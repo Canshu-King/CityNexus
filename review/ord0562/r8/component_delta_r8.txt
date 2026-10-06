@@ -1,0 +1,104 @@
+What the authoritative tip did to the one file this order edits, between the generation the last block
+described and the generation this block ships; then what this branch adds on top of it.
+
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/review/cff87c64-ord0562-english-count-nouns-r7
+bcbd89be584972c71af892324f82cb4c76349c33
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+8996eee4fb9fb4e159588305223ef421728c4e72
+
+== previous generation tip -> this tip, on frontend/src/app/V8Experience.tsx
+   previous tip aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+   diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+   index 62aa8b83c..5d62f7bc7 100644
+   --- a/frontend/src/app/V8Experience.tsx
+   +++ b/frontend/src/app/V8Experience.tsx
+   @@ -2320,12 +2320,16 @@ function TripsWorkspace({
+          <nav
+            className="trips-tabs"
+            data-testid="trips-tabs"
+   +        role="tablist"
+            aria-label={zh ? "行程分区" : "Trip sections"}
+          >
+            {tabs.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+   +            role="tab"
+   +            id={`trips-tab-${item.key}`}
+   +            aria-selected={tab === item.key}
+                className={tab === item.key ? "active" : ""}
+                data-testid={`trips-tab-${item.key}`}
+                onClick={() => setTab(item.key)}
+   
+   added lines: 4; of those carrying a counted noun: 0
+
+== this tip -> this branch head, on the same path
+   diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+   index 5d62f7bc7..19b890066 100644
+   --- a/frontend/src/app/V8Experience.tsx
+   +++ b/frontend/src/app/V8Experience.tsx
+   @@ -5,6 +5,7 @@ import {
+      commitmentLevelLabel,
+      commitmentStatusLabel,
+    } from "../lib/displayVocabulary";
+   +import { englishCountNoun } from "../lib/plural";
+    import { Icon } from "../components/v8/Icon";
+    import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
+    import { mapCopy } from "../i18n/mapPanelCopy";
+   @@ -2392,6 +2393,7 @@ function budgetAdvisory(
+      reference: V8Data["trip"]["budget_reference"],
+      zh: boolean,
+      locale: string,
+   +  t: (key: string, params?: Record<string, string | number>) => string,
+    ): { tight: boolean; text: string; hint: string } | null {
+      if (!reference || !reference.available) return null;
+      const days = reference.day_count;
+   @@ -2417,9 +2419,7 @@ function budgetAdvisory(
+      const amount = budgetMoney(perPersonPerDay, currency, locale);
+      return {
+        tight,
+   -    text: zh
+   -      ? `${days} 天 · ${people} 人 · 每人每天约 ${amount}`
+   -      : `${days} days · ${people} people · about ${amount} per person per day`,
+   +    text: t("hub.budgetLine", { days, people, amount }),
+        hint: tight
+          ? zh
+            ? TIGHT_CAVEAT_ZH
+   @@ -2578,7 +2578,7 @@ function Hub({
+        boolean | null
+      >(null);
+      const tripUnlocatable = mapReportsNoLocation ?? tripHasNoCoordinates(data);
+   -  const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale);
+   +  const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale, t);
+      const activities = (data.active_plan?.activities ?? []) as unknown as Array<{
+        id: string;
+        title: string;
+   @@ -2961,12 +2961,8 @@ function Hub({
+                {t("shell.travelers", { n: data.trip.party_size })}
+                {" · "}
+                {tripDayCount === null
+   -              ? zh
+   -                ? "天数未知"
+   -                : "length unknown"
+   -              : zh
+   -                ? `${tripDayCount} 天`
+   -                : `${tripDayCount} days`}
+   +              ? t("hub.todayDaysUnknown")
+   +              : t("hub.todayDays", { n: tripDayCount })}
+              </p>
+            </div>
+            {/* Pass-8 ruling #1/#2: with an active journey the hero's
+   @@ -3044,7 +3040,7 @@ function Hub({
+                {disruptions.length
+                  ? zh
+                    ? `${disruptions.length} 项变化`
+   -                : `${disruptions.length} change(s)`
+   +                : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
+                  : handledDisruptions.length
+                    ? zh
+                      ? "已处理"
+   
+   added lines: 7; of those carrying a counted noun: 5
+
+Read together: the tip moved the trips-tab markup, this branch moves three counted lines, and the two
+sets do not overlap -- which is why landing this file as a pure apply is safe on this generation.
