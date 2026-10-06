@@ -1315,7 +1315,9 @@ class DeepSeekJourneyAgent:
                                 # of spending another model turn on a 422.
                                 arguments["reason"] = arguments["reason"][:497] + "..."
                             payload = AgentToolCall.model_validate(arguments)
-                            result = AgentToolGateway(session).dispatch(tool_name, payload)
+                            result = AgentToolGateway(
+                                session, bound_run_id=run.id
+                            ).dispatch(tool_name, payload)
                             if tool_name in _INSPECTION_TOOLS:
                                 inspected = True
                         except HTTPException as exc:
