@@ -222,7 +222,11 @@ def test_r28_approval_route_resumes_same_run_without_second_model_turn(monkeypat
             "executed": True,
             "approval_id": seeded["approval_id"],
             "status": "CONSUMED",
-            "result": {"status": "ACCEPTED"},
+            "collective_authority_receipt_id": "receipt-continuation-test",
+            "result": {
+                "status": "ACCEPTED",
+                "collective_authority_receipt_id": "receipt-continuation-test",
+            },
         }
 
     monkeypatch.setattr("app.agent.gateway.AgentToolGateway.dispatch", fake_dispatch)
@@ -248,7 +252,15 @@ def test_r28_approval_route_resumes_same_run_without_second_model_turn(monkeypat
         assert run is not None and run.status == "COMPLETED" and run.completed_at
         assert mission is not None and mission.status == "COMPLETED" and mission.completed_at
         assert approval is not None and approval.status == "CONSUMED"
+        assert pending.authority_receipt_id == "receipt-continuation-test"
+        assert approval.authority_receipt_id == "receipt-continuation-test"
         steps = session.query(AgentRunStep).filter(AgentRunStep.run_id == seeded["run_id"]).all()
+        assert (
+            json.loads(steps[0].result_json)[
+                "collective_authority_receipt_id"
+            ]
+            == "receipt-continuation-test"
+        )
         assert len(steps) == 1
         assert steps[0].tool_name == "accept_replan"
         assert "agent-resume-" in steps[0].arguments_json
@@ -413,6 +425,7 @@ def test_r28_startup_recovers_consumed_approval_without_second_mutation(monkeypa
         approval.status = "CONSUMED"
         approval.approved_at = _now()
         approval.consumed_at = _now()
+        approval.authority_receipt_id = "receipt-crash-recovery-test"
         session.commit()
 
     def must_not_dispatch(*args, **kwargs):
@@ -424,7 +437,13 @@ def test_r28_startup_recovers_consumed_approval_without_second_mutation(monkeypa
     with SessionLocal() as session:
         pending = session.get(AgentPendingAction, seeded["pending_id"])
         assert pending.status == "RESUMED"
-        assert json.loads(pending.result_json)["continuation_recovered_from_domain_truth"] is True
+        recovered = json.loads(pending.result_json)
+        assert recovered["continuation_recovered_from_domain_truth"] is True
+        assert (
+            recovered["collective_authority_receipt_id"]
+            == "receipt-crash-recovery-test"
+        )
+        assert pending.authority_receipt_id == "receipt-crash-recovery-test"
         assert session.get(AgentRun, seeded["run_id"]).status == "COMPLETED"
         assert session.get(JourneyMission, seeded["mission_id"]).status == "COMPLETED"
         assert session.get(Journey, seeded["journey_id"]).active_plan_version_id == proposed_id
