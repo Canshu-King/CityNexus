@@ -146,18 +146,36 @@ def verdict(
         or []
     )
 
-    def provider_invoked(thread_name: str) -> bool | None:
+    def provider_invoked(causal_slot: str) -> bool | None:
         if external_outcomes:
+            # R32 v2c+ uses coordinator-owned causal slots because sync FastAPI
+            # endpoints run inside AnyIO worker threads under TestClient.  Keep
+            # the old thread-name fallback only for historical evidence.
+            slot_hits = [
+                item
+                for item in external_outcomes
+                if isinstance(item, dict)
+                and item.get("causal_slot") is not None
+            ]
+            if slot_hits:
+                return any(
+                    str(item.get("causal_slot")) == causal_slot
+                    and item.get("provider_call_invoked") is True
+                    for item in slot_hits
+                )
+            legacy_thread = (
+                "r32-agent-a" if causal_slot == "A" else "r32-agent-b"
+            )
             return any(
-                item.get("thread") == thread_name
+                item.get("thread") == legacy_thread
                 and item.get("provider_call_invoked") is True
                 for item in external_outcomes
                 if isinstance(item, dict)
             )
         return None
 
-    a_provider_invoked = provider_invoked("r32-agent-a")
-    b_provider_invoked = provider_invoked("r32-agent-b")
+    a_provider_invoked = provider_invoked("A")
+    b_provider_invoked = provider_invoked("B")
 
     a_external: bool | None = None
     if a.get("id") and a_provider_invoked is not None:
