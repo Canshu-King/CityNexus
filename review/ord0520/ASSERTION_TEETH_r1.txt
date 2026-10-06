@@ -1,0 +1,37 @@
+control_broken_variants_all_fail True
+  negative_control an arm file that is not there      -> covered=False
+  negative_control a site that is not in its file     -> covered=False
+abort_http_probe_r3.py                   verdict  refuse_unless_all_present              vacuous_guard_partial_arms_r1.py
+abort_glass_provenance_r3.py             verdict  refuse_unless_all_present              vacuous_guard_gap_closed_arm_r1.py
+osmt_flake_attribution_r3.py             verdict  refuse_unless_states_present           vacuous_guard_gap_closed_arm_r1.py
+abort_http_probe_r3.py                   verdict  refuse_when_empty                      vacuous_guard_arms_r1.py
+osmt_arms_and_supply_ab_r1.py            verdict  DEFECT_MEASURED_AND_CLOSED             self: the script's own arms_discriminate / new_red_names fields
+osmt_flake_attribution_r1.py             verdict  BATCH_SENSITIVE_FAMILY                 self: the per-state rates it prints are the two arms
+check_self_blindness_scan_r1.py          verdict  control_self_aware                     self: the two temporary probes it builds and requires to disagree
+teeth_audit_manifest_r1.py               verdict  control_dead_guard_lands_in_queue      self: the dead and deaf probes it builds
+vacuous_guard_manifest_r1.py             verdict  NEGATIVE_CONTROL                       self: two broken variants it drives and requires to come back MANIFEST_FAILED
+osmt_arms_and_supply_ab_r1.py            assert   assert probe_blob == git(              void: harness precondition: the published probe must be 
+osmt_arms_and_supply_ab_r1.py            assert   "apply", "--check", "-R"               void: harness precondition: the patch must be reversible
+osmt_arms_and_supply_ab_r1.py            assert   reverse apply failed                   void: harness precondition on the A/B state change itsel
+osmt_arms_and_supply_ab_r1.py            assert   assert git("hash-object"               void: harness precondition: the tree must be back in the
+osmt_abandon_family_r1.py                assert   assert git("apply", "-R"               void: harness precondition on the A/B state change itsel
+abort_glass_provenance_r1.py             verdict  "verdict":                             vacuous_guard_gap_closed_arm_r1.py
+abort_glass_provenance_r2.py             verdict  "verdict":                             vacuous_guard_gap_closed_arm_r1.py
+abort_http_probe_r1.py                   verdict  verdict_computed_from_the_rows_above   vacuous_guard_partial_arms_r1.py
+abort_http_probe_r2.py                   verdict  verdict_computed_from_the_rows_above   vacuous_guard_partial_arms_r1.py
+osmt_flake_attribution_r2.py             verdict  "verdict"] = (                         vacuous_guard_gap_closed_arm_r1.py
+vacuous_guard_arms_r1.py                 verdict  VERDICT                                self: this file IS the arm; the manifest re-runs it and compares
+vacuous_guard_gap_closed_arm_r1.py       verdict  VERDICT                                self: this file IS the arm; the manifest re-runs it and compares
+vacuous_guard_partial_arms_r1.py         verdict  VERDICT                                self: this file IS the arm; the manifest re-runs it and compares
+vacuous_guard_abnormal_arm_r1.py         verdict  VERDICT                                self: this file IS the arm; the manifest re-runs it and compares
+vacuous_guard_abnormal_pair_r1.py        verdict  VERDICT                                self: this file IS the arm; the manifest re-runs it and compares
+vacuous_truth_scan_r1.py                 verdict  CONTROL_FAILED_READ_THE_SITES          self: it refuses to report unless its own two controls hold
+abort_contested_race_probe_r1.py         verdict  verdict_computed_from_the_rows_above   self: the verdict is computed from the rows it collected in the same run
+abort_resurrect_probe_r1.py              verdict  "verdict": verdict                     self: the verdict is computed from the three door readings in the same run
+abort_glass_consolidate_r1.py            verdict  "verdict": body.get("verdict")         void: it re-publishes the verdict its source receipt alr
+osmt_readings_txt_r1.py                  verdict  "main_verdict=%s"                      void: a readings writer: it copies the verdict out of th
+abort_glass_status_move_r1.py            verdict  sys.exit(main())                       void: a helper the glass arm CALLS to move a row; its ex
+generated_client_drift_r1.py             verdict  sys.exit(main())                       void: its red path needs a drifted generated client, whi
+assertion_teeth_manifest_r1.py           verdict  SITES_WITHOUT_COVERAGE                 self: it refuses to answer unless every site above is present and every named arm exists
+sites 32 | with_arm 23 | named_void 9 | lane files 27 | files with no decision site none
+VERDICT EVERY_SITE_HAS_AN_ARM_OR_A_NAMED_VOID
