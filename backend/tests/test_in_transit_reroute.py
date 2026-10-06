@@ -706,18 +706,50 @@ def test_reroute_endpoint_uses_current_observation_and_keeps_active_plan(monkeyp
             route_provenance="LIVE_PROVIDER_CAPTURE",
         )
         session.commit()
+        assert event.affected_activity_id == activity_id
         duplicate = main_module._persist_trusted_transit_deviation_event(
             session,
             journey=session.get(Journey, journey_id),
             activity=session.get(Activity, activity_id),
             active_leg_id=session.query(JourneyLeg).filter_by(to_activity_id=activity_id).one().id,
-            transit=transit_truth,
+            transit={
+                **transit_truth,
+                "location_observation_id": "new-trusted-sample-same-incident",
+            },
             commitment_risk=at_risk,
-            reroute_operation_id="route-op-1",
+            reroute_operation_id="route-op-2",
             route_provider="valhalla-http",
             route_provenance="LIVE_PROVIDER_CAPTURE",
         )
         assert duplicate.id == event.id
+        assert session.query(EventModel).filter_by(
+            journey_id=journey_id,
+            provider_key="journey-in-transit-route",
+            event_type="TRAFFIC_DELAY",
+        ).count() == 1
+
+        # Once the incident has genuinely closed, a later verified deviation
+        # on the same edge is a new incident rather than being swallowed by
+        # historical evidence.
+        event.status = "RESOLVED"
+        session.commit()
+        reopened = main_module._persist_trusted_transit_deviation_event(
+            session,
+            journey=session.get(Journey, journey_id),
+            activity=session.get(Activity, activity_id),
+            active_leg_id=session.query(JourneyLeg).filter_by(to_activity_id=activity_id).one().id,
+            transit={
+                **transit_truth,
+                "location_observation_id": "trusted-sample-after-resolution",
+            },
+            commitment_risk=at_risk,
+            reroute_operation_id="route-op-3",
+            route_provider="valhalla-http",
+            route_provenance="LIVE_PROVIDER_CAPTURE",
+        )
+        assert reopened.id != event.id
+        session.commit()
+
         advisory = main_module._persist_trusted_transit_deviation_event(
             session,
             journey=session.get(Journey, journey_id),
@@ -730,4 +762,8 @@ def test_reroute_endpoint_uses_current_observation_and_keeps_active_plan(monkeyp
             route_provenance="LIVE_PROVIDER_CAPTURE",
         )
         assert advisory is None
-        assert session.query(EventModel).filter_by(journey_id=journey_id, event_type="TRAFFIC_DELAY").count() == 1
+        assert session.query(EventModel).filter_by(
+            journey_id=journey_id,
+            provider_key="journey-in-transit-route",
+            event_type="TRAFFIC_DELAY",
+        ).count() == 2
