@@ -1,0 +1,74 @@
+{
+  "instrument": "cmdra_0553_status_label_check_r1",
+  "script_sha256": "293b1b7cf81bd62c60fd1bd1fe339148814f50ccb3b969e6f0f2be0595335d3e",
+  "base": "http://127.0.0.1:49933",
+  "locale": "en",
+  "viewport": "390x844",
+  "src_dir": "D:/moodle/_qoder_cmdra_ord0553_20261003/tipfull_r21/frontend/src",
+  "dictionary_wordings_for_this_arm": [
+    "Not started",
+    "On the way",
+    "Arrived",
+    "In progress",
+    "Active",
+    "Completed",
+    "Skipped",
+    "Planned",
+    "Ready to start",
+    "Cancelled"
+  ],
+  "read": {
+    "panelPresent": true,
+    "activityStatus": [
+      "COMPLETED",
+      "COMPLETED",
+      "COMPLETED",
+      "ACTIVE",
+      "Planned",
+      "Planned"
+    ],
+    "stateValues": [
+      "ACTIVE",
+      "Planned"
+    ],
+    "footerButton": [
+      "Mark EN ROUTE",
+      "Preview impact",
+      "Accept edit"
+    ],
+    "paintedCount": 176,
+    "journeyId": "22222222-2222-4222-8222-222222222222"
+  },
+  "arms": [
+    {
+      "id": "panel_reached",
+      "verdict": "PASS",
+      "observed": "panelPresent=true activityRows=6 journeyId=22222222-2222-4222-8222-222222222222"
+    },
+    {
+      "id": "every_status_slot_is_painted",
+      "verdict": "PASS",
+      "observed": "8 slots painted, e.g. [\"COMPLETED\",\"COMPLETED\",\"COMPLETED\"]"
+    },
+    {
+      "id": "no_status_slot_paints_a_machine_shape",
+      "verdict": "FAIL",
+      "observed": "[{\"slot\":\"activity-status[0]\",\"text\":\"COMPLETED\",\"kind\":\"ALLCAPS_WORD\",\"token\":\"COMPLETED\"},{\"slot\":\"activity-status[1]\",\"text\":\"COMPLETED\",\"kind\":\"ALLCAPS_WORD\",\"token\":\"COMPLETED\"},{\"slot\":\"activity-status[2]\",\"text\":\"COMPLETED\",\"kind\":\"ALLCAPS_WORD\",\"token\":\"COMPLETED\"},{\"slot\":\"activity-status[3]\",\"text\":\"ACTIVE\",\"kind\":\"ALLCAPS_WORD\",\"token\":\"ACTIVE\"}]"
+    },
+    {
+      "id": "painted_words_come_from_the_dictionary",
+      "verdict": "FAIL",
+      "observed": "[{\"slot\":\"activity-status[0]\",\"text\":\"COMPLETED\"},{\"slot\":\"activity-status[1]\",\"text\":\"COMPLETED\"},{\"slot\":\"activity-status[2]\",\"text\":\"COMPLETED\"},{\"slot\":\"activity-status[3]\",\"text\":\"ACTIVE\"}]"
+    },
+    {
+      "id": "no_page_error",
+      "verdict": "PASS",
+      "observed": "[]"
+    }
+  ],
+  "verdict": "RED",
+  "red_arms": [
+    "no_status_slot_paints_a_machine_shape",
+    "painted_words_come_from_the_dictionary"
+  ]
+}
