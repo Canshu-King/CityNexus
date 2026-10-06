@@ -16588,6 +16588,162 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0550 r1 重切判定：我那一手的意图已在尖上，而且尖上那版比我这份更强 —— 所以不交空切（车道 8ac89982 · 绿化工·小许）
+
+**一、结论先说**
+
+你让我把这枝 rebase 到现尖再交一次。我先按形制做了只读复算，得到的答案是：**重切出来会是一枚空切**，而且如果我把自己那份原样盖上去，会把尖上更强的版本换回旧版。所以我停在这里交判定，不推空枝。
+
+**二、三枚坐标（现读）**
+
+- 我那枝：`refs/heads/review/8ac89982-ord0550-named-anchor-rulers-r1`，头 `ee42859729e9e2332e0551797388281eb4d04b1c`，父 `00b5f25e9b6b408fba8906ef3ffd49caa5eb84b9`。
+- 现尖：`cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2`（`refs/heads/mirror/integration-frontend-apple-pass1`，随你信里给的坐标，本机 `git ls-remote` 现取同值）。
+- 你报的冲突面就是这一枚：`backend/tests/test_qoder_ord0296_write_deadline.py`（两边都动过）。
+
+**三、两边各自动了什么（逐边现算，不是我记的）**
+
+- 我这一手（`00b5f25e` → `ee428597`）：`backend/tests/test_qoder_ord0296_write_deadline.py` 增删 `29/4`，`backend/tests/test_qoder_ord0479_dictionary_key_shape.py` 增删 `35/2`。
+- 尖上那一手（`00b5f25e` → `cfda610a9959`）：同一枚 0296 增删 `58/5`，同一枚 0479 增删 `31/2`（尖上同时还落了另外一批新测试文件，与本单无关）。
+- 逐枚 blob 摆一起（证明"不是同一份字节"）：0296 我 `f8383ef8df9f1edf791126308d3e591937f4f41e` vs 尖 `032777990661c5220794a91c2a00a8ed1ea97fe7`；0479 我 `4e19854e341a1d5e61752b691b74276c43124477` vs 尖 `91dffbf0f2244df3cf1eb20bf8f1986d37a97d90`。
+
+**四、为什么判"意图已在尖上"（按名字认，不按行号认）**
+
+- 0479 那把尺：尖上写的是 `_table_line_inside_named_const(SITE, "REFUSAL_KEY", VALUE)`，位置在 `backend/tests/test_qoder_ord0479_dictionary_key_shape.py:159`，判的是"被赦免的那一行落在具名表 `REFUSAL_KEY` 的表身里"——与我那版"按具名符号取表身、再判行落在其中"是同一件事的两种写法。
+- 0296 那把尺：尖上那版不再点文件名清单，改成从产品自己读两把尺度——`WD.busy_timeout_ms()` 现取射程（符号在 `backend/app/db/write_deadline.py:50`），加一张出厂只有一枚的单源路径白名单 `SINGLE_SOURCE_FILES`，再加"消费方一边向模块要数、一边自己内联写一枚"的检查。它比我那版更晚，而且带着两条后续裁语（`CMDR 02:45` 收形、`CMDR 18:34` 补盲区），我那份只认内联数字。
+
+**五、尖上那版在自己字节上是绿的（跑出来的，不是读出来的）**
+
+我在本车道目录里把现尖的树取出来（`backend` + `data` + `frontend/src`，只读导出，不碰任何共享工作树），用现成 venv 在一次性库上跑了两把尺：
+
+- `backend/tests/test_qoder_ord0296_write_deadline.py`：`11 passed`，件 `review/ord0550/tip_ruler_0296_r1.txt`。
+- `backend/tests/test_qoder_ord0479_dictionary_key_shape.py`：`9 passed / 1 skipped`，件 `review/ord0550/tip_ruler_0479_r1.txt`。
+
+两句交代，免得读数被当成别的意思：头一次跑是我把树裁得太小（少了仓库根的 `data/mock`，`seed_demo` 起不来；又少了 `frontend/src`，ORD-0479 那把尺读不到词典），那两次报的错是我的导出缺件，不是尖上的毛病；补齐后如上。库用的是导出树里的一次性文件，用户的共享预览库一次都没开。
+
+**六、我**没有**做、也不打算做的一件事**
+
+我没有把"我那份"和"尖上那份"做逐例对拍（同一枚坏输入两边各判什么）——那是另一件活，而且尖上那版带着后续裁语，形状已不是我的形状。所以本判定只覆盖两件事：我这一手的意图已在尖上；尖上那版在尖的字节上全绿。若你要的是"并集"或"我那份的形状"，请回一句定点，我按新基重切一版再交，不猜。
+
+**七、建议**
+
+本枝按"被现尖取代"闭单即可；我那枝 `ee428597` 留在线上作为记录，我不删不改。名下另一格（ORD-0577 底栏在四枚主路由之外的屏上如何回答"你在哪"）已在测。
+
+**八、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次、凭据零枚落盘零字打印；本轮只读复算与一次性导出树里的两跑。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · ORD-0556 第七趟只读腿：全仓有多少「值里没有小写字母」的词表项真走 `.v8-kicker` 那条大写规则（本手零枚产品字节）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `b0a6a6227b176ddae53cc8e64cdad0f7ba5bf5a4`，`ls-remote` 独立回读同值，parent = `448dffdf5dd2ddb44741b11eb03bea922ce24474`。本腿一笔 4 枚文件（量具一枚 + 读数件三枚，逐枚在 `review/` 下），产品路径 0 枚。**两边的数都在同一枚尖上同一次跑里读的**：现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`（件 `review/ord0556/readouts/kicker_coverage_20261006T083643Z.json`），先读词表（键→值，按值自己的大小写分类），再读该尖 `frontend/src/` 下每一处 `.v8-kicker` 出现及其携带的 `t("键")`。
+
+**一、计数**（件 `review/ord0556/readouts/kicker_coverage_20261006T083643Z.json`）：
+- 扫过的前端源文件 54 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:7`）
+- 词表条目 573 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:10`）
+- 值里一个小写字母都没有的 66 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:11`）
+- `.v8-kicker` 出现 44 处、分布在 19 枚文件（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:12`、`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:13`）
+- 这些 kicker 引用到的词表键 27 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:14`），其中不在词表里的 0 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:17`）
+- **两类相交：上面那 66 枚里，真走 kicker 的 7 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:15`），不走任何 kicker 的 59 枚（`review/ord0556/readouts/kicker_coverage_20261006T083643Z.json:16`）**
+
+**二、那 7 枚点名，及与 ORD-0556 的对号**：`exec.authoritativeJourney`、`exec.liveJourneyPrefix`、`exec.liveStatus`、`inbox.authoritativeMemory`、`inbox.multimodal`、`push.kicker`、`studio.v12Kicker`。
+⇒ **对号结论**：那单要改的两枚键 `inbox.multimodal`、`inbox.authoritativeMemory` **都在这 7 枚里**，所以在这代尖上改它们的值只改得动号令者那把尺的读数、改不动屏幕像素（外观由 `frontend/src/styles.css:173` 的 `.v8-kicker` 那条 `text-transform: uppercase` 决定）；而同一单第三枚 `bookings.stayEvidence` 落在另外那 59 枚里，它的值就是屏上字面，改值直接改屏。**射程说窄**：我数的是「被 `t("键")` 引用」，不是「真的渲染出来」——要屏侧数得另起屏读。
+
+**三、我自己在这条腿上踩的两枚仪器错（具名；两枚废件都留在枝上可查）**
+1. **取字窗口太宽**：第一版从 kicker 那行固定往后取三行，于是 kicker 下面两行的 `<p className="v8-lede">{t("bookings.lede")}</p>` 也被算成「走 kicker 的值」——在 kicker 里的值因此从 7 涨到 13（`review/ord0556/readouts/kicker_coverage_20261006T083245Z.json:15`），kicker 引用到的键从 27 涨到 76（`review/ord0556/readouts/kicker_coverage_20261006T083245Z.json:14`）。改法：走元素自身的表达式（从开标签的 `>` 到它自己的 `</`），不再按行数取。
+2. **值分类漏了中文**：第二版按「无小写字母」判值，于是中文句子里夹的英文缩写（含 JSON 的那种句子）也被算成大写值，类从 66 涨到 74（`review/ord0556/readouts/kicker_coverage_20261006T083458Z.json:11`）；更糟的是它让英文值是混合大小写的键从中文那行混进类里。改法：值里含 CJK 就不算大写值。本块引用的计数一律出自修完两处之后的 `review/ord0556/readouts/kicker_coverage_20261006T083643Z.json`。
+
+**四、没改善（具名报缺）**
+1. **屏侧没有数**：这腿全是 git 对象读，一枚浏览器都没开；「这 66 枚里有多少真上屏」我给不出，要屏读。
+2. **别的 CSS 大写规则没数**：我只数了 `.v8-kicker` 这一条（`frontend/src/styles.css:173`），全仓还有没有别的 `text-transform: uppercase` 规则会造同样效果，我没查。
+3. 逐格归因仍缺（原始上屏文字被腿一那手 teardown 删，`review/ord0556/route_sweep_dev_r1.py:219`；那行我没改，改完没重跑等于没验过）。
+
+**五、现场与等点**：本轮零枚自建端口、零枚浏览器、零枚产品字节、没写账本、force-push 0 次、没动任何人的进程、没碰别人的端口。仍等你点的两件不变：其一 ORD-0556 按现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a` re-cut r3 并重取两臂读数；其二 甲那格 `unsupported_forms` 换人话。不点我不动。
+
+
+### 1ba48dbf 自申报下一件 · 落地面复算收口：把我名下全部交付枝的落地面按「我引入∧枝末态仍保留∧现尖上没有」逐件算清，并把这条尺自己踩出来的仪器缺陷一并落账（本块只申报，不含读数）
+
+**一、为什么是这一件**
+
+- ORD-0575 那格（上一块）交了之后，我名下没有未接的单。手上剩下唯一半成品是"落地面复算"：我这一夜为它换了八版尺，每一版都是被上一版自己的假读数逼出来的。
+- 这件不占屏、不点屏、不起栈：纯只读 git，量"我交过的东西此刻在不在权威线上"。
+
+**二、这件要交付什么（三样，全部现算）**
+
+- 一张按件号的落地面表：每件取该件在我名下最干净的那枚枝做代表，逐件给出「我引入并保留到枝末的内容行数」与其中「现尖上没有的行数」，具名到文件。
+- 一条尺的缺陷账：八版尺各自的假读数与反证件（含这一夜抓到的两处我自己的仪器错：折叠层里未渲染的控件仍带布局盒、滚动遍历把"滚出屏外"读成"被遮挡"）。
+- 一句判语：只写读数支持得住的结论，不支持的部分写明"这版尺分不出措辞被改与真没落地"，不硬判。
+
+- 这件的前置读数（上一块 ORD-0575 已交）：展开态 6 格中心全命中自己、与正文盒重叠面积 0 枚，件 `review/ord0575-repro/ord0575_repro_RK-043052.json` = `13db1afc6ed41ba693d84ebcf8e5854a3172927e`。
+
+**三、边界**
+
+- 只读 git；不碰共享端口；不动他人枝与热文件；不改产品字节；不重开已交的块。
+- 若这件与号令者点单的新活撞上，新活优先，本件顺延。
+
+**四、手上还没了结的两处（等裁语，不自取）**
+
+- ORD-0575：折叠帧里那枚未渲染的提交键仍带布局盒，要不要按"折叠层里的控件也必须能命中自己"立案，上一块已请号令者点单。
+- 顺手量到的固定底栏那一族（折叠帧里中心被底栏接走的五枚）已具名交给 ORD-0571 那一族的车道。
+
+
+### ORD-0500 手机车道（0afdb49b）担保件上枝第一代：把「上一块是算出来的、不是手打的」这句话换成能用 git 取的坐标，本手产品字节零枚；顺手把真机那一格量了
+
+一、这一手交什么
+- 上一块（车队重扫第二代）说「块里的数是从线上工件算出来的」。那句话在车道里可验、在线上不可验：出块那两把工具当时只在车道里。本手把工具与它的反件回执一起上枝，之后任何人 `git cat-file` 就能重跑，不必信我。写本块的这一枚 `D:/moodle/_qoder_phone_ord0485_20260930/tools/vouch_r1_hand_r1.py` 仍留在车道、不在枝上，我按「不在树里」说，不假装在。
+- 发布：`refs/heads/review/0afdb49b-fleet-rescan-vouch-r1` 头 `7f7fa4b21010ae2429af57ce19146b540e3bbe8c`，单父就是发布那一刻现读的尖 `ed594904c09edf252c2765df354ba03bae9c47c3`；对尖改动 16 枚路径，全部落在 `review/fleet-rescan-vouch-r1/` 前缀之下，该前缀之外零枚，产品路径零枚（现取 `git diff --name-only ed594904c09edf252c2765df354ba03bae9c47c3..7f7fa4b21010ae2429af57ce19146b540e3bbe8c`，逐枚清单在第三节）。发布器自己的回执是车道本机件 `run/vouch_r1_publish.json`，不是 git 物件、不可 cat-file，所以我不给它编 blob 号。
+
+二、尖在我写这一块的几分钟里又走了
+- 发布时现读取到的尖是 `ed594904c09edf252c2765df354ba03bae9c47c3`（单父即它）；本块落笔时再读，现尖已经是 `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2`。这不是我推的——我的那一笔只在自己名下的新枝上，权威线我一次没动。两枚都是可解对象（`git cat-file -t` 各回 commit）。
+- 上一代的基座是 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（refs/heads/review/0afdb49b-fleet-rescan-r2 那一手读的尖），三代坐标我按读数并列，不做祖先判定——这条线上 ancestry 早已不作判据。
+- 新尖那几笔是别人推的文档手（不是我的枝）。旧尖仍是可解对象，`git cat-file -t aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f` 回 commit。
+
+三、上线逐枚（每行自带锚，字节数从 blob 现算）
+- `review/fleet-rescan-vouch-r1/run/adb_leg_r1.txt` 285 字节，blob `a13e4fe386e21fe5bd8ae94603ee9de01ae58e71`
+- `review/fleet-rescan-vouch-r1/run/commit_vouch_r1_msg.txt` 2076 字节，blob `422d7ec024618cf39e9a1c3afea8db24dbc94020`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_bb_body.tpl` 1734 字节，blob `4c8b8fd832adec8920c83672dacf7c5e81474d38`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_bb_evidence_final.txt` 3021 字节，blob `5fdb7d9030746180eb6675f6b7c8fcf3dce5eca0`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_bb_send_042016.txt` 5961 字节，blob `8f5394bc9499a724aed76e10bc205fdb92912f05`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_block_composed.md` 10947 字节，blob `3b385a90e39c0f61bbe361133928d2b41e505bda`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_guardtest.txt` 120 字节，blob `d683880de559d892f4ff6feda8df8447ef26744f`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_negctl.txt` 3067 字节，blob `2b7823c46afcb21c4e8aadcbae25c99a2ba88789`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_precheck.txt` 527 字节，blob `ce2f688720152d7f101e96df9b5bba2bba7f6004`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_publish_refused.txt` 119 字节，blob `31d13005c1d010b5c8e32793b8c45cd2838c3f13`
+- `review/fleet-rescan-vouch-r1/run/fleet_r2_reemit_guard.txt` 689 字节，blob `b38d111e5a78c95bb7fd666f82acc5d50e801794`
+- `review/fleet-rescan-vouch-r1/tools/fleet_rescan_bb_evidence_r1.py` 11043 字节，blob `8246f9748e0b5a3974272099d86b593cd6b5a76e`
+- `review/fleet-rescan-vouch-r1/tools/fleet_rescan_hand_r1.py` 19013 字节，blob `18abcfd2efc6dd94d0b2b49461f60c53c1d9742d`
+- `review/fleet-rescan-vouch-r1/run/vouch_r1_identities.json` 4385 字节，blob `a6aa773cdce37a604b8b2c030c847dd4dca188ff`
+- `review/fleet-rescan-vouch-r1/tools/vouch_r1_identities.py` 2950 字节，blob `b6889731963320866960575d88e07cc8aaa4941c`
+- `review/fleet-rescan-vouch-r1/run/vouch_r1_manifest.json` 679 字节，blob `cb3e0a9a605fe20caa4338e781d991126562a649`
+
+四、四条腿都咬过（新闸上架要有「该红的那一次」）
+- `run/fleet_r2_reemit_guard.txt` blob `b38d111e5a78c95bb7fd666f82acc5d50e801794`（689 字节，从 blob 现算）—— 第一行逐字是 `ABORT_ALREADY_DELIVERED 0afdb49b_0351.md.inserted_035934 -- this generation is already booked; publish an erratum as a NEW block instead of re-dropping`（那一行 151 字节）；出块写手不许把同一代投两次：真回执 `0afdb49b_0351.md.inserted_035934` 在场，重跑即被拒。
+- `run/fleet_r2_publish_refused.txt` blob `31d13005c1d010b5c8e32793b8c45cd2838c3f13`（119 字节，从 blob 现算）—— 第一行逐字是 `ABORT_REF_NOT_FREE refs/heads/review/0afdb49b-fleet-rescan-r2 already answers bc4b6fec021b921ece3194a4e0f65a800469ccfa`（那一行 118 字节）；发布器不许覆盖已答话的枝：第二次推同一枚枝被 ABORT_REF_NOT_FREE 拒掉，回显的正是当前头。
+- `run/fleet_r2_negctl.txt` blob `2b7823c46afcb21c4e8aadcbae25c99a2ba88789`（3067 字节，从 blob 现算）—— 第一行逐字是 `ledger block NOT_VOUCHED 9999 (1 of 34) -- the hub would refuse this post`（那一行 73 字节）；担保尺不许空转：往正文注一枚无处可取的数，它当场报 NOT_VOUCHED 并以非零退出。
+- `run/fleet_r2_guardtest.txt` blob `d683880de559d892f4ff6feda8df8447ef26744f`（120 字节，从 blob 现算）—— 第一行逐字是 `ABORT_WOULD_CHANGE_THE_POST -- the body on disk is not what this kv map renders; post nothing and re-render in one pass`（那一行 119 字节）；传信腿不许中途换正文：`bus.py` 先读正文后跑证据命令，所以正文与本次渲染不一致时它拒绝写回。
+- 另一枚不是「咬」而是「对上」：上枝前我把每枚文件的 blob 先记在 `review/fleet-rescan-vouch-r1/run/vouch_r1_identities.json`（blob `a6aa773cdce37a604b8b2c030c847dd4dca188ff`），发布后逐枚与枝上的 blob 相比，15 枚相同、零枚不一致；那个 id 是本地 sha1 独立算的，不是复制 `hash-object` 的输出。
+
+五、真机那一格：本车道第一次量（此前一直具名报「未量」）
+- 回执 `review/fleet-rescan-vouch-r1/run/adb_leg_r1.txt` blob `a13e4fe386e21fe5bd8ae94603ee9de01ae58e71`：第 1 行是 `$ adb version` 那条命令，下一行逐字是 `Android Debug Bridge version 1.0.41`；第 4 行是 `Installed as` 那条（它装在系统目录里）。
+- 同一份回执第 7 行 `List of devices attached` 之后到下一个 `rc=` 之间没有一行设备，且那一趟 `rc=0`：这句话只到「这台机器此刻没有连着任何设备」，不能推到「平板坏了」或「链断了」。
+- 同一份回执第 11 行是 `adb get-state`，回 `error: no devices/emulators found`、`rc=1`；随后 `adb kill-server` 回 `rc=0`。本手起过本机那个调试服务又关掉，起前它不在跑、关后回到原样，产品链的端口一个没碰（服务与端口逐字见同一份回执）。
+- 因此 ORD-0500 的真机腿仍是**没有量到产品**：设备不在，我不编读数，也不把「工具在」说成「链在」。
+
+六、边界与复算
+- 权威尖零次移动（我只读 `ls-remote` 与推自己名下的新枝）；线上已落字节覆盖零枚；名下旧枝改写零次；删枝零次；force-push 零次；账本直写零处（本块走收件口）；端口起停零个；重启链零次；wt22 工作树写入零处（本手全程用临时索引读线上对象，不碰工作树）。
+- 上线的 16 枚路径里没有一枚是产品文件；本代没跑构建、没跑套件、没发 fetch 之外的网络请求。
+- 复算（现取现读；尖若已走请整代重切）：先 `D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/vouch_r1_identities.py` 出上枝前身份，再 `D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/vouch_r1_hand_r1.py` 重出本块——同一代已被收件口记过，重跑会被它自己的 ABORT_ALREADY_DELIVERED 拒，这是设计。两把尺的源码都在枝上：`review/fleet-rescan-vouch-r1/tools/fleet_rescan_bb_evidence_r1.py`（担保尺）与 `review/fleet-rescan-vouch-r1/tools/fleet_rescan_hand_r1.py`（出块尺）。
+- 上一块的收件口回执 `0afdb49b_0351.md.inserted_035934` 仍在，本手不改写它，也不撤回它的任何读数。
+
+七、等你那三件（照旧，我没自己动）
+- 甲/乙/丙未回：`refs/heads/review/0afdb49b-ord0500-anchor-form-r5` 与 `refs/heads/review/0afdb49b-ord0500-staging-door-r7` 的父仍停在尖之前那一代；我按自己推荐的乙/丙执行，本小时没有再推零变化的重切枝。你点头任一，我按现尖 `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2` 重父。
+- 丙那问（这把重扫尺要不要进落地闸）仍挂起；若进闸，`SNAPSHOT_SHAPED` 的「不出判语」要一起进去，否则闸会拿快照形当红。
+- 未量照旧点名：Playwright 套件、拒绝语逐句屏读（真机那格本手已量，读数在第五节，结论仍是没量到产品）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0576 第四件 · 车道 82f55d8a：这一批把七枚 spec 的"不给坐标就打死整目录"改成具名跳过，尺的债从十二枚降到五枚（地面真值：`offenders` 五、`unjudged` 空、`stale_debt` 空）；另把一把 codemod 的两次翻车写清楚——第一次它把六枚文件的换行符翻了、我整批回退没留
 
 **〇、坐标（现读）。** 尖 `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2`；枝 `refs/heads/review/82f55d8a-e2e-collection-safe-r2` 头 `7b36622c9c29b274de70b956ca515b8d8a4c0b8c`（本件之前还有一枚 `c38213f77bae39ea69b75e243c5800031031a215` 是同一批的第一枚），`git push --atomic` 后 `ls-remote` 回读同值；对尖改动全在 `frontend/e2e` 与 `tools/`，产品字节零枚、删除零枚。上一批（`…-r1`，头 `18d19b62e8bcbdd11c9804c7fcda6f47342325ea`）你 04:42 那条回执里已记落地；浅边界那条成因我认，它正好解释我先前 `git rev-list --count` 只回五跳。
