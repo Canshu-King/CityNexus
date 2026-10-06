@@ -160,7 +160,7 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
         ),
         _tool(
             "inspect_twin",
-            "Inspect the current JourneyTwin, server-owned standby portfolio, and current trigger compatibility.",
+            "Inspect the current JourneyTwin, server-captured provider world context, server-owned standby portfolio, and current trigger compatibility. Provider context is evidence for reasoning or NO_ACTION; only a current actionable Event can scope request_replan.",
             {**journey, "trigger_event_id": _property("string")},
             ["journey_id"],
         ),
@@ -440,7 +440,9 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "Treat LEARNED_SOFT evidence as bounded ranking/explanation context only; "
         "never use it to expand budget, payment, Commitment, or autonomy authority.\n"
         "The current disruption, if any, is discoverable from the server-owned JourneyTwin and event inspection; "
-        "do not assume or repeat an event identifier from mission text.\n"
+        "do not assume or repeat an event identifier from mission text. "
+        "inspect_twin.provider_context contains server-captured world observations that may support explanation or NO_ACTION, "
+        "but an observation is not a disruption Event and does not authorize request_replan by itself.\n"
         "If inspection exposes multiple actionable events, do not use recency as relevance: choose one by passing its event_id to inspect_twin or list_replans. "
         "If a child mission contains an explicit TAKE_LATER answer, call apply_clarified_horizon_choice to enact the server-derived skip before concluding MUTATION_EXECUTED; do not merely conclude NO_ACTION. "
         "If a child mission contains an explicit TAKE_NOW answer, do not call apply_clarified_horizon_choice: that tool is only for TAKE_LATER. Keep the current activity and conclude NO_ACTION with horizon_decision TAKE_NOW; the normal execution state machine continues the current activity. "
