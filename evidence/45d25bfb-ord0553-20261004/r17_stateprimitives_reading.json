@@ -1,0 +1,118 @@
+{
+ "instrument": "cmdra_0553_stateprimitives_r17",
+ "tip": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+ "module": "frontend/src/features/execution/V12StatePrimitives.tsx",
+ "fallback": {
+  "line": [
+   "frontend/src/features/execution/V12StatePrimitives.tsx:19",
+   "frontend/src/features/execution/V12StatePrimitives.tsx:43"
+  ],
+  "verbatim": "return key ? t(key) : state.replaceAll(\"_\", \" \");",
+  "helper": "stateLabel"
+ },
+ "callers": [
+  {
+   "export": "ActivityCard",
+   "line": "frontend/src/features/execution/V12StatePrimitives.tsx:22"
+  },
+  {
+   "export": "LiveJourney",
+   "line": "frontend/src/features/execution/V12StatePrimitives.tsx:61"
+  }
+ ],
+ "importers": [
+  {
+   "file": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+   "line": 9,
+   "names": [
+    "ImpactPreview"
+   ]
+  },
+  {
+   "file": "frontend/src/stories/V12StatePrimitives.stories.tsx",
+   "line": 2,
+   "names": [
+    "ActivityCard",
+    "AgentAction",
+    "CommitmentCard",
+    "EdgeStatus",
+    "ImpactPreview",
+    "JourneyLeg",
+    "LiveJourney",
+    "OfflineBanner",
+    "RiskBanner"
+   ]
+  }
+ ],
+ "dynamic_imports": [],
+ "reachability": {
+  "entry": "frontend/src/main.tsx",
+  "files_reachable": 144,
+  "module_reachable": true,
+  "importers_reachable": {
+   "frontend/src/features/studio/V12TripStudioPanel.tsx": true,
+   "frontend/src/stories/V12StatePrimitives.stories.tsx": false
+  },
+  "caller_exports_imported_by": {
+   "ActivityCard": [
+    "frontend/src/stories/V12StatePrimitives.stories.tsx"
+   ],
+   "LiveJourney": [
+    "frontend/src/stories/V12StatePrimitives.stories.tsx"
+   ]
+  }
+ },
+ "runtime_leg": {
+  "source": "r11_walk_{en,zh}_49881.json (fourteen routes, same tip generation)",
+  "remnant_tokens_found": {
+   "en": [],
+   "zh": []
+  },
+  "positive_control_tokens_from_the_same_area": [
+   "AUTHORITATIVE",
+   "NEXT",
+   "REALITY",
+   "TRIP"
+  ]
+ },
+ "arms": [
+  {
+   "id": "the_fallback_line_is_still_there",
+   "verdict": "PASS",
+   "observed": "verbatim 'return key ? t(key) : state.replaceAll(\"_\", \" \");' at ['frontend/src/features/execution/V12StatePrimitives.tsx:19', 'frontend/src/features/execution/V12StatePrimitives.tsx:43']"
+  },
+  {
+   "id": "the_graph_can_see_the_app_shell_at_all",
+   "verdict": "PASS",
+   "observed": "144 files reachable from the entry; shell reachable=True, studio panel reachable=True"
+  },
+  {
+   "id": "the_fallback_is_held_by_exactly_the_two_unused_components",
+   "verdict": "PASS",
+   "observed": "callers of stateLabel(): ['ActivityCard', 'LiveJourney']"
+  },
+  {
+   "id": "no_reachable_screen_imports_those_components",
+   "verdict": "PASS",
+   "observed": "imported by {\"ActivityCard\": [\"frontend/src/stories/V12StatePrimitives.stories.tsx\"], \"LiveJourney\": [\"frontend/src/stories/V12StatePrimitives.stories.tsx\"]}; reachable from the entry: {\"frontend/src/features/studio/V12TripStudioPanel.tsx\": true, \"frontend/src/stories/V12StatePrimitives.stories.tsx\": false}"
+  },
+  {
+   "id": "the_product_importer_takes_a_different_export",
+   "verdict": "PASS",
+   "observed": "reachable importer(s) take [{\"file\": \"frontend/src/features/studio/V12TripStudioPanel.tsx\", \"line\": 9, \"names\": [\"ImpactPreview\"]}]"
+  },
+  {
+   "id": "no_dynamic_import_hides_a_screen",
+   "verdict": "PASS",
+   "observed": "dynamic imports of the module: none"
+  },
+  {
+   "id": "the_census_sees_this_screen_area_and_finds_no_spaced_enum",
+   "verdict": "PASS",
+   "observed": "remnants {\"en\": [], \"zh\": []}; positive control tokens [\"AUTHORITATIVE\", \"NEXT\", \"REALITY\", \"TRIP\"]"
+  }
+ ],
+ "verdict": "GREEN",
+ "red_arms": [],
+ "what_a_zero_does_not_prove": "reachability is over relative imports from main.tsx; a screen mounted from a route table built at runtime (a string map of component names) would not appear here, so the graph leg is named as a graph leg.  The runtime leg covers the fourteen routes this lane walks, not every route the product has."
+}
