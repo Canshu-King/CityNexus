@@ -9,10 +9,13 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
+from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
 from fastapi import HTTPException
+
+import app.main as main_module
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -26,6 +29,7 @@ from app.db.models import (
     JourneyMission,
     PlanVersion,
     RecoveryEpoch,
+    ReplanProposal,
     Traveler,
 )
 from app.agent.approval import create_or_reuse_approval
@@ -462,3 +466,209 @@ def test_legacy_pending_action_check_is_upgraded_for_superseded():
             "SELECT status FROM agent_pending_actions WHERE id='pending-1'"
         ).scalar()
         assert status == "SUPERSEDED"
+
+
+def test_collective_authority_surface_is_current_epoch_and_trigger_pure(
+    session, monkeypatch
+):
+    db, journey = session
+
+    base = PlanVersion(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        version_no=1,
+        planning_mode="balanced",
+        status="ACTIVE",
+        lifecycle="ACTIVE",
+        trigger_contract_json="{}",
+        source="INITIAL",
+        parent_plan_version_id=None,
+        total_cost_minor=0,
+        currency="JPY",
+        estimated_duration_min=60,
+        utility_score=0.0,
+        score_breakdown_json="{}",
+        explanation_json="{}",
+        mobility_snapshot_id=None,
+        mobility_evidence_json="{}",
+        created_at=_now(),
+    )
+    db.add(base)
+    db.flush()
+    journey.active_plan_version_id = base.id
+
+    event_a = _event(
+        journey,
+        event_id=str(uuid4()),
+        payload={"incident_fingerprint": "surface-event-a"},
+    )
+    db.add(event_a)
+    db.flush()
+    r1 = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    event_b = _event(
+        journey,
+        event_id=str(uuid4()),
+        payload={"incident_fingerprint": "surface-event-b"},
+    )
+    event_b.event_type = "WEATHER"
+    db.add(event_b)
+    db.commit()
+    r2 = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    plans = {}
+    for offset, name in enumerate(
+        (
+            "target",
+            "current-same-trigger",
+            "stale-r1",
+            "legacy-unbound",
+            "current-other-trigger",
+        ),
+        start=2,
+    ):
+        plan = PlanVersion(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            version_no=offset,
+            planning_mode="balanced",
+            status="CANDIDATE",
+            lifecycle="ACTIVE",
+            trigger_contract_json="{}",
+            source="REPLAN",
+            parent_plan_version_id=base.id,
+            total_cost_minor=offset,
+            currency="JPY",
+            estimated_duration_min=60,
+            utility_score=0.0,
+            score_breakdown_json="{}",
+            explanation_json=json.dumps({"name": name}),
+            mobility_snapshot_id=None,
+            mobility_evidence_json="{}",
+            created_at=_now(),
+        )
+        plans[name] = plan
+        db.add(plan)
+    db.flush()
+
+    def proposal(name, *, epoch_id, trigger_id):
+        plan = plans[name]
+        return ReplanProposal(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            trigger_event_id=trigger_id,
+            base_plan_version_id=base.id,
+            proposed_plan_version_id=plan.id,
+            status="PRESENTED",
+            hard_constraints_passed=True,
+            locked_commitments_preserved=True,
+            utility_score=0.0,
+            score_breakdown_json="{}",
+            diff_json="{}",
+            explanation_json="{}",
+            created_at=_now(),
+            recovery_epoch_id=epoch_id,
+            semantic_identity=f"semantic-{name}",
+            canonical_proposal_id=None,
+        )
+
+    db.add_all(
+        [
+            proposal("target", epoch_id=r2.id, trigger_id=event_a.id),
+            proposal(
+                "current-same-trigger",
+                epoch_id=r2.id,
+                trigger_id=event_a.id,
+            ),
+            proposal("stale-r1", epoch_id=r1.id, trigger_id=event_a.id),
+            proposal("legacy-unbound", epoch_id=None, trigger_id=event_a.id),
+            proposal(
+                "current-other-trigger",
+                epoch_id=r2.id,
+                trigger_id=event_b.id,
+            ),
+        ]
+    )
+    db.commit()
+
+    monkeypatch.setattr(
+        "app.collective_mediation.journey_has_unresolved_collective_mediation",
+        lambda *_args, **_kwargs: False,
+    )
+    monkeypatch.setattr(
+        "app.collective_mediation.pending_resolved_mediation_selection",
+        lambda *_args, **_kwargs: None,
+    )
+    captured_windows = []
+
+    def fake_members(_session, _journey, candidate_windows=None):
+        if candidate_windows is None:
+            return {
+                "member_count": 2,
+                "members": [
+                    {"member_id": "member-a"},
+                    {"member_id": "member-b"},
+                ],
+            }
+        captured_windows.extend(candidate_windows)
+        return {
+            "member_count": 2,
+            "members": [
+                {"member_id": "member-a"},
+                {"member_id": "member-b"},
+            ],
+            "candidate_fit_matrix": [],
+            "mediation": {
+                "classification": "HUMAN_TRADEOFF_REQUIRED",
+            },
+        }
+
+    monkeypatch.setattr(
+        main_module,
+        "active_journey_members_with_capabilities",
+        fake_members,
+    )
+    monkeypatch.setattr(
+        main_module,
+        "plan_collective_fit_subject",
+        lambda *_args, **_kwargs: {
+            "fit_subject_place_ids": [],
+            "fit_subject_basis": "NO_OPTIONAL_PLAN_DELTA",
+        },
+    )
+    monkeypatch.setattr(
+        main_module,
+        "plan_schema",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            model_dump=lambda **_kw: {"selectable": True}
+        ),
+    )
+
+    gate = main_module.collective_mutation_gate(
+        db,
+        journey,
+        plans["target"],
+        hard_feasible_plan_ids={
+            plans["target"].id,
+            plans["current-same-trigger"].id,
+        },
+    )
+
+    assert {row["window_id"] for row in captured_windows} == {
+        plans["target"].id,
+        plans["current-same-trigger"].id,
+    }
+    assert gate["candidate_surface_scope"] == "RECOVERY_EPOCH_TRIGGER"
+    assert gate["candidate_surface_recovery_epoch_id"] == r2.id
+    assert gate["candidate_surface_trigger_event_id"] == event_a.id
+    assert plans["stale-r1"].id not in {
+        row["window_id"] for row in captured_windows
+    }
+    assert plans["legacy-unbound"].id not in {
+        row["window_id"] for row in captured_windows
+    }
+    assert plans["current-other-trigger"].id not in {
+        row["window_id"] for row in captured_windows
+    }
