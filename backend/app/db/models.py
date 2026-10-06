@@ -66,6 +66,26 @@ class JourneyOutcomeEvent(Base):
     created_at: Mapped[str] = mapped_column(String)
 
 
+class OvernightStewardCycle(Base):
+    """One durable closeout and morning handoff per Journey local day and plan."""
+
+    __tablename__ = "overnight_steward_cycles"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    cycle_key: Mapped[str] = mapped_column(String, unique=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    local_date: Mapped[str] = mapped_column(String)
+    next_local_date: Mapped[str] = mapped_column(String)
+    plan_version_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    state: Mapped[str] = mapped_column(String, default="DAY_CLOSING", server_default="DAY_CLOSING")
+    consumed_outcome_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    learning_summary_by_traveler_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    briefing_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    morning_ready_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
 class TravelerPreferenceEvidence(Base):
     """Inspectable, decayable evidence for a learned soft preference."""
 

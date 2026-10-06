@@ -679,6 +679,30 @@ export function LiveRecovery({
             )}
           </div>
         )}
+        {operator?.overnight && operator.overnight.state !== "INACTIVE" && (
+          <div className={`journey-overnight journey-overnight-${operator.overnight.state.toLowerCase()}`} data-testid="journey-overnight">
+            <span className="v8-kicker">{zh ? "今晚我继续照看行程" : "I’ll keep looking after your trip overnight"}</span>
+            <strong>
+              {operator.overnight.state === "MORNING_READY"
+                ? (zh ? "早上好，你今天的行程已准备好。" : "Good morning — today’s trip is prepared.")
+                : operator.overnight.state === "MORNING_NEEDS_ATTENTION"
+                  ? (zh ? "明天的第一站已准备好，出发路线还需要确认。" : "Your first stop is ready, but I still need a reliable route before I can tell you when to leave.")
+                  : (zh ? "我会继续照看明天的安排。" : "I’m watching tomorrow’s plan while you rest.")}
+            </strong>
+            {operator.overnight.learning_summary?.summary && (
+              <small data-testid="journey-overnight-learning">{operator.overnight.learning_summary.summary}</small>
+            )}
+            {operator.overnight.briefing?.first_activities?.slice(0, 3).map((item, index) => (
+              <span key={item.id}>{index === 0 ? (zh ? `第一站：${item.title}` : `First stop: ${item.title}`) : (zh ? `之后：${item.title}` : `Then: ${item.title}`)}</span>
+            ))}
+            {operator.overnight.briefing?.route?.exact && operator.overnight.briefing.route.must_leave_by && (
+              <small>{zh ? `建议 ${new Date(operator.overnight.briefing.route.must_leave_by).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })} 出发 · ${operator.overnight.briefing.route.duration_min} 分钟路线` : `Leave around ${new Date(operator.overnight.briefing.route.must_leave_by).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })} · ${operator.overnight.briefing.route.duration_min} min route`}</small>
+            )}
+            {operator.overnight.briefing?.future_risk && (
+              <small>{zh ? `留意后续行程：${operator.overnight.briefing.future_risk.title ?? "有依据的风险"}` : `One thing to watch: ${operator.overnight.briefing.future_risk.title ?? "a grounded future risk"}`}</small>
+            )}
+          </div>
+        )}
         {operator?.brain && (
           <div className="journey-operator-brain" data-testid="journey-operator-brain">
             <span className="v8-kicker">Planning brain</span>

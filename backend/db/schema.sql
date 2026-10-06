@@ -40,6 +40,25 @@ CREATE TABLE IF NOT EXISTS journey_outcome_events (
     created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS overnight_steward_cycles (
+    id TEXT PRIMARY KEY,
+    cycle_key TEXT NOT NULL UNIQUE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    local_date TEXT NOT NULL,
+    next_local_date TEXT NOT NULL,
+    plan_version_id TEXT,
+    state TEXT NOT NULL DEFAULT 'DAY_CLOSING',
+    consumed_outcome_ids_json TEXT NOT NULL DEFAULT '[]',
+    learning_summary_by_traveler_json TEXT NOT NULL DEFAULT '{}',
+    briefing_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    closed_at TEXT,
+    morning_ready_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_overnight_steward_journey_day
+    ON overnight_steward_cycles(journey_id, local_date, created_at);
+
 CREATE TABLE IF NOT EXISTS traveler_preference_evidence (
     id TEXT PRIMARY KEY,
     traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,

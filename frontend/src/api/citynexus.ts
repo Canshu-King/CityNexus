@@ -456,6 +456,7 @@ export interface JourneyOperatorProjection {
   operations?: JourneyOperatorOperationsProjection | null;
   flow?: JourneyContinuousFlow | null;
   ahead?: JourneyAheadProjection | null;
+  overnight?: JourneyOvernightProjection | null;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
 }
@@ -487,6 +488,23 @@ export interface JourneyAheadProjection {
   current_activity_id?: string | null;
   read_only?: boolean;
   predictive_only?: boolean;
+}
+
+export interface JourneyOvernightProjection {
+  state: string;
+  reason?: string;
+  local_date?: string | null;
+  next_local_date?: string | null;
+  cycle_key?: string | null;
+  learning_summary?: { summary?: string; changed_dimensions?: string[]; learning_count?: number } | null;
+  briefing?: {
+    state?: string;
+    first_activities?: Array<{ id: string; title: string; status: string; start_at: string }>;
+    route?: { state?: string; exact?: boolean; duration_min?: number | null; must_leave_by?: string | null };
+    readiness?: { state?: string; route_status?: string; must_leave_by?: string | null };
+    future_risk?: { title?: string; lead_time_minutes?: number; grounded?: boolean } | null;
+  } | null;
+  read_only?: boolean;
 }
 
 export interface ExecutionTransitionPayload {

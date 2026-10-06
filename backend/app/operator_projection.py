@@ -32,6 +32,7 @@ from app.db.models import (
 from app.agent.transactional_operator import execution_plan_projection
 from app.execution.continuous_journey import continuous_flow_projection
 from app.agent.journey_ahead import journey_ahead_projection
+from app.agent.overnight_steward import overnight_steward_projection
 
 
 def classify_operator_state(
@@ -423,6 +424,16 @@ def operator_projection(
             and not resume_projection_state.get("safe_to_resume")
         ),
     )
+    viewer_traveler_id = journey.traveler_id
+    if viewer_member_id:
+        from app.db.models import JourneyMember
+
+        viewer_member = session.get(JourneyMember, str(viewer_member_id))
+        if viewer_member is not None and viewer_member.journey_id == journey.id:
+            viewer_traveler_id = viewer_member.traveler_id
+    overnight = overnight_steward_projection(
+        session, journey, viewer_traveler_id=viewer_traveler_id
+    )
 
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
     approval_payload = None
@@ -510,6 +521,7 @@ def operator_projection(
         "operations": operations,
         "flow": flow,
         "ahead": ahead,
+        "overnight": overnight,
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {

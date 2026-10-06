@@ -1466,6 +1466,11 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
     from app.execution.continuous_journey import continuous_flow_projection
 
     payload["continuous_flow"] = continuous_flow_projection(session, journey)
+    from app.agent.overnight_steward import overnight_steward_projection
+
+    payload["overnight"] = overnight_steward_projection(
+        session, journey, viewer_traveler_id=journey.traveler_id
+    )
     freshness = {
         "latest_provider_capture_at": max(provider_times) if provider_times else None,
         "transit_realtime": "UNKNOWN_REALTIME",

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from app.agent.overnight_steward import overnight_cycle_key, overnight_steward_state
+from app.agent.overnight_steward import _local_date, overnight_cycle_key, overnight_steward_state
 
 
 NOW = datetime(2026, 10, 7, 14, 30, tzinfo=timezone.utc)  # 23:30 JST
@@ -117,3 +117,12 @@ def test_plan_generation_changes_boundary_identity():
         local_date="2026-10-07",
         plan_version_id="p2",
     )
+
+
+def test_day_identity_uses_journey_timezone_not_utc_date():
+    # 16:30Z is already 01:30 on the next date in Tokyo.
+    assert _local_date("2026-10-07T16:30:00+00:00", "Asia/Tokyo").isoformat() == "2026-10-08"
+
+
+def test_boundary_key_includes_journey_local_date_and_active_plan():
+    assert overnight_cycle_key(journey_id="j1", local_date="2026-10-08", plan_version_id="p1") == "overnight:j1:2026-10-08:p1"

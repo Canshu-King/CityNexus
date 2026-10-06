@@ -38,6 +38,8 @@ from app.db.models import (
 )
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
+from app.agent.overnight_steward import process_overnight_steward
+from app.execution.clock import execution_clock
 from app.integrations.mobility.runtime import capture_runtime_mobility_snapshot
 from app.live_context_watch import run_live_context_watch
 from app.observability.tracing import persist_span, phoenix_status
@@ -532,6 +534,10 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                 "spans": trace_spans,
             },
         }
+        overnight = process_overnight_steward(
+            session, journey, now=execution_clock.now(journey.timezone)
+        )
+        result["overnight"] = overnight
         pulse.status = "COMPLETED"
         pulse.result_json = json.dumps(result, ensure_ascii=False, default=str)
         pulse.completed_at = _now()

@@ -412,22 +412,41 @@ def snapshot_payload(snapshot: TravelerTwinSnapshot) -> dict[str, Any]:
     }
 
 
-def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapshot:
-    """Accumulate bounded evidence from actual outcome events for one Journey."""
+def learn_from_journey(
+    session: Session,
+    journey: Journey,
+    *,
+    traveler_id: str | None = None,
+    event_ids: set[str] | None = None,
+) -> TravelerTwinSnapshot:
+    """Accumulate bounded evidence from actual outcome events for one Journey.
 
+    Optional event and traveler bounds let the overnight closeout reuse this
+    learner for one local day and one authenticated traveller at a time.
+    """
+
+    require_actor_match = traveler_id is not None
+    target_traveler_id = str(traveler_id or journey.traveler_id)
+    statement = select(JourneyOutcomeEvent).where(JourneyOutcomeEvent.journey_id == journey.id)
+    if event_ids is not None:
+        if not event_ids:
+            return refresh_snapshot(session, target_traveler_id)
+        statement = statement.where(JourneyOutcomeEvent.id.in_(event_ids))
     events = session.scalars(
-        select(JourneyOutcomeEvent)
-        .where(JourneyOutcomeEvent.journey_id == journey.id)
-        .order_by(JourneyOutcomeEvent.occurred_at_actual, JourneyOutcomeEvent.id)
+        statement.order_by(JourneyOutcomeEvent.occurred_at_actual, JourneyOutcomeEvent.id)
     ).all()
     # Include CLEARED/EXPIRED rows: reflect cannot resurrect consumed source IDs.
     history = session.scalars(select(TravelerPreferenceEvidence).where(
-        TravelerPreferenceEvidence.traveler_id == journey.traveler_id,
+        TravelerPreferenceEvidence.traveler_id == target_traveler_id,
         TravelerPreferenceEvidence.journey_id == journey.id,
     )).all()
     consumed = {source_id for row in history for source_id in _load(row.related_ids_json, [])}
     for event in events:
         if event.id in consumed:
+            continue
+        # Journey-wide cycles may have several travellers; only the person who
+        # produced an explicit/voluntary outcome may teach that person's Twin.
+        if require_actor_match and (event.actor_id is None or str(event.actor_id) != target_traveler_id):
             continue
         signal = _event_signal(session, event)
         if signal is None:
@@ -436,7 +455,7 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
         session.add(
                 TravelerPreferenceEvidence(
                     id=str(uuid4()),
-                    traveler_id=journey.traveler_id,
+                    traveler_id=target_traveler_id,
                     journey_id=journey.id,
                     evidence_type=str(signal["evidence_class"]),
                     preference_dimension=str(signal["dimension"]),
@@ -453,7 +472,7 @@ def learn_from_journey(session: Session, journey: Journey) -> TravelerTwinSnapsh
                 )
         )
     session.flush()
-    return refresh_snapshot(session, journey.traveler_id)
+    return refresh_snapshot(session, target_traveler_id)
 
 
 def clear_learned(session: Session, traveler_id: str) -> TravelerTwinSnapshot:

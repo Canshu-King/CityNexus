@@ -217,7 +217,9 @@ def journey_ahead_projection(
     current_id = str(journey.current_activity_id or "")
     future_rows = []
     for row in rows:
-        if row.status in {"COMPLETED", "SKIPPED", "CANCELLED"} or str(row.id) == current_id:
+        if row.status in {"COMPLETED", "SKIPPED", "CANCELLED"} or (
+            str(row.id) == current_id and row.status in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"}
+        ):
             continue
         try:
             start = datetime.fromisoformat(str(row.start_at).replace("Z", "+00:00"))
