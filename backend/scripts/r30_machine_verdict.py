@@ -156,6 +156,7 @@ def build_verdict(
     from app.db.models import (
         AgentRun,
         AuditLog,
+        CollectiveAuthorityReceipt,
         Event,
         JourneyMission,
         ReplanProposal,
@@ -170,6 +171,9 @@ def build_verdict(
     selected_plan_id = str(interlock.get("selected_plan_id") or "")
     e1 = str(interlock.get("decision_epoch_e1") or "")
     w1 = str(interlock.get("material_world_epoch_w1") or "")
+    e1_authority_receipt_id = str(
+        interlock.get("authority_receipt_id_e1w1") or ""
+    )
     fit_subject_place_ids = {
         str(value)
         for value in interlock.get("fit_subject_place_ids") or []
@@ -315,45 +319,133 @@ def build_verdict(
             selected_proposal_id=durable_selected,
         )
 
-        def _external_run_for_mission(mission_id: str) -> AgentRun | None:
-            if not mission_id:
-                return None
-            rows = list(
+        pre_shock_receipt = (
+            session.get(
+                CollectiveAuthorityReceipt,
+                e1_authority_receipt_id,
+            )
+            if e1_authority_receipt_id
+            else None
+        )
+        receipt_response_audit_ids = (
+            {
+                str(value)
+                for value in _json(
+                    pre_shock_receipt.response_audit_ids_json,
+                    [],
+                )
+                if value
+            }
+            if pre_shock_receipt is not None
+            else set()
+        )
+        receipt_principal_ids = (
+            {
+                str(value)
+                for value in _json(
+                    pre_shock_receipt.principal_actor_ids_json,
+                    [],
+                )
+                if value
+            }
+            if pre_shock_receipt is not None
+            else set()
+        )
+        receipt_required_ids = (
+            {
+                str(value)
+                for value in _json(
+                    pre_shock_receipt.required_member_ids_json,
+                    [],
+                )
+                if value
+            }
+            if pre_shock_receipt is not None
+            else set()
+        )
+        receipt_audits = (
+            list(
                 session.scalars(
-                    select(AgentRun)
-                    .where(AgentRun.mission_id == mission_id)
-                    .order_by(AgentRun.created_at, AgentRun.id)
+                    select(AuditLog).where(
+                        AuditLog.id.in_(receipt_response_audit_ids)
+                    )
                 ).all()
             )
-            external = [
-                row
-                for row in rows
-                if _looks_external(row.provider_key, row.model_key)
-            ]
-            return external[-1] if external else None
-
-        round1_run = _external_run_for_mission(round1_id)
-        round1_external_ok = round1_run is not None
-        verdicts["real_external_round1_agent"] = _verdict(
-            PROVEN if round1_external_ok else NOT_PROVEN,
-            "A configured external AgentRun is persisted on the first collective mission."
-            if round1_external_ok
-            else "No configured external AgentRun is persisted for round 1.",
-            run_id=round1_run.id if round1_run else None,
-            provider_key=round1_run.provider_key if round1_run else None,
-            model_key=round1_run.model_key if round1_run else None,
+            if receipt_response_audit_ids
+            else []
         )
+        receipt_audit_members: set[str] = set()
+        receipt_audit_actors: set[str] = set()
+        receipt_audits_exact = bool(receipt_audits)
+        for row in receipt_audits:
+            after = _json(row.after_json, {})
+            member_id = str(after.get("member_id") or "")
+            actor_id = str(row.actor_id or "")
+            if member_id:
+                receipt_audit_members.add(member_id)
+            if actor_id:
+                receipt_audit_actors.add(actor_id)
+            receipt_audits_exact = bool(
+                receipt_audits_exact
+                and row.action == "agent.collective_decision.response"
+                and row.entity_type == "JourneyMission"
+                and row.entity_id == mediator_id
+                and row.journey_id == journey_id
+                and row.actor_type == "AUTHENTICATED_TRAVELER"
+                and str(after.get("clarification_id") or "")
+                == str(mediator_payload.get("clarification_id") or "")
+                and str(after.get("proposal_id") or "")
+                == selected_proposal_id
+                and str(after.get("decision_epoch") or "") == e1
+                and str(after.get("traveler_id") or "") == actor_id
+            )
 
-        mediator_run = _external_run_for_mission(mediator_id)
-        mediator_external_ok = mediator_run is not None
-        verdicts["real_external_mediator"] = _verdict(
-            PROVEN if mediator_external_ok else NOT_PROVEN,
-            "A configured external AgentRun is persisted on the mediator mission."
-            if mediator_external_ok
-            else "No configured external mediator AgentRun is persisted.",
-            run_id=mediator_run.id if mediator_run else None,
-            provider_key=mediator_run.provider_key if mediator_run else None,
-            model_key=mediator_run.model_key if mediator_run else None,
+        pre_shock_receipt_ok = bool(
+            pre_shock_receipt is not None
+            and pre_shock_receipt.journey_id == journey_id
+            and pre_shock_receipt.proposal_id == selected_proposal_id
+            and pre_shock_receipt.plan_version_id == selected_plan_id
+            and pre_shock_receipt.authority_mode
+            == "AUTHENTICATED_MEMBER_CONSENT"
+            and pre_shock_receipt.classification
+            == "AUTHENTICATED_MEMBER_CONSENT"
+            and pre_shock_receipt.decision_epoch == e1
+            and pre_shock_receipt.material_world_epoch == w1
+            and receipt_required_ids == renewed_required
+            and receipt_response_audit_ids
+            == {str(row.id) for row in receipt_audits}
+            and receipt_audit_members == renewed_required
+            and receipt_principal_ids == receipt_audit_actors
+            and receipt_audits_exact
+        )
+        verdicts["pre_shock_human_authority_receipt"] = _verdict(
+            PROVEN if pre_shock_receipt_ok else CONTRADICTED,
+            (
+                "E1/W1 is backed by one exact server-issued authenticated "
+                "member-consent receipt whose response audits sign the "
+                "selected proposal and decision epoch."
+                if pre_shock_receipt_ok
+                else
+                "The pre-shock human authority receipt is missing, "
+                "mismatched, or not exactly bound to authenticated final "
+                "member responses."
+            ),
+            authority_receipt_id=e1_authority_receipt_id or None,
+            authority_mode=(
+                pre_shock_receipt.authority_mode
+                if pre_shock_receipt is not None
+                else None
+            ),
+            receipt_required_member_ids=sorted(receipt_required_ids),
+            receipt_response_audit_ids=sorted(receipt_response_audit_ids),
+            receipt_principal_actor_ids=sorted(receipt_principal_ids),
+            receipt_audit_member_ids=sorted(receipt_audit_members),
+            receipt_audit_actor_ids=sorted(receipt_audit_actors),
+            source_mission_id=(
+                pre_shock_receipt.source_mission_id
+                if pre_shock_receipt is not None
+                else None
+            ),
         )
 
         shock_ids = [
