@@ -9412,8 +9412,15 @@ def guide_authenticated_member_to_rendezvous(
         or str(observation.journey_member_id or "") != member.id
     ):
         raise HTTPException(403, "LOCATION_OBSERVATION_MEMBER_MISMATCH")
-    if str(observation.source or "").upper() != "FOREGROUND_WEB":
-        raise HTTPException(409, "GROUP_RENDEZVOUS_REQUIRES_FOREGROUND_SAMPLE")
+    source = str(observation.source or "").upper()
+    trusted_source = source in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
+    if source not in {"FOREGROUND_WEB", "DEVICE_ATTESTED", "LOCATION_ATTESTED"}:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_SOURCE_UNSUPPORTED")
+    route_authority = (
+        "TRUSTED_MEMBER_LOCATION_ROUTE"
+        if trusted_source
+        else "ADVISORY_FOREGROUND_LOCATION"
+    )
     captured = datetime.fromisoformat(observation.captured_at)
     if captured.tzinfo is None:
         raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_TIME_UNKNOWN")
@@ -9438,16 +9445,75 @@ def guide_authenticated_member_to_rendezvous(
             "location_observation_id": observation.id,
             "journey_member_id": member.id,
             "traveler_id": principal.traveler_id,
-            "source": "FOREGROUND_WEB",
+            "source": source,
             "captured_at": observation.captured_at,
             "accuracy_m": float(observation.accuracy_m),
-            "authority": "ADVISORY_FOREGROUND_LOCATION",
+            "authority": route_authority,
         },
     )
     plan_before = str(journey.active_plan_version_id)
     route, reused = submit_route_operation(session, journey, route_request)
     body = route_operation_payload(route, reused=reused)
     result = body.get("result") if isinstance(body.get("result"), dict) else {}
+    completed = (
+        str(body.get("status") or "").upper() == "COMPLETED"
+        and result.get("duration_min") is not None
+    )
+    commitment_risk = (
+        rendezvous_commitment_risk(
+            session,
+            journey,
+            target_activity,
+            route_duration_min=int(result["duration_min"]),
+            authority=route_authority,
+        )
+        if completed
+        else {
+            "state": "UNKNOWN",
+            "authority": route_authority,
+            "next_commitment": None,
+            "predicted_arrival_at": None,
+            "slack_after_buffer_min": None,
+        }
+    )
+    route_provider = str(result.get("provider") or body.get("provider") or "")
+    route_provenance = str(
+        result.get("provenance") or body.get("provider_provenance") or ""
+    )
+    member_risk_event = _persist_trusted_member_rendezvous_risk_event(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        observation=observation,
+        target_activity=target_activity,
+        target_place=target_place,
+        commitment_risk=commitment_risk,
+        route_operation_id=str(route.id),
+        route_provider=route_provider,
+        route_provenance=route_provenance,
+    )
+    guardian_handoff: dict[str, Any] | None = None
+    if member_risk_event is not None:
+        session.commit()
+        enrollment = session.get(AutopilotEnrollment, journey.id)
+        if enrollment is not None and enrollment.enabled:
+            try:
+                guardian_handoff = scan_guardian(
+                    session, journey, include_opportunity_signals=False
+                )
+            except Exception as exc:  # route truth remains useful even if Agent recovery is unavailable
+                logging.getLogger(__name__).exception(
+                    "R57 Guardian handoff failed for member rendezvous risk %s",
+                    member_risk_event.id,
+                )
+                guardian_handoff = {
+                    "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+                    "failure_classification": type(exc).__name__,
+                }
+        else:
+            guardian_handoff = {"status": "NOT_ENROLLED"}
+
     session.expire_all()
     current = session.get(Journey, journey.id)
     plan_unchanged = bool(
@@ -9460,12 +9526,19 @@ def guide_authenticated_member_to_rendezvous(
         "route": {
             "duration_min": result.get("duration_min"),
             "distance_m": result.get("distance_m"),
-            "provider": result.get("provider") or body.get("provider"),
-            "provenance": result.get("provenance") or body.get("provider_provenance"),
+            "provider": route_provider or None,
+            "provenance": route_provenance or None,
         },
-        "authority": "ADVISORY_FOREGROUND_LOCATION",
+        "authority": route_authority,
+        "shared_commitment_risk": commitment_risk,
+        "member_risk_event_id": member_risk_event.id if member_risk_event is not None else None,
+        "guardian_triggered": bool(
+            member_risk_event is not None
+            and guardian_handoff is not None
+            and guardian_handoff.get("status") != "NOT_ENROLLED"
+        ),
+        "guardian": guardian_handoff,
         "plan_unchanged": plan_unchanged,
-        "guardian_triggered": False,
     }
 
 
