@@ -944,6 +944,35 @@ class JourneyTripContext(Base):
     updated_at: Mapped[str] = mapped_column(String)
 
 
+class JourneyLaunchContext(Base):
+    """Durable planned launch origin, separate from execution truth."""
+
+    __tablename__ = "journey_launch_contexts"
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), primary_key=True
+    )
+    source_kind: Mapped[str] = mapped_column(String)
+    authority_kind: Mapped[str] = mapped_column(String)
+    place_id: Mapped[str | None] = mapped_column(
+        ForeignKey("places.id", ondelete="SET NULL"), nullable=True
+    )
+    target_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    display_name: Mapped[str] = mapped_column(String)
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
+    coordinate_crs: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_type: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_from: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_until: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmed_by: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmation_method: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
 class AccommodationOfferSnapshot(Base):
     """Immutable captured or live accommodation evidence used by stay-aware planning."""
 

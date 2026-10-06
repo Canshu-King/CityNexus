@@ -13,6 +13,7 @@ from app.db.models import (
     Activity,
     Journey,
     JourneyTripContext,
+    JourneyLaunchContext,
     LocationObservation,
     StayJourneyOption,
     JourneyLeg,
@@ -116,6 +117,34 @@ def _arrival_anchor(
     return anchor
 
 
+def _planned_contract(
+    session: Session,
+    journey: Journey,
+    *,
+    target_activity: Activity | None,
+) -> JourneyLaunchContext | None:
+    """Return a user-confirmed launch contract only when it binds this target."""
+
+    contract = session.get(JourneyLaunchContext, journey.id)
+    if contract is None or str(contract.authority_kind) != "USER_CONFIRMED_PLANNED_ORIGIN":
+        return None
+    target_id = str(target_activity.id) if target_activity is not None else None
+    if contract.target_activity_id and str(contract.target_activity_id) != target_id:
+        return None
+    target_start = _aware(target_activity.start_at if target_activity is not None else None)
+    if target_start is None:
+        return None
+    valid_from = _aware(contract.valid_from)
+    valid_until = _aware(contract.valid_until)
+    if valid_from is not None and target_start < valid_from:
+        return None
+    if valid_until is not None and target_start >= valid_until:
+        return None
+    if contract.latitude is None or contract.longitude is None:
+        return None
+    return contract
+
+
 def grounded_launch_origin(
     session: Session,
     journey: Journey,
@@ -161,24 +190,52 @@ def grounded_launch_origin(
             "reason_code": "FRESH_FOREGROUND_LOCATION",
         }
 
+    contract = _planned_contract(session, journey, target_activity=target_activity)
+    if contract is not None:
+        if contract.place_id:
+            origin_key = str(contract.place_id)
+        elif contract.source_ref_type == "ACCOMMODATION_OFFER" and contract.source_ref_id:
+            origin_key = f"stay-offer:{contract.source_ref_id}"
+        else:
+            origin_key = str(contract.source_ref_id or "planned-launch")
+        return {
+            "state": "READY",
+            "source": str(contract.source_kind),
+            "authority": str(contract.authority_kind),
+            "origin_key": origin_key,
+            "name": contract.display_name,
+            "latitude": float(contract.latitude),
+            "longitude": float(contract.longitude),
+            "captured_at": contract.updated_at,
+            "provider_key": None,
+            "target_activity_id": target_id,
+            "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+            "launch_context_id": journey.id,
+            "source_ref_type": contract.source_ref_type,
+            "source_ref_id": contract.source_ref_id,
+            "valid_from": contract.valid_from,
+            "valid_until": contract.valid_until,
+        }
+
     stay = _selected_stay(session, journey, target_start=target_start)
     if stay is not None:
         option, offer = stay
-        return {
-            "state": "READY",
-            "source": "SELECTED_STAY",
-            "authority": "PLANNED_GROUNDED_ORIGIN",
-            "origin_key": f"stay-offer:{offer.id}",
-            "name": offer.property_name,
-            "latitude": float(offer.latitude),
-            "longitude": float(offer.longitude),
-            "captured_at": offer.captured_at,
-            "provider_key": offer.provider_key,
-            "target_activity_id": target_id,
-            "reason_code": "SELECTED_STAY_COVERS_TARGET_START",
-            "stay_option_id": option.id,
-            "stay_offer_id": offer.id,
-        }
+        if getattr(offer, "latitude", None) is not None and getattr(offer, "longitude", None) is not None:
+            return {
+                "state": "READY",
+                "source": "SELECTED_STAY",
+                "authority": "PLANNED_GROUNDED_ORIGIN",
+                "origin_key": f"stay-offer:{offer.id}",
+                "name": offer.property_name,
+                "latitude": float(offer.latitude),
+                "longitude": float(offer.longitude),
+                "captured_at": offer.captured_at,
+                "provider_key": offer.provider_key,
+                "target_activity_id": target_id,
+                "reason_code": "SELECTED_STAY_COVERS_TARGET_START",
+                "stay_option_id": option.id,
+                "stay_offer_id": offer.id,
+            }
 
     anchor = _arrival_anchor(session, journey, target_start=target_start)
     if anchor is not None:

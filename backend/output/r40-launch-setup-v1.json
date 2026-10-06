@@ -1,0 +1,2213 @@
+{
+  "schema": "citynexus.r40.launch-setup.v1",
+  "status": "LAUNCH_SETUP_GROUNDED_EDGE_UNAVAILABLE",
+  "database": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-3fe041186095eb71.sqlite3",
+  "source_head_before_live": "72441e3b52a39bb7dfaa67185db2d963e7cc8e16",
+  "journey_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+  "fresh_journey": true,
+  "selected_catalog": {
+    "real-place-22cf72809897ff4c7f312fcf": "current_garden",
+    "real-place-b47a20314c81d5a81381d4a4": "c4_craft",
+    "real-place-ebd30de67691cab346be66ec": "candidate_garden",
+    "real-place-8c09b32224152e3e1ae12843": "candidate_museum",
+    "real-place-a346e8f7f72a4d8f523d81e3": "c4_anchor_museum"
+  },
+  "initial_setup": {
+    "status": "NEEDS_ORIGIN",
+    "current_origin": null,
+    "candidates": [],
+    "actions": [
+      "SHARE_LOCATION",
+      "CHOOSE_PLACE"
+    ],
+    "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "authority": "READ_ONLY_PROJECTION",
+    "contract": null,
+    "read_only": true,
+    "provider_capture": false
+  },
+  "confirmation": {
+    "contract": {
+      "journey_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+      "source_kind": "PLACE",
+      "authority_kind": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "place_id": "real-place-b47a20314c81d5a81381d4a4",
+      "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "display_name": "なら工藝館",
+      "latitude": 34.678661,
+      "longitude": 135.8281897,
+      "coordinate_crs": "WGS84",
+      "source_ref_type": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "valid_from": "2026-10-06T00:00:00+00:00",
+      "valid_until": "2026-10-08T00:00:00+00:00",
+      "confirmed_by": "aafab469-25f5-49e9-b6ea-19e9d8719807",
+      "confirmation_method": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "created_at": "2026-10-06T11:55:21.487260+00:00",
+      "updated_at": "2026-10-06T11:55:21.487260+00:00"
+    },
+    "provenance": {
+      "provider_key": "overpass",
+      "external_id": "overpass:node/2465643503",
+      "coordinate_system": "WGS84"
+    },
+    "idempotent": false,
+    "audit_action": "journey.launch_origin.confirmed",
+    "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "physical_presence_asserted": false
+  },
+  "confirmed_place": {
+    "id": "real-place-b47a20314c81d5a81381d4a4",
+    "provider_key": "overpass",
+    "external_id": "overpass:node/2465643503",
+    "name": "なら工藝館"
+  },
+  "launch_contract": {
+    "journey_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+    "source_kind": "PLACE",
+    "authority_kind": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "place_id": "real-place-b47a20314c81d5a81381d4a4",
+    "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "display_name": "なら工藝館",
+    "latitude": 34.678661,
+    "longitude": 135.8281897,
+    "coordinate_crs": "WGS84",
+    "source_ref_type": "PLACE",
+    "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+    "valid_from": "2026-10-06T00:00:00+00:00",
+    "valid_until": "2026-10-08T00:00:00+00:00",
+    "confirmed_by": "aafab469-25f5-49e9-b6ea-19e9d8719807",
+    "confirmation_method": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "created_at": "2026-10-06T11:55:21.487260+00:00",
+    "updated_at": "2026-10-06T11:55:21.487260+00:00"
+  },
+  "audit": [
+    {
+      "action": "journey.launch_origin.confirmed",
+      "entity_type": "JourneyLaunchContext",
+      "entity_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+      "actor_type": "traveler"
+    }
+  ],
+  "active_plan_before": "69766664-44a4-5456-a94e-ed2d1de7a81d",
+  "active_plan_after": "69766664-44a4-5456-a94e-ed2d1de7a81d",
+  "activities": [
+    {
+      "id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "sequence_no": 1,
+      "title": "依水園",
+      "place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "start_at": "2026-10-07T09:00:00+09:00",
+      "end_at": "2026-10-07T10:00:00+09:00"
+    },
+    {
+      "id": "8879f130-9fa7-53f4-93d3-f6fcde7a1a13",
+      "sequence_no": 2,
+      "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+      "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+      "start_at": "2026-10-07T10:52:00+09:00",
+      "end_at": "2026-10-07T11:52:00+09:00"
+    }
+  ],
+  "target_binding": {
+    "activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "title": "依水園",
+    "place_id": "real-place-22cf72809897ff4c7f312fcf",
+    "place_name": "依水園",
+    "provider_key": "overpass"
+  },
+  "readiness": {
+    "state": "READY_WITH_UNCERTAINTY",
+    "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "target_title": "依水園",
+    "starts_at": "2026-10-07T09:00:00+09:00",
+    "minutes_until_start": 724.6,
+    "must_leave_by": null,
+    "must_leave_by_absent_reason": "LAUNCH_EDGE_UNAVAILABLE",
+    "safety_buffer_minutes": null,
+    "launch_origin": {
+      "state": "READY",
+      "source": "PLACE",
+      "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "name": "なら工藝館",
+      "latitude": 34.678661,
+      "longitude": 135.8281897,
+      "captured_at": "2026-10-06T11:55:21.487260+00:00",
+      "provider_key": null,
+      "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+      "source_ref_type": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "valid_from": "2026-10-06T00:00:00+00:00",
+      "valid_until": "2026-10-08T00:00:00+00:00"
+    },
+    "launch_edge": {
+      "state": "LAUNCH_EDGE_UNAVAILABLE",
+      "kind": "LAUNCH_EDGE",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "target_key": "real-place-22cf72809897ff4c7f312fcf",
+      "from_activity_id": null,
+      "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "provider": null,
+      "provenance": null,
+      "captured_at": null,
+      "expires_at": null,
+      "duration_min": null,
+      "distance_m": null,
+      "mode": null,
+      "walking_min": null,
+      "degraded": false,
+      "geometry": null,
+      "reason_code": "NO_EXACT_LAUNCH_EDGE"
+    },
+    "blocking_reasons": [],
+    "warning_reasons": [
+      "LOCATION_UNAVAILABLE",
+      "ROUTE_EVIDENCE_UNCERTAIN",
+      "VENUE_NOT_VERIFIED"
+    ],
+    "checks": {
+      "venue": "UNKNOWN",
+      "route": "UNKNOWN",
+      "reservation": "NONE",
+      "reservation_realtime": null,
+      "commitment": "NONE",
+      "presence": "LOCATION_UNAVAILABLE"
+    },
+    "recommended_action": "LEAVE_ON_SCHEDULE",
+    "authority": "READ_ONLY_PROJECTION",
+    "next_move": {
+      "current_activity": {
+        "id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "next_activity": {
+        "id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "UNKNOWN",
+        "kind": "LAUNCH_EDGE",
+        "provider": null,
+        "provenance": null,
+        "captured_at": null,
+        "expires_at": null,
+        "minutes": null,
+        "from_activity_id": null,
+        "to_activity_id": null,
+        "edge_match": false,
+        "degraded": false,
+        "reason_code": "LAUNCH_EDGE_UNAVAILABLE",
+        "launch_origin": {
+          "state": "READY",
+          "source": "PLACE",
+          "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+          "name": "なら工藝館",
+          "latitude": 34.678661,
+          "longitude": 135.8281897,
+          "captured_at": "2026-10-06T11:55:21.487260+00:00",
+          "provider_key": null,
+          "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+          "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+          "source_ref_type": "PLACE",
+          "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+          "valid_from": "2026-10-06T00:00:00+00:00",
+          "valid_until": "2026-10-08T00:00:00+00:00"
+        },
+        "launch_edge": {
+          "state": "LAUNCH_EDGE_UNAVAILABLE",
+          "kind": "LAUNCH_EDGE",
+          "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+          "target_key": "real-place-22cf72809897ff4c7f312fcf",
+          "from_activity_id": null,
+          "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+          "provider": null,
+          "provenance": null,
+          "captured_at": null,
+          "expires_at": null,
+          "duration_min": null,
+          "distance_m": null,
+          "mode": null,
+          "walking_min": null,
+          "degraded": false,
+          "geometry": null,
+          "reason_code": "NO_EXACT_LAUNCH_EDGE"
+        }
+      },
+      "launch_origin": {
+        "state": "READY",
+        "source": "PLACE",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "name": "なら工藝館",
+        "latitude": 34.678661,
+        "longitude": 135.8281897,
+        "captured_at": "2026-10-06T11:55:21.487260+00:00",
+        "provider_key": null,
+        "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+        "source_ref_type": "PLACE",
+        "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+        "valid_from": "2026-10-06T00:00:00+00:00",
+        "valid_until": "2026-10-08T00:00:00+00:00"
+      },
+      "launch_edge": {
+        "state": "LAUNCH_EDGE_UNAVAILABLE",
+        "kind": "LAUNCH_EDGE",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "from_activity_id": null,
+        "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "provider": null,
+        "provenance": null,
+        "captured_at": null,
+        "expires_at": null,
+        "duration_min": null,
+        "distance_m": null,
+        "mode": null,
+        "walking_min": null,
+        "degraded": false,
+        "geometry": null,
+        "reason_code": "NO_EXACT_LAUNCH_EDGE"
+      },
+      "journey_phase": "OVERNIGHT",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "copy": "Your starting point is known, but the route to the next stop is not ready yet.",
+      "authority": "NONE"
+    },
+    "evidence": {
+      "material_event_ids": [],
+      "commitment_ids": [],
+      "reservation_id": null
+    },
+    "captured_at": "2026-10-06T11:55:21.536315+00:00",
+    "notification": {
+      "eligible": false,
+      "created_or_reused": false,
+      "id": null,
+      "dedupe_key": null,
+      "priority": null
+    }
+  },
+  "readiness_recheck_read_only": {
+    "state": "READY_WITH_UNCERTAINTY",
+    "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "target_title": "依水園",
+    "starts_at": "2026-10-07T09:00:00+09:00",
+    "minutes_until_start": 724.6,
+    "must_leave_by": null,
+    "must_leave_by_absent_reason": "LAUNCH_EDGE_UNAVAILABLE",
+    "safety_buffer_minutes": null,
+    "launch_origin": {
+      "state": "READY",
+      "source": "PLACE",
+      "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "name": "なら工藝館",
+      "latitude": 34.678661,
+      "longitude": 135.8281897,
+      "captured_at": "2026-10-06T11:55:21.487260+00:00",
+      "provider_key": null,
+      "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+      "source_ref_type": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "valid_from": "2026-10-06T00:00:00+00:00",
+      "valid_until": "2026-10-08T00:00:00+00:00"
+    },
+    "launch_edge": {
+      "state": "LAUNCH_EDGE_UNAVAILABLE",
+      "kind": "LAUNCH_EDGE",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "target_key": "real-place-22cf72809897ff4c7f312fcf",
+      "from_activity_id": null,
+      "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "provider": null,
+      "provenance": null,
+      "captured_at": null,
+      "expires_at": null,
+      "duration_min": null,
+      "distance_m": null,
+      "mode": null,
+      "walking_min": null,
+      "degraded": false,
+      "geometry": null,
+      "reason_code": "NO_EXACT_LAUNCH_EDGE"
+    },
+    "blocking_reasons": [],
+    "warning_reasons": [
+      "LOCATION_UNAVAILABLE",
+      "ROUTE_EVIDENCE_UNCERTAIN",
+      "VENUE_NOT_VERIFIED"
+    ],
+    "checks": {
+      "venue": "UNKNOWN",
+      "route": "UNKNOWN",
+      "reservation": "NONE",
+      "reservation_realtime": null,
+      "commitment": "NONE",
+      "presence": "LOCATION_UNAVAILABLE"
+    },
+    "recommended_action": "LEAVE_ON_SCHEDULE",
+    "authority": "READ_ONLY_PROJECTION",
+    "next_move": {
+      "current_activity": {
+        "id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "next_activity": {
+        "id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "UNKNOWN",
+        "kind": "LAUNCH_EDGE",
+        "provider": null,
+        "provenance": null,
+        "captured_at": null,
+        "expires_at": null,
+        "minutes": null,
+        "from_activity_id": null,
+        "to_activity_id": null,
+        "edge_match": false,
+        "degraded": false,
+        "reason_code": "LAUNCH_EDGE_UNAVAILABLE",
+        "launch_origin": {
+          "state": "READY",
+          "source": "PLACE",
+          "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+          "name": "なら工藝館",
+          "latitude": 34.678661,
+          "longitude": 135.8281897,
+          "captured_at": "2026-10-06T11:55:21.487260+00:00",
+          "provider_key": null,
+          "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+          "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+          "source_ref_type": "PLACE",
+          "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+          "valid_from": "2026-10-06T00:00:00+00:00",
+          "valid_until": "2026-10-08T00:00:00+00:00"
+        },
+        "launch_edge": {
+          "state": "LAUNCH_EDGE_UNAVAILABLE",
+          "kind": "LAUNCH_EDGE",
+          "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+          "target_key": "real-place-22cf72809897ff4c7f312fcf",
+          "from_activity_id": null,
+          "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+          "provider": null,
+          "provenance": null,
+          "captured_at": null,
+          "expires_at": null,
+          "duration_min": null,
+          "distance_m": null,
+          "mode": null,
+          "walking_min": null,
+          "degraded": false,
+          "geometry": null,
+          "reason_code": "NO_EXACT_LAUNCH_EDGE"
+        }
+      },
+      "launch_origin": {
+        "state": "READY",
+        "source": "PLACE",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "name": "なら工藝館",
+        "latitude": 34.678661,
+        "longitude": 135.8281897,
+        "captured_at": "2026-10-06T11:55:21.487260+00:00",
+        "provider_key": null,
+        "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+        "source_ref_type": "PLACE",
+        "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+        "valid_from": "2026-10-06T00:00:00+00:00",
+        "valid_until": "2026-10-08T00:00:00+00:00"
+      },
+      "launch_edge": {
+        "state": "LAUNCH_EDGE_UNAVAILABLE",
+        "kind": "LAUNCH_EDGE",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "from_activity_id": null,
+        "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "provider": null,
+        "provenance": null,
+        "captured_at": null,
+        "expires_at": null,
+        "duration_min": null,
+        "distance_m": null,
+        "mode": null,
+        "walking_min": null,
+        "degraded": false,
+        "geometry": null,
+        "reason_code": "NO_EXACT_LAUNCH_EDGE"
+      },
+      "journey_phase": "OVERNIGHT",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "copy": "Your starting point is known, but the route to the next stop is not ready yet.",
+      "authority": "NONE"
+    },
+    "evidence": {
+      "material_event_ids": [],
+      "commitment_ids": [],
+      "reservation_id": null
+    }
+  },
+  "venue": {
+    "state": "UNKNOWN",
+    "provenance": {
+      "state": "UNKNOWN",
+      "activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "source": null,
+      "observed_at": null
+    }
+  },
+  "route": {
+    "readiness_evidence": {
+      "state": "UNKNOWN",
+      "kind": "LAUNCH_EDGE",
+      "provider": null,
+      "provenance": null,
+      "captured_at": null,
+      "expires_at": null,
+      "minutes": null,
+      "from_activity_id": null,
+      "to_activity_id": null,
+      "edge_match": false,
+      "degraded": false,
+      "reason_code": "LAUNCH_EDGE_UNAVAILABLE",
+      "launch_origin": {
+        "state": "READY",
+        "source": "PLACE",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "name": "なら工藝館",
+        "latitude": 34.678661,
+        "longitude": 135.8281897,
+        "captured_at": "2026-10-06T11:55:21.487260+00:00",
+        "provider_key": null,
+        "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+        "source_ref_type": "PLACE",
+        "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+        "valid_from": "2026-10-06T00:00:00+00:00",
+        "valid_until": "2026-10-08T00:00:00+00:00"
+      },
+      "launch_edge": {
+        "state": "LAUNCH_EDGE_UNAVAILABLE",
+        "kind": "LAUNCH_EDGE",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "from_activity_id": null,
+        "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "provider": null,
+        "provenance": null,
+        "captured_at": null,
+        "expires_at": null,
+        "duration_min": null,
+        "distance_m": null,
+        "mode": null,
+        "walking_min": null,
+        "degraded": false,
+        "geometry": null,
+        "reason_code": "NO_EXACT_LAUNCH_EDGE"
+      }
+    },
+    "launch_origin": {
+      "state": "READY",
+      "source": "PLACE",
+      "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "name": "なら工藝館",
+      "latitude": 34.678661,
+      "longitude": 135.8281897,
+      "captured_at": "2026-10-06T11:55:21.487260+00:00",
+      "provider_key": null,
+      "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+      "source_ref_type": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "valid_from": "2026-10-06T00:00:00+00:00",
+      "valid_until": "2026-10-08T00:00:00+00:00"
+    },
+    "launch_edge": {
+      "state": "LAUNCH_EDGE_UNAVAILABLE",
+      "kind": "LAUNCH_EDGE",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "target_key": "real-place-22cf72809897ff4c7f312fcf",
+      "from_activity_id": null,
+      "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "provider": null,
+      "provenance": null,
+      "captured_at": null,
+      "expires_at": null,
+      "duration_min": null,
+      "distance_m": null,
+      "mode": null,
+      "walking_min": null,
+      "degraded": false,
+      "geometry": null,
+      "reason_code": "NO_EXACT_LAUNCH_EDGE"
+    },
+    "plan_fact_count": 2,
+    "plan_facts": [
+      {
+        "origin_key": "real-place-22cf72809897ff4c7f312fcf",
+        "destination_key": "real-place-a346e8f7f72a4d8f523d81e3",
+        "minutes": 52,
+        "provider": "valhalla-http",
+        "captured_at": "2026-10-06T11:55:19.316947+00:00",
+        "degraded": false,
+        "fallback_reason": null,
+        "route_geometry": [
+          [
+            135.837772,
+            34.685462
+          ],
+          [
+            135.837723,
+            34.685377
+          ],
+          [
+            135.837585,
+            34.685458
+          ],
+          [
+            135.837558,
+            34.685435
+          ],
+          [
+            135.837543,
+            34.685422
+          ],
+          [
+            135.837532,
+            34.685414
+          ],
+          [
+            135.837483,
+            34.685458
+          ],
+          [
+            135.837408,
+            34.685465
+          ],
+          [
+            135.837397,
+            34.685466
+          ],
+          [
+            135.837363,
+            34.685428
+          ],
+          [
+            135.837278,
+            34.685457
+          ],
+          [
+            135.837231,
+            34.685463
+          ],
+          [
+            135.837104,
+            34.685521
+          ],
+          [
+            135.837093,
+            34.685553
+          ],
+          [
+            135.837078,
+            34.68558
+          ],
+          [
+            135.837076,
+            34.685597
+          ],
+          [
+            135.837076,
+            34.685609
+          ],
+          [
+            135.837029,
+            34.685623
+          ],
+          [
+            135.836991,
+            34.685638
+          ],
+          [
+            135.83695,
+            34.685674
+          ],
+          [
+            135.836948,
+            34.685699
+          ],
+          [
+            135.836883,
+            34.685739
+          ],
+          [
+            135.836883,
+            34.685756
+          ],
+          [
+            135.836883,
+            34.685773
+          ],
+          [
+            135.836853,
+            34.685803
+          ],
+          [
+            135.836671,
+            34.685808
+          ],
+          [
+            135.836595,
+            34.685807
+          ],
+          [
+            135.836664,
+            34.686152
+          ],
+          [
+            135.836731,
+            34.686614
+          ],
+          [
+            135.836745,
+            34.686731
+          ],
+          [
+            135.836713,
+            34.687645
+          ],
+          [
+            135.836717,
+            34.68789
+          ],
+          [
+            135.836717,
+            34.687937
+          ],
+          [
+            135.836719,
+            34.687974
+          ],
+          [
+            135.836463,
+            34.688067
+          ],
+          [
+            135.836424,
+            34.688119
+          ],
+          [
+            135.836387,
+            34.688336
+          ],
+          [
+            135.836385,
+            34.688434
+          ],
+          [
+            135.836379,
+            34.68845
+          ],
+          [
+            135.836378,
+            34.688477
+          ],
+          [
+            135.836322,
+            34.688588
+          ],
+          [
+            135.836097,
+            34.688598
+          ],
+          [
+            135.836035,
+            34.689118
+          ],
+          [
+            135.836034,
+            34.689364
+          ],
+          [
+            135.835752,
+            34.689341
+          ],
+          [
+            135.835459,
+            34.689316
+          ],
+          [
+            135.83527,
+            34.689301
+          ],
+          [
+            135.835033,
+            34.689288
+          ],
+          [
+            135.835002,
+            34.689298
+          ],
+          [
+            135.834769,
+            34.689298
+          ],
+          [
+            135.834716,
+            34.689299
+          ],
+          [
+            135.834714,
+            34.689344
+          ],
+          [
+            135.834701,
+            34.689851
+          ],
+          [
+            135.8347,
+            34.690531
+          ],
+          [
+            135.834698,
+            34.690612
+          ],
+          [
+            135.834699,
+            34.690906
+          ],
+          [
+            135.834709,
+            34.69131
+          ],
+          [
+            135.834718,
+            34.691644
+          ],
+          [
+            135.834729,
+            34.69179
+          ],
+          [
+            135.834773,
+            34.693021
+          ],
+          [
+            135.834787,
+            34.693213
+          ],
+          [
+            135.8348,
+            34.693377
+          ],
+          [
+            135.834852,
+            34.693633
+          ],
+          [
+            135.834915,
+            34.693927
+          ],
+          [
+            135.834941,
+            34.694007
+          ],
+          [
+            135.835015,
+            34.694204
+          ],
+          [
+            135.835049,
+            34.694298
+          ],
+          [
+            135.835151,
+            34.694483
+          ],
+          [
+            135.835241,
+            34.694617
+          ],
+          [
+            135.83531,
+            34.694677
+          ],
+          [
+            135.835438,
+            34.694747
+          ],
+          [
+            135.835716,
+            34.694844
+          ],
+          [
+            135.835635,
+            34.695149
+          ],
+          [
+            135.835557,
+            34.695392
+          ],
+          [
+            135.83555,
+            34.695432
+          ],
+          [
+            135.835544,
+            34.695961
+          ],
+          [
+            135.835084,
+            34.695961
+          ],
+          [
+            135.835087,
+            34.696368
+          ],
+          [
+            135.835217,
+            34.696488
+          ],
+          [
+            135.835229,
+            34.696498
+          ],
+          [
+            135.835295,
+            34.696559
+          ],
+          [
+            135.83539,
+            34.696635
+          ],
+          [
+            135.835446,
+            34.696682
+          ],
+          [
+            135.835488,
+            34.696735
+          ],
+          [
+            135.835525,
+            34.696856
+          ],
+          [
+            135.835545,
+            34.696938
+          ],
+          [
+            135.835558,
+            34.697011
+          ],
+          [
+            135.835569,
+            34.697097
+          ],
+          [
+            135.835564,
+            34.697243
+          ],
+          [
+            135.835577,
+            34.698421
+          ],
+          [
+            135.835572,
+            34.698838
+          ],
+          [
+            135.835568,
+            34.699373
+          ],
+          [
+            135.835547,
+            34.699592
+          ],
+          [
+            135.835538,
+            34.699675
+          ],
+          [
+            135.835532,
+            34.699737
+          ],
+          [
+            135.835487,
+            34.700114
+          ],
+          [
+            135.835482,
+            34.700192
+          ],
+          [
+            135.835388,
+            34.700777
+          ],
+          [
+            135.835383,
+            34.700791
+          ],
+          [
+            135.835376,
+            34.700859
+          ],
+          [
+            135.83534,
+            34.701049
+          ],
+          [
+            135.83532,
+            34.701262
+          ],
+          [
+            135.835326,
+            34.701348
+          ],
+          [
+            135.835317,
+            34.701564
+          ],
+          [
+            135.835306,
+            34.701665
+          ],
+          [
+            135.835276,
+            34.701784
+          ],
+          [
+            135.835263,
+            34.701835
+          ],
+          [
+            135.83522,
+            34.702056
+          ],
+          [
+            135.835168,
+            34.702227
+          ],
+          [
+            135.835154,
+            34.702276
+          ],
+          [
+            135.835113,
+            34.702431
+          ],
+          [
+            135.835077,
+            34.70277
+          ],
+          [
+            135.83502,
+            34.703191
+          ],
+          [
+            135.834982,
+            34.703502
+          ],
+          [
+            135.834938,
+            34.703742
+          ],
+          [
+            135.834856,
+            34.704067
+          ],
+          [
+            135.834773,
+            34.70428
+          ],
+          [
+            135.834675,
+            34.704496
+          ],
+          [
+            135.834665,
+            34.704519
+          ],
+          [
+            135.834584,
+            34.704686
+          ],
+          [
+            135.834487,
+            34.704843
+          ],
+          [
+            135.834161,
+            34.705351
+          ],
+          [
+            135.834178,
+            34.705385
+          ],
+          [
+            135.834194,
+            34.705418
+          ],
+          [
+            135.833945,
+            34.705613
+          ],
+          [
+            135.8328,
+            34.70648
+          ],
+          [
+            135.832194,
+            34.706983
+          ],
+          [
+            135.831507,
+            34.707619
+          ],
+          [
+            135.831148,
+            34.70797
+          ],
+          [
+            135.831007,
+            34.708077
+          ],
+          [
+            135.83086,
+            34.708204
+          ],
+          [
+            135.830671,
+            34.708392
+          ],
+          [
+            135.830453,
+            34.708639
+          ],
+          [
+            135.830289,
+            34.708853
+          ],
+          [
+            135.830139,
+            34.70908
+          ],
+          [
+            135.829815,
+            34.709665
+          ],
+          [
+            135.829549,
+            34.710116
+          ],
+          [
+            135.829464,
+            34.710257
+          ],
+          [
+            135.82957,
+            34.71033
+          ],
+          [
+            135.830035,
+            34.710664
+          ],
+          [
+            135.83009,
+            34.710709
+          ],
+          [
+            135.830472,
+            34.711016
+          ],
+          [
+            135.830807,
+            34.71129
+          ],
+          [
+            135.830934,
+            34.711402
+          ],
+          [
+            135.831064,
+            34.711516
+          ],
+          [
+            135.831662,
+            34.712041
+          ],
+          [
+            135.83168,
+            34.712057
+          ],
+          [
+            135.83186,
+            34.712212
+          ],
+          [
+            135.832666,
+            34.712917
+          ],
+          [
+            135.83297,
+            34.713186
+          ],
+          [
+            135.833169,
+            34.71335
+          ],
+          [
+            135.833299,
+            34.713446
+          ],
+          [
+            135.833781,
+            34.713834
+          ],
+          [
+            135.833978,
+            34.714003
+          ],
+          [
+            135.834155,
+            34.714176
+          ],
+          [
+            135.834168,
+            34.71419
+          ],
+          [
+            135.834273,
+            34.714334
+          ],
+          [
+            135.834369,
+            34.714489
+          ],
+          [
+            135.834443,
+            34.714653
+          ],
+          [
+            135.834464,
+            34.714724
+          ],
+          [
+            135.834483,
+            34.714801
+          ],
+          [
+            135.83459,
+            34.71478
+          ],
+          [
+            135.834722,
+            34.714858
+          ],
+          [
+            135.835543,
+            34.714659
+          ],
+          [
+            135.836016,
+            34.714543
+          ]
+        ],
+        "geometry_provider": "valhalla-http",
+        "route_provenance": "LIVE_PROVIDER_CAPTURE",
+        "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+        "time_basis": "VALHALLA_ROUTE_CAPTURED_AT",
+        "distance_m": null,
+        "walking_distance_m": null,
+        "walking_min": null,
+        "mode": "WALK",
+        "fact_quality": "LIVE_PROVIDER_CAPTURE"
+      },
+      {
+        "origin_key": "real-place-a346e8f7f72a4d8f523d81e3",
+        "destination_key": "real-place-22cf72809897ff4c7f312fcf",
+        "minutes": 54,
+        "provider": "valhalla-http",
+        "captured_at": "2026-10-06T11:55:19.316947+00:00",
+        "degraded": false,
+        "fallback_reason": null,
+        "route_geometry": [
+          [
+            135.835918,
+            34.714529
+          ],
+          [
+            135.835446,
+            34.714646
+          ],
+          [
+            135.834626,
+            34.714846
+          ],
+          [
+            135.834495,
+            34.714769
+          ],
+          [
+            135.834389,
+            34.714791
+          ],
+          [
+            135.834371,
+            34.714715
+          ],
+          [
+            135.834351,
+            34.714645
+          ],
+          [
+            135.834278,
+            34.714482
+          ],
+          [
+            135.834183,
+            34.714328
+          ],
+          [
+            135.834079,
+            34.714185
+          ],
+          [
+            135.834067,
+            34.714172
+          ],
+          [
+            135.833891,
+            34.714
+          ],
+          [
+            135.833695,
+            34.713832
+          ],
+          [
+            135.833214,
+            34.713445
+          ],
+          [
+            135.833085,
+            34.71335
+          ],
+          [
+            135.832887,
+            34.713187
+          ],
+          [
+            135.832584,
+            34.712919
+          ],
+          [
+            135.831779,
+            34.712215
+          ],
+          [
+            135.8316,
+            34.712061
+          ],
+          [
+            135.831583,
+            34.712046
+          ],
+          [
+            135.830986,
+            34.711522
+          ],
+          [
+            135.830857,
+            34.711409
+          ],
+          [
+            135.830731,
+            34.711298
+          ],
+          [
+            135.830397,
+            34.711025
+          ],
+          [
+            135.830016,
+            34.710719
+          ],
+          [
+            135.829962,
+            34.710675
+          ],
+          [
+            135.829498,
+            34.710342
+          ],
+          [
+            135.829393,
+            34.71027
+          ],
+          [
+            135.829479,
+            34.71013
+          ],
+          [
+            135.829746,
+            34.70968
+          ],
+          [
+            135.830071,
+            34.709096
+          ],
+          [
+            135.830222,
+            34.70887
+          ],
+          [
+            135.830387,
+            34.708657
+          ],
+          [
+            135.830606,
+            34.708411
+          ],
+          [
+            135.830796,
+            34.708224
+          ],
+          [
+            135.830944,
+            34.708098
+          ],
+          [
+            135.831086,
+            34.707992
+          ],
+          [
+            135.831446,
+            34.707642
+          ],
+          [
+            135.832134,
+            34.707007
+          ],
+          [
+            135.832741,
+            34.706505
+          ],
+          [
+            135.833887,
+            34.705639
+          ],
+          [
+            135.834137,
+            34.705445
+          ],
+          [
+            135.834122,
+            34.705413
+          ],
+          [
+            135.834106,
+            34.70538
+          ],
+          [
+            135.834433,
+            34.704873
+          ],
+          [
+            135.834531,
+            34.704717
+          ],
+          [
+            135.834613,
+            34.704551
+          ],
+          [
+            135.834624,
+            34.704529
+          ],
+          [
+            135.834723,
+            34.704314
+          ],
+          [
+            135.834807,
+            34.704102
+          ],
+          [
+            135.83489,
+            34.703778
+          ],
+          [
+            135.834935,
+            34.703539
+          ],
+          [
+            135.834974,
+            34.703229
+          ],
+          [
+            135.835032,
+            34.702809
+          ],
+          [
+            135.835069,
+            34.702471
+          ],
+          [
+            135.835111,
+            34.702317
+          ],
+          [
+            135.835126,
+            34.702269
+          ],
+          [
+            135.835179,
+            34.702099
+          ],
+          [
+            135.835223,
+            34.701879
+          ],
+          [
+            135.835237,
+            34.701829
+          ],
+          [
+            135.835268,
+            34.701711
+          ],
+          [
+            135.83528,
+            34.701611
+          ],
+          [
+            135.83529,
+            34.701396
+          ],
+          [
+            135.835285,
+            34.701311
+          ],
+          [
+            135.835306,
+            34.701099
+          ],
+          [
+            135.835343,
+            34.70091
+          ],
+          [
+            135.835351,
+            34.700843
+          ],
+          [
+            135.835357,
+            34.70083
+          ],
+          [
+            135.835452,
+            34.700246
+          ],
+          [
+            135.835458,
+            34.700169
+          ],
+          [
+            135.835504,
+            34.699793
+          ],
+          [
+            135.835511,
+            34.699732
+          ],
+          [
+            135.835521,
+            34.69965
+          ],
+          [
+            135.835543,
+            34.699432
+          ],
+          [
+            135.835548,
+            34.698898
+          ],
+          [
+            135.835554,
+            34.698482
+          ],
+          [
+            135.835542,
+            34.697305
+          ],
+          [
+            135.835548,
+            34.69716
+          ],
+          [
+            135.835538,
+            34.697075
+          ],
+          [
+            135.835526,
+            34.697003
+          ],
+          [
+            135.835507,
+            34.696922
+          ],
+          [
+            135.835471,
+            34.696802
+          ],
+          [
+            135.83543,
+            34.69675
+          ],
+          [
+            135.835375,
+            34.696704
+          ],
+          [
+            135.835281,
+            34.696629
+          ],
+          [
+            135.835216,
+            34.696569
+          ],
+          [
+            135.835205,
+            34.69656
+          ],
+          [
+            135.835076,
+            34.696441
+          ],
+          [
+            135.835074,
+            34.696035
+          ],
+          [
+            135.835535,
+            34.696035
+          ],
+          [
+            135.835542,
+            34.695507
+          ],
+          [
+            135.83555,
+            34.695468
+          ],
+          [
+            135.835629,
+            34.695226
+          ],
+          [
+            135.835711,
+            34.694922
+          ],
+          [
+            135.835434,
+            34.694826
+          ],
+          [
+            135.835307,
+            34.694757
+          ],
+          [
+            135.835239,
+            34.694698
+          ],
+          [
+            135.83515,
+            34.694565
+          ],
+          [
+            135.835049,
+            34.694381
+          ],
+          [
+            135.835016,
+            34.694288
+          ],
+          [
+            135.834943,
+            34.694092
+          ],
+          [
+            135.834918,
+            34.694013
+          ],
+          [
+            135.834856,
+            34.69372
+          ],
+          [
+            135.834805,
+            34.693465
+          ],
+          [
+            135.834793,
+            34.693302
+          ],
+          [
+            135.83478,
+            34.693111
+          ],
+          [
+            135.834737,
+            34.691881
+          ],
+          [
+            135.834727,
+            34.691736
+          ],
+          [
+            135.834719,
+            34.691403
+          ],
+          [
+            135.83471,
+            34.691
+          ],
+          [
+            135.83471,
+            34.690707
+          ],
+          [
+            135.834713,
+            34.690627
+          ],
+          [
+            135.834715,
+            34.689948
+          ],
+          [
+            135.834729,
+            34.689442
+          ],
+          [
+            135.834732,
+            34.689398
+          ],
+          [
+            135.834786,
+            34.689398
+          ],
+          [
+            135.83502,
+            34.689399
+          ],
+          [
+            135.835052,
+            34.68939
+          ],
+          [
+            135.83529,
+            34.689404
+          ],
+          [
+            135.83548,
+            34.68942
+          ],
+          [
+            135.835774,
+            34.689446
+          ],
+          [
+            135.836057,
+            34.68947
+          ],
+          [
+            135.836059,
+            34.689225
+          ],
+          [
+            135.836122,
+            34.688706
+          ],
+          [
+            135.836348,
+            34.688697
+          ],
+          [
+            135.836405,
+            34.688587
+          ],
+          [
+            135.836407,
+            34.688561
+          ],
+          [
+            135.836414,
+            34.688546
+          ],
+          [
+            135.836417,
+            34.688449
+          ],
+          [
+            135.836455,
+            34.688233
+          ],
+          [
+            135.836495,
+            34.688182
+          ],
+          [
+            135.836752,
+            34.68809
+          ],
+          [
+            135.836751,
+            34.688054
+          ],
+          [
+            135.836751,
+            34.688008
+          ],
+          [
+            135.836748,
+            34.687764
+          ],
+          [
+            135.836781,
+            34.686851
+          ],
+          [
+            135.836768,
+            34.686735
+          ],
+          [
+            135.836702,
+            34.686274
+          ],
+          [
+            135.836634,
+            34.68593
+          ],
+          [
+            135.836711,
+            34.685932
+          ],
+          [
+            135.836894,
+            34.685928
+          ],
+          [
+            135.836925,
+            34.685899
+          ],
+          [
+            135.836926,
+            34.685883
+          ],
+          [
+            135.836927,
+            34.685867
+          ],
+          [
+            135.836993,
+            34.685828
+          ],
+          [
+            135.836996,
+            34.685804
+          ],
+          [
+            135.837038,
+            34.685769
+          ],
+          [
+            135.837077,
+            34.685755
+          ],
+          [
+            135.837125,
+            34.685742
+          ],
+          [
+            135.837163,
+            34.685742
+          ],
+          [
+            135.837173,
+            34.685763
+          ],
+          [
+            135.837183,
+            34.685798
+          ],
+          [
+            135.837196,
+            34.685797
+          ],
+          [
+            135.837218,
+            34.685793
+          ],
+          [
+            135.83726,
+            34.685787
+          ],
+          [
+            135.837293,
+            34.685788
+          ],
+          [
+            135.83732,
+            34.685794
+          ],
+          [
+            135.837338,
+            34.685802
+          ],
+          [
+            135.837364,
+            34.685807
+          ],
+          [
+            135.837371,
+            34.685809
+          ],
+          [
+            135.83739,
+            34.685809
+          ],
+          [
+            135.837403,
+            34.685797
+          ],
+          [
+            135.837459,
+            34.685797
+          ],
+          [
+            135.837431,
+            34.68574
+          ],
+          [
+            135.837433,
+            34.685725
+          ],
+          [
+            135.837473,
+            34.685682
+          ],
+          [
+            135.837531,
+            34.685683
+          ],
+          [
+            135.83755,
+            34.685683
+          ],
+          [
+            135.837562,
+            34.685679
+          ],
+          [
+            135.837607,
+            34.68566
+          ],
+          [
+            135.837631,
+            34.685615
+          ],
+          [
+            135.837648,
+            34.685606
+          ],
+          [
+            135.837787,
+            34.685526
+          ],
+          [
+            135.837837,
+            34.685612
+          ]
+        ],
+        "geometry_provider": "valhalla-http",
+        "route_provenance": "LIVE_PROVIDER_CAPTURE",
+        "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+        "time_basis": "VALHALLA_ROUTE_CAPTURED_AT",
+        "distance_m": null,
+        "walking_distance_m": null,
+        "walking_min": null,
+        "mode": "WALK",
+        "fact_quality": "LIVE_PROVIDER_CAPTURE"
+      }
+    ]
+  },
+  "reservation": {
+    "state": "NONE",
+    "realtime": null,
+    "id": null
+  },
+  "protected_commitment": {
+    "state": "NONE",
+    "ids": []
+  },
+  "presence": "LOCATION_UNAVAILABLE",
+  "minutes_until_start": 724.6,
+  "must_leave_by": null,
+  "must_leave_by_absent_reason": "LAUNCH_EDGE_UNAVAILABLE",
+  "safety_buffer_minutes": null,
+  "recommended_action": "LEAVE_ON_SCHEDULE",
+  "notification": {
+    "eligible": false,
+    "created_or_reused": false,
+    "id": null,
+    "dedupe_key": null,
+    "priority": null
+  },
+  "notifications_before": [],
+  "notifications_after": [],
+  "offline_snapshot": {
+    "captured_at": "2026-10-06T11:55:21.545157+00:00",
+    "checks": {
+      "commitment": "NONE",
+      "presence": "LOCATION_UNAVAILABLE",
+      "reservation": "NONE",
+      "reservation_realtime": null,
+      "route": "UNKNOWN",
+      "venue": "UNKNOWN"
+    },
+    "freshness_semantics": "CAPTURED_READ_MODEL",
+    "launch_edge": {
+      "captured_at": null,
+      "degraded": false,
+      "distance_m": null,
+      "duration_min": null,
+      "expires_at": null,
+      "from_activity_id": null,
+      "geometry": null,
+      "kind": "LAUNCH_EDGE",
+      "mode": null,
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "provenance": null,
+      "provider": null,
+      "reason_code": "NO_EXACT_LAUNCH_EDGE",
+      "state": "LAUNCH_EDGE_UNAVAILABLE",
+      "target_key": "real-place-22cf72809897ff4c7f312fcf",
+      "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "walking_min": null
+    },
+    "launch_origin": {
+      "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "captured_at": "2026-10-06T11:55:21.487260+00:00",
+      "latitude": 34.678661,
+      "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+      "longitude": 135.8281897,
+      "name": "なら工藝館",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "provider_key": null,
+      "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "source": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "source_ref_type": "PLACE",
+      "state": "READY",
+      "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "valid_from": "2026-10-06T00:00:00+00:00",
+      "valid_until": "2026-10-08T00:00:00+00:00"
+    },
+    "must_leave_by": null,
+    "must_leave_by_absent_reason": "LAUNCH_EDGE_UNAVAILABLE",
+    "recommended_action": "LEAVE_ON_SCHEDULE",
+    "route_evidence": {
+      "captured_at": null,
+      "degraded": false,
+      "edge_match": false,
+      "expires_at": null,
+      "from_activity_id": null,
+      "kind": "LAUNCH_EDGE",
+      "launch_edge": {
+        "captured_at": null,
+        "degraded": false,
+        "distance_m": null,
+        "duration_min": null,
+        "expires_at": null,
+        "from_activity_id": null,
+        "geometry": null,
+        "kind": "LAUNCH_EDGE",
+        "mode": null,
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "provenance": null,
+        "provider": null,
+        "reason_code": "NO_EXACT_LAUNCH_EDGE",
+        "state": "LAUNCH_EDGE_UNAVAILABLE",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "walking_min": null
+      },
+      "launch_origin": {
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "captured_at": "2026-10-06T11:55:21.487260+00:00",
+        "latitude": 34.678661,
+        "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+        "longitude": 135.8281897,
+        "name": "なら工藝館",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "provider_key": null,
+        "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "source": "PLACE",
+        "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+        "source_ref_type": "PLACE",
+        "state": "READY",
+        "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+        "valid_from": "2026-10-06T00:00:00+00:00",
+        "valid_until": "2026-10-08T00:00:00+00:00"
+      },
+      "minutes": null,
+      "provenance": null,
+      "provider": null,
+      "reason_code": "LAUNCH_EDGE_UNAVAILABLE",
+      "state": "UNKNOWN",
+      "to_activity_id": null
+    },
+    "safety_buffer_minutes": null,
+    "state": "READY_WITH_UNCERTAINTY",
+    "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "target_title": "依水園",
+    "venue_last_known": {
+      "activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+      "observed_at": null,
+      "source": null,
+      "state": "UNKNOWN"
+    }
+  },
+  "offline_launch_origin": {
+    "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "captured_at": "2026-10-06T11:55:21.487260+00:00",
+    "latitude": 34.678661,
+    "launch_context_id": "1bd72996-3da5-4cce-8e92-1d4eeae10582",
+    "longitude": 135.8281897,
+    "name": "なら工藝館",
+    "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+    "provider_key": null,
+    "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "source": "PLACE",
+    "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+    "source_ref_type": "PLACE",
+    "state": "READY",
+    "target_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "valid_from": "2026-10-06T00:00:00+00:00",
+    "valid_until": "2026-10-08T00:00:00+00:00"
+  },
+  "offline_launch_edge": {
+    "captured_at": null,
+    "degraded": false,
+    "distance_m": null,
+    "duration_min": null,
+    "expires_at": null,
+    "from_activity_id": null,
+    "geometry": null,
+    "kind": "LAUNCH_EDGE",
+    "mode": null,
+    "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+    "provenance": null,
+    "provider": null,
+    "reason_code": "NO_EXACT_LAUNCH_EDGE",
+    "state": "LAUNCH_EDGE_UNAVAILABLE",
+    "target_key": "real-place-22cf72809897ff4c7f312fcf",
+    "to_activity_id": "8fe4cd21-ad11-5b61-a761-c5ec901654a1",
+    "walking_min": null
+  },
+  "persisted": {
+    "event_ids": [],
+    "agent_run_ids": [],
+    "proposal_ids": [],
+    "mutation_count": 0,
+    "notifications": []
+  },
+  "location_observation_count": 0,
+  "no_provider_retry": true,
+  "no_location_required": true,
+  "captured_at": "2026-10-06T11:55:21.564635+00:00",
+  "limitations": [
+    "No foreground location was requested or fabricated.",
+    "No trusted device attestation bridge was used.",
+    "CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false"
+  ]
+}

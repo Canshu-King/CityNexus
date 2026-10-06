@@ -425,6 +425,15 @@ class LocationObservationRequest(BaseModel):
     captured_at: datetime
 
 
+class LaunchOriginRequest(BaseModel):
+    """Explicit planned-origin confirmation; coordinates and authority are server-owned."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source_kind: Literal["PLACE", "SELECTED_STAY", "ARRIVAL_ANCHOR"]
+    place_id: str | None = None
+
+
 class ExecutionTruthAttestation(BaseModel):
     """Optional evidence class for one execution-state transition.
 

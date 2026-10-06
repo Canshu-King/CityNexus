@@ -57,7 +57,7 @@ def launch_setup_projection(
         previous_activity=None,
         now=stamp,
     )
-    if current.get("state") == "READY":
+    if current.get("state") == "READY" and current.get("authority") == "USER_CONFIRMED_PLANNED_ORIGIN":
         return {
             "status": "ORIGIN_READY",
             "current_origin": current,
@@ -94,6 +94,8 @@ def launch_setup_projection(
                 "authority": "ADVISORY_FOREGROUND",
             }
         )
+        if not eligible:
+            actions.append("SHARE_LOCATION")
     else:
         actions.append("SHARE_LOCATION")
 

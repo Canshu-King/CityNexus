@@ -60,6 +60,14 @@ type DepartureReadiness = {
   recommended_action?: string;
 };
 
+type LaunchSetup = {
+  status?: string;
+  current_origin?: { name?: string | null } | null;
+  candidates?: Array<{ kind?: string; display_name?: string; eligible?: boolean }>;
+  actions?: string[];
+  contract?: { display_name?: string | null } | null;
+};
+
 type Disruption = {
   id: string;
   type: string;
@@ -140,6 +148,7 @@ export function LiveRecovery({
   const [guardianPulse, setGuardianPulse] = useState<GuardianPulse | null>(null);
   const [guardianWatch, setGuardianWatch] = useState<GuardianWatch | null>(null);
   const [departureReadiness, setDepartureReadiness] = useState<DepartureReadiness | null>(null);
+  const [launchSetup, setLaunchSetup] = useState<LaunchSetup | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -173,6 +182,39 @@ export function LiveRecovery({
       cancelled = true;
     };
   }, [journeyId]);
+
+  const loadLaunchSetup = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/v1/journeys/${journeyId}/launch-setup`);
+      if (!response.ok) return;
+      setLaunchSetup((await response.json()) as LaunchSetup);
+    } catch {
+      setLaunchSetup(null);
+    }
+  }, [journeyId]);
+
+  useEffect(() => {
+    void loadLaunchSetup();
+  }, [loadLaunchSetup]);
+
+  const confirmLaunchSource = useCallback(async (sourceKind: "SELECTED_STAY" | "ARRIVAL_ANCHOR") => {
+    setBusy(`launch:${sourceKind}`);
+    try {
+      const response = await fetch(`/api/v1/journeys/${journeyId}/launch-origin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source_kind: sourceKind }),
+      });
+      if (!response.ok) throw new Error("launch origin unavailable");
+      await loadLaunchSetup();
+      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`);
+      if (readiness.ok) setDepartureReadiness((await readiness.json()) as DepartureReadiness);
+    } catch {
+      setMessage(zh ? "暂时无法保存出发点。" : "We couldn't save that starting point yet.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, loadLaunchSetup, zh]);
 
   useEffect(() => {
     let cancelled = false;
@@ -435,6 +477,44 @@ export function LiveRecovery({
         <div className="live-next-move" data-testid="live-next-move" role="status">
           <b>{zh ? "下一步" : "Next move"}</b>
           <span>{guardianWatch.next_move.copy}</span>
+        </div>
+      )}
+
+      {launchSetup?.status === "NEEDS_ORIGIN" && (
+        <div className="live-readiness live-launch-setup" data-testid="live-launch-setup" role="status">
+          <b>{zh ? "你将从哪里出发？" : "Where will you start from?"}</b>
+          <span>
+            {zh
+              ? "CityNexus 需要一个明确的起点，才能估算何时出发。"
+              : "CityNexus needs a starting point before it can estimate when to leave."}
+          </span>
+          {(launchSetup.candidates ?? []).filter((candidate) => candidate.eligible && candidate.display_name).map((candidate) => (
+            <button
+              key={candidate.kind}
+              type="button"
+              disabled={busy !== null}
+              onClick={() => {
+                if (candidate.kind === "SELECTED_STAY") {
+                  void confirmLaunchSource("SELECTED_STAY");
+                } else if (candidate.kind === "ARRIVAL_ANCHOR") {
+                  void confirmLaunchSource("ARRIVAL_ANCHOR");
+                }
+              }}
+            >
+              {zh ? `从 ${candidate.display_name} 出发` : `Start from ${candidate.display_name}`}
+            </button>
+          ))}
+          {(launchSetup.actions ?? []).includes("CHOOSE_PLACE") && (
+            <small>{zh ? "也可以选择一个已验证的地点作为计划起点。" : "You can also choose another verified place as your planned starting point."}</small>
+          )}
+        </div>
+      )}
+
+      {launchSetup?.contract?.display_name && (
+        <div className="live-next-move" data-testid="live-launch-confirmed" role="status">
+          {zh
+            ? `首段路线将从 ${launchSetup.contract.display_name} 规划。`
+            : `Planning your first route from ${launchSetup.contract.display_name}.`}
         </div>
       )}
 

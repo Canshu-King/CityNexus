@@ -767,6 +767,26 @@ CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     updated_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS journey_launch_contexts (
+    journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
+    source_kind TEXT NOT NULL,
+    authority_kind TEXT NOT NULL,
+    place_id TEXT REFERENCES places(id) ON DELETE SET NULL,
+    target_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    display_name TEXT NOT NULL,
+    latitude REAL,
+    longitude REAL,
+    coordinate_crs TEXT,
+    source_ref_type TEXT,
+    source_ref_id TEXT,
+    valid_from TEXT,
+    valid_until TEXT,
+    confirmed_by TEXT,
+    confirmation_method TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS accommodation_offer_snapshots (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,

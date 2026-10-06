@@ -154,6 +154,7 @@ from app.db.models import (
     JourneyShareGrant,
     JourneyOutcomeEvent,
     JourneyTripContext,
+    JourneyLaunchContext,
     LocationObservation,
     MobilityFact,
     NotificationEvent,
@@ -226,6 +227,8 @@ from app.execution.readiness import (
     departure_readiness_projection,
     refresh_departure_readiness,
 )
+from app.execution.launch_setup import launch_setup_projection
+from app.execution.launch_origin import grounded_launch_origin
 from app.execution.truth import (
     DEVICE_LOCATION_VERIFIED_EXECUTION,
     OPERATOR_CONFIRMED_EXECUTION,
@@ -392,6 +395,7 @@ from app.schemas import (
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
+    LaunchOriginRequest,
     ExecutionTruthAttestation,
     LuggageContextRequest,
     MobilityModeRequest,
@@ -1938,6 +1942,210 @@ def refresh_guardian_departure_readiness(
     result = refresh_departure_readiness(session, journey)
     session.commit()
     return result
+
+
+def _launch_target_activity(session: Session, journey: Journey) -> Activity | None:
+    if not journey.active_plan_version_id:
+        return None
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == journey.active_plan_version_id)
+        .order_by(Activity.sequence_no)
+    ).all()
+    terminal = {"COMPLETED", "SKIPPED", "CANCELLED"}
+    if journey.current_activity_id:
+        current = next(
+            (row for row in rows if str(row.id) == str(journey.current_activity_id) and row.status not in terminal),
+            None,
+        )
+        if current is not None:
+            return current
+    return next((row for row in rows if row.status not in terminal), None)
+
+
+def _launch_contract_payload(
+    row: JourneyLaunchContext | None,
+    session: Session | None = None,
+) -> dict[str, Any] | None:
+    if row is None:
+        return None
+    payload = {
+        "journey_id": row.journey_id,
+        "source_kind": row.source_kind,
+        "authority_kind": row.authority_kind,
+        "place_id": row.place_id,
+        "target_activity_id": row.target_activity_id,
+        "display_name": row.display_name,
+        "latitude": row.latitude,
+        "longitude": row.longitude,
+        "coordinate_crs": row.coordinate_crs,
+        "source_ref_type": row.source_ref_type,
+        "source_ref_id": row.source_ref_id,
+        "valid_from": row.valid_from,
+        "valid_until": row.valid_until,
+        "confirmed_by": row.confirmed_by,
+        "confirmation_method": row.confirmation_method,
+        "created_at": row.created_at,
+        "updated_at": row.updated_at,
+    }
+    if session is not None:
+        if row.source_kind == "PLACE" and row.place_id:
+            place = session.get(Place, row.place_id)
+            if place is not None:
+                payload["provenance"] = {
+                    "provider_key": place.provider_key,
+                    "external_id": place.external_id,
+                    "coordinate_system": place.coordinate_system or place.source_coordinate_system,
+                }
+        elif row.source_kind == "SELECTED_STAY" and row.source_ref_id:
+            offer = session.get(AccommodationOfferSnapshot, row.source_ref_id)
+            if offer is not None:
+                payload["provenance"] = {
+                    "provider_key": offer.provider_key,
+                    "external_offer_id": offer.external_offer_id,
+                    "coordinate_system": offer.coordinate_crs,
+                }
+        elif row.source_kind == "ARRIVAL_ANCHOR":
+            payload["provenance"] = {"source_ref_type": row.source_ref_type, "source_ref_id": row.source_ref_id}
+    return payload
+
+
+@app.get("/api/v1/journeys/{journey_id}/launch-setup")
+def get_launch_setup(journey_id: UUID, session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    target = _launch_target_activity(session, journey)
+    projection = launch_setup_projection(session, journey, target_activity=target)
+    return {
+        **projection,
+        "contract": _launch_contract_payload(session.get(JourneyLaunchContext, journey.id), session),
+        "read_only": True,
+        "provider_capture": False,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/launch-origin")
+def set_launch_origin(
+    journey_id: UUID,
+    payload: LaunchOriginRequest,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    target = _launch_target_activity(session, journey)
+    if target is None:
+        raise HTTPException(409, "launch target is unavailable")
+    target_start = datetime.fromisoformat(str(target.start_at).replace("Z", "+00:00"))
+    if target_start.tzinfo is None:
+        target_start = target_start.replace(tzinfo=timezone.utc)
+    target_start = target_start.astimezone(timezone.utc)
+    valid_from = (target_start - timedelta(hours=24)).isoformat()
+    valid_until = (target_start + timedelta(hours=24)).isoformat()
+
+    source_ref_type: str
+    source_ref_id: str | None
+    display_name: str
+    place_id: str | None = None
+    latitude: float | None
+    longitude: float | None
+    coordinate_crs: str | None
+    provenance: dict[str, Any]
+    if payload.source_kind == "PLACE":
+        if payload.place_id is None:
+            raise HTTPException(422, "place_id is required for PLACE")
+        place = session.get(Place, str(payload.place_id))
+        if place is None:
+            raise HTTPException(404, "Place not found")
+        if str(place.city_code).upper() != str(journey.city_code).upper():
+            raise HTTPException(422, "Place is outside this Journey city")
+        if place.latitude is None or place.longitude is None:
+            raise HTTPException(422, "Place has no routable coordinates")
+        place_id = str(place.id)
+        display_name = place.name
+        latitude = float(place.latitude)
+        longitude = float(place.longitude)
+        coordinate_crs = place.coordinate_system or place.source_coordinate_system
+        source_ref_type, source_ref_id = "PLACE", str(place.id)
+        provenance = {
+            "provider_key": place.provider_key,
+            "external_id": place.external_id,
+            "coordinate_system": coordinate_crs,
+        }
+    elif payload.source_kind == "SELECTED_STAY":
+        option = session.scalar(
+            select(StayJourneyOption)
+            .where(StayJourneyOption.journey_id == journey.id, StayJourneyOption.status == "SELECTED")
+            .order_by(StayJourneyOption.rank, StayJourneyOption.id)
+        )
+        offer = session.get(AccommodationOfferSnapshot, option.accommodation_offer_id) if option else None
+        if option is None or offer is None:
+            raise HTTPException(422, "selected stay is unavailable")
+        latitude, longitude = float(offer.latitude), float(offer.longitude)
+        coordinate_crs = offer.coordinate_crs
+        display_name = offer.property_name
+        source_ref_type, source_ref_id = "ACCOMMODATION_OFFER", str(offer.id)
+        provenance = {"provider_key": offer.provider_key, "external_offer_id": offer.external_offer_id}
+    else:
+        context = session.get(JourneyTripContext, journey.id)
+        try:
+            anchor = json.loads(context.arrival_anchor_json or "{}") if context else {}
+        except json.JSONDecodeError:
+            anchor = {}
+        if anchor.get("latitude") is None or anchor.get("longitude") is None:
+            raise HTTPException(422, "arrival anchor has no routable coordinates")
+        latitude, longitude = float(anchor["latitude"]), float(anchor["longitude"])
+        coordinate_crs = str(anchor.get("coordinate_crs") or "WGS84")
+        display_name = str(anchor.get("location") or anchor.get("name") or "Arrival point")
+        source_ref_type, source_ref_id = "ARRIVAL_ANCHOR", str(anchor.get("reservation_id") or "arrival-anchor")
+        provenance = {"provider_key": anchor.get("provider_key"), "reservation_id": anchor.get("reservation_id")}
+
+    now = datetime.now(timezone.utc).isoformat()
+    before = session.get(JourneyLaunchContext, journey.id)
+    before_payload = _launch_contract_payload(before, session)
+    desired = {
+        "source_kind": payload.source_kind,
+        "authority_kind": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "place_id": place_id,
+        "target_activity_id": str(target.id),
+        "display_name": display_name,
+        "latitude": latitude,
+        "longitude": longitude,
+        "coordinate_crs": coordinate_crs,
+        "source_ref_type": source_ref_type,
+        "source_ref_id": source_ref_id,
+        "valid_from": valid_from,
+        "valid_until": valid_until,
+        "confirmed_by": str(journey.traveler_id),
+        "confirmation_method": "USER_CONFIRMED_PLANNED_ORIGIN",
+    }
+    comparable = {key: before_payload.get(key) for key in desired} if before_payload else None
+    idempotent = comparable == desired
+    if not idempotent:
+        if before is None:
+            before = JourneyLaunchContext(journey_id=journey.id, created_at=now)
+            session.add(before)
+        for key, value in desired.items():
+            setattr(before, key, value)
+        before.updated_at = now
+        record_audit(
+            session,
+            action="journey.launch_origin.confirmed",
+            entity_type="JourneyLaunchContext",
+            entity_id=journey.id,
+            journey_id=journey.id,
+            before=before_payload,
+            after={**desired, "provenance": provenance},
+            actor_type="traveler",
+            actor_id=str(journey.traveler_id),
+        )
+        session.commit()
+    row = session.get(JourneyLaunchContext, journey.id)
+    return {
+        "contract": _launch_contract_payload(row, session),
+        "provenance": provenance,
+        "idempotent": idempotent,
+        "audit_action": None if idempotent else "journey.launch_origin.confirmed",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "physical_presence_asserted": False,
+    }
 
 
 @app.post(

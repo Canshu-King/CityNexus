@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 
-from app.db.models import AccommodationOfferSnapshot, JourneyTripContext, StayJourneyOption
+from app.db.models import AccommodationOfferSnapshot, JourneyLaunchContext, JourneyTripContext, StayJourneyOption
 from app.execution.launch_origin import grounded_launch_origin, launch_context_projection, launch_edge_projection
 
 
@@ -16,11 +16,12 @@ class _Rows:
 
 
 class _Session:
-    def __init__(self, *, location=None, stay_option=None, stay_offer=None, trip_context=None):
+    def __init__(self, *, location=None, stay_option=None, stay_offer=None, trip_context=None, launch_contract=None):
         self.location = location
         self.stay_option = stay_option
         self.stay_offer = stay_offer
         self.trip_context = trip_context
+        self.launch_contract = launch_contract
 
     def scalar(self, statement):
         text = str(statement)
@@ -35,6 +36,8 @@ class _Session:
             return self.stay_offer if str(self.stay_offer.id) == str(row_id) else None
         if model is JourneyTripContext:
             return self.trip_context
+        if model is JourneyLaunchContext:
+            return self.launch_contract
         return None
 
 
@@ -203,3 +206,28 @@ def test_exact_mobility_fact_is_the_only_launch_edge_match():
     assert result["state"] == "LAUNCH_ROUTE_READY"
     assert result["duration_min"] == 18
     assert result["target_key"] == "target-place"
+
+
+def test_executing_previous_activity_beats_confirmed_planned_origin():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    contract = SimpleNamespace(
+        authority_kind="USER_CONFIRMED_PLANNED_ORIGIN",
+        target_activity_id="a1",
+        place_id="planned-place",
+        display_name="Planned start",
+        latitude=34.6,
+        longitude=135.8,
+        valid_from=None,
+        valid_until=(now + timedelta(days=1)).isoformat(),
+    )
+    previous = SimpleNamespace(id="previous", place_id="executed-place", title="Current stop")
+    result = grounded_launch_origin(
+        _Session(launch_contract=contract),
+        _journey(),
+        target_activity=_target(now),
+        previous_activity=previous,
+        now=now,
+    )
+
+    assert result["source"] == "PREVIOUS_ACTIVITY"
+    assert result["origin_key"] == "executed-place"
