@@ -9293,7 +9293,7 @@ def _persist_trusted_member_rendezvous_risk_event(
     ):
         return None
 
-    fingerprint_payload = {
+    semantic_payload = {
         "incident_kind": "MEMBER_RENDEZVOUS_COMMITMENT_RISK",
         "journey_id": str(journey.id),
         "active_plan_version_id": str(journey.active_plan_version_id or ""),
@@ -9302,30 +9302,50 @@ def _persist_trusted_member_rendezvous_risk_event(
         "rendezvous_activity_id": str(target_activity.id),
         "commitment_id": commitment_id,
     }
-    fingerprint = hashlib.sha256(
+    semantic_key = hashlib.sha256(
         json.dumps(
-            fingerprint_payload,
+            semantic_payload,
             sort_keys=True,
             separators=(",", ":"),
         ).encode("utf-8")
     ).hexdigest()
 
-    existing_rows = session.scalars(
+    incident_rows = session.scalars(
         select(EventModel).where(
             EventModel.journey_id == journey.id,
             EventModel.provider_key == "journey-group-presence",
             EventModel.event_type == "TRAFFIC_DELAY",
             EventModel.provenance == "SYSTEM_DERIVED",
-            EventModel.status.in_(("DETECTED", "ACKNOWLEDGED", "OPEN", "ACTIVE")),
         )
     ).all()
-    for existing in existing_rows:
+    prior_episodes: list[int] = []
+    for existing in incident_rows:
         try:
             payload = json.loads(existing.payload_json or "{}")
         except (TypeError, json.JSONDecodeError):
             continue
-        if payload.get("incident_fingerprint") == fingerprint:
+        if payload.get("incident_semantic_key") != semantic_key:
+            continue
+        try:
+            prior_episodes.append(max(1, int(payload.get("incident_episode") or 1)))
+        except (TypeError, ValueError):
+            prior_episodes.append(1)
+        if str(existing.status or "").upper() in {
+            "DETECTED",
+            "ACKNOWLEDGED",
+            "OPEN",
+            "ACTIVE",
+        }:
             return existing
+
+    episode = max(prior_episodes, default=0) + 1
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            {"semantic_key": semantic_key, "episode": episode},
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
 
     now = execution_clock.now().astimezone(timezone.utc).isoformat()
     event = EventModel(
@@ -9346,6 +9366,8 @@ def _persist_trusted_member_rendezvous_risk_event(
         payload_json=json.dumps(
             {
                 "incident_fingerprint": fingerprint,
+                "incident_semantic_key": semantic_key,
+                "incident_episode": episode,
                 "derivation": "SYSTEM_DERIVED_TRUSTED_MEMBER_RENDEZVOUS_RISK",
                 "predictive_only": False,
                 "traveler_id": str(traveler_id),
@@ -9378,6 +9400,8 @@ def _persist_trusted_member_rendezvous_risk_event(
         actor_id="journey-group-presence",
         after={
             "incident_fingerprint": fingerprint,
+            "incident_semantic_key": semantic_key,
+            "incident_episode": episode,
             "traveler_id": str(traveler_id),
             "journey_member_id": str(member.id),
             "rendezvous_activity_id": str(target_activity.id),
