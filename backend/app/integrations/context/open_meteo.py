@@ -129,7 +129,7 @@ class OpenMeteoContextProvider:
         rain_codes = {51, 53, 55, 61, 63, 65, 80, 81, 82}
         freezing_codes = {56, 57, 66, 67}
         snow_codes = {71, 73, 75, 77, 85, 86}
-        thunderstorm_codes = {95, 96, 99}
+        thunderstorm_codes = {95, 96, 97, 99}
         fog_codes = {45, 48}
 
         risks: list[WeatherRisk] = []
