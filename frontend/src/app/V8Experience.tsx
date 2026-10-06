@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
+  activityWordLabel,
   cityCodeLabel,
   commitmentKindLabel,
   commitmentLevelLabel,
@@ -3283,7 +3284,7 @@ function Hub({
           >
             <span>{t("hub.day", { n: day.day })}</span>
             <strong>{dayHeading(day, zh)}</strong>
-            <p>{day.activities.join(" · ")}</p>
+            <p>{day.activities.map((a) => activityWordLabel(a, zh)).join(" · ")}</p>
             <small>
               {/* ORD-0222 1: the *other* day-card path (the detail list at :2768 was fixed under
                   ORD-0208 ④).  `day.mode` is an enum and `hub.anchor` is a template, so
@@ -3391,6 +3392,11 @@ function Studio({
               <div className="v8-activity-list">
                 <SortableActivityList
                   activities={day.activities}
+                  /* ORD-0500 手机链路: this caller previously passed no `labels`, so
+                     SortableActivityList fell back to `activity` itself and printed server tokens raw
+                     (「Check in」「Overnight」 in a Chinese row).  Map each token through the role table,
+                     leaving a genuine place title untouched. */
+                  labels={Object.fromEntries(day.activities.map((a) => [a, activityWordLabel(a, locale.startsWith("zh"))]))}
                   protectedFirst={day.anchor !== "STAY"}
                   onDraft={(draft) =>
                     setDraftImpact({ day: day.day, count: draft.length })

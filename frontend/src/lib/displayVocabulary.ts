@@ -9,6 +9,8 @@
  * so a missing entry reads as a gap instead of silently becoming an invented claim.
  */
 
+import { humanizeToken, roleLabel } from "../i18n/travelerLabels";
+
 type Label = { zh: string; en: string };
 
 /* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx`), and
@@ -269,4 +271,28 @@ export function summaryHeldLabel(zh?: boolean | string | null): string {
  *  labelled as the server's word: a method we cannot name is not a method we may describe. */
 export function evidenceSourceLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(EVIDENCE_SOURCE, value, zh);
+}
+
+/** ORD-0500 手机链路: one cell of the plan day-list prints its activity strings raw, so a server value
+ * like `Check in` / `Check out` / `Overnight` reached a Chinese screen in English (the same line also
+ * carries already-Chinese place names, so the row read half-translated).  The role words were never
+ * missing -- `roleLabel` already owns them -- the day-list just bypassed the table.
+ *
+ * Measured: the strings are COMPOUND -- 「Check in · Beijing South Courtyard」, 「Overnight · …」 -- so
+ * feeding the whole token to `roleLabel` uppercases to CHECK_IN_·_BEIJING_… , matches nothing, and the
+ * English survives.  So each `·`-separated segment is mapped on its own: the role word becomes 入住 and
+ * the place part is returned verbatim, because it is not a role and `humanizeToken`'s lowercasing
+ * fallback would mangle it into `beijing south courtyard`. */
+export function activityWordLabel(value: unknown, zh?: boolean | string | null): string {
+  const raw = String(value ?? "").trim();
+  if (!raw) return raw;
+  return raw
+    .split("·")
+    .map((seg) => {
+      const part = seg.trim();
+      if (!part) return part;
+      const mapped = roleLabel(part, zh);
+      return mapped !== humanizeToken(part) ? mapped : part;
+    })
+    .join(" · ");
 }
