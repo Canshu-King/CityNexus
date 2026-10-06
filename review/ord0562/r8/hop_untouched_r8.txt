@@ -1,0 +1,12 @@
+The hop that landed while this lane was waiting, read from published bytes.
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+3d40efcc1956f49dcc0679a41995dedc5aae8475
+$ git -C D:/moodle/CityNexus diff --name-only 32372c7e57611f73782fdc607d929735224cf657 3d40efcc1956f49dcc0679a41995dedc5aae8475
+   review/1d64acf5-ord0574-landing-check/beat_trail_read_r1.txt
+   review/1d64acf5-ord0574-landing-check/landing_check_flat_r1.tsv
+   review/1d64acf5-ord0574-landing-check/ord0574_landing_check_r1.py
+   review/ord0520/ABORT_GLASS_PROVENANCE_r2.json
+   review/ord0520/ABORT_HTTP_RECEIPT_r2.json
+   review/ord0561/CONTROL_SET_PER_SCREEN_R1.md
+   paths moved: 6
+   paths this lane lands, among them: 0 of 2
