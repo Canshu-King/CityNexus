@@ -445,48 +445,87 @@ def run() -> dict[str, Any]:
     barrier_lock = threading.Lock()
 
     def gated_complete(self, messages):
+        """Start the real provider call, but hold its response at the boundary."""
+
+        caller_thread = threading.current_thread().name
         hit = {
-            "thread": threading.current_thread().name,
+            "thread": caller_thread,
             "model_key": str(getattr(self, "model_key", "unknown")),
             "at": datetime.now(timezone.utc).isoformat(),
             "release_was_set": release.is_set(),
             "provider_call_invoked": False,
             "provider_returned": False,
+            "response_released_to_runtime": False,
         }
-        with barrier_lock:
-            barrier_hits.append(hit)
-        if not release.wait(timeout=180):
-            raise RuntimeError("R32 external-response barrier timed out")
-        with barrier_lock:
-            hit["provider_call_invoked"] = True
-            hit["provider_call_started_at"] = (
-                datetime.now(timezone.utc).isoformat()
-            )
-        try:
-            result = original_complete(self, messages)
-        except Exception as exc:
+        provider_done = threading.Event()
+        provider_box: dict[str, Any] = {}
+
+        def call_provider():
             with barrier_lock:
-                hit["provider_exception"] = type(exc).__name__
-                hit["provider_call_finished_at"] = (
+                hit["provider_call_invoked"] = True
+                hit["provider_call_started_at"] = (
                     datetime.now(timezone.utc).isoformat()
                 )
-            raise
+            try:
+                provider_box["result"] = original_complete(self, messages)
+            except BaseException as exc:
+                provider_box["exception"] = exc
+                with barrier_lock:
+                    hit["provider_exception"] = type(exc).__name__
+            finally:
+                with barrier_lock:
+                    hit["provider_returned"] = "result" in provider_box
+                    hit["provider_call_finished_at"] = (
+                        datetime.now(timezone.utc).isoformat()
+                    )
+                    result = provider_box.get("result")
+                    if isinstance(result, dict):
+                        hit["tool_call_count"] = len(
+                            result.get("tool_calls") or []
+                        )
+                        hit["has_content"] = bool(
+                            str(result.get("content") or "").strip()
+                        )
+                provider_done.set()
+
         with barrier_lock:
-            hit["provider_returned"] = True
-            hit["provider_call_finished_at"] = (
+            barrier_hits.append(hit)
+        provider_thread = threading.Thread(
+            target=call_provider,
+            name=f"{caller_thread}-provider",
+            daemon=True,
+        )
+        provider_thread.start()
+
+        # The live coordinator may inject the next shock only after the real
+        # provider invocation is durable in this receipt.  The response itself
+        # stays outside Runtime until both Agent generations reach the barrier.
+        if not release.wait(timeout=180):
+            raise RuntimeError("R32 external-response barrier timed out")
+        if not provider_done.wait(timeout=240):
+            raise RuntimeError("R32 external provider call did not terminate")
+        if "exception" in provider_box:
+            raise provider_box["exception"]
+        result = provider_box.get("result")
+        if not isinstance(result, dict):
+            raise RuntimeError("R32 external provider returned no model message")
+        with barrier_lock:
+            hit["response_released_to_runtime"] = True
+            hit["response_released_at"] = (
                 datetime.now(timezone.utc).isoformat()
             )
-            hit["tool_call_count"] = len(result.get("tool_calls") or [])
-            hit["has_content"] = bool(str(result.get("content") or "").strip())
         return result
 
-    def wait_for_initial_barrier(thread_name: str, timeout: float = 45.0) -> bool:
+    def wait_for_initial_barrier(
+        thread_name: str, timeout: float = 45.0
+    ) -> bool:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             with barrier_lock:
                 if any(
                     item.get("thread") == thread_name
                     and item.get("release_was_set") is False
+                    and item.get("provider_call_invoked") is True
                     for item in barrier_hits
                 ):
                     return True
@@ -572,6 +611,10 @@ def run() -> dict[str, Any]:
         {item.get("thread") for item in hits_before_release}
         == expected_barrier_threads
         and len(hits_before_release) == 2
+        and all(
+            item.get("provider_call_invoked") is True
+            for item in hits_before_release
+        )
     )
     if not concurrent_external_barrier_proven:
         raise RuntimeError(
