@@ -605,6 +605,104 @@ def run() -> dict[str, Any]:
 
     HermesJourneyAgent._complete = gated_complete
     results: dict[str, Any] = {}
+    thread_a: threading.Thread | None = None
+    thread_b: threading.Thread | None = None
+    a_run: dict[str, Any] | None = None
+    b_run: dict[str, Any] | None = None
+    a_bound = False
+    b_bound = False
+    shock_b: dict[str, Any] = {}
+    r2: dict[str, Any] = {}
+
+    def abort_checkpoint(phase: str, message: str) -> dict[str, Any]:
+        """Persist the actual partial strike state instead of hand-building it."""
+
+        release.set()
+        for thread in (thread_a, thread_b):
+            if thread is not None and thread.is_alive():
+                thread.join(timeout=5)
+        HermesJourneyAgent._complete = original_complete
+
+        with barrier_lock:
+            external_call_outcomes = [dict(item) for item in barrier_hits]
+        invoked_threads = sorted(
+            {
+                str(item.get("thread"))
+                for item in external_call_outcomes
+                if item.get("provider_call_invoked") is True
+            }
+        )
+        final = _snapshot(journey_id)
+        current_epoch = next(
+            (
+                row
+                for row in final["epochs"]
+                if row.get("status") == "OPEN"
+            ),
+            None,
+        )
+        return {
+            "schema": "citynexus.r32.live-strike.v2.failure.v2",
+            "status": "NOT_PROVEN",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "database": str(db),
+            "journey_id": journey_id,
+            "failure": {
+                "phase": phase,
+                "error_type": "RuntimeError",
+                "message": message,
+                "cause": (
+                    "The harness stopped at the first unmet causal boundary "
+                    "and preserved the durable partial state without injecting "
+                    "later shocks or authority."
+                ),
+            },
+            "setup": _jsonable(setup),
+            "authority_setup": _jsonable(authority_setup),
+            "runtime_preflight": _jsonable(runtime_preflight),
+            "source_receipt": source_receipt,
+            "runtime": {
+                "provider": "WB2api",
+                "endpoint": os.getenv("CITYNEXUS_HERMES_API_URL"),
+                "configured_model": os.getenv("CITYNEXUS_HERMES_MODEL"),
+                "fallback_models": os.getenv(
+                    "CITYNEXUS_HERMES_MODEL_FALLBACKS"
+                ),
+                "external_call_outcomes": external_call_outcomes,
+                "provider_invoked_threads": invoked_threads,
+                "provider_calls_were_real": bool(invoked_threads),
+                "concurrent_external_barrier_proven": False,
+            },
+            "shock_a": shock_a,
+            "shock_b": shock_b,
+            "r1": r1,
+            "r2": r2,
+            "agent_a_bound_before_shock_b": a_bound,
+            "agent_b_bound_after_shock_b": b_bound,
+            "agent_a_run_at_barrier": a_run,
+            "agent_b_run_at_barrier": b_run,
+            "agent_responses": _jsonable(results),
+            "agent_threads_still_running_at_checkpoint": {
+                "a": bool(thread_a and thread_a.is_alive()),
+                "b": bool(thread_b and thread_b.is_alive()),
+            },
+            "stale_binding_assertion": {
+                "typed": False,
+                "detail": "not exercised before a complete R1 -> R2 chronology",
+            },
+            "current_epoch_id": (
+                current_epoch.get("id") if current_epoch else None
+            ),
+            "final": final,
+            "truth_boundary": {
+                "shock_source": "SERVER_OWNED_PROVIDER_REPLAY_FIXTURE",
+                "external_runtime": (
+                    "WB2api OpenAI-compatible Hermes endpoint"
+                ),
+                "physical_travel_proven": False,
+            },
+        }
+
     command = (
         "Recover the current shared Journey from server-owned provider facts. "
         "Preserve completed execution and protected commitments. Use only the "
@@ -631,8 +729,9 @@ def run() -> dict[str, Any]:
     )
     a_barrier_ready = wait_for_initial_barrier("r32-agent-a")
     if not a_bound or not a_barrier_ready:
-        raise RuntimeError(
-            "Agent A did not reach the durable R1 external-response boundary"
+        return abort_checkpoint(
+            "A_EXTERNAL_RESPONSE_BOUNDARY",
+            "Agent A did not reach the durable R1 external-response boundary",
         )
 
     # The second provider replay deliberately changes the semantic event
@@ -667,8 +766,9 @@ def run() -> dict[str, Any]:
     )
     b_barrier_ready = wait_for_initial_barrier("r32-agent-b")
     if not b_bound or not b_barrier_ready:
-        raise RuntimeError(
-            "Agent B did not reach the durable R2 external-response boundary"
+        return abort_checkpoint(
+            "B_EXTERNAL_RESPONSE_BOUNDARY",
+            "Agent B did not reach the durable R2 external-response boundary",
         )
 
     with barrier_lock:
@@ -688,8 +788,9 @@ def run() -> dict[str, Any]:
         )
     )
     if not concurrent_external_barrier_proven:
-        raise RuntimeError(
-            "R32 barrier did not isolate exactly the two initial external calls"
+        return abort_checkpoint(
+            "CONCURRENT_EXTERNAL_BARRIER",
+            "R32 barrier did not isolate exactly the two initial external calls",
         )
     release.set()
     thread_a.join(timeout=240)
@@ -762,8 +863,8 @@ def main() -> int:
     output = args.output or (BACKEND / "output" / f"r32-live-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(_jsonable(result), ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
-    print(json.dumps({"output": str(output), "journey_id": result["journey_id"], "r1": result["r1"], "r2": result["r2"], "agent_a_bound": result["agent_a_bound_before_shock_b"], "agent_b_bound": result["agent_b_bound_after_shock_b"], "stale_typed": result["stale_binding_assertion"].get("typed")}, ensure_ascii=False))
-    return 0
+    print(json.dumps({"output": str(output), "status": result.get("status", "COMPLETED"), "journey_id": result["journey_id"], "r1": result["r1"], "r2": result["r2"], "agent_a_bound": result["agent_a_bound_before_shock_b"], "agent_b_bound": result["agent_b_bound_after_shock_b"], "stale_typed": result["stale_binding_assertion"].get("typed"), "failure": result.get("failure")}, ensure_ascii=False))
+    return 2 if result.get("status") == "NOT_PROVEN" else 0
 
 
 if __name__ == "__main__":
