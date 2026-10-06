@@ -22,7 +22,12 @@ from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
-from app.recovery_epoch import RECOVERY_EPOCH_SUPERSEDED, ensure_recovery_epoch
+from app.recovery_epoch import (
+    RECOVERY_EPOCH_SUPERSEDED,
+    RecoveryEpochSuperseded,
+    ensure_recovery_epoch,
+    validate_recovery_epoch_binding,
+)
 from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
 from app.observability.tracing import persist_span
@@ -1072,6 +1077,107 @@ class DeepSeekJourneyAgent:
         ] = {}
         tool_counts: dict[str, int] = {}
         terminal_supervisor_turns = 0
+
+        def preempt_if_recovery_epoch_advanced() -> bool:
+            """Stop this exact run when server-owned Journey reality moved on.
+
+            The run is never retargeted.  This guard executes both immediately
+            before an external model call and immediately after its response so
+            a shock that lands while the provider is thinking cannot leak a
+            stale tool call into the current recovery generation.
+            """
+
+            nonlocal sequence, recovery_superseded, final_text
+            if not run.recovery_epoch_id:
+                return False
+            try:
+                validate_recovery_epoch_binding(
+                    session,
+                    journey.id,
+                    run.recovery_epoch_id,
+                )
+            except RecoveryEpochSuperseded as exc:
+                recovery_superseded = True
+                final_text = (
+                    "Recovery stopped because the server-owned Journey reality "
+                    "advanced to a newer recovery epoch."
+                )
+                sequence += 1
+                step_now = _now()
+                result = {
+                    "tool": "recovery_epoch_guard",
+                    **exc.facts,
+                    "decision": RECOVERY_EPOCH_SUPERSEDED,
+                    "executed": False,
+                    "model_response_discarded": True,
+                }
+                step = AgentRunStep(
+                    id=str(uuid4()),
+                    run_id=run.id,
+                    sequence_no=sequence,
+                    tool_name="recovery_epoch_guard",
+                    arguments_json=_json_text(
+                        {
+                            "bound_recovery_epoch_id": run.recovery_epoch_id,
+                        }
+                    ),
+                    result_json=_json_text(result),
+                    decision=RECOVERY_EPOCH_SUPERSEDED,
+                    status="SUPERSEDED",
+                    created_at=step_now,
+                    completed_at=step_now,
+                )
+                session.add(step)
+                tool_trace.append(
+                    {
+                        "sequence_no": sequence,
+                        "tool_name": "recovery_epoch_guard",
+                        "arguments": {
+                            "bound_recovery_epoch_id": run.recovery_epoch_id,
+                        },
+                        "result": result,
+                        "decision": RECOVERY_EPOCH_SUPERSEDED,
+                        "status": "SUPERSEDED",
+                        "created_at": step_now,
+                        "completed_at": step_now,
+                    }
+                )
+                record_audit(
+                    session,
+                    action="agent.run.recovery_epoch_superseded",
+                    entity_type="AgentRun",
+                    entity_id=run.id,
+                    journey_id=journey.id,
+                    actor_type="SYSTEM",
+                    actor_id="recovery-epoch",
+                    after={
+                        "run_id": run.id,
+                        "mission_id": mission.id,
+                        "status": "SUPERSEDED",
+                        **exc.facts,
+                    },
+                    trace_id=trace_id,
+                )
+                persist_span(
+                    session,
+                    journey_id=journey.id,
+                    trace_id=trace_id,
+                    name="agent.recovery_epoch_guard",
+                    attributes={
+                        "status": "SUPERSEDED",
+                        "bound_recovery_epoch_id": run.recovery_epoch_id,
+                        "current_recovery_epoch_id": exc.facts.get(
+                            "current_recovery_epoch_id"
+                        ),
+                    },
+                )
+                session.commit()
+                return True
+            # validate_recovery_epoch_binding reads current reality and therefore
+            # opens a transaction.  Close it before any provider wait.
+            session.commit()
+            return False
+
         try:
             for _ in range(max_steps):
                 batch_search_seen = False
@@ -1079,6 +1185,8 @@ class DeepSeekJourneyAgent:
                 # tool-result commit.  Every external call must start with no
                 # database transaction held by this model run.
                 session.commit()
+                if preempt_if_recovery_epoch_advanced():
+                    break
                 message = self._complete(messages)
                 for receipt in getattr(self, "external_attempts", [])[len(
                     [item for item in tool_trace if item.get("tool_name") == "external_model_call"
@@ -1104,6 +1212,11 @@ class DeepSeekJourneyAgent:
                         "created_at": step_now, "completed_at": step_now,
                     })
                 session.commit()
+                # The external call may have overlapped a new provider shock.
+                # Discard its response before even a read-only stale tool is
+                # executed; a fresh run owns the newer recovery generation.
+                if preempt_if_recovery_epoch_advanced():
+                    break
                 run.model_key = self.model_key
                 tool_calls = message.get("tool_calls") or []
                 content = message.get("content") or ""
