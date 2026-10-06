@@ -1,0 +1,206 @@
+{
+ "instrument": "cmdra_0553_rebind_r19",
+ "old_pin": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+ "new_pin": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+ "cited_files": {
+  "backend/app/main.py": {
+   "old": "46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5",
+   "new": "3aeb274c683c200eee7ec13138cf2b72a4615c03",
+   "same": false
+  },
+  "backend/app/schemas.py": {
+   "old": "c7ce67e452f84b992b52d01adcb664d3671dc417",
+   "new": "5db22519a38304da7ababcc5760a886b182d83fd",
+   "same": false
+  },
+  "backend/app/demo_scene.py": {
+   "old": "1ec3180a29a89d542f8dce738f7c5c13d3eadfef",
+   "new": "1ec3180a29a89d542f8dce738f7c5c13d3eadfef",
+   "same": true
+  },
+  "frontend/src/i18n/LocaleContext.tsx": {
+   "old": "20203fee4744513da320387e7923fabbf054d566",
+   "new": "74f3d6de5779b860b535f48c609d7ef4be7ba429",
+   "same": false
+  },
+  "frontend/src/lib/displayVocabulary.ts": {
+   "old": "bdbaa3da9bb3ad996a6238256abc5622915a93d1",
+   "new": "06e4ce792b32ecebafc21e01cb8ef2abb650fa09",
+   "same": false
+  },
+  "frontend/src/features/execution/V12StatePrimitives.tsx": {
+   "old": "84668f8d04843aae6e72cf20ec2e8cc5b285f278",
+   "new": "84668f8d04843aae6e72cf20ec2e8cc5b285f278",
+   "same": true
+  },
+  "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx": {
+   "old": "821365340bc164af105fcbb7839f65d5540e591a",
+   "new": "821365340bc164af105fcbb7839f65d5540e591a",
+   "same": true
+  },
+  "frontend/src/features/studio/V12TripStudioPanel.tsx": {
+   "old": "acfd47261022e1b0b8aeeab42feb34cc834fe8a9",
+   "new": "d3cc365880384164d4a57f3f8166263d05b769b5",
+   "same": false
+  },
+  "frontend/src/main.tsx": {
+   "old": "2b1571decf92fc7e466b593d09f92af546185300",
+   "new": "2da40e6487e01775b539e98a922c35a4987eef58",
+   "same": false
+  },
+  "frontend/src/app/V8Experience.tsx": {
+   "old": "c212a3af412e56681db83c4d19d2f6de22faccdb",
+   "new": "4fece5054beef7ab90ea6544cfaf1ce7ad720050",
+   "same": false
+  },
+  "frontend/e2e/v13-authoritative-integrity.spec.ts": {
+   "old": "f78b0507b749b03a6a0cd8eabfd97f005463d6e4",
+   "new": "f78b0507b749b03a6a0cd8eabfd97f005463d6e4",
+   "same": true
+  },
+  "frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts": {
+   "old": "84be25996cf4b082fcc2d6c338fa8a9cccd987f1",
+   "new": "84be25996cf4b082fcc2d6c338fa8a9cccd987f1",
+   "same": true
+  }
+ },
+ "mark_key_refs_at_new_tip": {
+  "exec.markEnRoute": {
+   "refs_outside_dictionary": 0,
+   "sites": []
+  },
+  "exec.markArrived": {
+   "refs_outside_dictionary": 0,
+   "sites": []
+  },
+  "exec.markInProgress": {
+   "refs_outside_dictionary": 1,
+   "sites": [
+    "79daa3c4ff8f37304d352177b456133d4b9c2a45"
+   ]
+  },
+  "exec.markCompleted": {
+   "refs_outside_dictionary": 0,
+   "sites": []
+  }
+ },
+ "reachability_at_new_tip": {
+  "files_reachable": 144,
+  "shell_reachable": true,
+  "importers_of_the_state_primitives_module": {
+   "frontend/src/features/studio/V12TripStudioPanel.tsx": {
+    "names": [
+     "ImpactPreview"
+    ],
+    "reachable": true
+   },
+   "frontend/src/stories/V12StatePrimitives.stories.tsx": {
+    "names": [
+     "ActivityCard",
+     "AgentAction",
+     "CommitmentCard",
+     "EdgeStatus",
+     "ImpactPreview",
+     "JourneyLeg",
+     "LiveJourney",
+     "OfflineBanner",
+     "RiskBanner"
+    ],
+    "reachable": false
+   }
+  },
+  "ActivityCard_imported_by_reachable_file": false,
+  "LiveJourney_imported_by_reachable_file": false
+ },
+ "own_ruler_at_new_tip": {
+  "rc": 0,
+  "passed": 4,
+  "failed": 0,
+  "evidence_written": true
+ },
+ "stale_by_generation": [
+  "r11 census and r13 screen walks: runtime readings taken against the previous generation's bundle (entry index-DLbc3Q3N.js); this round does NOT re-walk them, so they speak for the old pin only"
+ ],
+ "arms": [
+  {
+   "id": "the_rebind_runs_on_a_sha_that_exists_locally",
+   "verdict": "PASS",
+   "observed": "old pin b2fccfdf2728 -> new pin 79daa3c4ff8f"
+  },
+  {
+   "id": "the_cited_file_table_names_what_moved",
+   "verdict": "PASS",
+   "observed": "unchanged 5, changed 7: [\"backend/app/main.py\", \"backend/app/schemas.py\", \"frontend/src/i18n/LocaleContext.tsx\", \"frontend/src/lib/displayVocabulary.ts\", \"frontend/src/features/studio/V12TripStudioPanel.tsx\", \"frontend/src/main.tsx\", \"frontend/src/app/V8Experience.tsx\"]"
+  },
+  {
+   "id": "the_four_mark_keys_keep_their_reference_shape",
+   "verdict": "PASS",
+   "observed": "{\"exec.markEnRoute\": 0, \"exec.markArrived\": 0, \"exec.markInProgress\": 1, \"exec.markCompleted\": 0}"
+  },
+  {
+   "id": "the_reachability_graph_at_the_new_tip_still_sees_the_shell",
+   "verdict": "PASS",
+   "observed": "144 files reachable; shell reachable=True"
+  },
+  {
+   "id": "the_two_fallback_components_are_still_stories_only",
+   "verdict": "PASS",
+   "observed": "importers {\"frontend/src/features/studio/V12TripStudioPanel.tsx\": {\"names\": [\"ImpactPreview\"], \"reachable\": true}, \"frontend/src/stories/V12StatePrimitives.stories.tsx\": {\"names\": [\"ActivityCard\", \"AgentAction\", \"CommitmentCard\", \"EdgeStatus\", \"ImpactPreview\", \"JourneyLeg\", \"LiveJourney\", \"OfflineBanner\", \"Ri"
+  },
+  {
+   "id": "my_own_landed_ruler_is_still_green_at_the_new_tip",
+   "verdict": "PASS",
+   "observed": "ruler at the new tip: rc=0 passed=4 failed=0"
+  },
+  {
+   "id": "the_reworded_copy_words_are_measured_against_the_old_census",
+   "verdict": "PASS",
+   "observed": "reworded by another lane between the two pins: {\"bookings.stayEvidence\": [\"STAY EVIDENCE\", \"Stay evidence\"], \"inbox.multimodal\": [\"MULTIMODAL INBOX\", \"Multimodal inbox\"], \"inbox.authoritativeMemory\": [\"AUTHORITATIVE MEMORY\", \"Authoritative memory\"]}"
+  }
+ ],
+ "exported_paths": [
+  "backend/app/schemas.py",
+  "frontend/src",
+  "frontend/e2e",
+  "frontend/package.json"
+ ],
+ "reworded_copy_words": [
+  {
+   "key": "bookings.stayEvidence",
+   "old_value": "STAY EVIDENCE",
+   "new_value": "Stay evidence",
+   "changed": true,
+   "old_value_words_in_old_census": [
+    "EVIDENCE",
+    "STAY"
+   ]
+  },
+  {
+   "key": "inbox.multimodal",
+   "old_value": "MULTIMODAL INBOX",
+   "new_value": "Multimodal inbox",
+   "changed": true,
+   "old_value_words_in_old_census": [
+    "INBOX",
+    "MULTIMODAL"
+   ]
+  },
+  {
+   "key": "inbox.authoritativeMemory",
+   "old_value": "AUTHORITATIVE MEMORY",
+   "new_value": "Authoritative memory",
+   "changed": true,
+   "old_value_words_in_old_census": [
+    "AUTHORITATIVE",
+    "MEMORY"
+   ]
+  }
+ ],
+ "own_census_token_table_is_stale_for": [
+  "bookings.stayEvidence",
+  "inbox.multimodal",
+  "inbox.authoritativeMemory"
+ ],
+ "verdict": "GREEN",
+ "red_arms": []
+}
