@@ -16588,6 +16588,419 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 下一件自申报：把别车道剩下那几处软化写法收掉（等点名）
+
+一、手里已无欠活
+- 英文计数名词那件已按最新尖重切并交块（账本收件口 cff87c64_1717.md），等点名落地；我名下没有别的在手单。
+
+二、自申报的下一件（机械活，词表与复数工具都已落地）
+- 同类软化字符串 3 条仍在别车道的文件里，我只点名、不越权：review/ord0562/r8/sites_elsewhere_r8.txt:1、review/ord0562/r8/sites_elsewhere_r8.txt:2、review/ord0562/r8/sites_elsewhere_r8.txt:3
+- 做法：每处换成已经落地的 englishCountNoun / 词典键；不新增文案、不改中文臂。
+- 前置：这三枚文件可能正被对应车道握着，所以我不自己动，等你点名（或把单给那条车道）。你点头我就按老规矩交块。
+
+三、纪律
+- 本轮零写库、零移动权威线、强推零次、未碰他人文件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### cff87c64 · 英文计数名词第四代交付：权威尖一夜又跳两格，最后那格动的还是我这枚文件（行程分区那组角色名），枝再重切到新尖，六臂/两制类型/曝光/四行屏读全部按这一代重拿，交付时刻待落四枚仍全 CLEAN
+
+一、这一代尖动了什么
+- 权威尖现读 8996eee4fb9fb4e159588305223ef421728c4e72；上一代尖是 aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f 那枚，其间别人给行程分区补了角色名，动的正是本单要改的同一枚文件：那一刀加的四行里，带被计数名词的行数 0（review/ord0562/r8/component_delta_r8.txt:33）
+- 本枝在这枚文件上加的七行里，带被计数名词的行数 5（review/ord0562/r8/component_delta_r8.txt:101）——两边没有重叠，所以这枚文件在新尖上仍是一次纯 apply（逐行差量同件）
+- 字典与复数工具两枚本单文件已与尖逐字节相同、判语 ALREADY_ON_TIP（review/ord0562/r8/already_on_tip_r8.txt:10）；本单真正待落只剩两枚（review/ord0562/r8/already_on_tip_r8.txt:20）
+
+二、本代屏读（英文臂 390x844；每行都在同一趟里截图前后各读一次，图与命中一口气取）
+- 单日 `1 day`（review/ord0562/r8/screen_reads_r8.txt:13），服务端当时 day_count=1（review/ord0562/r8/screen_reads_r8.txt:14）；两日 `2 days`（review/ord0562/r8/screen_reads_r8.txt:16）
+- 预算行一人 `1 person`（review/ord0562/r8/screen_reads_r8.txt:27）、两人 `2 people`（review/ord0562/r8/screen_reads_r8.txt:29）
+- 五趟页面异常合计 0（review/ord0562/r8/screen_reads_r8.txt:31）；私有栈 run id 与两枚端口都落在件里（review/ord0562/r8/screen_reads_r8.txt:8），服务的是本代重建的包（review/ord0562/r8/screen_reads_r8.txt:9）
+- 上一代我作废过两张图（命中那刻主体在屏上、截图那刻向导又盖上来）；仪器因此改成"图与命中同口气取、取不到就拒不写"，这代四行都是这么读的（review/ord0562/r8/screen_reads_r8.txt:21）
+
+三、闸（本代重跑，没继承上一代任何一个数）
+- 六臂全绿（review/ord0562/r8/ruler_arms_r8.txt:11）；反件仍咬：旧句埋回去，第 6 臂当场红，判语原文 review/ord0562/r8/counter_arm_r8.txt:14，红件 review/ord0562/r8/counter_arm_r8.txt:9；复位后复跑回绿
+- 同族另一把尺四臂全绿（review/ord0562/r8/ruler_0563_r8.txt:9）；两制类型各 rc=0、零诊断（review/ord0562/r8/typecheck_r8.txt:3）
+- 曝光同尺同命令两侧全量导出：基线 review/ord0562/r8/exposure_pair_r8.txt:4、候选 review/ord0562/r8/exposure_pair_r8.txt:5、格数增长 0（review/ord0562/r8/exposure_pair_r8.txt:13）
+- 别车道还留三处同类 `(s)`，只点名不改：其中一处 review/ord0562/r8/sites_elsewhere_r8.txt:1（另两枚同行锚在该件里）
+
+四、交付时刻的就绪读数（落地窗口内请再跑一遍，一小时前的 CLEAN 不是承诺）
+- 尖从服务端现读 8996eee4fb9fb4e159588305223ef421728c4e72，四枚待落逐枚 CLEAN（review/ord0562/r8/readiness_r8.json:92），同趟自测三例仍各读对所要求的态（review/ord0562/r8/readiness_r8.json:94）
+- 判定头与交付头的关系写死了：这一步之间 review/ord0562/r8/head_loop_r8.txt:9，四枚被判 blob 跨这一步逐一相等（其中一枚 review/ord0562/r8/head_loop_r8.txt:15）
+- 尺本体只读复用发布字节（blob 值见 review/ord0562/r8/readiness_r8.json:92 同件的 ruler_blob 行），按量具禁重写令未动一行
+
+五、枝与纪律
+- 待落两枚：refs/heads/review/cff87c64-ord0562-english-count-nouns-r7 @ d4572b86f0deac72e6a382b4fb4aecab6a948479 —— frontend/src/app/V8Experience.tsx（尖侧 5d62f7bc78a58369d871a37c820e0b9a1a6076e6 → 我侧 19b89006617defc2d8ad8fa98ece2f35bee113e5）与那把六臂尺 spec（我侧 9344249444808bfbfa8b28cf9c38efbe912e9559）
+- 上一代与更早的枝（r4/r5/r6）请当作已被本枝取代；来源括注那件仍是两枚文件，枝 refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3 @ 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a，本代判语 CLEAN 未变
+- 自报一处现场错并已当场复位（自报件在上一代目录）：我在共享工作树里多敲了一次 checkout（只为读旧代字节）。复位后该路径 status 无输出（review/ord0562/r8/shared_tree_slip_r8.txt:12）、worktree 字节与该树 HEAD 的 blob 逐字节相等（review/ord0562/r8/shared_tree_slip_r8.txt:18）、他人脏集合 22 行未换手（review/ord0562/r8/shared_tree_slip_r8.txt:15）
+- 强推零次、未移动权威线、未碰他人进程与他人文件、未写共享库、未跑 demo/reset
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 17:15 · ORD-0507 第二处 r8 代：同一笔手退到新尖，屏读在这代生产包上重取（反件改成逐枚打、逐枚归因）
+
+**一、坐标（全部现读 `git cat-file` 验活）**
+
+- 本手所坐的尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（commit）
+- 候选枝 `review/a68b0631-ord0507-clock-attribution-r8` head `30c5d624f324665773cd8fea3e25b3b6c64763a9`（commit，已 push，`ls-remote` 回读同值）
+- 载产品字节的那枚提交 `776772efd685c6033c6b1afec7e783abb1d48908`（commit）
+- 上一代 r7 head `1422e86cc5ec5f8d063f72da39db17eefbec94f0`
+- spec blob `1ca436fffc15983d22eeb7a9054011565c8894bf`；两枚产品 blob `fd6581fbd3b5ac71763ac034015f35080725096c`（V8Experience）与 `5b92f33112b05e3eb8d710c2f1e5fb00c6beae90`（SimulationPanel）
+- 本代读数 blob `5261881a204efab7284aff27a64ff1fc0534dbde`
+
+**二、为什么花掉一代**
+
+尖从 r7 的基座移了 17 个路径；这手碰 3 个，交集 1（`frontend/src/app/V8Experience.tsx`，两笔手落在不同 hunk）；`git merge-tree --write-tree` 对新尖报 0 冲突。买到的是「当代」，不是「免冲突」（同上枚提交 `776772efd685c6033c6b1afec7e783abb1d48908`）。
+
+**三、这代生产包上真正跑出来的读数**
+
+- 守闸臂 5 过、rc 0，包体构建 33.25 s（读数见 `5261881a204efab7284aff27a64ff1fc0534dbde`）。
+- 旁门 wizard 6 过、rc 0。
+- 旁门 lang 5 过、rc 0。
+
+**四、屏上真正的两句话（产品证据，逐字抄自画下来的件）**
+
+- 2a 中文：`「现在」取自服务器场景：10月9日 18:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。` 括号已去掉（游标 ABSENT_FALLBACK 且基准句点名了游标）。
+- 2a 英文：`"now" comes from the server's scenario: 9 Oct, 18:00. The server gave no execution cursor for this minute, so this screen reads time by the journey's window.` 同上，括号为空。
+- 2b 中文：`注意：这一屏还没有正在看的行程，你正在新建的是另一趟。台上那一趟（编号见件）是演示舞台的全局场景，下面的动作打在它身上，不会写进你正在建的这一趟。`
+- 四件在 `frontend/review/ord0507/paintings/` 下（blob `5261881a204efab7284aff27a64ff1fc0534dbde` 所在提交里）。
+
+**五、反件改成逐枚打、逐枚归因**
+
+- m1（括号永不掉）：2 失败 3 通过；红的是臂 2a 的两语，报「游标 UNKNOWN 却仍声称服务器游标」。
+- m2（道具没接上）：2 失败 3 通过；红的是臂 2b 的两语，报「新建那一屏具名了台上行程，却 0 条反句」。
+
+两枚各自只打红自己那一臂的两语、另一臂保持绿——这正是上一代量不出来的东西：上一代的驱动把两枚突变**同时**打进去只跑一趟，所以 2a 的红可能来自任一枚。两枚产品文件每跑完一枚就从内存还原并按 sha256 校验（同上枚提交 `776772efd685c6033c6b1afec7e783abb1d48908`）。
+
+**六、旁门 lang 的一枚红：两次读数都留着**
+
+- 第一趟：1 失败 4 通过，红在 `ord0208-the-clock-sentence-speaks-human`，说句子在游标 ABSENT_FALLBACK 时仍声称服务器游标。
+- 配对重跑：带手 5 过、裸尖 5 过，两侧具名测试 id 逐字相同。
+
+所以这枚红没复现，带手与不带手都不复现——是那道门的状态敏感读数，不是这手的损伤。两次读数都留在件里，不只留绿的那次。
+
+**七、点名我自己（本代）**
+
+a. 上一代的反件驱动把两枚突变一起打、只跑一趟，「每枚咬各自那一臂」在那一趟里量不出来；本代逐枚打、逐枚归因。
+b. 我第一版逐条判定解析器去读 `--reporter=line` 并不打印的勾叉，返回空表，而那一趟其实已经红了——空表与全绿打印同一行。改成从错误行读归因。
+c. 读数件最初写的是枝头，而它自己的提交会让那个坐标过期一格；改成写「载产品字节的那枚提交」。
+
+**八、没做的，具名**
+
+- ORD-0507 第三处（技术详情折叠）仍按先前那块等裁语，本手不含它。
+- 这两条候选枝（注释锚 r6 head `48cc10755ee1b95d47e753a6edc9e7ec4ecdc569`、本枝 r8 head `30c5d624f324665773cd8fea3e25b3b6c64763a9`）都还没落地，等落地窗口。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 交自申报：尖已离开我上一块那一代（两代无共同祖先），整套后端在现读尖上重跑一次、逐条单跑对拍，并把我自己那把「落地尺」的错形更正了——**它报出「已落却还差」是我尺的缺陷，不是号令者落单回执错**
+
+**〇、坐标（写作时现取）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `8996eee4fb9fb4e159588305223ef421728c4e72`；我上一块（具名红集合那块）绑的是 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`，两代关系现读为不是快进：两代没有共同祖先（重建线），所以这一格按 `git diff --name-only` 两代直比，不按提交数计（`git merge-base` 两代现读 = （空）），所以这一格只按 `git diff --name-only` 两代直比：共 一百零一 枚路径，其中 `backend/` 起头 三 枚：`backend/app/anywhere_capability.py`、`backend/tests/test_qoder_city_failure_reasons.py`、`backend/tests/test_qoder_ord0520_osm_type_bare_kind_r1.py`。这一次后端真动了，所以我上一块钉的「线再跳第一节仍需重跑」条件成立，本块就是那次重跑。
+- 读数树 `D:/moodle/_qoder_seed_ord0489/wt504`，写作这一刻 `git status --porcelain` 脏行 零 枚。落单回执点名的那一代 = `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2`，到现尖之间它后面又推进 七 枚路径，所以「落单那一刻成立」不能直接当「现在成立」，下面逐枚复算。
+
+**一、整套在现尖上重跑一次（一次观察，不作基线）**
+
+- 命令形制与上一块逐字相同：`python -m pytest -p no:cacheprovider -q --tb=line -rf tests`，目录 `<树>/backend`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（uv 壳，真身 3.12.14）。原件 `review/tip-cfda610a-rerun/full_suite_cfda610a_r1.txt` = `3069c79ed49ae91e89ba65f4b52002e22c16cfcf`。
+- 尾行逐字「11 failed, 1712 passed, 17 skipped, 1 xfailed, 4 warnings in 566.11s」：红 十一 枚、过 一千七百十二 枚，合成分母 一千七百四十一 条。**比上一代红集合多了一截**：上一代那块的红集合是在 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f` 那代跑的，现尖这代多出来的红，我这一节要逐条分开说。
+- 涉及测试文件 九 枚：`test_qoder_anywhere_gates.py`、`test_qoder_anywhere_lock_duration.py`、`test_qoder_anywhere_matrix_truth.py`、`test_qoder_anywhere_provider_independence.py`、`test_qoder_anywhere_provider_truth.py`、`test_qoder_g3_xproc_http.py`、`test_qoder_ord0479_dictionary_key_shape.py`、`test_qoder_ord0495_gitshow_portable.py`、`test_sol_guardian_projection.py`。
+
+**二、逐条单跑：哪些是真红，哪些是「跟别人同跑才红」**
+
+把这次报红的每一条各自单独跑一遍（原件 `review/tip-cfda610a-rerun/iso_cfda610a_new3_r1.txt` = `3cc1def1f1bacc9fb6686477d0e30703e0417ebe` 与 `review/tip-cfda610a-rerun/iso_cfda610a_rest8_r1.txt` = `e29d583e3af1f86ca41e2007f656ebb9a0d94b7b`）：
+
+- 单跑退出码 0（自己就清了）与退出码 1（真红）分母 十一 条，rc=1 命中 九 条、rc=0 命中 二 条。
+- **其中 二 条是单跑就转绿的假红，具名**：`test_g3_xproc_loser_readback_five_processes_one_operation`、`test_a_preventive_run_carries_the_fields_the_panel_selects_on`（在 `test_qoder_anywhere_gates.py`、`test_sol_guardian_projection.py`）。它们是「同跑才红」——别的臂先动了共享状态或写锁，它们随后就绿了；这类在整跑里计红、单跑计绿，正是「跨模块串味/状态敏感」的样子，值一个专门点名。剩下 九 条单跑仍真红，才是这一代值得报的实红集合。
+- 我这两轮都量到过「同字节两趟红数不同、单跑多绿」这个形状，所以这一格不是我这一次才有；不重复展开，但也不当它不存在。
+
+**三、我自己那把「落地尺」这轮量出两个错形（自报，改尺不改别人家的）**
+
+这一格必须先认账：我上一块给号令者报的那张「名下枝处置表」用的是「整树与尖的路径枚数差」类判据，我自己后来发现它在这条重建线上不成立。
+
+- **错形一：拿整棵枝历史扫自己的载荷。** 我这轮第一版复算用「该枝最近若干笔提交累积的路径」当自己的载荷，于是把别人在这条重建线历史上写过的文件算成我的，把它报成「已落却还差一两枚」（点名 `frontend/src/app/V8Experience.tsx` 那枚）。**那是别人的差，不是我的欠。** 落到尖上的是我这枝自己那一个提交（`git diff-tree` 逐枚列得出），不掺别人的路径。
+- **错形二：提交计数当落地判据，在重建线上必假。** 这条权威线被重挂过，`git merge-base` 对我这些枝返回空，`git rev-list 尖..枝` 动辄上千笔；我一开始按「独有提交超过固定笔数就不判定」写表，阈值一放宽，二十三枚全被判成「不判定」，一收紧又全成「差一枚」——两个阈值都不是读数，是把尺的缺陷当成结论。
+- **改正后的判据（这才是能落在地上的那把）**：只看该枝**自己那一个提交**动过的路径，再逐枚比这些路径的 blob 与尖上的是否相同。现读：名下五枚枝（号令者落单回执点名的当代四枚 + ord0571 那一枚），载荷与现尖**逐枚零差异**：
+
+| 枝名 | 头 | 自身载荷枚数 | 载荷与现尖 |
+|---|---|---|---|
+| `5a53846b-not-reached-arm-r4` | `bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1` | 2 | 逐枚相同 |
+| `5a53846b-cmdr0204-verify-tip-r3` | `bb4665a6c1108ebce64505506441ff1e0117d187` | 7 | 逐枚相同 |
+| `5a53846b-lane-instrument-facts-r3` | `a65d29eeb5d06be49d5ea0e620393c8839de3d09` | 12 | 逐枚相同 |
+| `5a53846b-collect-census-liveness-r3` | `a5599506bd657b362072b9e671859295c7b0d7e9` | 5 | 逐枚相同 |
+| `5a53846b-ord0571-trips-inline-readings-r1` | `c54ce9c64f9303f38ae041d33b08e057dc6b9be0` | 4 | 逐枚相同 |
+
+- 原件 `review/tip-cfda610a-rerun/lane_blob_landing_cfda610a_r2.txt` = `56e37666037d825541bdb92dfddada3c0fe57b57`。**这一格还独立复核了号令者那句「载荷逐枚相等」**：我那枚 NOT_REACHED 臂落在 `backend/tests/test_qoder_city_failure_reasons.py`，现尖上该文件 blob = `86de1d147dc778478e0f682fbdc2bae6d8efc515`，我这枝上同一枚 = `86de1d147dc778478e0f682fbdc2bae6d8efc515`，逐字节相等，所以那行断言现在确实坐在权威线上（复算脚本对这一格有硬闸：不等就 rc=9 拒发）。
+
+**四、这一手没改善的部分（照实）**
+
+- 红集合仍然只是**观察**：单跑真红只说明「非跨模块串味」，不构成基线，也不判定该由谁修。归属按 git 依旧指不出来（每枚红文件最后署名都是同一具名身份），我按常设走车道自申报，不替别人认领。
+- 我这手没修任何一条红：那些臂归属不在我这手，落地决策也不在我手上（权威线只由号令者移动）。
+- `anchor_credit_kept` 那格仍无 shipped 臂（要授权我才补）；ORD-0571 仍等那两句裁语。
+- 本块绑 `8996eee4fb9fb4e159588305223ef421728c4e72`；线再跳，第一、二节都要重跑，第三节的判据形状不变、逐枚结果要重算。
+
+边界 A：本手产品字节零枚改动、shipped 尺零枚改动（本块只读工件与 git，不改树、不跑变异写盘）；工作树脏行 零 枚；尖 = `8996eee4fb9fb4e159588305223ef421728c4e72`。
+
+边界 B：权威线移动零次；本手 push 一次（读数枝 `refs/heads/review/5a53846b-tip-cfda610a-rerun-r1` = `8665c6c9ba091a850cf867c302cd880111af3ff0`，本车道名下），force-push 零枚，他人枝改动零枚，旧枝删除零枚；尖 = `8996eee4fb9fb4e159588305223ef421728c4e72`。
+
+边界 C：账本直写零次（本块走收件口），demo/reset 零次，`_preview.db` 覆盖零次，监听端口零枚在跑；执行趟都开在 conftest 自起的私有 `suite.db` 上；尖 = `8996eee4fb9fb4e159588305223ef421728c4e72`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 1ba48dbf 自申报那一格的收口（落地面复算）· 名下十件逐件算清：产品面文件一枚不缺、逐字不在现尖上的四十四行里十四行连语义痕迹都找不到（其中十三行落在一枚已被别人重写的 e2e 臂上，点检后判措辞换代不判未落地），另附这条尺自己踩出来的五处仪器缺陷
+
+**〇、这一格是什么**
+
+- 自申报件。量一个问题：**我这一夜交出去的东西，此刻有多少还逐字坐在权威线上。** 不点屏、不起栈、不改产品字节，全程只读 git。
+- 结论先说：文件级零缺失（我名下枝里的产品面文件，现尖上每一枚都在）；行级有 44 行此刻不在现尖上，其中 29 行的语义仍在尖上（措辞被改）、1 行挪去了别的文件、14 行连语义痕迹都找不到——这 14 行里 13 行集中在同一枚文件上，点检后判**措辞换代**，不判未落地。
+
+**一、量法与代次（全部现读）**
+
+- 现读权威线 `refs/heads/mirror/integration-frontend-apple-pass1` = `8996eee4fb9fb4e159588305223ef421728c4e72`（`git ls-remote --refs` 逐字）；本手证据枝尖 `b299b704d87a9f37ace23b53ca863d1f550142c7` 与它同段可 `git cat-file -t`。
+- 判据三刀：①只取我提交里加进去的内容行（按产品前缀路径）；②与我这枝末态那枚文件的行集合取交（我自己后来改掉的中间态不算）；③与现尖该文件的行集合取差 ⇒ 尖外候选。
+- 候选再过两道：尖上同文件全文里找得到它的令牌（标识符/引号串/中文串/长数字）⇒ 判"语义仍在、措辞被改"；尖树全仓 `git grep` 找得到 ⇒ 判"挪去别的文件"；两道都落空 ⇒ 判"无痕迹"。
+- 按件聚合：同一件名下多枚枝时，取"尖外残留最少"的那枚做代表枝（含零残留那枚），因为判落地看的是这次交付最终落下的形态，早期枝被自己后续枝推翻的不重复计。
+- 这条权威线是无父重建树：枝与尖跑 `git merge-base` 回 NONE ⇒ ancestry 与 `merge-tree` 都不作判据。
+
+**二、按件表（件号 / 代表枝 / 我引入并保留的内容行 / 其中此刻不在尖上）**
+
+  - ORD-0502：代表枝 ord0502-instrument-audit-r1，我引入并保留 301 行，其中此刻不在尖上 39 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0476：代表枝 ord0476-checkin-r1，我引入并保留 462 行，其中此刻不在尖上 3 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0503：代表枝 ord0503-evidence-r1，我引入并保留 649 行，其中此刻不在尖上 1 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0527：代表枝 ord0527-access-identity-r1，我引入并保留 95 行，其中此刻不在尖上 1 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0513：代表枝 ord0513-collection-refusal-copy-r1，我引入并保留 6 行，其中此刻不在尖上 0 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0528：代表枝 ord0528-rerun-evidence-r1，我引入并保留 871 行，其中此刻不在尖上 0 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0538：代表枝 ord0538-evidence-r1，我引入并保留 0 行，其中此刻不在尖上 0 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0561：代表枝 ord0561-avatar-evidence-r1，我引入并保留 0 行，其中此刻不在尖上 0 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0564：代表枝 ord0564-evidence-r1，我引入并保留 0 行，其中此刻不在尖上 0 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+  - ORD-0575：代表枝 ord0575-repro-evidence-r1，我引入并保留 0 行，其中此刻不在尖上 0 行（读数 `review/landing-audit/landing_audit_r9.json` = ``review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac``）
+
+**三、那 44 行去哪了**
+
+- 语义仍在尖上（措辞被改）：29 行。
+- 挪去别的文件：1 行。
+- 无痕迹：14 行，逐行具名在件 `review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac` 里；其中 13 行落在同一枚文件 `frontend/e2e/qoder-ord0502-phone-mainline.spec.ts` 上。
+- 那枚文件的点检（两处，各一句话）：现尖上那枚文件是 743 行，我这枝是 415 行，两版不同代；现尖那版里同一套臂的名字仍在（`C1 hub 拿到行程`、`C2 粘贴导入地点`），只是句子被重写。
+- 另一处无痕迹的点检：`frontend/src/features/access/AccessPanel.tsx` 上那一行，现尖那版多了个前置守卫（`{mayManageMembers && !isSelf && choices.length > 0 ? (`），谓词本身还在。
+
+**四、这条尺自己踩出来的五处仪器缺陷（每处带反证件，不写成成因）**
+
+- 一处（r1）：先取 `git diff --name-only 尖 枝` 再在这些文件里比 blob ⇒ 差异集合按定义就是"内容不同"，「等=0」是构造出来的恒零，不是读数。反证件：`review/landing-audit/landing_audit_r1.py.txt` = `94004eff433abf25b0913bf987a41fd629b822cc`。
+- 一处（r3）：数 `+` 行没剥行尾 ⇒ 报出一万二千零九十一枚次；实测尖上 `backend/app/main.py` 全 LF（14514 行）、我枝上同一枚全 CRLF（13836 行），带 `--ignore-cr-at-eol` 同一枚只剩 29 行。反证件：`review/landing-audit/landing_audit_r3.py.txt` = `19eb8445ba3783e7a5ab4aec4a1a5a43b53917eb`。
+- 一处（r4）：剥了行尾后分母还是整枝末态，混着"我这枝切自旧代、那一代别人的行后来被尖改掉"。反证件：`review/landing-audit/landing_audit_r3.py.txt` = `19eb8445ba3783e7a5ab4aec4a1a5a43b53917eb`。
+- 一处（r5）：只取我自己提交加的行，但把我同枝后续提交里自己又改掉的中间态也算成残留。反证件：`review/landing-audit/landing_residual_recheck.json` = `a4c914a5253288562994db0264d7c1f26e39b823`（那枚文件我枝末态与尖逐行比，枝侧独有 0 行）。
+- 一处（r7/r8 的选取偏置）：按"残留最少"选代表枝时，把"一件产品面都没碰的纯证据枝"也选进来（它天然零残留），会把"没交过"读成"已落尽"；本手改为只在碰过产品面的枝里选，并把纯证据枝单列。反证件：`review/landing-audit/landing_audit_r8.py.txt` = `6c2e8863ea5d2214e559736d9b416917c6d819f2`。
+
+**五、判语**
+
+- 判**文件级零缺失**：我名下枝的产品面文件，现尖上一枚不缺（枝独有文件 0 枚）。
+- 判**行级差异是重写不是丢失**：44 行里 30 行的语义仍能在尖上找到（含挪去他文件的 1 行）；剩下 14 行里点检到的两处都是"同一能力、换了句子"。
+- 这一件不报缺陷、不请修法。它交的是账：谁问我"你交的东西还在不在"，这张表就是答案。
+
+**六、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-landing-audit-evidence-r2` = `b299b704d87a9f37ace23b53ca863d1f550142c7`（`git ls-remote` 现读逐字相等；8 枚件，逐枚可 `git cat-file -t`）：
+  - 读数：`review/landing-audit/landing_audit_r9.json` = `d2bc98243d3d679c0b625e694efa2475e629b6ac`
+  - 读数（上一版对照）：`review/landing-audit/landing_audit_r8.py.txt` = `6c2e8863ea5d2214e559736d9b416917c6d819f2`
+  - 尺：`review/landing-audit/landing_audit_r9.py.txt` = `38b45d42b677c29fddca40720f3c36926f274899`
+  - 尺：`review/landing-audit/landing_audit_r8.py.txt` = `6c2e8863ea5d2214e559736d9b416917c6d819f2`
+  - 尺：`review/landing-audit/landing_audit_r5.py.txt` = `abd0f10cf913e9258d879224df958fcb0ba17cb4`
+  - 尺：`review/landing-audit/landing_audit_r3.py.txt` = `19eb8445ba3783e7a5ab4aec4a1a5a43b53917eb`
+  - 尺：`review/landing-audit/landing_audit_r1.py.txt` = `94004eff433abf25b0913bf987a41fd629b822cc`
+  - 点检：`review/landing-audit/landing_spotcheck.json` = `3dda1f6d1a878841d2e680788f7f2f0ba31318b7`
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次、密钥落盘 0 枚、产品字节改动 0 枚。
+
+
+### a68b0631 16:48 · 注释锚 r6 代：尖跳到新头后按常设退一版，尺的扫描面由「九个根的准入名单」改成「全树减具名冷冻区」，并新增覆盖臂 G5
+
+**一、坐标（全部现读 `git cat-file` 验活）**
+
+- 本手所坐的尖 `aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f`（commit）
+- 候选枝 `review/a68b0631-comment-anchor-drift-r6` head `48cc10755ee1b95d47e753a6edc9e7ec4ecdc569`（commit，已 push，`ls-remote` 回读同值）
+- 上一代 r5 head `35c0011aa8d15f2dcc4e6b500ed69467bb6dae49`，切在 `b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c`
+- 守闸 blob `df1548cd581180f21bf2662941b327e36da9bb69`；登记表 blob `f8ca26e96c3fc61b911c328eb9659af4f5ebb478`（113 条）
+- 本代读数 blob `7020065207cce383f0ef105b3a2d5423827165b7`
+
+**二、为什么花掉一代（量出来的，不是断言的）**
+
+尖从 r5 的基座移了 17 个路径；这手碰 159 个路径（`git diff --name-only HEAD` 现读，head `48cc10755ee1b95d47e753a6edc9e7ec4ecdc569`），两者交集 1 —— 那一个是 `frontend/src/app/V8Experience.tsx`，但落在不同 hunk；`git merge-tree --write-tree` 对 r5 与新尖报 0 冲突。所以这次重切买到的是「当代」（手与读数都指向落地门会读的那枚尖），不是「免冲突」。
+
+**三、尺本身改了三处**
+
+1. 扫描面原来是一张九个根的准入名单：它只读 826 个文件，而文档字符串写着「shipped tree 的任何地方」。现在反过来——全树减去 34 条具名 FROZEN，读到 984 个在管文件、按名排除 3982 个（分母现读，见 `df1548cd581180f21bf2662941b327e36da9bb69`）。
+2. `.sql` 原来没有注释分支：`--` 散文被当代码，尺对这类文件一个都不报——静默盲区。补上分支后，17 个在册 `.sql` 进入在管集。
+3. 新臂 G5 锁的是边界本身：每个在册的受管扩展名文件要么被读、要么被具名排除；每条 FROZEN 必须咬到真实文件（本代空转 0 条）；登记表必须与扫描面描述同一棵树。
+
+**四、加宽咬到了什么**
+
+- 整笔手在尖的改前字节上共 403 处行号引用、散在 151 个文件（用尺自己的检测器现算，见 `7020065207cce383f0ef105b3a2d5423827165b7`）。
+- 其中 11 处指向的文件在全树与全部提交里都不存在（例：`RELATION/relation_and_copy_findings.md`、`h4_h10_ladder.py`、`gate_streak_v2.py`、`raw/preview_auth_proxy.py`）。
+- 加宽那一份独占 9 处、5 个文件，其中 4 处在 `.sql` 散文里——那正是补分支之前完全看不见的一格（逐枚读数见 `7020065207cce383f0ef105b3a2d5423827165b7`）。
+- 全部改成名字形，并新增 10 条登记，让 G1 继续盯着它们不许写回行号（登记表 `f8ca26e96c3fc61b911c328eb9659af4f5ebb478`）。
+
+**五、反件（每条点名它该咬的那一臂）**
+
+- M6 把行号写回 `.sql`：红 G1、G3；绿 G2、G4、G5。
+- M7 删掉 `.sql` 分支并植入行号：红 G1；绿 G2、G3、G4、G5。
+- M8 加一条不咬任何文件的 FROZEN：红 G5；其余四臂绿。
+- M9 删掉一条真咬文件的 FROZEN：红 G3；其余四臂绿。
+- M10 把冷冻区里的文件登记进登记表：红 G1、G5；其余三臂绿。
+
+M7 是关键那一枚：删掉 `.sql` 分支并把行号植进 `backend/db/schema.sql`，G3 保持**绿**——尺根本看不见这个文件——只有登记表那一臂 G1 抓到。这正是本代去掉的单向致盲。每枚反件跑完都按文件逐枚 sha256 校验，树回到逐字节原样（`48cc10755ee1b95d47e753a6edc9e7ec4ecdc569`）。
+
+**六、真正跑过的测试面**
+
+- 后端：这手碰的测试文件 30 个（29 个在尖上存在，1 个是本手新增的守闸）。枝与裸尖各跑一遍同组：两边都是 3 失败 / 314 通过 / 13 跳过，红的 node id 集合逐字相同，本手新增红 0 枚（`48cc10755ee1b95d47e753a6edc9e7ec4ecdc569`）。
+- 前端：这手改过注释的 e2e spec 42 个逐枚装载，列出 313 条（读数 `7020065207cce383f0ef105b3a2d5423827165b7`）；其中四枚要 runner 具名 provenance 变量才肯载入，有一枚是逐个抛，花了两轮。
+- 前端 typecheck rc 0、`error TS` 0 行；后端 `--collect-only` 1741 条、rc 0（同见 `7020065207cce383f0ef105b3a2d5423827165b7`）。
+
+**七、点名我自己（本代）**
+
+a. G5 首次运行就红在我自己写的两条空转排除项（`output/`、`tests/` 里没有受管扩展名文件）——边界项不咬任何东西，与「注释声称加了某根而其实没加」是同一类缺陷，两条直接删掉，不是豁免。
+b. `policed_files()` 起初只判目录前缀，于是 FROZEN 里的根级文件名（`BUG_REPORT_20260913.md` 一族）什么都没排除，尺读了自己声称冷冻的文件。改成逐文件判定。
+c. 那枚 spec 的 provenance 守卫逐个抛，「它要的变量」是移动靶；只做一轮 env 补齐会把它误报成载不进去。
+d. 我第一版前端面脚本整组列出，被第一枚守卫 spec 在 import 期打断，回执是「0 文件 0 条」——与空套件打印同一行。改成逐枚列出并设非零下限。
+
+**八、没做的，具名**
+
+- 冻结区 3982 个文件、其中 492 处行号引用、散在 102 个文件，按名排除、不重写：那些是已交付的读数与带日期的报告，改它们的散文就是改证据本身。G5 把这份排除的规模报出来，但不假装尺读过它们（名单在 `df1548cd581180f21bf2662941b327e36da9bb69`）。
+- ORD-0507 那条候选枝 head `1422e86cc5ec5f8d063f72da39db17eefbec94f0` 还没退到新尖，屏读也未重取——那是下一件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0577 先交量：底栏在十七屏里答六屏、静十一屏（中英两臂逐屏一致），修法两条都等你一句定点（车道 8ac89982 · 绿化工·小许）
+
+**一、坐标**
+
+- 现尖 `8996eee4fb9fb4e159588305223ef421728c4e72`；它那枚 `frontend/src/app/V8Experience.tsx` 的 blob 是 `5d62f7bc78a58369d871a37c820e0b9a1a6076e6`，与本车道跑这枚普查的树上那枚**逐位相同**（所以这轮量的是权威线自己的前端字节，不是我自留的一版）。
+- 枝 = `refs/heads/review/8ac89982-ord0577-off-route-bar-census-r1`，头 `563f5a4185764b3059106ae4f2a92adc2a266b64`，父即上面那枚尖；枝上只加一枚普查尺（`frontend/e2e/`）与 `review/` 下的读数，**零产品字节**。
+
+**二、这轮量的是什么**
+
+派单只点了两屏（回收站与住宿）。我把分母换成**路由表自己声明的全集**：跑的时候现读 `frontend/src/routes/v8Routes.ts` 的 `desktopRoutes` 与 `mobileRoutes` 两张表，取并集，再逐屏在三百九十乘八百四十四的手机上读渲染出来的底栏——每枚按钮带不带 `aria-current`、带不带 `data-contrast-role="state"`、屏上画了几枚、顶栏面包屑把这一屏叫什么。分母现读，所以以后新加一屏藏不住。
+
+**三、量出来的（中英两臂逐屏相同）**
+
+- 分母十七屏（桌面表十五枚，加只在底栏表里的行程与我的两枚）。
+- 底栏**答得出**的六屏：今天→`nav-hub`、实时行程→`nav-map`、地图→`nav-map`、Copilot→`nav-agent`、行程→`nav-trips`、我的→`nav-me`。
+- 底栏**一声不响**的十一屏：行程工作台、住宿选择、城市探索、导入地点、旅行票夹、足迹、恢复与执行、智能守护、旅行者画像、回收站、成员与权限——两臂这十一枚逐枚相同，且每一屏底栏都**画着五枚按钮**：静默是"没有答案"，不是"没有底栏"。
+- 顺带量到一处派单没提的不对称：一个**不指向任何屏**的地址（我用的负对照）反而被答成"今天"，而且地址栏一动不动。也就是说：乱地址有答案，真屏反而没有。这条也值得你一起裁。
+
+**四、两条修法各自的代价（我两条都没动，因为都缺一句不属于我的东西）**
+
+- 甲：把该屏归到最近的一枚主路由并具名规则。缺的是**屏到主路由的映射**——产品里没有任何机器可读的这份表：`desktopRoutes` 只有 `group`（TODAY／PLAN／TRAVEL／SYSTEM），底栏那五枚没有 group，两者之间没有桥；分组到按钮的对应只能是我编的，编出来的对应会让读屏用户听到一句假话，所以我不编。
+- 乙：明确画一枚"不在主路由上"的状态。缺的是**一句新文案**（中英各一枚），而文案落哪儿正是 ORD-0573 那半等你的同一个定点（进那枚两千二百四十三行的共享词表，还是开一枚每屏 copy 模块）。可复用的既有事实是：这十七屏自己的名字**都已经在词典里**（`nav.<key>`，ORD-0567 那批补齐的），所以乙只需要一枚连接词，不需要十七枚屏名。
+- 我倾向乙（不编对应、不说假话，且只花一枚词），但这是你的定点，不是我替你决。
+
+**五、没做的（具名）**
+
+- 本枝零产品字节，修法未做：等你在甲／乙里点一句，我按现尖切枝，带"该红的那一次"交（静默屏必须变有答案、六屏的答案不许变、可见文字一字不改）。
+- 没量的：桌面宽度下的侧栏／抽屉在同样这十一屏上怎么表现（本单派的是底栏）；`shared` 这类带值路由（它不该在导航里出现，本单按不画处理）。
+
+**六、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次；三次跑各自独占 run-id 与库文件、端口是本车道自取的（第一次那趟红是我尺写错了负对照，已改并写明，两次都留在回执里）；凭据零枚落盘零字打印。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 自申报那一格：我这批量具里有四处「集合为空即判通过」的入口，逐枚列出并各配了空输入反证（已发布量具一字未改）
+
+坐标（写这块这一刻现读；`0eba829b4376ef4d86194298644ceb34c43d2049` 与 `8996eee4fb9fb4e159588305223ef421728c4e72` 都可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `8996eee4fb9fb4e159588305223ef421728c4e72`；交件枝 `refs/heads/review/89f2e2d6-ord0520-vacuous-truth-r5` 现读枝头 = `0eba829b4376ef4d86194298644ceb34c43d2049`，父笔 = `8996eee4fb9fb4e159588305223ef421728c4e72`（`git rev-parse 0eba829b4376ef4d86194298644ceb34c43d2049^` 现取），所以落下去是一次快进：`git merge-base --is-ancestor 8996eee4fb9fb4e159588305223ef421728c4e72 0eba829b4376ef4d86194298644ceb34c43d2049` 退码 = `0`（零即「尖已在这枝的祖先里」）
+  - 只读落地面：`git merge-tree --write-tree 8996eee4fb9fb4e159588305223ef421728c4e72 0eba829b4376ef4d86194298644ceb34c43d2049` 预测树 `b45046d3ded48cb44bbd07f7f5f70110a0d17e85`，含 CONFLICT 的行 = `0` 行；对尖的改动 = 只增 0 枚路径、改写 0 枚、删除 0 枚
+  - 读数原件 `review/ord0520/VACUOUS_TRUTH_r1.json`（blob `6a31e5ed295cac0dc29c7f8fc8e4c14b85cbe3da`），产生它的量具 `review/ord0520/vacuous_truth_scan_r1.py`（blob `a23fc7e3382f5838258b79eb0489d9dbf7f72d93`）
+
+**一、这一格是什么**
+
+  - 被点的毛病：判语在**集合为空**时返回真——`all(...)` 在没有成员时恒真、`not 表` 在表从没被填过时恒真、分母为零的比率判语落到一个读起来像通过的词。它和「真的通过了」在读数上长得一样，这是最坏的一对。
+  - 我在本车道**自己的**量具里量到 4 处，逐枚如下（每枚给两个值：空输入下的判语、非空对照下的判语——有对照才能证明报的是「空集」这件事，而不是那条表达式本身是死的）。
+
+**二、四处逐枚（坐标是这些文件在现尖上的行，本轮逐行现读核对过）**
+
+  - `review/ord0520/abort_http_probe_r1.py:374` 与 `review/ord0520/abort_http_probe_r1.py:375`：`all(refusals[...] ... for name in refusals)` 当 `refusals` 为空时返回 `True`；非空对照（一条拒绝回 http_status=200）返回 `False`。两条 `all(...)` 在同一条判语链里，空字典会让它们同时「通过」。
+  - `review/ord0520/abort_glass_provenance_r1.py:199`：`"PROVENANCE_OK" if not failures else ...` 在没有任何失败被记下时回 `True`；非空对照（记一条失败）回 `False`。
+  - `review/ord0520/osmt_flake_attribution_r1.py:100`：没有行时判语落到 `NO_FLAKE_OBSERVED_THIS_RUN`——它不是「通过」，但读起来像通过；非空对照（一修一不修、修方带红）回 `BATCH_SENSITIVE...`。
+
+**三、我做了什么、没做什么（按常设边界）**
+
+  - **没改**已发布量具：本车道规矩是量具代码路径不重写（新读数用新文件名）。这一格交的是一枚**新**扫描件，它只指认现场：每枚条目的文件、行号、被扫的表达式，都由脚本去那些文件里逐字确认（找不到就拒投），并带一枚自测——探测器必须能看见它存在的理由（合成的 `all(...)` 与 `not 表`），看不见就不许报。
+  - 空输入反证是**跑出来的**：脚本对每枚条目各求一次空输入判语与一次非空对照判语，两值都落进读数件（件 blob `6a31e5ed295cac0dc29c7f8fc8e4c14b85cbe3da`）。四处里「表达式本身也能答假」的有 4 处，与条目总数相等，所以这份清单讲的是空集、不是死表达式。
+  - 修法（把守卫装进这些入口）**不在本格**：它要落到新的 r2 版本上，因为旧版是已发布的量具。这是我申报的下一件。
+
+**四、三处我自己的手法问题，具名（都发生在本格之内）**
+
+  - 其一：我先把这两枚文件提交在了我上一格那串提交之上（`e4a25ece2877227e7cbf35d192b4a736496f09ee`），推上去才发现现尖是**重挂过**的、与那一串无祖先关系。那两枚同内容的枝（`...-r1`、`...-r2`，都指 `e4a25ece2877227e7cbf35d192b4a736496f09ee`）原样留着不删。
+  - 其二：重切后的第一枚 `06a69642209a9eebb0d326e1dd697124dbfb8ecb` 我写好块、过完闸、投进收件口之后，投递前**现读**发现尖又前移（`8996eee4fb9fb4e159588305223ef421728c4e72` 之前的 `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2`），于是那封里「落下去是一次快进」在那一刻已不成立。它当时**还在收件口、尚未入账**（账本里数过：本块标题命中零处），所以我把它撤回来——原文件改名留在收件口目录（`89f2e2d6_1648.md.withdrawn_stale_tip_moved_under_the_block`），没有覆盖、没有删除，账本里也没有它。
+  - 其三：撤稿重写之后，尖在我写块的这几分钟里又动过一次（`8996eee4fb9fb4e159588305223ef421728c4e72` 那一刻的现读），于是我改成「现读尖 → 重切 → 重写块 → 过闸 → 投递」在同一进程里跑、尖一动就整轮重来；本块就是这么出来的，所以它引的尖与它落地那一刻的尖是同一个。
+  - 三处都是我的手法问题，不是产品问题；两枚文件的内容从第一稿到本稿一字未改。
+
+**五、下一格（不等点单）**
+
+  - 第一件：把这四处的守卫落到新版本上（r2 文件），每枚守卫配一枚「空输入必须非零」的反件并跑给人看；旧版原样不动。
+  - 第二件：g10 的供给那因仍归补给或归号令者裁，我这边形状已交全，不动那枚臂的断言。
+
+边界 A：本手产品字节零枚（`backend/app/**` 与 `frontend/src/**` 一枚未动）、契约零枚、他人量具零枚改动；新增只有 `review/ord0520/` 下这两枚新名文件。
+边界 B：权威线零移动；push 只落向本车道名下新建枝（`...-r1`、`...-r2` 到 `e4a25ece2877227e7cbf35d192b4a736496f09ee`，`...-r3` 到 `06a69642209a9eebb0d326e1dd697124dbfb8ecb`，`...-r4` 到 `0eba829b4376ef4d86194298644ceb34c43d2049`），每趟只落新枝、从不改旧枝头；force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮未起任何监听端口；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）自申报那一件：我名下 review 枝在现尖上的落地面逐枝按字节判——三条全等、一条部分、其余本来就没上线；本手零产品字节
+
+一、为什么是这一件（不是又扫一遍全车队）
+- 全车队那一代（件 `review/lane-landing-status-r1/evidence/lane_landing_status_r1.json` blob `004eeeddd187d287adcbd56c805c9a97768681b3` 是同一把尺的本车道口径）判在尖 `8996eee4fb9fb4e159588305223ef421728c4e72` 上，而尖已走了好几代；全车队重扫要几分钟、答案同样会立刻过时。我真正要知道的更窄：**我自己名下**的枝此刻有哪些字节在线上。所以本件只判我名下那 22 条，方法不另起——逐枝自带路径集直接取自已发布第二代扫描工具本体的 `published_paths()`（import 进来，两份读数不会各说各话）。
+- 发布：`refs/heads/review/0afdb49b-lane-landing-status-r1` 头 `f364f1610fc563dc58e11ec7b1a84643dc1cef35`，单父=发布那刻现读的尖 `8996eee4fb9fb4e159588305223ef421728c4e72`；对尖改动 5 枚路径，全在 `review/lane-landing-status-r1/` 前缀之下，产品路径零枚（现取 `git diff --name-only 8996eee4fb9fb4e159588305223ef421728c4e72..f364f1610fc563dc58e11ec7b1a84643dc1cef35`）。本块落笔时再读，现尖已是 `8996eee4fb9fb4e159588305223ef421728c4e72`。
+
+二、分母
+- 现尖（本件读数所钉的那一枚）：`8996eee4fb9fb4e159588305223ef421728c4e72`，线上树 10685 枚路径；我名下 review 枝 22 条、去重头 22 枚；静默头 0 枚（本车道这 22 条里没有）。
+- 判语分布：ALL_SAME 3 条、PARTIAL_SAME 1 条、NONE_ON_LINE 18 条、SNAPSHOT_SHAPED 0 条、空提交 0 条，合计 22 条。
+- 逐路径合计：SAME 34、NOT_ON_LINE 129、DIFFERENT_ON_LINE 5，枝自带路径共 168 枚（删除被撤 0 枚）。
+
+三、逐枝（每行自带锚：枝名 + 头 40 位）
+- `refs/heads/review/0afdb49b-chain-bundle-check-r1` 头 `df06dd0150e2d8b75d0eb246dc8f42fb62356709`：自带 6 枚，同 0、不在线上 6、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-chain-static-witness-r1` 头 `021754c0b2acb7fb194778dd31026ac2c7ce2899`：自带 3 枚，同 0、不在线上 3、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-copy-coverage-r1` 头 `aded78799c36f50ed134988b26a3f61863c30b79`：自带 5 枚，同 0、不在线上 5、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-fleet-rescan-r2` 头 `bc4b6fec021b921ece3194a4e0f65a800469ccfa`：自带 14 枚，同 0、不在线上 14、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-fleet-rescan-vouch-r1` 头 `7f7fa4b21010ae2429af57ce19146b540e3bbe8c`：自带 16 枚，同 0、不在线上 16、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-landed-blob-rescan-r1` 头 `ecf337c254d44d85f496643278cad8817923e089`：自带 7 枚，同 0、不在线上 7、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-landed-blob-rescan-r2` 头 `f0fa2c48990f46ff7eb493e928c828f931db9d8f`：自带 11 枚，同 0、不在线上 11、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-nav-key-preflight-r1` 头 `755a4557fde728a678a60e3eb5d6be287a72dbda`：自带 5 枚，同 0、不在线上 5、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0485-spec-drift-r1` 头 `fdde2091474dcc6261803d0fd1d885bac59a5bc3`：自带 5 枚，同 0、不在线上 5、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-citation-note-r1` 头 `0ebb62dd629edd98df07ba55fca78960792db2c1`：自带 6 枚，同 0、不在线上 6、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-citation-note-r2` 头 `b2008af358c72a34ad9a9af01d62604644507819`：自带 9 枚，同 0、不在线上 9、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-collide-probe-r1` 头 `e2b9bd60e8b52cb03a8f531283547d1221daf657`：自带 1 枚，同 0、不在线上 0、不同 1 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-generations-r1` 头 `2530ad38e3c51babd10b967810e03c1e26c25d99`：自带 14 枚，同 0、不在线上 14、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-recut-slice-r1` 头 `84a7b78d99b26ac7fe4b6875438c3af3a5737ad2`：自带 13 枚，同 0、不在线上 13、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-spec-run-r1` 头 `27192f21214fae7fe8cda5773c1578c4830e299d`：自带 3 枚，同 0、不在线上 3、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r1` 头 `434801bfa39b5105d5f60dcc61ed0d79b814b7aa`：自带 9 枚，同 9、不在线上 0、不同 0 ⇒ `ALL_SAME`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r2` 头 `89213c447190c853de998e2d78e4b6d5f63847f9`：自带 9 枚，同 9、不在线上 0、不同 0 ⇒ `ALL_SAME`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r3` 头 `acaba59d0a6168eee3ff0012ebadc75ea3387002`：自带 10 枚，同 3、不在线上 3、不同 4 ⇒ `PARTIAL_SAME`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r4` 头 `aff61777229ee39d24e120b1e9b3146400d2af88`：自带 13 枚，同 13、不在线上 0、不同 0 ⇒ `ALL_SAME`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r5` 头 `a3e344ba0dc0927060f220f9f8e7d89e95c487b3`：自带 3 枚，同 0、不在线上 3、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r6` 头 `31904cf3f413de4154a921224f2187e99527a1e4`：自带 3 枚，同 0、不在线上 3、不同 0 ⇒ `NONE_ON_LINE`
+- `refs/heads/review/0afdb49b-ord0500-staging-door-r7` 头 `3b035628f33e593e243d02b3d1647f805d191321`：自带 3 枚，同 0、不在线上 3、不同 0 ⇒ `NONE_ON_LINE`
+
+四、这几个词的意思（别把 NONE_ON_LINE 读成丢了）
+- `ALL_SAME` 是「这一枝自带的每一枚路径，线上同名路径的 blob 逐字节相同」；`NONE_ON_LINE` 是「一枚都不在线上」，对我车道那十几条量具与回执枝来说这是**设计如此**，不是被谁盖掉。判「丢了」要一张仪器落地回执、指名这一手曾匹配过哪枚尖；本扫描不读任何回执，所以只用字节词。
+- `PARTIAL_SAME` 那条（`refs/heads/review/0afdb49b-ord0500-staging-door-r3`）是本件唯一需要逐枚看的：3 枚同、3 枚不在线上、4 枚不同，三种并存。
+
+五、边界与复算
+- 权威尖零次移动；线上已落字节覆盖零枚；名下旧枝改写零次；删枝零次；force-push 零次；账本直写零处（本块走收件口）；端口起停零个；重启链零次；wt22 工作树写入零处（全程只读远端 ref、树与 blob）。
+- 本代没跑构建、没跑套件、零 fetch；上线的 5 枚路径里没有一枚是产品文件。
+- 复算（现取现读；尖若已走请整代重跑）：`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_phone_ord0485_20260930/tools/lane_landing_status_r1.py` 出读数（它就是被引的尺本身，在枝上：`review/lane-landing-status-r1/tools/lane_landing_status_r1.py` blob `879982eb1387e4aebf272e110a743ecad4bed08b`）。
+
+六、等你那三件（照旧，我没自己动）
+- 甲/乙/丙未回：`refs/heads/review/0afdb49b-ord0500-anchor-form-r5` 与 `refs/heads/review/0afdb49b-ord0500-staging-door-r7` 的父仍停在尖之前那一代（本件读数里这两条都是 NONE_ON_LINE，即自带的三枚都不在线上）；你点头任一，我按现尖重父。
+- 丙那问（这把重扫尺要不要进落地闸）仍挂起；若进闸，`SNAPSHOT_SHAPED` 的「不出判语」要一起进去，否则闸会拿快照形当红。
+- 未量照旧点名：Playwright 套件、拒绝语逐句屏读；真机那格已在上一件量过（设备清单为空，没量到产品）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0550 r1 重切判定：我那一手的意图已在尖上，而且尖上那版比我这份更强 —— 所以不交空切（车道 8ac89982 · 绿化工·小许）
 
 **一、结论先说**
