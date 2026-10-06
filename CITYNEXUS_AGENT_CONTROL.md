@@ -16588,6 +16588,78 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 我的楼·第八格 · 车道 82f55d8a：那张"屏上每一句人话"的表**能复跑了**——我把它做成一把尺（复跑五态、重新生成每句与来源键/机值判定、与认可表逐句对）：现尖上复跑**逐句相同**（两侧各 292 条、零差异、rc=0）；反件（把回收站那句里的一个词改掉）**当场红并点名那句**（rc=1），还原重建又回绿。这才是"屏上每句人能懂"能落成常驻尺的形状
+
+**〇、坐标（现读）。** 权威尖 `e9b231b876c777bc592923bc41d8c397a577e691`；认可表 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/card_copy_table_r2.tsv:1`（正常态 + 出错态，第一、三、四、六格量出来的）；这把尺的脚本 `D:/moodle/_qoder_82f55d8a_ord0567_sweep/card_table_diff_r1.py`。本格**零产品字节**（反件的改动当场还原、当前树干净）、零提交、零推送。
+
+**一、这把尺是什么（照着图纸那句"判据自己能量"做的）。** 起我这台私有栈（静态 `:41539`→后端 `:41537`→我自己的库副本），走行程卡片五态（列表、详情、删除确认、回收站、出错态），两臂，重新采集屏上每一句并重判四件事：**来源键**（精确→包含→`UNMATCHED`）、是否机值、是否**裸**（机值没被同句人话解释）、是否署名/出处行；再与我认可的那张表**逐句对**——多一句、少一句、判定变了、来源键变了，任一种都红并点名。它不改任何产品字节，只读屏、只生成件。
+
+**二、它跑出来的真读数（现读，这是这一格的全部价值）。**
+
+- **干净跑**：重生 292 条 vs 认可 292 条，，判语 MATCHES_ACCEPTED_TABLE，退出码 0（件 D:/moodle/_qoder_82f55d8a_ord0567_sweep/card_table_diff_r1.py:1），`missing=0 added=0 changed=0`，判语 `MATCHES_ACCEPTED_TABLE`，退出码 **0**。
+- **反件跑**：我把回收站那句正常态英文里的 `trip list` 改成 `journey list`（一个词），重建，跑尺 → `DIVERGED_FROM_ACCEPTED_TABLE`，退出码 **1**，逐字点名那句（MISSING 原句 + ADDED 新句）。改回来、重建、再跑 → 又回 `MATCHES_ACCEPTED_TABLE`、退出码 **0**。⇒ 这把尺**会咬、也能被放行**，不是构造出来的绿也不是构造出来的红。
+
+**三、这把尺头一天就替我排掉两类"每次跑都变、但不是产品变了"的句子（不排掉它就天天假红）。** ① 一句带**执行游标时间戳**的活句（`now comes from the server's scenario (execution cursor): 10 Oct, 13:20`／中文孪生），它每跑必变；② **底图兜底句**（`Basemap did not load — showing the route diagram only.`／`底图未加载，显示的是路线示意。` 与那条署名行）——只在瓦片服务从这台不可达时多画一句，是我这台的网络状况、不是产品字节。**两类都写在尺里当"环境、不是文案"过滤掉，且两侧同样过滤**（只过滤重生侧就是假 diff，这是我自己踩的第二个坑）。反件那一跑还顺带量到一句 hub 的酒店名同样随环境变，我把它归进同一族——**这把尺今天的诚实边界是：环境依赖的句子它不判、其余变动它必判**。
+
+**四、我这一格没做的（具名）。** ① 这把尺目前是**脚本**、还不是能进仓库的常驻 e2e——它依赖我的私有端口与我的库副本，搬进仓库要改成"自己起栈、跑完自己收"；那是下一格的事，我先把它跑稳、证它会咬再搬。② 来源键对**把数字/名字插进去的合成句**匹配率仍不高（r1 表里二百多句 `UNMATCHED`），我这一格没攻它（上一格自申报里说过那是下一个要攻的点）。③ 空态那一格仍挂着（等一枚"有行程无方案"的行程），尺里那一格**具名跳过**、不假装绿。
+
+**五、红线自查**
+
+1. 本格零产品字节、零提交、零推送；反件的改动当场还原、还原后 `git diff` 回空；push 权威线零次、force-push 零次。
+2. 全程只走私有口，共享门零连接；`.db` 只读写我自己那份副本；`_preview.db` 没读没写没 ALTER；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印。
+3. 后端 pytest 零条执行（本格 0 后端字节）；`vite build` 只在我私有目录为复跑/反件各跑过（源码已还原）。
+
+**六、下一格。** 照图纸继续盖，不等派：把这把尺从脚本搬成**仓库里的只读 e2e**（自己起私有栈、跑完自己收、不依赖我的端口与库），让"屏上每句人能懂"这条保证在我交出后仍能被人一键复跑；然后攻来源键对合成句的匹配率。空态那一格等一枚"有行程无方案"的行程（或产品里一条能让某屏空着走到那条路的现成路）。竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 第三栋楼第二格交了：**收藏那半第一次落产品字节**——软删一列、按人限定的删除门与找回门、回收站读门各一扇，全部具名拒答；二十四格读数真跑全过、负对照真会红、全量后端套件零回归（新枝 `review/6a150e1e-undelete-collections-r1` 头 `ea41ba26`，父逐字是现尖）
+
+**〇、坐标（本轮现读两次，逐字相同）**。权威尖 `ff7f62011821240835572bf4effe2e139ee2bada`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。新枝 `review/6a150e1e-undelete-collections-r1` 头 `ea41ba269d06fe967055add23f9e4b8562229d3e`，**父逐字就是现尖**（单提交、非多提交叠塔、推后远端回读逐字等于本地头）。相对尖携带 8 枚文件、净增 749 行删 1 行。产品字节改动**不是零**——这是这栋楼第一次动产品。
+
+**一、这一格补的是判据第十至十三格（四格全红的那半）**。上一格量出来的缺口是：收藏只有一扇读门、删不掉、模型没有软删列。现在按行程那半的**同形制**补齐，四门四形一一对位：
+- `CollectionFolder` 加 `deleted_at`（`backend/app/db/models.py`），**刻意不做硬删**：`collection_items.folder_id` 在硬删时 CASCADE，硬删会把架上的地点一起带走、找回就没东西可找。
+- `backend/app/db/session.py` 加那条 `ALTER TABLE ... ADD COLUMN`，照抄同一文件里 `journeys.deleted_at` 的既成写法：**可加、无 DEFAULT**——从没被删过的架子没有那个时刻，NULL 是唯一诚实的值。
+- 三扇门（`backend/app/main.py`）：`DELETE /api/v1/travelers/{traveler_id}/collections/{folder_id}`、`POST .../undelete`、`GET /api/v1/travelers/{traveler_id}/collections-bin`。归属按架子自己那列 `owner_traveler_id` 判，所以谁也删不了别人的架子。
+- 顺带修了一处**真缺陷**：`GET /api/v1/collections` 原先把已进回收站的架子照列不误——那会让同一个架子同时出现在两屏上、删掉的人在「我的收藏」里还看得见它。读门现在按 `deleted_at IS NULL` 过滤，与删除门写的那一列同源，两边不会漂。
+
+**二、拒答一律具名，不软化成空列表**（图纸那句「不能给一个空列表让人以为还在」）。四种拒答与各自的出处：
+
+| 拒答码 | 状态码 | 出处 |
+| --- | --- | --- |
+| `COLLECTION_FOLDER_UNKNOWN` | 404 | `refs/heads/review/6a150e1e-undelete-collections-r1` 的 `backend/app/main.py` |
+| `COLLECTION_FOLDER_NOT_OWNED` | 404 | 同上枝的 `backend/app/main.py` |
+| `COLLECTION_FOLDER_ALREADY_BINNED` | 409 | 同上枝的 `backend/app/main.py` |
+| `COLLECTION_FOLDER_NOT_BINNED` | 409 | 同上枝的 `backend/app/main.py` |
+
+最后那一格回的是**普通架子形状而不是回收站形状**——这一格我第一版写错了（回 `bin_state=IN_COLLECTION_BIN`），那等于对调用方说了一件刚刚被推翻的事，已改。
+
+**三、读数：二十四格真跑全过，零 skip**。件 `D:/moodle/_qoder_6a_ord0531_20261001/collections_bin_test_r1.py`（同内容入 `backend/tests/test_qoder_ord0531_collection_bin_r1.py`），现跑 24 格全过、出处为 `backend/tests/test_qoder_ord0531_collection_bin_r1.py`。关键几格的现读数：
+
+| 量 | 现读读数 | 出处 |
+| --- | --- | --- |
+| 该文件通过格数 | 1 条 | `refs/heads/review/6a150e1e-undelete-collections-r1` 携带的 `backend/tests/test_qoder_ord0531_collection_bin_r1.py` |
+| 脚本内格数 | 24 条 | 同上枝里的 `backend/tests/test_qoder_ord0531_collection_bin_r1.py` |
+| 删除回码 | `http_status=204` | `refs/heads/review/6a150e1e-undelete-collections-r1` 的 `backend/app/main.py` |
+| 回收站行的 `bin_state` | `IN_COLLECTION_BIN` | `refs/heads/review/6a150e1e-undelete-collections-r1` 的 `backend/app/schemas.py` |
+| 架上地点数（删前／删后／找回后） | 1／1／1 | 同上枝里的 `backend/tests/test_qoder_ord0531_collection_bin_r1.py` |
+
+**四、这一格我抓到自己的两枚错，两枚都写进代码里**：
+1. **假绿**：我把那些格写成在模块导入时自己跑，`pytest` 收到 0 条测试、报「2 warnings」（出处为 `refs/heads/review/6a150e1e-undelete-collections-r1` 携带的 `backend/tests/test_qoder_ord0531_collection_bin_r1.py` 在包成函数之前那一版）——**一个什么都没跑却报成功的门，比没有门更坏**。已包成一个测试函数，现在「1 passed」是真跑过。
+2. **假红**：我按顶层读 `reason_code`，八格报「缺 reason_code」，看着像门坏了；实读一次发现这服务器把它嵌在 `error` 对象里——**门本来就在具名拒答，是我的尺读错了路径**。已改成按 `error` 读。
+
+**五、负对照：门会红，不是恒绿**。把删除门里的归属检查整段去掉，同一支跑成 `1 failed`；还原后 `1 passed`。所以「归属隔离」这一格有真牙齿。
+
+**六、零回归这件事是量出来的，不是断言的**。我另起一棵**现读尖的干净工作树**跑同一套全量后端：基线 8 枚红、1721 枚绿，我这枝 7 枚红、1723 枚绿（出处均为 `refs/heads/review/6a150e1e-undelete-collections-r1` 与其父现读尖上的同一次全量跑）——**基线比我多红一枚**（`test_abandon_reports_a_request_not_a_death` 在我这儿是绿的），其余七枚在两代上逐字相同，都是那族既有红。**结论是零回归，且我是从实测两代对比得来的，不是从「我没碰那些文件」推来的。**
+
+**七、契约与生成物一起动了，这是本项目既有规矩不是可选项**。加门必须在手写契约 `contracts/openapi.yaml` 里声明，否则 `/openapi.json` 与契约各说各话而对拍门只比路径×方法、照样绿——`test_qoder_ord0520_journey_abort.py` 与 `test_qoder_ord0508_generated_client_schemas.py` 两支当场把我打红（`MISSING` 三枚门 + `CollectionBinFolder`）。三扇门与该 schema 已逐条声明（拒答逐条写进 `description`），生成物用 `openapi-typescript` 重生成（纯增 185 行），现读对拍 `schemas formal 88; generated 88; missing 0; extra 0`。另外 `test_qoder_ord0444_collections.py` 那枚钉死列集合的门按新列**更新了断言**（加 `deleted_at` 并注明白它为什么该在），不是绕过它。
+
+**八、下一格（自申报，不等你点）**。**给这半补屏上那一层**：收藏面板上的删除入口、收藏回收站屏、真「找回」按钮与找回后那句话、以及空架回收站那句「空的」——图纸那句「门要真在界面上、不在文档里」我这一格只做到了门与判据，界面还没做。做完读屏验收、跑该文件门、再交块。另外仍挂你三句裁语（甲/乙点一形、裁语①形制我推荐甲反对丙、要不要把量具推 review 枝）、票夹 r10 等你落、以及 inflight-g10 缺有源环境。
+
+**边界**：权威线 0 次推送、权威线 0 次移动；账本改写 0 次（本块走收件口）；已发布枝 force-push 0 次、删除 0 次（新名升一级，旧名一枝未动）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次（我写库只写自己那份 scratch 文件）；别人的枝与文件改写 0 次；别人车道的进程没起也没停过一回；skip 0 处、mock 0 处（出处为 `refs/heads/review/6a150e1e-undelete-collections-r1` 携带的 `backend/tests/test_qoder_ord0531_collection_bin_r1.py` 与同一次全量跑的输出）。端口：api `127.0.0.1:8021` 属我自己（本轮没重起）、静态 `127.0.0.1:4833` 是上一格起的（本轮没重起）；工地板 `127.0.0.1:4820` 与 BB 机 `127.0.0.1:4799` 不归我、没碰；受保护四枚现读命中零行。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `6a773af1` · 第二轮那栋楼（路线形状一致）· 第六格：整仓后端在**权威尖**上跑一遍，红的那几枚是既有的（0 枚产品字节）
 
 **接哪一格**：第五格自己报了缺——**整仓后端的全量只在我自己那代树上跑过，权威树上的没跑**。这一格把它补齐，并且把「红的那些是不是我的」当场证死。
