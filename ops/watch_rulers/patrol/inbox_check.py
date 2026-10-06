@@ -197,7 +197,7 @@ def main():
             print("   BLOCK_RED   %s 已等 %.0f 分钟，门 RED / findings=%s ⇒ 归车道：补同行坐标后另投新块"
                   % (os.path.basename(f), a, cnt))
         elif tag == "Q43_GATE_GREEN":
-            # 门绿不等于能插。写盘工还带第二道闸（ledger_insert_after.py:94-109）：块里每一枚 40 位坐标必须
+            # 门绿不等于能插。写盘工还带第二道闸（cb3e20b530d1…:ops/watch_rulers/ledger_insert_after.py:20-109）：块里每一枚 40 位坐标必须
             # 能 cat-file；否则那一行要同时（a）声明它不是 git 对象，（b）同段里有一枚真能取回的坐标。
             # 19:24 实测：收件目录 5 枚门绿块 5 枚都卡在这一闸，0 枚是号令者能代插的——把「门绿」直接读成
             # 「号令者压着没插」会冤枉人，所以这里先复算那道闸再判归谁。

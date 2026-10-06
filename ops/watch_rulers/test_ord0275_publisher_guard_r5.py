@@ -175,7 +175,7 @@ def cli_arm(ns, label):
     local, repo, status, sha = ARMS[label]
     state, transport = make_stub(status, sha)
     real_call, real_urlopen, real_argv = ns["call"], ns["urllib"].request.urlopen, list(ns["sys"].argv)
-    # MEASURED 2026-09-24 23:20 (watchdog stack: publish_evidence.py:362 `time.sleep(2)`): the CLI arms did
+    # MEASURED 2026-09-24 23:20 (watchdog stack: cb3e20b530d1…:ops/watch_rulers/publish_evidence.py:84 `time.sleep(2)`): the CLI arms did
     # not hang, they PAID the publisher's real wall-clock backoff - 2 s + 2/4/6 s retries, per arm, per run,
     # times every mutant.  Neutralising the sleep is test-only acceleration: the retry COUNT, which is what
     # the arms assert on, is untouched.

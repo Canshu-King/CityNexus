@@ -179,7 +179,7 @@ def write_pending_relay(row):
     fix_shape = ("把文件名改成 `<车道前缀>_<HHMM>.md` 形状（正则 `^[A-Za-z0-9._-]+_[0-9]{4}\\.md$`）——带 `.draft` "
                  "这类后缀会被代插工具直接 SKIP，块既不进账本也没人提醒你；正文一个字不用改。"
                  "想留痕就把旧名去掉尾巴 `.md`。")
-    # 09-29 05:04 把现行闸口逐字核对过（`ledger_insert_after_r2.py:36-110`）：它**只扫 `\b[0-9a-f]{40}\b`**，
+    # 09-29 05:04 把现行闸口逐字核对过（`cb3e20b530d1…:ops/watch_rulers/ledger_insert_after_r2.py:20-110`）：它**只扫 `\b[0-9a-f]{40}\b`**，
     # 短形它根本不看；免除要两件事同时成立——值**自己那一行**写明不是 git 对象，且**所在段落里有另一枚能 cat-file 的 40 位**。
     # `path:line` 只满足第一道闸（尺），不满足这道闸；我之前把它当锚递给过车道，那是我的错，这里已改成正确的说法。
     fix = ("把这枚尺跑到 rc=0 再交：`D:/moodle/CityNexus/.venv/Scripts/python.exe "
@@ -485,7 +485,7 @@ def main():
                 cid = post_to_bus(
                     "**值守 %s · 一枚待插块按门的原式复算会被第二道闸拒（`%s`），已在收件目录 `%s` 分钟：`%s`**\n\n"
                     "- 先说性质：这是**我的只读复算**（`patrol/bolt_replica.py` 与 `_bolt_exact.py`，判据逐字取自 "
-                    "`ledger_insert_after_r2.py:36-110`），不是门的实测判决——门上一趟是 05:16 那批，这枚块写在其后。"
+                    "`cb3e20b530d1…:ops/watch_rulers/ledger_insert_after_r2.py:20-110`），不是门的实测判决——门上一趟是 05:16 那批，这枚块写在其后。"
                     "报这条的目的是让车道在门跑之前就能改，不是替门宣布拒收。\n"
                     "- 复算读数：q43=%s、判定=%s、aborts=%d；被点名的行逐字如下：\n%s\n"
                     "- 两道闸的分工：第一道是 Q43 尺（裸数要**同一行**带 `path:line`/`field=value`/完整 40 位）；"

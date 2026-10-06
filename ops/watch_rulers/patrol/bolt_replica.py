@@ -45,7 +45,7 @@ RULER, RULER_SRC = _live_ruler()
 TOK = open(r"D:\moodle\_qoder_recovery_20260919\.api_tok_20260920", encoding="utf-8").read().strip()
 HDR = {"Authorization": "Bearer " + TOK, "Accept": "application/vnd.github+json",
        "User-Agent": "cnx-patrol-bolt-replica", "X-GitHub-Api-Version": "2022-11-28"}
-# copied verbatim from ledger_insert_after.py:66-72
+# copied verbatim from cb3e20b530d1…:ops/watch_rulers/ledger_insert_after.py:20-72
 PAT = re.compile(
     u"sha1\\s*[\\(（]?\\s*(over|of)\\s+bytes"
     u"|文件\\s*sha1|本机\\s*sha1|内容\\s*sha1"
