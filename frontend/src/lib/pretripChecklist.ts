@@ -56,6 +56,24 @@ export const ANCHORED_CHECKLIST_KEYS = ["plan_feasibility_open", "recovery_needs
  * that was never read yields no items, because "we could not look" must not render as "nothing is
  * missing" -- and must not render as an invented gap either.
  */
+
+/** Plain-language reading of the feasibility enums the server can send, so the traveller does not have to
+ *  read a machine name. This translates the enum's own words -- it does not diagnose the trip; the quoted
+ *  server string beside it stays the evidence. An enum not listed here is passed through untouched rather
+ *  than guessed at, which is the same discipline the count-and-quote comment below follows. */
+const FAILURE_GLOSS: Record<string, { zh: string; en: string }> = {
+  STALE_RECOMPOSE_REQUIRED: {
+    zh: "的意思是「这一代方案引用的证据已经过期，需要重新算一次」：",
+    en: 'means "the evidence this plan generation was built on has expired, so it must be recomposed":',
+  },
+};
+
+function gloss(raw: unknown, arm: "zh" | "en"): string {
+  const name = String(raw).split(":")[0].trim();
+  const hit = FAILURE_GLOSS[name];
+  return hit ? hit[arm] : "";
+}
+
 export function derivePretripChecklist(sources: PretripSources): ChecklistItem[] {
   const exp = bag(sources.experience);
   if (!exp) return [];
@@ -70,9 +88,13 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
       key: "plan_feasibility_open",
       title: { zh: "方案有未处理的可行性失败", en: "The plan has open feasibility failures" },
       why: {
-        /* The server's own strings, counted and quoted, never rewritten into a cause we did not measure. */
-        zh: `服务端在这一代方案上列出了 ${failures.length} 条可行性失败，最新一条是「${String(failures[failures.length - 1])}」。`,
-        en: `The server lists ${failures.length} feasibility failure(s) on this plan generation; the latest reads "${String(failures[failures.length - 1])}".`,
+        /* The server's own strings, counted and quoted, never rewritten into a cause we did not measure.
+         * What the traveller could not read, though, was the enum inside the quote: STALE_RECOMPOSE_REQUIRED
+         * and its siblings arrive as raw machine names. So a known enum gets a plain-language reading in front
+         * of the quote, and the quote itself stays -- it is the evidence, and an unknown enum stays verbatim
+         * rather than being guessed at. */
+        zh: `服务端在这一代方案上列出了 ${failures.length} 条可行性失败，最新一条${gloss(failures[failures.length - 1], "zh")}是「${String(failures[failures.length - 1])}」。`,
+        en: `The server lists ${failures.length} feasibility failure(s) on this plan generation; the latest ${gloss(failures[failures.length - 1], "en")}reads "${String(failures[failures.length - 1])}".`,
       },
       basis: { endpoint: EXPERIENCE, field: "experience_flags.feasibility_failures",
                anchor: { file: CONTRACT, line: 1393 } },
