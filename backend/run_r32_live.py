@@ -10,8 +10,10 @@ after Agent A has a durable RUNNING/R1 envelope but before either provider call.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import subprocess
 import threading
 import time
 from datetime import datetime, timezone
@@ -29,6 +31,40 @@ def _jsonable(value: Any) -> Any:
     if isinstance(value, (list, tuple, set)):
         return [_jsonable(item) for item in value]
     return str(value)
+
+
+def _source_receipt() -> dict[str, Any]:
+    """Bind the live artifact to the exact source state that executed it."""
+
+    repo = BACKEND.parent
+
+    def git(*args: str) -> str:
+        completed = subprocess.run(
+            ["git", "-C", str(repo), *args],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return completed.stdout.strip()
+
+    tracked = [
+        "backend/run_r32_live.py",
+        "backend/app/agent/runtime.py",
+        "backend/app/recovery_epoch.py",
+        "backend/app/agent/gateway.py",
+        "backend/scripts/r32_machine_verdict.py",
+    ]
+    hashes: dict[str, str] = {}
+    for relative in tracked:
+        raw = (repo / relative).read_bytes()
+        hashes[relative] = hashlib.sha256(raw).hexdigest()
+    dirty = git("status", "--porcelain", "--untracked-files=no")
+    return {
+        "git_head": git("rev-parse", "HEAD"),
+        "tracked_dirty_before_strike": bool(dirty),
+        "tracked_dirty_paths_before_strike": dirty.splitlines(),
+        "source_sha256": hashes,
+    }
 
 
 def _fixture_shock(journey_id: str, *, target_place_id: str | None, label: str) -> dict[str, Any]:
@@ -199,8 +235,42 @@ def _snapshot(journey_id: str) -> dict[str, Any]:
             "proposals": [row(item, ["id", "trigger_event_id", "proposed_plan_version_id", "status", "hard_constraints_passed", "locked_commitments_preserved", "created_at", "decided_at", "recovery_epoch_id", "source_agent_run_id", "semantic_identity", "canonical_proposal_id"]) for item in proposals],
             "receipts": [row(item, ["id", "proposal_id", "plan_version_id", "authority_mode", "source_mission_id", "source_agent_run_id", "recovery_epoch_id", "classification", "issued_at", "invalidated_at", "invalidation_code"]) for item in receipts],
             "approvals": [row(item, ["id", "action", "target_type", "target_id", "status", "actor_id", "recovery_epoch_id", "authority_receipt_id", "created_at", "consumed_at"]) for item in approvals],
-            "pending_actions": [row(item, ["id", "run_id", "mission_id", "tool_name", "status", "authority_receipt_id", "recovery_epoch_id", "created_at", "resumed_at"]) for item in pending],
-            "events": [{**row(item, ["id", "provider_key", "provenance", "event_type", "severity", "status", "affected_activity_id", "occurred_at", "detected_at"]), "payload": _jsonable(json.loads(item.payload_json or "{}"))} for item in events],
+            "pending_actions": [row(item, ["id", "approval_id", "run_id", "mission_id", "tool_name", "status", "authority_receipt_id", "recovery_epoch_id", "created_at", "resumed_at"]) for item in pending],
+            "events": [
+                {
+                    **row(
+                        item,
+                        [
+                            "id",
+                            "provider_key",
+                            "provenance",
+                            "event_type",
+                            "severity",
+                            "status",
+                            "affected_activity_id",
+                            "occurred_at",
+                            "detected_at",
+                        ],
+                    ),
+                    "payload": {
+                        key: _jsonable(value)
+                        for key, value in json.loads(
+                            item.payload_json or "{}"
+                        ).items()
+                        if key
+                        in {
+                            "incident_fingerprint",
+                            "scope_place_id",
+                            "fixture_revision",
+                            "disruption_class",
+                            "target_place_id",
+                            "extra_minutes",
+                            "source",
+                        }
+                    },
+                }
+                for item in events
+            ],
             "plans": [row(item, ["id", "status", "created_at", "selected_at", "activated_at"]) for item in plans],
             "audits": [{**row(item, ["id", "action", "entity_type", "entity_id", "actor_type", "actor_id", "created_at"]), "after": _jsonable(json.loads(item.after_json or "{}"))} for item in audits],
         }
@@ -228,6 +298,7 @@ def _stale_binding_assertion(journey_id: str, run_id: str) -> dict[str, Any]:
 
 
 def run() -> dict[str, Any]:
+    source_receipt = _source_receipt()
     db = _configure()
     # Import application modules only after _configure has installed the fresh DB
     # and real configured WB2api settings.
@@ -244,15 +315,34 @@ def run() -> dict[str, Any]:
     from app.agent.orchestrator import HermesJourneyAgent
     original_complete = HermesJourneyAgent._complete
     release = threading.Event()
-    barrier_hits: list[str] = []
+    barrier_hits: list[dict[str, Any]] = []
     barrier_lock = threading.Lock()
 
     def gated_complete(self, messages):
+        hit = {
+            "thread": threading.current_thread().name,
+            "model_key": str(getattr(self, "model_key", "unknown")),
+            "at": datetime.now(timezone.utc).isoformat(),
+            "release_was_set": release.is_set(),
+        }
         with barrier_lock:
-            barrier_hits.append(str(getattr(self, "model_key", "unknown")))
+            barrier_hits.append(hit)
         if not release.wait(timeout=180):
             raise RuntimeError("R32 external-response barrier timed out")
         return original_complete(self, messages)
+
+    def wait_for_initial_barrier(thread_name: str, timeout: float = 45.0) -> bool:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            with barrier_lock:
+                if any(
+                    item.get("thread") == thread_name
+                    and item.get("release_was_set") is False
+                    for item in barrier_hits
+                ):
+                    return True
+            time.sleep(0.05)
+        return False
 
     HermesJourneyAgent._complete = gated_complete
     results: dict[str, Any] = {}
@@ -262,25 +352,78 @@ def run() -> dict[str, Any]:
         "reuse old consent as authority, and return a fresh server-owned decision when a material "
         "human value choice remains. Choose the next valid action from the live product state."
     )
-    thread_a = threading.Thread(target=_run_command, args=(journey_id, command, results, "agent_a"), daemon=True)
+    thread_a = threading.Thread(
+        target=_run_command,
+        args=(journey_id, command, results, "agent_a"),
+        name="r32-agent-a",
+        daemon=True,
+    )
     thread_a.start()
     runs_after_a = _poll_runs(journey_id, want=1)
     a_run = runs_after_a[0] if runs_after_a else None
-    a_bound = bool(a_run and a_run.get("status") == "RUNNING" and a_run.get("recovery_epoch_id") == r1["id"])
+    a_bound = bool(
+        a_run
+        and a_run.get("status") == "RUNNING"
+        and a_run.get("recovery_epoch_id") == r1["id"]
+    )
+    a_barrier_ready = wait_for_initial_barrier("r32-agent-a")
+    if not a_bound or not a_barrier_ready:
+        raise RuntimeError(
+            "Agent A did not reach the durable R1 external-response boundary"
+        )
 
     # The second provider replay deliberately changes the semantic event
     # family/scope (unscoped weather+mobility disturbance) rather than relying
     # on a new UUID for the same closure.  That is a material recovery reality
     # change and exercises the dedupe boundary honestly.
-    shock_b = _fixture_shock(journey_id, target_place_id=None, label="SHOCK_B")
+    shock_b = _fixture_shock(
+        journey_id, target_place_id=None, label="SHOCK_B"
+    )
     r2 = _open_epoch(journey_id)
 
-    thread_b = threading.Thread(target=_run_command, args=(journey_id, command, results, "agent_b"), daemon=True)
+    thread_b = threading.Thread(
+        target=_run_command,
+        args=(journey_id, command, results, "agent_b"),
+        name="r32-agent-b",
+        daemon=True,
+    )
     thread_b.start()
     runs_after_b = _poll_runs(journey_id, want=2)
-    b_run = next((item for item in runs_after_b if a_run is None or item["id"] != a_run["id"]), None)
-    b_bound = bool(b_run and b_run.get("status") == "RUNNING" and b_run.get("recovery_epoch_id") == r2["id"])
-    hits_before_release = len(barrier_hits)
+    b_run = next(
+        (
+            item
+            for item in runs_after_b
+            if a_run is None or item["id"] != a_run["id"]
+        ),
+        None,
+    )
+    b_bound = bool(
+        b_run
+        and b_run.get("status") == "RUNNING"
+        and b_run.get("recovery_epoch_id") == r2["id"]
+    )
+    b_barrier_ready = wait_for_initial_barrier("r32-agent-b")
+    if not b_bound or not b_barrier_ready:
+        raise RuntimeError(
+            "Agent B did not reach the durable R2 external-response boundary"
+        )
+
+    with barrier_lock:
+        hits_before_release = [
+            dict(item)
+            for item in barrier_hits
+            if item.get("release_was_set") is False
+        ]
+    expected_barrier_threads = {"r32-agent-a", "r32-agent-b"}
+    concurrent_external_barrier_proven = (
+        {item.get("thread") for item in hits_before_release}
+        == expected_barrier_threads
+        and len(hits_before_release) == 2
+    )
+    if not concurrent_external_barrier_proven:
+        raise RuntimeError(
+            "R32 barrier did not isolate exactly the two initial external calls"
+        )
     release.set()
     thread_a.join(timeout=240)
     thread_b.join(timeout=240)
@@ -295,12 +438,16 @@ def run() -> dict[str, Any]:
         "database": str(db),
         "journey_id": journey_id,
         "setup": _jsonable(setup),
+        "source_receipt": source_receipt,
         "runtime": {
             "provider": "WB2api",
             "endpoint": os.getenv("CITYNEXUS_HERMES_API_URL"),
             "configured_model": os.getenv("CITYNEXUS_HERMES_MODEL"),
             "fallback_models": os.getenv("CITYNEXUS_HERMES_MODEL_FALLBACKS"),
             "external_barrier_hits_before_release": hits_before_release,
+            "concurrent_external_barrier_proven": (
+                concurrent_external_barrier_proven
+            ),
             "provider_calls_were_real": True,
         },
         "shock_a": shock_a,
