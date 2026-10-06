@@ -36,10 +36,6 @@ ARMS = [
 ]
 
 
-
-
-
-
 def refuse_unless_states_present(records, what: str) -> None:
     """Refuse unless the records cover every state the comparison needs.
 
@@ -53,18 +49,6 @@ def refuse_unless_states_present(records, what: str) -> None:
     if missing:
         print("REFUSE: %s carries no line for %s, so the per-state rate would have a zero denominator"
               % (what, ", ".join(missing)))
-        raise SystemExit(2)
-
-def refuse_when_empty(collection, what: str) -> None:
-    """Refuse a verdict computed over a collection that never got filled.
-
-    The defect this exists for: `all(...)` over nothing is True, and `not <list>` on a list nobody filled
-    is True, so such a verdict reads exactly like a pass.  A caller that cannot say how many items it
-    ranged over must not be allowed to answer.
-    """
-
-    if not collection:
-        print("REFUSE: %s is empty, so any verdict over it would be vacuously true" % what)
         raise SystemExit(2)
 
 def rows(path: pathlib.Path) -> list[dict]:

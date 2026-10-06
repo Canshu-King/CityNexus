@@ -1,0 +1,15 @@
+control_dead_guard_lands_in_queue True
+control_refuses_everything_is_not_teeth True
+{
+  "method": "bites: RUN the guard (empty must be refused BY NAME, filled must be allowed). called: READ the instrument's call sites. Scope: every predicate each instrument defines.",
+  "total": 4,
+  "with_teeth": 4,
+  "work_queue": [],
+  "controls_passed": true,
+  "verdict": "EVERY_GUARD_HAS_TEETH"
+}
+abort_glass_provenance_r3.py     refuse_unless_all_present    called=True  bites=True  called by its instrument and bites when driven
+osmt_flake_attribution_r3.py     refuse_unless_states_present called=True  bites=True  called by its instrument and bites when driven
+abort_http_probe_r3.py           refuse_unless_all_present    called=True  bites=True  called by its instrument and bites when driven
+abort_http_probe_r3.py           refuse_when_empty            called=True  bites=True  called by its instrument and bites when driven
+VERDICT EVERY_GUARD_HAS_TEETH

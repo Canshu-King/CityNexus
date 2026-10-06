@@ -40,10 +40,6 @@ OUT = REPO / "review" / "ord0520" / (
 SHARED_PORTS = (8000, 4781, 4782, 8693)
 
 
-
-
-
-
 def refuse_unless_all_present(records, what: str) -> None:
     """Refuse unless every expected record is there, not merely unless none is.
 
@@ -56,18 +52,6 @@ def refuse_unless_all_present(records, what: str) -> None:
     if missing:
         print("REFUSE: %s is missing %d of %d records (missing at %s), so a verdict over it would be "
               "computed over a shorter set than it claims" % (what, len(missing), len(records), missing))
-        raise SystemExit(2)
-
-def refuse_when_empty(collection, what: str) -> None:
-    """Refuse a verdict computed over a collection that never got filled.
-
-    The defect this exists for: `all(...)` over nothing is True, and `not <list>` on a list nobody filled
-    is True, so such a verdict reads exactly like a pass.  A caller that cannot say how many items it
-    ranged over must not be allowed to answer.
-    """
-
-    if not collection:
-        print("REFUSE: %s is empty, so any verdict over it would be vacuously true" % what)
         raise SystemExit(2)
 
 def opener():
