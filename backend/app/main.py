@@ -2890,6 +2890,8 @@ def answer_collective_clarification(
             "clarification_id": stored.get("clarification_id"),
             "member_id": str(member_id),
             "traveler_id": member.traveler_id,
+            "proposal_id": str(payload.proposal_id),
+            "decision_epoch": stored.get("decision_epoch"),
             "auth_method": authenticated_principal.auth_method if authenticated_principal else "LEGACY_MEMBER_SCOPED_STATE",
             "status": stored.get("status"),
         },
@@ -2899,15 +2901,17 @@ def answer_collective_clarification(
         # response audit has been staged.  The receipt is server-owned and
         # binds the exact proposal, epochs, and response actors.
         session.flush()
-        response_audits = [
+        current_round_audits = [
             item
             for item in session.scalars(
-                select(AuditLog).where(
+                select(AuditLog)
+                .where(
                     AuditLog.action == "agent.collective_decision.response",
                     AuditLog.entity_type == "JourneyMission",
                     AuditLog.entity_id == parent.id,
                     AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
                 )
+                .order_by(AuditLog.created_at, AuditLog.id)
             ).all()
             if str(
                 _json_object(item.after_json or "{}").get(
@@ -2916,6 +2920,19 @@ def answer_collective_clarification(
                 or ""
             )
             == str(stored.get("clarification_id") or "")
+        ]
+        latest_response_audit_by_member: dict[str, AuditLog] = {}
+        for item in current_round_audits:
+            audit_member_id = str(
+                _json_object(item.after_json or "{}").get("member_id")
+                or ""
+            )
+            if audit_member_id:
+                latest_response_audit_by_member[audit_member_id] = item
+        response_audits = [
+            latest_response_audit_by_member[required_member_id]
+            for required_member_id in sorted(required)
+            if required_member_id in latest_response_audit_by_member
         ]
         authenticated_member_ids = {
             str(_json_object(item.after_json or "{}").get("member_id") or "")
