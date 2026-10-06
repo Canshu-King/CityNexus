@@ -906,6 +906,9 @@ class ReplanProposal(Base):
     recovery_epoch_id: Mapped[str | None] = mapped_column(
         ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
     )
+    source_agent_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
     semantic_identity: Mapped[str | None] = mapped_column(String, nullable=True)
     canonical_proposal_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
