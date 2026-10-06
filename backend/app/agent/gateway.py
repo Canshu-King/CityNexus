@@ -2202,6 +2202,11 @@ class AgentToolGateway:
                 "facts": evidence,
                 "result": result,
             }
+            if receipt_id:
+                # Surface the exact server-issued authority at the Gateway
+                # boundary so continuation/pending state can bind the same
+                # receipt without parsing nested domain payloads.
+                response["collective_authority_receipt_id"] = str(receipt_id)
             if approval is not None:
                 response.update(approval_payload(approval))
             after_status = "ACCEPTED"
@@ -2245,6 +2250,9 @@ class AgentToolGateway:
                 "user_confirmed": False,
                 "approval_id": response.get("approval_id"),
                 "approval_status": response.get("status"),
+                "collective_authority_receipt_id": response.get(
+                    "collective_authority_receipt_id"
+                ),
             },
         )
         _write_idempotent(
