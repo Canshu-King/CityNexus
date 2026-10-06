@@ -1,0 +1,437 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-off-route-bar-census-r1.spec.ts",
+ "arm": "zh",
+ "shape": "390x844",
+ "denominator": {
+  "desktop": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access"
+  ],
+  "mobile": [
+   "hub",
+   "trips",
+   "map",
+   "agent",
+   "me"
+  ],
+  "union": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ]
+ },
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "answered_as": [
+   "nav-hub"
+  ],
+  "breadcrumb": "今天"
+ },
+ "silent_on_screens": [
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access"
+ ],
+ "requested_keys_whose_address_moved": [],
+ "rows": [
+  {
+   "requested": "hub",
+   "landed": "hub",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "今天",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-hub"
+   ],
+   "state": [
+    "nav-hub"
+   ],
+   "silent": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "live",
+   "landed": "live",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "实时行程",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-map"
+   ],
+   "state": [
+    "nav-map"
+   ],
+   "silent": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "map",
+   "landed": "map",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "地图",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-map"
+   ],
+   "state": [
+    "nav-map"
+   ],
+   "silent": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "studio",
+   "landed": "studio",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "行程工作台",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "stay",
+   "landed": "stay",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "住宿选择",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "discover",
+   "landed": "discover",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "城市探索",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "import",
+   "landed": "import",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "导入地点",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "landed": "bookings",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "旅行票夹",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "landed": "footprints",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "足迹",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "agent",
+   "landed": "agent",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "Copilot",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-agent"
+   ],
+   "state": [
+    "nav-agent"
+   ],
+   "silent": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "landed": "authoritative",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "恢复与执行",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "landed": "intelligence",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "智能守护",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "twin",
+   "landed": "twin",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "旅行者画像",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "trash",
+   "landed": "trash",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "回收站",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "access",
+   "landed": "access",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "成员与权限",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "trips",
+   "landed": "trips",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "行程",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-trips"
+   ],
+   "state": [
+    "nav-trips"
+   ],
+   "silent": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "me",
+   "landed": "me",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "我的",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-me"
+   ],
+   "state": [
+    "nav-me"
+   ],
+   "silent": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  }
+ ]
+}
