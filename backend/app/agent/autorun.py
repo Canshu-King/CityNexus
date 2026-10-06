@@ -33,6 +33,7 @@ from app.db.models import (
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
 from app.integrations.mobility.runtime import capture_runtime_mobility_snapshot
+from app.live_context_watch import run_live_context_watch
 from app.observability.tracing import persist_span, phoenix_status
 
 _worker_lock = threading.Lock()
@@ -306,7 +307,39 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                 },
             )
         )
-        pulse.observation_ids_json = json.dumps(list(signals.observation_ids))
+        context_watch = (
+            run_live_context_watch(session, journey)
+            if journey.status == "ACTIVE"
+            and settings.guardian_signal_provider in {"open-meteo", "live", "weather"}
+            else None
+        )
+        context_observation_ids = [
+            str(item.get("id"))
+            for item in ((context_watch or {}).get("observations") or [])
+            if isinstance(item, dict) and item.get("id")
+        ]
+        pulse.observation_ids_json = json.dumps(
+            list(dict.fromkeys([*signals.observation_ids, *context_observation_ids]))
+        )
+        if context_watch is not None:
+            trace_spans.append(
+                persist_span(
+                    session,
+                    journey_id=journey.id,
+                    trace_id=trace_id,
+                    name="venue_context.capture",
+                    attributes={
+                        "status": context_watch.get("status"),
+                        "observation_ids": context_observation_ids,
+                        "recovery_event_ids": list(
+                            context_watch.get("recovery_event_ids") or []
+                        ),
+                        "checked_activity_count": len(
+                            context_watch.get("checked_activities") or []
+                        ),
+                    },
+                )
+            )
         guardian_result = None
         resilience = None
         counterfactuals: list[dict[str, Any]] = []
@@ -458,6 +491,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
             )
         result = {
             "signals": signals.to_dict(),
+            "context_watch": context_watch,
             "guardian": guardian_result,
             "resilience": snapshot_payload(resilience),
             "counterfactuals": counterfactuals,
