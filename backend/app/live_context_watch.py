@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from app.core.audit import record_audit
 from app.db.models import Activity, Event, Journey, Place, WebObservation
 from app.fact_acquisition import acquire_place_facts
+from app.replanning.proposal_lifecycle import invalidate_pending_replans_for_event
 
 WATCH_STATUSES = {
     "OPEN_COMPATIBLE",
@@ -210,6 +211,81 @@ def _persist_observation(
     return observation
 
 
+def _context_incident_fingerprint(
+    *, journey: Journey, activity: Activity, place: Place, result: dict[str, Any]
+) -> str:
+    """Stable identity for one plan-vs-venue conflict across repeated fresh polls."""
+
+    material = {
+        "journey_id": journey.id,
+        "activity_id": activity.id,
+        "place_id": place.id,
+        "provider_entity": place.external_id,
+        "planned_local_interval": result.get("planned_local_interval"),
+        "status": result.get("status"),
+        "reason_code": result.get("reason_code"),
+    }
+    return hashlib.sha256(
+        json.dumps(material, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
+    ).hexdigest()
+
+
+def _open_live_context_events(
+    session: Session, *, journey_id: str, activity_id: str
+) -> list[Event]:
+    return list(
+        session.scalars(
+            select(Event)
+            .where(
+                Event.journey_id == str(journey_id),
+                Event.provider_key == "truth-mesh",
+                Event.provenance == "SYSTEM_DERIVED",
+                Event.event_type == "CLOSURE",
+                Event.affected_activity_id == str(activity_id),
+                Event.status.in_(("DETECTED", "ACKNOWLEDGED")),
+            )
+            .order_by(Event.detected_at, Event.id)
+        ).all()
+    )
+
+
+def _resolve_live_context_event(
+    session: Session,
+    event: Event,
+    *,
+    resolved_at: str,
+    reason: str,
+    observation_id: str,
+) -> None:
+    try:
+        payload = json.loads(event.payload_json or "{}")
+    except json.JSONDecodeError:
+        payload = {}
+    payload["context_resolution"] = {
+        "reason": reason,
+        "resolved_at": resolved_at,
+        "observation_id": observation_id,
+    }
+    event.payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+    event.status = "RESOLVED"
+    event.resolved_at = resolved_at
+    invalidate_pending_replans_for_event(
+        session,
+        event_id=event.id,
+        journey_id=event.journey_id,
+        decided_at=resolved_at,
+        reason="trigger_event_resolved",
+    )
+    record_audit(
+        session,
+        action="live_context_watch.conflict.resolved",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=event.journey_id,
+        after=payload["context_resolution"],
+    )
+
+
 def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]:
     """Refresh exact active-plan venues and classify reality without starting an Agent."""
 
@@ -241,7 +317,9 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
     conflicts: list[dict[str, Any]] = []
     unknown_or_degraded: list[dict[str, Any]] = []
     observation_ids: list[str] = []
+    event_ids: list[str] = []
     created_event_ids: list[str] = []
+    resolved_event_ids: list[str] = []
     degraded = bool(receipt.get("degraded_providers"))
     for activity in active:
         place = session.get(Place, str(activity.place_id))
@@ -296,9 +374,39 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
             result["observation_id"] = observation.id
         classifications.append(result)
         if result["status"] in {"CLOSED_CONFLICT", "OUTSIDE_VERIFIED_HOURS"}:
+            incident_fingerprint = _context_incident_fingerprint(
+                journey=journey,
+                activity=activity,
+                place=place,
+                result=result,
+            )
+            open_events = _open_live_context_events(
+                session,
+                journey_id=journey.id,
+                activity_id=activity.id,
+            )
+            event = None
+            for candidate in open_events:
+                try:
+                    candidate_payload = json.loads(candidate.payload_json or "{}")
+                except json.JSONDecodeError:
+                    candidate_payload = {}
+                if candidate_payload.get("incident_fingerprint") == incident_fingerprint:
+                    event = candidate
+                    continue
+                _resolve_live_context_event(
+                    session,
+                    candidate,
+                    resolved_at=captured_at,
+                    reason="SUPERSEDED_BY_FRESH_CONTEXT",
+                    observation_id=observation.id,
+                )
+                resolved_event_ids.append(candidate.id)
+
             payload = {
                 "context_watch_status": result["status"],
                 "reason_code": result["reason_code"],
+                "incident_fingerprint": incident_fingerprint,
                 "affected_activity_id": activity.id,
                 "affected_place_id": place.id,
                 "provider_entity": place.external_id,
@@ -309,33 +417,55 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
                 "planned_local_interval": result["planned_local_interval"],
                 "verified_opening": result.get("opening_hours") or result.get("verified_opening_intervals"),
             }
-            event = Event(
-                id=str(uuid4()),
-                journey_id=journey.id,
-                provider_key="truth-mesh",
-                provenance="SYSTEM_DERIVED",
-                event_type="CLOSURE",
-                severity="MAJOR",
-                status="DETECTED",
-                affected_activity_id=activity.id,
-                occurred_at=captured_at,
-                detected_at=captured_at,
-                payload_json=json.dumps(payload, ensure_ascii=False, sort_keys=True),
-                created_at=captured_at,
-            )
-            session.add(event)
-            session.flush()
+            if event is None:
+                event = Event(
+                    id=str(uuid4()),
+                    journey_id=journey.id,
+                    provider_key="truth-mesh",
+                    provenance="SYSTEM_DERIVED",
+                    event_type="CLOSURE",
+                    severity="MAJOR",
+                    status="DETECTED",
+                    affected_activity_id=activity.id,
+                    occurred_at=result["planned_local_interval"]["start"],
+                    detected_at=captured_at,
+                    payload_json=json.dumps(payload, ensure_ascii=False, sort_keys=True),
+                    created_at=captured_at,
+                )
+                session.add(event)
+                session.flush()
+                created_event_ids.append(event.id)
+                audit_action = "live_context_watch.conflict.detected"
+            else:
+                event.payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+                audit_action = "live_context_watch.conflict.refreshed"
+
             record_audit(
                 session,
-                action="live_context_watch.conflict.detected",
+                action=audit_action,
                 entity_type="Event",
                 entity_id=event.id,
                 journey_id=journey.id,
                 after=payload,
             )
             result["event_id"] = event.id
+            result["incident_fingerprint"] = incident_fingerprint
             conflicts.append(result)
-            created_event_ids.append(event.id)
+            event_ids.append(event.id)
+        elif result["status"] == "OPEN_COMPATIBLE":
+            for event in _open_live_context_events(
+                session,
+                journey_id=journey.id,
+                activity_id=activity.id,
+            ):
+                _resolve_live_context_event(
+                    session,
+                    event,
+                    resolved_at=captured_at,
+                    reason="LIVE_CONTEXT_CLEARED",
+                    observation_id=observation.id,
+                )
+                resolved_event_ids.append(event.id)
         elif result["status"] in {"UNKNOWN", "PROVIDER_DEGRADED"}:
             unknown_or_degraded.append(result)
     if conflicts:
@@ -354,7 +484,9 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
         "classifications": classifications,
         "material_conflicts": conflicts,
         "unknown_or_degraded": unknown_or_degraded,
-        "recovery_event_ids": created_event_ids,
+        "recovery_event_ids": list(dict.fromkeys(event_ids)),
+        "created_recovery_event_ids": list(dict.fromkeys(created_event_ids)),
+        "resolved_recovery_event_ids": list(dict.fromkeys(resolved_event_ids)),
         "agent_started": False,
         "mutation_count": 0,
         "acquisition": receipt,
