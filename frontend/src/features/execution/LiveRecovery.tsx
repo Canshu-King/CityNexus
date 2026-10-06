@@ -902,7 +902,13 @@ export function LiveRecovery({
           </section>
         )}
         {journeyStatus === "ACTIVE" && groupPresence && groupPresence.state !== "MEMBER_IDENTITY_UNAVAILABLE" && (
-          <section className="journey-group-presence" data-testid="journey-group-presence" aria-live="polite">
+          <section
+            className="journey-group-presence"
+            data-testid="journey-group-presence"
+            data-group-state={groupPresence.state}
+            data-group-authority={groupPresence.authority}
+            aria-live="polite"
+          >
             <span className="v8-kicker">{zh ? "同行者位置" : "Group presence"}</span>
             <strong>
               {groupPresence.state === "SINGLE_TRAVELLER"
