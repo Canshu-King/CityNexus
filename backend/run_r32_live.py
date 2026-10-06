@@ -521,15 +521,74 @@ def run() -> dict[str, Any]:
     # before B starts, the slot advances exactly once to B.
     barrier_phase = {"slot": "A"}
 
+    def current_server_run_binding() -> dict[str, Any]:
+        """Resolve the exact durable AgentRun owning the current open epoch."""
+
+        from sqlalchemy import select
+        from app.db.models import AgentRun, RecoveryEpoch
+        from app.db.session import SessionLocal
+
+        with SessionLocal() as session:
+            open_epoch = session.scalar(
+                select(RecoveryEpoch)
+                .where(
+                    RecoveryEpoch.journey_id == journey_id,
+                    RecoveryEpoch.status == "OPEN",
+                )
+                .order_by(
+                    RecoveryEpoch.generation.desc(),
+                    RecoveryEpoch.id.desc(),
+                )
+            )
+            if open_epoch is None:
+                return {
+                    "agent_run_id": None,
+                    "recovery_epoch_id": None,
+                    "resolution": "NO_OPEN_RECOVERY_EPOCH",
+                    "candidate_run_ids": [],
+                }
+            runs = session.scalars(
+                select(AgentRun)
+                .where(
+                    AgentRun.journey_id == journey_id,
+                    AgentRun.recovery_epoch_id == open_epoch.id,
+                    AgentRun.status == "RUNNING",
+                )
+                .order_by(AgentRun.created_at, AgentRun.id)
+            ).all()
+            return {
+                "agent_run_id": runs[0].id if len(runs) == 1 else None,
+                "recovery_epoch_id": open_epoch.id,
+                "recovery_epoch_generation": open_epoch.generation,
+                "resolution": (
+                    "EXACT_ONE_CURRENT_RUN"
+                    if len(runs) == 1
+                    else "NO_CURRENT_RUN"
+                    if not runs
+                    else "AMBIGUOUS_CURRENT_RUN"
+                ),
+                "candidate_run_ids": [row.id for row in runs],
+            }
+
     def gated_complete(self, messages):
         """Start the real provider call, but hold its response at the boundary."""
 
         caller_thread = threading.current_thread().name
         with barrier_lock:
             causal_slot = str(barrier_phase["slot"])
+        server_binding = current_server_run_binding()
         hit = {
             "thread": caller_thread,
             "causal_slot": causal_slot,
+            "agent_run_id": server_binding.get("agent_run_id"),
+            "recovery_epoch_id": server_binding.get("recovery_epoch_id"),
+            "recovery_epoch_generation": server_binding.get(
+                "recovery_epoch_generation"
+            ),
+            "server_run_resolution": server_binding.get("resolution"),
+            "server_run_candidates": server_binding.get(
+                "candidate_run_ids", []
+            ),
             "model_key": str(getattr(self, "model_key", "unknown")),
             "at": datetime.now(timezone.utc).isoformat(),
             "release_was_set": release.is_set(),
@@ -597,13 +656,21 @@ def run() -> dict[str, Any]:
         return result
 
     def wait_for_initial_barrier(
-        causal_slot: str, timeout: float = 45.0
+        *,
+        run_id: str,
+        recovery_epoch_id: str,
+        causal_slot: str,
+        timeout: float = 45.0,
     ) -> bool:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             with barrier_lock:
                 if any(
-                    item.get("causal_slot") == causal_slot
+                    item.get("agent_run_id") == run_id
+                    and item.get("recovery_epoch_id") == recovery_epoch_id
+                    and item.get("causal_slot") == causal_slot
+                    and item.get("server_run_resolution")
+                    == "EXACT_ONE_CURRENT_RUN"
                     and item.get("release_was_set") is False
                     and item.get("provider_call_invoked") is True
                     for item in barrier_hits
@@ -737,7 +804,14 @@ def run() -> dict[str, Any]:
         and a_run.get("status") == "RUNNING"
         and a_run.get("recovery_epoch_id") == r1["id"]
     )
-    a_barrier_ready = wait_for_initial_barrier("A")
+    a_barrier_ready = bool(
+        a_run
+        and wait_for_initial_barrier(
+            run_id=str(a_run["id"]),
+            recovery_epoch_id=str(r1["id"]),
+            causal_slot="A",
+        )
+    )
     if not a_bound or not a_barrier_ready:
         return abort_checkpoint(
             "A_EXTERNAL_RESPONSE_BOUNDARY",
@@ -779,7 +853,14 @@ def run() -> dict[str, Any]:
         and b_run.get("status") == "RUNNING"
         and b_run.get("recovery_epoch_id") == r2["id"]
     )
-    b_barrier_ready = wait_for_initial_barrier("B")
+    b_barrier_ready = bool(
+        b_run
+        and wait_for_initial_barrier(
+            run_id=str(b_run["id"]),
+            recovery_epoch_id=str(r2["id"]),
+            causal_slot="B",
+        )
+    )
     if not b_bound or not b_barrier_ready:
         return abort_checkpoint(
             "B_EXTERNAL_RESPONSE_BOUNDARY",
@@ -793,12 +874,26 @@ def run() -> dict[str, Any]:
             if item.get("release_was_set") is False
         ]
     expected_barrier_slots = {"A", "B"}
+    expected_run_ids = {
+        str(a_run["id"]) if a_run else "",
+        str(b_run["id"]) if b_run else "",
+    }
+    expected_epoch_ids = {str(r1["id"]), str(r2["id"])}
     concurrent_external_barrier_proven = (
         {item.get("causal_slot") for item in hits_before_release}
         == expected_barrier_slots
+        and {str(item.get("agent_run_id") or "") for item in hits_before_release}
+        == expected_run_ids
+        and {
+            str(item.get("recovery_epoch_id") or "")
+            for item in hits_before_release
+        }
+        == expected_epoch_ids
         and len(hits_before_release) == 2
         and all(
             item.get("provider_call_invoked") is True
+            and item.get("server_run_resolution")
+            == "EXACT_ONE_CURRENT_RUN"
             for item in hits_before_release
         )
     )
@@ -814,13 +909,19 @@ def run() -> dict[str, Any]:
 
     with barrier_lock:
         external_call_outcomes = [dict(item) for item in barrier_hits]
-    provider_calls_were_real = all(
-        any(
-            item.get("causal_slot") == causal_slot
-            and item.get("provider_call_invoked") is True
-            for item in external_call_outcomes
+    provider_calls_were_real = bool(
+        a_run
+        and b_run
+        and all(
+            any(
+                item.get("agent_run_id") == run_id
+                and item.get("provider_call_invoked") is True
+                and item.get("server_run_resolution")
+                == "EXACT_ONE_CURRENT_RUN"
+                for item in external_call_outcomes
+            )
+            for run_id in (str(a_run["id"]), str(b_run["id"]))
         )
-        for causal_slot in ("A", "B")
     )
 
     final = _snapshot(journey_id)
