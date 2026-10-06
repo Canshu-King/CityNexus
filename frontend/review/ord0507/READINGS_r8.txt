@@ -3,7 +3,7 @@ Written by k118_make_readings_r8.py; every number is parsed from a run log or fr
 
 [coordinates]
   tip this hand rests on   : aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
-  branch                   : review/a68b0631-ord0507-clock-attribution-r8 head 776772efd685c6033c6b1afec7e783abb1d48908
+  branch                   : review/a68b0631-ord0507-clock-attribution-r8, product commit 776772efd685c6033c6b1afec7e783abb1d48908 (the last commit on it carrying product bytes)
   previous generation      : r7 head 1422e86cc5ec5f8d063f72da39db17eefbec94f0, cut at b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c
   spec blob                : 1ca436fffc15983d22eeb7a9054011565c8894bf
   product blobs            : fd6581fbd3b5ac71763ac034015f35080725096c (V8Experience), 5b92f33112b05e3eb8d710c2f1e5fb00c6beae90 (SimulationPanel)
