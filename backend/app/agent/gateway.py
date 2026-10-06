@@ -924,10 +924,16 @@ class AgentToolGateway:
             traveler_twin_context=compact_twin,
             current_mission_preferences=mission_preferences,
         )
+        from app.world_context import latest_world_context
+
         return {
             "tool": "inspect_twin",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "twin": twin,
+            # Provider context is inspectable world evidence, not an actionable
+            # disruption by itself. request_replan still requires a truthful
+            # server-owned Event, so the model cannot promote benign context.
+            "provider_context": latest_world_context(self.session, journey.id),
             "traveler_twin_context": compact_twin,
             "standby_portfolio": (
                 standby_portfolio(self.session, journey, trigger)
