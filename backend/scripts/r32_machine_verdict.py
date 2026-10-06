@@ -500,16 +500,20 @@ def verdict(
                 len(approval_ids) == len(set(approval_ids))
             )
 
+    active_mutation_tools = {
+        "accept_replan",
+        "activate_standby",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+        "apply_clarified_horizon_choice",
+    }
     mutations = [
         row
         for row in steps
-        if row.get("tool_name")
-        in {
-            "accept_replan",
-            "activate_standby",
-            "replace_activity",
-            "reschedule_activity",
-        }
+        if row.get("tool_name") in active_mutation_tools
         and (row.get("result") or {}).get("executed") is True
     ]
     active_plan_id = (final.get("journey") or {}).get(
@@ -548,6 +552,62 @@ def verdict(
             r2_terminal_state_consistent = (
                 r2row.get("status") == "OPEN"
             )
+
+    # A stale run may discover that its generation died, but that validation
+    # must not mint a successor generation.  In this strike there is no fresh
+    # work after R2, so any epoch newer than R2 is causally unexplained.
+    stale_validation_causally_inert: bool | None = None
+    r2_generation = r2row.get("generation")
+    post_r2_epochs: list[dict[str, Any]] = []
+    if r2id and isinstance(r2_generation, int):
+        post_r2_epochs = [
+            row
+            for row in epochs
+            if isinstance(row.get("generation"), int)
+            and row.get("generation") > r2_generation
+        ]
+        stale_validation_causally_inert = not post_r2_epochs
+
+    # A successful mutation is terminal on the server receipt.  The same run
+    # must not ask the external model for another turn after the mutation and
+    # then self-supersede against the reality it just committed.
+    b_mutation_terminalized: bool | None = None
+    if mutations:
+        b_response_run = (
+            ((checkpoint.get("agent_responses") or {}).get("agent_b") or {})
+            .get("payload", {})
+            .get("run", {})
+        )
+        completion_contract = (
+            b_response_run.get("completion_contract") or {}
+            if isinstance(b_response_run, dict)
+            else {}
+        )
+        mutation_completed_at = max(
+            (
+                str(row.get("completed_at"))
+                for row in mutations
+                if row.get("completed_at")
+            ),
+            default="",
+        )
+        post_mutation_provider_calls = [
+            item
+            for item in external_outcomes
+            if item.get("agent_run_id") == b.get("id")
+            and mutation_completed_at
+            and str(item.get("provider_call_started_at") or "")
+            > mutation_completed_at
+        ]
+        b_mutation_terminalized = bool(
+            b_final.get("status") == "COMPLETED"
+            and isinstance(b_response_run, dict)
+            and b_response_run.get("status") == "COMPLETED"
+            and completion_contract.get("kind") == "MUTATION_EXECUTED"
+            and completion_contract.get("source") == "server_trace"
+            and mutation_completed_at
+            and not post_mutation_provider_calls
+        )
 
     authority_provenance_mode_accurate: bool | None = None
     arrival_order_not_authority: bool | None = None
@@ -728,6 +788,21 @@ def verdict(
                 "accepted recovery mutation"
             ),
         ),
+        "stale_validation_causally_inert": _dim(
+            stale_validation_causally_inert,
+            (
+                f"R2 generation={r2_generation}; "
+                f"post_R2_epoch_ids="
+                f"{[row.get('id') for row in post_r2_epochs]}"
+            ),
+        ),
+        "b_mutation_terminalized": _dim(
+            b_mutation_terminalized,
+            (
+                "after an executed mutation B must be COMPLETED with "
+                "server-trace MUTATION_EXECUTED and no later provider call"
+            ),
+        ),
         "agent_b_external_and_bound_r2": _dim(
             (
                 None
@@ -870,6 +945,7 @@ def verdict(
         "shock_b_material_not_storage_churn",
         "r1_superseded_by_r2",
         "r2_terminal_state_consistent",
+        "stale_validation_causally_inert",
         "agent_b_external_and_bound_r2",
         "stale_agent_authority_refused",
         "stale_result_typed_superseded",
@@ -885,6 +961,7 @@ def verdict(
             {
                 "arrival_order_not_authority",
                 "authority_provenance_mode_accurate",
+                "b_mutation_terminalized",
             }
         )
 
@@ -908,6 +985,8 @@ def verdict(
             ),
             "r1_superseded_by_r2": bool(r2id),
             "r2_terminal_state_consistent": bool(r2id and r2row),
+            "stale_validation_causally_inert": bool(r2id and r2row),
+            "b_mutation_terminalized": bool(mutations),
             "agent_b_external_and_bound_r2": bool(
                 b.get("id") or b_provider_invoked is not None
             ),
@@ -961,7 +1040,7 @@ def verdict(
         else "NOT_PROVEN"
     )
     return {
-        "schema": "citynexus.r32.machine-verdict.v4",
+        "schema": "citynexus.r32.machine-verdict.v5",
         "evaluator_receipt": evaluator_receipt,
         "overall": overall,
         "required_dimensions": sorted(required_dimensions),
