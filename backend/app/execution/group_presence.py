@@ -155,6 +155,34 @@ def _route_eta(
         return None, None
 
 
+def _group_state(
+    *,
+    members: list[JourneyMember],
+    location_states: dict[str, str],
+    coarse_group: dict[str, str],
+) -> str:
+    """Return one stable group-level fact so every consumer tells the same story."""
+
+    if len(members) <= 1:
+        return "SINGLE_TRAVELLER"
+    if any(coarse_group.get(member.id) == "SPLIT_FROM_GROUP" for member in members):
+        return "GROUP_SPLIT_ADVISORY"
+    if all(
+        location_states.get(member.id) == "RECENT"
+        and coarse_group.get(member.id) == "WITH_GROUP"
+        for member in members
+    ):
+        return "TOGETHER"
+    if any(location_states.get(member.id) == "MISSING" for member in members):
+        return "MEMBER_LOCATION_MISSING"
+    if any(
+        location_states.get(member.id) in {"STALE", "IMPRECISE", "UNKNOWN"}
+        for member in members
+    ):
+        return "GROUP_LOCATION_STALE"
+    return "GROUP_LOCATION_UNKNOWN"
+
+
 def group_presence_projection(
     session: Session, journey: Journey, *, viewer_member_id: str | None
 ) -> dict[str, Any]:
@@ -218,20 +246,44 @@ def group_presence_projection(
             "route_eta_minutes": eta,
             "route_eta_provenance": eta_provenance,
         })
+    state = _group_state(
+        members=members,
+        location_states=location_states,
+        coarse_group=coarse_group,
+    )
+    rendezvous_ready = target_activity is not None and target_place is not None
+    viewer_row = rows.get(viewer.id)
+    viewer_eta, viewer_eta_provenance = _route_eta(
+        session, journey, viewer_row, target_activity
+    )
     return {
-        "state": "GROUP_PRESENCE" if len(members) > 1 else "SINGLE_TRAVELLER",
+        "state": state,
         "authority": "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
         "members": projected,
         "rendezvous": (
             {"activity_id": target_activity.id, "title": target_activity.title,
              "place_name": target_place.name, "basis": "ACTIVE_PLAN_EXACT_PLACE"}
-            if target_activity is not None and target_place is not None else None
+            if rendezvous_ready else None
+        ),
+        "rendezvous_state": (
+            "RENDEZVOUS_ROUTE_READY"
+            if viewer_eta is not None
+            else "RENDEZVOUS_TARGET_READY"
+            if rendezvous_ready
+            else "RENDEZVOUS_TARGET_UNAVAILABLE"
+        ),
+        "viewer_route": (
+            {
+                "eta_minutes": viewer_eta,
+                "provenance": viewer_eta_provenance,
+            }
+            if viewer_eta is not None
+            else None
         ),
         "can_guide": bool(
             len(members) > 1
             and
             str(journey.status).upper() == "ACTIVE"
-            and target_activity is not None
-            and target_place is not None
+            and rendezvous_ready
         ),
     }
