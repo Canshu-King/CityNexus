@@ -4,7 +4,10 @@ import pytest
 
 from app.agent.journey_intent import (
     canonical_intent_dimension,
+    expire_journey_intents,
+    intent_scopes_overlap,
     intent_is_active,
+    resolve_intent_targets,
     resolve_intent_scope,
     should_require_clarification,
 )
@@ -97,3 +100,69 @@ def test_grounded_bounded_intent_can_proceed():
         constraint_count=2,
         intent_kind="WALKING_LIMIT",
     ) is False
+
+
+def test_rest_of_today_targets_only_future_non_current_activities_in_local_timezone():
+    activities = [
+        {"id": "current", "sequence_no": 1, "status": "IN_PROGRESS", "start_at": "2026-10-07T01:00:00+00:00"},
+        {"id": "today-next", "sequence_no": 2, "status": "PLANNED", "start_at": "2026-10-07T04:00:00+00:00"},
+        {"id": "tomorrow", "sequence_no": 3, "status": "PLANNED", "start_at": "2026-10-07T16:00:00+00:00"},
+        {"id": "done", "sequence_no": 4, "status": "COMPLETED", "start_at": "2026-10-07T05:00:00+00:00"},
+    ]
+    targets = resolve_intent_targets(
+        scope_kind="REST_OF_TODAY",
+        activities=activities,
+        now=NOW,
+        timezone_name="Asia/Tokyo",
+        current_activity_id="current",
+    )
+    assert targets == ["today-next"]
+
+
+def test_next_stop_scope_expires_when_its_server_resolved_target_is_terminal():
+    from types import SimpleNamespace
+
+    row = SimpleNamespace(
+        status="ACTIVE",
+        scope_end_at=None,
+        scope_kind="NEXT_STOP",
+        target_activity_ids_json='["stop-2"]',
+        expired_at=None,
+        updated_at=None,
+    )
+
+    class Result:
+        def all(self):
+            return [row]
+
+    class Session:
+        def scalars(self, _query):
+            return Result()
+
+        def get(self, _model, _key):
+            return SimpleNamespace(status="COMPLETED")
+
+        def flush(self):
+            pass
+
+    changed = expire_journey_intents(
+        Session(),
+        SimpleNamespace(id="journey-1", status="ACTIVE"),
+        now=NOW,
+    )
+    assert changed == 1
+    assert row.status == "EXPIRED"
+    assert row.expired_at == NOW.isoformat()
+
+
+def test_overlapping_temporary_scopes_can_supersede_same_dimension():
+    assert intent_scopes_overlap(
+        left_kind="REST_OF_TODAY",
+        left_start="2026-10-07T00:00:00+00:00",
+        left_end="2026-10-08T00:00:00+00:00",
+        left_targets=["a", "b"],
+        right_kind="REMAINING_JOURNEY",
+        right_start="2026-10-07T02:00:00+00:00",
+        right_end="2026-10-09T00:00:00+00:00",
+        right_targets=["b", "c"],
+    )

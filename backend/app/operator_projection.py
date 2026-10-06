@@ -33,6 +33,8 @@ from app.agent.transactional_operator import execution_plan_projection
 from app.execution.continuous_journey import continuous_flow_projection
 from app.agent.journey_ahead import journey_ahead_projection
 from app.agent.overnight_steward import overnight_steward_projection
+from app.agent.journey_intent import active_journey_intents
+from app.execution.clock import execution_clock
 
 
 def classify_operator_state(
@@ -434,6 +436,11 @@ def operator_projection(
     overnight = overnight_steward_projection(
         session, journey, viewer_traveler_id=viewer_traveler_id
     )
+    active_intents = active_journey_intents(
+        session,
+        journey,
+        now=execution_clock.now(journey.timezone),
+    )
 
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
     approval_payload = None
@@ -522,6 +529,7 @@ def operator_projection(
         "flow": flow,
         "ahead": ahead,
         "overnight": overnight,
+        "intents": active_intents,
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {

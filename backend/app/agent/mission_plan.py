@@ -156,11 +156,12 @@ def build_mission_plan(
     # do not select or activate a plan, so an autonomous real-city mission may
     # use them before recovery mutation. PLAN_ONLY keeps its historical
     # proposal-only surface.
-    allowed_tools = (
-        (*_READ_TOOLS, "request_replan")
-        if autonomy == "PLAN_ONLY"
-        else (*_READ_TOOLS, *_STRATEGY_TOOLS, *_DECISION_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
-    )
+    if autonomy == "PLAN_ONLY" and "LIVE_JOURNEY_INTENT_STEERING" in objectives:
+        allowed_tools = (*_READ_TOOLS, *_STRATEGY_TOOLS, "request_replan")
+    elif autonomy == "PLAN_ONLY":
+        allowed_tools = (*_READ_TOOLS, "request_replan")
+    else:
+        allowed_tools = (*_READ_TOOLS, *_STRATEGY_TOOLS, *_DECISION_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
         autonomy=autonomy,
@@ -189,4 +190,11 @@ def mission_plan_for_model(mission: Any) -> dict[str, Any]:
         protected_activity_ids=decode("protected_activity_ids_json"),
         objective_codes=decode("objective_codes_json"),
     )
-    return plan.as_dict()
+    result = plan.as_dict()
+    try:
+        intent = json.loads(getattr(mission, "intent_json", "{}") or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        intent = {}
+    if isinstance(intent, dict) and intent.get("temporary_journey_intent"):
+        result["temporary_journey_intent"] = intent["temporary_journey_intent"]
+    return result

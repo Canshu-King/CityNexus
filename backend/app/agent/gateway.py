@@ -774,6 +774,8 @@ class AgentToolGateway:
 
     def inspect_journey(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
+        from app.agent.journey_intent import active_journey_intents
+        from app.execution.clock import execution_clock
         from app.main import active_journey_members_with_capabilities
         commitments = self.session.scalars(
             select(Commitment).where(
@@ -796,6 +798,11 @@ class AgentToolGateway:
             "tool": "inspect_journey",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "journey": _json(journey_schema(journey)),
+            "active_journey_intents": active_journey_intents(
+                self.session,
+                journey,
+                now=execution_clock.now(journey.timezone),
+            ),
             "protected_commitments": [item for item in protected if item["protected"]],
             "collective_journey": (
                 active_journey_members_with_capabilities(self.session, journey)

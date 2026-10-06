@@ -275,6 +275,11 @@ def next_due_seconds(session, *, now: datetime | None = None) -> float | None:
 def pulse_journey(session, journey: Journey) -> dict[str, Any]:
     """Persist one sensing -> Guardian evaluation cycle."""
 
+    from app.agent.journey_intent import expire_journey_intents
+
+    expire_journey_intents(
+        session, journey, now=execution_clock.now(journey.timezone)
+    )
     started_at = _now()
     trace_id = str(uuid4())
     trace_spans: list[dict[str, Any]] = []

@@ -572,6 +572,40 @@ CREATE TABLE IF NOT EXISTS journey_missions (
     failure_reason TEXT
 );
 
+CREATE TABLE IF NOT EXISTS journey_intents (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    created_by_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    created_by_member_id TEXT,
+    source_text TEXT NOT NULL,
+    intent_kind TEXT NOT NULL,
+    scope_kind TEXT,
+    scope_start_at TEXT,
+    scope_end_at TEXT,
+    local_date TEXT,
+    target_activity_ids_json TEXT NOT NULL DEFAULT '[]',
+    canonical_dimensions_json TEXT NOT NULL DEFAULT '[]',
+    constraints_json TEXT NOT NULL DEFAULT '[]',
+    capabilities_json TEXT NOT NULL DEFAULT '[]',
+    preference_hints_json TEXT NOT NULL DEFAULT '{}',
+    semantic_envelope_json TEXT NOT NULL DEFAULT '{}',
+    source TEXT NOT NULL DEFAULT 'USER_TEMPORARY_INTENT',
+    compiler_provider_key TEXT NOT NULL DEFAULT 'deterministic',
+    compiler_model_key TEXT NOT NULL DEFAULT 'fallback',
+    compiler_confidence REAL NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'ACTIVE',
+    evaluation_state TEXT NOT NULL DEFAULT 'QUEUED',
+    semantic_fingerprint TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    superseded_at TEXT,
+    expired_at TEXT,
+    cancelled_at TEXT,
+    UNIQUE(journey_id, semantic_fingerprint)
+);
+CREATE INDEX IF NOT EXISTS idx_journey_intents_active_scope
+    ON journey_intents(journey_id, status, scope_start_at, scope_end_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

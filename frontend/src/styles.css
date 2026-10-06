@@ -1439,6 +1439,12 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .live-readiness-action_needed, .live-readiness-ready_with_uncertainty { border-color: #e5c98f; background: #fffaf0; color: #63491b; }
 .journey-operator-card { display: grid; gap: 10px; margin: 0 0 18px; padding: 16px 18px; border: 1px solid #a9c8e8; border-radius: 16px; background: linear-gradient(135deg, #f8fbff, #eef5ff); color: #193a5b; }
 .journey-operator-card button { justify-self: start; }
+.journey-intent-steering { display: grid; gap: 8px; padding: 12px; border: 1px solid rgba(31, 91, 114, .2); border-radius: 12px; background: rgba(255, 255, 255, .8); }
+.journey-intent-steering label, .journey-intent-list li { display: grid; gap: 4px; }
+.journey-intent-steering label span, .journey-intent-list small { font-size: 13px; }
+.journey-intent-steering textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid #aabbd0; border-radius: 10px; padding: 10px 12px; color: inherit; font: inherit; }
+.journey-intent-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.journey-intent-list li { padding: 8px 10px; border-radius: 9px; background: rgba(31, 91, 114, .06); }
 .journey-operator-heading { display: grid; gap: 4px; }
 .journey-operator-heading strong { font-size: 16px; }
 .journey-operator-brain { display: grid; gap: 4px; padding: 10px 12px; border-radius: 12px; background: rgba(31, 91, 114, .08); }

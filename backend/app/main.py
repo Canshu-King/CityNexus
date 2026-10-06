@@ -150,6 +150,7 @@ from app.db.models import (
     JourneyLeg,
     JourneyConstraint,
     JourneyMission,
+    JourneyIntent,
     JourneyMember as JourneyMemberModel,
     JourneyRoleCapability,
     JourneyShareGrant,
@@ -1304,20 +1305,29 @@ def call_agent_tool(
     return AgentToolGateway(session).dispatch(tool_name, resolved_payload)
 
 
-@app.post(
-    "/api/v1/journeys/{journey_id}/agent/commands",
-    response_model=AgentCommandResponse,
-)
+@app.post("/api/v1/journeys/{journey_id}/agent/commands")
 def run_agent_command(
     journey_id: UUID,
     payload: AgentCommandRequest,
+    request: Request,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     start_request_budget(SCENARIO_AGENT_COMMANDS)
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
-    interpretation = _copilot_fallback_or_ai(payload.command, _copilot_context(session, journey))
+    context = _copilot_context(session, journey)
+    interpretation = _copilot_fallback_or_ai(payload.command, context)
+    if _is_live_journey_intent_request(payload.command, interpretation):
+        return _run_live_journey_intent(
+            request=request,
+            session=session,
+            journey=journey,
+            command=payload.command,
+            interpretation=interpretation,
+            context=context,
+            now=now_dt,
+        )
     event_type = (
         str(interpretation.entities.get("event_type"))
         if not is_status_inspection_reference(payload.command)
@@ -16700,6 +16710,11 @@ def _copilot_context(session: Session, journey: Journey) -> dict[str, Any]:
             }
         )
     capabilities = capability_payload(session, journey.traveler_id, journey.id)
+    from app.agent.journey_intent import active_journey_intents
+
+    active_intents = active_journey_intents(
+        session, journey, now=execution_clock.now(journey.timezone)
+    )
     mobility_evidence = _json_object(plan.mobility_evidence_json) if plan is not None else {}
     return {
         "journey_id": journey.id,
@@ -16728,6 +16743,7 @@ def _copilot_context(session: Session, journey: Journey) -> dict[str, Any]:
         "capabilities": capabilities,
         "capability_summary": summarize_capabilities(capabilities),
         "protected_commitments": [item for item in commitment_payload if item["protected"]],
+        "active_journey_intents": active_intents,
     }
 
 
@@ -16766,6 +16782,15 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         "preferences": context["preferences"],
         "capabilities": context.get("capabilities", []),
         "capability_summary": context.get("capability_summary", {}),
+        "active_journey_intents": context.get("active_journey_intents", []),
+        "journey_intent_steering": {
+            "purpose": "interpret a temporary request for the already-running Journey",
+            "scope_kind_enum": ["REST_OF_TODAY", "NEXT_MORNING", "NEXT_STOP", "REMAINING_JOURNEY"],
+            "intent_kind_enum": ["PACE", "WALKING_LIMIT", "FOOD_PREFERENCE", "INDOOR_OUTDOOR", "REST_BREAK", "BUDGET_TIGHTENING", "TIME_CONSTRAINT", "INTEREST", "ACCESSIBILITY_NEED", "GENERAL_GOAL"],
+            "return_entities": ["intent_kind", "scope_kind", "preference_hints"],
+            "return_constraints": "bounded structured facts only; never return Activity ids",
+            "distinction": "fatigue or a preference for easier pacing is USER_TEMPORARY_INTENT, not an accessibility capability; only a stated functional limitation is USER_STATED_CAPABILITY",
+        },
         "authority": (
             "The server owns ids, coordinates, prices, provider facts, commitments, "
             "and mutations. Return meaning only; do not claim an authoritative mutation."
@@ -16821,6 +16846,406 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         )
     except (DeepSeekResponsesError, TypeError, ValueError, json.JSONDecodeError, httpx.HTTPError):
         return fallback
+
+
+def _is_live_journey_intent_request(message: str, interpretation: CopilotInterpretation) -> bool:
+    if interpretation.intent not in {"PREFERENCE_CHANGE", "REPLAN_REQUEST"}:
+        return False
+    semantic = interpretation.semantic_envelope or {}
+    entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
+    if any(entities.get(key) for key in ("intent_kind", "scope_kind", "preference_hints")):
+        return True
+    folded = str(message).casefold()
+    return any(
+        marker in folded
+        for marker in (
+            "rest of today", "today easier", "this afternoon", "tonight", "tomorrow morning",
+            "next stop", "rest of the trip", "rest of this journey", "less walking", "walk less",
+            "keep walking", "i'm tired", "i am tired", "tired today", "轻松", "少走", "今天",
+            "明天早上", "下一站", "剩下的行程",
+        )
+    )
+
+
+def _server_intent_scope_from_text(message: str) -> str | None:
+    text = str(message).casefold()
+    choices = (
+        ("REMAINING_JOURNEY", ("rest of the trip", "rest of this journey", "for the rest of the journey", "剩下的行程", "之后整个行程")),
+        ("NEXT_MORNING", ("tomorrow morning", "next morning", "明天早上", "明早")),
+        ("NEXT_STOP", ("next stop", "next one", "下一站", "接下来一站")),
+        ("REST_OF_TODAY", ("rest of today", "for today", "today", "this afternoon", "tonight", "今天", "下午", "今晚")),
+    )
+    return next((kind for kind, markers in choices if any(marker in text for marker in markers)), None)
+
+
+def _bounded_intent_constraints(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    output: list[dict[str, Any]] = []
+    for item in value[:12]:
+        if not isinstance(item, dict):
+            continue
+        cleaned: dict[str, Any] = {}
+        for key, raw in item.items():
+            if str(key).lower() in {"id", "activity_id", "place_id", "journey_id", "member_id", "coordinates", "latitude", "longitude", "price", "route_time", "route_min"}:
+                continue
+            if isinstance(raw, (str, int, float, bool)) or raw is None:
+                cleaned[str(key)[:48]] = raw
+            elif isinstance(raw, list):
+                cleaned[str(key)[:48]] = [str(part)[:120] for part in raw[:12] if isinstance(part, (str, int, float, bool))]
+        if cleaned:
+            output.append(cleaned)
+    return output
+
+
+def _intent_constraint_kind(item: dict[str, Any]) -> str:
+    raw = item.get("kind") or item.get("intent_kind") or item.get("dimension") or item.get("type")
+    value = str(raw or "").strip().upper().replace("-", "_").replace(" ", "_")
+    aliases = {
+        "WALKING": "WALKING_LIMIT", "WALKING_MIN": "WALKING_LIMIT", "MAX_WALKING": "WALKING_LIMIT",
+        "PACE_PREFERENCE": "PACE", "FOOD": "FOOD_PREFERENCE", "REST": "REST_BREAK",
+        "INDOOR": "INDOOR_OUTDOOR", "OUTDOOR": "INDOOR_OUTDOOR", "ACCESSIBILITY": "ACCESSIBILITY_NEED",
+    }
+    value = aliases.get(value, value)
+    allowed = {"PACE", "WALKING_LIMIT", "FOOD_PREFERENCE", "INDOOR_OUTDOOR", "REST_BREAK", "BUDGET_TIGHTENING", "TIME_CONSTRAINT", "INTEREST", "ACCESSIBILITY_NEED", "GENERAL_GOAL"}
+    return value if value in allowed else ""
+
+
+def _run_live_journey_intent(
+    *,
+    request: Request,
+    session: Session,
+    journey: Journey,
+    command: str,
+    interpretation: CopilotInterpretation,
+    context: dict[str, Any],
+    now: datetime,
+) -> dict[str, Any]:
+    """Persist one authenticated temporary intent, then use the existing Agent runtime."""
+    from app.agent.journey_intent import (
+        canonical_intent_dimension,
+        intent_scopes_overlap,
+        journey_intent_payload,
+        resolve_intent_scope,
+        resolve_intent_targets,
+        should_require_clarification,
+    )
+    from app.execution.clock import execution_clock
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    standing = session.scalar(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if enrollment is None or not enrollment.enabled or standing is None:
+        raise HTTPException(409, "Start the Journey Operator before steering the running Journey")
+
+    semantic = interpretation.semantic_envelope if isinstance(interpretation.semantic_envelope, dict) else {}
+    entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
+    constraints = _bounded_intent_constraints(semantic.get("constraints"))
+    kinds = list(dict.fromkeys(kind for kind in (_intent_constraint_kind(item) for item in constraints) if kind))
+    requested_kind = str(entities.get("intent_kind") or "").upper().replace("-", "_")
+    allowed_kinds = {"PACE", "WALKING_LIMIT", "FOOD_PREFERENCE", "INDOOR_OUTDOOR", "REST_BREAK", "BUDGET_TIGHTENING", "TIME_CONSTRAINT", "INTEREST", "ACCESSIBILITY_NEED", "GENERAL_GOAL"}
+    intent_kind = requested_kind if requested_kind in allowed_kinds else (kinds[0] if len(kinds) == 1 else "MULTI_CONSTRAINT" if kinds else "")
+    scope_kind = str(entities.get("scope_kind") or "").upper()
+    if scope_kind not in {"REST_OF_TODAY", "NEXT_MORNING", "NEXT_STOP", "REMAINING_JOURNEY"}:
+        scope_kind = _server_intent_scope_from_text(command) or ""
+    preference_hints = entities.get("preference_hints") if isinstance(entities.get("preference_hints"), dict) else {}
+    if not constraints and not kinds and intent_kind == "MULTI_CONSTRAINT":
+        intent_kind = ""
+    if intent_kind == "ACCESSIBILITY_NEED":
+        # Functional limitations use the existing capability path, not a temporary preference.
+        return {
+            "outcome": "INTENT_STEERING_NEEDS_CLARIFICATION",
+            "message": "Is this a temporary preference for this Journey, or a functional accessibility need you want recorded?",
+            "intent": None,
+            "mission": None,
+            "run": None,
+            "source": "USER_STATED_CAPABILITY",
+        }
+
+    semantic_confidence = float(semantic.get("confidence", interpretation.confidence) or 0.0)
+    scope = None
+    if scope_kind:
+        scope = resolve_intent_scope(
+            scope_kind=scope_kind,
+            now=now,
+            timezone_name=journey.timezone,
+            journey_end_at=journey.end_at,
+        )
+        if scope.ends_at and journey.end_at:
+            try:
+                journey_end = datetime.fromisoformat(journey.end_at.replace("Z", "+00:00"))
+                scope_end = datetime.fromisoformat(scope.ends_at.replace("Z", "+00:00"))
+                if journey_end.tzinfo and scope_end.tzinfo and journey_end.astimezone(timezone.utc) < scope_end.astimezone(timezone.utc):
+                    from app.agent.journey_intent import IntentScope
+
+                    scope = IntentScope(scope.kind, scope.starts_at, journey_end.astimezone(timezone.utc).isoformat(), scope.local_date)
+            except ValueError:
+                pass
+
+    activities = list(context.get("plan", {}).get("activities", [])) if context.get("plan") else []
+    target_ids = resolve_intent_targets(
+        scope_kind=scope_kind,
+        activities=activities,
+        now=now,
+        timezone_name=journey.timezone,
+        current_activity_id=journey.current_activity_id,
+    ) if scope is not None else []
+    clarification_needed = should_require_clarification(
+        confidence=semantic_confidence,
+        scope_resolved=scope is not None and bool(target_ids),
+        constraint_count=len(constraints) + len(preference_hints),
+        intent_kind=intent_kind,
+    )
+    if not intent_kind or not constraints and not preference_hints:
+        clarification_needed = True
+
+    dimensions = list(dict.fromkeys(
+        canonical_intent_dimension(intent_kind=kind)
+        for kind in (kinds or ([intent_kind] if intent_kind else []))
+        if kind and kind != "MULTI_CONSTRAINT"
+    ))
+    if not dimensions and intent_kind:
+        dimensions = [canonical_intent_dimension(intent_kind=intent_kind)]
+    normalized_source = " ".join(command.casefold().split())
+    fingerprint_material = json.dumps(
+        {"traveler_id": principal.traveler_id, "source": normalized_source, "scope_start": scope.starts_at if scope else None, "scope_end": scope.ends_at if scope else None, "constraints": constraints, "hints": preference_hints},
+        ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+    )
+    fingerprint = hashlib.sha256(fingerprint_material.encode("utf-8")).hexdigest()
+    existing = session.scalar(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.semantic_fingerprint == fingerprint,
+        )
+    )
+    if existing is not None:
+        existing_outcome = str(existing.evaluation_state or "").upper()
+        allowed_outcomes = {
+            "INTENT_STEERING_PLAN_ALREADY_FITS",
+            "INTENT_STEERING_REPLAN_READY",
+            "INTENT_STEERING_APPLIED",
+            "INTENT_STEERING_NEEDS_CLARIFICATION",
+            "INTENT_STEERING_NO_FEASIBLE_CHANGE",
+            "INTENT_STEERING_BRAIN_BLOCKED",
+        }
+        if existing_outcome not in allowed_outcomes:
+            existing_outcome = "INTENT_STEERING_BRAIN_BLOCKED"
+        return {
+            "outcome": existing_outcome,
+            "message": "I already have this request for the same Journey scope.",
+            "intent": journey_intent_payload(existing),
+            "mission": None,
+            "run": None,
+            "source": existing.source,
+        }
+
+    now_text = now.astimezone(timezone.utc).isoformat()
+    status = "NEEDS_CLARIFICATION" if clarification_needed else "ACTIVE"
+    intent = JourneyIntent(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        created_by_traveler_id=principal.traveler_id,
+        created_by_member_id=member.id,
+        source_text=command,
+        intent_kind=intent_kind or "UNRESOLVED",
+        scope_kind=scope_kind or None,
+        scope_start_at=scope.starts_at if scope else None,
+        scope_end_at=scope.ends_at if scope else None,
+        local_date=scope.local_date if scope else None,
+        target_activity_ids_json=json.dumps(target_ids),
+        canonical_dimensions_json=json.dumps(dimensions),
+        constraints_json=json.dumps(constraints, ensure_ascii=False),
+        capabilities_json=json.dumps(
+            semantic.get("capabilities", []) if intent_kind == "ACCESSIBILITY_NEED" else [],
+            ensure_ascii=False,
+        ),
+        preference_hints_json=json.dumps(preference_hints, ensure_ascii=False),
+        semantic_envelope_json=json.dumps(semantic, ensure_ascii=False, sort_keys=True),
+        source="USER_TEMPORARY_INTENT",
+        compiler_provider_key=interpretation.provider_key,
+        compiler_model_key=(settings.ai_model.removeprefix("deepseek/") if interpretation.provider_key == "deepseek" else "copilot-fallback"),
+        compiler_confidence=semantic_confidence,
+        status=status,
+        evaluation_state="NEEDS_CLARIFICATION" if clarification_needed else "QUEUED",
+        semantic_fingerprint=fingerprint,
+        created_at=now_text,
+        updated_at=now_text,
+    )
+    active_rows = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.status == "ACTIVE",
+        )
+    ).all()
+    if not clarification_needed and dimensions:
+        for old in active_rows:
+            old_dimensions = json.loads(old.canonical_dimensions_json or "[]")
+            old_targets = json.loads(old.target_activity_ids_json or "[]")
+            if set(dimensions).intersection(old_dimensions) and intent_scopes_overlap(
+                left_kind=old.scope_kind or "",
+                left_start=old.scope_start_at,
+                left_end=old.scope_end_at,
+                left_targets=old_targets,
+                right_kind=intent.scope_kind or "",
+                right_start=intent.scope_start_at,
+                right_end=intent.scope_end_at,
+                right_targets=target_ids,
+            ):
+                old.status = "SUPERSEDED"
+                old.superseded_at = now_text
+                old.updated_at = now_text
+    session.add(intent)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.intent.created",
+        entity_type="JourneyIntent",
+        entity_id=intent.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=principal.traveler_id,
+        after={"intent_kind": intent.intent_kind, "scope_kind": intent.scope_kind, "status": intent.status, "target_count": len(target_ids)},
+    )
+    if clarification_needed:
+        if not scope_kind:
+            message = "Should this apply to the rest of today, tomorrow morning, your next stop, or the rest of the trip?"
+        elif not intent_kind or not constraints and not preference_hints:
+            message = "Do you mean a slower pace, less walking, or fewer stops?"
+        else:
+            message = "I can’t see a non-current stop inside that time window. Which part of the Journey should I adjust?"
+        intent.evaluation_state = "NEEDS_CLARIFICATION"
+        session.commit()
+        return {"outcome": "INTENT_STEERING_NEEDS_CLARIFICATION", "message": message, "intent": journey_intent_payload(intent), "mission": None, "run": None, "source": intent.source}
+
+    commitments = session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.status == "ACTIVE",
+            CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
+        )
+    ).all()
+    protected_ids = {str(item.activity_id) for item in commitments if item.activity_id}
+    if journey.current_activity_id:
+        protected_ids.add(str(journey.current_activity_id))
+    mutable_ids = [item for item in target_ids if item not in protected_ids]
+    mission_context = {
+        "id": intent.id,
+        "source": "USER_TEMPORARY_INTENT",
+        "created_by_traveler_id": principal.traveler_id,
+        "created_by_member_id": member.id,
+        "scope_kind": scope.kind,
+        "scope_start_at": scope.starts_at,
+        "scope_end_at": scope.ends_at,
+        "local_date": scope.local_date,
+        "target_activity_ids": target_ids,
+        "canonical_dimensions": dimensions,
+        "constraints": constraints,
+        "preference_hints": preference_hints,
+    }
+    mission = JourneyMission(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        traveler_id=principal.traveler_id,
+        trigger_event_id=None,
+        user_text=command,
+        objective_codes_json=json.dumps(["LIVE_JOURNEY_INTENT_STEERING"]),
+        protected_activity_ids_json=json.dumps(sorted(protected_ids)),
+        mutable_activity_ids_json=json.dumps(mutable_ids),
+        intent_json=json.dumps({"temporary_journey_intent": mission_context}, ensure_ascii=False),
+        resolved_intent_json=json.dumps({"temporary_journey_intent": mission_context, "authority": "PLAN_ONLY; normal R43/R45/R47 gates remain"}, ensure_ascii=False),
+        allowed_action_classes_json=json.dumps(["REQUEST_REPLAN"]),
+        unresolved_references_json="[]",
+        compiler_provider_key=interpretation.provider_key,
+        compiler_model_key=settings.ai_model.removeprefix("deepseek/") if interpretation.provider_key == "deepseek" else "copilot-fallback",
+        compiler_confidence=semantic_confidence,
+        reasoning_summary="One user temporary intent evaluated by the existing Journey Operator Agent.",
+        is_standing=False,
+        parent_mission_id=standing.id,
+        max_cost_delta_minor=0,
+        max_loss_minor=0,
+        max_schedule_drift_min=0,
+        preferences_json="{}",
+        requested_autonomy="PLAN_ONLY",
+        status="CREATED",
+        created_at=now_text,
+    )
+    intent.evaluation_state = "RUNNING"
+    session.add(mission)
+    session.commit()
+    run: dict[str, Any]
+    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    try:
+        run = runtime.run(session, journey=journey, mission=mission)
+    except AgentRuntimeUnavailable as exc:
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": str(exc), "outcome": {"reason_code": "AGENT_RUNTIME_UNAVAILABLE"}}
+    except Exception as exc:  # noqa: BLE001 - keep the temporary intent durable across provider faults
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": type(exc).__name__, "outcome": {"reason_code": "AGENT_RUNTIME_FAILURE"}}
+    finally:
+        runtime.close()
+
+    after_stamp = execution_clock.now(journey.timezone).astimezone(timezone.utc).isoformat()
+    run_outcome = run.get("outcome") if isinstance(run.get("outcome"), dict) else {}
+    reason_code = str(run_outcome.get("reason_code") or "").upper()
+    run_status = str(run.get("status") or "").upper()
+    created_proposals = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.created_at >= now_text,
+        ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    if created_proposals or run_status in {"WAITING_FOR_APPROVAL", "REQUIRE_CONFIRMATION", "REQUIRE_STEP_UP"}:
+        result_code = "INTENT_STEERING_REPLAN_READY"
+    elif run_status in {"FAILED_EXTERNAL", "BLOCKED", "UNAVAILABLE"}:
+        result_code = "INTENT_STEERING_BRAIN_BLOCKED"
+    elif reason_code in {"PLAN_ALREADY_FITS", "CURRENT_PLAN_SATISFIES_INTENT", "INTENT_ALREADY_SATISFIED"}:
+        result_code = "INTENT_STEERING_PLAN_ALREADY_FITS"
+    elif reason_code.startswith("NO_FEASIBLE") or reason_code in {"NO_MATERIAL_CHANGE", "NO_ACTIONABLE_CHANGE"}:
+        result_code = "INTENT_STEERING_NO_FEASIBLE_CHANGE"
+    elif run_outcome.get("clarification"):
+        result_code = "INTENT_STEERING_NEEDS_CLARIFICATION"
+    else:
+        result_code = "INTENT_STEERING_NO_FEASIBLE_CHANGE"
+    intent.evaluation_state = result_code
+    intent.updated_at = after_stamp
+    session.commit()
+    return {
+        "outcome": result_code,
+        "message": _intent_steering_copy(result_code, scope, len(target_ids)),
+        "intent": journey_intent_payload(intent),
+        "mission": mission_payload(mission),
+        "run": run,
+        "source": "USER_TEMPORARY_INTENT",
+        "proposal_ids": [row.id for row in created_proposals],
+    }
+
+
+def _intent_steering_copy(outcome: str, scope: Any, target_count: int) -> str:
+    scope_label = {
+        "REST_OF_TODAY": "for the rest of today",
+        "NEXT_MORNING": "tomorrow morning",
+        "NEXT_STOP": "for your next stop",
+        "REMAINING_JOURNEY": "for the rest of this trip",
+    }.get(getattr(scope, "kind", ""), "for this Journey")
+    if outcome == "INTENT_STEERING_PLAN_ALREADY_FITS":
+        return f"I checked the remaining plan {scope_label}; it already fits what you asked for."
+    if outcome == "INTENT_STEERING_REPLAN_READY":
+        return f"I checked {target_count} remaining stops {scope_label}. A proposed change is ready for the normal review and approval steps."
+    if outcome == "INTENT_STEERING_NEEDS_CLARIFICATION":
+        return "I need one detail before I can safely steer the Journey."
+    if outcome == "INTENT_STEERING_BRAIN_BLOCKED":
+        return "I saved your temporary request, but the Journey planning Agent could not evaluate it yet."
+    if outcome == "INTENT_STEERING_NO_FEASIBLE_CHANGE":
+        return f"I checked the remaining plan {scope_label}; I couldn’t find a grounded change that improves it."
+    return f"I’m keeping this temporary request in view {scope_label}."
 
 
 # Traveller-facing names for the city codes the product can be created with.

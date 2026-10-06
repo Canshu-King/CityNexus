@@ -203,6 +203,7 @@ def _new_evidence_for_events(session, traveler_id: str, journey_id: str, event_i
 
 def _briefing(session, journey: Journey, cycle_day: date, next_day_rows: list[Activity], now: datetime) -> dict[str, Any]:
     from app.agent.journey_ahead import journey_ahead_projection
+    from app.agent.journey_intent import active_journey_intents
     from app.execution.readiness import departure_readiness_projection
 
     first = next_day_rows[0] if next_day_rows else None
@@ -250,6 +251,7 @@ def _briefing(session, journey: Journey, cycle_day: date, next_day_rows: list[Ac
     )).all()
     readiness = departure_readiness_projection(session, journey, now=now)
     ahead = journey_ahead_projection(session, journey, now=now)
+    active_intents = active_journey_intents(session, journey, now=now)
     return {
         "state": "MORNING_NEEDS_ATTENTION" if first is not None and not route["exact"] else "MORNING_READY",
         "local_date": cycle_day.isoformat(),
@@ -276,6 +278,7 @@ def _briefing(session, journey: Journey, cycle_day: date, next_day_rows: list[Ac
             for row in reservations
         ],
         "future_risk": ahead.get("top_risk"),
+        "active_intents": active_intents,
         "captured_at": now.isoformat(),
         "read_only": True,
     }

@@ -263,6 +263,45 @@ class JourneyMission(Base):
     clarification_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
 
 
+class JourneyIntent(Base):
+    """A member-scoped, time-bounded steering request for one running Journey."""
+
+    __tablename__ = "journey_intents"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    created_by_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    created_by_member_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_text: Mapped[str] = mapped_column(Text)
+    intent_kind: Mapped[str] = mapped_column(String)
+    scope_kind: Mapped[str | None] = mapped_column(String, nullable=True)
+    scope_start_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    scope_end_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    local_date: Mapped[str | None] = mapped_column(String, nullable=True)
+    target_activity_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    canonical_dimensions_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    constraints_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    capabilities_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    preference_hints_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    semantic_envelope_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    source: Mapped[str] = mapped_column(String, default="USER_TEMPORARY_INTENT", server_default="USER_TEMPORARY_INTENT")
+    compiler_provider_key: Mapped[str] = mapped_column(String, default="deterministic", server_default="deterministic")
+    compiler_model_key: Mapped[str] = mapped_column(String, default="fallback", server_default="fallback")
+    compiler_confidence: Mapped[float] = mapped_column(default=0.0, server_default="0")
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    evaluation_state: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    semantic_fingerprint: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    superseded_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    expired_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "semantic_fingerprint"),
+        Index("idx_journey_intents_active_scope", "journey_id", "status", "scope_start_at", "scope_end_at"),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

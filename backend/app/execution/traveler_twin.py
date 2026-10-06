@@ -542,6 +542,33 @@ def planning_preference_items(
                     source="EXPLICIT_MISSION",
                 )
             )
+        journey = session.get(Journey, str(journey_id))
+        if journey is not None:
+            from app.agent.journey_intent import active_journey_intents
+            from app.execution.clock import execution_clock
+
+            for intent in active_journey_intents(
+                session,
+                journey,
+                now=execution_clock.now(journey.timezone),
+                traveler_id=str(traveler_id),
+            ):
+                for dimension in intent.get("canonical_dimensions", []):
+                    items.append(
+                        SimpleNamespace(
+                            category="temporary_intent",
+                            preference_key=str(dimension),
+                            value_json=_json({
+                                "intent_id": intent["id"],
+                                "constraints": intent.get("constraints", []),
+                                "preference_hints": intent.get("preference_hints", {}),
+                                "scope_kind": intent.get("scope_kind"),
+                                "scope_end_at": intent.get("scope_end_at"),
+                            }),
+                            weight=0.5,
+                            source="USER_TEMPORARY_INTENT",
+                        )
+                    )
     snapshot = refresh_snapshot(session, traveler_id)
     for item in _load(snapshot.learned_soft_preferences_json, []):
         learned_direction = str(item.get("direction") or "").strip().lower()

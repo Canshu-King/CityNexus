@@ -174,6 +174,8 @@ export function LiveRecovery({
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
+  const [intentText, setIntentText] = useState("");
+  const [intentResult, setIntentResult] = useState<string | null>(null);
 
   const loadOperator = useCallback(async () => {
     try {
@@ -200,6 +202,24 @@ export function LiveRecovery({
       setBusy(null);
     }
   }, [journeyId, zh]);
+
+  const submitJourneyIntent = useCallback(async () => {
+    const command = intentText.trim();
+    if (!command) return;
+    setBusy("journey-intent");
+    setIntentResult(null);
+    try {
+      const result = await cityNexusApi.steerJourneyIntent(journeyId, command);
+      setIntentResult(result.message);
+      setIntentText("");
+      await loadOperator();
+      onAccepted?.();
+    } catch {
+      setIntentResult(zh ? "暂时无法调整这趟行程，请稍后再试。" : "I couldn’t steer this Journey right now. Please try again later.");
+    } finally {
+      setBusy(null);
+    }
+  }, [intentText, journeyId, loadOperator, onAccepted, zh]);
 
   const approveOperatorChange = useCallback(async () => {
     const approvalId = operator?.approval?.approval_id;
@@ -813,6 +833,42 @@ export function LiveRecovery({
                       ? (zh ? "暂时无法完整照看" : "Needs attention")
                       : (zh ? "正在处理" : "Working")}
         </span>}
+        {operator?.enabled && (
+          <div className="journey-intent-steering" data-testid="journey-intent-steering">
+            <label htmlFor="journey-intent-input">
+              <strong>{zh ? "想调整接下来的行程？" : "Want to steer the rest of your Journey?"}</strong>
+              <span>{zh ? "用自己的话告诉 CityNexus；只影响这趟行程，并会自动到期。" : "Tell CityNexus in your own words. It applies to this Journey and expires automatically."}</span>
+            </label>
+            <textarea
+              id="journey-intent-input"
+              data-testid="journey-intent-input"
+              rows={2}
+              maxLength={500}
+              value={intentText}
+              onChange={(event) => setIntentText(event.target.value)}
+              placeholder={zh ? "比如：今天剩下的行程轻松一点，少走路。" : "For example: Make the rest of today easier and keep walking low."}
+            />
+            <button
+              type="button"
+              data-testid="journey-intent-submit"
+              disabled={busy !== null || !intentText.trim()}
+              onClick={() => void submitJourneyIntent()}
+            >
+              {busy === "journey-intent" ? (zh ? "正在调整…" : "Steering…") : (zh ? "调整接下来的行程" : "Steer my Journey")}
+            </button>
+            {intentResult && <span role="status" data-testid="journey-intent-result">{intentResult}</span>}
+            {!!operator.intents?.length && (
+              <ul className="journey-intent-list" data-testid="journey-intent-list">
+                {operator.intents.map((intent) => (
+                  <li key={intent.id}>
+                    <span>{intent.source_text}</span>
+                    <small>{intent.scope_kind?.replaceAll("_", " ") ?? (zh ? "临时行程意图" : "Temporary Journey intent")} · {intent.evaluation_state.replaceAll("_", " ")}</small>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
         {operator?.approval?.required && operator.decision && (
           <div className="journey-operator-approval" data-testid="journey-operator-approval">
             <b>{zh ? "CityNexus 找到一个更稳妥的调整" : "CityNexus recommends this change"}</b>

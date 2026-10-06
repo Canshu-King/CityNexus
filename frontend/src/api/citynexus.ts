@@ -351,6 +351,22 @@ export interface JourneyOperatorTimelineItem {
   kind: string;
 }
 
+export interface JourneyIntentProjection {
+  id: string;
+  source_text: string;
+  intent_kind: string;
+  scope_kind: string | null;
+  scope_start_at: string | null;
+  scope_end_at: string | null;
+  local_date: string | null;
+  target_activity_ids: string[];
+  source: string;
+  status: string;
+  evaluation_state: string;
+  created_at: string;
+  expired_at?: string | null;
+}
+
 export interface JourneyOperatorBrainProjection {
   state: "READY" | "UNCONFIGURED" | "CONFIGURED_UNKNOWN" | "TEMPORARILY_UNAVAILABLE" | "RECOVERING" | "ACTIVE" | "ATTENTION_REQUIRED";
   headline: string;
@@ -459,6 +475,15 @@ export interface JourneyOperatorProjection {
   overnight?: JourneyOvernightProjection | null;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
+  intents?: JourneyIntentProjection[];
+}
+
+export interface JourneyIntentSteeringResponse {
+  outcome: string;
+  message: string;
+  source?: string;
+  intent?: JourneyIntentProjection | null;
+  proposal_ids?: string[];
 }
 
 export interface JourneyContinuousFlow {
@@ -1302,6 +1327,14 @@ export const cityNexusApi = {
     return requestJson<AgentCommandResponse>("/journeys/" + journeyId + "/agent/commands", {
       method: "POST",
       body: JSON.stringify({ command, requested_autonomy: requestedAutonomy }),
+    });
+  },
+
+  steerJourneyIntent(journeyId: string, command: string): Promise<JourneyIntentSteeringResponse> {
+    return requestJson<JourneyIntentSteeringResponse>("/journeys/" + journeyId + "/agent/commands", {
+      method: "POST",
+      headers: travelerAuthHeaders(),
+      body: JSON.stringify({ command, requested_autonomy: "PLAN_ONLY" }),
     });
   },
 

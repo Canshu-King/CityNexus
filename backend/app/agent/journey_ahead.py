@@ -291,6 +291,9 @@ def journey_ahead_projection(
         brain_blocked=brain_blocked,
         journey_completed=journey.status == "COMPLETED",
     )
+    from app.agent.journey_intent import active_journey_intents
+
+    active_intents = active_journey_intents(session, journey, now=stamp)
     return {
         **classified,
         "horizon": {
@@ -302,6 +305,7 @@ def journey_ahead_projection(
         "snapshot_id": snapshot.id if snapshot else None,
         "snapshot_captured_at": snapshot.captured_at if snapshot else None,
         "current_activity_id": current_id or None,
+        "active_intents": active_intents,
         "read_only": True,
         "predictive_only": True,
     }
