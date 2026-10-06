@@ -1,0 +1,4639 @@
+{
+ "run_id": "RK-162905",
+ "tree_at": "ed594904c09edf252c2765df354ba03bae9c47c3",
+ "legs": [
+  {
+   "arm": "zh-CN",
+   "vw": 360,
+   "closed": {
+    "state": "closed",
+    "arm": "zh-CN",
+    "vw": 360,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": false,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 574,
+     "bottom": 618,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 520,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 218
+    },
+    "itinerary_rect": {
+     "top": 520,
+     "bottom": 1813,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 520,
+     "bottom": 773,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 596,
+       "bottom": 617,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 21
+      },
+      "overlap_with_button": 2016,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 630,
+       "bottom": 673,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 686,
+       "bottom": 729,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 2016,
+    "hit": "p.v8-lede",
+    "hits_self": false,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 449,
+      "bottom": 493,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 596
+    },
+    "leak": {
+     "textarea": {
+      "rect": {
+       "top": 524,
+       "bottom": 602,
+       "left": 34,
+       "right": 220
+      },
+      "centre": {
+       "x": 127,
+       "y": 563
+      },
+      "stack": [
+       "h1",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "submit": {
+      "rect": {
+       "top": 574,
+       "bottom": 618,
+       "left": 220,
+       "right": 316
+      },
+      "centre": {
+       "x": 268,
+       "y": 596
+      },
+      "stack": [
+       "p.v8-lede",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "details_content_visibility": "hidden",
+     "details_display": "grid",
+     "display_experiment": {
+      "before_rects": 1,
+      "before_top": 574,
+      "after_rects": 1,
+      "after_top": 564,
+      "section_bottom_after": 520
+     }
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "page_errors": []
+   },
+   "open": {
+    "state": "open",
+    "arm": "zh-CN",
+    "vw": 360,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 574,
+     "bottom": 618,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 635,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 332
+    },
+    "itinerary_rect": {
+     "top": 635,
+     "bottom": 1928,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 635,
+     "bottom": 888,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 711,
+       "bottom": 732,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 745,
+       "bottom": 788,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 801,
+       "bottom": 844,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 449,
+      "bottom": 493,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 596
+    },
+    "explains_verbatim": {
+     "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。",
+     "chars": 114,
+     "clipped_lines": 7,
+     "rect": {
+      "top": 320,
+      "bottom": 439,
+      "h": 120
+     },
+     "overflow_hidden": false,
+     "scroll_le_client": 1,
+     "in_viewport": true
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips"
+   },
+   "centred": {
+    "state": "open_centred",
+    "arm": "zh-CN",
+    "vw": 360,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 400,
+     "bottom": 444,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 129,
+     "bottom": 461,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 332
+    },
+    "itinerary_rect": {
+     "top": 461,
+     "bottom": 1754,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 461,
+     "bottom": 714,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": -6,
+     "bottom": 113,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 537,
+       "bottom": 558,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 571,
+       "bottom": 614,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 627,
+       "bottom": 670,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 275,
+      "bottom": 319,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 422
+    },
+    "scroll_y": 174,
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "sweep": [
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 360,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": 574,
+       "bottom": 618,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": 303,
+       "bottom": 635,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 332
+      },
+      "itinerary_rect": {
+       "top": 635,
+       "bottom": 1928,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": 635,
+       "bottom": 888,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": 168,
+       "bottom": 287,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 711,
+         "bottom": 732,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 745,
+         "bottom": 788,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 801,
+         "bottom": 844,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": "button.v8-quiet-button",
+      "hits_self": true,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": 449,
+        "bottom": 493,
+        "left": 34,
+        "right": 326,
+        "w": 292,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": 596
+      },
+      "scroll_y": 0
+     },
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 360,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -70,
+       "bottom": -26,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -341,
+       "bottom": -9,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 332
+      },
+      "itinerary_rect": {
+       "top": -9,
+       "bottom": 1284,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": -9,
+       "bottom": 244,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": -476,
+       "bottom": -357,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 67,
+         "bottom": 88,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 101,
+         "bottom": 144,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 157,
+         "bottom": 200,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -195,
+        "bottom": -151,
+        "left": 34,
+        "right": 326,
+        "w": 292,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": -48
+      },
+      "scroll_y": 644
+     },
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 360,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -714,
+       "bottom": -670,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -985,
+       "bottom": -653,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 332
+      },
+      "itinerary_rect": {
+       "top": -653,
+       "bottom": 640,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": -653,
+       "bottom": -400,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": -1120,
+       "bottom": -1001,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": -577,
+         "bottom": -556,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": -543,
+         "bottom": -500,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": -487,
+         "bottom": -444,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -839,
+        "bottom": -795,
+        "left": 34,
+        "right": 326,
+        "w": 292,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": -692
+      },
+      "scroll_y": 1288
+     }
+    ]
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "vw": 390,
+   "closed": {
+    "state": "closed",
+    "arm": "zh-CN",
+    "vw": 390,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": false,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 557,
+     "bottom": 601,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 503,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 201
+    },
+    "itinerary_rect": {
+     "top": 503,
+     "bottom": 1796,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 503,
+     "bottom": 756,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 579,
+       "bottom": 600,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 21
+      },
+      "overlap_with_button": 2016,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 613,
+       "bottom": 656,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 669,
+       "bottom": 712,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 2016,
+    "hit": "p.v8-lede",
+    "hits_self": false,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 432,
+      "bottom": 476,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 579
+    },
+    "leak": {
+     "textarea": {
+      "rect": {
+       "top": 507,
+       "bottom": 585,
+       "left": 34,
+       "right": 220
+      },
+      "centre": {
+       "x": 127,
+       "y": 546
+      },
+      "stack": [
+       "h1",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "submit": {
+      "rect": {
+       "top": 557,
+       "bottom": 601,
+       "left": 220,
+       "right": 316
+      },
+      "centre": {
+       "x": 268,
+       "y": 579
+      },
+      "stack": [
+       "p.v8-lede",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "details_content_visibility": "hidden",
+     "details_display": "grid",
+     "display_experiment": {
+      "before_rects": 1,
+      "before_top": 557,
+      "after_rects": 1,
+      "after_top": 547,
+      "section_bottom_after": 503
+     }
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "page_errors": []
+   },
+   "open": {
+    "state": "open",
+    "arm": "zh-CN",
+    "vw": 390,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 557,
+     "bottom": 601,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 618,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 315
+    },
+    "itinerary_rect": {
+     "top": 618,
+     "bottom": 1911,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 618,
+     "bottom": 871,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 693,
+       "bottom": 715,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 728,
+       "bottom": 771,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 784,
+       "bottom": 827,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 432,
+      "bottom": 476,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 579
+    },
+    "explains_verbatim": {
+     "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。",
+     "chars": 114,
+     "clipped_lines": 6,
+     "rect": {
+      "top": 320,
+      "bottom": 422,
+      "h": 103
+     },
+     "overflow_hidden": false,
+     "scroll_le_client": 0,
+     "in_viewport": true
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips"
+   },
+   "centred": {
+    "state": "open_centred",
+    "arm": "zh-CN",
+    "vw": 390,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 400,
+     "bottom": 444,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 146,
+     "bottom": 461,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 315
+    },
+    "itinerary_rect": {
+     "top": 461,
+     "bottom": 1754,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 461,
+     "bottom": 714,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 11,
+     "bottom": 130,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 536,
+       "bottom": 558,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 571,
+       "bottom": 614,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 627,
+       "bottom": 670,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 275,
+      "bottom": 319,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 422
+    },
+    "scroll_y": 157,
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "sweep": [
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 390,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": 557,
+       "bottom": 601,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": 303,
+       "bottom": 618,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 315
+      },
+      "itinerary_rect": {
+       "top": 618,
+       "bottom": 1911,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": 618,
+       "bottom": 871,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": 168,
+       "bottom": 287,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 693,
+         "bottom": 715,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 728,
+         "bottom": 771,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 784,
+         "bottom": 827,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": "button.v8-quiet-button",
+      "hits_self": true,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": 432,
+        "bottom": 476,
+        "left": 34,
+        "right": 356,
+        "w": 322,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": 579
+      },
+      "scroll_y": 0
+     },
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 390,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -79,
+       "bottom": -35,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -333,
+       "bottom": -18,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 315
+      },
+      "itinerary_rect": {
+       "top": -18,
+       "bottom": 1275,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": -18,
+       "bottom": 235,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": -468,
+       "bottom": -349,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 57,
+         "bottom": 79,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 92,
+         "bottom": 135,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 148,
+         "bottom": 191,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -204,
+        "bottom": -160,
+        "left": 34,
+        "right": 356,
+        "w": 322,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": -57
+      },
+      "scroll_y": 636
+     },
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 390,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -714,
+       "bottom": -670,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -968,
+       "bottom": -653,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 315
+      },
+      "itinerary_rect": {
+       "top": -653,
+       "bottom": 640,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": -653,
+       "bottom": -400,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": -1103,
+       "bottom": -984,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": -578,
+         "bottom": -556,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": -543,
+         "bottom": -500,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": -487,
+         "bottom": -444,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -839,
+        "bottom": -795,
+        "left": 34,
+        "right": 356,
+        "w": 322,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": -692
+      },
+      "scroll_y": 1271
+     }
+    ]
+   }
+  },
+  {
+   "arm": "zh-CN",
+   "vw": 414,
+   "closed": {
+    "state": "closed",
+    "arm": "zh-CN",
+    "vw": 414,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": false,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 540,
+     "bottom": 584,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 486,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 183
+    },
+    "itinerary_rect": {
+     "top": 486,
+     "bottom": 1779,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 486,
+     "bottom": 739,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 562,
+       "bottom": 583,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 21
+      },
+      "overlap_with_button": 2016,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 596,
+       "bottom": 639,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 652,
+       "bottom": 695,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 2016,
+    "hit": "p.v8-lede",
+    "hits_self": false,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 415,
+      "bottom": 459,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 562
+    },
+    "leak": {
+     "textarea": {
+      "rect": {
+       "top": 490,
+       "bottom": 568,
+       "left": 34,
+       "right": 220
+      },
+      "centre": {
+       "x": 127,
+       "y": 529
+      },
+      "stack": [
+       "h1",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "submit": {
+      "rect": {
+       "top": 540,
+       "bottom": 584,
+       "left": 220,
+       "right": 316
+      },
+      "centre": {
+       "x": 268,
+       "y": 562
+      },
+      "stack": [
+       "p.v8-lede",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "details_content_visibility": "hidden",
+     "details_display": "grid",
+     "display_experiment": {
+      "before_rects": 1,
+      "before_top": 540,
+      "after_rects": 1,
+      "after_top": 530,
+      "section_bottom_after": 486
+     }
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "page_errors": []
+   },
+   "open": {
+    "state": "open",
+    "arm": "zh-CN",
+    "vw": 414,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 540,
+     "bottom": 584,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 601,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 298
+    },
+    "itinerary_rect": {
+     "top": 601,
+     "bottom": 1894,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 601,
+     "bottom": 854,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 676,
+       "bottom": 698,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 711,
+       "bottom": 754,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 767,
+       "bottom": 810,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 415,
+      "bottom": 459,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 562
+    },
+    "explains_verbatim": {
+     "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。",
+     "chars": 114,
+     "clipped_lines": 5,
+     "rect": {
+      "top": 320,
+      "bottom": 405,
+      "h": 85
+     },
+     "overflow_hidden": false,
+     "scroll_le_client": 1,
+     "in_viewport": true
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips"
+   },
+   "centred": {
+    "state": "open_centred",
+    "arm": "zh-CN",
+    "vw": 414,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 400,
+     "bottom": 444,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 163,
+     "bottom": 461,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 298
+    },
+    "itinerary_rect": {
+     "top": 461,
+     "bottom": 1754,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 1293
+    },
+    "intro_rect": {
+     "top": 461,
+     "bottom": 714,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 253
+    },
+    "poster_rect": {
+     "top": 28,
+     "bottom": 147,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 536,
+       "bottom": 558,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "逐日安排。已确认的预订会被标记为受保护。"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 571,
+       "bottom": 614,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 627,
+       "bottom": 670,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 275,
+      "bottom": 319,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 268,
+     "y": 422
+    },
+    "scroll_y": 140,
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "sweep": [
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 414,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": 540,
+       "bottom": 584,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": 303,
+       "bottom": 601,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 298
+      },
+      "itinerary_rect": {
+       "top": 601,
+       "bottom": 1894,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": 601,
+       "bottom": 854,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": 168,
+       "bottom": 287,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 676,
+         "bottom": 698,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 711,
+         "bottom": 754,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 767,
+         "bottom": 810,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": "button.v8-quiet-button",
+      "hits_self": true,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": 415,
+        "bottom": 459,
+        "left": 34,
+        "right": 380,
+        "w": 346,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": 562
+      },
+      "scroll_y": 0
+     },
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 414,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -87,
+       "bottom": -43,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -324,
+       "bottom": -26,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 298
+      },
+      "itinerary_rect": {
+       "top": -26,
+       "bottom": 1267,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": -26,
+       "bottom": 227,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": -459,
+       "bottom": -340,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 49,
+         "bottom": 71,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 84,
+         "bottom": 127,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 140,
+         "bottom": 183,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -212,
+        "bottom": -168,
+        "left": 34,
+        "right": 380,
+        "w": 346,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": -65
+      },
+      "scroll_y": 627
+     },
+     {
+      "state": "open_sweep",
+      "arm": "zh-CN",
+      "vw": 414,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -714,
+       "bottom": -670,
+       "left": 220,
+       "right": 316,
+       "w": 96,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -951,
+       "bottom": -653,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 298
+      },
+      "itinerary_rect": {
+       "top": -653,
+       "bottom": 640,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 1293
+      },
+      "intro_rect": {
+       "top": -653,
+       "bottom": -400,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 253
+      },
+      "poster_rect": {
+       "top": -1086,
+       "bottom": -967,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": -578,
+         "bottom": -556,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "逐日安排。已确认的预订会被标记为受保护。"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": -543,
+         "bottom": -500,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": -487,
+         "bottom": -444,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -839,
+        "bottom": -795,
+        "left": 34,
+        "right": 380,
+        "w": 346,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 268,
+       "y": -692
+      },
+      "scroll_y": 1254
+     }
+    ]
+   }
+  },
+  {
+   "arm": "en-US",
+   "vw": 360,
+   "closed": {
+    "state": "closed",
+    "arm": "en-US",
+    "vw": 360,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": false,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 640,
+     "bottom": 684,
+     "left": 34,
+     "right": 132,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 554,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 252
+    },
+    "itinerary_rect": {
+     "top": 554,
+     "bottom": 1912,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 1357
+    },
+    "intro_rect": {
+     "top": 554,
+     "bottom": 872,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 317
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 630,
+       "bottom": 673,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 3234,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 686,
+       "bottom": 750,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 763,
+       "bottom": 828,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 3234,
+    "hit": "p.v8-lede",
+    "hits_self": false,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 483,
+      "bottom": 527,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 83,
+     "y": 662
+    },
+    "leak": {
+     "textarea": {
+      "rect": {
+       "top": 558,
+       "bottom": 636,
+       "left": 34,
+       "right": 240
+      },
+      "centre": {
+       "x": 137,
+       "y": 597
+      },
+      "stack": [
+       "h1",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "submit": {
+      "rect": {
+       "top": 640,
+       "bottom": 684,
+       "left": 34,
+       "right": 132
+      },
+      "centre": {
+       "x": 83,
+       "y": 662
+      },
+      "stack": [
+       "p.v8-lede",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "details_content_visibility": "hidden",
+     "details_display": "grid",
+     "display_experiment": {
+      "before_rects": 1,
+      "before_top": 640,
+      "after_rects": 1,
+      "after_top": 630,
+      "section_bottom_after": 554
+     }
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "page_errors": []
+   },
+   "open": {
+    "state": "open",
+    "arm": "en-US",
+    "vw": 360,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 640,
+     "bottom": 684,
+     "left": 34,
+     "right": 132,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 701,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 399
+    },
+    "itinerary_rect": {
+     "top": 701,
+     "bottom": 2059,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 1357
+    },
+    "intro_rect": {
+     "top": 701,
+     "bottom": 1019,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 317
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 777,
+       "bottom": 820,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 833,
+       "bottom": 897,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 910,
+       "bottom": 975,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 483,
+      "bottom": 527,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 83,
+     "y": 662
+    },
+    "explains_verbatim": {
+     "text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards -- and the reason you write is stored with the trip, so any later screen can read it back. There is no way back: this server has no door that un-aborts a trip, so travelling it again means starting a new one.",
+     "chars": 369,
+     "clipped_lines": 9,
+     "rect": {
+      "top": 320,
+      "bottom": 473,
+      "h": 154
+     },
+     "overflow_hidden": false,
+     "scroll_le_client": 1,
+     "in_viewport": true
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips"
+   },
+   "centred": {
+    "state": "open_centred",
+    "arm": "en-US",
+    "vw": 360,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 400,
+     "bottom": 444,
+     "left": 34,
+     "right": 132,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 63,
+     "bottom": 461,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 399
+    },
+    "itinerary_rect": {
+     "top": 461,
+     "bottom": 1819,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 1357
+    },
+    "intro_rect": {
+     "top": 461,
+     "bottom": 779,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 317
+    },
+    "poster_rect": {
+     "top": -72,
+     "bottom": 47,
+     "left": 17,
+     "right": 343,
+     "w": 326,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 537,
+       "bottom": 580,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 593,
+       "bottom": 657,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 670,
+       "bottom": 735,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 243,
+      "bottom": 287,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 83,
+     "y": 422
+    },
+    "scroll_y": 240,
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "sweep": [
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 360,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": 640,
+       "bottom": 684,
+       "left": 34,
+       "right": 132,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": 303,
+       "bottom": 701,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 399
+      },
+      "itinerary_rect": {
+       "top": 701,
+       "bottom": 2059,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 1357
+      },
+      "intro_rect": {
+       "top": 701,
+       "bottom": 1019,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 317
+      },
+      "poster_rect": {
+       "top": 168,
+       "bottom": 287,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 777,
+         "bottom": 820,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 833,
+         "bottom": 897,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 910,
+         "bottom": 975,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": "button.v8-quiet-button",
+      "hits_self": true,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": 483,
+        "bottom": 527,
+        "left": 34,
+        "right": 326,
+        "w": 292,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 83,
+       "y": 662
+      },
+      "scroll_y": 0
+     },
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 360,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -70,
+       "bottom": -26,
+       "left": 34,
+       "right": 132,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -407,
+       "bottom": -9,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 399
+      },
+      "itinerary_rect": {
+       "top": -9,
+       "bottom": 1349,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 1357
+      },
+      "intro_rect": {
+       "top": -9,
+       "bottom": 309,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 317
+      },
+      "poster_rect": {
+       "top": -542,
+       "bottom": -423,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 67,
+         "bottom": 110,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 123,
+         "bottom": 187,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 200,
+         "bottom": 265,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -227,
+        "bottom": -183,
+        "left": 34,
+        "right": 326,
+        "w": 292,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 83,
+       "y": -48
+      },
+      "scroll_y": 710
+     },
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 360,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -779,
+       "bottom": -735,
+       "left": 34,
+       "right": 132,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -1116,
+       "bottom": -718,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 399
+      },
+      "itinerary_rect": {
+       "top": -718,
+       "bottom": 640,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 1357
+      },
+      "intro_rect": {
+       "top": -718,
+       "bottom": -400,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 317
+      },
+      "poster_rect": {
+       "top": -1251,
+       "bottom": -1132,
+       "left": 17,
+       "right": 343,
+       "w": 326,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": -642,
+         "bottom": -599,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": -586,
+         "bottom": -522,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": -509,
+         "bottom": -444,
+         "left": 17,
+         "right": 343,
+         "w": 326,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -936,
+        "bottom": -892,
+        "left": 34,
+        "right": 326,
+        "w": 292,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 83,
+       "y": -757
+      },
+      "scroll_y": 1419
+     }
+    ]
+   }
+  },
+  {
+   "arm": "en-US",
+   "vw": 390,
+   "closed": {
+    "state": "closed",
+    "arm": "en-US",
+    "vw": 390,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": false,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 591,
+     "bottom": 635,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 537,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 235
+    },
+    "itinerary_rect": {
+     "top": 537,
+     "bottom": 1852,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 1314
+    },
+    "intro_rect": {
+     "top": 537,
+     "bottom": 812,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 274
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 613,
+       "bottom": 635,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 21
+      },
+      "overlap_with_button": 2156,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 648,
+       "bottom": 712,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 725,
+       "bottom": 768,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 2156,
+    "hit": "p.v8-lede",
+    "hits_self": false,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 466,
+      "bottom": 510,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 289,
+     "y": 613
+    },
+    "leak": {
+     "textarea": {
+      "rect": {
+       "top": 541,
+       "bottom": 619,
+       "left": 34,
+       "right": 240
+      },
+      "centre": {
+       "x": 137,
+       "y": 580
+      },
+      "stack": [
+       "h1",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "submit": {
+      "rect": {
+       "top": 591,
+       "bottom": 635,
+       "left": 240,
+       "right": 338
+      },
+      "centre": {
+       "x": 289,
+       "y": 613
+      },
+      "stack": [
+       "p.v8-lede",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "details_content_visibility": "hidden",
+     "details_display": "grid",
+     "display_experiment": {
+      "before_rects": 1,
+      "before_top": 591,
+      "after_rects": 1,
+      "after_top": 581,
+      "section_bottom_after": 537
+     }
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "page_errors": []
+   },
+   "open": {
+    "state": "open",
+    "arm": "en-US",
+    "vw": 390,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 591,
+     "bottom": 635,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 652,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 349
+    },
+    "itinerary_rect": {
+     "top": 652,
+     "bottom": 1966,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 1314
+    },
+    "intro_rect": {
+     "top": 652,
+     "bottom": 926,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 274
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 728,
+       "bottom": 749,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 762,
+       "bottom": 826,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 839,
+       "bottom": 882,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 466,
+      "bottom": 510,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 289,
+     "y": 613
+    },
+    "explains_verbatim": {
+     "text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards -- and the reason you write is stored with the trip, so any later screen can read it back. There is no way back: this server has no door that un-aborts a trip, so travelling it again means starting a new one.",
+     "chars": 369,
+     "clipped_lines": 8,
+     "rect": {
+      "top": 320,
+      "bottom": 456,
+      "h": 137
+     },
+     "overflow_hidden": false,
+     "scroll_le_client": 1,
+     "in_viewport": true
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips"
+   },
+   "centred": {
+    "state": "open_centred",
+    "arm": "en-US",
+    "vw": 390,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 400,
+     "bottom": 444,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 112,
+     "bottom": 461,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 349
+    },
+    "itinerary_rect": {
+     "top": 461,
+     "bottom": 1775,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 1314
+    },
+    "intro_rect": {
+     "top": 461,
+     "bottom": 735,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 274
+    },
+    "poster_rect": {
+     "top": -23,
+     "bottom": 96,
+     "left": 17,
+     "right": 373,
+     "w": 356,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 537,
+       "bottom": 558,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 571,
+       "bottom": 635,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 648,
+       "bottom": 691,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 275,
+      "bottom": 319,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 289,
+     "y": 422
+    },
+    "scroll_y": 191,
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "sweep": [
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 390,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": 591,
+       "bottom": 635,
+       "left": 240,
+       "right": 338,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": 303,
+       "bottom": 652,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 349
+      },
+      "itinerary_rect": {
+       "top": 652,
+       "bottom": 1966,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 1314
+      },
+      "intro_rect": {
+       "top": 652,
+       "bottom": 926,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 274
+      },
+      "poster_rect": {
+       "top": 168,
+       "bottom": 287,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 728,
+         "bottom": 749,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 762,
+         "bottom": 826,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 839,
+         "bottom": 882,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": "button.v8-quiet-button",
+      "hits_self": true,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": 466,
+        "bottom": 510,
+        "left": 34,
+        "right": 356,
+        "w": 322,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 289,
+       "y": 613
+      },
+      "scroll_y": 0
+     },
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 390,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -72,
+       "bottom": -28,
+       "left": 240,
+       "right": 338,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -360,
+       "bottom": -11,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 349
+      },
+      "itinerary_rect": {
+       "top": -11,
+       "bottom": 1303,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 1314
+      },
+      "intro_rect": {
+       "top": -11,
+       "bottom": 263,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 274
+      },
+      "poster_rect": {
+       "top": -495,
+       "bottom": -376,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 65,
+         "bottom": 86,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 99,
+         "bottom": 163,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 176,
+         "bottom": 219,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -197,
+        "bottom": -153,
+        "left": 34,
+        "right": 356,
+        "w": 322,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 289,
+       "y": -50
+      },
+      "scroll_y": 663
+     },
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 390,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -735,
+       "bottom": -691,
+       "left": 240,
+       "right": 338,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -1023,
+       "bottom": -674,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 349
+      },
+      "itinerary_rect": {
+       "top": -674,
+       "bottom": 640,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 1314
+      },
+      "intro_rect": {
+       "top": -674,
+       "bottom": -400,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 274
+      },
+      "poster_rect": {
+       "top": -1158,
+       "bottom": -1039,
+       "left": 17,
+       "right": 373,
+       "w": 356,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": -598,
+         "bottom": -577,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": -564,
+         "bottom": -500,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": -487,
+         "bottom": -444,
+         "left": 17,
+         "right": 373,
+         "w": 356,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -860,
+        "bottom": -816,
+        "left": 34,
+        "right": 356,
+        "w": 322,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 289,
+       "y": -713
+      },
+      "scroll_y": 1326
+     }
+    ]
+   }
+  },
+  {
+   "arm": "en-US",
+   "vw": 414,
+   "closed": {
+    "state": "closed",
+    "arm": "en-US",
+    "vw": 414,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": false,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 574,
+     "bottom": 618,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 520,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 218
+    },
+    "itinerary_rect": {
+     "top": 520,
+     "bottom": 1835,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 1314
+    },
+    "intro_rect": {
+     "top": 520,
+     "bottom": 795,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 274
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 596,
+       "bottom": 617,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 21
+      },
+      "overlap_with_button": 2058,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 630,
+       "bottom": 695,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 708,
+       "bottom": 751,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 2058,
+    "hit": "p.v8-lede",
+    "hits_self": false,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 449,
+      "bottom": 493,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 289,
+     "y": 596
+    },
+    "leak": {
+     "textarea": {
+      "rect": {
+       "top": 524,
+       "bottom": 602,
+       "left": 34,
+       "right": 240
+      },
+      "centre": {
+       "x": 137,
+       "y": 563
+      },
+      "stack": [
+       "h1",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "submit": {
+      "rect": {
+       "top": 574,
+       "bottom": 618,
+       "left": 240,
+       "right": 338
+      },
+      "centre": {
+       "x": 289,
+       "y": 596
+      },
+      "stack": [
+       "p.v8-lede",
+       "div",
+       "div.v8-page-intro.compact",
+       "section.v8-page",
+       "div.v8-content"
+      ],
+      "self_in_stack": false,
+      "vis": false,
+      "opacity": "1"
+     },
+     "details_content_visibility": "hidden",
+     "details_display": "grid",
+     "display_experiment": {
+      "before_rects": 1,
+      "before_top": 574,
+      "after_rects": 1,
+      "after_top": 564,
+      "section_bottom_after": 520
+     }
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "page_errors": []
+   },
+   "open": {
+    "state": "open",
+    "arm": "en-US",
+    "vw": 414,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 574,
+     "bottom": 618,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 303,
+     "bottom": 635,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 332
+    },
+    "itinerary_rect": {
+     "top": 635,
+     "bottom": 1949,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 1314
+    },
+    "intro_rect": {
+     "top": 635,
+     "bottom": 909,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 274
+    },
+    "poster_rect": {
+     "top": 168,
+     "bottom": 287,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 711,
+       "bottom": 732,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 745,
+       "bottom": 809,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 822,
+       "bottom": 865,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 449,
+      "bottom": 493,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 289,
+     "y": 596
+    },
+    "explains_verbatim": {
+     "text": "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is not discarding, and the recycle bin is the only place that discards -- and the reason you write is stored with the trip, so any later screen can read it back. There is no way back: this server has no door that un-aborts a trip, so travelling it again means starting a new one.",
+     "chars": 369,
+     "clipped_lines": 7,
+     "rect": {
+      "top": 320,
+      "bottom": 439,
+      "h": 120
+     },
+     "overflow_hidden": false,
+     "scroll_le_client": 1,
+     "in_viewport": true
+    },
+    "landed": "http://127.0.0.1:5140/v8/trips"
+   },
+   "centred": {
+    "state": "open_centred",
+    "arm": "en-US",
+    "vw": 414,
+    "href": "http://127.0.0.1:5140/v8/trips",
+    "details_open": true,
+    "button_present_in_dom": true,
+    "button_rect": {
+     "top": 400,
+     "bottom": 444,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 44
+    },
+    "abort_section_rect": {
+     "top": 129,
+     "bottom": 461,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 332
+    },
+    "itinerary_rect": {
+     "top": 461,
+     "bottom": 1775,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 1314
+    },
+    "intro_rect": {
+     "top": 461,
+     "bottom": 735,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 274
+    },
+    "poster_rect": {
+     "top": -6,
+     "bottom": 113,
+     "left": 17,
+     "right": 397,
+     "w": 380,
+     "h": 119
+    },
+    "ledes": [
+     {
+      "testid": "",
+      "owner": "trip-itinerary",
+      "rect": {
+       "top": 537,
+       "bottom": 558,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 21
+      },
+      "overlap_with_button": 0,
+      "text": "Day by day. Confirmed bookings are marke"
+     },
+     {
+      "testid": "trip-progress-contract",
+      "owner": "trip-progress-contract",
+      "rect": {
+       "top": 571,
+       "bottom": 635,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 64
+      },
+      "overlap_with_button": 0,
+      "text": "1 days. none of the 6 stops is walked ye"
+     },
+     {
+      "testid": "trip-progress-daygap",
+      "owner": "trip-progress-daygap",
+      "rect": {
+       "top": 648,
+       "bottom": 691,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 43
+      },
+      "overlap_with_button": 0,
+      "text": "The server has not placed this journey o"
+     }
+    ],
+    "overlaps": 0,
+    "hit": "button.v8-quiet-button",
+    "hits_self": true,
+    "render_evidence": {
+     "offset_parent_null": false,
+     "client_rects_count": 1,
+     "display": "inline-flex",
+     "visibility": "visible",
+     "details_display": "grid",
+     "summary_rect": {
+      "top": 275,
+      "bottom": 319,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_owner": "p.cn-abort__explains"
+    },
+    "centre": {
+     "x": 289,
+     "y": 422
+    },
+    "scroll_y": 174,
+    "landed": "http://127.0.0.1:5140/v8/trips",
+    "sweep": [
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 414,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": 574,
+       "bottom": 618,
+       "left": 240,
+       "right": 338,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": 303,
+       "bottom": 635,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 332
+      },
+      "itinerary_rect": {
+       "top": 635,
+       "bottom": 1949,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 1314
+      },
+      "intro_rect": {
+       "top": 635,
+       "bottom": 909,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 274
+      },
+      "poster_rect": {
+       "top": 168,
+       "bottom": 287,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 711,
+         "bottom": 732,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 745,
+         "bottom": 809,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 822,
+         "bottom": 865,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": "button.v8-quiet-button",
+      "hits_self": true,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": 449,
+        "bottom": 493,
+        "left": 34,
+        "right": 380,
+        "w": 346,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 289,
+       "y": 596
+      },
+      "scroll_y": 0
+     },
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 414,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -81,
+       "bottom": -37,
+       "left": 240,
+       "right": 338,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -352,
+       "bottom": -20,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 332
+      },
+      "itinerary_rect": {
+       "top": -20,
+       "bottom": 1294,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 1314
+      },
+      "intro_rect": {
+       "top": -20,
+       "bottom": 254,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 274
+      },
+      "poster_rect": {
+       "top": -487,
+       "bottom": -368,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": 56,
+         "bottom": 77,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": 90,
+         "bottom": 154,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": 167,
+         "bottom": 210,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -206,
+        "bottom": -162,
+        "left": 34,
+        "right": 380,
+        "w": 346,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 289,
+       "y": -59
+      },
+      "scroll_y": 655
+     },
+     {
+      "state": "open_sweep",
+      "arm": "en-US",
+      "vw": 414,
+      "href": "http://127.0.0.1:5140/v8/trips",
+      "details_open": true,
+      "button_present_in_dom": true,
+      "button_rect": {
+       "top": -735,
+       "bottom": -691,
+       "left": 240,
+       "right": 338,
+       "w": 98,
+       "h": 44
+      },
+      "abort_section_rect": {
+       "top": -1006,
+       "bottom": -674,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 332
+      },
+      "itinerary_rect": {
+       "top": -674,
+       "bottom": 640,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 1314
+      },
+      "intro_rect": {
+       "top": -674,
+       "bottom": -400,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 274
+      },
+      "poster_rect": {
+       "top": -1141,
+       "bottom": -1022,
+       "left": 17,
+       "right": 397,
+       "w": 380,
+       "h": 119
+      },
+      "ledes": [
+       {
+        "testid": "",
+        "owner": "trip-itinerary",
+        "rect": {
+         "top": -598,
+         "bottom": -577,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 21
+        },
+        "overlap_with_button": 0,
+        "text": "Day by day. Confirmed bookings are marke"
+       },
+       {
+        "testid": "trip-progress-contract",
+        "owner": "trip-progress-contract",
+        "rect": {
+         "top": -564,
+         "bottom": -500,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 64
+        },
+        "overlap_with_button": 0,
+        "text": "1 days. none of the 6 stops is walked ye"
+       },
+       {
+        "testid": "trip-progress-daygap",
+        "owner": "trip-progress-daygap",
+        "rect": {
+         "top": -487,
+         "bottom": -444,
+         "left": 17,
+         "right": 397,
+         "w": 380,
+         "h": 43
+        },
+        "overlap_with_button": 0,
+        "text": "The server has not placed this journey o"
+       }
+      ],
+      "overlaps": 0,
+      "hit": null,
+      "hits_self": false,
+      "render_evidence": {
+       "offset_parent_null": false,
+       "client_rects_count": 1,
+       "display": "inline-flex",
+       "visibility": "visible",
+       "details_display": "grid",
+       "summary_rect": {
+        "top": -860,
+        "bottom": -816,
+        "left": 34,
+        "right": 380,
+        "w": 346,
+        "h": 44
+       },
+       "explains_owner": "p.cn-abort__explains"
+      },
+      "centre": {
+       "x": 289,
+       "y": -713
+      },
+      "scroll_y": 1309
+     }
+    ]
+   }
+  }
+ ],
+ "errors": []
+}

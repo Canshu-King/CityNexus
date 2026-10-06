@@ -1,0 +1,123 @@
+/* ORD-0575 复现腿：/v8/trips 展开「中止这趟行程」后，提交键中心被谁接走。
+   只读几何 + 命中测试；不发中止提交（那程还在），页面异常逐条收。
+   要求自包含：playwright 只把这一个函数送进页面，函数内部不许引用外面的符号。 */
+function PROBE(opts) {
+  var q = function (sel) { return document.querySelector(sel); };
+  var rectOf = function (n) {
+    if (!n) return null;
+    var r = n.getBoundingClientRect();
+    return { top: Math.round(r.top), bottom: Math.round(r.bottom),
+             left: Math.round(r.left), right: Math.round(r.right),
+             w: Math.round(r.width), h: Math.round(r.height) };
+  };
+  var nameOf = function (n) {
+    return n.tagName.toLowerCase() + (n.id ? "#" + n.id : "") +
+      (n.className && typeof n.className === "string" ? "." + n.className.trim().split(/\s+/).join(".") : "");
+  };
+  var chainOf = function (n) {
+    var out = [], c = n, guard = 0;
+    while (c && c.tagName && guard++ < 12) { out.push(nameOf(c)); c = c.parentElement; }
+    return out.join(" < ");
+  };
+  var styleOf = function (n, prop) {
+    return n ? getComputedStyle(n).getPropertyValue(prop) : null;
+  };
+  var inter = function (a, b) {
+    if (!a || !b) return 0;
+    var w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    var h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    return (w > 0 && h > 0) ? w * h : 0;
+  };
+  var res = { at: opts.at || "", href: location.href, viewport: { w: innerWidth, h: innerHeight },
+              errors: [], cells: [] };
+
+  var section = q("[data-testid='journey-abort']");
+  var details = section ? section.querySelector("details.cn-abort__form") : null;
+  var summary = section ? section.querySelector("summary.cn-abort__summary") : null;
+  var textarea = q("[data-testid='journey-abort-reason']");
+  var btn = q("[data-testid='journey-abort-submit']");
+  var explains = q("[data-testid='journey-abort-explains']");
+  if (!section || !summary || !btn) {
+    res.errors.push("屏上没凑齐 journey-abort 的三枚：" +
+      JSON.stringify({ section: !!section, summary: !!summary, submit: !!btn }));
+    return res;
+  }
+  var opened = !!(details && details.open);
+  if (!opened) {
+    res.errors.push("details 没展开就量了，读数会算成折叠态");
+    return res;
+  }
+
+  var bRect = rectOf(btn);
+  var cx = Math.round((bRect.left + bRect.right) / 2);
+  var cy = Math.round((bRect.top + bRect.bottom) / 2);
+  var hit = document.elementFromPoint(cx, cy);
+  var ledes = Array.prototype.map.call(document.querySelectorAll("p.v8-lede"), function (p) {
+    var r = rectOf(p);
+    var sec = p.closest("[data-testid]");
+    return { name: nameOf(p), testid: p.getAttribute("data-testid") || "",
+             owner: sec ? sec.getAttribute("data-testid") : "",
+             text: (p.textContent || "").trim().slice(0, 60), rect: r,
+             overlap_with_button: inter(r, bRect), chain: chainOf(p) };
+  });
+  var overlapping = ledes.filter(function (x) { return x.overlap_with_button > 0; });
+  var byId = function (tid) {
+    var n = q("[data-testid='" + tid + "']");
+    return n ? { present: true, rect: rectOf(n) } : { present: false, rect: null };
+  };
+  var secOrder = [];
+  var nodes = document.querySelectorAll("[data-testid='journey-abort'], [data-testid='trip-itinerary'], .v8-page-intro, [data-testid='trip-poster-bar']");
+  Array.prototype.forEach.call(nodes, function (n) {
+    var r = rectOf(n);
+    secOrder.push({ name: nameOf(n), testid: n.getAttribute("data-testid") || "",
+                    top: r.top, bottom: r.bottom, h: r.h });
+  });
+  res.landmarks = { order: secOrder };
+
+  var ctl = { planted: false };
+  if (opts.plant_lede) {
+    var fake = document.createElement("p");
+    fake.className = "v8-lede";
+    fake.setAttribute("data-rp-probe", "1");
+    fake.textContent = "负对照：把正文盒撑到提交键上";
+    fake.style.cssText = "position:fixed;left:" + (bRect.left) + "px;top:" +
+      (bRect.top + 2) + "px;width:" + bRect.w + "px;height:" + (bRect.h - 4) + "px;z-index:20;margin:0";
+    document.body.appendChild(fake);
+    var cx2 = Math.round((bRect.left + bRect.right) / 2);
+    var cy2 = Math.round((bRect.top + bRect.bottom) / 2);
+    var hit2 = document.elementFromPoint(cx2, cy2);
+    ctl = { planted: true, rect: rectOf(fake),
+            hits_self: !!(hit2 && (hit2 === btn || btn.contains(hit2))),
+            hit_name: hit2 ? nameOf(hit2) : null,
+            overlap: inter(rectOf(fake), bRect) };
+    document.querySelectorAll("[data-rp-probe]").forEach(function (n) { n.remove(); });
+  }
+  res.negative_control = ctl;
+
+  res.cells.push({
+    label: opts.label || "cell", arm: opts.arm || "", vw: opts.vw || innerWidth,
+    opened: opened, summary_rect: rectOf(summary), explains_rect: rectOf(explains),
+    textarea_rect: rectOf(textarea), button_rect: bRect, button_centre: { x: cx, y: cy },
+    button_hits_self: !!(hit && (hit === btn || btn.contains(hit))),
+    hit_name: hit ? nameOf(hit) : null,
+    hit_text: hit ? (hit.textContent || "").trim().slice(0, 60) : null,
+    hit_chain: hit ? chainOf(hit) : null,
+    hit_pos: hit ? styleOf(hit, "position") : null,
+    hit_z: hit ? styleOf(hit, "z-index") : null,
+    button_area: bRect.w * bRect.h,
+    overlap_area_total: overlapping.reduce(function (s, x) { return s + x.overlap_with_button; }, 0),
+    overlapping_ledes: overlapping,
+    lede_total: ledes.length, all_ledes: ledes,
+    section_order: secOrder, neg_ctl: ctl,
+    section_rect: rectOf(section), details_rect: rectOf(details),
+    section_style: { pos: styleOf(section, "position"), overflow: styleOf(section, "overflow"),
+                     display: styleOf(section, "display") },
+    details_style: { pos: styleOf(details, "position"), overflow: styleOf(details, "overflow"),
+                     display: styleOf(details, "display"), height: styleOf(details, "height") },
+    parent_of_button: chainOf(btn),
+    abort_state: section.getAttribute("data-abort-state") || ""
+  });
+  return res;
+}
+
+module.exports = { PROBE };

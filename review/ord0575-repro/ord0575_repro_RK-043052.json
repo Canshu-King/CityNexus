@@ -1,0 +1,1395 @@
+{
+ "run_id": "RK-043052",
+ "base": "http://127.0.0.1:5140",
+ "tree_at": "ed594904c09edf252c2765df354ba03bae9c47c3",
+ "probe_file": "D:\\moodle\\_qoder_newlane_ord0444_20260929\\scratch\\ord0575_probe_r1.cjs.txt",
+ "legs": [
+  {
+   "at": "2026-10-05T20:31:02.016Z",
+   "href": "http://127.0.0.1:5140/v8/trips",
+   "viewport": {
+    "w": 360,
+    "h": 844
+   },
+   "errors": [],
+   "cells": [
+    {
+     "label": "trips/journey-abort-open/zh-CN/360",
+     "arm": "zh-CN",
+     "vw": 360,
+     "opened": true,
+     "summary_rect": {
+      "top": 449,
+      "bottom": 493,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_rect": {
+      "top": 320,
+      "bottom": 439,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 120
+     },
+     "textarea_rect": {
+      "top": 524,
+      "bottom": 602,
+      "left": 34,
+      "right": 220,
+      "w": 186,
+      "h": 78
+     },
+     "button_rect": {
+      "top": 574,
+      "bottom": 618,
+      "left": 220,
+      "right": 316,
+      "w": 96,
+      "h": 44
+     },
+     "button_centre": {
+      "x": 268,
+      "y": 596
+     },
+     "button_hits_self": true,
+     "hit_name": "button.v8-quiet-button",
+     "hit_text": "中止这趟行程",
+     "hit_chain": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "hit_pos": "static",
+     "hit_z": "auto",
+     "button_area": 4224,
+     "overlap_area_total": 0,
+     "overlapping_ledes": [],
+     "lede_total": 3,
+     "all_ledes": [
+      {
+       "name": "p.v8-lede",
+       "testid": "",
+       "owner": "trip-itinerary",
+       "text": "逐日安排。已确认的预订会被标记为受保护。",
+       "rect": {
+        "top": 711,
+        "bottom": 732,
+        "left": 17,
+        "right": 343,
+        "w": 326,
+        "h": 21
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-contract",
+       "owner": "trip-progress-contract",
+       "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。",
+       "rect": {
+        "top": 745,
+        "bottom": 788,
+        "left": 17,
+        "right": 343,
+        "w": 326,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-daygap",
+       "owner": "trip-progress-daygap",
+       "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出现。",
+       "rect": {
+        "top": 801,
+        "bottom": 844,
+        "left": 17,
+        "right": 343,
+        "w": 326,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      }
+     ],
+     "section_order": [
+      {
+       "name": "div.cn-poster-bar",
+       "testid": "trip-poster-bar",
+       "top": 168,
+       "bottom": 287,
+       "h": 119
+      },
+      {
+       "name": "section.cn-abort",
+       "testid": "journey-abort",
+       "top": 303,
+       "bottom": 635,
+       "h": 332
+      },
+      {
+       "name": "section.v8-page",
+       "testid": "trip-itinerary",
+       "top": 635,
+       "bottom": 1928,
+       "h": 1293
+      },
+      {
+       "name": "div.v8-page-intro.compact",
+       "testid": "",
+       "top": 635,
+       "bottom": 888,
+       "h": 253
+      }
+     ],
+     "neg_ctl": {
+      "planted": false
+     },
+     "section_rect": {
+      "top": 303,
+      "bottom": 635,
+      "left": 17,
+      "right": 343,
+      "w": 326,
+      "h": 332
+     },
+     "details_rect": {
+      "top": 449,
+      "bottom": 618,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 169
+     },
+     "section_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid"
+     },
+     "details_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid",
+      "height": "168.5px"
+     },
+     "parent_of_button": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "abort_state": "NOT_ABORTED"
+    }
+   ],
+   "landmarks": {
+    "order": [
+     {
+      "name": "div.cn-poster-bar",
+      "testid": "trip-poster-bar",
+      "top": 168,
+      "bottom": 287,
+      "h": 119
+     },
+     {
+      "name": "section.cn-abort",
+      "testid": "journey-abort",
+      "top": 303,
+      "bottom": 635,
+      "h": 332
+     },
+     {
+      "name": "section.v8-page",
+      "testid": "trip-itinerary",
+      "top": 635,
+      "bottom": 1928,
+      "h": 1293
+     },
+     {
+      "name": "div.v8-page-intro.compact",
+      "testid": "",
+      "top": 635,
+      "bottom": 888,
+      "h": 253
+     }
+    ]
+   },
+   "negative_control": {
+    "planted": true,
+    "rect": {
+     "top": 576,
+     "bottom": 616,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 40
+    },
+    "hits_self": false,
+    "hit_name": "p.v8-lede",
+    "overlap": 3840
+   },
+   "neg_hits_self": false,
+   "neg_hit_name": "p.v8-lede",
+   "neg_overlap": 3840,
+   "arm": "zh-CN",
+   "vw": 360,
+   "landed": "http://127.0.0.1:5140/v8/trips",
+   "was_open_before": false,
+   "opened_now": true,
+   "abort_state": "NOT_ABORTED",
+   "page_errors": []
+  },
+  {
+   "at": "2026-10-05T20:31:04.151Z",
+   "href": "http://127.0.0.1:5140/v8/trips",
+   "viewport": {
+    "w": 390,
+    "h": 844
+   },
+   "errors": [],
+   "cells": [
+    {
+     "label": "trips/journey-abort-open/zh-CN/390",
+     "arm": "zh-CN",
+     "vw": 390,
+     "opened": true,
+     "summary_rect": {
+      "top": 432,
+      "bottom": 476,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_rect": {
+      "top": 320,
+      "bottom": 422,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 103
+     },
+     "textarea_rect": {
+      "top": 507,
+      "bottom": 585,
+      "left": 34,
+      "right": 220,
+      "w": 186,
+      "h": 78
+     },
+     "button_rect": {
+      "top": 557,
+      "bottom": 601,
+      "left": 220,
+      "right": 316,
+      "w": 96,
+      "h": 44
+     },
+     "button_centre": {
+      "x": 268,
+      "y": 579
+     },
+     "button_hits_self": true,
+     "hit_name": "button.v8-quiet-button",
+     "hit_text": "中止这趟行程",
+     "hit_chain": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "hit_pos": "static",
+     "hit_z": "auto",
+     "button_area": 4224,
+     "overlap_area_total": 0,
+     "overlapping_ledes": [],
+     "lede_total": 3,
+     "all_ledes": [
+      {
+       "name": "p.v8-lede",
+       "testid": "",
+       "owner": "trip-itinerary",
+       "text": "逐日安排。已确认的预订会被标记为受保护。",
+       "rect": {
+        "top": 693,
+        "bottom": 715,
+        "left": 17,
+        "right": 373,
+        "w": 356,
+        "h": 21
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-contract",
+       "owner": "trip-progress-contract",
+       "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。",
+       "rect": {
+        "top": 728,
+        "bottom": 771,
+        "left": 17,
+        "right": 373,
+        "w": 356,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-daygap",
+       "owner": "trip-progress-daygap",
+       "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出现。",
+       "rect": {
+        "top": 784,
+        "bottom": 827,
+        "left": 17,
+        "right": 373,
+        "w": 356,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      }
+     ],
+     "section_order": [
+      {
+       "name": "div.cn-poster-bar",
+       "testid": "trip-poster-bar",
+       "top": 168,
+       "bottom": 287,
+       "h": 119
+      },
+      {
+       "name": "section.cn-abort",
+       "testid": "journey-abort",
+       "top": 303,
+       "bottom": 618,
+       "h": 315
+      },
+      {
+       "name": "section.v8-page",
+       "testid": "trip-itinerary",
+       "top": 618,
+       "bottom": 1911,
+       "h": 1293
+      },
+      {
+       "name": "div.v8-page-intro.compact",
+       "testid": "",
+       "top": 618,
+       "bottom": 871,
+       "h": 253
+      }
+     ],
+     "neg_ctl": {
+      "planted": false
+     },
+     "section_rect": {
+      "top": 303,
+      "bottom": 618,
+      "left": 17,
+      "right": 373,
+      "w": 356,
+      "h": 315
+     },
+     "details_rect": {
+      "top": 432,
+      "bottom": 601,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 169
+     },
+     "section_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid"
+     },
+     "details_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid",
+      "height": "168.5px"
+     },
+     "parent_of_button": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "abort_state": "NOT_ABORTED"
+    }
+   ],
+   "landmarks": {
+    "order": [
+     {
+      "name": "div.cn-poster-bar",
+      "testid": "trip-poster-bar",
+      "top": 168,
+      "bottom": 287,
+      "h": 119
+     },
+     {
+      "name": "section.cn-abort",
+      "testid": "journey-abort",
+      "top": 303,
+      "bottom": 618,
+      "h": 315
+     },
+     {
+      "name": "section.v8-page",
+      "testid": "trip-itinerary",
+      "top": 618,
+      "bottom": 1911,
+      "h": 1293
+     },
+     {
+      "name": "div.v8-page-intro.compact",
+      "testid": "",
+      "top": 618,
+      "bottom": 871,
+      "h": 253
+     }
+    ]
+   },
+   "negative_control": {
+    "planted": true,
+    "rect": {
+     "top": 559,
+     "bottom": 599,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 40
+    },
+    "hits_self": false,
+    "hit_name": "p.v8-lede",
+    "overlap": 3840
+   },
+   "neg_hits_self": false,
+   "neg_hit_name": "p.v8-lede",
+   "neg_overlap": 3840,
+   "arm": "zh-CN",
+   "vw": 390,
+   "landed": "http://127.0.0.1:5140/v8/trips",
+   "was_open_before": false,
+   "opened_now": true,
+   "abort_state": "NOT_ABORTED",
+   "page_errors": []
+  },
+  {
+   "at": "2026-10-05T20:31:06.211Z",
+   "href": "http://127.0.0.1:5140/v8/trips",
+   "viewport": {
+    "w": 414,
+    "h": 844
+   },
+   "errors": [],
+   "cells": [
+    {
+     "label": "trips/journey-abort-open/zh-CN/414",
+     "arm": "zh-CN",
+     "vw": 414,
+     "opened": true,
+     "summary_rect": {
+      "top": 415,
+      "bottom": 459,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_rect": {
+      "top": 320,
+      "bottom": 405,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 85
+     },
+     "textarea_rect": {
+      "top": 490,
+      "bottom": 568,
+      "left": 34,
+      "right": 220,
+      "w": 186,
+      "h": 78
+     },
+     "button_rect": {
+      "top": 540,
+      "bottom": 584,
+      "left": 220,
+      "right": 316,
+      "w": 96,
+      "h": 44
+     },
+     "button_centre": {
+      "x": 268,
+      "y": 562
+     },
+     "button_hits_self": true,
+     "hit_name": "button.v8-quiet-button",
+     "hit_text": "中止这趟行程",
+     "hit_chain": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "hit_pos": "static",
+     "hit_z": "auto",
+     "button_area": 4224,
+     "overlap_area_total": 0,
+     "overlapping_ledes": [],
+     "lede_total": 3,
+     "all_ledes": [
+      {
+       "name": "p.v8-lede",
+       "testid": "",
+       "owner": "trip-itinerary",
+       "text": "逐日安排。已确认的预订会被标记为受保护。",
+       "rect": {
+        "top": 676,
+        "bottom": 698,
+        "left": 17,
+        "right": 397,
+        "w": 380,
+        "h": 21
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-contract",
+       "owner": "trip-progress-contract",
+       "text": "共 1 天。6 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。",
+       "rect": {
+        "top": 711,
+        "bottom": 754,
+        "left": 17,
+        "right": 397,
+        "w": 380,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-daygap",
+       "owner": "trip-progress-daygap",
+       "text": "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出现。",
+       "rect": {
+        "top": 767,
+        "bottom": 810,
+        "left": 17,
+        "right": 397,
+        "w": 380,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      }
+     ],
+     "section_order": [
+      {
+       "name": "div.cn-poster-bar",
+       "testid": "trip-poster-bar",
+       "top": 168,
+       "bottom": 287,
+       "h": 119
+      },
+      {
+       "name": "section.cn-abort",
+       "testid": "journey-abort",
+       "top": 303,
+       "bottom": 601,
+       "h": 298
+      },
+      {
+       "name": "section.v8-page",
+       "testid": "trip-itinerary",
+       "top": 601,
+       "bottom": 1894,
+       "h": 1293
+      },
+      {
+       "name": "div.v8-page-intro.compact",
+       "testid": "",
+       "top": 601,
+       "bottom": 854,
+       "h": 253
+      }
+     ],
+     "neg_ctl": {
+      "planted": false
+     },
+     "section_rect": {
+      "top": 303,
+      "bottom": 601,
+      "left": 17,
+      "right": 397,
+      "w": 380,
+      "h": 298
+     },
+     "details_rect": {
+      "top": 415,
+      "bottom": 584,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 169
+     },
+     "section_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid"
+     },
+     "details_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid",
+      "height": "168.5px"
+     },
+     "parent_of_button": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "abort_state": "NOT_ABORTED"
+    }
+   ],
+   "landmarks": {
+    "order": [
+     {
+      "name": "div.cn-poster-bar",
+      "testid": "trip-poster-bar",
+      "top": 168,
+      "bottom": 287,
+      "h": 119
+     },
+     {
+      "name": "section.cn-abort",
+      "testid": "journey-abort",
+      "top": 303,
+      "bottom": 601,
+      "h": 298
+     },
+     {
+      "name": "section.v8-page",
+      "testid": "trip-itinerary",
+      "top": 601,
+      "bottom": 1894,
+      "h": 1293
+     },
+     {
+      "name": "div.v8-page-intro.compact",
+      "testid": "",
+      "top": 601,
+      "bottom": 854,
+      "h": 253
+     }
+    ]
+   },
+   "negative_control": {
+    "planted": true,
+    "rect": {
+     "top": 542,
+     "bottom": 582,
+     "left": 220,
+     "right": 316,
+     "w": 96,
+     "h": 40
+    },
+    "hits_self": false,
+    "hit_name": "p.v8-lede",
+    "overlap": 3840
+   },
+   "neg_hits_self": false,
+   "neg_hit_name": "p.v8-lede",
+   "neg_overlap": 3840,
+   "arm": "zh-CN",
+   "vw": 414,
+   "landed": "http://127.0.0.1:5140/v8/trips",
+   "was_open_before": false,
+   "opened_now": true,
+   "abort_state": "NOT_ABORTED",
+   "page_errors": []
+  },
+  {
+   "at": "2026-10-05T20:31:08.388Z",
+   "href": "http://127.0.0.1:5140/v8/trips",
+   "viewport": {
+    "w": 360,
+    "h": 844
+   },
+   "errors": [],
+   "cells": [
+    {
+     "label": "trips/journey-abort-open/en-US/360",
+     "arm": "en-US",
+     "vw": 360,
+     "opened": true,
+     "summary_rect": {
+      "top": 483,
+      "bottom": 527,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 44
+     },
+     "explains_rect": {
+      "top": 320,
+      "bottom": 473,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 154
+     },
+     "textarea_rect": {
+      "top": 558,
+      "bottom": 636,
+      "left": 34,
+      "right": 240,
+      "w": 206,
+      "h": 78
+     },
+     "button_rect": {
+      "top": 640,
+      "bottom": 684,
+      "left": 34,
+      "right": 132,
+      "w": 98,
+      "h": 44
+     },
+     "button_centre": {
+      "x": 83,
+      "y": 662
+     },
+     "button_hits_self": true,
+     "hit_name": "button.v8-quiet-button",
+     "hit_text": "Abort this trip",
+     "hit_chain": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "hit_pos": "static",
+     "hit_z": "auto",
+     "button_area": 4312,
+     "overlap_area_total": 0,
+     "overlapping_ledes": [],
+     "lede_total": 3,
+     "all_ledes": [
+      {
+       "name": "p.v8-lede",
+       "testid": "",
+       "owner": "trip-itinerary",
+       "text": "Day by day. Confirmed bookings are marked as protected.",
+       "rect": {
+        "top": 777,
+        "bottom": 820,
+        "left": 17,
+        "right": 343,
+        "w": 326,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-contract",
+       "owner": "trip-progress-contract",
+       "text": "1 days. none of the 6 stops is walked yet -- the server move",
+       "rect": {
+        "top": 833,
+        "bottom": 897,
+        "left": 17,
+        "right": 343,
+        "w": 326,
+        "h": 64
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-daygap",
+       "owner": "trip-progress-daygap",
+       "text": "The server has not placed this journey on a stop yet, so \"wh",
+       "rect": {
+        "top": 910,
+        "bottom": 975,
+        "left": 17,
+        "right": 343,
+        "w": 326,
+        "h": 64
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      }
+     ],
+     "section_order": [
+      {
+       "name": "div.cn-poster-bar",
+       "testid": "trip-poster-bar",
+       "top": 168,
+       "bottom": 287,
+       "h": 119
+      },
+      {
+       "name": "section.cn-abort",
+       "testid": "journey-abort",
+       "top": 303,
+       "bottom": 701,
+       "h": 399
+      },
+      {
+       "name": "section.v8-page",
+       "testid": "trip-itinerary",
+       "top": 701,
+       "bottom": 2059,
+       "h": 1357
+      },
+      {
+       "name": "div.v8-page-intro.compact",
+       "testid": "",
+       "top": 701,
+       "bottom": 1019,
+       "h": 317
+      }
+     ],
+     "neg_ctl": {
+      "planted": false
+     },
+     "section_rect": {
+      "top": 303,
+      "bottom": 701,
+      "left": 17,
+      "right": 343,
+      "w": 326,
+      "h": 399
+     },
+     "details_rect": {
+      "top": 483,
+      "bottom": 684,
+      "left": 34,
+      "right": 326,
+      "w": 292,
+      "h": 201
+     },
+     "section_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid"
+     },
+     "details_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid",
+      "height": "201px"
+     },
+     "parent_of_button": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "abort_state": "NOT_ABORTED"
+    }
+   ],
+   "landmarks": {
+    "order": [
+     {
+      "name": "div.cn-poster-bar",
+      "testid": "trip-poster-bar",
+      "top": 168,
+      "bottom": 287,
+      "h": 119
+     },
+     {
+      "name": "section.cn-abort",
+      "testid": "journey-abort",
+      "top": 303,
+      "bottom": 701,
+      "h": 399
+     },
+     {
+      "name": "section.v8-page",
+      "testid": "trip-itinerary",
+      "top": 701,
+      "bottom": 2059,
+      "h": 1357
+     },
+     {
+      "name": "div.v8-page-intro.compact",
+      "testid": "",
+      "top": 701,
+      "bottom": 1019,
+      "h": 317
+     }
+    ]
+   },
+   "negative_control": {
+    "planted": true,
+    "rect": {
+     "top": 642,
+     "bottom": 682,
+     "left": 34,
+     "right": 132,
+     "w": 98,
+     "h": 40
+    },
+    "hits_self": false,
+    "hit_name": "p.v8-lede",
+    "overlap": 3920
+   },
+   "neg_hits_self": false,
+   "neg_hit_name": "p.v8-lede",
+   "neg_overlap": 3920,
+   "arm": "en-US",
+   "vw": 360,
+   "landed": "http://127.0.0.1:5140/v8/trips",
+   "was_open_before": false,
+   "opened_now": true,
+   "abort_state": "NOT_ABORTED",
+   "page_errors": []
+  },
+  {
+   "at": "2026-10-05T20:31:10.523Z",
+   "href": "http://127.0.0.1:5140/v8/trips",
+   "viewport": {
+    "w": 390,
+    "h": 844
+   },
+   "errors": [],
+   "cells": [
+    {
+     "label": "trips/journey-abort-open/en-US/390",
+     "arm": "en-US",
+     "vw": 390,
+     "opened": true,
+     "summary_rect": {
+      "top": 466,
+      "bottom": 510,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 44
+     },
+     "explains_rect": {
+      "top": 320,
+      "bottom": 456,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 137
+     },
+     "textarea_rect": {
+      "top": 541,
+      "bottom": 619,
+      "left": 34,
+      "right": 240,
+      "w": 206,
+      "h": 78
+     },
+     "button_rect": {
+      "top": 591,
+      "bottom": 635,
+      "left": 240,
+      "right": 338,
+      "w": 98,
+      "h": 44
+     },
+     "button_centre": {
+      "x": 289,
+      "y": 613
+     },
+     "button_hits_self": true,
+     "hit_name": "button.v8-quiet-button",
+     "hit_text": "Abort this trip",
+     "hit_chain": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "hit_pos": "static",
+     "hit_z": "auto",
+     "button_area": 4312,
+     "overlap_area_total": 0,
+     "overlapping_ledes": [],
+     "lede_total": 3,
+     "all_ledes": [
+      {
+       "name": "p.v8-lede",
+       "testid": "",
+       "owner": "trip-itinerary",
+       "text": "Day by day. Confirmed bookings are marked as protected.",
+       "rect": {
+        "top": 728,
+        "bottom": 749,
+        "left": 17,
+        "right": 373,
+        "w": 356,
+        "h": 21
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-contract",
+       "owner": "trip-progress-contract",
+       "text": "1 days. none of the 6 stops is walked yet -- the server move",
+       "rect": {
+        "top": 762,
+        "bottom": 826,
+        "left": 17,
+        "right": 373,
+        "w": 356,
+        "h": 64
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-daygap",
+       "owner": "trip-progress-daygap",
+       "text": "The server has not placed this journey on a stop yet, so \"wh",
+       "rect": {
+        "top": 839,
+        "bottom": 882,
+        "left": 17,
+        "right": 373,
+        "w": 356,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      }
+     ],
+     "section_order": [
+      {
+       "name": "div.cn-poster-bar",
+       "testid": "trip-poster-bar",
+       "top": 168,
+       "bottom": 287,
+       "h": 119
+      },
+      {
+       "name": "section.cn-abort",
+       "testid": "journey-abort",
+       "top": 303,
+       "bottom": 652,
+       "h": 349
+      },
+      {
+       "name": "section.v8-page",
+       "testid": "trip-itinerary",
+       "top": 652,
+       "bottom": 1966,
+       "h": 1314
+      },
+      {
+       "name": "div.v8-page-intro.compact",
+       "testid": "",
+       "top": 652,
+       "bottom": 926,
+       "h": 274
+      }
+     ],
+     "neg_ctl": {
+      "planted": false
+     },
+     "section_rect": {
+      "top": 303,
+      "bottom": 652,
+      "left": 17,
+      "right": 373,
+      "w": 356,
+      "h": 349
+     },
+     "details_rect": {
+      "top": 466,
+      "bottom": 635,
+      "left": 34,
+      "right": 356,
+      "w": 322,
+      "h": 169
+     },
+     "section_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid"
+     },
+     "details_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid",
+      "height": "168.5px"
+     },
+     "parent_of_button": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "abort_state": "NOT_ABORTED"
+    }
+   ],
+   "landmarks": {
+    "order": [
+     {
+      "name": "div.cn-poster-bar",
+      "testid": "trip-poster-bar",
+      "top": 168,
+      "bottom": 287,
+      "h": 119
+     },
+     {
+      "name": "section.cn-abort",
+      "testid": "journey-abort",
+      "top": 303,
+      "bottom": 652,
+      "h": 349
+     },
+     {
+      "name": "section.v8-page",
+      "testid": "trip-itinerary",
+      "top": 652,
+      "bottom": 1966,
+      "h": 1314
+     },
+     {
+      "name": "div.v8-page-intro.compact",
+      "testid": "",
+      "top": 652,
+      "bottom": 926,
+      "h": 274
+     }
+    ]
+   },
+   "negative_control": {
+    "planted": true,
+    "rect": {
+     "top": 593,
+     "bottom": 633,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 40
+    },
+    "hits_self": false,
+    "hit_name": "p.v8-lede",
+    "overlap": 3920
+   },
+   "neg_hits_self": false,
+   "neg_hit_name": "p.v8-lede",
+   "neg_overlap": 3920,
+   "arm": "en-US",
+   "vw": 390,
+   "landed": "http://127.0.0.1:5140/v8/trips",
+   "was_open_before": false,
+   "opened_now": true,
+   "abort_state": "NOT_ABORTED",
+   "page_errors": []
+  },
+  {
+   "at": "2026-10-05T20:31:12.655Z",
+   "href": "http://127.0.0.1:5140/v8/trips",
+   "viewport": {
+    "w": 414,
+    "h": 844
+   },
+   "errors": [],
+   "cells": [
+    {
+     "label": "trips/journey-abort-open/en-US/414",
+     "arm": "en-US",
+     "vw": 414,
+     "opened": true,
+     "summary_rect": {
+      "top": 449,
+      "bottom": 493,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 44
+     },
+     "explains_rect": {
+      "top": 320,
+      "bottom": 439,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 120
+     },
+     "textarea_rect": {
+      "top": 524,
+      "bottom": 602,
+      "left": 34,
+      "right": 240,
+      "w": 206,
+      "h": 78
+     },
+     "button_rect": {
+      "top": 574,
+      "bottom": 618,
+      "left": 240,
+      "right": 338,
+      "w": 98,
+      "h": 44
+     },
+     "button_centre": {
+      "x": 289,
+      "y": 596
+     },
+     "button_hits_self": true,
+     "hit_name": "button.v8-quiet-button",
+     "hit_text": "Abort this trip",
+     "hit_chain": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "hit_pos": "static",
+     "hit_z": "auto",
+     "button_area": 4312,
+     "overlap_area_total": 0,
+     "overlapping_ledes": [],
+     "lede_total": 3,
+     "all_ledes": [
+      {
+       "name": "p.v8-lede",
+       "testid": "",
+       "owner": "trip-itinerary",
+       "text": "Day by day. Confirmed bookings are marked as protected.",
+       "rect": {
+        "top": 711,
+        "bottom": 732,
+        "left": 17,
+        "right": 397,
+        "w": 380,
+        "h": 21
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-contract",
+       "owner": "trip-progress-contract",
+       "text": "1 days. none of the 6 stops is walked yet -- the server move",
+       "rect": {
+        "top": 745,
+        "bottom": 809,
+        "left": 17,
+        "right": 397,
+        "w": 380,
+        "h": 64
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      },
+      {
+       "name": "p.v8-lede",
+       "testid": "trip-progress-daygap",
+       "owner": "trip-progress-daygap",
+       "text": "The server has not placed this journey on a stop yet, so \"wh",
+       "rect": {
+        "top": 822,
+        "bottom": 865,
+        "left": 17,
+        "right": 397,
+        "w": 380,
+        "h": 43
+       },
+       "overlap_with_button": 0,
+       "chain": "p.v8-lede < div < div.v8-page-intro.compact < section.v8-page < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html"
+      }
+     ],
+     "section_order": [
+      {
+       "name": "div.cn-poster-bar",
+       "testid": "trip-poster-bar",
+       "top": 168,
+       "bottom": 287,
+       "h": 119
+      },
+      {
+       "name": "section.cn-abort",
+       "testid": "journey-abort",
+       "top": 303,
+       "bottom": 635,
+       "h": 332
+      },
+      {
+       "name": "section.v8-page",
+       "testid": "trip-itinerary",
+       "top": 635,
+       "bottom": 1949,
+       "h": 1314
+      },
+      {
+       "name": "div.v8-page-intro.compact",
+       "testid": "",
+       "top": 635,
+       "bottom": 909,
+       "h": 274
+      }
+     ],
+     "neg_ctl": {
+      "planted": false
+     },
+     "section_rect": {
+      "top": 303,
+      "bottom": 635,
+      "left": 17,
+      "right": 397,
+      "w": 380,
+      "h": 332
+     },
+     "details_rect": {
+      "top": 449,
+      "bottom": 618,
+      "left": 34,
+      "right": 380,
+      "w": 346,
+      "h": 169
+     },
+     "section_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid"
+     },
+     "details_style": {
+      "pos": "static",
+      "overflow": "visible",
+      "display": "grid",
+      "height": "168.5px"
+     },
+     "parent_of_button": "button.v8-quiet-button < details.cn-abort__form < section.cn-abort < div.v8-content < main.v8-main < div.v8-product-shell < div#root < body < html",
+     "abort_state": "NOT_ABORTED"
+    }
+   ],
+   "landmarks": {
+    "order": [
+     {
+      "name": "div.cn-poster-bar",
+      "testid": "trip-poster-bar",
+      "top": 168,
+      "bottom": 287,
+      "h": 119
+     },
+     {
+      "name": "section.cn-abort",
+      "testid": "journey-abort",
+      "top": 303,
+      "bottom": 635,
+      "h": 332
+     },
+     {
+      "name": "section.v8-page",
+      "testid": "trip-itinerary",
+      "top": 635,
+      "bottom": 1949,
+      "h": 1314
+     },
+     {
+      "name": "div.v8-page-intro.compact",
+      "testid": "",
+      "top": 635,
+      "bottom": 909,
+      "h": 274
+     }
+    ]
+   },
+   "negative_control": {
+    "planted": true,
+    "rect": {
+     "top": 576,
+     "bottom": 616,
+     "left": 240,
+     "right": 338,
+     "w": 98,
+     "h": 40
+    },
+    "hits_self": false,
+    "hit_name": "p.v8-lede",
+    "overlap": 3920
+   },
+   "neg_hits_self": false,
+   "neg_hit_name": "p.v8-lede",
+   "neg_overlap": 3920,
+   "arm": "en-US",
+   "vw": 414,
+   "landed": "http://127.0.0.1:5140/v8/trips",
+   "was_open_before": false,
+   "opened_now": true,
+   "abort_state": "NOT_ABORTED",
+   "page_errors": []
+  }
+ ],
+ "errors": []
+}

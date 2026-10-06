@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+"""代次对拍：派单那一次读的是哪一代、屏上这代差在哪，逐枚给 blob 或给「同代」的证据。
+
+为什么要这一手：判"不复现"不能只说"我这代量不到"，必须先排除"两代之间这屏的布局变了"
+这一条替代解释。做法：派单块自己声明的那代（d107131c…）与现尖逐枚比这屏的五枚源码文件 blob；
+再列两代之间的全部差异文件。只读 git。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+CLAIMED = "d107131c6f6e65d9f207f6bf1b563d1cc8877f89"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+SRC = ["frontend/src/features/abort/JourneyAbortPanel.tsx",
+       "frontend/src/features/abort/journeyAbort.css",
+       "frontend/src/app/v8PanelRegistry.tsx",
+       "frontend/src/features/trip/TripItinerary.tsx",
+       "frontend/src/styles.css"]
+
+
+def g(*a, t=600):
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return (p.stdout or "").strip(), p.returncode, p.stderr or ""
+
+
+tip = g("ls-remote", "--refs", "origin", MIRROR)[0].split("\t")[0]
+assert len(tip) == 40, "现尖没读到"
+for rev in (tip, CLAIMED):
+    if g("cat-file", "-t", rev)[0] != "commit":
+        print("REFUSED: %s 本地不可 cat-file（要先 fetch 那代）" % rev[:12])
+        sys.exit(1)
+
+rows = []
+for f in SRC:
+    a, rca, _ = g("rev-parse", "--verify", "-q", "%s:%s" % (CLAIMED, f))
+    b, rcb, _ = g("rev-parse", "--verify", "-q", "%s:%s" % (tip, f))
+    rows.append({"path": f, "blob_claimed_gen": a if len(a) == 40 else None,
+                 "blob_tip": b if len(b) == 40 else None,
+                 "identical": len(a) == 40 and a == b})
+
+diff_stat = g("diff", "--stat", CLAIMED, tip, "--", "frontend/")[0]
+changed = [ln.split("|")[0].strip() for ln in diff_stat.splitlines() if "|" in ln]
+ins_del = g("diff", "--shortstat", CLAIMED, tip, "--", "frontend/")[0]
+
+out = {"claimed_generation": CLAIMED, "tip": tip, "mirror": MIRROR,
+       "same_generation_files": sum(1 for r in rows if r["identical"]),
+       "files_compared": len(rows),
+       "frontend_files_changed_between": len(changed),
+       "changed_paths": changed, "shortstat": ins_del,
+       "abort_screen_changed": [c for c in changed if "abort" in c.lower()
+                                or "TripItinerary" in c or "styles.css" in c
+                                or "v8PanelRegistry" in c],
+       "rows": rows}
+print("派单那代={} 现尖={}".format(CLAIMED[:12], tip[:12]))
+for r in rows:
+    print("  {s} {p}\n      派单代 blob {a} / 现尖 blob {b}".format(
+        s="同代" if r["identical"] else "不同", p=r["path"],
+        a=(r["blob_claimed_gen"] or "无")[:40], b=(r["blob_tip"] or "无")[:40]))
+print("两代之间 frontend/ 共 %d 个文件变过：%s" % (len(changed), ins_del))
+print("其中碰这屏布局的：%d 枚" % len(out["abort_screen_changed"]))
+p = os.path.join(ART, "ord0575_blobcmp_%s.json" % time.strftime("%H%M"))
+io.open(p, "w", encoding="utf-8", newline="\n").write(json.dumps(out, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + p)
+if out["abort_screen_changed"]:
+    print("NOTE: 这屏有文件在两代之间变过，判语要改口径")

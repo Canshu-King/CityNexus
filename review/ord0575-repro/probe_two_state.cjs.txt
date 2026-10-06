@@ -1,0 +1,101 @@
+/* ORD-0575 两态腿：同一屏同一把尺，分「details 折叠」与「details 展开」两态各量一遍。
+   为什么要这一手：号令者那块里键的盒（zh/360 顶 574、宽 96、高 44）与我现读的逐字相同，
+   但同一枚 `p.v8-lede` 他读 y 596..617、我读 y 711..732。两代之间 v8PanelRegistry.tsx、
+   JourneyAbortPanel.tsx、TripItinerary.tsx、styles.css 四枚 blob 逐字相同 ⇒ 布局不可能差 115 px。
+   假设：那两个数是**两个帧**合出来的（折叠帧的正文 + 展开帧的键），不是同一帧的几何。
+   本腿只点 summary 开合（原生 details，不改服务端），一次写请求都不发。
+   函数自包含（playwright 只送被调那一枚源码）。 */
+function TWO_STATE(opts) {
+  var q = function (sel) { return document.querySelector(sel); };
+  var rectOf = function (n) {
+    if (!n) return null;
+    var r = n.getBoundingClientRect();
+    return { top: Math.round(r.top), bottom: Math.round(r.bottom), left: Math.round(r.left),
+             right: Math.round(r.right), w: Math.round(r.width), h: Math.round(r.height) };
+  };
+  var nameOf = function (n) {
+    return n.tagName.toLowerCase() + (n.id ? "#" + n.id : "") +
+      (n.className && typeof n.className === "string" ? "." + n.className.trim().split(/\s+/).join(".") : "");
+  };
+  var inter = function (a, b) {
+    if (!a || !b) return 0;
+    var w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    var h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    return (w > 0 && h > 0) ? w * h : 0;
+  };
+  var section = q("[data-testid='journey-abort']");
+  var details = section ? section.querySelector("details.cn-abort__form") : null;
+  var btn = q("[data-testid='journey-abort-submit']");
+  var out = { state: opts.state || "", arm: opts.arm || "", vw: opts.vw || innerWidth,
+              href: location.href,
+              details_open: !!(details && details.open),
+              button_present_in_dom: !!btn,
+              button_rect: rectOf(btn),
+              abort_section_rect: rectOf(section),
+              itinerary_rect: rectOf(q("[data-testid='trip-itinerary']")),
+              intro_rect: rectOf(q("[data-testid='trip-itinerary'] .v8-page-intro")),
+              poster_rect: rectOf(q("[data-testid='trip-poster-bar']")),
+              ledes: [], overlaps: 0, hit: null, hits_self: null };
+  var bRect = out.button_rect;
+  // 这一手要钉死的：折叠帧里那枚"有盒的键"到底能不能被用户碰到。
+  // 盒仍在（getClientRects 回 1）不等于渲染在屏上——未渲染的内容照样留布局盒。
+  if (btn && details) {
+    var stack = [];
+    if (bRect && bRect.w) {
+      var mx = Math.round((bRect.left + bRect.right) / 2);
+      var my = Math.round((bRect.top + bRect.bottom) / 2);
+      stack = Array.prototype.map.call(document.elementsFromPoint(mx, my).slice(0, 6), nameOf);
+    }
+    var cvv = null;
+    try { cvv = getComputedStyle(details, "::details-content").contentVisibility; } catch (e) { cvv = "取不到"; }
+    out.render_evidence = {
+      offset_parent_null: btn.offsetParent === null,
+      client_rects: btn.getClientRects().length,
+      display: getComputedStyle(btn).display,
+      check_visibility: typeof btn.checkVisibility === "function"
+        ? btn.checkVisibility({ checkVisibilityCSS: true, checkOpacity: false }) : null,
+      details_content_visibility: cvv,
+      centre_stack: stack,
+      button_in_stack: stack.some(function (n) { return n.indexOf("v8-quiet-button") >= 0; })
+    };
+  }
+
+  // 决定性证据：折叠帧里这枚键到底有没有渲染。没渲染 ⇒ 它的盒是残留盒，拿它比遮挡就是尺的错。
+  if (btn) {
+    var cs = getComputedStyle(btn);
+    var csD = details ? getComputedStyle(details) : null;
+    var dc = details && details.querySelector("::details-content") ? null : null;
+    out.render_evidence = {
+      offset_parent_null: btn.offsetParent === null,
+      client_rects_count: btn.getClientRects().length,
+      display: cs.display, visibility: cs.visibility,
+      details_display: csD ? csD.display : null,
+      summary_rect: (function () {
+        var sm = section.querySelector("summary");
+        return sm ? rectOf(sm) : null;
+      })(),
+      explains_owner: (function () {
+        var e = q("[data-testid='journey-abort-explains']");
+        return e ? nameOf(e) : null;
+      })()
+    };
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("p.v8-lede"), function (p) {
+    var r = rectOf(p);
+    var sec = p.closest("[data-testid]");
+    var ov = (bRect && bRect.w) ? inter(r, bRect) : 0;
+    out.ledes.push({ testid: p.getAttribute("data-testid") || "", owner: sec ? sec.getAttribute("data-testid") : "",
+                     rect: r, overlap_with_button: ov, text: (p.textContent || "").trim().slice(0, 40) });
+    out.overlaps += ov;
+  });
+  if (bRect && bRect.w) {
+    var cx = Math.round((bRect.left + bRect.right) / 2);
+    var cy = Math.round((bRect.top + bRect.bottom) / 2);
+    var hit = document.elementFromPoint(cx, cy);
+    out.centre = { x: cx, y: cy };
+    out.hit = hit ? nameOf(hit) : null;
+    out.hits_self = !!(hit && btn && (hit === btn || btn.contains(hit)));
+  }
+  return out;
+}
+module.exports = { TWO_STATE };

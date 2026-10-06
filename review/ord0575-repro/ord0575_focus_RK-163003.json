@@ -1,0 +1,421 @@
+{
+ "run_id": "RK-163003",
+ "tree_at": "ed594904c09edf252c2765df354ba03bae9c47c3",
+ "legs": [
+  {
+   "arm": "zh-CN",
+   "vw": 360,
+   "errors": [],
+   "closed_hit": {
+    "rect": {
+     "top": 574,
+     "bottom": 618
+    },
+    "centre": {
+     "x": 268,
+     "y": 596
+    },
+    "hit": "p.v8-lede",
+    "self": false,
+    "vis": false,
+    "eaten_count": 3,
+    "eaten": [
+     {
+      "who": "textarea#journey-abort-reason.cn-abort__input",
+      "got": "h1#trip-day-total",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#journey-abort-submit.v8-quiet-button",
+      "got": "p.v8-lede",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#trip-day-0.active",
+      "got": "nav.v8-mobile-nav",
+      "self_vis": true,
+      "got_is_the_invisible_button": false
+     }
+    ]
+   },
+   "closed_open_before": false,
+   "focus_start": "summary#journey-abort-open",
+   "tab_walk": [
+    "button#calendar-export(vis=true)",
+    "button#trip-day-0(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)"
+   ],
+   "closed_form_focusable": false,
+   "closed_form_focus_visible": [],
+   "open_hit": {
+    "rect": {
+     "top": 63,
+     "bottom": 107,
+     "left": 220,
+     "right": 316
+    },
+    "centre": {
+     "x": 268,
+     "y": 85
+    },
+    "in_viewport": true,
+    "self": true,
+    "vis": true,
+    "hit": "button.v8-quiet-button"
+   },
+   "href": "http://127.0.0.1:5140/v8/trips"
+  },
+  {
+   "arm": "zh-CN",
+   "vw": 390,
+   "errors": [],
+   "closed_hit": {
+    "rect": {
+     "top": 557,
+     "bottom": 601
+    },
+    "centre": {
+     "x": 268,
+     "y": 579
+    },
+    "hit": "p.v8-lede",
+    "self": false,
+    "vis": false,
+    "eaten_count": 3,
+    "eaten": [
+     {
+      "who": "textarea#journey-abort-reason.cn-abort__input",
+      "got": "h1#trip-day-total",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#journey-abort-submit.v8-quiet-button",
+      "got": "p.v8-lede",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#trip-day-0.active",
+      "got": "span",
+      "self_vis": true,
+      "got_is_the_invisible_button": false
+     }
+    ]
+   },
+   "closed_open_before": false,
+   "focus_start": "summary#journey-abort-open",
+   "tab_walk": [
+    "button#calendar-export(vis=true)",
+    "button#trip-day-0(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)"
+   ],
+   "closed_form_focusable": false,
+   "closed_form_focus_visible": [],
+   "open_hit": {
+    "rect": {
+     "top": 63,
+     "bottom": 107,
+     "left": 220,
+     "right": 316
+    },
+    "centre": {
+     "x": 268,
+     "y": 85
+    },
+    "in_viewport": true,
+    "self": true,
+    "vis": true,
+    "hit": "button.v8-quiet-button"
+   },
+   "href": "http://127.0.0.1:5140/v8/trips"
+  },
+  {
+   "arm": "zh-CN",
+   "vw": 414,
+   "errors": [],
+   "closed_hit": {
+    "rect": {
+     "top": 540,
+     "bottom": 584
+    },
+    "centre": {
+     "x": 268,
+     "y": 562
+    },
+    "hit": "p.v8-lede",
+    "self": false,
+    "vis": false,
+    "eaten_count": 3,
+    "eaten": [
+     {
+      "who": "textarea#journey-abort-reason.cn-abort__input",
+      "got": "h1#trip-day-total",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#journey-abort-submit.v8-quiet-button",
+      "got": "p.v8-lede",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#trip-day-0.active",
+      "got": "svg",
+      "self_vis": true,
+      "got_is_the_invisible_button": false
+     }
+    ]
+   },
+   "closed_open_before": false,
+   "focus_start": "summary#journey-abort-open",
+   "tab_walk": [
+    "button#calendar-export(vis=true)",
+    "button#trip-day-0(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)"
+   ],
+   "closed_form_focusable": false,
+   "closed_form_focus_visible": [],
+   "open_hit": {
+    "rect": {
+     "top": 63,
+     "bottom": 107,
+     "left": 220,
+     "right": 316
+    },
+    "centre": {
+     "x": 268,
+     "y": 85
+    },
+    "in_viewport": true,
+    "self": true,
+    "vis": true,
+    "hit": "button.v8-quiet-button"
+   },
+   "href": "http://127.0.0.1:5140/v8/trips"
+  },
+  {
+   "arm": "en-US",
+   "vw": 360,
+   "errors": [],
+   "closed_hit": {
+    "rect": {
+     "top": 640,
+     "bottom": 684
+    },
+    "centre": {
+     "x": 83,
+     "y": 662
+    },
+    "hit": "p.v8-lede",
+    "self": false,
+    "vis": false,
+    "eaten_count": 2,
+    "eaten": [
+     {
+      "who": "textarea#journey-abort-reason.cn-abort__input",
+      "got": "h1#trip-day-total",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#journey-abort-submit.v8-quiet-button",
+      "got": "p.v8-lede",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     }
+    ]
+   },
+   "closed_open_before": false,
+   "focus_start": "summary#journey-abort-open",
+   "tab_walk": [
+    "button#calendar-export(vis=true)",
+    "button#trip-day-0(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)"
+   ],
+   "closed_form_focusable": false,
+   "closed_form_focus_visible": [],
+   "open_hit": {
+    "rect": {
+     "top": 127,
+     "bottom": 171,
+     "left": 34,
+     "right": 132
+    },
+    "centre": {
+     "x": 83,
+     "y": 149
+    },
+    "in_viewport": true,
+    "self": true,
+    "vis": true,
+    "hit": "button.v8-quiet-button"
+   },
+   "href": "http://127.0.0.1:5140/v8/trips"
+  },
+  {
+   "arm": "en-US",
+   "vw": 390,
+   "errors": [],
+   "closed_hit": {
+    "rect": {
+     "top": 591,
+     "bottom": 635
+    },
+    "centre": {
+     "x": 289,
+     "y": 613
+    },
+    "hit": "p.v8-lede",
+    "self": false,
+    "vis": false,
+    "eaten_count": 3,
+    "eaten": [
+     {
+      "who": "textarea#journey-abort-reason.cn-abort__input",
+      "got": "h1#trip-day-total",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#journey-abort-submit.v8-quiet-button",
+      "got": "p.v8-lede",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#calendar-export.v8-quiet-button",
+      "got": "button#nav-hub",
+      "self_vis": true,
+      "got_is_the_invisible_button": false
+     }
+    ]
+   },
+   "closed_open_before": false,
+   "focus_start": "summary#journey-abort-open",
+   "tab_walk": [
+    "button#calendar-export(vis=true)",
+    "button#trip-day-0(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)"
+   ],
+   "closed_form_focusable": false,
+   "closed_form_focus_visible": [],
+   "open_hit": {
+    "rect": {
+     "top": 138,
+     "bottom": 182,
+     "left": 240,
+     "right": 338
+    },
+    "centre": {
+     "x": 289,
+     "y": 160
+    },
+    "in_viewport": true,
+    "self": true,
+    "vis": true,
+    "hit": "button.v8-quiet-button"
+   },
+   "href": "http://127.0.0.1:5140/v8/trips"
+  },
+  {
+   "arm": "en-US",
+   "vw": 414,
+   "errors": [],
+   "closed_hit": {
+    "rect": {
+     "top": 574,
+     "bottom": 618
+    },
+    "centre": {
+     "x": 289,
+     "y": 596
+    },
+    "hit": "p.v8-lede",
+    "self": false,
+    "vis": false,
+    "eaten_count": 3,
+    "eaten": [
+     {
+      "who": "textarea#journey-abort-reason.cn-abort__input",
+      "got": "h1#trip-day-total",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#journey-abort-submit.v8-quiet-button",
+      "got": "p.v8-lede",
+      "self_vis": false,
+      "got_is_the_invisible_button": false
+     },
+     {
+      "who": "button#calendar-export.v8-quiet-button",
+      "got": "nav.v8-mobile-nav",
+      "self_vis": true,
+      "got_is_the_invisible_button": false
+     }
+    ]
+   },
+   "closed_open_before": false,
+   "focus_start": "summary#journey-abort-open",
+   "tab_walk": [
+    "button#calendar-export(vis=true)",
+    "button#trip-day-0(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)",
+    "button#trip-stop-details(vis=true)",
+    "button#stop-checkin(vis=true)",
+    "button#collect-entry(vis=true)"
+   ],
+   "closed_form_focusable": false,
+   "closed_form_focus_visible": [],
+   "open_hit": {
+    "rect": {
+     "top": 41,
+     "bottom": 85,
+     "left": 240,
+     "right": 338
+    },
+    "centre": {
+     "x": 289,
+     "y": 63
+    },
+    "in_viewport": true,
+    "self": true,
+    "vis": true,
+    "hit": "button.v8-quiet-button"
+   },
+   "href": "http://127.0.0.1:5140/v8/trips"
+  }
+ ],
+ "errors": []
+}

@@ -1,0 +1,315 @@
+# -*- coding: utf-8 -*-
+"""ORD-0575 复现腿的栈腿：现尖 aac1142e 那一代构建产物 + 私有后端 + 私有前端 + 新库各一枚。
+
+红线（写死，别在这一手破）：
+- 一次写请求都不发：只 POST 过 demo/scene/ensure（造分母用的那一条具名路由），浏览器腿只点 summary。
+- :8000 :4781 :4782 :4783 :4785 :4787 :4789 :8693 :4799 一枚都不碰；demo/reset 零次；共享预览库零次。
+- 屏上跑的那份构建代次要逐字对：tree_at = 现尖、入口资产与磁盘 sha1 都落件，别拿旧 dist 冒充。
+- 复用 dist 的规矩：入口资产名与磁盘字节 sha1 两枚都得上一次记录对得上才敢复用，否则现建。
+"""
+from __future__ import annotations
+
+import hashlib
+import io
+import json
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = Path(r"D:/moodle/_qoder_anchor_rulers_20261002")
+SCR = Path(r"D:/moodle/_qoder_newlane_ord0444_20260929/scratch")
+WT2 = Path(r"D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+DIST = WT2 / "frontend" / "dist"
+WHICH = os.environ.get("RKLEG", "repro")
+if WHICH == "two_state":
+    LEG = SCR / "ord0575_two_state_leg_r1.cjs"
+    PROBE = SCR / "ord0575_two_state_r1.cjs.txt"
+    PROBE_ENV = "RK_TWO"
+elif WHICH == "focus":
+    LEG = SCR / "ord0575_focus_leg_r1.cjs"
+    PROBE = None
+    PROBE_ENV = "RK_UNUSED"
+else:
+    LEG = SCR / "ord0575_repro_leg_r1.cjs"
+    PROBE = SCR / "ord0575_probe_r1.cjs.txt"
+    PROBE_ENV = "RK_PROBE"
+PYX = Path(r"D:/moodle/CityNexus/.venv/Scripts/python.exe")
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+FORBIDDEN = {8000, 4781, 4782, 4783, 4785, 4787, 4789, 8693, 4799}
+BAD: list[str] = []
+
+
+def g(*a):
+    p = subprocess.run(["git", *a], cwd=str(WT2), capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    return (p.stdout or "").strip()
+
+
+def http(url, data=None, headers=None, timeout=90):
+    req = urllib.request.Request(url, data=data, method="POST" if data is not None else "GET",
+                                 headers=headers or {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+    except Exception as e:  # noqa: BLE001
+        return None, (type(e).__name__ + str(e))[:150].encode()
+
+
+def free_port(wanted, taken=()):
+    p = wanted
+    while p < wanted + 120:
+        if p not in FORBIDDEN and p not in taken:
+            with socket.socket() as s:
+                try:
+                    s.bind(("127.0.0.1", p))
+                    return p
+                except OSError:
+                    pass
+        p += 1
+    raise SystemExit("REFUSED: 找不到空闲私有端口")
+
+
+run_id = "RK-%s" % time.strftime("%H%M%S")
+shots = ART / ("ord0575_shots_%s" % run_id)
+shots.mkdir(exist_ok=True)
+tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+head = g("rev-parse", "HEAD")
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+# 这条权威线本夜一直在长：允许把"我切的那一代"钉死（RK_PIN_TREE），同时把出块时现读的尖另记一笔。
+# 只钉不比对的话，得由对拍件证明这屏源码在两代之间没动（ord0575_blobcmp_r1.py 干这件事）。
+PIN = os.environ.get("RK_PIN_TREE", "")
+if PIN:
+    if head != PIN:
+        BAD.append("工作树不在钉死那一代：HEAD=%s PIN=%s" % (head, PIN))
+    if len(tip) != 40:
+        BAD.append("现尖没读到")
+else:
+    if head != tip:
+        BAD.append("屏上这份构建不是现尖那一代：wt2 HEAD=%s 现尖=%s" % (head, tip))
+
+idx = (DIST / "index.html").read_text(encoding="utf-8")
+m = re.search(r"/assets/(index-[\w\-]+\.js)", idx)
+if not m:
+    print("REFUSED: dist 的 index.html 里没找到入口资产")
+    sys.exit(1)
+asset = m.group(1)
+disk = (DIST / "assets" / asset).read_bytes()
+out = {"run_id": run_id, "leg": LEG.name, "probe": PROBE.name if PROBE else "（自包含腿，无外置探针）",
+       "pinned_tree": PIN or None,
+       "mirror": MIRROR, "tip_now": tip, "tree_at": head, "wt2_head": head,
+       "dist_entry": asset, "dist_bytes": len(disk),
+       "dist_disk_sha1": hashlib.sha1(disk).hexdigest()}
+if PROBE is not None and not PROBE.is_file():
+    BAD.append("探针腿没落盘")
+
+api = free_port(5131)
+front_port = free_port(api + 9, taken={api})
+front = "http://127.0.0.1:%d" % front_port
+env = dict(os.environ)
+for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+    env.pop(k, None)
+env.update({"CITYNEXUS_DATABASE_URL": "sqlite:///%s" % (WT2 / "backend" / ("%s.db" % run_id)).as_posix(),
+            "CITYNEXUS_E2E_RUN_ID": run_id, "CITYNEXUS_BACKEND_PORT": str(api),
+            "CITYNEXUS_DEMO_MODE": "true", "CITYNEXUS_DEMO_SCENE_TOKEN": os.urandom(16).hex()})
+token = env["CITYNEXUS_DEMO_SCENE_TOKEN"]
+log = ART / ("uvicorn_%s.log" % run_id)
+backend = subprocess.Popen([str(PYX), "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                            "--port", str(api)], cwd=str(WT2 / "backend"), env=env,
+                           stdout=log.open("w", encoding="utf-8"), stderr=subprocess.STDOUT)
+out["private_backend_port"] = api
+out["private_front_port"] = front_port
+out["backend_pid"] = backend.pid
+
+
+class H(BaseHTTPRequestHandler):
+    def log_message(self, *a):
+        pass
+
+    def _send(self, code, body, ctype):
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        try:
+            self.wfile.write(body)
+        except (ConnectionAbortedError, ConnectionResetError, BrokenPipeError):
+            pass
+
+    def do_GET(self):
+        p = self.path.split("?")[0]
+        if p.startswith("/api/"):
+            st, body = http("http://127.0.0.1:%d%s" % (api, self.path))
+            self._send(st or 502, body, "application/json")
+            return
+        f = (DIST / (p.lstrip("/") or "index.html")).resolve()
+        ctype = ("text/javascript" if f.suffix == ".js" else "text/css" if f.suffix == ".css"
+                 else "text/html" if f.suffix == ".html" else "application/octet-stream")
+        if not str(f).startswith(str(DIST)) or not f.is_file():
+            f, ctype = DIST / "index.html", "text/html"
+        self._send(200, f.read_bytes(), ctype)
+
+    do_POST = do_GET
+
+
+srv = ThreadingHTTPServer(("127.0.0.1", front_port), H)
+threading.Thread(target=srv.serve_forever, daemon=True).start()
+dest = ART / ("ord0575_%s_%s.json" % (WHICH, run_id))
+try:
+    if BAD:
+        raise SystemExit(1)
+    ok = False
+    for _ in range(90):
+        st, body = http("http://127.0.0.1:%d/api/v1/health" % api)
+        if st == 200 and run_id.encode() in body:
+            ok = True
+            break
+        time.sleep(1)
+    if not ok:
+        BAD.append("后端没答或答复里没本 run id（日志 %s）" % log.name)
+        raise SystemExit(1)
+    st, body2 = http(front + "/assets/" + asset)
+    out["served_equals_disk"] = body2 == disk
+    hdr = {"Content-Type": "application/json", "X-Demo-Scene-Token": token,
+           "Idempotency-Key": "rk-" + run_id}
+    req = urllib.request.Request("http://127.0.0.1:%d/api/v1/demo/scene/ensure" % api,
+                                 data=b"{}", headers=hdr, method="POST")
+    with urllib.request.urlopen(req, timeout=180) as resp:
+        jid = json.loads(resp.read().decode("utf-8")).get("journey_id")
+        out["ensure_http_status"] = resp.status
+    if not jid:
+        BAD.append("供不出场景（分母起不来）")
+        raise SystemExit(1)
+    out["journey_id_present"] = True
+    penv = dict(os.environ)
+    for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+        penv.pop(k, None)
+    penv.update({"NODE_PATH": str(WT2 / "frontend" / "node_modules"), "RK_BASE": front,
+                 "RK_OUT": str(dest), "RK_SHOTS": str(shots), "RK_JID": jid,
+                 PROBE_ENV: str(PROBE), "RK_RUN": run_id, "RK_TREE": head})
+    p = subprocess.run(["node", str(LEG)], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", env=penv, timeout=900)
+    out["leg_rc"] = p.returncode
+    out["leg_stdout_tail"] = (p.stdout or "")[-2000:]
+    out["leg_stderr_tail"] = (p.stderr or "")[-400:]
+    doc = json.loads(dest.read_text(encoding="utf-8")) if dest.exists() else {}
+    legs = doc.get("legs") or []
+    out["legs"] = len(legs)
+    out["leg_errors"] = doc.get("errors")
+    out["hits_self"] = sum(1 for L in legs if L.get("cells") and L["cells"][0]["button_hits_self"])
+    out["stolen"] = sum(1 for L in legs if L.get("cells") and not L["cells"][0]["button_hits_self"])
+    out["page_errors"] = sum(len(L.get("page_errors") or []) for L in legs)
+    if WHICH == "two_state":
+        out["closed_frames"] = sum(1 for L in legs if L["closed"]["details_open"] is False
+                                   and L["closed"]["button_present_in_dom"] is not None)
+        out["open_frames"] = sum(1 for L in legs if L["open"]["details_open"] is True)
+        out["centred_frames"] = sum(1 for L in legs if L["centred"]["details_open"] is True)
+        out["stolen_centred"] = sum(1 for L in legs if L["centred"]["hits_self"] is False)
+        sw = [r for L in legs for r in (L["centred"].get("sweep") or [])]
+        # 滚出屏外那几帧的"没命中自己"不算遮挡：中心点在负 y 上本来就不在视口里。
+        viewed = [r for r in sw if r.get("centre") and 0 <= r["centre"]["y"] <= 844]
+        out["sweep_frames"] = len(sw)
+        out["sweep_in_view"] = len(viewed)
+        out["sweep_offscreen"] = len(sw) - len(viewed)
+        out["sweep_stolen"] = sum(1 for r in viewed if r.get("hits_self") is not True)
+        out["closed_stolen"] = sum(1 for L in legs if L["closed"]["hits_self"] is False)
+        out["closed_unpainted"] = sum(1 for L in legs
+                                      if (L["closed"].get("leak") or {}).get("submit", {}).get("vis") is False)
+        out["closed_not_in_stack"] = sum(1 for L in legs
+                                         if (L["closed"].get("leak") or {}).get("submit", {}).get("self_in_stack") is False)
+        if legs and (out["closed_unpainted"] != len(legs) or out["closed_not_in_stack"] != len(legs)):
+            BAD.append("折叠帧的渲染证据没凑齐：没画=%d 不在命中栈=%d 应各 %d" % (
+                out["closed_unpainted"], out["closed_not_in_stack"], len(legs)))
+        print("折叠帧中心没命中自己的腿=%d 枚；同一帧里那枚键没被画出来=%d 枚、不在自己的命中栈里=%d 枚"
+              % (out["closed_stolen"], out["closed_unpainted"], out["closed_not_in_stack"]))
+        print("展开态滚动遍历 %d 帧：在屏内 %d 帧（其中中心没命中自己=%d），滚出屏外 %d 帧不计"
+              % (out["sweep_frames"], out["sweep_in_view"], out["sweep_stolen"], out["sweep_offscreen"]))
+        if out["sweep_stolen"]:
+            BAD.append("展开态确有屏内帧被接走：%d 帧" % out["sweep_stolen"])
+        if legs and (out["closed_frames"] != len(legs) or out["open_frames"] != len(legs)
+                     or out["centred_frames"] != len(legs)):
+            BAD.append("三态没凑齐：closed=%s open=%s centred=%s 应各 %d" % (
+                out["closed_frames"], out["open_frames"], out["centred_frames"], len(legs)))
+        out["page_errors"] = sum(len(L["closed"].get("page_errors") or []) for L in legs)
+        out["BAD"] = BAD
+        NL0 = chr(10)
+        (ART / ("ord0575_run_%s.json" % run_id)).write_text(
+            json.dumps(out, ensure_ascii=False, indent=1) + NL0, encoding="utf-8", newline=NL0)
+        print(out.get("leg_stdout_tail", ""))
+        print("ARTIFACT(early) ", dest, BAD)
+        sys.exit(1 if BAD else 0)
+    out["negctl_planted"] = sum(1 for L in legs if (L.get("negative_control") or {}).get("planted"))
+    out["negctl_bites"] = sum(1 for L in legs if L.get("neg_hits_self") is False)
+    if WHICH == "focus":
+        # 这一档要证的三件事，逐条从件里重算，不写字面量
+        out["closed_unpainted"] = sum(1 for L in legs if (L.get("closed_hit") or {}).get("vis") is False)
+        out["closed_self_hit"] = sum(1 for L in legs if (L.get("closed_hit") or {}).get("self") is True)
+        out["open_self_hit_inview"] = sum(1 for L in legs
+                                         if (L.get("open_hit") or {}).get("self") is True
+                                         and (L.get("open_hit") or {}).get("in_viewport") is True)
+        out["form_focusable_closed"] = sum(1 for L in legs if L.get("closed_form_focusable"))
+        out["eaten_interactive"] = sum((L.get("closed_hit") or {}).get("eaten_count") or 0 for L in legs)
+        if legs and out["closed_unpainted"] != len(legs):
+            BAD.append("折叠帧里那枚键不是每腿都不可见：%d/%d" % (out["closed_unpainted"], len(legs)))
+        if legs and out["open_self_hit_inview"] != len(legs):
+            BAD.append("展开帧里没做到每腿屏内命中自己：%d/%d" % (out["open_self_hit_inview"], len(legs)))
+        print("折叠帧：键不可见=%d 枚、焦点能进折叠表单=%d 枚、幽灵盒吃掉的可交互元素=%d 枚"
+              % (out["closed_unpainted"], out["form_focusable_closed"], out["eaten_interactive"]))
+        print("展开帧：屏内且命中自己=%d/%d 枚" % (out["open_self_hit_inview"], len(legs) or 0))
+        out["BAD"] = BAD
+        N1 = chr(10)
+        (ART / ("ord0575_run_%s.json" % run_id)).write_text(
+            json.dumps(out, ensure_ascii=False, indent=1) + N1, encoding="utf-8", newline=N1)
+        print(out.get("leg_stdout_tail", ""))
+        print("ARTIFACT(early)", dest, BAD)
+        sys.exit(1 if BAD else 0)
+    if legs and out["negctl_planted"] != len(legs):
+        BAD.append("负对照没在每腿都种下去：%d/%d" % (out["negctl_planted"], len(legs)))
+    if legs and out["negctl_bites"] != len(legs):
+        BAD.append("负对照没能咬住（那把尺是空尺）：%d/%d" % (out["negctl_bites"], len(legs)))
+    if len(legs) != 6:
+        BAD.append("腿数不是 6：%d" % len(legs))
+    if doc.get("errors"):
+        BAD.append("腿自己报了 errors：%s" % str(doc["errors"])[:200])
+    if p.returncode != 0:
+        BAD.append("腿 rc=%s" % p.returncode)
+    out["leg_doc_head"] = {k: doc.get(k) for k in ("base", "tree_at", "probe_file")}
+except SystemExit:
+    pass
+finally:
+    srv.shutdown()
+    srv.server_close()
+    backend.terminate()
+    try:
+        backend.wait(timeout=40)
+    except subprocess.TimeoutExpired:
+        backend.kill()
+    out["backend_exit"] = backend.poll()
+    dbf = WT2 / "backend" / ("%s.db" % run_id)
+    out["private_db_created"] = dbf.is_file()
+
+out["BAD"] = BAD
+NL = chr(10)
+dst = ART / ("ord0575_run_%s.json" % run_id)
+dst.write_text(json.dumps(out, ensure_ascii=False, indent=1) + NL, encoding="utf-8", newline=NL)
+print(out.get("leg_stdout_tail", ""))
+print(json.dumps({k: out.get(k) for k in ("run_id", "tip_now", "tree_at", "dist_entry", "dist_bytes",
+                                          "dist_disk_sha1", "private_backend_port", "private_front_port",
+                                          "ensure_http_status", "served_equals_disk", "legs", "hits_self",
+                                          "stolen", "page_errors", "negctl_planted", "negctl_bites", "leg_rc", "private_db_created", "BAD")},
+                 ensure_ascii=False, indent=1))
+print("ARTIFACT", dst)
+sys.exit(1 if BAD else 0)

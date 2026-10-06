@@ -1,0 +1,53 @@
+{
+ "claimed_generation": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "tip": "cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2",
+ "mirror": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "same_generation_files": 5,
+ "files_compared": 5,
+ "frontend_files_changed_between": 9,
+ "changed_paths": [
+  "...qoder-0533-dictionary-keys-on-screen-r1.spec.ts",
+  ".../qoder-6a150e1e-spend-faces-day24-r1.spec.ts",
+  "...oder-82f55d8a-hub-quality-vocabulary-r1.spec.ts",
+  ".../e2e/qoder-8ac89982-ord0572-nav-current.spec.ts",
+  ".../qoder-8ac89982-ord0573-trips-tab-roles.spec.ts",
+  "...89982-ord0573-upstream-locator-forms-r1.spec.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/features/trip/SpendPanel.tsx",
+  "frontend/src/features/trip/spendCopy.ts"
+ ],
+ "shortstat": "9 files changed, 534 insertions(+), 8 deletions(-)",
+ "abort_screen_changed": [],
+ "rows": [
+  {
+   "path": "frontend/src/features/abort/JourneyAbortPanel.tsx",
+   "blob_claimed_gen": "cf39818eac1c0b321ec788a0b8e60fe93d6be70a",
+   "blob_tip": "cf39818eac1c0b321ec788a0b8e60fe93d6be70a",
+   "identical": true
+  },
+  {
+   "path": "frontend/src/features/abort/journeyAbort.css",
+   "blob_claimed_gen": "4a5fa9298c51bc030106c6b3400a5932210f89fa",
+   "blob_tip": "4a5fa9298c51bc030106c6b3400a5932210f89fa",
+   "identical": true
+  },
+  {
+   "path": "frontend/src/app/v8PanelRegistry.tsx",
+   "blob_claimed_gen": "c1081adf60fd9bfe505286215a627fe15fb1698d",
+   "blob_tip": "c1081adf60fd9bfe505286215a627fe15fb1698d",
+   "identical": true
+  },
+  {
+   "path": "frontend/src/features/trip/TripItinerary.tsx",
+   "blob_claimed_gen": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "blob_tip": "e846ed1b67c67313405f645ecac5432f1a97d241",
+   "identical": true
+  },
+  {
+   "path": "frontend/src/styles.css",
+   "blob_claimed_gen": "9833f6910700a2950977041d461bbf7bece17f73",
+   "blob_tip": "9833f6910700a2950977041d461bbf7bece17f73",
+   "identical": true
+  }
+ ]
+}
