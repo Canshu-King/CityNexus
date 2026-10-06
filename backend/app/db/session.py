@@ -879,6 +879,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 "action_approvals": {"recovery_epoch_id": "TEXT"},
                 "replan_proposals": {
                     "recovery_epoch_id": "TEXT",
+                    "source_agent_run_id": "TEXT",
                     "semantic_identity": "TEXT",
                     "canonical_proposal_id": "TEXT",
                 },
