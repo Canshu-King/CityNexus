@@ -160,6 +160,70 @@ def _seed_pending_continuation() -> dict[str, str]:
     }
 
 
+def test_r30_pending_action_binds_receipt_at_initial_suspension() -> None:
+    seeded = _seed_pending_continuation()
+    receipt_id = "receipt-initial-suspension"
+    with SessionLocal() as session:
+        run = session.get(AgentRun, seeded["run_id"])
+        mission = session.get(JourneyMission, seeded["mission_id"])
+        pending = session.get(AgentPendingAction, seeded["pending_id"])
+        approval = session.get(ActionApproval, seeded["approval_id"])
+        assert run is not None
+        assert mission is not None
+        assert pending is not None
+        assert approval is not None
+        assert pending.authority_receipt_id is None
+
+        approval.authority_receipt_id = receipt_id
+        step = AgentRunStep(
+            id=str(uuid4()),
+            run_id=run.id,
+            sequence_no=99,
+            tool_name="accept_replan",
+            arguments_json="{}",
+            result_json="{}",
+            decision="REQUIRE_CONFIRMATION",
+            status="COMPLETED",
+            created_at=_now(),
+            completed_at=_now(),
+        )
+        captured = capture_pending_action(
+            session,
+            run=run,
+            mission=mission,
+            step=step,
+            tool_name="accept_replan",
+            arguments={
+                "agent_id": "citynexus-agent",
+                "journey_id": seeded["journey_id"],
+                "mission_id": seeded["mission_id"],
+                "request_id": "initial-suspension-test",
+            },
+            result={
+                "tool": "accept_replan",
+                "decision": "REQUIRE_CONFIRMATION",
+                "executed": False,
+                "approval_id": seeded["approval_id"],
+                "status": "PENDING",
+                "collective_authority_receipt_id": receipt_id,
+            },
+        )
+        assert captured is not None
+        assert captured.id == seeded["pending_id"]
+        assert captured.authority_receipt_id == receipt_id
+        session.commit()
+
+    with SessionLocal() as verify:
+        assert (
+            verify.get(AgentPendingAction, seeded["pending_id"]).authority_receipt_id
+            == receipt_id
+        )
+        assert (
+            verify.get(ActionApproval, seeded["approval_id"]).authority_receipt_id
+            == receipt_id
+        )
+
+
 def test_r28_server_resolved_collective_selection_requires_acceptance() -> None:
     proposal_id = str(uuid4())
     mission = JourneyMission(
