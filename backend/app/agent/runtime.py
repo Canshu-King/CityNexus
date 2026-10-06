@@ -1634,6 +1634,21 @@ class DeepSeekJourneyAgent:
                             "advanced to a newer recovery epoch."
                         )
                         break
+                    # An executed mutation is itself a server-owned terminal
+                    # recovery fact.  Do not ask the same model turn to reason
+                    # again against a reality it just changed; any further work
+                    # belongs to a fresh inspection/run in the new reality.
+                    if (
+                        tool_name in _MUTATION_TOOLS
+                        and isinstance(result, dict)
+                        and result.get("executed") is True
+                    ):
+                        final_text = (
+                            "The server-authorized Journey mutation was "
+                            "executed and this recovery run is complete."
+                        )
+                        session.commit()
+                        break
                     # Human approval is not a reason to keep asking the model.
                     # Persist the already-selected action and suspend this same
                     # AgentRun until the server receives the approval.
