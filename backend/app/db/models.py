@@ -272,6 +272,59 @@ class RecoveryEpoch(Base):
     )
 
 
+class AgentExecutionLease(Base):
+    """Durable distributed execution ownership for one mission lineage."""
+
+    __tablename__ = "agent_execution_leases"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    mission_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="CASCADE")
+    )
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE")
+    )
+    generation: Mapped[int] = mapped_column(Integer)
+    owner_worker_id: Mapped[str] = mapped_column(String)
+    recovery_epoch_id_at_acquire: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+    status: Mapped[str] = mapped_column(
+        String, default="ACTIVE", server_default="ACTIVE"
+    )
+    acquired_at: Mapped[str] = mapped_column(String)
+    heartbeat_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    released_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    superseded_by_lease_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_execution_leases.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('ACTIVE','EXPIRED','SUPERSEDED','RELEASED')",
+            name="ck_agent_execution_leases_status",
+        ),
+        UniqueConstraint(
+            "mission_id",
+            "generation",
+            name="uq_agent_execution_leases_mission_generation",
+        ),
+        Index(
+            "ux_agent_execution_leases_one_active",
+            "mission_id",
+            unique=True,
+            sqlite_where=text("status = 'ACTIVE'"),
+        ),
+        Index(
+            "idx_agent_execution_leases_mission_status",
+            "mission_id",
+            "status",
+            "generation",
+        ),
+    )
+
+
 class AgentRun(Base):
     """Persisted execution envelope for a model-backed Journey Agent run."""
 
@@ -290,6 +343,14 @@ class AgentRun(Base):
     recovery_epoch_id: Mapped[str | None] = mapped_column(
         ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
     )
+    execution_lease_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_execution_leases.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    execution_lease_generation: Mapped[int | None] = mapped_column(
+        Integer, nullable=True
+    )
+    worker_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class AgentRunStep(Base):
