@@ -79,6 +79,27 @@ def _is_predictive(event: Event) -> bool:
         return False
 
 
+def _is_live_context_trigger(event: Event) -> bool:
+    """Identify R34+ open-world venue conflicts that require a real Agent."""
+
+    if (
+        event.provider_key != "truth-mesh"
+        or event.provenance != "SYSTEM_DERIVED"
+        or event.event_type != "CLOSURE"
+    ):
+        return False
+    try:
+        payload = json.loads(event.payload_json or "{}")
+    except json.JSONDecodeError:
+        return False
+    return bool(
+        payload.get("context_watch_status")
+        in {"CLOSED_CONFLICT", "OUTSIDE_VERIFIED_HOURS"}
+        and payload.get("observation_ids")
+        and payload.get("provider_entity")
+    )
+
+
 def _fingerprint(journey: Journey, mission: JourneyMission | None, events: list[Event]) -> str:
     from app.agent.signal_pipeline import incident_fingerprint
 
@@ -717,6 +738,44 @@ def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
         if agent.status not in {"COMPLETED", "PARTIAL"}:
             agent.status = "COMPLETED"
     except AgentRuntimeUnavailable as exc:
+        if _is_live_context_trigger(trigger):
+            completed = _now().isoformat()
+            evidence["inference"] = {
+                **evidence.get("inference", {}),
+                "controller": "configured_external_agent_required",
+                "runtime_unavailable": str(exc),
+                "deterministic_fallback_allowed": False,
+            }
+            evidence["policy"] = {
+                "decision": "NO_FALLBACK",
+                "reason_codes": ["OPEN_WORLD_EXTERNAL_AGENT_REQUIRED"],
+            }
+            evidence["mutation"] = {"executed": False, "proposal_id": None}
+            run.status = "PARTIAL"
+            run.action_status = "RETRYABLE_FAILURE"
+            run.reasoning_summary = (
+                "A live-world conflict requires the configured external Agent; "
+                "deterministic Guardian fallback was refused."
+            )
+            run.active_plan_after_id = journey.active_plan_version_id
+            run.evidence_json = _json(evidence)
+            run.completed_at = completed
+            record_audit(
+                session,
+                action="guardian.open_world.external_agent_required",
+                entity_type="GuardianRun",
+                entity_id=run.id,
+                journey_id=journey.id,
+                actor_type="SYSTEM",
+                actor_id="guardian",
+                after={
+                    "trigger_event_id": trigger.id,
+                    "action_status": run.action_status,
+                    "deterministic_fallback_allowed": False,
+                },
+            )
+            session.commit()
+            return guardian_payload(session, run)
         evidence["inference"] = {
             **evidence.get("inference", {}),
             "controller": "deterministic_guardian_fallback",
