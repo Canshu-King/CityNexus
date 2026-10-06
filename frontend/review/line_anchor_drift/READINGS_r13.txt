@@ -3,7 +3,7 @@ Written by k124_make_readings_r9.py; every number is parsed from a log, a probe,
 
 [coordinates]
   tip this hand rests on        : 3d40efcc1956f49dcc0679a41995dedc5aae8475
-  branch                        : review/a68b0631-comment-anchor-drift-r9 head 3d40efcc1956f49dcc0679a41995dedc5aae8475
+  branch                        : review/a68b0631-comment-anchor-drift-r9 head 902845461774416a33fda55215bee87549fb4bdf
   previous generation           : r7 head 123e7ce27f6b3eca0a46aeaa9a00f65214fc625b, cut at 32372c7e57611f73782fdc607d929735224cf657
   guard test blob               : df1548cd581180f21bf2662941b327e36da9bb69
   registry blob                 : 36dbc41f2049a822fca8d9e4c2f29f1c48045c51 (114 entries)
@@ -11,7 +11,7 @@ Written by k124_make_readings_r9.py; every number is parsed from a log, a probe,
 [why a generation was spent, measured rather than asserted]
   the tip moved while this hand was being cut: it is now 3d40efcc1956, and between it and the tip first
   read (d022177502d2) exactly 0 paths differ -- the line re-hung the same tree, it did not add bytes.
-  the line moved 6 paths in the step before that; this hand touches 161, intersection 0, so
+  the line moved 6 paths in the step before that; this hand touches 162, intersection 0, so
   the two sides changed disjoint file sets.
   ancestry, now that the branch ref was fetched whole: `rev-list --count` 1553, `merge-base` with
   the previous generation 32372c7e5761, and `merge-tree --write-tree` of this tip against this branch
@@ -54,9 +54,10 @@ Written by k124_make_readings_r9.py; every number is parsed from a log, a probe,
   the widening's own share -- citations in files the nine-root allow-list never read : 9 lines
   in 5 files; of those, 4 sit in .sql prose, which the ruler could not see at all before the
   comment branch existed.
-  the count above is the whole hand's conversions, taken from the tip's own bytes; THIS
-  generation added 0 registry entry (the one the new tip's lane introduced), so G1 keeps it
-  un-numbered along with the rest.
+  the count above is the whole hand's conversions, taken from the base's own bytes.  THIS
+  generation adds 0 registry entry: it converts no citation of its own, because the tip it
+  re-hung carries no new product bytes -- the one citation the previous generation converted was
+  already in the registry.
 
 [what the tip actually moved this time, and why the readings were expected to hold]
   the tip moved 6 paths and every one of them is under `review/`, i.e. inside the frozen zone
@@ -96,7 +97,7 @@ Written by k124_make_readings_r9.py; every number is parsed from a log, a probe,
   naming a frozen file.
 
 [the test surface, really run]
-  backend files this hand touches : 30 (paired against the tip: 29; new at this hand: 1)
+  backend files this hand touches : 30 (paired against the tip: 30; new at this hand: 0)
   branch : {"failed": 3, "passed": 314, "skipped": 13}
   tip    : {"failed": 3, "passed": 314, "skipped": 13}
   red node ids identical at both ends : True
