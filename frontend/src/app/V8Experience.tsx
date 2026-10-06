@@ -37,6 +37,7 @@ import {
   READ_DEADLINE_MS,
 } from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
+import { travelerAuthHeaders } from "../lib/travelerSession";
 import {
   clearPendingContinuation,
   continuePendingPlan,
@@ -1338,6 +1339,7 @@ export function V8Experience() {
               `/api/v1/journeys/${data.journey.id}/location`,
               {
                 method: "POST",
+                headers: travelerAuthHeaders(),
                 body: JSON.stringify({
                   latitude: position.coords.latitude,
                   longitude: position.coords.longitude,
