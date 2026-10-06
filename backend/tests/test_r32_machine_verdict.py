@@ -34,12 +34,18 @@ def _checkpoint() -> dict:
                 {
                     "thread": "AnyIO worker thread",
                     "causal_slot": "A",
+                    "agent_run_id": "agent-a",
+                    "recovery_epoch_id": "r1",
+                    "server_run_resolution": "EXACT_ONE_CURRENT_RUN",
                     "provider_call_invoked": True,
                     "provider_returned": True,
                 },
                 {
                     "thread": "AnyIO worker thread",
                     "causal_slot": "B",
+                    "agent_run_id": "agent-b",
+                    "recovery_epoch_id": "r2",
+                    "server_run_resolution": "EXACT_ONE_CURRENT_RUN",
                     "provider_call_invoked": True,
                     "provider_returned": True,
                 },
@@ -372,6 +378,30 @@ def test_unanimous_receipt_cannot_borrow_stale_agent_a_lineage():
         == "CONTRADICTED"
     )
     assert result["overall"] == "CONTRADICTED"
+
+
+def test_exact_durable_run_binding_overrides_worker_thread_identity():
+    checkpoint = _checkpoint()
+    # Both provider calls run on the same AnyIO worker-thread label; proof comes
+    # from exact durable AgentRun + RecoveryEpoch receipts instead.
+    assert {
+        item["thread"]
+        for item in checkpoint["runtime"]["external_call_outcomes"]
+    } == {"AnyIO worker thread"}
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 145, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["agent_a_external_and_bound_r1"]["verdict"]
+        == "PROVEN"
+    )
+    assert (
+        result["dimensions"]["agent_b_external_and_bound_r2"]["verdict"]
+        == "PROVEN"
+    )
 
 
 def test_anyio_worker_thread_does_not_define_agent_identity():
