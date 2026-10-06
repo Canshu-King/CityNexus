@@ -86,6 +86,13 @@ def create_or_reuse_approval(
     required_decision: str,
     recovery_epoch_id: str | None = None,
 ) -> ActionApproval:
+    if recovery_epoch_id:
+        try:
+            validate_recovery_epoch_binding(
+                session, journey_id, recovery_epoch_id
+            )
+        except RecoveryEpochSuperseded as exc:
+            raise HTTPException(409, detail=exc.facts)
     now = _now()
     existing = session.scalar(
         select(ActionApproval)
