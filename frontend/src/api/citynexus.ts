@@ -574,6 +574,7 @@ export interface GroupRendezvousRouteResult {
   } | null;
   member_risk_event_id?: string | null;
   guardian_triggered: boolean;
+  guardian_deduplicated?: boolean;
   guardian?: Record<string, unknown> | null;
   plan_unchanged: boolean;
 }
