@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
+from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -334,6 +334,13 @@ class AgentPendingAction(Base):
     authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
     recovery_epoch_id: Mapped[str | None] = mapped_column(
         ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('PENDING','RESUMING','RESUMED','FAILED','EXPIRED','SUPERSEDED')",
+            name="ck_agent_pending_actions_status",
+        ),
     )
 
 
