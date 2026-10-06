@@ -373,3 +373,53 @@ Every valid new checkpoint must additionally carry:
 The v4 verifier treats this freshness attestation as a required dimension.
 Renaming or copying an old artifact can no longer become a valid new strike by
 filename convention alone.
+
+## Strike 2C-FRESH — Exact-Run Causality Replacement
+
+The provenance audit established that the earlier claimed 2C artifact was a
+byte-identical relabel of Strike 2B and did not consume the 2C budget. The single
+authorized replacement ran from remote/local head
+`9b29532d8cd5c77dd6617054c4803f5caa4ac1c0` with a clean tracked tree and a new
+output path. Freshness attestation is **PROVEN**: protocol
+`R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1`, authorization commit
+`03357b7c8f8a9a671c59113be71d6093fab04742`, `head_matches_remote=true`,
+`output_preexisted=false`, and all nine source hashes present.
+
+The fresh live checkpoint completed with machine verdict **PROVEN** and no
+contradicted dimensions. The deterministic regression on the same head was
+**157 passed / 0 failed**. Five coverage dimensions remain explicitly
+`NOT_PROVEN` because this single path did not exercise those separate cases:
+R1 candidate/receipt invalidation, semantic dedupe across equivalent futures,
+stale approval retargeting, and duplicate continuation side effects.
+
+### Durable exact-run chronology
+
+- A provider call: AgentRun
+  `41639fa0-b3fe-4c9b-bbf8-e49fc49c599e`, Hermes, bound to R1
+  `0008996a-73cc-4f78-909c-5e2dfcdd6073`, causal slot `A`,
+  `server_run_resolution=EXACT_ONE_CURRENT_RUN`.
+- B provider call: AgentRun
+  `8f3ff38e-79b4-4087-8ce7-1336af208ddb`, Hermes, bound to R2
+  `c11cd4cb-e5cf-4153-870d-8f1a3f33785a`, causal slot `B`,
+  `server_run_resolution=EXACT_ONE_CURRENT_RUN`.
+- Shock B materially opened R2 and superseded R1. A's held response was
+  discarded before Gateway use by durable `recovery_epoch_guard` with
+  `RECOVERY_EPOCH_SUPERSEDED`, `model_response_discarded=true`, and A terminated
+  `SUPERSEDED`. Stale validation did not create R3.
+- B autonomously produced proposal
+  `dcc3e782-c3a8-45e5-acd4-21b14fde0a85`; the current R2 authority surface
+  issued `UNANIMOUS_DOMINANCE` receipt
+  `31de81f9-6a74-45d3-a485-ece07c728135` with
+  `source_agent_run_id=B`. Standing `ALLOW_AUTO` delegation authorized exactly
+  one `accept_replan` mutation. R2 closed `COMMITTED` with
+  `REPLAN_ACCEPTED`, and B ended `COMPLETED / MUTATION_EXECUTED`.
+
+The provider is a replay-backed WB2api/Hermes runtime and physical travel is not
+claimed. No 2D or further live retry is authorized by this result.
+
+Artifacts:
+
+- Fresh native checkpoint: `backend/output/r32-live-strike-v2c-fresh.json`
+- Fresh machine verdict: `backend/output/R32_MACHINE_VERDICT_V2C_FRESH.json`
+- Fresh regression receipt: `backend/output/r32-focused-regression-v2c-fresh.json`
+- Fresh raw regression: `backend/output/r32-focused-regression-v2c-fresh.txt`
