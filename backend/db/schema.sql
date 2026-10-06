@@ -348,6 +348,7 @@ CREATE TABLE IF NOT EXISTS replan_proposals (
     created_at TEXT NOT NULL,
     decided_at TEXT,
     recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
     semantic_identity TEXT,
     canonical_proposal_id TEXT REFERENCES replan_proposals(id) ON DELETE SET NULL,
     CHECK (base_plan_version_id <> proposed_plan_version_id)
