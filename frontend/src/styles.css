@@ -1445,6 +1445,9 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .journey-intent-steering textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid #aabbd0; border-radius: 10px; padding: 10px 12px; color: inherit; font: inherit; }
 .journey-intent-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .journey-intent-list li { padding: 8px 10px; border-radius: 9px; background: rgba(31, 91, 114, .06); }
+.journey-operator-attention { display: grid; gap: 8px; padding: 16px; border: 1px solid rgba(31, 91, 114, .28); border-radius: 14px; background: #f4fafb; }
+.journey-operator-attention > strong { font-size: 18px; }
+.journey-operator-attention-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .journey-operator-heading { display: grid; gap: 4px; }
 .journey-operator-heading strong { font-size: 16px; }
 .journey-operator-brain { display: grid; gap: 4px; padding: 10px 12px; border-radius: 12px; background: rgba(31, 91, 114, .08); }

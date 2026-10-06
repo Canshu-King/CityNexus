@@ -33,8 +33,9 @@ from app.agent.transactional_operator import execution_plan_projection
 from app.execution.continuous_journey import continuous_flow_projection
 from app.agent.journey_ahead import journey_ahead_projection
 from app.agent.overnight_steward import overnight_steward_projection
-from app.agent.journey_intent import active_journey_intents
+from app.agent.journey_intent import active_journey_intents, pending_journey_intent_clarifications
 from app.execution.clock import execution_clock
+from app.operator_attention import attention_from_operator_projection
 
 
 def classify_operator_state(
@@ -440,6 +441,14 @@ def operator_projection(
         session,
         journey,
         now=execution_clock.now(journey.timezone),
+        traveler_id=viewer_traveler_id,
+    )
+    pending_intents = pending_journey_intent_clarifications(
+        session, journey, traveler_id=viewer_traveler_id
+    )
+    projected_intents = sorted(
+        [*active_intents, *pending_intents],
+        key=lambda item: (str(item.get("created_at") or ""), str(item.get("id") or "")),
     )
 
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
@@ -529,7 +538,17 @@ def operator_projection(
         "flow": flow,
         "ahead": ahead,
         "overnight": overnight,
-        "intents": active_intents,
+        "intents": projected_intents,
+        "attention": attention_from_operator_projection({
+            "operations": operations,
+            "approval": approval_payload,
+            "collective": collective,
+            "intents": projected_intents,
+            "flow": flow,
+            "overnight": overnight,
+            "brain": brain,
+        }),
+        "quiet_mode": "QUIET",
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {

@@ -221,6 +221,25 @@ export function LiveRecovery({
     }
   }, [intentText, journeyId, loadOperator, onAccepted, zh]);
 
+  const answerAttentionIntent = useCallback(async (intentId: string, answer: string) => {
+    setBusy("intent-clarification");
+    setMessage(null);
+    try {
+      const next = await cityNexusApi.answerJourneyIntentClarification(journeyId, intentId, answer);
+      setOperator(next);
+      const blocked = next.intent_clarification_result?.outcome === "DECISION_INBOX_BRAIN_BLOCKED_AFTER_RESPONSE";
+      setMessage(blocked
+        ? (zh ? "已记录你的选择；规划 Agent 暂不可用，原行程保持不变。" : "Your answer is saved. The planning Agent is unavailable; your current trip is unchanged.")
+        : (zh ? "已记住你的选择，CityNexus 正在继续处理。" : "Got it. CityNexus is continuing with your Journey."));
+      await loadOperator();
+      onAccepted?.();
+    } catch {
+      setMessage(zh ? "无法提交这个选择，请刷新后重试。" : "That choice could not be submitted. Refresh and try again.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, loadOperator, onAccepted, zh]);
+
   const approveOperatorChange = useCallback(async () => {
     const approvalId = operator?.approval?.approval_id;
     if (!approvalId) return;
@@ -650,6 +669,36 @@ export function LiveRecovery({
           <p className="v8-kicker">Journey Operator</p>
           <strong>{operator?.headline ?? (zh ? "把这趟行程交给 CityNexus" : "Let CityNexus take care of this trip")}</strong>
         </div>
+        {operator?.attention && (
+          <section className="journey-operator-attention" data-testid="journey-operator-attention" aria-label={zh ? "需要你处理" : "Needs you"}>
+            <span className="v8-kicker">{zh ? "需要你" : "Needs you"}</span>
+            <strong>{operator.attention.title}</strong>
+            <span>{operator.attention.body}</span>
+            {operator.attention.action_type === "ANSWER_INTENT_CLARIFICATION" && (
+              <div className="journey-operator-attention-actions">
+                {(operator.attention.options ?? []).map((option) => (
+                  <button key={option.value} type="button" disabled={busy !== null}
+                    onClick={() => void answerAttentionIntent(operator.attention!.source_ref.intent_id, option.value)}>
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {operator.attention.action_type === "REVIEW_APPROVAL" && operator.approval?.required && (
+              <button type="button" disabled={busy !== null} onClick={() => void approveOperatorChange()}>{operator.attention.action_label}</button>
+            )}
+            {operator.attention.action_type === "RESPOND_COLLECTIVE" && operator.collective?.viewer_can_respond && (
+              <div className="journey-operator-attention-actions">
+                {operator.collective.options.map((option) => <button key={option.proposal_id ?? option.label} type="button" disabled={busy !== null} onClick={() => void answerCollectiveOption(option.proposal_id)}>{option.label}</button>)}
+              </div>
+            )}
+            {operator.attention.action_type === "CHECK_ROUTE" && <button type="button" disabled={busy !== null} onClick={() => void checkRoute()}>{operator.attention.action_label}</button>}
+            {operator.attention.action_type?.startsWith("CONFIRM_") && (
+              <button type="button" disabled={busy !== null} onClick={() => void advanceFlow(({ CONFIRM_ARRIVAL: "arrive", CONFIRM_BEGIN: "begin", CONFIRM_COMPLETE: "complete", CONFIRM_DEPARTURE: "depart" } as const)[operator.attention!.action_type as "CONFIRM_ARRIVAL" | "CONFIRM_BEGIN" | "CONFIRM_COMPLETE" | "CONFIRM_DEPARTURE"])}>{operator.attention.action_label}</button>
+            )}
+            {operator.attention.action_type === "REVIEW_TRANSACTION" && <a href="#journey-operator-operations">{operator.attention.action_label}</a>}
+          </section>
+        )}
         {flow && (
           <div className={`journey-continuous-flow journey-flow-${flow.state.toLowerCase()}`} data-testid="journey-continuous-flow">
             <span className="v8-kicker">{zh ? "今天的行程" : "Today’s journey"}</span>
@@ -664,19 +713,19 @@ export function LiveRecovery({
             )}
             {flow.route?.exact && flow.route.duration_min != null ? (
               <small>{zh ? `已找到准确路线 · 约 ${flow.route.duration_min} 分钟` : `Exact route found · about ${flow.route.duration_min} min`}</small>
-            ) : flow.current && ["PREPARING_TO_LEAVE", "NEXT_STOP_PREPARING", "BETWEEN_STOPS"].includes(flow.state) ? (
+            ) : flow.current && ["PREPARING_TO_LEAVE", "NEXT_STOP_PREPARING", "BETWEEN_STOPS"].includes(flow.state) && operator?.attention?.action_type !== "CHECK_ROUTE" ? (
               <>
                 <small>{zh ? "路线还需要检查。" : "The route still needs checking."}</small>
                 <button type="button" disabled={busy !== null} onClick={() => void checkRoute()}>{zh ? "检查路线" : "Check route"}</button>
               </>
             ) : null}
-            {flow.state === "DAY_COMPLETE" ? null : flow.state === "ARRIVAL_READY" ? (
+            {flow.state === "DAY_COMPLETE" ? null : flow.state === "ARRIVAL_READY" && operator?.attention?.action_type !== "CONFIRM_ARRIVAL" ? (
               <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("arrive")}>{zh ? "我到了" : "I’m here"}</button>
-            ) : flow.state === "READY_TO_BEGIN" ? (
+            ) : flow.state === "READY_TO_BEGIN" && operator?.attention?.action_type !== "CONFIRM_BEGIN" ? (
               <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("begin")}>{zh ? "开始" : "Start"}</button>
-            ) : flow.state === "READY_TO_COMPLETE" || flow.state === "IN_ACTIVITY" ? (
+            ) : (flow.state === "READY_TO_COMPLETE" || flow.state === "IN_ACTIVITY") && operator?.attention?.action_type !== "CONFIRM_COMPLETE" ? (
               <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("complete")}>{zh ? "完成这站" : "Done"}</button>
-            ) : flow.state === "LEAVE_NOW" || flow.state === "PREPARING_TO_LEAVE" ? (
+            ) : (flow.state === "LEAVE_NOW" || flow.state === "PREPARING_TO_LEAVE") && operator?.attention?.action_type !== "CONFIRM_DEPARTURE" ? (
               <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("depart")}>{zh ? "我出发了" : "I’m leaving"}</button>
             ) : null}
           </div>
@@ -757,7 +806,7 @@ export function LiveRecovery({
                 </span>
               ))}
             </div>
-            {operator.collective.viewer_can_respond && operator.collective.options.length > 0 && (
+            {operator.collective.viewer_can_respond && operator.collective.options.length > 0 && operator?.attention?.action_type !== "RESPOND_COLLECTIVE" && (
               <div className="journey-operator-collective-options">
                 <span>{zh ? "你更愿意哪种处理？" : "Which recovery fits you?"}</span>
                 {operator.collective.options.map((option) => (
@@ -788,7 +837,7 @@ export function LiveRecovery({
           </div>
         )}
         {operator?.operations && (
-          <div className="journey-operator-operations" data-testid="journey-operator-operations">
+          <div id="journey-operator-operations" className="journey-operator-operations" data-testid="journey-operator-operations">
             <span className="v8-kicker">{zh ? "外部事务" : "Trip operations"}</span>
             <strong>
               {operator.operations.status === "WAITING_FOR_APPROVAL"
@@ -869,7 +918,7 @@ export function LiveRecovery({
             )}
           </div>
         )}
-        {operator?.approval?.required && operator.decision && (
+        {operator?.approval?.required && operator.decision && operator?.attention?.action_type !== "REVIEW_APPROVAL" && (
           <div className="journey-operator-approval" data-testid="journey-operator-approval">
             <b>{zh ? "CityNexus 找到一个更稳妥的调整" : "CityNexus recommends this change"}</b>
             <span>{operator.decision.summary ?? (zh ? "这项调整可以减少行程影响。" : "This change should reduce the impact on your trip.")}</span>

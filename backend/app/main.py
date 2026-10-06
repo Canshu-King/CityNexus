@@ -2021,6 +2021,152 @@ def get_journey_operator(
     return operator_projection(session, journey, viewer_member_id=viewer_member_id)
 
 
+@app.post("/api/v1/journeys/{journey_id}/operator/intents/{intent_id}/clarification")
+def answer_operator_intent_clarification(
+    journey_id: UUID,
+    intent_id: str,
+    payload: dict[str, Any],
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Resolve a persisted bounded question on the same JourneyIntent lineage."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
+    intent = session.get(JourneyIntent, str(intent_id))
+    if (
+        intent is None
+        or intent.journey_id != journey.id
+        or intent.created_by_traveler_id != principal.traveler_id
+    ):
+        raise HTTPException(404, "Journey intent clarification was not found")
+    if intent.status != "NEEDS_CLARIFICATION":
+        raise HTTPException(409, "Journey intent clarification is no longer pending")
+
+    selected = str(payload.get("answer") or "").strip().upper()
+    envelope = _json_object(intent.semantic_envelope_json or "{}")
+    clarification = envelope.get("r52_clarification")
+    if not isinstance(clarification, dict) or clarification.get("status") != "PENDING":
+        raise HTTPException(409, "Journey intent has no pending bounded clarification")
+    allowed = {
+        str(option.get("value"))
+        for option in clarification.get("options", [])
+        if isinstance(option, dict) and option.get("value")
+    }
+    if selected not in allowed:
+        raise HTTPException(422, "Choose one of the listed clarification options")
+
+    semantic_kind, constraint = {
+        "SLOWER_PACE": ("PACE", {"kind": "PACE", "preference": "SLOWER"}),
+        "LESS_WALKING": ("WALKING_LIMIT", {"kind": "WALKING_LIMIT", "preference": "LOW"}),
+        "FEWER_STOPS": ("GENERAL_GOAL", {"kind": "GENERAL_GOAL", "preference": "FEWER_STOPS"}),
+    }.get(selected, (None, None))
+    if selected in {"REST_OF_TODAY", "NEXT_MORNING", "NEXT_STOP", "REMAINING_JOURNEY"}:
+        semantic_kind, constraint = ("GENERAL_GOAL", {"kind": "GENERAL_GOAL", "preference": "AS_REQUESTED"})
+    if semantic_kind is None or constraint is None:
+        raise HTTPException(422, "This clarification option needs additional semantic interpretation")
+
+    now_dt = datetime.now(timezone.utc)
+    now_text = now_dt.isoformat()
+    intent.intent_kind = semantic_kind
+    intent.constraints_json = json.dumps([constraint], ensure_ascii=False, sort_keys=True)
+    intent.canonical_dimensions_json = json.dumps([
+        "journey-intent:walking" if semantic_kind == "WALKING_LIMIT"
+        else "journey-intent:pace" if semantic_kind == "PACE"
+        else "journey-intent:general"
+    ])
+    clarification["status"] = "ANSWERED"
+    clarification["answer"] = selected
+    clarification["answered_at"] = now_text
+    envelope["r52_clarification"] = clarification
+    intent.semantic_envelope_json = json.dumps(envelope, ensure_ascii=False, sort_keys=True)
+    intent.status = "ACTIVE"
+    intent.evaluation_state = "RUNNING"
+    intent.updated_at = now_text
+
+    standing = session.scalar(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if standing is None:
+        raise HTTPException(409, "Journey Operator is no longer active")
+    protected = {str(journey.current_activity_id)} if journey.current_activity_id else set()
+    commitments = session.scalars(select(CommitmentModel).where(
+        CommitmentModel.journey_id == journey.id,
+        CommitmentModel.status == "ACTIVE",
+        CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
+    )).all()
+    protected.update(str(row.activity_id) for row in commitments if row.activity_id)
+    targets = json.loads(intent.target_activity_ids_json or "[]")
+    context = {
+        "id": intent.id,
+        "source": intent.source,
+        "created_by_traveler_id": principal.traveler_id,
+        "created_by_member_id": member.id,
+        "scope_kind": intent.scope_kind,
+        "scope_start_at": intent.scope_start_at,
+        "scope_end_at": intent.scope_end_at,
+        "local_date": intent.local_date,
+        "target_activity_ids": targets,
+        "canonical_dimensions": json.loads(intent.canonical_dimensions_json or "[]"),
+        "constraints": [constraint],
+    }
+    mission = JourneyMission(
+        id=str(uuid4()), journey_id=journey.id, traveler_id=principal.traveler_id,
+        trigger_event_id=None, user_text=intent.source_text,
+        objective_codes_json=json.dumps(["LIVE_JOURNEY_INTENT_STEERING"]),
+        protected_activity_ids_json=json.dumps(sorted(protected)),
+        mutable_activity_ids_json=json.dumps([item for item in targets if item not in protected]),
+        intent_json=json.dumps({"temporary_journey_intent": context}, ensure_ascii=False),
+        resolved_intent_json=json.dumps({"temporary_journey_intent": context, "authority": "PLAN_ONLY; normal R43/R45/R47 gates remain"}, ensure_ascii=False),
+        allowed_action_classes_json=json.dumps(["REQUEST_REPLAN"]), unresolved_references_json="[]",
+        compiler_provider_key=intent.compiler_provider_key,
+        compiler_model_key=intent.compiler_model_key,
+        compiler_confidence=intent.compiler_confidence,
+        reasoning_summary="The traveller answered a bounded question on the existing JourneyIntent.",
+        is_standing=False, parent_mission_id=standing.id,
+        max_cost_delta_minor=0, max_loss_minor=0, max_schedule_drift_min=0,
+        preferences_json="{}", requested_autonomy="PLAN_ONLY", status="CREATED", created_at=now_text,
+    )
+    session.add(mission)
+    clarification["resumed_mission_id"] = mission.id
+    envelope["r52_clarification"] = clarification
+    intent.semantic_envelope_json = json.dumps(envelope, ensure_ascii=False, sort_keys=True)
+    session.add(intent)
+    session.commit()
+
+    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    try:
+        run = runtime.run(session, journey=journey, mission=mission)
+    except AgentRuntimeUnavailable as exc:
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": str(exc), "outcome": {"reason_code": "AGENT_RUNTIME_UNAVAILABLE"}}
+    except Exception as exc:  # noqa: BLE001
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": type(exc).__name__, "outcome": {"reason_code": "AGENT_RUNTIME_FAILURE"}}
+    finally:
+        runtime.close()
+    run_status = str(run.get("status") or "").upper()
+    intent.evaluation_state = "BRAIN_BLOCKED" if run_status in {"FAILED_EXTERNAL", "BLOCKED", "UNAVAILABLE"} else "QUEUED"
+    intent.updated_at = datetime.now(timezone.utc).isoformat()
+    record_audit(
+        session, action="journey.intent.clarification_answered", entity_type="JourneyIntent",
+        entity_id=intent.id, journey_id=journey.id, actor_type="TRAVELER",
+        actor_id=principal.traveler_id,
+        after={"answer": selected, "mission_id": mission.id, "agent_status": run_status},
+    )
+    session.commit()
+    result = operator_projection(session, journey, viewer_member_id=member.id)
+    result["intent_clarification_result"] = {
+        "intent_id": intent.id, "mission_id": mission.id,
+        "outcome": "DECISION_INBOX_BRAIN_BLOCKED_AFTER_RESPONSE" if intent.evaluation_state == "BRAIN_BLOCKED" else "DECISION_INBOX_CLARIFICATION_RESOLVED",
+        "agent_status": run_status,
+    }
+    return result
+
+
 @app.post("/api/v1/journeys/{journey_id}/operator/approvals/{approval_id}/reject")
 def reject_journey_operator_change(
     journey_id: UUID,
@@ -17118,10 +17264,31 @@ def _run_live_journey_intent(
     if clarification_needed:
         if not scope_kind:
             message = "Should this apply to the rest of today, tomorrow morning, your next stop, or the rest of the trip?"
+            bounded_options = [
+                {"value": "REST_OF_TODAY", "label": "Rest of today"},
+                {"value": "NEXT_MORNING", "label": "Tomorrow morning"},
+                {"value": "NEXT_STOP", "label": "My next stop"},
+            ]
         elif not intent_kind or not constraints and not preference_hints:
             message = "Do you mean a slower pace, less walking, or fewer stops?"
+            bounded_options = [
+                {"value": "SLOWER_PACE", "label": "Slower pace"},
+                {"value": "LESS_WALKING", "label": "Less walking"},
+                {"value": "FEWER_STOPS", "label": "Fewer stops"},
+            ]
         else:
             message = "I can’t see a non-current stop inside that time window. Which part of the Journey should I adjust?"
+            bounded_options = [
+                {"value": "NEXT_STOP", "label": "My next stop"},
+                {"value": "REMAINING_JOURNEY", "label": "The rest of the trip"},
+            ]
+        envelope = json.loads(intent.semantic_envelope_json or "{}")
+        envelope["r52_clarification"] = {
+            "question": message,
+            "options": bounded_options,
+            "status": "PENDING",
+        }
+        intent.semantic_envelope_json = json.dumps(envelope, ensure_ascii=False, sort_keys=True)
         intent.evaluation_state = "NEEDS_CLARIFICATION"
         session.commit()
         return {"outcome": "INTENT_STEERING_NEEDS_CLARIFICATION", "message": message, "intent": journey_intent_payload(intent), "mission": None, "run": None, "source": intent.source}

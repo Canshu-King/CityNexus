@@ -288,6 +288,39 @@ def active_journey_intents(
     return active
 
 
+def pending_journey_intent_clarifications(
+    session: Any,
+    journey: Any,
+    *,
+    traveler_id: str,
+) -> list[dict[str, Any]]:
+    """Return unresolved clarifications only to the traveller who created them."""
+    from sqlalchemy import select
+
+    from app.db.models import JourneyIntent
+
+    rows = session.scalars(
+        select(JourneyIntent)
+        .where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_traveler_id == str(traveler_id),
+            JourneyIntent.status == "NEEDS_CLARIFICATION",
+        )
+        .order_by(JourneyIntent.created_at, JourneyIntent.id)
+    ).all()
+    result: list[dict[str, Any]] = []
+    for row in rows:
+        item = journey_intent_payload(row)
+        envelope = _safe_json_object(row.semantic_envelope_json)
+        item["clarification"] = (
+            envelope.get("r52_clarification")
+            if isinstance(envelope.get("r52_clarification"), dict)
+            else {}
+        )
+        result.append(item)
+    return result
+
+
 def _safe_json_list(value: str | None) -> list[Any]:
     import json
 
@@ -296,6 +329,16 @@ def _safe_json_list(value: str | None) -> list[Any]:
     except (TypeError, ValueError, json.JSONDecodeError):
         return []
     return parsed if isinstance(parsed, list) else []
+
+
+def _safe_json_object(value: str | None) -> dict[str, Any]:
+    import json
+
+    try:
+        parsed = json.loads(value or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 
 
 def expire_journey_intents(session: Any, journey: Any, *, now: datetime) -> int:

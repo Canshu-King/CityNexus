@@ -118,7 +118,10 @@ def attention_from_operator_projection(operator: dict[str, Any]) -> dict[str, An
                     blocking=True,
                     semantic_id=f"intent:{intent_id}:clarification",
                     title="One quick question",
-                    body="I need one detail before I can safely steer the rest of this Journey.",
+                    body=str(
+                        (intent.get("clarification") or {}).get("question")
+                        or "I need one detail before I can safely steer the rest of this Journey."
+                    ),
                     action_label="Answer",
                     action_type="ANSWER_INTENT_CLARIFICATION",
                     source_ref={"intent_id": intent_id},
@@ -243,5 +246,33 @@ def attention_from_operator_projection(operator: dict[str, Any]) -> dict[str, An
         "blocking": primary.blocking,
         "semantic_id": primary.semantic_id,
         "source_ref": primary.source_ref or {},
+        "created_at": _created_at_for(primary, operator),
+        "options": _options_for(primary, operator),
         "pending_count": len(candidates),
     }
+
+
+def _created_at_for(primary: AttentionCandidate, operator: dict[str, Any]) -> str | None:
+    intent_id = (primary.source_ref or {}).get("intent_id")
+    if not intent_id:
+        return None
+    for intent in operator.get("intents") or []:
+        if str(intent.get("id")) == str(intent_id):
+            return intent.get("created_at")
+    return None
+
+
+def _options_for(primary: AttentionCandidate, operator: dict[str, Any]) -> list[dict[str, str]]:
+    intent_id = (primary.source_ref or {}).get("intent_id")
+    if not intent_id:
+        return []
+    for intent in operator.get("intents") or []:
+        if str(intent.get("id")) == str(intent_id):
+            clarification = intent.get("clarification") or {}
+            options = clarification.get("options") or []
+            return [
+                {"value": str(item["value"]), "label": str(item["label"])}
+                for item in options
+                if isinstance(item, dict) and item.get("value") and item.get("label")
+            ]
+    return []

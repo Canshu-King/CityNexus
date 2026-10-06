@@ -1,0 +1,31 @@
+{
+  "release": "R52",
+  "result": "DECISION_INBOX_BRAIN_BLOCKED_AFTER_RESPONSE",
+  "product_capability": "The traveller can now hand the Journey to CityNexus and stop supervising every subsystem. The Operator works quietly by default and surfaces one unified, prioritized Needs you decision only when it cannot safely continue without the traveller; once the traveller responds, the original Journey flow resumes automatically.",
+  "experiment": {
+    "scope": "one fresh demo Journey; Operator enabled",
+    "lab_estimate_authority": false,
+    "original_prompt": "I'm tired. Make the rest of today easier and keep walking low.",
+    "prompt_submissions": 1,
+    "initial_attention": "INTENT_CLARIFICATION_REQUIRED",
+    "attention_gets": 2,
+    "attention_stable_across_gets": true,
+    "bounded_answer": "LESS_WALKING",
+    "answer_submissions": 1,
+    "journey_intent_id_preserved": true,
+    "journey_intent_count_after_answer": 1,
+    "scope_preserved": "REST_OF_TODAY",
+    "current_activity_unchanged": true,
+    "evaluation_missions_created": 1,
+    "runtime": "AgentRuntimeUnavailable adapter; no external model call",
+    "duplicate_answer_http_status": 409
+  },
+  "verification": {
+    "focused_backend_tests": "11 passed",
+    "typescript_typecheck": "passed",
+    "decision_inbox_playwright": "1 passed",
+    "diff_check": "passed",
+    "python_compileall": "passed",
+    "historical_r33_r51_closures_rerun": false
+  }
+}

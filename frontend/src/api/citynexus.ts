@@ -365,6 +365,22 @@ export interface JourneyIntentProjection {
   evaluation_state: string;
   created_at: string;
   expired_at?: string | null;
+  clarification?: { question?: string; status?: string; options?: Array<{ value: string; label: string }> };
+}
+
+export interface JourneyOperatorAttention {
+  kind: string;
+  title: string;
+  body: string;
+  action_label: string | null;
+  action_type: string | null;
+  priority: number;
+  blocking: boolean;
+  semantic_id: string;
+  source_ref: Record<string, string>;
+  created_at?: string | null;
+  options?: Array<{ value: string; label: string }>;
+  pending_count: number;
 }
 
 export interface JourneyOperatorBrainProjection {
@@ -476,6 +492,9 @@ export interface JourneyOperatorProjection {
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
   intents?: JourneyIntentProjection[];
+  attention?: JourneyOperatorAttention | null;
+  quiet_mode?: "QUIET" | "NORMAL";
+  intent_clarification_result?: { intent_id: string; mission_id: string; outcome: string; agent_status: string };
 }
 
 export interface JourneyIntentSteeringResponse {
@@ -1516,6 +1535,17 @@ export const cityNexusApi = {
     return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator", {
       headers: travelerAuthHeaders(),
     });
+  },
+
+  answerJourneyIntentClarification(
+    journeyId: string,
+    intentId: string,
+    answer: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/operator/intents/" + intentId + "/clarification",
+      { method: "POST", body: JSON.stringify({ answer }) },
+    );
   },
 
   startJourneyOperator(
