@@ -1,6 +1,15 @@
 from types import SimpleNamespace
 
+from fastapi.testclient import TestClient
+from sqlalchemy import select
+
+import app.main as main_module
 from app.live_context_watch import _place_receipt, classify_opening_hours, observation_is_fresh
+from app.db.models import Activity, Event, Journey, Place
+from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers
+
+client = TestClient(main_module.app)
 
 
 def activity(start="2026-10-08T09:00:00+09:00", end="2026-10-08T10:00:00+09:00"):
@@ -149,3 +158,77 @@ def test_missing_exact_receipt_contributes_to_unknown_summary(monkeypatch):
     assert result["status"] == "UNKNOWN"
     assert result["material_conflicts"] == []
     assert result["unknown_or_degraded"][0]["reason_code"] == "EXACT_PLACE_EVIDENCE_MISSING"
+
+
+def test_live_incident_is_refreshed_once_unknown_does_not_clear_and_compatible_resolves(monkeypatch):
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
+    journey_id = ids["journey_id"]
+    generated = client.post(
+        f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
+    )
+    assert generated.status_code == 201, generated.text
+    plan = generated.json()[0]
+    assert client.post(f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select").status_code == 200
+    assert client.post(f"/api/v1/journeys/{journey_id}/start").status_code == 200
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        activity = session.scalar(
+            select(Activity)
+            .where(Activity.plan_version_id == journey.active_plan_version_id, Activity.place_id.is_not(None))
+            .order_by(Activity.sequence_no)
+        )
+        place = session.get(Place, activity.place_id)
+        place.metadata_json = "{}"
+        session.commit()
+        activity_id, place_id, provider_entity = activity.id, place.id, place.external_id
+
+    state = {"opening": {"status": "CLOSED", "raw": "closed", "intervals": []}, "degraded": False}
+
+    def acquire(_session, _journey, *, place_ids=None):
+        return {
+            "places": [
+                {
+                    "place_id": place_id,
+                    "provider_entity": provider_entity,
+                    "identity_evidence": {"exact_ref": provider_entity},
+                    "opening_hours": state["opening"],
+                    "source_binding": None,
+                }
+            ],
+            "degraded_providers": ["overpass"] if state["degraded"] else [],
+        }
+
+    from app import live_context_watch as module
+    monkeypatch.setattr(module, "acquire_place_facts", acquire)
+
+    def watch():
+        with SessionLocal() as session:
+            journey = session.get(Journey, journey_id)
+            result = module.run_live_context_watch(session, journey)
+            session.commit()
+            return result
+
+    first = watch()
+    assert first["status"] == "MATERIAL_CONFLICT"
+    event_id = first["created_recovery_event_ids"][0]
+    second = watch()
+    assert second["status"] == "MATERIAL_CONFLICT"
+    assert second["created_recovery_event_ids"] == []
+    assert second["recovery_event_ids"] == [event_id]
+    with SessionLocal() as session:
+        assert len(session.scalars(select(Event).where(Event.journey_id == journey_id)).all()) == 1
+
+    state["degraded"] = True
+    degraded = watch()
+    assert degraded["status"] == "PROVIDER_DEGRADED"
+    assert degraded["resolved_recovery_event_ids"] == []
+
+    state["degraded"] = False
+    state["opening"] = {"status": "NORMALIZED_VALID", "intervals": [{"days": ["*"], "open": "00:00", "close": "24:00"}]}
+    resolved = watch()
+    assert resolved["status"] == "UNKNOWN"
+    assert resolved["resolved_recovery_event_ids"] == [event_id]
+    with SessionLocal() as session:
+        event = session.get(Event, event_id)
+        assert event.status == "RESOLVED"

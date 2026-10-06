@@ -36,6 +36,15 @@ type Proposal = {
   explanation?: { impact_model?: string; summary?: string };
 };
 
+type GuardianPulse = {
+  status?: string;
+  completed_at?: string | null;
+  result?: {
+    signals?: { degraded?: boolean };
+    context_watch?: { status?: string } | null;
+  };
+};
+
 type Disruption = {
   id: string;
   type: string;
@@ -113,6 +122,7 @@ export function LiveRecovery({
   const twin = useAuthoritativeTwin(journeyId);
   const plans = useAuthoritativePlans(journeyId);
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [guardianPulse, setGuardianPulse] = useState<GuardianPulse | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -129,6 +139,23 @@ export function LiveRecovery({
   useEffect(() => {
     void loadProposals();
   }, [loadProposals]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const response = await fetch(`/api/v1/journeys/${journeyId}/guardian/pulse/latest`);
+        if (!response.ok) return;
+        const body = await response.json();
+        if (!cancelled) setGuardianPulse((body?.pulse ?? null) as GuardianPulse | null);
+      } catch {
+        if (!cancelled) setGuardianPulse(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [journeyId]);
 
   const plan =
     plans.data?.find((p) => p.status === "ACTIVE" || p.status === "SELECTED") ?? null;
@@ -196,6 +223,16 @@ export function LiveRecovery({
   const acknowledgedOnly = disruptions.filter((d) =>
     isDisruptionAcknowledgedOnly(d, acceptedTriggerIds),
   );
+
+  const contextStatus = String(guardianPulse?.result?.context_watch?.status ?? "");
+  const pulseDegraded = Boolean(guardianPulse?.result?.signals?.degraded);
+  const guardianSurfaceState = guardianPulse
+    ? contextStatus === "MATERIAL_CONFLICT" || openDisruptions.length > 0
+      ? "recovery"
+      : pulseDegraded || ["UNKNOWN", "PROVIDER_DEGRADED"].includes(contextStatus) || guardianPulse.status !== "COMPLETED"
+        ? "incomplete"
+        : "clear"
+    : null;
 
   // Canonicalise each proposal's semantic diff so two proposals that describe
   // the SAME change cannot appear as two identical "接受新方案" buttons.  The key
@@ -314,6 +351,44 @@ export function LiveRecovery({
           </p>
         </div>
       </div>
+
+      {guardianSurfaceState && (
+        <div
+          className={`live-guardian-check live-guardian-check-${guardianSurfaceState}`}
+          data-testid="live-guardian-check"
+          data-state={guardianSurfaceState}
+          role="status"
+        >
+          <b>
+            {guardianSurfaceState === "clear"
+              ? zh
+                ? "刚刚检查过"
+                : "Just checked"
+              : guardianSurfaceState === "incomplete"
+                ? zh
+                  ? "部分信息待确认"
+                  : "Some information needs checking"
+                : zh
+                  ? "正在处理行程变化"
+                  : "Trip change is being handled"}
+          </b>
+          <span>
+            {guardianSurfaceState === "clear"
+              ? t("live.guardianCheckedClear")
+              : guardianSurfaceState === "incomplete"
+                ? t("live.guardianVerificationIncomplete")
+                : t("live.guardianRecoveryActive")}
+          </span>
+          {guardianPulse?.completed_at && (
+            <time dateTime={guardianPulse.completed_at}>
+              {new Date(guardianPulse.completed_at).toLocaleTimeString(locale, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </time>
+          )}
+        </div>
+      )}
 
       {journeyCompleted && (openDisruptions.length > 0 || pending.length > 0) && (
         <p className="v8-muted" data-testid="live-completed">

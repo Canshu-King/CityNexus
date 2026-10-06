@@ -1421,6 +1421,12 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 }
 .live-disruption { background: #fff6ee; border-color: #f0c2a5; }
 .live-proposal { background: #eef4ff; border-color: #c7d6f5; }
+.live-guardian-check { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; margin: 0 0 16px; padding: 12px 14px; border: 1px solid #b9d8ca; border-radius: 14px; background: #f2fbf6; color: #214b3a; }
+.live-guardian-check span { line-height: 1.45; }
+.live-guardian-check time { color: #54766a; font-size: 12px; white-space: nowrap; }
+.live-guardian-check-incomplete { border-color: #e6c98d; background: #fffaf0; color: #644b1c; }
+.live-guardian-check-recovery { border-color: #efb4a3; background: #fff5f1; color: #6f2d20; }
+@media (max-width: 760px) { .live-guardian-check { grid-template-columns: 1fr; gap: 4px; } }
 .live-disruption b, .live-proposal b { font-size: var(--cn-fs-meta); }
 .live-disruption ul { margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.55; }
 .live-affected { opacity: 0.75; }
