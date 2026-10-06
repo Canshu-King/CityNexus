@@ -135,4 +135,42 @@ test.describe("a journey-anchored moment says which moment it is", () => {
         `the arrival anchor was not in the journey's zone: ${JSON.stringify(text)}`),
     ).toBe(true);
   });
+
+  test("an unusable zone is said out loud, never claimed", async ({ page }) => {
+    test.setTimeout(150_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    const BOGUS = "Mars/Phobos";
+    await patchExperience(page, (body) => {
+      body.journey.timezone = BOGUS;
+      body.journey.start_at = INSTANT;
+      body.journey.end_at = INSTANT;
+      body.trip.arrival_anchor = { at: INSTANT, location: "Xiamen" };
+    });
+    await openHub(page, ["today-heading", "today-when"]);
+
+    const text = (await page.getByTestId("today-when").innerText()).replace(/\s+/g, " ").trim();
+    record("today-when-unusable-zone.json",
+      { text, bogusZone: BOGUS, instant: INSTANT, deviceTz: "UTC" });
+
+    // The reading is the device clock, and the screen has to say so.
+    expect(
+      text,
+      node("unusable-zone-says-device-time",
+        `the zone could not be used and the screen did not say the reading is the device clock: ${JSON.stringify(text)}`),
+    ).toMatch(/本设备时间|this device's time/);
+    // ...and it must NOT claim the zone it did not honour.
+    expect(
+      text,
+      node("unusable-zone-is-not-claimed",
+        `the screen named a zone it did not render in: ${JSON.stringify(text)}`),
+    ).not.toContain(BOGUS);
+    // The device is UTC here, so the moment must read 10:00 -- the fallback really happened.
+    expect(
+      /10:00/.test(text),
+      node("unusable-zone-reads-the-device-clock",
+        `the fallback reading was not the device clock: ${JSON.stringify(text)}`),
+    ).toBe(true);
+  });
 });

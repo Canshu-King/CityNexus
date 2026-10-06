@@ -451,6 +451,24 @@ function date(value?: string, locale = "en-GB") {
     : "—";
 }
 
+/**
+ * Is this string a time zone `Intl` will actually accept?
+ *
+ * The contract types `journey.timezone` as a bare string with no enum or format, so an unusable
+ * zone is contract-legal, and the backend raises on it (`ZoneInfo(...)`) while this screen used to
+ * fall back to the device clock in silence -- the same field with two failure behaviours, one of
+ * them silent.  Asking this first is what lets the label be true.
+ */
+function zoneIsUsable(timeZone: string | undefined | null): boolean {
+  if (!timeZone) return false;
+  try {
+    new Intl.DateTimeFormat("en-GB", { timeZone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Same as `date`, but rendered in the journey's time zone, not the device's. */
 function dateInZone(
   value: string | undefined,
@@ -468,7 +486,9 @@ function dateInZone(
       hour12: false,
     }).format(new Date(value));
   } catch {
-    return date(value, locale);
+    // The zone could not be used, so this reading is the DEVICE clock.  Saying so is the whole
+    // point: a moment that silently switches zones is a moment the reader cannot place.
+    return date(value, locale) + (locale === "zh-CN" ? " · 本设备时间" : " · this device's time");
   }
 }
 
@@ -2605,6 +2625,10 @@ function Hub({
   // "Today" is a calendar day in the city the traveller is in, not on the
   // device that happens to be open — and the clock must be the city's clock.
   const journeyTz = data.journey.timezone || "UTC";
+  // Whether that zone can actually be used.  The attribution below names the zone, so it may only
+  // name it when the moment really is in it; otherwise the reading is the device clock and must
+  // say so instead of claiming a zone it does not honour.
+  const journeyTzUsable = zoneIsUsable(data.journey.timezone);
   const todayKey = dateKeyInZone(
     stageInstant ?? new Date().toISOString(),
     journeyTz,
@@ -2957,8 +2981,7 @@ function Hub({
           <p className="v8-lede" data-testid="today-when">
             {dateInZone(data.journey.start_at, locale, journeyTz)} —{" "}
             {dateInZone(data.journey.end_at, locale, journeyTz)}
-            {" · "}
-            {t("hub.zoneAttribution", { zone: journeyTz })}
+            {journeyTzUsable ? ` · ${t("hub.zoneAttribution", { zone: journeyTz })}` : ""}
             {" · "}
             {t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
@@ -3235,11 +3258,11 @@ function Hub({
         </div>
         <div className="cn-strip-item">
           <span>{t("hub.arrival")}</span>
-          <b>{dateInZone(data.trip.arrival_anchor.at, locale, journeyTz)}{" · "}{t("hub.zoneAttribution", { zone: journeyTz })}</b>
+          <b>{dateInZone(data.trip.arrival_anchor.at, locale, journeyTz)}{journeyTzUsable ? ` · ${t("hub.zoneAttribution", { zone: journeyTz })}` : ""}</b>
         </div>
         <div className="cn-strip-item">
           <span>{t("hub.departure")}</span>
-          <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}{" · "}{t("hub.zoneAttribution", { zone: journeyTz })}</b>
+          <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}{journeyTzUsable ? ` · ${t("hub.zoneAttribution", { zone: journeyTz })}` : ""}</b>
         </div>
       </div>
       {/* ORD-0392: this anchor is a table now (`hubAnchorPanels` in app/v8PanelRegistry.tsx), so a
