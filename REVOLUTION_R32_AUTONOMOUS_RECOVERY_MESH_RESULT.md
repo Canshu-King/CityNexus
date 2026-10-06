@@ -267,3 +267,32 @@ harness correlation defect that has now been removed. It is not permission for
 open-ended reruns. If 2C does not close, its native black box is the stopping
 point for this R32 line until the newly observed product/harness cause is
 understood.
+
+## Strike 2C — Exact-Run Causality (head `03357b7c8f8a9a671c59113be71d6093fab04742`)
+
+The focused regression at this head completed with **152 passed / 0 failed**. The
+available native checkpoint stopped at **`A_EXTERNAL_RESPONSE_BOUNDARY`** with
+exit code **1** before Shock B/R2. Runtime preflight selected the configured
+WB2api/Hermes adapter (`cn:glm-5.3-flash`), ambient semantic AI was absent, and
+native Hermes was not ready. The black-box runtime recorded a real provider call
+for Agent A that returned with two model tool calls, while the durable run remained
+`RUNNING` on R1. No Agent B run, R2, stale-response guard, authority receipt, or
+mutation was observed.
+
+The current verifier output is **CONTRADICTED**. Its first causal product/runtime
+boundary is the missing exact durable association for Agent A: the provider evidence
+was recorded on `AnyIO worker thread` without `AgentRun.id`, bound
+`RecoveryEpoch.id`, and `server_run_resolution == EXACT_ONE_CURRENT_RUN`, so the
+verifier cannot treat it as proof of `agent_a_external_and_bound_r1`. The same
+checkpoint's source receipt is from the earlier 2B head and lacks the nine-path
+2C traceability set; that is reported as a separate source-evidence contradiction,
+not upgraded into product success.
+
+Artifacts:
+
+- Native checkpoint: `backend/output/r32-live-strike-v2c.json`
+- Machine verdict: `backend/output/R32_MACHINE_VERDICT_V2C.json`
+- Focused regression: `backend/output/r32-focused-regression-v2c.json`
+- Raw regression output: `backend/output/r32-focused-regression-v2c.txt`
+
+No 2D or third live retry was run.
