@@ -51,7 +51,12 @@ from app.db.models import (
     ReplanProposal,
     WebObservation,
 )
-from app.recovery_epoch import ensure_recovery_epoch, semantic_plan_identity
+from app.recovery_epoch import (
+    RecoveryEpochSuperseded,
+    ensure_recovery_epoch,
+    semantic_plan_identity,
+    validate_recovery_epoch_binding,
+)
 from app.schemas import AgentToolCall, ReplanGenerateRequest
 from app.services import (
     _place_verified_cost,
@@ -585,8 +590,12 @@ class AgentToolGateway:
     result, provider state, cost delta, or C4 assertion.
     """
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, *, bound_run_id: str | None = None):
         self.session = session
+        # Internal model runtimes inject the exact durable AgentRun that owns
+        # this Gateway turn.  Direct/MCP callers may omit it, but the server
+        # must never infer an internal run by "latest mission run" ordering.
+        self.bound_run_id = str(bound_run_id) if bound_run_id else None
 
     def _native_plan_boundary(self, request: AgentToolCall) -> bool:
         """Keep native MCP runs proposal-only at the CityNexus boundary.
@@ -1718,16 +1727,44 @@ class AgentToolGateway:
         # the model cannot supply or change this value.  Ordinary non-Agent
         # proposals remain NULL for backwards compatibility.
         run_epoch_id = None
-        if request.mission_id is not None:
-            run_epoch_id = self.session.scalar(
-                select(AgentRun.recovery_epoch_id)
-                .where(
-                    AgentRun.mission_id == str(request.mission_id),
-                    AgentRun.journey_id == journey.id,
+        if self.bound_run_id is not None:
+            bound_run = self.session.get(AgentRun, self.bound_run_id)
+            if (
+                bound_run is None
+                or bound_run.journey_id != journey.id
+                or (
+                    request.mission_id is not None
+                    and bound_run.mission_id != str(request.mission_id)
                 )
-                .order_by(AgentRun.started_at.desc(), AgentRun.id.desc())
-            )
-        if run_epoch_id is None and request.mission_id is not None:
+            ):
+                raise HTTPException(
+                    409,
+                    {
+                        "code": "AGENT_RUN_RECOVERY_BINDING_INVALID",
+                        "bound_run_id": self.bound_run_id,
+                    },
+                )
+            if not bound_run.recovery_epoch_id:
+                raise HTTPException(
+                    409,
+                    {
+                        "code": "RECOVERY_EPOCH_UNAVAILABLE",
+                        "bound_run_id": bound_run.id,
+                    },
+                )
+            try:
+                validate_recovery_epoch_binding(
+                    self.session,
+                    journey.id,
+                    bound_run.recovery_epoch_id,
+                )
+            except RecoveryEpochSuperseded as exc:
+                raise HTTPException(409, detail=exc.facts)
+            run_epoch_id = str(bound_run.recovery_epoch_id)
+        elif request.mission_id is not None:
+            # Native/legacy callers that do not have a local AgentRun are
+            # server-bound to current reality.  Never guess another run merely
+            # because it shares the same mission id.
             run_epoch_id = ensure_recovery_epoch(self.session, journey).id
         canonical_by_identity: dict[str, ReplanProposal] = {}
         for item in proposals:
