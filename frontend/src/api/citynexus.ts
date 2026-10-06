@@ -502,6 +502,7 @@ export interface JourneyOperatorProjection {
   operations?: JourneyOperatorOperationsProjection | null;
   flow?: JourneyContinuousFlow | null;
   transit?: JourneyTransitProjection | null;
+  group_presence?: JourneyGroupPresenceProjection | null;
   progress?: JourneyProgressProjection;
   ahead?: JourneyAheadProjection | null;
   overnight?: JourneyOvernightProjection | null;
@@ -513,6 +514,39 @@ export interface JourneyOperatorProjection {
   reality_conflict?: JourneyRealityConflictProjection | null;
   quiet_mode?: "QUIET" | "NORMAL";
   intent_clarification_result?: { intent_id: string; mission_id: string; outcome: string; agent_status: string };
+}
+
+export interface JourneyGroupPresenceProjection {
+  state: string;
+  authority: string;
+  members: Array<{
+    member_id: string;
+    display_name: string;
+    is_viewer: boolean;
+    location_state: "MISSING" | "STALE" | "IMPRECISE" | "UNKNOWN" | "RECENT";
+    group_state: "UNKNOWN" | "WITH_GROUP" | "SPLIT_FROM_GROUP";
+    age_seconds: number | null;
+    authority: string;
+    route_eta_minutes: number | null;
+    route_eta_provenance: string | null;
+  }>;
+  rendezvous: { activity_id: string; title: string; place_name: string; basis: string } | null;
+  can_guide: boolean;
+}
+
+export interface GroupRendezvousRouteResult {
+  status: string;
+  outcome?: string | null;
+  target: { activity_id: string; title: string; place_name: string };
+  route: {
+    duration_min?: number | null;
+    distance_m?: number | null;
+    provider?: string | null;
+    provenance?: string | null;
+  };
+  authority: "ADVISORY_FOREGROUND_LOCATION";
+  plan_unchanged: boolean;
+  guardian_triggered: false;
 }
 
 export interface JourneyTransitProjection {
@@ -1640,6 +1674,20 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify({ location_observation_id: locationObservationId }),
+      },
+    );
+  },
+
+  routeToGroupRendezvous(
+    journeyId: string,
+    locationObservationId: string,
+  ): Promise<GroupRendezvousRouteResult> {
+    return requestJson<GroupRendezvousRouteResult>(
+      "/journeys/" + journeyId + "/group-presence/route",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ location_observation_id: locationObservationId, requested_mode: "WALK" }),
       },
     );
   },

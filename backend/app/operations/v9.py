@@ -1512,6 +1512,8 @@ def record_location(
     longitude: float,
     accuracy_m: float,
     captured_at: str,
+    traveler_id: str | None = None,
+    journey_member_id: str | None = None,
 ) -> LocationObservation:
     captured = datetime.fromisoformat(captured_at)
     if captured.tzinfo is None:
@@ -1519,6 +1521,8 @@ def record_location(
     row = LocationObservation(
         id=str(uuid4()),
         journey_id=journey.id,
+        traveler_id=traveler_id,
+        journey_member_id=journey_member_id,
         latitude=latitude,
         longitude=longitude,
         accuracy_m=accuracy_m,

@@ -1094,6 +1094,8 @@ CREATE TABLE IF NOT EXISTS offline_journey_snapshots (
 CREATE TABLE IF NOT EXISTS location_observations (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    traveler_id TEXT REFERENCES travelers(id) ON DELETE SET NULL,
+    journey_member_id TEXT REFERENCES journey_members(id) ON DELETE SET NULL,
     latitude REAL NOT NULL,
     longitude REAL NOT NULL,
     accuracy_m REAL NOT NULL,

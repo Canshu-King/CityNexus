@@ -705,6 +705,17 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 connection.exec_driver_sql(
                     "ALTER TABLE journey_members ADD COLUMN preferences_json TEXT NOT NULL DEFAULT '{}'"
                 )
+            location_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(location_observations)")
+            }
+            if location_columns and "traveler_id" not in location_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE location_observations ADD COLUMN traveler_id TEXT REFERENCES travelers(id) ON DELETE SET NULL"
+                )
+            if location_columns and "journey_member_id" not in location_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE location_observations ADD COLUMN journey_member_id TEXT REFERENCES journey_members(id) ON DELETE SET NULL"
+                )
             inbox_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journey_inbox_items)")
             }

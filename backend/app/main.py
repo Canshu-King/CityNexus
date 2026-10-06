@@ -263,6 +263,12 @@ from app.execution.in_transit_reroute import (
     reroute_commitment_risk,
     reroute_semantic_key,
 )
+from app.execution.group_presence import (
+    LOCATION_FRESHNESS_SECONDS as GROUP_LOCATION_FRESHNESS_SECONDS,
+    MAX_USEFUL_ACCURACY_M as GROUP_MAX_LOCATION_ACCURACY_M,
+    group_presence_projection,
+    rendezvous_target,
+)
 from app.route_session_operations import operation_payload as route_operation_payload
 from app.route_session_operations import submit_operation as submit_route_operation
 from app.execution.truth import (
@@ -432,6 +438,7 @@ from app.schemas import (
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
+    GroupPresenceRouteRequest,
     InTransitRerouteRequest,
     LaunchOriginRequest,
     RouteAcquireRequest,
@@ -1933,6 +1940,14 @@ def start_journey_operator(
     if journey.status != "ACTIVE":
         raise HTTPException(409, "Journey Operator requires an active Journey")
     actor_id = _operator_actor(request, session, journey)
+    viewer_member_id = None
+    if settings.traveler_auth_secret:
+        viewer_member_id = session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == journey.id,
+                JourneyMemberModel.traveler_id == actor_id,
+            )
+        )
     body = payload or JourneyOperatorStartRequest()
     objective = body.objective.strip()
     current = session.scalar(
@@ -1994,7 +2009,7 @@ def start_journey_operator(
     )
     session.commit()
     return {
-        **operator_projection(session, journey),
+        **operator_projection(session, journey, viewer_member_id=viewer_member_id),
         "started": True,
         "worker": worker,
     }
@@ -2008,6 +2023,14 @@ def stop_journey_operator(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     actor_id = _operator_actor(request, session, journey)
+    viewer_member_id = None
+    if settings.traveler_auth_secret:
+        viewer_member_id = session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == journey.id,
+                JourneyMemberModel.traveler_id == actor_id,
+            )
+        )
     enrollment = session.get(AutopilotEnrollment, journey.id)
     if enrollment is not None:
         enrollment.enabled = False
@@ -2026,7 +2049,11 @@ def stop_journey_operator(
         after={"autopilot_enabled": False, "remaining_enrolled_journeys": remaining},
     )
     session.commit()
-    return {**operator_projection(session, journey), "stopped": True, "worker": worker}
+    return {
+        **operator_projection(session, journey, viewer_member_id=viewer_member_id),
+        "stopped": True,
+        "worker": worker,
+    }
 
 
 @app.get("/api/v1/journeys/{journey_id}/operator")
@@ -9193,6 +9220,8 @@ def post_foreground_location(
             longitude=payload.longitude,
             accuracy_m=payload.accuracy_m,
             captured_at=payload.captured_at.isoformat(),
+            traveler_id=principal.traveler_id if principal is not None else None,
+            journey_member_id=member.id if member is not None else None,
         )
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
@@ -9223,6 +9252,87 @@ def post_foreground_location(
         "source": row.source,
         "background_tracking_claimed": False,
         "principal_bound": principal is not None,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/group-presence/route")
+def guide_authenticated_member_to_rendezvous(
+    journey_id: UUID,
+    request: Request,
+    payload: GroupPresenceRouteRequest,
+    session: Session = Depends(get_session),
+):
+    """Route only this authenticated member's fresh location to a server-derived group stop."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_REQUIRES_ACTIVE_JOURNEY")
+    observation = session.get(LocationObservation, str(payload.location_observation_id))
+    if observation is None or str(observation.journey_id) != journey.id:
+        raise HTTPException(404, "LOCATION_OBSERVATION_NOT_FOUND")
+    if (
+        str(observation.traveler_id or "") != principal.traveler_id
+        or str(observation.journey_member_id or "") != member.id
+    ):
+        raise HTTPException(403, "LOCATION_OBSERVATION_MEMBER_MISMATCH")
+    if str(observation.source or "").upper() != "FOREGROUND_WEB":
+        raise HTTPException(409, "GROUP_RENDEZVOUS_REQUIRES_FOREGROUND_SAMPLE")
+    captured = datetime.fromisoformat(observation.captured_at)
+    if captured.tzinfo is None:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_TIME_UNKNOWN")
+    age_seconds = (execution_clock.now().astimezone(timezone.utc) - captured.astimezone(timezone.utc)).total_seconds()
+    if age_seconds < -30 or age_seconds > GROUP_LOCATION_FRESHNESS_SECONDS:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_STALE")
+    if float(observation.accuracy_m) > GROUP_MAX_LOCATION_ACCURACY_M:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_IMPRECISE")
+    target_pair = rendezvous_target(session, journey)
+    if target_pair is None:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE")
+    target_activity, target_place = target_pair
+    route_request = RouteRequest(
+        journey_id=journey.id,
+        origin_key=f"location-observation:{observation.id}",
+        target_key=str(target_place.id),
+        target_activity_id=str(target_activity.id),
+        requested_mode=payload.requested_mode,
+        provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+        route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+        origin_evidence={
+            "location_observation_id": observation.id,
+            "journey_member_id": member.id,
+            "traveler_id": principal.traveler_id,
+            "source": "FOREGROUND_WEB",
+            "captured_at": observation.captured_at,
+            "accuracy_m": float(observation.accuracy_m),
+            "authority": "ADVISORY_FOREGROUND_LOCATION",
+        },
+    )
+    plan_before = str(journey.active_plan_version_id)
+    route, reused = submit_route_operation(session, journey, route_request)
+    body = route_operation_payload(route, reused=reused)
+    result = body.get("result") if isinstance(body.get("result"), dict) else {}
+    session.expire_all()
+    current = session.get(Journey, journey.id)
+    plan_unchanged = bool(
+        current is not None and str(current.active_plan_version_id or "") == plan_before
+    )
+    return {
+        "status": body.get("status"),
+        "outcome": body.get("outcome"),
+        "target": {"activity_id": target_activity.id, "title": target_activity.title, "place_name": target_place.name},
+        "route": {
+            "duration_min": result.get("duration_min"),
+            "distance_m": result.get("distance_m"),
+            "provider": result.get("provider") or body.get("provider"),
+            "provenance": result.get("provenance") or body.get("provider_provenance"),
+        },
+        "authority": "ADVISORY_FOREGROUND_LOCATION",
+        "plan_unchanged": plan_unchanged,
+        "guardian_triggered": False,
     }
 
 

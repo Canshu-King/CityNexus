@@ -438,10 +438,21 @@ class ScheduleChangeRequest(BaseModel):
 
 
 class LocationObservationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     latitude: float = Field(ge=-90, le=90)
     longitude: float = Field(ge=-180, le=180)
     accuracy_m: float = Field(gt=0, le=10000)
     captured_at: datetime
+
+
+class GroupPresenceRouteRequest(BaseModel):
+    """Request one member-specific route from a fresh, server-bound location sample."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
 class LaunchOriginRequest(BaseModel):

@@ -41,6 +41,7 @@ from app.agent.journey_ahead import journey_ahead_projection
 from app.agent.overnight_steward import overnight_steward_projection
 from app.agent.journey_intent import active_journey_intents, pending_journey_intent_clarifications
 from app.execution.clock import execution_clock
+from app.execution.group_presence import group_presence_projection
 from app.operator_attention import attention_from_operator_projection
 
 
@@ -480,6 +481,9 @@ def operator_projection(
         ),
     )
     transit = in_transit_projection(session, journey)
+    group_presence = group_presence_projection(
+        session, journey, viewer_member_id=viewer_member_id
+    )
     # Journey Ahead is a read-only projection.  Reuse the already persisted
     # predictive Guardian/brain state, but never start a provider call or an
     # action from this GET path.
@@ -616,6 +620,7 @@ def operator_projection(
         "operations": operations,
         "flow": flow,
         "transit": transit,
+        "group_presence": group_presence,
         "ahead": ahead,
         "progress": progress,
         "overnight": overnight,

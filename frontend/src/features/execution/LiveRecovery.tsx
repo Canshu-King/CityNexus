@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   cityNexusApi,
   type InTransitRerouteResult,
+  type GroupRendezvousRouteResult,
   type JourneyOperatorProjection,
 } from "../../api/citynexus";
 import { travelerAuthHeaders } from "../../lib/travelerSession";
@@ -182,6 +183,7 @@ export function LiveRecovery({
   const [message, setMessage] = useState<string | null>(null);
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
   const [transitReroute, setTransitReroute] = useState<InTransitRerouteResult | null>(null);
+  const [groupRoute, setGroupRoute] = useState<GroupRendezvousRouteResult | null>(null);
   const [intentText, setIntentText] = useState("");
   const [intentResult, setIntentResult] = useState<string | null>(null);
   const [inboxText, setInboxText] = useState("");
@@ -656,6 +658,31 @@ export function LiveRecovery({
 
   const flow = operator?.flow ?? null;
   const transit = operator?.transit ?? null;
+  const groupPresence = operator?.group_presence ?? null;
+  const guideToGroup = async () => {
+    if (!onRefreshLocation || busy !== null || !groupPresence?.can_guide) {
+      setMessage(zh ? "请先允许获取你这一次的位置。" : "Allow one fresh location sample to get a route.");
+      return;
+    }
+    setBusy("group-route");
+    setGroupRoute(null);
+    try {
+      const observationId = await onRefreshLocation();
+      if (!observationId) return;
+      const result = await cityNexusApi.routeToGroupRendezvous(journeyId, observationId);
+      setGroupRoute(result);
+      await loadOperator();
+      setMessage(
+        result.status === "COMPLETED" && result.route.duration_min != null
+          ? (zh ? `到「${result.target.title}」约 ${result.route.duration_min} 分钟；位置只用于这次路线，行程计划未变。` : `About ${result.route.duration_min} min to ${result.target.title}. This one-time location was used for routing; your plan is unchanged.`)
+          : (zh ? "路线服务暂时没有可靠结果；没有修改行程计划。" : "No reliable route is available yet. Your plan was not changed."),
+      );
+    } catch {
+      setMessage(zh ? "暂时无法计算到集合点的路线；计划没有改变。" : "Could not calculate a route to the rendezvous. Your plan is unchanged.");
+    } finally {
+      setBusy(null);
+    }
+  };
   const rerouteFromHere = async () => {
     if (!onRefreshLocation || busy !== null) {
       setMessage(zh ? "请先允许浏览器获取这次位置。" : "Allow location access to recalculate this route.");
@@ -870,6 +897,53 @@ export function LiveRecovery({
             {transitReroute && (transitReroute.status !== "COMPLETED" || transitReroute.reroute_state === "IN_TRANSIT_CONTEXT_STALE") && (
               <small data-testid="journey-transit-reroute-result">
                 {zh ? "路线服务暂时没有可靠结果；没有修改原计划。" : "The route provider returned no reliable route. Your original plan was not changed."}
+              </small>
+            )}
+          </section>
+        )}
+        {journeyStatus === "ACTIVE" && groupPresence && groupPresence.state !== "MEMBER_IDENTITY_UNAVAILABLE" && (
+          <section className="journey-group-presence" data-testid="journey-group-presence" aria-live="polite">
+            <span className="v8-kicker">{zh ? "同行者位置" : "Group presence"}</span>
+            <strong>
+              {groupPresence.state === "SINGLE_TRAVELLER"
+                ? (zh ? "这趟行程目前只有你一位有效成员。" : "You are the only active member on this Journey.")
+                : groupPresence.members.some((member) => member.group_state === "SPLIT_FROM_GROUP")
+                  ? (zh ? "同行者的位置显示队伍可能已经分开。" : "Recent member locations suggest the group may be split.")
+                  : groupPresence.members.every((member) => member.location_state === "RECENT")
+                    ? (zh ? "同行者最近都更新过位置。" : "Everyone has shared a recent location.")
+                    : (zh ? "正在等待同行者主动更新位置。" : "Waiting for travellers to share a fresh location.")}
+            </strong>
+            {groupPresence.members.map((member) => (
+              <small key={member.member_id} data-testid="journey-group-member">
+                {member.is_viewer ? (zh ? "你" : "You") : member.display_name}: {member.location_state === "RECENT"
+                  ? member.group_state === "SPLIT_FROM_GROUP"
+                    ? (zh ? "位置较新 · 可能与队伍分开" : "Recent · may be separated")
+                    : member.group_state === "WITH_GROUP"
+                      ? (zh ? "位置较新 · 与队伍接近" : "Recent · near the group")
+                      : (zh ? "位置较新 · 尚不能判断是否同行" : "Recent · group proximity unknown")
+                  : member.location_state === "STALE"
+                    ? (zh ? "位置已过时" : "Location is stale")
+                    : member.location_state === "IMPRECISE"
+                      ? (zh ? "定位精度不足" : "Location is too imprecise")
+                      : (zh ? "尚未分享位置" : "No shared location")}
+                {member.age_seconds != null && member.location_state === "RECENT" ? ` · ${member.age_seconds}${zh ? "秒前" : "s ago"}` : ""}
+                {member.route_eta_minutes != null ? ` · ${zh ? `到集合点约 ${member.route_eta_minutes} 分钟` : `about ${member.route_eta_minutes} min to rendezvous`}` : ""}
+              </small>
+            ))}
+            {groupPresence.rendezvous && (
+              <small>{zh ? `集合点：${groupPresence.rendezvous.title}（来自当前行程安排）` : `Rendezvous: ${groupPresence.rendezvous.title} (from the active itinerary)`}</small>
+            )}
+            <small>{zh ? "只显示同行者是否接近，不共享他人的精确坐标。浏览器定位仅用于参考，不会触发 Guardian 或改计划。" : "Only coarse together/split status is shown; other travellers’ exact coordinates are never shared. Browser location is advisory and cannot trigger Guardian or change the plan."}</small>
+            {groupPresence.can_guide && groupPresence.rendezvous && (
+              <button type="button" disabled={busy !== null} data-testid="journey-guide-to-group" onClick={() => void guideToGroup()}>
+                {busy === "group-route" ? (zh ? "正在找路线…" : "Finding route…") : (zh ? "带我去集合点" : "Guide me to the group")}
+              </button>
+            )}
+            {groupRoute?.status && (
+              <small data-testid="journey-group-route-result">
+                {groupRoute.status === "COMPLETED" && groupRoute.route.duration_min != null
+                  ? (zh ? `约 ${groupRoute.route.duration_min} 分钟 · ${groupRoute.route.provenance ?? groupRoute.route.provider ?? "路线来源已记录"} · 行程计划未变` : `About ${groupRoute.route.duration_min} min · ${groupRoute.route.provenance ?? groupRoute.route.provider ?? "route source recorded"} · plan unchanged`)
+                  : (zh ? "当前没有可靠路线；行程计划未变。" : "No reliable route is available; the plan is unchanged.")}
               </small>
             )}
           </section>

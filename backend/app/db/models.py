@@ -1463,6 +1463,14 @@ class LocationObservation(Base):
     __tablename__ = "location_observations"
     id: Mapped[str] = mapped_column(String, primary_key=True)
     journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    # NULL means the historical/browser row was never bound to a verified traveler principal.
+    # Do not infer identity later from Journey.traveler_id or request-body claims.
+    traveler_id: Mapped[str | None] = mapped_column(
+        ForeignKey("travelers.id", ondelete="SET NULL"), nullable=True
+    )
+    journey_member_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="SET NULL"), nullable=True
+    )
     latitude: Mapped[float] = mapped_column()
     longitude: Mapped[float] = mapped_column()
     accuracy_m: Mapped[float] = mapped_column()
