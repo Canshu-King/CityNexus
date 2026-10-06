@@ -357,6 +357,12 @@ def test_pending_server_approval_is_not_fabricated_human_authority():
     checkpoint["final"]["receipts"] = []
     checkpoint["final"]["proposals"][0]["status"] = "PRESENTED"
     checkpoint["final"]["journey"]["active_plan_version_id"] = "plan-0"
+    checkpoint["current_epoch_id"] = "r2"
+    for epoch in checkpoint["final"]["epochs"]:
+        if epoch.get("id") == "r2":
+            epoch["status"] = "OPEN"
+            epoch["closed_at"] = None
+            epoch["close_reason"] = None
     checkpoint["final"]["approvals"] = [
         {
             "id": "approval-pending",
