@@ -5286,6 +5286,10 @@ def _record_collective_mutation_denial(
         "current_material_world_epoch": decision.get(
             "current_material_world_epoch"
         ),
+        "candidate_surface_fingerprint": decision.get(
+            "candidate_surface_fingerprint"
+        ),
+        "authority_provenance": decision.get("authority_provenance"),
     }
 
     # Nothing in the refused mutation may survive merely because the refusal
