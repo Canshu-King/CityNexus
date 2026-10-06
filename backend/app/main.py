@@ -9256,6 +9256,138 @@ def post_foreground_location(
     }
 
 
+def _persist_trusted_member_rendezvous_risk_event(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMemberModel,
+    traveler_id: str,
+    observation: LocationObservation,
+    target_activity: Activity,
+    target_place: Place,
+    commitment_risk: dict[str, Any],
+    route_operation_id: str,
+    route_provider: str,
+    route_provenance: str,
+) -> EventModel | None:
+    """Materialize one member-scoped incident only from trusted location + grounded route truth."""
+
+    trusted_sources = {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
+    grounded_route_provenance = {
+        "LIVE_PROVIDER_CAPTURE",
+        "LIVE_CAPTURE",
+        "CAPTURED_REPLAY",
+        "SEALED_REAL_REPLAY",
+    }
+    source = str(observation.source or "").upper()
+    provenance = str(route_provenance or "").upper()
+    commitment = commitment_risk.get("next_commitment") or {}
+    commitment_id = str(commitment.get("commitment_id") or "")
+    if (
+        source not in trusted_sources
+        or str(commitment_risk.get("state") or "") != "COMMITMENT_AT_RISK"
+        or not commitment_id
+        or not route_provider
+        or route_provider.casefold().startswith(("mock", "fixture"))
+        or provenance not in grounded_route_provenance
+    ):
+        return None
+
+    fingerprint_payload = {
+        "incident_kind": "MEMBER_RENDEZVOUS_COMMITMENT_RISK",
+        "journey_id": str(journey.id),
+        "active_plan_version_id": str(journey.active_plan_version_id or ""),
+        "traveler_id": str(traveler_id),
+        "journey_member_id": str(member.id),
+        "rendezvous_activity_id": str(target_activity.id),
+        "commitment_id": commitment_id,
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            fingerprint_payload,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+    existing_rows = session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.provider_key == "journey-group-presence",
+            EventModel.event_type == "TRAFFIC_DELAY",
+            EventModel.provenance == "SYSTEM_DERIVED",
+            EventModel.status.in_(("DETECTED", "ACKNOWLEDGED", "OPEN", "ACTIVE")),
+        )
+    ).all()
+    for existing in existing_rows:
+        try:
+            payload = json.loads(existing.payload_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if payload.get("incident_fingerprint") == fingerprint:
+            return existing
+
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="journey-group-presence",
+        provenance="SYSTEM_DERIVED",
+        event_type="TRAFFIC_DELAY",
+        severity="MAJOR",
+        status="DETECTED",
+        # There is no member-specific travel-leg entity yet. Do not falsely
+        # blame the downstream protected stop; keep the causal member movement
+        # explicit in the payload instead.
+        affected_activity_id=None,
+        occurred_at=str(observation.captured_at or now),
+        detected_at=now,
+        resolved_at=None,
+        payload_json=json.dumps(
+            {
+                "incident_fingerprint": fingerprint,
+                "derivation": "SYSTEM_DERIVED_TRUSTED_MEMBER_RENDEZVOUS_RISK",
+                "predictive_only": False,
+                "traveler_id": str(traveler_id),
+                "journey_member_id": str(member.id),
+                "location_observation_id": str(observation.id),
+                "location_source": source,
+                "accuracy_m": float(observation.accuracy_m),
+                "rendezvous_activity_id": str(target_activity.id),
+                "rendezvous_place_id": str(target_place.id),
+                "affected_commitment_id": commitment_id,
+                "member_route_operation_id": str(route_operation_id),
+                "route_provider": route_provider,
+                "route_provenance": provenance,
+                "shared_commitment_risk": commitment_risk,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.group_presence.member_risk_materialized",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="journey-group-presence",
+        after={
+            "incident_fingerprint": fingerprint,
+            "traveler_id": str(traveler_id),
+            "journey_member_id": str(member.id),
+            "rendezvous_activity_id": str(target_activity.id),
+            "affected_commitment_id": commitment_id,
+            "event_type": event.event_type,
+        },
+    )
+    return event
+
+
 @app.post("/api/v1/journeys/{journey_id}/group-presence/route")
 def guide_authenticated_member_to_rendezvous(
     journey_id: UUID,
