@@ -110,3 +110,57 @@ Agent B, or fabricate any post-shock authority.
 This result supersedes no historical evidence. The first strike artifacts remain
 unchanged and are not reused as Strike 2 proof. Physical travel remains NOT
 PROVEN; the intended shock source remains `SERVER_OWNED_PROVIDER_REPLAY_FIXTURE`.
+
+
+## GPT review after Strike 2
+
+Strike 2 remains an honest **NOT_PROVEN**. Its failure classification is valid,
+but its committed 52-line failure artifact is not a native partial checkpoint
+from the then-current harness: that harness raised before `main()` could write
+the normal result file. The compact artifact therefore records the operator's
+post-failure normalization rather than the full durable state that existed at
+the boundary.
+
+That is useful as a failure receipt, but insufficient as a black box for root
+cause analysis. It intentionally does **not** become proof for any missing
+causal dimension.
+
+A code-path review found a concrete harness isolation gap. Before
+`configured_journey_agent()` is reached, `/agent/commands` calls
+`_copilot_fallback_or_ai()`. If the launching shell carries an unrelated
+`CITYNEXUS_AI_API_KEY` or `DEEPSEEK_API_KEY`, that semantic compiler can
+perform a separate external request before the instrumented Hermes boundary.
+The previous R32 setup did not clear those ambient credentials.
+
+This does not prove that an ambient key caused Strike 2, because the old failure
+artifact omitted the partial runtime state needed to distinguish that case.
+It does explain why the symptom cannot safely be labelled "WB2api was slow":
+the R32 `gated_complete()` records provider invocation before making the
+WB2api network request, so failure to observe that marker means the instrumented
+Hermes boundary itself was not reached.
+
+Post-Strike-2 hardening now:
+
+- isolates the experiment from ambient semantic-AI credentials;
+- machine-checks that `HermesJourneyAgent` is the selected runtime before the
+  strike;
+- excludes native-Hermes routing from this specific experiment;
+- writes automatic partial black-box state on A/B/barrier abort instead of
+  requiring post-failure reconstruction;
+- separates per-Agent provider invocation proof from the complete A+B concurrent
+  barrier;
+- prevents a generic failure marker from erasing an already observed
+  contradiction;
+- writes a SHA/git receipt for the verifier itself, separately from the strike
+  source receipt;
+- requires runtime isolation and verifier traceability as proof dimensions.
+
+The current deterministic workflow is green after these changes.
+
+Exactly one isolated retry is authorized by:
+
+`taskbooks/revolution/R32_LIVE_STRIKE_2B_ISOLATED_BLACKBOX_RETRY.md`
+
+This is not a strategy retry. The Agent command and authority policy remain
+unchanged. If 2B fails, its native black-box checkpoint is the stopping point;
+no automatic 2C rerun is authorized.
