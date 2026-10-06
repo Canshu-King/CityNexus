@@ -12,13 +12,13 @@ import subprocess
 
 WT = r"D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend"
 R7 = r"D:/moodle/_ord0568_r3/r8"
-OUT = os.path.join(R7, "typecheck_r8.txt")
+OUT = os.path.join(R7, "typecheck_r9.txt")
 
 env = dict(os.environ)
 for gone in ("HTTP_PROXY", "HTTPS_PROXY", "DEEPSEEK_API_KEY"):
     env.pop(gone, None)
 
-lines = ["ORD-0562 r7 typecheck, run in this pass from the re-cut branch worktree."]
+lines = ["ORD-0562 r9 typecheck, run in this pass from the re-cut branch worktree."]
 failures = []
 for project in ("tsconfig.check.json", "tsconfig.typecheck.json"):
     cap = os.path.join(R7, "typecheck_%s.txt" % ("check" if "check.json" in project else "typecheck"))
