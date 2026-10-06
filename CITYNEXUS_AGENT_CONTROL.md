@@ -16588,6 +16588,186 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 主执行路那栋楼·第二格（勘误重发）：这条主路确实只有一处说法——逐个消费者验完
+
+（上一条同名块里有一个坏字，是我生成时的乱码；这一条是干净的替代，请以这条为准。）
+
+一、这一格不动产品字节，只把「唯一说法」变成有据的判断
+- MCP 适配器：call() 直接 POST 到 review/ord/mainexec_path_r1/cell2_sweep_r1.txt:17，走契约的第一跳，没有绕开
+- agent 运行时：经 review/ord/mainexec_path_r1/cell2_sweep_r1.txt:13 派发
+- 守护：建一个网关后 dispatch inspect_twin/request_replan/accept_replan（review/ord/mainexec_path_r1/cell2_sweep_r1.txt:7 等），自治动作走主路
+- 两条 HTTP 工具入口喂 AgentToolGateway.dispatch（上一格件里）
+
+二、所以「主执行路是唯一的工具执行说法」这句现在有回执支撑
+- 适配器、运行时、守护、HTTP 入口，每个消费者都被点名，都过网关；网关的 allowlist 与钉死的目录 review/ord/mainexec_path_r1/cell2_sweep_r1.txt:20 是唯一那道闸
+
+三、还剩一处 agent 主动写域真值没过闸（已具名，等你裁）
+- 上一格收敛后的那行「上报扰动到 Event」仍由两条自然语言入口直接落，不经 dispatch。要让它也过策略边界，得在钉死的目录里加一枚工具——report_disruption 今天不在目录里（review/ord/mainexec_path_r1/cell2_sweep_r1.txt:22），而 V2 是钉死的十一枚工具面，加它=改契约，我不擅自做
+
+四、纪律
+- 本格零产品字节（树差异仍只有上一格的 main.py + 两个证据目录）；零写库、零移动权威线、强推零次
+- 枝 refs/heads/review/cff87c64-main-exec-path-r1 @ a446a6b1b69447bb4c92418abaeba794477adc39（自尖 2e2ddbaf72eed9565fd8b18ea9b8216061269f57 切出）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### cff87c64 · 主执行路那栋楼·第一格：上报型扰动落成 Event 这一行现在只有一处说法（两条入口原本各造各的）
+
+一、我按图纸量的：主执行路是什么
+- 契约 `contracts/AGENT_RUNTIME_ARCHITECTURE.md` 写死了这条路：`/api/v1/agent/tools/{tool}` → AgentToolGateway → DelegationPolicy → 服务端事实 → 确定性闸 → 领域真值。别的模块要执行一件事，只能调它
+- 全树扫所有执行入口（仪器在 review/ord/mainexec_path_r1/review_exec_inventory_r1.py，只读）：把每条写领域真值（PlanVersion/Activity/Commitment/Event/JourneyMission）的入口逐条判"该不该收敛"
+
+二、收敛了哪一处、为什么是它
+- 两处入口各自建了同一个"上报扰动 → Event"：/agent/commands 路由与 /copilot/messages 路由，字段相同但 payload 形状、provider_key、审计足迹都不同，所以改一边对另一边隐形。两边现在都调 `_capture_reported_disruption`，由入参复现各自那一行（review/ord/mainexec_path_r1/cell1_note.md:45）
+- 收敛前后，扫出来的"agent 写域真值却不走网关"从 3 处降到 2 处（review/ord/mainexec_path_r1/inventory_before_r1.txt:2 → review/ord/mainexec_path_r1/inventory_after_r1.txt:2）
+
+三、留在原处并给了理由的（不静默处理，写在件里）
+- guardian.py 的 _recovery_mission 与 mission.py 的 create_mission：它们由主路自己的命令/守护流程调用，写的是主路的 mission 记账，不是另起一条执行；把它们塞进网关会改行为（review/ord/mainexec_path_r1/cell1_note.md:48）
+
+四、行为不变怎么证的（整跑一遍，两侧同一命令）
+- 干净尖：review/ord/mainexec_path_r1/cell1_note.md:79 ；本枝：review/ord/mainexec_path_r1/cell1_note.md:80 —— 9 处红两侧同 id，一处都没多（review/ord/mainexec_path_r1/cell1_note.md:82）。两枚聚焦行为套件（覆盖这两条入口）在两侧都全过（review/ord/mainexec_path_r1/cell1_note.md:85）
+- 一个 hermes transport 探针因 venv 缺 mcp 两侧都收集失败，已记为环境既有缺口、与本格无关
+
+五、这格不声称的 / 下一格
+- 没有新增网关工具。把扰动捕获也走 dispatch（让它拿 allowlist/DelegationPolicy/工具审计）= 往钉死的工具目录里加一枚，是契约变更，我不擅自做；这是自然的下一格，等裁（review/ord/mainexec_path_r1/cell1_note.md:94）
+- 只动 backend/app/main.py 一枚文件（review/ord/mainexec_path_r1/cell1_note.md:73）；没碰 19 处产品写入（用户自己改行程/预订/天气/商务，那是主路可以调的那份域真值）
+
+六、枝与纪律
+- 枝 refs/heads/review/cff87c64-main-exec-path-r1 @ 01b4567a6949d5ba0210b541f6cdd79dfe1b33b8，自尖 2e2ddbaf72eed9565fd8b18ea9b8216061269f57 切出，只带上述一枚产品文件＋本目录证据
+- 本轮零写库、零移动权威线、强推零次、未碰他人进程与他人文件
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · 第二轮那栋楼（路线形状一致）· 第三格：服务商几何那条分支（0 枚产品字节）
+
+**接哪一格**：第二格验的是「按地点坐标连的线」三处全等，件里自己报了缺——**服务商几何那条拼接分支没被覆盖**。这一格补它，并且**先说清它没被真数据覆盖**。
+
+**一、真数据臂：没被覆盖，如实报缺**（件 `review/ord0577/readouts/route_shape_provider_20261006T164133Z.json`）。canary 那份拷贝里存着 35 条 `mobility_facts`（带真实坐标），但它们属于**另一趟行程**（南锣鼓巷那一族），和本方案连续活动键**逐条都对不上**：命中 0 对（`review/ord0577/readouts/route_shape_provider_20261006T164133Z.json:37`）。于是 `_frozen_route_for_plan` 走的是「没有服务商几何」的回退支，供给 `provider_backed` 为 False、`fallback_reason` 为 `NO_FROZEN_ROUTE_GEOMETRY`，**拼接分支没有真的被触发**。判语 `BRANCH_NOT_EXERCISED`——这一格不假装覆盖了它。
+
+**二、合成臂：把分支真正跑起来**。为了让分支被执行（而不是绕过），我另起一条**明确标注为合成**的臂：让快照的键就是本方案**真实的连续活动键**，几何取该对活动自身的两个端点坐标。这是受控替身、**不是采集到的服务商数据**，只用来证明「一旦服务商几何真的参与拼接，三处仍逐点全等」。件里 `synthetic_arm` 逐枚：配对 7 对（`review/ord0577/readouts/route_shape_provider_20261006T164133Z.json:43`）、`spliced` 为真、`provider_backed` 为 True（分支真的触发了）、规划 8 点对供给 8 点、逐点同 True、顺序同 True、段数同 True，判语 `THREE_WAY_SHAPE_CONSISTENT`。
+
+**三、合起来这栋楼现在钉住了什么**。三处形状（规划里那条线、端点供给的那条线、屏上画的那条线）在两条分支上都逐点全等：坐标连的那条第二格验了、服务商几何这条合成臂验了；「规划里没线时屏上不说谎」第一格修掉了。**没有真数据证明服务商几何那条分支**——canary 里那条数据属于别的行程，要真覆盖得有一份**带匹配 mobility snapshot 的行程**，这是下一格要凑的样本。
+
+**四、代次与现场**。枝 `review/6a773af1-ord0577-route-shape-r1` = `9f657811df2616c738652c63e24f63296397570d`（`ls-remote` 回读同值），parent = `e6cf24daaa77072b081667cdde93302144bd2506`。本轮零枚产品字节、零枚自建端口、零枚浏览器、没写账本、force-push 0 次、没动任何人的进程、canary 源库现读未被动。**下一格我自申报**：找/造一份带匹配 mobility snapshot 的行程样本，让服务商几何那条分支在**真数据**上被覆盖（不发明数据——要么在 canary 里换一趟有匹配 fact 的行程，要么在授权下补一条真实 fact）。
+
+
+### 1ba48dbf 办收藏容器那栋楼 · 第一格（地基）：真跑一遍收藏与再看到它，两臂 × 三档共六格，接口与屏上逐字一致、重复收藏被诚实地拒成「已经在这个架子上」；**但「取消收藏」零枚门**（屏上 0 枚、served contract 0 枚）⇒ 点得下、看得见、撤不回，判状态**单向唯一**、撤不回这一半不满足图纸
+
+**〇、这一格是什么**
+
+- 图纸（账本里 00:08 那轮派单的第二轮五栋楼那张图）：收藏从点下去到再看到它，状态必须唯一——不许同时存在「已收藏但列表里没有」或「列表里有但接口说没有」。判据自己能量：真跑一遍收藏与取消收藏，每步读接口与屏上两处表达，逐字比对。
+- 这一格只交**地基读数**：把"点下去 → 再看到"这条链真跑一遍，把"取消"这一半量清楚。**修法等读数站住、号令者裁了"取消收藏该做什么"再动字节。**
+
+**一、量法（全部现读现跑）**
+
+- 现读权威线 `refs/heads/mirror/integration-frontend-apple-pass1` = `dfaac8fa00ad404b3fd67f9a28abba246c8e67a6`；私有后端 + 私有前端 + 私有库 + 私有 run-id，共享端口与共享库一律零触碰。
+- 真跑：两臂（中文 / 英文）× 三档宽（三六〇 / 三九〇 / 四一四 px）共 6 格，每格先建一层、再真点收藏、再读接口列表与屏上（held 标、挑层、结果原句），并枚举屏上有没有"取消"门。一次写请求只发在"点收藏"那一下。
+
+**二、逐格读数（接口 + 屏上，两处都读）**
+
+  - en-US / 宽 三六〇：建层 二〇一｜接口收 [{"name": "WalkShelf", "item_count": 1}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}]｜屏上那句「This place is already on that shelf. · Collected into WalkShelf」｜屏上 held 标 1｜取消门 0（读数 ``review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb``）
+  - en-US / 宽 三九〇：建层 二〇一｜接口收 [{"name": "WalkShelf", "item_count": 1}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}]｜屏上那句「This place is already on that shelf. · Collected into WalkShelf」｜屏上 held 标 1｜取消门 0（读数 ``review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb``）
+  - en-US / 宽 四一四：建层 二〇一｜接口收 [{"name": "WalkShelf", "item_count": 1}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}]｜屏上那句「This place is already on that shelf. · Collected into WalkShelf」｜屏上 held 标 1｜取消门 0（读数 ``review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb``）
+  - zh-CN / 宽 三六〇：建层 二〇一｜接口收 [{"name": "WalkShelf", "item_count": 0}]｜屏上那句「已收在 WalkShelf」｜屏上 held 标 0｜取消门 0（读数 ``review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb``）
+  - zh-CN / 宽 三九〇：建层 二〇一｜接口收 [{"name": "WalkShelf", "item_count": 1}, {"name": "WalkShelf", "item_count": 0}]｜屏上那句「这一枚已经在这个架子上。 · 已收在 WalkShelf」｜屏上 held 标 1｜取消门 0（读数 ``review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb``）
+  - zh-CN / 宽 四一四：建层 二〇一｜接口收 [{"name": "WalkShelf", "item_count": 1}, {"name": "WalkShelf", "item_count": 0}, {"name": "WalkShelf", "item_count": 0}]｜屏上那句「这一枚已经在这个架子上。 · 已收在 WalkShelf」｜屏上 held 标 1｜取消门 0（读数 ``review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb``）
+
+**三、这一格量到的三件事（判据自能量的结论）**
+
+- **一致的那半**：点收藏后，接口 `item_count` 加一、屏上那句「已收在 …」逐字对上；再点同一枚，接口不再加、屏上诚实地拒成「这一枚已经在这个架子上。」——「已收藏但列表没有」「列表有但接口说没有」这两种组合，这一代读不到。
+- **缺的那半**：**取消收藏**零枚门。屏上六格都枚举不到一枚可点的"取消/移出/删除收藏"控件（六格全零），后端 served `/openapi.json` 里 `/api/v1/collections*` 也只有 get / post / post，**零个 delete**（这一格另起了一趟直打 API 的探针：`DELETE` 那条 item 路径回的是「没有这一条」那一种 Not Found）。所以"点下去→再看到"是通的，"看得见→撤得回"**不成立**：收藏一旦做进去就收不回，也没有屏上或接口上的取消门。
+- **顺带量到的一枚**：层（挑层容器）同样**零个改名门、零个删除门**——真跑里每趟建一层、层会越跑越多，因为没有任何门能收掉它。
+
+**四、判语**
+
+- 判**单向唯一**：正向（点下去→接口与屏上一致、重复被诚实拒）**成立**；反向（看得见→撤得回）**缺门**。
+- 这一格**不自取修法**：图纸说"列出所有不一致的组合并修掉"，但"取消收藏"该做成硬删、软删还是移出队列，是产品取舍，请号令者点单；我这一格把缺的那半量清楚了，等一句定点再落字节。
+- 本格产品字节改动 0 枚（改的只是可丢的读数副本）；不推产品枝。
+
+**五、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-collect-unique-evidence-r2` = `14ffb1d02e9d7874f475261dfa32485b38d5108c`（`git ls-remote` 现读逐字相等；9 枚件，逐枚可 `git cat-file -t`）：
+  - 总账：`review/collect-unique/walk_summary.json` = `c5ca181b60a48733bd111ac7f81e0fba6e9af6eb`
+  - 尺（真跑腿）：`review/collect-unique/leg_collect_walk.cjs.txt` = `6014f0ce52da54a6cd9c8509465944cae49d03d3`
+  - 尺（驱动）：`review/collect-unique/driver_collect_walk.py.txt` = `59bf0477a0ff02bd7797fdd39d456f65e9f3f1ea`
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求（除本趟建层与点收藏那几下）0 次、密钥落盘 0 枚、产品字节改动 0 枚。
+
+**六、下一格（自申报，不等你点）**
+
+- 按你的定点点"取消收藏"那扇门，并补上"该红的那一次"：把接口层做一次删、屏上不刷新（或反过来），尺必须红。
+- 同时把层的改名/删除那两枚缺口一并入册（它们是同一族"只增不减"的病根）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0500 手机车道（0afdb49b）自申报：手机链从第一屏到订完一次行程走通了，真机口径 390px；走查抓到一处看不懂并已修掉——计划日清单里混着英文角色词
+
+一、这一格量到什么（本车道自己的栈，端口 4881/8145，号令者的 4783/4787 没碰）
+- 在权威尖上起**自己**的手机演示链（`build_walk` 落在尖），两条路都从第一屏走到订完：**封存演示行程**那一条与**自己敲城市和两个地点**那一条，都是 BOOKED，0 个页面错误、0 个控制台错误。每一步都截屏并把屏上的字读出来；一次点击只有在浏览器自己滚动之后、元素中心点命中那枚控件才算数。件 `review/phone-preview-language-r2/evidence/walk_preview_language_arm.json` blob `264eea1eb8954f4607cb0f342b113d274c143654`。
+- 发布：`refs/heads/review/0afdb49b-phone-preview-language-r2` 头 `bbd9486210a8d89ea2e857e970ffba4dcac3f1e6`，单父=发布那刻现读的尖 `dfaac8fa00ad404b3fd67f9a28abba246c8e67a6`；对尖改动 10 枚路径，全在 `review/phone-preview-language-r2/` 前缀之下。修复枝 `refs/heads/review/0afdb49b-ord0500-preview-language-r1` 头 `b5a86184650e0533c63220b6a14387954a1a82d4`（2 枚产品文件）。本块落笔时现尖已是 `dfaac8fa00ad404b3fd67f9a28abba246c8e67a6`。
+
+二、那处看不懂（修掉前屏上逐字是这样）
+- 计划预览的候选日清单里，一行中文里混着服务端的英文角色词：「第 1 天 星期四 北京站 · Check in · Beijing South Courtyard · Temple of Heaven · Overnight · Beijing South Courtyard 骑行 抵达锚点」——一个中文用户读到一半是英文。
+- 根因不是词表缺词：`roleLabel` 本来就有 CHECK_IN→入住、CHECK_OUT→退房、OVERNIGHT→过夜。是那两格渲染**没走词表**——首页日卡片把 `day.activities` 直接 join、工作室日明细调 `SortableActivityList` 时没传 `labels`，于是回落到原始字符串。
+
+三、修法与它为什么第一版没生效（这是本格最要紧的一段）
+- 第一版把整枚 token 丢给 `roleLabel`，结果**英文还在**。我把真值取下来才看清：服务端给的并不是裸角色词，是**复合串**——「Check in · Beijing South Courtyard」。整枚丢进去会变成 CHECK_IN_·_BEIJING_…，查不到，自然回落成原样。件 `review/phone-preview-language-r2/evidence/walk_day_tokens.json` blob `c1a2a63f064b4d2f5d739dec75cbab5bce32cd85`。
+- 所以 `activityWordLabel` 按 `·` 逐段映射，且**只映射词表真认得的段**（判据 `roleLabel(v) !== humanizeToken(v)`，恰好对已映射行成立、对地点名不成立）。地点名原样返回——词表的兜底会把 `Beijing South Courtyard` 压成小写 `beijing south courtyard`，那才是真弄坏。
+
+四、反向对照（同一尖、同一条手动路径，只换被服务的 bundle）
+- 修前：英文 `Check in`/`Check out`/`Overnight` 都在屏上，中文一个没有。修后：英文 0 枚，中文「入住、过夜、退房」都在屏上。两次的地名清单**逐字相同**（Beijing South Courtyard、National Museum of China、Temple of Heaven、北京站、天安门），证明没有顺手改坏地名。件 `review/phone-preview-language-r2/evidence/walk_preview_language_arm.json` blob `264eea1eb8954f4607cb0f342b113d274c143654`。
+- 修后两条路都仍是 BOOKED、0 错（演示那条回执在件 `review/phone-preview-language-r2/evidence/walk_book_fixed.json` blob `82c53161301c7eb2afe5318701e4228ca91a4296`）。
+
+五、边界
+- 权威尖零次移动；账号线、demo/reset 零次；账本直写零处（本块走收件口）；端口只用我自己的 4881/8145，号令者的 4783/4787 与 4799 一个没碰；共享预览库以 `mode=ro` 打开、`backup()` 复制成我自己那份，从未写过共享文件。
+- 上线的 10 枚路径里没有一枚是产品文件（产品字节在修复枝 `refs/heads/review/0afdb49b-ord0500-preview-language-r1` 那 2 枚里，那是候选，**尚未落地**——落地与否由你按 blob 相等判）。
+- 复算（现取现读；尖若已走请整代重跑）：`node D:/moodle/_qoder_phone_ord0485_20260930/tools/walk_manual.cjs` 重走手动那条；真值取数是 `node D:/moodle/_qoder_phone_ord0485_20260930/tools/capture_day_tokens.cjs`。
+
+六、等你（照旧，我没自己动）
+- 甲/乙/丙照旧等你；这一格不碰它们。未量照旧点名：真机 adb（这一格量的是真浏览器 390px，不是真机）、Playwright 套件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · 第二轮那栋楼（路线形状一致）· 第二格：一段**真**路线的三处形状逐点全等（有读数，0 枚产品字节）
+
+**为什么有这一格**：第一格钉的是「规划里没路线时屏上不说谎」。那一格只验了坏的那一半；这一格验另一半——**有真路线时，三处形状必须逐点相同**，否则我的修法可能把真路线也画歪了。这是第一格的阳性对照。
+
+**代次**：枝 `review/6a773af1-ord0577-route-shape-r1` = `e6cf24daaa77072b081667cdde93302144bd2506`（`ls-remote` 回读同值），parent = `cd91ffb8d557f18e4aab9cae241ff74fcf6d31e7`，再上 = `885f2ec18790761b0cf539973e6b17555f52f2ee`（第一格那笔）。本笔只落量具与读数件，**产品字节 0 枚**。
+
+**一、样本**（件 `review/ord0577/readouts/route_shape_real_20261006T163323Z.json`）：取号令者 canary 的一份拷贝，行程 `6cbdbc65-904a-40c7-a778-f981690f25d0`，它的当前方案 `3d869a0c-d4ca-5d76-aa17-28a774ccf3b3`。跑的是**产品自己的**函数：`backend/app/main.py` 的 `_frozen_route_for_plan`（规划形状，按 `Activity.sequence_no` 顺序把带坐标的活动连成线）与 `_route_feature`（供给形状），前端那一步复现 `JourneyMap` 拿服务端 feature 读坐标的行为。canary 源库现读未被动（`review/ord0577/readouts/route_shape_real_20261006T163323Z.json` 里 `canary_untouched` 为真，跑前跑后 sha 相同）。
+
+**二、逐点比对**：
+- **规划**：8 个点、7 段（`review/ord0577/readouts/route_shape_real_20261006T163323Z.json:13` 起）
+- **供给**：8 个点、7 段（`review/ord0577/readouts/route_shape_real_20261006T163323Z.json:54` 起），与规划坐标**逐点相同、顺序相同、段数相同**
+- **屏上画**：8 个点、7 段（`review/ord0577/readouts/route_shape_real_20261006T163323Z.json:93` 起），与供给相同
+
+**三、判语与反件**：三处相等 True/True、顺序同 True、段数同 True，判语 `THREE_WAY_SHAPE_CONSISTENT`。**非空洞**：供给那份坐标与规划那份是**不同对象**（不是自己比自己），把供给序列里的一枚点改掉，重算立刻翻成 MISMATCH——这眼在读形状。
+
+**四、一个要报缺的事实**：这趟的供给 `fallback_reason` 是 `NO_FROZEN_MOBILITY_SNAPSHOT`、`provider_backed` 为 False——意思是这条线是**按地点坐标连的**，没走服务商的几何。所以这一格验的是「按坐标连的线」在三处全等；**服务商几何那条分支（`fact.route_geometry` 参与拼接）没被这格覆盖**，那要一份带 mobility snapshot 的样本，是下一格。
+
+**五、下一格我自申报**：带服务商几何（mobility snapshot）的那条分支，同样三处逐点全等；这格不开盘、不起栈。
+
+
+### 车道 2d2d7428 · Qoder 00:33 · 承重墙·第四格：源码 41 处「白底且暗色无覆盖」，浏览器实测**暗色下仍是白底的只有 4 处**（hub/trips/agent/me 四屏），33 处两套都没画到是死 CSS（产品字节 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-white-surface-map-r4` 远端头现读 `3b77f52183c75122d60ad41575bae5e30d6f1ce3`，父提 `dfaac8fa00ad404b3fd67f9a28abba246c8e67a6` 就是现尖 ⇒ 可直接快进合（`git merge-base` 读回 `dfaac8fa00ad404b3fd67f9a28abba246c8e67a6`、`git merge-tree --write-tree` 退 0、相对现尖只动这一枚件）；件 `review/ord0561/WHITE_SURFACE_MAP_R4.md` 的 blob `6f78f33054753605d7bba484a8e7b62f764ebe87`（现回 3548 字节），件 41 行。
+- 量法：读数代次 `44b47dfdfd167d71597f19055769e6aaf8b38597`，私有栈自有端口与自有库；两套主题 × 五屏 × 手机形，逐枚 `querySelectorAll` 那 41 个选择器，对每个命中元素读 `getComputedStyle().backgroundColor`，只算真可见（有盒、非 display:none、非透明）；选择器查询失败 41 枚。0
+- 结论（分解见 `review/ord0561/WHITE_SURFACE_MAP_R4.md:9`）：源码 **41** 处（规则数）→ 真缺陷 **4** 处；4 处两套都画到但暗色已被别处改色、0 处只一套画到、**33 处两套都没画到（死 CSS）**。41 = 8 + 0 + 33（`review/ord0561/WHITE_SURFACE_MAP_R4.md:9`）。
+- 逐枚点名（亮档画到 / 暗档画到 / 暗档实际色 / 屏，逐行坐标见 `4`）：
+  - `.cn-collect__entry` / 6 处 / 6 处 / `rgb(255, 255, 255)` / `/v8/trips`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+  - `.plan-ranking` / 1 处 / 1 处 / `rgb(255, 255, 255)` / `/v8/hub`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+  - `.v8-agent-progress` / 1 处 / 1 处 / `rgb(255, 255, 255)` / `/v8/agent`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+  - `.v8-me-card` / 7 处 / 7 处 / `rgb(255, 255, 255)` / `/v8/me`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+- 这四枚与第二格实测翻红的两族**互相对上**：第二格读到暗色下近白字压在纯白底（比值约 1.09），这一格指出是哪几枚选择器干的、画在 hub / trips / agent / me；`/v8/me` 那枚暗档一次画到 7 个元素，影响面最大。review/ord0561/WHITE_SURFACE_MAP_R4.md:18
+- 这一格把判断改了：源码尺的 41 处是**嫌疑**不是缺陷数，真要修的只有 4 处；剩下 4 处「两套都画到但暗色已被别处改色」与 0 处「只一套画到」**不并进缺陷**——把规则数和缺陷数混为一谈，正是这面墙要防的错。review/ord0561/WHITE_SURFACE_MAP_R4.md:29
+- 没做的，具名：本格只读浏览器、零产品字节；四枚怎么改（换 `--cn-surface`／给暗色单列）归号令者裁；只在手机形两套主题五屏上量，宽形与其余屏 `NOT_MEASURED`；死 CSS（33 处）我点数量但不主张删——删不删是产品判断；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`）。review/ord0561/WHITE_SURFACE_MAP_R4.md:34
+- 我自申报的下一格（先读账本 ORDERS 再动）：把第二格的对比度读数按这四枚选择器对齐（哪几枚各自压了多少行、每行差多少），做成一张「选择器 → 影响行数 → 建议动作」的单；仍只读，等您裁怎么改。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 `6a773af1` · 第二轮那栋楼（路线形状一致）· 第一格：把「规划里没线、屏上却画出一条线」修掉了（有产品字节，判语自算）
 
 **图纸**（账本第 16696 行那条派单）：一条行程里的路线，从规划、渲染、到用户读它，形状必须一致；判据是对同一段行程把三个地方的形状逐点比对，不一致要么修数据、要么在界面上诚实说明。
