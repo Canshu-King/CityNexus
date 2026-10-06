@@ -1,0 +1,177 @@
+# -*- coding: utf-8 -*-
+"""落地面复算 r3：逐枚枝对尖做 diff，数「枝侧独有、尖上没有」的添加行。
+
+为什么要 r3（前两枚的仪器缺陷都写死在这里）：
+- r1：先取 `git diff --name-only 尖 枝` 再在这些文件里比 blob ⇒ 差异集合按定义就是内容不同的
+  文件，「等=0」是构造出来的恒零，不是读数。r1 的 JSON 留盘但不作交付依据。
+- r2：整树 ls-tree 比 blob，判出「等比 93.7%」，但分母是整条线的产品树，
+  跟我交没交没关系 ⇒ 只能说明"我的枝离尖有多远"，不能说明"我的内容落没落"。
+
+r3 的判据（这才对应"落地"两个字）：
+- 对每枚有产品面的枝，逐枚比 blob；blob 相等的文件 = 那枚此刻就在尖上。
+- 对 blob 不等的文件跑 `git diff --no-color 尖 枝 -- 该文件`，只数行首为 `+` 的**枝侧独有内容行**
+  （去掉 diff 噪声行）。若为 0，说明这枚文件上的 blob 不等**只是因为尖后来长了别人的行**，
+  我这枝没有一行内容留在尖外 ⇒ 判「已落尽（尖只多不少）」。
+- 若 >0，那些行就是此刻真不在权威线上的东西，具名落件，判「尖外残留」。
+- 全程只读 git，不碰栈、不点屏、不触发任何写路径。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+PRODUCT_PREFIX = ("frontend/src/", "backend/app/", "contracts/", "frontend/e2e/")
+NOISE = ("++", "+++ ")
+
+
+def git(*a, t=900):
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return (p.stdout or "").strip(), p.returncode
+
+
+def gitb(*a, t=900):
+    """diff 可能很大，直接拿 stdout 原样（不做 strip），带 rc。"""
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return p.stdout or "", p.returncode, p.stderr or ""
+
+
+def tree_map(rev):
+    out, rc = git("ls-tree", "-r", "--format=%(objectname) %(path)", rev, "--", *PRODUCT_PREFIX)
+    if rc != 0:
+        return None
+    m = {}
+    for line in out.splitlines():
+        sha, _, path = line.partition(" ")
+        if len(sha) == 40:
+            m[path] = sha
+    return m
+
+
+BAD = []
+tip, rc = git("ls-remote", "--refs", "origin", MIRROR)
+tip = tip.split("\t")[0]
+if rc != 0 or len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+refs, rc = git("ls-remote", "--refs", "origin", "refs/heads/review/1ba48dbf-*")
+pairs = []
+for line in refs.splitlines():
+    parts = line.split("\t")
+    if len(parts) == 2 and len(parts[0]) == 40:
+        pairs.append((parts[1], parts[0]))
+pairs.sort()
+if not pairs:
+    print("REFUSED: 名下一枚枝都没读到")
+    sys.exit(1)
+
+_, rc, err = gitb("fetch", "-q", "origin",
+                  "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*")
+if rc != 0:
+    print("REFUSED: fetch 我的枝 rc=%s %s" % (rc, err[:200]))
+    sys.exit(1)
+_, rc, err = gitb("fetch", "-q", "origin", MIRROR)
+if rc != 0:
+    print("REFUSED: fetch 权威线 rc=%s %s" % (rc, err[:200]))
+    sys.exit(1)
+t, _ = git("cat-file", "-t", tip)
+if t != "commit":
+    print("REFUSED: 现尖本地不可 cat-file（%s）" % t)
+    sys.exit(1)
+
+tip_map = tree_map(tip)
+if not tip_map:
+    print("REFUSED: 尖上产品表空")
+    sys.exit(1)
+
+rows = []
+for ref, sha in pairs:
+    ty, _ = git("cat-file", "-t", sha)
+    if ty != "commit":
+        rows.append({"ref": ref, "sha": sha, "status": "对象不是 commit"})
+        continue
+    bm = tree_map(sha)
+    if bm is None:
+        rows.append({"ref": ref, "sha": sha, "status": "ls-tree 失败"})
+        continue
+    if not bm:
+        rows.append({"ref": ref, "sha": sha, "status": "空树（纯证据枝，无产品面）",
+                     "branch_product_files": 0})
+        continue
+    same, differ, absent = [], [], []
+    extra_lines = 0
+    residual_files = []
+    rc_fail = []
+    for path, b in sorted(bm.items()):
+        tp = tip_map.get(path)
+        if tp is None:
+            absent.append(path)
+            continue
+        if tp == b:
+            same.append(path)
+            continue
+        differ.append(path)
+        d, rcd, e = gitb("diff", "--no-color", "--no-ext-diff", tip, sha, "--", path, t=600)
+        if rcd != 0:
+            rc_fail.append(path)
+            continue
+        plus = [ln for ln in d.splitlines()
+                if ln.startswith("+") and not any(ln.startswith(x) for x in NOISE)
+                and ln[1:].strip()]
+        if plus:
+            extra_lines += len(plus)
+            residual_files.append({"path": path, "n": len(plus),
+                                   "sample": [p[1:].strip()[:90] for p in plus[:4]]})
+    st = "ok"
+    if rc_fail:
+        st = "diff_rc_failed"
+    rows.append({"ref": ref, "sha": sha, "status": st,
+                 "branch_product_files": len(bm), "blob_same": len(same),
+                 "blob_differ": len(differ), "absent_on_tip": absent,
+                 "residual_plus_lines": extra_lines,
+                 "residual_files": residual_files,
+                 "diff_rc_failed": rc_fail})
+
+okrows = [r for r in rows if r.get("status") == "ok"]
+clean = [r for r in okrows if r["residual_plus_lines"] == 0 and not r["absent_on_tip"]]
+resid = [r for r in okrows if r["residual_plus_lines"] > 0 or r["absent_on_tip"]]
+print("现尖={} 名下枝={}枚 尖上产品={}枚".format(tip, len(rows), len(tip_map)))
+print("带产品面且全跑通={}枚；尖外残留为零={}枚；有残留={}枚".format(
+    len(okrows), len(clean), len(resid)))
+print("残留行合计={} 枚次".format(sum(r["residual_plus_lines"] for r in okrows)))
+for r in sorted(okrows, key=lambda x: -x["residual_plus_lines"]):
+    print("  {n} 产品={p} 等={s} 不等={d} 尖上没有={a} 枝外留行={x}".format(
+        n=r["ref"].replace("refs/heads/review/", "")[:58], p=r["branch_product_files"],
+        s=r["blob_same"], d=r["blob_differ"], a=len(r["absent_on_tip"]),
+        x=r["residual_plus_lines"]))
+    for f in r["residual_files"][:3]:
+        print("      留行 {n} 枚于 {p}".format(n=f["n"], p=f["path"]))
+        for s in f["sample"][:2]:
+            print("        + {s}".format(s=s))
+    for p in r["absent_on_tip"][:3]:
+        print("      尖上没有 {}".format(p))
+for r in rows:
+    if r.get("status") != "ok":
+        print("  {n} -> {s}".format(n=r["ref"].replace("refs/heads/review/", "")[:58],
+                                    s=r["status"]))
+
+out_path = os.path.join(ART, "landing_audit_1ba48dbf_%s.json" % time.strftime("%H%M"))
+io.open(out_path, "w", encoding="utf-8", newline="\n").write(json.dumps(
+    {"tip": tip, "tip_product_files": len(tip_map), "branches": len(rows),
+     "with_product_ok": len(okrows), "clean_branches": len(clean),
+     "residual_branches": len(resid),
+     "residual_lines_total": sum(r["residual_plus_lines"] for r in okrows),
+     "rows": rows}, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + out_path)
+if BAD:
+    print("REFUSED:\n  " + "\n  ".join(BAD))
+    sys.exit(1)

@@ -1,0 +1,20 @@
+{
+ "tip": "8996eee4fb9fb4e159588305223ef421728c4e72",
+ "hot_path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+ "hot_tip_lines": 743,
+ "hot_branch_lines": 415,
+ "hot_branch_ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+ "hot_markers": [
+  "C1 hub 拿到行程",
+  "C2 粘贴导入地点"
+ ],
+ "ap_path": "frontend/src/features/access/AccessPanel.tsx",
+ "ap_guard": "{mayManageMembers && !isSelf && choices.length > 0 ? (",
+ "eol": {
+  "lf_lines_on_tip": 14514,
+  "crlf_lines_on_branch": 13836,
+  "plus_lines_after_ignore_cr": 29
+ },
+ "branch_only_files": 0,
+ "r5_counterexample": null
+}
