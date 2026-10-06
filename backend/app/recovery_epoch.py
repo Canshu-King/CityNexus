@@ -46,11 +46,16 @@ def _payload_fingerprint(payload_json: str | None) -> str | None:
 
 
 def recovery_reality_basis(session: Session, journey: Journey) -> dict[str, Any]:
-    """Return only decision-material, canonical Journey facts.
+    """Return decision-material Journey facts with storage identity kept separate.
 
-    Observation timestamps, raw payloads and model output are intentionally
-    excluded.  Event ids remain in the basis so a new actionable fact changes
-    the epoch while irrelevant observation churn does not.
+    Recovery reality is semantic, not row identity.  Two provider rows that
+    describe the same canonical incident must not create a new generation just
+    because their Event UUIDs differ.  Likewise DETECTED -> ACKNOWLEDGED is a
+    workflow transition while the same incident remains actionable, not a new
+    physical world.
+
+    Source Event ids are retained only for lineage/debugging and are explicitly
+    excluded from the recovery-reality fingerprint below.
     """
 
     rows = session.scalars(
@@ -58,24 +63,49 @@ def recovery_reality_basis(session: Session, journey: Journey) -> dict[str, Any]
         .where(Event.journey_id == journey.id)
         .order_by(Event.id.asc())
     ).all()
-    events: list[dict[str, Any]] = []
+    grouped: dict[str, dict[str, Any]] = {}
     for event in rows:
         if str(event.status or "").upper() not in _ACTIONABLE_EVENT_STATUSES:
             continue
-        events.append(
-            {
-                "id": str(event.id),
-                "provider_key": str(event.provider_key or ""),
-                "provenance": str(event.provenance or ""),
-                "event_type": str(event.event_type or ""),
-                "severity": str(event.severity or ""),
-                "status": str(event.status or ""),
-                "affected_activity_id": str(event.affected_activity_id or ""),
-                "incident_fingerprint": _payload_fingerprint(event.payload_json),
-            }
+        incident = _payload_fingerprint(event.payload_json)
+        semantic = {
+            "provider_key": str(event.provider_key or ""),
+            "provenance": str(event.provenance or ""),
+            "event_type": str(event.event_type or ""),
+            "severity": str(event.severity or ""),
+            "affected_activity_id": str(event.affected_activity_id or ""),
+            "incident_fingerprint": incident,
+            # When a provider supplied no semantic incident fingerprint, the
+            # server-owned occurrence time is the conservative fallback that
+            # distinguishes genuinely separate incidents without using UUIDs.
+            "fallback_occurred_at": None if incident else str(event.occurred_at or ""),
+        }
+        identity_material = json.dumps(
+            semantic,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
         )
+        event_identity = (
+            f"incident:{incident}"
+            if incident
+            else "fallback:" + hashlib.sha256(identity_material.encode("utf-8")).hexdigest()
+        )
+        item = grouped.setdefault(
+            event_identity,
+            {
+                "event_identity": event_identity,
+                **semantic,
+                "source_event_ids": [],
+            },
+        )
+        item["source_event_ids"].append(str(event.id))
+
+    events = sorted(grouped.values(), key=lambda item: str(item["event_identity"]))
+    for item in events:
+        item["source_event_ids"] = sorted(set(item["source_event_ids"]))
     return {
-        "schema": "citynexus.recovery-reality.v1",
+        "schema": "citynexus.recovery-reality.v2",
         "journey_id": str(journey.id),
         "active_plan_version_id": str(journey.active_plan_version_id or ""),
         "current_activity_id": str(journey.current_activity_id or ""),
@@ -84,7 +114,23 @@ def recovery_reality_basis(session: Session, journey: Journey) -> dict[str, Any]
 
 
 def recovery_reality_fingerprint(basis: Mapping[str, Any]) -> str:
-    encoded = json.dumps(dict(basis), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    material = dict(basis)
+    # Event UUIDs are provenance, never recovery reality.
+    material["events"] = [
+        {
+            key: value
+            for key, value in dict(item).items()
+            if key != "source_event_ids"
+        }
+        for item in material.get("events", [])
+        if isinstance(item, Mapping)
+    ]
+    encoded = json.dumps(
+        material,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
@@ -144,7 +190,14 @@ def ensure_recovery_epoch(session: Session, journey: Journey) -> RecoveryEpoch:
         active_plan_version_id_at_open=journey.active_plan_version_id,
         recovery_reality_fingerprint=fingerprint,
         triggering_event_ids_json=json.dumps(
-            sorted(str(item["id"]) for item in basis["events"]), separators=(",", ":")
+            sorted(
+                {
+                    str(event_id)
+                    for item in basis["events"]
+                    for event_id in item.get("source_event_ids", [])
+                }
+            ),
+            separators=(",", ":"),
         ),
         status=OPEN,
         opened_at=now,
@@ -173,9 +226,26 @@ def validate_recovery_epoch_binding(
     *,
     expected_status: str = OPEN,
 ) -> RecoveryEpoch:
-    current = current_open_recovery_epoch(session, journey_id)
-    bound = session.get(RecoveryEpoch, str(bound_recovery_epoch_id)) if bound_recovery_epoch_id else None
-    if bound is None or current is None or bound.id != current.id or bound.status != expected_status:
+    # "OPEN" is not enough: a provider/Event transaction may have changed the
+    # actual Journey reality before any caller explicitly refreshed the epoch.
+    # Recompute here so every authority-bearing spend observes current truth.
+    journey = session.get(Journey, str(journey_id))
+    current = (
+        ensure_recovery_epoch(session, journey)
+        if journey is not None
+        else current_open_recovery_epoch(session, journey_id)
+    )
+    bound = (
+        session.get(RecoveryEpoch, str(bound_recovery_epoch_id))
+        if bound_recovery_epoch_id
+        else None
+    )
+    if (
+        bound is None
+        or current is None
+        or bound.id != current.id
+        or bound.status != expected_status
+    ):
         raise RecoveryEpochSuperseded(bound=bound, current=current)
     return current
 
