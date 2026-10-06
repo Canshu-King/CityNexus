@@ -127,6 +127,13 @@ REASON_NO_CANONICAL_IDENTITY = "NO_CANONICAL_IDENTITY"
 REASON_DESTINATION_AMBIGUOUS = "DESTINATION_AMBIGUOUS"
 # R1: these are runtime facts and must never be dressed up as the structural verdict.
 REASON_RESOLVER_UNAVAILABLE = "DESTINATION_RESOLVER_UNAVAILABLE"
+# The third "why is it not found" cause, named so the screen has something truthful to say: the
+# destination resolved, the catalog HAS rows for it, and those rows carry no usable coordinate.  Before
+# this code the only two options were to drop such places (the user sees an empty list and cannot tell
+# this apart from "never registered") or to invent a coordinate (a lie).  It is deliberately NOT
+# `COVERAGE_INCOMPLETE`: that one means "this category was never prepared", this one means "it was
+# prepared and the point is missing", and a reader that conflates them cannot act correctly on either.
+REASON_PLACES_NO_COORDINATE = "PLACES_NO_COORDINATE"
 TRANSIENT_REASONS = (
     REASON_RESOLVER_UNAVAILABLE,
     "PROVIDER_RATE_LIMITED",
@@ -145,6 +152,9 @@ ACTION_ACCEPT_PARTIAL_PLAN = "ACCEPT_PARTIAL_PLAN"
 #: meaning "later", that half was unimplementable without a fourth word - so it is added here, named
 #: once, and raised as its own R1 question rather than smuggled in behind a state rename.
 ACTION_RETRY_LATER = "RETRY_LATER"
+# The third cause's action: the rows exist, so there is nothing to choose and nothing to wait for --
+# what the traveller can act on is preparing the coordinates for the places already registered.
+ACTION_PREPARE_PLACES = "PREPARE_PLACES"
 
 #: The named gap the arbitration's acceptance wording asks for (ruling A: `HYDRATABLE` plus
 #: `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`).  Until this constant gained an emitter it existed only
@@ -1404,6 +1414,35 @@ def fingerprint_parts(
 _OSM_GEOMETRY_KINDS = ("node", "way", "relation")
 
 
+def _resolved_places_lack_coordinates(session: Session, resolution: Any) -> bool:
+    """True when the destination resolved AND its catalog holds rows AND every one lacks a point.
+
+    Measured against the rows rather than against the coverage counters on purpose: the cause is about
+    the rows, and a destination with no rows at all is the *never registered* cause, not this one.  A
+    half-filled row counts as lacking a coordinate too -- one number is not a usable point.
+    """
+    if not resolution.city_code:
+        return False
+    rows = session.scalars(select(Place).where(Place.city_code == resolution.city_code)).all()
+    return bool(rows) and all(catalog_coordinate_status(place) != "RESOLVED_COORDINATE" for place in rows)
+
+
+def catalog_coordinate_status(place: Any) -> str:
+    """Per-row geometry verdict for one catalog place: is there a usable point, and is it coherent.
+
+    Three values, because half a point is its own failure and must not be reported as either of the
+    others: `RESOLVED_COORDINATE` (both numbers), `NO_COORDINATE` (neither), `HALF_COORDINATE` (only one,
+    which is a corrupt row rather than a missing one and deserves to be visible as such).
+    """
+    has_lat = place.latitude is not None
+    has_lon = place.longitude is not None
+    if has_lat and has_lon:
+        return "RESOLVED_COORDINATE"
+    if has_lat != has_lon:
+        return "HALF_COORDINATE"
+    return "NO_COORDINATE"
+
+
 def _place_geometry_kind(external_id: object) -> str | None:
     head = re.split(r"[:/]", str(external_id or ""), maxsplit=1)[0].strip().lower()
     return head if head in _OSM_GEOMETRY_KINDS else None
@@ -1455,6 +1494,12 @@ def evaluate_capability(
             REASON_DESTINATION_AMBIGUOUS,
             ACTION_CHOOSE_ANOTHER_DESTINATION,
         )
+    elif resolution.state == "RESOLVED" and _resolved_places_lack_coordinates(session, resolution):
+        # The third cause, and it must outrank COVERAGE: the destination IS named and the catalog IS
+        # prepared -- what is missing is the point on every row, so telling the traveller to "prepare
+        # more" would ask for work that cannot fix it.  This verdict is HYDRATABLE-with-the-wrong-reason
+        # avoided: the reason carries what is actually missing, the action carries what can be done.
+        verdict, reason, action = "HYDRATABLE", REASON_PLACES_NO_COORDINATE, ACTION_PREPARE_PLACES
     elif not resolution.resolved:
         # Structural: nothing in this build can name the destination at all.  Note that this
         # branch is *not* reached when a resolver merely failed - R1 keeps that retryable.
@@ -1520,6 +1565,11 @@ def evaluate_capability(
                         "category": place.category,
                         "latitude": place.latitude,
                         "longitude": place.longitude,
+                        # The third "why is it not found" cause, nameable per row: the place resolved to
+                        # an identity and the catalog still has no usable point for it.  Carried on the row
+                        # rather than inferred by the screen, so "here is the place and here is the gap"
+                        # survives whatever the screen does with the two numbers.
+                        "coordinate_status": catalog_coordinate_status(place),
                     }
                     for place in session.scalars(
                         select(Place).where(Place.city_code == resolution.city_code)
