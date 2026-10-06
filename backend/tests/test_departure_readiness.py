@@ -1,0 +1,105 @@
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
+
+from app.execution import readiness as module
+
+
+def _journey(status="ACTIVE"):
+    return SimpleNamespace(id="j1", status=status)
+
+
+def _next_move(now, *, venue="OPEN_COMPATIBLE", route="AVAILABLE", presence="LOCATION_UNAVAILABLE"):
+    return {
+        "next_activity": {
+            "id": "a1",
+            "title": "Next stop",
+            "start_at": (now + timedelta(minutes=90)).isoformat(),
+        },
+        "current_activity": None,
+        "venue_readiness": {"state": venue},
+        "route_evidence": {"state": route, "degraded": route == "DEGRADED"},
+        "presence": {"state": presence},
+    }
+
+
+def _patch_basics(monkeypatch, now, move):
+    monkeypatch.setattr(module, "next_move_projection", lambda *_a, **_k: move)
+    monkeypatch.setattr(module, "_target_commitments", lambda *_a, **_k: [])
+    monkeypatch.setattr(module, "_next_reservation", lambda *_a, **_k: None)
+    monkeypatch.setattr(module, "_open_material_events", lambda *_a, **_k: [])
+
+
+def test_location_unavailable_pretrip_is_uncertainty_not_block(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    _patch_basics(monkeypatch, now, _next_move(now))
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["state"] == "READY_WITH_UNCERTAINTY"
+    assert result["blocking_reasons"] == []
+    assert "LOCATION_UNAVAILABLE" in result["warning_reasons"]
+
+
+def test_closed_venue_blocks_departure(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    _patch_basics(
+        monkeypatch,
+        now,
+        _next_move(now, venue="CLOSED_CONFLICT", presence="NEAR_TARGET"),
+    )
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["state"] == "BLOCKED"
+    assert result["recommended_action"] == "DO_NOT_DEPART"
+    assert "VENUE_NOT_COMPATIBLE" in result["blocking_reasons"]
+
+
+def test_unknown_venue_near_departure_needs_action(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    move = _next_move(now, venue="UNKNOWN", presence="NEAR_TARGET")
+    move["next_activity"]["start_at"] = (now + timedelta(minutes=45)).isoformat()
+    _patch_basics(monkeypatch, now, move)
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["state"] == "ACTION_NEEDED"
+    assert "VENUE_NOT_VERIFIED" in result["warning_reasons"]
+
+
+def test_cancelled_transport_blocks(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    _patch_basics(monkeypatch, now, _next_move(now, presence="NEAR_TARGET"))
+    reservation = SimpleNamespace(id="r1", status="CONFIRMED", realtime_status="CANCELLED")
+    monkeypatch.setattr(module, "_next_reservation", lambda *_a, **_k: reservation)
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["state"] == "BLOCKED"
+    assert "TRANSPORT_CANCELLED" in result["blocking_reasons"]
+
+
+def test_unknown_realtime_is_uncertainty_not_cancellation(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    _patch_basics(monkeypatch, now, _next_move(now, presence="NEAR_TARGET"))
+    reservation = SimpleNamespace(
+        id="r1", status="CONFIRMED", realtime_status="UNKNOWN_REALTIME"
+    )
+    monkeypatch.setattr(module, "_next_reservation", lambda *_a, **_k: reservation)
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["state"] != "BLOCKED"
+    assert "TRANSPORT_REALTIME_UNCERTAIN" in result["warning_reasons"]
+
+
+def test_missing_route_minutes_never_fabricates_departure_time(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    _patch_basics(monkeypatch, now, _next_move(now, presence="NEAR_TARGET"))
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["must_leave_by"] is None
+    assert result["must_leave_by_absent_reason"] == "ROUTE_EVIDENCE_DOES_NOT_EXPOSE_TRAVEL_MINUTES"
