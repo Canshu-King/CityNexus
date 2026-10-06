@@ -28,42 +28,56 @@ def departure_activation_projection(
     """Project whether departure is due without asserting that movement occurred."""
 
     status = str(activity_status or "").upper()
+    activity_id = readiness.get("target_activity_id")
+    target_title = readiness.get("target_title")
+    must_leave_by = readiness.get("must_leave_by")
+    readiness_state = str(readiness.get("state") or "UNKNOWN")
+
+    def result(**values: Any) -> dict[str, Any]:
+        return {
+            "activity_id": activity_id,
+            "target_title": target_title,
+            "must_leave_by": must_leave_by,
+            "readiness_state": readiness_state,
+            **values,
+        }
+
     if status == "EN_ROUTE":
-        return {
-            "state": "ALREADY_EN_ROUTE",
-            "minutes_to_leave": None,
-            "can_confirm_departure": False,
-            "recommended_action": "CONTINUE_ROUTE",
-            "authority_required": None,
-        }
+        return result(
+            state="ALREADY_EN_ROUTE",
+            minutes_to_leave=None,
+            can_confirm_departure=False,
+            recommended_action="CONTINUE_ROUTE",
+            authority_required=None,
+        )
     if status in {"ARRIVED", "IN_PROGRESS", "COMPLETED", "SKIPPED", "CANCELLED"}:
-        return {
-            "state": "ARRIVED_OR_LATER" if status != "COMPLETED" else "COMPLETE",
-            "minutes_to_leave": None,
-            "can_confirm_departure": False,
-            "recommended_action": "NONE",
-            "authority_required": None,
-        }
+        return result(
+            state="ARRIVED_OR_LATER" if status != "COMPLETED" else "COMPLETE",
+            minutes_to_leave=None,
+            can_confirm_departure=False,
+            recommended_action="NONE",
+            authority_required=None,
+        )
 
     readiness_state = str(readiness.get("state") or "UNKNOWN").upper()
     if readiness_state == "BLOCKED":
-        return {
-            "state": "BLOCKED",
-            "minutes_to_leave": None,
-            "can_confirm_departure": False,
-            "recommended_action": "CHECK_BLOCKER",
-            "authority_required": "OPERATOR_CONFIRMED_EXECUTION",
-        }
+        return result(
+            state="BLOCKED",
+            minutes_to_leave=None,
+            can_confirm_departure=False,
+            recommended_action="CHECK_BLOCKER",
+            authority_required="OPERATOR_CONFIRMED_EXECUTION",
+        )
 
     leave_at = _aware(readiness.get("must_leave_by"))
     if leave_at is None:
-        return {
-            "state": "NO_ROUTE",
-            "minutes_to_leave": None,
-            "can_confirm_departure": False,
-            "recommended_action": "CHECK_ROUTE",
-            "authority_required": "OPERATOR_CONFIRMED_EXECUTION",
-        }
+        return result(
+            state="NO_ROUTE",
+            minutes_to_leave=None,
+            can_confirm_departure=False,
+            recommended_action="CHECK_ROUTE",
+            authority_required="OPERATOR_CONFIRMED_EXECUTION",
+        )
 
     stamp = now.astimezone(timezone.utc)
     minutes = (leave_at - stamp).total_seconds() / 60.0
@@ -80,13 +94,13 @@ def departure_activation_projection(
         state = "OVERDUE"
         action = "CONFIRM_DEPARTURE"
 
-    return {
-        "state": state,
-        "minutes_to_leave": round(minutes, 1),
-        "can_confirm_departure": True,
-        "recommended_action": action,
-        "authority_required": "OPERATOR_CONFIRMED_EXECUTION",
-    }
+    return result(
+        state=state,
+        minutes_to_leave=round(minutes, 1),
+        can_confirm_departure=True,
+        recommended_action=action,
+        authority_required="OPERATOR_CONFIRMED_EXECUTION",
+    )
 
 
 def departure_cue_fingerprint(

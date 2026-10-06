@@ -12,6 +12,10 @@ from sqlalchemy.orm import Session
 from app.agent.watch_policy import next_move_projection
 from app.db.models import Commitment, Event, Journey, TransportReservation
 from app.execution.clock import execution_clock
+from app.execution.departure_activation import (
+    departure_activation_projection,
+    departure_cue_fingerprint,
+)
 
 _MATERIAL_EVENT_TYPES = {"WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY"}
 _BLOCKING_VENUE_STATES = {"CLOSED_CONFLICT", "OUTSIDE_VERIFIED_HOURS"}
@@ -341,8 +345,20 @@ def refresh_departure_readiness(
 ) -> dict[str, Any]:
     """Refresh the read model and, when due, record one deduped briefing."""
 
+    from app.operations.v9 import notify
+
     projection = departure_readiness_projection(session, journey, now=now)
-    captured_at = (now or execution_clock.now()).astimezone(timezone.utc).isoformat()
+    stamp = (now or execution_clock.now()).astimezone(timezone.utc)
+    next_move = projection.get("next_move") or {}
+    current_move = next_move.get("current_activity") or {}
+    target = next_move.get("next_activity") or current_move or {}
+    activity_status = current_move.get("status") if current_move.get("status") in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"} else target.get("status")
+    activation = departure_activation_projection(
+        projection,
+        activity_status=activity_status,
+        now=stamp,
+    )
+    captured_at = stamp.isoformat()
     notification: dict[str, Any] = {
         "eligible": False,
         "created_or_reused": False,
@@ -352,8 +368,6 @@ def refresh_departure_readiness(
     }
     priority = briefing_priority(projection)
     if emit_briefing and priority is not None:
-        from app.operations.v9 import notify
-
         fingerprint = readiness_fingerprint(projection)
         dedupe_key = f"departure-readiness:{journey.id}:{fingerprint}"
         row = notify(
@@ -378,8 +392,67 @@ def refresh_departure_readiness(
             "priority": priority,
             "occurrence_count": row.occurrence_count,
         }
+    departure_cue: dict[str, Any] = {
+        "eligible": False,
+        "created_or_reused": False,
+        "id": None,
+        "dedupe_key": None,
+        "priority": None,
+    }
+    cue_states = {"LEAVE_SOON", "DUE_NOW", "OVERDUE", "BLOCKED"}
+    if (
+        emit_briefing
+        and activation.get("state") in cue_states
+        and activation.get("activity_id")
+    ):
+        cue_state = str(activation["state"])
+        blocker_codes = list(projection.get("blocking_reasons") or [])
+        cue_fingerprint = departure_cue_fingerprint(
+            journey_id=str(journey.id),
+            activity_id=str(activation["activity_id"]),
+            activation_state=cue_state,
+            readiness_state=str(projection.get("state") or "UNKNOWN"),
+            blocker_codes=blocker_codes,
+        )
+        dedupe_key = f"departure-activation:{journey.id}:{cue_fingerprint}"
+        cue_priority = {
+            "BLOCKED": "CRITICAL",
+            "OVERDUE": "HIGH",
+            "DUE_NOW": "HIGH",
+            "LEAVE_SOON": "NORMAL",
+        }[cue_state]
+        cue_copy = {
+            "BLOCKED": "Hold before leaving — check the issue first.",
+            "OVERDUE": "You’re past the planned leave time. Confirm when you’re on the way.",
+            "DUE_NOW": "It’s time to leave for your next stop.",
+            "LEAVE_SOON": "You’ll need to leave soon for your next stop.",
+        }[cue_state]
+        row = notify(
+            session,
+            journey.id,
+            dedupe_key=dedupe_key,
+            kind="DEPARTURE_ACTIVATION",
+            priority=cue_priority,
+            payload={
+                "activity_id": activation.get("activity_id"),
+                "state": cue_state,
+                "readiness_state": projection.get("state"),
+                "must_leave_by": projection.get("must_leave_by"),
+                "summary": cue_copy,
+            },
+        )
+        departure_cue = {
+            "eligible": True,
+            "created_or_reused": True,
+            "id": row.id,
+            "dedupe_key": dedupe_key,
+            "priority": cue_priority,
+            "occurrence_count": row.occurrence_count,
+            "state": cue_state,
+        }
     projection = {
         **projection,
+        "departure_activation": {**activation, "captured_at": captured_at, "cue": departure_cue},
         "captured_at": captured_at,
         "notification": notification,
     }

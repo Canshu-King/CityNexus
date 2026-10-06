@@ -1306,6 +1306,7 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
     # Keep the offline card as a captured read model.  This deliberately uses
     # the pure projection, never the notification-producing refresh helper.
     from app.execution.readiness import departure_readiness_projection
+    from app.execution.departure_activation import departure_activation_projection
 
     reference = execution_clock.now(journey.timezone)
     window_end = reference + timedelta(hours=24)
@@ -1365,6 +1366,15 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             offer = session.get(AccommodationOfferSnapshot, str(stay_offer_id))
     execution = _execution_truth(activities, legs, journey.current_activity_id)
     readiness = departure_readiness_projection(session, journey, now=reference.astimezone(timezone.utc))
+    next_move = readiness.get("next_move") or {}
+    current_move = next_move.get("current_activity") or {}
+    activation_target = next_move.get("next_activity") or current_move or {}
+    activation_status = current_move.get("status") if current_move.get("status") in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"} else activation_target.get("status")
+    departure_activation = departure_activation_projection(
+        readiness,
+        activity_status=activation_status,
+        now=reference.astimezone(timezone.utc),
+    )
     route_operation = session.scalar(
         select(RouteAcquisitionOperation)
         .where(
@@ -1441,6 +1451,15 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             "freshness_semantics": "CAPTURED_READ_MODEL",
         },
         "route_session": route_session,
+        "departure_activation": {
+            **departure_activation,
+            "captured_at": now,
+            "cue": None,
+            "departure_confirmed": activation_status == "EN_ROUTE",
+            "execution_status": activation_status,
+            "execution_truth": (execution.get("now") or {}).get("execution_truth"),
+            "freshness_semantics": "CAPTURED_READ_MODEL",
+        },
     }
     freshness = {
         "latest_provider_capture_at": max(provider_times) if provider_times else None,

@@ -53,11 +53,22 @@ type GuardianWatch = {
 type DepartureReadiness = {
   state?: string;
   target_title?: string | null;
+  target_activity_id?: string | null;
   starts_at?: string | null;
   minutes_until_start?: number | null;
   must_leave_by?: string | null;
   launch_origin?: { source?: string | null; name?: string | null } | null;
   recommended_action?: string;
+  departure_activation?: {
+    state?: string;
+    activity_id?: string | null;
+    target_title?: string | null;
+    must_leave_by?: string | null;
+    minutes_to_leave?: number | null;
+    readiness_state?: string;
+    can_confirm_departure?: boolean;
+    recommended_action?: string;
+  } | null;
 };
 
 type LaunchSetup = {
@@ -244,6 +255,47 @@ export function LiveRecovery({
       setBusy(null);
     }
   }, [journeyId, zh]);
+
+  const confirmDeparture = useCallback(async () => {
+    const activation = departureReadiness?.departure_activation;
+    const activityId = activation?.activity_id ?? departureReadiness?.target_activity_id;
+    if (!activityId || activation?.can_confirm_departure !== true || activation.state === "BLOCKED") {
+      setMessage(zh ? "现在还不能确认出发，请先检查行程提示。" : "You cannot confirm departure yet. Check the trip guidance first.");
+      return;
+    }
+    setBusy("departure");
+    setMessage(null);
+    try {
+      const response = await fetchWithWriteDeadline(
+        `/api/v1/journeys/${journeyId}/activities/${activityId}/depart`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            truth_kind: "OPERATOR_CONFIRMED_EXECUTION",
+            operator_confirmed: true,
+          }),
+        },
+      );
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          setMessage(zh ? "请先登录后确认出发。" : "Please sign in before confirming departure.");
+        } else {
+          setMessage(zh ? "暂时无法确认出发。" : "We couldn't confirm departure yet.");
+        }
+        return;
+      }
+      setMessage(zh ? "已记录，你正在前往下一站。" : "Got it — you’re on the way to the next stop.");
+      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`);
+      if (readiness.ok) setDepartureReadiness((await readiness.json()) as DepartureReadiness);
+      await twin.refetch();
+      await plans.refetch();
+    } catch (error) {
+      setMessage(isWriteDeadlineMissed(error) ? writeDeadlineCopy(zh).body : (zh ? "暂时无法确认出发。" : "We couldn't confirm departure yet."));
+    } finally {
+      setBusy(null);
+    }
+  }, [departureReadiness, journeyId, plans, twin, zh]);
 
   useEffect(() => {
     let cancelled = false;
@@ -607,6 +659,36 @@ export function LiveRecovery({
               {zh ? `出发点：${departureReadiness.launch_origin.name}` : `Starting from ${departureReadiness.launch_origin.name}`}
             </small>
           )}
+          {(() => {
+            const activation = departureReadiness.departure_activation;
+            if (!activation) return null;
+            if (activation.state === "ALREADY_EN_ROUTE") {
+              return <strong>{zh ? "正在前往下一站。" : "On the way to the next stop."}</strong>;
+            }
+            if (activation.state === "BLOCKED") {
+              return <strong>{zh ? "先暂停出发，请先检查行程提示。" : "Hold before leaving — check the issue first."}</strong>;
+            }
+            if (activation.state === "NO_ROUTE") {
+              return <small>{zh ? "路线尚未准备好。" : "The route is not ready yet."}</small>;
+            }
+            if (activation.state === "NOT_DUE") return null;
+            return (
+              <>
+                <strong>
+                  {activation.state === "LEAVE_SOON"
+                    ? zh ? "快到出发时间了。" : "You’ll need to leave soon."
+                    : activation.state === "OVERDUE"
+                      ? zh ? "已超过建议出发时间；确认你已在路上。" : "You’re past the planned leave time; confirm when you’re on the way."
+                      : zh ? `该出发前往 ${activation.target_title ?? departureReadiness.target_title ?? "下一站"} 了。` : `It’s time to leave for ${activation.target_title ?? departureReadiness.target_title ?? "your next stop"}.`}
+                </strong>
+                {activation.can_confirm_departure === true && (
+                  <button type="button" disabled={busy !== null} onClick={() => void confirmDeparture()}>
+                    {zh ? "我出发了" : "I’m leaving"}
+                  </button>
+                )}
+              </>
+            );
+          })()}
         </div>
       )}
 

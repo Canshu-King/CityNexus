@@ -228,6 +228,7 @@ from app.execution.readiness import (
     departure_readiness_projection,
     refresh_departure_readiness,
 )
+from app.execution.departure_activation import departure_activation_projection
 from app.execution.launch_setup import launch_setup_projection
 from app.execution.launch_origin import grounded_launch_origin
 from app.execution.route_session_contract import (
@@ -1912,7 +1913,9 @@ def get_guardian_autopilot_status(
         if enrollment is not None and enrollment.enabled
         else None
     )
-    readiness = departure_readiness_projection(session, journey)
+    readiness = _readiness_with_departure_activation(
+        session, journey, departure_readiness_projection(session, journey)
+    )
     return {
         "journey_id": journey.id,
         "enrollment": (
@@ -1939,7 +1942,38 @@ def get_guardian_departure_readiness(
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
-    return departure_readiness_projection(session, journey)
+    readiness = departure_readiness_projection(session, journey)
+    return _readiness_with_departure_activation(session, journey, readiness)
+
+
+def _readiness_with_departure_activation(
+    session: Session,
+    journey: Journey,
+    readiness: dict[str, Any],
+) -> dict[str, Any]:
+    next_move = readiness.get("next_move") or {}
+    current_move = next_move.get("current_activity") or {}
+    target = next_move.get("next_activity") or current_move or {}
+    activity_status = current_move.get("status") if current_move.get("status") in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"} else target.get("status")
+    activation = departure_activation_projection(
+        readiness,
+        activity_status=activity_status,
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
+    return {
+        **readiness,
+        "departure_activation": activation,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/departure-activation")
+def get_departure_activation(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    readiness = departure_readiness_projection(session, journey)
+    return _readiness_with_departure_activation(session, journey, readiness)
 
 
 @app.post("/api/v1/journeys/{journey_id}/guardian/readiness/refresh")
