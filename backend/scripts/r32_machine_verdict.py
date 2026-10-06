@@ -2,13 +2,57 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
 
 def _dim(value: bool | None, evidence: str) -> dict[str, Any]:
     return {"verdict": "PROVEN" if value is True else "CONTRADICTED" if value is False else "NOT_PROVEN", "evidence": evidence}
+
+
+def _evaluator_receipt() -> dict[str, Any]:
+    """Identify the exact verifier source used to produce this verdict."""
+
+    path = Path(__file__).resolve()
+    raw = path.read_bytes()
+    repo = path.parents[2]
+    git_head = None
+    dirty = None
+    try:
+        git_head = subprocess.run(
+            ["git", "-C", str(repo), "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        dirty = bool(
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(repo),
+                    "status",
+                    "--porcelain",
+                    "--untracked-files=no",
+                    "--",
+                    str(path.relative_to(repo)),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+        )
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        pass
+    return {
+        "path": str(path.relative_to(repo)) if path.is_relative_to(repo) else str(path),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "git_head": git_head,
+        "tracked_dirty": dirty,
+    }
 
 
 def verdict(
@@ -74,9 +118,17 @@ def verdict(
         if provider_calls_raw is False
         else None
     )
+    failure = checkpoint.get("failure") or {}
+    failure_phase = str(failure.get("phase") or "")
     barrier_raw = runtime.get("concurrent_external_barrier_proven")
     concurrent_barrier: bool | None = (
-        True if barrier_raw is True else False if barrier_raw is False else None
+        True
+        if barrier_raw is True
+        else None
+        if checkpoint.get("status") == "NOT_PROVEN"
+        else False
+        if barrier_raw is False
+        else None
     )
     source_traceable: bool | None = None
     if source_receipt:
@@ -86,29 +138,36 @@ def verdict(
             and source_receipt.get("tracked_dirty_before_strike") is False
         )
 
+    external_outcomes = (
+        runtime.get("external_call_outcomes")
+        or runtime.get("external_barrier_hits_before_release")
+        or []
+    )
+
+    def provider_invoked(thread_name: str) -> bool | None:
+        if external_outcomes:
+            return any(
+                item.get("thread") == thread_name
+                and item.get("provider_call_invoked") is True
+                for item in external_outcomes
+                if isinstance(item, dict)
+            )
+        return None
+
+    a_provider_invoked = provider_invoked("r32-agent-a")
+    b_provider_invoked = provider_invoked("r32-agent-b")
+
     a_external: bool | None = None
-    if (
-        provider_calls_real is not None
-        and concurrent_barrier is not None
-        and a.get("id")
-    ):
+    if a.get("id") and a_provider_invoked is not None:
         a_external = bool(
-            provider_calls_real
-            and concurrent_barrier
+            a_provider_invoked
             and a.get("provider_key") == "hermes"
-            and any(row.get("run_id") == a.get("id") for row in steps)
         )
     b_external: bool | None = None
-    if (
-        provider_calls_real is not None
-        and concurrent_barrier is not None
-        and b.get("id")
-    ):
+    if b.get("id") and b_provider_invoked is not None:
         b_external = bool(
-            provider_calls_real
-            and concurrent_barrier
+            b_provider_invoked
             and b.get("provider_key") == "hermes"
-            and any(row.get("run_id") == b.get("id") for row in steps)
         )
 
     standing_authority_preconfigured: bool | None = None
@@ -646,22 +705,58 @@ def verdict(
             }
         )
 
-    # A clean harness abort before the causal chronology is established is a
-    # coverage failure, not evidence that the product violated the authority
-    # contract.  Keep source/regression/truth receipts positive when present,
-    # but downgrade unexercised causal dimensions to NOT_PROVEN instead of
-    # manufacturing CONTRADICTED results from empty rows.
+    # A clean harness abort is a coverage failure only for dimensions that
+    # truly were not exercised.  Never let a generic failure marker overwrite
+    # a contradiction that has concrete durable evidence.
     if checkpoint.get("failure") or checkpoint.get("status") == "NOT_PROVEN":
-        preserved = {
-            "strike_source_state_traceable",
-            "inherited_r28_exactly_once",
-            "truth_boundary_honest",
+        observed_on_abort = {
+            "strike_source_state_traceable": bool(source_receipt),
+            "standing_authority_preconfigured": bool(authority_setup),
+            "r1_opened_from_shock_a": bool(r1id),
+            "agent_a_external_and_bound_r1": bool(
+                a.get("id") or a_provider_invoked is not None
+            ),
+            "recovery_epoch_server_owned": bool(r2id),
+            "shock_b_material_not_storage_churn": bool(
+                checkpoint.get("shock_b") or r2id
+            ),
+            "r1_superseded_by_r2": bool(r2id),
+            "agent_b_external_and_bound_r2": bool(
+                b.get("id") or b_provider_invoked is not None
+            ),
+            "stale_agent_authority_refused": bool(
+                stale.get("typed") or stale_steps
+            ),
+            "stale_result_typed_superseded": bool(
+                stale.get("typed") or stale_steps
+            ),
+            "agent_a_terminal_live_outcome": bool(
+                a_final.get("status") or stale_steps
+            ),
+            "current_surface_epoch_pure": bool(
+                option_ids or accepted_audit or current_agent_rows
+            ),
+            "arrival_order_not_authority": bool(mutations),
+            "authority_provenance_mode_accurate": bool(mutations),
+            "approval_not_retargeted": bool(stale_approvals),
+            "no_duplicate_continuation_side_effect": bool(pending),
+            "exactly_one_or_zero_legal_plan_transition": bool(
+                mutations or r2id
+            ),
+            "no_post_shock_human_authority_fabrication": bool(r2id),
+            "inherited_r28_exactly_once": regression is not None,
+            "truth_boundary_honest": bool(
+                checkpoint.get("truth_boundary")
+            ),
         }
         for key in required_dimensions:
-            if key not in preserved:
+            if not observed_on_abort.get(key, False):
                 dimensions[key] = _dim(
                     None,
-                    "strike aborted before this causal dimension was exercised",
+                    (
+                        "strike aborted before this causal dimension was "
+                        f"exercised; phase={failure_phase or 'UNKNOWN'}"
+                    ),
                 )
 
     all_values = [
@@ -680,6 +775,7 @@ def verdict(
     )
     return {
         "schema": "citynexus.r32.machine-verdict.v3",
+        "evaluator_receipt": _evaluator_receipt(),
         "overall": overall,
         "required_dimensions": sorted(required_dimensions),
         "coverage_not_proven": [
