@@ -14581,6 +14581,11 @@ def generate_replan(
             id=str(uuid4()),
             journey_id=journey.id,
             trigger_event_id=trigger_id,
+            recovery_epoch_id=(
+                str(session.info.get("recovery_epoch_id"))
+                if session.info.get("recovery_epoch_id")
+                else None
+            ),
             base_plan_version_id=base.id,
             proposed_plan_version_id=proposed.id,
             status="PRESENTED",
