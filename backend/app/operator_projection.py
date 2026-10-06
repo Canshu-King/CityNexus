@@ -12,6 +12,7 @@ from app.db.models import (
     AgentPendingAction,
     AgentRun,
     AutopilotEnrollment,
+    AuditLog,
     Event,
     GuardianRun,
     Journey,
@@ -39,8 +40,12 @@ def classify_operator_state(
         return "OFF"
     if degraded:
         return "DEGRADED"
+    if guardian_action_status == "OPERATOR_EXTERNAL_AGENT_BLOCKED":
+        return "DEGRADED"
     if pending_status == "RESUMING":
         return "APPLYING"
+    if approval_status == "REJECTED":
+        return "NEEDS_ATTENTION"
     if (
         pending_status == "PENDING"
         and approval_status not in {"APPROVED", "CONSUMED"}
@@ -72,6 +77,44 @@ def _json(value: str | None, fallback: Any) -> Any:
         return json.loads(value or "")
     except (TypeError, json.JSONDecodeError):
         return fallback
+
+
+def _timeline(session: Session, journey_id: str) -> list[dict[str, Any]]:
+    """Turn durable audits into a compact traveller-facing story."""
+
+    rows = session.scalars(
+        select(AuditLog)
+        .where(AuditLog.journey_id == journey_id)
+        .order_by(AuditLog.created_at, AuditLog.id)
+    ).all()
+    items: list[dict[str, Any]] = []
+    for row in rows:
+        after = _json(row.after_json, {})
+        if not isinstance(after, dict):
+            after = {}
+        label: str | None = None
+        if row.action == "operator.started":
+            label = "Watching your trip"
+        elif row.action == "operator.stopped":
+            label = "Journey Operator paused"
+        elif row.action == "city.signal.incident.created":
+            label = f"Detected: {str(after.get('event_type') or 'a trip change').replace('_', ' ').title()}"
+        elif row.action in {"guardian.mission.compiled", "guardian.scan.started"}:
+            label = "Working on a recovery"
+        elif row.action == "agent.action_approval.created":
+            label = "Waiting for your approval"
+        elif row.action == "agent.action_approval.approved":
+            label = "Approved"
+        elif row.action == "replan.accepted":
+            label = "Plan updated"
+        elif row.action == "agent.pending_action.resumed":
+            label = "Watching your trip again"
+        elif row.action == "operator.external_agent_blocked":
+            label = "CityNexus could not reach its trip Agent"
+        if label is None:
+            continue
+        items.append({"at": row.created_at, "label": label, "kind": row.action})
+    return items[-12:]
 
 
 def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
@@ -142,13 +185,38 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
     )
     degraded = bool(enrollment is not None and enrollment.last_error)
 
+    # A continuation is a short-lived recovered transition. Once the next
+    # Guardian pulse is recorded, the same Journey is back in WATCHING.
+    resumed_audit = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.journey_id == journey.id,
+            AuditLog.action == "agent.pending_action.resumed",
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    recovered_transition = bool(
+        resumed_audit is not None
+        and (
+            enrollment is None
+            or not enrollment.last_pulse_at
+            or str(enrollment.last_pulse_at) <= str(resumed_audit.created_at)
+        )
+    )
+    projected_guardian_action = guardian.action_status if guardian else None
+    projected_pending_status = pending.status if pending else None
+    if not recovered_transition and projected_pending_status == "RESUMED":
+        projected_pending_status = None
+    if not recovered_transition and projected_guardian_action == "EXECUTED":
+        projected_guardian_action = None
+
     state = classify_operator_state(
         enabled=enabled,
         mission_active=mission_active,
         guardian_status=guardian.status if guardian else None,
-        guardian_action_status=guardian.action_status if guardian else None,
+        guardian_action_status=projected_guardian_action,
         agent_status=agent.status if agent else None,
-        pending_status=pending.status if pending else None,
+        pending_status=projected_pending_status,
         approval_status=approval.status if approval else None,
         material_event_open=open_event is not None,
         active_plan_changed=active_plan_changed,
@@ -189,6 +257,14 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
             or (guardian.reasoning_summary if guardian else None),
             "cost_delta_minor": proposal_diff.get("cost_delta_minor"),
             "schedule_delta_min": proposal_diff.get("end_time_delta_min"),
+            "changes": {
+                "removed": proposal_diff.get("removed", []),
+                "added": proposal_diff.get("added", []),
+                "moved": proposal_diff.get("moved", []),
+            },
+            "protected_commitments_preserved": bool(
+                proposal.locked_commitments_preserved
+            ),
         }
         if proposal is not None
         else None
@@ -215,26 +291,30 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
         "incident": incident,
         "decision": decision,
         "approval": approval_payload,
-        "guardian": (
-            {
-                "run_id": guardian.id,
-                "status": guardian.status,
-                "action_status": guardian.action_status,
-                "agent_run_id": guardian.agent_run_id,
-            }
-            if guardian is not None
-            else None
-        ),
-        "agent": (
-            {
-                "run_id": agent.id,
-                "provider_key": agent.provider_key,
-                "model_key": agent.model_key,
-                "status": agent.status,
-            }
-            if agent is not None
-            else None
-        ),
+        "timeline": _timeline(session, journey.id),
+        "advanced": {
+            "guardian": (
+                {
+                    "run_id": guardian.id,
+                    "status": guardian.status,
+                    "action_status": guardian.action_status,
+                    "agent_run_id": guardian.agent_run_id,
+                }
+                if guardian is not None
+                else None
+            ),
+            "agent": (
+                {
+                    "run_id": agent.id,
+                    "provider_key": agent.provider_key,
+                    "model_key": agent.model_key,
+                    "status": agent.status,
+                }
+                if agent is not None
+                else None
+            ),
+            "recovered_transition": recovered_transition,
+        },
         "operator": {
             "watching": enabled,
             "will_continue_after_approval": bool(

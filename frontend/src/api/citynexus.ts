@@ -345,6 +345,39 @@ export interface GuardianStatus {
   } | null;
 }
 
+export interface JourneyOperatorTimelineItem {
+  at: string;
+  label: string;
+  kind: string;
+}
+
+export interface JourneyOperatorProjection {
+  journey_id: string;
+  state: "OFF" | "WATCHING" | "INVESTIGATING" | "WAITING_FOR_APPROVAL" | "APPLYING" | "RECOVERED" | "NEEDS_ATTENTION" | "DEGRADED";
+  headline: string;
+  enabled: boolean;
+  standing_mission_id: string | null;
+  autonomy: string | null;
+  incident: { id: string; kind: string; severity: string; activity_id: string | null; provenance: string } | null;
+  decision: {
+    proposal_id: string;
+    status: string;
+    summary?: string | null;
+    cost_delta_minor?: number | null;
+    schedule_delta_min?: number | null;
+    changes?: Record<string, unknown>;
+  } | null;
+  approval: {
+    required: boolean;
+    approval_id: string;
+    status: string;
+    action_label: string;
+    pending_action_id: string;
+  } | null;
+  timeline: JourneyOperatorTimelineItem[];
+  operator: { watching: boolean; will_continue_after_approval: boolean };
+}
+
 export interface DepartureReadiness {
   state: "READY" | "READY_WITH_UNCERTAINTY" | "ACTION_NEEDED" | "BLOCKED" | "NOT_DUE" | "COMPLETE" | "UNKNOWN";
   target_activity_id: string | null;
@@ -1294,6 +1327,52 @@ export const cityNexusApi = {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/guardian/autopilot/stop",
       { method: "POST" },
+    );
+  },
+
+  getJourneyOperator(journeyId: string): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator");
+  },
+
+  startJourneyOperator(
+    journeyId: string,
+    objective?: string,
+    requestedAutonomy: "PLAN_ONLY" | "EXECUTE_WITHIN_BOUNDS" = "EXECUTE_WITHIN_BOUNDS",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator/start", {
+      method: "POST",
+      headers: travelerAuthHeaders(),
+      body: JSON.stringify({
+        objective: objective ?? "Take care of this trip. Protect confirmed commitments, keep changes reasonable, and ask me before important changes.",
+        requested_autonomy: requestedAutonomy,
+      }),
+    });
+  },
+
+  stopJourneyOperator(journeyId: string): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator/stop", {
+      method: "POST",
+      headers: travelerAuthHeaders(),
+    });
+  },
+
+  approveJourneyOperatorChange(
+    journeyId: string,
+    approvalId: string,
+  ): Promise<Record<string, unknown>> {
+    return requestJson<Record<string, unknown>>(
+      "/journeys/" + journeyId + "/operator/approvals/" + approvalId + "/approve",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  rejectJourneyOperatorChange(
+    journeyId: string,
+    approvalId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/operator/approvals/" + approvalId + "/reject",
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 

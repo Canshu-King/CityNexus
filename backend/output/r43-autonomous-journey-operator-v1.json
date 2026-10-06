@@ -1,0 +1,329 @@
+{
+  "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "operator_start": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "state": "WATCHING",
+    "headline": "I’m watching your trip.",
+    "enabled": true,
+    "standing_mission_id": "f942198a-0b03-473c-8e77-a77593d26d72",
+    "autonomy": "EXECUTE_WITHIN_BOUNDS",
+    "incident": null,
+    "decision": null,
+    "approval": null,
+    "timeline": [
+      {
+        "at": "2026-10-06T13:52:24.551478+00:00",
+        "label": "Watching your trip",
+        "kind": "operator.started"
+      }
+    ],
+    "advanced": {
+      "guardian": null,
+      "agent": null,
+      "recovered_transition": false
+    },
+    "operator": {
+      "watching": true,
+      "will_continue_after_approval": false
+    },
+    "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+    "started": true,
+    "worker": {
+      "enabled": true,
+      "interval_seconds": 3600.0,
+      "signal_provider": "demo",
+      "enrolled_journey_ids": [
+        "22222222-2222-4222-8222-222222222222"
+      ],
+      "last_pulse_at": null,
+      "last_error": null
+    }
+  },
+  "fixture": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "provider_key": "city-signal-fixture",
+    "state": "DISRUPTED",
+    "revision": 1,
+    "payload": {
+      "description": "LAB_FIXTURE: selected place is temporarily closed",
+      "target_place_id": "place-tech-art"
+    },
+    "updated_at": "2026-10-06T13:52:24.565389+00:00"
+  },
+  "pulse": {
+    "status_code": 200,
+    "guardian": {
+      "id": "6b76ae19-46c6-4b05-851e-ec7ef6a1da25",
+      "journey_id": "22222222-2222-4222-8222-222222222222",
+      "decision": "RECOVERY_REQUIRED",
+      "status": "PARTIAL",
+      "action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+      "deduplicated": false,
+      "standing_mission": {
+        "id": "f942198a-0b03-473c-8e77-a77593d26d72",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "trigger_event_id": null,
+        "user_text": "Take care of this trip. Protect confirmed commitments, keep changes reasonable, and ask me before important changes.",
+        "objective_codes": [],
+        "protected_activity_ids": [],
+        "mutable_activity_ids": [],
+        "intent": {
+          "capabilities": [],
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "mutable_activity_ids": [],
+          "objective_codes": [],
+          "preferences": {},
+          "protected_activity_ids": [],
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "resolved_intent": {
+          "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+          "capabilities": [],
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "mutable_activity_ids": [],
+          "objective_codes": [],
+          "policy_mode": "ADVISORY",
+          "policy_version": 1,
+          "preferences": {},
+          "protected_activity_ids": [],
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "allowed_action_classes": [
+          "REQUEST_REPLAN",
+          "ACCEPT_REPLAN"
+        ],
+        "unresolved_references": [],
+        "compiler": {
+          "provider_key": "deterministic",
+          "model_key": "mission-compiler-v2-fallback",
+          "confidence": 1.0
+        },
+        "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+        "is_standing": true,
+        "parent_mission_id": null,
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "preferences": {},
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+        "status": "ACTIVE",
+        "created_at": "2026-10-06T13:52:24.536531+00:00",
+        "started_at": null,
+        "completed_at": null,
+        "failure_reason": null,
+        "clarification": {},
+        "ai_state": "DISABLED_BY_OPS",
+        "mission_plan": {
+          "version": "citynexus.mission-plan.v1",
+          "autonomy": "EXECUTE_WITHIN_BOUNDS",
+          "steps": [
+            {
+              "id": "inspect_journey",
+              "operation": "Inspect current Journey",
+              "tool_name": "inspect_journey",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_twin",
+              "operation": "Inspect JourneyTwin",
+              "tool_name": "inspect_twin",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_commitments",
+              "operation": "Inspect protected commitments",
+              "tool_name": "inspect_journey",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "evaluate_recovery_options",
+              "operation": "Evaluate the current reality and available recovery options",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": true
+            },
+            {
+              "id": "evaluate_candidates",
+              "operation": "Evaluate candidates against constraints",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_proposal",
+              "operation": "Inspect available proposal trade-offs",
+              "tool_name": "list_replans",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "approval_boundary",
+              "operation": "Wait for explicit CityNexus approval before mutation",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": true
+            }
+          ],
+          "protected_activity_ids": [],
+          "allowed_tools": [
+            "inspect_journey",
+            "inspect_twin",
+            "list_replans",
+            "search_city_services",
+            "acquire_place_facts",
+            "estimate_place_facts",
+            "generate_plans",
+            "request_collective_decision",
+            "activate_standby",
+            "request_replan",
+            "accept_replan",
+            "replace_activity",
+            "reschedule_activity",
+            "create_booking",
+            "cancel_refundable_booking",
+            "request_commitment_change",
+            "apply_clarified_horizon_choice",
+            "conclude_recovery"
+          ],
+          "read_only_tools": [
+            "inspect_journey",
+            "inspect_twin",
+            "list_replans",
+            "search_city_services"
+          ],
+          "approval_required_tools": [
+            "request_collective_decision",
+            "activate_standby",
+            "accept_replan",
+            "replace_activity",
+            "reschedule_activity",
+            "create_booking",
+            "cancel_refundable_booking",
+            "request_commitment_change",
+            "apply_clarified_horizon_choice"
+          ],
+          "authority": "CityNexus AgentToolGateway and deterministic domain services"
+        }
+      },
+      "trigger_event_id": "d5de0c86-eea9-43ea-923f-62b36e8459b5",
+      "trigger_kind": "REACTIVE",
+      "resilience_snapshot_id": null,
+      "proposal_id": null,
+      "agent_run_id": null,
+      "agent_runtime": null,
+      "tool_steps": [],
+      "evidence": {
+        "inference": {
+          "controller": "configured_external_agent_required",
+          "decision": "RECOVERY_REQUIRED",
+          "deterministic_fallback_allowed": false,
+          "reason": "highest-severity actionable unresolved event",
+          "runtime_unavailable": "DeepSeek API key is not configured",
+          "selected_trigger_event_id": "d5de0c86-eea9-43ea-923f-62b36e8459b5"
+        },
+        "mutation": {
+          "executed": false,
+          "proposal_id": null
+        },
+        "observation": {
+          "actionable_event_ids": [
+            "d5de0c86-eea9-43ea-923f-62b36e8459b5"
+          ],
+          "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+          "incident_fingerprints": [
+            "0513e3a862c95134eec2c8b7516349c29f441636895baf805a6ca515f0446a7b"
+          ],
+          "journey_status": "ACTIVE",
+          "open_event_ids": [
+            "d5de0c86-eea9-43ea-923f-62b36e8459b5"
+          ]
+        },
+        "policy": {
+          "decision": "NO_FALLBACK",
+          "reason_codes": [
+            "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+          ]
+        },
+        "solver": null
+      },
+      "reasoning_summary": "The Journey Operator requires its configured external Agent; deterministic Guardian fallback was refused.",
+      "active_plan_before_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+      "active_plan_after_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+      "created_at": "2026-10-06T13:52:24.604300+00:00",
+      "completed_at": "2026-10-06T13:52:24.612302+00:00",
+      "cooldown_until": "2026-10-06T14:07:24.604300+00:00"
+    }
+  },
+  "operator": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "state": "DEGRADED",
+    "headline": "Journey Operator needs attention.",
+    "enabled": true,
+    "standing_mission_id": "f942198a-0b03-473c-8e77-a77593d26d72",
+    "autonomy": "EXECUTE_WITHIN_BOUNDS",
+    "incident": {
+      "id": "d5de0c86-eea9-43ea-923f-62b36e8459b5",
+      "kind": "CLOSURE",
+      "severity": "MAJOR",
+      "activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "provenance": "PROVIDER_VERIFIED"
+    },
+    "decision": null,
+    "approval": null,
+    "timeline": [
+      {
+        "at": "2026-10-06T13:52:24.551478+00:00",
+        "label": "Watching your trip",
+        "kind": "operator.started"
+      },
+      {
+        "at": "2026-10-06T13:52:24.587308+00:00",
+        "label": "Detected: Closure",
+        "kind": "city.signal.incident.created"
+      },
+      {
+        "at": "2026-10-06T13:52:24.610310+00:00",
+        "label": "Working on a recovery",
+        "kind": "guardian.mission.compiled"
+      },
+      {
+        "at": "2026-10-06T13:52:24.612302+00:00",
+        "label": "CityNexus could not reach its trip Agent",
+        "kind": "operator.external_agent_blocked"
+      }
+    ],
+    "advanced": {
+      "guardian": {
+        "run_id": "6b76ae19-46c6-4b05-851e-ec7ef6a1da25",
+        "status": "PARTIAL",
+        "action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+        "agent_run_id": null
+      },
+      "agent": null,
+      "recovered_transition": false
+    },
+    "operator": {
+      "watching": true,
+      "will_continue_after_approval": false
+    },
+    "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839"
+  },
+  "external_agent_available": false,
+  "lab_estimate_authority": false,
+  "journey_status": "ACTIVE",
+  "autopilot_enabled": true,
+  "standing_mission_id": "f942198a-0b03-473c-8e77-a77593d26d72",
+  "incident_count": 1,
+  "guardian_action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+  "agent_run_count": 0,
+  "proposal_count": 0,
+  "notification_count": 0
+}

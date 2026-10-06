@@ -19,6 +19,7 @@ from app.core.config import settings
 from app.db.models import (
     AgentRun,
     AgentRunStep,
+    AutopilotEnrollment,
     Event,
     GuardianRun,
     Journey,
@@ -750,7 +751,11 @@ def scan_guardian(
         if agent.status not in {"COMPLETED", "PARTIAL"}:
             agent.status = "COMPLETED"
     except AgentRuntimeUnavailable as exc:
-        if _is_live_context_trigger(trigger):
+        operator_enabled = bool(
+            (enrollment := session.get(AutopilotEnrollment, journey.id)) is not None
+            and enrollment.enabled
+        )
+        if _is_live_context_trigger(trigger) or operator_enabled:
             completed = _now().isoformat()
             evidence["inference"] = {
                 **evidence.get("inference", {}),
@@ -760,21 +765,35 @@ def scan_guardian(
             }
             evidence["policy"] = {
                 "decision": "NO_FALLBACK",
-                "reason_codes": ["OPEN_WORLD_EXTERNAL_AGENT_REQUIRED"],
+                "reason_codes": [
+                    "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+                    if operator_enabled
+                    else "OPEN_WORLD_EXTERNAL_AGENT_REQUIRED"
+                ],
             }
             evidence["mutation"] = {"executed": False, "proposal_id": None}
             run.status = "PARTIAL"
-            run.action_status = "RETRYABLE_FAILURE"
+            run.action_status = (
+                "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+                if operator_enabled
+                else "RETRYABLE_FAILURE"
+            )
             run.reasoning_summary = (
-                "A live-world conflict requires the configured external Agent; "
+                "The Journey Operator requires its configured external Agent; "
                 "deterministic Guardian fallback was refused."
+                if operator_enabled
+                else "A live-world conflict requires the configured external Agent; deterministic Guardian fallback was refused."
             )
             run.active_plan_after_id = journey.active_plan_version_id
             run.evidence_json = _json(evidence)
             run.completed_at = completed
             record_audit(
                 session,
-                action="guardian.open_world.external_agent_required",
+                action=(
+                    "operator.external_agent_blocked"
+                    if operator_enabled
+                    else "guardian.open_world.external_agent_required"
+                ),
                 entity_type="GuardianRun",
                 entity_id=run.id,
                 journey_id=journey.id,

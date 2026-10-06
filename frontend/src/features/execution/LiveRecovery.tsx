@@ -10,6 +10,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { cityNexusApi, type JourneyOperatorProjection } from "../../api/citynexus";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
   isDisruptionAcknowledgedOnly,
@@ -171,6 +172,68 @@ export function LiveRecovery({
   const [routeOperation, setRouteOperation] = useState<RouteOperation | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
+
+  const loadOperator = useCallback(async () => {
+    try {
+      setOperator(await cityNexusApi.getJourneyOperator(journeyId));
+    } catch {
+      setOperator(null);
+    }
+  }, [journeyId]);
+
+  useEffect(() => {
+    void loadOperator();
+  }, [loadOperator]);
+
+  const startOperator = useCallback(async () => {
+    setBusy("operator-start");
+    setMessage(null);
+    try {
+      const next = await cityNexusApi.startJourneyOperator(journeyId);
+      setOperator(next);
+      setMessage(zh ? "CityNexus 会照看这趟行程。" : "CityNexus is now taking care of this trip.");
+    } catch {
+      setMessage(zh ? "暂时无法开启行程托管。" : "We couldn't start trip care yet.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, zh]);
+
+  const approveOperatorChange = useCallback(async () => {
+    const approvalId = operator?.approval?.approval_id;
+    if (!approvalId) return;
+    setBusy("operator-approve");
+    setMessage(null);
+    try {
+      await cityNexusApi.approveJourneyOperatorChange(journeyId, approvalId);
+      await loadOperator();
+      await plans.refetch();
+      await twin.refetch();
+      setMessage(zh ? "变更已应用，CityNexus 会继续照看行程。" : "Change applied. CityNexus is watching your trip again.");
+      onAccepted?.();
+    } catch {
+      setMessage(zh ? "这项变更暂时无法批准。" : "We couldn't approve that change yet.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, loadOperator, onAccepted, operator, plans, twin, zh]);
+
+  const rejectOperatorChange = useCallback(async () => {
+    const approvalId = operator?.approval?.approval_id;
+    if (!approvalId) return;
+    setBusy("operator-reject");
+    setMessage(null);
+    try {
+      await cityNexusApi.rejectJourneyOperatorChange(journeyId, approvalId);
+      await loadOperator();
+      setMessage(zh ? "保留当前行程，CityNexus 会继续照看。" : "Keeping the current plan. CityNexus will keep watching.");
+    } catch {
+      setMessage(zh ? "暂时无法保留当前行程。" : "We couldn't keep the current plan yet.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, loadOperator, operator, zh]);
 
   const loadProposals = useCallback(async () => {
     try {
@@ -521,6 +584,68 @@ export function LiveRecovery({
           </p>
         </div>
       </div>
+
+      <section className="journey-operator-card" data-testid="journey-operator" aria-live="polite">
+        <div className="journey-operator-heading">
+          <p className="v8-kicker">Journey Operator</p>
+          <strong>{operator?.headline ?? (zh ? "把这趟行程交给 CityNexus" : "Let CityNexus take care of this trip")}</strong>
+        </div>
+        {!operator?.enabled && (
+          <button
+            type="button"
+            data-testid="journey-operator-start"
+            disabled={busy !== null}
+            onClick={() => void startOperator()}
+          >
+            {zh ? "照看这趟行程" : "Take care of this trip"}
+          </button>
+        )}
+        {operator?.enabled && <span data-testid="journey-operator-state">
+          {operator.state === "WATCHING"
+            ? (zh ? "正在照看" : "Watching")
+            : operator.state === "INVESTIGATING"
+              ? (zh ? "正在了解情况" : "Working on a recovery")
+              : operator.state === "WAITING_FOR_APPROVAL"
+                ? (zh ? "等待你的批准" : "Waiting for your approval")
+                : operator.state === "RECOVERED"
+                  ? (zh ? "调整已应用，继续照看" : "Change applied · watching again")
+                  : operator.state === "NEEDS_ATTENTION"
+                    ? (zh ? "需要你的注意" : "Needs your attention")
+                    : operator.state === "DEGRADED"
+                      ? (zh ? "暂时无法完整照看" : "Needs attention")
+                      : (zh ? "正在处理" : "Working")}
+        </span>}
+        {operator?.approval?.required && operator.decision && (
+          <div className="journey-operator-approval" data-testid="journey-operator-approval">
+            <b>{zh ? "CityNexus 找到一个更稳妥的调整" : "CityNexus recommends this change"}</b>
+            <span>{operator.decision.summary ?? (zh ? "这项调整可以减少行程影响。" : "This change should reduce the impact on your trip.")}</span>
+            {operator.decision.schedule_delta_min != null && (
+              <span>{zh ? `时间影响：${operator.decision.schedule_delta_min} 分钟` : `Schedule impact: ${operator.decision.schedule_delta_min} min`}</span>
+            )}
+            <button
+              type="button"
+              data-testid="journey-operator-approve"
+              disabled={busy !== null}
+              onClick={() => void approveOperatorChange()}
+            >
+              {zh ? "批准变更" : "Approve change"}
+            </button>
+            <button
+              type="button"
+              data-testid="journey-operator-reject"
+              disabled={busy !== null}
+              onClick={() => void rejectOperatorChange()}
+            >
+              {zh ? "保留当前行程" : "Keep current plan"}
+            </button>
+          </div>
+        )}
+        {operator?.timeline?.length ? (
+          <ol data-testid="journey-operator-timeline">
+            {operator.timeline.slice(-5).map((item) => <li key={`${item.at}-${item.kind}`}>{item.label}</li>)}
+          </ol>
+        ) : null}
+      </section>
 
       {guardianSurfaceState && (
         <div

@@ -16,6 +16,7 @@ from app.db.models import (
     AgentRun,
     AgentRunStep,
     CollectiveAuthorityReceipt,
+    GuardianRun,
     Journey,
     JourneyMission,
     ReplanProposal,
@@ -146,6 +147,22 @@ def capture_pending_action(
         },
     )
     session.flush()
+    # One in-app cue belongs to the durable approval, not to each Guardian
+    # pulse. The semantic approval id is the dedupe boundary.
+    from app.operations.v9 import notify
+
+    notify(
+        session,
+        run.journey_id,
+        dedupe_key=f"operator-approval:{approval_id}",
+        kind="OPERATOR_APPROVAL",
+        priority="HIGH",
+        payload={
+            "approval_id": approval_id,
+            "pending_action_id": pending.id,
+            "message": "CityNexus found a safer plan. Review one change.",
+        },
+    )
     return pending
 
 
@@ -567,6 +584,35 @@ def resume_pending_action(
             mission.status = "COMPLETED"
             mission.completed_at = now
             mission.failure_reason = None
+        guardian_run = session.scalar(
+            select(GuardianRun)
+            .where(GuardianRun.agent_run_id == pending.run_id)
+            .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
+        )
+        if guardian_run is not None:
+            guardian_run.status = "COMPLETED"
+            guardian_run.action_status = "EXECUTED"
+            guardian_run.active_plan_after_id = session.get(
+                Journey, pending.journey_id
+            ).active_plan_version_id
+            guardian_run.reasoning_summary = "Approved recovery applied; Journey Operator returned to monitoring."
+        record_audit(
+            session,
+            action="operator.recovered",
+            entity_type="Journey",
+            entity_id=pending.journey_id,
+            journey_id=pending.journey_id,
+            actor_type="SYSTEM",
+            actor_id="approval-continuation",
+            after={
+                "pending_action_id": pending.id,
+                "approval_id": approval_id,
+                "guardian_run_id": guardian_run.id if guardian_run is not None else None,
+                "active_plan_version_id": (
+                    session.get(Journey, pending.journey_id).active_plan_version_id
+                ),
+            },
+        )
     else:
         pending.status = "FAILED"
         pending.error_json = _json_text(

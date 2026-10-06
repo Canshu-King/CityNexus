@@ -255,6 +255,23 @@ class GuardianAutopilotStart(BaseModel):
     interval_seconds: float | None = Field(default=None, gt=0, le=3600)
 
 
+class JourneyOperatorStartRequest(BaseModel):
+    """Plain-language one-click activation for the Journey Operator."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    objective: str = Field(
+        default=(
+            "Take care of this trip. Protect confirmed commitments, keep changes reasonable, "
+            "and ask me before important changes."
+        ),
+        min_length=8,
+        max_length=2000,
+    )
+    requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
+    interval_seconds: float | None = Field(default=None, gt=0, le=3600)
+
+
 class CitySignalFixtureRequest(BaseModel):
     state: Literal["NORMAL", "DISRUPTED", "OUTAGE", "RISK_FORECAST"]
     payload: dict[str, Any] = Field(default_factory=dict)

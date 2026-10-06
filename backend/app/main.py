@@ -57,6 +57,7 @@ from app.replanning.commitment_remap import (
 from app.agent.guardian import guardian_status, scan_guardian
 from app.agent.mission import create_mission, mission_payload
 from app.agent.mission_plan import mission_plan_for_model
+from app.operator_projection import operator_projection
 from app.agent.runtime_events import normalize_hermes_event
 from app.agent.orchestrator import configured_journey_agent
 from app.agent.predictive import (
@@ -401,6 +402,7 @@ from app.schemas import (
     CatalogHydrationRequest,
     FactAcquisitionRequest,
     GuardianAutopilotStart,
+    JourneyOperatorStartRequest,
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
@@ -1866,6 +1868,201 @@ def start_guardian_autopilot(
     }
 
 
+def _operator_actor(request: Request, session: Session, journey: Journey) -> str:
+    """Resolve the authenticated owner/member for Operator mutations."""
+
+    actor_id = journey.traveler_id
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if principal.traveler_id != journey.traveler_id:
+            raise HTTPException(403, "authenticated member cannot operate another traveler Journey")
+        if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "authenticated member cannot operate this Journey")
+        actor_id = principal.traveler_id
+    return actor_id
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/start")
+def start_journey_operator(
+    journey_id: UUID,
+    request: Request,
+    payload: JourneyOperatorStartRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Put one active Journey under the standing mission + Guardian watch."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "Journey Operator requires an active Journey")
+    actor_id = _operator_actor(request, session, journey)
+    body = payload or JourneyOperatorStartRequest()
+    objective = body.objective.strip()
+    current = session.scalar(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if current is None or current.user_text != objective or current.requested_autonomy != body.requested_autonomy:
+        if current is not None:
+            current.status = "SUPERSEDED"
+            current.completed_at = datetime.now(timezone.utc).isoformat()
+        mission = create_mission(
+            session,
+            journey,
+            command=objective,
+            requested_autonomy=body.requested_autonomy,
+            trigger_event_id=None,
+            is_standing=True,
+        )
+        mission.status = "ACTIVE"
+        record_audit(
+            session,
+            action="guardian.mission.activated",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="USER",
+            actor_id=actor_id,
+            after=mission_payload(mission),
+        )
+    else:
+        mission = current
+    enrollment = ensure_enrollment(
+        session,
+        journey,
+        enabled=True,
+        interval_seconds=body.interval_seconds,
+    )
+    session.commit()
+    worker = start_autorun(interval_seconds=body.interval_seconds)
+    record_audit(
+        session,
+        action="operator.started",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=actor_id,
+        after={
+            "objective": objective,
+            "requested_autonomy": mission.requested_autonomy,
+            "mission_id": mission.id,
+            "autopilot_enabled": bool(enrollment.enabled),
+        },
+    )
+    session.commit()
+    return {
+        **operator_projection(session, journey),
+        "started": True,
+        "worker": worker,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/stop")
+def stop_journey_operator(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    actor_id = _operator_actor(request, session, journey)
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if enrollment is not None:
+        enrollment.enabled = False
+        enrollment.updated_at = datetime.now(timezone.utc).isoformat()
+    session.commit()
+    remaining = enrolled_journey_ids(session)
+    worker = stop_autorun() if not remaining else autorun_status()
+    record_audit(
+        session,
+        action="operator.stopped",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=actor_id,
+        after={"autopilot_enabled": False, "remaining_enrolled_journeys": remaining},
+    )
+    session.commit()
+    return {**operator_projection(session, journey), "stopped": True, "worker": worker}
+
+
+@app.get("/api/v1/journeys/{journey_id}/operator")
+def get_journey_operator(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    return operator_projection(session, journey)
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/approvals/{approval_id}/reject")
+def reject_journey_operator_change(
+    journey_id: UUID,
+    approval_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Reject the exact pending recovery without changing the active plan."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    actor_id = _operator_actor(request, session, journey)
+    approval = session.get(ActionApproval, str(approval_id))
+    if approval is None or approval.journey_id != journey.id or approval.traveler_id != journey.traveler_id:
+        raise HTTPException(404, "operator approval was not found")
+    pending = session.scalar(
+        select(AgentPendingAction).where(AgentPendingAction.approval_id == approval.id)
+    )
+    if pending is None:
+        raise HTTPException(409, "operator approval has no pending action")
+    if approval.status in {"REJECTED", "EXPIRED"}:
+        return operator_projection(session, journey)
+    if approval.status != "PENDING":
+        raise HTTPException(409, "operator approval is no longer usable")
+    approval.status = "REJECTED"
+    pending.status = "SUPERSEDED"
+    pending.updated_at = datetime.now(timezone.utc).isoformat()
+    run = session.get(AgentRun, pending.run_id)
+    if run is not None:
+        run.status = "COMPLETED"
+        run.completed_at = pending.updated_at
+        run.outcome = json.dumps({"status": "NO_ACTION", "reason_code": "USER_REJECTED"})
+    guardian_run = session.scalar(
+        select(GuardianRun)
+        .where(GuardianRun.agent_run_id == pending.run_id)
+        .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
+    )
+    if guardian_run is not None:
+        guardian_run.status = "COMPLETED"
+        guardian_run.action_status = "NO_ACTION"
+        guardian_run.reasoning_summary = "The traveller kept the current plan."
+    mission = session.get(JourneyMission, pending.mission_id)
+    if mission is not None:
+        mission.status = "COMPLETED"
+        mission.completed_at = pending.updated_at
+        mission.failure_reason = "USER_REJECTED"
+    record_audit(
+        session,
+        action="agent.action_approval.rejected",
+        entity_type="ActionApproval",
+        entity_id=approval.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=actor_id,
+        after={"approval_id": approval.id, "pending_action_id": pending.id, "status": "REJECTED"},
+    )
+    session.commit()
+    return operator_projection(session, journey)
+
+
 @app.post("/api/v1/journeys/{journey_id}/guardian/autopilot/stop")
 def stop_guardian_autopilot(
     journey_id: UUID,
@@ -2725,6 +2922,7 @@ def get_agent_run(
     }
 
 
+@app.post("/api/v1/journeys/{journey_id}/operator/approvals/{approval_id}/approve")
 @app.post("/api/v1/journeys/{journey_id}/agent/approvals/{approval_id}/approve")
 def approve_agent_action(
     journey_id: UUID,
