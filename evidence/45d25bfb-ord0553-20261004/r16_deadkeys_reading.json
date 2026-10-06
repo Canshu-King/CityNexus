@@ -1,0 +1,124 @@
+{
+ "instrument": "cmdra_0553_deadkeys_r16",
+ "tip": "b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c",
+ "files_scanned": 149,
+ "keys": {
+  "exec.markEnRoute": {
+   "defined_at": [
+    "frontend/src/i18n/LocaleContext.tsx:608",
+    "frontend/src/i18n/LocaleContext.tsx:1687"
+   ],
+   "en_value": "Mark EN_ROUTE",
+   "en_is_enum_shaped": true,
+   "zh_values": [
+    "Mark EN_ROUTE",
+    "标记 出发中"
+   ],
+   "refs_outside_dictionary": [],
+   "refs_count": 0,
+   "consumes_whole_string": false
+  },
+  "exec.markArrived": {
+   "defined_at": [
+    "frontend/src/i18n/LocaleContext.tsx:609",
+    "frontend/src/i18n/LocaleContext.tsx:1688"
+   ],
+   "en_value": "Mark ARRIVED",
+   "en_is_enum_shaped": true,
+   "zh_values": [
+    "Mark ARRIVED",
+    "标记 已到达"
+   ],
+   "refs_outside_dictionary": [],
+   "refs_count": 0,
+   "consumes_whole_string": false
+  },
+  "exec.markInProgress": {
+   "defined_at": [
+    "frontend/src/i18n/LocaleContext.tsx:610",
+    "frontend/src/i18n/LocaleContext.tsx:1689"
+   ],
+   "en_value": "Mark IN_PROGRESS",
+   "en_is_enum_shaped": true,
+   "zh_values": [
+    "Mark IN_PROGRESS",
+    "标记 进行中"
+   ],
+   "refs_outside_dictionary": [
+    {
+     "at": "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:133",
+     "line": "{busy ? t(\"exec.updating\") : action ? `${t(\"exec.markInProgress\").split(\" \")[0]} ${label(action === \"depart\" ? \"EN_ROUTE\" : action === \"arrive\" ? \"ARRIVED\" : action === \"begin\" ? \"IN_PROGRESS\" : \"COMP"
+    }
+   ],
+   "refs_count": 1,
+   "consumes_whole_string": false
+  },
+  "exec.markCompleted": {
+   "defined_at": [
+    "frontend/src/i18n/LocaleContext.tsx:611",
+    "frontend/src/i18n/LocaleContext.tsx:1690"
+   ],
+   "en_value": "Mark COMPLETED",
+   "en_is_enum_shaped": true,
+   "zh_values": [
+    "Mark COMPLETED",
+    "标记 已完成"
+   ],
+   "refs_outside_dictionary": [],
+   "refs_count": 0,
+   "consumes_whole_string": false
+  }
+ },
+ "controls": {
+  "exec.complete": {
+   "refs_count": 1
+  },
+  "exec.updating": {
+   "refs_count": 1
+  },
+  "exec.state.enRoute": {
+   "refs_count": 3
+  }
+ },
+ "dynamic_composition": [],
+ "runtime_leg": {
+  "source_reading": "r13_locator_revet.json leg tip_b2fccfdf",
+  "painted_button_names": 64,
+  "four_values_painted": [],
+  "positive_control_first_word_present": true,
+  "sample_painted_mark_buttons": [
+   "Mark Arrived",
+   "Mark On the way"
+  ]
+ },
+ "arms": [
+  {
+   "id": "three_of_the_four_keys_are_referenced_nowhere_outside_the_dictionary",
+   "verdict": "PASS",
+   "observed": "markEnRoute=0 markArrived=0 markCompleted=0 refs outside the dictionary"
+  },
+  {
+   "id": "the_fourth_key_is_read_only_for_its_first_word",
+   "verdict": "PASS",
+   "observed": "markInProgress refs=1 and every reference consumes a split()ed fragment"
+  },
+  {
+   "id": "no_dynamic_key_composition_hides_a_reader",
+   "verdict": "PASS",
+   "observed": "template-literal or concatenated exec.mark keys: none"
+  },
+  {
+   "id": "the_scan_can_find_readers_at_all",
+   "verdict": "PASS",
+   "observed": "positive controls {\"exec.complete\": 1, \"exec.updating\": 1, \"exec.state.enRoute\": 3}"
+  },
+  {
+   "id": "no_screen_paints_any_of_the_four_values_on_this_generation",
+   "verdict": "PASS",
+   "observed": "of 64 painted button names, the four values appear 0 times; the shared first word does appear (sample [\"Mark Arrived\", \"Mark On the way\"])"
+  }
+ ],
+ "verdict": "GREEN",
+ "red_arms": [],
+ "what_a_zero_does_not_prove": "a key-name scan sees literal keys; the dynamic scan above covers template/concatenated construction, and the runtime leg covers the one screen that paints a button label -- the other thirteen routes were not re-walked for these four literals on this round"
+}
