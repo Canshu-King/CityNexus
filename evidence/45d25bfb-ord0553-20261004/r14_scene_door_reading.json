@@ -1,0 +1,116 @@
+{
+ "instrument": "cmdra_0553_scene_door_r14",
+ "store_path_is_temp": true,
+ "reset_was_called": false,
+ "arms": [
+  {
+   "id": "store_starts_really_empty",
+   "verdict": "PASS",
+   "observed": "counts {\"places\": 0, \"travelers\": 0, \"journeys\": 0, \"plan_versions\": 0, \"activities\": 0}"
+  },
+  {
+   "id": "ensure_without_token_refuses_by_name_and_writes_nothing",
+   "verdict": "PASS",
+   "observed": "http=403 named=True counts_equal_before_after=True"
+  },
+  {
+   "id": "ensure_without_idempotency_key_refuses",
+   "verdict": "PASS",
+   "observed": "http=422 body_keys=['error']"
+  },
+  {
+   "id": "ensure_writes_on_an_empty_store",
+   "verdict": "PASS",
+   "observed": "http=200 counts={\"places\": 16, \"travelers\": 1, \"journeys\": 1, \"plan_versions\": 3, \"activities\": 18}"
+  },
+  {
+   "id": "replaying_the_same_signed_request_is_a_receipt_not_a_second_board",
+   "verdict": "PASS",
+   "observed": "http=200 flagged_replay=True counts_unchanged=True"
+  },
+  {
+   "id": "counterexample_same_key_different_SIGNED_field_conflicts",
+   "verdict": "PASS",
+   "observed": "http=422 named=True counts_unchanged=True -- the signature covers city_code and journey_id (canonical_request_signature in demo_scene.py), so an unsigned field is a legal replay and my first version aimed this arm at the wrong field"
+  },
+  {
+   "id": "the_v13_steps_after_the_seed_line_run_on_this_door_state",
+   "verdict": "PASS",
+   "observed": "generate=201/1 select=200 start=200"
+  }
+ ],
+ "readings": {
+  "empty_store_counts": {
+   "places": 0,
+   "travelers": 0,
+   "journeys": 0,
+   "plan_versions": 0,
+   "activities": 0
+  },
+  "no_token_body": "{\"error\": {\"code\": \"REQUEST_ERROR\", \"message\": \"No X-Demo-Scene-Token was presented; nothing was written.\", \"message_key\": \"request.forbidden\", \"trace_id\": \"f4b84bb7-f133-45c2-8350-a6e9921e115b\", \"details\": {\"header\": \"X-Demo-Scene-Token\", \"idempotency_key_pre",
+  "no_key_body": "{\"error\": {\"code\": \"VALIDATION_ERROR\", \"message\": \"Idempotency-Key header is required\", \"message_key\": \"request.invalid\", \"trace_id\": \"606eff31-cc86-42f1-906e-bc0d563c7a20\", \"details\": null, \"error_receipt_id\": \"CNX-NXGBXM2Z\"}}",
+  "ensure_http": 200,
+  "ensure_body_keys": [
+   "advance",
+   "advance_refused_steps",
+   "city_code",
+   "idempotency_key",
+   "journey_created_by_this_call",
+   "journey_id",
+   "journey_status",
+   "plan_version_id",
+   "scene_label",
+   "state",
+   "supply"
+  ],
+  "counts_after_ensure": {
+   "places": 16,
+   "travelers": 1,
+   "journeys": 1,
+   "plan_versions": 3,
+   "activities": 18
+  },
+  "replay_same_key_same_signed_fields": {
+   "http": 200,
+   "idempotency_replay": true,
+   "counts_equal_after_replay": true
+  },
+  "conflict_body": "{\"error\": {\"code\": \"VALIDATION_ERROR\", \"message\": \"IDEMPOTENCY_KEY_REUSE_CONFLICT\", \"message_key\": \"request.invalid\", \"trace_id\": \"2ede78fa-06e4-4149-9f78-d1556d49b7a4\", \"details\": null, \"reason_code\": \"IDEMPOTENCY_KEY_REUSE_CONFLICT\", \"error_receipt_id\": \"CNX",
+  "demo_scene_http": 200,
+  "demo_scene_journey_id_present": true,
+  "demo_scene_keys": [
+   "basis",
+   "current_activity_id",
+   "demo_mode",
+   "effective_now",
+   "evidence_expires_at",
+   "evidence_reference_consistent",
+   "evidence_snapshot_id",
+   "evidence_state",
+   "journey_id",
+   "journey_status",
+   "mobility_legs_hard_eligible",
+   "mobility_legs_total",
+   "plan_version_id",
+   "scene_end_at"
+  ],
+  "spec_step_generate": {
+   "http": 201,
+   "produced": 1
+  },
+  "spec_step_select": {
+   "http": 200
+  },
+  "spec_step_start": {
+   "http": 200,
+   "code_answered": null
+  },
+  "twin_after_the_walk": {
+   "http": 200,
+   "now_state": "ACTIVE",
+   "next_state": "PLANNED"
+  }
+ },
+ "verdict": "GREEN",
+ "red_arms": []
+}
