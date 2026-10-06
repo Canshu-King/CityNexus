@@ -44,12 +44,14 @@ test("shared Journey shows coarse member presence and guides only the viewer to 
       discovery: { state: "IDLE", attempt_count: 0, max_attempts: 0, raw_candidate_count: 0, materialized_place_count: 0 },
       flow: null, transit: null,
       group_presence: {
-        state: "GROUP_PRESENCE", authority: "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
+        state: "GROUP_SPLIT_ADVISORY", authority: "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
         members: [
           { member_id: "member-self", display_name: "Alex", is_viewer: true, location_state: "RECENT", group_state: "SPLIT_FROM_GROUP", age_seconds: 12, authority: "ADVISORY_FOREGROUND_WEB", route_eta_minutes: null, route_eta_provenance: null },
           { member_id: "member-friend", display_name: "Sam", is_viewer: false, location_state: "RECENT", group_state: "SPLIT_FROM_GROUP", age_seconds: 24, authority: "ADVISORY_FOREGROUND_WEB", route_eta_minutes: null, route_eta_provenance: null },
         ],
         rendezvous: { activity_id: "next-stop-r57", title: "Shared tea house", place_name: "Shared tea house", basis: "ACTIVE_PLAN_EXACT_PLACE" },
+        rendezvous_state: "RENDEZVOUS_TARGET_READY",
+        viewer_route: null,
         can_guide: true,
       },
       progress: null, ahead: null, overnight: null, intents: [], attention: null,
@@ -159,9 +161,16 @@ test("two signed member contexts share independently and see themselves as You",
         discovery: { state: "IDLE", attempt_count: 0, max_attempts: 0, raw_candidate_count: 0, materialized_place_count: 0 },
         flow: null, transit: null,
         group_presence: {
-          state: "GROUP_PRESENCE", authority: "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
+          state: !sharedSamples.owner || !sharedSamples.admin
+            ? "MEMBER_LOCATION_MISSING"
+            : Math.abs(sharedSamples.owner.latitude - sharedSamples.admin.latitude) > 0.003
+              ? "GROUP_SPLIT_ADVISORY"
+              : "TOGETHER",
+          authority: "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
           members: [makeMember("owner", viewer), makeMember("admin", viewer)],
           rendezvous: { activity_id: "next-stop-r57", title: "Shared tea house", place_name: "Shared tea house", basis: "ACTIVE_PLAN_EXACT_PLACE" },
+          rendezvous_state: "RENDEZVOUS_TARGET_READY",
+          viewer_route: null,
           can_guide: true,
         },
         progress: null, ahead: null, overnight: null, intents: [], attention: null,
