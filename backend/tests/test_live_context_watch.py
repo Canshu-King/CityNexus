@@ -40,14 +40,31 @@ def test_outside_verified_hours_is_conflict_but_unknown_is_not():
     assert unknown["status"] == "UNKNOWN"
 
 
-def test_overnight_hours_cover_local_activity_interval():
+def test_activity_extending_past_close_is_outside_verified_hours():
     result = classify_opening_hours(
         activity=activity("2026-10-08T23:30:00+09:00", "2026-10-09T00:30:00+09:00"),
         place=place(),
         opening={"status": "NORMALIZED_VALID", "intervals": [{"days": ["Th"], "open": "22:00", "close": "24:00"}]},
         timezone_name="Asia/Tokyo",
     )
-    assert result["status"] == "OPEN_COMPATIBLE"
+    assert result["status"] == "OUTSIDE_VERIFIED_HOURS"
+
+
+def test_cross_midnight_opening_must_cover_full_activity_interval():
+    compatible = classify_opening_hours(
+        activity=activity("2026-10-08T23:30:00+09:00", "2026-10-09T00:30:00+09:00"),
+        place=place(),
+        opening={"status": "NORMALIZED_VALID", "intervals": [{"days": ["Th"], "open": "22:00", "close": "02:00"}]},
+        timezone_name="Asia/Tokyo",
+    )
+    partial = classify_opening_hours(
+        activity=activity("2026-10-08T15:00:00+09:00", "2026-10-08T16:00:00+09:00"),
+        place=place(),
+        opening={"status": "NORMALIZED_VALID", "intervals": [{"days": ["Th"], "open": "10:00", "close": "15:30"}]},
+        timezone_name="Asia/Tokyo",
+    )
+    assert compatible["status"] == "OPEN_COMPATIBLE"
+    assert partial["status"] == "OUTSIDE_VERIFIED_HOURS"
 
 
 def test_stale_observation_cannot_override_newer_evidence():
