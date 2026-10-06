@@ -1,0 +1,220 @@
+{
+  "measured_at": "2026-10-07T04:11:42",
+  "directory": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\patrol",
+  "ran": 29,
+  "per_file_timeout_s": 240,
+  "rows": {
+    "green_no_counter_arm_found": [
+      "_alarm_backoff_selftest_r1.py",
+      "_applier_verify_red_selftest_r1.py",
+      "_bb_evidence_selftests_r1.py",
+      "_bus_forget_selftest_patch_r1.py",
+      "_conclude_undec_selftest_r1.py",
+      "_disk_band_selftest_r1.py",
+      "_g_band_alarm_selftest_r1.py",
+      "_keepalive_blind_selftest_r1.py",
+      "_m_band_relay_selftest_r1.py",
+      "_night_verdict_runner_selftest_r1.py",
+      "_patrol_cell11_selftest_r1.py",
+      "_recipe_selftest.py",
+      "_restart_selftest_r1.py",
+      "_ruling_delivery_audit_selftest_r1.py",
+      "_s_band_selftest_r1.py",
+      "_selftest_namekeep_patch_r1.py",
+      "_shape_recipe_selftest.py",
+      "_stack_keeper_selftest_r1.py",
+      "_unclaimed_selftest_r1.py",
+      "_verdict_two_slot_done_selftest_r1.py",
+      "_watch_stack_selftest_r1.py"
+    ],
+    "green_with_counter_arm": [
+      "_knock_gate_shape_selftest_r1.py",
+      "_patch_watchstack_selftest_r2.py",
+      "_patrol_adoption_split_selftest_r1.py"
+    ],
+    "red": [
+      "_patrol_loop_needseyes_selftest_r1.py",
+      "_selftest_send_guard_patch_r1.py",
+      "_sentinel_K_selftest_r1.py",
+      "_sentinel_keepalive_selftest_r1.py",
+      "_sentinel_selftest_r1.py"
+    ]
+  },
+  "detail": [
+    {
+      "file": "_alarm_backoff_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_applier_verify_red_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_bb_evidence_selftests_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_bus_forget_selftest_patch_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_conclude_undec_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_disk_band_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_g_band_alarm_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_keepalive_blind_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_knock_gate_shape_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_with_counter_arm"
+    },
+    {
+      "file": "_m_band_relay_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_night_verdict_runner_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "PASS 16/16",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_patch_watchstack_selftest_r2.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_with_counter_arm"
+    },
+    {
+      "file": "_patrol_adoption_split_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_with_counter_arm"
+    },
+    {
+      "file": "_patrol_cell11_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_patrol_loop_needseyes_selftest_r1.py",
+      "exit_code": 1,
+      "verdict_line": "",
+      "status": "red"
+    },
+    {
+      "file": "_recipe_selftest.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_restart_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "PASS：红的真响了（停在额度且没人接 1 条并逐条列出），绿的没误响（叫醒＋回话那份判为已接）。",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_ruling_delivery_audit_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "PASS：三态各判对，且带 Z 的旧 UTC 记录没有被误算成基线之后的新节点 ⇒ 这枚尺可以拿去判「话送到没有」。",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_s_band_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_selftest_namekeep_patch_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_selftest_send_guard_patch_r1.py",
+      "exit_code": 1,
+      "verdict_line": "",
+      "status": "red"
+    },
+    {
+      "file": "_sentinel_K_selftest_r1.py",
+      "exit_code": 1,
+      "verdict_line": "",
+      "status": "red"
+    },
+    {
+      "file": "_sentinel_keepalive_selftest_r1.py",
+      "exit_code": 1,
+      "verdict_line": "",
+      "status": "red"
+    },
+    {
+      "file": "_sentinel_selftest_r1.py",
+      "exit_code": 1,
+      "verdict_line": "PASS 71/96",
+      "status": "red"
+    },
+    {
+      "file": "_shape_recipe_selftest.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_stack_keeper_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "PASS 12/12",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_unclaimed_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "PASS：四张该红的都红了（静默会话、无流水 id、被 D 路点名但那条车道没动、形制像 D 却没有「你」的那张），该绿的靠车道块判出来，明细也没借别的单的收件车道 ⇒ 这把尺报得出红，D 路补的是「点得到名」这一格。",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_verdict_two_slot_done_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "",
+      "status": "green_no_counter_arm_found"
+    },
+    {
+      "file": "_watch_stack_selftest_r1.py",
+      "exit_code": 0,
+      "verdict_line": "PASS 15/15",
+      "status": "green_no_counter_arm_found"
+    }
+  ],
+  "verdict": "TRIAGED_BY_RUNNING_NOT_BY_SCANNING"
+}
