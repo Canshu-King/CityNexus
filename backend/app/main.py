@@ -12091,6 +12091,7 @@ def _replan_payload(item: ReplanProposalModel) -> dict[str, Any]:
         "base_plan_version_id": item.base_plan_version_id,
         "proposed_plan_version_id": item.proposed_plan_version_id,
         "recovery_epoch_id": item.recovery_epoch_id,
+        "source_agent_run_id": item.source_agent_run_id,
         "semantic_identity": item.semantic_identity,
         "canonical_proposal_id": item.canonical_proposal_id,
         "status": item.status,
