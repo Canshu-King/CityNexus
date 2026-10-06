@@ -73,7 +73,11 @@ def test_stale_observation_cannot_override_newer_evidence():
     assert not observation_is_fresh("2026-10-08T01:00:00", "2026-10-08T00:59:59+00:00")
 
 
-def test_receipt_binding_requires_exact_place_id():
+def test_receipt_binding_requires_exact_place_and_provider_entity():
     receipt = {"places": [{"place_id": "p1", "provider_entity": "overpass:node/1"}]}
-    assert _place_receipt(receipt, "p1")["provider_entity"] == "overpass:node/1"
-    assert _place_receipt(receipt, "p2") is None
+    assert (
+        _place_receipt(receipt, "p1", "overpass:node/1")["provider_entity"]
+        == "overpass:node/1"
+    )
+    assert _place_receipt(receipt, "p2", "overpass:node/1") is None
+    assert _place_receipt(receipt, "p1", "overpass:node/999") is None
