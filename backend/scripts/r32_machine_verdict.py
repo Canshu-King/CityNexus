@@ -646,6 +646,24 @@ def verdict(
             }
         )
 
+    # A clean harness abort before the causal chronology is established is a
+    # coverage failure, not evidence that the product violated the authority
+    # contract.  Keep source/regression/truth receipts positive when present,
+    # but downgrade unexercised causal dimensions to NOT_PROVEN instead of
+    # manufacturing CONTRADICTED results from empty rows.
+    if checkpoint.get("failure") or checkpoint.get("status") == "NOT_PROVEN":
+        preserved = {
+            "strike_source_state_traceable",
+            "inherited_r28_exactly_once",
+            "truth_boundary_honest",
+        }
+        for key in required_dimensions:
+            if key not in preserved:
+                dimensions[key] = _dim(
+                    None,
+                    "strike aborted before this causal dimension was exercised",
+                )
+
     all_values = [
         item["verdict"] for item in dimensions.values()
     ]

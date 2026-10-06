@@ -90,3 +90,23 @@ physical travel.
 Focused R28-R32 and Agent runtime regression: **132 passed** (4 deprecation
 warnings). The new harness and runtime and provider-scope regression compile successfully; `git diff --check`
 is clean before commit.
+
+## Strike 2 — Preempt + Converge (head `72a8557a1b874f085ef8c342f513681faf2aa644`)
+
+The single permitted Strike 2 attempt was launched from a tracked-clean tree with
+`CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false` and the configured WB2api/Hermes runtime.
+It stopped before Shock B because Agent A did not reach the durable R1
+external-response boundary. The harness therefore did not inject Shock B, start
+Agent B, or fabricate any post-shock authority.
+
+- Strike artifact: `backend/output/r32-live-strike-v2.json`
+- Machine verdict: `backend/output/R32_MACHINE_VERDICT_V2.json`
+- Regression receipt: `backend/output/r32-focused-regression-v2.json`
+- Actual focused regression: **142 passed**, 0 failed
+- v3 verdict: **NOT_PROVEN**, 0 contradicted dimensions
+- Failure cause: `Agent A did not reach the durable R1 external-response boundary`
+- No third live strike was run.
+
+This result supersedes no historical evidence. The first strike artifacts remain
+unchanged and are not reused as Strike 2 proof. Physical travel remains NOT
+PROVEN; the intended shock source remains `SERVER_OWNED_PROVIDER_REPLAY_FIXTURE`.
