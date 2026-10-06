@@ -1,0 +1,7 @@
+{"recorded": 0, "refused": true, "expect_refusal": true, "guard_said": "REFUSE: the refusal arms declared and recorded is short 4 of 4: ABORT_ACTOR_NOT_OWNER, ABORT_JOURNEY_IN_RECYCLE_BIN, JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND never got recorded, so the verdict would be computed over a shorter set than it declares"}
+{"recorded": 1, "refused": true, "expect_refusal": true, "guard_said": "REFUSE: the refusal arms declared and recorded is short 3 of 4: ABORT_JOURNEY_IN_RECYCLE_BIN, JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND never got recorded, so the verdict would be computed over a shorter set than it declares"}
+{"recorded": 2, "refused": true, "expect_refusal": true, "guard_said": "REFUSE: the refusal arms declared and recorded is short 2 of 4: JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND never got recorded, so the verdict would be computed over a shorter set than it declares"}
+{"recorded": 3, "refused": true, "expect_refusal": true, "guard_said": "REFUSE: the refusal arms declared and recorded is short 1 of 4: JOURNEY_NOT_FOUND never got recorded, so the verdict would be computed over a shorter set than it declares"}
+{"recorded": 4, "refused": false, "expect_refusal": false, "guard_said": ""}
+control_recorded=ABORT_ACTOR_NOT_OWNER, ABORT_JOURNEY_IN_RECYCLE_BIN, JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND control_verdict=PASSED
+VERDICT REFUSES_EVERY_PARTIAL_SET_AND_ALLOWS_THE_FULL_ONE
