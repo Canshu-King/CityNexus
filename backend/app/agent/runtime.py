@@ -22,6 +22,7 @@ from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
+from app.recovery_epoch import ensure_recovery_epoch
 from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
 from app.observability.tracing import persist_span
@@ -842,6 +843,7 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "run_id": run.id,
         "mission_id": run.mission_id,
         "journey_id": run.journey_id,
+        "recovery_epoch_id": run.recovery_epoch_id,
         "provider_key": run.provider_key,
         "runtime_identity": (
             NATIVE_DEEPSEEK_TOOL_LOOP
@@ -961,6 +963,7 @@ class DeepSeekJourneyAgent:
     ) -> dict[str, Any]:
         now = _now()
         trace_id = str(uuid4())
+        recovery_epoch = ensure_recovery_epoch(session, journey)
         run = AgentRun(
             id=str(uuid4()),
             mission_id=mission.id,
@@ -970,6 +973,7 @@ class DeepSeekJourneyAgent:
             status="RUNNING",
             created_at=now,
             started_at=now,
+            recovery_epoch_id=recovery_epoch.id,
         )
         session.add(run)
         mission.status = "RUNNING"
@@ -982,7 +986,13 @@ class DeepSeekJourneyAgent:
             journey_id=journey.id,
             actor_type="AI_AGENT",
             actor_id="deepseek-agent",
-            after={"run_id": run.id, "mission_id": mission.id, "model": self.model_key},
+            after={
+                "run_id": run.id,
+                "mission_id": mission.id,
+                "model": self.model_key,
+                "recovery_epoch_id": recovery_epoch.id,
+                "recovery_epoch_generation": recovery_epoch.generation,
+            },
             trace_id=trace_id,
         )
         session.flush()
@@ -1580,6 +1590,7 @@ def unavailable_run_payload(
     session: Session, *, journey: Journey, mission: JourneyMission
 ) -> dict[str, Any]:
     now = _now()
+    recovery_epoch = ensure_recovery_epoch(session, journey)
     availability = ai_availability_state()
     outcome = {
         "status": "BLOCKED",
@@ -1602,6 +1613,7 @@ def unavailable_run_payload(
         created_at=now,
         started_at=now,
         completed_at=now,
+        recovery_epoch_id=recovery_epoch.id,
     )
     session.add(run)
     mission.status = "SKIPPED_EXTERNAL_DEPENDENCY"

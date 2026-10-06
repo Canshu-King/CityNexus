@@ -844,6 +844,63 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 connection.exec_driver_sql(
                     "ALTER TABLE agent_pending_actions ADD COLUMN authority_receipt_id TEXT"
                 )
+            # R32: durable server-owned recovery reality epochs.  All bindings
+            # are nullable for legacy rows; new authority paths fail closed
+            # when they have no epoch.
+            if not _table_exists(connection, "recovery_epochs"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_epochs (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    generation INTEGER NOT NULL,
+                    active_plan_version_id_at_open TEXT,
+                    material_world_epoch_at_open TEXT,
+                    recovery_reality_fingerprint TEXT NOT NULL,
+                    triggering_event_ids_json TEXT NOT NULL DEFAULT '[]',
+                    status TEXT NOT NULL CHECK (status IN ('OPEN','SUPERSEDED','COMMITTED','ABANDONED')),
+                    opened_at TEXT NOT NULL,
+                    closed_at TEXT,
+                    close_reason TEXT,
+                    superseded_by_recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+                    UNIQUE(journey_id, generation)
+                    )"""
+                )
+            connection.exec_driver_sql(
+                "CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open "
+                "ON recovery_epochs(journey_id) WHERE status = 'OPEN'"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status "
+                "ON recovery_epochs(journey_id, status, generation)"
+            )
+            for table, columns in {
+                "agent_runs": {"recovery_epoch_id": "TEXT"},
+                "agent_pending_actions": {"recovery_epoch_id": "TEXT"},
+                "action_approvals": {"recovery_epoch_id": "TEXT"},
+                "replan_proposals": {
+                    "recovery_epoch_id": "TEXT",
+                    "semantic_identity": "TEXT",
+                    "canonical_proposal_id": "TEXT",
+                },
+            }.items():
+                existing = {row[1] for row in connection.exec_driver_sql(f"PRAGMA table_info({table})")}
+                if not existing:
+                    continue
+                for column, declaration in columns.items():
+                    if column not in existing:
+                        connection.exec_driver_sql(
+                            f"ALTER TABLE {table} ADD COLUMN {column} {declaration}"
+                        )
+            collective_columns = {
+                row[1]
+                for row in connection.exec_driver_sql(
+                    "PRAGMA table_info(collective_authority_receipts)"
+                )
+            }
+            if collective_columns and "recovery_epoch_id" not in collective_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE collective_authority_receipts ADD COLUMN recovery_epoch_id TEXT"
+                )
             if not _table_exists(connection, "collective_authority_receipts"):
                 connection.exec_driver_sql(
                     """CREATE TABLE collective_authority_receipts (

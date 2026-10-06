@@ -243,6 +243,29 @@ class JourneyMission(Base):
     clarification_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
 
 
+class RecoveryEpoch(Base):
+    """Server-owned recovery reality binding for one Journey."""
+
+    __tablename__ = "recovery_epochs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    generation: Mapped[int] = mapped_column(Integer)
+    active_plan_version_id_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_reality_fingerprint: Mapped[str] = mapped_column(String)
+    triggering_event_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    status: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    opened_at: Mapped[str] = mapped_column(String)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    close_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    superseded_by_recovery_epoch_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "generation"),
+        Index("idx_recovery_epochs_journey_status", "journey_id", "status", "generation"),
+    )
+
+
 class AgentRun(Base):
     """Persisted execution envelope for a model-backed Journey Agent run."""
 
@@ -258,6 +281,9 @@ class AgentRun(Base):
     created_at: Mapped[str] = mapped_column(String)
     started_at: Mapped[str] = mapped_column(String)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
 
 
 class AgentRunStep(Base):
@@ -300,6 +326,9 @@ class AgentPendingAction(Base):
     resumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[str] = mapped_column(String)
     authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
 
 
 class AutopilotEnrollment(Base):
@@ -731,6 +760,9 @@ class ActionApproval(Base):
     approved_at: Mapped[str | None] = mapped_column(String, nullable=True)
     consumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
 
 
 class CollectiveAuthorityReceipt(Base):
@@ -755,6 +787,9 @@ class CollectiveAuthorityReceipt(Base):
     )
     source_agent_run_id: Mapped[str | None] = mapped_column(
         ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
     )
     required_member_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
     response_audit_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
@@ -862,6 +897,11 @@ class ReplanProposal(Base):
     explanation_json: Mapped[str] = mapped_column(Text)
     created_at: Mapped[str] = mapped_column(String)
     decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+    semantic_identity: Mapped[str | None] = mapped_column(String, nullable=True)
+    canonical_proposal_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class JourneyTripContext(Base):

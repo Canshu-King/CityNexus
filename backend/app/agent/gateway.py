@@ -37,6 +37,7 @@ from app.core.audit import record_audit
 from app.fact_acquisition import acquire_place_facts
 from app.db.models import (
     Activity,
+    AgentRun,
     Booking,
     CityService,
     Commitment,
@@ -50,6 +51,7 @@ from app.db.models import (
     ReplanProposal,
     WebObservation,
 )
+from app.recovery_epoch import ensure_recovery_epoch, semantic_plan_identity
 from app.schemas import AgentToolCall, ReplanGenerateRequest
 from app.services import (
     _place_verified_cost,
@@ -1712,6 +1714,36 @@ class AgentToolGateway:
             )
             .order_by(ReplanProposal.created_at, ReplanProposal.id)
         ).all()
+        # Bind recovery proposals to the server-owned epoch of the AgentRun;
+        # the model cannot supply or change this value.  Ordinary non-Agent
+        # proposals remain NULL for backwards compatibility.
+        run_epoch_id = None
+        if request.mission_id is not None:
+            run_epoch_id = self.session.scalar(
+                select(AgentRun.recovery_epoch_id)
+                .where(
+                    AgentRun.mission_id == str(request.mission_id),
+                    AgentRun.journey_id == journey.id,
+                )
+                .order_by(AgentRun.started_at.desc(), AgentRun.id.desc())
+            )
+        if run_epoch_id is None and request.mission_id is not None:
+            run_epoch_id = ensure_recovery_epoch(self.session, journey).id
+        canonical_by_identity: dict[str, ReplanProposal] = {}
+        for item in proposals:
+            if run_epoch_id and item.recovery_epoch_id is None:
+                item.recovery_epoch_id = str(run_epoch_id)
+            item.semantic_identity = semantic_plan_identity(
+                self.session, item.proposed_plan_version_id
+            )
+            if item.semantic_identity:
+                canonical = canonical_by_identity.setdefault(item.semantic_identity, item)
+                if canonical.id != item.id:
+                    item.canonical_proposal_id = canonical.id
+        self.session.flush()
+        actionable_proposals = [
+            item for item in proposals if not item.canonical_proposal_id
+        ]
         response = {
             "tool": "request_replan",
             "decision": auth.decision.value,
@@ -1726,11 +1758,11 @@ class AgentToolGateway:
                     "hard_constraints_passed": bool(item.hard_constraints_passed),
                     "locked_commitments_preserved": bool(item.locked_commitments_preserved),
                 }
-                for item in proposals
+                for item in actionable_proposals
             ],
         }
         from app.main import collective_proposal_receipt
-        response.update(collective_proposal_receipt(self.session, journey, proposals))
+        response.update(collective_proposal_receipt(self.session, journey, actionable_proposals))
         record_audit(
             self.session,
             action="agent.request_replan",
@@ -2168,6 +2200,9 @@ class AgentToolGateway:
             str(authority_preflight.get("authority_receipt_id") or "")
             or None
         )
+        preflight_recovery_epoch_id = (
+            str(authority_preflight.get("recovery_epoch_id") or "") or None
+        )
         approval_signature = approval_fingerprint(
             action=AgentAction.ACCEPT_REPLAN.value,
             journey_id=journey.id,
@@ -2193,6 +2228,7 @@ class AgentToolGateway:
                     target_id=proposal.id,
                     request_fingerprint=approval_signature,
                     actor_id=request.agent_id,
+                    recovery_epoch_id=preflight_recovery_epoch_id,
                 )
             else:
                 approval = create_or_reuse_approval(
@@ -2205,6 +2241,7 @@ class AgentToolGateway:
                     request_fingerprint=approval_signature,
                     actor_id=request.agent_id,
                     required_decision=auth.decision.value,
+                    recovery_epoch_id=preflight_recovery_epoch_id,
                 )
             if preflight_receipt_id:
                 existing_receipt_id = str(
@@ -2243,6 +2280,7 @@ class AgentToolGateway:
                 reason_codes=response_reason_codes,
                 resolved_decision=resolved_collective_decision,
                 expected_authority_receipt_id=preflight_receipt_id,
+                expected_recovery_epoch_id=preflight_recovery_epoch_id,
             )
             receipt_id = result.get("collective_authority_receipt_id") if isinstance(result, dict) else None
             if approval is not None and receipt_id:

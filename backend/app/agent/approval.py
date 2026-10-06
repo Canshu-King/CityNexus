@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 from app.commerce.idempotency import canonical_request_signature
 from app.core.audit import record_audit
 from app.db.models import ActionApproval
+from app.recovery_epoch import RecoveryEpochSuperseded, validate_recovery_epoch_binding
 
 APPROVAL_TTL = timedelta(minutes=10)
 DEMO_STEP_UP_ENV = "CITYNEXUS_DEMO_STEP_UP_CODE"
@@ -68,6 +69,7 @@ def approval_payload(row: ActionApproval) -> dict[str, Any]:
         "approved_at": row.approved_at,
         "consumed_at": row.consumed_at,
         "collective_authority_receipt_id": row.authority_receipt_id,
+        "recovery_epoch_id": row.recovery_epoch_id,
     }
 
 
@@ -82,6 +84,7 @@ def create_or_reuse_approval(
     request_fingerprint: str,
     actor_id: str,
     required_decision: str,
+    recovery_epoch_id: str | None = None,
 ) -> ActionApproval:
     now = _now()
     existing = session.scalar(
@@ -92,6 +95,7 @@ def create_or_reuse_approval(
             ActionApproval.target_type == target_type,
             ActionApproval.target_id == target_id,
             ActionApproval.request_fingerprint == request_fingerprint,
+            *( [ActionApproval.recovery_epoch_id == recovery_epoch_id] if recovery_epoch_id else [] ),
             ActionApproval.status.in_(("PENDING", "APPROVED")),
         )
         .order_by(ActionApproval.created_at.desc())
@@ -113,6 +117,7 @@ def create_or_reuse_approval(
         required_decision=required_decision,
         created_at=now.isoformat(),
         expires_at=(now + APPROVAL_TTL).isoformat(),
+        recovery_epoch_id=recovery_epoch_id,
     )
     session.add(row)
     record_audit(
@@ -210,12 +215,20 @@ def consume_action_approval(
     target_id: str,
     request_fingerprint: str,
     actor_id: str,
+    recovery_epoch_id: str | None = None,
 ) -> ActionApproval:
     row = session.get(ActionApproval, approval_id)
     if row is None or row.journey_id != journey_id:
         raise HTTPException(409, "agent approval does not match this action")
     if row.request_fingerprint != request_fingerprint:
         raise HTTPException(409, "agent approval was issued for a different action")
+    if recovery_epoch_id is not None and row.recovery_epoch_id != recovery_epoch_id:
+        raise HTTPException(409, detail={"code": "RECOVERY_EPOCH_SUPERSEDED"})
+    if row.recovery_epoch_id:
+        try:
+            validate_recovery_epoch_binding(session, row.journey_id, row.recovery_epoch_id)
+        except RecoveryEpochSuperseded as exc:
+            raise HTTPException(409, detail=exc.facts)
     if row.action != action or row.target_type != target_type or row.target_id != target_id:
         raise HTTPException(409, "agent approval scope does not match this action")
     if _as_datetime(row.expires_at) <= _now():

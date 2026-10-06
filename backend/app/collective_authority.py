@@ -18,6 +18,7 @@ from app.db.models import (
     PlanVersion,
     ReplanProposal,
 )
+from app.recovery_epoch import RECOVERY_EPOCH_SUPERSEDED
 
 AUTHENTICATED_MEMBER_CONSENT = "AUTHENTICATED_MEMBER_CONSENT"
 UNANIMOUS_DOMINANCE = "UNANIMOUS_DOMINANCE"
@@ -103,6 +104,7 @@ def issue_collective_authority_receipt(
     source_mission_id: str | None = None,
     source_agent_run_id: str | None = None,
     source_clarification_id: str | None = None,
+    recovery_epoch_id: str | None = None,
 ) -> CollectiveAuthorityReceipt:
     """Issue a receipt only from server-computed, exact target facts."""
 
@@ -215,6 +217,8 @@ def issue_collective_authority_receipt(
             == (str(source_mission_id) if source_mission_id else None),
             CollectiveAuthorityReceipt.source_agent_run_id
             == (str(source_agent_run_id) if source_agent_run_id else None),
+            CollectiveAuthorityReceipt.recovery_epoch_id
+            == (str(recovery_epoch_id) if recovery_epoch_id else None),
             CollectiveAuthorityReceipt.required_member_ids_json == required_json,
             CollectiveAuthorityReceipt.response_audit_ids_json == audits_json,
             CollectiveAuthorityReceipt.principal_actor_ids_json == actors_json,
@@ -239,6 +243,7 @@ def issue_collective_authority_receipt(
         candidate_surface_fingerprint=str(candidate_surface_fingerprint),
         source_mission_id=str(source_mission_id) if source_mission_id else None,
         source_agent_run_id=str(source_agent_run_id) if source_agent_run_id else None,
+        recovery_epoch_id=str(recovery_epoch_id) if recovery_epoch_id else None,
         required_member_ids_json=required_json,
         response_audit_ids_json=audits_json,
         principal_actor_ids_json=actors_json,
@@ -260,6 +265,7 @@ def receipt_validation(
     material_world_epoch: str,
     candidate_surface_fingerprint: str,
     authority_mode: str | None = None,
+    recovery_epoch_id: str | None = None,
 ) -> dict[str, Any]:
     """Pure exact-match validation used immediately before every mutation."""
 
@@ -282,6 +288,8 @@ def receipt_validation(
     for actual, expected, code in checks:
         if str(actual or "") != expected:
             return {"valid": False, "code": code}
+    if recovery_epoch_id is not None and str(receipt.recovery_epoch_id or "") != str(recovery_epoch_id):
+        return {"valid": False, "code": RECOVERY_EPOCH_SUPERSEDED}
     return {"valid": True, "code": None, "receipt_id": receipt.id, "authority_mode": receipt.authority_mode}
 
 
@@ -304,6 +312,9 @@ def authority_receipt_for_allowed_gate(
 
     if gate.get("allowed") is not True:
         raise ValueError("collective authority receipt requires an allowed gate")
+    recovery_epoch_id = str(gate.get("recovery_epoch_id") or "") or None
+    if not recovery_epoch_id and str(gate.get("classification") or "") != "RENEWED_COLLECTIVE_CONSENT":
+        raise ValueError("COLLECTIVE_AUTHORITY_EPOCH_UNAVAILABLE")
 
     classification = str(gate.get("classification") or "")
     if classification == UNANIMOUS_DOMINANCE:
@@ -328,6 +339,7 @@ def authority_receipt_for_allowed_gate(
             material_world_epoch=material_world_epoch,
             candidate_surface_fingerprint=surface_fingerprint,
             classification=UNANIMOUS_DOMINANCE,
+            recovery_epoch_id=recovery_epoch_id,
         )
         check = receipt_validation(
             receipt,
@@ -338,6 +350,7 @@ def authority_receipt_for_allowed_gate(
             material_world_epoch=material_world_epoch,
             candidate_surface_fingerprint=surface_fingerprint,
             authority_mode=UNANIMOUS_DOMINANCE,
+            recovery_epoch_id=recovery_epoch_id,
         )
         if not check.get("valid"):
             raise ValueError(
@@ -384,6 +397,7 @@ def authority_receipt_for_allowed_gate(
             material_world_epoch=material_world_epoch,
             candidate_surface_fingerprint=surface_fingerprint,
             authority_mode=AUTHENTICATED_MEMBER_CONSENT,
+            recovery_epoch_id=recovery_epoch_id,
         )
         if not check.get("valid"):
             raise ValueError(

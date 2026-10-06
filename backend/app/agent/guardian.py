@@ -26,6 +26,7 @@ from app.db.models import (
     JourneyResilienceSnapshot,
     ReplanProposal,
 )
+from app.recovery_epoch import ensure_recovery_epoch
 from app.schemas import AgentToolCall
 
 ACTIONABLE_EVENT_TYPES = frozenset(
@@ -384,6 +385,7 @@ def guardian_payload(
 
 def _new_agent_run(session: Session, journey: Journey, mission: JourneyMission) -> AgentRun:
     now = _now().isoformat()
+    recovery_epoch = ensure_recovery_epoch(session, journey)
     run = AgentRun(
         id=str(uuid4()),
         mission_id=mission.id,
@@ -393,6 +395,7 @@ def _new_agent_run(session: Session, journey: Journey, mission: JourneyMission) 
         status="RUNNING",
         created_at=now,
         started_at=now,
+        recovery_epoch_id=recovery_epoch.id,
     )
     session.add(run)
     session.flush()

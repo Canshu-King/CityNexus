@@ -347,6 +347,9 @@ CREATE TABLE IF NOT EXISTS replan_proposals (
     explanation_json TEXT NOT NULL,
     created_at TEXT NOT NULL,
     decided_at TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    semantic_identity TEXT,
+    canonical_proposal_id TEXT REFERENCES replan_proposals(id) ON DELETE SET NULL,
     CHECK (base_plan_version_id <> proposed_plan_version_id)
 );
 
@@ -428,8 +431,30 @@ CREATE TABLE IF NOT EXISTS action_approvals (
     expires_at TEXT NOT NULL,
     approved_at TEXT,
     consumed_at TEXT,
-    authority_receipt_id TEXT
+    authority_receipt_id TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
 );
+
+CREATE TABLE IF NOT EXISTS recovery_epochs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    generation INTEGER NOT NULL,
+    active_plan_version_id_at_open TEXT,
+    material_world_epoch_at_open TEXT,
+    recovery_reality_fingerprint TEXT NOT NULL,
+    triggering_event_ids_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL CHECK (status IN ('OPEN','SUPERSEDED','COMMITTED','ABANDONED')),
+    opened_at TEXT NOT NULL,
+    closed_at TEXT,
+    close_reason TEXT,
+    superseded_by_recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    UNIQUE(journey_id, generation)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open
+    ON recovery_epochs(journey_id) WHERE status = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status
+    ON recovery_epochs(journey_id, status, generation);
 
 CREATE TABLE IF NOT EXISTS collective_authority_receipts (
     id TEXT PRIMARY KEY,
@@ -448,7 +473,8 @@ CREATE TABLE IF NOT EXISTS collective_authority_receipts (
     classification TEXT NOT NULL,
     issued_at TEXT NOT NULL,
     invalidated_at TEXT,
-    invalidation_code TEXT
+    invalidation_code TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_collective_authority_receipts_target
@@ -537,7 +563,8 @@ CREATE TABLE IF NOT EXISTS agent_runs (
     failure_reason TEXT,
     created_at TEXT NOT NULL,
     started_at TEXT NOT NULL,
-    completed_at TEXT
+    completed_at TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS agent_run_steps (
@@ -563,14 +590,15 @@ CREATE TABLE IF NOT EXISTS agent_pending_actions (
     tool_name TEXT NOT NULL,
     arguments_json TEXT NOT NULL DEFAULT '{}',
     status TEXT NOT NULL DEFAULT 'PENDING'
-        CHECK (status IN ('PENDING','RESUMING','RESUMED','FAILED','EXPIRED')),
+        CHECK (status IN ('PENDING','RESUMING','RESUMED','FAILED','EXPIRED','SUPERSEDED')),
     result_json TEXT NOT NULL DEFAULT '{}',
     error_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     claimed_at TEXT,
     resumed_at TEXT,
     updated_at TEXT NOT NULL,
-    authority_receipt_id TEXT
+    authority_receipt_id TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_run

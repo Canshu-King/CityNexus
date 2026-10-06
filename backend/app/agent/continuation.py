@@ -15,9 +15,15 @@ from app.db.models import (
     AgentPendingAction,
     AgentRun,
     AgentRunStep,
+    CollectiveAuthorityReceipt,
     Journey,
     JourneyMission,
     ReplanProposal,
+)
+from app.recovery_epoch import (
+    RECOVERY_EPOCH_SUPERSEDED,
+    RecoveryEpochSuperseded,
+    validate_recovery_epoch_binding,
 )
 from app.schemas import AgentToolCall
 
@@ -67,6 +73,7 @@ def capture_pending_action(
     authority_receipt_id = (
         str(result.get("collective_authority_receipt_id") or "") or None
     )
+    recovery_epoch_id = str(run.recovery_epoch_id or result.get("recovery_epoch_id") or "") or None
     existing = session.scalar(
         select(AgentPendingAction).where(AgentPendingAction.approval_id == approval_id)
     )
@@ -82,6 +89,10 @@ def capture_pending_action(
         if authority_receipt_id and not existing.authority_receipt_id:
             existing.authority_receipt_id = authority_receipt_id
             existing.updated_at = _now()
+        if recovery_epoch_id and existing.recovery_epoch_id and existing.recovery_epoch_id != recovery_epoch_id:
+            raise RuntimeError("pending action recovery epoch changed for the same approval")
+        if recovery_epoch_id and not existing.recovery_epoch_id:
+            existing.recovery_epoch_id = recovery_epoch_id
         run.status = "WAITING_FOR_APPROVAL"
         mission.status = "WAITING_FOR_APPROVAL"
         run.completed_at = None
@@ -101,6 +112,7 @@ def capture_pending_action(
         journey_id=run.journey_id,
         originating_step_id=step.id,
         authority_receipt_id=authority_receipt_id,
+        recovery_epoch_id=recovery_epoch_id,
         tool_name=tool_name,
         arguments_json=_json_text(canonical_arguments),
         status="PENDING",
@@ -130,6 +142,7 @@ def capture_pending_action(
             "tool": tool_name,
             "status": pending.status,
             "collective_authority_receipt_id": authority_receipt_id,
+            "recovery_epoch_id": recovery_epoch_id,
         },
     )
     session.flush()
@@ -288,6 +301,58 @@ def resume_pending_action(
             "status": "FAILED",
             "pending_action_id": pending.id,
             "reason": "APPROVAL_NOT_FOUND",
+        }
+    bound_epoch_id = pending.recovery_epoch_id or approval.recovery_epoch_id
+    if pending.authority_receipt_id and bound_epoch_id:
+        receipt = session.get(CollectiveAuthorityReceipt, pending.authority_receipt_id)
+        receipt_epoch_id = receipt.recovery_epoch_id if receipt is not None else None
+        if receipt is None or (bound_epoch_id and receipt_epoch_id != bound_epoch_id):
+            pending.status = "SUPERSEDED"
+            pending.error_json = _json_text({
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "reason": "authority receipt recovery epoch does not match pending action",
+                "pending_recovery_epoch_id": bound_epoch_id,
+                "receipt_recovery_epoch_id": receipt_epoch_id,
+            })
+            pending.updated_at = _now()
+            session.commit()
+            return {
+                "status": "SUPERSEDED",
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "pending_action_id": pending.id,
+                "run_id": pending.run_id,
+                "mission_id": pending.mission_id,
+            }
+    try:
+        if bound_epoch_id:
+            validate_recovery_epoch_binding(session, pending.journey_id, bound_epoch_id)
+    except RecoveryEpochSuperseded as exc:
+        pending.status = "SUPERSEDED"
+        pending.error_json = _json_text(exc.facts)
+        pending.updated_at = _now()
+        run = session.get(AgentRun, pending.run_id)
+        if run is not None:
+            run.status = "SUPERSEDED"
+            run.failure_reason = RECOVERY_EPOCH_SUPERSEDED
+            run.outcome = _json_text({"status": "SUPERSEDED", **exc.facts})
+        record_audit(
+            session,
+            action="agent.pending_action.superseded",
+            entity_type="AgentPendingAction",
+            entity_id=pending.id,
+            journey_id=pending.journey_id,
+            actor_type="SYSTEM",
+            actor_id="recovery-epoch",
+            after={"status": pending.status, **exc.facts},
+        )
+        session.commit()
+        return {
+            "status": "SUPERSEDED",
+            "code": RECOVERY_EPOCH_SUPERSEDED,
+            "pending_action_id": pending.id,
+            "run_id": pending.run_id,
+            "mission_id": pending.mission_id,
+            **exc.facts,
         }
     if pending.status == "RESUMED":
         try:

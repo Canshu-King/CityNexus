@@ -159,6 +159,7 @@ from app.db.models import (
     Place,
     PlanVersion,
     Preference,
+    RecoveryEpoch,
     ProviderObservation,
     RealPlaceCandidate,
     StayJourneyOption,
@@ -170,6 +171,13 @@ from app.db.models import (
 )
 from app.db.models import (
     Booking as BookingModel,
+)
+from app.recovery_epoch import (
+    RECOVERY_EPOCH_SUPERSEDED,
+    RecoveryEpochSuperseded,
+    close_recovery_epoch,
+    ensure_recovery_epoch,
+    validate_recovery_epoch_binding,
 )
 from app.db.models import (
     Commitment as CommitmentModel,
@@ -3004,6 +3012,7 @@ def answer_collective_clarification(
                 source_clarification_id=str(
                     stored.get("clarification_id") or ""
                 ),
+                recovery_epoch_id=ensure_recovery_epoch(session, journey).id,
             )
         if authority_receipt is None:
             session.commit()
@@ -4844,10 +4853,13 @@ def collective_mutation_gate(
         journey_has_unresolved_collective_mediation,
         pending_resolved_mediation_selection,
     )
+    recovery_epoch = ensure_recovery_epoch(session, journey)
 
     if journey_has_unresolved_collective_mediation(session, journey.id):
         return {
             "allowed": False,
+            "recovery_epoch_id": recovery_epoch.id,
+            "recovery_epoch_generation": recovery_epoch.generation,
             "code": "COLLECTIVE_MEDIATION_RENEWED_CONSENT_REQUIRED",
             "classification": "MEDIATION_REQUIRED",
             "member_count": None,
@@ -4887,6 +4899,8 @@ def collective_mutation_gate(
     ):
         return {
             "allowed": False,
+            "recovery_epoch_id": recovery_epoch.id,
+            "recovery_epoch_generation": recovery_epoch.generation,
             "code": "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED",
             "classification": "RESOLVED_MEDIATION_PENDING_CONSUMPTION",
             "member_count": None,
@@ -4903,6 +4917,8 @@ def collective_mutation_gate(
     if member_projection.get("member_count", 0) < 2:
         return {
             "allowed": True,
+            "recovery_epoch_id": recovery_epoch.id,
+            "recovery_epoch_generation": recovery_epoch.generation,
             "classification": "SINGLE_MEMBER_JOURNEY",
             "member_count": member_projection.get("member_count", 0),
         }
@@ -5080,6 +5096,7 @@ def collective_mutation_gate(
         if consent_epoch_stale:
             decision = {
                 "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
                 "code": "COLLECTIVE_CONSENT_EPOCH_STALE",
                 "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
                 "resolved_decision_epoch": resolved_decision_epoch,
@@ -5088,6 +5105,7 @@ def collective_mutation_gate(
         elif world_epoch_stale:
             decision = {
                 "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
                 "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
                 "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
                 # Carry both layers into the durable denial audit. At this
@@ -5105,12 +5123,14 @@ def collective_mutation_gate(
         elif target_window_status != "GROUNDED_FEASIBLE":
             decision = {
                 "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
                 "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
                 "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
             }
         else:
             decision = {
                 "allowed": True,
+                "recovery_epoch_id": recovery_epoch.id,
                 "code": None,
                 "classification": "RENEWED_COLLECTIVE_CONSENT",
                 "resolved_decision_epoch": resolved_decision_epoch or None,
@@ -5146,6 +5166,7 @@ def collective_mutation_gate(
         ):
             decision = {
                 "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
                 "code": "COLLECTIVE_STALE_CONSENT_RENEWAL_REQUIRED",
                 "classification": "POST_STALE_CONSENT_HUMAN_AUTHORITY_REQUIRED",
                 "prior_selected_plan_version_id": pending_selection.get(
@@ -5172,6 +5193,8 @@ def collective_mutation_gate(
             }
     return {
         **decision,
+        "recovery_epoch_id": recovery_epoch.id,
+        "recovery_epoch_generation": recovery_epoch.generation,
         "member_count": refreshed.get("member_count", 0),
         "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
         "mediation": mediation,
@@ -5322,6 +5345,9 @@ def collective_proposal_receipt(
     must see the server's decision over the same proposal set before it asks the
     members, while the mutation gate still recomputes everything at commit time.
     """
+    # R32 keeps duplicate discovery rows for provenance but exposes one
+    # executable candidate per normalized future.
+    proposals = [item for item in proposals if not getattr(item, "canonical_proposal_id", None)]
     active = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
     base_activities = session.scalars(
         select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
@@ -11947,6 +11973,9 @@ def _replan_payload(item: ReplanProposalModel) -> dict[str, Any]:
         "trigger_event_id": item.trigger_event_id,
         "base_plan_version_id": item.base_plan_version_id,
         "proposed_plan_version_id": item.proposed_plan_version_id,
+        "recovery_epoch_id": item.recovery_epoch_id,
+        "semantic_identity": item.semantic_identity,
+        "canonical_proposal_id": item.canonical_proposal_id,
         "status": item.status,
         "hard_constraints_passed": bool(item.hard_constraints_passed),
         "locked_commitments_preserved": bool(item.locked_commitments_preserved),
@@ -15125,6 +15154,7 @@ def _accept_replan_impl(
     reason_codes: tuple[str, ...] = (),
     resolved_decision: Mapping[str, Any] | None = None,
     expected_authority_receipt_id: str | None = None,
+    expected_recovery_epoch_id: str | None = None,
 ):
     """Serialize acceptance for one Journey across its whole transaction.
 
@@ -15149,6 +15179,7 @@ def _accept_replan_impl(
         "reason_codes": reason_codes,
         "resolved_decision": resolved_decision,
         "expected_authority_receipt_id": expected_authority_receipt_id,
+        "expected_recovery_epoch_id": expected_recovery_epoch_id,
     }
     located = session.get(ReplanProposalModel, str(proposal_id))
     journey_id = located.journey_id if located is not None else None
@@ -15202,6 +15233,7 @@ def _accept_replan_serialized_impl(
     reason_codes: tuple[str, ...] = (),
     resolved_decision: Mapping[str, Any] | None = None,
     expected_authority_receipt_id: str | None = None,
+    expected_recovery_epoch_id: str | None = None,
 ):
     """Accept a replan, replaying any response this key already produced.
 
@@ -15231,6 +15263,7 @@ def _accept_replan_serialized_impl(
         "reason_codes": reason_codes,
         "resolved_decision": resolved_decision,
         "expected_authority_receipt_id": expected_authority_receipt_id,
+        "expected_recovery_epoch_id": expected_recovery_epoch_id,
     }
     try:
         return _accept_replan_executing(proposal_id, idempotency_key, session, **kwargs)
@@ -15263,6 +15296,7 @@ def _accept_replan_executing(
     reason_codes: tuple[str, ...] = (),
     resolved_decision: Mapping[str, Any] | None = None,
     expected_authority_receipt_id: str | None = None,
+    expected_recovery_epoch_id: str | None = None,
 ):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
@@ -15286,6 +15320,17 @@ def _accept_replan_executing(
     if proposal.status != "PRESENTED":
         raise HTTPException(409, "replan proposal is no longer actionable")
     journey = require(session, Journey, proposal.journey_id, "Journey")
+    bound_recovery_epoch_id = expected_recovery_epoch_id or proposal.recovery_epoch_id
+    try:
+        current_recovery_epoch = (
+            validate_recovery_epoch_binding(session, journey.id, bound_recovery_epoch_id)
+            if bound_recovery_epoch_id
+            else ensure_recovery_epoch(session, journey)
+        )
+    except RecoveryEpochSuperseded as exc:
+        raise HTTPException(409, detail=exc.facts)
+    if proposal.recovery_epoch_id and proposal.recovery_epoch_id != current_recovery_epoch.id:
+        raise HTTPException(409, detail={"code": RECOVERY_EPOCH_SUPERSEDED})
     if (
         journey.status != "ACTIVE"
         or journey.active_plan_version_id != proposal.base_plan_version_id
@@ -15374,6 +15419,7 @@ def _accept_replan_executing(
             "classification": bound_authority_receipt.classification,
             "source_mission_id": bound_authority_receipt.source_mission_id,
             "source_agent_run_id": bound_authority_receipt.source_agent_run_id,
+            "recovery_epoch_id": bound_authority_receipt.recovery_epoch_id,
             "provenance": {
                 "decision_epoch": {
                     "source": "SERVER_SEMANTIC_DECISION_EPOCH",
@@ -15511,6 +15557,12 @@ def _accept_replan_executing(
         replacement_current.status = "ACTIVE"
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
+    close_recovery_epoch(
+        session,
+        current_recovery_epoch,
+        status="COMMITTED",
+        reason="REPLAN_ACCEPTED",
+    )
     # An accepted replan has now adapted the Journey to the event.  Keep the
     # external-world fact intact, but close the Journey-scoped trigger so the
     # same opportunity/disruption cannot be offered again as unresolved.
