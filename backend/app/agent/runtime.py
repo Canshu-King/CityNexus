@@ -666,6 +666,29 @@ def _server_completion_contract(
 ) -> dict[str, Any]:
     """Classify recovery completion from persisted server/tool facts only."""
 
+    if run_status == "SUPERSEDED":
+        latest = next(
+            (
+                item.get("result")
+                for item in reversed(tool_steps)
+                if isinstance(item.get("result"), dict)
+                and item["result"].get("code")
+                == RECOVERY_EPOCH_SUPERSEDED
+            ),
+            {},
+        )
+        return {
+            "kind": "SUPERSEDED",
+            "source": "server_trace",
+            "reason_code": RECOVERY_EPOCH_SUPERSEDED,
+            "stale_recovery_epoch_id": latest.get(
+                "stale_recovery_epoch_id"
+            ),
+            "current_recovery_epoch_id": latest.get(
+                "current_recovery_epoch_id"
+            ),
+        }
+
     active_mutations = {
         "accept_replan",
         "activate_standby",
