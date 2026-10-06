@@ -20,7 +20,7 @@ from app.agent.predictive import (
     maintain_standby_portfolio,
 )
 from app.agent.signal_pipeline import SignalPipelineResult, refresh_demo_signals
-from app.agent.watch_policy import adaptive_watch_policy, watch_is_due
+from app.agent.watch_policy import adaptive_watch_policy, journey_phase_projection, watch_is_due
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import (
@@ -295,6 +295,16 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
     )
     session.flush()
     try:
+        phase = journey_phase_projection(session, journey)
+        trace_spans.append(
+            persist_span(
+                session,
+                journey_id=journey.id,
+                trace_id=trace_id,
+                name="guardian.phase",
+                attributes=phase,
+            )
+        )
         signals = refresh_signals(session, journey)
         trace_spans.append(
             persist_span(
@@ -312,7 +322,11 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
             )
         )
         context_watch = (
-            run_live_context_watch(session, journey)
+            run_live_context_watch(
+                session,
+                journey,
+                activity_ids=tuple(phase.get("monitored_activity_ids") or ()),
+            )
             if journey.status == "ACTIVE"
             and settings.guardian_signal_provider in {"open-meteo", "live", "weather"}
             else None
@@ -498,6 +512,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                 )
             )
         result = {
+            "phase": phase,
             "signals": signals.to_dict(),
             "context_watch": context_watch,
             "guardian": guardian_result,
