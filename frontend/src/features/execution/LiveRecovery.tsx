@@ -937,7 +937,13 @@ export function LiveRecovery({
             {groupPresence.rendezvous && (
               <small>{zh ? `集合点：${groupPresence.rendezvous.title}（来自当前行程安排）` : `Rendezvous: ${groupPresence.rendezvous.title} (from the active itinerary)`}</small>
             )}
-            <small>{zh ? "只显示同行者是否接近，不共享他人的精确坐标。浏览器定位仅用于参考，不会触发 Guardian 或改计划。" : "Only coarse together/split status is shown; other travellers’ exact coordinates are never shared. Browser location is advisory and cannot trigger Guardian or change the plan."}</small>
+            <small>
+              {groupPresence.authority === "TRUSTED_MEMBER_LOCATION"
+                ? (zh ? "只显示同行者是否接近，不共享他人的精确坐标；可信位置仍沿正常权限边界处理。" : "Only coarse together/split status is shown; exact coordinates stay private, and trusted location still follows normal authority boundaries.")
+                : groupPresence.authority === "MIXED_MEMBER_LOCATION_AUTHORITY"
+                  ? (zh ? "部分位置是参考定位、部分来自可信来源；这里只显示粗粒度队伍状态，不共享他人的精确坐标。" : "Location authority is mixed. This view shows only coarse group state and never exposes another traveller’s exact coordinates.")
+                  : (zh ? "只显示同行者是否接近，不共享他人的精确坐标。浏览器定位仅用于参考，不会单独触发 Guardian 或改计划。" : "Only coarse together/split status is shown; other travellers’ exact coordinates are never shared. Browser location is advisory and cannot by itself trigger Guardian or change the plan.")}
+            </small>
             {groupPresence.can_guide && groupPresence.rendezvous && (
               <button type="button" disabled={busy !== null} data-testid="journey-guide-to-group" onClick={() => void guideToGroup()}>
                 {busy === "group-route" ? (zh ? "正在找路线…" : "Finding route…") : (zh ? "带我去集合点" : "Guide me to the group")}
