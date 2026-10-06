@@ -16588,6 +16588,140 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 主执行路那栋楼·第六格：把网关十二枚处理器逐枚扫过假闸形制——没有第二处（第五格那处已删）
+
+一、按常设自派：把"这道闸真能失败吗"逐枚套到网关每个处理器上
+- 仪器只读：读每枚处理器评估的 AgentAction 与它自带的拒绝分支，并用最紧信封**真跑策略**拿三种模式下的判语（件 review/ord/mainexec_path_r2/handler_refusal_reachability_r2.txt）
+- 十二枚逐枚有据。两种"策略永远放行"的动作——REQUEST_REPLAN（review/ord/mainexec_path_r2/handler_refusal_reachability_r2.txt:11）与 REPORT_DISRUPTION（review/ord/mainexec_path_r2/handler_refusal_reachability_r2.txt:18）——它们的拒绝都不是策略拒绝，而是可达的参数校验（request_replan 的 404/422 review/ord/mainexec_path_r2/handler_refusal_reachability_r2.txt:25、report_disruption 的 422 review/ord/mainexec_path_r2/handler_refusal_reachability_r2.txt:32）；两者真正的闸是 allowlist
+- 其余 typed 变更类在紧信封下判 DENY，拒绝分支可达。⇒ 假闸形制只剩第五格删掉的那一处，分母是 12/12（review/ord/mainexec_path_r2/cell6_note.md:40）
+
+二、这一格我自己的仪器有两处盲点，当场修了（不藏）
+- 第一趟把五枚 typed 处理器读成 (none)：它们的动作经 `_run_typed_mutation(action=AgentAction.X)` 到策略，不在体里直接 evaluate_action；扫法已补这一形
+- 第二趟仍漏，因为取体时被处理器内层的 `def execute()` 截断；已改成只按方法级 `def` 截（review/ord/mainexec_path_r2/cell6_note.md:44、review/ord/mainexec_path_r2/cell6_note.md:47）
+- 这两处若不修，扫法会看着 7/12 就报"全清"——正是本领域要防的那种假绿
+
+三、下一格（按常设再往外扩一层）
+- 这一格只读了处理器体里的拒绝。往外一层是**体之外**的拒绝：共享的 `_run_typed_mutation` / `_bound_authorization` 路径与 `_require_journey` / `_typed_*` 帮手。第七格问那条共享层里有没有不可达的拒绝——若有，会一次影响所有 typed 工具（review/ord/mainexec_path_r2/cell6_note.md:51）
+
+四、边界
+- 本格零产品字节（只读）；权威尖零移动，只动本车道枝
+- 枝 refs/heads/review/cff87c64-main-exec-path-r2 @ 71e7698a945f901ac8c9aead95d09e4a89c35de9（自尖 e9b231b876c777bc592923bc41d8c397a577e691 切出）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### cff87c64 · 主执行路那栋楼·第五格：我自己上一格那枚工具装了个假闸——我自己扫出来、自己修了
+
+一、按新常设（领域所有权）自扫：我上一格那枚工具的策略闸能不能真的响
+- 第四格我给 report_disruption 写了一条 DENY 分支（策略拒绝就 403）。我量了一下它能不能触发：它被放在 request_replan 那一支旁边，而那一支在任何模式判定之前就直接放行
+- 现读（最紧的信封：不开自动接受、零花费额度、零损失额度、零漂移、无可活动类型）：ADVISORY→ALLOW_AUTO（review/ord/mainexec_path_r2/policy_modes_r2.txt:3）、ASSISTED→ALLOW_AUTO（review/ord/mainexec_path_r2/policy_modes_r2.txt:4）、AUTONOMOUS→ALLOW_AUTO（review/ord/mainexec_path_r2/policy_modes_r2.txt:5）
+- 所以那条 DENY 分支在三种模式里一次都不可达——它是个**假闸**：宣称有一道策略拒绝，而它不可能发生。这正是我这块领域（断言可信）要抓的东西
+
+二、改法与它的臂
+- 删掉那条死分支：不能响的检查比没有更坏（它暗示一道不存在的闸）。真正闸这枚工具的是 allowlist（不在目录里的名字被拒）与每次 dispatch 都写的 agent_tool_requested 审计；回执里仍如实报 decision
+- 新臂 review/ord/mainexec_path_r2/cell5_note.md:40：压住"它在 V2、不在 V1 钉死六枚、不在目录的名字被拒"三件事。判别性我验了：把 ToolDescriptor 从 TYPED_TOOLS 拿掉，这臂当场红（review/ord/mainexec_path_r2/cell5_note.md:47），随后按字节复位
+
+三、行为不变（整跑，两侧同一尖）
+- 干净尖 review/ord/mainexec_path_r2/cell5_note.md:54 ；第四格 review/ord/mainexec_path_r2/cell5_note.md:55 ；本格 review/ord/mainexec_path_r2/cell5_note.md:56 —— 红集与干净尖逐枚相同，零新增；比第四格多一格绿（新增那臂）
+
+四、下一格（按常设自派，往外扩一层）
+- 同一问法（"这道闸真能失败吗"）逐枚套到网关其余每枚工具处理器上：扫每个 dispatch 处理器，问它的拒绝分支可不可达，逐枚出可达性回执（review/ord/mainexec_path_r2/cell5_note.md:62）。只有不可达拒绝的处理器，就是本格在我自己代码里找到的同一种假闸形制
+
+五、边界
+- 产品字节：gateway.py 删一支 + 一枚测试；无新增契约变更（除第四格那枚工具）。权威尖零移动，只动本车道枝
+- 枝 refs/heads/review/cff87c64-main-exec-path-r2 @ 519a7892f5c25a1392153b3144c41d4797244f3c（自尖 e9b231b876c777bc592923bc41d8c397a577e691 切出）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 04:56 · 领域「时间与时钟」头两格：行程锚定的时刻现在说清是哪个时刻；时区用不了时也说出来，而不是悄悄换成设备钟
+
+**一、要落的枝（只这一枚，枝名逐字）**
+
+- `review/a68b0631-time-anchors-zone-r1` head `6bdf882d0457adbe4c71367d17ddbb7d1a727d05`（已 push，`ls-remote` 现读回同值），切在权威尖 `e9b231b876c777bc592923bc41d8c397a577e691` 上。
+- 产品 blob：`frontend/src/app/V8Experience.tsx` = `c712fa273ea3dd98c3364dc1f9767c4fafcd13dd`；`frontend/src/i18n/LocaleContext.tsx` = `0dff53916ec8891a468d78f361247e00ba2bd52b`。
+- 臂：屏读 spec blob `f6d4eab4e33d9b8effae3fec7307ac8c373f7760`（三条臂）；源码普查 blob `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`。
+
+**二、这一轮新扫的范围**
+
+全树前端时间面：149 个 src 文件按源码现读，**62 处时间展示点、散在 19 个文件**（`Intl.DateTimeFormat` 21、`dateInZone` 10、`new Date(` 39、`timeZone` 67 次）；从中单挑**行程锚定的展示**与**会静默兜底的调用点**两类，分母与点名全部在普查件 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`。
+
+**三、新发现的处数**
+
+- **4 处**行程锚定展示不带任何时区归属（Today 起止那行、Hub 到达/出发锚）：另一个时区的读者看到 `9 Oct, 18:00`，分不清那是行程的钟还是自己的钟。
+- **8 处**调用点会静默退回设备钟点：契约把 `journey.timezone` 定成**裸字符串**（无枚举无格式），所以"用不了的时区"是契约合法的；后端遇它抛 `ZoneInfo`，这屏却**无声退回设备钟点**——同一个字段两套失败行为，其中一套看不见。（上两处计数与点名同出 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`）
+
+**四、新修的处数与新增的回归臂**
+
+- 修 **4 处**产品字节（挂 `hub.zoneAttribution`，两个语各加词条，**接在同一元素、不新增节点**，条带布局不动）。
+- 再修那 **8 处**兜底：兜底路径现在**渲染设备钟点并说出来**（"this device's time"）；同时归属由 `zoneIsUsable(journey.timezone)` 把守，**时区真用得上才声称那个区**——否则第一格会造出"声称一个时刻并不在的区"。
+- 三条臂随行（设备 UTC／行程 New York／时刻 +08:00，三者互不相同才能分辨），实测屏读文字：
+  - 时区可用：`9 Oct, 06:00 — 9 Oct, 06:00 · America/New_York · journey time zone · 1 traveler · 3 days`
+  - 时区无效：`9 Oct, 10:00 · this device's time — 9 Oct, 10:00 · this device's time · 1 traveler · 3 days`
+  - 06:00 是纽约、10:00 是 UTC，无效时区名一个字都没出现。
+- **该红的那两次**（现取，各只红一格）：撤掉 Today 那行的归属 → 只有 `today-when-names-the-zone` 红；撤掉兜底那句标记 → 只有 `unusable-zone-says-device-time` 红。两次都按字节还原。
+
+**五、点名我自己**
+
+普查第一版在**修好的树上仍报红**：它在调用点找渲染出来的**字**，可词在 i18n 表里、调用点只有键名——**词级判据抓错了层**；改成认语义载体（那个键），并把"字真印出来"交给屏读臂去证。另外第一格的归属如果单独上，在兜底路径上会**声称一个没用的时区**，所以第二格不是补丁，是把第一格那句话说真。
+
+**六、下一轮我要扫什么新范围**
+
+- 剩下 **55 处**不带时区归属的时间点（行程锚定之外的屏）：逐屏判它们各自是什么时刻、该不该带归属，扩到 Hub 以外（checkin／footprint／inbox／pending／planning／setup／execution 各屏，计数同出 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`）。
+- 扩一类输入：**跨零时区行程**（行程时区与设备相差整日）、以及**夏令时切换日**的行程钟读数——这类情形下 06:00 与 05:00 只差一小时，正是最容易被误读成"同一天"的形状。
+- 把普查的覆盖面从 `frontend/src` 扩到**后端对外说的时刻**（execution clock、weather_runtime 的 `ZoneInfo(journey.timezone)`），核两端口径是否一致。
+
+**七、没做的，具名**
+
+- 后端那侧（`ZoneInfo` 对无效时区的行为）本轮**只量不改**：它是别人的产品行为，改它要另起一格并配反例臂。
+- 上一栋楼（尺的坐标可取回）的枝 `review/a68b0631-ruler-coordinates-r2` 仍挂着，与本领域互不相干。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 04:50 · 领域「时间与时钟」第一格：全树时间面扫完（62 处 / 19 文件），修掉四处"行程锚定的时刻不说是哪个时刻"；两条臂随行，该红的那一次已取
+
+**一、要落的枝（只这一枚，枝名逐字）**
+
+- `review/a68b0631-time-anchors-zone-r1` head `b94eb86af75678bf0bc8502e023c8c02573076ff`（已 push，`ls-remote` 现读回同值），切在权威尖 `e9b231b876c777bc592923bc41d8c397a577e691` 上。
+- 产品 blob：`frontend/src/app/V8Experience.tsx` = `f6187a800f4c252893e265a9ed70fb2178d77272`；`frontend/src/i18n/LocaleContext.tsx` = `fce7cbc09add996d80ba33d0614a2a00e9e86a40`。
+- 臂：屏读 spec blob `04e59a805350426f08cbd7119144db953c75d159`；源码普查 blob `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`。
+
+**二、这一轮新扫的范围**
+
+全树前端时间面：149 个 src 文件里按源码现读，**62 处时间展示点、散在 19 个文件**（`Intl.DateTimeFormat` 21 处、`dateInZone` 10 处、`new Date(` 39 处、`timeZone` 67 次）。其中**行程锚定的展示**单独挑出来：4 处（全部分母与点名见普查件 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`）。
+
+**三、新发现的处数**
+
+- **四处行程锚定展示不带任何时区归属**（`V8Experience.tsx` 的 Today 起止那行 2958/2959、Hub 到达/出发锚 3236/3240）：另一个时区的读者看到 `9 Oct, 18:00`，**分不清那是行程的钟还是自己的钟**——正是这个领域存在的理由。
+- 另发现**一条静默兜底**（本格未修，记入下一轮）：`dateInZone` 在时区串无效时 `Intl` 抛 `RangeError`，它**退回设备钟点且不作任何提示**；实测设备恰好 +08 时，兜底前后**印出来一模一样**。
+
+**四、新修的处数与新增的回归臂**
+
+- 修 **4 处**产品字节：四处都挂上 `hub.zoneAttribution`（两个语各加一条新词条），**接在同一元素里、不新增节点**，所以条带布局不动（这四处由普查件 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae` 现读点名）。
+- 新臂两条：
+  - 源码普查 `time_surface_census_r1.py`：修前退 1、修后退 0（行程锚定 4/4 带归属）。
+  - 屏读 spec：设备时区钉 `UTC`、行程时区打桩成 `America/New_York`、时刻串 `+08:00`——**三个读数互不相同**才能分辨。实测渲染文字：`today-when` 是 `9 Oct, 06:00 — 9 Oct, 06:00 · America/New_York · journey time zone · 1 traveler · 3 days`，条带是 `ARRIVAL 9 Oct, 06:00 · America/New_York · journey time zone`。06:00 是纽约、**不是** UTC 的 10:00。
+- **该红的那一次**（现取）：把归属文字从 Today 那行撤掉重跑，**只有那一条臂红**（`today-when-names-the-zone — Today rendered a journey-anchored moment without saying which zone it is: "9 Oct, 06:00 — 9 Oct, 06:00 · 1 traveler · 3 days"`），另两格仍绿；随后按字节还原。
+
+**五、点名我自己**
+
+普查第一版在**修好的树上仍报红**：它在调用点找渲染出来的**字**，可我把词放进了 i18n 表，调用点只有键名——**词级判据抓错了层**。改成认语义载体（`hub.zoneAttribution` 这个键），并把"字真的印出来"交给屏读臂去证。源码尺只该认载体，不该认字面。
+
+**六、下一轮我要扫什么新范围**
+
+- 那 **8 处会静默退回设备钟点**的调用点（`dateInZone` 的兜底）：把"兜底发生"变成屏上说得出来的事实，并配一条"时区无效时必须说"的反例臂（8 与 55 两数同出 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`）。
+- 剩下 **55 处不带时区归属**的时间点（除行程锚定之外的屏）：逐屏判它们各自是什么时刻、该不该带归属。
+- 扩一类输入：**跨时区行程**（行程时区 ≠ 设备时区）这一整类场景在各屏上的读数。
+
+**七、没做的，具名**
+
+- 本格只修了行程锚定那 4 处；那 8 处兜底与 55 处其余时间点按上面第六节排进下一轮（三数同出 `185a7b8fb27b6d5a671df59eef336e2bc8c7e5ae`）。
+- 上一栋楼（尺的坐标可取回）的枝 `review/a68b0631-ruler-coordinates-r2` 仍挂着，只带登记表那一件，与本格无关。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车主 · 04:15 常设：把「派单」换成「领域所有权」（主人第三次纠正派法）
 
 **主人的话**：任务不够防重，他们用力一下就停；要给一个远大的目标，让他们持续完成。
