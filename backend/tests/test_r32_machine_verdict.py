@@ -32,12 +32,14 @@ def _checkpoint() -> dict:
             "concurrent_external_barrier_proven": True,
             "external_call_outcomes": [
                 {
-                    "thread": "r32-agent-a",
+                    "thread": "AnyIO worker thread",
+                    "causal_slot": "A",
                     "provider_call_invoked": True,
                     "provider_returned": True,
                 },
                 {
-                    "thread": "r32-agent-b",
+                    "thread": "AnyIO worker thread",
+                    "causal_slot": "B",
                     "provider_call_invoked": True,
                     "provider_returned": True,
                 },
@@ -370,6 +372,23 @@ def test_unanimous_receipt_cannot_borrow_stale_agent_a_lineage():
         == "CONTRADICTED"
     )
     assert result["overall"] == "CONTRADICTED"
+
+
+def test_anyio_worker_thread_does_not_define_agent_identity():
+    checkpoint = _checkpoint()
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 145, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["agent_a_external_and_bound_r1"]["verdict"]
+        == "PROVEN"
+    )
+    assert (
+        result["dimensions"]["agent_b_external_and_bound_r2"]["verdict"]
+        == "PROVEN"
+    )
 
 
 def test_clean_precausal_abort_is_not_a_product_contradiction():
