@@ -23,6 +23,7 @@ from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
 from app.recovery_epoch import (
+    COMMITTED,
     RECOVERY_EPOCH_SUPERSEDED,
     RecoveryEpochSuperseded,
     ensure_recovery_epoch,
@@ -1643,12 +1644,22 @@ class DeepSeekJourneyAgent:
                         and isinstance(result, dict)
                         and result.get("executed") is True
                     ):
-                        final_text = (
-                            "The server-authorized Journey mutation was "
-                            "executed and this recovery run is complete."
+                        bound_epoch = (
+                            session.get(RecoveryEpoch, run.recovery_epoch_id)
+                            if run.recovery_epoch_id
+                            else None
                         )
-                        session.commit()
-                        break
+                        if (
+                            bound_epoch is not None
+                            and bound_epoch.status == COMMITTED
+                        ):
+                            final_text = (
+                                "The server-authorized Journey mutation "
+                                "committed this recovery epoch; the run is "
+                                "complete."
+                            )
+                            session.commit()
+                            break
                     # Human approval is not a reason to keep asking the model.
                     # Persist the already-selected action and suspend this same
                     # AgentRun until the server receives the approval.
