@@ -155,6 +155,95 @@ def _route_eta(
         return None, None
 
 
+def rendezvous_commitment_risk(
+    session: Session,
+    journey: Journey,
+    target_activity: Activity,
+    *,
+    route_duration_min: int,
+    authority: str,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Project whether this member-specific route threatens the shared protected stop."""
+
+    base = {
+        "state": "NO_PROTECTED_RENDEZVOUS_COMMITMENT",
+        "authority": authority,
+        "next_commitment": None,
+        "predicted_arrival_at": None,
+        "slack_after_buffer_min": None,
+    }
+    commitments = session.scalars(
+        select(Commitment).where(
+            Commitment.journey_id == journey.id,
+            Commitment.activity_id == target_activity.id,
+            Commitment.status == "ACTIVE",
+        )
+    ).all()
+    commitment = next(
+        (
+            row
+            for row in commitments
+            if str(row.level or "").upper() in PROTECTED_LEVELS
+        ),
+        None,
+    )
+    if commitment is None:
+        return base
+    try:
+        policy = json.loads(commitment.policy_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        policy = {}
+    scheduled = _stamp(
+        str(policy.get("scheduled_start_at") or target_activity.start_at)
+    )
+    reference = (now or execution_clock.now()).astimezone(timezone.utc)
+    if scheduled is None:
+        return {
+            **base,
+            "state": "COMMITMENT_TIME_UNKNOWN",
+            "next_commitment": {
+                "commitment_id": commitment.id,
+                "activity_id": target_activity.id,
+                "title": target_activity.title,
+            },
+        }
+    buffer_min = 5
+    for key in ("safety_buffer_min", "required_buffer_min", "resilience_buffer_min"):
+        if policy.get(key) is None:
+            continue
+        try:
+            buffer_min = max(0, int(policy[key]))
+            break
+        except (TypeError, ValueError):
+            continue
+    duration = max(0, int(route_duration_min))
+    predicted = reference + timedelta(minutes=duration)
+    slack = int((scheduled - predicted).total_seconds() // 60) - buffer_min
+    state = (
+        "COMMITMENT_AT_RISK"
+        if slack < 0
+        else "LOW_BUFFER"
+        if slack < max(10, buffer_min * 2)
+        else "WITHIN_BUFFER"
+    )
+    return {
+        "state": state,
+        "authority": authority,
+        "next_commitment": {
+            "commitment_id": commitment.id,
+            "activity_id": target_activity.id,
+            "title": target_activity.title,
+            "scheduled_at": scheduled.isoformat(),
+            "safety_buffer_min": buffer_min,
+        },
+        "predicted_arrival_at": predicted.isoformat(),
+        "slack_after_buffer_min": slack,
+        "route_duration_min": duration,
+        "basis": "DIRECT_MEMBER_ROUTE_TO_EXISTING_SHARED_COMMITMENT",
+    }
+
+
 def _group_state(
     *,
     members: list[JourneyMember],
