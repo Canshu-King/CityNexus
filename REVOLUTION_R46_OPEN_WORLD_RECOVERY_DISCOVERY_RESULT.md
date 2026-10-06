@@ -38,4 +38,4 @@ The replay catalog yielded one grounded replan proposal after expansion, so the 
 
 ## Commit
 
-Pending final R46 commit and push on `gpt/revolution-r33-open-world-journey-adaptation`.
+Implementation commit: `fdcc9dec00c817aa9e3e3281012f9758de82a1ee` on `gpt/revolution-r33-open-world-journey-adaptation`.
