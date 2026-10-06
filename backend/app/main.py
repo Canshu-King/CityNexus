@@ -4922,20 +4922,132 @@ def collective_mutation_gate(
             "classification": "SINGLE_MEMBER_JOURNEY",
             "member_count": member_projection.get("member_count", 0),
         }
-    active = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
+    active = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
+    )
     plan_rows = [target_plan]
-    sibling_filters = [
-        PlanVersion.journey_id == journey.id,
-        PlanVersion.id != target_plan.id,
-        PlanVersion.status == "CANDIDATE",
-    ]
-    if active is None:
-        sibling_filters.append(PlanVersion.parent_plan_version_id.is_(None))
+
+    # R32: an epoch-bound recovery proposal gets an epoch-pure, trigger-pure
+    # authority surface.  Parent-plan equality is not enough: historical
+    # legacy candidates and stale R1 plans can share the same active parent,
+    # while proposals for different simultaneous incidents are not necessarily
+    # interchangeable choices.  Only current, non-alias proposal siblings for
+    # the same trigger may participate in E/S calculation.
+    target_proposal = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.proposed_plan_version_id == target_plan.id,
+            ReplanProposalModel.status.in_(("PRESENTED", "ACCEPTED")),
+        )
+        .order_by(
+            ReplanProposalModel.created_at.desc(),
+            ReplanProposalModel.id.desc(),
+        )
+        .limit(1)
+    ).first()
+    candidate_surface_recovery_epoch_id: str | None = None
+    candidate_surface_trigger_event_id: str | None = None
+
+    if target_proposal is not None and target_proposal.recovery_epoch_id:
+        candidate_surface_recovery_epoch_id = str(
+            target_proposal.recovery_epoch_id
+        )
+        candidate_surface_trigger_event_id = (
+            str(target_proposal.trigger_event_id)
+            if target_proposal.trigger_event_id
+            else None
+        )
+        if candidate_surface_recovery_epoch_id != str(recovery_epoch.id):
+            return {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "recovery_epoch_generation": recovery_epoch.generation,
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "classification": "STALE_RECOVERY_EPOCH",
+                "member_count": member_projection.get("member_count", 0),
+                "candidate_fit_matrix": [],
+                "fit_subject_basis": "PLAN_DIFF",
+                "candidate_surface_scope": "RECOVERY_EPOCH_TRIGGER",
+                "candidate_surface_recovery_epoch_id": (
+                    candidate_surface_recovery_epoch_id
+                ),
+                "candidate_surface_trigger_event_id": (
+                    candidate_surface_trigger_event_id
+                ),
+            }
+
+        sibling_proposal_filters = [
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.recovery_epoch_id == recovery_epoch.id,
+            ReplanProposalModel.status == "PRESENTED",
+            ReplanProposalModel.canonical_proposal_id.is_(None),
+            ReplanProposalModel.proposed_plan_version_id != target_plan.id,
+        ]
+        if target_proposal.trigger_event_id is None:
+            sibling_proposal_filters.append(
+                ReplanProposalModel.trigger_event_id.is_(None)
+            )
+        else:
+            sibling_proposal_filters.append(
+                ReplanProposalModel.trigger_event_id
+                == target_proposal.trigger_event_id
+            )
+        sibling_plan_ids = {
+            str(value)
+            for value in session.scalars(
+                select(ReplanProposalModel.proposed_plan_version_id).where(
+                    *sibling_proposal_filters
+                )
+            ).all()
+            if value
+        }
+        if sibling_plan_ids:
+            sibling_plan_filters = [
+                PlanVersion.id.in_(sibling_plan_ids),
+                PlanVersion.journey_id == journey.id,
+                PlanVersion.status == "CANDIDATE",
+            ]
+            if active is None:
+                sibling_plan_filters.append(
+                    PlanVersion.parent_plan_version_id.is_(None)
+                )
+            else:
+                sibling_plan_filters.append(
+                    PlanVersion.parent_plan_version_id == active.id
+                )
+            siblings = session.scalars(
+                select(PlanVersion)
+                .where(*sibling_plan_filters)
+                .order_by(PlanVersion.created_at, PlanVersion.id)
+            ).all()
+        else:
+            siblings = []
     else:
-        sibling_filters.append(PlanVersion.parent_plan_version_id == active.id)
-    siblings = session.scalars(
-        select(PlanVersion).where(*sibling_filters).order_by(PlanVersion.created_at, PlanVersion.id)
-    ).all()
+        # Compatibility surface for legacy/non-Agent candidates that predate
+        # RecoveryEpoch binding.  Once a target proposal is epoch-bound this
+        # branch is never used.
+        sibling_filters = [
+            PlanVersion.journey_id == journey.id,
+            PlanVersion.id != target_plan.id,
+            PlanVersion.status == "CANDIDATE",
+        ]
+        if active is None:
+            sibling_filters.append(
+                PlanVersion.parent_plan_version_id.is_(None)
+            )
+        else:
+            sibling_filters.append(
+                PlanVersion.parent_plan_version_id == active.id
+            )
+        siblings = session.scalars(
+            select(PlanVersion)
+            .where(*sibling_filters)
+            .order_by(PlanVersion.created_at, PlanVersion.id)
+        ).all()
+
     plan_rows.extend(siblings)
     hard_feasible = {str(item) for item in (hard_feasible_plan_ids or set())}
     windows: list[dict[str, Any]] = []
@@ -5206,6 +5318,17 @@ def collective_mutation_gate(
             "current_material_world_epoch", current_world_epoch_for_gate
         ),
         "candidate_surface_fingerprint": current_surface_fingerprint,
+        "candidate_surface_scope": (
+            "RECOVERY_EPOCH_TRIGGER"
+            if candidate_surface_recovery_epoch_id
+            else "LEGACY_PARENT_PLAN"
+        ),
+        "candidate_surface_recovery_epoch_id": (
+            candidate_surface_recovery_epoch_id
+        ),
+        "candidate_surface_trigger_event_id": (
+            candidate_surface_trigger_event_id
+        ),
         "authority_provenance": collective_authority_provenance(
             AUTHENTICATED_MEMBER_CONSENT
             if renewed_consent_selected
