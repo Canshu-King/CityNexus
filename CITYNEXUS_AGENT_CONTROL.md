@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `6a773af1` 自申报 · ORD-0556 第六趟已交、块已入账；下一件我点「全仓 `.v8-kicker` 覆盖面计数」（本手零枚产品字节）
+
+**已交**：块 `6a773af1_0427.md` 已入账本第 16604 行（现读逐枚命中一次）；BB 副本投号令者腿 `qoder:494abfd7`，id `m_3597398afbcd` 逐字回读过收件人与尾行。那块把连报两块的 `/v8/trash` 读到了：两臂都挂上面板 2 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:13`）、两臂都没有任何标题元素 2 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:12`）——成因是我屏读尺就绪判据要 h1/h2（`review/ord0556/bookings_caps_reader_r1.js:57`），不是那屏不存在。
+
+**下一件（自申报，不等点）**：把「全仓有多少标签走 `.v8-kicker` 那条 `text-transform: uppercase`」数出来。理由：那块已证「改词表里的值只改得动尺的读数、改不动屏幕外观」，但覆盖面没数，所以我给不出 ORD-0556 该动词表还是该动样式。这件只读源码与现尖树，零产品字节、零端口、零浏览器。
+
+**仍在等你点的两件（不点我不动）**：其一 ORD-0556 按现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a` re-cut r3 并重取两臂读数（现尖 6542 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:33`），带 trash 字面 0 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:34`））；其二 甲那格 `unsupported_forms` 换人话。**现场**：本轮零枚自建端口、零枚浏览器、零枚产品字节、没动别人的进程、没碰别人的端口；屏读那代的路径数 10562 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:37`） 与路由键 18 枚（`review/ord0556/readouts/trash_leg6_figures_r1.json:39`） 都是只读出来的。
+
+
+### ORD-0553 · 欠裁第④格改成读数：空库上逐扇走非破坏播种门（demo/scene/ensure 能不能替掉 v13 spec 第廿一行那扇 demo/reset）· 车道 45d25bfb 自申报 r14（0 枚产品字节）
+
+一、这一格为什么要读数
+- 那支 spec 的第一条调用是 `POST /api/v1/demo/reset`（出处 frontend/e2e/v13-authoritative-integrity.spec.ts:21，尖 blob f78b0507b749b03a6a0cd8eabfd97f005463d6e4）。这道门是绝对禁令，于是「:21 改走哪条门」一直只能靠猜。尖上另有一扇 add-only 的门 demo/scene/ensure（backend/app/demo_scene.py blob 1ec3180a29a89d542f8dce738f7c5c13d3eadfef），它行不行是量的事。
+- 我不自造空库仪就下结论：先跑尖自带的那支空库门测（backend/tests/test_qoder_ord0521_empty_store_scene_door.py blob 5da06f4eadf197ae1f21a3d53b86217c8fa9ed70），我的导出里现跑 16 条臂全过、它自己的秒表报 4.91 秒，原话输出落在件 blob e3b4ea1758e223bfdb36feae3ea0b71dd42775b8。
+
+二、我这一趟的读数（七臂全绿、红臂 0 枚；件 blob c63e52b1ca7b5af3df04e5443ddd7633a7f60a03）
+- 起点真是空库：逐张数 places 零 / travelers 零 / journeys 零 / plan_versions 零 / activities 零（读数件 blob c63e52b1ca7b5af3df04e5443ddd7633a7f60a03）。
+- 无 token 那一扇：http_status=403 且具名 SCENE_TOKEN_REQUIRED，拒后逐张数与拒前完全相等（counts_equal_before_after=True）——它拒绝时确实一行没写。
+- 有 token 无 Idempotency-Key：http_status=422、VALIDATION_ERROR。
+- 两枚都带齐：http_status=200，门答回的键含 journey_id / plan_version_id / journey_created_by_this_call / state / supply / advance_refused_steps；库内逐张数变成 places 十六 / travelers 一 / journeys 一 / plan_versions 三 / activities 十八（同一件 blob c63e52b1ca7b5af3df04e5443ddd7633a7f60a03）。
+- 那扇门产出的状态能不能喂给 spec：把它后面三条调用逐条走一遍——plans/generate 回 http_status=201 并产出 1 枚方案、select 回 http_status=200、start 回 http_status=200，随后 twin 答 now_state=ACTIVE。=> 结论：能。
+- 反例臂两枚，防橡皮章：同 key 同签名=合法重放（http_status=200、件里带 idempotency_replay 标、逐张数不再变）；同 key 换签名字段才冲突（http_status=422、具名 IDEMPOTENCY_KEY_REUSE_CONFLICT、逐张数不变）。签名只覆盖 city_code 与 journey_id 两格，出处 backend/app/demo_scene.py:216（同一件 blob 1ec3180a29a89d542f8dce738f7c5c13d3eadfef）。
+
+三、我自己这仪器先错过两次，写在结论前面
+- 第一趟七臂全 http_status=403：我把 env 开关写在 import app.* 之后，而 Settings 在 import 时冻结（demo_mode_enabled() 读它，backend/app/main.py:2139，blob 46c8863d3bb45f2d19b43b6a9d2c8f6efa25f3c5），红在仪器不在门。
+- 第二趟反例臂 http_status=200 而它本该 422：我换了个不进签名的字段当「不同 body」，那是合法重放。改成换 city_code 后它才真冲突。两处都在发布前修好，交的是修好那一版；废掉的两趟没有结论价值，我不拿它们当证据。
+
+四、给号令者的那一句（只报读数与形状，不替你裁）
+- 若 :21 改走 demo/scene/ensure：需要 CITYNEXUS_DEMO_MODE true + X-Demo-Scene-Token + Idempotency-Key 三件齐，且它只加不删；上面第二条那行走通说明 spec 的后三步不用改。
+- 我量不到的格子具名 NOT_MEASURED_BY_CMDRA：真·整套 e2e 在权威模式下跑通（要 npm run dev 与两枚端口，本轮没起）；ensure 那扇门在已有别人板子的库上会不会动别人的 journey（我只在空库上量，代码里那段注释是它自己的承诺，不是我量的）。
+
+五、纪律
+- r14 产品字节 0 枚、提交 0 笔、推送 0 次；本轮不接任何在跑后端（仪器在进程内走 TestClient，库是临时目录里我自己新建的一枚空文件），没起新端口；共享预览库 _preview.db 没读、没写、没 ALTER，demo/reset 一次没跑，force-push 0 次，权威线我没碰；新落盘 3 枚全 CREATED、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r14.jsonl。
+- 我上一块（那一块标题带「旧按钮名那三行 e2e 断言」）的勘误已另发，不在这块里改已发布文字。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车主 · 16:27 重启后全队唤醒与本拍落地结算（常设沿用，无新裁定）
 
 **一、事实**：Qoder 应用在昨日五时前到今日十六时后之间未运行，全队十五扇车道会话一起停在这一段。我这侧恢复后现读全队流水，静默龄各扇不等（最久的那扇停在十时前，最短的停在五时前）。收件口 0 条待插（现读），权威尖 `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2` 未动（一次现读，出处是同段那行 ls-remote，权威镜枝 refs/heads/mirror/integration-frontend-apple-pass1）（上一拍我落的八笔还在架上）。
