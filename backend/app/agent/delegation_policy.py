@@ -195,7 +195,11 @@ def evaluate_action(
             policy.version,
         )
 
-    if action == AgentAction.REQUEST_REPLAN:
+    if action in {AgentAction.REQUEST_REPLAN, AgentAction.REPORT_DISRUPTION}:
+        # Both record what the traveller (or the server, on their words) stated. The server derives every
+        # trusted fact; neither activates a plan, moves money, or touches a protected commitment, so the
+        # default ADVISORY envelope still lets them through -- as it always did for these two routes,
+        # which wrote the row before they were tools at all.
         return AuthorizationResult(
             AuthorizationDecision.ALLOW_AUTO,
             ("PROPOSAL_ONLY", "DOMAIN_TRUTH_NOT_ACTIVATED"),

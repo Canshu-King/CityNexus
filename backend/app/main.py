@@ -1385,19 +1385,19 @@ def run_agent_command(
                 "effective_time": interpretation.entities.get("effective_time", "NOW"),
                 "entities": dict(interpretation.entities),
             }
-            captured = _capture_reported_disruption(
-                session,
-                journey,
+            # The Event now crosses the main path: this route no longer writes the row itself, it dispatches
+            # the report_disruption tool so the write gets the gateway's allowlist, audit and policy.
+            agent_call = AgentToolCall(
+                request_id=f"cmd-{payload.command[:8]}-{event_type}-{uuid4().hex[:8]}",
+                agent_id="hermes",
+                journey_id=journey.id,
                 event_type=event_type,
-                description=payload.command,
-                provider_key="user-command",
+                reason=payload.command,
                 source="agent_command",
-                semantic_payload=semantic,
-                semantic_envelope=semantic,
-                occurred_at_fallback=now,
-                audit_action=None,
-                commit=False,
+                semantic=semantic,
             )
+            dispatched = AgentToolGateway(session).dispatch("report_disruption", agent_call)
+            captured = dispatched["event"]
             if captured.get("requires_review"):
                 return {
                     "mission": None,
@@ -14042,14 +14042,16 @@ def _capture_copilot_disruption(
         raise HTTPException(422, "a current disruption type is required")
     semantic = interpretation.semantic_envelope or {}
     semantic_entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
-    return _capture_reported_disruption(
-        session,
-        journey,
+    # The Event now crosses the main path: this route dispatches report_disruption rather than writing
+    # the row itself, so the copilot write gets the gateway's allowlist, audit and policy too.
+    agent_call = AgentToolCall(
+        request_id=f"copilot-{message[:8]}-{event_type}-{uuid4().hex[:8]}",
+        agent_id="hermes",
+        journey_id=journey.id,
         event_type=event_type,
-        description=message,
-        provider_key="user-copilot",
+        reason=message,
         source="copilot",
-        semantic_payload={
+        semantic={
             "assertion_status": semantic.get("assertion_status", "ASSERTED"),
             "effective_time": semantic.get("effective_time", "NOW"),
             "event_type": event_type,
@@ -14057,12 +14059,9 @@ def _capture_copilot_disruption(
             "subject_text": semantic_entities.get("subject_text"),
             "temporal_expression": semantic_entities.get("temporal_expression"),
         },
-        semantic_envelope=semantic,
-        occurred_at_fallback=None,
-        audit_action="copilot.disruption.captured",
-        commit=True,
-        payload_extra={"simulation_only": False},
+        simulation_only=False,
     )
+    return AgentToolGateway(session).dispatch("report_disruption", agent_call)["event"]
 
 
 def _verify_copilot_fact(

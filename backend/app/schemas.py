@@ -149,6 +149,16 @@ class AgentToolCall(BaseModel):
     end_at: datetime | None = None
     provider_key: str = Field(default="mock-booking", min_length=1, max_length=64)
     reason: str | None = Field(default=None, min_length=1, max_length=500)
+    # report_disruption only: the current-disruption type the traveller reported.
+    event_type: str | None = Field(default=None, min_length=1, max_length=32)
+    # report_disruption only: the stored provenance the calling surface records (the two natural-language
+    # routes have always stored different keys for the same row; the tool must reproduce each, not unify).
+    source: str | None = Field(default=None, min_length=1, max_length=32)
+    # report_disruption only: the semantic envelope the calling surface already computed for the row.
+    semantic: dict[str, object] | None = None
+    # report_disruption only: whether this row is a simulation (the copilot route stamps it, the command one
+    # does not; the tool must reproduce each).
+    simulation_only: bool | None = None
     # Compatibility-only input. The gateway never treats this caller-owned
     # boolean as authorization; approvals are server-issued and user-bound.
     user_confirmed: bool = False

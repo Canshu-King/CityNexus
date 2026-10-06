@@ -56,6 +56,9 @@ TYPED_TOOLS = (
         False,
         True,
     ),
+    # The reported-disruption Event, now recorded on the main path instead of beside it. It sits with the
+    # typed tools, not in the pinned V1 six, so the V1 catalog is unchanged.
+    ToolDescriptor(AgentAction.REPORT_DISRUPTION, "report_disruption", True, False, False),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

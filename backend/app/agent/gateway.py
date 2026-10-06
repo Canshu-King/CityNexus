@@ -369,6 +369,7 @@ class AgentToolGateway:
             "create_booking": self.create_booking,
             "cancel_refundable_booking": self.cancel_refundable_booking,
             "request_commitment_change": self.request_commitment_change,
+            "report_disruption": self.report_disruption,
         }
         scope_journey_id = request.journey_id
         if scope_journey_id is None and request.proposal_id is not None:
@@ -540,6 +541,63 @@ class AgentToolGateway:
                 }
                 for item in places
             ],
+        }
+
+    def report_disruption(self, request: AgentToolCall) -> dict[str, Any]:
+        """Record a traveller-reported disruption as a domain Event through the policy boundary.
+
+        This is the one agent-initiated write that used to land outside the gateway (the two
+        natural-language routes each built the row themselves). Routing it through dispatch means it now
+        crosses the same allowlist, audit and policy the other eleven tools cross, instead of being a
+        side door. The row itself is still produced by _capture_reported_disruption, so the stored bytes
+        and the receipt shape are exactly what those routes already wrote.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        event_type = (request.event_type or "").strip()
+        if not event_type or not (request.reason or "").strip():
+            raise HTTPException(422, "event_type and reason are required for report_disruption")
+        # The two natural-language routes have always stored different provenance for the same row; the tool
+        # reproduces each from a fixed map rather than letting a caller write an arbitrary key.
+        provenance = {
+            "agent_command": ("user-command", "agent_command"),
+            "copilot": ("user-copilot", "copilot"),
+        }.get(request.source or "agent_command")
+        if provenance is None:
+            raise HTTPException(422, "source must be agent_command or copilot")
+        provider_key, source = provenance
+        policy_row = get_or_create_policy(self.session, journey.traveler_id)
+        policy = policy_from_model(policy_row)
+        auth = evaluate_action(policy, AgentAction.REPORT_DISRUPTION, AuthoritativeActionFacts())
+        if auth.decision is AuthorizationDecision.DENY:
+            raise HTTPException(403, "the traveller's delegation policy denies report_disruption")
+
+        from app.main import _capture_reported_disruption
+
+        semantic = dict(request.semantic or {})
+        captured = _capture_reported_disruption(
+            self.session,
+            journey,
+            event_type=event_type,
+            description=request.reason or "",
+            provider_key=provider_key,
+            source=source,
+            semantic_payload=semantic,
+            semantic_envelope=semantic,
+            occurred_at_fallback=(
+                # the command route falls back to now when the target has no time; the copilot route always
+                # stored the raw target time, so it passes no fallback.
+                datetime.now(timezone.utc).isoformat() if source == "agent_command" else None
+            ),
+            audit_action="copilot.disruption.captured" if source == "copilot" else None,
+            commit=False,
+            payload_extra=({"simulation_only": request.simulation_only}
+                            if request.simulation_only is not None else None),
+        )
+        self.session.commit()
+        return {
+            "tool": "report_disruption",
+            "decision": auth.decision.value,
+            "event": captured,
         }
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:

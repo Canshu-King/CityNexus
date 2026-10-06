@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
+
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
 import app.main as main_module
-from app.db.models import Event, JourneyTwin
+from app.db.models import AuditLog, Event, JourneyTwin
 from app.db.session import SessionLocal
 from app.integrations.ai.copilot_contract import (
     classify_copilot_message,
@@ -173,6 +175,32 @@ def test_v15_only_current_disruption_creates_event():
         assert len(events) == 1
         assert events[0].provider_key == "user-copilot"
         assert events[0].provenance == "USER_REPORTED"
+
+
+def test_v15_disruption_report_crosses_the_main_path_as_a_tool_call():
+    """The reported-disruption Event must now be written through AgentToolGateway, not beside it.
+
+    Before this change the two natural-language routes built the row themselves, so a disruption left no
+    agent_tool_requested audit trail. This arm reads that audit row, which is the concrete difference
+    between "the write happened" and "the write happened on the main path".
+    """
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
+    report = client.post(
+        f"/api/v1/journeys/{journey_id}/copilot/messages",
+        json={"message": "现在堵车了", "locale": "zh"},
+    )
+    assert report.status_code == 200, report.text
+    with SessionLocal() as session:
+        rows = session.scalars(
+            select(AuditLog).where(
+                AuditLog.action == "agent_tool_requested",
+                AuditLog.journey_id == journey_id,
+            )
+        ).all()
+        tools = [json.loads(row.after_json or "{}").get("tool") for row in rows]
+        assert "report_disruption" in tools, (
+            "a reported disruption did not cross the gateway: no agent_tool_requested audit names it"
+        )
 
 
 def test_v15_copilot_reports_fallback_mode_without_deepseek_configuration():
