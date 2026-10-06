@@ -13,9 +13,10 @@ from uuid import uuid4
 
 import pytest
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.db.models import Activity, Base, Event, Journey, PlanVersion, Traveler
+from app.db.models import Activity, Base, Event, Journey, PlanVersion, RecoveryEpoch, Traveler
 from app.recovery_epoch import (
     OPEN,
     RECOVERY_EPOCH_SUPERSEDED,
@@ -140,3 +141,122 @@ def test_semantic_plan_identity_excludes_plan_and_proposal_ids(session):
         ))
     db.commit()
     assert semantic_plan_identity(db, p1.id) == semantic_plan_identity(db, p2.id)
+
+
+def test_duplicate_event_row_with_same_incident_does_not_rotate_epoch(session):
+    db, journey = session
+    db.add(
+        _event(
+            journey,
+            event_id=str(uuid4()),
+            payload={"incident_fingerprint": "same-incident"},
+        )
+    )
+    db.commit()
+    first = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    db.add(
+        _event(
+            journey,
+            event_id=str(uuid4()),
+            payload={"incident_fingerprint": "same-incident"},
+        )
+    )
+    db.commit()
+    second = ensure_recovery_epoch(db, journey)
+
+    assert second.id == first.id
+    assert second.generation == first.generation == 1
+
+
+def test_acknowledging_same_incident_does_not_rotate_epoch(session):
+    db, journey = session
+    event = _event(
+        journey,
+        event_id=str(uuid4()),
+        payload={"incident_fingerprint": "ack-same-incident"},
+    )
+    db.add(event)
+    db.commit()
+    first = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    event.status = "ACKNOWLEDGED"
+    db.commit()
+    second = ensure_recovery_epoch(db, journey)
+
+    assert second.id == first.id
+    assert second.recovery_reality_fingerprint == first.recovery_reality_fingerprint
+
+
+def test_material_change_inside_same_incident_rotates_epoch(session):
+    db, journey = session
+    event = _event(
+        journey,
+        event_id=str(uuid4()),
+        payload={"incident_fingerprint": "severity-incident"},
+    )
+    event.severity = "MINOR"
+    db.add(event)
+    db.commit()
+    first = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    event.severity = "CRITICAL"
+    db.commit()
+    second = ensure_recovery_epoch(db, journey)
+
+    assert second.id != first.id
+    assert second.generation == 2
+
+
+def test_binding_validation_refreshes_reality_without_prior_explicit_ensure(session):
+    db, journey = session
+    first = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    db.add(
+        _event(
+            journey,
+            event_id=str(uuid4()),
+            payload={"incident_fingerprint": "late-shock"},
+        )
+    )
+    db.commit()
+
+    with pytest.raises(RecoveryEpochSuperseded) as error:
+        validate_recovery_epoch_binding(db, journey.id, first.id)
+
+    assert error.value.facts["code"] == RECOVERY_EPOCH_SUPERSEDED
+    assert error.value.facts["stale_recovery_epoch_id"] == first.id
+    assert error.value.facts["current_recovery_epoch_id"] != first.id
+    current = db.get(RecoveryEpoch, error.value.facts["current_recovery_epoch_id"])
+    assert current is not None
+    assert current.generation == 2
+    assert current.status == OPEN
+
+
+def test_database_enforces_one_open_epoch_per_journey(session):
+    db, journey = session
+    first = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    duplicate = RecoveryEpoch(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        generation=first.generation + 1,
+        active_plan_version_id_at_open=journey.active_plan_version_id,
+        material_world_epoch_at_open=None,
+        recovery_reality_fingerprint="manual-duplicate-open",
+        triggering_event_ids_json="[]",
+        status=OPEN,
+        opened_at=_now(),
+        closed_at=None,
+        close_reason=None,
+        superseded_by_recovery_epoch_id=None,
+    )
+    db.add(duplicate)
+    with pytest.raises(IntegrityError):
+        db.flush()
+    db.rollback()
