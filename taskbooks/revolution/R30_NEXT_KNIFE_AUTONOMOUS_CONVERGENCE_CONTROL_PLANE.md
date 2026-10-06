@@ -453,3 +453,235 @@ the remote branch.
 
 After integration, run deterministic tests only. Do not immediately run the
 same old full strike again.
+
+
+---
+
+# GPT execution addendum — control plane hardened, new-architecture strike is now allowed
+
+This addendum is newer than the design sections above.
+
+## Remote deterministic state
+
+Canonical branch:
+
+    gpt/revolution-r30-consent-epoch-shock-recovery
+
+Current hardened control-plane head at this checkpoint:
+
+    00911307c163952a123cc8da8d28ea44cbfd359f
+
+GitHub Actions R30 control-plane validation is green:
+
+    125 passed
+    0 failed
+    4 warnings
+
+The suite now includes not only the R28/R29/R30 authority regressions but also
+the relevant general Agent mission/runtime/gateway/authority/principal tests.
+
+Do not spend Codex time repeating this same deterministic suite unless a later
+code change makes the remote CI red.
+
+## What changed after the first CollectiveAuthorityReceipt implementation
+
+The first receipt implementation was directionally correct but not strict
+enough. GPT hardened it before allowing another live strike.
+
+### Receipt existence is not authority
+
+The inherited R28 verifier no longer accepts an arbitrary matching
+UNANIMOUS_DOMINANCE row merely because it exists.
+
+When no collective parent is reachable, one exact receipt id must be bound
+through:
+
+    ActionApproval
+    -> AgentPendingAction
+    -> resumed AgentRunStep result
+    -> agent.accept_replan Gateway audit
+    -> replan.accepted domain audit
+
+The domain mutation audit also carries an immutable receipt snapshot whose mode,
+decision epoch, material-world epoch and candidate-surface fingerprint must
+match the receipt row.
+
+### Human receipts bind the final authenticated choice only
+
+AUTHENTICATED_MEMBER_CONSENT receipts now require:
+
+- response audits from the exact source mission;
+- response audits from the exact current clarification;
+- the final response audit for each required member;
+- exact authenticated traveler actor binding;
+- exact selected proposal;
+- exact decision epoch;
+- exact principal set;
+- no historical response from an earlier clarification may be borrowed.
+
+### Receipt issuance is idempotent
+
+One exact authority fact produces one durable receipt identity.
+
+Repeated preflight/resume cannot mint a new UUID merely because the same
+authority is being revalidated.
+
+### Authority is locked before approval
+
+The product order is now:
+
+    current collective authority
+    -> exact server-issued receipt
+    -> ActionApproval bound to that receipt
+    -> AgentPendingAction bound to that receipt
+    -> authenticated approval
+    -> recompute current authority
+    -> require the same receipt id
+    -> domain mutation
+
+A stale or unavailable collective authority therefore cannot create a
+traveler-facing approval button first and discover the problem only after the
+human approves.
+
+If the receipt changes between suspension and mutation:
+
+    COLLECTIVE_AUTHORITY_RECEIPT_CHANGED_BEFORE_MUTATION
+
+must fail closed before the active plan changes.
+
+### Crash recovery preserves authority identity
+
+The continuation recovery path preserves the receipt id. The receipt is also
+visible on approval and pending-mission read models so authority is inspectable,
+not merely an internal database side effect.
+
+## Runtime convergence is strategy-neutral
+
+Same-state repeats of these server-owned read tools:
+
+    inspect_journey
+    inspect_twin
+    list_replans
+
+use REPLAY_SAME_STATE / COMPLETED rather than a false TOOL_ERROR.
+
+Mutation calls are never replayed by this mechanism.
+
+A prose-only model response with no legal server terminal fact gets one bounded
+terminal-supervisor turn. The supervisor says only that no typed terminal state
+exists; it does not name any next tool.
+
+A machine test enumerates the runtime tool allowlist and proves that the
+supervisor message contains no tool name.
+
+The compact replan context also retains decision-relevant travel deltas and
+verified evidence while still removing bulky route geometry.
+
+## Phase A is no longer an external-Agent strategy test
+
+The old R30 live harness is superseded.
+
+Pre-shock authority is now established through ordinary product boundaries:
+
+    real provider-backed setup
+    -> normal Journey mission
+    -> request_collective_decision Gateway
+    -> two authenticated relevant members independently answer
+    -> genuine disagreement creates mediator state
+    -> ordinary replan product API creates grounded improved future
+    -> renewed collective decision
+    -> each member independently has the same unique grounded maximum
+    -> authenticated member responses
+    -> AUTHENTICATED_MEMBER_CONSENT receipt
+    -> E1/W1
+
+No external model is called to manufacture this precondition.
+
+The R30 machine verifier no longer requires:
+
+    real_external_round1_agent
+    real_external_mediator
+
+It instead requires:
+
+    pre_shock_human_authority_receipt
+
+and proves the exact receipt source mission, signer set, response audits,
+proposal, plan, E1 and W1.
+
+The configured external Agent is still mandatory after the world shock.
+
+## The next live strike is a new experiment
+
+A new full strike may now be run once.
+
+This is not a third repetition of the old experiment because the control plane,
+approval authority chain, runtime convergence behavior, Phase A setup and
+machine verifier have all changed.
+
+Execution:
+
+    git fetch origin
+    git checkout gpt/revolution-r30-consent-epoch-shock-recovery
+    git pull --ff-only origin gpt/revolution-r30-consent-epoch-shock-recovery
+    git status --short
+    git rev-parse HEAD
+
+Do not discard any local unpushed work with reset --hard.
+
+The worktree must be understood before running live evidence.
+
+Then, from backend in the configured external-Agent environment:
+
+    python run_r30_live.py --full-r30
+
+Do not prescribe an external-Agent tool sequence.
+
+Do not edit the prompt to force mediation.
+
+Do not reject a post-shock UNANIMOUS_DOMINANCE recovery merely because no fresh
+human round happened.
+
+Do not manually create an authority receipt.
+
+Do not manually attach a receipt id to approval/pending rows.
+
+Do not copy mission lineage to satisfy R28.
+
+Do not write Event/E/W/verifier state by hand.
+
+Do not add deterministic fallback for the external recovery Agent.
+
+## What to do with the result
+
+If the new strike stops before machine verification:
+
+- inspect the first causal server/runtime failure;
+- fix the product;
+- do not immediately rerun merely to sample model randomness.
+
+If R30_MACHINE_VERDICT has one or more NOT_PROVEN/CONTRADICTED items:
+
+- fix only the first causal blocker;
+- do not weaken the verifier.
+
+If the external Agent reaches typed UNRESOLVED because the current world has no
+safe autonomous closure, preserve that as a legitimate Agent outcome. R30 is
+then not PROVEN, but the runtime must not relabel it as an accidental PARTIAL.
+
+Only when:
+
+    R30_MACHINE_VERDICT.summary.overall == PROVEN
+
+commit the generated checkpoint, machine verdict and result report.
+
+Then push and run:
+
+    python scripts/r30_delivery_gate.py
+
+R30 closes only when both are true:
+
+    machine verdict == PROVEN
+    delivery gate ok == true
+
+At that point STOP. Do not create R30.1.
