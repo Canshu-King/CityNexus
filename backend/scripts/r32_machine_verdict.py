@@ -55,6 +55,12 @@ def _evaluator_receipt() -> dict[str, Any]:
     }
 
 
+R32_FRESH_STRIKE_PROTOCOL = "R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1"
+R32_AUTHORIZATION_TASKBOOK_COMMIT = (
+    "03357b7c8f8a9a671c59113be71d6093fab04742"
+)
+
+
 _REQUIRED_STRIKE_SOURCE_PATHS = {
     "backend/run_r32_live.py",
     "backend/app/agent/runtime.py",
@@ -161,6 +167,37 @@ def verdict(
                 for path in _REQUIRED_STRIKE_SOURCE_PATHS
             )
             and source_receipt.get("tracked_dirty_before_strike") is False
+        )
+
+    freshness_attested: bool | None = None
+    if source_receipt:
+        strike_id = str(checkpoint.get("strike_id") or "")
+        receipt_strike_id = str(source_receipt.get("strike_id") or "")
+        started_at = str(checkpoint.get("strike_started_at") or "")
+        receipt_started_at = str(
+            source_receipt.get("strike_started_at") or ""
+        )
+        finished_at = str(checkpoint.get("timestamp") or "")
+        chronological = bool(
+            started_at
+            and receipt_started_at == started_at
+            and finished_at
+            and finished_at >= started_at
+        )
+        freshness_attested = bool(
+            checkpoint.get("strike_protocol")
+            == R32_FRESH_STRIKE_PROTOCOL
+            and source_receipt.get("protocol")
+            == R32_FRESH_STRIKE_PROTOCOL
+            and strike_id
+            and receipt_strike_id == strike_id
+            and source_receipt.get("authorization_taskbook_commit")
+            == R32_AUTHORIZATION_TASKBOOK_COMMIT
+            and source_receipt.get("head_matches_remote") is True
+            and source_receipt.get("git_head")
+            == source_receipt.get("remote_branch_head")
+            and source_receipt.get("output_preexisted") is False
+            and chronological
         )
 
     external_outcomes = (
@@ -597,6 +634,17 @@ def verdict(
                 f"{len(_REQUIRED_STRIKE_SOURCE_PATHS)}"
             ),
         ),
+        "strike_freshness_attested": _dim(
+            freshness_attested,
+            (
+                f"protocol={source_receipt.get('protocol')} "
+                f"strike_id={source_receipt.get('strike_id')} "
+                f"local_head={source_receipt.get('git_head')} "
+                f"remote_head={source_receipt.get('remote_branch_head')} "
+                f"output_preexisted="
+                f"{source_receipt.get('output_preexisted')}"
+            ),
+        ),
         "runtime_preflight_isolated": _dim(
             runtime_preflight_isolated,
             (
@@ -810,6 +858,7 @@ def verdict(
 
     required_dimensions = {
         "strike_source_state_traceable",
+        "strike_freshness_attested",
         "runtime_preflight_isolated",
         "verifier_source_traceable",
         "concurrent_external_barrier",
@@ -845,6 +894,7 @@ def verdict(
     if checkpoint.get("failure") or checkpoint.get("status") == "NOT_PROVEN":
         observed_on_abort = {
             "strike_source_state_traceable": bool(source_receipt),
+            "strike_freshness_attested": bool(source_receipt),
             "runtime_preflight_isolated": bool(runtime_preflight),
             "verifier_source_traceable": bool(evaluator_receipt.get("sha256")),
             "standing_authority_preconfigured": bool(authority_setup),
@@ -911,7 +961,7 @@ def verdict(
         else "NOT_PROVEN"
     )
     return {
-        "schema": "citynexus.r32.machine-verdict.v3",
+        "schema": "citynexus.r32.machine-verdict.v4",
         "evaluator_receipt": evaluator_receipt,
         "overall": overall,
         "required_dimensions": sorted(required_dimensions),
