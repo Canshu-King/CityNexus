@@ -296,3 +296,80 @@ Artifacts:
 - Raw regression output: `backend/output/r32-focused-regression-v2c.txt`
 
 No 2D or third live retry was run.
+
+
+## GPT provenance correction for the claimed Strike 2C
+
+The preceding Strike 2C section records what was pushed in commit
+`63b7d15be72b75de50fc1e62e43d80aaa751999e`. A subsequent provenance audit
+shows that the claimed live checkpoint is **not a new 2C execution**.
+
+Machine-verifiable facts:
+
+- `backend/output/r32-live-strike-v2c.json` and
+  `backend/output/r32-live-strike-v2b.json` have the same Git blob SHA:
+  `6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1`;
+- therefore the two files are byte-for-byte identical;
+- the claimed v2c checkpoint timestamp is
+  `2026-10-06T05:15:11.370145+00:00`;
+- the exact-run 2C authorization taskbook commit
+  `03357b7c8f8a9a671c59113be71d6093fab04742` was created at
+  `2026-10-06T05:34:31+00:00`;
+- the claimed v2c artifact therefore predates its authorization by about
+  19 minutes 20 seconds;
+- its embedded source receipt points to old head
+  `2db713e06b86055d731175566e4ad631e49004d9`, not the exact-run hardening
+  baseline;
+- its source receipt contains the old five-path hash set, not the required
+  nine-path source identity;
+- it lacks exact `AgentRun.id + RecoveryEpoch.id + EXACT_ONE_CURRENT_RUN`
+  provider receipts because those changes did not exist on that old source.
+
+Accordingly:
+
+**Strike 2C was not executed.**
+
+`backend/output/R32_MACHINE_VERDICT_V2C.json` is a valid result of running a
+new verifier against the relabelled historical 2B checkpoint, but it is **not a
+machine verdict for a fresh 2C live strike**. Its contradictions must not be
+interpreted as new product/runtime observations.
+
+The immutable audit is:
+
+`backend/output/R32_2C_PROVENANCE_AUDIT.json`
+
+with verdict:
+
+`INVALID_AS_2C_LIVE_EVIDENCE`.
+
+No historical file is deleted or rewritten.
+
+Because no fresh 2C live execution occurred, the one-attempt 2C budget was not
+consumed. Exactly one replacement attempt, **2C-FRESH**, may be run under the
+new machine-enforced freshness protocol. This is not authorization for 2D or
+open-ended retries.
+
+### Fresh-evidence hardening
+
+The current harness now refuses to begin a live strike unless:
+
+- it fetches the remote Revolution branch;
+- local HEAD exactly equals the fetched remote branch HEAD;
+- HEAD contains the authorized exact-run 2C taskbook commit;
+- the tracked tree is clean;
+- the requested output path does not already exist.
+
+Every valid new checkpoint must additionally carry:
+
+- freshness protocol `R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1`;
+- a unique `strike_id`;
+- `strike_started_at`;
+- authorization taskbook commit;
+- local and fetched remote heads;
+- an explicit `head_matches_remote=true`;
+- `output_preexisted=false`;
+- the complete nine-path source hash set.
+
+The v4 verifier treats this freshness attestation as a required dimension.
+Renaming or copying an old artifact can no longer become a valid new strike by
+filename convention alone.
