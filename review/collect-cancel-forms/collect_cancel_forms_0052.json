@@ -1,0 +1,54 @@
+{
+ "tip": "20b209cab9caa35285c98b4e7e17b2021138b82b",
+ "collection_items_columns": [
+  "id",
+  "folder_id",
+  "place_id",
+  "note",
+  "added_at"
+ ],
+ "collection_folders_columns": [
+  "id",
+  "name",
+  "owner_traveler_id",
+  "created_at",
+  "updated_at"
+ ],
+ "journeys_has_deleted_at": true,
+ "journey_half_doors": {
+  "undelete": true,
+  "recycle_bin": true
+ },
+ "collection_paths_in_main": [
+  "\"/api/v1/collections\"",
+  "\"/api/v1/collections/{folder_id}/items\""
+ ],
+ "collection_methods": [
+  "get /api/v1/collections",
+  "post /api/v1/collections",
+  "post /api/v1/collections/{folder_id}/items"
+ ],
+ "options": [
+  {
+   "form": "硬删（直接删那一行）",
+   "schema_change": "无（collection_items 现列 id、folder_id、place_id、note、added_at，不需要动）",
+   "code_shape": "一扇 DELETE，删完就没了",
+   "recoverable": "撤了找不回——与行程那半的回收站形制不一致",
+   "cost": "最小"
+  },
+  {
+   "form": "软删（加 deleted_at 列 + 一扇 undelete）",
+   "schema_change": "要给 collection_items 加 deleted_at（现表五列没有这一列）",
+   "code_shape": "照行程那半：删时写 deleted_at、undelete 时清它、没删时回 409 诚实的名",
+   "recoverable": "找得回，与行程那半同一副骨架",
+   "cost": "中（要迁移加列 + 两扇门）"
+  },
+  {
+   "form": "移出队列（加位置/状态列）",
+   "schema_change": "要给 collection_items 加一个位置或状态列",
+   "code_shape": "收藏可排序、可重排，撤了是移位不是删",
+   "recoverable": "撤得回，但要维护顺序",
+   "cost": "最重（列 + 排序腿 + 两扇门）"
+  }
+ ]
+}
