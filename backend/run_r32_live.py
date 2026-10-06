@@ -514,13 +514,22 @@ def run() -> dict[str, Any]:
     release = threading.Event()
     barrier_hits: list[dict[str, Any]] = []
     barrier_lock = threading.Lock()
+    # TestClient executes sync FastAPI endpoints in AnyIO worker threads, so
+    # operating-system/thread names are not a trustworthy Agent identity.
+    # The coordinator owns this causal slot: while A's first response is held,
+    # A cannot enter a second model turn; after A reaches the boundary and
+    # before B starts, the slot advances exactly once to B.
+    barrier_phase = {"slot": "A"}
 
     def gated_complete(self, messages):
         """Start the real provider call, but hold its response at the boundary."""
 
         caller_thread = threading.current_thread().name
+        with barrier_lock:
+            causal_slot = str(barrier_phase["slot"])
         hit = {
             "thread": caller_thread,
+            "causal_slot": causal_slot,
             "model_key": str(getattr(self, "model_key", "unknown")),
             "at": datetime.now(timezone.utc).isoformat(),
             "release_was_set": release.is_set(),
@@ -588,13 +597,13 @@ def run() -> dict[str, Any]:
         return result
 
     def wait_for_initial_barrier(
-        thread_name: str, timeout: float = 45.0
+        causal_slot: str, timeout: float = 45.0
     ) -> bool:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             with barrier_lock:
                 if any(
-                    item.get("thread") == thread_name
+                    item.get("causal_slot") == causal_slot
                     and item.get("release_was_set") is False
                     and item.get("provider_call_invoked") is True
                     for item in barrier_hits
@@ -625,11 +634,12 @@ def run() -> dict[str, Any]:
 
         with barrier_lock:
             external_call_outcomes = [dict(item) for item in barrier_hits]
-        invoked_threads = sorted(
+        invoked_slots = sorted(
             {
-                str(item.get("thread"))
+                str(item.get("causal_slot"))
                 for item in external_call_outcomes
                 if item.get("provider_call_invoked") is True
+                and item.get("causal_slot")
             }
         )
         final = _snapshot(journey_id)
@@ -669,8 +679,8 @@ def run() -> dict[str, Any]:
                     "CITYNEXUS_HERMES_MODEL_FALLBACKS"
                 ),
                 "external_call_outcomes": external_call_outcomes,
-                "provider_invoked_threads": invoked_threads,
-                "provider_calls_were_real": bool(invoked_threads),
+                "provider_invoked_slots": invoked_slots,
+                "provider_calls_were_real": bool(invoked_slots),
                 "concurrent_external_barrier_proven": False,
             },
             "shock_a": shock_a,
@@ -727,7 +737,7 @@ def run() -> dict[str, Any]:
         and a_run.get("status") == "RUNNING"
         and a_run.get("recovery_epoch_id") == r1["id"]
     )
-    a_barrier_ready = wait_for_initial_barrier("r32-agent-a")
+    a_barrier_ready = wait_for_initial_barrier("A")
     if not a_bound or not a_barrier_ready:
         return abort_checkpoint(
             "A_EXTERNAL_RESPONSE_BOUNDARY",
@@ -742,6 +752,11 @@ def run() -> dict[str, Any]:
         journey_id, target_place_id=None, label="SHOCK_B"
     )
     r2 = _open_epoch(journey_id)
+
+    # A is still blocked on its first response, so advancing the coordinator
+    # slot here cannot mislabel a later A turn.
+    with barrier_lock:
+        barrier_phase["slot"] = "B"
 
     thread_b = threading.Thread(
         target=_run_command,
@@ -764,7 +779,7 @@ def run() -> dict[str, Any]:
         and b_run.get("status") == "RUNNING"
         and b_run.get("recovery_epoch_id") == r2["id"]
     )
-    b_barrier_ready = wait_for_initial_barrier("r32-agent-b")
+    b_barrier_ready = wait_for_initial_barrier("B")
     if not b_bound or not b_barrier_ready:
         return abort_checkpoint(
             "B_EXTERNAL_RESPONSE_BOUNDARY",
@@ -777,10 +792,10 @@ def run() -> dict[str, Any]:
             for item in barrier_hits
             if item.get("release_was_set") is False
         ]
-    expected_barrier_threads = {"r32-agent-a", "r32-agent-b"}
+    expected_barrier_slots = {"A", "B"}
     concurrent_external_barrier_proven = (
-        {item.get("thread") for item in hits_before_release}
-        == expected_barrier_threads
+        {item.get("causal_slot") for item in hits_before_release}
+        == expected_barrier_slots
         and len(hits_before_release) == 2
         and all(
             item.get("provider_call_invoked") is True
@@ -801,11 +816,11 @@ def run() -> dict[str, Any]:
         external_call_outcomes = [dict(item) for item in barrier_hits]
     provider_calls_were_real = all(
         any(
-            item.get("thread") == thread_name
+            item.get("causal_slot") == causal_slot
             and item.get("provider_call_invoked") is True
             for item in external_call_outcomes
         )
-        for thread_name in ("r32-agent-a", "r32-agent-b")
+        for causal_slot in ("A", "B")
     )
 
     final = _snapshot(journey_id)
