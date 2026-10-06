@@ -1263,6 +1263,103 @@ def call_agent_tool(
     return AgentToolGateway(session).dispatch(tool_name, resolved_payload)
 
 
+# The one statement of "a reported disruption becomes a domain Event." Two entry points used to each
+# build this row themselves -- the natural-language /agent/commands route and the /copilot/messages
+# route -- with the same fields but different payload shapes, different provider keys and a different
+# audit footprint, so a change to one was invisible to the other. Both now route through this function;
+# it reproduces each caller's exact row and audit from the arguments, so the bytes and the side effects
+# are unchanged while the logic is one thing to read and one thing to change.
+def _capture_reported_disruption(
+    session: Session,
+    journey: Journey,
+    *,
+    event_type: str,
+    description: str,
+    provider_key: str,
+    source: str,
+    semantic_payload: dict[str, Any],
+    semantic_envelope: dict[str, Any],
+    occurred_at_fallback: str | None,
+    audit_action: str | None,
+    commit: bool,
+    payload_extra: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Resolve the disruption's target, persist the Event, optionally audit/commit, and return the receipt.
+
+    Returns a REVIEW_REQUIRED receipt (no Event written) when the server cannot anchor the target, which
+    is the same early-return both entry points performed.
+    """
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat()
+    target = resolve_event_target(
+        session,
+        journey,
+        event_type=event_type,
+        semantic=semantic_envelope,
+        now=now_dt,
+    )
+    resolved = target.resolution != "UNRESOLVED_REVIEW_REQUIRED"
+    if not resolved:
+        return {
+            "id": None,
+            "event_type": event_type,
+            "status": "REVIEW_REQUIRED",
+            "affected_activity_id": None,
+            "occurred_at": None,
+            "target_resolution": target.resolution,
+            "requires_review": True,
+            "effective_time": str(semantic_envelope.get("effective_time") or "FUTURE").upper(),
+        }
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key=provider_key,
+        provenance="USER_REPORTED",
+        event_type=event_type,
+        severity=disruption_severity(description, event_type),
+        status="DETECTED",
+        affected_activity_id=target.activity_id,
+        occurred_at=target.occurred_at or occurred_at_fallback,
+        detected_at=now,
+        payload_json=json.dumps(
+            {
+                "description": description,
+                "source": source,
+                "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
+                "semantic": {**semantic_payload, "target_resolution": target.resolution},
+                **(payload_extra or {}),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    if audit_action:
+        record_audit(
+            session,
+            action=audit_action,
+            entity_type="Event",
+            entity_id=event.id,
+            journey_id=journey.id,
+            actor_type="USER",
+            actor_id=journey.traveler_id,
+            after={"event_type": event_type, "source": source},
+        )
+    if commit:
+        session.commit()
+    return {
+        "id": event.id,
+        "event_type": event.event_type,
+        "status": event.status,
+        "affected_activity_id": event.affected_activity_id,
+        "occurred_at": event.occurred_at,
+        "target_resolution": target.resolution,
+        "requires_review": not resolved,
+    }
+
+
 @app.post("/api/v1/journeys/{journey_id}/agent/commands")
 def run_agent_command(
     journey_id: UUID,
@@ -1288,14 +1385,20 @@ def run_agent_command(
                 "effective_time": interpretation.entities.get("effective_time", "NOW"),
                 "entities": dict(interpretation.entities),
             }
-            target = resolve_event_target(
+            captured = _capture_reported_disruption(
                 session,
                 journey,
                 event_type=event_type,
-                semantic=semantic,
-                now=now_dt,
+                description=payload.command,
+                provider_key="user-command",
+                source="agent_command",
+                semantic_payload=semantic,
+                semantic_envelope=semantic,
+                occurred_at_fallback=now,
+                audit_action=None,
+                commit=False,
             )
-            if target.resolution == "UNRESOLVED_REVIEW_REQUIRED":
+            if captured.get("requires_review"):
                 return {
                     "mission": None,
                     "event_id": None,
@@ -1306,38 +1409,11 @@ def run_agent_command(
                         "status": "REVIEW_REQUIRED",
                         "affected_activity_id": None,
                         "occurred_at": None,
-                        "target_resolution": target.resolution,
+                        "target_resolution": captured.get("target_resolution"),
                         "effective_time": str(semantic.get("effective_time") or "FUTURE").upper(),
                     },
                 }
-            resolved = target.resolution != "UNRESOLVED_REVIEW_REQUIRED"
-            event = EventModel(
-                id=str(uuid4()),
-                journey_id=journey.id,
-                provider_key="user-command",
-                provenance="USER_REPORTED",
-                event_type=event_type,
-                severity=disruption_severity(payload.command, event_type),
-                status="DETECTED",
-                # A free-text disruption is scoped to the server's current
-                # execution position. The model may describe the event, but it
-                # must not invent an Activity target.
-                affected_activity_id=target.activity_id,
-                occurred_at=target.occurred_at or now,
-                detected_at=now,
-                payload_json=json.dumps(
-                    {
-                        "description": payload.command,
-                        "source": "agent_command",
-                        "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
-                        "semantic": {**semantic, "target_resolution": target.resolution},
-                    },
-                    ensure_ascii=False,
-                    sort_keys=True,
-                ),
-                created_at=now,
-            )
-            session.add(event)
+            event = session.get(EventModel, captured["id"])
             session.flush()
         mission = create_mission(
             session,
@@ -13971,83 +14047,29 @@ def _capture_copilot_disruption(
     event_type = str(interpretation.entities.get("event_type") or disruption_event_type(message) or "")
     if event_type not in {"CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY", "WEATHER"}:
         raise HTTPException(422, "a current disruption type is required")
-    now_dt = datetime.now(timezone.utc)
-    now = now_dt.isoformat()
     semantic = interpretation.semantic_envelope or {}
     semantic_entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
-    target = resolve_event_target(
+    return _capture_reported_disruption(
         session,
         journey,
         event_type=event_type,
-        semantic=semantic,
-        now=now_dt,
-    )
-    resolved = target.resolution != "UNRESOLVED_REVIEW_REQUIRED"
-    if not resolved:
-        return {
-            "id": None,
-            "event_type": event_type,
-            "status": "REVIEW_REQUIRED",
-            "affected_activity_id": None,
-            "occurred_at": None,
-            "target_resolution": target.resolution,
-            "requires_review": True,
-            "effective_time": str(semantic.get("effective_time") or "FUTURE").upper(),
-        }
-    event = EventModel(
-        id=str(uuid4()),
-        journey_id=journey.id,
+        description=message,
         provider_key="user-copilot",
-        provenance="USER_REPORTED",
-        event_type=event_type,
-        severity=disruption_severity(message, event_type),
-        status="DETECTED",
-        affected_activity_id=target.activity_id,
-        occurred_at=target.occurred_at,
-        detected_at=now,
-        payload_json=json.dumps(
-            {
-                "description": message,
-                "source": "copilot",
-                "simulation_only": False,
-                "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
-                "semantic": {
-                    "assertion_status": semantic.get("assertion_status", "ASSERTED"),
-                    "effective_time": semantic.get("effective_time", "NOW"),
-                    "event_type": event_type,
-                    "requested_action": semantic.get("requested_action", "REQUEST_REPLAN"),
-                    "subject_text": semantic_entities.get("subject_text"),
-                    "temporal_expression": semantic_entities.get("temporal_expression"),
-                    "target_resolution": target.resolution,
-                },
-            },
-            ensure_ascii=False,
-            sort_keys=True,
-        ),
-        created_at=now,
+        source="copilot",
+        semantic_payload={
+            "assertion_status": semantic.get("assertion_status", "ASSERTED"),
+            "effective_time": semantic.get("effective_time", "NOW"),
+            "event_type": event_type,
+            "requested_action": semantic.get("requested_action", "REQUEST_REPLAN"),
+            "subject_text": semantic_entities.get("subject_text"),
+            "temporal_expression": semantic_entities.get("temporal_expression"),
+        },
+        semantic_envelope=semantic,
+        occurred_at_fallback=None,
+        audit_action="copilot.disruption.captured",
+        commit=True,
+        payload_extra={"simulation_only": False},
     )
-    session.add(event)
-    session.flush()
-    record_audit(
-        session,
-        action="copilot.disruption.captured",
-        entity_type="Event",
-        entity_id=event.id,
-        journey_id=journey.id,
-        actor_type="USER",
-        actor_id=journey.traveler_id,
-        after={"event_type": event_type, "source": "copilot"},
-    )
-    session.commit()
-    return {
-        "id": event.id,
-        "event_type": event.event_type,
-        "status": event.status,
-        "affected_activity_id": event.affected_activity_id,
-        "occurred_at": event.occurred_at,
-        "target_resolution": target.resolution,
-        "requires_review": not resolved,
-    }
 
 
 def _verify_copilot_fact(
