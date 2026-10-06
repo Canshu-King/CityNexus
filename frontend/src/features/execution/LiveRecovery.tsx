@@ -236,7 +236,10 @@ export function LiveRecovery({
   const latestWeather = worldContext.find((item) => item.observation_type === "WEATHER") ?? null;
   const weatherDisruptionOpen = openDisruptions.some((item) => item.type === "WEATHER");
   const benignWeatherContext =
-    latestWeather && latestWeather.material_risk !== true && !weatherDisruptionOpen
+    latestWeather &&
+    (latestWeather.activity_observations?.length ?? 0) > 0 &&
+    latestWeather.material_risk !== true &&
+    !weatherDisruptionOpen
       ? latestWeather
       : null;
   const weatherReading = benignWeatherContext?.activity_observations?.[0] ?? null;
