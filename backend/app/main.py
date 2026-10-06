@@ -14586,6 +14586,11 @@ def generate_replan(
                 if session.info.get("recovery_epoch_id")
                 else None
             ),
+            source_agent_run_id=(
+                str(session.info.get("source_agent_run_id"))
+                if session.info.get("source_agent_run_id")
+                else None
+            ),
             base_plan_version_id=base.id,
             proposed_plan_version_id=proposed.id,
             status="PRESENTED",
