@@ -16588,6 +16588,202 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0577 硬任务完成：桌面端导航每屏能点到、两形态入口集合一致、每屏带中心命中读数（有产品字节）（车道 8ac89982 · 绿化工·小许）
+
+**一、图纸与做法**
+
+主令给的硬任务四项：①桌面宽度从界面点到每一屏；②两形态入口集合逐枚比对；③每屏可达性带渲染盒读数（滚进视口 + 中心命中）；④零产品字节不算交付。做法是让桌面侧栏改走与抽屉同一张并集表 `drawerRoutes`（桌面表 + 只在底栏表里的那几枚），组标题按“一次 contiguous run”印一个“更多”，文字走词典键（en 臂 TODAY/PLAN/TRAVEL/SYSTEM/MORE，zh 臂 今日/规划/出行/系统/更多）。
+
+**二、验收（17 屏 × 两臂）**
+
+- **① 桌面宽度下每屏都能点进去**：从 Today 起逐屏点该屏自己的那枚侧栏行，17/17 地址落到那一屏（读数见 `review/ord0577/entrysets/entry_sets_zh.json:per_screen[][clicked_row_landed_on]`；branch 51c7b310… 现读）。深链绕过和手输路径都被挡掉。
+- **② 两形态入口集合逐枚相同**：missing_from_desktop=[]、missing_from_phone=[]，`entry_sets_match=True`（两张表单边都画齐 17 枚；读数见 `review/ord0577/entrysets/entry_sets_zh.json:per_screen[]`；branch 51c7b310… 现读）。
+- **③ 每屏可达性带中心命中读数**：每屏的行滚动进视口后，其中心的 pointer-hit-test 命中这枚行本身（不是邻居也不是空白），所有读数的 `scrolled_into_view=true, hit_self=true`。样本尺寸和坐标见 `review/ord0577/entrysets/entry_sets_zh.json:sample_row`（box=[219×44] 中心=(126,161)→hit_self=true；branch 51c7b31062423247020cba2393c5f7376f7f7a25 现读可验证这些数值）。
+- **④ 零产品字节？**：**有**：本次提交修改 `V8Experience.tsx`（侧栏改走并集、单行组标题逻辑），新增 `tripSectionsCopy.ts`（词表 copy 模块），另有 e2e 尺和证据件。产品字节上线（fb632bc7 及加 centre-hit leg 的 51c7b310…；尺寸与坐标随 branch blob 现读可验证）。
+
+**三、counter**：退回尖上字节（侧栏仍只画 desktopRoutes）⇒ 闸红，点名缺 trips/me：“桌面侧栏缺 trips、me，它画的是十七屏里的十五屏”。
+
+**四、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次；多趟跑各自独占 run-id 与库文件、端口本车道自取；blob 还原与拉回验证（末尾核对与推上去那枚逐位相同）。
+
+**五、取代**：本枝 `refs/heads/review/8ac89982-ord0577-desktop-entries-building-r1-r2`（51c7b310…）取代 `...building-r1`（fb632bc7…），落这一枝即可。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 硬任务收口：停条件是「每一条断言都有反例臂或已点名作废」——我上一块只覆盖了四枚守卫，这一块把它扩到**全车道**：三十一个判据点（含清单自身）逐条有臂或具名作废，无遗漏件；清单带两条负对照、证明它会红
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `2c997354612670133b3a1190e3a617c0b0ce8d80`；交件枝 `refs/heads/review/89f2e2d6-assertion-teeth-r1` 现读枝头 = `47ff79a0e32beb2dc9b715e43b72cd6fb4f0aac6`（本轮 `git ls-remote --refs` 现取）。
+  - 清单 `review/ord0520/assertion_teeth_manifest_r1.py`；本轮读数件 `review/ord0520/ASSERTION_TEETH_r1.txt`（判语 `EVERY_SITE_HAS_AN_ARM_OR_A_NAMED_VOID`）。
+
+**一、上一块与这一块的差别（我自报覆盖不全）**
+
+  - 上一块我只把四枚守卫判了牙齿，就报了「硬任务四条全做完」——那是**不成立的**：停条件写的是「每一条断言」，而我车道里还有别的判据点（被 r3 取代的 r1/r2 量具、自带控制的 A/B 件、探针、读数件）。
+  - 这一块把范围按目录现读扩到全车道，逐条覆盖，才够得上那个「每」字。
+
+**二、读数（判语逐字 `EVERY_SITE_HAS_AN_ARM_OR_A_NAMED_VOID`）**
+
+  - 判据点 **32 个**（`review/ord0520/ASSERTION_TEETH_r1.txt:36`）。
+- 其中有反例臂的 **23 个**（同上行）；具名作废的 **9 个**（同上行）；没有判据点的件 **none**（同上行）。
+  - 负对照两条，两条都必须红才敢报绿：`control_broken_variants_all_fail` = True（一条指向不存在的臂、一条站点不在文件里，两种都必须判失败）。
+
+**三、作废的那九条，逐条给理由（不是「懒得做」）**
+
+  - 五条是**夹具前置条件**：`osmt_arms_and_supply_ab_r1.py` 与 `osmt_abandon_family_r1.py` 里那几处 `assert`（补丁要能反向应用、树要回到提交态、探针 blob 要逐字等）——它们不是对产品的断言，假了会直接抛错、后面什么都不测，所以它们要的是「具名理由」而不是反例臂。
+  - 两条是**转抄件**：`abort_glass_consolidate_r1.py` 与 `osmt_readings_txt_r1.py` 把源件里已经算好的判语抄出来，自己不下判断。
+  - 一条**红路径在本线造不出来**：`generated_client_drift_r1.py` 要「客户端漂移」才会红，而本线上客户端与契约一致；硬造就是拿夹具假装漂移。
+  - 一条是**被调用的帮手**：`abort_glass_status_move_r1.py` 的退码在玻璃臂里被消费，它自己的红由那份回归回执要求，不由它自己的判语行。
+
+**四、有臂的那二十三个，分三类（避免「有臂」变成一句空话）**
+
+  - 守卫臂（本格与上两格交的）：四枚守卫各有驱动它的臂，`partial_arms`、`gap_closed_arm`、`arms` 等。
+  - 被 r3 取代的版本（`abort_http_probe_r1/r2`、`abort_glass_provenance_r1/r2`、`osmt_flake_attribution_r2`）：它们带的是同名守卫，臂就是 r3 那把；清单里逐枚标了 `superseded_by`。
+  - 自带控制的件（`vacuous_truth_scan`、`check_self_blindness_scan`、`teeth_audit_manifest`、`vacuous_guard_manifest`、以及几枚臂本身）：它们的判语就是臂的答案，清单里逐枚写明「这一枚本身就是臂」。
+
+**五、这一格的边界（据实）**
+
+  - 产品字节零枚、契约零枚、他人量具零枚改动；本车道 `review/ord0520/` 下新增两枚（清单 + 读数件）。
+  - 权威线零移动；push 只落向本车道名下新建枝 `refs/heads/review/89f2e2d6-assertion-teeth-r1`（现读枝头已列在上），force-push 零次、他人枝零枚改动、旧枝零枚删除。
+  - 账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**（清单只读源码与 import）；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+**六、下一格（不等点单，当场开工）**
+
+  - 值守那扇的第三格我上一块交了「逐把实跑三档表」，其中「疑似哑」那档是按文件文本判的、不是突变判的。下一格按我自己的申报去做**突变臂**：把每一把疑似哑守的行为改坏一次、看它红不红；红的从疑似哑里划掉，不红的才判哑并点名。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 值守派第三格（脚手架那扇）交块：巡检目录下二十九把自测**逐把实跑**完，出了三档表，每档带退出码与判语——没有一把是「只报通过」；「疑似哑」那档的判据来源我具名讲清（按文件文本判、不是突变判），并把本树里扫源码误判过的前例点名
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `2c997354612670133b3a1190e3a617c0b0ce8d80`；交件枝 `refs/heads/review/89f2e2d6-teeth-audit-r1` 现读枝头 = `3c0f85f4f81bbef5d48e08ba40ce909bef38fa3a`（本轮 `git ls-remote --refs` 现取）。
+  - 三档表原件 `review/ord0520/SELFTEST_TRIAGE_r1.txt` 与 `review/ord0520/SELFTEST_TRIAGE_r1.json`；跑它的量具 `D:/moodle/_qoder_lane_ord0520_20260930/tmp/selftest_triage_r1.py`。
+
+**一、三档表（二十九把，逐把一进程、各带 240 s 上限、各用自己的工作目录）**
+
+  - 有反控臂档：**3 把**——`_knock_gate_shape_selftest_r1.py`、`_patch_watchstack_selftest_r2.py`、`_patrol_adoption_split_selftest_r1.py`，三把退出码都是 0。
+  - 疑似哑档：**21 把**——退出码都是 0，但文件里找不到「该红的那一次」的写法（这是按文件文本判的，来源见第二节）。
+  - 跑不起来档：**5 把**，退出码 1——`_patrol_loop_needseyes_selftest_r1.py`、`_selftest_send_guard_patch_r1.py`、`_sentinel_K_selftest_r1.py`、`_sentinel_keepalive_selftest_r1.py`、`_sentinel_selftest_r1.py`。这五把的红是**有效读数**，不是漏跑。
+  - 一把没跑：**0 把**。超时那一档也是 0 把（上限 240 s 内都收尾了）。
+
+**二、「疑似哑」这一档的判据来源，我说清楚（这档最容易假）**
+
+  - 这 21 把的标签是**读文件文本**得出的：文件里没有「必须红一次」这类写法。**它不是突变判的**——我没有把每把自测的靶改坏再跑一遍。
+  - 为什么不敢把它当判语：本树里已经有过一次前例——有一把闸明明带着 `still_red` 臂，却被「扫源码词表」判成哑的。所以这一档我只当**下一轮的工单**，不当结论。
+  - 真判「哑」要的是：把每把自测守的那个行为改坏一次，看它会不会红。这一步是下一格，我当场开工。
+
+**三、这格与上一格的衔接（跨天那两把的去向）**
+
+  - 上一格我把两把跨天自测的判据从写死日期改成相对今天，跨天那两格已绿（keeper 12/12、night 16/16 都是退出码 0）。
+  - 这格的三档表里，`_sentinel_keepalive_selftest_r1.py` 仍在「跑不起来」档、退出码 1——那**不是跨天那两条**（已绿），是它那条量真进程数的格子：`真起一支后数量 +1` 实读 `0->3`、`收掉后回到原状` 实读 0 或 1，来自此刻七扇车道同时在起停哨兵。改它就得把真进程计数改成假计数，那是改断言换绿，我不做。
+
+**四、这一格的边界（据实）**
+
+  - 产品字节零枚、契约零枚、他人量具零枚改动；巡检目录里二十九把自测**只跑不改**（本格一个字节都没写进 patrol）。
+  - 权威线零移动；本格新增两枚读数件在 `review/ord0520/` 下、随上一格的枝一起；force-push 零次、他人枝零枚改动、旧枝零枚删除。
+  - 账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+**五、下一格（不等点单，当场开工）**
+
+  - 给那 21 把「疑似哑」逐把做**突变臂**：把它守的行为改坏一次、看它红不红；红的从疑似哑里划掉，不红的才判哑并点名。判哑只认这一趟实跑，不认扫源码。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 硬任务追件（更正上一块里的一句）：第三种成因那句话**少了「下一步」**——我两块的验收尺把它抓出来，补上之后三种成因在尺上**全过**
+
+**〇、坐标（写作时现取）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `2c997354612670133b3a1190e3a617c0b0ce8d80`；我这手的产品枝 `refs/heads/review/5a53846b-why-not-found-product-r1` = `f06a23aa109cb0536d13ece65ae41524304c487b`（上一块交的是它的前一笔 `9362337d0eaaacfebef5fdd6bfa35f9f6af1ab52`）。这一追件改了 四 枚文件（就是那一句），写作这一刻 `git status --porcelain` 脏行 一 枚。
+
+**一、更正什么**
+
+上一块我交的第三种成因屏上句子是「…不是没登记，是登记了而缺坐标。」——**它点名了成因，却没告诉用户下一步做什么**。我那块自己立的验收尺（问三件事：点名这一种成因／带回服务器答案／给了下一步）**第三问对它读了不过**。所以这一句补上了服务端本来就在建议的动作（`PREPARE_PLACES`）：
+
+> 「这里有地点，但它们没有坐标：服务器认得「北京」，目录里有 1 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。」（读数件 `1e831fb32f81dba2d287ef4e4cd631cbef8bf8e3`）
+
+（补的理由逐字记在读数件里：the first version of this sentence named the cause and stopped; the acceptance ruler's third question (does it tell the user what to do next) read False, so the sentence gained the action the server already recommends (PREPARE_PLACES)）
+
+**二、补完之后的验收读数：三种成因在尺上全过**
+
+| 成因 | 点名这一种 | 带回服务器答案 | 给了下一步 |
+|---|---|---|---|
+| `no_canonical_identity` | 过 | 过 | 过 |
+| `never_registered` | 过 | 过 | 过 |
+| `resolved_but_no_coordinate` | 过 | 过 | 过 |
+
+- 尺末行读 `ALL_CAUSES_HONEST`。原件 `review/why-not-found/why_not_found_three_causes_r1.json` = `1e831fb32f81dba2d287ef4e4cd631cbef8bf8e3`（含三条屏上渲染文字与尺的逐条判语）、尺本体 = `6eb70cd808104be1bb910eb1a613607e53475c19`。
+- 这一追件也是这一楼的收口方式：**同一把尺、改前改后各跑一次**——上一块交的时候它读不过第三问，补一句之后读全过。所以「修好了」不是我说，是尺说。
+
+**三、这一手没改善的部分（照实）**
+
+- 上一块那份正文里第三种成因的句子**作废**，以本追件为准（旧件一字未改，按常设走新件更正）。
+- 产品字节仍只在**我自己名下的候选枝**上，没动权威线；要落地请点这枚枝。
+- 整套回归的新红与我这手无关（那三枚注释锚红是把我的改动挪开也照样红的，成因是账本行号漂移）；我这手**没有引入新红**。
+- `anchor_credit_kept` 那格仍无 shipped 臂（要授权我才补）；ORD-0571 仍等那两句裁语。
+
+边界 A：本手产品字节 四 枚文件改动（本车道候选枝上）、shipped 尺零枚改动；工作树脏行 一 枚；尖 = `2c997354612670133b3a1190e3a617c0b0ce8d80`。
+
+边界 B：权威线移动零次；本手 push 一次（候选枝 `refs/heads/review/5a53846b-why-not-found-product-r1` = `f06a23aa109cb0536d13ece65ae41524304c487b`，本车道名下），force-push 零枚，他人枝改动零枚，旧枝删除零枚；尖 = `2c997354612670133b3a1190e3a617c0b0ce8d80`。
+
+边界 C：账本直写零次（本块走收件口），demo/reset 零次，`_preview.db` 覆盖零次；实例跑在我自建库上、收工端口零占用；尖 = `2c997354612670133b3a1190e3a617c0b0ce8d80`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `5a53846b` 硬任务交付：「一个地点为什么查不到」三种成因，各有一枚真实可复现的场景、各抄了一段屏上渲染文字——**且这一手改了产品字节（五 枚文件、新增 三百零三 行）**，不再是零产品字节的读数
+
+**〇、坐标与实例（写作时现取）**
+
+- 权威尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `2c997354612670133b3a1190e3a617c0b0ce8d80`；我这手的产品改动在 `refs/heads/review/5a53846b-why-not-found-product-r1` = `9362337d0eaaacfebef5fdd6bfa35f9f6af1ab52`（对上一代 `ecc6b0ea` 起）。写作这一刻 `git status --porcelain` 脏行 一 枚。
+- 两个实例都是我自己的私有端口（后端 `:4923`、前端 `:4924`），后端跑在**我自己新建的库**上（`CITYNEXUS_DATABASE_URL` 指到本车道名下文件），受保护口与他人进程未碰。
+
+**一、三种成因，三种屏上说法（逐字抄屏，不是读 data 属性）**
+
+| 成因 | 服务器这一次答的 | 屏上渲染文字（逐字） |
+|---|---|---|
+| `never_registered`（输入 `天津`） | `COVERAGE_INCOMPLETE` / `START_HYDRATION` / 目录 0 条（读数件 `4fac7cddb2f97d78ae86dadf2d22af38d6e23049`） | 「这座城还没准备过：服务器认得「天津」，但还缺 6 类事实（attractions、food、nightlife、lodging、mobility、booking），所以现在直接规划会缺依据。可以先准备。」 |
+| `no_canonical_identity`（输入 `贡山独龙族怒族自治县`） | `NO_CANONICAL_IDENTITY` / `CHOOSE_ANOTHER_DESTINATION` / 目录 0 条（读数件 `4fac7cddb2f97d78ae86dadf2d22af38d6e23049`） | 「没认出「贡山独龙族怒族自治县」：已退回中立口径 CN / 人民币（CNY）/ Asia/Shanghai 规划，不沿用上一次识别到的城市。换个写法，或在"看支持的目的地"里挑一个。」 |
+| `resolved_but_no_coordinate`（输入 `北京`） | `PLACES_NO_COORDINATE` / `PREPARE_PLACES` / 目录 1 条（读数件 `4fac7cddb2f97d78ae86dadf2d22af38d6e23049`） | 「这里有地点，但它们没有坐标：服务器认得「北京」，目录里有 1 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。」 |
+
+三条互不相同，没有一条是空列表——这正是图纸要的「能被分辨」。
+
+**二、每一条是怎么造出来的（真实场景，不是 mock）**
+
+- **没登记 / 还没准备**（开头是「这座城还没准备过：服务器认得「天津」，但还缺…」）：解析得到城市、目录里一条地点都没有。改前这一格屏上只有一句「已自动设置：中国 · 人民币 · 中国标准时间」——服务器的「还缺 6 类」从来没到过这一格。
+- **没解析到规范身份**：输入一个词表和目录都认不出的地名。这一格改前就是诚实的（这一格改前就是诚实的，这手没动它）。
+- **解析到了但没坐标**：`往目录里写一行「有身份、无坐标」的地点：用产品自己的 ORM 写（与发现链路写地点同一形状），代表 provider 给回了一个没有点的身份`。改前**这种状态根本建不出来**——`places` 的坐标两列是 NOT NULL，所以「有身份、无坐标」的行存不进去（改前这种状态根本建不出来——places 的坐标两列是 NOT NULL，所以「有身份、无坐标」的行存不进去）。
+
+**三、这一手改了哪些产品字节（这一条是硬要求）**
+
+- `backend/app/anywhere_capability.py`
+- `backend/app/db/models.py`
+- `backend/app/integrations/discovery/photon.py`
+- `backend/db/schema.sql`
+- `frontend/src/features/setup/JourneyTrialSetup.tsx`
+
+- 后端三处：`db/schema.sql` 与 `db/models.py` 把 `places` 的坐标两列改为可空（**这才是「有身份无坐标」能存在的前提**）；`integrations/discovery/photon.py` 的 `GeocodedPlace` 坐标随之可空（provider 本来就可能给回一个没有点的身份）；`anywhere_capability.py` 新增 `REASON_PLACES_NO_COORDINATE` + `ACTION_PREPARE_PLACES` + `catalog_coordinate_status()`（每行三态：有坐标／无坐标／半截坐标）+ 判定函数，并在响应里逐行带出坐标状态。
+- 前端一处：目的地栏原来**只读本机词表**，服务器的判定从来没到过这一格；现在它读当前输入的服务器回答，按三种成因各说一句，并在原有诚实段落已经说话时不重复说（第一版重复了，真跑屏上看到两句同义话，已改）。
+- 判定优先级我写死了一条：**这一种成因要压过 `COVERAGE_INCOMPLETE`**——城市认得出、目录也备过，缺的是点；叫用户「再去准备」会让他做一件修不好这件事的活。
+
+**四、这一手没改善的部分（照实）**
+
+- 整套回归：我这手**没有引入新红**。现尖整套 10 红里 7 枚是上一代就在的（`g5`/`g9b`/`g14a`/`g14c`/`g8a`/`g10`/`g3_xproc`），另 3 枚是注释锚漂移那组——我**把改动临时挪开重跑验证过**：那 3 枚照样红，与我这手无关（成因是账本行号随交付增长而漂移，`CITYNEXUS_AGENT_CONTROL.md:16604` 那类引文失准，落在别人名下的 spec 里）。
+- 我只在**我自己名下的候选枝**上改产品，没动权威线（权威线只由号令者移动）。要落地请点这枚枝。
+- 第三格那个种子行是我用产品自己的 ORM 写的（`scenario_third_cause_seed_r1.py` 随件入库），代表「provider 给回一个没有点的身份」这一真实形状；真正的 provider 路径我未改（水合链路里那条由别人持有）。
+- `anchor_credit_kept` 那格仍无 shipped 臂（要授权我才补）；ORD-0571 仍等那两句裁语。
+
+边界 A：本手**改产品字节 五 枚文件**（全部在本车道候选枝上）、shipped 尺零枚改动；工作树脏行 一 枚；尖 = `2c997354612670133b3a1190e3a617c0b0ce8d80`。
+
+边界 B：权威线移动零次；本手 push 一次（候选枝 `refs/heads/review/5a53846b-why-not-found-product-r1` = `9362337d0eaaacfebef5fdd6bfa35f9f6af1ab52`，本车道名下），force-push 零枚，他人枝改动零枚，旧枝删除零枚；尖 = `2c997354612670133b3a1190e3a617c0b0ce8d80`。
+
+边界 C：账本直写零次（本块走收件口），demo/reset 零次，`_preview.db` 覆盖零次；实例跑在我自建的库上，收工后端口零占用；尖 = `2c997354612670133b3a1190e3a617c0b0ce8d80`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 89f2e2d6 · 硬任务（守卫与空态）四条全做完交块：我名下每一枚守卫/断言都实跑判了牙齿——四枚全部有牙、工作队列空；两枚咬不到东西的死代码逐枚点名删掉；清单由代码现读生成，负对照证明它会红。另：我上一轮的自盲扫描负对照写覆盖了一枚已交付的清单件，已从交付那枚逐字取回。
 
 坐标（写这块这一刻现读，逐枚可 `git cat-file`）
