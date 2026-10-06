@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.db.models import Activity, AutopilotEnrollment, Event, Journey
 from app.execution.clock import execution_clock
+from app.execution.presence import presence_projection
 
 _TERMINAL_ACTIVITY = {"COMPLETED", "SKIPPED", "CANCELLED"}
 _MATERIAL_EVENT_TYPES = {"WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY"}
@@ -248,6 +249,21 @@ def adaptive_watch_policy(
             "current_activity_id": None,
             "monitored_activity_ids": [],
         }
+    presence = (
+        presence_projection(
+            session,
+            journey,
+            target_activity_id=((phase.get("monitored_activity_ids") or [None])[0]),
+            now=stamp,
+        )
+        if callable(getattr(session, "scalar", None))
+        else {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "arrival_transition_allowed": False,
+            "reason_code": "PRESENCE_ROWS_UNAVAILABLE",
+        }
+    )
     next_activity, horizon = _next_activity(session, journey, now=stamp)
     incidents = _open_material_events(session, journey.id)
 
@@ -296,6 +312,7 @@ def adaptive_watch_policy(
         "next_activity_horizon_seconds": horizon,
         "open_material_event_ids": [row.id for row in incidents],
         "event_newer_than_last_pulse": event_newer_than_last_pulse,
+        "presence": presence,
         **phase,
     }
 
