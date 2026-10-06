@@ -532,6 +532,9 @@ def _compact_replan_for_model(item: Any) -> Any:
                 "fit_subject_basis",
                 "cost_delta_minor",
                 "duration_delta_min",
+                "travel_delta_min",
+                "candidate_family",
+                "verified_evidence",
             )
             if key in source_diff
         }
