@@ -552,8 +552,18 @@ def _deterministic_recovery(
     return agent
 
 
-def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
-    """Observe persisted journey facts and launch at most one recovery per incident state."""
+def scan_guardian(
+    session: Session,
+    journey: Journey,
+    *,
+    include_opportunity_signals: bool = True,
+) -> dict[str, Any]:
+    """Observe persisted journey facts and launch at most one recovery per incident state.
+
+    A bounded live Guardian pulse evaluates disruption evidence.  Opportunity
+    windows are a separate proactive product surface and must not turn an
+    otherwise quiet pulse into a model recovery run.
+    """
 
     # A killed HTTP worker can leave the Guardian envelope RUNNING even when
     # its model/tool transaction no longer exists.  Reconcile that bounded
@@ -590,7 +600,7 @@ def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
     # Autopilot and the HTTP scan endpoint share this function. Generate the
     # positive opportunity signal here so a standing mission never depends on
     # a caller remembering a special pre-scan route.
-    if journey.status == "ACTIVE":
+    if include_opportunity_signals and journey.status == "ACTIVE":
         from app.main import _ensure_opportunity_window_event
 
         _ensure_opportunity_window_event(session, journey)
@@ -599,7 +609,9 @@ def scan_guardian(session: Session, journey: Journey) -> dict[str, Any]:
     actionable_events = [
         event
         for event in events
-        if event.event_type in ACTIONABLE_EVENT_TYPES and not _is_predictive(event)
+        if event.event_type in ACTIONABLE_EVENT_TYPES
+        and not _is_predictive(event)
+        and (include_opportunity_signals or event.event_type != "OPPORTUNITY_WINDOW")
     ]
     # Resolving a handled trigger must not make a retrying HTTP caller create a
     # fresh NO_ACTION GuardianRun.  Once the Journey has no open signal, replay

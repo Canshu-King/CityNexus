@@ -390,9 +390,13 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                     resilience,
                 )
             else:
-                guardian_result = scan_guardian(session, journey)
+                guardian_result = scan_guardian(
+                    session, journey, include_opportunity_signals=False
+                )
         else:
-            guardian_result = scan_guardian(session, journey)
+                guardian_result = scan_guardian(
+                    session, journey, include_opportunity_signals=False
+                )
         if guardian_result is not None:
             pulse.guardian_run_id = guardian_result.get("id")
             evidence = guardian_result.get("evidence") or {}
