@@ -30,6 +30,7 @@ jobs:
         run: |
           uv run python -m pytest -q \
             tests/test_r32_recovery_epoch.py \
+            tests/test_r32_machine_verdict.py \
             tests/test_r31_epoch_integrity.py \
             tests/test_r30_collective_authority_receipt.py \
             tests/test_r29_disagreement_mediation.py \
