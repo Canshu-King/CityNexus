@@ -368,6 +368,13 @@ def authority_receipt_for_allowed_gate(
             or gate.get("current_material_world_epoch")
             or ""
         )
+        surface_fingerprint = str(
+            gate.get("candidate_surface_fingerprint") or ""
+        )
+        if not decision_epoch or not material_world_epoch:
+            raise ValueError("COLLECTIVE_AUTHORITY_EPOCH_UNAVAILABLE")
+        if not surface_fingerprint:
+            raise ValueError("COLLECTIVE_AUTHORITY_SURFACE_UNAVAILABLE")
         check = receipt_validation(
             receipt,
             journey_id=journey_id,
@@ -375,7 +382,7 @@ def authority_receipt_for_allowed_gate(
             plan_version_id=plan_version_id,
             decision_epoch=decision_epoch,
             material_world_epoch=material_world_epoch,
-            candidate_surface_fingerprint=receipt.candidate_surface_fingerprint,
+            candidate_surface_fingerprint=surface_fingerprint,
             authority_mode=AUTHENTICATED_MEMBER_CONSENT,
         )
         if not check.get("valid"):
