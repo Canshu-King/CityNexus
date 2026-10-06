@@ -16,6 +16,7 @@ import {
   isDisruptionOpen,
 } from "../../lib/disruptionState";
 import { riskReasonLabel } from "../../lib/displayVocabulary";
+import { englishCountNoun } from "../../lib/plural";
 import {
   fetchWithWriteDeadline,
   isWriteDeadlineMissed,
@@ -344,7 +345,7 @@ export function LiveRecovery({
         <p className="v8-muted" data-testid="live-deduped">
           {zh
             ? `已合并 ${duplicateCount} 个内容相同的建议。`
-            : `Merged ${duplicateCount} identical suggestion(s).`}
+            : `Merged ${duplicateCount} identical ${englishCountNoun(duplicateCount, "suggestion")}.`}
         </p>
       )}
 

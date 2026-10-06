@@ -20,6 +20,8 @@
  * Copy lives here on purpose -- `LocaleContext.tsx` is being edited by two other lanes.
  */
 
+import { englishCountNoun } from "./plural";
+
 export type ChecklistBasis = {
   /** The endpoint whose response carries the field. `{journeyId}` is the placeholder the app fills. */
   endpoint: string;
@@ -72,7 +74,7 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
       why: {
         /* The server's own strings, counted and quoted, never rewritten into a cause we did not measure. */
         zh: `服务端在这一代方案上列出了 ${failures.length} 条可行性失败，最新一条是「${String(failures[failures.length - 1])}」。`,
-        en: `The server lists ${failures.length} feasibility failure(s) on this plan generation; the latest reads "${String(failures[failures.length - 1])}".`,
+        en: `The server lists ${failures.length} feasibility ${englishCountNoun(failures.length, "failure")} on this plan generation; the latest reads "${String(failures[failures.length - 1])}".`,
       },
       basis: { endpoint: EXPERIENCE, field: "experience_flags.feasibility_failures",
                anchor: { file: CONTRACT, line: 1393 } },

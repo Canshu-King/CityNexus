@@ -165,11 +165,11 @@ function softenedInStrings(line: string): number[] {
   return found;
 }
 
-test("no user-visible `(s)` survives in the files this order owns, and the rest is counted, not policed", () => {
-  /* Three of the surviving sites live in files another lane may have open (LiveRecovery, simulationAdapter,
-     pretripChecklist). This lane does not edit them on an order it was not given, so the arm asserts only
-     over what ORD-0562 owns and writes the rest into the evidence with its line number -- a list the
-     commander can dispatch from, rather than a green that hides it. */
+test("no user-visible `(s)` survives anywhere under frontend/src", () => {
+  /* When this arm was first written the three files ORD-0562 owns were policed and the rest was only
+     counted, because the surviving sites (LiveRecovery, simulationAdapter, pretripChecklist) belong to
+     other lanes. Those three are now fixed through the same helper, so nothing is exempt any more: the
+     whole tree is asserted empty, and the counter-arm can plant a `(s)` in any file and this must go red. */
   const OWNED = ["frontend/src/i18n/LocaleContext.tsx", "frontend/src/app/V8Experience.tsx",
     "frontend/src/lib/plural.ts"];
   const files = sources(join(ROOT, "frontend", "src"));
@@ -189,6 +189,7 @@ test("no user-visible `(s)` survives in the files this order owns, and the rest 
     });
   }
   expect(owned, "a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge").toEqual([]);
+  expect(elsewhere, "a counted noun somewhere else under frontend/src went back to the `1 or more` dodge").toEqual([]);
   expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
   writeFileSync(EVIDENCE_SITES, elsewhere.join("\n") + (elsewhere.length ? "\n" : ""), "utf8");
 });
