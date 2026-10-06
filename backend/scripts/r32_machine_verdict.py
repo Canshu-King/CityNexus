@@ -32,6 +32,8 @@ def verdict(
     approvals = final.get("approvals") or []
     pending = final.get("pending_actions") or []
     events = final.get("events") or []
+    audits = final.get("audits") or []
+    authority_setup = checkpoint.get("authority_setup") or {}
 
     r1 = checkpoint.get("r1") or {}
     r2 = checkpoint.get("r2") or {}
@@ -109,6 +111,41 @@ def verdict(
             and any(row.get("run_id") == b.get("id") for row in steps)
         )
 
+    standing_authority_preconfigured: bool | None = None
+    if authority_setup:
+        requested_preference = (
+            authority_setup.get("requested_member_preference") or {}
+        )
+        preference_receipts = (
+            authority_setup.get("member_preferences") or []
+        )
+        owner_policy = authority_setup.get("owner_policy") or {}
+        standing_authority_preconfigured = bool(
+            authority_setup.get("timing")
+            == "PRE_SHOCK_STANDING_AUTHORITY"
+            and authority_setup.get("human_action_after_shock") is False
+            and requested_preference.get("key") == "garden"
+            and requested_preference.get("value") is True
+            and len(preference_receipts) == 2
+            and all(
+                item.get("status_code") == 200
+                for item in preference_receipts
+            )
+            and owner_policy.get("mode") == "AUTONOMOUS"
+            and owner_policy.get("auto_accept_replan") is True
+            and int(
+                owner_policy.get(
+                    "max_auto_replan_cost_delta_minor", -1
+                )
+            )
+            >= 0
+            and int(owner_policy.get("max_auto_loss_minor", -1)) >= 0
+            and int(
+                owner_policy.get("max_auto_schedule_drift_min", -1)
+            )
+            >= 0
+        )
+
     r1_event_ids = set(r1.get("triggering_event_ids") or [])
     r2_event_ids = set(r2.get("triggering_event_ids") or [])
     new_r2_event_ids = r2_event_ids - r1_event_ids
@@ -154,43 +191,102 @@ def verdict(
         if row.get("recovery_epoch_id") == r1id
     ]
 
-    # Current executable Agent surface: legacy setup rows are historical input
-    # but every currently PRESENTED Agent-discovered proposal must belong to
-    # the one OPEN recovery epoch.  If B opened a collective clarification,
-    # every candidate option in that surface must resolve to one of those rows.
-    current_agent_presented = [
+    # Current executable Agent surface.  A post-mutation strike proves this
+    # from the exact gate facts persisted in replan.accepted; a waiting
+    # collective round proves it from its server-derived option set.
+    current_agent_rows = [
         row
         for row in proposals
         if row.get("source_agent_run_id")
-        and row.get("status") == "PRESENTED"
+        and row.get("recovery_epoch_id") == current_id
     ]
     current_agent_ids = {
         str(row.get("id"))
-        for row in current_agent_presented
-        if row.get("recovery_epoch_id") == current_id
+        for row in current_agent_rows
+        if row.get("id")
     }
     b_payload = (
         (checkpoint.get("agent_responses") or {})
         .get("agent_b", {})
         .get("payload", {})
     )
-    clarification = (b_payload.get("mission") or {}).get("clarification") or {}
+    clarification = (b_payload.get("mission") or {}).get(
+        "clarification"
+    ) or {}
     option_ids = {
         str(item.get("proposal_id"))
         for item in clarification.get("candidate_options") or []
         if isinstance(item, dict) and item.get("proposal_id")
     }
-    surface_epoch_pure = (
-        True
-        if current_agent_presented
-        and all(
-            row.get("recovery_epoch_id") == current_id
-            for row in current_agent_presented
-        )
-        and option_ids
-        and option_ids.issubset(current_agent_ids)
-        else None
+
+    accepted_audits = [
+        row
+        for row in audits
+        if row.get("action") == "replan.accepted"
+    ]
+    accepted_audit = accepted_audits[-1] if accepted_audits else {}
+    accepted_after = accepted_audit.get("after") or {}
+    accepted_collective = (
+        accepted_after.get("collective_authority") or {}
     )
+    accepted_proposal_id = str(
+        accepted_audit.get("entity_id") or ""
+    )
+    accepted_proposal = next(
+        (
+            row
+            for row in proposals
+            if str(row.get("id") or "") == accepted_proposal_id
+        ),
+        {},
+    )
+    accepted_receipt_id = str(
+        accepted_collective.get("receipt_id") or ""
+    )
+    accepted_receipt = next(
+        (
+            row
+            for row in receipts
+            if str(row.get("id") or "") == accepted_receipt_id
+        ),
+        {},
+    )
+    receipt_snapshot = accepted_collective.get("receipt") or {}
+    receipt_provenance = receipt_snapshot.get("provenance") or {}
+
+    surface_epoch_pure: bool | None = None
+    if accepted_audit:
+        surface_epoch_pure = bool(
+            accepted_collective.get("candidate_surface_scope")
+            == "RECOVERY_EPOCH_TRIGGER"
+            and accepted_collective.get(
+                "candidate_surface_recovery_epoch_id"
+            )
+            == current_id
+            and accepted_collective.get(
+                "candidate_surface_trigger_event_id"
+            )
+            == accepted_proposal.get("trigger_event_id")
+            and accepted_proposal.get("recovery_epoch_id")
+            == current_id
+            and accepted_proposal.get("source_agent_run_id")
+            == b.get("id")
+        )
+    elif option_ids:
+        current_presented_ids = {
+            str(row.get("id"))
+            for row in current_agent_rows
+            if row.get("status") == "PRESENTED"
+        }
+        surface_epoch_pure = bool(
+            current_presented_ids
+            and option_ids.issubset(current_presented_ids)
+            and all(
+                row.get("recovery_epoch_id") == current_id
+                for row in proposals
+                if str(row.get("id") or "") in option_ids
+            )
+        )
 
     # A stale approval only proves non-retargeting if one actually existed.
     # A post-R2 consumption of an R1 approval is a contradiction.
@@ -213,7 +309,9 @@ def verdict(
             for row in pending
         ]
         if all(approval_ids):
-            continuation_exact_once = len(approval_ids) == len(set(approval_ids))
+            continuation_exact_once = (
+                len(approval_ids) == len(set(approval_ids))
+            )
 
     mutations = [
         row
@@ -227,11 +325,82 @@ def verdict(
         }
         and (row.get("result") or {}).get("executed") is True
     ]
-    zero_legal_transition = (
-        not mutations
-        and (final.get("journey") or {}).get("active_plan_version_id")
-        == (checkpoint.get("setup") or {}).get("active_plan_id")
+    active_plan_id = (final.get("journey") or {}).get(
+        "active_plan_version_id"
     )
+    setup_plan_id = (checkpoint.get("setup") or {}).get(
+        "active_plan_id"
+    )
+    zero_legal_transition = (
+        not mutations and active_plan_id == setup_plan_id
+    )
+    one_legal_transition = bool(
+        len(mutations) == 1
+        and accepted_proposal
+        and active_plan_id
+        == accepted_proposal.get("proposed_plan_version_id")
+        and mutations[0].get("run_id") == b.get("id")
+    )
+    legal_transition_cardinality = (
+        True
+        if zero_legal_transition or one_legal_transition
+        else False
+        if mutations or active_plan_id != setup_plan_id
+        else None
+    )
+
+    authority_provenance_mode_accurate: bool | None = None
+    arrival_order_not_authority: bool | None = None
+    if mutations:
+        expected_decision_source = (
+            "ALGORITHMIC_UNANIMOUS_SEMANTIC_EPOCH"
+        )
+        authority_provenance_mode_accurate = bool(
+            len(mutations) == 1
+            and accepted_receipt
+            and accepted_receipt.get("authority_mode")
+            == "UNANIMOUS_DOMINANCE"
+            and accepted_receipt.get("recovery_epoch_id") == current_id
+            and accepted_receipt.get("source_agent_run_id")
+            == b.get("id")
+            and accepted_receipt.get("invalidated_at") is None
+            and accepted_receipt.get("proposal_id")
+            == accepted_proposal_id
+            and receipt_snapshot.get("recovery_epoch_id")
+            == current_id
+            and (
+                receipt_provenance.get("decision_epoch") or {}
+            ).get("source")
+            == expected_decision_source
+            and accepted_collective.get(
+                "candidate_surface_recovery_epoch_id"
+            )
+            == current_id
+        )
+        arrival_order_not_authority = bool(
+            authority_provenance_mode_accurate
+            and a_final.get("status") == "SUPERSEDED"
+            and not any(
+                row.get("run_id") == a.get("id")
+                and (row.get("result") or {}).get("executed") is True
+                for row in steps
+            )
+            and mutations[0].get("run_id") == b.get("id")
+        )
+
+    no_post_shock_human_authority_fabrication: bool | None = None
+    if authority_setup:
+        no_post_shock_human_authority_fabrication = bool(
+            authority_setup.get("human_action_after_shock") is False
+            and not approvals
+            and not pending
+            and not any(
+                row.get("action")
+                == "agent.collective_decision.response"
+                for row in audits
+            )
+        )
+
     regression_green = bool(
         regression
         and regression.get("exit_code") == 0
@@ -251,11 +420,24 @@ def verdict(
         "concurrent_external_barrier": _dim(
             concurrent_barrier,
             (
-                "A and B must each be durably blocked on their first external "
-                "model response before the harness releases either"
+                "A and B must each invoke the real external provider before "
+                "their first model response is released to Runtime"
             ),
         ),
-        "recovery_epoch_server_owned": _dim(
+        "standing_authority_preconfigured": _dim(
+            standing_authority_preconfigured,
+            (
+                "member values and a finite AUTONOMOUS delegation envelope "
+                "must be configured through product APIs before Shock A"
+            ),
+        ),
+        "no_post_shock_human_authority_fabrication": _dim(
+            no_post_shock_human_authority_fabrication,
+            (
+                "this standing-autonomy strike must not synthesize approvals "
+                "or member clarification responses after either shock"
+            ),
+        ),        "recovery_epoch_server_owned": _dim(
             bool(r1id and r2id and r1id != r2id),
             "R1/R2 are distinct persisted server-created ids",
         ),
@@ -366,8 +548,11 @@ def verdict(
             ),
         ),
         "arrival_order_not_authority": _dim(
-            None,
-            "no authority-bearing competing arrival was exercised",
+            arrival_order_not_authority,
+            (
+                "if mutation occurs it must be authorized from B/R2; A/R1 "
+                "arrival or completion order may not confer authority"
+            ),
         ),
         "approval_not_retargeted": _dim(
             approval_not_retargeted,
@@ -377,10 +562,11 @@ def verdict(
             ),
         ),
         "exactly_one_or_zero_legal_plan_transition": _dim(
-            True if zero_legal_transition else None,
+            legal_transition_cardinality,
             (
-                "zero executed mutation with unchanged active plan is a legal "
-                "convergence outcome for this path"
+                f"executed_mutations={len(mutations)}; "
+                f"active_plan={active_plan_id}; "
+                f"accepted_proposal={accepted_proposal_id or None}"
             ),
         ),
         "no_duplicate_continuation_side_effect": _dim(
@@ -399,10 +585,11 @@ def verdict(
             ),
         ),
         "authority_provenance_mode_accurate": _dim(
-            None if not receipts else None,
+            authority_provenance_mode_accurate,
             (
-                "requires an authority receipt plus its mutation/gate "
-                "provenance in this strike"
+                "an executed collective mutation must carry a current R2 "
+                "UNANIMOUS_DOMINANCE receipt sourced from Agent B's proposal "
+                "and algorithmic decision-epoch provenance"
             ),
         ),
         "truth_boundary_honest": _dim(
@@ -417,17 +604,58 @@ def verdict(
         ),
     }
 
-    values = [item["verdict"] for item in dimensions.values()]
+    required_dimensions = {
+        "strike_source_state_traceable",
+        "concurrent_external_barrier",
+        "standing_authority_preconfigured",
+        "no_post_shock_human_authority_fabrication",
+        "recovery_epoch_server_owned",
+        "r1_opened_from_shock_a",
+        "agent_a_external_and_bound_r1",
+        "shock_b_material_not_storage_churn",
+        "r1_superseded_by_r2",
+        "agent_b_external_and_bound_r2",
+        "stale_agent_authority_refused",
+        "stale_result_typed_superseded",
+        "agent_a_terminal_live_outcome",
+        "exactly_one_or_zero_legal_plan_transition",
+        "inherited_r28_exactly_once",
+        "truth_boundary_honest",
+    }
+    if current_agent_rows or option_ids or mutations:
+        required_dimensions.add("current_surface_epoch_pure")
+    if mutations:
+        required_dimensions.update(
+            {
+                "arrival_order_not_authority",
+                "authority_provenance_mode_accurate",
+            }
+        )
+
+    all_values = [
+        item["verdict"] for item in dimensions.values()
+    ]
+    required_values = [
+        dimensions[key]["verdict"]
+        for key in sorted(required_dimensions)
+    ]
     overall = (
         "CONTRADICTED"
-        if "CONTRADICTED" in values
+        if "CONTRADICTED" in all_values
         else "PROVEN"
-        if all(value == "PROVEN" for value in values)
+        if all(value == "PROVEN" for value in required_values)
         else "NOT_PROVEN"
     )
     return {
-        "schema": "citynexus.r32.machine-verdict.v2",
+        "schema": "citynexus.r32.machine-verdict.v3",
         "overall": overall,
+        "required_dimensions": sorted(required_dimensions),
+        "coverage_not_proven": [
+            key
+            for key, item in dimensions.items()
+            if key not in required_dimensions
+            and item["verdict"] == "NOT_PROVEN"
+        ],
         "dimensions": dimensions,
         "not_proven": [
             key
