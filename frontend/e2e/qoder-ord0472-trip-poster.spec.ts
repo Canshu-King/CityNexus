@@ -24,9 +24,13 @@ const DEMO_TITLE = "One Day in Nexus City";
 const STOP_COUNT = 6;
 
 const EVIDENCE_DIR = (process.env.CITYNEXUS_ORD0472_EVIDENCE ?? "").trim();
-if (!EVIDENCE_DIR) {
-  throw new Error("[ord0472] CITYNEXUS_ORD0472_EVIDENCE must name where evidence is written");
-}
+/* ORD-0576: this refusal is unchanged in force -- no reading is written without a named directory -- but it
+ * used to happen at module scope, where one unset variable aborted Playwright's collection for every spec in
+ * the directory. It is now a named skip inside this file's tests, so the reason reaches the report instead of
+ * the collector. */
+const EVIDENCE_PREREQ = EVIDENCE_DIR
+  ? null
+  : "missing environment variable: CITYNEXUS_ORD0472_EVIDENCE must name where evidence is written";
 
 function write(name: string, body: unknown): string {
   const path = `${EVIDENCE_DIR}/${name}.json`;
@@ -99,6 +103,10 @@ async function hitTest(page: Page, locator: Locator, testId: string) {
     : { found: false as const };
   return { box, scrollY, centre, owner };
 }
+
+test.beforeEach(() => {
+  test.skip(EVIDENCE_PREREQ !== null, EVIDENCE_PREREQ ?? undefined);
+});
 
 test("ORD-0472 A1 the poster entry is reachable and its words are on the screen", async ({ browser }) => {
   const context = await browser.newContext({

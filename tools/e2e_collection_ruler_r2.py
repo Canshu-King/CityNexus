@@ -26,7 +26,6 @@ from pathlib import Path
 # author: the fix is to move the prerequisite inside a test as a named skip (ORD-0576).
 DEBT = {
     "qoder-e766b154-checkin-words-real-door-r1.spec.ts",
-    "qoder-ord0472-trip-poster.spec.ts",
     "qoder-ord0498-poster-multiday.spec.ts",
     "qoder-ord0501-poster-day-seams.spec.ts",
     "qoder-ord0515-poster-pagination.spec.ts",
