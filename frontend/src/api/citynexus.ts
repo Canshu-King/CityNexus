@@ -618,7 +618,9 @@ export interface RouteEvidence {
   snapshot_id: string | null;
   provider: string;
   frozen: boolean;
-  old_route: RouteFeature;
+  // A plan with no route serves no line: the backend refuses to invent one, so the map takes its
+  // "nothing honest to draw" branch instead of being handed a hard-coded city.
+  old_route: RouteFeature | null;
   new_route: RouteFeature | null;
   disruption_scope?: {
     type: "Feature";

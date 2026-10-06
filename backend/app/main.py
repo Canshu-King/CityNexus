@@ -10439,10 +10439,14 @@ def _route_feature(
     provider_backed: bool,
     fallback_reason: str | None,
     plan_version_id: str,
-) -> dict[str, Any]:
-    safe_coordinates = coordinates if len(coordinates) >= 2 else coordinates * 2
-    if not safe_coordinates:
-        safe_coordinates = [[117.19, 39.13], [117.19, 39.13]]
+) -> dict[str, Any] | None:
+    # A route needs two places to be a line.  Returning a hard-coded city here made the map draw (and
+    # centre on) a route the plan never had, and duplicating a single point drew a zero-length line for
+    # a plan that has no travel yet; the client already refuses to invent a line, so the server must not
+    # either.  `None` lets JourneyMap take its "nothing honest to draw" branch.
+    if len(coordinates) < 2:
+        return None
+    safe_coordinates = coordinates
     return {
         "type": "Feature",
         "properties": {
@@ -10662,6 +10666,8 @@ def journey_route_evidence(
             ]
         )
     )
+    old_props = old_route["properties"] if old_route else {}
+    new_props = new_route["properties"] if new_route else {}
     return {
         "journey_id": journey.id,
         "proposal_id": proposal.id if proposal else None,
@@ -10674,11 +10680,12 @@ def journey_route_evidence(
         "impacted_activity_ids": impacted_activity_ids,
         "markers": {"type": "FeatureCollection", "features": markers},
         "fallback": bool(
-            old_route["properties"]["fallback"]
-            or (new_route and new_route["properties"]["fallback"])
+            old_props.get("fallback", True)
+            or (new_props.get("fallback", True) if new_route else False)
         ),
-        "fallback_reason": old_route["properties"]["fallback_reason"]
-        or (new_route["properties"]["fallback_reason"] if new_route else None),
+        "fallback_reason": old_props.get("fallback_reason")
+        or (new_props.get("fallback_reason") if new_route else None)
+        or "ROUTE_HAS_NO_TRAVEL_SEGMENTS",
         "source": "frozen_mobility_snapshot" if snapshot else "server_place_coordinates",
     }
 
