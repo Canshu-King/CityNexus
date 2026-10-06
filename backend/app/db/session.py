@@ -969,6 +969,41 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     UNIQUE(journey_id, generation)
                     )"""
                 )
+            if not _table_exists(connection, "operator_recovery_resumes"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE operator_recovery_resumes (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    recovery_epoch_id TEXT NOT NULL REFERENCES recovery_epochs(id) ON DELETE CASCADE,
+                    event_id TEXT REFERENCES events(id) ON DELETE SET NULL,
+                    incident_fingerprint TEXT NOT NULL,
+                    standing_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+                    recovery_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+                    guardian_run_id TEXT REFERENCES guardian_runs(id) ON DELETE SET NULL,
+                    active_plan_version_id_at_block TEXT,
+                    material_world_epoch_at_block TEXT,
+                    blocked_reason TEXT NOT NULL,
+                    failure_classification TEXT NOT NULL,
+                    provider_key TEXT,
+                    model_key TEXT,
+                    status TEXT NOT NULL DEFAULT 'PENDING',
+                    next_retry_at TEXT,
+                    retry_count INTEGER NOT NULL DEFAULT 0,
+                    safe_to_resume INTEGER NOT NULL DEFAULT 1,
+                    owner_runtime_key TEXT,
+                    owner_claim_token TEXT,
+                    owner_claimed_at TEXT,
+                    last_attempt_at TEXT,
+                    resumed_at TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    UNIQUE(journey_id, recovery_epoch_id)
+                    )"""
+                )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_operator_recovery_resumes_due "
+                "ON operator_recovery_resumes(journey_id, status, next_retry_at)"
+            )
             connection.exec_driver_sql(
                 "CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open "
                 "ON recovery_epochs(journey_id) WHERE status = 'OPEN'"
@@ -1055,6 +1090,10 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             if guardian_columns and "resilience_snapshot_id" not in guardian_columns:
                 connection.exec_driver_sql(
                     "ALTER TABLE guardian_runs ADD COLUMN resilience_snapshot_id TEXT"
+                )
+            if guardian_columns and "recovery_epoch_id" not in guardian_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE guardian_runs ADD COLUMN recovery_epoch_id TEXT"
                 )
             offer_columns = {
                 row[1]

@@ -223,3 +223,20 @@ def configured_journey_agent(
     if settings.hermes_api_url and settings.hermes_api_key:
         return HermesJourneyAgent()
     return native_factory()
+
+
+def configured_journey_agent_candidates(
+    *, native_factory: Callable[[], JourneyAgentRuntime] = DeepSeekJourneyAgent
+) -> list[JourneyAgentRuntime]:
+    """Build the explicit external runtime order used for safe handoff."""
+
+    candidates: list[JourneyAgentRuntime] = []
+    if settings.hermes_api_url and settings.hermes_api_key:
+        candidates.append(HermesJourneyAgent())
+    if settings.ai_api_key:
+        candidates.append(native_factory())
+    if not candidates:
+        # Preserve the existing unavailable error and avoid inventing a local
+        # deterministic brain when no external candidate is configured.
+        candidates.append(native_factory())
+    return candidates

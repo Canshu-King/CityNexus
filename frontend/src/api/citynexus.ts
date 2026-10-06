@@ -351,6 +351,35 @@ export interface JourneyOperatorTimelineItem {
   kind: string;
 }
 
+export interface JourneyOperatorBrainProjection {
+  state: "READY" | "UNCONFIGURED" | "CONFIGURED_UNKNOWN" | "TEMPORARILY_UNAVAILABLE" | "RECOVERING" | "ACTIVE" | "ATTENTION_REQUIRED";
+  headline: string;
+  configured_runtimes: string[];
+  preferred_runtime: string | null;
+  last_failure_reason: string | null;
+  recovery_resume: {
+    pending: boolean;
+    status?: string | null;
+    recovery_resume_id?: string;
+    recovery_epoch_id?: string;
+    incident_id?: string | null;
+    incident_fingerprint?: string;
+    safe_to_resume: boolean;
+    blocked_reason?: string;
+    failure_classification?: string;
+    retry_count?: number;
+    next_retry_at?: string | null;
+    last_attempt_at?: string | null;
+  };
+  runtime_candidates?: Array<{
+    key: string;
+    provider: string;
+    model: string | null;
+    status: string;
+    next_retry_at?: string | null;
+  }>;
+}
+
 export interface JourneyOperatorProjection {
   journey_id: string;
   state: "OFF" | "WATCHING" | "INVESTIGATING" | "WAITING_FOR_APPROVAL" | "APPLYING" | "RECOVERED" | "NEEDS_ATTENTION" | "DEGRADED";
@@ -374,6 +403,7 @@ export interface JourneyOperatorProjection {
     action_label: string;
     pending_action_id: string;
   } | null;
+  brain: JourneyOperatorBrainProjection;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
 }

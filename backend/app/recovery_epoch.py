@@ -251,6 +251,10 @@ def ensure_recovery_epoch(session: Session, journey: Journey) -> RecoveryEpoch:
         journey_id=journey.id,
         generation=int(max_generation) + 1,
         active_plan_version_id_at_open=journey.active_plan_version_id,
+        # This is the server-owned material-world basis captured with the
+        # incident.  It intentionally shares the semantic recovery fingerprint
+        # so provider row churn cannot invalidate a blocked resume.
+        material_world_epoch_at_open=fingerprint,
         recovery_reality_fingerprint=fingerprint,
         triggering_event_ids_json=json.dumps(
             sorted(

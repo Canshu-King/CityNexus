@@ -272,6 +272,52 @@ class RecoveryEpoch(Base):
     )
 
 
+class OperatorRecoveryResume(Base):
+    """Durable resume intent for one unresolved Operator recovery epoch."""
+
+    __tablename__ = "operator_recovery_resumes"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    recovery_epoch_id: Mapped[str] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="CASCADE")
+    )
+    event_id: Mapped[str | None] = mapped_column(
+        ForeignKey("events.id", ondelete="SET NULL"), nullable=True
+    )
+    incident_fingerprint: Mapped[str] = mapped_column(String)
+    standing_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    recovery_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    guardian_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("guardian_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    active_plan_version_id_at_block: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch_at_block: Mapped[str | None] = mapped_column(String, nullable=True)
+    blocked_reason: Mapped[str] = mapped_column(String)
+    failure_classification: Mapped[str] = mapped_column(String)
+    provider_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    model_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    next_retry_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    retry_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    safe_to_resume: Mapped[bool] = mapped_column(Boolean, default=True, server_default="1")
+    owner_runtime_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    owner_claim_token: Mapped[str | None] = mapped_column(String, nullable=True)
+    owner_claimed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    last_attempt_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    resumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "recovery_epoch_id"),
+        Index("idx_operator_recovery_resumes_due", "journey_id", "status", "next_retry_at"),
+    )
+
+
 class AgentRun(Base):
     """Persisted execution envelope for a model-backed Journey Agent run."""
 
@@ -388,6 +434,9 @@ class GuardianRun(Base):
     active_plan_after_id: Mapped[str | None] = mapped_column(String, nullable=True)
     trigger_kind: Mapped[str] = mapped_column(String, default="REACTIVE", server_default="REACTIVE")
     resilience_snapshot_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
     created_at: Mapped[str] = mapped_column(String)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     cooldown_until: Mapped[str | None] = mapped_column(String, nullable=True)

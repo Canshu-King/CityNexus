@@ -7,6 +7,13 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.agent.operator_brain import (
+    find_recovery_resume,
+    operator_brain_state,
+    resume_projection,
+    runtime_candidates_for_session,
+)
+from app.core.config import settings
 from app.db.models import (
     ActionApproval,
     AgentPendingAction,
@@ -18,6 +25,7 @@ from app.db.models import (
     Journey,
     JourneyMission,
     ReplanProposal,
+    RecoveryEpoch,
 )
 
 
@@ -223,6 +231,43 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
         degraded=degraded,
     )
 
+    runtime_candidates = runtime_candidates_for_session(session, settings)
+    recovery_epoch_id = (
+        guardian.recovery_epoch_id
+        if guardian is not None and guardian.recovery_epoch_id
+        else session.scalar(
+            select(RecoveryEpoch.id)
+            .where(
+                RecoveryEpoch.journey_id == journey.id,
+                RecoveryEpoch.status == "OPEN",
+            )
+            .order_by(RecoveryEpoch.generation.desc())
+        )
+    )
+    resume = find_recovery_resume(
+        session, journey_id=journey.id, recovery_epoch_id=recovery_epoch_id
+    )
+    brain = operator_brain_state(
+        configured_candidates=runtime_candidates,
+        selected_runtime=(
+            resume.provider_key
+            if resume is not None
+            and any(
+                candidate.key == str(resume.provider_key)
+                and candidate.configured
+                for candidate in runtime_candidates
+            )
+            else None
+        ),
+        active_agent_status=agent.status if agent else None,
+        blocked_recovery_pending=bool(
+            resume is not None and resume.status in {"PENDING", "RUNNING"}
+        ),
+        last_failure_reason=(resume.failure_classification if resume is not None else None),
+        safe_to_resume=bool(resume is not None and resume.safe_to_resume),
+    )
+    brain["recovery_resume"] = resume_projection(resume)
+
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
     approval_payload = None
     if approval is not None and pending is not None and pending.status in {"PENDING", "RESUMING"}:
@@ -291,6 +336,7 @@ def operator_projection(session: Session, journey: Journey) -> dict[str, Any]:
         "incident": incident,
         "decision": decision,
         "approval": approval_payload,
+        "brain": brain,
         "timeline": _timeline(session, journey.id),
         "advanced": {
             "guardian": (

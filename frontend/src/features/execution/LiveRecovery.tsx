@@ -590,6 +590,19 @@ export function LiveRecovery({
           <p className="v8-kicker">Journey Operator</p>
           <strong>{operator?.headline ?? (zh ? "把这趟行程交给 CityNexus" : "Let CityNexus take care of this trip")}</strong>
         </div>
+        {operator?.brain && (
+          <div className="journey-operator-brain" data-testid="journey-operator-brain">
+            <span className="v8-kicker">Planning brain</span>
+            <strong>{operator.brain.headline}</strong>
+            {operator.brain.recovery_resume.pending && (
+              <span>
+                {operator.brain.recovery_resume.safe_to_resume
+                  ? (zh ? "问题已记住，规划 AI 恢复后会继续处理。" : "I remembered the problem and will continue when planning is available.")
+                  : (zh ? "这次恢复已保留，需要安全地回到原来的处理链。" : "I kept this recovery safe and will not switch brains blindly.")}
+              </span>
+            )}
+          </div>
+        )}
         {!operator?.enabled && (
           <button
             type="button"

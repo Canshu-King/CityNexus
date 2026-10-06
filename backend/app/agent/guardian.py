@@ -12,11 +12,21 @@ from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
 from app.agent.mission import mission_payload
-from app.agent.orchestrator import configured_journey_agent
+from app.agent.operator_brain import (
+    RESUME_UNSAFE,
+    claim_resume,
+    find_recovery_resume,
+    release_resume,
+    resume_is_due,
+    upsert_recovery_resume,
+)
+from app.agent.orchestrator import configured_journey_agent_candidates
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import (
+    ActionApproval,
+    AgentPendingAction,
     AgentRun,
     AgentRunStep,
     AutopilotEnrollment,
@@ -25,6 +35,7 @@ from app.db.models import (
     Journey,
     JourneyMission,
     JourneyResilienceSnapshot,
+    OperatorRecoveryResume,
     ReplanProposal,
 )
 from app.recovery_epoch import ensure_recovery_epoch
@@ -244,17 +255,83 @@ def _model_recovery(
     trigger: Event,
     run: GuardianRun,
     evidence: dict[str, Any],
+    *,
+    resume: OperatorRecoveryResume | None = None,
 ) -> tuple[JourneyMission, AgentRun, dict[str, Any]]:
     """Run the configured Hermes/DeepSeek runtime and normalize its trace."""
 
-    recovery = _recovery_mission(session, journey, standing, trigger)
-    runtime = configured_journey_agent()
-    try:
-        result = runtime.run(session, journey=journey, mission=recovery, max_steps=10)
-    finally:
-        close = getattr(runtime, "close", None)
-        if callable(close):
-            close()
+    recovery = (
+        session.get(JourneyMission, resume.recovery_mission_id)
+        if resume is not None and resume.recovery_mission_id
+        else None
+    )
+    if recovery is None:
+        recovery = _recovery_mission(session, journey, standing, trigger)
+        if resume is not None:
+            resume.recovery_mission_id = recovery.id
+            resume.updated_at = _now().isoformat()
+            session.flush()
+    result: dict[str, Any] | None = None
+    last_error: AgentRuntimeUnavailable | None = None
+    runtimes = configured_journey_agent_candidates()
+    for index, runtime in enumerate(runtimes):
+        if resume is not None:
+            token = claim_resume(
+                session,
+                resume,
+                runtime_key=str(getattr(runtime, "provider_key", "external")),
+            )
+            if token is None:
+                raise AgentRuntimeUnavailable("Operator recovery is already owned by another runtime")
+            resume.provider_key = str(getattr(runtime, "provider_key", "external"))
+            resume.model_key = str(getattr(runtime, "model_key", "")) or resume.model_key
+        try:
+            result = runtime.run(session, journey=journey, mission=recovery, max_steps=10)
+            break
+        except AgentRuntimeUnavailable as exc:
+            last_error = exc
+            failed_agent = session.scalar(
+                select(AgentRun)
+                .where(AgentRun.mission_id == recovery.id)
+                .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
+            )
+            if failed_agent is not None:
+                failed_steps = session.scalars(
+                    select(AgentRunStep).where(AgentRunStep.run_id == failed_agent.id)
+                ).all()
+                tool_steps = [
+                    step
+                    for step in failed_steps
+                    if step.tool_name not in {"external_model_call", "recovery_epoch_guard"}
+                ]
+                approval_created = bool(
+                    session.scalar(
+                        select(ActionApproval.id).where(ActionApproval.id.in_(
+                            select(AgentPendingAction.approval_id).where(
+                                AgentPendingAction.run_id == failed_agent.id
+                            )
+                        ))
+                    )
+                )
+                run.agent_run_id = failed_agent.id
+                if tool_steps or approval_created:
+                    raise AgentRuntimeUnavailable(
+                        "Operator external handoff is unsafe after a tool or approval boundary"
+                    ) from exc
+            if resume is not None:
+                resume.status = "PENDING"
+                resume.owner_runtime_key = None
+                resume.owner_claim_token = None
+                resume.owner_claimed_at = None
+                resume.updated_at = _now().isoformat()
+            if index + 1 >= len(runtimes):
+                raise
+        finally:
+            close = getattr(runtime, "close", None)
+            if callable(close):
+                close()
+    if result is None:
+        raise last_error or AgentRuntimeUnavailable("no external Agent runtime completed")
     agent = session.get(AgentRun, result.get("run_id")) if result.get("run_id") else None
     if agent is None:
         agent = session.scalar(
@@ -383,6 +460,7 @@ def guardian_payload(
         "trigger_event_id": run.trigger_event_id,
         "trigger_kind": run.trigger_kind,
         "resilience_snapshot_id": run.resilience_snapshot_id,
+        "recovery_epoch_id": run.recovery_epoch_id,
         "proposal_id": run.proposal_id,
         "agent_run_id": run.agent_run_id,
         "agent_runtime": (
@@ -640,34 +718,56 @@ def scan_guardian(
             return guardian_payload(session, prior_mutation, deduplicated=True)
     fingerprint = _fingerprint(journey, mission, events)
     now = _now()
-    existing = _cooldown_active(
+    actionable = actionable_events
+    recovery_epoch = (
+        ensure_recovery_epoch(session, journey)
+        if mission is not None and actionable
+        else None
+    )
+    resume = find_recovery_resume(
         session,
         journey_id=journey.id,
-        evidence_fingerprint=fingerprint,
-        now=now,
+        recovery_epoch_id=recovery_epoch.id if recovery_epoch is not None else None,
     )
-    if existing is not None:
-        return guardian_payload(session, existing, deduplicated=True)
-    # The semantic fingerprint is also a durable idempotency key.  Once an
-    # equivalent incident has completed, a later refresh must not hit the
-    # Guardian unique constraint or create another PlanVersion.
-    existing = session.scalar(
-        select(GuardianRun).where(
-            GuardianRun.journey_id == journey.id,
-            GuardianRun.evidence_fingerprint == fingerprint,
+    resume_due = bool(resume is not None and resume_is_due(resume, now=now))
+    # A blocked Operator recovery is a durable queue item.  Pulses during its
+    # backoff return the same Guardian lineage and never mint another run.
+    if resume is not None and resume.status in {"PENDING", "RUNNING"}:
+        if not resume_is_due(resume, now=now):
+            prior = session.get(GuardianRun, resume.guardian_run_id) if resume.guardian_run_id else None
+            if prior is not None:
+                return guardian_payload(session, prior, deduplicated=True)
+        elif resume.status == "RUNNING" and resume.owner_claimed_at:
+            prior = session.get(GuardianRun, resume.guardian_run_id) if resume.guardian_run_id else None
+            if prior is not None and not resume_is_due(resume, now=now):
+                return guardian_payload(session, prior, deduplicated=True)
+    if not resume_due:
+        existing = _cooldown_active(
+            session,
+            journey_id=journey.id,
+            evidence_fingerprint=fingerprint,
+            now=now,
         )
-    )
-    if existing is not None:
-        if existing.status not in {"INTERRUPTED", "ABORTED"} and existing.action_status not in {
-            "UNRESOLVED",
-            "RETRYABLE_FAILURE",
-            "NO_FEASIBLE_RECOVERY",
-        }:
+        if existing is not None:
             return guardian_payload(session, existing, deduplicated=True)
-        existing.evidence_fingerprint = f"{existing.evidence_fingerprint}:retry:{existing.id}"
-        session.flush()
-
-    actionable = actionable_events
+        # The semantic fingerprint is also a durable idempotency key. Once an
+        # equivalent incident has completed, a later refresh must not mint a
+        # second recovery run.
+        existing = session.scalar(
+            select(GuardianRun).where(
+                GuardianRun.journey_id == journey.id,
+                GuardianRun.evidence_fingerprint == fingerprint,
+            )
+        )
+        if existing is not None:
+            if existing.status not in {"INTERRUPTED", "ABORTED"} and existing.action_status not in {
+                "UNRESOLVED",
+                "RETRYABLE_FAILURE",
+                "NO_FEASIBLE_RECOVERY",
+            }:
+                return guardian_payload(session, existing, deduplicated=True)
+            existing.evidence_fingerprint = f"{existing.evidence_fingerprint}:retry:{existing.id}"
+            session.flush()
     incident_fingerprints = []
     for event in events:
         try:
@@ -701,27 +801,41 @@ def scan_guardian(
         decision, action_status = "RECOVERY_REQUIRED", "PLANNING"
         summary = "Guardian found an actionable disruption and launched one bounded recovery run."
 
-    run = GuardianRun(
-        id=str(uuid4()),
-        journey_id=journey.id,
-        standing_mission_id=mission.id if mission else None,
-        trigger_event_id=None,
-        agent_run_id=None,
-        proposal_id=None,
-        decision=decision,
-        status="RUNNING" if decision == "RECOVERY_REQUIRED" else "COMPLETED",
-        action_status=action_status,
-        evidence_fingerprint=fingerprint,
-        evidence_json=_json(evidence),
-        reasoning_summary=summary,
-        active_plan_before_id=journey.active_plan_version_id,
-        active_plan_after_id=journey.active_plan_version_id,
-        created_at=now.isoformat(),
-        completed_at=None if decision == "RECOVERY_REQUIRED" else now.isoformat(),
-        cooldown_until=(now + timedelta(seconds=settings.guardian_cooldown_seconds)).isoformat(),
-    )
-    session.add(run)
-    session.flush()
+    if resume is not None and resume.status == "PENDING" and resume_is_due(resume, now=now):
+        run = session.get(GuardianRun, resume.guardian_run_id) if resume.guardian_run_id else None
+        if run is not None:
+            run.status = "RUNNING"
+            run.action_status = "PLANNING"
+            run.completed_at = None
+            run.cooldown_until = None
+            run.evidence_fingerprint = fingerprint
+            run.recovery_epoch_id = recovery_epoch.id if recovery_epoch is not None else run.recovery_epoch_id
+            session.flush()
+        else:
+            resume = None
+    if resume is None:
+        run = GuardianRun(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            standing_mission_id=mission.id if mission else None,
+            trigger_event_id=None,
+            agent_run_id=None,
+            proposal_id=None,
+            decision=decision,
+            status="RUNNING" if decision == "RECOVERY_REQUIRED" else "COMPLETED",
+            action_status=action_status,
+            evidence_fingerprint=fingerprint,
+            evidence_json=_json(evidence),
+            reasoning_summary=summary,
+            active_plan_before_id=journey.active_plan_version_id,
+            active_plan_after_id=journey.active_plan_version_id,
+            recovery_epoch_id=recovery_epoch.id if recovery_epoch is not None else None,
+            created_at=now.isoformat(),
+            completed_at=None if decision == "RECOVERY_REQUIRED" else now.isoformat(),
+            cooldown_until=(now + timedelta(seconds=settings.guardian_cooldown_seconds)).isoformat(),
+        )
+        session.add(run)
+        session.flush()
     if decision != "RECOVERY_REQUIRED":
         session.commit()
         return guardian_payload(session, run)
@@ -738,6 +852,7 @@ def scan_guardian(
     }
     session.commit()
     proposal_id = None
+    prior_resume = resume
     try:
         _recovery, agent, _model_result = _model_recovery(
             session,
@@ -746,16 +861,40 @@ def scan_guardian(
             trigger,
             run,
             evidence,
+            resume=resume,
         )
         proposal_id = run.proposal_id
         if agent.status not in {"COMPLETED", "PARTIAL"}:
             agent.status = "COMPLETED"
+        if resume is not None:
+            release_resume(resume, retry=False)
     except AgentRuntimeUnavailable as exc:
         operator_enabled = bool(
             (enrollment := session.get(AutopilotEnrollment, journey.id)) is not None
             and enrollment.enabled
         )
         if _is_live_context_trigger(trigger) or operator_enabled:
+            agent = session.get(AgentRun, run.agent_run_id) if run.agent_run_id else None
+            steps = (
+                session.scalars(
+                    select(AgentRunStep).where(AgentRunStep.run_id == agent.id)
+                ).all()
+                if agent is not None
+                else []
+            )
+            tool_step_count = sum(
+                1 for step in steps if step.tool_name not in {"external_model_call", "recovery_epoch_guard"}
+            )
+            approval_created = bool(
+                agent is not None
+                and session.scalar(
+                    select(ActionApproval.id).where(ActionApproval.journey_id == journey.id)
+                    .where(ActionApproval.id.in_(
+                        select(AgentPendingAction.approval_id).where(AgentPendingAction.run_id == agent.id)
+                    ))
+                )
+            )
+            safe_to_resume = tool_step_count == 0 and not approval_created
             completed = _now().isoformat()
             evidence["inference"] = {
                 **evidence.get("inference", {}),
@@ -763,21 +902,27 @@ def scan_guardian(
                 "runtime_unavailable": str(exc),
                 "deterministic_fallback_allowed": False,
             }
-            evidence["policy"] = {
-                "decision": "NO_FALLBACK",
-                "reason_codes": [
-                    "OPERATOR_EXTERNAL_AGENT_BLOCKED"
-                    if operator_enabled
-                    else "OPEN_WORLD_EXTERNAL_AGENT_REQUIRED"
-                ],
-            }
-            evidence["mutation"] = {"executed": False, "proposal_id": None}
-            run.status = "PARTIAL"
-            run.action_status = (
-                "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+            action_code = (
+                "OPERATOR_BRAIN_UNSAFE_TO_FAILOVER"
+                if operator_enabled and not safe_to_resume
+                else "OPERATOR_EXTERNAL_AGENT_BLOCKED"
                 if operator_enabled
                 else "RETRYABLE_FAILURE"
             )
+            evidence["policy"] = {
+                "decision": "NO_FALLBACK",
+                "reason_codes": [
+                    action_code
+                    if operator_enabled
+                    else "OPEN_WORLD_EXTERNAL_AGENT_REQUIRED"
+                ],
+                "safe_to_resume": safe_to_resume,
+                "tool_step_count": tool_step_count,
+                "approval_created": approval_created,
+            }
+            evidence["mutation"] = {"executed": False, "proposal_id": None}
+            run.status = "PARTIAL"
+            run.action_status = action_code
             run.reasoning_summary = (
                 "The Journey Operator requires its configured external Agent; "
                 "deterministic Guardian fallback was refused."
@@ -787,6 +932,38 @@ def scan_guardian(
             run.active_plan_after_id = journey.active_plan_version_id
             run.evidence_json = _json(evidence)
             run.completed_at = completed
+            if operator_enabled:
+                recovery_mission = session.scalar(
+                    select(JourneyMission)
+                    .where(JourneyMission.parent_mission_id == mission.id)
+                    .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+                )
+                resume = upsert_recovery_resume(
+                    session,
+                    journey_id=journey.id,
+                    recovery_epoch_id=recovery_epoch.id if recovery_epoch is not None else ensure_recovery_epoch(session, journey).id,
+                    event_id=trigger.id,
+                    incident_fingerprint=fingerprint,
+                    standing_mission_id=mission.id,
+                    recovery_mission_id=recovery_mission.id if recovery_mission is not None else None,
+                    guardian_run_id=run.id,
+                    active_plan_version_id=journey.active_plan_version_id,
+                    material_world_epoch=(recovery_epoch.material_world_epoch_at_open if recovery_epoch is not None else None),
+                    blocked_reason=str(exc),
+                    failure_classification=action_code,
+                    provider_key=(agent.provider_key if agent is not None else None),
+                    model_key=(agent.model_key if agent is not None else None),
+                    safe_to_resume=safe_to_resume,
+                )
+                resume.guardian_run_id = run.id
+                resume.status = "PENDING" if safe_to_resume else RESUME_UNSAFE
+                if not safe_to_resume:
+                    resume.next_retry_at = None
+                elif prior_resume is not None:
+                    # Existing queued work just consumed one bounded attempt;
+                    # advance its durable backoff before the next pulse.
+                    release_resume(resume, retry=True, reason=str(exc))
+                run.recovery_epoch_id = recovery_epoch.id if recovery_epoch is not None else run.recovery_epoch_id
             record_audit(
                 session,
                 action=(
@@ -803,6 +980,7 @@ def scan_guardian(
                     "trigger_event_id": trigger.id,
                     "action_status": run.action_status,
                     "deterministic_fallback_allowed": False,
+                    "safe_to_resume": safe_to_resume,
                 },
             )
             session.commit()
