@@ -68,6 +68,14 @@ type LaunchSetup = {
   contract?: { display_name?: string | null } | null;
 };
 
+type RouteOperation = {
+  operation_id?: string;
+  status?: string;
+  outcome?: string | null;
+  terminal?: boolean;
+  result?: { duration_min?: number | null; mobility_fact_id?: string | null } | null;
+};
+
 type Disruption = {
   id: string;
   type: string;
@@ -149,6 +157,7 @@ export function LiveRecovery({
   const [guardianWatch, setGuardianWatch] = useState<GuardianWatch | null>(null);
   const [departureReadiness, setDepartureReadiness] = useState<DepartureReadiness | null>(null);
   const [launchSetup, setLaunchSetup] = useState<LaunchSetup | null>(null);
+  const [routeOperation, setRouteOperation] = useState<RouteOperation | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -215,6 +224,26 @@ export function LiveRecovery({
       setBusy(null);
     }
   }, [journeyId, loadLaunchSetup, zh]);
+
+  const checkRoute = useCallback(async () => {
+    setBusy("route");
+    try {
+      const response = await fetch(`/api/v1/journeys/${journeyId}/routes/acquire`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requested_mode: "WALK" }),
+      });
+      if (!response.ok) throw new Error("route unavailable");
+      const body = (await response.json()) as RouteOperation;
+      setRouteOperation(body);
+      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`);
+      if (readiness.ok) setDepartureReadiness((await readiness.json()) as DepartureReadiness);
+    } catch {
+      setMessage(zh ? "暂时无法检查这段路线。" : "We couldn't check that route yet.");
+    } finally {
+      setBusy(null);
+    }
+  }, [journeyId, zh]);
 
   useEffect(() => {
     let cancelled = false;
@@ -299,6 +328,12 @@ export function LiveRecovery({
       .map((p) => String((p as { trigger_event_id?: string | null }).trigger_event_id ?? ""))
       .filter(Boolean),
   );
+  const leaveByDisplay = departureReadiness?.must_leave_by
+    ? new Date(departureReadiness.must_leave_by).toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
   const openDisruptions = disruptions.filter((d) => isDisruptionOpen(d, acceptedTriggerIds));
   const handledDisruptions = disruptions.filter((d) => !isDisruptionOpen(d, acceptedTriggerIds));
   // Acknowledged-but-unresolved events get their own copy: the traveller has
@@ -515,6 +550,27 @@ export function LiveRecovery({
           {zh
             ? `首段路线将从 ${launchSetup.contract.display_name} 规划。`
             : `Planning your first route from ${launchSetup.contract.display_name}.`}
+          {!routeOperation || routeOperation.status === "UNAVAILABLE" || routeOperation.status === "FAILED" ? (
+            <button type="button" disabled={busy !== null} onClick={() => void checkRoute()}>
+              {zh ? "检查路线" : "Check route"}
+            </button>
+          ) : null}
+          {routeOperation?.status === "RUNNING" && (
+            <small>{zh ? "正在检查从起点到下一站的路线……" : "Checking the route to your first stop…"}</small>
+          )}
+          {routeOperation?.status === "COMPLETED" && routeOperation.result?.duration_min != null && (
+            <small>
+              {zh
+                ? `约 ${routeOperation.result.duration_min} 分钟${leaveByDisplay ? ` · 建议 ${leaveByDisplay} 前出发` : ""}`
+                : `About ${routeOperation.result.duration_min} min${leaveByDisplay ? ` · leave around ${leaveByDisplay}` : ""}`}
+            </small>
+          )}
+          {routeOperation?.status === "UNAVAILABLE" && (
+            <small>{zh ? "CityNexus 暂时无法获取这段路线的可靠结果。" : "CityNexus could not get a reliable route for this leg."}</small>
+          )}
+          {routeOperation?.status === "FAILED" && (
+            <small>{zh ? "路线服务暂时不可用。" : "The route provider is unavailable right now."}</small>
+          )}
         </div>
       )}
 

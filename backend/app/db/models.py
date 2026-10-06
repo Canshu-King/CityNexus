@@ -1380,6 +1380,33 @@ class CatalogHydrationOperation(Base):
     updated_at: Mapped[str] = mapped_column(String)
 
 
+class RouteAcquisitionOperation(Base):
+    """Durable lifecycle for one exact on-demand mobility edge."""
+
+    __tablename__ = "route_acquisition_operations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), index=True
+    )
+    fingerprint: Mapped[str] = mapped_column(String)
+    origin_key: Mapped[str] = mapped_column(String)
+    target_key: Mapped[str] = mapped_column(String)
+    target_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    requested_mode: Mapped[str] = mapped_column(String)
+    provider_policy_version: Mapped[str] = mapped_column(String)
+    route_truth_policy_version: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    phase: Mapped[str | None] = mapped_column(String, nullable=True)
+    outcome: Mapped[str | None] = mapped_column(String, nullable=True)
+    request_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    queued_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
 class JourneyShareGrant(Base):
     """One share grant: a token, a visibility, and the two moments that end it.
 

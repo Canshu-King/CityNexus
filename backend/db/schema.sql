@@ -1146,6 +1146,36 @@ CREATE INDEX IF NOT EXISTS idx_catalog_hydration_destination_recent
 CREATE INDEX IF NOT EXISTS idx_catalog_hydration_journey_recent
     ON catalog_hydration_operations(journey_id, queued_at);
 
+-- R41: one durable operation for one exact grounded-origin -> target route request.
+CREATE TABLE IF NOT EXISTS route_acquisition_operations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fingerprint TEXT NOT NULL,
+    origin_key TEXT NOT NULL,
+    target_key TEXT NOT NULL,
+    target_activity_id TEXT,
+    requested_mode TEXT NOT NULL,
+    provider_policy_version TEXT NOT NULL,
+    route_truth_policy_version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'QUEUED' CHECK (status IN ('QUEUED','RUNNING','COMPLETED','UNAVAILABLE','FAILED')),
+    phase TEXT,
+    outcome TEXT,
+    request_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    queued_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_route_acquisition_one_open
+    ON route_acquisition_operations(journey_id, fingerprint)
+    WHERE status IN ('QUEUED','RUNNING');
+
+CREATE INDEX IF NOT EXISTS idx_route_acquisition_journey_recent
+    ON route_acquisition_operations(journey_id, queued_at);
+
 -- ORD-0434 step 1: a share grant is a server fact, not a URL the client assembles.
 -- One journey can hold many grants.  `expires_at` and `revoked_at` carry no DEFAULT and no
 -- sentinel: a NULL means that moment was never set, which is the only honest way to say

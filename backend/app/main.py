@@ -155,6 +155,7 @@ from app.db.models import (
     JourneyOutcomeEvent,
     JourneyTripContext,
     JourneyLaunchContext,
+    RouteAcquisitionOperation,
     LocationObservation,
     MobilityFact,
     NotificationEvent,
@@ -229,6 +230,13 @@ from app.execution.readiness import (
 )
 from app.execution.launch_setup import launch_setup_projection
 from app.execution.launch_origin import grounded_launch_origin
+from app.execution.route_session_contract import (
+    ROUTE_PROVIDER_POLICY_VERSION,
+    ROUTE_TRUTH_POLICY_VERSION,
+    RouteRequest,
+)
+from app.route_session_operations import operation_payload as route_operation_payload
+from app.route_session_operations import submit_operation as submit_route_operation
 from app.execution.truth import (
     DEVICE_LOCATION_VERIFIED_EXECUTION,
     OPERATOR_CONFIRMED_EXECUTION,
@@ -396,6 +404,7 @@ from app.schemas import (
     JourneyPatch,
     LocationObservationRequest,
     LaunchOriginRequest,
+    RouteAcquireRequest,
     ExecutionTruthAttestation,
     LuggageContextRequest,
     MobilityModeRequest,
@@ -2146,6 +2155,70 @@ def set_launch_origin(
         "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
         "physical_presence_asserted": False,
     }
+
+
+@app.post("/api/v1/journeys/{journey_id}/routes/acquire")
+def acquire_route_session(
+    journey_id: UUID,
+    payload: RouteAcquireRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Acquire exactly one server-resolved grounded-origin -> target edge."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    target = _launch_target_activity(session, journey)
+    requested = payload or RouteAcquireRequest()
+    if target is None or not target.place_id:
+        raise HTTPException(409, "exact route target is unavailable")
+    if requested.target_activity_id and str(requested.target_activity_id) != str(target.id):
+        raise HTTPException(422, "target_activity_id is not the active exact target")
+    origin = grounded_launch_origin(session, journey, target_activity=target)
+    if origin.get("state") != "READY" or not origin.get("origin_key"):
+        raise HTTPException(409, "grounded launch origin is unavailable")
+    if str(origin.get("source") or "") == "FOREGROUND_LOCATION":
+        raise HTTPException(409, "route acquisition requires an exact persisted origin Place")
+    request = RouteRequest(
+        journey_id=str(journey.id),
+        origin_key=str(origin["origin_key"]),
+        target_key=str(target.place_id),
+        target_activity_id=str(target.id),
+        requested_mode=requested.requested_mode,
+        provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+        route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+    )
+    row, reused = submit_route_operation(session, journey, request)
+    body = route_operation_payload(row, reused=reused)
+    body.update(
+        {
+            "origin": {
+                "key": origin.get("origin_key"),
+                "name": origin.get("name"),
+                "authority": origin.get("authority"),
+                "source": origin.get("source"),
+            },
+            "target": {
+                "activity_id": str(target.id),
+                "key": str(target.place_id),
+                "name": target.title,
+            },
+        }
+    )
+    return body
+
+
+@app.get("/api/v1/journeys/{journey_id}/routes/operations/{operation_id}")
+def read_route_session(
+    journey_id: UUID,
+    operation_id: str,
+    session: Session = Depends(get_session),
+):
+    """Read one route operation without contacting a provider."""
+
+    require(session, Journey, str(journey_id), "Journey")
+    row = session.get(RouteAcquisitionOperation, operation_id)
+    if row is None or str(row.journey_id) != str(journey_id):
+        raise HTTPException(404, f"Route acquisition operation {operation_id} was not found")
+    return route_operation_payload(row)
 
 
 @app.post(

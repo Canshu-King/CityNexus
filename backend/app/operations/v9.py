@@ -45,6 +45,7 @@ from app.db.models import (
     Place,
     PlanVersion,
     PushSubscription,
+    RouteAcquisitionOperation,
     StayJourneyOption,
     TransportReservation,
 )
@@ -1364,6 +1365,31 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             offer = session.get(AccommodationOfferSnapshot, str(stay_offer_id))
     execution = _execution_truth(activities, legs, journey.current_activity_id)
     readiness = departure_readiness_projection(session, journey, now=reference.astimezone(timezone.utc))
+    route_operation = session.scalar(
+        select(RouteAcquisitionOperation)
+        .where(
+            RouteAcquisitionOperation.journey_id == journey.id,
+            RouteAcquisitionOperation.status.in_(("COMPLETED", "UNAVAILABLE", "FAILED")),
+        )
+        .order_by(RouteAcquisitionOperation.finished_at.desc(), RouteAcquisitionOperation.updated_at.desc())
+    )
+    route_session = None
+    if route_operation is not None:
+        route_session = {
+            "operation_id": route_operation.id,
+            "status": route_operation.status,
+            "phase": route_operation.phase,
+            "outcome": route_operation.outcome,
+            "fingerprint": route_operation.fingerprint,
+            "origin_key": route_operation.origin_key,
+            "target_key": route_operation.target_key,
+            "target_activity_id": route_operation.target_activity_id,
+            "requested_mode": route_operation.requested_mode,
+            "result": _load(route_operation.result_json, {}),
+            "error": _load(route_operation.error_json, {}),
+            "finished_at": route_operation.finished_at,
+            "freshness_semantics": "LAST_TERMINAL_ROUTE_SESSION",
+        }
     provider_times = [item.captured_at for item in legs if item.captured_at]
     now = execution_clock.now().isoformat()
     existing = session.get(OfflineJourneySnapshot, journey.id)
@@ -1414,6 +1440,7 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             "captured_at": now,
             "freshness_semantics": "CAPTURED_READ_MODEL",
         },
+        "route_session": route_session,
     }
     freshness = {
         "latest_provider_capture_at": max(provider_times) if provider_times else None,
@@ -1424,6 +1451,7 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             "route": (readiness.get("next_move") or {}).get("route_evidence", {}).get("captured_at"),
             "launch_origin": (readiness.get("launch_origin") or {}).get("captured_at"),
             "launch_edge": (readiness.get("launch_edge") or {}).get("captured_at"),
+            "route_session": route_operation.finished_at if route_operation else None,
             "semantics": "last_known_at_capture",
         },
     }

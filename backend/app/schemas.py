@@ -434,6 +434,15 @@ class LaunchOriginRequest(BaseModel):
     place_id: str | None = None
 
 
+class RouteAcquireRequest(BaseModel):
+    """Request exactly one server-resolved route edge; no client coordinates."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    target_activity_id: str | None = None
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
 class ExecutionTruthAttestation(BaseModel):
     """Optional evidence class for one execution-state transition.
 
