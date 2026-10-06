@@ -1,0 +1,1016 @@
+{
+  "instrument": "cmdra_0553_caps_context_r2",
+  "script_sha256": "1b48d81c4bb59f0eef7d21c5ea9fc5feedf686116e0be081480acf797220a429",
+  "base": "http://127.0.0.1:49912",
+  "locale": "en",
+  "viewport": "390x844",
+  "entryAssets": [
+    "/assets/index-ay8Jsqaq.js"
+  ],
+  "routesWalked": 14,
+  "apiResponses": 21,
+  "apiResponseList": [
+    {
+      "url": "/api/v1/demo/scene",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 1006
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 6089
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 527
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 1679
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 1198
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2660
+    },
+    {
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 408
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 978297
+    },
+    {
+      "url": "/api/v1/places?city_code=CNX-DEMO",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2155
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 95
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 20800
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/web-observations",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 103
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/execution-clock",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 209
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/checkins",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/collections?traveler_id=11111111-1111-4111-8111-111111111111",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/inbox",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 65
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/memory",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 421
+    },
+    {
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 357
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/recycle-bin/journeys",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 2
+    },
+    {
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/push-config",
+      "status": 200,
+      "ctype": "application/json",
+      "bytes": 122
+    }
+  ],
+  "server_index_file": "(none -- classification done by _census_r5.py)",
+  "indexed_server_strings": 0,
+  "totals": {
+    "painted_hits": 32,
+    "distinct_tokens": 29,
+    "routes_with_hits": 7,
+    "server_answer_tokens": 0,
+    "style_only_tokens": 29
+  },
+  "pageErrors": [],
+  "perRoute": {
+    "/v8/hub": {
+      "hits": [],
+      "docChars": 6376
+    },
+    "/v8/live": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NEXT",
+          "text_head": "NEXT · Nexus River Cruise Pier · Transit · duration pending",
+          "tag": "p",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "p",
+            "div",
+            "div.v8-live-now",
+            "div.v8-live-main"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NEXT",
+          "text_head": "NEXT · LEAVE BY",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div.v8-next-card",
+            "div.v8-live-side",
+            "div.cn-live-secondary"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "LEAVE",
+          "text_head": "NEXT · LEAVE BY",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div.v8-next-card",
+            "div.v8-live-side",
+            "div.cn-live-secondary"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NAVIGATE",
+          "text_head": "NAVIGATE →",
+          "tag": "a",
+          "cls": "v9-navigate",
+          "standalone_line": false,
+          "ancestors": [
+            "a.v9-navigate",
+            "div.v8-next-card",
+            "div.v8-live-side",
+            "div.cn-live-secondary"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "RISK",
+          "text_head": "RISK",
+          "tag": "b",
+          "cls": "",
+          "standalone_line": true,
+          "ancestors": [
+            "b",
+            "div.v9-risk",
+            "div.v8-next-card",
+            "div.v8-live-side"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "LIVE",
+          "text_head": "LIVE STATUS",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "div.v10-execution-heading",
+            "section.v10-execution-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STATUS",
+          "text_head": "LIVE STATUS",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "div.v10-execution-heading",
+            "section.v10-execution-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "CLOCK",
+          "text_head": "CLOCK",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": true,
+          "ancestors": [
+            "span",
+            "div.v10-metric",
+            "div.v10-execution-grid",
+            "section.v10-execution-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "CURRENT",
+          "text_head": "CURRENT STEP",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div.v10-metric",
+            "div.v10-execution-grid",
+            "section.v10-execution-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STEP",
+          "text_head": "CURRENT STEP",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div.v10-metric",
+            "div.v10-execution-grid",
+            "section.v10-execution-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "OFFLINE",
+          "text_head": "OFFLINE",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": true,
+          "ancestors": [
+            "span",
+            "div.v10-metric",
+            "div.v10-execution-grid",
+            "section.v10-execution-panel"
+          ]
+        }
+      ],
+      "docChars": 1278
+    },
+    "/v8/map": {
+      "hits": [],
+      "docChars": 1010
+    },
+    "/v8/studio": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STAY",
+          "text_head": "NO STAY SELECTED",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div.v8-aside-heading",
+            "aside.v8-studio-aside",
+            "div.v8-studio-layout"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "SELECTED",
+          "text_head": "NO STAY SELECTED",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div.v8-aside-heading",
+            "aside.v8-studio-aside",
+            "div.v8-studio-layout"
+          ]
+        }
+      ],
+      "docChars": 636
+    },
+    "/v8/stay": {
+      "hits": [],
+      "docChars": 495
+    },
+    "/v8/discover": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DISCOVERY",
+          "text_head": "CN / DISCOVERY",
+          "tag": "span",
+          "cls": "v8-agent-mark",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-agent-mark",
+            "div.v8-agent-copy",
+            "div.v8-agent-composer-card",
+            "section.v8-page"
+          ]
+        }
+      ],
+      "docChars": 1140
+    },
+    "/v8/bookings": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as a durable commitment",
+          "tag": "p",
+          "cls": "v8-lede",
+          "standalone_line": false,
+          "ancestors": [
+            "p.v8-lede",
+            "div",
+            "div.v8-page-intro.compact",
+            "section.v8-page"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirmation text and scree",
+          "tag": "p",
+          "cls": "v8-lede",
+          "standalone_line": false,
+          "ancestors": [
+            "p.v8-lede",
+            "aside.v9-inbox",
+            "div.v9-wallet-layout",
+            "section.v8-page"
+          ]
+        }
+      ],
+      "docChars": 1521
+    },
+    "/v8/agent": {
+      "hits": [],
+      "docChars": 857
+    },
+    "/v8/authoritative": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "AUTHORITATIVE",
+          "text_head": "AUTHORITATIVE JOURNEY",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-authoritative-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JOURNEY",
+          "text_head": "AUTHORITATIVE JOURNEY",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-authoritative-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NEXT",
+          "text_head": "NEXT",
+          "tag": "span",
+          "cls": "v12-state-kicker",
+          "standalone_line": true,
+          "ancestors": [
+            "span.v12-state-kicker",
+            "article.v12-state-card.next",
+            "div.v12-now-next",
+            "section.v12-authoritative-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "TRIP",
+          "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-trip-studio"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "STUDIO",
+          "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-trip-studio"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DRAFT",
+          "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-trip-studio"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "THEN",
+          "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-trip-studio"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "ACCEPT",
+          "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-trip-studio"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "REALITY",
+          "text_head": "V14 · REALITY CHANGED",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-authoritative-panel"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "CHANGED",
+          "text_head": "V14 · REALITY CHANGED",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": false,
+          "ancestors": [
+            "span.v8-kicker",
+            "div",
+            "header.v12-panel-header",
+            "section.v12-authoritative-panel"
+          ]
+        }
+      ],
+      "docChars": 3472
+    },
+    "/v8/intelligence": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "POLICY",
+          "text_head": "POLICY",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": true,
+          "ancestors": [
+            "span",
+            "div",
+            "div.v8-intel-facts",
+            "div.v8-intelligence-grid"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "POST",
+          "text_head": "POST-ACTION GATE",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div",
+            "div.v8-intel-facts",
+            "div.v8-intelligence-grid"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "ACTION",
+          "text_head": "POST-ACTION GATE",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div",
+            "div.v8-intel-facts",
+            "div.v8-intelligence-grid"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "GATE",
+          "text_head": "POST-ACTION GATE",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": false,
+          "ancestors": [
+            "span",
+            "div",
+            "div.v8-intel-facts",
+            "div.v8-intelligence-grid"
+          ]
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "COMMITMENT",
+          "text_head": "COMMITMENT",
+          "tag": "span",
+          "cls": "",
+          "standalone_line": true,
+          "ancestors": [
+            "span",
+            "div",
+            "div.v8-intel-facts",
+            "div.v8-intelligence-grid"
+          ]
+        }
+      ],
+      "docChars": 945
+    },
+    "/v8/twin": {
+      "hits": [],
+      "docChars": 920
+    },
+    "/v8/trash": {
+      "hits": [],
+      "docChars": 266
+    },
+    "/v8/trips": {
+      "hits": [],
+      "docChars": 1158
+    },
+    "/v8/me": {
+      "hits": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "NOTIFICATIONS",
+          "text_head": "NOTIFICATIONS",
+          "tag": "span",
+          "cls": "v8-kicker",
+          "standalone_line": true,
+          "ancestors": [
+            "span.v8-kicker",
+            "article.v8-me-card",
+            "div.v8-me-grid",
+            "section.v8-page"
+          ]
+        }
+      ],
+      "docChars": 624
+    }
+  },
+  "census": {
+    "NEXT": {
+      "token": "NEXT",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 2,
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "p": 1,
+        "span": 1,
+        "v12-state-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "LEAVE": {
+      "token": "LEAVE",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "NAVIGATE": {
+      "token": "NAVIGATE",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "v9-navigate": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "RISK": {
+      "token": "RISK",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "b": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "LIVE": {
+      "token": "LIVE",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "STATUS": {
+      "token": "STATUS",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "CLOCK": {
+      "token": "CLOCK",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "CURRENT": {
+      "token": "CURRENT",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "STEP": {
+      "token": "STEP",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "OFFLINE": {
+      "token": "OFFLINE",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/live": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "STAY": {
+      "token": "STAY",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/studio": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "SELECTED": {
+      "token": "SELECTED",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/studio": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "DISCOVERY": {
+      "token": "DISCOVERY",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/discover": 1
+      },
+      "slots": {
+        "v8-agent-mark": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "JSON": {
+      "token": "JSON",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/bookings": 2
+      },
+      "slots": {
+        "v8-lede": 2
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "AUTHORITATIVE": {
+      "token": "AUTHORITATIVE",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "JOURNEY": {
+      "token": "JOURNEY",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "TRIP": {
+      "token": "TRIP",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "STUDIO": {
+      "token": "STUDIO",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "DRAFT": {
+      "token": "DRAFT",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "THEN": {
+      "token": "THEN",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "ACCEPT": {
+      "token": "ACCEPT",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "REALITY": {
+      "token": "REALITY",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "CHANGED": {
+      "token": "CHANGED",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/authoritative": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "POLICY": {
+      "token": "POLICY",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/intelligence": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "POST": {
+      "token": "POST",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/intelligence": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "ACTION": {
+      "token": "ACTION",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/intelligence": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "GATE": {
+      "token": "GATE",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/intelligence": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "COMMITMENT": {
+      "token": "COMMITMENT",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/intelligence": 1
+      },
+      "slots": {
+        "span": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    },
+    "NOTIFICATIONS": {
+      "token": "NOTIFICATIONS",
+      "kind": "ALLCAPS_WORD",
+      "routes": {
+        "/v8/me": 1
+      },
+      "slots": {
+        "v8-kicker": 1
+      },
+      "server_answered_fields": [],
+      "provenance": "not-in-any-response"
+    }
+  }
+}
