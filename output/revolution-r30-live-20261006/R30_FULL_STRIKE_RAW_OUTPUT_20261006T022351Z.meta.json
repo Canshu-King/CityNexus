@@ -1,0 +1,19 @@
+{
+  "command": "cd backend && python run_r30_live.py --full-r30",
+  "interpreter": "backend/.venv/Scripts/python.exe",
+  "config_path": "C:\\Users\\仓鼠王\\WorkBuddy\\2026-09-15-15-47-27\\wb2api\\config.json",
+  "config_exists": true,
+  "started_utc": "20261006T022351Z",
+  "ended_utc": "2026-10-06T02:42:08.3471997Z",
+  "exit_code": 0,
+  "raw_output": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\output\\revolution-r30-live-20261006\\R30_FULL_STRIKE_RAW_OUTPUT_20261006T022351Z.log",
+  "first_failure": {
+    "kind": "FAILED_EXTERNAL",
+    "model": "cn:glm-5.3-flash",
+    "provider": "hermes-compat",
+    "reason_code": "MODEL_TIMEOUT",
+    "sequence_no": 10,
+    "run_id": "e0571afd-c495-4317-81ca-13e0791bd5f8"
+  },
+  "top_level_failure": null
+}
