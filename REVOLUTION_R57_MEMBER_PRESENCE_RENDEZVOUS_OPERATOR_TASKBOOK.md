@@ -35,6 +35,40 @@ GPT additionally closed three R56 seams before this baton:
 
 Do **not** reopen R33-R56 historical closures.
 
+## Relay preflight — validate GPT's R56 seam fixes, then move on
+
+Do not re-open R56 design.
+
+Before starting R57, run exactly this focused preflight from the latest branch:
+
+```bash
+git fetch origin
+git checkout gpt/revolution-r33-open-world-journey-adaptation
+git reset --hard origin/gpt/revolution-r33-open-world-journey-adaptation
+
+cd backend
+python -m pytest -q tests/test_in_transit_reroute.py
+
+cd ../frontend
+npm run typecheck
+npx playwright test e2e/r56-in-transit-reroute.spec.ts --project=chromium
+```
+
+What this preflight is checking:
+- same continuous trusted deviation does not create an Event per GPS sample;
+- the deviation Event's causal activity is the current EN_ROUTE stop, not the downstream protected stop;
+- a resolved incident can later recur as a new incident;
+- R56 uses the shared execution clock for freshness;
+- strict-auth foreground location capture carries the signed Traveler bearer;
+- the subsequent reroute carries the same signed bearer and exact observation id;
+- the UI shows a grounded new ETA while saying the active plan stayed unchanged.
+
+No real external model call is required.
+No live route provider call is required.
+Do not rerun R33-R55.
+
+If one of these focused tests fails, repair the actual integration without weakening the authority/provenance semantics. Once green, **start R57 immediately**.
+
 ## The product gap
 
 Today `LocationObservation` is Journey-scoped.
