@@ -307,16 +307,14 @@ def take_over_execution_lease(
 
     successor_id = str(uuid4())
     if previous.status == ACTIVE:
-        # Expiry made it non-spendable before this transaction.  Takeover now
-        # durably fences that generation.
+        # Expiry made it non-spendable before this transaction.  Fence the old
+        # ACTIVE row first so the database one-ACTIVE index can arbitrate the
+        # successor insert across processes.
         previous.status = SUPERSEDED
         previous.released_at = _iso(stamp)
-        previous.superseded_by_lease_id = successor_id
-    elif previous.status in {EXPIRED, RELEASED, SUPERSEDED}:
-        previous.superseded_by_lease_id = (
-            previous.superseded_by_lease_id or successor_id
-        )
-    else:  # defensive against future status expansion
+        session.flush()
+    elif previous.status not in {EXPIRED, RELEASED, SUPERSEDED}:
+        # Defensive against future status expansion.
         raise ExecutionLeaseConflict(
             previous,
             reason=f"UNSUPPORTED_PREDECESSOR_STATUS_{previous.status}",
@@ -340,6 +338,9 @@ def take_over_execution_lease(
     )
     session.add(row)
     session.flush()
+    if previous.superseded_by_lease_id is None:
+        previous.superseded_by_lease_id = row.id
+        session.flush()
     return row
 
 
