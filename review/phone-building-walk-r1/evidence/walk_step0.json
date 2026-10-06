@@ -1,0 +1,162 @@
+{
+ "step": "first_screen",
+ "base": "http://127.0.0.1:4881",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Wed Oct 07 2026 00:15:29 GMT+0800 (中国标准时间)",
+ "page_errors": [],
+ "console_errors": [],
+ "url_after_load": "http://127.0.0.1:4881/",
+ "state": {
+  "path": "/",
+  "rendered_chars": 168,
+  "body_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步",
+  "pressables": [
+   {
+    "tag": "BUTTON",
+    "testid": null,
+    "words": "EN",
+    "disabled": false,
+    "href": null,
+    "aria": "Switch language"
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "trial-show-advanced",
+    "words": "高级设置",
+    "disabled": false,
+    "href": null,
+    "aria": null
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "trial-missing-jump",
+    "words": "目的地",
+    "disabled": false,
+    "href": null,
+    "aria": null
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "trial-missing-jump",
+    "words": "抵达地点",
+    "disabled": false,
+    "href": null,
+    "aria": null
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "trial-missing-jump",
+    "words": "离开地点",
+    "disabled": false,
+    "href": null,
+    "aria": null
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "trial-tianjin-demo",
+    "words": "使用封存的演示行程",
+    "disabled": false,
+    "href": null,
+    "aria": null
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "trial-next",
+    "words": "下一步",
+    "disabled": false,
+    "href": null,
+    "aria": null
+   },
+   {
+    "tag": "BUTTON",
+    "testid": "sim-ball",
+    "words": "",
+    "disabled": false,
+    "href": null,
+    "aria": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-10-10 13:20 +08:00"
+   }
+  ],
+  "testids": {
+   "trial-setup": 1,
+   "trial-scroll": 1,
+   "trial-steps": 1,
+   "trial-step-1": 1,
+   "trial-step-2": 1,
+   "trial-step-3": 1,
+   "trial-step1-body": 1,
+   "trial-city": 1,
+   "trial-supported-cities": 1,
+   "trial-supported-toggle": 1,
+   "trial-supported-group-supported": 1,
+   "trial-supported-group-rule-supported": 1,
+   "trial-supported-none-supported": 1,
+   "trial-supported-group-needs_lookup": 1,
+   "trial-supported-group-rule-needs_lookup": 1,
+   "trial-supported-none-needs_lookup": 1,
+   "trial-supported-group-unknown": 1,
+   "trial-supported-group-rule-unknown": 1,
+   "trial-supported-row-厦门": 1,
+   "trial-supported-identity-厦门": 1,
+   "trial-supported-fields-厦门": 1,
+   "trial-supported-row-北京": 1,
+   "trial-supported-identity-北京": 1,
+   "trial-supported-fields-北京": 1,
+   "trial-supported-row-上海": 1,
+   "trial-supported-identity-上海": 1,
+   "trial-supported-fields-上海": 1,
+   "trial-supported-row-天津": 1,
+   "trial-supported-identity-天津": 1,
+   "trial-supported-fields-天津": 1,
+   "trial-supported-row-福州": 1,
+   "trial-supported-identity-福州": 1,
+   "trial-supported-fields-福州": 1,
+   "trial-supported-row-广州": 1,
+   "trial-supported-identity-广州": 1,
+   "trial-supported-fields-广州": 1,
+   "trial-supported-row-深圳": 1,
+   "trial-supported-identity-深圳": 1,
+   "trial-supported-fields-深圳": 1,
+   "trial-supported-row-成都": 1,
+   "trial-supported-identity-成都": 1,
+   "trial-supported-fields-成都": 1,
+   "trial-supported-row-杭州": 1,
+   "trial-supported-identity-杭州": 1,
+   "trial-supported-fields-杭州": 1,
+   "trial-supported-row-东京": 1,
+   "trial-supported-identity-东京": 1,
+   "trial-supported-fields-东京": 1,
+   "trial-supported-row-新加坡": 1,
+   "trial-supported-identity-新加坡": 1,
+   "trial-supported-fields-新加坡": 1,
+   "trial-arrival": 1,
+   "trial-departure": 1,
+   "trial-start": 1,
+   "trial-end": 1,
+   "trial-country": 1,
+   "trial-timezone": 1,
+   "trial-currency": 1,
+   "trial-show-advanced": 1,
+   "trial-required-hint": 1,
+   "trial-missing-jump": 3,
+   "trial-next-reason": 1,
+   "trial-tianjin-demo": 1,
+   "trial-sticky-cta": 1,
+   "trial-next": 1,
+   "sim-float": 1,
+   "sim-ball": 1,
+   "sim-ball-dot": 1
+  },
+  "nav": [],
+  "suspicious": [
+   {
+    "kind": "UPPER_SNAKE_TOKEN",
+    "hits": [
+     "CITYNEXUS"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,12 @@
+[
+ ["tools/building_stack_up_r1.py", "tools"],
+ ["tools/walk_step0.cjs", "tools"],
+ ["tools/walk_book.cjs", "tools"],
+ ["tools/walk_manual.cjs", "tools"],
+ ["evidence/walk_book.json", "evidence"],
+ ["evidence/walk_manual.json", "evidence"],
+ ["evidence/walk_step0.json", "evidence"],
+ ["evidence/walk_defect_preview.json", "evidence"],
+ ["run/walk_manual_manifest.json", "run"],
+ ["run/commit_walk_manual_msg.txt", "run"]
+]
