@@ -360,6 +360,20 @@ async def refresh_weather_runtime(
             )
             is not None
         ]
+        activity_risk_facts = [
+            attribution.to_evidence()
+            for fact in snapshot.facts
+            for activity in activities
+            if (
+                attribution := attribute_weather_fact_to_activity(
+                    journey=journey,
+                    activity=activity,
+                    place=place,
+                    fact=fact,
+                )
+            )
+            is not None
+        ]
         provider_observation = ProviderObservation(
             id=str(uuid4()),
             journey_id=journey.id,
@@ -378,6 +392,9 @@ async def refresh_weather_runtime(
                     # They remain provider context even when no risk policy
                     # promotes them into a PROVIDER_VERIFIED Event.
                     "activity_observations": activity_observations,
+                    # Only this subset is material to a Journey Activity. The
+                    # complete risk snapshot remains frozen separately.
+                    "activity_risk_facts": activity_risk_facts,
                     "target_times": [
                         item.at.astimezone(timezone.utc).isoformat() for item in observations
                     ],
