@@ -556,9 +556,26 @@ export interface GroupRendezvousRouteResult {
     provider?: string | null;
     provenance?: string | null;
   };
-  authority: "ADVISORY_FOREGROUND_LOCATION";
+  authority: "ADVISORY_FOREGROUND_LOCATION" | "TRUSTED_MEMBER_LOCATION_ROUTE";
+  shared_commitment_risk?: {
+    state: string;
+    authority?: string;
+    next_commitment?: {
+      commitment_id?: string;
+      activity_id?: string;
+      title?: string;
+      scheduled_at?: string;
+      safety_buffer_min?: number;
+    } | null;
+    predicted_arrival_at?: string | null;
+    slack_after_buffer_min?: number | null;
+    route_duration_min?: number;
+    basis?: string;
+  } | null;
+  member_risk_event_id?: string | null;
+  guardian_triggered: boolean;
+  guardian?: Record<string, unknown> | null;
   plan_unchanged: boolean;
-  guardian_triggered: false;
 }
 
 export interface JourneyTransitProjection {
