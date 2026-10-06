@@ -24,8 +24,39 @@ AUTHENTICATED_MEMBER_CONSENT = "AUTHENTICATED_MEMBER_CONSENT"
 UNANIMOUS_DOMINANCE = "UNANIMOUS_DOMINANCE"
 _MODES = {AUTHENTICATED_MEMBER_CONSENT, UNANIMOUS_DOMINANCE}
 COLLECTIVE_SEMANTIC_EPOCH_SCHEMA = "citynexus.collective-semantic-decision-epoch.v1"
+AUTHENTICATED_COLLECTIVE_DECISION_EPOCH_SCHEMA = "citynexus.collective-decision-epoch.v1"
 COLLECTIVE_WORLD_EPOCH_SCHEMA = "citynexus.collective-material-world-epoch.v1"
 COLLECTIVE_SURFACE_SCHEMA = "citynexus.collective-candidate-surface.v1"
+
+
+def collective_authority_provenance(
+    authority_mode: str | None,
+) -> dict[str, Any]:
+    """Describe the builder that actually produced each authority fact."""
+
+    if authority_mode == AUTHENTICATED_MEMBER_CONSENT:
+        decision = {
+            "source": "AUTHENTICATED_MEMBER_COLLECTIVE_DECISION_EPOCH",
+            "schema": AUTHENTICATED_COLLECTIVE_DECISION_EPOCH_SCHEMA,
+        }
+    elif authority_mode == UNANIMOUS_DOMINANCE:
+        decision = {
+            "source": "ALGORITHMIC_UNANIMOUS_SEMANTIC_EPOCH",
+            "schema": COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
+        }
+    else:
+        decision = {"source": None, "schema": None}
+    return {
+        "decision_epoch": decision,
+        "material_world_epoch": {
+            "source": "SERVER_COLLECTIVE_MATERIAL_WORLD_EPOCH",
+            "schema": COLLECTIVE_WORLD_EPOCH_SCHEMA,
+        },
+        "candidate_surface_fingerprint": {
+            "source": "SERVER_CANDIDATE_FIT_SURFACE",
+            "schema": COLLECTIVE_SURFACE_SCHEMA,
+        },
+    }
 
 
 def _now() -> str:
