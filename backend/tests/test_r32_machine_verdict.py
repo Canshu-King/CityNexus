@@ -182,6 +182,137 @@ def test_missing_new_evidence_fields_remain_not_proven_not_contradicted():
     assert result["overall"] == "NOT_PROVEN"
 
 
+def _successful_autonomous_mutation_checkpoint() -> dict:
+    checkpoint = _checkpoint()
+    checkpoint["authority_setup"] = {
+        "requested_member_preference": {
+            "category": "interest",
+            "key": "garden",
+            "value": True,
+            "weight": 1.0,
+        },
+        "member_preferences": [
+            {"member_id": "member-a", "status_code": 200},
+            {"member_id": "member-b", "status_code": 200},
+        ],
+        "owner_policy": {
+            "mode": "AUTONOMOUS",
+            "auto_accept_replan": True,
+            "max_auto_replan_cost_delta_minor": 25000,
+            "max_auto_loss_minor": 25000,
+            "max_auto_schedule_drift_min": 240,
+        },
+        "timing": "PRE_SHOCK_STANDING_AUTHORITY",
+        "human_action_after_shock": False,
+    }
+    checkpoint["final"]["journey"]["active_plan_version_id"] = "plan-r2"
+    checkpoint["final"]["proposals"] = [
+        {
+            "id": "proposal-r2",
+            "trigger_event_id": "event-a",
+            "proposed_plan_version_id": "plan-r2",
+            "status": "ACCEPTED",
+            "recovery_epoch_id": "r2",
+            "source_agent_run_id": "agent-b",
+        }
+    ]
+    checkpoint["final"]["receipts"] = [
+        {
+            "id": "receipt-r2",
+            "proposal_id": "proposal-r2",
+            "plan_version_id": "plan-r2",
+            "authority_mode": "UNANIMOUS_DOMINANCE",
+            "recovery_epoch_id": "r2",
+            "source_agent_run_id": "agent-b",
+            "classification": "UNANIMOUS_DOMINANCE",
+            "invalidated_at": None,
+        }
+    ]
+    checkpoint["final"]["steps"].append(
+        {
+            "run_id": "agent-b",
+            "tool_name": "accept_replan",
+            "status": "COMPLETED",
+            "result": {
+                "executed": True,
+                "collective_authority_receipt_id": "receipt-r2",
+            },
+        }
+    )
+    checkpoint["final"]["audits"] = [
+        {
+            "action": "replan.accepted",
+            "entity_id": "proposal-r2",
+            "after": {
+                "collective_authority": {
+                    "receipt_id": "receipt-r2",
+                    "receipt": {
+                        "receipt_id": "receipt-r2",
+                        "authority_mode": "UNANIMOUS_DOMINANCE",
+                        "recovery_epoch_id": "r2",
+                        "source_agent_run_id": "agent-b",
+                        "provenance": {
+                            "decision_epoch": {
+                                "source": (
+                                    "ALGORITHMIC_UNANIMOUS_SEMANTIC_EPOCH"
+                                )
+                            }
+                        },
+                    },
+                    "candidate_surface_scope": "RECOVERY_EPOCH_TRIGGER",
+                    "candidate_surface_recovery_epoch_id": "r2",
+                    "candidate_surface_trigger_event_id": "event-a",
+                }
+            },
+        }
+    ]
+    return checkpoint
+
+
+def test_complete_b_r2_unanimous_mutation_path_can_prove_core():
+    result = verdict(
+        _successful_autonomous_mutation_checkpoint(),
+        regression={"exit_code": 0, "passed": 132, "failed": 0},
+    )
+
+    assert result["overall"] == "PROVEN"
+    assert (
+        result["dimensions"]["arrival_order_not_authority"]["verdict"]
+        == "PROVEN"
+    )
+    assert (
+        result["dimensions"]["authority_provenance_mode_accurate"]["verdict"]
+        == "PROVEN"
+    )
+    assert (
+        result["dimensions"]["current_surface_epoch_pure"]["verdict"]
+        == "PROVEN"
+    )
+    assert "approval_not_retargeted" in result["coverage_not_proven"]
+    assert (
+        "no_duplicate_continuation_side_effect"
+        in result["coverage_not_proven"]
+    )
+
+
+def test_unanimous_receipt_cannot_borrow_stale_agent_a_lineage():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    checkpoint["final"]["receipts"][0][
+        "source_agent_run_id"
+    ] = "agent-a"
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 132, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["authority_provenance_mode_accurate"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
 def test_dirty_source_state_cannot_be_proven():
     checkpoint = _checkpoint()
     checkpoint["source_receipt"]["tracked_dirty_before_strike"] = True
