@@ -553,6 +553,28 @@ CREATE TABLE IF NOT EXISTS journey_missions (
     failure_reason TEXT
 );
 
+CREATE TABLE IF NOT EXISTS agent_execution_leases (
+    id TEXT PRIMARY KEY,
+    mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    generation INTEGER NOT NULL,
+    owner_worker_id TEXT NOT NULL,
+    recovery_epoch_id_at_acquire TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'ACTIVE'
+        CHECK (status IN ('ACTIVE','EXPIRED','SUPERSEDED','RELEASED')),
+    acquired_at TEXT NOT NULL,
+    heartbeat_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    released_at TEXT,
+    superseded_by_lease_id TEXT REFERENCES agent_execution_leases(id) ON DELETE SET NULL,
+    UNIQUE(mission_id, generation)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_agent_execution_leases_one_active
+    ON agent_execution_leases(mission_id) WHERE status = 'ACTIVE';
+CREATE INDEX IF NOT EXISTS idx_agent_execution_leases_mission_status
+    ON agent_execution_leases(mission_id, status, generation);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,
@@ -565,7 +587,10 @@ CREATE TABLE IF NOT EXISTS agent_runs (
     created_at TEXT NOT NULL,
     started_at TEXT NOT NULL,
     completed_at TEXT,
-    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    execution_lease_id TEXT REFERENCES agent_execution_leases(id) ON DELETE SET NULL,
+    execution_lease_generation INTEGER,
+    worker_id TEXT
 );
 
 CREATE TABLE IF NOT EXISTS agent_run_steps (
