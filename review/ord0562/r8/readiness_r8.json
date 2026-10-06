@@ -1,5 +1,5 @@
 {
- "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
+ "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
  "ruler_branch_sha": "1acdeaafa8c349f52f7919f05381cb5a6f78bda1",
  "ruler_blob": "d5280febffc8094aa8f1d9eb1fcb80ae1b7664e4",
  "ruler_path": "tools/cff87c64_landing_readiness_r1.py",
@@ -8,9 +8,9 @@
    "name": "singular_plural_component_r6",
    "path": "frontend/src/app/V8Experience.tsx",
    "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r7",
-   "base_tip": "8996eee4fb9fb4e159588305223ef421728c4e72",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
-   "branch_sha": "b6824afe3097b5ccaad5dde6e0622a0f74560854",
+   "base_tip": "32372c7e57611f73782fdc607d929735224cf657",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
+   "branch_sha": "d4572b86f0deac72e6a382b4fb4aecab6a948479",
    "tip_blob": "5d62f7bc78a58369d871a37c820e0b9a1a6076e6",
    "branch_blob": "19b89006617defc2d8ad8fa98ece2f35bee113e5",
    "base_blob": "5d62f7bc78a58369d871a37c820e0b9a1a6076e6",
@@ -20,9 +20,9 @@
    "name": "count_noun_ruler_r6",
    "path": "frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
    "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r7",
-   "base_tip": "8996eee4fb9fb4e159588305223ef421728c4e72",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
-   "branch_sha": "b6824afe3097b5ccaad5dde6e0622a0f74560854",
+   "base_tip": "32372c7e57611f73782fdc607d929735224cf657",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
+   "branch_sha": "d4572b86f0deac72e6a382b4fb4aecab6a948479",
    "tip_blob": "fc2c06432044e2870bf9c682e1a27b31dbf83610",
    "branch_blob": "9344249444808bfbfa8b28cf9c38efbe912e9559",
    "base_blob": "fc2c06432044e2870bf9c682e1a27b31dbf83610",
@@ -33,7 +33,7 @@
    "path": "frontend/src/lib/displayVocabulary.ts",
    "branch": "refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3",
    "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
    "branch_sha": "56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a",
    "tip_blob": "bdbaa3da9bb3ad996a6238256abc5622915a93d1",
    "branch_blob": "e3255a21678207673556977cf61081391c86992e",
@@ -45,7 +45,7 @@
    "path": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
    "branch": "refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3",
    "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
    "branch_sha": "56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a",
    "tip_blob": "24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a",
    "branch_blob": "20c2da725dc3b1e3b3012b782acce81abaaae09a",
@@ -59,7 +59,7 @@
    "path": "frontend/src/app/V8Experience.tsx",
    "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
    "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
    "branch_sha": "dcc10366e197a35358d3bd0b1b299afb4cc1e23e",
    "tip_blob": "5d62f7bc78a58369d871a37c820e0b9a1a6076e6",
    "branch_blob": "3a3591253c5e894d6add545c3636f2ed102e85c4",
@@ -71,25 +71,25 @@
    "path": "frontend/src/i18n/LocaleContext.tsx",
    "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
    "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
    "branch_sha": "dcc10366e197a35358d3bd0b1b299afb4cc1e23e",
-   "tip_blob": "20203fee4744513da320387e7923fabbf054d566",
+   "tip_blob": "260f2755f0353d2742f9aef57900f3f60760a942",
    "branch_blob": "20203fee4744513da320387e7923fabbf054d566",
    "base_blob": "20203fee4744513da320387e7923fabbf054d566",
-   "verdict": "LANDED"
+   "verdict": "DRIFTED_ON_TIP"
   },
   {
    "name": "must_read_MISSING",
    "path": "frontend/src/i18n/NoSuchFile_r1.tsx",
    "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
    "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
-   "tip_sha": "8996eee4fb9fb4e159588305223ef421728c4e72",
+   "tip_sha": "32372c7e57611f73782fdc607d929735224cf657",
    "verdict": "MISSING",
-   "reason": "tip blob: rc=128 fatal: path 'frontend/src/i18n/NoSuchFile_r1.tsx' does not exist in '8996eee4fb9fb4e159588305223ef421728c4e72'"
+   "reason": "tip blob: rc=128 fatal: path 'frontend/src/i18n/NoSuchFile_r1.tsx' does not exist in '32372c7e57611f73782fdc607d929735224cf657'"
   }
  ],
  "counts": {
   "CLEAN": 4
  },
- "selftest_ok": true
+ "selftest_ok": false
 }
