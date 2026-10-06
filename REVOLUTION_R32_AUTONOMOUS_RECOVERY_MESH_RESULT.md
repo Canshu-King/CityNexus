@@ -12,6 +12,41 @@ Machine dimensions and evidence are in
 `backend/output/R32_MACHINE_VERDICT.json`; the complete durable checkpoint is
 `backend/output/r32-live-strike-final.json`.
 
+> Historical evidence note: the files above are the immutable first R32 strike
+> produced by commit `5ea964b7dba515b090bb47fb2746051ca996ea45`.
+> They remain useful evidence for what that exact build did, but they MUST NOT
+> be relabelled as evidence for later hardening.  The current branch now uses a
+> stricter v3 machine verifier and a v2 live-strike harness; a fresh strike is
+> required before R32 can move from NOT_PROVEN to PROVEN.
+
+## Post-strike GPT hardening
+
+The first strike exposed architecture gaps rather than a provider failure.
+Those gaps were fixed on this same branch after the historical checkpoint:
+
+- stale R1 AgentRuns are now server-preempted at model-call boundaries; a
+  response computed across a new shock is discarded before any stale tool can
+  reach Gateway;
+- the live barrier starts the real WB2api call before Shock B and withholds only
+  its response from Runtime, so concurrency is evidenced rather than asserted;
+- the harness records its clean git head and SHA-256 source receipt, and derives
+  external-call evidence instead of hard-coding it;
+- collective mutation authority for an epoch-bound proposal is now scoped to
+  the current RecoveryEpoch **and the same trigger family**; legacy/null, stale
+  R1, and different-trigger sibling plans cannot contaminate the current E/S
+  surface;
+- UNANIMOUS_DOMINANCE receipts inherit the exact proposal AgentRun lineage, and
+  accepted-mutation audits persist the candidate-surface epoch/trigger scope;
+- the verifier no longer treats empty approval/continuation/proposal/receipt
+  sets as positive proof.  Missing coverage stays NOT_PROVEN; a contradiction
+  anywhere still makes the overall verdict CONTRADICTED;
+- the v2 strike preconfigures aligned member preferences and a finite standing
+  AUTONOMOUS envelope through normal product APIs **before** Shock A.  It does
+  not synthesize member responses or approvals after either shock.
+
+The next run is specified in
+`taskbooks/revolution/R32_LIVE_STRIKE_2_PREEMPT_CONVERGE.md`.
+
 The strike did prove:
 
 - Shock A opened server-owned R1 (`1c62e904-810f-44d9-85bd-a77f99f9eafe`).
