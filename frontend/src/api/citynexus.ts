@@ -323,6 +323,7 @@ export interface GuardianStatus {
     signal_provider: string;
     last_pulse_at: string | null;
     last_error: string | null;
+    watch?: GuardianWatch | null;
     enrolled_journey_ids?: string[];
     enrollment?: {
       journey_id: string;
@@ -341,6 +342,24 @@ export interface GuardianStatus {
     payload: Record<string, unknown>;
     updated_at: string;
   } | null;
+}
+
+export interface GuardianWatch {
+  watch_state: "QUIET" | "DAY_AHEAD" | "TODAY" | "APPROACHING" | "INCIDENT_ACTIVE";
+  reason_code: string;
+  configured_interval_seconds: number;
+  effective_interval_seconds: number;
+  next_due_at: string | null;
+  next_activity_id: string | null;
+  next_activity_start_at: string | null;
+  next_activity_horizon_seconds: number | null;
+  open_material_event_ids: string[];
+  event_newer_than_last_pulse: boolean;
+  journey_phase: string;
+  phase_reason_code: string;
+  phase_authority: string;
+  current_activity_id: string | null;
+  monitored_activity_ids: string[];
 }
 
 export interface ResilienceSnapshot {

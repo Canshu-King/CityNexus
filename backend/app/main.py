@@ -1965,6 +1965,11 @@ def get_guardian_status(
         if enrollment is not None
         else None
     )
+    result["autopilot"]["watch"] = (
+        adaptive_watch_policy(session, journey, enrollment)
+        if enrollment is not None and enrollment.enabled
+        else None
+    )
     fixture = session.get(CitySignalFixture, journey.id)
     result["signal_fixture"] = fixture_payload(fixture) if fixture is not None else None
     return result

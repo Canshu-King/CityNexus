@@ -79,6 +79,21 @@ function formatTime(value: string | null | undefined): string {
   });
 }
 
+function guardianWatchCopy(state: string | undefined): string {
+  switch (state) {
+    case "INCIDENT_ACTIVE":
+      return "A live issue needs closer attention, so Guardian is checking more often.";
+    case "APPROACHING":
+      return "Your next activity is within two hours, so Guardian is checking more often.";
+    case "TODAY":
+      return "You have an activity later today, so Guardian is keeping a closer watch.";
+    case "DAY_AHEAD":
+      return "An activity is planned for tomorrow, so Guardian is checking periodically.";
+    default:
+      return "Nothing important is near, so Guardian is checking at a calmer pace.";
+  }
+}
+
 function formatAgentOutcome(outcome: AgentRun["outcome"]): string {
   if (!outcome) return "";
   if (typeof outcome === "string") return outcome;
@@ -664,6 +679,21 @@ function LegacyApp() {
     }
   }
 
+  async function stopLiveAutopilot() {
+    if (!session) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await cityNexusApi.stopGuardianAutopilot(session.journeyId);
+      await refreshAutopilotTruth(session.journeyId);
+      setLastAction("Guardian Watch stopped");
+    } catch (autopilotError) {
+      setError(errorNote(autopilotError));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function transitionProviderFixture(state: "NORMAL" | "DISRUPTED" | "OUTAGE") {
     if (!session) return;
     setBusy(true);
@@ -1177,6 +1207,14 @@ function LegacyApp() {
           </button>
           <button
             className="secondary-button"
+            data-testid="guardian-autopilot-stop"
+            onClick={() => void stopLiveAutopilot()}
+            disabled={busy || !guardianStatus?.autopilot?.enabled}
+          >
+            Stop Guardian Watch
+          </button>
+          <button
+            className="secondary-button"
             data-testid="guardian-provider-disrupted"
             onClick={() => void transitionProviderFixture("DISRUPTED")}
             disabled={busy || !guardianStatus?.autopilot?.enabled}
@@ -1204,6 +1242,15 @@ function LegacyApp() {
           Autopilot · {guardianStatus?.autopilot?.enabled ? "RUNNING" : "STOPPED"} · provider fixture ·{" "}
           {guardianStatus?.signal_fixture?.state ?? "NORMAL"}
         </p>
+        {guardianStatus?.autopilot?.enabled && guardianStatus.autopilot.watch && (
+          <div className="guardian-watch-panel" data-testid="guardian-watch-status">
+            <strong>Guardian Watch is on</strong>
+            <span>{guardianWatchCopy(guardianStatus.autopilot.watch.watch_state)}</span>
+            <span data-testid="guardian-watch-next-check">
+              Next check around {formatTime(guardianStatus.autopilot.watch.next_due_at)}
+            </span>
+          </div>
+        )}
         <div className="predictive-panel" data-testid="guardian-predictive-resilience">
           <div>
             <strong>Predictive resilience</strong>

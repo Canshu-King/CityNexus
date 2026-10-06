@@ -234,7 +234,20 @@ def adaptive_watch_policy(
 
     stamp = (now or execution_clock.now()).astimezone(timezone.utc)
     configured = max(0.05, float(enrollment.interval_seconds))
-    phase = journey_phase_projection(session, journey, now=stamp)
+    # Keep the policy callable for older lightweight callers that provide only
+    # the cadence collaborators (for example a stub session in an integration
+    # boundary).  A phase cannot be inferred without the persisted activity
+    # rows, so degrade its metadata explicitly without changing cadence.
+    if callable(getattr(session, "scalars", None)):
+        phase = journey_phase_projection(session, journey, now=stamp)
+    else:
+        phase = {
+            "journey_phase": "UNKNOWN",
+            "phase_reason_code": "ACTIVITY_ROWS_UNAVAILABLE",
+            "phase_authority": "CONTROL_PLANE_ONLY",
+            "current_activity_id": None,
+            "monitored_activity_ids": [],
+        }
     next_activity, horizon = _next_activity(session, journey, now=stamp)
     incidents = _open_material_events(session, journey.id)
 
