@@ -18,7 +18,7 @@ import "./sharedJourney.css";
  *
  * Until this file, the link could be sent and had nowhere to open: `GET /api/v1/shared/journeys/{token}`
  * was already on the line and the generated client already carried its shape
- * (`frontend/src/generated/api.ts:488`), but no route read that door, so `/v8/shared/...` bounced to
+ * (`frontend/src/generated/api.ts`), but no route read that door, so `/v8/shared/...` bounced to
  * Today and the token was a string with no destination.
  *
  * Four rules this screen is built under, each of which has a defect behind it:
@@ -303,7 +303,7 @@ export function SharedJourneyScreen({ token }: { token: string }) {
                         </b>
                         {/* Only the clock. The owner's itinerary labels a stop's kind by reading
                             `metadata.role` first and the activity type last
-                            (`i18n/travelerLabels.ts:261`), and this door sends neither -- `metadata` is
+                            (`i18n/travelerLabels.ts`), and this door sends neither -- `metadata` is
                             the store's transition record, not a display field. Falling straight to
                             `activity_type` would have put a machine word like `visit` on a Chinese
                             screen wherever the owner's screen shows the nicer word the same table gives

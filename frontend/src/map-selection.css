@@ -2,7 +2,7 @@
  * ORD-0390 — the map is a surface you can pick things on, so a marker has to look pickable and the
  * selection has to be visible on both halves of the screen at once.
  *
- * Selectors are deliberately deeper than `styles.css:248` (`.v9-map-marker`) so they win on
+ * Selectors are deliberately deeper than `styles.css` (`.v9-map-marker`) so they win on
  * specificity rather than on import order, and colours come from the existing `--cn-*` / `--v8-*`
  * tokens: the ring is the same accent the product already uses for "this one", so a selected pin
  * does not introduce a fourth meaning for a colour.
@@ -23,7 +23,7 @@
  * ORD-0497 — the footprint on the pin: solid and dated for a stop this trip's read carried a stamp
  * for, hollow for one it did not.
  *
- * Deliberately placed ABOVE `.selected` and below `.v9-map-marker` in `styles.css:248`:
+ * Deliberately placed ABOVE `.selected` and below `.v9-map-marker` in `styles.css`:
  *   - deeper than `styles.css`'s single-class rules, so it wins without depending on import order
  *     (the same reason this file exists, per its header);
  *   - shallower than, and earlier than, `.v8-map-panel .v9-map-marker.selected`, so a pin that is
@@ -37,8 +37,8 @@
  * its fill, so a surface that never asked (`footprints = null`) cannot be mistaken for "all visited".
  *
  * `.filtered-out` hides by visibility and never by removal:
- * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
- * `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count pins as the proof that every located stop is
+ * `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and
+ * `e2e/qoder-ord0394-map-coordinates.spec.ts` count pins as the proof that every located stop is
  * pickable, and ORD-0453 already ruled that a constrained view on this surface is a clip, not a
  * deletion.
  */
@@ -53,9 +53,9 @@
 }
 
 /* The day the server recorded, under the pin and beside nothing else. Its own marker rather than a
-   child of the pin, because `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:177` asserts a
+   child of the pin, because `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts` asserts a
    pin paints only its stop number; date-only because that gate's `clock-time` rule
-   (`e2e/_mapLabelRules.ts:69`) forbids a time on the glass. `pointer-events: none` is not
+   (`e2e/_mapLabelRules.ts`) forbids a time on the glass. `pointer-events: none` is not
    decorative: an element that swallows a tap here would take the pin's hit test with it, which is
    what `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` measures at four widths. */
 .v8-map-panel .v8-map-stamp-date {
@@ -121,7 +121,7 @@
 
    Inline, inside `.v8-map-caption`, and that placement is the whole design decision.
 
-   The bottom band (`.v8-map-overlay-stack`, `map-attribution.css:28`) is the box `MapPanel` measures
+   The bottom band (`.v8-map-overlay-stack`, `map-attribution.css`) is the box `MapPanel` measures
    its `fitBounds` bottom padding against -- once, when the map is built, with nothing selected -- and
    it leaves `safetyGap` 16 px between the band's top edge and the framing.  So anything that raises
    that top edge moves it into ground the camera was promised: measured on this lane's own gate, a
@@ -135,9 +135,9 @@
    failure) and blocks no hit-test -- `elementFromPoint` at a pin's centre still returns the pin,
    which `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` measures rather than assumes.
 
-   Colour follows `styles.css:169`'s own `.v8-map-caption b`, which is already `var(--v8-indigo)`
+   Colour follows `styles.css`'s own `.v8-map-caption b`, which is already `var(--v8-indigo)`
    inside this box: no new token, and the caption's existing dark binding
-   (`design-tokens.css:592`) keeps the surrounding text legible without a rule for this span.
+   (`design-tokens.css`) keeps the surrounding text legible without a rule for this span.
    `overflow-wrap: anywhere` is the ORD-0407 C7 lesson -- a long provider name must not widen the
    panel at 320 px. */
 .v8-map-panel .v8-map-caption .v8-map-selected-stop {
@@ -154,8 +154,8 @@
  *   `.v8-map-stops` is the box whose `max-height` is set from the laid-out chip after the last one it
  *   shows (see `measurePressed` in `V8Experience.tsx`), with `overflow: hidden` so the cut is a cut.
  *   It is a height clip, not a deletion: every located stop keeps its row in the document, because
- *   `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` and
- *   `e2e/qoder-ord0394-map-coordinates.spec.ts:261` count those rows as the proof that a pinned stop
+ *   `e2e/qoder-map-ord0390-selection-both-ways.spec.ts` and
+ *   `e2e/qoder-ord0394-map-coordinates.spec.ts` count those rows as the proof that a pinned stop
  *   can be picked, and a collapse that removed nodes would read 4 against 9 pins there.
  *   `align-content: flex-start` keeps the chip lines at their own height instead of squeezing five
  *   lines into the clipped box.

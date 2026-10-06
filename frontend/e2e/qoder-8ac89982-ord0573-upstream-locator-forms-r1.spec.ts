@@ -2,8 +2,8 @@
  * ORD-0573 · 代价尺（车道 8ac89982）：`role="tab"` 会不会拿走别人正在用的 locator
  *
  * 这枚尺不改产品字节，只回答一件事：已在线的上游闸用
- * `getByRole("button", { name: "Bookings" })` 点这枚分区标签（实测两处：
- * `product-v8.spec.ts:101`、`real-world-trip-operations-v9.spec.ts:46`，两枚都强制 `en`，
+ * `getByRole("button", { name: "Bookings" })` 点这枚分区标签（实测两处，都是那句同一个
+ * locator：`product-v8.spec.ts` 与 `real-world-trip-operations-v9.spec.ts` 各一处；两枚都强制 `en`，
  * 见各自 `addInitScript` 那行）。一个元素只认一个 role：挂了 `role="tab"`，button 形就
  * 找不到它了。这一手在真屏上把两种形制各数一遍，谁数到几、答的是哪一枚，写在读数里。
  *

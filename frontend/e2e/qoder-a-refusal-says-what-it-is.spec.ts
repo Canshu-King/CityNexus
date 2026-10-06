@@ -154,7 +154,7 @@ test("ord0126d-c-the-screen-submits-the-journey-it-shows — 屏上那趟和提�
     localStorage.setItem("citynexus.locale", "zh-CN");
   }, journeyId);
   /* The action measured below is the AI planning sheet's submit: the shell hands it
-     `data.journey.id` (`V8Experience.tsx:1693`), so the uuid in its POST is the uuid on screen.
+     `data.journey.id` (`V8Experience.tsx`), so the uuid in its POST is the uuid on screen.
      Two earlier attempts are recorded in the ledger block -- the hub's stay retry never renders on
      a seeded journey that already has options, and no read-only navigation issues a request at all
      once the screen is loaded, so neither could carry the comparison. */

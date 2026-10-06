@@ -9,7 +9,7 @@
  * commander's 定形 block named all three sites: `:515` agent/commands, `:573` GET /places,
  * `:629` POST /plans/generate (coordinates on `45b0a5e`).
  *
- * The fix is `simulationAdapter.ts:145-155`'s existing two-branch model, not a new vocabulary: the
+ * The fix is `simulationAdapter.ts`'s existing two-branch model, not a new vocabulary: the
  * sentence carries who said it (`from: "server" | "device"`), and the label is chosen from that.
  *
  * Seven arms, because "one gate covers three sites" is exactly how a partial fix gets shipped green:

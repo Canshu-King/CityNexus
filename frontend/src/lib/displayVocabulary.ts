@@ -11,11 +11,11 @@
 
 type Label = { zh: string; en: string };
 
-/* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx:51`), and
-   the table carried one of the four names `backend/app/agent/runtime_identity.py:15-18` can write. The
+/* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx`), and
+   the table carried one of the four names `backend/app/agent/runtime_identity.py` can write. The
    other three went down `pick`'s labelled-raw branch, so the traveller read
    「这台服务器写的：NATIVE_DEEPSEEK_TOOL_LOOP」. Each wording below states the condition that branch
-   actually tested (`runtime_identity.py:50-56`) -- no wording claims a verified gateway where only a
+   actually tested (`runtime_identity.py`) -- no wording claims a verified gateway where only a
    configured endpoint exists, and none repeats the server's own name. */
 const RUNTIME_IDENTITY: Record<string, Label> = {
   HERMES_NATIVE_MCP: {
@@ -99,9 +99,9 @@ const PLAN_VERSION_NOUN: Label = { zh: "方案版本", en: "Plan version" };
 
 /* ORD-0446: the bookings card used to print the three internal identifiers straight from the wallet
    payload. The value sets below are not invented here -- `kind` is a contract Literal
-   (`backend/app/schemas.py:772`), `level` is the frozen strength tuple
-   (`backend/app/commerce/strengths_generated.py:6-12`), and `status` is what the server actually writes
-   (`backend/app/commerce/service_impl.py:306`, `:442`, `backend/app/operations/v9.py:579`, `:646`).
+   (`backend/app/schemas.py`), `level` is the frozen strength tuple
+   (`backend/app/commerce/strengths_generated.py`), and `status` is what the server actually writes
+   (`backend/app/commerce/service_impl.py`, `:442`, `backend/app/operations/v9.py`, `:646`).
    Anything outside them still falls to the labelled raw channel, so a new server value shows up as a
    gap rather than being quietly renamed into a claim. */
 const COMMITMENT_KIND: Record<string, Label> = {
@@ -132,7 +132,7 @@ const COMMITMENT_STATUS: Record<string, Label> = {
   CANCELED: { zh: "已取消", en: "Cancelled" },
 };
 
-/* The demo deployment is not a city a traveller can name. `backend/app/anywhere_capability.py:233`
+/* The demo deployment is not a city a traveller can name. `backend/app/anywhere_capability.py`
    already carries traveller-facing labels for this very code, so this says the same thing in words
    instead of painting the code's last segment. */
 const CITY_CODE: Record<string, Label> = {
@@ -140,7 +140,7 @@ const CITY_CODE: Record<string, Label> = {
 };
 
 /* ORD-0455: the estimation ladder's 说方法 rung has to name where a figure came from, and the cell
-   it reads is `stay.evidence_json.source`, which `backend/app/stay_mobility.py:435` writes as
+   it reads is `stay.evidence_json.source`, which `backend/app/stay_mobility.py` writes as
    `provider.provenance`. The three values below are the provenances that module's own provider
    classes declare (`:111` CAPTURED_REPLAY, `:136` UNAVAILABLE, `:1323` SYNTHETIC_FIXTURE) -- nothing
    else is listed, so a fourth provenance reaches the screen through the labelled raw channel and
@@ -157,7 +157,7 @@ const SUMMARY_HELD: Label = {
 };
 
 /* 路段证据的档位（`fact_quality`）也走这一层：三个名字逐枚来自
-   `backend/app/replanning/provider_snapshots.py:13-15`，第四个值一旦出现就退回上面那两条通道
+   `backend/app/replanning/provider_snapshots.py`，第四个值一旦出现就退回上面那两条通道
    （`pick` 的 labelled-raw 那一支），屏上说的是「这台服务器写的：X」而不是我们替它编的人话。 */
 const MOBILITY_FACT_QUALITY: Record<string, Label> = {
   EXPLICIT_FROZEN_FIXTURE: { zh: "冻结快照里写明的一条", en: "a value written out in the frozen snapshot" },

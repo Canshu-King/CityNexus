@@ -1,7 +1,7 @@
 /**
  * ORD-0423 defect two: the bookings screen printed the server's ISO-8601 straight to the traveller
  * (`Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00`).  The instant is rendered in the traveller's
- * own language here instead, in the device's zone, the same shape `V8Experience.tsx:4537` already uses.
+ * own language here instead, in the device's zone, the same shape `V8Experience.tsx` already uses.
  *
  * A value we cannot read as an instant is returned as-is rather than as `pending`: the server did say
  * something about time, so calling it "时间待定" would be a false statement on the screen.

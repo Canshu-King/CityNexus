@@ -190,7 +190,7 @@ export function describeFailure(error: unknown): NamedFailure {
 
 /**
  * ORD-0085 / the booking gate: `POST /bookings` refuses an un-bookable activity with a **sentence**
- * rather than a code (`main.py:10721` turns `CommerceValidationError` into `HTTPException(422,
+ * rather than a code (`main.py` turns `CommerceValidationError` into `HTTPException(422,
  * str(exc))`), and on the demo stage five of the six activities are of that kind -- `_service_for_
  * activity` only maps a `city_service_id` or two known `place_id`s onto a catalog service.  So a
  * row that assumes "any activity can be booked" hands the teacher a 422 on the spot, and a row that

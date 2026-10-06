@@ -8,7 +8,7 @@ import { evidencePath } from "./_qoderEvidence";
  *
  * The user's report was "stuck on 确认创建".  The shell's createJourney catch does write
  * the named backend error into state, and the shell does render state — but this screen
- * returns before the shell exists (V8Experience.tsx:794), so nothing reached the display.
+ * returns before the shell exists (V8Experience.tsx), so nothing reached the display.
  * Retrying the button looked identical to it working, which is what read as frozen.
  *
  * This gate drives the real product with a real failing request rather than asserting on
@@ -320,7 +320,7 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
 
     /* The wording is chosen by locale, so both arms have to speak.  The draft is seeded
        before a reload rather than by an init script: the chromium project replays a
-       storageState holding a journey id (playwright.config.ts:66), so storage must be
+       storageState holding a journey id (playwright.config.ts), so storage must be
        rewritten between boots or the shell skips the wizard entirely. */
     for (const arm of [
       { locale: "en", phrase: "not filled in · required" },

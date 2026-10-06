@@ -65,7 +65,7 @@ NEVER_EXEMPT_PATTERNS = frozenset({"provider_key_shape", "aws_access_key", "gith
 _CONTRACT_CACHE: dict = {}
 
 #: ORD-0479. A translation-table value is not a credential, and the shape probe was reading one as
-#: such -- the entry at frontend/src/features/shared/SharedJourneyPanel.tsx:45, whose value is a
+#: such -- the entry at frontend/src/features/shared/SharedJourneyPanel.tsx, whose value is a
 #: dictionary key and whose table is a string-to-string lookup. (Quoting that line's text here would
 #: make this very file trip the same probe, which is how the first draft of this comment did.)
 #: The exemption is STRUCTURAL, three things that all have to hold, because none of them alone means

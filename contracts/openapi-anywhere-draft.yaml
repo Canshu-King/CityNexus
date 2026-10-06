@@ -159,7 +159,7 @@ x-testing-obligations:
   matrix-units-must-be-pinned:
     rule: >-
       Valhalla 的 ``/route`` 与 ``/sources_to_targets`` 里 ``time`` 是**秒**、``length`` 与
-      ``distance`` 是**公里**。产品在 valhalla_http.py:99 / :225 / :275 三处各除一次 60，
+      ``distance`` 是**公里**。产品在 valhalla_http.py / :225 / :275 三处各除一次 60，
       仓库里没有任何东西钉住这个单位：漏除 ⇒ 20 分钟的腿报成 1200 分钟，多除 ⇒ 报成 1 分钟，
       两者看着都是一个正常数字。门的判据不是"我们也除了一遍"，是**步行速度带** 1.5–9.0 km/h
       （1.5 km / 20 分钟 = 4.5 km/h），单位一错必然出带。
@@ -172,7 +172,7 @@ x-testing-obligations:
     rule: >-
       出网前必须先算 cells = sources × targets，>100 就分片或明确拒绝；不得按 provider 错误文案里
       那个字面 "locations" 数预检。实测：N=10 ⇒ 100 cells / 200 / 1018 ms；N=11 ⇒ 121 cells / 400 /
-      error_code 150。今天 runtime.py:232 把全部节点一次发出（N=20 ⇒ 400 cells），整次捕获 FAILED。
+      error_code 150。今天 runtime.py 把全部节点一次发出（N=20 ⇒ 400 cells），整次捕获 FAILED。
       分片还必须**不丢格**：只切第一片能骗过 ≤100 cells，骗不过"有序成对事实全覆盖"这一条。
     why-not-the-literal: >-
       今天的调用形状是方阵，cells 规则与 locations 规则恰好同解；换成 4×20=80 cells 的合法矩形，
@@ -198,7 +198,7 @@ x-testing-obligations:
 
   cached-discovery-must-be-read-not-only-written:
     rule: >-
-      settings.real_city_cache_ttl_seconds=900 只在 real_city.py:964-966 写 RealPlaceCandidate.expires_at、
+      settings.real_city_cache_ttl_seconds=900 只在 real_city.py 写 RealPlaceCandidate.expires_at、
       :1004 抄进 evidence_json，**全仓没有一处读它决定是否出网** ⇒ B 实测暖趟 242.9 s vs 冷趟 238.3 s。
       判据用计数 client：同一 journey + 同一 provider + 未过期 ⇒ 第二次外呼必须为 0，且第二次产出的候选
       不得变少；反向半边（过期之后必须回到 provider）同时钉住，免得"永远不出网"假装通过。
@@ -214,7 +214,7 @@ x-testing-obligations:
 
   discovery-range-must-come-from-the-destination-extent:
     rule: >-
-      real_city.py:716 的 around:{min(radius_m, 5000)} 把"水合一个县"变成"搜县城 5 公里圈"。
+      real_city.py 的 around:{min(radius_m, 5000)} 把"水合一个县"变成"搜县城 5 公里圈"。
       门不规定写法（bbox / area 多边形 / 按 extent 算半径都行），只规定两件事：发出去的几何必须
       配得上调用方要的范围；两块不同尺度的目的地不得问出同一句话。等车道 C 的 ORD-0114 提供 extent。
     measured-on: fed1861
@@ -228,7 +228,7 @@ x-testing-obligations:
 
   unasked-category-must-be-missing-not-defaulted:
     rule: >-
-      real_city.py:701-711 的关键词分支里没有的覆盖分类，会落到默认集合
+      real_city.py 的关键词分支里没有的覆盖分类，会落到默认集合
       "amenity"~"cafe|restaurant|library|arts_centre|theatre" ⇒ 屏幕上的"夜生活"其实是咖啡馆的结果。
       每个分类要么有自己的 tag 分支，要么明确 MISSING；不得借默认集合还魂，也不得两个分类共用同一句查询。
     measured-on: fed1861
@@ -259,7 +259,7 @@ x-testing-obligations:
       # 同指纹、同 capability（g19a/g19b/g19c 转绿）；认不出的那句 ⇒
       # canonical_destination_id=null + pending_destination_label=原文逐字 + 独立的归一化列，
       # 上面那行历史读数里"由查询文本现造身份"的做法在产品码里已无写点（g12 扫全模块钉住）。
-      根因 anywhere_capability.py:186-194 的别名集合 = {code, 去 CN- 前缀, _CITY_DISPLAY_NAMES 的光杆名字}，
+      根因 anywhere_capability.py 的别名集合 = {code, 去 CN- 前缀, _CITY_DISPLAY_NAMES 的光杆名字}，
       _normalise(:143) 不处理后缀，_TRAVELER_FACING_LABELS(:119) 今天只有 CNX-DEMO 一条；
       未命中即走 :217-226 mint 身份。连带后果：指纹按拼法生成 ⇒ §17D/G3 要的"同指纹收敛同一操作"
       对同一座城失效。归车道 C。
@@ -391,7 +391,7 @@ x-testing-obligations:
       attempts/retryable/reason/answered/provider_replied，`ProviderAttempt` 不带会答条数）。要分开这句话
       需要 provider 层把"看到了几条"交出来 ⇒ 已把两侧读数交给 B，不由 C 伸手进 integrations/discovery/** 改。
       今晚把这句话从推断升成实测，并扩了两格：塌陷点就是
-      `integrations/discovery/provider_identity.py:318-321` 的 `_is_destination_grade`，它同时按
+      `integrations/discovery/provider_identity.py` 的 `_is_destination_grade`，它同时按
       `props["name"] is None`、`props["osm_id"] is None` **和** `props["type"] not in
       DESTINATION_GRADE_TYPES` 丢弃整条 feature ⇒ 塌成"这个地方不存在"的形状不止缺 id 这一种；
       探针把两侧 dataclass 的字段名整排打印出来，确认没有任何一条报"看到几条"。
@@ -512,7 +512,7 @@ x-testing-obligations:
       - backend/tests/test_qoder_provider_identity_leg.py::test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural
       - backend/tests/test_qoder_provider_identity_leg.py::test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string
     gate-followup-for-lane-f: >-
-      F 的 `tests/test_qoder_anywhere_gates.py:47 STATES = {"READY","HYDRATABLE","UNAVAILABLE"}` 是本地
+      F 的 `tests/test_qoder_anywhere_gates.py STATES = {"READY","HYDRATABLE","UNAVAILABLE"}` 是本地
       副本，没读产品的 `CAPABILITY_STATES`。本轮**没有**去改 F 的文件（改了就是替 F 把门配绿）。
       全量实测：这一改动**没让任何一条现有门变红**（seam 默认关 ⇒ 未答仍是 UNAVAILABLE，不落入新格），
       所以 F 可以在自己节奏里把 STATES 改为引用产品常量并补"未答 ⇒ 新格"的门。
@@ -579,11 +579,11 @@ x-testing-obligations:
       tests/test_agent_mission_runtime.py::test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace
       在**自己是绿的情况下** POST https://api.deepseek.com/responses，DNS 解析到公网 IP、TCP 连接建立、
       对端回 **401 Authorization Required**（该测试把 key 换成占位串，所以没花钱，但一个来回真的走完了）。
-      机制：它在 tests/test_agent_mission_runtime.py:106 只 stub 了 chat-completions 客户端，
-      而 Responses API 那条腿自己建传输层 —— 产品栈：app/main.py:1056 run_agent_command →
-      app/main.py:10154 _copilot_fallback_or_ai → app/integrations/ai/semantic_compiler.py:315 →
-      app/integrations/ai/responses.py:306。G8a 看不见它（域名不在测试文件里）。
-      反过来，G8a 点名的 backend/tests/test_qoder_catalog_hydration.py:388 在同一次带绊线的运行里
+      机制：它在 tests/test_agent_mission_runtime.py 只 stub 了 chat-completions 客户端，
+      而 Responses API 那条腿自己建传输层 —— 产品栈：app/main.py run_agent_command →
+      app/main.py _copilot_fallback_or_ai → app/integrations/ai/semantic_compiler.py →
+      app/integrations/ai/responses.py。G8a 看不见它（域名不在测试文件里）。
+      反过来，G8a 点名的 backend/tests/test_qoder_catalog_hydration.py 在同一次带绊线的运行里
       **零条运行时记录** ⇒ 那是形状违规、今天不出网，两条要分开修。
 
 # -----------------------------------------------------------------------------
@@ -598,7 +598,7 @@ x-matrix-bound:
   derived-rationale: >-
     N=20 ⇒ 每套 costing ⌈20/10⌉² = 4 片，两套共 8 次请求；按实测单次 1018 ms（100 cells、200 OK）
     串行估 ≈ 4.3 s。N=24 ⇒ 9 × 2 = 18 次 ≈ 9.6 s —— 已经越过本附件 x-latency-budget 那一档，
-    而且今天是**一把捕获**（runtime.py:255）：任何一片失败，整趟行程的机动事实全丢。
+    而且今天是**一把捕获**（runtime.py）：任何一片失败，整趟行程的机动事实全丢。
     所以 20 的含义不是"最多塞得下多少"，是"在延迟预算内还重跑得起一次"的上界。
     要往上抬必须先做两件事：片间并发（把 8 次压成一轮的常数倍）与失败局部化（一片丢只丢那一片的格，
     其余事实照常封存），并且回来改这段依据 —— 不许只在代码里把常数改大。
@@ -635,7 +635,7 @@ x-server-truth-fields:
         - matrix 阶段的界另见 x-matrix-bound（cells ≤ 100、N ≤ 20）
       why: >-
         B 实测暖趟 242.9 s vs 冷趟 238.3 s —— 因为没有任何一份"这趟允许花多少"的账，
-        expires_at 写了没人读（real_city.py:966 只写）。
+        expires_at 写了没人读（real_city.py 只写）。
       gate: backend/tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
     discovery_area:
       meaning: 本次发现所用范围的**来源与几何** —— 必须来自已解析目的地的 extent（行政区多边形或 bbox）
@@ -644,7 +644,7 @@ x-server-truth-fields:
         - 只能退化成圆时必须说出半径，并说清它配不配得上目的地尺度；**不得静默地 min(radius_m, 5000)**
         - 前端不得传 discovery_area 来"扩大搜索范围"：范围是目的地的属性，不是查询参数
       why: >-
-        real_city.py:716 现在把 radius_m 硬夹到 5000 m ⇒ "水合一个县"实为"搜县城 5 公里圈"，
+        real_city.py 现在把 radius_m 硬夹到 5000 m ⇒ "水合一个县"实为"搜县城 5 公里圈"，
         县域里的乡镇一律看不见，能力回答会把 PARTIAL 说成 READY。等车道 C 的 ORD-0114。
       gates:
         - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp
@@ -671,14 +671,14 @@ x-red-doors:
       kind: product-defect-named
       owner: 车道 C（backend/app/integrations/**）
       cause: >-
-        valhalla_http.py:185-187 调 _normalize_duration_matrix 时没传 payload 里的 distances
+        valhalla_http.py 调 _normalize_duration_matrix 时没传 payload 里的 distances
         （:178 那条嵌套分支传了）⇒ provider 给了 0.75 公里，规范化后 distance_m=None。时长活着、距离死了。
       rerun: pytest tests/test_qoder_anywhere_matrix_truth.py -k g13d
     - id: test_qoder_anywhere_matrix_truth.py::test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives
       kind: implementation-not-yet
       owner: 车道 C（backend/app/integrations/**）
       cause: >-
-        runtime.py:232 把全部节点一次发出（N=20 ⇒ 400 cells），而 provider 上限是 cells ≤ 100
+        runtime.py 把全部节点一次发出（N=20 ⇒ 400 cells），而 provider 上限是 cells ≤ 100
         （实测 N=10 ⇒ 200 / 100 cells / 1018 ms；N=11 ⇒ 400 / error_code 150）⇒ 今天整次捕获 FAILED。
         门要的是"先按 cells 预检、再按 ⌈N/10⌉² 分片、且一格都不丢"。
       not-this-doors-fault: >-
@@ -723,7 +723,7 @@ x-red-doors:
       kind: product-defect-named
       owner: 车道 C（测试形状，不是生产码）
       cause: >-
-        静态扫到 backend/tests/test_qoder_catalog_hydration.py:388 对公共 resolver 域名的字面调用；
+        静态扫到 backend/tests/test_qoder_catalog_hydration.py 对公共 resolver 域名的字面调用；
         同一次带运行时绊线的复跑里该节点零条出网记录 ⇒ 今天不出网，但形状违反 §17C，
         且**真外呼另有其人**（见 x-testing-obligations 的 runtime-egress-tripwire 条）。
       rerun: pytest tests/test_qoder_anywhere_provider_independence.py -k g8a

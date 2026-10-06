@@ -3,7 +3,7 @@
  *
  * ORD-0497 put the switch on `/v8/map` and proved what it does. Nobody measured whether a traveller
  * on a narrow screen can actually land a tap on it: at 390 the shell puts a `position: fixed`
- * bottom bar over the last rows of the page (`styles.css:178` `.v8-mobile-nav`), and the switch sits
+ * bottom bar over the last rows of the page (`styles.css` `.v8-mobile-nav`), and the switch sits
  * in the facts column under the map, which is exactly where such a band eats a hit test.
  *
  * Three readings, in the shape the order names:

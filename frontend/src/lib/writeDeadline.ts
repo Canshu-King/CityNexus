@@ -14,7 +14,7 @@
  * and that pass-through is a named line, not an accident.
  *
  * Two numbers must not fight. The server's own budget for one write is 45 s over a 30 s lock wait
- * (`backend/app/core/config.py:95-96`, `backend/app/db/write_deadline.py`), so a client bound BELOW that would
+ * (`backend/app/core/config.py`, `backend/app/db/write_deadline.py`), so a client bound BELOW that would
  * cancel work the server was still legitimately doing and report the server's own success as a failure. This
  * constant therefore sits strictly above the whole server chain, and the test that names it checks the order of
  * the two numbers, not just the number (`writeDeadlineNumbersAreOrdered`).

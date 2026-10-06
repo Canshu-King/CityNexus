@@ -70,7 +70,7 @@ function writeEvidence(name: string, payload: unknown) {
 }
 
 async function bootIntoTrip(page: Page, journeyId: string, via: "deep" | "nav" = "deep") {
-  // The shell's own gate: `V8Experience.tsx:868` only opens the wizard when no journey reference is
+  // The shell's own gate: `V8Experience.tsx` only opens the wizard when no journey reference is
   // stored, so the reference -- not a completed wizard -- is what gets the traveller inside.
   await page.addInitScript(
     ([id, locale]) => {
@@ -87,7 +87,7 @@ async function bootIntoTrip(page: Page, journeyId: string, via: "deep" | "nav" =
     await page.goto("/");
     await expect(page.getByRole("main")).toBeVisible();
     // The mobile nav bar is always mounted and each entry carries its own test id
-    // (`V8Experience.tsx:2079` -> `nav-trips`), so the traveller's own route to the trips surface is
+    // (`V8Experience.tsx` -> `nav-trips`), so the traveller's own route to the trips surface is
     // tapped by identity rather than by a name that other labels on the screen also contain.
     const trips = page.getByTestId("nav-trips");
     await expect(trips).toHaveCount(1);

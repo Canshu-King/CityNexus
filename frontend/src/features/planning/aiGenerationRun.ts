@@ -45,7 +45,7 @@ import {
  * 「模型原始输出」 label credits a model for text the deterministic compiler wrote -- the mirror
  * image of the defect ORD-0240 closed.
  *
- * The vocabulary is the one `backend/app/agent/ai_availability.py:36-44` produces after ORD-0359,
+ * The vocabulary is the one `backend/app/agent/ai_availability.py` produces after ORD-0359,
  * which renamed `READY` away because "a key exists" was promising that it works. So
  * `CONFIGURED_UNVERIFIED` deliberately does **not** mean a model wrote this -- mapping it to
  * "model" would re-open 0359's hole one level up. Only `PROVIDER_REFUSED` states that the provider
@@ -344,7 +344,7 @@ async function confirmAfterInterruption(
 /** The read-back's own ceiling: 12 s, the same floor every other read in this app carries. */
 export const CONFIRM_READ_MS = 12_000;
 
-/** The three envelope keys this server puts a machine name in (`main.py:497-502`). */
+/** The three envelope keys this server puts a machine name in (`main.py`). */
 const REASON_CODE_KEYS = ["reason_code", "code", "message_key"] as const;
 
 export function serverReasonCode(body: unknown): { code: string; field: string } | null {

@@ -180,7 +180,7 @@ test("Z2_phone_arms_paint_and_select_on_real_data - 390x844 里标点与双向�
   );
 
   // forward: a row selects its pin.  A pin carries no "selected" class -- it answers with
-  // aria-pressed (MapPanel.tsx:347), which is also what a screen reader is told.
+  // aria-pressed (MapPanel.tsx), which is also what a screen reader is told.
   const second = stops.nth(1);
   const stopId = (await second.getAttribute("data-testid") ?? "").replace("map-stop-", "");
   await second.click();
@@ -277,7 +277,7 @@ test("Z3_a_place_without_a_row_answers_named_and_the_rest_keep_working - 反例�
   expect(named.length, "the unlocated stop vanished from every surface").toBeGreaterThan(0);
 
   /* Its own card must answer by name. `ActivityDetail` renders on the trips surface once a stop is
-     selected (V8Experience.tsx:1788), so that is where the unjoinable answer is read. */
+     selected (V8Experience.tsx), so that is where the unjoinable answer is read. */
   const cardHome = named.includes("nav-trips") ? "nav-trips" : named[0];
   await page.getByTestId(cardHome).click();
   await page.waitForTimeout(1000);

@@ -1078,8 +1078,9 @@ CREATE INDEX IF NOT EXISTS idx_journey_share_grants_journey
     ON journey_share_grants(journey_id, created_at);
 
 -- ORD-0434 step 2: one member set per journey, and a role-to-capability table the server holds.
--- Borrowed shape: RELATION/relation_and_copy_findings.md:94 (each role carries one sentence of
--- scope) and :133 (an invitation has a lifetime, and a withdrawal has a moment).
+-- Borrowed shape: the relation-and-copy findings note written for this order -- each role carries
+-- one sentence of scope, and an invitation has a lifetime while a withdrawal has a moment.  That
+-- note is not a file in this tree, so the sentences it held are restated here instead of pointed at.
 --
 -- `journey_members` is the single set the product speaks of: the unique index below is what makes
 -- "one row per traveller per journey" a store fact rather than a convention a caller must respect.
@@ -1117,12 +1118,13 @@ CREATE TABLE IF NOT EXISTS journey_role_capabilities (
 
 -- ORD-0476 slice 1: the trip footprint -- a stamp saying the traveller was at one target of one
 -- journey.  Built from zero: the only `check_in` reading on the model layer before this order was
--- `backend/app/db/models.py:837` (`Stay.check_in_at`, an accommodation arrival time), and no route,
+-- `Stay.check_in_at` in `backend/app/db/models.py` (an accommodation arrival time), and no route,
 -- table or contract path named a check-in.
 --
 -- Why `activity_id` and `place_id` are `ON DELETE SET NULL` rather than RESTRICT or CASCADE.  Both
--- are deleted by doors that already exist: `backend/app/main.py:11190` and
--- `backend/app/operations/v9.py:732` remove `activities` rows when a plan version is superseded, and
+-- are deleted by doors that already exist: `generate_replan` in `backend/app/main.py` and
+-- `materialize_stay_option` in `backend/app/operations/v9.py` remove `activities` rows when a plan
+-- version is superseded, and
 -- the catalog prunes `places`.  A footpoint is the traveller's own history, so it must outlive the
 -- row it pointed at -- a RESTRICT would turn those two replan doors into failures, which is the same
 -- class of defect this project already had once with `demo/reset` and a new table's foreign key.

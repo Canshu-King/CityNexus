@@ -23,7 +23,7 @@
  * planner may not actually have computed — and on a phone the label is the first thing covering
  * the map.
  *
- * This module is the single place that says so. `lib/rawFacts.ts:66` already owns a whitelist, but
+ * This module is the single place that says so. `lib/rawFacts.ts` already owns a whitelist, but
  * that one is about failure readouts on a different surface; reusing its name for a different
  * domain would make two things look like one.
  *

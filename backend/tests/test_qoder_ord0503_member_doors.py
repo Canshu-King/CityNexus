@@ -10,7 +10,7 @@ What each arm is for:
 
 1. `..._moves_a_seat_and_the_answer_is_the_row_read_back` -- the door writes, and what it hands back
    is `_member_payload` (the same helper `GET /api/v1/journeys/{journey_id}/members` uses at
-   `backend/app/main.py:4291`), not an object assembled from the request.  Also pins `joined_at`
+   `backend/app/main.py`), not an object assembled from the request.  Also pins `joined_at`
    staying put while `updated_at` moves, and the audit row.
 2. `..._unknown_member_row...` -- `MEMBER_UNKNOWN` (404).
 3. `..._withdrawn_row...` -- `MEMBER_ALREADY_WITHDRAWN` (409) on a row whose removal already happened.

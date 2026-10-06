@@ -311,7 +311,7 @@ def test_v191_eac_guard_capability_vocabulary_is_stable():
 # Codex V19.1 added a per-requirement evaluator in app.capabilities:
 #     normalize_osm_tags(value)                  -> dict[str, str]
 #     evaluate_accessibility_requirement(code, facts) -> state string
-# and wired it into the gate (feasibility.py:286).  The tests below drive that
+# and wired it into the gate (feasibility.py).  The tests below drive that
 # API directly, so unlike the EAC `osm` block above they run on the live tree
 # instead of being skipped.
 #

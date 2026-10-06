@@ -16,10 +16,10 @@
  *   第几天        <- the day group that holds the cursor activity.  Groups come in as an argument: the
  *                    grouping rule belongs to the screen that draws the day strip, not to a second copy.
  *
- * There is deliberately no percentage.  `api/citynexus.ts:771` records the same decision on the
+ * There is deliberately no percentage.  `api/citynexus.ts` records the same decision on the
  * preparation surface -- the backend refuses to invent a denominator, and a percentage would be one.
  *
- * Copy lives here for the reason `lib/pretripChecklist.ts:20` gives: `LocaleContext.tsx` is under
+ * Copy lives here for the reason `lib/pretripChecklist.ts` gives: `LocaleContext.tsx` is under
  * concurrent edit by other lanes.
  */
 import { TERMINAL_ACTIVITY_STATES } from "../../lib/executionWindow";

@@ -7,7 +7,7 @@ Commander 在 `fed1861` 量到 `GET /destinations/capability?query=CN-BEIJING` �
     query=北京市 -> destination_resolution=unresolved, place_count=0, 六轴全 MISSING,
                     capability=UNAVAILABLE, canonical_destination_id=unresolved:15ef4634d57e865f
 
-机制（只读不猜，行号给全）：``anywhere_capability.py:186-194`` 的别名集合是
+机制（只读不猜，行号给全）：``anywhere_capability.py`` 的别名集合是
 {city_code, 去掉 CN- 前缀, `_CITY_DISPLAY_NAMES` 里那条光杆名字}，而 ``_normalise``（:143-145）
 只去空白/连字符/句点，**不去行政区后缀**；``_TRAVELER_FACING_LABELS``（:119-121）今天只有
 CNX-DEMO 一条。旅客与一切官方名称写的正是「北京市/上海市/天津市」，于是走到 :217-226 第 3 步：

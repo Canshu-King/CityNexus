@@ -2,8 +2,8 @@
 
 Measured at the tip this slice was written against (`4efe7efb70ac4e08471da9bd5153f178348e4db9`): the
 grant table carried `journey_id`, `token`, `visibility`, `created_by` and the two ending moments and
-nothing else (`backend/app/db/models.py:1237`), so "share this trip" was the finest thing the store
-could say about sharing; `plan_versions` (`backend/app/db/models.py:505`) had no share exit at all.
+nothing else (`backend/app/db/models.py`), so "share this trip" was the finest thing the store
+could say about sharing; `plan_versions` (`backend/app/db/models.py`) had no share exit at all.
 The preset design says journeys *and versions* are shareable, so the gap is a scope column, not a new
 table and not a second token door.
 

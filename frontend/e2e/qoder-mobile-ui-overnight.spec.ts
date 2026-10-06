@@ -213,7 +213,7 @@ test.describe("Qoder mobile-overnight gate (Journey creation, first entry)", () 
   test("no overflow, 44px targets, unblocked CTA, no truncation", async ({ page }) => {
     test.setTimeout(180_000);
     await page.emulateMedia({ colorScheme: "light", media: "screen" });
-    /* First entry = no journey id in storage. V8Experience.tsx:456 auto-opens
+    /* First entry = no journey id in storage. V8Experience.tsx auto-opens
        JourneyTrialSetup when it finds none, and :818 returns it *outside*
        .v8-product-shell, which is why this surface is measured on its own. */
     await page.addInitScript(() => {

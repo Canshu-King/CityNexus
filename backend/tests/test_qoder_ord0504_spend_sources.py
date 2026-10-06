@@ -10,7 +10,7 @@ What is pinned, and why each one is the thing that could silently break:
 
   * `active_plan.legs[]` carries `cost_amount_minor`, `cost_status`, `currency` and `depart_at`. The
     server has been answering these for as long as the leg table existed; the client type did not name
-    them until this order (`frontend/src/app/v8Types.ts:52`), which is how a page titled "这趟旅行花多
+    them until this order (`frontend/src/app/v8Types.ts`), which is how a page titled "这趟旅行花多
     少" came to say nothing about transport cost.
   * a leg the server cannot price comes back as `cost_amount_minor: null` with `cost_status: "UNKNOWN"`
     -- not as `0`. The difference between "free" and "nobody has costed this" is the whole content of
@@ -148,7 +148,7 @@ def _wallet(journey_id: str) -> dict:
 def test_ord0504_the_experience_answer_carries_a_legs_price_and_the_word_that_says_how_well_known_it_is():
     """The four fields the spend face reads off a leg, named and present.
 
-    This is the pair to `frontend/src/app/v8Types.ts:52`: the server answered them all along and the
+    This is the pair to `frontend/src/app/v8Types.ts`: the server answered them all along and the
     client declared none of them, so no screen could ask. If one of these ever stops arriving, the
     transport total on that page gets quietly smaller instead of visibly wrong -- which is why it is
     pinned on the door rather than in the component.
