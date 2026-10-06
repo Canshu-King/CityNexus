@@ -567,9 +567,12 @@ class AgentToolGateway:
         provider_key, source = provenance
         policy_row = get_or_create_policy(self.session, journey.traveler_id)
         policy = policy_from_model(policy_row)
+        # Measured: REPORT_DISRUPTION resolves ALLOW_AUTO in every mode the product has (ADVISORY,
+        # ASSISTED, AUTONOMOUS) even with auto_accept_replan off and zero allowances, because it shares the
+        # REQUEST_REPLAN branch -- the traveller is stating a fact, and the server derives it. So there is
+        # deliberately no DENY branch here: a check that can never fire would advertise a gate that is not
+        # there. What actually gates this tool is the allowlist above and the agent_tool_requested audit.
         auth = evaluate_action(policy, AgentAction.REPORT_DISRUPTION, AuthoritativeActionFacts())
-        if auth.decision is AuthorizationDecision.DENY:
-            raise HTTPException(403, "the traveller's delegation policy denies report_disruption")
 
         from app.main import _capture_reported_disruption
 

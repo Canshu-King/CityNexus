@@ -237,6 +237,29 @@ def test_agt10_19_catalog_contains_only_v1_allowlist():
     assert not names & {"payment", "refund", "modify_c4", "set_policy", "raw_sql", "terminal"}
 
 
+def test_agt10_19b_report_disruption_is_v2_only_and_the_allowlist_is_its_real_gate():
+    """The reported-disruption tool is gated by the allowlist, not by a policy that can never refuse it.
+
+    Measured on this tree: REPORT_DISRUPTION resolves ALLOW_AUTO in every product mode (ADVISORY, ASSISTED,
+    AUTONOMOUS), so a DENY branch in its handler would be dead code. This arm pins the two facts that make
+    the gate real: the tool is listed in V2 (so dispatch admits it) and it is NOT in the pinned V1 six (so
+    the V1 surface is unchanged), and a name that is in neither is refused.
+    """
+    v2 = client.get("/api/v1/agent/tools/v2")
+    assert v2.status_code == 200
+    v2_names = {item["name"] for item in v2.json()}
+    assert "report_disruption" in v2_names, "the tool is not in V2, so dispatch would refuse it"
+    v1 = client.get("/api/v1/agent/tools")
+    v1_names = {item["name"] for item in v1.json()}
+    assert "report_disruption" not in v1_names, "the tool leaked into the pinned V1 six"
+    # an unlisted name is refused by the allowlist -- that is the gate that actually bites
+    refused = client.post(
+        "/api/v1/agent/tools/definitely_not_a_tool",
+        json={"request_id": "agt1019b-refused-0001", "journey_id": None},
+    )
+    assert refused.status_code in (403, 404, 422), refused.text
+
+
 def test_agt11_policy_is_user_api_and_agent_cannot_self_upgrade():
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
