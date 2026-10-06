@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 from typing import Any
 from urllib.parse import urlparse
@@ -98,29 +98,41 @@ def classify_opening_hours(*, activity: Any, place: Any, opening: dict[str, Any]
     if status not in _VALID_OPENING:
         return {**base, "status": "UNKNOWN", "reason_code": "OPENING_HOURS_UNQUALIFIED"}
 
-    weekday = _DAY_NAMES[start.weekday()]
-    start_min = start.hour * 60 + start.minute
-    end_min = end.hour * 60 + end.minute
-    if end.date() > start.date() or end_min <= start_min:
-        end_min += 24 * 60
     matching: list[dict[str, Any]] = []
+    # An overnight opening interval belongs to the day on which it opens.
+    # Therefore an activity shortly after midnight must consider both its own
+    # calendar day and the previous day (e.g. Fri 00:30 inside Thu 22:00-02:00).
+    candidate_open_days = (start - timedelta(days=1), start)
     for item in _intervals(opening):
-        if not _days_match(item.get("days"), weekday):
-            continue
         open_min = _minutes(item.get("open"))
         close_min = _minutes(item.get("close"))
         if open_min is None or close_min is None:
             continue
-        if close_min <= open_min and close_min != 24 * 60:
-            close_min += 24 * 60
-        matching.append({"open": item.get("open"), "close": item.get("close"), "days": item.get("days")})
-        if start_min >= open_min and end_min <= close_min:
-            return {
-                **base,
-                "status": "OPEN_COMPATIBLE",
-                "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
-                "verified_opening_interval": item,
+        for opening_day in candidate_open_days:
+            weekday = _DAY_NAMES[opening_day.weekday()]
+            if not _days_match(item.get("days"), weekday):
+                continue
+            day_floor = opening_day.replace(hour=0, minute=0, second=0, microsecond=0)
+            open_at = day_floor + timedelta(minutes=open_min)
+            normalized_close_min = close_min
+            if normalized_close_min <= open_min and normalized_close_min != 24 * 60:
+                normalized_close_min += 24 * 60
+            close_at = day_floor + timedelta(minutes=normalized_close_min)
+            evidence = {
+                "open": item.get("open"),
+                "close": item.get("close"),
+                "days": item.get("days"),
+                "opening_day": opening_day.date().isoformat(),
             }
+            if evidence not in matching:
+                matching.append(evidence)
+            if start >= open_at and end <= close_at:
+                return {
+                    **base,
+                    "status": "OPEN_COMPATIBLE",
+                    "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+                    "verified_opening_interval": evidence,
+                }
     return {
         **base,
         "status": "OUTSIDE_VERIFIED_HOURS",
