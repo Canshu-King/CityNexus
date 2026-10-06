@@ -87,9 +87,8 @@ def recovery_reality_basis(session: Session, journey: Journey) -> dict[str, Any]
             separators=(",", ":"),
         )
         event_identity = (
-            f"incident:{incident}"
-            if incident
-            else "fallback:" + hashlib.sha256(identity_material.encode("utf-8")).hexdigest()
+            "semantic:"
+            + hashlib.sha256(identity_material.encode("utf-8")).hexdigest()
         )
         item = grouped.setdefault(
             event_identity,
