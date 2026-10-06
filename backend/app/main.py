@@ -15372,6 +15372,32 @@ def _accept_replan_executing(
         hard_feasible_plan_ids={str(proposed.id)},
         resolved_decision=resolved_decision,
     )
+    # Preflight itself recomputes current collective/world facts and may rotate
+    # the Journey RecoveryEpoch.  Revalidate the proposal/run binding after
+    # that recomputation so single-member and no-receipt paths cannot cross a
+    # shock merely because they do not carry a collective receipt.
+    if bound_recovery_epoch_id:
+        try:
+            current_recovery_epoch = validate_recovery_epoch_binding(
+                session, journey.id, bound_recovery_epoch_id
+            )
+        except RecoveryEpochSuperseded as exc:
+            raise HTTPException(409, detail=exc.facts)
+        gate_recovery_epoch_id = str(
+            collective_gate.get("recovery_epoch_id") or ""
+        )
+        if (
+            gate_recovery_epoch_id
+            and gate_recovery_epoch_id != str(bound_recovery_epoch_id)
+        ):
+            raise HTTPException(
+                409,
+                detail={
+                    "code": RECOVERY_EPOCH_SUPERSEDED,
+                    "stale_recovery_epoch_id": str(bound_recovery_epoch_id),
+                    "current_recovery_epoch_id": gate_recovery_epoch_id,
+                },
+            )
     if not collective_gate.get("allowed"):
         _record_collective_mutation_denial(
             session,
