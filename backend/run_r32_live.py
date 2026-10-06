@@ -380,6 +380,12 @@ def _configure_r32_authority(setup: dict[str, Any]) -> dict[str, Any]:
     policy.raise_for_status()
     stored_policy = policy.json()
     return {
+        "requested_member_preference": {
+            "category": "interest",
+            "key": "garden",
+            "value": True,
+            "weight": 1.0,
+        },
         "member_preferences": preference_receipts,
         "owner_policy": {
             key: stored_policy.get(key)
