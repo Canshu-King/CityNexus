@@ -1078,7 +1078,9 @@ class DeepSeekJourneyAgent:
         tool_counts: dict[str, int] = {}
         terminal_supervisor_turns = 0
 
-        def preempt_if_recovery_epoch_advanced() -> bool:
+        def preempt_if_recovery_epoch_advanced(
+            *, model_response_in_hand: bool = False
+        ) -> bool:
             """Stop this exact run when server-owned Journey reality moved on.
 
             The run is never retargeted.  This guard executes both immediately
@@ -1109,7 +1111,7 @@ class DeepSeekJourneyAgent:
                     **exc.facts,
                     "decision": RECOVERY_EPOCH_SUPERSEDED,
                     "executed": False,
-                    "model_response_discarded": True,
+                    "model_response_discarded": model_response_in_hand,
                 }
                 step = AgentRunStep(
                     id=str(uuid4()),
@@ -1215,7 +1217,9 @@ class DeepSeekJourneyAgent:
                 # The external call may have overlapped a new provider shock.
                 # Discard its response before even a read-only stale tool is
                 # executed; a fresh run owns the newer recovery generation.
-                if preempt_if_recovery_epoch_advanced():
+                if preempt_if_recovery_epoch_advanced(
+                    model_response_in_hand=True
+                ):
                     break
                 run.model_key = self.model_key
                 tool_calls = message.get("tool_calls") or []
