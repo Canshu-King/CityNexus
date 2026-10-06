@@ -1,0 +1,2045 @@
+{
+ "arm": "en",
+ "screens": [
+  {
+   "requested": "hub",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "live",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "map",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "studio",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "stay",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "discover",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "import",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "bookings",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "footprints",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "agent",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "twin",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "trash",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "access",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "trips",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  },
+  {
+   "requested": "me",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "Today"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "Live Journey"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "Map"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "Trip Studio"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "Stay Explorer"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "City Discovery"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "Import places"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "Travel Wallet"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "Footprints"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "Recovery"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "Intelligence"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "Traveler Twin"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "Recycle bin"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "Members and access"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "Trips"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "Me"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "Today"
+    },
+    {
+     "text": "Live Journey"
+    },
+    {
+     "text": "Map"
+    },
+    {
+     "text": "Trip Studio"
+    },
+    {
+     "text": "Stay Explorer"
+    },
+    {
+     "text": "City Discovery"
+    },
+    {
+     "text": "Import places"
+    },
+    {
+     "text": "Travel Wallet"
+    },
+    {
+     "text": "Footprints"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "Recovery"
+    },
+    {
+     "text": "Intelligence"
+    },
+    {
+     "text": "Traveler Twin"
+    },
+    {
+     "text": "Recycle bin"
+    },
+    {
+     "text": "Members and access"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,193 @@
+{
+ "arm": "zh",
+ "shape": "390x844",
+ "screens": [
+  {
+   "requested": "hub",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "今天"
+  },
+  {
+   "requested": "live",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "实时行程"
+  },
+  {
+   "requested": "map",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "地图"
+  },
+  {
+   "requested": "studio",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "行程工作台"
+  },
+  {
+   "requested": "stay",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "住宿选择"
+  },
+  {
+   "requested": "discover",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "城市探索"
+  },
+  {
+   "requested": "import",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "导入地点"
+  },
+  {
+   "requested": "bookings",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "旅行票夹"
+  },
+  {
+   "requested": "footprints",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "足迹"
+  },
+  {
+   "requested": "agent",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "Copilot"
+  },
+  {
+   "requested": "authoritative",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "恢复与执行"
+  },
+  {
+   "requested": "intelligence",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "智能守护"
+  },
+  {
+   "requested": "twin",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "旅行者画像"
+  },
+  {
+   "requested": "trash",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "回收站"
+  },
+  {
+   "requested": "access",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "成员与权限"
+  },
+  {
+   "requested": "trips",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "行程"
+  },
+  {
+   "requested": "me",
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "breadcrumb": "我的"
+  }
+ ]
+}

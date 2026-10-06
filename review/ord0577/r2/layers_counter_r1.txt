@@ -1,0 +1,61 @@
+
+[WebServer] INFO:     127.0.0.1:53988 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57872 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57873 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57875 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57386 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57387 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52210 - "GET /api/v1/travelers/e2b45179-fcf1-4463-8771-bbc92c37e452/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60637 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57874 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54304 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57876 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64009 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51165 - "GET /api/v1/journeys/31dc5f9b-4af7-4e33-90b1-04801c26ef0d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51164 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  2) [chromium] › e2e\qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts:65:5 › ORD-0577 the drawer and the sidebar say where you are › layers-say-where-en 
+
+    Error: en: hub -- the drawer says nothing to a screen reader
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "v8-drawer-entry-hub",
+    - ]
+    + Array []
+
+      102 |           drawerCurrent,
+      103 |           `${arm.locale}: ${screen.requested} -- the drawer says nothing to a screen reader`
+    > 104 |         ).toEqual(["v8-drawer-entry-" + screen.requested]);
+          |           ^
+      105 |         expect(drawerCurrent, `${arm.locale}: ${screen.requested} -- the spoken mark drifted off the painted one`)
+      106 |           .toEqual(drawerActive);
+      107 |
+        at D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend\e2e\qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts:104:11
+
+    Error Context: test-results\qoder-8ac89982-ord0577-lay-acb97-you-are-layers-say-where-en-chromium\error-context.md
+
+
+  2 failed
+    [chromium] › e2e\qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts:65:5 › ORD-0577 the drawer and the sidebar say where you are › layers-say-where-zh 
+    [chromium] › e2e\qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts:65:5 › ORD-0577 the drawer and the sidebar say where you are › layers-say-where-en 
+  1 passed (40.4s)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-layers-say-where-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577recut_layers_counter.db ports 5226/5227 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0577recut_layers_counter LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577recut_layers_counter.log

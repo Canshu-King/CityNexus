@@ -1,0 +1,319 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts",
+ "arm": "en",
+ "shape": "390x844",
+ "answered_by_button": [
+  "hub",
+  "live",
+  "map",
+  "agent",
+  "trips",
+  "me"
+ ],
+ "answered_by_pointer": [
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access"
+ ],
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "current": [
+   "nav-hub"
+  ],
+  "describedby": null
+ },
+ "rows": [
+  {
+   "requested": "hub",
+   "current": [
+    "nav-hub"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Today",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "live",
+   "current": [
+    "nav-map"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Live Journey",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "map",
+   "current": [
+    "nav-map"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Map",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "studio",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Trip Studio",
+   "breadcrumb": "Trip Studio",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "stay",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Stay Explorer",
+   "breadcrumb": "Stay Explorer",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "discover",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "City Discovery",
+   "breadcrumb": "City Discovery",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "import",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Import places",
+   "breadcrumb": "Import places",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Travel Wallet",
+   "breadcrumb": "Travel Wallet",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Footprints",
+   "breadcrumb": "Footprints",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "agent",
+   "current": [
+    "nav-agent"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Copilot",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Recovery",
+   "breadcrumb": "Recovery",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Intelligence",
+   "breadcrumb": "Intelligence",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "twin",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Traveler Twin",
+   "breadcrumb": "Traveler Twin",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "trash",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Recycle bin",
+   "breadcrumb": "Recycle bin",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "access",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "Members and access",
+   "breadcrumb": "Members and access",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "trips",
+   "current": [
+    "nav-trips"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Trips",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "me",
+   "current": [
+    "nav-me"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Me",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  }
+ ]
+}

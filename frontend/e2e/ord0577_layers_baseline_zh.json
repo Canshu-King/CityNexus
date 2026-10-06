@@ -1,0 +1,2045 @@
+{
+ "arm": "zh",
+ "screens": [
+  {
+   "requested": "hub",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "live",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "map",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "studio",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "stay",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "discover",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "import",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "bookings",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "footprints",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "agent",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "twin",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "trash",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "access",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "trips",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  },
+  {
+   "requested": "me",
+   "drawer": [
+    {
+     "testid": "v8-drawer-entry-hub",
+     "text": "今天"
+    },
+    {
+     "testid": "v8-drawer-entry-live",
+     "text": "实时行程"
+    },
+    {
+     "testid": "v8-drawer-entry-map",
+     "text": "地图"
+    },
+    {
+     "testid": "v8-drawer-entry-studio",
+     "text": "行程工作台"
+    },
+    {
+     "testid": "v8-drawer-entry-stay",
+     "text": "住宿选择"
+    },
+    {
+     "testid": "v8-drawer-entry-discover",
+     "text": "城市探索"
+    },
+    {
+     "testid": "v8-drawer-entry-import",
+     "text": "导入地点"
+    },
+    {
+     "testid": "v8-drawer-entry-bookings",
+     "text": "旅行票夹"
+    },
+    {
+     "testid": "v8-drawer-entry-footprints",
+     "text": "足迹"
+    },
+    {
+     "testid": "v8-drawer-entry-agent",
+     "text": "Copilot"
+    },
+    {
+     "testid": "v8-drawer-entry-authoritative",
+     "text": "恢复与执行"
+    },
+    {
+     "testid": "v8-drawer-entry-intelligence",
+     "text": "智能守护"
+    },
+    {
+     "testid": "v8-drawer-entry-twin",
+     "text": "旅行者画像"
+    },
+    {
+     "testid": "v8-drawer-entry-trash",
+     "text": "回收站"
+    },
+    {
+     "testid": "v8-drawer-entry-access",
+     "text": "成员与权限"
+    },
+    {
+     "testid": "v8-drawer-entry-trips",
+     "text": "行程"
+    },
+    {
+     "testid": "v8-drawer-entry-me",
+     "text": "我的"
+    }
+   ],
+   "sidebar": [
+    {
+     "text": "今天"
+    },
+    {
+     "text": "实时行程"
+    },
+    {
+     "text": "地图"
+    },
+    {
+     "text": "行程工作台"
+    },
+    {
+     "text": "住宿选择"
+    },
+    {
+     "text": "城市探索"
+    },
+    {
+     "text": "导入地点"
+    },
+    {
+     "text": "旅行票夹"
+    },
+    {
+     "text": "足迹"
+    },
+    {
+     "text": "Copilot"
+    },
+    {
+     "text": "恢复与执行"
+    },
+    {
+     "text": "智能守护"
+    },
+    {
+     "text": "旅行者画像"
+    },
+    {
+     "text": "回收站"
+    },
+    {
+     "text": "成员与权限"
+    }
+   ]
+  }
+ ]
+}
