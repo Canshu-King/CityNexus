@@ -631,6 +631,34 @@ def _tool_result_advances_state(tool_name: str, result: Any) -> bool:
     return tool_name in _MUTATION_TOOLS and result.get("executed") is True
 
 
+def _same_state_replay(
+    tool_name: str,
+    prior_result: Any,
+    *,
+    replayed_from_sequence_no: int,
+    state_epoch: int,
+) -> dict[str, Any] | None:
+    """Replay a prior server-owned observation without turning it into failure.
+
+    Only pure inspection tools are eligible.  The replay is explicit machine
+    evidence that the world has not advanced; it neither re-executes a mutation
+    nor tells the model which strategy to choose next.
+    """
+
+    if tool_name not in _INSPECTION_TOOLS:
+        return None
+    if not isinstance(prior_result, dict) or prior_result.get("error"):
+        return None
+    replay = dict(prior_result)
+    replay["_runtime_replay"] = {
+        "same_state_replay": True,
+        "state_changed": False,
+        "state_epoch": state_epoch,
+        "replayed_from_sequence_no": replayed_from_sequence_no,
+    }
+    return replay
+
+
 def _server_completion_contract(
     tool_steps: list[dict[str, Any]], *, run_status: str
 ) -> dict[str, Any]:
@@ -964,6 +992,9 @@ class DeepSeekJourneyAgent:
         # the model can inspect newly-created server facts before deciding.
         state_epoch = 0
         seen_calls: set[tuple[str, str, int]] = set()
+        replayable_results: dict[
+            tuple[str, str, int], tuple[int, dict[str, Any]]
+        ] = {}
         tool_counts: dict[str, int] = {}
         acceptance_nudge_sent = False
         mediation_nudge_sent = False
@@ -1135,6 +1166,73 @@ class DeepSeekJourneyAgent:
                     signature = json.dumps(arguments, ensure_ascii=False, sort_keys=True)
                     repetition_key = (tool_name, signature, state_epoch)
                     if repetition_key in seen_calls:
+                        replay_source = replayable_results.get(repetition_key)
+                        replay = (
+                            _same_state_replay(
+                                tool_name,
+                                replay_source[1],
+                                replayed_from_sequence_no=replay_source[0],
+                                state_epoch=state_epoch,
+                            )
+                            if replay_source is not None
+                            else None
+                        )
+                        if replay is not None:
+                            sequence += 1
+                            step_now = _now()
+                            step = AgentRunStep(
+                                id=str(uuid4()),
+                                run_id=run.id,
+                                sequence_no=sequence,
+                                tool_name=tool_name,
+                                arguments_json=_json_text(arguments),
+                                result_json=_json_text(replay),
+                                decision="REPLAY_SAME_STATE",
+                                status="COMPLETED",
+                                created_at=step_now,
+                                completed_at=step_now,
+                            )
+                            session.add(step)
+                            tool_trace.append(
+                                {
+                                    "sequence_no": sequence,
+                                    "tool_name": tool_name,
+                                    "arguments": arguments,
+                                    "result": replay,
+                                    "decision": "REPLAY_SAME_STATE",
+                                    "status": "COMPLETED",
+                                    "created_at": step_now,
+                                    "completed_at": step_now,
+                                }
+                            )
+                            record_audit(
+                                session,
+                                action="agent.run.tool",
+                                entity_type="AgentRun",
+                                entity_id=run.id,
+                                journey_id=journey.id,
+                                actor_type="AI_AGENT",
+                                actor_id="deepseek-agent",
+                                after={
+                                    "run_id": run.id,
+                                    "sequence_no": sequence,
+                                    "tool": tool_name,
+                                    "decision": "REPLAY_SAME_STATE",
+                                    "status": "COMPLETED",
+                                    "replayed_from_sequence_no": replay_source[0],
+                                    "state_epoch": state_epoch,
+                                },
+                                trace_id=trace_id,
+                            )
+                            messages.append(
+                                {
+                                    "role": "tool",
+                                    "tool_call_id": call_id,
+                                    "content": _result_for_model(replay),
+                                }
+                            )
+                            continue
+
                         result = {
                             "tool": tool_name,
                             "error": "tool loop repetition stopped",
@@ -1150,7 +1248,7 @@ class DeepSeekJourneyAgent:
                         )
                         session.add(step)
                         tool_trace.append({"sequence_no": sequence, "tool_name": tool_name, "arguments": arguments, "result": result, "decision": "STOP_REPETITION", "status": step.status})
-                        final_text = "Agent stopped a repeated tool request before another domain action."
+                        final_text = "Agent stopped a repeated non-replayable tool request before another domain action."
                         messages.append({"role": "tool", "tool_call_id": call_id, "content": _result_for_model(result)})
                         continue
                     seen_calls.add(repetition_key)
@@ -1329,6 +1427,15 @@ class DeepSeekJourneyAgent:
                                 name="domain.mutation",
                                 attributes={"tool_name": tool_name, "executed": True},
                             )
+                    if (
+                        tool_name in _INSPECTION_TOOLS
+                        and isinstance(result, dict)
+                        and not result.get("error")
+                    ):
+                        replayable_results[repetition_key] = (
+                            sequence,
+                            dict(result),
+                        )
                     if _tool_result_advances_state(tool_name, result):
                         state_epoch += 1
                     messages.append(
