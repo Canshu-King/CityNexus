@@ -1,0 +1,1262 @@
+{
+  "schema": "citynexus.r37.grounded-presence-next-move.v1",
+  "status": "LIVE_LOCATION_UNAVAILABLE",
+  "database": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-321026a77e5cccae.sqlite3",
+  "source_head_before_live": "06879db6b70c69a1bcf40dd094343685433d1eac",
+  "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+  "fresh_journey": true,
+  "selected_catalog": {
+    "real-place-22cf72809897ff4c7f312fcf": "current_garden",
+    "real-place-b47a20314c81d5a81381d4a4": "c4_craft",
+    "real-place-ebd30de67691cab346be66ec": "candidate_garden",
+    "real-place-8c09b32224152e3e1ae12843": "candidate_museum",
+    "real-place-a346e8f7f72a4d8f523d81e3": "c4_anchor_museum"
+  },
+  "initial_plan": {
+    "active_plan_id": "a15b3bdb-5837-5b2a-a52b-5429627d1d69",
+    "activity_ids": [
+      "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "258efea8-be76-5a91-aee7-feb24ac70e60"
+    ],
+    "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81"
+  },
+  "target_binding": {
+    "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+    "activity_title": "依水園",
+    "place_id": "real-place-22cf72809897ff4c7f312fcf",
+    "place_name": "依水園",
+    "provider_key": "overpass",
+    "latitude": 34.6854763,
+    "longitude": 135.8377354
+  },
+  "standing_mission": {
+    "id": "39465c4b-182b-47fa-b45f-6d95bfa4a1bc",
+    "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+    "trigger_event_id": null,
+    "user_text": "关注接下来的行程、天气、路线和地点开放信息；只在真实影响当前安排时进入恢复流程。",
+    "objective_codes": [],
+    "protected_activity_ids": [],
+    "mutable_activity_ids": [],
+    "intent": {
+      "capabilities": [],
+      "max_cost_delta_minor": 0,
+      "max_loss_minor": 0,
+      "max_schedule_drift_min": 0,
+      "mutable_activity_ids": [],
+      "objective_codes": [],
+      "preferences": {},
+      "protected_activity_ids": [],
+      "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+    },
+    "resolved_intent": {
+      "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+      "capabilities": [],
+      "max_cost_delta_minor": 0,
+      "max_loss_minor": 0,
+      "max_schedule_drift_min": 0,
+      "mutable_activity_ids": [],
+      "objective_codes": [],
+      "policy_mode": "ADVISORY",
+      "policy_version": 1,
+      "preferences": {},
+      "protected_activity_ids": [],
+      "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+    },
+    "allowed_action_classes": [
+      "REQUEST_REPLAN",
+      "ACCEPT_REPLAN"
+    ],
+    "unresolved_references": [],
+    "compiler": {
+      "provider_key": "deterministic",
+      "model_key": "mission-compiler-v2-fallback",
+      "confidence": 1.0
+    },
+    "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+    "is_standing": true,
+    "parent_mission_id": null,
+    "max_cost_delta_minor": 0,
+    "max_loss_minor": 0,
+    "max_schedule_drift_min": 0,
+    "preferences": {},
+    "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+    "status": "ACTIVE",
+    "created_at": "2026-10-06T10:12:22.656466+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "failure_reason": null,
+    "clarification": {},
+    "ai_state": "CONFIGURED_UNVERIFIED",
+    "mission_plan": {
+      "version": "citynexus.mission-plan.v1",
+      "autonomy": "EXECUTE_WITHIN_BOUNDS",
+      "steps": [
+        {
+          "id": "inspect_journey",
+          "operation": "Inspect current Journey",
+          "tool_name": "inspect_journey",
+          "status": "PENDING",
+          "requires_authority": false
+        },
+        {
+          "id": "inspect_twin",
+          "operation": "Inspect JourneyTwin",
+          "tool_name": "inspect_twin",
+          "status": "PENDING",
+          "requires_authority": false
+        },
+        {
+          "id": "inspect_commitments",
+          "operation": "Inspect protected commitments",
+          "tool_name": "inspect_journey",
+          "status": "PENDING",
+          "requires_authority": false
+        },
+        {
+          "id": "evaluate_recovery_options",
+          "operation": "Evaluate the current reality and available recovery options",
+          "tool_name": null,
+          "status": "PENDING",
+          "requires_authority": true
+        },
+        {
+          "id": "evaluate_candidates",
+          "operation": "Evaluate candidates against constraints",
+          "tool_name": null,
+          "status": "PENDING",
+          "requires_authority": false
+        },
+        {
+          "id": "inspect_proposal",
+          "operation": "Inspect available proposal trade-offs",
+          "tool_name": "list_replans",
+          "status": "PENDING",
+          "requires_authority": false
+        },
+        {
+          "id": "approval_boundary",
+          "operation": "Wait for explicit CityNexus approval before mutation",
+          "tool_name": null,
+          "status": "PENDING",
+          "requires_authority": true
+        }
+      ],
+      "protected_activity_ids": [],
+      "allowed_tools": [
+        "inspect_journey",
+        "inspect_twin",
+        "list_replans",
+        "search_city_services",
+        "acquire_place_facts",
+        "estimate_place_facts",
+        "generate_plans",
+        "request_collective_decision",
+        "activate_standby",
+        "request_replan",
+        "accept_replan",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+        "apply_clarified_horizon_choice",
+        "conclude_recovery"
+      ],
+      "read_only_tools": [
+        "inspect_journey",
+        "inspect_twin",
+        "list_replans",
+        "search_city_services"
+      ],
+      "approval_required_tools": [
+        "request_collective_decision",
+        "activate_standby",
+        "accept_replan",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+        "apply_clarified_horizon_choice"
+      ],
+      "authority": "CityNexus AgentToolGateway and deterministic domain services"
+    }
+  },
+  "autopilot_status_before": {
+    "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+    "enrollment": {
+      "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+      "enabled": true,
+      "interval_seconds": 3600.0,
+      "provider_mesh": {
+        "city_discovery": "nominatim+overpass",
+        "mobility": "valhalla",
+        "weather": "open-meteo"
+      },
+      "last_pulse_at": "2026-10-06T10:12:22.664474+00:00",
+      "last_error": null
+    },
+    "watch": {
+      "watch_state": "DAY_AHEAD",
+      "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+      "configured_interval_seconds": 3600.0,
+      "effective_interval_seconds": 1800.0,
+      "next_due_at": "2026-10-06T10:42:22.664474+00:00",
+      "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+      "next_activity_horizon_seconds": 49657.326981,
+      "open_material_event_ids": [],
+      "event_newer_than_last_pulse": false,
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "next_move": {
+        "current_activity": {
+          "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "title": "依水園",
+          "status": "ACTIVE",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "start_at": "2026-10-07T09:00:00+09:00",
+          "end_at": "2026-10-07T10:00:00+09:00"
+        },
+        "next_activity": {
+          "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "title": "依水園",
+          "status": "ACTIVE",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "start_at": "2026-10-07T09:00:00+09:00",
+          "end_at": "2026-10-07T10:00:00+09:00"
+        },
+        "presence": {
+          "state": "LOCATION_UNAVAILABLE",
+          "authority": "NONE",
+          "location_observation_id": null,
+          "source": null,
+          "captured_at": null,
+          "age_seconds": null,
+          "accuracy_m": null,
+          "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "distance_to_target_m": null,
+          "maximum_near_distance_m": null,
+          "arrival_transition_allowed": false,
+          "reason_code": "NO_LOCATION_OBSERVATION"
+        },
+        "venue_readiness": {
+          "state": "UNKNOWN",
+          "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "source": null,
+          "observed_at": null
+        },
+        "route_evidence": {
+          "state": "AVAILABLE",
+          "provider": "valhalla-http",
+          "provenance": null,
+          "degraded": false
+        },
+        "journey_phase": "PRE_TRIP",
+        "phase_authority": "CONTROL_PLANE_ONLY",
+        "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+        "authority": "NONE"
+      },
+      "journey_phase": "PRE_TRIP",
+      "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "current_activity_id": null,
+      "monitored_activity_ids": [
+        "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "258efea8-be76-5a91-aee7-feb24ac70e60"
+      ]
+    },
+    "enabled": false,
+    "interval_seconds": 60.0,
+    "signal_provider": "open-meteo",
+    "enrolled_journey_ids": [
+      "86478b77-7085-4eb9-8d0d-bef56db6f614"
+    ],
+    "last_pulse_at": null,
+    "last_error": null
+  },
+  "guardian_status_before": {
+    "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+    "standing_mission": {
+      "id": "39465c4b-182b-47fa-b45f-6d95bfa4a1bc",
+      "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+      "trigger_event_id": null,
+      "user_text": "关注接下来的行程、天气、路线和地点开放信息；只在真实影响当前安排时进入恢复流程。",
+      "objective_codes": [],
+      "protected_activity_ids": [],
+      "mutable_activity_ids": [],
+      "intent": {
+        "capabilities": [],
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "mutable_activity_ids": [],
+        "objective_codes": [],
+        "preferences": {},
+        "protected_activity_ids": [],
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+      },
+      "resolved_intent": {
+        "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+        "capabilities": [],
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "mutable_activity_ids": [],
+        "objective_codes": [],
+        "policy_mode": "ADVISORY",
+        "policy_version": 1,
+        "preferences": {},
+        "protected_activity_ids": [],
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+      },
+      "allowed_action_classes": [
+        "REQUEST_REPLAN",
+        "ACCEPT_REPLAN"
+      ],
+      "unresolved_references": [],
+      "compiler": {
+        "provider_key": "deterministic",
+        "model_key": "mission-compiler-v2-fallback",
+        "confidence": 1.0
+      },
+      "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+      "is_standing": true,
+      "parent_mission_id": null,
+      "max_cost_delta_minor": 0,
+      "max_loss_minor": 0,
+      "max_schedule_drift_min": 0,
+      "preferences": {},
+      "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+      "status": "ACTIVE",
+      "created_at": "2026-10-06T10:12:22.656466+00:00",
+      "started_at": null,
+      "completed_at": null,
+      "failure_reason": null,
+      "clarification": {},
+      "ai_state": "CONFIGURED_UNVERIFIED",
+      "mission_plan": {
+        "version": "citynexus.mission-plan.v1",
+        "autonomy": "EXECUTE_WITHIN_BOUNDS",
+        "steps": [
+          {
+            "id": "inspect_journey",
+            "operation": "Inspect current Journey",
+            "tool_name": "inspect_journey",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "inspect_twin",
+            "operation": "Inspect JourneyTwin",
+            "tool_name": "inspect_twin",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "inspect_commitments",
+            "operation": "Inspect protected commitments",
+            "tool_name": "inspect_journey",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "evaluate_recovery_options",
+            "operation": "Evaluate the current reality and available recovery options",
+            "tool_name": null,
+            "status": "PENDING",
+            "requires_authority": true
+          },
+          {
+            "id": "evaluate_candidates",
+            "operation": "Evaluate candidates against constraints",
+            "tool_name": null,
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "inspect_proposal",
+            "operation": "Inspect available proposal trade-offs",
+            "tool_name": "list_replans",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "approval_boundary",
+            "operation": "Wait for explicit CityNexus approval before mutation",
+            "tool_name": null,
+            "status": "PENDING",
+            "requires_authority": true
+          }
+        ],
+        "protected_activity_ids": [],
+        "allowed_tools": [
+          "inspect_journey",
+          "inspect_twin",
+          "list_replans",
+          "search_city_services",
+          "acquire_place_facts",
+          "estimate_place_facts",
+          "generate_plans",
+          "request_collective_decision",
+          "activate_standby",
+          "request_replan",
+          "accept_replan",
+          "replace_activity",
+          "reschedule_activity",
+          "create_booking",
+          "cancel_refundable_booking",
+          "request_commitment_change",
+          "apply_clarified_horizon_choice",
+          "conclude_recovery"
+        ],
+        "read_only_tools": [
+          "inspect_journey",
+          "inspect_twin",
+          "list_replans",
+          "search_city_services"
+        ],
+        "approval_required_tools": [
+          "request_collective_decision",
+          "activate_standby",
+          "accept_replan",
+          "replace_activity",
+          "reschedule_activity",
+          "create_booking",
+          "cancel_refundable_booking",
+          "request_commitment_change",
+          "apply_clarified_horizon_choice"
+        ],
+        "authority": "CityNexus AgentToolGateway and deterministic domain services"
+      }
+    },
+    "current_active_plan_version_id": "a15b3bdb-5837-5b2a-a52b-5429627d1d69",
+    "latest": null,
+    "runs": [],
+    "latest_pulse": null,
+    "autopilot": {
+      "enabled": false,
+      "interval_seconds": 60.0,
+      "signal_provider": "open-meteo",
+      "enrolled_journey_ids": [
+        "86478b77-7085-4eb9-8d0d-bef56db6f614"
+      ],
+      "last_pulse_at": null,
+      "last_error": null,
+      "enrollment": {
+        "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+        "enabled": true,
+        "interval_seconds": 3600.0,
+        "provider_mesh": {
+          "city_discovery": "nominatim+overpass",
+          "mobility": "valhalla",
+          "weather": "open-meteo"
+        },
+        "last_pulse_at": "2026-10-06T10:12:22.664474+00:00",
+        "last_error": null
+      },
+      "watch": {
+        "watch_state": "DAY_AHEAD",
+        "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+        "configured_interval_seconds": 3600.0,
+        "effective_interval_seconds": 1800.0,
+        "next_due_at": "2026-10-06T10:42:22.664474+00:00",
+        "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+        "next_activity_horizon_seconds": 49657.316828,
+        "open_material_event_ids": [],
+        "event_newer_than_last_pulse": false,
+        "presence": {
+          "state": "LOCATION_UNAVAILABLE",
+          "authority": "NONE",
+          "location_observation_id": null,
+          "source": null,
+          "captured_at": null,
+          "age_seconds": null,
+          "accuracy_m": null,
+          "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "distance_to_target_m": null,
+          "maximum_near_distance_m": null,
+          "arrival_transition_allowed": false,
+          "reason_code": "NO_LOCATION_OBSERVATION"
+        },
+        "next_move": {
+          "current_activity": {
+            "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "title": "依水園",
+            "status": "ACTIVE",
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "start_at": "2026-10-07T09:00:00+09:00",
+            "end_at": "2026-10-07T10:00:00+09:00"
+          },
+          "next_activity": {
+            "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "title": "依水園",
+            "status": "ACTIVE",
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "start_at": "2026-10-07T09:00:00+09:00",
+            "end_at": "2026-10-07T10:00:00+09:00"
+          },
+          "presence": {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": null,
+            "source": null,
+            "captured_at": null,
+            "age_seconds": null,
+            "accuracy_m": null,
+            "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "distance_to_target_m": null,
+            "maximum_near_distance_m": null,
+            "arrival_transition_allowed": false,
+            "reason_code": "NO_LOCATION_OBSERVATION"
+          },
+          "venue_readiness": {
+            "state": "UNKNOWN",
+            "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "source": null,
+            "observed_at": null
+          },
+          "route_evidence": {
+            "state": "AVAILABLE",
+            "provider": "valhalla-http",
+            "provenance": null,
+            "degraded": false
+          },
+          "journey_phase": "PRE_TRIP",
+          "phase_authority": "CONTROL_PLANE_ONLY",
+          "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+          "authority": "NONE"
+        },
+        "journey_phase": "PRE_TRIP",
+        "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+        "phase_authority": "CONTROL_PLANE_ONLY",
+        "current_activity_id": null,
+        "monitored_activity_ids": [
+          "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "258efea8-be76-5a91-aee7-feb24ac70e60"
+        ]
+      }
+    },
+    "signal_fixture": null
+  },
+  "watch_before": {
+    "watch_state": "DAY_AHEAD",
+    "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+    "configured_interval_seconds": 3600.0,
+    "effective_interval_seconds": 1800.0,
+    "next_due_at": "2026-10-06T10:42:22.664474+00:00",
+    "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+    "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+    "next_activity_horizon_seconds": 49657.334527,
+    "open_material_event_ids": [],
+    "event_newer_than_last_pulse": false,
+    "presence": {
+      "state": "LOCATION_UNAVAILABLE",
+      "authority": "NONE",
+      "location_observation_id": null,
+      "source": null,
+      "captured_at": null,
+      "age_seconds": null,
+      "accuracy_m": null,
+      "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "distance_to_target_m": null,
+      "maximum_near_distance_m": null,
+      "arrival_transition_allowed": false,
+      "reason_code": "NO_LOCATION_OBSERVATION"
+    },
+    "next_move": {
+      "current_activity": {
+        "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "next_activity": {
+        "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "AVAILABLE",
+        "provider": "valhalla-http",
+        "provenance": null,
+        "degraded": false
+      },
+      "journey_phase": "PRE_TRIP",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+      "authority": "NONE"
+    },
+    "journey_phase": "PRE_TRIP",
+    "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "current_activity_id": null,
+    "monitored_activity_ids": [
+      "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "258efea8-be76-5a91-aee7-feb24ac70e60"
+    ]
+  },
+  "next_move_before": {
+    "current_activity": {
+      "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "title": "依水園",
+      "status": "ACTIVE",
+      "place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "start_at": "2026-10-07T09:00:00+09:00",
+      "end_at": "2026-10-07T10:00:00+09:00"
+    },
+    "next_activity": {
+      "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "title": "依水園",
+      "status": "ACTIVE",
+      "place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "start_at": "2026-10-07T09:00:00+09:00",
+      "end_at": "2026-10-07T10:00:00+09:00"
+    },
+    "presence": {
+      "state": "LOCATION_UNAVAILABLE",
+      "authority": "NONE",
+      "location_observation_id": null,
+      "source": null,
+      "captured_at": null,
+      "age_seconds": null,
+      "accuracy_m": null,
+      "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "distance_to_target_m": null,
+      "maximum_near_distance_m": null,
+      "arrival_transition_allowed": false,
+      "reason_code": "NO_LOCATION_OBSERVATION"
+    },
+    "venue_readiness": {
+      "state": "UNKNOWN",
+      "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "source": null,
+      "observed_at": null
+    },
+    "route_evidence": {
+      "state": "AVAILABLE",
+      "provider": "valhalla-http",
+      "provenance": null,
+      "degraded": false
+    },
+    "journey_phase": "PRE_TRIP",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+    "authority": "NONE"
+  },
+  "presence_before": {
+    "state": "LOCATION_UNAVAILABLE",
+    "authority": "NONE",
+    "location_observation_id": null,
+    "source": null,
+    "captured_at": null,
+    "age_seconds": null,
+    "accuracy_m": null,
+    "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+    "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+    "distance_to_target_m": null,
+    "maximum_near_distance_m": null,
+    "arrival_transition_allowed": false,
+    "reason_code": "NO_LOCATION_OBSERVATION"
+  },
+  "location_observation_attempt": {
+    "count": 0,
+    "path": "FOREGROUND_WEB",
+    "outcome": "LIVE_LOCATION_UNAVAILABLE",
+    "reason": "NO_BROWSER_FOREGROUND_LOCATION_SUPPLIED"
+  },
+  "watch_after": {
+    "watch_state": "DAY_AHEAD",
+    "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+    "configured_interval_seconds": 3600.0,
+    "effective_interval_seconds": 1800.0,
+    "next_due_at": "2026-10-06T10:42:22.664474+00:00",
+    "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+    "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+    "next_activity_horizon_seconds": 49657.312821,
+    "open_material_event_ids": [],
+    "event_newer_than_last_pulse": false,
+    "presence": {
+      "state": "LOCATION_UNAVAILABLE",
+      "authority": "NONE",
+      "location_observation_id": null,
+      "source": null,
+      "captured_at": null,
+      "age_seconds": null,
+      "accuracy_m": null,
+      "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "distance_to_target_m": null,
+      "maximum_near_distance_m": null,
+      "arrival_transition_allowed": false,
+      "reason_code": "NO_LOCATION_OBSERVATION"
+    },
+    "next_move": {
+      "current_activity": {
+        "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "next_activity": {
+        "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "AVAILABLE",
+        "provider": "valhalla-http",
+        "provenance": null,
+        "degraded": false
+      },
+      "journey_phase": "PRE_TRIP",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+      "authority": "NONE"
+    },
+    "journey_phase": "PRE_TRIP",
+    "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "current_activity_id": null,
+    "monitored_activity_ids": [
+      "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "258efea8-be76-5a91-aee7-feb24ac70e60"
+    ]
+  },
+  "next_move_after": {
+    "current_activity": {
+      "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "title": "依水園",
+      "status": "ACTIVE",
+      "place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "start_at": "2026-10-07T09:00:00+09:00",
+      "end_at": "2026-10-07T10:00:00+09:00"
+    },
+    "next_activity": {
+      "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "title": "依水園",
+      "status": "ACTIVE",
+      "place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "start_at": "2026-10-07T09:00:00+09:00",
+      "end_at": "2026-10-07T10:00:00+09:00"
+    },
+    "presence": {
+      "state": "LOCATION_UNAVAILABLE",
+      "authority": "NONE",
+      "location_observation_id": null,
+      "source": null,
+      "captured_at": null,
+      "age_seconds": null,
+      "accuracy_m": null,
+      "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+      "distance_to_target_m": null,
+      "maximum_near_distance_m": null,
+      "arrival_transition_allowed": false,
+      "reason_code": "NO_LOCATION_OBSERVATION"
+    },
+    "venue_readiness": {
+      "state": "UNKNOWN",
+      "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "source": null,
+      "observed_at": null
+    },
+    "route_evidence": {
+      "state": "AVAILABLE",
+      "provider": "valhalla-http",
+      "provenance": null,
+      "degraded": false
+    },
+    "journey_phase": "PRE_TRIP",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+    "authority": "NONE"
+  },
+  "presence_after": {
+    "state": "LOCATION_UNAVAILABLE",
+    "authority": "NONE",
+    "location_observation_id": null,
+    "source": null,
+    "captured_at": null,
+    "age_seconds": null,
+    "accuracy_m": null,
+    "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+    "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+    "distance_to_target_m": null,
+    "maximum_near_distance_m": null,
+    "arrival_transition_allowed": false,
+    "reason_code": "NO_LOCATION_OBSERVATION"
+  },
+  "autopilot_status_after": {
+    "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+    "enrollment": {
+      "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+      "enabled": true,
+      "interval_seconds": 3600.0,
+      "provider_mesh": {
+        "city_discovery": "nominatim+overpass",
+        "mobility": "valhalla",
+        "weather": "open-meteo"
+      },
+      "last_pulse_at": "2026-10-06T10:12:22.664474+00:00",
+      "last_error": null
+    },
+    "watch": {
+      "watch_state": "DAY_AHEAD",
+      "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+      "configured_interval_seconds": 3600.0,
+      "effective_interval_seconds": 1800.0,
+      "next_due_at": "2026-10-06T10:42:22.664474+00:00",
+      "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+      "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+      "next_activity_horizon_seconds": 49657.306396,
+      "open_material_event_ids": [],
+      "event_newer_than_last_pulse": false,
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "next_move": {
+        "current_activity": {
+          "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "title": "依水園",
+          "status": "ACTIVE",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "start_at": "2026-10-07T09:00:00+09:00",
+          "end_at": "2026-10-07T10:00:00+09:00"
+        },
+        "next_activity": {
+          "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "title": "依水園",
+          "status": "ACTIVE",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "start_at": "2026-10-07T09:00:00+09:00",
+          "end_at": "2026-10-07T10:00:00+09:00"
+        },
+        "presence": {
+          "state": "LOCATION_UNAVAILABLE",
+          "authority": "NONE",
+          "location_observation_id": null,
+          "source": null,
+          "captured_at": null,
+          "age_seconds": null,
+          "accuracy_m": null,
+          "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "distance_to_target_m": null,
+          "maximum_near_distance_m": null,
+          "arrival_transition_allowed": false,
+          "reason_code": "NO_LOCATION_OBSERVATION"
+        },
+        "venue_readiness": {
+          "state": "UNKNOWN",
+          "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "source": null,
+          "observed_at": null
+        },
+        "route_evidence": {
+          "state": "AVAILABLE",
+          "provider": "valhalla-http",
+          "provenance": null,
+          "degraded": false
+        },
+        "journey_phase": "PRE_TRIP",
+        "phase_authority": "CONTROL_PLANE_ONLY",
+        "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+        "authority": "NONE"
+      },
+      "journey_phase": "PRE_TRIP",
+      "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "current_activity_id": null,
+      "monitored_activity_ids": [
+        "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "258efea8-be76-5a91-aee7-feb24ac70e60"
+      ]
+    },
+    "enabled": false,
+    "interval_seconds": 60.0,
+    "signal_provider": "open-meteo",
+    "enrolled_journey_ids": [
+      "86478b77-7085-4eb9-8d0d-bef56db6f614"
+    ],
+    "last_pulse_at": null,
+    "last_error": null
+  },
+  "guardian_status_after": {
+    "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+    "standing_mission": {
+      "id": "39465c4b-182b-47fa-b45f-6d95bfa4a1bc",
+      "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+      "trigger_event_id": null,
+      "user_text": "关注接下来的行程、天气、路线和地点开放信息；只在真实影响当前安排时进入恢复流程。",
+      "objective_codes": [],
+      "protected_activity_ids": [],
+      "mutable_activity_ids": [],
+      "intent": {
+        "capabilities": [],
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "mutable_activity_ids": [],
+        "objective_codes": [],
+        "preferences": {},
+        "protected_activity_ids": [],
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+      },
+      "resolved_intent": {
+        "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+        "capabilities": [],
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "mutable_activity_ids": [],
+        "objective_codes": [],
+        "policy_mode": "ADVISORY",
+        "policy_version": 1,
+        "preferences": {},
+        "protected_activity_ids": [],
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+      },
+      "allowed_action_classes": [
+        "REQUEST_REPLAN",
+        "ACCEPT_REPLAN"
+      ],
+      "unresolved_references": [],
+      "compiler": {
+        "provider_key": "deterministic",
+        "model_key": "mission-compiler-v2-fallback",
+        "confidence": 1.0
+      },
+      "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+      "is_standing": true,
+      "parent_mission_id": null,
+      "max_cost_delta_minor": 0,
+      "max_loss_minor": 0,
+      "max_schedule_drift_min": 0,
+      "preferences": {},
+      "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+      "status": "ACTIVE",
+      "created_at": "2026-10-06T10:12:22.656466+00:00",
+      "started_at": null,
+      "completed_at": null,
+      "failure_reason": null,
+      "clarification": {},
+      "ai_state": "CONFIGURED_UNVERIFIED",
+      "mission_plan": {
+        "version": "citynexus.mission-plan.v1",
+        "autonomy": "EXECUTE_WITHIN_BOUNDS",
+        "steps": [
+          {
+            "id": "inspect_journey",
+            "operation": "Inspect current Journey",
+            "tool_name": "inspect_journey",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "inspect_twin",
+            "operation": "Inspect JourneyTwin",
+            "tool_name": "inspect_twin",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "inspect_commitments",
+            "operation": "Inspect protected commitments",
+            "tool_name": "inspect_journey",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "evaluate_recovery_options",
+            "operation": "Evaluate the current reality and available recovery options",
+            "tool_name": null,
+            "status": "PENDING",
+            "requires_authority": true
+          },
+          {
+            "id": "evaluate_candidates",
+            "operation": "Evaluate candidates against constraints",
+            "tool_name": null,
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "inspect_proposal",
+            "operation": "Inspect available proposal trade-offs",
+            "tool_name": "list_replans",
+            "status": "PENDING",
+            "requires_authority": false
+          },
+          {
+            "id": "approval_boundary",
+            "operation": "Wait for explicit CityNexus approval before mutation",
+            "tool_name": null,
+            "status": "PENDING",
+            "requires_authority": true
+          }
+        ],
+        "protected_activity_ids": [],
+        "allowed_tools": [
+          "inspect_journey",
+          "inspect_twin",
+          "list_replans",
+          "search_city_services",
+          "acquire_place_facts",
+          "estimate_place_facts",
+          "generate_plans",
+          "request_collective_decision",
+          "activate_standby",
+          "request_replan",
+          "accept_replan",
+          "replace_activity",
+          "reschedule_activity",
+          "create_booking",
+          "cancel_refundable_booking",
+          "request_commitment_change",
+          "apply_clarified_horizon_choice",
+          "conclude_recovery"
+        ],
+        "read_only_tools": [
+          "inspect_journey",
+          "inspect_twin",
+          "list_replans",
+          "search_city_services"
+        ],
+        "approval_required_tools": [
+          "request_collective_decision",
+          "activate_standby",
+          "accept_replan",
+          "replace_activity",
+          "reschedule_activity",
+          "create_booking",
+          "cancel_refundable_booking",
+          "request_commitment_change",
+          "apply_clarified_horizon_choice"
+        ],
+        "authority": "CityNexus AgentToolGateway and deterministic domain services"
+      }
+    },
+    "current_active_plan_version_id": "a15b3bdb-5837-5b2a-a52b-5429627d1d69",
+    "latest": null,
+    "runs": [],
+    "latest_pulse": null,
+    "autopilot": {
+      "enabled": false,
+      "interval_seconds": 60.0,
+      "signal_provider": "open-meteo",
+      "enrolled_journey_ids": [
+        "86478b77-7085-4eb9-8d0d-bef56db6f614"
+      ],
+      "last_pulse_at": null,
+      "last_error": null,
+      "enrollment": {
+        "journey_id": "86478b77-7085-4eb9-8d0d-bef56db6f614",
+        "enabled": true,
+        "interval_seconds": 3600.0,
+        "provider_mesh": {
+          "city_discovery": "nominatim+overpass",
+          "mobility": "valhalla",
+          "weather": "open-meteo"
+        },
+        "last_pulse_at": "2026-10-06T10:12:22.664474+00:00",
+        "last_error": null
+      },
+      "watch": {
+        "watch_state": "DAY_AHEAD",
+        "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+        "configured_interval_seconds": 3600.0,
+        "effective_interval_seconds": 1800.0,
+        "next_due_at": "2026-10-06T10:42:22.664474+00:00",
+        "next_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+        "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+        "next_activity_horizon_seconds": 49657.300344,
+        "open_material_event_ids": [],
+        "event_newer_than_last_pulse": false,
+        "presence": {
+          "state": "LOCATION_UNAVAILABLE",
+          "authority": "NONE",
+          "location_observation_id": null,
+          "source": null,
+          "captured_at": null,
+          "age_seconds": null,
+          "accuracy_m": null,
+          "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "distance_to_target_m": null,
+          "maximum_near_distance_m": null,
+          "arrival_transition_allowed": false,
+          "reason_code": "NO_LOCATION_OBSERVATION"
+        },
+        "next_move": {
+          "current_activity": {
+            "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "title": "依水園",
+            "status": "ACTIVE",
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "start_at": "2026-10-07T09:00:00+09:00",
+            "end_at": "2026-10-07T10:00:00+09:00"
+          },
+          "next_activity": {
+            "id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "title": "依水園",
+            "status": "ACTIVE",
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "start_at": "2026-10-07T09:00:00+09:00",
+            "end_at": "2026-10-07T10:00:00+09:00"
+          },
+          "presence": {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": null,
+            "source": null,
+            "captured_at": null,
+            "age_seconds": null,
+            "accuracy_m": null,
+            "target_activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "distance_to_target_m": null,
+            "maximum_near_distance_m": null,
+            "arrival_transition_allowed": false,
+            "reason_code": "NO_LOCATION_OBSERVATION"
+          },
+          "venue_readiness": {
+            "state": "UNKNOWN",
+            "activity_id": "ddc0744c-df04-585f-b2d4-d147e982eb81",
+            "source": null,
+            "observed_at": null
+          },
+          "route_evidence": {
+            "state": "AVAILABLE",
+            "provider": "valhalla-http",
+            "provenance": null,
+            "degraded": false
+          },
+          "journey_phase": "PRE_TRIP",
+          "phase_authority": "CONTROL_PLANE_ONLY",
+          "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+          "authority": "NONE"
+        },
+        "journey_phase": "PRE_TRIP",
+        "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+        "phase_authority": "CONTROL_PLANE_ONLY",
+        "current_activity_id": null,
+        "monitored_activity_ids": [
+          "ddc0744c-df04-585f-b2d4-d147e982eb81",
+          "258efea8-be76-5a91-aee7-feb24ac70e60"
+        ]
+      }
+    },
+    "signal_fixture": null
+  },
+  "persisted": {
+    "guardian_pulse_ids": [],
+    "location_observation_ids": [],
+    "events": [],
+    "agent_run_ids": [],
+    "proposal_ids": [],
+    "mutation_count": 0
+  },
+  "final_active_plan_id": "a15b3bdb-5837-5b2a-a52b-5429627d1d69",
+  "execution_truth": {
+    "physical_arrival_claimed": false,
+    "strong_execution_transition": "BLOCKED",
+    "trusted_bridge": "UNAVAILABLE_IN_LOCAL_ENVIRONMENT",
+    "foreground_web_authority": "ADVISORY_ONLY"
+  },
+  "proof": {
+    "no_spoofed_coordinate": true,
+    "no_near_target_retry": true,
+    "read_only_projection": true,
+    "watch_presence_did_not_create_event": true
+  },
+  "captured_at": "2026-10-06T10:12:22.761746+00:00",
+  "limitations": [
+    "No browser foreground permission was available in this local closure.",
+    "No trusted device attestation bridge is configured.",
+    "CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false"
+  ]
+}

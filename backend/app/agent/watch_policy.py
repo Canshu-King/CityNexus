@@ -219,6 +219,147 @@ def journey_phase_projection(
         "monitored_activity_ids": bounded_from(next_row),
     }
 
+
+def next_move_projection(
+    session: Session,
+    journey: Journey,
+    *,
+    phase: dict[str, Any] | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Return a read-only traveller projection for the next meaningful move."""
+
+    stamp = (now or execution_clock.now()).astimezone(timezone.utc)
+    phase_value = phase or journey_phase_projection(session, journey, now=stamp)
+    active_rows: list[Activity] = []
+    if callable(getattr(session, "scalars", None)) and journey.active_plan_version_id:
+        active_rows = list(
+            session.scalars(
+                select(Activity)
+                .where(Activity.plan_version_id == journey.active_plan_version_id)
+                .order_by(Activity.sequence_no)
+            ).all()
+        )
+        active_rows = [row for row in active_rows if row.status not in _TERMINAL_ACTIVITY]
+
+    current_id = str(
+        phase_value.get("current_activity_id")
+        or getattr(journey, "current_activity_id", None)
+        or ""
+    )
+    current = next((row for row in active_rows if str(row.id) == current_id), None)
+    if current is not None and phase_value.get("journey_phase") in {"IN_TRANSIT", "IN_ACTIVITY"}:
+        next_activity = next(
+            (row for row in active_rows if row.sequence_no > current.sequence_no),
+            None,
+        )
+    else:
+        next_activity, _ = _next_activity(session, journey, now=stamp)
+    target = next_activity or current
+    presence = (
+        presence_projection(
+            session,
+            journey,
+            target_activity_id=str(target.id) if target is not None else None,
+            now=stamp,
+        )
+        if callable(getattr(session, "scalar", None))
+        else {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "arrival_transition_allowed": False,
+            "reason_code": "PRESENCE_ROWS_UNAVAILABLE",
+        }
+    )
+
+    venue_readiness: dict[str, Any] = {
+        "state": "UNKNOWN",
+        "activity_id": str(target.id) if target is not None else None,
+        "source": None,
+        "observed_at": None,
+    }
+    if callable(getattr(session, "scalar", None)):
+        from app.db.models import GuardianPulse, PlanVersion
+
+        latest_pulse = session.scalar(
+            select(GuardianPulse)
+            .where(GuardianPulse.journey_id == journey.id)
+            .order_by(GuardianPulse.started_at.desc(), GuardianPulse.id.desc())
+        )
+        if latest_pulse is not None:
+            try:
+                pulse_result = json.loads(latest_pulse.result_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                pulse_result = {}
+            classifications = (pulse_result.get("context_watch") or {}).get("classifications") or []
+            for item in classifications:
+                if target is not None and str(item.get("activity_id")) == str(target.id):
+                    venue_readiness = {
+                        "state": item.get("status") or "UNKNOWN",
+                        "activity_id": item.get("activity_id"),
+                        "source": item.get("opening_hours", {}).get("source")
+                        if isinstance(item.get("opening_hours"), dict)
+                        else None,
+                        "observed_at": item.get("observation_id"),
+                    }
+                    break
+
+        plan = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
+    else:
+        plan = None
+    mobility_raw: dict[str, Any] = {}
+    if plan is not None:
+        try:
+            mobility_raw = json.loads(plan.mobility_evidence_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            mobility_raw = {}
+    route_evidence = {
+        "state": mobility_raw.get("state") or ("AVAILABLE" if mobility_raw else "UNKNOWN"),
+        "provider": mobility_raw.get("source_provider") or mobility_raw.get("provider_key"),
+        "provenance": mobility_raw.get("aggregate_provenance") or mobility_raw.get("provenance"),
+        "degraded": bool(mobility_raw.get("degraded", False)),
+    }
+
+    presence_state = str(presence.get("state") or "LOCATION_UNAVAILABLE")
+    if presence_state == "LOCATION_STALE":
+        copy = "Your location is too old to judge where you are."
+    elif presence_state == "LOCATION_IMPRECISE":
+        copy = "Your location is too imprecise to judge where you are."
+    elif presence_state == "NEAR_TARGET":
+        copy = "You appear close to the next stop. Confirm arrival when you’re there."
+    elif presence_state == "VERIFIED_AT_TARGET":
+        copy = "Guardian verified a trusted location near the next stop. Confirm arrival to continue."
+    elif presence_state == "AWAY_FROM_TARGET":
+        copy = "You’re still far from your next stop. Guardian is watching the route and venue."
+    elif presence_state == "TARGET_UNBOUND":
+        copy = "The next stop has no exact place yet; Guardian is using the plan schedule."
+    else:
+        copy = "Location sharing is off; Guardian is using the plan schedule only."
+
+    def activity_payload(row: Activity | None) -> dict[str, Any] | None:
+        if row is None:
+            return None
+        return {
+            "id": str(row.id),
+            "title": getattr(row, "title", None),
+            "status": getattr(row, "status", None),
+            "place_id": getattr(row, "place_id", None),
+            "start_at": getattr(row, "start_at", None),
+            "end_at": getattr(row, "end_at", None),
+        }
+
+    return {
+        "current_activity": activity_payload(current),
+        "next_activity": activity_payload(next_activity),
+        "presence": presence,
+        "venue_readiness": venue_readiness,
+        "route_evidence": route_evidence,
+        "journey_phase": phase_value.get("journey_phase"),
+        "phase_authority": phase_value.get("phase_authority"),
+        "copy": copy,
+        "authority": presence.get("authority") or "NONE",
+    }
+
 def adaptive_watch_policy(
     session: Session,
     journey: Journey,
@@ -249,23 +390,10 @@ def adaptive_watch_policy(
             "current_activity_id": None,
             "monitored_activity_ids": [],
         }
-    presence = (
-        presence_projection(
-            session,
-            journey,
-            target_activity_id=((phase.get("monitored_activity_ids") or [None])[0]),
-            now=stamp,
-        )
-        if callable(getattr(session, "scalar", None))
-        else {
-            "state": "LOCATION_UNAVAILABLE",
-            "authority": "NONE",
-            "arrival_transition_allowed": False,
-            "reason_code": "PRESENCE_ROWS_UNAVAILABLE",
-        }
-    )
     next_activity, horizon = _next_activity(session, journey, now=stamp)
     incidents = _open_material_events(session, journey.id)
+    next_move = next_move_projection(session, journey, phase=phase, now=stamp)
+    presence = next_move.get("presence") or {}
 
     if incidents:
         state = "INCIDENT_ACTIVE"
@@ -287,6 +415,18 @@ def adaptive_watch_policy(
         state = "QUIET"
         policy_interval = configured
         reason = "NO_NEAR_TERM_ACTIVITY_OR_MATERIAL_INCIDENT"
+
+    # Presence only tightens a due cadence. It never creates an incident or
+    # grants execution authority. A fresh foreground location near/far from a
+    # near-term stop is still advisory evidence.
+    presence_state = str(presence.get("state") or "")
+    if not incidents and horizon is not None and horizon <= 2 * 3600:
+        if presence_state == "AWAY_FROM_TARGET":
+            policy_interval = min(policy_interval, 60.0)
+            reason = "FRESH_FOREGROUND_LOCATION_AWAY_FROM_NEAR_TERM_STOP"
+        elif presence_state in {"NEAR_TARGET", "VERIFIED_AT_TARGET"}:
+            policy_interval = min(policy_interval, 300.0)
+            reason = "FRESH_FOREGROUND_LOCATION_NEAR_NEXT_STOP"
 
     effective = min(configured, policy_interval)
     previous = _as_aware(enrollment.last_pulse_at)
@@ -313,6 +453,7 @@ def adaptive_watch_policy(
         "open_material_event_ids": [row.id for row in incidents],
         "event_newer_than_last_pulse": event_newer_than_last_pulse,
         "presence": presence,
+        "next_move": next_move,
         **phase,
     }
 

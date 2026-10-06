@@ -21,6 +21,11 @@ class _Session:
         return None
 
     def scalar(self, _statement):
+        if self.location is None:
+            return None
+        parameters = set(_statement.compile().params.values())
+        if str(self.location.journey_id) not in {str(item) for item in parameters}:
+            return None
         return self.location
 
 
@@ -125,4 +130,46 @@ def test_foreground_location_far_from_target_is_not_an_incident():
 
     assert result["state"] == "AWAY_FROM_TARGET"
     assert result["authority"] == "ADVISORY_FOREGROUND"
+    assert result["arrival_transition_allowed"] is False
+
+
+def test_location_from_another_journey_is_not_considered():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    foreign = _location(now)
+    foreign.journey_id = "some-other-journey"
+    result = presence_projection(
+        _Session(activity=_activity(), place=_place(), location=foreign),
+        _journey(),
+        now=now,
+    )
+
+    assert result["state"] == "LOCATION_UNAVAILABLE"
+    assert result["location_observation_id"] is None
+    assert result["arrival_transition_allowed"] is False
+
+
+def test_activity_without_exact_place_is_unbound():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    unbound = _activity()
+    unbound.place_id = None
+    result = presence_projection(
+        _Session(activity=unbound, place=_place(), location=_location(now)),
+        _journey(),
+        now=now,
+    )
+
+    assert result["state"] == "TARGET_UNBOUND"
+    assert result["arrival_transition_allowed"] is False
+
+
+def test_unknown_activity_id_is_not_rebound_to_another_place():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    result = presence_projection(
+        _Session(activity=_activity(), place=_place(), location=_location(now)),
+        _journey(),
+        target_activity_id="activity-from-another-plan",
+        now=now,
+    )
+
+    assert result["state"] == "TARGET_UNBOUND"
     assert result["arrival_transition_allowed"] is False

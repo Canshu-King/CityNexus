@@ -209,10 +209,23 @@ def test_r28_foreground_web_location_cannot_claim_device_verified_execution() ->
                 "longitude": longitude,
                 "accuracy_m": 20.0,
                 "captured_at": _now(),
+                # Ordinary browser JSON cannot choose a trusted persisted source.
+                "source": "DEVICE_ATTESTED",
             },
         )
         assert location.status_code == 201, location.text
         assert location.json()["principal_bound"] is True
+        assert location.json()["source"] == "FOREGROUND_WEB"
+
+        from app.execution.presence import presence_projection
+
+        with SessionLocal() as session:
+            journey = session.get(Journey, journey_id)
+            presence = presence_projection(session, journey)
+        assert presence["state"] == "NEAR_TARGET"
+        assert presence["authority"] == "ADVISORY_FOREGROUND"
+        assert presence["arrival_transition_allowed"] is False
+        assert presence["distance_to_target_m"] <= 150.0
 
         verified = client.post(
             f"/api/v1/journeys/{journey_id}/activities/{activity_id}/depart",

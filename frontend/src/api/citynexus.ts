@@ -360,6 +360,22 @@ export interface GuardianWatch {
   phase_authority: string;
   current_activity_id: string | null;
   monitored_activity_ids: string[];
+  next_move?: {
+    copy: string;
+    authority: string;
+    journey_phase: string | null;
+    phase_authority: string | null;
+    presence?: {
+      state?: string;
+      authority?: string;
+      distance_to_target_m?: number | null;
+      age_seconds?: number | null;
+      accuracy_m?: number | null;
+      arrival_transition_allowed?: boolean;
+    };
+    venue_readiness?: { state?: string; activity_id?: string | null };
+    route_evidence?: { state?: string; provider?: string | null; provenance?: string | null; degraded?: boolean };
+  } | null;
 }
 
 export interface ResilienceSnapshot {

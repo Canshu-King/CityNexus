@@ -20,7 +20,12 @@ from app.agent.predictive import (
     maintain_standby_portfolio,
 )
 from app.agent.signal_pipeline import SignalPipelineResult, refresh_demo_signals
-from app.agent.watch_policy import adaptive_watch_policy, journey_phase_projection, watch_is_due
+from app.agent.watch_policy import (
+    adaptive_watch_policy,
+    journey_phase_projection,
+    next_move_projection,
+    watch_is_due,
+)
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import (
@@ -296,6 +301,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
     session.flush()
     try:
         phase = journey_phase_projection(session, journey)
+        next_move = next_move_projection(session, journey, phase=phase)
         trace_spans.append(
             persist_span(
                 session,
@@ -513,6 +519,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
             )
         result = {
             "phase": phase,
+            "next_move": next_move,
             "signals": signals.to_dict(),
             "context_watch": context_watch,
             "guardian": guardian_result,

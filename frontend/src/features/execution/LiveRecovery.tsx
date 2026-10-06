@@ -45,6 +45,11 @@ type GuardianPulse = {
   };
 };
 
+type GuardianWatch = {
+  enabled?: boolean;
+  next_move?: { copy?: string; presence?: { state?: string } } | null;
+};
+
 type Disruption = {
   id: string;
   type: string;
@@ -123,6 +128,7 @@ export function LiveRecovery({
   const plans = useAuthoritativePlans(journeyId);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [guardianPulse, setGuardianPulse] = useState<GuardianPulse | null>(null);
+  const [guardianWatch, setGuardianWatch] = useState<GuardianWatch | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -150,6 +156,29 @@ export function LiveRecovery({
         if (!cancelled) setGuardianPulse((body?.pulse ?? null) as GuardianPulse | null);
       } catch {
         if (!cancelled) setGuardianPulse(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [journeyId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const response = await fetch(`/api/v1/journeys/${journeyId}/guardian/autopilot/status`);
+        if (!response.ok) return;
+        const body = await response.json();
+        if (!cancelled) {
+          setGuardianWatch(
+            body?.enrollment?.enabled
+              ? ({ enabled: true, next_move: body?.watch?.next_move ?? null } as GuardianWatch)
+              : null,
+          );
+        }
+      } catch {
+        if (!cancelled) setGuardianWatch(null);
       }
     })();
     return () => {
@@ -387,6 +416,13 @@ export function LiveRecovery({
               })}
             </time>
           )}
+        </div>
+      )}
+
+      {guardianWatch?.enabled && guardianWatch.next_move?.copy && (
+        <div className="live-next-move" data-testid="live-next-move" role="status">
+          <b>{zh ? "下一步" : "Next move"}</b>
+          <span>{guardianWatch.next_move.copy}</span>
         </div>
       )}
 

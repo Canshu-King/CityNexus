@@ -1249,6 +1249,11 @@ function LegacyApp() {
             <span data-testid="guardian-watch-next-check">
               Next check around {formatTime(guardianStatus.autopilot.watch.next_due_at)}
             </span>
+            {guardianStatus.autopilot.watch.next_move?.copy && (
+              <span data-testid="guardian-next-move">
+                {guardianStatus.autopilot.watch.next_move.copy}
+              </span>
+            )}
           </div>
         )}
         <div className="predictive-panel" data-testid="guardian-predictive-resilience">
