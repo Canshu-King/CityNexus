@@ -166,6 +166,9 @@ def pending_resolved_mediation_selection(
         "clarification_id": str(clarification.get("clarification_id") or ""),
         "decision_epoch": str(clarification.get("decision_epoch") or ""),
         "material_world_epoch": str(clarification.get("material_world_epoch") or ""),
+        "authority_receipt_id": str(
+            clarification.get("authority_receipt_id") or ""
+        ),
         "selected_proposal_id": proposal.id,
         "selected_plan_version_id": plan.id,
     }
