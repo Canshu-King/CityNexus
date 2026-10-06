@@ -1,0 +1,26 @@
+fleet citation audit r1: every coordinate the whole ledger cites, checked against the remote (0 product paths)
+
+The lane-only sweep found a ref name I had invented.  The same mistake is fleet-wide business, so this
+sweep covers every block in the ledger -- but it deliberately answers the two halves differently, because
+only one of them can be answered without a fetch:
+
+  ref names -- one `ls-remote --refs origin` returns the whole remote ref map, so EXISTS / MISSING is
+    decided against the remote itself.  This is a real verdict, and it is the half that found things.
+    40-hex  -- `cat-file` only asks MY object store, so a blob another lane pushed can be live on the
+    remote and simply unfetched here.  "Not in my store" is therefore NOT reported as a dead coordinate;
+    settling it would need a fetch nobody authorised.
+
+Missing refs are classified before being counted: blocks abbreviate (`refs/heads/review/6a150e1e…`) and a
+regex hands back the fragment, so each one is split into COMPLETE (nothing on the remote starts with it --
+a name a reader really would try to resolve) and FRAGMENT (ends mid-token, or is a strict prefix of a ref
+that does exist).  Publishing the raw count without that split would be the same over-claim this tool
+exists to stop.
+
+Contents under review/citation-audit-fleet-r1/:
+- tools/citation_audit_fleet_r1.py -- the sweep; also renders and vouches its own BB copy.
+- evidence/citation_audit_fleet_r1/citation_audit_fleet_r1.json -- the per-ref and per-hex tables.
+- run/citation_audit_fleet_r1.txt -- the printed output.
+- run/citation_audit_fleet_r1_manifest.json, run/commit_citation_audit_fleet_r1_msg.txt -- this publish.
+
+Read-only: no fetch, no write, no ref moved, no ledger direct write, no product byte.  New file names
+throughout; no landed instrument path is rewritten (CMDR-0925-2128).
