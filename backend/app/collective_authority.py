@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from datetime import datetime, timezone
 from typing import Any, Iterable
@@ -228,6 +229,113 @@ def receipt_validation(
         if str(actual or "") != expected:
             return {"valid": False, "code": code}
     return {"valid": True, "code": None, "receipt_id": receipt.id, "authority_mode": receipt.authority_mode}
+
+
+def authority_receipt_for_allowed_gate(
+    session: Session,
+    *,
+    journey_id: str,
+    proposal_id: str,
+    plan_version_id: str,
+    gate: dict[str, Any],
+    resolved_decision: dict[str, Any] | None = None,
+) -> CollectiveAuthorityReceipt | None:
+    """Resolve one exact receipt for a server-approved mutation preflight.
+
+    This function never decides whether a collective mutation is allowed. The
+    caller supplies the current collective-mutation gate result. It turns that
+    allowed server fact into one durable, idempotent authority receipt so
+    approval suspension and final mutation can bind the same token.
+    """
+
+    if gate.get("allowed") is not True:
+        raise ValueError("collective authority receipt requires an allowed gate")
+
+    classification = str(gate.get("classification") or "")
+    if classification == UNANIMOUS_DOMINANCE:
+        surface = json.dumps(
+            gate.get("candidate_fit_matrix") or [],
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        )
+        surface_fingerprint = hashlib.sha256(surface.encode()).hexdigest()
+        decision_epoch = str(
+            gate.get("current_decision_epoch") or surface_fingerprint
+        )
+        material_world_epoch = str(
+            gate.get("current_material_world_epoch") or surface_fingerprint
+        )
+        receipt = issue_collective_authority_receipt(
+            session,
+            journey_id=journey_id,
+            proposal_id=proposal_id,
+            plan_version_id=plan_version_id,
+            authority_mode=UNANIMOUS_DOMINANCE,
+            decision_epoch=decision_epoch,
+            material_world_epoch=material_world_epoch,
+            candidate_surface_fingerprint=surface_fingerprint,
+            classification=UNANIMOUS_DOMINANCE,
+        )
+        check = receipt_validation(
+            receipt,
+            journey_id=journey_id,
+            proposal_id=proposal_id,
+            plan_version_id=plan_version_id,
+            decision_epoch=decision_epoch,
+            material_world_epoch=material_world_epoch,
+            candidate_surface_fingerprint=surface_fingerprint,
+            authority_mode=UNANIMOUS_DOMINANCE,
+        )
+        if not check.get("valid"):
+            raise ValueError(
+                str(check.get("code") or "COLLECTIVE_AUTHORITY_RECEIPT_INVALID")
+            )
+        return receipt
+
+    if classification == "RENEWED_COLLECTIVE_CONSENT":
+        receipt_id = str(
+            gate.get("authority_receipt_id")
+            or (resolved_decision or {}).get("authority_receipt_id")
+            or ""
+        )
+        receipt = (
+            session.get(CollectiveAuthorityReceipt, receipt_id)
+            if receipt_id
+            else None
+        )
+        if receipt is None:
+            raise ValueError("COLLECTIVE_AUTHORITY_RECEIPT_MISSING")
+        decision_epoch = str(
+            gate.get("resolved_decision_epoch")
+            or gate.get("current_decision_epoch")
+            or ""
+        )
+        material_world_epoch = str(
+            gate.get("resolved_material_world_epoch")
+            or gate.get("current_material_world_epoch")
+            or ""
+        )
+        check = receipt_validation(
+            receipt,
+            journey_id=journey_id,
+            proposal_id=proposal_id,
+            plan_version_id=plan_version_id,
+            decision_epoch=decision_epoch,
+            material_world_epoch=material_world_epoch,
+            candidate_surface_fingerprint=receipt.candidate_surface_fingerprint,
+            authority_mode=AUTHENTICATED_MEMBER_CONSENT,
+        )
+        if not check.get("valid"):
+            raise ValueError(
+                str(check.get("code") or "COLLECTIVE_AUTHORITY_RECEIPT_INVALID")
+            )
+        return receipt
+
+    # Single-member and other authority modes are outside R30 collective
+    # receipt semantics. They remain governed by existing product policy.
+    return None
 
 
 def latest_collective_authority_receipt(
