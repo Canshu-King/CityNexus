@@ -90,6 +90,38 @@ def test_open_epoch_is_idempotent_for_same_reality(session):
     assert second.status == OPEN
 
 
+@pytest.mark.parametrize("second_revision", [1, 2])
+def test_provider_replay_dedupe_preserves_material_scope_change(session, second_revision):
+    from app.agent.signal_pipeline import _upsert_fixture_event
+
+    db, journey = session
+    common = {
+        "event_type": "CLOSURE", "severity": "MAJOR", "activity": None,
+        "occurred_at": "2026-10-06T09:00:00+09:00",
+    }
+    first, created = _upsert_fixture_event(
+        db, journey, scope_key="place-a",
+        payload={"disruption_class": "PLACE_CLOSURE", "fixture_revision": 1}, **common,
+    )
+    assert created
+    r1 = ensure_recovery_epoch(db, journey)
+    db.commit()
+    repeat, created = _upsert_fixture_event(
+        db, journey, scope_key="place-a",
+        payload={"disruption_class": "PLACE_CLOSURE", "fixture_revision": second_revision}, **common,
+    )
+    assert not created and repeat.id == first.id
+    assert ensure_recovery_epoch(db, journey).id == r1.id
+    second, created = _upsert_fixture_event(
+        db, journey, scope_key="place-b",
+        payload={"disruption_class": "PLACE_CLOSURE", "fixture_revision": second_revision}, **common,
+    )
+    assert created and second.id != first.id
+    r2 = ensure_recovery_epoch(db, journey)
+    assert r2.id != r1.id
+    assert r1.status == "SUPERSEDED"
+
+
 def test_relevant_event_change_supersedes_and_opens_next_generation(session):
     db, journey = session
     first = ensure_recovery_epoch(db, journey)

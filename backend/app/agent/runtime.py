@@ -1051,6 +1051,12 @@ class DeepSeekJourneyAgent:
                 "content": mission.user_text,
             },
         ]
+        # Do not hold the Journey/AgentRun session transaction across an
+        # external provider response.  The durable RUNNING envelope and its
+        # pre-call trace are already committed above; releasing this read
+        # transaction lets a concurrent server-owned provider observation open
+        # the next recovery epoch while this Agent is waiting on the model.
+        session.commit()
         inspected = False
         final_text = ""
         recovery_superseded = False
@@ -1069,6 +1075,10 @@ class DeepSeekJourneyAgent:
         try:
             for _ in range(max_steps):
                 batch_search_seen = False
+                # Includes replay/no-progress paths that bypass the normal
+                # tool-result commit.  Every external call must start with no
+                # database transaction held by this model run.
+                session.commit()
                 message = self._complete(messages)
                 for receipt in getattr(self, "external_attempts", [])[len(
                     [item for item in tool_trace if item.get("tool_name") == "external_model_call"
@@ -1537,6 +1547,11 @@ class DeepSeekJourneyAgent:
                     ):
                         final_text = "Collective decision is waiting for the required member responses."
                         break
+                    # Each tool result is a durable boundary.  Do not let one
+                    # model turn's inspection batch hold SQLite's writer lock
+                    # while another independent recovery run is processing its
+                    # own current epoch.
+                    session.commit()
                 session.flush()
                 if final_text:
                     break

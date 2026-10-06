@@ -299,6 +299,8 @@ def _upsert_fixture_event(
                     == payload.get("fixture_revision")
                     and json.loads(item.payload_json or "{}").get("disruption_class")
                     == payload.get("disruption_class")
+                    and json.loads(item.payload_json or "{}").get("scope_place_id")
+                    == (scope_key or place_id)
                 )
             ),
             None,
@@ -316,6 +318,8 @@ def _upsert_fixture_event(
                 if (
                     json.loads(item.payload_json or "{}").get("disruption_class")
                     == payload.get("disruption_class")
+                    and json.loads(item.payload_json or "{}").get("scope_place_id")
+                    == (scope_key or place_id)
                     and item.occurred_at == occurred_at
                 )
             ),

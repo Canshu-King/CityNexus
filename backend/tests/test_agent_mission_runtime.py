@@ -39,6 +39,39 @@ def test_default_hermes_model_order_is_international_then_domestic_fallbacks():
     )
 
 
+def test_r32_external_wait_does_not_hold_database_transaction(monkeypatch):
+    """A provider wait must leave concurrent provider ingestion free to write."""
+    from app.agent.mission import create_mission
+
+    journey_id = _selected_journey()
+    agent = object.__new__(DeepSeekJourneyAgent)
+    agent.model_key = "transaction-boundary-fixture"
+    calls = []
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        mission = create_mission(
+            session, journey, command="Inspect the current Journey.",
+            requested_autonomy="PLAN_ONLY", trigger_event_id=None,
+        )
+        session.commit()
+
+        def complete(messages):
+            assert not session.in_transaction()
+            calls.append(len(messages))
+            if len(calls) == 1:
+                return {
+                    "content": "", "tool_calls": [{
+                        "id": "transaction-inspection", "type": "function",
+                        "function": {"name": "inspect_journey", "arguments": json.dumps({"journey_id": journey_id})},
+                    }],
+                }
+            return {"content": "Inspection complete.", "tool_calls": []}
+
+        monkeypatch.setattr(agent, "_complete", complete)
+        agent.run(session, journey=journey, mission=mission)
+    assert len(calls) >= 2
+
+
 def test_negative_indoor_preference_does_not_compile_as_indoor_preferred(monkeypatch):
     command = "我喜欢户外自然景观，不喜欢剧场和室内馆，路线松弛不要赶。"
     capabilities = extract_capabilities_from_text(command)

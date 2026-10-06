@@ -1,0 +1,7 @@
+{
+  "command": "focused R28-R32 + agent runtime regression",
+  "exit_code": 0,
+  "passed": 132,
+  "failed": 0,
+  "raw_output": "backend/output/r32-focused-regression.txt"
+}
