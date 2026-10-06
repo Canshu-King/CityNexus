@@ -22,6 +22,9 @@ from app.db.models import (
 AUTHENTICATED_MEMBER_CONSENT = "AUTHENTICATED_MEMBER_CONSENT"
 UNANIMOUS_DOMINANCE = "UNANIMOUS_DOMINANCE"
 _MODES = {AUTHENTICATED_MEMBER_CONSENT, UNANIMOUS_DOMINANCE}
+COLLECTIVE_SEMANTIC_EPOCH_SCHEMA = "citynexus.collective-semantic-decision-epoch.v1"
+COLLECTIVE_WORLD_EPOCH_SCHEMA = "citynexus.collective-material-world-epoch.v1"
+COLLECTIVE_SURFACE_SCHEMA = "citynexus.collective-candidate-surface.v1"
 
 
 def _now() -> str:
@@ -30,6 +33,57 @@ def _now() -> str:
 
 def _json(values: Iterable[Any]) -> str:
     return json.dumps(sorted({str(value) for value in values if value}), ensure_ascii=False)
+
+
+def candidate_surface_fingerprint(candidate_fit_matrix: Iterable[Any] | None) -> str:
+    """Fingerprint the server's current candidate surface without aliasing E/W."""
+
+    surface = json.dumps(
+        list(candidate_fit_matrix or []),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    )
+    return hashlib.sha256(surface.encode("utf-8")).hexdigest()
+
+
+def server_semantic_decision_epoch(
+    *,
+    journey_id: str,
+    active_plan_version_id: str | None,
+    target_plan_version_id: str,
+    classification: str,
+    candidate_id: str,
+    candidate_fit_matrix: Iterable[Any] | None,
+    members: Iterable[Any] | None,
+) -> str:
+    """Build a distinct server-owned E for an algorithmic collective decision.
+
+    The semantic epoch deliberately has its own schema and projection.  It
+    describes what the server decided about the current member-fit surface and
+    target, while the surface fingerprint remains the independent S value.
+    """
+
+    material = {
+        "schema": COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
+        "journey_id": str(journey_id),
+        "active_plan_version_id": str(active_plan_version_id or ""),
+        "target_plan_version_id": str(target_plan_version_id),
+        "classification": str(classification),
+        "candidate_id": str(candidate_id),
+        "candidate_fit_matrix": list(candidate_fit_matrix or []),
+        "members": list(members or []),
+    }
+    return hashlib.sha256(
+        json.dumps(
+            material,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        ).encode("utf-8")
+    ).hexdigest()
 
 
 def issue_collective_authority_receipt(
@@ -253,20 +307,17 @@ def authority_receipt_for_allowed_gate(
 
     classification = str(gate.get("classification") or "")
     if classification == UNANIMOUS_DOMINANCE:
-        surface = json.dumps(
-            gate.get("candidate_fit_matrix") or [],
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            default=str,
-        )
-        surface_fingerprint = hashlib.sha256(surface.encode()).hexdigest()
-        decision_epoch = str(
-            gate.get("current_decision_epoch") or surface_fingerprint
-        )
+        # The gate is the sole authority for current provenance.  In
+        # particular, never manufacture E or W from the candidate surface S.
+        decision_epoch = str(gate.get("current_decision_epoch") or "")
         material_world_epoch = str(
-            gate.get("current_material_world_epoch") or surface_fingerprint
+            gate.get("current_material_world_epoch") or ""
         )
+        surface_fingerprint = str(
+            gate.get("candidate_surface_fingerprint") or ""
+        )
+        if not decision_epoch or not material_world_epoch or not surface_fingerprint:
+            raise ValueError("COLLECTIVE_AUTHORITY_EPOCH_UNAVAILABLE")
         receipt = issue_collective_authority_receipt(
             session,
             journey_id=journey_id,

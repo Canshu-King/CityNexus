@@ -89,6 +89,13 @@ from app.collective_mediation import (
     member_fit,
     plan_collective_fit_subject,
 )
+from app.collective_authority import (
+    COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
+    COLLECTIVE_SURFACE_SCHEMA,
+    COLLECTIVE_WORLD_EPOCH_SCHEMA,
+    candidate_surface_fingerprint,
+    server_semantic_decision_epoch,
+)
 from app.commerce.idempotency import IdempotencyConflict, canonical_request_signature
 from app.commerce.order_pricing import OrderLineRequest, OrderPricingError
 from app.commerce.service_impl import (
@@ -2679,6 +2686,9 @@ def answer_collective_clarification(
         ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
     ).all()
     receipt = collective_proposal_receipt(session, journey, proposals)
+    current_surface_fingerprint = candidate_surface_fingerprint(
+        receipt.get("candidate_fit_matrix") or []
+    )
     current_options = [
         item for item in receipt.get("proposal_collective_decisions", {}).values()
         if str(item.get("proposal_id")) in option_ids and item.get("status") == "GROUNDED_FEASIBLE"
@@ -2745,6 +2755,7 @@ def answer_collective_clarification(
             stored["material_world_epoch"] = collective_material_world_epoch(
                 material_world_basis
             )
+            stored["candidate_surface_fingerprint"] = current_surface_fingerprint
             stored["status"] = "RESOLVED"
             stored["selected_proposal_id"] = selected_id
             stored["selected_candidate_id"] = selected_id
@@ -2773,6 +2784,9 @@ def answer_collective_clarification(
                     "clarification_id": stored["clarification_id"],
                     "decision_epoch": stored["decision_epoch"],
                     "material_world_epoch": stored["material_world_epoch"],
+                    "candidate_surface_fingerprint": stored[
+                        "candidate_surface_fingerprint"
+                    ],
                     "selected_proposal_id": selected_id,
                     "selected_candidate_id": selected_id,
                     "selected_plan_version_id": next(
@@ -2979,7 +2993,9 @@ def answer_collective_clarification(
                 authority_mode=AUTHENTICATED_MEMBER_CONSENT,
                 decision_epoch=str(stored["decision_epoch"]),
                 material_world_epoch=str(stored["material_world_epoch"]),
-                candidate_surface_fingerprint=str(stored["decision_epoch"]),
+                candidate_surface_fingerprint=str(
+                    stored.get("candidate_surface_fingerprint") or ""
+                ),
                 classification="AUTHENTICATED_MEMBER_CONSENT",
                 required_member_ids=required,
                 response_audit_ids=[item.id for item in response_audits],
@@ -4972,6 +4988,47 @@ def collective_mutation_gate(
         ),
         "",
     )
+    target_window = next(
+        (
+            item
+            for item in windows
+            if str(item.get("window_id") or "") == str(target_plan.id)
+        ),
+        None,
+    )
+    # E, W and S are separate server-owned facts.  S describes the current
+    # candidate surface, E describes the semantic authority decision over
+    # that surface, and W is recomputed from the material-world basis used by
+    # shock invalidation.  None of them is synthesized from another value.
+    current_surface_fingerprint = candidate_surface_fingerprint(
+        refreshed.get("candidate_fit_matrix") or []
+    )
+    current_decision_epoch_for_gate: str | None = None
+    current_world_epoch_for_gate: str | None = None
+    if str(mediation.get("classification") or "") == "UNANIMOUS_DOMINANCE":
+        current_decision_epoch_for_gate = server_semantic_decision_epoch(
+            journey_id=journey.id,
+            active_plan_version_id=journey.active_plan_version_id,
+            target_plan_version_id=target_plan.id,
+            classification="UNANIMOUS_DOMINANCE",
+            candidate_id=str(mediation.get("candidate_id") or target_plan.id),
+            candidate_fit_matrix=refreshed.get("candidate_fit_matrix") or [],
+            members=refreshed.get("members") or [],
+        )
+        from app.collective_mediation import collective_material_world_epoch
+
+        candidate = (target_window or {}).get("candidate") or {}
+        world_basis = collective_material_world_basis(
+            session,
+            journey,
+            target_plan,
+            fit_subject_place_ids=list(
+                candidate.get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch_for_gate = collective_material_world_epoch(
+            world_basis
+        )
     effective_resolved_decision = resolved_decision
     renewed_consent_selected = bool(
         pending_selection is not None
@@ -5119,6 +5176,27 @@ def collective_mutation_gate(
         "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
         "mediation": mediation,
         "fit_subject_basis": "PLAN_DIFF",
+        "current_decision_epoch": decision.get(
+            "current_decision_epoch", current_decision_epoch_for_gate
+        ),
+        "current_material_world_epoch": decision.get(
+            "current_material_world_epoch", current_world_epoch_for_gate
+        ),
+        "candidate_surface_fingerprint": current_surface_fingerprint,
+        "authority_provenance": {
+            "decision_epoch": {
+                "source": "SERVER_SEMANTIC_DECISION_EPOCH",
+                "schema": COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
+            },
+            "material_world_epoch": {
+                "source": "SERVER_COLLECTIVE_MATERIAL_WORLD_EPOCH",
+                "schema": COLLECTIVE_WORLD_EPOCH_SCHEMA,
+            },
+            "candidate_surface_fingerprint": {
+                "source": "SERVER_CANDIDATE_FIT_SURFACE",
+                "schema": COLLECTIVE_SURFACE_SCHEMA,
+            },
+        },
     }
 
 
@@ -14969,6 +15047,21 @@ def _collective_resolution_for_child(
                 409, "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
             )
 
+    stored_surface_fingerprint = str(
+        stored.get("candidate_surface_fingerprint") or ""
+    )
+    resolved_surface_fingerprint = str(
+        resolved.get("candidate_surface_fingerprint") or ""
+    )
+    if (
+        not stored_surface_fingerprint
+        or not resolved_surface_fingerprint
+        or stored_surface_fingerprint != resolved_surface_fingerprint
+    ):
+        raise HTTPException(
+            409, "COLLECTIVE_AUTHORITY_SURFACE_UNAVAILABLE"
+        )
+
     from app.collective_authority import (
         AUTHENTICATED_MEMBER_CONSENT,
         latest_collective_authority_receipt,
@@ -14987,7 +15080,7 @@ def _collective_resolution_for_child(
         plan_version_id=proposal.proposed_plan_version_id,
         decision_epoch=epoch,
         material_world_epoch=current_world_epoch or stored_world_epoch or resolved_world_epoch,
-        candidate_surface_fingerprint=epoch,
+        candidate_surface_fingerprint=stored_surface_fingerprint,
         authority_mode=AUTHENTICATED_MEMBER_CONSENT,
     )
     if not receipt_check.get("valid"):
@@ -15010,6 +15103,7 @@ def _collective_resolution_for_child(
         "material_world_epoch": (
             current_world_epoch or stored_world_epoch or None
         ),
+        "candidate_surface_fingerprint": stored_surface_fingerprint,
         "clarification_id": stored.get("clarification_id"),
         "authority_receipt_id": authority_receipt.id,
     }
@@ -15276,6 +15370,20 @@ def _accept_replan_executing(
             "classification": bound_authority_receipt.classification,
             "source_mission_id": bound_authority_receipt.source_mission_id,
             "source_agent_run_id": bound_authority_receipt.source_agent_run_id,
+            "provenance": {
+                "decision_epoch": {
+                    "source": "SERVER_SEMANTIC_DECISION_EPOCH",
+                    "schema": COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
+                },
+                "material_world_epoch": {
+                    "source": "SERVER_COLLECTIVE_MATERIAL_WORLD_EPOCH",
+                    "schema": COLLECTIVE_WORLD_EPOCH_SCHEMA,
+                },
+                "candidate_surface_fingerprint": {
+                    "source": "SERVER_CANDIDATE_FIT_SURFACE",
+                    "schema": COLLECTIVE_SURFACE_SCHEMA,
+                },
+            },
         }
 
     old_current = (

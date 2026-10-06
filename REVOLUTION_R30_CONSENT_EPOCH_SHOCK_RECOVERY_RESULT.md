@@ -54,3 +54,12 @@ R30 closes only because the machine verdict is PROVEN.
 - WB2api config: `C:\Users\仓鼠王\WorkBuddy\2026-09-15-15-47-27\wb2api\config.json` (present)
 - Valid-strike raw output: `output/revolution-r30-live-20261006/R30_FULL_STRIKE_RAW_OUTPUT_20261006T022351Z.log`
 - Model calls: `cn:glm-5.3-flash` was called and recorded `FAILED_EXTERNAL/MODEL_TIMEOUT`; `cn:deepseek-v4.1-flash` completed the recovery AgentRun.
+
+## R31 deterministic authority hardening
+
+- `UNANIMOUS_DOMINANCE` now consumes server-owned decision epoch E, material-world epoch W, and candidate-surface fingerprint S as separate provenance fields.
+- Missing E or W fails closed with `COLLECTIVE_AUTHORITY_EPOCH_UNAVAILABLE` before an approval or receipt is created; no E/W value is derived from S.
+- Human collective receipts now bind the server candidate surface S instead of reusing E.
+- Same S with changed E or W fails exact receipt validation; unchanged E/W/S remains idempotent.
+- Focused deterministic result: 53 passed (R31/R30/R29); strategy-neutral runtime and R28 continuation result: 32 passed; `compileall` passed.
+- No new external strike was run; the R30 truth boundary remains unchanged.
