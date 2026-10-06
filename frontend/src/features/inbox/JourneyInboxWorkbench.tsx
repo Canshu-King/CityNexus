@@ -787,7 +787,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           <div>
             <span className="v8-kicker">{t("inbox.authoritativeMemory")}</span>
             {/* ORD-0423 defect one: `memory.title` is prose the server writes for itself
-                (semantic_intake.py:489 = "Journey Memory"), so `??` never reached the dictionary and a zh
+                (semantic_intake.py = "Journey Memory"), so `??` never reached the dictionary and a zh
                 screen read English.  The heading is this panel's own label, so it comes from the dictionary. */}
             <h3>{t("inbox.journeyMemory")}</h3>
           </div>

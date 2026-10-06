@@ -22,7 +22,7 @@ const FILE = "e2e/qoder-ord0349-two-legs-two-sentences.spec.ts";
 const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 
 /** Verbatim from the shipped gate this order must not redden:
- *  `e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts:27`. */
+ *  `e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts`. */
 const GATE_ANSWERED_SENTENCE =
   "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。";
 

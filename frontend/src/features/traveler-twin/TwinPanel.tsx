@@ -37,7 +37,7 @@ function CapabilityList({ items }: { items: TravelerCapability[] }) {
 export function TwinPanel({ data }: { data: V8Data }) {
   const t = useT();
   /* A dimension that happens to be a capability code (the server puts confirmed capabilities into
-     `explicit_dimensions` too -- backend/app/execution/traveler_twin.py:349) reads with its capability
+     `explicit_dimensions` too -- backend/app/execution/traveler_twin.py) reads with its capability
      name rather than as unregistered. Only a token in neither vocabulary says so out loud. */
   const dimensionLabel = (code: string) => {
     const asDimension = t(`twin.dim.${code}`);

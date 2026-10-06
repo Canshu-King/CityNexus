@@ -2,7 +2,7 @@
  * ORD-0107 -- when the AI planner has nothing to build from, the screen has to say *which* nothing.
  *
  * The defect this closes is a chain of silences measured on the user's own phone:
- *   `PlanWithAiSheet.tsx:358` turned a failed catalogue read into `[]`;
+ *   `PlanWithAiSheet.tsx` turned a failed catalogue read into `[]`;
  *   `:360` then took the first eight ids in whatever order the server happened to return them;
  *   `:362` skipped the request entirely when fewer than two survived, and the traveller was left with
  *   "没有生成可行方案 … 可以调整预算或换个说法再试" -- advice about their wording and budget for a
@@ -488,7 +488,7 @@ test("ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟
 
 /* --------------------------------------- ORD-0134 ①: the sheet belongs to the *visible* viewport.
  *
- * `styles.css:691` bounds `.plan-ai-sheet` with `max-height: 92vh`.  `vh` is the **layout**
+ * `styles.css` bounds `.plan-ai-sheet` with `max-height: 92vh`.  `vh` is the **layout**
  * viewport, which does not change when a phone's toolbar or keyboard takes space -- the *visual*
  * viewport does.  So the bottom row of the sheet (稍后 / 开始规划) can sit in a part of the layout
  * box that is no longer on screen, and scrolling the sheet cannot rescue it because the sheet's own

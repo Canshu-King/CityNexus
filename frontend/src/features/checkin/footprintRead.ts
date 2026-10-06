@@ -1,8 +1,8 @@
 /* ORD-0497 -- the one place that turns the footprint door's answer into a state the map can paint.
  *
  * Why a module and not a `useState` inside `MapPanel`: the door this reads is
- * `GET /api/v1/journeys/{id}/checkins` (`checkins.ts:93`), and that answer is already held privately
- * by two surfaces (`TripItinerary.tsx:133`, `FootprintPanel.tsx:31`). A third copy inside the map
+ * `GET /api/v1/journeys/{id}/checkins` (`checkins.ts`), and that answer is already held privately
+ * by two surfaces (`TripItinerary.tsx`, `FootprintPanel.tsx`). A third copy inside the map
  * would be a third footprint state, and the third one is where a stale local list starts disagreeing
  * with the server. So the map holds a *read*, never a footprint of its own: one GET per mount, no
  * cache, nothing carried across surfaces -- which is also what makes "did the map guess?" answerable.
@@ -12,7 +12,7 @@
  *   refused     -- the server answered and would not serve the read;
  *   unreachable -- no usable answer arrived at all;
  *   not_asked   -- this surface has no journey, so nobody was asked.
- * `refused`/`unreachable`/`not_asked` paint NO stamp claim: `TripItinerary.tsx:139` returns silently
+ * `refused`/`unreachable`/`not_asked` paint NO stamp claim: `TripItinerary.tsx` returns silently
  * on a non-`read` answer and then renders every stop as 打卡, which is the guessing this order
  * forbids. The map must not inherit that habit, so the caller gets the arm and the painter is told
  * to stay silent in three of the four.
@@ -31,7 +31,7 @@ export type FootprintState =
 
 /**
  * How a stamp names the stop it is on. The server stores this decision (`target_key`,
- * `backend/app/schemas.py:1057`), and `TripItinerary.tsx:368` looks stamps up with the same
+ * `backend/app/schemas.py`), and `TripItinerary.tsx` looks stamps up with the same
  * spelling; this is the one copy of the form so a fourth surface cannot invent a fifth.
  */
 export const activityTargetKey = (activityId: string) => `activity:${activityId}`;
@@ -49,9 +49,9 @@ export function stampForActivity(
 /**
  * The day a stamp was made, as it is painted under the pin.
  *
- * Date and no clock, on purpose: `e2e/_mapLabelRules.ts:69` forbids a time painted on the map glass
+ * Date and no clock, on purpose: `e2e/_mapLabelRules.ts` forbids a time painted on the map glass
  * (`clock-time`, `/\b\d{1,2}:\d{2}\b/`), because a pin carrying a clock reads as a promise about a
- * value the planner may not hold -- and `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:181`
+ * value the planner may not hold -- and `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts`
  * enforces that list against the canvas's own rendered text. A stamp day is still the server's
  * `stamped_at`, just rendered to the resolution the surface is allowed to speak.
  */

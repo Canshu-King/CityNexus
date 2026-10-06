@@ -149,7 +149,7 @@ def test_w2_a_terminal_job_is_still_answered_by_a_new_attempt(monkeypatch) -> No
         f"实际 reused={reused} id {first['id']} -> {second['id']}"
     )
     # Per-phase, not a total: submit#1 resolves once to *create* the job, the worker resolves again
-    # for itself (`resolve_destination` is also called at catalog_hydration_operations.py:699), and
+    # for itself (`resolve_destination` is also called at catalog_hydration_operations.py), and
     # submit#2 resolves once more because a terminal row is not something to join.  Naming each
     # phase is what keeps a future drop from hiding inside an averaged count.
     assert (after_first_submit, after_worker - after_first_submit, len(calls) - after_worker) == (

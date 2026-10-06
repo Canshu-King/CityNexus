@@ -34,7 +34,7 @@
  *       still counts 0. If anyone moves run state into storage, this arm goes red -- that is the job.
  *
  * NOT_COVERED, stated instead of faked: while a run is actually in flight, whether the strip renders,
- * whether `plan-ai-run-chat` appears off the `agent` route (V8Experience.tsx:1885 passes it as
+ * whether `plan-ai-run-chat` appears off the `agent` route (V8Experience.tsx passes it as
  * undefined precisely there, on purpose), and whether the seconds/phase row update. Those need an
  * AI-enabled run, which authoritative mode forbids by design. A lane that wants them must ask the
  * commander for a named, non-authoritative run rather than mock the state into existence.

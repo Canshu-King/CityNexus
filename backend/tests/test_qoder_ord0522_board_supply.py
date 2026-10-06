@@ -275,7 +275,7 @@ def _stage_plan(session, journey_id: str, *, provenance: str, broken_stops: int 
         ))
     for index in range(broken_stops):
         # A stop with no place identity is the shape this store can actually reach: `activities.place_id`
-        # is `ondelete="SET NULL"` (models.py:536) and `places.latitude` is NOT NULL, so "the place row
+        # is `ondelete="SET NULL"` (models.py) and `places.latitude` is NOT NULL, so "the place row
         # is gone but the stop still names it" cannot exist here -- that arm is left unmeasured on
         # purpose rather than forced through a row the schema refuses.
         session.add(Activity(

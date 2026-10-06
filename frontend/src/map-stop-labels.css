@@ -3,7 +3,7 @@
  *
  * Its own marker element, not a child of the pin, for the same reason ORD-0497 gave for the date
  * badge (`src/map-selection.css`, the `.v8-map-stamp-date` note):
- * `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:177` asserts a pin paints nothing but its
+ * `e2e/qoder-map-ord0403-named-control-and-labels.spec.ts` asserts a pin paints nothing but its
  * stop number, and a child node would break that with the text it adds. The label sits to the right
  * of the pin so it cannot land on the date badge underneath.
  *

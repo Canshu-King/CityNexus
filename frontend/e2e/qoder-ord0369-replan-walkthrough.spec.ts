@@ -366,7 +366,7 @@ test("E1 AI 开关关着：这句总结不得算在模型头上", async ({ page 
 });
 
 test("E2 正控：提供方真的答过话时，ORD-0240 那句冻结标签一个字不改", async ({ page }) => {
-  // PROVIDER_REFUSED is the one state in `backend/app/agent/ai_availability.py:36-44` that says the
+  // PROVIDER_REFUSED is the one state in `backend/app/agent/ai_availability.py` that says the
   // provider was reached, so it is the only one allowed to keep crediting the sentence to a model.
   const r = await submitWithMission(page, { ai_state: "PROVIDER_REFUSED" }, "E2");
   expect(r.said, node("E2", `提供方答过话时标签被改写了，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);

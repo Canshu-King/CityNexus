@@ -154,7 +154,7 @@ test("ord0193-starting-the-preparation-shows-the-servers-own-phase-and-no-invent
     node(NODE, "starting a preparation produced no job block at all"),
   ).toBeVisible({ timeout: 20_000 });
   /* My instrument, not the product: the block is first painted straight from the POST's own answer
-     (`DestinationPreparationPanel.tsx:116`), and that answer is honestly `QUEUED` -- the route above
+     (`DestinationPreparationPanel.tsx`), and that answer is honestly `QUEUED` -- the route above
      pins only the polled `GET`.  Reading the block once at first paint therefore flipped under chain
      load on this tip: 1 RED ("QUEUED", `review/run-run072593.log`) / 1 GREEN (`run-run072814.log`)
      in the ten-file shape, 2 GREEN single-node (`run-run072724.log`, `run-run072766.log`).  The wait

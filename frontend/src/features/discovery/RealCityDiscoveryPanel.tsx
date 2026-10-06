@@ -287,7 +287,7 @@ export function RealCityDiscoveryPanel({
   };
 
   /* ORD-0435 -- "done" writes through the route the V13.4 discovery path already uses internally
-     (`POST /journeys/{id}/plans/authoritative-compose`, contracts/openapi.yaml:1128) and then reads
+     (`POST /journeys/{id}/plans/authoritative-compose`, contracts/openapi.yaml) and then reads
      the answer back through a second, unrelated one (`GET /plans/{id}`). The second call is the
      point of the order: a tick that only lives in this component's state would look identical on
      screen and mean nothing, so the screen shows what the row store returned -- including the case

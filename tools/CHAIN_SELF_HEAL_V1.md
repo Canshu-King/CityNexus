@@ -15,7 +15,7 @@
 
 **三种判决，只有第一种是绿**：`CHAIN_HEALTHY`（exit 0，四腿俱在且全健康）、`STATIC_SIDE_HEALTHY_API_NOT_CARRIED`（exit 2，只在我这样的隔离实例上出现：隧道指向静态服、这条实例根本没有 API 腿 ⇒ 具名，不许当通过）、`CHAIN_UNHEALTHY`（exit 3）。
 
-**隧道那条腿分三层判**（字段 `tunnel_probe.shape` 与 `verdict_reason.tunnel_edge_state`）：连不上 = `no-answer`；边缘代答（还没绑上连接器，实测过 502/503/530 一形）= `edge_only_or_no_answer`；对端真答 = `origin_answered`。对端真答里还有一形要单独点名：`origin-refused-host` —— vite 自己有 Host 白名单，仓库里 `allowedHosts` 全文 0 命中，所以直接拿隧道域名去敲静态服必然 `403 + Blocked request. This host (…)`。这**不是**隧道断了：`Server: cloudflare` 是 cloudflared 给 origin 应答也盖上的头，拿它判"谁在答"会判错。现网那一腿能过，是因为中间那把鉴权代理丢开来路 Host 并显式改写成 `127.0.0.1:4781`（`raw/preview_auth_proxy.py:124`、`:127`）。
+**隧道那条腿分三层判**（字段 `tunnel_probe.shape` 与 `verdict_reason.tunnel_edge_state`）：连不上 = `no-answer`；边缘代答（还没绑上连接器，实测过 502/503/530 一形）= `edge_only_or_no_answer`；对端真答 = `origin_answered`。对端真答里还有一形要单独点名：`origin-refused-host` —— vite 自己有 Host 白名单，仓库里 `allowedHosts` 全文 0 命中，所以直接拿隧道域名去敲静态服必然 `403 + Blocked request. This host (…)`。这**不是**隧道断了：`Server: cloudflare` 是 cloudflared 给 origin 应答也盖上的头，拿它判"谁在答"会判错。现网那一腿能过，是因为中间那把鉴权代理丢开来路 Host 并显式改写成 `127.0.0.1:4781`（`raw/preview_auth_proxy.py`、`:127`）。
 
 **就绪等待是有界的**（字段 `tunnel_probe_attempts`、`tunnel_probe_waited_ms`、`tunnel_probe_statuses`）：quick tunnel 打完址还要几秒甚至一分多钟才转发，探不到就等 5 秒再探，最多 24 次；每一次探到的状态都按顺序进收据（`tunnel_probe_statuses`），不靠"多试几次直到绿"。
 
@@ -53,8 +53,8 @@ node tools/chain_self_heal.mjs --only static,tunnel --static-port 4792 --auth-po
 
 ## 已量到的三条形状事实（写在这里，省得下一个人重踩）
 
-- 那把鉴权代理尺把自己钉死在 `:4782`、静态上游钉死在 `:4781`（`raw/preview_auth_proxy.py:25` 与 `:31`），只有 API 上游可由 `CNX_PROXY_API_UPSTREAM` 改（`:30`）⇒ 它不能挪端口做实验，只能整条一起起。
-- `vite preview` 的 /api 目标是 `CITYNEXUS_BACKEND_PORT ?? 8000`（`frontend/vite.config.ts:132`、`:143`）⇒ 后端在 `:8693` 时，代理会自己答 500/0 字节（14:34 那批 `ECONNREFUSED 127.0.0.1:8000` 就是这个）。这一形状是 ORD-0352 的题，不是本单的题。
+- 那把鉴权代理尺把自己钉死在 `:4782`、静态上游钉死在 `:4781`（`raw/preview_auth_proxy.py` 与 `:31`），只有 API 上游可由 `CNX_PROXY_API_UPSTREAM` 改（`:30`）⇒ 它不能挪端口做实验，只能整条一起起。
+- `vite preview` 的 /api 目标是 `CITYNEXUS_BACKEND_PORT ?? 8000`（`frontend/vite.config.ts`、`:143`）⇒ 后端在 `:8693` 时，代理会自己答 500/0 字节（14:34 那批 `ECONNREFUSED 127.0.0.1:8000` 就是这个）。这一形状是 ORD-0352 的题，不是本单的题。
 - quick tunnel 把新址打成 `... INF |  https://xxx.trycloudflare.com  |`，**行首不是 URL** ⇒ 提取地址的 regex 不能带 `^` 锚。
 - 在这台机器上 `cloudflared tunnel --url … `（默认 QUIC）会停在 `precheck complete` 之后不再打印地址（实测 5 分钟没吐）；现网那条自己带 `--protocol http2`。本工具起的隧道同样带 `--protocol http2`，吐址只要几秒。
 - `cmd /c start "" /min 某.bat` 起的是 `cmd /K 某.bat`：那个 cmd **一直握着从调用方继承的 stdout 管道写端**且不退出 ⇒ `spawnSync` 永远不返回（实测把一整趟 recover 挂死）。所有 start 调用一律 `stdio: "ignore"` + `timeout: 30000`。

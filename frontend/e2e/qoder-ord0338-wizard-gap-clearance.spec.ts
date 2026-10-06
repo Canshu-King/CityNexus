@@ -35,7 +35,7 @@ const SCROLL = '[data-testid="trial-scroll"]';
 const CTA = '[data-testid="trial-sticky-cta"]';
 const PROBE = "input, textarea, button, summary, label > span, [data-testid], .trial-supported-list li";
 
-/* The pane is a `.v8-page`, and `.v8-page` opens with `v8-reveal .25s` (styles.css:165), whose
+/* The pane is a `.v8-page`, and `.v8-page` opens with `v8-reveal .25s` (styles.css), whose
    `from` state is `translateY(4px)`.  Measuring rects during it reads a layout that is not there
    yet -- the first run of this instrument caught the CTA 6px off its own row because of it. */
 async function settle(page: Page) {

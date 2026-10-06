@@ -4,8 +4,8 @@ import { namedCodeIn } from "../../lib/rawFacts";
 /**
  * ORD-0450 -- the two writes the 待规划 screen performs, both through doors that are already on the
  * line.  Nothing here declares a route: the compose call is the one ORD-0435's discovery batch uses
- * (`backend/app/main.py:5762`), and the adopt call is `POST /journeys/{id}/plans/{version}/select`,
- * which `frontend/src/api/citynexus.ts:856` has been calling for a long time.
+ * (`backend/app/main.py`), and the adopt call is `POST /journeys/{id}/plans/{version}/select`,
+ * which `frontend/src/api/citynexus.ts` has been calling for a long time.
  *
  * The read-back is not decoration.  ORD-0435's own reason for existing was that a tick which only
  * lives in component state looks identical on screen and means nothing, so the receipt this file

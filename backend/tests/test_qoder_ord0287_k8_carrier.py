@@ -5,7 +5,7 @@
 一枚裸奔进线的守卫，下一次重写 Phase B 时没人拦。这一格就是那枚拦头。
 
 只依赖权威线：本文件 import 的是 `app.main._execute_plan_generation_claimed`（Phase B 本体，
-落地代就在 main.py:4736），**不 import** `_fill_plan_generation_receipts` —— 那枚缝只在候选代，
+落地代就在 main.py），**不 import** `_fill_plan_generation_receipts` —— 那枚缝只在候选代，
 按 ORD-0287 第 0 条实测，引用它会让本文件在权威线上 ImportError。
 形制：单进程、pytest 一次跑、库由 conftest 给（ORD-0211 那座），两格互控：
   K1 负例 = 别人已填的两把键 ⇒ 必须抛**现成那句**具名 409、别人字节逐字不动、不许多写候选；
