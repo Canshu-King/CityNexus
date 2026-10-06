@@ -16,7 +16,15 @@ import app.main as main_module
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import DeepSeekJourneyAgent, _result_for_model
 from app.core.config import settings as runtime_settings
-from app.db.models import Activity, AgentRun, Event, Journey, JourneyMission, Place
+from app.db.models import (
+    Activity,
+    AgentRun,
+    Event,
+    Journey,
+    JourneyMission,
+    Place,
+    RecoveryEpoch,
+)
 from app.db.session import SessionLocal
 from app.integrations.ai.copilot_contract import classify_copilot_message
 from app.integrations.ai.event_targeting import resolve_event_target
@@ -191,10 +199,7 @@ def test_r32_executed_mutation_terminalizes_before_self_supersession(
         persisted = db.get(AgentRun, result["run_id"])
         assert persisted is not None
         assert persisted.status == "COMPLETED"
-        epoch = db.get(
-            __import__("app.db.models", fromlist=["RecoveryEpoch"]).RecoveryEpoch,
-            persisted.recovery_epoch_id,
-        )
+        epoch = db.get(RecoveryEpoch, persisted.recovery_epoch_id)
         assert epoch is not None
         assert epoch.status == COMMITTED
 
