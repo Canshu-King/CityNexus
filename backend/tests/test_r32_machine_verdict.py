@@ -30,6 +30,18 @@ def _checkpoint() -> dict:
         "runtime": {
             "provider_calls_were_real": True,
             "concurrent_external_barrier_proven": True,
+            "external_call_outcomes": [
+                {
+                    "thread": "r32-agent-a",
+                    "provider_call_invoked": True,
+                    "provider_returned": True,
+                },
+                {
+                    "thread": "r32-agent-b",
+                    "provider_call_invoked": True,
+                    "provider_returned": True,
+                },
+            ],
         },
         "setup": {"active_plan_id": "plan-0"},
         "truth_boundary": {
@@ -347,6 +359,115 @@ def test_unanimous_receipt_cannot_borrow_stale_agent_a_lineage():
         == "CONTRADICTED"
     )
     assert result["overall"] == "CONTRADICTED"
+
+
+def test_clean_precausal_abort_is_not_a_product_contradiction():
+    checkpoint = {
+        "schema": "citynexus.r32.live-strike.v2.failure.v2",
+        "status": "NOT_PROVEN",
+        "failure": {
+            "phase": "A_EXTERNAL_RESPONSE_BOUNDARY",
+            "message": "Agent A did not reach the boundary",
+        },
+        "source_receipt": {
+            "git_head": "deadbeef",
+            "tracked_dirty_before_strike": False,
+            "source_sha256": {"backend/run_r32_live.py": "abc"},
+        },
+        "runtime": {
+            "provider_calls_were_real": False,
+            "concurrent_external_barrier_proven": False,
+            "external_call_outcomes": [],
+        },
+        "setup": {},
+        "authority_setup": {},
+        "r1": {},
+        "r2": {},
+        "current_epoch_id": None,
+        "agent_a_run_at_barrier": None,
+        "agent_b_run_at_barrier": None,
+        "agent_responses": {},
+        "stale_binding_assertion": {},
+        "final": {
+            "journey": {},
+            "epochs": [],
+            "runs": [],
+            "steps": [],
+            "events": [],
+            "proposals": [],
+            "receipts": [],
+            "approvals": [],
+            "pending_actions": [],
+            "audits": [],
+            "plans": [],
+        },
+        "truth_boundary": {
+            "shock_source": "SERVER_OWNED_PROVIDER_REPLAY_FIXTURE",
+            "physical_travel_proven": False,
+        },
+    }
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 142, "failed": 0},
+    )
+
+    assert result["overall"] == "NOT_PROVEN"
+    assert result["contradicted"] == []
+    assert len(result["evaluator_receipt"]["sha256"]) == 64
+
+
+def test_failure_marker_cannot_hide_observed_authority_contradiction():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    checkpoint["status"] = "NOT_PROVEN"
+    checkpoint["failure"] = {
+        "phase": "POST_MUTATION_CHECKPOINT",
+        "message": "later harness observation failed",
+    }
+    checkpoint["final"]["receipts"][0][
+        "source_agent_run_id"
+    ] = "agent-a"
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 142, "failed": 0},
+    )
+
+    assert result["overall"] == "CONTRADICTED"
+    assert (
+        result["dimensions"]["authority_provenance_mode_accurate"]["verdict"]
+        == "CONTRADICTED"
+    )
+
+
+def test_r32_configuration_clears_ambient_semantic_ai(
+    monkeypatch, tmp_path
+):
+    import os
+    import run_r32_live
+
+    monkeypatch.setattr(
+        run_r32_live,
+        "_base_configure",
+        lambda: tmp_path / "r32-isolated.sqlite3",
+    )
+    monkeypatch.setenv("CITYNEXUS_AI_API_KEY", "ambient-citynexus-ai")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "ambient-deepseek")
+    monkeypatch.setenv("CITYNEXUS_AI_ENABLED", "true")
+    monkeypatch.setenv(
+        "CITYNEXUS_HERMES_NATIVE_API_URL",
+        "http://127.0.0.1:9999",
+    )
+    monkeypatch.setenv("CITYNEXUS_HERMES_API_SERVER_KEY", "ambient-native")
+
+    db = run_r32_live._configure_r32()
+
+    assert db == tmp_path / "r32-isolated.sqlite3"
+    assert os.environ["CITYNEXUS_AI_API_KEY"] == ""
+    assert os.environ["DEEPSEEK_API_KEY"] == ""
+    assert os.environ["CITYNEXUS_AI_ENABLED"] == "false"
+    assert os.environ["CITYNEXUS_HERMES_NATIVE_API_URL"] == ""
+    assert os.environ["CITYNEXUS_HERMES_API_SERVER_KEY"] == ""
 
 
 def test_dirty_source_state_cannot_be_proven():
