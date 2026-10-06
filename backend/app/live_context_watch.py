@@ -298,7 +298,13 @@ def _resolve_live_context_event(
     )
 
 
-def run_live_context_watch(\n    session: Session,\n    journey: Journey,\n    *,\n    activity_ids: tuple[str, ...] | list[str] | None = None,\n) -> dict[str, Any]:\n    """Refresh exact active-plan venues and classify reality without starting an Agent."""
+def run_live_context_watch(
+    session: Session,
+    journey: Journey,
+    *,
+    activity_ids: tuple[str, ...] | list[str] | None = None,
+) -> dict[str, Any]:
+    """Refresh exact active-plan venues and classify reality without starting an Agent."""
 
     captured_at = datetime.now(timezone.utc).isoformat()
     activities = list(
