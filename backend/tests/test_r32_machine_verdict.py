@@ -161,6 +161,27 @@ def test_stale_r1_approval_consumed_after_r2_is_contradiction():
     assert result["overall"] == "CONTRADICTED"
 
 
+def test_missing_new_evidence_fields_remain_not_proven_not_contradicted():
+    checkpoint = _checkpoint()
+    checkpoint.pop("source_receipt")
+    checkpoint["runtime"].pop("concurrent_external_barrier_proven")
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 132, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["strike_source_state_traceable"]["verdict"]
+        == "NOT_PROVEN"
+    )
+    assert (
+        result["dimensions"]["concurrent_external_barrier"]["verdict"]
+        == "NOT_PROVEN"
+    )
+    assert result["overall"] == "NOT_PROVEN"
+
+
 def test_dirty_source_state_cannot_be_proven():
     checkpoint = _checkpoint()
     checkpoint["source_receipt"]["tracked_dirty_before_strike"] = True
