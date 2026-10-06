@@ -8,6 +8,7 @@ from uuid import uuid4
 import httpx
 import pytest
 from demo_stage import demo_reset_headers
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
@@ -19,6 +20,7 @@ from app.db.models import Activity, AgentRun, Event, Journey, JourneyMission, Pl
 from app.db.session import SessionLocal
 from app.integrations.ai.copilot_contract import classify_copilot_message
 from app.integrations.ai.event_targeting import resolve_event_target
+from app.recovery_epoch import RECOVERY_EPOCH_SUPERSEDED
 from app.agent.mission import compile_mission
 from app.capabilities import (
     extract_capabilities_from_text,
@@ -312,6 +314,98 @@ def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkey
         "inspect_journey",
         "inspect_twin",
     ]
+
+
+def test_r32_runtime_persists_recovery_supersession_as_terminal(monkeypatch):
+    journey_id = _selected_journey()
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            message = {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "r32-stale-inspect",
+                        "type": "function",
+                        "function": {
+                            "name": "inspect_journey",
+                            "arguments": json.dumps(
+                                {"journey_id": journey_id}
+                            ),
+                        },
+                    }
+                ],
+            }
+        else:
+            message = {
+                "role": "assistant",
+                "content": "This turn should not be needed after supersession.",
+            }
+        return httpx.Response(
+            200, json={"choices": [{"message": message}]}
+        )
+
+    fake_client = httpx.Client(transport=httpx.MockTransport(handler))
+    fake_agent = object.__new__(DeepSeekJourneyAgent)
+    fake_agent.model_key = "cn:deepseek-v4.1-flash"
+    fake_agent._client = fake_client
+    fake_agent._owns_client = False
+
+    def superseded_dispatch(self, tool_name, request):
+        raise HTTPException(
+            409,
+            detail={
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "stale_recovery_epoch_id": "r1",
+                "current_recovery_epoch_id": "r2",
+                "stale_generation": 1,
+                "current_generation": 2,
+            },
+        )
+
+    monkeypatch.setattr(
+        "app.agent.gateway.AgentToolGateway.dispatch",
+        superseded_dispatch,
+    )
+    monkeypatch.setattr(
+        main_module,
+        "settings",
+        replace(
+            runtime_settings,
+            ai_api_key="test-key",
+            ai_model="cn:deepseek-v4.1-flash",
+        ),
+    )
+    monkeypatch.setattr(
+        main_module, "DeepSeekJourneyAgent", lambda: fake_agent
+    )
+
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/commands",
+        json={
+            "command": "Inspect current reality and recover if needed.",
+            "requested_autonomy": "PLAN_ONLY",
+        },
+    )
+    assert response.status_code == 200, response.text
+    run = response.json()["run"]
+    assert run["status"] == "SUPERSEDED"
+    assert calls == 1
+    assert run["tool_steps"][-1]["status"] == "SUPERSEDED"
+    assert (
+        run["tool_steps"][-1]["result"]["code"]
+        == RECOVERY_EPOCH_SUPERSEDED
+    )
+
+    with SessionLocal() as db:
+        persisted = db.get(AgentRun, run["run_id"])
+        assert persisted is not None
+        assert persisted.status == "SUPERSEDED"
+        assert persisted.failure_reason == RECOVERY_EPOCH_SUPERSEDED
 
 
 def test_agent_runtime_nudges_explicit_accept_request_after_model_prose(monkeypatch):
