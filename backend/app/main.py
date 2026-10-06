@@ -30,6 +30,7 @@ from app.agent.autorun import (
     autorun_status,
     enrolled_journey_ids,
     ensure_enrollment,
+    pulse_journey,
     start_autorun,
     stop_autorun,
 )
@@ -140,6 +141,7 @@ from app.db.models import (
     CounterfactualSimulation,
     EdgeDevice,
     ExternalReservationDraft,
+    GuardianPulse,
     IdempotencyKey,
     ImpactAssessment,
     Journey,
@@ -1744,6 +1746,53 @@ def run_guardian_scan(
     return scan_guardian(session, journey)
 
 
+def _guardian_pulse_payload(row: GuardianPulse | None) -> dict[str, Any] | None:
+    if row is None:
+        return None
+    try:
+        result = json.loads(row.result_json or "{}")
+    except json.JSONDecodeError:
+        result = {}
+    return {
+        "id": row.id,
+        "journey_id": row.journey_id,
+        "status": row.status,
+        "provider_key": row.provider_key,
+        "observation_ids": json.loads(row.observation_ids_json or "[]"),
+        "guardian_run_id": row.guardian_run_id,
+        "started_at": row.started_at,
+        "completed_at": row.completed_at,
+        "result": result,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/guardian/pulse")
+def run_guardian_pulse_now(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Run exactly one live sensing -> Guardian evaluation cycle now."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "Guardian pulse requires an active Journey")
+    return pulse_journey(session, journey)
+
+
+@app.get("/api/v1/journeys/{journey_id}/guardian/pulse/latest")
+def get_latest_guardian_pulse(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    require(session, Journey, str(journey_id), "Journey")
+    row = session.scalar(
+        select(GuardianPulse)
+        .where(GuardianPulse.journey_id == str(journey_id))
+        .order_by(GuardianPulse.started_at.desc(), GuardianPulse.id.desc())
+    )
+    return {"journey_id": str(journey_id), "pulse": _guardian_pulse_payload(row)}
+
+
 @app.post("/api/v1/journeys/{journey_id}/guardian/autopilot/start")
 def start_guardian_autopilot(
     journey_id: UUID,
@@ -1889,6 +1938,12 @@ def get_guardian_status(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     result = guardian_status(session, journey)
+    latest_pulse = session.scalar(
+        select(GuardianPulse)
+        .where(GuardianPulse.journey_id == journey.id)
+        .order_by(GuardianPulse.started_at.desc(), GuardianPulse.id.desc())
+    )
+    result["latest_pulse"] = _guardian_pulse_payload(latest_pulse)
     result["autopilot"] = autorun_status()
     enrollment = session.get(AutopilotEnrollment, journey.id)
     result["autopilot"]["enrollment"] = (
