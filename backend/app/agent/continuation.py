@@ -420,7 +420,16 @@ def resume_pending_action(
     session.commit()
 
     try:
-        if recovered is not None:
+        if pending.tool_name == "execute_recovery_execution":
+            from app.agent.transactional_operator import execute_recovery_execution_plan
+
+            result = execute_recovery_execution_plan(
+                session,
+                str(arguments.get("plan_id") or ""),
+                approval_id=approval_id,
+            )
+            result["executed"] = True
+        elif recovered is not None:
             result = recovered
         else:
             from app.agent.gateway import AgentToolGateway
@@ -429,6 +438,20 @@ def resume_pending_action(
             result = AgentToolGateway(
                 session, bound_run_id=pending.run_id
             ).dispatch(pending.tool_name, request)
+        if pending.tool_name == "accept_replan" and result.get("executed") is True:
+            from app.agent.transactional_operator import compile_recovery_execution_plan
+
+            proposal_id = str(arguments.get("proposal_id") or result.get("result", {}).get("proposal", {}).get("id") or "")
+            proposal = session.get(ReplanProposal, proposal_id)
+            journey = session.get(Journey, pending.journey_id)
+            if proposal is not None and journey is not None:
+                result["execution_plan"] = compile_recovery_execution_plan(
+                    session,
+                    journey=journey,
+                    proposal=proposal,
+                    agent_run_id=pending.run_id,
+                    mission_id=pending.mission_id,
+                )
     except HTTPException as exc:
         session.rollback()
         pending = session.get(AgentPendingAction, pending.id)
@@ -564,16 +587,17 @@ def resume_pending_action(
     run = session.get(AgentRun, pending.run_id)
     mission = session.get(JourneyMission, pending.mission_id)
     executed = result.get("executed") is True
+    transactional_status = str(result.get("status") or "") if pending.tool_name == "execute_recovery_execution" else ""
     if executed:
         pending.status = "RESUMED"
         pending.resumed_at = now
         if run is not None:
-            run.status = "COMPLETED"
+            run.status = "PARTIAL" if transactional_status in {"PARTIALLY_APPLIED", "FAILED_SAFE", "NEEDS_ATTENTION"} else "COMPLETED"
             run.completed_at = now
-            run.failure_reason = None
+            run.failure_reason = None if not transactional_status or transactional_status == "COMPLETED" else transactional_status
             run.outcome = _json_text(
                 {
-                    "status": "MUTATION_EXECUTED",
+                    "status": transactional_status or "MUTATION_EXECUTED",
                     "reason_code": "APPROVAL_CONTINUATION_RESUMED",
                     "user_summary": "The approved pending Agent action resumed and executed.",
                     "pending_action_id": pending.id,
@@ -581,38 +605,39 @@ def resume_pending_action(
                 }
             )
         if mission is not None:
-            mission.status = "COMPLETED"
+            mission.status = "PARTIAL" if transactional_status in {"PARTIALLY_APPLIED", "FAILED_SAFE", "NEEDS_ATTENTION"} else "COMPLETED"
             mission.completed_at = now
-            mission.failure_reason = None
+            mission.failure_reason = None if not transactional_status or transactional_status == "COMPLETED" else transactional_status
         guardian_run = session.scalar(
             select(GuardianRun)
             .where(GuardianRun.agent_run_id == pending.run_id)
             .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
         )
         if guardian_run is not None:
-            guardian_run.status = "COMPLETED"
-            guardian_run.action_status = "EXECUTED"
+            guardian_run.status = "COMPLETED" if transactional_status in {"", "COMPLETED"} else "PARTIAL"
+            guardian_run.action_status = "EXECUTED" if transactional_status in {"", "COMPLETED"} else "NEEDS_ATTENTION"
             guardian_run.active_plan_after_id = session.get(
                 Journey, pending.journey_id
             ).active_plan_version_id
             guardian_run.reasoning_summary = "Approved recovery applied; Journey Operator returned to monitoring."
-        record_audit(
-            session,
-            action="operator.recovered",
-            entity_type="Journey",
-            entity_id=pending.journey_id,
-            journey_id=pending.journey_id,
-            actor_type="SYSTEM",
-            actor_id="approval-continuation",
-            after={
-                "pending_action_id": pending.id,
-                "approval_id": approval_id,
-                "guardian_run_id": guardian_run.id if guardian_run is not None else None,
-                "active_plan_version_id": (
-                    session.get(Journey, pending.journey_id).active_plan_version_id
-                ),
-            },
-        )
+        if not transactional_status or transactional_status == "COMPLETED":
+            record_audit(
+                session,
+                action="operator.recovered",
+                entity_type="Journey",
+                entity_id=pending.journey_id,
+                journey_id=pending.journey_id,
+                actor_type="SYSTEM",
+                actor_id="approval-continuation",
+                after={
+                    "pending_action_id": pending.id,
+                    "approval_id": approval_id,
+                    "guardian_run_id": guardian_run.id if guardian_run is not None else None,
+                    "active_plan_version_id": (
+                        session.get(Journey, pending.journey_id).active_plan_version_id
+                    ),
+                },
+            )
     else:
         pending.status = "FAILED"
         pending.error_json = _json_text(

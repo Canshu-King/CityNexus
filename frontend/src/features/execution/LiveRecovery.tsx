@@ -676,6 +676,27 @@ export function LiveRecovery({
             </strong>
           </div>
         )}
+        {operator?.operations && (
+          <div className="journey-operator-operations" data-testid="journey-operator-operations">
+            <span className="v8-kicker">{zh ? "外部事务" : "Trip operations"}</span>
+            <strong>
+              {operator.operations.status === "WAITING_FOR_APPROVAL"
+                ? (zh ? "这次调整还需要处理预订。" : "This recovery still needs reservation work.")
+                : operator.operations.status === "EXECUTING"
+                  ? (zh ? "正在更新行程并处理预订……" : "Updating the trip and handling the reservation…")
+                  : operator.operations.status === "COMPLETED"
+                    ? (zh ? "Sandbox 预订已确认，继续照看行程。" : "Sandbox booking confirmed. I’m watching the trip again.")
+                    : operator.operations.status === "PARTIALLY_APPLIED"
+                      ? (zh ? "部分预订操作已完成，剩余事项需要你的注意。" : "Part of the reservation work completed; the remaining work needs your attention.")
+                      : (zh ? "预订操作需要你的注意。" : "Reservation work needs your attention.")}
+            </strong>
+            <span>
+              {zh
+                ? `${operator.operations.completed_action_count} / ${operator.operations.planned_action_count} 项已完成 · ${operator.operations.provider_label ?? "LAB_SANDBOX_PROVIDER"}`
+                : `${operator.operations.completed_action_count} of ${operator.operations.planned_action_count} actions complete · ${operator.operations.provider_label ?? "LAB_SANDBOX_PROVIDER"}`}
+            </span>
+          </div>
+        )}
         {!operator?.enabled && (
           <button
             type="button"

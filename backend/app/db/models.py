@@ -350,6 +350,50 @@ class RecoveryDiscoveryAttempt(Base):
     )
 
 
+class RecoveryExecutionPlan(Base):
+    """Frozen server-owned commerce work for one accepted recovery."""
+
+    __tablename__ = "recovery_execution_plans"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    recovery_epoch_id: Mapped[str] = mapped_column(ForeignKey("recovery_epochs.id", ondelete="CASCADE"))
+    proposal_id: Mapped[str] = mapped_column(ForeignKey("replan_proposals.id", ondelete="CASCADE"))
+    agent_run_id: Mapped[str | None] = mapped_column(ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True)
+    status: Mapped[str] = mapped_column(String, default="PLANNED", server_default="PLANNED")
+    semantic_fingerprint: Mapped[str] = mapped_column(String)
+    approval_id: Mapped[str | None] = mapped_column(ForeignKey("action_approvals.id", ondelete="SET NULL"), nullable=True)
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (UniqueConstraint("recovery_epoch_id", "proposal_id"),)
+
+
+class RecoveryExecutionAction(Base):
+    """One idempotent action in a frozen recovery execution plan."""
+
+    __tablename__ = "recovery_execution_actions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    execution_plan_id: Mapped[str] = mapped_column(ForeignKey("recovery_execution_plans.id", ondelete="CASCADE"))
+    sequence_no: Mapped[int] = mapped_column(Integer)
+    kind: Mapped[str] = mapped_column(String)
+    target_type: Mapped[str] = mapped_column(String)
+    target_id: Mapped[str] = mapped_column(String)
+    provider_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    semantic_fingerprint: Mapped[str] = mapped_column(String)
+    authority_decision: Mapped[str] = mapped_column(String, default="REQUIRE_CONFIRMATION", server_default="REQUIRE_CONFIRMATION")
+    approval_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (UniqueConstraint("execution_plan_id", "semantic_fingerprint"),)
+
+
 class AgentRun(Base):
     """Persisted execution envelope for a model-backed Journey Agent run."""
 

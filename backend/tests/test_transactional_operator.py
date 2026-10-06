@@ -79,3 +79,18 @@ def test_model_cannot_claim_provider_transaction_truth():
     assert model_supplied_transaction_fields_are_forbidden({"external_ref": "fake"}) is True
     assert model_supplied_transaction_fields_are_forbidden({"provider_success": True}) is True
     assert model_supplied_transaction_fields_are_forbidden({"activity_id": "a1"}) is False
+
+
+def test_frozen_action_payload_contains_only_server_owned_target_facts():
+    payload = RecoveryExecutionAction(
+        "CREATE_BOOKING", "Activity", "activity-1", "mock-booking"
+    ).semantic_payload()
+    assert payload == {
+        "kind": "CREATE_BOOKING",
+        "target_type": "Activity",
+        "target_id": "activity-1",
+        "provider_key": "mock-booking",
+        "requires_approval": True,
+    }
+    assert "external_ref" not in payload
+    assert "provider_success" not in payload

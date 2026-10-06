@@ -3045,7 +3045,8 @@ class AgentToolGateway:
                 assert_selected_plan_feasible=_assert_selected_plan_feasible,
                 force_failure=provider_failure,
             )
-            return {"booking_id": item.id, "status": item.status, "amount_minor": item.amount_minor}
+            from app.agent.transactional_operator import provider_truth_label
+            return {"booking_id": item.id, "status": item.status, "amount_minor": item.amount_minor, "provider_label": provider_truth_label(item.provider_key)}
 
         return self._run_typed_mutation(
             request,
@@ -3103,7 +3104,8 @@ class AgentToolGateway:
                 provider=provider,
                 force_failure=provider_failure,
             )
-            return {"booking_id": updated.id, "status": updated.status}
+            from app.agent.transactional_operator import provider_truth_label
+            return {"booking_id": updated.id, "status": updated.status, "provider_label": provider_truth_label(updated.provider_key)}
 
         return self._run_typed_mutation(
             request,

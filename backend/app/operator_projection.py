@@ -26,8 +26,10 @@ from app.db.models import (
     JourneyMission,
     ReplanProposal,
     RecoveryDiscoveryAttempt,
+    RecoveryExecutionPlan,
     RecoveryEpoch,
 )
+from app.agent.transactional_operator import execution_plan_projection
 
 
 def classify_operator_state(
@@ -318,6 +320,42 @@ def operator_projection(
         "query": latest_discovery.query if latest_discovery else None,
     }
 
+    execution_plan = session.scalar(
+        select(RecoveryExecutionPlan)
+        .where(RecoveryExecutionPlan.journey_id == journey.id)
+        .order_by(RecoveryExecutionPlan.updated_at.desc(), RecoveryExecutionPlan.id.desc())
+    )
+    operations = None
+    if execution_plan is not None:
+        raw_operations = execution_plan_projection(session, execution_plan)
+        actions = raw_operations.get("actions") or []
+        done = sum(1 for item in actions if item.get("status") in {"CONFIRMED", "CANCELLED", "SUCCEEDED"})
+        operations = {
+            "plan_id": raw_operations["id"],
+            "status": raw_operations["status"],
+            "planned_action_count": len(actions),
+            "completed_action_count": done,
+            "approval_id": raw_operations.get("approval_id"),
+            "provider_label": next((item.get("provider_label") for item in actions if item.get("provider_label")), None),
+            "actions": [
+                {
+                    "sequence_no": item["sequence_no"],
+                    "kind": item["kind"],
+                    "status": item["status"],
+                    "provider_label": item.get("provider_label"),
+                    "target_type": item["target_type"],
+                }
+                for item in actions
+            ],
+        }
+        # A completed frozen saga is the stronger operational truth.  A
+        # planning runtime may still be unavailable, but once all commerce
+        # actions are terminal the Operator is safe to return to monitoring.
+        if enabled and operations["status"] == "COMPLETED":
+            state = "WATCHING"
+        elif operations["status"] in {"PARTIALLY_APPLIED", "FAILED_SAFE", "NEEDS_ATTENTION"}:
+            state = "NEEDS_ATTENTION"
+
     from app.collective_operator import collective_operator_projection
 
     collective = collective_operator_projection(
@@ -341,6 +379,19 @@ def operator_projection(
             "pending_action_id": pending.id,
             "action_label": "Approve change",
         }
+    if approval_payload is None and execution_plan is not None and execution_plan.approval_id:
+        execution_approval = session.get(ActionApproval, execution_plan.approval_id)
+        if execution_approval is not None and execution_approval.status in {"PENDING", "APPROVED"}:
+            approval_payload = {
+                "required": True,
+                "approval_id": execution_approval.id,
+                "status": execution_approval.status,
+                "action": execution_approval.action,
+                "target_type": execution_approval.target_type,
+                "target_id": execution_approval.target_id,
+                "pending_action_id": None,
+                "action_label": "Approve reservation work",
+            }
 
     incident = (
         {
@@ -398,6 +449,7 @@ def operator_projection(
         "approval": approval_payload,
         "brain": brain,
         "discovery": discovery,
+        "operations": operations,
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {

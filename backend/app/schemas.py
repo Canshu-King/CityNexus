@@ -880,6 +880,7 @@ class Booking(BaseModel):
     activity_id: UUID | None
     commitment_id: UUID | None
     provider_key: str
+    provider_label: str | None = None
     external_ref: str | None
     status: Literal["DRAFT", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED", "FAILED"]
     amount: Money

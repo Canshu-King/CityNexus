@@ -3016,6 +3016,16 @@ def approve_agent_action(
             session.commit()
     continuation = resume_pending_action(session, approval_id=str(approval_id))
     if continuation is None:
+        if approval.action == "RECOVERY_EXECUTION" and approval.target_type == "RecoveryExecutionPlan":
+            from app.agent.transactional_operator import execute_recovery_execution_plan
+            execution = execute_recovery_execution_plan(
+                session,
+                approval.target_id,
+                approval_id=str(approval_id),
+            )
+            current = session.get(ActionApproval, str(approval_id))
+            receipt = approval_payload(current) if current is not None else approved
+            return {**receipt, "continuation": {"status": "RESUMED", "result": execution, "model_call_count": 0}}
         # Approvals created by direct/manual tool calls retain the historical
         # two-step API. Only a durable AgentRun continuation auto-resumes.
         return approved
@@ -9986,12 +9996,15 @@ def _replacement_activity_metadata(
 
 
 def _booking_payload(item: BookingModel) -> dict[str, Any]:
+    from app.agent.transactional_operator import provider_truth_label
+
     return {
         "id": item.id,
         "journey_id": item.journey_id,
         "activity_id": item.activity_id,
         "commitment_id": item.commitment_id,
         "provider_key": item.provider_key,
+        "provider_label": provider_truth_label(item.provider_key),
         "external_ref": item.external_ref,
         "status": item.status,
         "amount": {"amount_minor": item.amount_minor, "currency": item.currency},
@@ -15968,10 +15981,31 @@ def _accept_replan_impl(
     journey_id = located.journey_id if located is not None else None
     if journey_id is None:
         # Unknown proposal: let the body below produce the canonical 404.
-        return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        result = _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        return _compile_transactional_recovery_if_needed(session, result)
     with journey_write_lock(journey_id):
         session.expire_all()
-        return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        result = _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        return _compile_transactional_recovery_if_needed(session, result)
+
+
+def _compile_transactional_recovery_if_needed(session: Session, result: dict[str, Any]) -> dict[str, Any]:
+    proposal_payload = result.get("proposal") if isinstance(result, dict) else None
+    if not isinstance(proposal_payload, dict) or proposal_payload.get("status") != "ACCEPTED":
+        return result
+    proposal = session.get(ReplanProposalModel, str(proposal_payload.get("id") or ""))
+    journey = session.get(Journey, proposal.journey_id) if proposal is not None else None
+    if proposal is None or journey is None:
+        return result
+    from app.agent.transactional_operator import compile_recovery_execution_plan
+    result["execution_plan"] = compile_recovery_execution_plan(
+        session,
+        journey=journey,
+        proposal=proposal,
+        agent_run_id=proposal.source_agent_run_id,
+        mission_id=None,
+    )
+    return result
 
 
 def _replay_committed_accept(
@@ -16355,12 +16389,19 @@ def _accept_replan_executing(
         replacement_current.status = "ACTIVE"
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
-    close_recovery_epoch(
-        session,
-        current_recovery_epoch,
-        status="COMMITTED",
-        reason="REPLAN_ACCEPTED",
-    )
+    if not proposal.recovery_epoch_id:
+        proposal.recovery_epoch_id = current_recovery_epoch.id
+    # Keep the recovery epoch spendable while the accepted plan still has
+    # server-owned booking work to execute.  It is closed by the transactional
+    # operator only after the frozen saga reaches a terminal state.
+    from app.agent.transactional_operator import recovery_requires_execution
+    if not recovery_requires_execution(session, base_plan=base, proposed_plan=proposed):
+        close_recovery_epoch(
+            session,
+            current_recovery_epoch,
+            status="COMMITTED",
+            reason="REPLAN_ACCEPTED",
+        )
     # An accepted replan has now adapted the Journey to the event.  Keep the
     # external-world fact intact, but close the Journey-scoped trigger so the
     # same opportunity/disruption cannot be offered again as unresolved.

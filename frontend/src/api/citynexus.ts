@@ -411,6 +411,22 @@ export interface JourneyOperatorDiscoveryProjection {
   query?: string | null;
 }
 
+export interface JourneyOperatorOperationsProjection {
+  plan_id: string;
+  status: "PLANNED" | "WAITING_FOR_APPROVAL" | "EXECUTING" | "PARTIALLY_APPLIED" | "COMPLETED" | "FAILED_SAFE" | "NEEDS_ATTENTION";
+  planned_action_count: number;
+  completed_action_count: number;
+  approval_id?: string | null;
+  provider_label?: string | null;
+  actions: Array<{
+    sequence_no: number;
+    kind: string;
+    status: string;
+    provider_label?: string | null;
+    target_type: string;
+  }>;
+}
+
 export interface JourneyOperatorProjection {
   journey_id: string;
   state: "OFF" | "WATCHING" | "INVESTIGATING" | "WAITING_FOR_APPROVAL" | "APPLYING" | "RECOVERED" | "NEEDS_ATTENTION" | "DEGRADED";
@@ -437,6 +453,7 @@ export interface JourneyOperatorProjection {
   brain: JourneyOperatorBrainProjection;
   collective: JourneyOperatorCollectiveProjection;
   discovery: JourneyOperatorDiscoveryProjection;
+  operations?: JourneyOperatorOperationsProjection | null;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
 }

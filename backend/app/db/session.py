@@ -1025,6 +1025,46 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     UNIQUE(recovery_epoch_id, query_hash)
                     )"""
                 )
+            if not _table_exists(connection, "recovery_execution_plans"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_execution_plans (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    recovery_epoch_id TEXT NOT NULL REFERENCES recovery_epochs(id) ON DELETE CASCADE,
+                    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+                    agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+                    status TEXT NOT NULL DEFAULT 'PLANNED',
+                    semantic_fingerprint TEXT NOT NULL,
+                    approval_id TEXT REFERENCES action_approvals(id) ON DELETE SET NULL,
+                    error_json TEXT NOT NULL DEFAULT '{}',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    completed_at TEXT,
+                    UNIQUE(recovery_epoch_id, proposal_id)
+                    )"""
+                )
+            if not _table_exists(connection, "recovery_execution_actions"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_execution_actions (
+                    id TEXT PRIMARY KEY,
+                    execution_plan_id TEXT NOT NULL REFERENCES recovery_execution_plans(id) ON DELETE CASCADE,
+                    sequence_no INTEGER NOT NULL,
+                    kind TEXT NOT NULL,
+                    target_type TEXT NOT NULL,
+                    target_id TEXT NOT NULL,
+                    provider_key TEXT,
+                    semantic_fingerprint TEXT NOT NULL,
+                    authority_decision TEXT NOT NULL DEFAULT 'REQUIRE_CONFIRMATION',
+                    approval_id TEXT,
+                    status TEXT NOT NULL DEFAULT 'PENDING',
+                    result_json TEXT NOT NULL DEFAULT '{}',
+                    error_json TEXT NOT NULL DEFAULT '{}',
+                    created_at TEXT NOT NULL,
+                    started_at TEXT,
+                    completed_at TEXT,
+                    UNIQUE(execution_plan_id, semantic_fingerprint)
+                    )"""
+                )
             connection.exec_driver_sql(
                 "CREATE INDEX IF NOT EXISTS idx_operator_recovery_resumes_due "
                 "ON operator_recovery_resumes(journey_id, status, next_retry_at)"
@@ -1032,6 +1072,14 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             connection.exec_driver_sql(
                 "CREATE INDEX IF NOT EXISTS idx_recovery_discovery_epoch "
                 "ON recovery_discovery_attempts(journey_id, recovery_epoch_id, created_at)"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_execution_plans_journey "
+                "ON recovery_execution_plans(journey_id, recovery_epoch_id, status, updated_at)"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_execution_actions_plan "
+                "ON recovery_execution_actions(execution_plan_id, sequence_no)"
             )
             connection.exec_driver_sql(
                 "CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open "
