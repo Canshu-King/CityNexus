@@ -907,11 +907,15 @@ export function LiveRecovery({
             <strong>
               {groupPresence.state === "SINGLE_TRAVELLER"
                 ? (zh ? "这趟行程目前只有你一位有效成员。" : "You are the only active member on this Journey.")
-                : groupPresence.members.some((member) => member.group_state === "SPLIT_FROM_GROUP")
+                : groupPresence.state === "GROUP_SPLIT_ADVISORY"
                   ? (zh ? "同行者的位置显示队伍可能已经分开。" : "Recent member locations suggest the group may be split.")
-                  : groupPresence.members.every((member) => member.location_state === "RECENT")
-                    ? (zh ? "同行者最近都更新过位置。" : "Everyone has shared a recent location.")
-                    : (zh ? "正在等待同行者主动更新位置。" : "Waiting for travellers to share a fresh location.")}
+                  : groupPresence.state === "TOGETHER"
+                    ? (zh ? "最近分享的位置显示大家仍在一起。" : "Recent shared locations suggest the group is together.")
+                    : groupPresence.state === "GROUP_LOCATION_STALE"
+                      ? (zh ? "有同行者的位置已经过时或精度不足。" : "Some member locations are stale or too imprecise.")
+                      : groupPresence.state === "MEMBER_LOCATION_MISSING"
+                        ? (zh ? "正在等待同行者主动分享一次当前位置。" : "Waiting for travellers to share a fresh location.")
+                        : (zh ? "目前还不能可靠判断队伍是否在一起。" : "There is not enough current evidence to classify the group yet.")}
             </strong>
             {groupPresence.members.map((member) => (
               <small key={member.member_id} data-testid="journey-group-member">
