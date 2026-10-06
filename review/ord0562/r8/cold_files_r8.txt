@@ -1,0 +1,25 @@
+The three files that still soften a counted noun: who touched them last on the tip, read in this run.
+$ git -C D:/moodle/CityNexus ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1
+32372c7e57611f73782fdc607d929735224cf657
+
+file frontend/src/features/execution/LiveRecovery.tsx
+$ git -C D:/moodle/CityNexus log -2 --format=%h %ad %an %s --date=format:%m-%d_%H:%M <tip> -- frontend/src/features/execution/LiveRecovery.tsx
+   9b228ad3d 09-29_04:33 仓鼠王 ORD-0432: say what the summary decided, in the traveller's own language
+   baa6f5dbd 09-28_20:51 仓鼠王 ORD-0407 slice 1: the five empty states say what this build can actually do
+   
+
+file frontend/src/features/simulation/simulationAdapter.ts
+$ git -C D:/moodle/CityNexus log -2 --format=%h %ad %an %s --date=format:%m-%d_%H:%M <tip> -- frontend/src/features/simulation/simulationAdapter.ts
+   45250213f 09-28_01:58 仓鼠王 ORD-0369: the stage's refused replan says which evidence fell short instead of only quoting the code
+   1b74040ec 09-21_16:04 仓鼠王 feat(frontend): let the stage ask the server what can be booked, and which proposal it means
+   
+
+file frontend/src/lib/pretripChecklist.ts
+$ git -C D:/moodle/CityNexus log -2 --format=%h %ad %an %s --date=format:%m-%d_%H:%M <tip> -- frontend/src/lib/pretripChecklist.ts
+   8b0ea5971 09-28_18:59 仓鼠王 ORD-0401 ①: the empty state collapses to one row, and the two named anchors cannot reach the first screen
+   f4442f303 09-28_15:58 仓鼠王 ORD-0384 rebase: the contract grew 42 and 50 lines, so the anchors the panel prints had to move with it
+   
+
+Read: none of the three was touched today, so the reason this lane gave for not editing them --
+another lane might be holding them right now -- is not supported by the tip. The lane still asks to be
+named before editing, because the files are not this order
