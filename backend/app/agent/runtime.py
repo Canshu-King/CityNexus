@@ -418,7 +418,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "If inspect_twin returns decision_sensitivity.decision_sensitive=true, do not guess the traveller's value choice. "
         "Call conclude_recovery with outcome CLARIFICATION_REQUIRED, one concise human-value question, and the exact server option_keys. "
         "Ask no question about opening, cost, or mobility; acquire those facts yourself. If decision_sensitive is false, do not ask. "
-        "When the user or mission explicitly selects a feasible proposal, call accept_replan with that exact proposal ID before producing a final summary; do not stop after list_replans or claim that acceptance is in progress. "
+        "Use the server-returned action tools when their current facts and authority permit; never claim that a mutation happened without a tool receipt. "
         "For every mutating tool, summarize the returned executed/decision/result fields and never substitute model prose for the Gateway receipt. "
         "Do not reveal private chain-of-thought; final text should summarize actionable rationale and observed results.\n\n"
         f"Journey ID: {journey.id}\n"
@@ -442,9 +442,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "For a shared Journey, inspect_journey and inspect_twin expose separate in-force members, role capabilities, journey-scoped preferences, and compact learned-soft context. Never treat the owner TravelerTwin as the group. "
         "Use the server-returned per-member fit matrix and mediation classification: seek a grounded compromise before asking people, never majority-vote, and never ask a member about opening, cost, mobility, or provider identity. "
         "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
-        "For an ordinary shared mission that is not already a DISAGREEMENT_MEDIATION child, when server-returned proposals remain individually grounded but the collective classification is HUMAN_TRADEOFF_REQUIRED, call request_collective_decision with the Journey, current mission, and the event ID returned by inspection. The server derives options and required members; never submit proposal IDs, member IDs, or a guessed social policy. A WAITING_FOR_MEMBERS result is a valid CLARIFICATION_REQUIRED mission outcome, not a failed or partial recovery. "
-        "If Mission.resolved_intent.collective_decision.selected_proposal_id is present, authenticated members have already resolved the human trade-off. After inspection, continue toward accept_replan for exactly that server-selected proposal under the normal Gateway boundary; do not reopen the social choice and do not stop with prose before the Gateway returns a decision. "
-        "If Mission.resolved_intent.collective_mediation.kind is DISAGREEMENT_MEDIATION, the relevant members selected different grounded proposals. You are a mediator, not a decider: never majority-vote, never accept one of the disputed proposals merely because one role is stronger, and never overwrite member preferences. The previous decision surface is already known to be socially unresolved, so do not immediately call request_collective_decision on the unchanged proposals. Inspect the separate member context and grounded evidence, then use normal search/fact/planning/replan tools to create a materially different candidate surface that improves the server fairness boundary without regressing another protected fairness boundary. You may recombine multiple already-grounded server-returned Place IDs when that creates a genuinely different executable future. generate_plans is exploratory only; before asking members again, use request_replan with the grounded Place IDs and the inspected trigger event so the improved future becomes a server-owned ReplanProposal that collective mediation can evaluate. CityNexus will revalidate it, so this is exploration rather than authority. Only after CityNexus exposes measurable progress should you call request_collective_decision for renewed consent. After explicit disagreement, even a later server classification of COMPROMISE_AVAILABLE is recommendation evidence, not renewed social authority: present the materially improved option surface through request_collective_decision and let the relevant members answer again before any active-reality mutation. "
+        "For shared Journeys, treat the server-returned member fit, mediation classification, and collective authority receipt as the authority boundary. Preserve every member's explicit choice, never majority-vote or invent member IDs, and use available tools to gather facts or present unresolved authority without prescribing a tool order. "
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"
@@ -996,8 +994,6 @@ class DeepSeekJourneyAgent:
             tuple[str, str, int], tuple[int, dict[str, Any]]
         ] = {}
         tool_counts: dict[str, int] = {}
-        acceptance_nudge_sent = False
-        mediation_nudge_sent = False
         try:
             for _ in range(max_steps):
                 batch_search_seen = False
@@ -1041,74 +1037,6 @@ class DeepSeekJourneyAgent:
                     },
                 )
                 if not tool_calls:
-                    accept_executed = any(
-                        item.get("tool_name") == "accept_replan"
-                        and isinstance(item.get("result"), dict)
-                        and item["result"].get("executed") is True
-                        for item in tool_trace
-                    )
-                    mediation_completed = any(
-                        item.get("tool_name") == "request_collective_decision"
-                        and isinstance(item.get("result"), dict)
-                        and item["result"].get("mission_status") == "WAITING_FOR_MEMBERS"
-                        for item in tool_trace
-                    ) or any(
-                        item.get("tool_name") == "conclude_recovery"
-                        and isinstance(item.get("result"), dict)
-                        and item["result"].get("requested_outcome") == "UNRESOLVED"
-                        for item in tool_trace
-                    )
-                    if (
-                        _collective_mediation_requested(mission)
-                        and not mediation_completed
-                        and not mediation_nudge_sent
-                    ):
-                        mediation_nudge_sent = True
-                        messages.append(
-                            {
-                                "role": "user",
-                                "content": (
-                                    "The member disagreement is still unresolved. Do not finish with "
-                                    "prose and do not pick a winner. Use CityNexus tools to inspect the "
-                                    "member-specific fit and seek a grounded compromise. After this "
-                                    "explicit disagreement, any materially improved option surface must "
-                                    "go through request_collective_decision for renewed member consent, "
-                                    "even if the server labels a candidate COMPROMISE_AVAILABLE. If no safe compromise "
-                                    "can be grounded inside the mission envelope, conclude UNRESOLVED "
-                                    "with the exact blocker."
-                                ),
-                            }
-                        )
-                        continue
-                    selected_collective_proposal_id = _resolved_collective_proposal_id(mission)
-                    has_proposal_evidence = bool(selected_collective_proposal_id) or any(
-                        item.get("tool_name") in {"request_replan", "list_replans"}
-                        for item in tool_trace
-                    )
-                    if (
-                        _acceptance_requested(mission)
-                        and has_proposal_evidence
-                        and not accept_executed
-                        and not acceptance_nudge_sent
-                    ):
-                        acceptance_nudge_sent = True
-                        if selected_collective_proposal_id:
-                            nudge = (
-                                "The authenticated members already resolved this collective decision. "
-                                f"The server-selected proposal is {selected_collective_proposal_id}. "
-                                "Do not finish with prose or reopen the social choice. "
-                                "Emit one accept_replan tool call for exactly that proposal now and "
-                                "wait for its Gateway response before summarizing."
-                            )
-                        else:
-                            nudge = (
-                                "Your requested acceptance has not been executed. "
-                                "Do not finish with prose. Use the exact feasible proposal ID "
-                                "from the latest CityNexus tool result and emit one accept_replan "
-                                "tool call now; wait for its Gateway response before summarizing."
-                            )
-                        messages.append({"role": "user", "content": nudge})
-                        continue
                     final_text = str(content)
                     break
                 assistant_message = {
@@ -1235,20 +1163,21 @@ class DeepSeekJourneyAgent:
 
                         result = {
                             "tool": tool_name,
-                            "error": "tool loop repetition stopped",
-                            "decision": "STOP_REPETITION",
+                            "status": "NO_PROGRESS",
+                            "decision": "NO_PROGRESS",
+                            "reason": "same request and state produced no new domain fact",
                         }
                         sequence += 1
                         step_now = _now()
                         step = AgentRunStep(
                             id=str(uuid4()), run_id=run.id, sequence_no=sequence,
                             tool_name=tool_name, arguments_json=_json_text(arguments),
-                            result_json=_json_text(result), decision="STOP_REPETITION",
-                            status="TOOL_ERROR", created_at=step_now, completed_at=step_now,
+                            result_json=_json_text(result), decision="NO_PROGRESS",
+                            status="COMPLETED", created_at=step_now, completed_at=step_now,
                         )
                         session.add(step)
-                        tool_trace.append({"sequence_no": sequence, "tool_name": tool_name, "arguments": arguments, "result": result, "decision": "STOP_REPETITION", "status": step.status})
-                        final_text = "Agent stopped a repeated non-replayable tool request before another domain action."
+                        tool_trace.append({"sequence_no": sequence, "tool_name": tool_name, "arguments": arguments, "result": result, "decision": "NO_PROGRESS", "status": step.status})
+                        final_text = "No new domain fact was produced for the repeated request."
                         messages.append({"role": "tool", "tool_call_id": call_id, "content": _result_for_model(result)})
                         continue
                     seen_calls.add(repetition_key)

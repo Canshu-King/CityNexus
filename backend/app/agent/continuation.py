@@ -387,6 +387,10 @@ def resume_pending_action(
     )
     now = _now()
     pending.result_json = _json_text(result)
+    receipt_id = result.get("collective_authority_receipt_id") if isinstance(result, dict) else None
+    if receipt_id:
+        pending.authority_receipt_id = str(receipt_id)
+        approval.authority_receipt_id = str(receipt_id)
     pending.updated_at = now
     run = session.get(AgentRun, pending.run_id)
     mission = session.get(JourneyMission, pending.mission_id)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -299,6 +299,7 @@ class AgentPendingAction(Base):
     claimed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     resumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[str] = mapped_column(String)
+    authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class AutopilotEnrollment(Base):
@@ -729,6 +730,43 @@ class ActionApproval(Base):
     expires_at: Mapped[str] = mapped_column(String)
     approved_at: Mapped[str | None] = mapped_column(String, nullable=True)
     consumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+class CollectiveAuthorityReceipt(Base):
+    """Server-issued proof that one exact collective future is executable.
+
+    The receipt is deliberately separate from a planning proposal, member
+    response, or user approval.  Those rows are evidence used to issue it;
+    this row is the durable authority boundary consumed by a mutation.
+    """
+
+    __tablename__ = "collective_authority_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    proposal_id: Mapped[str] = mapped_column(ForeignKey("replan_proposals.id", ondelete="CASCADE"))
+    plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="CASCADE"))
+    authority_mode: Mapped[str] = mapped_column(String)
+    decision_epoch: Mapped[str] = mapped_column(String)
+    material_world_epoch: Mapped[str] = mapped_column(String)
+    candidate_surface_fingerprint: Mapped[str] = mapped_column(String)
+    source_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    source_agent_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    required_member_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    response_audit_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    principal_actor_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    classification: Mapped[str] = mapped_column(String)
+    issued_at: Mapped[str] = mapped_column(String)
+    invalidated_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    invalidation_code: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        Index("idx_collective_authority_receipts_target", "journey_id", "proposal_id", "plan_version_id"),
+    )
 
 
 class Event(Base):

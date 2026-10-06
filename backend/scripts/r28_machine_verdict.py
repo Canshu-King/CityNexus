@@ -21,6 +21,7 @@ from app.db.models import (  # noqa: E402
     AgentRunStep,
     AuditLog,
     Commitment,
+    CollectiveAuthorityReceipt,
     Journey,
     JourneyMission,
     JourneyOutcomeEvent,
@@ -335,32 +336,27 @@ def build_verdict(run_id: str) -> dict[str, Any]:
 
         if collective is None:
             # R30 may continue without a fresh member round only when the
-            # mutation audit durably records current UNANIMOUS_DOMINANCE.
-            # This is a separate authority path from R28's authenticated
-            # collective response path; an ordinary missing parent remains a
-            # hard verifier failure.
-            dominance_audit = (
+            # server-issued durable dominance receipt matches the exact
+            # proposal and plan.  An audit line or model claim is not authority.
+            dominance_receipt = (
                 session.scalar(
-                    select(AuditLog)
+                    select(CollectiveAuthorityReceipt)
                     .where(
-                        AuditLog.action == "replan.accepted",
-                        AuditLog.entity_type == "ReplanProposal",
-                        AuditLog.entity_id == (proposal.id if proposal else ""),
-                        AuditLog.journey_id == journey.id,
+                        CollectiveAuthorityReceipt.journey_id == journey.id,
+                        CollectiveAuthorityReceipt.proposal_id == (proposal.id if proposal else ""),
+                        CollectiveAuthorityReceipt.plan_version_id == (
+                            proposal.proposed_plan_version_id if proposal else ""
+                        ),
+                        CollectiveAuthorityReceipt.authority_mode == "UNANIMOUS_DOMINANCE",
+                        CollectiveAuthorityReceipt.classification == "UNANIMOUS_DOMINANCE",
+                        CollectiveAuthorityReceipt.invalidated_at.is_(None),
                     )
-                    .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+                    .order_by(CollectiveAuthorityReceipt.issued_at.desc(), CollectiveAuthorityReceipt.id.desc())
                 )
                 if proposal is not None
                 else None
             )
-            dominance_after = _audit_after(dominance_audit)
-            dominance = dominance_after.get("collective_authority")
-            unanimous_no_round = bool(
-                proposal is not None
-                and isinstance(dominance, dict)
-                and dominance.get("classification") == "UNANIMOUS_DOMINANCE"
-                and dominance_after.get("status") == "ACCEPTED"
-            )
+            unanimous_no_round = dominance_receipt is not None
             if unanimous_no_round:
                 option_rows = session.scalars(
                     select(ReplanProposal).where(
@@ -372,7 +368,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                         ReplanProposal.id != proposal.id,
                     )
                 ).all()
-                terminal_options_ok = bool(option_rows) and all(
+                terminal_options_ok = all(
                     row.status in {"REJECTED", "INVALIDATED", "EXPIRED"}
                     for row in option_rows
                 )
@@ -380,8 +376,8 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                     PROVEN,
                     "No fresh member round was required: the accepted mutation carries a durable current UNANIMOUS_DOMINANCE classification.",
                     collective_required=False,
-                    authority_audit_id=dominance_audit.id,
-                    classification=dominance.get("classification"),
+                    authority_receipt_id=dominance_receipt.id,
+                    classification=dominance_receipt.classification,
                 )
                 verdicts["non_selected_proposals_rejected"] = _verdict(
                     PROVEN if terminal_options_ok else NOT_PROVEN,
@@ -392,7 +388,7 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                         {"proposal_id": row.id, "status": row.status}
                         for row in option_rows
                     ],
-                    authority_audit_id=dominance_audit.id,
+                    authority_receipt_id=dominance_receipt.id,
                 )
             else:
                 verdicts["authenticated_collective_responses"] = _verdict(

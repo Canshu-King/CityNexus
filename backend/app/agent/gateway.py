@@ -2188,6 +2188,9 @@ class AgentToolGateway:
                 reason_codes=response_reason_codes,
                 resolved_decision=resolved_collective_decision,
             )
+            receipt_id = result.get("collective_authority_receipt_id") if isinstance(result, dict) else None
+            if approval is not None and receipt_id:
+                approval.authority_receipt_id = str(receipt_id)
             response = {
                 "tool": "accept_replan",
                 "decision": auth.decision.value,

@@ -2894,6 +2894,85 @@ def answer_collective_clarification(
             "status": stored.get("status"),
         },
     )
+    if stored.get("status") == "RESOLVED":
+        # Issue the durable authority only after the final authenticated
+        # response audit has been staged.  The receipt is server-owned and
+        # binds the exact proposal, epochs, and response actors.
+        session.flush()
+        response_audits = session.scalars(
+            select(AuditLog).where(
+                AuditLog.action == "agent.collective_decision.response",
+                AuditLog.entity_type == "JourneyMission",
+                AuditLog.entity_id == parent.id,
+                AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+            )
+        ).all()
+        authenticated_member_ids = {
+            str(_json_object(item.after_json or "{}").get("member_id") or "")
+            for item in response_audits
+        }
+        if not required.issubset(authenticated_member_ids):
+            # A member-scoped legacy answer may render the clarification as
+            # resolved for compatibility, but it can never mint mutation
+            # authority.  The later mutation gate will fail closed without a
+            # durable receipt.
+            response_audits = []
+        from app.collective_authority import (
+            AUTHENTICATED_MEMBER_CONSENT,
+            issue_collective_authority_receipt,
+        )
+        selected_plan_id = next(
+            (
+                str(item.get("plan_id"))
+                for item in stored.get("candidate_options") or []
+                if isinstance(item, dict)
+                and str(item.get("proposal_id") or "")
+                == str(stored.get("selected_proposal_id") or "")
+            ),
+            "",
+        )
+        authority_receipt = None
+        if response_audits:
+            authority_receipt = issue_collective_authority_receipt(
+                session,
+                journey_id=journey.id,
+                proposal_id=str(stored["selected_proposal_id"]),
+                plan_version_id=selected_plan_id,
+                authority_mode=AUTHENTICATED_MEMBER_CONSENT,
+                decision_epoch=str(stored["decision_epoch"]),
+                material_world_epoch=str(stored["material_world_epoch"]),
+                candidate_surface_fingerprint=str(stored["decision_epoch"]),
+                classification="AUTHENTICATED_MEMBER_CONSENT",
+                required_member_ids=required,
+                response_audit_ids=[item.id for item in response_audits],
+                principal_actor_ids=[item.actor_id for item in response_audits if item.actor_id],
+                source_mission_id=parent.id,
+            )
+        if authority_receipt is None:
+            session.commit()
+            return {
+                "journey_id": journey.id,
+                "mission_id": parent.id,
+                "clarification_id": stored.get("clarification_id"),
+                "status": stored.get("status"),
+                "responses": stored.get("responses", {}),
+                "baseline_preferences_unchanged": True,
+                "traveler_twin_unchanged": True,
+                "child_mission": response_child,
+            }
+        stored["authority_receipt_id"] = authority_receipt.id
+        parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+        response_child["authority_receipt_id"] = authority_receipt.id
+        if response_child and response_child.get("id"):
+            child_row = session.get(JourneyMission, str(response_child["id"]))
+            if child_row is not None:
+                child_intent = _json_object(child_row.resolved_intent_json or "{}")
+                decision_payload = child_intent.get("collective_decision")
+                if isinstance(decision_payload, dict):
+                    decision_payload["authority_receipt_id"] = authority_receipt.id
+                    child_row.resolved_intent_json = json.dumps(
+                        child_intent, ensure_ascii=False, sort_keys=True
+                    )
     session.commit()
     return {
         "journey_id": journey.id,
@@ -14792,6 +14871,35 @@ def _collective_resolution_for_child(
                 409, "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
             )
 
+    from app.collective_authority import (
+        AUTHENTICATED_MEMBER_CONSENT,
+        latest_collective_authority_receipt,
+        receipt_validation,
+    )
+    authority_receipt = latest_collective_authority_receipt(
+        session,
+        journey_id=journey.id,
+        proposal_id=proposal.id,
+        plan_version_id=proposal.proposed_plan_version_id,
+    )
+    receipt_check = receipt_validation(
+        authority_receipt,
+        journey_id=journey.id,
+        proposal_id=proposal.id,
+        plan_version_id=proposal.proposed_plan_version_id,
+        decision_epoch=epoch,
+        material_world_epoch=current_world_epoch or stored_world_epoch or resolved_world_epoch,
+        candidate_surface_fingerprint=epoch,
+        authority_mode=AUTHENTICATED_MEMBER_CONSENT,
+    )
+    if not receipt_check.get("valid"):
+        raise HTTPException(409, str(receipt_check.get("code") or "COLLECTIVE_AUTHORITY_RECEIPT_INVALID"))
+    if (
+        str(resolved.get("authority_receipt_id") or "") != str(authority_receipt.id)
+        or str(stored.get("authority_receipt_id") or "") != str(authority_receipt.id)
+    ):
+        raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_MISMATCH")
+
     return {
         "status": "RESOLVED",
         "selected_proposal_id": str(proposal.id),
@@ -14805,6 +14913,7 @@ def _collective_resolution_for_child(
             current_world_epoch or stored_world_epoch or None
         ),
         "clarification_id": stored.get("clarification_id"),
+        "authority_receipt_id": authority_receipt.id,
     }
 
 
@@ -15029,6 +15138,59 @@ def _accept_replan_executing(
             409,
             f"{collective_gate.get('code')}: collective mediation must be resolved before mutation",
         )
+    authority_receipt_id = (
+        str((resolved_decision or {}).get("authority_receipt_id") or "") or None
+    )
+    if collective_gate.get("classification") == "UNANIMOUS_DOMINANCE":
+        # Dominance has no member response round.  Recompute its receipt from
+        # the current server gate and bind it to this exact proposal/plan
+        # before any plan row is mutated.
+        from app.collective_authority import (
+            UNANIMOUS_DOMINANCE,
+            issue_collective_authority_receipt,
+        )
+        surface = json.dumps(
+            collective_gate.get("candidate_fit_matrix") or [],
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            default=str,
+        )
+        dominance_decision_epoch = str(
+            collective_gate.get("current_decision_epoch")
+            or hashlib.sha256(surface.encode()).hexdigest()
+        )
+        dominance_world_epoch = str(
+            collective_gate.get("current_material_world_epoch")
+            or hashlib.sha256(surface.encode()).hexdigest()
+        )
+        dominance_surface_fingerprint = hashlib.sha256(surface.encode()).hexdigest()
+        authority_receipt = issue_collective_authority_receipt(
+            session,
+            journey_id=journey.id,
+            proposal_id=proposal.id,
+            plan_version_id=proposed.id,
+            authority_mode=UNANIMOUS_DOMINANCE,
+            decision_epoch=dominance_decision_epoch,
+            material_world_epoch=dominance_world_epoch,
+            candidate_surface_fingerprint=dominance_surface_fingerprint,
+            classification="UNANIMOUS_DOMINANCE",
+        )
+        session.flush()
+        reloaded_receipt = session.get(type(authority_receipt), authority_receipt.id)
+        from app.collective_authority import receipt_validation
+        if not receipt_validation(
+            reloaded_receipt,
+            journey_id=journey.id,
+            proposal_id=proposal.id,
+            plan_version_id=proposed.id,
+            decision_epoch=dominance_decision_epoch,
+            material_world_epoch=dominance_world_epoch,
+            candidate_surface_fingerprint=dominance_surface_fingerprint,
+            authority_mode=UNANIMOUS_DOMINANCE,
+        ).get("valid"):
+            raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_INVALID")
+        authority_receipt_id = authority_receipt.id
     old_current = (
         session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
     )
@@ -15246,6 +15408,7 @@ def _accept_replan_executing(
             "authorization_decision": authorization_decision,
             "reason_codes": list(reason_codes),
             "collective_authority": {
+                "receipt_id": authority_receipt_id,
                 "classification": collective_gate.get("classification"),
                 "code": collective_gate.get("code"),
                 "resolved_decision_epoch": collective_gate.get(
@@ -15268,6 +15431,7 @@ def _accept_replan_executing(
         "journey": journey_schema(journey).model_dump(mode="json"),
         "proposal": _replan_payload(proposal),
         "twin": twin,
+        "collective_authority_receipt_id": authority_receipt_id,
     }
     session.add(
         IdempotencyKey(

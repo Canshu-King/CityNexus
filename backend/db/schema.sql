@@ -427,8 +427,32 @@ CREATE TABLE IF NOT EXISTS action_approvals (
     created_at TEXT NOT NULL,
     expires_at TEXT NOT NULL,
     approved_at TEXT,
-    consumed_at TEXT
+    consumed_at TEXT,
+    authority_receipt_id TEXT
 );
+
+CREATE TABLE IF NOT EXISTS collective_authority_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+    plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    authority_mode TEXT NOT NULL CHECK (authority_mode IN ('AUTHENTICATED_MEMBER_CONSENT','UNANIMOUS_DOMINANCE')),
+    decision_epoch TEXT NOT NULL,
+    material_world_epoch TEXT NOT NULL,
+    candidate_surface_fingerprint TEXT NOT NULL,
+    source_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+    required_member_ids_json TEXT NOT NULL DEFAULT '[]',
+    response_audit_ids_json TEXT NOT NULL DEFAULT '[]',
+    principal_actor_ids_json TEXT NOT NULL DEFAULT '[]',
+    classification TEXT NOT NULL,
+    issued_at TEXT NOT NULL,
+    invalidated_at TEXT,
+    invalidation_code TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_collective_authority_receipts_target
+    ON collective_authority_receipts(journey_id, proposal_id, plan_version_id);
 
 CREATE INDEX IF NOT EXISTS idx_journeys_traveler ON journeys(traveler_id);
 CREATE INDEX IF NOT EXISTS idx_plan_versions_journey ON plan_versions(journey_id, version_no);
@@ -545,7 +569,8 @@ CREATE TABLE IF NOT EXISTS agent_pending_actions (
     created_at TEXT NOT NULL,
     claimed_at TEXT,
     resumed_at TEXT,
-    updated_at TEXT NOT NULL
+    updated_at TEXT NOT NULL,
+    authority_receipt_id TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_run
