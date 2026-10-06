@@ -3,13 +3,13 @@ Written by k127_make_readings_r11.py; every number is parsed from a run log or f
 
 [coordinates]
   tip this hand rests on   : 79daa3c4ff8f37304d352177b456133d4b9c2a45
-  branch                   : review/a68b0631-ord0507-clock-attribution-r11, product commit 902845461774416a33fda55215bee87549fb4bdf (the last commit on it carrying product bytes)
+  branch                   : review/a68b0631-ord0507-clock-attribution-r11, product commit af6cb6238ca48f7b790aec9c0faa2fbb245cc8c0 (the last commit on it carrying product bytes)
   previous generation      : r10 head e9c3625fa0f8d264d3f543015d88fc6b5c0bf128 (landed-attempt refused), cut at 3d40efcc1956f49dcc0679a41995dedc5aae8475
   spec blob                : 81d989755c942be6ba5b7987c5daf70c94ded1f9
   product blobs            : 5e244990e8397244df9c8e0962e82f3b70f8619a (V8Experience), 37c67de4a78f6363143fde2731cc8bdc49b81812 (SimulationPanel)
 
 [why a generation was spent]
-  the line moved 165 paths; this hand touches 3 of them, so the intersection is 2
+  the line moved 165 paths; this hand touches 0 of them, so the intersection is 0
   -- `frontend/src/app/V8Experience.tsx`, and the two hands sit in different hunks;
   `git merge-tree --write-tree` against this tip reports 0 conflicts.  The re-cut buys currency.
 
@@ -42,11 +42,10 @@ Written by k127_make_readings_r11.py; every number is parsed from a run log or f
   cursor reads ABSENT_FALLBACK -- the very shape item 2 removes -- and with the hand the same gate
   is green.  The bare-tip log also carries `apiResponse.json: Response has been disposed` and names
   an id the with-hand run never reaches, so the two runs are not even the same test set.
-  previous generation, first run : {"failed": 1, "passed": 4} -- red on ord0208-the-clock-sentence-speaks-human, naming a
-     sentence that claims a server cursor while the cursor is ABSENT_FALLBACK; a paired re-run of
-     that same generation was green with the hand and green at the bare tip, same named test ids.
-  So that red was a state-sensitive reading of that gate, not the hand's damage, and it has not
-  come back at this tip either.  The red reading stays on the record rather than being dropped.
+  the previous generation read the same gate red once and green on a re-run, and I called that
+  state-sensitive.  This generation is the one that settles it: at THIS tip the bare tip is red and
+  the hand is green, so the sentence item 2 removes is on the line right now, and the earlier reds
+  were that same shape being caught.  Both readings stay on the record.
 
   the mechanism, from the red run's own painted sentence: it read
   "现在取自服务器场景（执行游标）：10月9日 18:00。服务器的执行投影还没到…" -- bracket present, and no
