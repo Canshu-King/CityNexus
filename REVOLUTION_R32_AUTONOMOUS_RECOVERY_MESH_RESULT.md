@@ -196,3 +196,74 @@ stale authority consumption or fabricated human authority was observed.
 
 No second 2B attempt or 2C retry was run. Strike 1 and Strike 2 artifacts remain
 unchanged. Physical travel remains NOT PROVEN.
+
+
+## GPT review after Strike 2B
+
+Strike 2B remains immutable historical evidence. Its committed machine verdict
+is **CONTRADICTED** because the verifier used the then-current harness rule for
+`agent_a_external_and_bound_r1`: it expected the outer coordinator thread
+name `r32-agent-a`, while FastAPI/TestClient executed the synchronous endpoint
+inside `AnyIO worker thread`.
+
+The 2B black box is nevertheless decisive about the underlying product/runtime
+facts before that harness association failed:
+
+- runtime preflight selected `HermesJourneyAgent`;
+- ambient semantic AI was disabled and native Hermes was not ready;
+- Shock A opened R1;
+- Agent A was durably RUNNING and bound to R1;
+- a real WB2api call was invoked and returned from
+  `cn:glm-5.3-flash`;
+- that first response contained two autonomous tool calls.
+
+Therefore the sole 2B contradiction is a contradiction of the **old evidence
+association rule**, not evidence that CityNexus violated RecoveryEpoch
+authority. The historical verdict file is not rewritten after this finding.
+
+### Post-2B hardening
+
+The branch now removes thread identity from proof authority.
+
+Provider-call evidence is bound in this order:
+
+1. exact durable `AgentRun.id`;
+2. exact bound `RecoveryEpoch.id`;
+3. server resolution `EXACT_ONE_CURRENT_RUN`;
+4. coordinator causal slot only as experiment metadata;
+5. thread name only as legacy diagnostic context.
+
+This matters because an AnyIO worker label is a transport/execution detail, not
+an Agent identity.
+
+Additional hardening was completed before authorizing another live attempt:
+
+- successful recovery mutation terminalizes the run only when its **bound
+  RecoveryEpoch is durably COMMITTED**;
+- a successful `accept_replan` path is expected to leave R2
+  `COMMITTED / REPLAN_ACCEPTED`, not OPEN;
+- the verifier accepts R2 OPEN only for a non-mutating current path and requires
+  R2 COMMITTED after the accepted mutation path;
+- after a committed recovery, the same AgentRun does not request an extra model
+  turn merely to produce prose and therefore cannot self-supersede;
+- validating an already SUPERSEDED or COMMITTED bound epoch is causally inert:
+  stale work is rejected **without opening a successor RecoveryEpoch**;
+- in particular, if B commits R2 before A performs its stale post-response
+  guard, A/R1 cannot manufacture R3 simply by checking whether it is stale;
+- the live source receipt now hashes the complete critical R32 surface:
+  harness, runtime, RecoveryEpoch, Gateway, signal pipeline, delegation policy,
+  collective authority, main mutation surface and verifier.
+
+The deterministic gate at
+`794f624728ecb4ce6438ea00a03a04efba17505b` is green with **152 passed / 0
+failed** (4 deprecation warnings).
+
+Exactly one further live strike is authorized by:
+
+`taskbooks/revolution/R32_LIVE_STRIKE_2C_EXACT_RUN_CAUSALITY.md`
+
+This authorization exists because 2B identified and preserved one concrete
+harness correlation defect that has now been removed. It is not permission for
+open-ended reruns. If 2C does not close, its native black box is the stopping
+point for this R32 line until the newly observed product/harness cause is
+understood.
