@@ -1,0 +1,684 @@
+{
+  "schema": "citynexus.r34.live-context-watch.v1",
+  "status": "NO_MATERIAL_CHANGE",
+  "database": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-9a40006ed000826b.sqlite3",
+  "setup": {
+    "db": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-9a40006ed000826b.sqlite3",
+    "journey_id": "d264cb72-154d-4704-91cf-3d7709797a5d",
+    "owner_id": "6d2d7321-9fd3-41b1-8787-4f82986fa429",
+    "admin_id": "4b573868-69a4-4032-9b37-d76994d3ee00",
+    "owner_member_id": "76655aeb-ad3f-461e-95ae-d7635c92b126",
+    "admin_member_id": "9fd61cab-625a-4fb1-8513-1c63c63a4fdf",
+    "active_plan_id": "25551e41-b977-54c0-8adf-913993a7d937",
+    "current_activity_id": "d1760e84-1127-5040-a39b-8cb5c7d9550d",
+    "c4_activity_id": "be25765b-8571-51b4-9c07-7118089586f9",
+    "opportunity_event_id": "7b4b42ae-fec1-4a0a-b759-829ca41b81ba",
+    "proposal_count": 2,
+    "proposal_fingerprints": 2,
+    "selected_place_keys": {
+      "real-place-22cf72809897ff4c7f312fcf": "current_garden",
+      "real-place-b47a20314c81d5a81381d4a4": "c4_craft",
+      "real-place-ebd30de67691cab346be66ec": "candidate_garden",
+      "real-place-8c09b32224152e3e1ae12843": "candidate_museum",
+      "real-place-a346e8f7f72a4d8f523d81e3": "c4_anchor_museum"
+    },
+    "estimate_authority": "false",
+    "mobility_provider": "https://valhalla1.openstreetmap.de"
+  },
+  "initial_strategy": {
+    "journey_id": "d264cb72-154d-4704-91cf-3d7709797a5d",
+    "plan_id": "25551e41-b977-54c0-8adf-913993a7d937",
+    "plan_status": "ACTIVE",
+    "strategy": [
+      {
+        "sequence_no": 1,
+        "id": "d1760e84-1127-5040-a39b-8cb5c7d9550d",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "title": "依水園",
+        "activity_type": "visit",
+        "start_at": "2026-10-08T09:00:00+09:00",
+        "end_at": "2026-10-08T10:00:00+09:00",
+        "status": "ARRIVED",
+        "locked": false
+      },
+      {
+        "sequence_no": 2,
+        "id": "be25765b-8571-51b4-9c07-7118089586f9",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+        "activity_type": "C4",
+        "start_at": "2026-10-08T15:00:00+09:00",
+        "end_at": "2026-10-08T16:00:00+09:00",
+        "status": "PLANNED",
+        "locked": true
+      }
+    ]
+  },
+  "watch_http_status": 200,
+  "watch": {
+    "status": "NO_MATERIAL_CHANGE",
+    "journey_id": "d264cb72-154d-4704-91cf-3d7709797a5d",
+    "captured_at": "2026-10-06T07:49:02.792359+00:00",
+    "checked_activities": [
+      {
+        "activity_id": "d1760e84-1127-5040-a39b-8cb5c7d9550d",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf"
+      },
+      {
+        "activity_id": "be25765b-8571-51b4-9c07-7118089586f9",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3"
+      }
+    ],
+    "observations": [
+      {
+        "id": "3b799a49-2d23-419b-b3f1-55a8a4161bce",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "provider_entity": "overpass:way/97082272",
+        "provider_key": "truth-mesh",
+        "source_class": "OFFICIAL_TICKETING",
+        "authority_status": "NON_AUTHORITATIVE",
+        "captured_at": "2026-10-06T07:49:02.792359+00:00"
+      },
+      {
+        "id": "24de96e1-aaf3-425d-8c3c-77e2d38fa173",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "provider_entity": "overpass:node/2661423323",
+        "provider_key": "truth-mesh",
+        "source_class": "OFFICIAL_WEB",
+        "authority_status": "NON_AUTHORITATIVE",
+        "captured_at": "2026-10-06T07:49:02.792359+00:00"
+      }
+    ],
+    "classifications": [
+      {
+        "activity_id": "d1760e84-1127-5040-a39b-8cb5c7d9550d",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "provider_entity": "overpass:way/97082272",
+        "planned_local_interval": {
+          "start": "2026-10-08T09:00:00+09:00",
+          "end": "2026-10-08T10:00:00+09:00"
+        },
+        "opening_hours": {
+          "status": "NORMALIZED_VALID",
+          "raw": "We-Mo 09:00-16:30; Tu off",
+          "open": "09:00",
+          "close": "16:30",
+          "intervals": [
+            {
+              "open": "09:00",
+              "close": "16:30",
+              "days": [
+                "We",
+                "Th",
+                "Fr",
+                "Sa",
+                "Su",
+                "Mo"
+              ]
+            }
+          ],
+          "weekday_intervals": [
+            {
+              "days": [
+                "We",
+                "Th",
+                "Fr",
+                "Sa",
+                "Su",
+                "Mo"
+              ],
+              "intervals": [
+                {
+                  "open": "09:00",
+                  "close": "16:30"
+                }
+              ]
+            }
+          ]
+        },
+        "status": "OPEN_COMPATIBLE",
+        "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+        "verified_opening_interval": {
+          "open": "09:00",
+          "close": "16:30",
+          "days": [
+            "We",
+            "Th",
+            "Fr",
+            "Sa",
+            "Su",
+            "Mo"
+          ]
+        },
+        "observation_id": "3b799a49-2d23-419b-b3f1-55a8a4161bce"
+      },
+      {
+        "activity_id": "be25765b-8571-51b4-9c07-7118089586f9",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "provider_entity": "overpass:node/2661423323",
+        "planned_local_interval": {
+          "start": "2026-10-08T15:00:00+09:00",
+          "end": "2026-10-08T16:00:00+09:00"
+        },
+        "opening_hours": {
+          "status": "OFFICIAL_WEB_VERIFIED",
+          "raw": "午前10時00分～午後4時30分",
+          "open": "10:00",
+          "close": "16:30",
+          "intervals": [
+            {
+              "open": "10:00",
+              "close": "16:30",
+              "days": [
+                "*"
+              ]
+            }
+          ],
+          "weekday_intervals": [
+            {
+              "days": [
+                "*"
+              ],
+              "intervals": [
+                {
+                  "open": "10:00",
+                  "close": "16:30"
+                }
+              ]
+            }
+          ],
+          "source": "official_web",
+          "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+        },
+        "status": "OPEN_COMPATIBLE",
+        "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+        "verified_opening_interval": {
+          "open": "10:00",
+          "close": "16:30",
+          "days": [
+            "*"
+          ]
+        },
+        "observation_id": "24de96e1-aaf3-425d-8c3c-77e2d38fa173"
+      }
+    ],
+    "material_conflicts": [],
+    "unknown_or_degraded": [],
+    "recovery_event_ids": [],
+    "agent_started": false,
+    "mutation_count": 0,
+    "acquisition": {
+      "provider": "truth-mesh",
+      "source": "https://overpass.openstreetmap.fr/api/interpreter",
+      "retrieved_at": "2026-10-06T07:49:02.794358+00:00",
+      "journey_id": "d264cb72-154d-4704-91cf-3d7709797a5d",
+      "places": [
+        {
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "provider": "truth-mesh",
+          "source": "https://overpass.openstreetmap.fr/api/interpreter",
+          "provider_entity": "overpass:way/97082272",
+          "retrieved_at": "2026-10-06T07:49:02.794358+00:00",
+          "identity_evidence": {
+            "exact_ref": "way/97082272",
+            "overpass": "EXACT_IDENTITY_MATCH",
+            "nominatim": "EXACT_IDENTITY_MATCH",
+            "identity_authority": "EXACT_OSM_ID_CONVERGED"
+          },
+          "identity_authority": "EXACT_OSM_ID_CONVERGED",
+          "source_binding": {
+            "provider_entity": "overpass:way/97082272",
+            "source_url": "https://isuien.or.jp/",
+            "source_class": "OFFICIAL_TICKETING",
+            "identity_basis": {
+              "matched_provider_entity": true,
+              "provider_entity": "overpass:way/97082272",
+              "basis": "exact_provider_website_tag",
+              "secondary_provider": "nominatim"
+            },
+            "approval": "PROVIDER_TAG_EXACT_URL",
+            "source_kind": "PROVIDER_BOUND_EXACT_URL"
+          },
+          "secondary_source": {
+            "provider": "nominatim",
+            "source": "https://nominatim.openstreetmap.org/lookup",
+            "status": "ACQUIRED",
+            "matched_provider_entity": true
+          },
+          "supporting_content": {
+            "tags": {
+              "charge:adult": "1200 JPY",
+              "charge:child": "300 JPY;500 JPY",
+              "charge:disabled": "500 JPY",
+              "contact:facebook": "100063951454210",
+              "contact:twitter": "ISUIEN_Garden",
+              "contact:website": "https://isuien.or.jp/",
+              "fee": "yes",
+              "leisure": "garden",
+              "name": "依水園",
+              "name:en": "Isuien Garden",
+              "name:fr": "Jardin Isui",
+              "name:ja-Hira": "いすいえん",
+              "name:ja-Latn": "Isui-en",
+              "name:zh": "依水园",
+              "opening_hours": "We-Mo 09:00-16:30; Tu off",
+              "start_date": "1673",
+              "wikidata": "Q2745677",
+              "wikimedia_commons": "Category:Isuien",
+              "wikipedia": "ja:依水園"
+            },
+            "nominatim_extratags": {
+              "fee": "yes",
+              "wikidata": "Q2745677",
+              "wikipedia": "ja:依水園",
+              "start_date": "1673",
+              "charge:adult": "1200 JPY",
+              "charge:child": "300 JPY;500 JPY",
+              "opening_hours": "We-Mo 09:00-16:30; Tu off",
+              "charge:disabled": "500 JPY",
+              "contact:twitter": "ISUIEN_Garden",
+              "contact:website": "https://isuien.or.jp/",
+              "contact:facebook": "100063951454210",
+              "wikimedia_commons": "Category:Isuien"
+            }
+          },
+          "opening_hours": {
+            "status": "NORMALIZED_VALID",
+            "raw": "We-Mo 09:00-16:30; Tu off",
+            "open": "09:00",
+            "close": "16:30",
+            "intervals": [
+              {
+                "open": "09:00",
+                "close": "16:30",
+                "days": [
+                  "We",
+                  "Th",
+                  "Fr",
+                  "Sa",
+                  "Su",
+                  "Mo"
+                ]
+              }
+            ],
+            "weekday_intervals": [
+              {
+                "days": [
+                  "We",
+                  "Th",
+                  "Fr",
+                  "Sa",
+                  "Su",
+                  "Mo"
+                ],
+                "intervals": [
+                  {
+                    "open": "09:00",
+                    "close": "16:30"
+                  }
+                ]
+              }
+            ]
+          },
+          "cost_evidence": {
+            "status": "KNOWN",
+            "amount_minor": 1200,
+            "currency": "JPY",
+            "source": "overpass"
+          },
+          "official_web": {
+            "provider": "official_web",
+            "source": "https://isuien.or.jp/",
+            "retrieved_at": "2026-10-06T07:49:02.794358+00:00",
+            "status": "NO_STRUCTURED_FACTS",
+            "opening_hours": {
+              "status": "UNKNOWN",
+              "raw": null,
+              "intervals": []
+            },
+            "cost_evidence": {
+              "status": "UNKNOWN",
+              "amount_minor": null,
+              "currency": "CNY",
+              "source": "official_web",
+              "source_url": "https://isuien.or.jp/"
+            },
+            "source_binding": {
+              "provider_entity": "overpass:way/97082272",
+              "source_url": "https://isuien.or.jp/",
+              "source_class": "OFFICIAL_TICKETING",
+              "identity_basis": {
+                "matched_provider_entity": true,
+                "provider_entity": "overpass:way/97082272",
+                "basis": "exact_provider_website_tag",
+                "secondary_provider": "nominatim"
+              },
+              "approval": "PROVIDER_TAG_EXACT_URL",
+              "source_kind": "PROVIDER_BOUND_EXACT_URL"
+            }
+          },
+          "search_source": {
+            "provider": "searxng",
+            "status": "UNCONFIGURED",
+            "attempted": false,
+            "observations": [],
+            "opening_hours": {
+              "status": "UNKNOWN",
+              "raw": null,
+              "intervals": []
+            },
+            "cost_evidence": {
+              "status": "UNKNOWN",
+              "amount_minor": null,
+              "currency": "CNY",
+              "source": "searxng"
+            }
+          }
+        },
+        {
+          "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+          "provider": "truth-mesh",
+          "source": "https://overpass.openstreetmap.fr/api/interpreter",
+          "provider_entity": "overpass:node/2661423323",
+          "retrieved_at": "2026-10-06T07:49:02.794358+00:00",
+          "identity_evidence": {
+            "exact_ref": "node/2661423323",
+            "overpass": "EXACT_IDENTITY_MATCH",
+            "nominatim": "EXACT_IDENTITY_MATCH",
+            "identity_authority": "EXACT_OSM_ID_CONVERGED"
+          },
+          "identity_authority": "EXACT_OSM_ID_CONVERGED",
+          "source_binding": {
+            "provider_entity": "overpass:node/2661423323",
+            "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+            "source_class": "OFFICIAL_WEB",
+            "identity_basis": {
+              "matched_provider_entity": true,
+              "provider_entity": "overpass:node/2661423323",
+              "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+            },
+            "approval": "OPERATOR_VERIFIED"
+          },
+          "secondary_source": {
+            "provider": "nominatim",
+            "source": "https://nominatim.openstreetmap.org/lookup",
+            "status": "ACQUIRED",
+            "matched_provider_entity": true
+          },
+          "supporting_content": {
+            "tags": {
+              "name": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+              "name:en": "The Kids Science Museum of Photons",
+              "name:ja": "きっづ光科学館ふぉとん",
+              "opening_hours": "10:00 - 16:30",
+              "operator": "日本原子力研究開発機構 関西光科学研究所",
+              "source": "bing",
+              "tourism": "museum",
+              "wikidata": "Q17211497",
+              "wikipedia": "ja:きっづ光科学館ふぉとん"
+            },
+            "nominatim_extratags": {
+              "operator": "日本原子力研究開発機構 関西光科学研究所",
+              "wikidata": "Q17211497",
+              "wikipedia": "ja:きっづ光科学館ふぉとん",
+              "opening_hours": "10:00 - 16:30"
+            }
+          },
+          "opening_hours": {
+            "status": "OFFICIAL_WEB_VERIFIED",
+            "raw": "午前10時00分～午後4時30分",
+            "open": "10:00",
+            "close": "16:30",
+            "intervals": [
+              {
+                "open": "10:00",
+                "close": "16:30",
+                "days": [
+                  "*"
+                ]
+              }
+            ],
+            "weekday_intervals": [
+              {
+                "days": [
+                  "*"
+                ],
+                "intervals": [
+                  {
+                    "open": "10:00",
+                    "close": "16:30"
+                  }
+                ]
+              }
+            ],
+            "source": "official_web",
+            "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+          },
+          "cost_evidence": {
+            "status": "VERIFIED_PROVIDER",
+            "amount_minor": 0,
+            "currency": "JPY",
+            "source": "official_web",
+            "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+            "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+          },
+          "official_web": {
+            "provider": "official_web",
+            "source": "https://www.qst.go.jp/site/kids-photon/43021.html",
+            "retrieved_at": "2026-10-06T07:49:02.794358+00:00",
+            "status": "ACQUIRED",
+            "opening_hours": {
+              "status": "OFFICIAL_WEB_VERIFIED",
+              "raw": "午前10時00分～午後4時30分",
+              "open": "10:00",
+              "close": "16:30",
+              "intervals": [
+                {
+                  "open": "10:00",
+                  "close": "16:30",
+                  "days": [
+                    "*"
+                  ]
+                }
+              ],
+              "weekday_intervals": [
+                {
+                  "days": [
+                    "*"
+                  ],
+                  "intervals": [
+                    {
+                      "open": "10:00",
+                      "close": "16:30"
+                    }
+                  ]
+                }
+              ],
+              "source": "official_web",
+              "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+            },
+            "cost_evidence": {
+              "status": "VERIFIED_PROVIDER",
+              "amount_minor": 0,
+              "currency": "JPY",
+              "source": "official_web",
+              "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+              "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+            },
+            "source_binding": {
+              "provider_entity": "overpass:node/2661423323",
+              "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+              "source_class": "OFFICIAL_WEB",
+              "identity_basis": {
+                "matched_provider_entity": true,
+                "provider_entity": "overpass:node/2661423323",
+                "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+              },
+              "approval": "OPERATOR_VERIFIED"
+            }
+          },
+          "search_source": {
+            "provider": "searxng",
+            "status": "UNCONFIGURED",
+            "attempted": false,
+            "observations": [],
+            "opening_hours": {
+              "status": "UNKNOWN",
+              "raw": null,
+              "intervals": []
+            },
+            "cost_evidence": {
+              "status": "UNKNOWN",
+              "amount_minor": null,
+              "currency": "CNY",
+              "source": "searxng"
+            }
+          }
+        }
+      ],
+      "known_opening_count": 2,
+      "known_cost_count": 2,
+      "overpass_attempts": [
+        {
+          "endpoint": "https://overpass-api.de/api/interpreter",
+          "answered": false,
+          "http_status": 504,
+          "elapsed_ms": 10629.7,
+          "error": "HTTPStatusError: Server error '504 Gateway Timeout' for url 'https://overpass-api.de/api/interpreter'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HT"
+        },
+        {
+          "endpoint": "https://overpass.kumi.systems/api/interpreter",
+          "answered": false,
+          "http_status": null,
+          "elapsed_ms": 27721.9,
+          "error": "ReadTimeout: The read operation timed out"
+        },
+        {
+          "endpoint": "https://overpass.private.coffee/api/interpreter",
+          "answered": false,
+          "http_status": null,
+          "elapsed_ms": 29670.8,
+          "error": "ReadTimeout: The read operation timed out"
+        },
+        {
+          "endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+          "answered": true,
+          "http_status": 200,
+          "elapsed_ms": 1595.1,
+          "elements": 2
+        }
+      ],
+      "identity_evidence": [
+        {
+          "exact_ref": "way/97082272",
+          "overpass": "EXACT_IDENTITY_MATCH",
+          "nominatim": "EXACT_IDENTITY_MATCH",
+          "identity_authority": "EXACT_OSM_ID_CONVERGED"
+        },
+        {
+          "exact_ref": "node/2661423323",
+          "overpass": "EXACT_IDENTITY_MATCH",
+          "nominatim": "EXACT_IDENTITY_MATCH",
+          "identity_authority": "EXACT_OSM_ID_CONVERGED"
+        }
+      ],
+      "identity_authority": "EXACT_OSM_ID_CONVERGED",
+      "degraded_providers": [],
+      "fact_sources": [
+        {
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "provider_tags": true,
+          "nominatim_extratags": true,
+          "official_web": false
+        },
+        {
+          "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+          "provider_tags": true,
+          "nominatim_extratags": true,
+          "official_web": true
+        }
+      ],
+      "official_web": {
+        "provider": "official_web",
+        "status": "ACQUIRED",
+        "attempted": 2,
+        "acquired": 1
+      },
+      "search_source": {
+        "provider": "searxng",
+        "status": "UNCONFIGURED",
+        "attempted": false,
+        "acquired": 0
+      },
+      "secondary_source": {
+        "provider": "nominatim",
+        "source": "https://nominatim.openstreetmap.org/lookup",
+        "status": "ACQUIRED",
+        "element_count": 2
+      },
+      "status": "ACQUIRED",
+      "element_count": 2
+    }
+  },
+  "evidence": {
+    "observations": [
+      {
+        "id": "3b799a49-2d23-419b-b3f1-55a8a4161bce",
+        "provider_key": "truth-mesh",
+        "source_class": "OFFICIAL_TICKETING",
+        "authority_status": "NON_AUTHORITATIVE",
+        "captured_at": "2026-10-06T07:49:02.792359+00:00",
+        "url": "https://isuien.or.jp/",
+        "domain": "isuien.or.jp",
+        "content_excerpt": "{\"cost_evidence\": {\"amount_minor\": 1200, \"currency\": \"JPY\", \"source\": \"overpass\", \"status\": \"KNOWN\"}, \"identity_evidence\": {\"exact_ref\": \"way/97082272\", \"identity_authority\": \"EXACT_OSM_ID_CONVERGED\", \"nominatim\": \"EXACT_IDENTITY_MATCH\", \"overpass\": \"EXACT_IDENTITY_MATCH\"}, \"opening_hours\": {\"close\": \"16:30\", \"intervals\": [{\"close\": \"16:30\", \"days\": [\"We\", \"Th\", \"Fr\", \"Sa\", \"Su\", \"Mo\"], \"open\": \"09:00\"}], \"open\": \"09:00\", \"raw\": \"We-Mo 09:00-16:30; Tu off\", \"status\": \"NORMALIZED_VALID\", \"weekday_intervals\": [{\"days\": [\"We\", \"Th\", \"Fr\", \"Sa\", \"Su\", \"Mo\"], \"intervals\": [{\"close\": \"16:30\", \"open\": \"09:00\"}]}]}, \"provider_entity\": \"overpass:way/97082272\", \"source_binding\": {\"approval\": \"PROVIDER_TAG_EXACT_URL\", \"identity_basis\": {\"basis\": \"exact_provider_website_tag\", \"matched_provider_entity\": true, \"provider_entity\": \"overpass:way/97082272\", \"secondary_provider\": \"nominatim\"}, \"provider_entity\": \"overpass:way/97082272\", \"source_class\": \"OFFICIAL_TICKETING\", \"source_kind\": \"PROVIDER_BOUND_EXACT_URL\", \"source_url\": \"https://isuien.or.jp/\"}}"
+      },
+      {
+        "id": "24de96e1-aaf3-425d-8c3c-77e2d38fa173",
+        "provider_key": "truth-mesh",
+        "source_class": "OFFICIAL_WEB",
+        "authority_status": "NON_AUTHORITATIVE",
+        "captured_at": "2026-10-06T07:49:02.792359+00:00",
+        "url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+        "domain": "www.qst.go.jp",
+        "content_excerpt": "{\"cost_evidence\": {\"amount_minor\": 0, \"currency\": \"JPY\", \"raw\": \"無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん\", \"source\": \"official_web\", \"source_url\": \"https://www.qst.go.jp/site/kids-photon/43021.html\", \"status\": \"VERIFIED_PROVIDER\"}, \"identity_evidence\": {\"exact_ref\": \"node/2661423323\", \"identity_authority\": \"EXACT_OSM_ID_CONVERGED\", \"nominatim\": \"EXACT_IDENTITY_MATCH\", \"overpass\": \"EXACT_IDENTITY_MATCH\"}, \"opening_hours\": {\"close\": \"16:30\", \"intervals\": [{\"close\": \"16:30\", \"days\": [\"*\"], \"open\": \"10:00\"}], \"open\": \"10:00\", \"raw\": \"午前10時00分～午後4時30分\", \"source\": \"official_web\", \"source_url\": \"https://www.qst.go.jp/site/kids-photon/43021.html\", \"status\": \"OFFICIAL_WEB_VERIFIED\", \"weekday_intervals\": [{\"days\": [\"*\"], \"intervals\": [{\"close\": \"16:30\", \"open\": \"10:00\"}]}]}, \"provider_entity\": \"overpass:node/2661423323\", \"source_binding\": {\"approval\": \"OPERATOR_VERIFIED\", \"identity_basis\": {\"basis\": \"OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY\", \"matched_provider_entity\": true, \"provider_entity\": \"overpass:node/2661423323\"}, \"provider_entity\": \"overpass:node/2661423323\", \"source_class\": \"OFFICIAL_WEB\", \"source_url\": \"https://www.qst.go.jp/site/kids-photon/43021.html\"}}"
+      }
+    ],
+    "events": []
+  },
+  "agent": null,
+  "final_strategy": {
+    "journey_id": "d264cb72-154d-4704-91cf-3d7709797a5d",
+    "plan_id": "25551e41-b977-54c0-8adf-913993a7d937",
+    "plan_status": "ACTIVE",
+    "strategy": [
+      {
+        "sequence_no": 1,
+        "id": "d1760e84-1127-5040-a39b-8cb5c7d9550d",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "title": "依水園",
+        "activity_type": "visit",
+        "start_at": "2026-10-08T09:00:00+09:00",
+        "end_at": "2026-10-08T10:00:00+09:00",
+        "status": "ARRIVED",
+        "locked": false
+      },
+      {
+        "sequence_no": 2,
+        "id": "be25765b-8571-51b4-9c07-7118089586f9",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+        "activity_type": "C4",
+        "start_at": "2026-10-08T15:00:00+09:00",
+        "end_at": "2026-10-08T16:00:00+09:00",
+        "status": "PLANNED",
+        "locked": true
+      }
+    ]
+  },
+  "mutation_count": 0,
+  "captured_at": "2026-10-06T07:50:17.149765+00:00",
+  "limitations": [
+    "physical travel is not claimed",
+    "no Hermes Agent was started because no qualified conflict was observed"
+  ]
+}

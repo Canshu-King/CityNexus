@@ -120,7 +120,7 @@ def _mutation_receipt(journey_id: str) -> list[dict[str, Any]]:
             .order_by(AuditLog.created_at)
         ).all()
         return [
-            {"action": row.action, "created_at": row.created_at, "after": json.loads(row.after_json or "{}")} 
+            {"action": row.action, "created_at": row.created_at, "after": json.loads(row.after_json or "{}")}
             for row in rows
             if row.action == "replan.accepted"
         ]
