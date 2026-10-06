@@ -10,31 +10,33 @@ import {
  * renders and cannot hide what it asked the server for.
  *
  * BOTH DOORS ARE ON THE LINE NOW. The write door landed with ORD-0399:
- * `POST /api/v1/journeys/{journey_id}/undelete` -- `backend/app/main.py` carries the decorator
- * `@app.post("/api/v1/journeys/{journey_id}/undelete` -- with no `Idempotency-Key`: the durable column
- * decides whether the write happens, and the refusal that answers instead of a fake success is the
- * line `refused.reason_code = "JOURNEY_NOT_DELETED"` in the same file. The read door landed with
- * ORD-0402 slice 1 as `@app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])`,
- * declared in `contracts/openapi.yaml` under the path key `/recycle-bin/journeys:` and generated into
- * `frontend/src/generated/api.ts` as the operation `"/recycle-bin/journeys": {`, each row carrying the
- * stored fields `deleted_at: datetime` and `bin_state: Literal["IN_RECYCLE_BIN"]` from
- * `backend/app/schemas.py` -- so this screen never has to conclude "it was deleted" from the trip being
- * missing from `GET /api/v1/journeys`, which keeps its own `deleted_at IS NULL` promise as the statement
- * `live = select(Journey).where(Journey.deleted_at.is_(None))`.
+ * `POST /api/v1/journeys/{journey_id}/undelete` (`undelete_journey` in `backend/app/main.py`), no
+ * `Idempotency-Key` -- the durable column decides whether the write happens -- answering `409` with
+ * `reason_code` = `JOURNEY_NOT_DELETED` rather than reporting a success that did not occur. The read
+ * door landed with ORD-0402 slice 1 as `list_recycle_bin_journeys`: `GET /api/v1/recycle-bin/journeys`,
+ * declared under that path in `contracts/openapi.yaml` and generated into
+ * `frontend/src/generated/api.ts`, each row carrying the stored `deleted_at` and
+ * `bin_state` = `IN_RECYCLE_BIN` (`RecycleBinJourney` in `backend/app/schemas.py`) -- so this screen
+ * never has to conclude "it was deleted" from the trip being missing from `GET /api/v1/journeys`
+ * (`list_journeys`, whose own predicate keeps `deleted_at IS NULL`).
+ *
+ * Pointers in this header name symbols, not rows. The numeric `file:line` form is what this header
+ * used to carry, and it costs a re-measure every time another lane lands above it -- these anchors
+ * were re-numbered once already, by the ORD-0535 citation pass. The arm
+ * `test_b8_the_screen_owns_no_stale_pointer` in `backend/tests/test_qoder_ord0531_bin_ownership.py`
+ * refuses that form in this family.
  *
  * The name this file chose is the name slice 1 shipped, so the constant below needed no edit when the
  * door arrived; that is the point of keeping the URL in one place. The reason for not using
- * `/journeys/discarded` still stands and was measured, not guessed (see
- * `review/ord0402/stack_receipt_r1.json`, key `shadowed_collection_name`): the landed
+ * `/journeys/discarded` still stands and was measured, not guessed: the landed
  * `GET /api/v1/journeys/{journey_id}` door is declared earlier in `app.main`, so a one-segment
  * collection name under `/journeys/` is swallowed by it and answers 422 with
  * `loc: ["path","journey_id"]`, `type: "uuid_parsing"`, `message_key: "validation.not_an_id"` (the
  * server's own receipt for that answer was `CNX-TWXNJHE2`).
  *
- * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first --
- * the statement `.order_by(Journey.deleted_at.desc(), Journey.id)` inside that same read door -- and the
- * panel renders the array as answered, so the order a traveller sees is the server's order, not a
- * client-side re-sort.
+ * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first
+ * (`list_recycle_bin_journeys` sorts on the stored deletion moment), and the panel renders the array
+ * as answered, so the order a traveller sees is the server's order, not a client-side re-sort.
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
 
@@ -96,8 +98,9 @@ export function binMayRestore(row: ScopedBinRow): boolean {
   return binRecovery(row) === "RECOVERY_ALLOWED";
 }
 
-/** A binned trip, typed from the contract rather than re-declared here: slice 1 shipped the schema
- *  `RecycleBinJourney: components["schemas"]["Journey"] & {` into the generated client, so the
+/** A binned trip, typed from the contract rather than re-declared here: slice 1 shipped
+ *  `RecycleBinJourney` into the generated client (the schema of that name in
+ *  `components["schemas"]`), so the
  *  screen's rows and the server's schema cannot drift apart silently. The guards in the panel stay
  *  anyway -- a model says what the server intends to send, not what this response did send. */
 export type DiscardedJourney = components["schemas"]["RecycleBinJourney"];
