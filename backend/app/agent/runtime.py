@@ -21,7 +21,13 @@ from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identi
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
 from app.core.config import settings
-from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
+from app.db.models import (
+    AgentRun,
+    AgentRunStep,
+    Journey,
+    JourneyMission,
+    RecoveryEpoch,
+)
 from app.recovery_epoch import (
     COMMITTED,
     RECOVERY_EPOCH_SUPERSEDED,
