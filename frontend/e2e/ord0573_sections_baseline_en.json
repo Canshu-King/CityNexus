@@ -1,0 +1,23 @@
+{
+ "arm": "en",
+ "shape": "390x844",
+ "source": "readings of the roles gate, taken before this hand",
+ "sections": [
+  {
+   "key": "itinerary",
+   "text": "Itinerary"
+  },
+  {
+   "key": "stay",
+   "text": "Stay"
+  },
+  {
+   "key": "bookings",
+   "text": "Bookings"
+  },
+  {
+   "key": "spend",
+   "text": "Spend"
+  }
+ ]
+}

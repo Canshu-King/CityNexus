@@ -1,0 +1,44 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0573-sections-copy-r1.spec.ts",
+ "arm": "zh",
+ "shape": "390x844",
+ "nav_role": "tablist",
+ "before_rows": [
+  {
+   "key": "itinerary",
+   "role": "tab",
+   "id": "trips-tab-itinerary",
+   "aria_selected": "true",
+   "text": "行程"
+  },
+  {
+   "key": "stay",
+   "role": "tab",
+   "id": "trips-tab-stay",
+   "aria_selected": "false",
+   "text": "住宿"
+  },
+  {
+   "key": "bookings",
+   "role": "tab",
+   "id": "trips-tab-bookings",
+   "aria_selected": "false",
+   "text": "预订"
+  },
+  {
+   "key": "spend",
+   "role": "tab",
+   "id": "trips-tab-spend",
+   "aria_selected": "false",
+   "text": "花费"
+  }
+ ],
+ "selected_after_clicking_stay": [
+  "stay"
+ ],
+ "source_arm": {
+  "tabRowsLeftInShell": [],
+  "importsTheModule": true,
+  "moduleHasEveryWord": true
+ }
+}

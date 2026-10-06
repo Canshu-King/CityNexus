@@ -1,0 +1,23 @@
+{
+ "arm": "zh",
+ "shape": "390x844",
+ "source": "readings of the roles gate, taken before this hand",
+ "sections": [
+  {
+   "key": "itinerary",
+   "text": "行程"
+  },
+  {
+   "key": "stay",
+   "text": "住宿"
+  },
+  {
+   "key": "bookings",
+   "text": "预订"
+  },
+  {
+   "key": "spend",
+   "text": "花费"
+  }
+ ]
+}

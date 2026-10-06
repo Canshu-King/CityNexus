@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:57211 - "GET /api/v1/travelers/b22ef9d6-7f7e-49ac-a7dc-473986229404/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60673 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60653 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57488 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58131 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57491 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62917 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62916 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59840 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59841 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59842 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52352 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59845 - "GET /api/v1/travelers/b22ef9d6-7f7e-49ac-a7dc-473986229404/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52351 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59843 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59844 - "GET /api/v1/journeys/b2443d4e-71a8-4b62-840d-b48be9fb1221/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52353 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  2) [chromium] › e2e\qoder-8ac89982-ord0573-sections-copy-r1.spec.ts:57:5 › ORD-0573 the section labels come from the copy table › sections-copy-en 
+
+    Error: the shell does not read the section labels from the copy table
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+       99 |
+      100 |       const src = sourceArm();
+    > 101 |       expect(src.importsTheModule, "the shell does not read the section labels from the copy table").toBe(true);
+          |                                                                                                      ^
+      102 |       expect(src.moduleHasEveryWord, "the copy table is missing one of the four section labels").toBe(true);
+      103 |       expect(
+      104 |         src.tabRowsLeftInShell,
+        at D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend\e2e\qoder-8ac89982-ord0573-sections-copy-r1.spec.ts:101:102
+
+    Error Context: test-results\qoder-8ac89982-ord0573-sec-97197-copy-table-sections-copy-en-chromium\error-context.md
+
+
+  2 failed
+    [chromium] › e2e\qoder-8ac89982-ord0573-sections-copy-r1.spec.ts:57:5 › ORD-0573 the section labels come from the copy table › sections-copy-zh 
+    [chromium] › e2e\qoder-8ac89982-ord0573-sections-copy-r1.spec.ts:57:5 › ORD-0573 the section labels come from the copy table › sections-copy-en 
+  1 passed (17.5s)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0573-sections-copy-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0573copy_counter.db ports 5238/5239 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0573copy_counter LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0573copy_counter.log

@@ -8,6 +8,7 @@ import {
 import { Icon } from "../components/v8/Icon";
 import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { mapCopy } from "../i18n/mapPanelCopy";
+import { tripsSectionKeys, tripsSectionLabel } from "../i18n/tripSectionsCopy";
 import { footprintWords, useFootprints } from "../features/checkin/footprintRead";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
@@ -1871,6 +1872,13 @@ export function V8Experience() {
     slots: routeSlots,
   };
 
+  /* ORD-0577: no bar button is the current one on a screen outside the bar's own routes, and the bar used
+     to say nothing there. It answers by pointing at the name the breadcrumb already paints, rather than
+     claiming a "nearest" main route the product does not carry and the traveller is not on. */
+  const barAnswersHere = mobileRoutes.some(
+    (item) => item.key === route || (item.key === "map" && route === "live")
+  );
+
   return (
     <div className="v8-product-shell">
       <aside className="v8-sidebar">
@@ -1893,6 +1901,7 @@ export function V8Experience() {
               )}
               <button
                 className={route === item.key ? "active" : ""}
+                aria-current={route === item.key ? "page" : undefined}
                 data-contrast-role={route === item.key ? "state" : undefined}
                 onClick={() => navigate(item.key)}
               >
@@ -1934,7 +1943,7 @@ export function V8Experience() {
           <div className="v8-breadcrumb">
             <span>{t("shell.journeys")}</span>
             <b>/</b>
-            <strong>
+            <strong id="v8-bar-where">
               {t(
                 "nav." +
                   (route in
@@ -2109,7 +2118,11 @@ export function V8Experience() {
           }}
         />
       )}
-      <nav className="v8-mobile-nav" aria-label="Mobile navigation">
+      <nav
+        className="v8-mobile-nav"
+        aria-label="Mobile navigation"
+        aria-describedby={barAnswersHere ? undefined : "v8-bar-where"}
+      >
         {mobileRoutes.map((item) => (
           <button
             key={item.key}
@@ -2184,6 +2197,7 @@ export function V8Experience() {
                   )}
                 <button
                   className={route === item.key ? "active" : ""}
+                  aria-current={route === item.key ? "page" : undefined}
                   data-testid={"v8-drawer-entry-" + item.key}
                   onClick={() => navigate(item.key)}
                 >
@@ -2247,12 +2261,10 @@ function TripsWorkspace({
   const [tab, setTab] = useState<"itinerary" | "stay" | "bookings" | "spend">(
     "itinerary",
   );
-  const tabs = [
-    { key: "itinerary" as const, zh: "行程", en: "Itinerary" },
-    { key: "stay" as const, zh: "住宿", en: "Stay" },
-    { key: "bookings" as const, zh: "预订", en: "Bookings" },
-    { key: "spend" as const, zh: "花费", en: "Spend" },
-  ];
+  /* ORD-0573: the four section labels live in `i18n/tripSectionsCopy.ts` instead of inline literals --
+     the same per-surface table `mapPanelCopy.ts` is, for the same reason (the shared dictionary is
+     being edited by other lanes). The words are unchanged; only where they are written moved. */
+  const tabs = tripsSectionKeys.map((key) => ({ key, label: tripsSectionLabel(key, zh) }));
   /* ORD-0392: the tab bodies live in `app/v8PanelRegistry.tsx` now; this file keeps the
      `Bookings` / `WalletCommitments` shells it defines. A new panel on any of these four tabs is one
      entry in that table. The Spend tab's own face moved out to
@@ -2334,7 +2346,7 @@ function TripsWorkspace({
             data-testid={`trips-tab-${item.key}`}
             onClick={() => setTab(item.key)}
           >
-            {zh ? item.zh : item.en}
+            {item.label}
           </button>
         ))}
       </nav>
