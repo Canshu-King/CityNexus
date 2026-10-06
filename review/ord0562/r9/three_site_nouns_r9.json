@@ -1,0 +1,16 @@
+{
+ "three_site_nouns": {
+  "suggestion": {
+   "one": "suggestion",
+   "several": "suggestions"
+  },
+  "leg": {
+   "one": "leg",
+   "several": "legs"
+  },
+  "failure": {
+   "one": "failure",
+   "several": "failures"
+  }
+ }
+}
