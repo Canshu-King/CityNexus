@@ -1,4 +1,11 @@
-from app.agent.runtime import _same_state_replay, _tool_result_advances_state
+from app.agent.runtime import (
+    _same_state_replay,
+    _server_completion_contract,
+    _strategy_neutral_terminal_message,
+    _terminal_agent_status,
+    _tool_result_advances_state,
+)
+from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 
 
 def test_replan_proposal_advances_observation_epoch():
@@ -64,3 +71,47 @@ def test_failed_inspection_is_not_replayed_as_truth():
         )
         is None
     )
+
+
+
+def test_no_progress_is_a_typed_server_completion_contract():
+    trace = [
+        {
+            "tool_name": "accept_replan",
+            "decision": "NO_PROGRESS",
+            "status": "COMPLETED",
+            "result": {
+                "tool": "accept_replan",
+                "status": "NO_PROGRESS",
+                "decision": "NO_PROGRESS",
+            },
+        }
+    ]
+    completion = _server_completion_contract(
+        trace,
+        run_status="COMPLETED",
+    )
+    assert completion == {
+        "kind": "NO_PROGRESS",
+        "source": "server_trace",
+        "reason_code": "SAME_STATE_STRATEGY_STALLED",
+        "tool_name": "accept_replan",
+    }
+    assert _terminal_agent_status(
+        trace,
+        has_final_text=True,
+        clarification=False,
+    ) == ("PARTIAL", "PARTIAL")
+
+
+def test_terminal_supervisor_message_is_strategy_neutral():
+    message = _strategy_neutral_terminal_message(
+        {
+            "kind": "UNRESOLVED",
+            "reason_code": "NO_TYPED_RECOVERY_CONCLUSION",
+        }
+    )
+    lowered = message.casefold()
+    assert "no specific next tool" in lowered
+    for tool_name in RUNTIME_MCP_ALLOWLIST_V2:
+        assert tool_name.casefold() not in lowered
