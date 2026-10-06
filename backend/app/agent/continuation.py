@@ -64,10 +64,24 @@ def capture_pending_action(
     if not approval_waiting(result):
         return None
     approval_id = str(result["approval_id"])
+    authority_receipt_id = (
+        str(result.get("collective_authority_receipt_id") or "") or None
+    )
     existing = session.scalar(
         select(AgentPendingAction).where(AgentPendingAction.approval_id == approval_id)
     )
     if existing is not None:
+        if (
+            authority_receipt_id
+            and existing.authority_receipt_id
+            and str(existing.authority_receipt_id) != authority_receipt_id
+        ):
+            raise RuntimeError(
+                "pending action authority receipt changed for the same approval"
+            )
+        if authority_receipt_id and not existing.authority_receipt_id:
+            existing.authority_receipt_id = authority_receipt_id
+            existing.updated_at = _now()
         run.status = "WAITING_FOR_APPROVAL"
         mission.status = "WAITING_FOR_APPROVAL"
         run.completed_at = None
@@ -86,6 +100,7 @@ def capture_pending_action(
         mission_id=mission.id,
         journey_id=run.journey_id,
         originating_step_id=step.id,
+        authority_receipt_id=authority_receipt_id,
         tool_name=tool_name,
         arguments_json=_json_text(canonical_arguments),
         status="PENDING",
@@ -114,6 +129,7 @@ def capture_pending_action(
             "mission_id": mission.id,
             "tool": tool_name,
             "status": pending.status,
+            "collective_authority_receipt_id": authority_receipt_id,
         },
     )
     session.flush()
