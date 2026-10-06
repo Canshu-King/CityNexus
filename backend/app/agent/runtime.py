@@ -774,6 +774,21 @@ def _server_completion_contract(
     }
 
 
+def _strategy_neutral_terminal_message(
+    completion: dict[str, Any] | None = None,
+) -> str:
+    """Describe the missing terminal contract without prescribing strategy."""
+
+    kind = str((completion or {}).get("kind") or "UNRESOLVED")
+    return (
+        "CityNexus terminal contract is not yet satisfied "
+        f"({kind}): no server-owned typed terminal outcome exists for this "
+        "mission. Continue with any allowed strategy, or finish only when "
+        "the server can record a valid terminal outcome. No specific next "
+        "tool is required."
+    )
+
+
 def _terminal_agent_status(
     tool_steps: list[dict[str, Any]], *, has_final_text: bool, clarification: bool
 ) -> tuple[str, str]:
@@ -1079,13 +1094,8 @@ class DeepSeekJourneyAgent:
                         messages.append(
                             {
                                 "role": "user",
-                                "content": (
-                                    "CityNexus terminal contract is not yet "
-                                    "satisfied: no server-owned typed terminal "
-                                    "outcome exists for this mission. Continue "
-                                    "with any allowed strategy, or finish only "
-                                    "when the server can record a valid terminal "
-                                    "outcome. No specific next tool is required."
+                                "content": _strategy_neutral_terminal_message(
+                                    completion
                                 ),
                             }
                         )
