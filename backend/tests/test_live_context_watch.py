@@ -95,3 +95,57 @@ def test_receipt_binding_requires_exact_place_and_provider_entity():
     )
     assert _place_receipt(receipt, "p2", "overpass:node/1") is None
     assert _place_receipt(receipt, "p1", "overpass:node/999") is None
+
+
+def test_missing_exact_receipt_contributes_to_unknown_summary(monkeypatch):
+    from app import live_context_watch as module
+
+    fake_activity = SimpleNamespace(
+        id="a-missing",
+        plan_version_id="plan-1",
+        sequence_no=1,
+        status="PLANNED",
+        place_id="p-missing",
+        start_at="2026-10-08T09:00:00+09:00",
+        end_at="2026-10-08T10:00:00+09:00",
+    )
+    fake_journey = SimpleNamespace(
+        id="j1",
+        active_plan_version_id="plan-1",
+        timezone="Asia/Tokyo",
+    )
+
+    class _Scalars:
+        def all(self):
+            return [fake_activity]
+
+    class _Session:
+        def scalars(self, *_args, **_kwargs):
+            return _Scalars()
+
+        def get(self, model, key):
+            if model is module.Place and key == "p-missing":
+                return SimpleNamespace(
+                    id="p-missing",
+                    external_id="overpass:node/1",
+                    metadata_json="{}",
+                )
+            return None
+
+        def flush(self):
+            return None
+
+    monkeypatch.setattr(
+        module,
+        "acquire_place_facts",
+        lambda *_args, **_kwargs: {
+            "places": [],
+            "degraded_providers": [],
+        },
+    )
+
+    result = module.run_live_context_watch(_Session(), fake_journey)
+
+    assert result["status"] == "UNKNOWN"
+    assert result["material_conflicts"] == []
+    assert result["unknown_or_degraded"][0]["reason_code"] == "EXACT_PLACE_EVIDENCE_MISSING"
