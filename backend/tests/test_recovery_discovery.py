@@ -1,4 +1,5 @@
 from app.agent.recovery_discovery import recovery_surface_decision
+from app.agent.runtime import citynexus_tool_definitions
 
 
 def test_zero_grounded_options_expands():
@@ -117,3 +118,16 @@ def test_provider_degradation_does_not_destroy_existing_option():
     assert d.state == "DISCOVERY_DEGRADED"
     assert d.grounded_option_count == 1
     assert d.should_expand is False
+
+
+def test_explicit_discovery_tool_has_intent_only_and_no_coordinates():
+    discovery = next(
+        item for item in citynexus_tool_definitions()
+        if item["function"]["name"] == "discover_recovery_options"
+    )
+    properties = discovery["function"]["parameters"]["properties"]
+    assert "q" in properties
+    assert "journey_id" in properties
+    assert "trigger_event_id" in properties
+    assert "latitude" not in properties
+    assert "longitude" not in properties

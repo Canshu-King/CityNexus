@@ -47,6 +47,7 @@ from app.db.models import (
     JourneyMission,
     PaymentTransaction,
     Place,
+    RecoveryDiscoveryAttempt,
     PlanVersion,
     ReplanProposal,
     WebObservation,
@@ -691,6 +692,7 @@ class AgentToolGateway:
             "conclude_recovery": self.conclude_recovery,
             "apply_clarified_horizon_choice": self.apply_clarified_horizon_choice,
             "search_city_services": self.search_city_services,
+            "discover_recovery_options": self.discover_recovery_options,
             "research_place_sources": self.research_place_sources,
             "acquire_place_facts": self.acquire_place_facts,
             "estimate_place_facts": self.estimate_place_facts,
@@ -1463,6 +1465,151 @@ class AgentToolGateway:
         if discovery_receipt is not None:
             result["discovery"] = discovery_receipt
         return result
+
+    def discover_recovery_options(self, request: AgentToolCall) -> dict[str, Any]:
+        """Expand one recovery epoch with a bounded, server-anchored city search."""
+        if request.journey_id is None or request.trigger_event_id is None or request.mission_id is None:
+            raise HTTPException(422, "journey_id, trigger_event_id, and mission_id are required")
+        journey = _require_journey(self.session, request.journey_id)
+        mission = self.session.get(JourneyMission, str(request.mission_id))
+        if mission is None or mission.journey_id != journey.id:
+            raise HTTPException(404, "Journey mission was not found")
+        trigger = self.session.get(Event, str(request.trigger_event_id))
+        if trigger is None or trigger.journey_id != journey.id or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}:
+            raise HTTPException(409, "discovery trigger is not actionable")
+        epoch_id = self._bound_recovery_epoch_id(request, journey)
+        if not epoch_id:
+            epoch_id = str(ensure_recovery_epoch(self.session, journey).id)
+        query = " ".join(str(request.q or request.category or "").split()).strip()
+        if not query:
+            raise HTTPException(422, "a recovery search intent is required")
+        category = " ".join(str(request.category or "").split()).strip() or None
+        radius_m = 2500
+        candidate_limit = 8
+        query_hash = hashlib.sha256(
+            json.dumps(
+                {"journey_id": journey.id, "recovery_epoch_id": epoch_id, "query": query.casefold(), "category": category.casefold() if category else None, "radius_m": radius_m, "limit": candidate_limit},
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        existing = self.session.scalar(
+            select(RecoveryDiscoveryAttempt).where(
+                RecoveryDiscoveryAttempt.recovery_epoch_id == epoch_id,
+                RecoveryDiscoveryAttempt.query_hash == query_hash,
+            )
+        )
+        if existing is not None:
+            place_ids = json.loads(existing.materialized_place_ids_json or "[]")
+            return {
+                "tool": "discover_recovery_options",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "status": "REUSED",
+                "recovery_epoch_id": epoch_id,
+                "attempt_id": existing.id,
+                "query": existing.query,
+                "candidate_place_ids": place_ids,
+                "raw_candidate_count": existing.raw_candidate_count,
+                "provider_mode": existing.provider_mode,
+                "runtime_provenance": existing.runtime_provenance,
+                "idempotent_reuse": True,
+            }
+        attempts = self.session.scalars(
+            select(RecoveryDiscoveryAttempt).where(
+                RecoveryDiscoveryAttempt.recovery_epoch_id == epoch_id
+            )
+        ).all()
+        if len(attempts) >= 2:
+            return {
+                "tool": "discover_recovery_options",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "status": "DISCOVERY_EXHAUSTED",
+                "recovery_epoch_id": epoch_id,
+                "attempt_count": len(attempts),
+                "max_attempts": 2,
+                "candidate_place_ids": [],
+                "idempotent_reuse": False,
+            }
+        from app.core.config import settings
+        from app.integrations.discovery.real_city import capture_real_city_candidates
+
+        record_audit(
+            self.session,
+            action="agent.recovery_discovery.started",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="AI_AGENT",
+            actor_id=request.agent_id,
+            after={"recovery_epoch_id": epoch_id, "query": query, "attempt_count": len(attempts) + 1},
+        )
+        mode = str(settings.real_city_mode or "replay").lower()
+        if mode not in {"live", "captured_replay", "replay"}:
+            mode = "replay"
+        now = datetime.now(timezone.utc).isoformat()
+        try:
+            captured = capture_real_city_candidates(
+                self.session,
+                journey,
+                query=query,
+                radius_m=radius_m,
+                limit=candidate_limit,
+                mode=mode,
+            )
+            candidates = captured.get("candidates") or []
+            provider_status = captured.get("provider_status") or {}
+            runtime_provenance = str(captured.get("runtime_provenance") or captured.get("provenance") or mode.upper())
+            status = "COMPLETED"
+            if mode == "live" and str(captured.get("mode") or "").endswith("unavailable"):
+                status = "DEGRADED"
+        except Exception as exc:
+            candidates = []
+            provider_status = {"failure": "PROVIDER_DISCOVERY_FAILED", "detail": str(exc)[:240]}
+            runtime_provenance = "PROVIDER_DEGRADED"
+            status = "DEGRADED"
+            captured = {"mode": mode}
+        place_ids = [str(item.get("materialized_place_id") or item.get("id")) for item in candidates if item.get("materialized_place_id") or item.get("id")]
+        attempt = RecoveryDiscoveryAttempt(
+            id=str(uuid4()), journey_id=journey.id, recovery_epoch_id=epoch_id,
+            mission_id=mission.id, query_hash=query_hash, query=query, category=category,
+            radius_m=radius_m, candidate_limit=candidate_limit, status=status,
+            provider_mode=str(captured.get("mode") or mode), runtime_provenance=runtime_provenance,
+            raw_candidate_count=len(candidates), materialized_place_ids_json=json.dumps(place_ids),
+            provider_status_json=json.dumps(provider_status, ensure_ascii=False, sort_keys=True),
+            created_at=now, updated_at=now,
+        )
+        self.session.add(attempt)
+        record_audit(
+            self.session,
+            action="agent.recovery_discovery.completed",
+            entity_type="RecoveryDiscoveryAttempt",
+            entity_id=attempt.id,
+            journey_id=journey.id,
+            actor_type="AI_AGENT",
+            actor_id=request.agent_id,
+            after={
+                "attempt_id": attempt.id, "recovery_epoch_id": epoch_id,
+                "query": query, "status": status,
+                "raw_candidate_count": len(candidates), "materialized_place_ids": place_ids,
+                "runtime_provenance": runtime_provenance,
+            },
+        )
+        self.session.commit()
+        return {
+            "tool": "discover_recovery_options",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "status": status,
+            "recovery_epoch_id": epoch_id,
+            "attempt_id": attempt.id,
+            "query": query,
+            "candidate_place_ids": place_ids,
+            "raw_candidate_count": len(candidates),
+            "provider_mode": attempt.provider_mode,
+            "runtime_provenance": runtime_provenance,
+            "idempotent_reuse": False,
+            "creates_proposal": False,
+            "mutates_active_plan": False,
+        }
 
     def acquire_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)

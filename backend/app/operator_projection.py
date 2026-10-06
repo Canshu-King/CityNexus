@@ -25,6 +25,7 @@ from app.db.models import (
     Journey,
     JourneyMission,
     ReplanProposal,
+    RecoveryDiscoveryAttempt,
     RecoveryEpoch,
 )
 
@@ -119,6 +120,14 @@ def _timeline(session: Session, journey_id: str) -> list[dict[str, Any]]:
             label = "Watching your trip again"
         elif row.action == "operator.external_agent_blocked":
             label = "CityNexus could not reach its trip Agent"
+        elif row.action == "agent.recovery_discovery.started":
+            label = "I’m looking for more recovery options nearby"
+        elif row.action == "agent.recovery_discovery.completed":
+            label = (
+                "I found new places to check"
+                if int(after.get("raw_candidate_count") or 0) > 0
+                else "I couldn’t find another grounded option"
+            )
         if label is None:
             continue
         items.append({"at": row.created_at, "label": label, "kind": row.action})
@@ -273,6 +282,42 @@ def operator_projection(
     )
     brain["recovery_resume"] = resume_projection(resume)
 
+    discovery_rows = (
+        session.scalars(
+            select(RecoveryDiscoveryAttempt)
+            .where(
+                RecoveryDiscoveryAttempt.journey_id == journey.id,
+                RecoveryDiscoveryAttempt.recovery_epoch_id == recovery_epoch_id,
+            )
+            .order_by(RecoveryDiscoveryAttempt.created_at, RecoveryDiscoveryAttempt.id)
+        ).all()
+        if recovery_epoch_id
+        else []
+    )
+    latest_discovery = discovery_rows[-1] if discovery_rows else None
+    discovery_state = "IDLE"
+    if latest_discovery is not None:
+        if latest_discovery.status == "DEGRADED":
+            discovery_state = "DISCOVERY_DEGRADED"
+        elif len(discovery_rows) >= 2 and latest_discovery.raw_candidate_count == 0:
+            discovery_state = "DISCOVERY_EXHAUSTED"
+        else:
+            discovery_state = "DISCOVERY_IN_PROGRESS"
+    discovery = {
+        "state": discovery_state,
+        "attempt_count": len(discovery_rows),
+        "max_attempts": 2,
+        "raw_candidate_count": latest_discovery.raw_candidate_count if latest_discovery else 0,
+        "materialized_place_count": (
+            len(_json(latest_discovery.materialized_place_ids_json, []))
+            if latest_discovery is not None
+            else 0
+        ),
+        "provider_mode": latest_discovery.provider_mode if latest_discovery else None,
+        "runtime_provenance": latest_discovery.runtime_provenance if latest_discovery else None,
+        "query": latest_discovery.query if latest_discovery else None,
+    }
+
     from app.collective_operator import collective_operator_projection
 
     collective = collective_operator_projection(
@@ -352,6 +397,7 @@ def operator_projection(
         "decision": decision,
         "approval": approval_payload,
         "brain": brain,
+        "discovery": discovery,
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {

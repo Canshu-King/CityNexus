@@ -117,7 +117,7 @@ def reconcile_stale_agent_runs(
 
 
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
-_NON_DOMAIN_TOOLS = {"search_city_services", "research_place_sources", "conclude_recovery"}
+_NON_DOMAIN_TOOLS = {"search_city_services", "discover_recovery_options", "research_place_sources", "conclude_recovery"}
 _MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - _NON_DOMAIN_TOOLS
 _RECOVERY_CONCLUSIONS = {
     "MUTATION_EXECUTED",
@@ -211,6 +211,20 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 "service_type": _property("string"),
             },
             ["journey_id"],
+        ),
+        _tool(
+            "discover_recovery_options",
+            "Expand the current recovery surface with a bounded provider-backed city search. Describe the kind of alternative that would help; the server derives the anchor, radius, provider identity, and Place records.",
+            {
+                **journey,
+                "trigger_event_id": _property("string"),
+                "mission_id": _property("string"),
+                "q": _property("string"),
+                "category": _property("string"),
+                "radius_m": _property("integer", minimum=250, maximum=5000),
+                "discovery_limit": _property("integer", minimum=1, maximum=8),
+            },
+            ["journey_id", "trigger_event_id", "mission_id", "q"],
         ),
         _tool(
             "research_place_sources",
@@ -1582,6 +1596,23 @@ class DeepSeekJourneyAgent:
                             trace_id=trace_id,
                             name="real_city.discovery",
                             attributes={"tool_name": tool_name},
+                        )
+                    if tool_name == "discover_recovery_options":
+                        persist_span(
+                            session,
+                            journey_id=journey.id,
+                            trace_id=trace_id,
+                            name="real_city.recovery_discovery",
+                            attributes={
+                                "tool_name": tool_name,
+                                "status": result.get("status")
+                                if isinstance(result, dict)
+                                else None,
+                                "candidate_count": len(result.get("candidate_place_ids", []))
+                                if isinstance(result, dict)
+                                and isinstance(result.get("candidate_place_ids"), list)
+                                else 0,
+                            },
                         )
                     if tool_name == "request_replan":
                         persist_span(

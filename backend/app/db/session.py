@@ -1000,9 +1000,38 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     UNIQUE(journey_id, recovery_epoch_id)
                     )"""
                 )
+            if not _table_exists(connection, "recovery_discovery_attempts"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_discovery_attempts (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    recovery_epoch_id TEXT NOT NULL REFERENCES recovery_epochs(id) ON DELETE CASCADE,
+                    mission_id TEXT,
+                    guardian_run_id TEXT,
+                    query_hash TEXT NOT NULL,
+                    query TEXT NOT NULL,
+                    category TEXT,
+                    radius_m INTEGER NOT NULL DEFAULT 2500,
+                    candidate_limit INTEGER NOT NULL DEFAULT 8,
+                    status TEXT NOT NULL DEFAULT 'COMPLETED',
+                    provider_mode TEXT NOT NULL,
+                    runtime_provenance TEXT NOT NULL,
+                    raw_candidate_count INTEGER NOT NULL DEFAULT 0,
+                    materialized_place_ids_json TEXT NOT NULL DEFAULT '[]',
+                    deep_candidate_ids_json TEXT NOT NULL DEFAULT '[]',
+                    provider_status_json TEXT NOT NULL DEFAULT '{}',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    UNIQUE(recovery_epoch_id, query_hash)
+                    )"""
+                )
             connection.exec_driver_sql(
                 "CREATE INDEX IF NOT EXISTS idx_operator_recovery_resumes_due "
                 "ON operator_recovery_resumes(journey_id, status, next_retry_at)"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_discovery_epoch "
+                "ON recovery_discovery_attempts(journey_id, recovery_epoch_id, created_at)"
             )
             connection.exec_driver_sql(
                 "CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open "

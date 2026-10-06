@@ -139,6 +139,8 @@ class AgentToolCall(BaseModel):
     city_code: str | None = Field(default=None, min_length=1, max_length=32)
     q: str | None = Field(default=None, max_length=120)
     category: str | None = Field(default=None, max_length=80)
+    radius_m: int | None = Field(default=None, ge=250, le=5000)
+    discovery_limit: int | None = Field(default=None, ge=1, le=8)
     service_type: str | None = Field(default=None, max_length=80)
     place_id: str | None = Field(default=None, min_length=1, max_length=128)
     source_url: str | None = Field(default=None, min_length=1, max_length=2048)

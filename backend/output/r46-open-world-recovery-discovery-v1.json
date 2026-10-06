@@ -1,0 +1,76 @@
+{
+  "experiment": "R46_OPEN_WORLD_RECOVERY_DISCOVERY",
+  "authority_flag": "false",
+  "provider_mode": "CAPTURED_REPLAY",
+  "reset_status": 200,
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "guardian_status": 200,
+  "result": "OPEN_WORLD_RECOVERY_EXPANDED",
+  "discovery": {
+    "tool": "discover_recovery_options",
+    "decision": "ALLOW_AUTO",
+    "status": "COMPLETED",
+    "recovery_epoch_id": "1879efd0-4605-4891-b409-b42f29cc55b6",
+    "attempt_id": "ca51056b-7100-430b-8b48-d94d9fc6f689",
+    "query": "an open nearby alternative that protects the remaining schedule and budget",
+    "candidate_place_ids": [
+      "real-place-f9f6b604dddcbaf4d27517a8",
+      "real-place-a60fd27c0eb55fb4d6bd6cbf",
+      "real-place-e9495c822a4f29bf2f2a032f",
+      "real-place-48915c22a7769f20ee1465c1",
+      "real-place-714143ca8cc84ce1ff26f782"
+    ],
+    "raw_candidate_count": 5,
+    "provider_mode": "captured_replay",
+    "runtime_provenance": "SEALED_REAL_REPLAY",
+    "idempotent_reuse": false,
+    "creates_proposal": false,
+    "mutates_active_plan": false
+  },
+  "repeat": {
+    "tool": "discover_recovery_options",
+    "decision": "ALLOW_AUTO",
+    "status": "REUSED",
+    "recovery_epoch_id": "1879efd0-4605-4891-b409-b42f29cc55b6",
+    "attempt_id": "ca51056b-7100-430b-8b48-d94d9fc6f689",
+    "query": "an open nearby alternative that protects the remaining schedule and budget",
+    "candidate_place_ids": [
+      "real-place-f9f6b604dddcbaf4d27517a8",
+      "real-place-a60fd27c0eb55fb4d6bd6cbf",
+      "real-place-e9495c822a4f29bf2f2a032f",
+      "real-place-48915c22a7769f20ee1465c1",
+      "real-place-714143ca8cc84ce1ff26f782"
+    ],
+    "raw_candidate_count": 5,
+    "provider_mode": "captured_replay",
+    "runtime_provenance": "SEALED_REAL_REPLAY",
+    "idempotent_reuse": true
+  },
+  "replan_after_discovery": {
+    "proposal_count": 1,
+    "error": null,
+    "candidate_surface_count": 1
+  },
+  "same_attempt_reused": true,
+  "creates_proposal": false,
+  "mutates_active_plan": false,
+  "attempt_count": 1,
+  "materialized_place_ids": [
+    "real-place-f9f6b604dddcbaf4d27517a8",
+    "real-place-a60fd27c0eb55fb4d6bd6cbf",
+    "real-place-e9495c822a4f29bf2f2a032f",
+    "real-place-48915c22a7769f20ee1465c1",
+    "real-place-714143ca8cc84ce1ff26f782"
+  ],
+  "operator_status": 200,
+  "operator_discovery": {
+    "state": "DISCOVERY_IN_PROGRESS",
+    "attempt_count": 1,
+    "max_attempts": 2,
+    "raw_candidate_count": 5,
+    "materialized_place_count": 5,
+    "provider_mode": "captured_replay",
+    "runtime_provenance": "SEALED_REAL_REPLAY",
+    "query": "an open nearby alternative that protects the remaining schedule and budget"
+  }
+}

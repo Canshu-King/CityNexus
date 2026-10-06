@@ -35,6 +35,13 @@ TOOLS = (
         False,
     ),
     ToolDescriptor(
+        AgentAction.DISCOVER_RECOVERY_OPTIONS,
+        "discover_recovery_options",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
         AgentAction.RESEARCH_PLACE_SOURCES,
         "research_place_sources",
         False,

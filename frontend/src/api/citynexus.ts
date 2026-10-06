@@ -400,6 +400,17 @@ export interface JourneyOperatorCollectiveProjection {
   timeline?: JourneyOperatorTimelineItem[];
 }
 
+export interface JourneyOperatorDiscoveryProjection {
+  state: "IDLE" | "DISCOVERY_IN_PROGRESS" | "DISCOVERY_EXHAUSTED" | "DISCOVERY_DEGRADED";
+  attempt_count: number;
+  max_attempts: number;
+  raw_candidate_count: number;
+  materialized_place_count: number;
+  provider_mode?: string | null;
+  runtime_provenance?: string | null;
+  query?: string | null;
+}
+
 export interface JourneyOperatorProjection {
   journey_id: string;
   state: "OFF" | "WATCHING" | "INVESTIGATING" | "WAITING_FOR_APPROVAL" | "APPLYING" | "RECOVERED" | "NEEDS_ATTENTION" | "DEGRADED";
@@ -425,6 +436,7 @@ export interface JourneyOperatorProjection {
   } | null;
   brain: JourneyOperatorBrainProjection;
   collective: JourneyOperatorCollectiveProjection;
+  discovery: JourneyOperatorDiscoveryProjection;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
 }

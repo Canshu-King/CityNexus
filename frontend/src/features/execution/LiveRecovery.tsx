@@ -664,6 +664,18 @@ export function LiveRecovery({
             )}
           </div>
         )}
+        {operator?.discovery && operator.discovery.state !== "IDLE" && (
+          <div className="journey-operator-discovery" data-testid="journey-operator-discovery">
+            <span className="v8-kicker">Open-world recovery</span>
+            <strong>
+              {operator.discovery.state === "DISCOVERY_IN_PROGRESS"
+                ? (zh ? "已知选择不够，我正在附近寻找新的可能性。" : "The known choices are too narrow, so I’m looking nearby for new possibilities.")
+                : operator.discovery.state === "DISCOVERY_DEGRADED"
+                  ? (zh ? "暂时无法连接城市发现服务，已有行程选项保持不变。" : "City discovery is temporarily unavailable; your existing recovery options are unchanged.")
+                  : (zh ? "我已经找过附近的替代方案，但还没有更多可靠选择。" : "I looked nearby, but I still don’t have another grounded recovery.")}
+            </strong>
+          </div>
+        )}
         {!operator?.enabled && (
           <button
             type="button"

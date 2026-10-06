@@ -318,6 +318,38 @@ class OperatorRecoveryResume(Base):
     )
 
 
+class RecoveryDiscoveryAttempt(Base):
+    """Durable bounded open-world discovery inside one recovery epoch."""
+
+    __tablename__ = "recovery_discovery_attempts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    recovery_epoch_id: Mapped[str] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="CASCADE")
+    )
+    mission_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    guardian_run_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    query_hash: Mapped[str] = mapped_column(String)
+    query: Mapped[str] = mapped_column(String)
+    category: Mapped[str | None] = mapped_column(String, nullable=True)
+    radius_m: Mapped[int] = mapped_column(Integer, default=2500, server_default="2500")
+    candidate_limit: Mapped[int] = mapped_column(Integer, default=8, server_default="8")
+    status: Mapped[str] = mapped_column(String, default="COMPLETED", server_default="COMPLETED")
+    provider_mode: Mapped[str] = mapped_column(String)
+    runtime_provenance: Mapped[str] = mapped_column(String)
+    raw_candidate_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    materialized_place_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    deep_candidate_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    provider_status_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("recovery_epoch_id", "query_hash"),
+        Index("idx_recovery_discovery_epoch", "journey_id", "recovery_epoch_id", "created_at"),
+    )
+
+
 class AgentRun(Base):
     """Persisted execution envelope for a model-backed Journey Agent run."""
 
