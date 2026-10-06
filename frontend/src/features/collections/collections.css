@@ -128,7 +128,7 @@ same trap ORD-0435 measured at 272 px of control inside a 358 px card.
    control that does nothing.  Sizes are the token scale, and the entry keeps a full-height hit box so
    a 390 px row can actually land a tap on it (the ORD-0338 lesson: laid out is not hittable). */
 .cn-collect { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cn-s-6); margin-top: var(--cn-s-6); }
-.cn-collect__entry { flex: none; padding: 7px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: #fff; color: var(--v8-indigo); font-size: 11px; font-weight: 700; }
+.cn-collect__entry { flex: none; padding: 7px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: var(--cn-surface); color: var(--v8-indigo); font-size: 11px; font-weight: 700; }
 .cn-collect__entry:disabled { color: #98a2b3; background: #f4f6f8; }
 .cn-collect__state { flex: 1 1 100%; margin: 0; color: #6b7688; font-size: 11px; line-height: 1.45; }
 .cn-collect__picker { flex: 1 1 100%; display: grid; gap: var(--cn-s-6); padding: var(--cn-s-10); border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: #fbfcfe; }
