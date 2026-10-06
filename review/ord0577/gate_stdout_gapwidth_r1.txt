@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:49739 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49757 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63008 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64766 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64767 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52935 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64769 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52934 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64768 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55030 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55031 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55780 - "GET /api/v1/travelers/ea4ae492-e287-4041-8428-9f9b8e438f99/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61152 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61153 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61155 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61154 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56145 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56146 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56148 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60864 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60865 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56149 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56147 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61460 - "GET /api/v1/travelers/ea4ae492-e287-4041-8428-9f9b8e438f99/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59566 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59565 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57558 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64661 - "GET /api/v1/journeys/24e85837-bdfb-4758-8555-525df9b8181e/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56189 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  3 passed (44.6s)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-entry-gap-width-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577gapwidth_r1.db ports 5228/5229 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0577gapwidth_r1 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577gapwidth_r1.log
