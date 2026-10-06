@@ -1,0 +1,113 @@
+{
+ "tip": "4323a5ce905e54cba8bcc612f576c13ed19c1410",
+ "tip_testid_count": 844,
+ "rows": [
+  {
+   "branch": "ord0527-access-identity-r1",
+   "sha": "87f7a2b86536b99a6043c79e2532e0f1ebd39695",
+   "files": 325,
+   "testids_total": 719,
+   "testids_on_tip": 712,
+   "testids_off_tip": 7,
+   "off_tip_examples": [
+    "access-journey-picker",
+    "footprint-failed",
+    "poi-import-favorite",
+    "poi-import-favorite-why",
+    "poi-import-new-journey",
+    "poi-import-new-journey-why",
+    "spend-stay-total"
+   ],
+   "suspected_own_off_tip": [
+    "footprint-failed"
+   ],
+   "verdict": "部分落"
+  },
+  {
+   "branch": "ord0527-access-identity-r2",
+   "sha": "57147e28f58b09f678d5fd0efa5883f0a7011d50",
+   "files": 326,
+   "testids_total": 726,
+   "testids_on_tip": 719,
+   "testids_off_tip": 7,
+   "off_tip_examples": [
+    "access-journey-picker",
+    "footprint-failed",
+    "poi-import-favorite",
+    "poi-import-favorite-why",
+    "poi-import-new-journey",
+    "poi-import-new-journey-why",
+    "spend-stay-total"
+   ],
+   "suspected_own_off_tip": [
+    "footprint-failed"
+   ],
+   "verdict": "部分落"
+  },
+  {
+   "branch": "ord0527-evidence-r1",
+   "sha": "c35f1fe04a920c03955f596453b11acc6a172c44",
+   "files": 325,
+   "testids_total": 719,
+   "testids_on_tip": 712,
+   "testids_off_tip": 7,
+   "off_tip_examples": [
+    "access-journey-picker",
+    "footprint-failed",
+    "poi-import-favorite",
+    "poi-import-favorite-why",
+    "poi-import-new-journey",
+    "poi-import-new-journey-why",
+    "spend-stay-total"
+   ],
+   "suspected_own_off_tip": [
+    "footprint-failed"
+   ],
+   "verdict": "部分落"
+  },
+  {
+   "branch": "ord0527-evidence-r2",
+   "sha": "e801e310268bc4489d964ed7c2da7ec5f463b3bc",
+   "files": 325,
+   "testids_total": 719,
+   "testids_on_tip": 712,
+   "testids_off_tip": 7,
+   "off_tip_examples": [
+    "access-journey-picker",
+    "footprint-failed",
+    "poi-import-favorite",
+    "poi-import-favorite-why",
+    "poi-import-new-journey",
+    "poi-import-new-journey-why",
+    "spend-stay-total"
+   ],
+   "suspected_own_off_tip": [
+    "footprint-failed"
+   ],
+   "verdict": "部分落"
+  },
+  {
+   "branch": "ord0476-footprint-screen-r1",
+   "sha": "37c6a85aa153cfa1e95b1bb0f95c3dbf8bb67806",
+   "files": 312,
+   "testids_total": 676,
+   "testids_on_tip": 668,
+   "testids_off_tip": 8,
+   "off_tip_examples": [
+    "access-disabled-reasons",
+    "access-journey-picker",
+    "footprint-failed",
+    "poi-import-favorite",
+    "poi-import-favorite-why",
+    "poi-import-new-journey",
+    "poi-import-new-journey-why",
+    "spend-stay-total"
+   ],
+   "suspected_own_off_tip": [
+    "footprint-failed"
+   ],
+   "verdict": "部分落"
+  }
+ ],
+ "BAD": []
+}
