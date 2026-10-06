@@ -22,7 +22,23 @@ def _checkpoint() -> dict:
     a = "agent-a"
     b = "agent-b"
     return {
+        "strike_protocol": "R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1",
+        "strike_id": "strike-fixture",
+        "strike_started_at": "2026-10-06T00:00:00+00:00",
+        "timestamp": "2026-10-06T00:05:00+00:00",
         "source_receipt": {
+            "protocol": "R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1",
+            "authorization_taskbook_commit": (
+                "03357b7c8f8a9a671c59113be71d6093fab04742"
+            ),
+            "strike_id": "strike-fixture",
+            "strike_started_at": "2026-10-06T00:00:00+00:00",
+            "remote_branch": (
+                "gpt/revolution-r32-autonomous-recovery-mesh"
+            ),
+            "remote_branch_head": "deadbeef",
+            "head_matches_remote": True,
+            "output_preexisted": False,
             "git_head": "deadbeef",
             "tracked_dirty_before_strike": False,
             "source_sha256": {
@@ -556,6 +572,43 @@ def test_failure_marker_cannot_hide_observed_authority_contradiction():
     )
 
 
+def test_fresh_strike_gate_rejects_preexisting_output(tmp_path):
+    import pytest
+    import run_r32_live
+
+    output = tmp_path / "old-live.json"
+    output.write_text("historical", encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="already exists"):
+        run_r32_live._fresh_strike_gate(output)
+
+
+def test_fresh_strike_gate_rejects_stale_local_head(
+    monkeypatch, tmp_path
+):
+    import subprocess
+    import pytest
+    import run_r32_live
+
+    output = tmp_path / "new-live.json"
+
+    def fake_git(*args, check=True):
+        if args[:3] == ("fetch", "--quiet", "origin"):
+            return subprocess.CompletedProcess(args, 0, "", "")
+        if args == ("rev-parse", "HEAD"):
+            return subprocess.CompletedProcess(args, 0, "old-head\n", "")
+        if args[0] == "rev-parse" and str(args[1]).startswith(
+            "refs/remotes/origin/"
+        ):
+            return subprocess.CompletedProcess(args, 0, "new-head\n", "")
+        raise AssertionError(args)
+
+    monkeypatch.setattr(run_r32_live, "_repo_git", fake_git)
+
+    with pytest.raises(RuntimeError, match="not the current remote"):
+        run_r32_live._fresh_strike_gate(output)
+
+
 def test_r32_configuration_clears_ambient_semantic_ai(
     monkeypatch, tmp_path
 ):
@@ -614,4 +667,65 @@ def test_dirty_source_state_cannot_be_proven():
     )
 
     assert result["dimensions"]["strike_source_state_traceable"]["verdict"] == "CONTRADICTED"
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_relabelled_historical_artifact_fails_freshness_attestation():
+    checkpoint = _checkpoint()
+    checkpoint.pop("strike_protocol")
+    checkpoint.pop("strike_id")
+    checkpoint.pop("strike_started_at")
+    for key in (
+        "protocol",
+        "authorization_taskbook_commit",
+        "strike_id",
+        "strike_started_at",
+        "remote_branch",
+        "remote_branch_head",
+        "head_matches_remote",
+        "output_preexisted",
+    ):
+        checkpoint["source_receipt"].pop(key, None)
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 152, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["strike_freshness_attested"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_local_head_must_match_fetched_remote_head():
+    checkpoint = _checkpoint()
+    checkpoint["source_receipt"]["remote_branch_head"] = "newer-remote"
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 152, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["strike_freshness_attested"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_preexisting_output_cannot_be_fresh_evidence():
+    checkpoint = _checkpoint()
+    checkpoint["source_receipt"]["output_preexisted"] = True
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 152, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["strike_freshness_attested"]["verdict"]
+        == "CONTRADICTED"
+    )
     assert result["overall"] == "CONTRADICTED"
