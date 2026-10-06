@@ -90,10 +90,10 @@ from app.collective_mediation import (
     plan_collective_fit_subject,
 )
 from app.collective_authority import (
-    COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
-    COLLECTIVE_SURFACE_SCHEMA,
-    COLLECTIVE_WORLD_EPOCH_SCHEMA,
+    AUTHENTICATED_MEMBER_CONSENT,
+    UNANIMOUS_DOMINANCE,
     candidate_surface_fingerprint,
+    collective_authority_provenance,
     server_semantic_decision_epoch,
 )
 from app.commerce.idempotency import IdempotencyConflict, canonical_request_signature
@@ -5206,20 +5206,14 @@ def collective_mutation_gate(
             "current_material_world_epoch", current_world_epoch_for_gate
         ),
         "candidate_surface_fingerprint": current_surface_fingerprint,
-        "authority_provenance": {
-            "decision_epoch": {
-                "source": "SERVER_SEMANTIC_DECISION_EPOCH",
-                "schema": COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
-            },
-            "material_world_epoch": {
-                "source": "SERVER_COLLECTIVE_MATERIAL_WORLD_EPOCH",
-                "schema": COLLECTIVE_WORLD_EPOCH_SCHEMA,
-            },
-            "candidate_surface_fingerprint": {
-                "source": "SERVER_CANDIDATE_FIT_SURFACE",
-                "schema": COLLECTIVE_SURFACE_SCHEMA,
-            },
-        },
+        "authority_provenance": collective_authority_provenance(
+            AUTHENTICATED_MEMBER_CONSENT
+            if renewed_consent_selected
+            else UNANIMOUS_DOMINANCE
+            if str(mediation.get("classification") or "")
+            == UNANIMOUS_DOMINANCE
+            else None
+        ),
     }
 
 
@@ -15456,20 +15450,9 @@ def _accept_replan_executing(
             "source_mission_id": bound_authority_receipt.source_mission_id,
             "source_agent_run_id": bound_authority_receipt.source_agent_run_id,
             "recovery_epoch_id": bound_authority_receipt.recovery_epoch_id,
-            "provenance": {
-                "decision_epoch": {
-                    "source": "SERVER_SEMANTIC_DECISION_EPOCH",
-                    "schema": COLLECTIVE_SEMANTIC_EPOCH_SCHEMA,
-                },
-                "material_world_epoch": {
-                    "source": "SERVER_COLLECTIVE_MATERIAL_WORLD_EPOCH",
-                    "schema": COLLECTIVE_WORLD_EPOCH_SCHEMA,
-                },
-                "candidate_surface_fingerprint": {
-                    "source": "SERVER_CANDIDATE_FIT_SURFACE",
-                    "schema": COLLECTIVE_SURFACE_SCHEMA,
-                },
-            },
+            "provenance": collective_authority_provenance(
+                bound_authority_receipt.authority_mode
+            ),
         }
 
     old_current = (
