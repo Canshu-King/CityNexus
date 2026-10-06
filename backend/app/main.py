@@ -15817,6 +15817,21 @@ def _accept_replan_executing(
                 "current_material_world_epoch": collective_gate.get(
                     "current_material_world_epoch"
                 ),
+                "candidate_surface_fingerprint": collective_gate.get(
+                    "candidate_surface_fingerprint"
+                ),
+                "candidate_surface_scope": collective_gate.get(
+                    "candidate_surface_scope"
+                ),
+                "candidate_surface_recovery_epoch_id": collective_gate.get(
+                    "candidate_surface_recovery_epoch_id"
+                ),
+                "candidate_surface_trigger_event_id": collective_gate.get(
+                    "candidate_surface_trigger_event_id"
+                ),
+                "authority_provenance": collective_gate.get(
+                    "authority_provenance"
+                ),
             },
         },
     )
