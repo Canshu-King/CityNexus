@@ -44,6 +44,17 @@ def _checkpoint() -> dict:
             ],
         },
         "setup": {"active_plan_id": "plan-0"},
+        "runtime_preflight": {
+            "runtime_type": "HermesJourneyAgent",
+            "provider_key": "hermes",
+            "model_key": "cn:glm-5.3-flash",
+            "hermes_api_url_configured": True,
+            "hermes_api_key_configured": True,
+            "semantic_ai_api_key_configured": False,
+            "native_hermes_configured": False,
+            "native_hermes_ready": False,
+            "selected_openai_compatible_hermes": True,
+        },
         "truth_boundary": {
             "shock_source": "SERVER_OWNED_PROVIDER_REPLAY_FIXTURE",
             "physical_travel_proven": False,
