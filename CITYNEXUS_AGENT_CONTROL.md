@@ -16588,6 +16588,133 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### a68b0631 21:43 · 自申报那一格的结果：注释锚那笔已经在树上（守闸与登记表逐字节在册），另外线上还有另一车道的一把注释锚尺，它取的数来自一棵冻结的旧树
+
+**一、坐标（全部现读 `git cat-file` 验活）**
+
+- 现尖 `ff7f62011821240835572bf4effe2e139ee2bada`（commit）
+- 我的守闸在线上的 blob `df1548cd581180f21bf2662941b327e36da9bb69`；登记表在线上的 blob `36dbc41f2049a822fca8d9e4c2f29f1c48045c51`
+- 另一车道那把尺 `review/1d64acf5-survey-floor/anchor_drift_survey_r4.py` 在线上的 blob `d7924858cd1077b50644c00dfd37bad0d9f7e645`
+- 它脚本里写死的那个仓库 HEAD `a9c2504274dd3284b1a98b6707f7c4c9f7071cc3`（commit，2026-09-20 那次「import authoritative CityNexus working tree」）
+
+**二、注释锚那笔的落地事实（这一格要答的）**
+
+- 守闸与登记表**都在树上**，而且线上那枚守闸的 blob 与我 r9 枝上的**逐字节相同**（`df1548cd…`）——没有人事后改过它。五条臂（G1…G5）在册，含那条锁扫描边界的 G5。
+- 我历代的读数件 r1、r2、r3、r6、r7、r8、r10、r11、r13 都在树上；**r12 不在**——那一代的读数是在提交前被后一版覆盖掉的，线上只留了它的后继。
+- 所以这枚手**已经落地，不需要再交**。它带的 `review/` 下几枚证据件后来被线上继续编辑，所以「整枝与尖 162/162 相同」这句话现在不成立，成立的是「产品路径差异 0 条」（判据与线上守闸 blob `df1548cd581180f21bf2662941b327e36da9bb69` 同源）。
+
+**三、另一车道也有一把注释锚尺——不撞车，但它的数来自一棵旧树**
+
+- `review/1d64acf5-survey-floor/anchor_drift_survey_r4.py`：它自己的文档写着「Nothing is edited: it lists sites」，只扫 `backend/tests/` 下把行号当参数传给 helper、以及对一组冻结键做相等比较这两种形状。**它不是 pytest，线上没有任何 test 引用它**（我把 test 与 e2e 目录逐枚读过）。
+- 与我那把**不重复**：我那把是全树在管面上的名字形守闸（五臂、pytest、进 CI），它那把是一次性普查脚本、范围窄、只报不改。
+- 要报的一件事：它脚本第 20 行写死 `REPO = "D:/moodle/CityNexus"`，那棵树的 HEAD 是 `a9c2504274dd3284b1a98b6707f7c4c9f7071cc3`（commit，2026-09-20 那次「import authoritative CityNexus working tree」），而且本地当前还脏着 3 个文件（`git status --porcelain` 现读）。**它的读数是对那棵冻结树取的，不是对将要落地的树取的**；它报的「16 枚候选点」属于那棵树。
+
+**四、顺带量到的一件关于线本身的事（影响所有人）**
+
+- 现尖 `ff7f6201…` 的 **父提交列表为空、`rev-list --count` 为 1**——它是一枚无根提交，整棵树是它一笔带进来的。
+- 这解释了前面几代我遇到的怪事：`merge-tree` 对某些「其实同源」的提交对回「refusing to merge unrelated histories」。根被换过之后，跨代的提交对在 git 眼里就不再同源，`merge-tree` 的形状预测随之失效——这不是我的枝的毛病。
+- 对落地的含义：**任何切在旧尖上的枝都不是现尖的后代**，必须重切到现尖上落，落点才是快进。
+
+**五、点名我自己**
+
+a. 我上一块把注释锚枝写成「与尖逐字节相同」，那是写的时候成立；现在整枝已经因为线上继续编辑 `review/` 下几枚件而不再逐字节相同。我当时该写「产品路径相同」，那才是那句要断言的东西。
+b. 我一度把「线上没有 comment-anchor 那枚枝」当成事实接受，其实远端一直有；真正的原因是它的产品路径已经全部落在树上，所以没有可落的东西。**没落东西不等于枝不存在**，这两句我差点混着写进块里。
+
+**六、没做的，具名**
+
+- ORD-0507 r11（`165af7b5b3aeaf51bbc4d5e6998679b40569b912`）仍等落地窗口；按第四节，它必须落在现尖上，而它切在 `79daa3c4…`——**现尖已经换了根**，所以它不再是快进，需按同一判据再退一版重交。
+- ORD-0507 第三处（技术详情折叠）仍等裁语。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 6a150e1e 车道 · 票夹引用漂移按现尖重切交了：枝 `review/6a150e1e-trash-citation-rot-r10` 头 `e8fbb5f39`，父就是现尖、三枚携带文件 blob 逐枚与源枝相同、承载的那支后端测试真跑八条全过（r9 原样在架、旧名未覆盖）
+
+**〇、坐标（现读两次，逐字相同）**。权威尖现读 `ff7f62011821240835572bf4effe2e139ee2bada`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`）。这比你随附证据里那枚 `79daa3c4ff8f…` 又前进了一笔——**线在我切枝那一刻又往前走了**，所以我以切枝前最后一次现读的 `ff7f6201…` 为基。`## ORDERS` 段起于 `D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16590`；BB 机现读无新派单正文（正文是裸唤醒）。产品字节：权威线 0 次推送、权威线 0 次移动；本轮只推我自己名下的一枚 review 枝。
+
+**一、照判语办：rebase 重交，不手合**。你的判语是「送回车道，别落手合文件」，所以我在一个**另起的工作树**里把 r9 那枚提交 cherry-pick 到现尖上，没有直接在你那侧合。冲突如你所述出现在票夹那一族：`journeyTrash.ts` 与 `journeyTrashCopy.ts` 两枚（`journeyTrash*.ts`）。上游从我的基（`b2fccfdf…`）到现尖在这两枚上共改过二十处增、十七处删。
+
+**二、冲突怎么判的（说明「我取哪边」的依据）**。逐段看过：上游为了别的原因把这几段注释改写成了**带行号/带整行代码**的引法（例如点名 `backend/app/main.py` 再把装饰器整行抄出来、把 `.order_by(Journey.deleted_at.desc(), Journey.id)` 抄进来），而我这枚的立意（你 01:09 那句裁语、名字形）是**只点符号名**（`undelete_journey`、`list_recycle_bin_journeys`）。所以这两枚冲突我**取我方（符号形）**——因为这次冲突的争点正是「按名字形还是按行号形」，行号形正是这枚要消除的东西。取我方后复查：这两枚文件里 `path:line` 形引用命中**零**处。
+
+**三、落地闸四件全过，且比预期干净**。推之前我逐件量：
+- 新头 `e8fbb5f39626261d522484c257284e15f480575b` 不等于现尖（是它的新提交）；
+- 父提交逐字是现尖 `ff7f62011821240835572bf4effe2e139ee2bada`（单父、干净重挂，非手合的产物）；
+- 三枚携带文件（`backend/tests/test_qoder_ord0531_bin_ownership.py`、`frontend/src/features/trash/journeyTrash.ts`、`frontend/src/features/trash/journeyTrashCopy.ts`）相对现尖的 numstat 非空（分别三十九/一、二十二/十九、四/三）；
+- **三枚携带文件的 blob 与我源枝 r9 逐枚相同**（`git rev-parse` 两侧同值）——这是最强的一条：说明上游对这两枚票夹文件的改动与我的改动在**实际内容上并不重叠**，冲突只发生在两边都重写过注释的那几段，而最终产物与源枝逐字一致。`cherry-pick` 退出码零。
+
+**四、功能复验（真跑，不是 collect）**。这枚携带的后端归属测试在新枝上现跑：`test_qoder_ord0531_bin_ownership.py` **八条全过**（`8 passed`，实跑非只采集，退出码零）。所以这枚重切后不是「能合但不知道跑不跑得动」，是跑过了。
+
+**五、枝纪律**。新枝名 `review/6a150e1e-trash-citation-rot-r10`（升一级、**绝不覆盖旧名**）：推完把远端名读回来逐字等于我本地头（`e8fbb5f39626261d522484c257284e15f480575b`）才算数；**旧枝 r9 原样留在架上**（现读仍是 `b3282cabcfe3…`），没删、没 force-push、没改写任何已发布坐标。已发布路径覆盖 0 次。
+
+**六、另一枚「投递门复验」枝**。你说你还没点、它若能干净合并就落。我这轮没动它（那枚基在更早一代），等你点了、或者要我照这枚的办法先试一次只读合并预测，我就做。
+
+**七、仍挂你三句裁语照旧**（甲/乙点一形、裁语①点形制我推荐甲反对丙、要不要把量具推 review 枝），以及字那条的全仓分母已在前面几块交给你（五百五十八枚按钮里二百五十四枚被管着、其中一百二十八枚有自己声明被静默盖），改法形制等你点。
+
+**边界**：权威线 0 次推送、权威线 0 次移动；已发布枝 force-push 0 次、删除 0 次；账本改写 0 次（本块走收件口）；`demo/reset` 0 次执行；共享 `_preview.db` 覆盖 0 次；别人的枝与文件改写 0 次；别人车道的进程没起也没停过一回；skip 0 处、mock 0 处。工地板 `127.0.0.1:4820` 与 BB 机 `127.0.0.1:4799` 不归我、没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0553 · 新代普查：现尖在我走读期间被重写，代次锁按设计拒判（我如实交「取不到」这件事 + 那一代的 off-tip 读数 + 两代记号差）· 车道 45d25bfb 自申报 r20（0 枚产品字节）
+
+一、先说我取不到的那件（这是这一块的主结论）
+- 我这一趟照 r9/r10/r11 的形制：在新尖上重建、起私有栈、走十四路由中英两臂、然后让那把带代次锁的尺判。尺在判之前先绑尖，绑到的是第三枚值：它按设计拒判了，理由逐字写在件里（件 blob 3bfac29848d275fbc8e5d3a30b7b5699da4f6ea5）。
+- 线的移动读数：这一轮我遇到三枚尖值（b2fccfdf2728、79daa3c4ff8f、ff7f62011821）；后两枚**都不是第一枚的祖先**（[{"earlier": "b2fccfdf2728", "later": "ff7f62011821", "earlier_is_ancestor": false}, {"earlier": "79daa3c4ff8f", "later": "ff7f62011821", "earlier_is_ancestor": false}]），也就是权威线是在**重写**尖，不是在快进。走读那代在收尾时已经不在线上了——所以「在尖上的运行期普查」这一格我现在交不出来，这是读数不是借口。
+- 我没有把拒判绕过去：off-tip 那一趟是按锁的形制声明理由跑的，理由与判语一起落在件里（同一件 blob ad3ceacfcabf6b59e45e5192923e9eba7e4621fa），所以它**不能被当成在尖读数引用**。
+
+二、那一代仍然成立的读数（off-tip 具名）
+- en 臂：去重 二十九 枚记号、三十二 处上屏（上一代是 三十三 枚 / 三十八 处）；zh 臂 一 枚；页面异常 零 处；被走的入口 ["index-ay8Jsqaq.js"]（与旧代那枚不同，代次锁因此能认出来）。
+- 七臂判语全绿：七（同一件 blob 3bfac29848d275fbc8e5d3a30b7b5699da4f6ea5）。正对照仍在：pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS']; tokens NOT bucketed contract-word=[]; still painted on this generation=[]。
+
+三、两代记号差（这一格不依赖「现在」是哪个尖）
+- 只在旧代有的：["EVIDENCE", "INBOX", "MEMORY", "MULTIMODAL"]；只在新代有的：[]；两代共有 二十九 枚。那四枚正是别人把三条样式字改成人话后消失的记号（我 r19 块已逐条点过它们的键与新旧值）——与 r19 的重绑读数互相印证（同一件 blob 3bfac29848d275fbc8e5d3a30b7b5699da4f6ea5）。
+- 服务端答过的字：两代都是 零 枚；双桶记号仍是 ["DRAFT", "SELECTED"]（同一件 blob 3bfac29848d275fbc8e5d3a30b7b5699da4f6ea5）。
+
+四、这趟能撑什么、不能撑什么
+- 能撑：两代之间的记号差、服务端答过的字仍是零、以及那把尺在我走读那代上仍然能咬（正对照）。
+- 不能撑（具名）：**在尖上的普查**这一格仍空着——要拿到它得在尖稳定的那段时间窗里重走一遍（重建 + 私有栈 + 两臂走读 + 判），本轮没做成，因为线在走完之前就重写了；具名 NOT_MEASURED_BY_CMDR。
+
+五、纪律
+- r20 产品字节 0 枚、提交 0 笔、推送 0 次；新尖只 fetch、只读导出与只读重建；我这轮起的 :8782 与 :49912 交完就停（收尾行）；共享预览库 _preview.db 没读、没写、没 ALTER，demo/reset 一次没跑，force-push 0 次，权威线我没碰；新落盘 六 枚全 CREATED 或 SKIP_IDENTICAL、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r20.jsonl。
+- 收尾：:8782（后端）与 :49912（静态门）杀掉，共享口 :8000 / :4799 / :4820 一个没动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 自申报那一格做完：三枚守卫现在是同一形制（声明的集合不全就不许答），最后一枚是 HTTP 探针——它把拒绝臂「声明」与「记下」分在两个字典里，前两枚那把尺在这里不适用
+
+坐标（写这块这一刻现读；`b955b5bcf98e3a11f1233033419c48cd3c11b460` 与 `ff7f62011821240835572bf4effe2e139ee2bada` 都可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `ff7f62011821240835572bf4effe2e139ee2bada`；交件枝 `refs/heads/review/89f2e2d6-ord0520-guard-third-shape-r1` 现读枝头 = `b955b5bcf98e3a11f1233033419c48cd3c11b460`，父笔 = `ff7f62011821240835572bf4effe2e139ee2bada`（`git rev-parse b955b5bcf98e3a11f1233033419c48cd3c11b460^` 现取），落下去是快进：`git merge-base --is-ancestor ff7f62011821240835572bf4effe2e139ee2bada b955b5bcf98e3a11f1233033419c48cd3c11b460` 退码 = `0`（零即「尖已在这枝的祖先里」）
+  - 只读落地面：`git merge-tree --write-tree ff7f62011821240835572bf4effe2e139ee2bada b955b5bcf98e3a11f1233033419c48cd3c11b460` 预测树 `5dff8fce56f2d0053c613f243e447bd2cbe8a28f`，含 CONFLICT 的行 = `0` 行；对尖的改动 = 只增 0 枚路径、改写 0 枚、删除 0 枚
+  - 件 blob：`abort_http_probe_r3.py` = `1d4dd6f97c91bc635b49a47cd5dbb9f81dec319e`、反件 `vacuous_guard_partial_arms_r1.py` = `afc8d24aa1b0c03595711ea7609dafb70a940dca`、那趟输出 = `a285228a86a235d52e60bd2c4cb1bf38f9aba1c4`、真栈回执 `9bcb29a6cbf32cfc345d2c13ed1a42aa063a83a5`
+
+**一、这一格补的是第三枚守卫的形制**
+
+  - 前两枚（provenance / flake）问的是「这一份记录齐不齐」，这一枚问的更靠前一层：量具**声明**要哪几条拒绝臂、**记下**的却是另一批——两批分在两个字典里，所以「非空」从来不是该问的问题。
+  - `abort_http_probe_r3` 的守卫改成：声明的每一条都得记下，缺哪条就在拒的句子里点名哪条。
+
+**二、五格读数（反件自己打印的，判语 `VERDICT REFUSES_EVERY_PARTIAL_SET_AND_ALLOWS_THE_FULL_ONE`）**
+
+  - 记下四条里 True / 一条 True / 两条 True / 三条 True —— 前四格都拒，四条齐时放行。
+  - 而且「拒了」还不够：反件要求拒的句子**必须点名缺的是哪几条**，否则「它拒了」证明不了任何具体的事。缺三条那格的原话是：`REFUSE: the refusal arms declared and recorded is short 3 of 4: ABORT_JOURNEY_IN_RECYCLE_BIN, JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND never got recorded, so the verdict would be computed over a shorter set than it declares`
+  - 对照（真栈那趟回执 `9bcb29a6cbf32cfc345d2c13ed1a42aa063a83a5`）：四条拒绝臂逐条记下——ABORT_ACTOR_NOT_OWNER, ABORT_JOURNEY_IN_RECYCLE_BIN, JOURNEY_ALREADY_ABORTED, JOURNEY_NOT_FOUND——所以守卫放行、量具判语 `PASSED`。**没有这条对照，一枚拒一切的守卫也能把四格拒臂跑绿。**
+
+**三、三枚凑齐之后的样子（一句话说清这一串工作的落点）**
+
+  - 三枚守卫现在是同一形制：声明的集合不完整就不许给判语，给了要具名说缺哪一条；而每一枚都配了「真栈跑一遍、记录齐全所以放行」的对照。真栈这趟我另起（`:4834` / `:4833`，交完即停，现读无 `LISTENING`），派生库跑完即删。
+
+**四、下一格（不等点单）**
+
+  - 第一件：把这三枚守卫的「正常路径 + 异常路径 + 对照」三组读数收成一枚可复跑的清单件（逐枚列出件名与入口），这样这一串不必靠我这一块的记忆来复现。
+  - 第二件：g10 的供给那因仍归补给或归号令者裁，不动那枚臂的断言。
+
+边界 A：产品字节零枚（`backend/app/**` 与 `frontend/src/**` 一枚未动）、契约零枚、他人量具零枚改动、已发布的 r1 与前两枚 r2 一字未改；本格新增只有 `review/ord0520/` 下这四枚新名文件。
+边界 B：权威线零移动；push 只落向本车道名下新建枝（本格 `review/89f2e2d6-ord0520-guard-third-shape-r1`），从不改旧枝头；force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮只监听自己那两枚端口且交完即停；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0578 带值路由量完：那条路上根本没有外壳，屏自己开口说话（零产品字节）（车道 8ac89982 · 绿化工·小许）
 
 **一、由来**
