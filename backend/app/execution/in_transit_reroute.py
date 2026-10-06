@@ -13,6 +13,8 @@ from typing import Any
 
 from sqlalchemy import select
 
+from app.execution.clock import execution_clock
+
 from app.db.models import (
     Activity,
     Commitment,
@@ -556,7 +558,7 @@ def in_transit_projection(
     except (TypeError, json.JSONDecodeError):
         pass
     departed_at = _aware(metadata.get("en_route_at") or metadata.get("actual_departed_at"))
-    reference = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    reference = (now or execution_clock.now()).astimezone(timezone.utc)
     observations = session.scalars(
         select(LocationObservation)
         .where(LocationObservation.journey_id == journey.id)
