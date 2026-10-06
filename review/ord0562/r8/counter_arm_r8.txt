@@ -1,0 +1,358 @@
+
+Running 6 tests using 1 worker
+
+  ok 1 e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:57:1 › no English line softens a count into `(s)` any more (15ms)
+  ok 2 e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:65:1 › the counted keys carry the marker on the English side only, and the Chinese side stays plain (33ms)
+  ok 3 e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:90:1 › the hub stopped building counted nouns inline (8ms)
+  ok 4 e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:100:1 › the irregular noun the budget line counts is declared once, in plural.ts (9ms)
+  ok 5 e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:109:1 › the ruler read what it claims to have read (8ms)
+  x  6 e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:168:1 › no user-visible `(s)` survives in the files this order owns, and the rest is counted, not policed (426ms)
+
+
+  1) e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:168:1 › no user-visible `(s)` survives in the files this order owns, and the rest is counted, not policed 
+
+    Error: a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "frontend/src/app/V8Experience.tsx:3043  : `${disruptions.length} change(s)`",
+    + ]
+
+      189 |     });
+      190 |   }
+    > 191 |   expect(owned, "a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge").toEqual([]);
+          |                                                                                              ^
+      192 |   expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
+      193 |   writeFileSync(EVIDENCE_SITES, elsewhere.join("\n") + (elsewhere.length ? "\n" : ""), "utf8");
+      194 | });
+        at D:\moodle\_qoder_ord0568_r3_20261005\wt\frontend\e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:191:94
+
+    Error Context: test-results\qoder-cff87c64-ord0562-eng-e6b92-rest-is-counted-not-policed\error-context.md
+
+  1 failed
+    e2e\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:168:1 › no user-visible `(s)` survives in the files this order owns, and the rest is counted, not policed 
+  5 passed (1.7s)
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.ord0562-count-r1.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\playwright.ord0562-count-r1.config.ts",
+    "rootDir": "D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_ord0568_r3_20261005/wt/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-cff87c64-ord0562-english-count-nouns-.*\\.spec\\.ts/"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {}
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+      "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "no English line softens a count into `(s)` any more",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T09:04:55.654Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "34ca1d3f908d8e1b9190-da7771b1a15556d51d37",
+          "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "the counted keys carry the marker on the English side only, and the Chinese side stays plain",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 33,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T09:04:55.736Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "34ca1d3f908d8e1b9190-276351ea6075ac4c2462",
+          "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "the hub stopped building counted nouns inline",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T09:04:55.795Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "34ca1d3f908d8e1b9190-2ac75a316222e1303b56",
+          "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+          "line": 90,
+          "column": 1
+        },
+        {
+          "title": "the irregular noun the budget line counts is declared once, in plural.ts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T09:04:55.823Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "34ca1d3f908d8e1b9190-a5850864d961031b7057",
+          "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+          "line": 100,
+          "column": 1
+        },
+        {
+          "title": "the ruler read what it claims to have read",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T09:04:55.854Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "34ca1d3f908d8e1b9190-9ad66a8e9690528f3719",
+          "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+          "line": 109,
+          "column": 1
+        },
+        {
+          "title": "no user-visible `(s)` survives in the files this order owns, and the rest is counted, not policed",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 426,
+                  "error": {
+                    "message": "Error: a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"frontend/src/app/V8Experience.tsx:3043  : `${disruptions.length} change(s)`\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"frontend/src/app/V8Experience.tsx:3043  : `${disruptions.length} change(s)`\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\e2e\\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:191:94",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\e2e\\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+                      "column": 94,
+                      "line": 191
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 189 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 190 |\u001b[39m   }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 191 |\u001b[39m   expect(owned\u001b[33m,\u001b[39m \u001b[32m\"a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge\"\u001b[39m)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 192 |\u001b[39m   expect(files\u001b[33m.\u001b[39mlength\u001b[33m,\u001b[39m \u001b[32m\"the walk found almost no sources, so this arm would pass on nothing\"\u001b[39m)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m100\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 193 |\u001b[39m   writeFileSync(\u001b[33mEVIDENCE_SITES\u001b[39m\u001b[33m,\u001b[39m elsewhere\u001b[33m.\u001b[39mjoin(\u001b[32m\"\\n\"\u001b[39m) \u001b[33m+\u001b[39m (elsewhere\u001b[33m.\u001b[39mlength \u001b[33m?\u001b[39m \u001b[32m\"\\n\"\u001b[39m \u001b[33m:\u001b[39m \u001b[32m\"\"\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 194 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\e2e\\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+                        "column": 94,
+                        "line": 191
+                      },
+                      "message": "Error: a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"frontend/src/app/V8Experience.tsx:3043  : `${disruptions.length} change(s)`\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  189 |     });\n  190 |   }\n> 191 |   expect(owned, \"a counted noun in a file ORD-0562 owns went back to the `1 or more` dodge\").toEqual([]);\n      |                                                                                              ^\n  192 |   expect(files.length, \"the walk found almost no sources, so this arm would pass on nothing\").toBeGreaterThan(100);\n  193 |   writeFileSync(EVIDENCE_SITES, elsewhere.join(\"\\n\") + (elsewhere.length ? \"\\n\" : \"\"), \"utf8\");\n  194 | });\n    at D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\e2e\\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:191:94"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T09:04:55.894Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\test-results\\qoder-cff87c64-ord0562-eng-e6b92-rest-is-counted-not-policed\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_ord0568_r3_20261005\\wt\\frontend\\e2e\\qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+                    "column": 94,
+                    "line": 191
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "34ca1d3f908d8e1b9190-0bd8dc1df58f42b0c03a",
+          "file": "qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+          "line": 168,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-06T09:04:54.715Z",
+    "duration": 1694.4910000000002,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

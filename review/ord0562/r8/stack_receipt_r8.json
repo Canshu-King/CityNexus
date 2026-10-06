@@ -1,0 +1,30 @@
+{
+ "run": "ORD0562prv4-165809",
+ "db": "D:/moodle/_ord0568_r3\\stack_ORD0562prv4-165809\\ORD0562prv4-165809.db",
+ "store_created_by": "the app, from an empty file (no seed copy, no demo/reset)",
+ "tree": "D:/moodle/_qoder_ord0568_r3_20261005/wt",
+ "branch": "review/cff87c64-ord0562-english-count-nouns-r7",
+ "head": "b6824afe3097b5ccaad5dde6e0622a0f74560854",
+ "base_tip": "8996eee4fb9fb4e159588305223ef421728c4e72",
+ "ports": {
+  "backend": 4772,
+  "front": 4771
+ },
+ "health_status": 200,
+ "front_status": 200,
+ "health_body": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"ORD0562prv4-165809\",\"e2e_database_id\":\"ORD0562prv4-165809.db\"}",
+ "bundle": [
+  "index-BMKK80ie.js",
+  "index-Cb6APFFy.css"
+ ],
+ "children": [
+  {
+   "pid": 42692,
+   "role": "uvicorn"
+  },
+  {
+   "pid": 15320,
+   "role": "vite preview"
+  }
+ ]
+}

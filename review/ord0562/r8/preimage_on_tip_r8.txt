@@ -1,0 +1,17 @@
+Pre-image and post-image read from published bytes of the same file, frontend/src/app/V8Experience.tsx
+
+$ git -C D:/moodle/CityNexus show 8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx
+  budget advisory, one traveller reads `1 people` -> line 2422: : `${days} days · ${people} people · about ${amount} per person per day`,
+    anchor: frontend/src/app/V8Experience.tsx:2422
+  hub day line, one day reads `1 days` -> line 2969: : `${tripDayCount} days`}
+    anchor: frontend/src/app/V8Experience.tsx:2969
+  attention line, one change reads `1 change(s)` -> line 3047: : `${disruptions.length} change(s)`
+    anchor: frontend/src/app/V8Experience.tsx:3047
+
+$ git -C D:/moodle/CityNexus show b6824afe3097b5ccaad5dde6e0622a0f74560854:frontend/src/app/V8Experience.tsx
+  budget advisory goes through the counted key -> line 2422: text: t("hub.budgetLine", { days, people, amount }),
+    anchor: frontend/src/app/V8Experience.tsx:2422
+  hub day line goes through the counted key -> line 2965: : t("hub.todayDays", { n: tripDayCount })}
+    anchor: frontend/src/app/V8Experience.tsx:2965
+  attention line goes through the helper -> line 3043: : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
+    anchor: frontend/src/app/V8Experience.tsx:3043
