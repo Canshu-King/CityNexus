@@ -7,7 +7,8 @@ Three modes, one file, re-runnable:
   --mode inspect --db PATH   read that database strictly `mode=ro` and print the same sets
                              against what is really in it
   --mode boot --db PATH      run the product's own startup path (`import app.main`, which calls
-                             `ensure_schema()` at `backend/app/main.py:494`) against PATH, then
+                             `ensure_schema()` at module level in `backend/app/main.py`) against
+                             PATH, then
                              inspect.  PATH is WRITTEN by this mode -- point it at a copy, never
                              at a live database.
 

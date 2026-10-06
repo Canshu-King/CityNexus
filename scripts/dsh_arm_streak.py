@@ -111,7 +111,8 @@ def make_event():
                                      (plan[0],)).fetchall()]
     finally:
         c.close()
-    # Same preference the fleet ladder uses (h4_h10_ladder.py:107-109): the flagship
+    # Same preference the fleet ladder uses (its h4/h10 scenario builder, a script that is no
+    # longer in this tree): the flagship
     # scenario is the Tech Art Center closure. The zero-budget policy the ruler installs
     # (cost delta / loss / drift all 0) legitimately refuses a *costly* replan, so
     # choosing an arbitrary activity measures the gate, not the arm.
@@ -131,7 +132,8 @@ TRAVELER = "11111111-1111-4111-8111-111111111111"
 
 
 def set_policy():
-    """Mirror the fleet ruler's own per-run policy step (gate_streak_v2.py:382-394):
+    """Mirror the fleet ruler's own per-run policy step (its `set_policy` equivalent, in a ruler
+    script that is no longer in this tree):
     a freshly seeded traveller is ADVISORY, so `accept_replan` correctly answers
     REQUIRE_CONFIRMATION and mutates nothing. Recording before/after keeps that
     honest — the arm asks for auto-accept, it does not fake a confirmation."""

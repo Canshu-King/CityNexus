@@ -506,7 +506,7 @@ test("today-scene-window-is-not-called-device-time — 有场景分钟、没投�
  * "延时舞台系统我也用不明白，你改成悬浮窗形式，点一下会展开，里面有各种功能，但是别把屏幕挡住").
  *
  * Two overlays already live at the bottom of a phone: the fixed nav and the Copilot pill resting on
- * top of its band (`styles.css:405` puts the dock at `bottom: 72px`, `.v8-content` reserves
+ * top of its band (`styles.css` puts the dock at `bottom: 72px`, `.v8-content` reserves
  * `124px + safe-area`).  So "floating" is only a fix if the widget clears both, at every scroll
  * position, and still leaves each row centre-hittable -- the same failure ORD-0085 was about, now
  * with a third way to get it wrong (a panel that covers the nav and eats its taps).

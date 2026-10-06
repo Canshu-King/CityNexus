@@ -1,6 +1,6 @@
 /* ORD-0545 slice six (CMDR 01:37, option 乙) -- two cells on the import screen, retaken as product bytes.
  *
- * Cell 1 (was `PoiImportPanel.tsx:489`): the channel slot printed the answer's machine token
+ * Cell 1 (was `PoiImportPanel.tsx`): the channel slot printed the answer's machine token
  *   (`LOCAL_TEXT_PARSER`) straight onto the main screen. It now prints this family's own words, and the
  *   token is only available inside a fold a human opens on purpose.
  * Cell 2 (was `:463`): when the device measured no status, the technical cell repeated the refusal

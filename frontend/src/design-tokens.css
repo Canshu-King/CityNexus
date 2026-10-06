@@ -195,7 +195,7 @@
 /* Bind the V8 palette to the Apple tokens at :root as well as on the shell.
    Existing components consume --v8-*, so rebinding them re-skins the app; doing it
    on :root additionally reaches the one screen that is returned *before*
-   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx:818) — which until
+   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx) — which until
    now got neither the Apple palette nor the dark theme.
    The shell selector is not redundant: styles.css carries an AA override block on
    `.v8-product-shell` (--v8-muted / -amber / -coral) that this file has always beaten
@@ -1084,7 +1084,7 @@ button[data-testid^="mode-"],
 /* ===========================================================================
    Pass-17 UI overnight lane — the screen that renders outside the shell.
 
-   JourneyTrialSetup is returned at V8Experience.tsx:818, before
+   JourneyTrialSetup is returned at V8Experience.tsx, before
    .v8-product-shell exists.  Everything the shell supplied was therefore
    missing on the very first screen a traveller sees:
      * the --v8-* tokens            (fixed by hoisting the bindings to :root)
@@ -1118,7 +1118,7 @@ body {
    reserve (76px + the stage clearance, 212px measured) is the blank band ORD-0338 was opened
    for, and it was load-bearing for ORD-0261/0264.  A layout row cannot be painted over, so the
    reserve has nothing to protect and both ends of that dependency are gone.
-   `--vv-height` is published by `installVisualViewportVars()` (V8Experience.tsx:811, which runs
+   `--vv-height` is published by `installVisualViewportVars()` (V8Experience.tsx, which runs
    on this surface too); the `100dvh` fallback is what a browser without a visual viewport gets. */
 .cn-onboarding {
   box-sizing: border-box;

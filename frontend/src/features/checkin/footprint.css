@@ -6,7 +6,7 @@ are landing rules in at once. Vite inlines it into the same document, so the rea
 Colours, sizes and radii come from the `--cn-*` layer, never hex literals, so dark follows without a
 second block.
 
-`width: auto; margin-top: 0` on both controls is load-bearing: `src/styles.css:47` carries a bare
+`width: auto; margin-top: 0` on both controls is load-bearing: `src/styles.css` carries a bare
 element rule (`button { display: block; width: 100%; margin-top: 12px; … }`), and a class that
 overrides only `display` inherits the full width -- the trap that measured 272 px of control inside a
 358 px card on a sibling order.

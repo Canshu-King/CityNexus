@@ -2,7 +2,7 @@
    Sizes and colours come from design-tokens.css tiers only (--cn-s-*, --cn-r-*, --cn-fs-*,
    --cn-ink*), so the poster inherits the light/dark token flip instead of carrying its own palette.
    The one exception is the 30px fine-pointer control height below: that is Amendment F-2's literal,
-   taken from `design-tokens.css:853`, and the touch override matches `design-tokens.css:859`. */
+   taken from `design-tokens.css`, and the touch override matches `design-tokens.css`. */
 
 .cn-poster-bar {
   display: flex;
@@ -123,7 +123,7 @@
 }
 
 /* The download is a `.v8-primary-button` inside a `.v8-page`, so the shell already owns its height
-   (the >=44px floor at `design-tokens.css:309`) and its fill. Only its spacing and the outcome line
+   (the >=44px floor at `design-tokens.css`) and its fill. Only its spacing and the outcome line
    are described here. */
 .cn-poster-download {
   margin-top: var(--cn-s-16);
@@ -170,7 +170,7 @@
 
 /* ORD-0528: "share this picture" sits under the download, not beside it -- two presses that both
    reach out (one to the file system, one to the server) should not read as one choice. Same 30px
-   fine-pointer floor as the bar's own control, with the touch override matching `design-tokens.css:859`. */
+   fine-pointer floor as the bar's own control, with the touch override matching `design-tokens.css`. */
 .cn-poster-share {
   display: block;
   min-height: 30px;

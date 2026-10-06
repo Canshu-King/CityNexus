@@ -244,7 +244,7 @@ def _backfill_legacy_hydration_rows(connection) -> None:
 
 
 # ORD-0434 step 2: the ACL table's one home.  A role is a set of capabilities plus the message key
-# that states its scope in one sentence (RELATION/relation_and_copy_findings.md:94); the sentence
+# that states its scope in one sentence (RELATION/relation_and_copy_findings.md); the sentence
 # itself is not stored here, so no server-authored prose can ever reach a screen from this table.
 JOURNEY_ROLE_CAPABILITIES = (
     ("OWNER", "JOURNEY_READ", "member.scope.owner"),
@@ -885,7 +885,7 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
             # ORD-0466: version-scoped share grants. A nullable column with no DEFAULT, because the
             # rows this table already holds are journey-level grants, and "no version" is their real
             # shape -- a DEFAULT of '' or a back-filled id would invent a scope nobody granted.  No
-            # foreign key either, and `models.py:1248` says why: every ON DELETE option there would
+            # foreign key either, and `models.py` says why: every ON DELETE option there would
             # either delete the grant with its version (collapsing the 409 into a 404) or widen the
             # scope to the whole journey.
             share_grant_columns = {

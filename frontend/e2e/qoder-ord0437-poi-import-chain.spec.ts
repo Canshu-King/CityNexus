@@ -150,7 +150,7 @@ async function ensureActivePlan(page: Page): Promise<string> {
  * the arm needs.
  *
  * The app is pointed at the new journey through its own storage key (`citynexus.v8.journey_id`,
- * written by V8Experience.tsx:1133 when a traveller creates a trip), then reloads. Nothing here
+ * written by V8Experience.tsx when a traveller creates a trip), then reloads. Nothing here
  * touches the database directly. */
 async function useSlackJourney(page: Page): Promise<{ id: string; seen: unknown }> {
   const made = await page.evaluate(async () => {
@@ -374,7 +374,7 @@ test("link-named and states — a link is named while the text next to it is sti
   expect(pickBoxes, "the shared .v8-pick-box control appears once per pickable card").toBe(pickable);
   /* Importing ORD-0435's sheet is only a claim until the paint is measured: at this 390 px width the
      line's own narrow-screen rule gives the control `min-height: var(--cn-touch-min)` = 44 px
-     (design-tokens.css:202). A class that reached no rule would still count as one pick box, so the
+     (design-tokens.css). A class that reached no rule would still count as one pick box, so the
      box is measured, not named. */
   const firstBox = await page.getByTestId("poi-card-select").first().boundingBox();
   /* Ticking one card is what makes the comparison honest: the panel now arrives with nothing selected

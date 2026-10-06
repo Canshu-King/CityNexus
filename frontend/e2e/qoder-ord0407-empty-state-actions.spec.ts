@@ -333,9 +333,9 @@ test.describe("ORD-0407 empty states carry the door they name", () => {
     }
 
     /* The other remedy the old sentence named.  Sharing a position is a real door -- this build has it,
-       and the shell wires it (V8Experience.tsx:1270 -> POST /journeys/{id}/location).  So the question
+       and the shell wires it (V8Experience.tsx -> POST /journeys/{id}/location).  So the question
        is not whether it works, it is whether it reaches *this* cell, whose inputs are the plan's located
-       activities and the stay offers' coordinates (MapPanel.tsx:17 and :113).  The door is called for
+       activities and the stay offers' coordinates (MapPanel.tsx and :113).  The door is called for
        real, over HTTP, against this lane's own journey; then the panel is read again after a reload.
        No product code is stubbed and nothing is patched. */
     const built = await createUnlocatableJourney(page);

@@ -3,7 +3,7 @@
  *
  * ORD-0351 made `/v8/<uuid>` a real entry point (`dbe6d285cb9dbe7654cf43caeb12940b2d5437c8`), and the
  * tip this gate was written against still held exactly one writer of that address:
- * `frontend/src/app/V8Experience.tsx:844` `window.history.pushState({}, "", `/v8/${value}`)`. A phone
+ * `frontend/src/app/V8Experience.tsx` `window.history.pushState({}, "", `/v8/${value}`)`. A phone
  * hides the address bar, so the entry existed and the traveller still could not hand it to anyone.
  *
  * Cells:
@@ -17,7 +17,7 @@
  *   B4  a refusal costs no second screen and leaks no prose into an attribute (Q64=① / Q71).
  *
  * The counter-example that lives outside this file: `review/n3_mutation_hollow_r1.py` deletes the
- * empty-id guard at `frontend/src/lib/journeyLink.ts:29`, re-runs A1 and B1, and requires them red.
+ * empty-id guard at `frontend/src/lib/journeyLink.ts`, re-runs A1 and B1, and requires them red.
  */
 import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";

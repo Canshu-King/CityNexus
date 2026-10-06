@@ -133,7 +133,7 @@ export function posterLinesFor(
  *
  * `dayTotal` is null and stays null. The trip-length projection is a field of the traveller's own
  * door; `GET /api/v1/shared/journeys/{token}` answers with the journey body plus the four keys its
- * contract whitelist names (`frontend/src/generated/api.ts:4995`), and the length projection is not
+ * contract whitelist names (`frontend/src/generated/api.ts`), and the length projection is not
  * one of them. So the guest side has no projection to quote, and `posterLinesFor` is handed a
  * *counted* sentence for its progress line instead -- which says out loud that it counted.
  */
@@ -168,7 +168,7 @@ export function buildPosterFromShared(input: {
     city: cityCodeLabel(answer.city_code ?? "", locale),
     /* Null and staying null: the length projection is a field of the traveller's own door, and
        `GET /api/v1/shared/journeys/{token}` answers with the journey body plus the four keys its
-       contract whitelist names (`frontend/src/generated/api.ts:4995`) -- the projection is not one of
+       contract whitelist names (`frontend/src/generated/api.ts`) -- the projection is not one of
        them. ORD-0542's finding was what the *wording* did with that: the subtitle used
        `poster.daysUnknown` ("trip length unknown") while the line under it printed a counted "2 days",
        so one screen denied itself. The count is now the subtitle, and the line under it says where the

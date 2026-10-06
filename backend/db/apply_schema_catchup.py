@@ -6,7 +6,8 @@ nothing here picks a database for you, and the report path opens the store stric
     python backend/db/apply_schema_catchup.py path/to/store.db            # report, mode=ro
     python backend/db/apply_schema_catchup.py path/to/store.db --apply    # heal
 
-`app.db.session.ensure_schema` already runs on every boot (`backend/app/main.py:494`) and creates
+`app.db.session.ensure_schema` already runs on every boot (the bare `ensure_schema()` call in the
+startup block of `backend/app/main.py`, beside `assert_configuration_reachable()`) and creates
 whatever `backend/db/schema.sql` declares that the store is missing, so a new generation deployed
 over an old database heals itself on its own way in.  This script exists for the operator who wants
 to land that step deliberately, and for the one who has to state WHICH tables were added -- after

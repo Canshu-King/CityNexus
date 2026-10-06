@@ -70,7 +70,7 @@ export function SharedPosterScreen({ token }: { token: string }) {
   /* The grouping the traveller's own itinerary and the traveller's own poster use, so the guest looks
      at the trip's days rather than at a second calendar this file invented. `dayTotal` stays null on
      this side -- the guest door answers no `temporal_shape` (it is not in its contract whitelist,
-     `frontend/src/generated/api.ts:4995`) -- but ORD-0542 caught what the old wording did with that:
+     `frontend/src/generated/api.ts`) -- but ORD-0542 caught what the old wording did with that:
      the subtitle said "trip length unknown" while the line under it printed a counted "2 days". The
      count is the subtitle now, and the line under it names the count's provenance. Neither one fills
      in a projection the door did not send. */
