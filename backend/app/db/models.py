@@ -1343,11 +1343,57 @@ class JourneyInboxItem(Base):
     status: Mapped[str] = mapped_column(String)
     linked_reservation_id: Mapped[str | None] = mapped_column(String, nullable=True)
     linked_commitment_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    reality_claim_id: Mapped[str | None] = mapped_column(String, nullable=True)
     impact_status: Mapped[str] = mapped_column(String)
     result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
     __table_args__ = (UniqueConstraint("journey_id", "raw_text_hash"),)
+
+
+class RealityClaim(Base):
+    __tablename__ = "reality_claims"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    fact_domain: Mapped[str] = mapped_column(String)
+    fact_key: Mapped[str] = mapped_column(String)
+    subject_type: Mapped[str] = mapped_column(String)
+    subject_id: Mapped[str] = mapped_column(String)
+    value_json: Mapped[str] = mapped_column(Text)
+    provenance: Mapped[str] = mapped_column(String)
+    source_ref: Mapped[str] = mapped_column(String)
+    observed_at: Mapped[str] = mapped_column(String)
+    effective_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    authority_class: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    generation: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
+    fingerprint: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    __table_args__ = (UniqueConstraint("journey_id", "fingerprint"),)
+
+
+class RealityConflict(Base):
+    __tablename__ = "reality_conflicts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    fact_domain: Mapped[str] = mapped_column(String)
+    fact_key: Mapped[str] = mapped_column(String)
+    generation: Mapped[int] = mapped_column(Integer)
+    claim_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    claim_set_fingerprint: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    reason: Mapped[str] = mapped_column(String)
+    selected_claim_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    resolution_claim_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    resolution_provenance: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    resolved_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    __table_args__ = (
+        UniqueConstraint("journey_id", "fact_key", "generation"),
+        UniqueConstraint("journey_id", "fact_key", "claim_set_fingerprint"),
+    )
 
 
 class TransportReservation(Base):

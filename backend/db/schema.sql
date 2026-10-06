@@ -991,11 +991,55 @@ CREATE TABLE IF NOT EXISTS journey_inbox_items (
     status TEXT NOT NULL,
     linked_reservation_id TEXT,
     linked_commitment_id TEXT,
+    reality_claim_id TEXT,
     impact_status TEXT NOT NULL,
     result_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     UNIQUE(journey_id, raw_text_hash)
+);
+
+CREATE TABLE IF NOT EXISTS reality_claims (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fact_domain TEXT NOT NULL CHECK (fact_domain IN ('RESERVATION_TIME')),
+    fact_key TEXT NOT NULL,
+    subject_type TEXT NOT NULL,
+    subject_id TEXT NOT NULL,
+    value_json TEXT NOT NULL,
+    provenance TEXT NOT NULL,
+    source_ref TEXT NOT NULL,
+    observed_at TEXT NOT NULL,
+    effective_at TEXT,
+    expires_at TEXT,
+    authority_class TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('CURRENT','SUPERSEDED','CONFLICTING','REJECTED','EXPIRED')),
+    generation INTEGER NOT NULL DEFAULT 1,
+    fingerprint TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(journey_id, fingerprint)
+);
+CREATE INDEX IF NOT EXISTS idx_reality_claims_fact_status
+    ON reality_claims(journey_id, fact_key, status, observed_at);
+
+CREATE TABLE IF NOT EXISTS reality_conflicts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fact_domain TEXT NOT NULL CHECK (fact_domain IN ('RESERVATION_TIME')),
+    fact_key TEXT NOT NULL,
+    generation INTEGER NOT NULL,
+    claim_ids_json TEXT NOT NULL DEFAULT '[]',
+    claim_set_fingerprint TEXT NOT NULL,
+    status TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    selected_claim_id TEXT,
+    resolution_claim_id TEXT,
+    resolution_provenance TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    resolved_at TEXT,
+    UNIQUE(journey_id, fact_key, generation),
+    UNIQUE(journey_id, fact_key, claim_set_fingerprint)
 );
 
 CREATE TABLE IF NOT EXISTS transport_reservations (

@@ -250,6 +250,17 @@ export function LiveRecovery({
     finally { setBusy(null); }
   }, [journeyId, loadOperator, onAccepted, zh]);
 
+  const resolveRealityConflict = useCallback(async (conflictId: string, claimId: string) => {
+    setBusy("reality-resolution");
+    try {
+      await cityNexusApi.resolveJourneyRealityConflict(journeyId, conflictId, claimId);
+      await loadOperator();
+      setMessage(zh ? "已记录你的选择，CityNexus 正在重新评估后续影响。" : "Choice recorded. CityNexus is checking the Journey impact again.");
+      onAccepted?.();
+    } catch { setMessage(zh ? "无法记录这个选择，请刷新后重试。" : "That choice could not be recorded. Refresh and try again."); }
+    finally { setBusy(null); }
+  }, [journeyId, loadOperator, onAccepted, zh]);
+
   const answerAttentionIntent = useCallback(async (intentId: string, answer: string) => {
     setBusy("intent-clarification");
     setMessage(null);
@@ -717,6 +728,12 @@ export function LiveRecovery({
               <div className="journey-operator-attention-actions">
                 {(operator.attention.options ?? []).map((option) => <button key={option.value} type="button" disabled={busy !== null}
                   onClick={() => void bindInboxReservation(operator.attention!.source_ref.inbox_item_id, option.value)}>{option.label}</button>)}
+              </div>
+            )}
+            {operator.attention.action_type === "RESOLVE_REALITY_CONFLICT" && (
+              <div className="journey-operator-attention-actions" data-testid="reality-conflict-choices">
+                {(operator.attention.options ?? []).map((option) => <button key={option.value} type="button" disabled={busy !== null}
+                  onClick={() => void resolveRealityConflict(operator.attention!.source_ref.conflict_id, option.value)}>{option.label}</button>)}
               </div>
             )}
             {operator.attention.action_type === "REVIEW_APPROVAL" && operator.approval?.required && (

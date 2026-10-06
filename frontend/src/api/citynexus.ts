@@ -388,6 +388,15 @@ export interface JourneyOperatorInboxProjection {
   pending_count: number;
 }
 
+export interface JourneyRealityConflictProjection {
+  id: string;
+  generation: number;
+  status: string;
+  title: string;
+  body: string;
+  choices: Array<{ claim_id: string; label: string }>;
+}
+
 export interface JourneyOperatorBrainProjection {
   state: "READY" | "UNCONFIGURED" | "CONFIGURED_UNKNOWN" | "TEMPORARILY_UNAVAILABLE" | "RECOVERING" | "ACTIVE" | "ATTENTION_REQUIRED";
   headline: string;
@@ -499,6 +508,7 @@ export interface JourneyOperatorProjection {
   intents?: JourneyIntentProjection[];
   attention?: JourneyOperatorAttention | null;
   inbox?: JourneyOperatorInboxProjection;
+  reality_conflict?: JourneyRealityConflictProjection | null;
   quiet_mode?: "QUIET" | "NORMAL";
   intent_clarification_result?: { intent_id: string; mission_id: string; outcome: string; agent_status: string };
 }
@@ -1552,6 +1562,12 @@ export const cityNexusApi = {
   bindJourneyInboxItem(journeyId: string, itemId: string, reservationId: string): Promise<Record<string, unknown>> {
     return requestJson<Record<string, unknown>>("/journeys/" + journeyId + "/operator/inbox/" + itemId + "/bind", {
       method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify({ reservation_id: reservationId }),
+    });
+  },
+
+  resolveJourneyRealityConflict(journeyId: string, conflictId: string, selectedClaimId: string): Promise<Record<string, unknown>> {
+    return requestJson<Record<string, unknown>>("/journeys/" + journeyId + "/operator/reality-conflicts/" + conflictId + "/resolve", {
+      method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify({ selected_claim_id: selectedClaimId }),
     });
   },
 

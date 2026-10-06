@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import hashlib
+import json
 from typing import Any, Iterable
 
 
@@ -22,6 +24,34 @@ class ReconciliationDecision:
     winning_claim_id: str | None
     contested: bool
     reason: str
+
+
+def reservation_time_claim_fingerprint(
+    *, journey_id: str, reservation_id: str, value: Any, provenance: str, source_ref: str
+) -> str:
+    """Stable identity for a bound reservation-time claim, independent of processing runs."""
+    body = {
+        "journey_id": str(journey_id), "reservation_id": str(reservation_id),
+        "value": value, "provenance": str(provenance).upper(), "source_ref": str(source_ref),
+    }
+    encoded = json.dumps(body, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def reservation_time_authority_class(provenance: str) -> str:
+    """Explain authority within RESERVATION_TIME without exposing a global rank."""
+    source = str(provenance or "").upper()
+    if source in {"LIVE_PROVIDER", "LIVE_PROVIDER_CAPTURE"}:
+        return "EXACT_LIVE_PROVIDER"
+    if source in {"USER_PASTED_TEXT", "USER_REPORTED", "USER_UPLOADED_IMAGE"}:
+        return "EXPLICIT_USER_EVIDENCE"
+    if source == "USER_CONFIRMED_REALITY_RESOLUTION":
+        return "TRAVELLER_SELECTED_INTERNAL_TRUTH"
+    if source in {"SEALED_REAL_REPLAY", "CAPTURED_REPLAY"}:
+        return "CAPTURED_PROVIDER_REPLAY"
+    if source == "ESTIMATED_AGENT":
+        return "NON_AUTHORITATIVE_ESTIMATE"
+    return "UNCLASSIFIED_RESERVATION_TIME_SOURCE"
 
 
 def _stamp(value: str | None) -> datetime | None:
@@ -130,7 +160,13 @@ def reconcile_reservation_time_claims(
     winner_observed = _stamp(winner.observed_at)
     runner_observed = _stamp(runner.observed_at)
 
-    if top_authority >= 95 and top_authority > runner_authority:
+    if (
+        top_authority >= 95
+        and top_authority > runner_authority
+        and winner_observed is not None
+        and runner_observed is not None
+        and winner_observed > runner_observed
+    ):
         return ReconciliationDecision(
             state="NEWER_HIGHER_AUTHORITY_WINS",
             winning_claim_id=winner.claim_id,
@@ -140,7 +176,8 @@ def reconcile_reservation_time_claims(
 
     if (
         str(winner.provenance).upper() in {"USER_PASTED_TEXT", "USER_REPORTED", "USER_UPLOADED_IMAGE"}
-        and str(runner.provenance).upper() in {"SEALED_REAL_REPLAY", "CAPTURED_REPLAY"}
+        and runner_authority < top_authority
+        and runner_authority < 95
         and winner_observed is not None
         and runner_observed is not None
         and winner_observed > runner_observed

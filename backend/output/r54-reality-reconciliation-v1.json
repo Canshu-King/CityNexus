@@ -1,0 +1,40 @@
+{
+  "capability": "When CityNexus receives conflicting travel facts from different sources, it no longer silently overwrites reality or follows “last write wins.” It reconciles source authority and freshness, freezes unsafe automation when the truth is genuinely contested, asks the traveller one bounded question only when needed, and resumes the same Journey once reality is resolved.",
+  "outcome": "REALITY_RECONCILIATION_USER_RESOLVED",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "reservation_id": "3b2e2e5e-b07d-45bb-b0c3-6d23cb5c5862",
+  "confirmation_ref": "AB123",
+  "old_provider_claim": {
+    "departure_at": "2026-10-09T17:40:00+00:00",
+    "provenance": "CAPTURED_REPLAY",
+    "freshness": "OLDER"
+  },
+  "traveller_claim": {
+    "departure_at": "2026-10-09T18:10:00+00:00",
+    "provenance": "USER_PASTED_TEXT"
+  },
+  "fresh_provider_claim": {
+    "departure_at": "2026-10-09T17:40:00+00:00",
+    "provenance": "CAPTURED_REPLAY",
+    "is_live": false
+  },
+  "conflict_id": "1aeb0f7e-7c41-4971-bd4d-b2f77ce44cd7",
+  "conflict_generation": 1,
+  "conflict_attention_kind": "REALITY_CONFLICT_REQUIRED",
+  "conflict_choice_count": 2,
+  "no_truth_flip_while_conflicted": true,
+  "no_new_event_or_guardian_while_conflicted": true,
+  "selected_label": "Use 18:10",
+  "resolution_provenance": "USER_CONFIRMED_REALITY_RESOLUTION",
+  "reservation_departure_at_after_resolution": "2026-10-09T18:10:00+00:00",
+  "current_activity_id_unchanged": true,
+  "current_activity_status": "IN_PROGRESS",
+  "event_count": 1,
+  "guardian_after_resolution": {
+    "id": "adf1f995-defa-4f5d-912b-99f9432e6d5c",
+    "status": "PARTIAL",
+    "action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+  },
+  "lab_estimate_authority": false,
+  "agent_estimate_authority": 0
+}

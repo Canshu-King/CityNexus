@@ -198,7 +198,15 @@ from app.journey_inbox import (
     inbox_artifact_fingerprint,
     inbox_provenance_for_source,
 )
+from app.reality_reconciliation import (
+    RealityClaimView,
+    reconcile_reservation_time_claims,
+    reservation_time_authority_class,
+    reservation_time_claim_fingerprint,
+)
 from app.db.models import (
+    RealityClaim as RealityClaimModel,
+    RealityConflict as RealityConflictModel,
     JourneyTwin as JourneyTwinModel,
 )
 from app.db.models import (
@@ -7727,12 +7735,68 @@ def import_journey_reservation(
     return _draft_payload(draft)
 
 
+def _reality_fact_key(reservation_id: str) -> str:
+    return f"reservation:{reservation_id}:scheduled_departure_at"
+
+
+def _record_reservation_time_claim(
+    session: Session, *, journey: Journey, reservation: TransportReservation,
+    value: str, provenance: str, source_ref: str, observed_at: str,
+) -> RealityClaimModel:
+    fact_key = _reality_fact_key(reservation.id)
+    fingerprint = reservation_time_claim_fingerprint(
+        journey_id=journey.id, reservation_id=reservation.id, value=value,
+        provenance=provenance, source_ref=source_ref,
+    )
+    existing = session.scalar(select(RealityClaimModel).where(
+        RealityClaimModel.journey_id == journey.id,
+        RealityClaimModel.fingerprint == fingerprint,
+    ))
+    if existing is not None:
+        return existing
+    generation = int(session.scalar(select(func.max(RealityClaimModel.generation)).where(
+        RealityClaimModel.journey_id == journey.id,
+        RealityClaimModel.fact_key == fact_key,
+    )) or 0) + 1
+    claim = RealityClaimModel(
+        id=str(uuid4()), journey_id=journey.id, fact_domain="RESERVATION_TIME",
+        fact_key=fact_key, subject_type="TransportReservation", subject_id=reservation.id,
+        value_json=json.dumps(value), provenance=provenance, source_ref=source_ref,
+        observed_at=observed_at, effective_at=value, expires_at=None,
+        authority_class=reservation_time_authority_class(provenance),
+        status="CURRENT", generation=generation, fingerprint=fingerprint,
+        created_at=datetime.now(timezone.utc).isoformat(),
+    )
+    session.add(claim)
+    session.flush()
+    return claim
+
+
+def _reservation_time_claim_views(claims: list[RealityClaimModel]) -> list[RealityClaimView]:
+    return [RealityClaimView(
+        claim_id=item.id, fact_domain=item.fact_domain,
+        value=json.loads(item.value_json), provenance=item.provenance,
+        observed_at=item.observed_at, exact_binding=(item.subject_type == "TransportReservation"),
+    ) for item in claims]
+
+
+def _active_reservation_time_claims(
+    session: Session, journey_id: str, reservation_id: str,
+) -> list[RealityClaimModel]:
+    return session.scalars(select(RealityClaimModel).where(
+        RealityClaimModel.journey_id == journey_id,
+        RealityClaimModel.fact_key == _reality_fact_key(reservation_id),
+        RealityClaimModel.status.in_(["CURRENT", "CONFLICTING"]),
+    ).order_by(RealityClaimModel.observed_at, RealityClaimModel.id)).all()
+
+
 def _journey_inbox_payload(item: JourneyInboxItem) -> dict[str, Any]:
     return {
         "id": item.id, "kind": item.semantic_kind, "status": item.status,
         "impact": item.impact_status, "confirmation_ref": item.confirmation_ref,
         "reservation_id": item.linked_reservation_id,
         "commitment_id": item.linked_commitment_id,
+        "reality_claim_id": item.reality_claim_id,
         "provenance": item.provenance,
         "result": json.loads(item.result_json or "{}"),
     }
@@ -7782,6 +7846,21 @@ def intake_journey_change(journey_id: UUID, request: Request, payload: dict[str,
     )
     session.add(row)
     session.flush()
+    if reservation is not None:
+        open_conflict = session.scalar(select(RealityConflictModel).where(
+            RealityConflictModel.journey_id == journey.id,
+            RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+            RealityConflictModel.status == "UNRESOLVED_MATERIAL_CONFLICT",
+        ).order_by(RealityConflictModel.generation.desc()))
+        if open_conflict is not None:
+            row.linked_reservation_id = reservation.id
+            row.linked_commitment_id = reservation.commitment_id
+            row.status = "REALITY_CONFLICT"
+            row.impact_status = "UNRESOLVED_MATERIAL_CONFLICT"
+            row.result_json = json.dumps({"conflict_id": open_conflict.id,
+                "question": "Which departure time should CityNexus use?"}, sort_keys=True)
+            session.commit()
+            return {**_journey_inbox_payload(row), "replayed": False}
     if reservation is None or not old_time or not new_time:
         row.status = "BINDING_REQUIRED" if reservation is None else "NEEDS_REVIEW"
         row.impact_status = "BINDING_REQUIRED" if reservation is None else "NEEDS_REVIEW"
@@ -7809,31 +7888,81 @@ def intake_journey_change(journey_id: UUID, request: Request, payload: dict[str,
             decision = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
                 affects_protected_commitment=protected, schedule_delta_min=delta,
                 current_execution_affected=bool(commitment and commitment.activity_id == journey.current_activity_id))
-            reservation.scheduled_departure_at = new_at.isoformat()
-            reservation.source_provenance = row.provenance
-            reservation.captured_at = now
-            if commitment is not None:
-                policy = json.loads(commitment.policy_json or "{}")
-                policy["scheduled_start_at"] = new_at.isoformat()
-                policy["source"] = row.provenance
-                commitment.policy_json = json.dumps(policy, ensure_ascii=False, sort_keys=True)
-                commitment.updated_at = now
             row.linked_reservation_id = reservation.id
             row.linked_commitment_id = reservation.commitment_id
-            row.status = "APPLIED"
-            row.impact_status = decision.state
-            row.result_json = json.dumps({"old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(),
-                "schedule_delta_min": delta, "reason": decision.reason}, sort_keys=True)
-            if decision.material:
-                event = EventModel(id=str(uuid4()), journey_id=journey.id, provider_key="user-pasted-change",
-                    provenance="USER_REPORTED", event_type="SCHEDULE_DELAY", severity="MAJOR",
-                    status="DETECTED", affected_activity_id=commitment.activity_id if commitment else None,
-                    occurred_at=now, detected_at=now, resolved_at=None,
-                    payload_json=json.dumps({"inbox_item_id": row.id, "confirmation_ref": ref,
-                        "old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(),
-                        "future_change": new_at > datetime.now(old_at.tzinfo)}, sort_keys=True), created_at=now)
-                session.add(event)
-                session.flush()
+            fact_key = _reality_fact_key(reservation.id)
+            active_claims = _active_reservation_time_claims(session, journey.id, reservation.id)
+            if not active_claims:
+                _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+                    value=reservation.scheduled_departure_at,
+                    provenance=reservation.source_provenance or "USER_CONFIRMED_IMPORT",
+                    source_ref=f"reservation-import:{reservation.id}", observed_at=reservation.captured_at or now)
+            user_claim = _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+                value=new_at.isoformat(), provenance=row.provenance,
+                source_ref=f"journey-inbox:{row.id}", observed_at=now)
+            active_claims = _active_reservation_time_claims(session, journey.id, reservation.id)
+            reconciled = reconcile_reservation_time_claims(
+                _reservation_time_claim_views(active_claims), now=datetime.now(timezone.utc))
+            row.reality_claim_id = user_claim.id
+            if reconciled.contested:
+                claim_set = hashlib.sha256("|".join(sorted(item.fingerprint for item in active_claims)).encode("utf-8")).hexdigest()
+                conflict = session.scalar(select(RealityConflictModel).where(
+                    RealityConflictModel.journey_id == journey.id,
+                    RealityConflictModel.fact_key == fact_key,
+                    RealityConflictModel.claim_set_fingerprint == claim_set,
+                ))
+                if conflict is None:
+                    generation = int(session.scalar(select(func.max(RealityConflictModel.generation)).where(
+                        RealityConflictModel.journey_id == journey.id,
+                        RealityConflictModel.fact_key == fact_key,
+                    )) or 0) + 1
+                    conflict = RealityConflictModel(id=str(uuid4()), journey_id=journey.id,
+                        fact_domain="RESERVATION_TIME", fact_key=fact_key, generation=generation,
+                        claim_ids_json=json.dumps([item.id for item in active_claims]),
+                        claim_set_fingerprint=claim_set, status="UNRESOLVED_MATERIAL_CONFLICT",
+                        reason=reconciled.reason, selected_claim_id=None, resolution_claim_id=None,
+                        resolution_provenance=None, created_at=now, updated_at=now, resolved_at=None)
+                    session.add(conflict)
+                for claim in active_claims:
+                    claim.status = "CONFLICTING"
+                row.status = "REALITY_CONFLICT"
+                row.impact_status = "UNRESOLVED_MATERIAL_CONFLICT"
+                row.result_json = json.dumps({"old_departure": old_at.isoformat(),
+                    "new_departure": new_at.isoformat(), "conflict_id": conflict.id,
+                    "reason": reconciled.reason}, sort_keys=True)
+            else:
+                winner = next((item for item in active_claims if item.id == reconciled.winning_claim_id), None)
+                if winner is None:
+                    row.status, row.impact_status = "NEEDS_REVIEW", "WAITING_FOR_TRUTH"
+                    row.result_json = json.dumps({"reason": reconciled.reason}, sort_keys=True)
+                else:
+                    winner_at = datetime.fromisoformat(str(json.loads(winner.value_json)).replace("Z", "+00:00"))
+                    for claim in active_claims:
+                        claim.status = "CURRENT" if claim.id == winner.id else "SUPERSEDED"
+                    reservation.scheduled_departure_at = winner_at.isoformat()
+                    reservation.source_provenance = winner.provenance
+                    reservation.captured_at = now
+                    if commitment is not None:
+                        policy = json.loads(commitment.policy_json or "{}")
+                        policy.update({"scheduled_start_at": winner_at.isoformat(), "source": winner.provenance})
+                        commitment.policy_json = json.dumps(policy, ensure_ascii=False, sort_keys=True)
+                        commitment.updated_at = now
+                    row.status = "APPLIED"
+                    row.impact_status = decision.state
+                    row.result_json = json.dumps({"old_departure": old_at.isoformat(),
+                        "new_departure": winner_at.isoformat(), "schedule_delta_min": delta,
+                        "reconciliation": reconciled.state, "reason": reconciled.reason,
+                        "winning_claim_id": winner.id}, sort_keys=True)
+                    if decision.material:
+                        session.add(EventModel(id=str(uuid4()), journey_id=journey.id,
+                            provider_key="user-pasted-change", provenance="USER_REPORTED",
+                            event_type="SCHEDULE_DELAY", severity="MAJOR", status="DETECTED",
+                            affected_activity_id=commitment.activity_id if commitment else None,
+                            occurred_at=now, detected_at=now, resolved_at=None,
+                            payload_json=json.dumps({"inbox_item_id": row.id, "confirmation_ref": ref,
+                                "old_departure": old_at.isoformat(), "new_departure": winner_at.isoformat(),
+                                "future_change": winner_at > datetime.now(winner_at.tzinfo)}, sort_keys=True), created_at=now))
+                        session.flush()
     session.commit()
     replayed = False
     enrollment = session.get(AutopilotEnrollment, journey.id)
@@ -7895,6 +8024,204 @@ def bind_journey_inbox_item(journey_id: UUID, item_id: UUID, request: Request, p
         except Exception:
             logging.getLogger(__name__).exception("R53 Guardian handoff failed for %s", item.id)
     return _journey_inbox_payload(item)
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/reality/provider-replay")
+def add_reservation_time_provider_replay(
+    journey_id: UUID, request: Request, payload: dict[str, Any], session: Session = Depends(get_session),
+):
+    """Ingest an explicitly captured provider replay. This route never asserts live status."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    observation_id = str(payload.get("provider_observation_id") or "")
+    observation = session.get(ProviderObservation, observation_id)
+    if observation is None or observation.journey_id != journey.id:
+        raise HTTPException(404, "captured provider replay was not found")
+    if observation.provenance != "REPLAY" or observation.observation_type != "RESERVATION_TIME":
+        raise HTTPException(422, "only a captured RESERVATION_TIME replay may enter this route")
+    try:
+        evidence = json.loads(observation.payload_json or "{}")
+        ref = str(evidence.get("confirmation_ref") or "").strip().upper()
+        value = str(evidence.get("scheduled_departure_at") or "").strip()
+        datetime.fromisoformat(value.replace("Z", "+00:00"))
+        datetime.fromisoformat(observation.captured_at.replace("Z", "+00:00"))
+    except (ValueError, json.JSONDecodeError) as exc:
+        raise HTTPException(422, "captured replay is missing its exact reservation time") from exc
+    if not ref:
+        raise HTTPException(422, "captured replay is missing its confirmation reference")
+    if observation.expires_at:
+        expires_at = datetime.fromisoformat(observation.expires_at.replace("Z", "+00:00"))
+        if expires_at <= datetime.now(timezone.utc):
+            return {"provenance": "CAPTURED_REPLAY", "reconciliation": "STALE_SOURCE_IGNORED",
+                "conflict_id": None, "reservation_departure_at": None}
+    reservation = session.scalar(select(TransportReservation).where(
+        TransportReservation.journey_id == journey.id,
+        TransportReservation.confirmation_ref == ref,
+        TransportReservation.status == "CONFIRMED",
+    ))
+    if reservation is None:
+        raise HTTPException(404, "exact reservation was not found")
+    open_conflict = session.scalar(select(RealityConflictModel).where(
+        RealityConflictModel.journey_id == journey.id,
+        RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+        RealityConflictModel.status == "UNRESOLVED_MATERIAL_CONFLICT",
+    ).order_by(RealityConflictModel.generation.desc()))
+    claim = _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+        value=datetime.fromisoformat(value.replace("Z", "+00:00")).isoformat(),
+        provenance="CAPTURED_REPLAY", source_ref=f"provider-observation:{observation.id}",
+        observed_at=observation.captured_at)
+    claims = _active_reservation_time_claims(session, journey.id, reservation.id)
+    if open_conflict is not None:
+        claim.status = "CONFLICTING"
+        claim_ids = set(json.loads(open_conflict.claim_ids_json or "[]"))
+        claim_ids.add(claim.id)
+        open_conflict.claim_ids_json = json.dumps(sorted(claim_ids))
+        session.commit()
+        return {"claim_id": claim.id, "provenance": claim.provenance,
+            "authority_class": claim.authority_class,
+            "reconciliation": "UNRESOLVED_MATERIAL_CONFLICT",
+            "conflict_id": open_conflict.id,
+            "reservation_departure_at": reservation.scheduled_departure_at}
+    result = reconcile_reservation_time_claims(_reservation_time_claim_views(claims), now=datetime.now(timezone.utc))
+    now = datetime.now(timezone.utc).isoformat()
+    conflict_id = None
+    if result.contested:
+        claim_set = hashlib.sha256("|".join(sorted(item.fingerprint for item in claims)).encode("utf-8")).hexdigest()
+        conflict = session.scalar(select(RealityConflictModel).where(
+            RealityConflictModel.journey_id == journey.id,
+            RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+            RealityConflictModel.claim_set_fingerprint == claim_set,
+        ))
+        if conflict is None:
+            generation = int(session.scalar(select(func.max(RealityConflictModel.generation)).where(
+                RealityConflictModel.journey_id == journey.id,
+                RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+            )) or 0) + 1
+            conflict = RealityConflictModel(id=str(uuid4()), journey_id=journey.id,
+                fact_domain="RESERVATION_TIME", fact_key=_reality_fact_key(reservation.id),
+                generation=generation, claim_ids_json=json.dumps([item.id for item in claims]),
+                claim_set_fingerprint=claim_set, status="UNRESOLVED_MATERIAL_CONFLICT",
+                reason=result.reason, selected_claim_id=None, resolution_claim_id=None,
+                resolution_provenance=None, created_at=now, updated_at=now, resolved_at=None)
+            session.add(conflict)
+        for item in claims:
+            item.status = "CONFLICTING"
+        conflict_id = conflict.id
+    elif result.winning_claim_id:
+        for item in claims:
+            item.status = "CURRENT" if item.id == result.winning_claim_id else "SUPERSEDED"
+    session.commit()
+    return {"claim_id": claim.id, "provenance": claim.provenance,
+        "authority_class": claim.authority_class, "reconciliation": result.state,
+        "conflict_id": conflict_id, "reservation_departure_at": reservation.scheduled_departure_at}
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/reality-conflicts/{conflict_id}/resolve")
+def resolve_journey_reality_conflict(
+    journey_id: UUID, conflict_id: UUID, request: Request, payload: dict[str, Any],
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    conflict = require(session, RealityConflictModel, str(conflict_id), "Reality conflict")
+    if conflict.journey_id != journey.id:
+        raise HTTPException(404, "reality conflict was not found")
+    if conflict.status == "RESOLVED":
+        return {"conflict_id": conflict.id, "generation": conflict.generation,
+            "status": conflict.status, "resolution_provenance": conflict.resolution_provenance,
+            "replayed": True}
+    if conflict.status != "UNRESOLVED_MATERIAL_CONFLICT":
+        raise HTTPException(409, "reality conflict is not awaiting a choice")
+    selected_id = str(payload.get("selected_claim_id") or "")
+    claim_ids = set(json.loads(conflict.claim_ids_json or "[]"))
+    if selected_id not in claim_ids:
+        raise HTTPException(422, "selected claim is not part of this conflict")
+    selected = session.get(RealityClaimModel, selected_id)
+    if selected is None or selected.journey_id != journey.id or selected.fact_key != conflict.fact_key:
+        raise HTTPException(404, "selected reality claim was not found")
+    reservation = session.get(TransportReservation, selected.subject_id)
+    if reservation is None or reservation.journey_id != journey.id:
+        raise HTTPException(409, "the reservation binding is no longer valid")
+    now = datetime.now(timezone.utc).isoformat()
+    selected_value = str(json.loads(selected.value_json))
+    resolution = _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+        value=selected_value, provenance="USER_CONFIRMED_REALITY_RESOLUTION",
+        source_ref=f"reality-conflict:{conflict.id}:selected:{selected.id}", observed_at=now)
+    for item_id in claim_ids:
+        item = session.get(RealityClaimModel, item_id)
+        if item is not None:
+            item.status = "CURRENT" if item.id == selected.id else "SUPERSEDED"
+    resolution.status = "CURRENT"
+    reservation.scheduled_departure_at = datetime.fromisoformat(selected_value.replace("Z", "+00:00")).isoformat()
+    reservation.source_provenance = "USER_CONFIRMED_REALITY_RESOLUTION"
+    reservation.captured_at = now
+    commitment = session.get(CommitmentModel, reservation.commitment_id) if reservation.commitment_id else None
+    if commitment is not None:
+        policy = json.loads(commitment.policy_json or "{}")
+        policy.update({"scheduled_start_at": reservation.scheduled_departure_at,
+            "source": "USER_CONFIRMED_REALITY_RESOLUTION", "reality_conflict_id": conflict.id})
+        commitment.policy_json = json.dumps(policy, ensure_ascii=False, sort_keys=True)
+        commitment.updated_at = now
+    conflict.status = "RESOLVED"
+    conflict.selected_claim_id = selected.id
+    conflict.resolution_claim_id = resolution.id
+    conflict.resolution_provenance = "USER_CONFIRMED_REALITY_RESOLUTION"
+    conflict.resolved_at = now
+    conflict.updated_at = now
+    item = session.scalar(select(JourneyInboxItem).where(
+        JourneyInboxItem.journey_id == journey.id,
+        JourneyInboxItem.linked_reservation_id == reservation.id,
+        JourneyInboxItem.semantic_kind == "SCHEDULE_CHANGE",
+    ).order_by(JourneyInboxItem.created_at.desc()))
+    old_value = None
+    if item is not None:
+        old_value = json.loads(item.result_json or "{}").get("old_departure")
+        item.status = "APPLIED"
+        item.impact_status = "USER_CONFIRMED_REALITY_RESOLUTION"
+        item.updated_at = now
+    material = False
+    if old_value:
+        old_at = datetime.fromisoformat(str(old_value).replace("Z", "+00:00"))
+        new_at = datetime.fromisoformat(reservation.scheduled_departure_at.replace("Z", "+00:00"))
+        delta = int((new_at - old_at).total_seconds() / 60)
+        impact = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
+            affects_protected_commitment=bool(commitment and commitment.level in {"C2_Reserved", "C3_Guaranteed", "C4_Anchored"}),
+            schedule_delta_min=delta)
+        material = impact.material
+        event_exists = False
+        for existing_event in session.scalars(select(EventModel).where(
+            EventModel.journey_id == journey.id, EventModel.event_type == "SCHEDULE_DELAY"
+        )).all():
+            try:
+                if json.loads(existing_event.payload_json or "{}").get("inbox_item_id") == (item.id if item else None):
+                    event_exists = True
+                    break
+            except json.JSONDecodeError:
+                continue
+        if material and not event_exists:
+            session.add(EventModel(id=str(uuid4()), journey_id=journey.id,
+                provider_key="journey-reality-reconciliation", provenance="USER_REPORTED",
+                event_type="SCHEDULE_DELAY", severity="MAJOR", status="DETECTED",
+                affected_activity_id=commitment.activity_id if commitment else None,
+                occurred_at=now, detected_at=now, resolved_at=None,
+                payload_json=json.dumps({"reality_conflict_id": conflict.id,
+                    "inbox_item_id": item.id if item else None,
+                    "old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(),
+                    "resolution_provenance": "USER_CONFIRMED_REALITY_RESOLUTION"}, sort_keys=True),
+                created_at=now))
+    session.commit()
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if material and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey)
+        except Exception:
+            logging.getLogger(__name__).exception("R54 Guardian handoff failed for %s", conflict.id)
+    return {"conflict_id": conflict.id, "generation": conflict.generation,
+        "status": conflict.status, "selected_claim_id": selected.id,
+        "resolution_claim_id": resolution.id,
+        "resolution_provenance": conflict.resolution_provenance,
+        "reservation_departure_at": reservation.scheduled_departure_at,
+        "material_impact": material, "replayed": False}
 
 
 @app.get("/api/v1/journeys/{journey_id}/inbox")

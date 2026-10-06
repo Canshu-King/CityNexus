@@ -24,6 +24,9 @@ from app.db.models import (
     GuardianRun,
     Journey,
     JourneyInboxItem,
+    RealityClaim,
+    RealityConflict,
+    TransportReservation,
     JourneyMission,
     ReplanProposal,
     RecoveryDiscoveryAttempt,
@@ -393,6 +396,40 @@ def operator_projection(
         "latest": inbox_latest,
         "pending_count": sum(1 for item in inbox_rows if item.status in {"BINDING_REQUIRED", "NEEDS_REVIEW"}),
     }
+    reality_conflict_row = session.scalar(select(RealityConflict).where(
+        RealityConflict.journey_id == journey.id,
+        RealityConflict.status == "UNRESOLVED_MATERIAL_CONFLICT",
+    ).order_by(RealityConflict.generation.desc(), RealityConflict.created_at.desc()))
+    reality_conflict = None
+    if reality_conflict_row is not None:
+        claim_ids = json.loads(reality_conflict_row.claim_ids_json or "[]")
+        claims = session.scalars(select(RealityClaim).where(RealityClaim.id.in_(claim_ids))).all() if claim_ids else []
+        claims.sort(key=lambda item: (0 if item.provenance in {"USER_PASTED_TEXT", "USER_REPORTED"} else 1, item.observed_at))
+        choices = []
+        labels = []
+        for claim in claims:
+            value = json.loads(claim.value_json)
+            stamp = str(value).replace("T", " ")[:16]
+            clock = stamp[-5:]
+            if claim.provenance == "USER_PASTED_TEXT":
+                label = f"Use {clock}"
+                source_label = f"Your forwarded update: {clock}"
+            else:
+                label = f"Keep {clock}"
+                source_label = f"Provider replay: {clock}"
+            choices.append({"claim_id": claim.id, "label": label})
+            labels.append(source_label)
+        reservation_id = reality_conflict_row.fact_key.split(":")[1]
+        reservation = session.get(TransportReservation, reservation_id)
+        reference = reservation.confirmation_ref if reservation is not None else "train"
+        reality_conflict = {
+            "id": reality_conflict_row.id, "generation": reality_conflict_row.generation,
+            "status": reality_conflict_row.status, "fact_domain": reality_conflict_row.fact_domain,
+            "fact_key": reality_conflict_row.fact_key,
+            "title": "I have two different departure times for the same train",
+            "body": f"I have conflicting departure times for train {reference}. " + ". ".join(labels) + ". I’m holding off on replanning until you choose.",
+            "choices": choices,
+        }
     timeline = [*_timeline(session, journey.id), *(collective.get("timeline") or [])]
     timeline.extend({"at": item.received_at, "kind": "RESERVATION_UPDATE",
                      "label": ("Reservation schedule updated" if item.status == "APPLIED" else "Booking update needs a detail")}
@@ -559,12 +596,14 @@ def operator_projection(
         "overnight": overnight,
         "intents": projected_intents,
         "inbox": inbox,
+        "reality_conflict": reality_conflict,
         "attention": attention_from_operator_projection({
             "operations": operations,
             "approval": approval_payload,
             "collective": collective,
             "intents": projected_intents,
             "inbox": inbox,
+            "reality_conflict": reality_conflict,
             "flow": flow,
             "overnight": overnight,
             "brain": brain,

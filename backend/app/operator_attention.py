@@ -23,6 +23,7 @@ _PRIORITY = {
     "APPROVAL_REQUIRED": 10,
     "COLLECTIVE_RESPONSE_REQUIRED": 11,
     "INTENT_CLARIFICATION_REQUIRED": 12,
+    "REALITY_CONFLICT_REQUIRED": 8,
     "INBOX_BINDING_REQUIRED": 13,
     "CONFIRM_ARRIVAL": 20,
     "CONFIRM_BEGIN": 21,
@@ -140,6 +141,18 @@ def attention_from_operator_projection(operator: dict[str, Any]) -> dict[str, An
             body="I received a booking update, but I need one detail before I can apply it.",
             action_label="Choose reservation", action_type="BIND_INBOX_ITEM",
             source_ref={"inbox_item_id": item_id},
+        ))
+
+    reality_conflict = operator.get("reality_conflict") or {}
+    if reality_conflict.get("status") == "UNRESOLVED_MATERIAL_CONFLICT":
+        conflict_id = str(reality_conflict.get("id") or "")
+        candidates.append(AttentionCandidate(
+            kind="REALITY_CONFLICT_REQUIRED", priority=priority_for("REALITY_CONFLICT_REQUIRED"),
+            blocking=True, semantic_id=f"reality-conflict:{conflict_id}:{reality_conflict.get('generation')}",
+            title="I have two different departure times for the same train",
+            body=str(reality_conflict.get("body") or "I’m holding off on replanning until I know which departure time is real."),
+            action_label="Choose departure time", action_type="RESOLVE_REALITY_CONFLICT",
+            source_ref={"conflict_id": conflict_id},
         ))
 
     flow = operator.get("flow") or {}
@@ -277,6 +290,12 @@ def _created_at_for(primary: AttentionCandidate, operator: dict[str, Any]) -> st
 
 
 def _options_for(primary: AttentionCandidate, operator: dict[str, Any]) -> list[dict[str, str]]:
+    conflict_id = (primary.source_ref or {}).get("conflict_id")
+    if conflict_id:
+        conflict = operator.get("reality_conflict") or {}
+        if str(conflict.get("id") or "") == str(conflict_id):
+            return [{"value": str(item["claim_id"]), "label": str(item["label"])}
+                    for item in conflict.get("choices") or [] if item.get("claim_id") and item.get("label")]
     inbox_item_id = (primary.source_ref or {}).get("inbox_item_id")
     if inbox_item_id:
         latest = (operator.get("inbox") or {}).get("latest") or {}

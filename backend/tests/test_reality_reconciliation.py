@@ -2,6 +2,7 @@ from app.reality_reconciliation import (
     RealityClaimView,
     dependent_action_allowed,
     reconcile_reservation_time_claims,
+    reservation_time_claim_fingerprint,
 )
 
 
@@ -43,6 +44,15 @@ def test_fresh_live_provider_can_win_over_user_message():
     assert d.winning_claim_id == "live"
 
 
+def test_stale_live_provider_does_not_beat_newer_user_claim_solely_by_source_label():
+    d = reconcile_reservation_time_claims([
+        claim("live-yesterday", "2026-10-09T17:40:00+00:00", "LIVE_PROVIDER", "2026-10-06T10:00:00+00:00"),
+        claim("user-today", "2026-10-09T18:10:00+00:00", "USER_PASTED_TEXT", "2026-10-07T10:00:00+00:00"),
+    ])
+    assert d.state == "UNRESOLVED_MATERIAL_CONFLICT"
+    assert d.contested is True
+
+
 def test_estimated_agent_never_becomes_authoritative_winner():
     d = reconcile_reservation_time_claims([
         claim("estimate", "2026-10-09T18:10:00+00:00", "ESTIMATED_AGENT", "2026-10-07T11:00:00+00:00"),
@@ -74,3 +84,20 @@ def test_contested_fact_blocks_only_dependent_actions():
     assert dependent_action_allowed(contested=True, depends_on_fact=True) is False
     assert dependent_action_allowed(contested=True, depends_on_fact=False) is True
     assert dependent_action_allowed(contested=False, depends_on_fact=True) is True
+
+
+def test_claim_replay_fingerprint_is_stable_for_same_bound_source_claim():
+    first = reservation_time_claim_fingerprint(
+        journey_id="j1", reservation_id="r1", value="2026-10-09T17:40:00+00:00",
+        provenance="CAPTURED_REPLAY", source_ref="sealed-capture:cap-1",
+    )
+    second = reservation_time_claim_fingerprint(
+        journey_id="j1", reservation_id="r1", value="2026-10-09T17:40:00+00:00",
+        provenance="CAPTURED_REPLAY", source_ref="sealed-capture:cap-1",
+    )
+    changed_value = reservation_time_claim_fingerprint(
+        journey_id="j1", reservation_id="r1", value="2026-10-09T18:10:00+00:00",
+        provenance="CAPTURED_REPLAY", source_ref="sealed-capture:cap-1",
+    )
+    assert first == second
+    assert first != changed_value
