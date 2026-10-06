@@ -324,12 +324,35 @@ def run() -> dict[str, Any]:
             "model_key": str(getattr(self, "model_key", "unknown")),
             "at": datetime.now(timezone.utc).isoformat(),
             "release_was_set": release.is_set(),
+            "provider_call_invoked": False,
+            "provider_returned": False,
         }
         with barrier_lock:
             barrier_hits.append(hit)
         if not release.wait(timeout=180):
             raise RuntimeError("R32 external-response barrier timed out")
-        return original_complete(self, messages)
+        with barrier_lock:
+            hit["provider_call_invoked"] = True
+            hit["provider_call_started_at"] = (
+                datetime.now(timezone.utc).isoformat()
+            )
+        try:
+            result = original_complete(self, messages)
+        except Exception as exc:
+            with barrier_lock:
+                hit["provider_exception"] = type(exc).__name__
+                hit["provider_call_finished_at"] = (
+                    datetime.now(timezone.utc).isoformat()
+                )
+            raise
+        with barrier_lock:
+            hit["provider_returned"] = True
+            hit["provider_call_finished_at"] = (
+                datetime.now(timezone.utc).isoformat()
+            )
+            hit["tool_call_count"] = len(result.get("tool_calls") or [])
+            hit["has_content"] = bool(str(result.get("content") or "").strip())
+        return result
 
     def wait_for_initial_barrier(thread_name: str, timeout: float = 45.0) -> bool:
         deadline = time.monotonic() + timeout
@@ -429,6 +452,17 @@ def run() -> dict[str, Any]:
     thread_b.join(timeout=240)
     HermesJourneyAgent._complete = original_complete
 
+    with barrier_lock:
+        external_call_outcomes = [dict(item) for item in barrier_hits]
+    provider_calls_were_real = all(
+        any(
+            item.get("thread") == thread_name
+            and item.get("provider_call_invoked") is True
+            for item in external_call_outcomes
+        )
+        for thread_name in ("r32-agent-a", "r32-agent-b")
+    )
+
     final = _snapshot(journey_id)
     stale_assertion = _stale_binding_assertion(journey_id, str(a_run["id"])) if a_run else {"typed": False, "detail": "Agent A run not durable"}
     current_epoch = next((row for row in final["epochs"] if row["status"] == "OPEN"), None)
@@ -445,10 +479,11 @@ def run() -> dict[str, Any]:
             "configured_model": os.getenv("CITYNEXUS_HERMES_MODEL"),
             "fallback_models": os.getenv("CITYNEXUS_HERMES_MODEL_FALLBACKS"),
             "external_barrier_hits_before_release": hits_before_release,
+            "external_call_outcomes": external_call_outcomes,
             "concurrent_external_barrier_proven": (
                 concurrent_external_barrier_proven
             ),
-            "provider_calls_were_real": True,
+            "provider_calls_were_real": provider_calls_were_real,
         },
         "shock_a": shock_a,
         "shock_b": shock_b,
