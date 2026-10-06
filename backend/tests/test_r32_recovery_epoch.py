@@ -12,11 +12,26 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 import pytest
+from fastapi import HTTPException
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.db.models import Activity, Base, Event, Journey, PlanVersion, RecoveryEpoch, Traveler
+from app.db.models import (
+    Activity,
+    AgentRun,
+    Base,
+    Event,
+    Journey,
+    JourneyMission,
+    PlanVersion,
+    RecoveryEpoch,
+    Traveler,
+)
+from app.agent.approval import create_or_reuse_approval
+from app.agent.gateway import AgentToolGateway
+from app.db.session import _reconcile_agent_pending_action_status_check
+from app.schemas import AgentToolCall
 from app.recovery_epoch import (
     OPEN,
     RECOVERY_EPOCH_SUPERSEDED,
@@ -260,3 +275,158 @@ def test_database_enforces_one_open_epoch_per_journey(session):
     with pytest.raises(IntegrityError):
         db.flush()
     db.rollback()
+
+
+def test_old_epoch_cannot_mint_new_approval_after_unseen_shock(session):
+    db, journey = session
+    old = ensure_recovery_epoch(db, journey)
+    db.commit()
+    db.add(
+        _event(
+            journey,
+            event_id=str(uuid4()),
+            payload={"incident_fingerprint": "approval-shock"},
+        )
+    )
+    db.commit()
+
+    with pytest.raises(HTTPException) as error:
+        create_or_reuse_approval(
+            db,
+            traveler_id=journey.traveler_id,
+            journey_id=journey.id,
+            action="ACCEPT_REPLAN",
+            target_type="ReplanProposal",
+            target_id="proposal-stale",
+            request_fingerprint="fingerprint-stale",
+            actor_id="agent-r32",
+            required_decision="REQUIRE_CONFIRMATION",
+            recovery_epoch_id=old.id,
+        )
+
+    assert error.value.status_code == 409
+    assert error.value.detail["code"] == RECOVERY_EPOCH_SUPERSEDED
+
+
+def test_gateway_uses_exact_bound_run_not_latest_mission_run(session):
+    db, journey = session
+    mission = JourneyMission(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        traveler_id=journey.traveler_id,
+        trigger_event_id=None,
+        user_text="Recover autonomously.",
+        requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+        status="RUNNING",
+        created_at=_now(),
+        started_at=_now(),
+    )
+    db.add(mission)
+    first = ensure_recovery_epoch(db, journey)
+    run_a = AgentRun(
+        id=str(uuid4()),
+        mission_id=mission.id,
+        journey_id=journey.id,
+        provider_key="external-a",
+        model_key="a",
+        status="RUNNING",
+        created_at=_now(),
+        started_at="2026-10-06T00:00:00+00:00",
+        recovery_epoch_id=first.id,
+    )
+    db.add(run_a)
+    db.commit()
+
+    db.add(
+        _event(
+            journey,
+            event_id=str(uuid4()),
+            payload={"incident_fingerprint": "second-shock"},
+        )
+    )
+    db.commit()
+    second = ensure_recovery_epoch(db, journey)
+    run_b = AgentRun(
+        id=str(uuid4()),
+        mission_id=mission.id,
+        journey_id=journey.id,
+        provider_key="external-b",
+        model_key="b",
+        status="RUNNING",
+        created_at=_now(),
+        started_at="2026-10-06T00:01:00+00:00",
+        recovery_epoch_id=second.id,
+    )
+    db.add(run_b)
+    db.commit()
+
+    request = AgentToolCall(
+        request_id="exact-run-binding",
+        journey_id=journey.id,
+        mission_id=mission.id,
+    )
+    with pytest.raises(HTTPException) as stale:
+        AgentToolGateway(
+            db, bound_run_id=run_a.id
+        )._bound_recovery_epoch_id(request, journey)
+    assert stale.value.detail["code"] == RECOVERY_EPOCH_SUPERSEDED
+
+    exact = AgentToolGateway(
+        db, bound_run_id=run_b.id
+    )._bound_recovery_epoch_id(request, journey)
+    assert exact == second.id
+
+
+def test_legacy_pending_action_check_is_upgraded_for_superseded():
+    engine = create_engine("sqlite://", future=True)
+    with engine.begin() as connection:
+        connection.exec_driver_sql(
+            """
+            CREATE TABLE agent_pending_actions (
+                id TEXT PRIMARY KEY,
+                approval_id TEXT NOT NULL UNIQUE,
+                run_id TEXT NOT NULL,
+                mission_id TEXT NOT NULL,
+                journey_id TEXT NOT NULL,
+                originating_step_id TEXT,
+                tool_name TEXT NOT NULL,
+                arguments_json TEXT NOT NULL DEFAULT '{}',
+                status TEXT NOT NULL DEFAULT 'PENDING'
+                    CHECK (status IN (
+                        'PENDING','RESUMING','RESUMED','FAILED','EXPIRED'
+                    )),
+                result_json TEXT NOT NULL DEFAULT '{}',
+                error_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                claimed_at TEXT,
+                resumed_at TEXT,
+                updated_at TEXT NOT NULL,
+                authority_receipt_id TEXT,
+                recovery_epoch_id TEXT
+            )
+            """
+        )
+        _reconcile_agent_pending_action_status_check(connection)
+        ddl = connection.exec_driver_sql(
+            "SELECT sql FROM sqlite_master "
+            "WHERE type='table' AND name='agent_pending_actions'"
+        ).scalar()
+        assert ddl is not None
+        assert "SUPERSEDED" in ddl
+        connection.exec_driver_sql(
+            """
+            INSERT INTO agent_pending_actions (
+                id, approval_id, run_id, mission_id, journey_id,
+                tool_name, status, created_at, updated_at
+            ) VALUES (
+                'pending-1', 'approval-1', 'run-1', 'mission-1',
+                'journey-1', 'accept_replan', 'SUPERSEDED',
+                '2026-10-06T00:00:00+00:00',
+                '2026-10-06T00:00:00+00:00'
+            )
+            """
+        )
+        status = connection.exec_driver_sql(
+            "SELECT status FROM agent_pending_actions WHERE id='pending-1'"
+        ).scalar()
+        assert status == "SUPERSEDED"
