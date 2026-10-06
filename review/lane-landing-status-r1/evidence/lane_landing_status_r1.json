@@ -1,0 +1,259 @@
+{
+ "tip": "8996eee4fb9fb4e159588305223ef421728c4e72",
+ "tip_tree_paths": 10685,
+ "refspec": "refs/heads/review/0afdb49b-*",
+ "lane_refs": 22,
+ "distinct_heads": 22,
+ "quiet_heads": 0,
+ "per_ref": [
+  {
+   "ref": "refs/heads/review/0afdb49b-chain-bundle-check-r1",
+   "head": "df06dd0150e2d8b75d0eb246dc8f42fb62356709",
+   "own_paths": 6,
+   "same": 0,
+   "absent": 6,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-chain-static-witness-r1",
+   "head": "021754c0b2acb7fb194778dd31026ac2c7ce2899",
+   "own_paths": 3,
+   "same": 0,
+   "absent": 3,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-copy-coverage-r1",
+   "head": "aded78799c36f50ed134988b26a3f61863c30b79",
+   "own_paths": 5,
+   "same": 0,
+   "absent": 5,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-fleet-rescan-r2",
+   "head": "bc4b6fec021b921ece3194a4e0f65a800469ccfa",
+   "own_paths": 14,
+   "same": 0,
+   "absent": 14,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-fleet-rescan-vouch-r1",
+   "head": "7f7fa4b21010ae2429af57ce19146b540e3bbe8c",
+   "own_paths": 16,
+   "same": 0,
+   "absent": 16,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-landed-blob-rescan-r1",
+   "head": "ecf337c254d44d85f496643278cad8817923e089",
+   "own_paths": 7,
+   "same": 0,
+   "absent": 7,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-landed-blob-rescan-r2",
+   "head": "f0fa2c48990f46ff7eb493e928c828f931db9d8f",
+   "own_paths": 11,
+   "same": 0,
+   "absent": 11,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-nav-key-preflight-r1",
+   "head": "755a4557fde728a678a60e3eb5d6be287a72dbda",
+   "own_paths": 5,
+   "same": 0,
+   "absent": 5,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0485-spec-drift-r1",
+   "head": "fdde2091474dcc6261803d0fd1d885bac59a5bc3",
+   "own_paths": 5,
+   "same": 0,
+   "absent": 5,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-citation-note-r1",
+   "head": "0ebb62dd629edd98df07ba55fca78960792db2c1",
+   "own_paths": 6,
+   "same": 0,
+   "absent": 6,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-citation-note-r2",
+   "head": "b2008af358c72a34ad9a9af01d62604644507819",
+   "own_paths": 9,
+   "same": 0,
+   "absent": 9,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-collide-probe-r1",
+   "head": "e2b9bd60e8b52cb03a8f531283547d1221daf657",
+   "own_paths": 1,
+   "same": 0,
+   "absent": 0,
+   "changed": 1,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-generations-r1",
+   "head": "2530ad38e3c51babd10b967810e03c1e26c25d99",
+   "own_paths": 14,
+   "same": 0,
+   "absent": 14,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-recut-slice-r1",
+   "head": "84a7b78d99b26ac7fe4b6875438c3af3a5737ad2",
+   "own_paths": 13,
+   "same": 0,
+   "absent": 13,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-spec-run-r1",
+   "head": "27192f21214fae7fe8cda5773c1578c4830e299d",
+   "own_paths": 3,
+   "same": 0,
+   "absent": 3,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r1",
+   "head": "434801bfa39b5105d5f60dcc61ed0d79b814b7aa",
+   "own_paths": 9,
+   "same": 9,
+   "absent": 0,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "ALL_SAME"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r2",
+   "head": "89213c447190c853de998e2d78e4b6d5f63847f9",
+   "own_paths": 9,
+   "same": 9,
+   "absent": 0,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "ALL_SAME"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r3",
+   "head": "acaba59d0a6168eee3ff0012ebadc75ea3387002",
+   "own_paths": 10,
+   "same": 3,
+   "absent": 3,
+   "changed": 4,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "PARTIAL_SAME"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r4",
+   "head": "aff61777229ee39d24e120b1e9b3146400d2af88",
+   "own_paths": 13,
+   "same": 13,
+   "absent": 0,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "ALL_SAME"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r5",
+   "head": "a3e344ba0dc0927060f220f9f8e7d89e95c487b3",
+   "own_paths": 3,
+   "same": 0,
+   "absent": 3,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r6",
+   "head": "31904cf3f413de4154a921224f2187e99527a1e4",
+   "own_paths": 3,
+   "same": 0,
+   "absent": 3,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r7",
+   "head": "3b035628f33e593e243d02b3d1647f805d191321",
+   "own_paths": 3,
+   "same": 0,
+   "absent": 3,
+   "changed": 0,
+   "deletion_held": 0,
+   "deletion_undone": 0,
+   "label": "NONE_ON_LINE"
+  }
+ ],
+ "label_tally": {
+  "NONE_ON_LINE": 18,
+  "ALL_SAME": 3,
+  "PARTIAL_SAME": 1
+ },
+ "method": "own path set from the published r2 tool's published_paths(); landed-ness is byte equality against the live tip tree; ancestry is not a criterion",
+ "reads_nothing_else": "no fetch, no write, no ref moved"
+}

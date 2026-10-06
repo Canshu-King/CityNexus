@@ -1,0 +1,15 @@
+lane landing status r1: this lane's own review refs re-judged at the live tip (0 product paths)
+
+The fleet re-scan r2 judged all 1081 review refs at tip aac1142e; the tip has since moved several times,
+so this hand answers the narrower question this lane actually needs: which of ITS OWN branches' bytes are
+on the line right now.  Same method, not a re-derivation -- the per-hand path sets come from the published
+r2 tool's own published_paths() (imported), and landed-ness is byte equality against the live tip tree.
+
+Contents under review/lane-landing-status-r1/:
+- tools/lane_landing_status_r1.py -- the reading; also renders and vouches its own BB copy.
+- evidence/lane_landing_status_r1/lane_landing_status_r1.json -- the full per-ref table.
+- run/lane_status_r1_run.txt -- the printed output (kv line + one line per ref).
+- run/lane_status_r1_manifest.json, run/commit_lane_status_r1_msg.txt -- this publish.
+
+No fetch, no write, no ref moved, no ledger direct write, no product byte.  New file names throughout;
+no landed instrument path is rewritten (CMDR-0925-2128).

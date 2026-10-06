@@ -1,0 +1,24 @@
+all_same=3 deletion_held=0 deletion_undone=0 distinct_heads=22 empty_commit=0 lane_refs=22 no_paths_reported=0 none_on_line=18 own_paths_total=168 partial_same=1 paths_absent=129 paths_changed=5 paths_same=34 quiet_heads=0 snapshot_shaped=0 tip=8996eee4fb9fb4e159588305223ef421728c4e72 tip_tree_paths=10685
+refs/heads/review/0afdb49b-chain-bundle-check-r1               df06dd0150e2 own=6 same=0 absent=6 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-chain-static-witness-r1             021754c0b2ac own=3 same=0 absent=3 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-copy-coverage-r1                    aded78799c36 own=5 same=0 absent=5 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-fleet-rescan-r2                     bc4b6fec021b own=14 same=0 absent=14 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-fleet-rescan-vouch-r1               7f7fa4b21010 own=16 same=0 absent=16 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-landed-blob-rescan-r1               ecf337c254d4 own=7 same=0 absent=7 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-landed-blob-rescan-r2               f0fa2c48990f own=11 same=0 absent=11 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-nav-key-preflight-r1                755a4557fde7 own=5 same=0 absent=5 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0485-spec-drift-r1               fdde2091474d own=5 same=0 absent=5 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-citation-note-r1            0ebb62dd629e own=6 same=0 absent=6 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-citation-note-r2            b2008af358c7 own=9 same=0 absent=9 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-collide-probe-r1            e2b9bd60e8b5 own=1 same=0 absent=0 changed=1 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-generations-r1              2530ad38e3c5 own=14 same=0 absent=14 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-recut-slice-r1              84a7b78d99b2 own=13 same=0 absent=13 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-spec-run-r1                 27192f21214f own=3 same=0 absent=3 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-staging-door-r1             434801bfa39b own=9 same=9 absent=0 changed=0 del_held=0 del_undone=0 ALL_SAME
+refs/heads/review/0afdb49b-ord0500-staging-door-r2             89213c447190 own=9 same=9 absent=0 changed=0 del_held=0 del_undone=0 ALL_SAME
+refs/heads/review/0afdb49b-ord0500-staging-door-r3             acaba59d0a61 own=10 same=3 absent=3 changed=4 del_held=0 del_undone=0 PARTIAL_SAME
+refs/heads/review/0afdb49b-ord0500-staging-door-r4             aff61777229e own=13 same=13 absent=0 changed=0 del_held=0 del_undone=0 ALL_SAME
+refs/heads/review/0afdb49b-ord0500-staging-door-r5             a3e344ba0dc0 own=3 same=0 absent=3 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-staging-door-r6             31904cf3f413 own=3 same=0 absent=3 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+refs/heads/review/0afdb49b-ord0500-staging-door-r7             3b035628f33e own=3 same=0 absent=3 changed=0 del_held=0 del_undone=0 NONE_ON_LINE
+BB BODY WRITTEN run/lane_status_r1_bb_body.txt | VOUCHED 10 number tokens

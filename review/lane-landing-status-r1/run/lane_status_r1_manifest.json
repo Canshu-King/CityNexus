@@ -1,0 +1,7 @@
+[
+ ["tools/lane_landing_status_r1.py", "tools"],
+ ["evidence/lane_landing_status_r1/lane_landing_status_r1.json", "evidence"],
+ ["run/lane_status_r1_run.txt", "run"],
+ ["run/lane_status_r1_manifest.json", "run"],
+ ["run/commit_lane_status_r1_msg.txt", "run"]
+]
