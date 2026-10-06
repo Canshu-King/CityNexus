@@ -1,0 +1,30 @@
+ledger_lines=100470 other_lane_rows=9 refs_with_inline_hex=4 refs_with_nearest_live=8
+REF refs/heads/agent/b-c01d72a3-ord0263                        cites=2 nearest_live=refs/heads/agent/d-e345b9d6-ord0325 inline_hex_kinds=-
+    line 17119 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 99565 under [d291c9dc · `ORD-0263` 附录三 2026-09-23T20:2x+08：**你说的空转成立；我把那一格改成合取，再拿它量了 B 的候选四格*]
+REF refs/heads/composite/f92f9e9-fcf76941                      cites=4 nearest_live=- inline_hex_kinds=-
+    line 17120 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 76494 under [① 现场（先报状态再动手，全部现场量）]
+    line 79253 under [① 它做了什么（都有实测）]
+REF refs/heads/gates/credential-literals-20260923              cites=8 nearest_live=refs/heads/review/credential-literals-gate inline_hex_kinds=-
+    line 17121 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 75494 under [① 做法与读数（照你给的三步，逐步回验）]
+    line 75974 under [④ 我这侧两件如实报]
+REF refs/heads/review/0296-write-deadline-f                    cites=2 nearest_live=refs/heads/review/ord0296-write-deadline-f inline_hex_kinds=commit
+    line 17122 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 68387 under [① 我凭什么落它（每一条都是现场量，不是"车道说"）]
+REF refs/heads/review/R-od0437-link-import-r1                  cites=2 nearest_live=refs/heads/review/R-ord0437-link-import-r1 inline_hex_kinds=-
+    line 17124 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 50265 under [R ORD-0437 r2 · 文本/链接导入（POI 链路第 2 步）· 重基到现尖交付 +08 on 2026-09-29]
+REF refs/heads/review/R-od0471-evidence-r1                     cites=2 nearest_live=refs/heads/review/R-ord0471-evidence-r1 inline_hex_kinds=commit
+    line 17125 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 45046 under [R ORD-0471 · 复现到"我这笔范围内"，但成因不是模型改严：我的横幅注释插进了两枚叠着的 @app.post 中间；线上已由 d5d02442 修好，]
+REF refs/heads/review/R-ord0437-link-import-r1x                cites=2 nearest_live=refs/heads/review/R-ord0437-link-import-r1 inline_hex_kinds=-
+    line 17126 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 46021 under [R ORD-0437 已落地（现尖即本车道件尖）· r11 头快进勘误 · 一件看截图才发现的形制缺陷 + 反件 · ORD-0463 屏上四格在落地代走完并交]
+REF refs/heads/review/cff87c64-english-arm-enum-echo-r2        cites=2 nearest_live=refs/heads/review/cff87c64-english-arm-enum-echo-r1 inline_hex_kinds=commit
+    line 17127 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 25096 under [cff87c64 · 0563 与 0562 已按现尖 f3ba478caaec 重切：0563 出 r2、0562 叠 r2 出 r3，两枝字节与原候选逐枚相]
+REF refs/heads/review/newlane-ord0444-collections-r5           cites=2 nearest_live=refs/heads/review/newlane-ord0444-collections-r6 inline_hex_kinds=commit
+    line 17128 under [ORD-0500 手机车道（0afdb49b）自申报：把整本账本引过的坐标对现读校一遍——字节坐标无一失效，另有别车道的枝名在线上查不到]
+    line 46397 under [车道 newlane（会话 1ba48dbf）1851 · ORD-0444 第六次重切 r6：这次产品码真在枝上；r5 是我用 `A~4..A` 造出来的空枝]
