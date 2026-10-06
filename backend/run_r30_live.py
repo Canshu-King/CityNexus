@@ -211,12 +211,13 @@ def _reach_post_consent_interlock(
         raise RuntimeError(
             f"R29/R30 renewed member set drifted: {required} -> {round2_required}"
         )
-    round2_options = [
-        item
-        for item in round2.get("candidate_options") or []
-        if isinstance(item, dict) and item.get("proposal_id")
-    ]
-    improved_choice = _best_improved_choice(round2_options, improved_ids)
+    renewed_independent_choices = _independent_member_choices(
+        round2,
+        round2_required,
+        allowed_proposal_ids=set(improved_ids),
+        phase="pre-shock renewed consent round",
+    )
+    improved_choice = next(iter(set(renewed_independent_choices.values())))
 
     round2_tokens = _signed_member_tokens(round2_required)
     round2_path = (
@@ -230,7 +231,7 @@ def _reach_post_consent_interlock(
             headers={"Authorization": f"Bearer {round2_tokens[member_id]}"},
             json={
                 "clarification_id": round2["clarification_id"],
-                "proposal_id": improved_choice,
+                "proposal_id": renewed_independent_choices[member_id],
             },
         )
         if response.status_code >= 400:
@@ -291,6 +292,7 @@ def _reach_post_consent_interlock(
         "mediator_run_id": mediator_run.get("run_id"),
         "mediation_progress": progress,
         "renewed_required_member_ids": round2_required,
+        "renewed_independent_member_choices": renewed_independent_choices,
         "renewed_responses": renewed_responses,
         "selected_proposal_id": selected_proposal_id,
         "selected_plan_id": selected_plan_id,
@@ -657,29 +659,46 @@ def _journey_owner_member_id(journey_id: str) -> str:
     return str(rows[0].id)
 
 
-def _independent_fresh_member_choices(
+def _independent_member_choices(
     clarification: dict[str, Any],
     required_member_ids: list[str],
+    *,
+    allowed_proposal_ids: set[str] | None = None,
+    phase: str = "collective round",
 ) -> dict[str, str]:
-    """Derive each test member's choice independently from its own grounded fit.
+    """Derive each test member's choice independently from grounded fit.
 
-    The harness may emulate the authenticated principals used by the R29/R30
-    strike, but it must not invent social consensus by picking one global
-    fairness optimum and submitting that answer for everyone. Each relevant
-    member must have one unique server-grounded maximum, and the maxima must
-    converge on the same proposal before automated closure is allowed.
+    Automated strike code may emulate authenticated principals, but it must
+    never manufacture social consensus by choosing one global fairness optimum
+    and submitting that answer for everyone. Every relevant member must have
+    one unique acceptable grounded maximum on the current decision surface,
+    and those independent maxima must converge before automation may close the
+    round.
+
+    allowed_proposal_ids lets a mediator narrow the decision surface to
+    proposals it has actually improved. The mediator may define that surface;
+    it still may not choose on behalf of the people inside it.
     """
 
+    allowed = (
+        {str(value) for value in allowed_proposal_ids if value}
+        if allowed_proposal_ids is not None
+        else None
+    )
     options = [
         item
         for item in clarification.get("candidate_options") or []
         if isinstance(item, dict)
         and item.get("proposal_id")
         and item.get("status") == "GROUNDED_FEASIBLE"
+        and (
+            allowed is None
+            or str(item.get("proposal_id") or "") in allowed
+        )
     ]
     if not options:
         raise RuntimeError(
-            "fresh recovery round has no grounded feasible options"
+            f"{phase} has no grounded feasible options on its allowed surface"
         )
 
     choices: dict[str, str] = {}
@@ -703,8 +722,8 @@ def _independent_fresh_member_choices(
             scored.append((score, str(option["proposal_id"])))
         if not scored:
             raise RuntimeError(
-                "fresh recovery round has no acceptable grounded fit for "
-                f"member {member_id}"
+                f"{phase} has no acceptable grounded fit for member "
+                f"{member_id}"
             )
         best_score = max(score for score, _proposal_id in scored)
         best_ids = sorted(
@@ -714,21 +733,19 @@ def _independent_fresh_member_choices(
         )
         if len(best_ids) != 1:
             raise RuntimeError(
-                "fresh recovery member has no unique grounded maximum; "
-                f"human choice remains genuinely open for {member_id}: "
-                f"{best_ids}"
+                f"{phase} member has no unique grounded maximum; human "
+                f"choice remains genuinely open for {member_id}: {best_ids}"
             )
         choices[member_id] = best_ids[0]
 
     distinct = sorted(set(choices.values()))
     if len(distinct) != 1:
         raise RuntimeError(
-            "fresh recovery members still prefer different grounded futures; "
+            f"{phase} members still prefer different grounded futures; "
             "the harness must not manufacture consensus: "
             f"{choices}"
         )
     return choices
-
 
 def _close_fresh_collective_round(
     *,
@@ -750,9 +767,10 @@ def _close_fresh_collective_round(
         raise RuntimeError(
             "fresh collective round has no mission or required member scope"
         )
-    independent_choices = _independent_fresh_member_choices(
+    independent_choices = _independent_member_choices(
         clarification,
         required,
+        phase="fresh post-shock recovery round",
     )
     choice = next(iter(set(independent_choices.values())))
     tokens = _signed_member_tokens(required)
@@ -927,6 +945,107 @@ def _write_checkpoint(result: dict[str, Any]) -> str:
     return path.relative_to(root).as_posix()
 
 
+
+def _write_result_markdown(result: dict[str, Any]) -> str:
+    """Write the human-readable closeout from machine-derived R30 truth."""
+
+    root = Path(__file__).resolve().parents[1]
+    path = root / "REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_RESULT.md"
+    verdict = result.get("machine_verdict") or {}
+    summary = verdict.get("summary") or {}
+    truth = result.get("truth_boundary") or {}
+    interlock = result.get("interlock") or {}
+    old_attempt = result.get("old_authority_attempt") or {}
+    fresh = result.get("fresh_collective_closure")
+    unanimous = result.get("unambiguous_recovery_closure")
+
+    authority_mode = (
+        "FRESH_AUTHENTICATED_MEMBER_CONVERGENCE"
+        if isinstance(fresh, dict)
+        else "CURRENT_UNANIMOUS_DOMINANCE"
+        if isinstance(unanimous, dict)
+        else "UNKNOWN"
+    )
+    lines = [
+        "# Revolution R30 - Consent Epoch Shock Recovery Result",
+        "",
+        "## Final status",
+        "",
+        f"- Harness status: {result.get('status')}",
+        f"- Machine verdict: {summary.get('overall')}",
+        f"- PROVEN: {summary.get('PROVEN', 0)}",
+        f"- NOT_PROVEN: {summary.get('NOT_PROVEN', 0)}",
+        f"- CONTRADICTED: {summary.get('CONTRADICTED', 0)}",
+        f"- Final authority mode: {authority_mode}",
+        "",
+        "## Evidence",
+        "",
+        "- output/revolution-r30-live-20261006/R30_LIVE_CHECKPOINT.json",
+        "- output/revolution-r30-live-20261006/R30_MACHINE_VERDICT.json",
+        "",
+        "## Authority chain proven",
+        "",
+        (
+            "- Pre-shock renewed E1/W1 authority was bound to authenticated, "
+            "independent relevant-member convergence on one grounded future."
+        ),
+        (
+            "- An unrelated provider observation left the material world epoch "
+            "unchanged."
+        ),
+        (
+            "- A server-owned provider-replay closure changed the material "
+            "world epoch for the consent-relevant future."
+        ),
+        (
+            "- Old E1/W1 authority failed closed and the selected old proposal "
+            "was not accepted."
+        ),
+        (
+            "- Expired authority released the stale selected-plan lock without "
+            "transferring value-choice authority to the algorithm."
+        ),
+        (
+            "- Recovery proceeded only through current unanimous dominance or "
+            "fresh authenticated independent member authority."
+        ),
+        (
+            "- Final mutation preserved inherited R28 exactly-once approval "
+            "and continuation invariants."
+        ),
+        "",
+        "## Bound identifiers",
+        "",
+        f"- Selected pre-shock proposal: {interlock.get('selected_proposal_id')}",
+        f"- Selected pre-shock plan: {interlock.get('selected_plan_id')}",
+        f"- E1: {interlock.get('decision_epoch_e1')}",
+        f"- W1: {interlock.get('material_world_epoch_w1')}",
+        f"- Final AgentRun: {result.get('final_run_id')}",
+        "",
+        "## Truth boundary",
+        "",
+        f"- Shock source: {truth.get('shock_source')}",
+        f"- External Agent required: {truth.get('external_agent_required')}",
+        f"- Physical travel proven: {truth.get('physical_travel_proven')}",
+        "",
+        (
+            "R30 proves consent invalidation and recovery authority against a "
+            "server-owned provider-replay shock. It does not claim the shock "
+            "came from a live public network provider and does not claim "
+            "physical travel."
+        ),
+        "",
+        "## Old-authority refusal",
+        "",
+        f"- Direct stale accept status: {old_attempt.get('direct_accept_status')}",
+        f"- Durable denial audit: {old_attempt.get('denial_audit_id')}",
+        "",
+        "R30 closes only because the machine verdict is PROVEN.",
+        "",
+    ]
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return path.relative_to(root).as_posix()
+
 def _run_full() -> dict[str, Any]:
     db = _configure()
     setup = _api_setup(db)
@@ -1035,8 +1154,9 @@ def _run_full() -> dict[str, Any]:
         and (verdict.get("summary") or {}).get("overall") == "PROVEN"
     ):
         result["status"] = "R30_PROVEN"
-        # Re-write the checkpoint with the final machine status for a single
-        # self-contained handoff artifact.
+        result["result_path"] = _write_result_markdown(result)
+        # Re-write the checkpoint with the final machine status and the
+        # generated closeout path for a single self-contained handoff artifact.
         result["checkpoint_path"] = _write_checkpoint(result)
     return result
 

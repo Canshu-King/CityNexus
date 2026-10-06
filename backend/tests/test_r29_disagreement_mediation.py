@@ -2547,3 +2547,41 @@ def test_r30_fresh_human_choice_outranks_algorithmic_compromise_tiebreak() -> No
         algorithm["code"]
         == "COLLECTIVE_CANDIDATE_NOT_ACCEPTABLE_COMPROMISE"
     )
+
+
+
+def test_r30_harness_refuses_to_manufacture_member_consensus() -> None:
+    from run_r30_live import _independent_member_choices
+
+    clarification = {
+        "candidate_options": [
+            {
+                "proposal_id": "proposal-a",
+                "status": "GROUNDED_FEASIBLE",
+                "member_fits": {
+                    "member-a": {"effective_fit": 0.95},
+                    "member-b": {"effective_fit": 0.40},
+                },
+                "fairness": {"unacceptable_member_ids": []},
+            },
+            {
+                "proposal_id": "proposal-b",
+                "status": "GROUNDED_FEASIBLE",
+                "member_fits": {
+                    "member-a": {"effective_fit": 0.35},
+                    "member-b": {"effective_fit": 0.90},
+                },
+                "fairness": {"unacceptable_member_ids": []},
+            },
+        ]
+    }
+
+    with pytest.raises(
+        RuntimeError,
+        match="must not manufacture consensus",
+    ):
+        _independent_member_choices(
+            clarification,
+            ["member-a", "member-b"],
+            phase="test collective round",
+        )

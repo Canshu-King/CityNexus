@@ -58,6 +58,81 @@ def _looks_external(provider_key: str | None, model_key: str | None) -> bool:
     )
 
 
+
+def _independent_choice_evidence(
+    payload: dict[str, Any],
+    required_member_ids: set[str],
+    *,
+    allowed_proposal_ids: set[str] | None = None,
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Recompute independent member maxima from the persisted decision surface."""
+
+    allowed = (
+        {str(value) for value in allowed_proposal_ids if value}
+        if allowed_proposal_ids is not None
+        else None
+    )
+    grounded_options = [
+        item
+        for item in payload.get("candidate_options") or []
+        if isinstance(item, dict)
+        and item.get("proposal_id")
+        and item.get("status") == "GROUNDED_FEASIBLE"
+        and (
+            allowed is None
+            or str(item.get("proposal_id") or "") in allowed
+        )
+    ]
+    choices: dict[str, str] = {}
+    errors: dict[str, str] = {}
+    for member_id in sorted(required_member_ids):
+        scored: list[tuple[float, str]] = []
+        for option in grounded_options:
+            fairness = option.get("fairness") or {}
+            if member_id in {
+                str(value)
+                for value in fairness.get("unacceptable_member_ids") or []
+            }:
+                continue
+            fits = option.get("member_fits") or {}
+            fit = fits.get(member_id) if isinstance(fits, dict) else None
+            if not isinstance(fit, dict):
+                continue
+            try:
+                score = float(fit.get("effective_fit"))
+            except (TypeError, ValueError):
+                continue
+            proposal_id = str(option.get("proposal_id") or "")
+            if proposal_id:
+                scored.append((score, proposal_id))
+        if not scored:
+            errors[member_id] = "no acceptable grounded member fit"
+            continue
+        best_score = max(score for score, _pid in scored)
+        best_ids = sorted(
+            pid
+            for score, pid in scored
+            if abs(score - best_score) <= 1e-9
+        )
+        if len(best_ids) != 1:
+            errors[member_id] = "no unique grounded maximum: " + repr(
+                best_ids
+            )
+            continue
+        choices[member_id] = best_ids[0]
+
+    if (
+        required_member_ids
+        and set(choices) == required_member_ids
+        and not errors
+        and len(set(choices.values())) != 1
+    ):
+        errors["__convergence__"] = (
+            "members independently prefer different grounded futures: "
+            + repr(choices)
+        )
+    return choices, errors
+
 def _configure_checkpoint_db(checkpoint: dict[str, Any]) -> Path:
     raw = str(checkpoint.get("db") or "").strip()
     if not raw:
@@ -140,6 +215,104 @@ def build_verdict(
             material_world_epoch=durable_w1,
             selected_proposal_id=durable_selected,
             selected_plan_id=selected_plan_id,
+        )
+
+        renewed_required = {
+            str(value)
+            for value in mediator_payload.get("required_member_ids") or []
+            if value
+        }
+        renewed_responses = (
+            mediator_payload.get("responses")
+            if isinstance(mediator_payload.get("responses"), dict)
+            else {}
+        )
+        renewed_progress = (
+            mediator_payload.get("mediation_progress")
+            if isinstance(
+                mediator_payload.get("mediation_progress"),
+                dict,
+            )
+            else {}
+        )
+        renewed_improved_ids = {
+            str(value)
+            for value in renewed_progress.get("improved_option_ids") or []
+            if value
+        }
+        renewed_response_audits = list(
+            session.scalars(
+                select(AuditLog)
+                .where(
+                    AuditLog.action
+                    == "agent.collective_decision.response",
+                    AuditLog.entity_type == "JourneyMission",
+                    AuditLog.entity_id == mediator_id,
+                    AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                )
+                .order_by(AuditLog.created_at, AuditLog.id)
+            ).all()
+        )
+        renewed_authenticated_members = {
+            str((_json(row.after_json, {}) or {}).get("member_id") or "")
+            for row in renewed_response_audits
+        }
+        (
+            renewed_independent_choices,
+            renewed_independent_errors,
+        ) = _independent_choice_evidence(
+            mediator_payload,
+            renewed_required,
+            allowed_proposal_ids=renewed_improved_ids,
+        )
+        renewed_independent_ok = bool(
+            renewed_required
+            and renewed_improved_ids
+            and set(renewed_independent_choices) == renewed_required
+            and not renewed_independent_errors
+            and len(set(renewed_independent_choices.values())) == 1
+            and set(renewed_independent_choices.values())
+            == {durable_selected}
+            and all(
+                isinstance(renewed_responses.get(member_id), dict)
+                and str(
+                    renewed_responses[member_id].get("proposal_id") or ""
+                )
+                == renewed_independent_choices[member_id]
+                for member_id in renewed_required
+            )
+        )
+        renewed_authority_ok = bool(
+            renewed_required
+            and renewed_required.issubset(set(renewed_responses))
+            and renewed_required.issubset(
+                renewed_authenticated_members
+            )
+            and renewed_independent_ok
+        )
+        verdicts[
+            "e1_w1_authenticated_independent_authority"
+        ] = _verdict(
+            PROVEN if renewed_authority_ok else CONTRADICTED,
+            (
+                "The pre-shock renewed consent is authenticated and every "
+                "relevant member independently converges on the same unique "
+                "grounded best improved option."
+                if renewed_authority_ok
+                else
+                "The pre-shock E1/W1 authority is not proven as independent "
+                "authenticated member convergence."
+            ),
+            mediator_mission_id=mediator_id,
+            required_member_ids=sorted(renewed_required),
+            response_member_ids=sorted(renewed_responses),
+            authenticated_member_ids=sorted(
+                renewed_authenticated_members
+            ),
+            improved_option_ids=sorted(renewed_improved_ids),
+            independent_member_choices=renewed_independent_choices,
+            independent_choice_errors=renewed_independent_errors,
+            selected_proposal_id=durable_selected,
         )
 
         def _external_run_for_mission(mission_id: str) -> AgentRun | None:
@@ -476,60 +649,13 @@ def build_verdict(
                 str((_json(row.after_json, {}) or {}).get("member_id") or "")
                 for row in response_audits
             }
-            independent_choices: dict[str, str] = {}
-            independent_choice_errors: dict[str, str] = {}
-            grounded_options = [
-                item
-                for item in fresh_payload.get("candidate_options") or []
-                if isinstance(item, dict)
-                and item.get("proposal_id")
-                and item.get("status") == "GROUNDED_FEASIBLE"
-            ]
-            for member_id in sorted(required):
-                scored: list[tuple[float, str]] = []
-                for option in grounded_options:
-                    fairness = option.get("fairness") or {}
-                    if member_id in {
-                        str(value)
-                        for value in fairness.get(
-                            "unacceptable_member_ids"
-                        )
-                        or []
-                    }:
-                        continue
-                    fits = option.get("member_fits") or {}
-                    fit = (
-                        fits.get(member_id)
-                        if isinstance(fits, dict)
-                        else None
-                    )
-                    if not isinstance(fit, dict):
-                        continue
-                    try:
-                        score = float(fit.get("effective_fit"))
-                    except (TypeError, ValueError):
-                        continue
-                    scored.append(
-                        (score, str(option.get("proposal_id") or ""))
-                    )
-                if not scored:
-                    independent_choice_errors[member_id] = (
-                        "no acceptable grounded member fit"
-                    )
-                    continue
-                best_score = max(score for score, _pid in scored)
-                best_ids = sorted(
-                    pid
-                    for score, pid in scored
-                    if pid and abs(score - best_score) <= 1e-9
-                )
-                if len(best_ids) != 1:
-                    independent_choice_errors[member_id] = (
-                        "no unique grounded maximum: " + repr(best_ids)
-                    )
-                    continue
-                independent_choices[member_id] = best_ids[0]
-
+            (
+                independent_choices,
+                independent_choice_errors,
+            ) = _independent_choice_evidence(
+                fresh_payload,
+                required,
+            )
             selected_fresh = str(
                 fresh_payload.get("selected_proposal_id") or ""
             )
