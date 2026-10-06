@@ -147,6 +147,58 @@ def _eligible_weather_activities(
     return eligible
 
 
+def _weather_observation_activity_context(
+    *,
+    journey: Journey,
+    activity: Activity,
+    place: Place,
+    observation: WeatherObservation,
+) -> dict[str, object] | None:
+    """Keep the provider reading that overlaps one weather-sensitive Activity.
+
+    This is context, not an Event and not authority. R33 showed why the
+    distinction matters: a successful live provider call below the risk policy
+    must remain inspectable instead of being reduced to an empty risk snapshot.
+    """
+
+    if activity.status in TERMINAL_ACTIVITY_STATES or activity.place_id != place.id:
+        return None
+    if not _activity_weather_sensitive(place):
+        return None
+    if observation.at.tzinfo is None:
+        raise ValueError("weather observation timestamp must be timezone-aware")
+
+    zone = _journey_timezone(journey)
+    observed_start = observation.at.astimezone(zone)
+    observed_end = observed_start + timedelta(hours=1)
+    activity_start = datetime.fromisoformat(activity.start_at)
+    activity_end = datetime.fromisoformat(activity.end_at)
+    activity_start = (
+        activity_start.replace(tzinfo=zone)
+        if activity_start.tzinfo is None
+        else activity_start.astimezone(zone)
+    )
+    activity_end = (
+        activity_end.replace(tzinfo=zone)
+        if activity_end.tzinfo is None
+        else activity_end.astimezone(zone)
+    )
+    if max(observed_start, activity_start) >= min(observed_end, activity_end):
+        return None
+    return {
+        "activity_id": activity.id,
+        "place_id": place.id,
+        "activity_start_at": activity_start.isoformat(),
+        "activity_end_at": activity_end.isoformat(),
+        **observation.to_evidence(),
+        "reason_codes": [
+            "WEATHER_TIME_OVERLAP",
+            "WEATHER_SCOPE_MATCH",
+            "WEATHER_SENSITIVE_PLACE",
+        ],
+    }
+
+
 def attribute_weather_fact_to_activity(
     *,
     journey: Journey,
@@ -294,6 +346,20 @@ async def refresh_weather_runtime(
                 if item.evidence.get("forecast_run") not in (None, "")
             }
         )
+        activity_observations = [
+            context
+            for observation in observations
+            for activity in activities
+            if (
+                context := _weather_observation_activity_context(
+                    journey=journey,
+                    activity=activity,
+                    place=place,
+                    observation=observation,
+                )
+            )
+            is not None
+        ]
         provider_observation = ProviderObservation(
             id=str(uuid4()),
             journey_id=journey.id,
@@ -308,6 +374,10 @@ async def refresh_weather_runtime(
                     "provider": provider_key,
                     "capture_provenance": capture_provenance,
                     "forecast_runs": forecast_runs,
+                    # Preserve the bounded readings that overlap the Journey.
+                    # They remain provider context even when no risk policy
+                    # promotes them into a PROVIDER_VERIFIED Event.
+                    "activity_observations": activity_observations,
                     "target_times": [
                         item.at.astimezone(timezone.utc).isoformat() for item in observations
                     ],
