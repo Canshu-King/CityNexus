@@ -25,7 +25,17 @@ def _checkpoint() -> dict:
         "source_receipt": {
             "git_head": "deadbeef",
             "tracked_dirty_before_strike": False,
-            "source_sha256": {"backend/run_r32_live.py": "abc"},
+            "source_sha256": {
+                "backend/run_r32_live.py": "a" * 64,
+                "backend/app/agent/runtime.py": "b" * 64,
+                "backend/app/recovery_epoch.py": "c" * 64,
+                "backend/app/agent/gateway.py": "d" * 64,
+                "backend/app/agent/signal_pipeline.py": "e" * 64,
+                "backend/app/agent/delegation_policy.py": "f" * 64,
+                "backend/app/collective_authority.py": "1" * 64,
+                "backend/app/main.py": "2" * 64,
+                "backend/scripts/r32_machine_verdict.py": "3" * 64,
+            },
         },
         "runtime": {
             "provider_calls_were_real": True,
@@ -462,7 +472,17 @@ def test_clean_precausal_abort_is_not_a_product_contradiction():
         "source_receipt": {
             "git_head": "deadbeef",
             "tracked_dirty_before_strike": False,
-            "source_sha256": {"backend/run_r32_live.py": "abc"},
+            "source_sha256": {
+                "backend/run_r32_live.py": "a" * 64,
+                "backend/app/agent/runtime.py": "b" * 64,
+                "backend/app/recovery_epoch.py": "c" * 64,
+                "backend/app/agent/gateway.py": "d" * 64,
+                "backend/app/agent/signal_pipeline.py": "e" * 64,
+                "backend/app/agent/delegation_policy.py": "f" * 64,
+                "backend/app/collective_authority.py": "1" * 64,
+                "backend/app/main.py": "2" * 64,
+                "backend/scripts/r32_machine_verdict.py": "3" * 64,
+            },
         },
         "runtime": {
             "provider_calls_were_real": False,
@@ -558,6 +578,24 @@ def test_r32_configuration_clears_ambient_semantic_ai(
     assert os.environ["CITYNEXUS_AI_ENABLED"] == "false"
     assert os.environ["CITYNEXUS_HERMES_NATIVE_API_URL"] == ""
     assert os.environ["CITYNEXUS_HERMES_API_SERVER_KEY"] == ""
+
+
+def test_incomplete_source_receipt_cannot_be_proven():
+    checkpoint = _checkpoint()
+    checkpoint["source_receipt"]["source_sha256"].pop(
+        "backend/app/collective_authority.py"
+    )
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 145, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["strike_source_state_traceable"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
 
 
 def test_dirty_source_state_cannot_be_proven():
