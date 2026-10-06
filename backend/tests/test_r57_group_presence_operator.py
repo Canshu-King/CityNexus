@@ -80,7 +80,8 @@ def test_r57_location_rows_bind_to_signed_members_and_operator_hides_coordinates
     )
     assert projection.status_code == 200, projection.text
     presence = projection.json()["group_presence"]
-    assert presence["state"] == "GROUP_PRESENCE"
+    assert presence["state"] == "GROUP_SPLIT_ADVISORY"
+    assert presence["rendezvous_state"] == "RENDEZVOUS_TARGET_READY"
     assert len(presence["members"]) == 2
     assert {member["location_state"] for member in presence["members"]} == {"RECENT"}
     assert any(member["group_state"] == "SPLIT_FROM_GROUP" for member in presence["members"])
@@ -190,7 +191,9 @@ def test_r57_missing_member_location_is_unknown_not_a_split(monkeypatch):
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
     )
     assert response.status_code == 200, response.text
-    members = response.json()["group_presence"]["members"]
+    presence = response.json()["group_presence"]
+    assert presence["state"] == "MEMBER_LOCATION_MISSING"
+    members = presence["members"]
     assert len(members) == 2
     assert all(member["location_state"] == "MISSING" for member in members)
     assert all(member["group_state"] == "UNKNOWN" for member in members)
@@ -265,7 +268,9 @@ def test_r57_stale_member_location_is_visible_as_stale_but_cannot_start_route(mo
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
     )
     assert projection.status_code == 200, projection.text
-    assert projection.json()["group_presence"]["members"][0]["location_state"] == "STALE"
+    presence = projection.json()["group_presence"]
+    assert presence["state"] == "GROUP_LOCATION_STALE"
+    assert presence["members"][0]["location_state"] == "STALE"
 
     called = False
     def should_not_route(*_args, **_kwargs):
@@ -301,6 +306,7 @@ def test_r57_close_member_locations_are_together_and_other_journey_observation_i
     presence = client.get(
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
     ).json()["group_presence"]
+    assert presence["state"] == "TOGETHER"
     assert {member["group_state"] for member in presence["members"]} == {"WITH_GROUP"}
 
     foreign = client.post("/api/v1/journeys", json={
@@ -358,6 +364,7 @@ def test_r57_without_an_exact_active_plan_place_has_no_invented_rendezvous(monke
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
     ).json()["group_presence"]
     assert projection["rendezvous"] is None
+    assert projection["rendezvous_state"] == "RENDEZVOUS_TARGET_UNAVAILABLE"
     assert projection["can_guide"] is False
 
     called = False
