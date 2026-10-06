@@ -950,6 +950,13 @@ export function LiveRecovery({
                   : (zh ? "当前没有可靠路线；行程计划未变。" : "No reliable route is available; the plan is unchanged.")}
               </small>
             )}
+            {groupRoute?.shared_commitment_risk?.state === "COMMITMENT_AT_RISK" && (
+              <small data-testid="journey-group-commitment-risk">
+                {zh
+                  ? `按这位成员当前路线估算，「${groupRoute.shared_commitment_risk.next_commitment?.title ?? "下一项共同安排"}」可能赶不上。${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "浏览器位置只作参考，不会因此触发 Guardian。" : "这是可信成员位置形成的风险事实，已沿现有 Guardian 边界处理。"}`
+                  : `This member's current route may miss “${groupRoute.shared_commitment_risk.next_commitment?.title ?? "the next shared commitment"}”. ${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "Browser location is advisory and cannot trigger Guardian." : "This risk is grounded in trusted member location and follows the existing Guardian boundary."}`}
+              </small>
+            )}
           </section>
         )}
         {operator?.progress?.basis && operator.progress.state !== "UNKNOWN_PROGRESS" && (
