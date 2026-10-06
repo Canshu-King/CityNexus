@@ -22,6 +22,7 @@ from app.db.models import (
     Traveler,
 )
 from app.db.session import SessionLocal
+from app.execution.clock import execution_clock
 from app.traveler_principal import issue_traveler_token
 from demo_stage import demo_reset_headers
 
@@ -216,7 +217,7 @@ def test_r57_expired_members_and_historical_unbound_locations_are_not_projected(
     monkeypatch.setattr(principal_module, "settings", isolated)
     journey_id, owner_id, _other_id = _shared_active_journey()
     expired_id = str(uuid4())
-    now = datetime.now(timezone.utc)
+    now = execution_clock.now().astimezone(timezone.utc)
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
         assert journey
@@ -635,3 +636,37 @@ def test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff(monkeypat
             )
         ).all()
         assert len(handoffs) == 1
+        first_payload = __import__("json").loads(events[0].payload_json)
+        semantic_key = first_payload["incident_semantic_key"]
+        assert first_payload["incident_episode"] == 1
+
+        events[0].status = "RESOLVED"
+        events[0].resolved_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+
+    third_observation = add_trusted_observation()
+    third = client.post(
+        f"/api/v1/journeys/{journey_id}/group-presence/route",
+        headers=_auth(owner_id),
+        json={"location_observation_id": third_observation, "requested_mode": "WALK"},
+    )
+    assert third.status_code == 200, third.text
+    third_body = third.json()
+    assert third_body["member_risk_event_id"] != event_id
+    assert third_body["guardian_triggered"] is True
+    assert third_body["guardian_deduplicated"] is False
+    assert guardian_calls == ["called", "called"]
+
+    with SessionLocal() as session:
+        episodes = session.scalars(
+            select(Event).where(
+                Event.journey_id == journey_id,
+                Event.provider_key == "journey-group-presence",
+                Event.event_type == "TRAFFIC_DELAY",
+            )
+        ).all()
+        assert len(episodes) == 2
+        parsed = [__import__("json").loads(row.payload_json) for row in episodes]
+        assert {item["incident_episode"] for item in parsed} == {1, 2}
+        assert {item["incident_semantic_key"] for item in parsed} == {semantic_key}
+        assert len({item["incident_fingerprint"] for item in parsed}) == 2
