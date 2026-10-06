@@ -38,4 +38,5 @@ jobs:
             tests/test_r29_disagreement_mediation.py \
             tests/test_r28_authenticated_member_principal.py \
             tests/test_r28_durable_approval_continuation.py \
-            tests/test_agent_runtime_state_epoch.py
+            tests/test_agent_runtime_state_epoch.py \
+            tests/test_r30_collective_authority_receipt.py
