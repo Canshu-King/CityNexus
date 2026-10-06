@@ -40,6 +40,7 @@ from app.recovery_epoch import (
     OPEN,
     RECOVERY_EPOCH_SUPERSEDED,
     RecoveryEpochSuperseded,
+    commit_recovery_epoch,
     ensure_recovery_epoch,
     recovery_reality_basis,
     recovery_reality_fingerprint,
@@ -286,6 +287,73 @@ def test_binding_validation_refreshes_reality_without_prior_explicit_ensure(sess
     assert current is not None
     assert current.generation == 2
     assert current.status == OPEN
+
+
+def test_stale_validation_after_committed_success_does_not_mint_r3(session):
+    db, journey = session
+
+    # R1
+    first = ensure_recovery_epoch(db, journey)
+    db.commit()
+
+    # Material Shock B opens R2 and supersedes R1.
+    db.add(
+        _event(
+            journey,
+            event_id=str(uuid4()),
+            payload={"incident_fingerprint": "shock-b-before-commit"},
+        )
+    )
+    db.commit()
+    second = ensure_recovery_epoch(db, journey)
+    db.commit()
+    assert first.status == "SUPERSEDED"
+    assert second.generation == 2
+
+    # B legally commits R2.
+    commit_recovery_epoch(db, second, reason="REPLAN_ACCEPTED")
+    db.commit()
+    assert second.status == "COMMITTED"
+
+    before = db.scalars(
+        select(RecoveryEpoch)
+        .where(RecoveryEpoch.journey_id == journey.id)
+        .order_by(RecoveryEpoch.generation)
+    ).all()
+    assert [row.generation for row in before] == [1, 2]
+
+    # A/R1 checks its stale binding after B has already committed.  The check
+    # must reject A without manufacturing an otherwise causeless R3.
+    with pytest.raises(RecoveryEpochSuperseded) as error:
+        validate_recovery_epoch_binding(db, journey.id, first.id)
+
+    assert error.value.facts["stale_recovery_epoch_id"] == first.id
+    assert error.value.facts["current_recovery_epoch_id"] == second.id
+    after = db.scalars(
+        select(RecoveryEpoch)
+        .where(RecoveryEpoch.journey_id == journey.id)
+        .order_by(RecoveryEpoch.generation)
+    ).all()
+    assert [row.generation for row in after] == [1, 2]
+    assert not any(row.status == OPEN for row in after)
+
+
+def test_committed_run_validation_is_inert_until_fresh_work_starts(session):
+    db, journey = session
+    epoch = ensure_recovery_epoch(db, journey)
+    db.commit()
+    commit_recovery_epoch(db, epoch, reason="REPLAN_ACCEPTED")
+    db.commit()
+
+    with pytest.raises(RecoveryEpochSuperseded) as error:
+        validate_recovery_epoch_binding(db, journey.id, epoch.id)
+
+    assert error.value.facts["current_recovery_epoch_id"] == epoch.id
+    rows = db.scalars(
+        select(RecoveryEpoch).where(RecoveryEpoch.journey_id == journey.id)
+    ).all()
+    assert len(rows) == 1
+    assert rows[0].status == "COMMITTED"
 
 
 def test_database_enforces_one_open_epoch_per_journey(session):
