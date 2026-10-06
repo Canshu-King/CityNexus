@@ -2,21 +2,21 @@
 ......................................................................   [100%]
 ============================== warnings summary ===============================
 app\main.py:555
-  D:\moodle\CityNexus-Revolution-RealTrip-Recovery\backend\app\main.py:555: DeprecationWarning: 
+  D:\moodle\CityNexus-Revolution-RealTrip-Recovery\backend\app\main.py:555: DeprecationWarning:
           on_event is deprecated, use lifespan event handlers instead.
-  
+
           Read more about it in the
           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
-          
+
     @app.on_event("startup")
 
 .venv\Lib\site-packages\fastapi\applications.py:4681
-  D:\moodle\CityNexus-Revolution-RealTrip-Recovery\backend\.venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning: 
+  D:\moodle\CityNexus-Revolution-RealTrip-Recovery\backend\.venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning:
           on_event is deprecated, use lifespan event handlers instead.
-  
+
           Read more about it in the
           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
-          
+
     return self.router.on_event(event_type)  # ty: ignore[deprecated]
 
 .venv\Lib\site-packages\fastapi\testclient.py:1
