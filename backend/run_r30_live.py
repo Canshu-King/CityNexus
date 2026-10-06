@@ -25,10 +25,8 @@ from typing import Any
 from run_r28_live import BACKEND, ROOT, _api_setup, _configure
 from run_r29_live import (
     _approval_id_from_run,
-    _first_mission_id,
     _owner_member_id,
     _resume_resolved_child_and_approve,
-    _run_first_agent,
     _signed_member_tokens,
 )
 
@@ -99,55 +97,105 @@ def _best_improved_choice(
 
 def _reach_post_consent_interlock(
     *,
-    journey_id: str,
-    round1_mission_id: str,
+    setup: dict[str, Any],
 ) -> dict[str, Any]:
-    """Run R29 social causality, but stop before the resolved child is resumed."""
+    """Establish E1/W1 through the normal authenticated product boundary.
+
+    Phase A is deliberately not an Agent-strategy test.  The setup already
+    contains a real provider-backed Journey, two grounded proposals, two
+    authenticated members with different explicit preferences, a C4 anchor and
+    an actionable opportunity event.  This function uses normal CityNexus
+    mission/tool/replan/member-response surfaces to establish one durable human
+    authority receipt.  The configured external Agent is first invoked only
+    after the world shock.
+    """
 
     from fastapi.testclient import TestClient
 
-    from app.db.models import JourneyMission, ReplanProposal
+    from app.agent.mission import create_mission
+    from app.db.models import (
+        CollectiveAuthorityReceipt,
+        Journey,
+        JourneyMission,
+        ReplanProposal,
+    )
     from app.db.session import SessionLocal
     from app.main import app
 
     client = TestClient(app)
-    with SessionLocal() as session:
-        round1 = session.get(JourneyMission, round1_mission_id)
-        if round1 is None:
-            raise RuntimeError("round-1 mission not found")
-        clarification = json.loads(round1.clarification_json or "{}")
+    journey_id = str(setup["journey_id"])
+    trigger_event_id = str(setup["opportunity_event_id"])
 
+    # Open the first human decision through the same mission/Gateway surfaces
+    # used by the product.  No external model is called here.
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        if journey is None:
+            raise RuntimeError("R30 Phase A journey disappeared")
+        round1 = create_mission(
+            session,
+            journey,
+            command=(
+                "Open the current shared Journey decision for the relevant "
+                "members without choosing on their behalf."
+            ),
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+            trigger_event_id=trigger_event_id,
+        )
+        session.commit()
+        round1_id = str(round1.id)
+
+    requested = client.post(
+        "/api/v1/agent/tools/v2/request_collective_decision",
+        json={
+            "request_id": "r30-phase-a-round1-collective",
+            "journey_id": journey_id,
+            "mission_id": round1_id,
+            "trigger_event_id": trigger_event_id,
+        },
+    )
+    if requested.status_code >= 400:
+        raise RuntimeError(
+            "Phase A round-1 collective decision request failed: "
+            f"{requested.status_code} {requested.text}"
+        )
+    clarification = (requested.json().get("clarification") or {})
     options = [
         item
-        for item in (clarification.get("candidate_options") or [])
+        for item in clarification.get("candidate_options") or []
         if isinstance(item, dict) and item.get("proposal_id")
     ]
-    required = [str(item) for item in clarification.get("required_member_ids") or []]
-    if clarification.get("status") != "WAITING_FOR_MEMBERS":
+    required = [
+        str(item)
+        for item in clarification.get("required_member_ids") or []
+    ]
+    if (
+        clarification.get("status") != "WAITING_FOR_MEMBERS"
+        or len(options) < 2
+        or len(required) != 2
+    ):
         raise RuntimeError(
-            "round-1 mission is not waiting for members: "
-            f"{clarification.get('status')}"
-        )
-    if len(options) < 2 or len(required) != 2:
-        raise RuntimeError(
-            f"R30 needs two relevant members and >=2 options; "
-            f"required={required} options={len(options)}"
+            "Phase A round 1 did not expose the expected grounded human "
+            "trade-off surface"
         )
 
+    # These are not model choices.  Each authenticated test principal answers
+    # according to its own unique server-grounded maximum.  If the maxima do
+    # not differ, this fixture has ceased to prove a real starting trade-off.
     first_choice = _rank_member_choice(options, required[0])
     second_choice = _rank_member_choice(options, required[1])
     if first_choice == second_choice:
         raise RuntimeError(
-            "R30 setup did not reproduce genuine preference-driven disagreement"
+            "Phase A no longer contains a genuine member-specific trade-off"
         )
 
     tokens = _signed_member_tokens(required)
-    path = (
-        f"/api/v1/journeys/{journey_id}/missions/{round1_mission_id}/"
+    round1_path = (
+        f"/api/v1/journeys/{journey_id}/missions/{round1_id}/"
         "collective-clarification"
     )
     first_response = client.post(
-        f"{path}/{required[0]}",
+        f"{round1_path}/{required[0]}",
         headers={"Authorization": f"Bearer {tokens[required[0]]}"},
         json={
             "clarification_id": clarification["clarification_id"],
@@ -156,11 +204,11 @@ def _reach_post_consent_interlock(
     )
     if first_response.status_code >= 400:
         raise RuntimeError(
-            f"first disagreement response failed: "
+            "Phase A first authenticated response failed: "
             f"{first_response.status_code} {first_response.text}"
         )
     second_response = client.post(
-        f"{path}/{required[1]}",
+        f"{round1_path}/{required[1]}",
         headers={"Authorization": f"Bearer {tokens[required[1]]}"},
         json={
             "clarification_id": clarification["clarification_id"],
@@ -169,55 +217,110 @@ def _reach_post_consent_interlock(
     )
     if second_response.status_code >= 400:
         raise RuntimeError(
-            f"second disagreement response failed: "
+            "Phase A second authenticated response failed: "
             f"{second_response.status_code} {second_response.text}"
         )
     disagreement = second_response.json()
     mediator = disagreement.get("child_mission") or {}
     mediator_id = str(mediator.get("id") or "")
-    if disagreement.get("status") != "MEDIATION_REQUIRED" or not mediator_id:
-        raise RuntimeError("genuine disagreement did not produce mediator child")
-
-    mediator_resume = client.post(
-        f"/api/v1/journeys/{journey_id}/missions/{mediator_id}/resume"
-    )
-    if mediator_resume.status_code >= 400:
+    if (
+        disagreement.get("status") != "MEDIATION_REQUIRED"
+        or not mediator_id
+    ):
         raise RuntimeError(
-            f"mediator resume failed: "
-            f"{mediator_resume.status_code} {mediator_resume.text}"
+            "Phase A authenticated disagreement did not create mediator state"
         )
-    mediator_run = mediator_resume.json().get("run") or {}
 
-    with SessionLocal() as session:
-        mediator_row = session.get(JourneyMission, mediator_id)
-        if mediator_row is None:
-            raise RuntimeError("mediator mission disappeared")
-        round2 = json.loads(mediator_row.clarification_json or "{}")
+    # Build a materially improved future through the ordinary server replan
+    # product API.  This is explicit fixture setup, not a model fallback and
+    # not an imitation of an Agent tool sequence.
+    place_roles = setup.get("selected_place_keys") or {}
+    compromise_place_ids = sorted(
+        str(place_id)
+        for place_id, role in place_roles.items()
+        if role in {"candidate_garden", "candidate_museum"}
+    )
+    if len(compromise_place_ids) != 2:
+        raise RuntimeError(
+            "Phase A setup does not expose the two grounded disputed places"
+        )
+    improved = client.post(
+        f"/api/v1/journeys/{journey_id}/replans",
+        headers={"Idempotency-Key": "r30-phase-a-grounded-compromise-001"},
+        json={
+            "trigger_event_id": trigger_event_id,
+            "candidate_count": 1,
+            "place_ids": compromise_place_ids,
+        },
+    )
+    if improved.status_code not in {200, 201}:
+        raise RuntimeError(
+            "Phase A improved future generation failed: "
+            f"{improved.status_code} {improved.text}"
+        )
+    improved_payload = improved.json()
+    if not (
+        isinstance(improved_payload, dict)
+        and improved_payload.get("hard_constraints_passed") is True
+        and improved_payload.get("id")
+    ):
+        raise RuntimeError(
+            "Phase A product replan did not create a grounded feasible "
+            "improved future"
+        )
 
+    renewed_request = client.post(
+        "/api/v1/agent/tools/v2/request_collective_decision",
+        json={
+            "request_id": "r30-phase-a-renewed-collective",
+            "journey_id": journey_id,
+            "mission_id": mediator_id,
+            "trigger_event_id": trigger_event_id,
+        },
+    )
+    if renewed_request.status_code >= 400:
+        raise RuntimeError(
+            "Phase A renewed collective decision request failed: "
+            f"{renewed_request.status_code} {renewed_request.text}"
+        )
+    round2 = renewed_request.json().get("clarification") or {}
     if round2.get("status") != "WAITING_FOR_MEMBERS":
         raise RuntimeError(
-            "external mediator did not open renewed member round: "
-            f"{round2.get('status')}"
+            "Phase A renewed decision did not enter WAITING_FOR_MEMBERS"
         )
     progress = round2.get("mediation_progress") or {}
     improved_ids = [
-        str(value) for value in progress.get("improved_option_ids") or [] if value
+        str(value)
+        for value in progress.get("improved_option_ids") or []
+        if value
     ]
     if progress.get("allowed") is not True or not improved_ids:
-        raise RuntimeError("mediator did not prove material decision-surface progress")
+        raise RuntimeError(
+            "Phase A improved future did not pass the server mediation "
+            "progress gate"
+        )
 
-    round2_required = [str(item) for item in round2.get("required_member_ids") or []]
+    round2_required = [
+        str(item)
+        for item in round2.get("required_member_ids") or []
+    ]
     if set(round2_required) != set(required):
         raise RuntimeError(
-            f"R29/R30 renewed member set drifted: {required} -> {round2_required}"
+            "Phase A renewed decision changed the relevant member set"
         )
+
     renewed_independent_choices = _independent_member_choices(
         round2,
         round2_required,
         allowed_proposal_ids=set(improved_ids),
-        phase="pre-shock renewed consent round",
+        phase="pre-shock authenticated authority anchor",
     )
-    improved_choice = next(iter(set(renewed_independent_choices.values())))
+    selected_ids = set(renewed_independent_choices.values())
+    if len(selected_ids) != 1:
+        raise RuntimeError(
+            "Phase A improved surface did not create independent convergence"
+        )
+    improved_choice = next(iter(selected_ids))
 
     round2_tokens = _signed_member_tokens(round2_required)
     round2_path = (
@@ -228,7 +331,9 @@ def _reach_post_consent_interlock(
     for index, member_id in enumerate(round2_required):
         response = client.post(
             f"{round2_path}/{member_id}",
-            headers={"Authorization": f"Bearer {round2_tokens[member_id]}"},
+            headers={
+                "Authorization": f"Bearer {round2_tokens[member_id]}"
+            },
             json={
                 "clarification_id": round2["clarification_id"],
                 "proposal_id": renewed_independent_choices[member_id],
@@ -236,60 +341,111 @@ def _reach_post_consent_interlock(
         )
         if response.status_code >= 400:
             raise RuntimeError(
-                f"renewed consent failed for {member_id}: "
+                f"Phase A renewed consent failed for {member_id}: "
                 f"{response.status_code} {response.text}"
             )
         payload = response.json()
         renewed_responses.append(payload)
         if index == 0 and payload.get("status") != "WAITING_FOR_MEMBERS":
-            raise RuntimeError("first renewed response incorrectly resolved the round")
+            raise RuntimeError(
+                "Phase A first renewed response resolved too early"
+            )
 
     resolved = renewed_responses[-1]
     child = resolved.get("child_mission") or {}
     child_id = str(child.get("id") or "")
+    authority_receipt_id = str(
+        child.get("authority_receipt_id") or ""
+    )
     if resolved.get("status") != "RESOLVED" or not child_id:
-        raise RuntimeError("renewed consent did not create a resolved continuation child")
+        raise RuntimeError(
+            "Phase A renewed consent did not create a resolved continuation"
+        )
 
     with SessionLocal() as session:
         mediator_row = session.get(JourneyMission, mediator_id)
+        if mediator_row is None:
+            raise RuntimeError("Phase A mediator mission disappeared")
         stored = json.loads(mediator_row.clarification_json or "{}")
-        selected_proposal_id = str(stored.get("selected_proposal_id") or "")
+        selected_proposal_id = str(
+            stored.get("selected_proposal_id") or ""
+        )
         selected_option = next(
             (
                 item
                 for item in stored.get("candidate_options") or []
                 if isinstance(item, dict)
-                and str(item.get("proposal_id") or "") == selected_proposal_id
+                and str(item.get("proposal_id") or "")
+                == selected_proposal_id
             ),
             None,
         )
-        if not selected_proposal_id or not isinstance(selected_option, dict):
-            raise RuntimeError("resolved round lost its selected server-owned option")
-        selected_plan_id = str(selected_option.get("plan_id") or "")
-        proposal = session.get(ReplanProposal, selected_proposal_id)
+        selected_plan_id = (
+            str(selected_option.get("plan_id") or "")
+            if isinstance(selected_option, dict)
+            else ""
+        )
+        proposal = (
+            session.get(ReplanProposal, selected_proposal_id)
+            if selected_proposal_id
+            else None
+        )
+        decision_epoch = str(stored.get("decision_epoch") or "")
+        material_world_epoch = str(
+            stored.get("material_world_epoch") or ""
+        )
+        authority_receipt_id = str(
+            stored.get("authority_receipt_id")
+            or authority_receipt_id
+            or ""
+        )
+        authority = (
+            session.get(
+                CollectiveAuthorityReceipt,
+                authority_receipt_id,
+            )
+            if authority_receipt_id
+            else None
+        )
         if (
             proposal is None
             or proposal.status != "PRESENTED"
             or not selected_plan_id
-            or str(proposal.proposed_plan_version_id) != selected_plan_id
+            or str(proposal.proposed_plan_version_id)
+            != selected_plan_id
+            or selected_proposal_id != improved_choice
         ):
-            raise RuntimeError("R30 interlock is not a pending selected proposal")
-        decision_epoch = str(stored.get("decision_epoch") or "")
-        material_world_epoch = str(stored.get("material_world_epoch") or "")
+            raise RuntimeError(
+                "Phase A resolved authority lost its exact grounded proposal"
+            )
+        if (
+            authority is None
+            or authority.authority_mode
+            != "AUTHENTICATED_MEMBER_CONSENT"
+            or authority.proposal_id != selected_proposal_id
+            or authority.plan_version_id != selected_plan_id
+            or authority.decision_epoch != decision_epoch
+            or authority.material_world_epoch != material_world_epoch
+        ):
+            raise RuntimeError(
+                "Phase A did not persist the exact authenticated authority "
+                "receipt for E1/W1"
+            )
         if not decision_epoch or not material_world_epoch:
             raise RuntimeError(
-                "R30 resolved consent did not persist both semantic and world epochs"
+                "Phase A resolved consent did not persist E1/W1"
             )
 
     return {
-        "round1_mission_id": round1_mission_id,
+        "phase_a_mode": "SERVER_OWNED_AUTHENTICATED_COLLECTIVE_ANCHOR",
+        "round1_mission_id": round1_id,
         "round1_required_member_ids": required,
         "round1_choices": {
             required[0]: first_choice,
             required[1]: second_choice,
         },
         "mediator_mission_id": mediator_id,
-        "mediator_run_id": mediator_run.get("run_id"),
+        "mediator_run_id": None,
         "mediation_progress": progress,
         "renewed_required_member_ids": round2_required,
         "renewed_independent_member_choices": renewed_independent_choices,
@@ -297,13 +453,13 @@ def _reach_post_consent_interlock(
         "selected_proposal_id": selected_proposal_id,
         "selected_plan_id": selected_plan_id,
         "resolved_child_id": child_id,
+        "authority_receipt_id_e1w1": authority_receipt_id,
         "decision_epoch_e1": decision_epoch,
         "material_world_epoch_w1": material_world_epoch,
         "fit_subject_place_ids": list(
             selected_option.get("fit_subject_place_ids") or []
         ),
     }
-
 
 def _prove_unrelated_observation_control(
     journey_id: str,
@@ -1049,17 +1205,8 @@ def _write_result_markdown(result: dict[str, Any]) -> str:
 def _run_full() -> dict[str, Any]:
     db = _configure()
     setup = _api_setup(db)
-    first = _run_first_agent(setup)
-    if int(first["status"]) >= 400:
-        raise RuntimeError(
-            f"first external Agent failed: {first['status']} "
-            f"{json.dumps(first['payload'], ensure_ascii=True)}"
-        )
     journey_id = str(setup["journey_id"])
-    interlock = _reach_post_consent_interlock(
-        journey_id=journey_id,
-        round1_mission_id=_first_mission_id(first),
-    )
+    interlock = _reach_post_consent_interlock(setup=setup)
     owner_member_id = _owner_member_id(
         journey_id,
         list(interlock["renewed_required_member_ids"]),
@@ -1126,7 +1273,7 @@ def _run_full() -> dict[str, Any]:
         "status": status,
         "db": str(db),
         "journey_id": journey_id,
-        "first_agent_run": first,
+        "phase_a_authority_anchor": interlock.get("phase_a_mode"),
         "interlock": interlock,
         "unrelated_observation_control": unrelated_control,
         "shock": shock,
