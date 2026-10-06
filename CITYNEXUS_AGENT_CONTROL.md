@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 1ba48dbf 办收藏容器那栋楼 · 第三格：把「取消收藏」三种形制的代价各量一遍交号令者点单——**软删（加 deleted_at 列）是对齐行程那半现成骨架的那一形**（那半已有 undelete + recycle-bin 两扇门，收藏这半一行都没有）；硬删最省但找不回；移出队列最重。补法是产品取舍，我量完交你点，不自取。
+
+**〇、这一格是什么**
+
+- 前两格量到"取消收藏零枚门"。这一格按图纸那句"修掉"，把三种能补的形制各自的代价现读量一遍，好让号令者点单——补法（硬删／软删／移出）是产品取舍，我不自取。
+
+**一、三种形制的代价（全部现读 models.py / main.py 量，不是猜）**
+
+  - **硬删**（直接删那一行）：不动 schema（collection_items 现五列 id／folder_id／place_id／note／added_at）；一扇 DELETE 就够；**代价是撤了找不回**。
+  - **软删**（加 `deleted_at` 列 + 一扇 undelete）：要给 collection_items 加一列 deleted_at（现表没有）；照行程那半的骨架——删时写 deleted_at、undelete 时清它、没删时回一个诚实 refusal 名；**找得回，且与行程那半同一副骨架**。
+  - **移出队列**（加位置／状态列）：最重——要加列、外加排序腿与两扇门。
+
+**二、对照：行程那半的现成骨架（这一代就在树上）**
+
+- 行程那半已经有两扇门：`POST /journeys/{id}/undelete`（没删时回一个诚实 refusal 名 JOURNEY_NOT_DELETED）与 `GET /recycle-bin/journeys`。
+- 收藏那半一条没有：`/api/v1/collections` 只有 get／post，`/api/v1/collections/{folder_id}/items` 只有 post——**零个 delete、零个 undelete、零个 recycle-bin**（件见证据枝）。
+
+**三、判语与建议（交号令者点单，我不自取）**
+
+- 推荐**软删**：它是对齐行程那半现成骨架的那一形，同一副骨头两处复用，找得回，与图纸"状态唯一"的要求最贴。代价是给 collection_items 加一列 deleted_at + 两扇门（删/undelete），加一扇 recycle-bin 读门。
+- 这一格**不自取修法**：加列与两扇门是产品取舍（尤其"要不要回收站"），请号令者点单。我把三种代价与骨架对照量清了，等一句定点再落字节。
+
+**四、坐标与账**
+
+- 证据枝 `refs/heads/review/1ba48dbf-collect-cancel-forms-evidence-r1` = `db0b2a6de902`（读数件 `review/collect-cancel-forms/collect_cancel_forms_0052.json` = `8bcb53a5174aac2130d4d4acbdd0d57b69731ac4`，驱动 `review/collect-cancel-forms/collect_cancel_forms.py.txt`，逐枚可 `git cat-file -t`）
+- 本格逐条量的形状：collections 路径两枚、方法三枚（get 一、post 两）、collection_items 列五枚、collection_folders 列六枚（件 `8bcb53a5174aac2130d4d4acbdd0d57b69731ac4`）
+- 前两格：第一格 `1ba48dbf_0038.md`、第二格 `1ba48dbf_0047.md`（账本已入账）
+- 本手账：他人文件改动 0 枚、权威线移动 0 次、他人枝删改 0 枚、`demo/reset` 0 次、共享预览库覆盖 0 次、他人内容改写 0 次、写库请求 0 次、密钥落盘 0 枚、产品字节改动 0 枚。
+
+
 ### 我的楼·第三、四格 · 车道 82f55d8a：删除确认那一屏走进去了（两臂零机值，而且它明确把"中止≠丢弃"讲给人听），并把"人话句里夹机词"这一形态在六屏三百三十四句里普查了一遍——除已修的枚举与已归类的出处/署名外，零句。附：我的尺把一句拆成粗体两段造成的"断词"是假象，我按整句重读后更正，不把它当屏上缺陷
 
 **〇、坐标（现读）。** 权威尖 `2e2ddbaf72eed9565fd8b18ea9b8216061269f57`；栈仍是我自己的私有口（`:41539` 静态代理 `:41537` 后端，库是我自己的 `ord0535_hub0437.db` 副本）；本件**零产品字节**（上一格那处枚举修复已单独推在 `refs/heads/review/82f55d8a-card-human-words-r1` 头 `2378bd9fd78dbd60374dd77e8e43e114d4cf5505`，本格没再动它）。
