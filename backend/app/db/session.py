@@ -567,6 +567,110 @@ def _quarantine_duplicates(connection) -> None:
 
 
 
+def _reconcile_agent_pending_action_status_check(connection) -> None:
+    """Upgrade pre-R32 pending-action CHECK while preserving durable history."""
+
+    row = connection.exec_driver_sql(
+        "SELECT sql FROM sqlite_master "
+        "WHERE type='table' AND name='agent_pending_actions'"
+    ).scalar()
+    if not row or "SUPERSEDED" in str(row):
+        return
+
+    columns = {
+        item[1]
+        for item in connection.exec_driver_sql(
+            "PRAGMA table_info(agent_pending_actions)"
+        )
+    }
+    required = {
+        "id",
+        "approval_id",
+        "run_id",
+        "mission_id",
+        "journey_id",
+        "originating_step_id",
+        "tool_name",
+        "arguments_json",
+        "status",
+        "result_json",
+        "error_json",
+        "created_at",
+        "claimed_at",
+        "resumed_at",
+        "updated_at",
+        "authority_receipt_id",
+        "recovery_epoch_id",
+    }
+    if not required.issubset(columns):
+        raise RuntimeError(
+            "agent_pending_actions cannot be upgraded to R32 safely"
+        )
+
+    connection.exec_driver_sql(
+        """
+        CREATE TABLE agent_pending_actions_r32_reconciled (
+            id TEXT PRIMARY KEY,
+            approval_id TEXT NOT NULL UNIQUE
+                REFERENCES action_approvals(id) ON DELETE CASCADE,
+            run_id TEXT NOT NULL
+                REFERENCES agent_runs(id) ON DELETE CASCADE,
+            mission_id TEXT NOT NULL
+                REFERENCES journey_missions(id) ON DELETE CASCADE,
+            journey_id TEXT NOT NULL
+                REFERENCES journeys(id) ON DELETE CASCADE,
+            originating_step_id TEXT
+                REFERENCES agent_run_steps(id) ON DELETE SET NULL,
+            tool_name TEXT NOT NULL,
+            arguments_json TEXT NOT NULL DEFAULT '{}',
+            status TEXT NOT NULL DEFAULT 'PENDING'
+                CHECK (status IN (
+                    'PENDING','RESUMING','RESUMED','FAILED',
+                    'EXPIRED','SUPERSEDED'
+                )),
+            result_json TEXT NOT NULL DEFAULT '{}',
+            error_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            claimed_at TEXT,
+            resumed_at TEXT,
+            updated_at TEXT NOT NULL,
+            authority_receipt_id TEXT,
+            recovery_epoch_id TEXT
+                REFERENCES recovery_epochs(id) ON DELETE SET NULL
+        )
+        """
+    )
+    connection.exec_driver_sql(
+        """
+        INSERT INTO agent_pending_actions_r32_reconciled (
+            id, approval_id, run_id, mission_id, journey_id,
+            originating_step_id, tool_name, arguments_json, status,
+            result_json, error_json, created_at, claimed_at, resumed_at,
+            updated_at, authority_receipt_id, recovery_epoch_id
+        )
+        SELECT
+            id, approval_id, run_id, mission_id, journey_id,
+            originating_step_id, tool_name, arguments_json, status,
+            result_json, error_json, created_at, claimed_at, resumed_at,
+            updated_at, authority_receipt_id, recovery_epoch_id
+        FROM agent_pending_actions
+        """
+    )
+    connection.exec_driver_sql("DROP TABLE agent_pending_actions")
+    connection.exec_driver_sql(
+        "ALTER TABLE agent_pending_actions_r32_reconciled "
+        "RENAME TO agent_pending_actions"
+    )
+    connection.exec_driver_sql(
+        "CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_run "
+        "ON agent_pending_actions(run_id, status, created_at)"
+    )
+    connection.exec_driver_sql(
+        "CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_journey "
+        "ON agent_pending_actions(journey_id, status, created_at)"
+    )
+
+
 def ensure_schema(target_engine: Engine = engine) -> None:
     """Apply the package SQL schema to an empty or existing SQLite database."""
     sql = SCHEMA_PATH.read_text(encoding="utf-8")
@@ -892,6 +996,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                         connection.exec_driver_sql(
                             f"ALTER TABLE {table} ADD COLUMN {column} {declaration}"
                         )
+            _reconcile_agent_pending_action_status_check(connection)
             collective_columns = {
                 row[1]
                 for row in connection.exec_driver_sql(
