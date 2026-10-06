@@ -1,0 +1,61 @@
+
+[WebServer] INFO:     127.0.0.1:50768 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52422 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50766 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55773 - "GET /api/v1/travelers/515fb028-90f7-40d4-8bf4-a52d23963fc3/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62355 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65526 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62357 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62356 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50770 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62041 - "GET /api/v1/shared/journeys/qoder-0578-not-a-real-token HTTP/1.1" 404 Not Found
+
+[WebServer] INFO:     127.0.0.1:52274 - "GET /api/v1/shared/journeys/qoder-0578-not-a-real-token HTTP/1.1" 404 Not Found
+
+[WebServer] INFO:     127.0.0.1:54101 - "GET /api/v1/shared/journeys/not-a-share-tail HTTP/1.1" 404 Not Found
+
+[3/3] [chromium] › e2e\qoder-8ac89982-ord0578-token-route-chrome-r1.spec.ts:56:5 › ORD-0578 what says where you are on a token route › token-route-en
+[WebServer] INFO:     127.0.0.1:51887 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51888 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61761 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61763 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61760 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61764 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61762 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61549 - "GET /api/v1/travelers/515fb028-90f7-40d4-8bf4-a52d23963fc3/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61550 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58065 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61504 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61765 - "GET /api/v1/journeys/0c6402c0-aadd-4042-b936-b867841458ce/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58064 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64553 - "GET /api/v1/shared/journeys/qoder-0578-not-a-real-token HTTP/1.1" 404 Not Found
+
+[WebServer] INFO:     127.0.0.1:54428 - "GET /api/v1/shared/journeys/qoder-0578-not-a-real-token HTTP/1.1" 404 Not Found
+
+[WebServer] INFO:     127.0.0.1:56839 - "GET /api/v1/shared/journeys/not-a-share-tail HTTP/1.1" 404 Not Found
+
+  3 passed (30.7s)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0578-token-route-chrome-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0578token_r3.db ports 5234/5235 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0578token_r3 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0578token_r3.log
