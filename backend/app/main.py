@@ -2899,14 +2899,24 @@ def answer_collective_clarification(
         # response audit has been staged.  The receipt is server-owned and
         # binds the exact proposal, epochs, and response actors.
         session.flush()
-        response_audits = session.scalars(
-            select(AuditLog).where(
-                AuditLog.action == "agent.collective_decision.response",
-                AuditLog.entity_type == "JourneyMission",
-                AuditLog.entity_id == parent.id,
-                AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+        response_audits = [
+            item
+            for item in session.scalars(
+                select(AuditLog).where(
+                    AuditLog.action == "agent.collective_decision.response",
+                    AuditLog.entity_type == "JourneyMission",
+                    AuditLog.entity_id == parent.id,
+                    AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                )
+            ).all()
+            if str(
+                _json_object(item.after_json or "{}").get(
+                    "clarification_id"
+                )
+                or ""
             )
-        ).all()
+            == str(stored.get("clarification_id") or "")
+        ]
         authenticated_member_ids = {
             str(_json_object(item.after_json or "{}").get("member_id") or "")
             for item in response_audits
@@ -2947,6 +2957,9 @@ def answer_collective_clarification(
                 response_audit_ids=[item.id for item in response_audits],
                 principal_actor_ids=[item.actor_id for item in response_audits if item.actor_id],
                 source_mission_id=parent.id,
+                source_clarification_id=str(
+                    stored.get("clarification_id") or ""
+                ),
             )
         if authority_receipt is None:
             session.commit()
