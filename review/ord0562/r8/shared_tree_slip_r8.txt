@@ -1,0 +1,18 @@
+Shared-tree slip and restoration, lane cff87c64, every line below is the stdout of the command printed above it, read in this same run.
+$ git -C D:/moodle/CityNexus rev-parse HEAD          # rc=0
+a9c2504274dd3284b1a98b6707f7c4c9f7071cc3
+
+$ git -C D:/moodle/CityNexus rev-parse HEAD:frontend/src/app/V8Experience.tsx   # rc=0
+34294d08b1c40f6f2af618b3d6728e909b8891e5
+
+$ git -C D:/moodle/CityNexus hash-object frontend/src/app/V8Experience.tsx          # rc=0 (worktree bytes)
+34294d08b1c40f6f2af618b3d6728e909b8891e5
+
+$ git -C D:/moodle/CityNexus status --porcelain -- frontend/src/app/V8Experience.tsx   # rc=0
+(no output: the path is clean against HEAD, staged and unstaged)
+
+$ git -C D:/moodle/CityNexus status --porcelain | count of non-empty lines   # rc=0
+22
+(that is everybody else's dirty set in the shared tree; this run touched one path and left it byte-identical, so none of those lines changed hands)
+
+byte-equal read-back: True
