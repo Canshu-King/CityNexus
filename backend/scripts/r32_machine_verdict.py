@@ -85,6 +85,9 @@ def verdict(
     r2 = checkpoint.get("r2") or {}
     r1id, r2id = r1.get("id"), r2.get("id")
     current_id = checkpoint.get("current_epoch_id")
+    # R2 is the authority generation under test even if a successful mutation
+    # later closes it COMMITTED, leaving no OPEN recovery epoch at checkpoint.
+    authority_epoch_id = r2id or current_id
     a = checkpoint.get("agent_a_run_at_barrier") or {}
     b = checkpoint.get("agent_b_run_at_barrier") or {}
     stale = checkpoint.get("stale_binding_assertion") or {}
@@ -325,7 +328,7 @@ def verdict(
         row
         for row in proposals
         if row.get("source_agent_run_id")
-        and row.get("recovery_epoch_id") == current_id
+        and row.get("recovery_epoch_id") == authority_epoch_id
     ]
     current_agent_ids = {
         str(row.get("id"))
@@ -389,13 +392,13 @@ def verdict(
             and accepted_collective.get(
                 "candidate_surface_recovery_epoch_id"
             )
-            == current_id
+            == authority_epoch_id
             and accepted_collective.get(
                 "candidate_surface_trigger_event_id"
             )
             == accepted_proposal.get("trigger_event_id")
             and accepted_proposal.get("recovery_epoch_id")
-            == current_id
+            == authority_epoch_id
             and accepted_proposal.get("source_agent_run_id")
             == b.get("id")
         )
@@ -409,7 +412,7 @@ def verdict(
             current_presented_ids
             and option_ids.issubset(current_presented_ids)
             and all(
-                row.get("recovery_epoch_id") == current_id
+                row.get("recovery_epoch_id") == authority_epoch_id
                 for row in proposals
                 if str(row.get("id") or "") in option_ids
             )
@@ -476,6 +479,19 @@ def verdict(
         else None
     )
 
+    r2_terminal_state_consistent: bool | None = None
+    if r2id:
+        if mutations:
+            r2_terminal_state_consistent = bool(
+                r2row.get("status") == "COMMITTED"
+                and r2row.get("closed_at")
+                and r2row.get("close_reason") == "REPLAN_ACCEPTED"
+            )
+        elif b.get("id"):
+            r2_terminal_state_consistent = (
+                r2row.get("status") == "OPEN"
+            )
+
     authority_provenance_mode_accurate: bool | None = None
     arrival_order_not_authority: bool | None = None
     if mutations:
@@ -487,14 +503,15 @@ def verdict(
             and accepted_receipt
             and accepted_receipt.get("authority_mode")
             == "UNANIMOUS_DOMINANCE"
-            and accepted_receipt.get("recovery_epoch_id") == current_id
+            and accepted_receipt.get("recovery_epoch_id")
+            == authority_epoch_id
             and accepted_receipt.get("source_agent_run_id")
             == b.get("id")
             and accepted_receipt.get("invalidated_at") is None
             and accepted_receipt.get("proposal_id")
             == accepted_proposal_id
             and receipt_snapshot.get("recovery_epoch_id")
-            == current_id
+            == authority_epoch_id
             and (
                 receipt_provenance.get("decision_epoch") or {}
             ).get("source")
@@ -502,7 +519,7 @@ def verdict(
             and accepted_collective.get(
                 "candidate_surface_recovery_epoch_id"
             )
-            == current_id
+            == authority_epoch_id
         )
         arrival_order_not_authority = bool(
             authority_provenance_mode_accurate
@@ -628,9 +645,18 @@ def verdict(
             bool(
                 r1row.get("status") == "SUPERSEDED"
                 and r1row.get("superseded_by_recovery_epoch_id") == r2id
-                and r2row.get("status") == "OPEN"
+                and r2row.get("status") in {"OPEN", "COMMITTED"}
             ),
-            "R1 SUPERSEDED -> R2 OPEN",
+            "R1 SUPERSEDED -> R2, with R2 later OPEN or COMMITTED",
+        ),
+        "r2_terminal_state_consistent": _dim(
+            r2_terminal_state_consistent,
+            (
+                f"R2 status={r2row.get('status')} "
+                f"close_reason={r2row.get('close_reason')}; "
+                "OPEN without mutation, COMMITTED/REPLAN_ACCEPTED after one "
+                "accepted recovery mutation"
+            ),
         ),
         "agent_b_external_and_bound_r2": _dim(
             (
@@ -692,8 +718,8 @@ def verdict(
         "current_surface_epoch_pure": _dim(
             surface_epoch_pure,
             (
-                "every current Agent PRESENTED proposal and every B collective "
-                "candidate must belong to the current OPEN epoch"
+                "every B-authority proposal/candidate must belong to the "
+                "exact R2 authority epoch, even if R2 later COMMITTED"
             ),
         ),
         "semantic_dedupe_not_uuid_dedupe": _dim(
@@ -772,6 +798,7 @@ def verdict(
         "agent_a_external_and_bound_r1",
         "shock_b_material_not_storage_churn",
         "r1_superseded_by_r2",
+        "r2_terminal_state_consistent",
         "agent_b_external_and_bound_r2",
         "stale_agent_authority_refused",
         "stale_result_typed_superseded",
@@ -808,6 +835,7 @@ def verdict(
                 checkpoint.get("shock_b") or r2id
             ),
             "r1_superseded_by_r2": bool(r2id),
+            "r2_terminal_state_consistent": bool(r2id and r2row),
             "agent_b_external_and_bound_r2": bool(
                 b.get("id") or b_provider_invoked is not None
             ),
