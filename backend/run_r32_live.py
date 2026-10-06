@@ -233,8 +233,49 @@ def _snapshot(journey_id: str) -> dict[str, Any]:
             "runs": [row(item, ["id", "mission_id", "provider_key", "model_key", "status", "outcome", "failure_reason", "created_at", "completed_at", "recovery_epoch_id"]) for item in runs],
             "steps": step_rows,
             "proposals": [row(item, ["id", "trigger_event_id", "proposed_plan_version_id", "status", "hard_constraints_passed", "locked_commitments_preserved", "created_at", "decided_at", "recovery_epoch_id", "source_agent_run_id", "semantic_identity", "canonical_proposal_id"]) for item in proposals],
-            "receipts": [row(item, ["id", "proposal_id", "plan_version_id", "authority_mode", "source_mission_id", "source_agent_run_id", "recovery_epoch_id", "classification", "issued_at", "invalidated_at", "invalidation_code"]) for item in receipts],
-            "approvals": [row(item, ["id", "action", "target_type", "target_id", "status", "actor_id", "recovery_epoch_id", "authority_receipt_id", "created_at", "consumed_at"]) for item in approvals],
+            "receipts": [
+                row(
+                    item,
+                    [
+                        "id",
+                        "proposal_id",
+                        "plan_version_id",
+                        "authority_mode",
+                        "decision_epoch",
+                        "material_world_epoch",
+                        "candidate_surface_fingerprint",
+                        "source_mission_id",
+                        "source_agent_run_id",
+                        "recovery_epoch_id",
+                        "classification",
+                        "issued_at",
+                        "invalidated_at",
+                        "invalidation_code",
+                    ],
+                )
+                for item in receipts
+            ],
+            "approvals": [
+                row(
+                    item,
+                    [
+                        "id",
+                        "action",
+                        "target_type",
+                        "target_id",
+                        "status",
+                        "required_decision",
+                        "approval_method",
+                        "approved_by",
+                        "recovery_epoch_id",
+                        "authority_receipt_id",
+                        "created_at",
+                        "approved_at",
+                        "consumed_at",
+                    ],
+                )
+                for item in approvals
+            ],
             "pending_actions": [row(item, ["id", "approval_id", "run_id", "mission_id", "tool_name", "status", "authority_receipt_id", "recovery_epoch_id", "created_at", "resumed_at"]) for item in pending],
             "events": [
                 {
@@ -276,6 +317,90 @@ def _snapshot(journey_id: str) -> dict[str, Any]:
         }
 
 
+def _configure_r32_authority(setup: dict[str, Any]) -> dict[str, Any]:
+    """Configure explicit pre-strike values/authority through product APIs.
+
+    This is not an approval of any future action.  Both Journey members publish
+    the same standing preference and the owner pre-authorizes a finite
+    deterministic autonomy envelope before either shock exists.
+    """
+
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    client = TestClient(app)
+    journey_id = str(setup["journey_id"])
+    preference_receipts = []
+    for member_id in (
+        str(setup["owner_member_id"]),
+        str(setup["admin_member_id"]),
+    ):
+        response = client.put(
+            f"/api/v1/journeys/{journey_id}/members/{member_id}/preferences",
+            json={
+                "preferences": [
+                    {
+                        "category": "interest",
+                        "key": "garden",
+                        "value": True,
+                        "weight": 1.0,
+                    }
+                ]
+            },
+        )
+        response.raise_for_status()
+        preference_receipts.append(
+            {
+                "member_id": member_id,
+                "status_code": response.status_code,
+                "preferences": response.json().get("preferences", []),
+            }
+        )
+
+    policy_payload = {
+        "mode": "AUTONOMOUS",
+        "auto_accept_replan": True,
+        "max_auto_replan_cost_delta_minor": 25000,
+        "max_auto_loss_minor": 25000,
+        "max_auto_schedule_drift_min": 240,
+        "allowed_activity_types": [],
+        "allowed_booking_types": [],
+        "protected_commitment_levels": [
+            "C3_Guaranteed",
+            "C4_Anchored",
+        ],
+        "allow_auto_commitment_management": False,
+        "allow_auto_when_provider_degraded": False,
+        "allow_auto_on_critical_event": False,
+    }
+    policy = client.put(
+        f"/api/v1/travelers/{setup['owner_id']}/agent-policy",
+        json=policy_payload,
+    )
+    policy.raise_for_status()
+    stored_policy = policy.json()
+    return {
+        "member_preferences": preference_receipts,
+        "owner_policy": {
+            key: stored_policy.get(key)
+            for key in (
+                "mode",
+                "auto_accept_replan",
+                "max_auto_replan_cost_delta_minor",
+                "max_auto_loss_minor",
+                "max_auto_schedule_drift_min",
+                "protected_commitment_levels",
+                "allow_auto_commitment_management",
+                "allow_auto_when_provider_degraded",
+                "allow_auto_on_critical_event",
+                "version",
+            )
+        },
+        "timing": "PRE_SHOCK_STANDING_AUTHORITY",
+        "human_action_after_shock": False,
+    }
+
+
 def _stale_binding_assertion(journey_id: str, run_id: str) -> dict[str, Any]:
     """Validate the already persisted old run through the real Gateway binding seam."""
     from fastapi import HTTPException
@@ -303,6 +428,7 @@ def run() -> dict[str, Any]:
     # Import application modules only after _configure has installed the fresh DB
     # and real configured WB2api settings.
     setup = _api_setup(db)
+    authority_setup = _configure_r32_authority(setup)
     journey_id = str(setup["journey_id"])
     places = setup["selected_place_keys"]
     place_ids = list(places.keys())
@@ -370,10 +496,14 @@ def run() -> dict[str, Any]:
     HermesJourneyAgent._complete = gated_complete
     results: dict[str, Any] = {}
     command = (
-        "Inspect the current shared Journey and recover any unresolved server-owned provider incident "
-        "using current grounded facts. Preserve completed execution and protected commitments, do not "
-        "reuse old consent as authority, and return a fresh server-owned decision when a material "
-        "human value choice remains. Choose the next valid action from the live product state."
+        "Recover the current shared Journey from server-owned provider facts. "
+        "Preserve completed execution and protected commitments. Use only the "
+        "current Journey state, standing delegation policy, and server-derived "
+        "collective authority; never reuse stale consent or invent a human "
+        "answer. If current authority permits autonomous execution, you may "
+        "execute within that envelope. If a real human value choice remains, "
+        "leave it unresolved. Choose your own valid strategy from the live "
+        "product state."
     )
     thread_a = threading.Thread(
         target=_run_command,
@@ -467,11 +597,12 @@ def run() -> dict[str, Any]:
     stale_assertion = _stale_binding_assertion(journey_id, str(a_run["id"])) if a_run else {"typed": False, "detail": "Agent A run not durable"}
     current_epoch = next((row for row in final["epochs"] if row["status"] == "OPEN"), None)
     result = {
-        "schema": "citynexus.r32.live-strike.v1",
+        "schema": "citynexus.r32.live-strike.v2",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "database": str(db),
         "journey_id": journey_id,
         "setup": _jsonable(setup),
+        "authority_setup": _jsonable(authority_setup),
         "source_receipt": source_receipt,
         "runtime": {
             "provider": "WB2api",
