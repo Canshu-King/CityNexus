@@ -167,6 +167,8 @@ def _audit(
                 "clarification_id": clarification_id,
                 "member_id": member_id,
                 "traveler_id": traveler_id,
+                "proposal_id": "proposal-1",
+                "decision_epoch": "decision-1",
                 "status": "RESOLVED",
             }
         ),
@@ -276,4 +278,57 @@ def test_r30_human_receipt_rejects_cross_mission_response_audit():
         ]
     )
     with pytest.raises(ValueError, match="invalid response audits"):
+        _issue(session)
+
+
+
+def test_r30_human_receipt_rejects_audit_for_other_proposal():
+    wrong = _audit(
+        audit_id="audit-a",
+        member_id="member-a",
+        traveler_id="traveler-a",
+    )
+    wrong.after_json = json.dumps(
+        {
+            **json.loads(wrong.after_json),
+            "proposal_id": "proposal-other",
+        }
+    )
+    session = _AuthoritySession(
+        [
+            wrong,
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    with pytest.raises(ValueError, match="selected another proposal"):
+        _issue(session)
+
+
+def test_r30_human_receipt_rejects_audit_from_stale_decision_epoch():
+    wrong = _audit(
+        audit_id="audit-a",
+        member_id="member-a",
+        traveler_id="traveler-a",
+    )
+    wrong.after_json = json.dumps(
+        {
+            **json.loads(wrong.after_json),
+            "decision_epoch": "decision-old",
+        }
+    )
+    session = _AuthoritySession(
+        [
+            wrong,
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    with pytest.raises(ValueError, match="decision epoch mismatch"):
         _issue(session)
