@@ -397,7 +397,7 @@ def test_r57_without_an_exact_active_plan_place_has_no_invented_rendezvous(monke
 def _r57_risky_shared_target(journey_id: str) -> tuple[str, str, str]:
     from app.execution.group_presence import rendezvous_target
 
-    now = datetime.now(timezone.utc)
+    now = execution_clock.now().astimezone(timezone.utc)
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
         assert journey is not None
@@ -547,7 +547,7 @@ def test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff(monkeypat
                     latitude=35.0,
                     longitude=135.0,
                     accuracy_m=8,
-                    captured_at=datetime.now(timezone.utc).isoformat(),
+                    captured_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
                     source="DEVICE_ATTESTED",
                 )
             )
@@ -641,7 +641,7 @@ def test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff(monkeypat
         assert first_payload["incident_episode"] == 1
 
         events[0].status = "RESOLVED"
-        events[0].resolved_at = datetime.now(timezone.utc).isoformat()
+        events[0].resolved_at = execution_clock.now().astimezone(timezone.utc).isoformat()
         session.commit()
 
     third_observation = add_trusted_observation()
