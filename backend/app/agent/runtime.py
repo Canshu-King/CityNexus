@@ -22,7 +22,7 @@ from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
-from app.recovery_epoch import ensure_recovery_epoch
+from app.recovery_epoch import RECOVERY_EPOCH_SUPERSEDED, ensure_recovery_epoch
 from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
 from app.observability.tracing import persist_span
@@ -1030,6 +1030,7 @@ class DeepSeekJourneyAgent:
         ]
         inspected = False
         final_text = ""
+        recovery_superseded = False
         sequence = 0
         tool_trace: list[dict[str, Any]] = []
         # A repeated inspection is only a loop while the domain state is
@@ -1321,11 +1322,28 @@ class DeepSeekJourneyAgent:
                             if tool_name in _INSPECTION_TOOLS:
                                 inspected = True
                         except HTTPException as exc:
-                            result = {
-                                "tool": tool_name,
-                                "error": str(exc.detail),
-                                "status_code": exc.status_code,
-                            }
+                            detail = exc.detail if isinstance(exc.detail, dict) else None
+                            if (
+                                exc.status_code == 409
+                                and isinstance(detail, dict)
+                                and detail.get("code") == RECOVERY_EPOCH_SUPERSEDED
+                            ):
+                                # The provider/model worked; the world moved.
+                                # Preserve that causal distinction instead of
+                                # downgrading a stale strategy to TOOL_ERROR.
+                                result = {
+                                    "tool": tool_name,
+                                    **detail,
+                                    "status_code": exc.status_code,
+                                    "decision": RECOVERY_EPOCH_SUPERSEDED,
+                                }
+                                recovery_superseded = True
+                            else:
+                                result = {
+                                    "tool": tool_name,
+                                    "error": str(exc.detail),
+                                    "status_code": exc.status_code,
+                                }
                         except (TypeError, ValueError, KeyError) as exc:
                             result = {
                                 "tool": tool_name,
@@ -1341,7 +1359,15 @@ class DeepSeekJourneyAgent:
                         arguments_json=_json_text(arguments),
                         result_json=_json_text(result),
                         decision=str(result.get("decision")) if isinstance(result, dict) else None,
-                        status="COMPLETED" if "error" not in result else "TOOL_ERROR",
+                        status=(
+                            "SUPERSEDED"
+                            if recovery_superseded
+                            and isinstance(result, dict)
+                            and result.get("decision") == RECOVERY_EPOCH_SUPERSEDED
+                            else "COMPLETED"
+                            if "error" not in result
+                            else "TOOL_ERROR"
+                        ),
                         created_at=step_now,
                         completed_at=step_now,
                     )
@@ -1375,7 +1401,7 @@ class DeepSeekJourneyAgent:
                             "decision": result.get("decision")
                             if isinstance(result, dict)
                             else None,
-                            "status": "TOOL_ERROR" if "error" in result else "COMPLETED",
+                            "status": step.status,
                         },
                         trace_id=trace_id,
                     )
@@ -1452,6 +1478,12 @@ class DeepSeekJourneyAgent:
                             "content": _result_for_model(result),
                         }
                     )
+                    if recovery_superseded:
+                        final_text = (
+                            "Recovery stopped because the server-owned reality "
+                            "advanced to a newer recovery epoch."
+                        )
+                        break
                     # Human approval is not a reason to keep asking the model.
                     # Persist the already-selected action and suspend this same
                     # AgentRun until the server receives the approval.
@@ -1494,10 +1526,37 @@ class DeepSeekJourneyAgent:
                 and item["result"].get("mission_status") == "WAITING_FOR_USER"
                 for item in tool_trace
             )
-            run.status, mission.status = _terminal_agent_status(
-                tool_trace, has_final_text=bool(final_text), clarification=clarification
-            )
-            run.outcome = final_text or "Tool loop completed without a final summary."
+            if recovery_superseded:
+                run.status = "SUPERSEDED"
+                mission.status = "SUPERSEDED"
+                run.failure_reason = RECOVERY_EPOCH_SUPERSEDED
+                mission.failure_reason = RECOVERY_EPOCH_SUPERSEDED
+                run.outcome = json.dumps(
+                    _structured_failure_outcome(
+                        status="SUPERSEDED",
+                        reason_code=RECOVERY_EPOCH_SUPERSEDED,
+                        user_summary=(
+                            "This Agent run became stale because the Journey "
+                            "advanced to a newer server-owned recovery epoch."
+                        ),
+                        recommended_action=(
+                            "Inspect the current Journey reality and start or "
+                            "join recovery in the current epoch."
+                        ),
+                    ),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+            else:
+                run.status, mission.status = _terminal_agent_status(
+                    tool_trace,
+                    has_final_text=bool(final_text),
+                    clarification=clarification,
+                )
+                run.outcome = (
+                    final_text
+                    or "Tool loop completed without a final summary."
+                )
         except AgentRuntimeUnavailable as exc:
             for receipt in getattr(self, "external_attempts", []):
                 if any(
