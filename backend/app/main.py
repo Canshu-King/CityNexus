@@ -256,6 +256,13 @@ from app.execution.route_session_contract import (
     ROUTE_TRUTH_POLICY_VERSION,
     RouteRequest,
 )
+from app.execution.in_transit_reroute import (
+    LOCATION_FRESHNESS_SECONDS,
+    active_transit_leg,
+    in_transit_projection,
+    reroute_commitment_risk,
+    reroute_semantic_key,
+)
 from app.route_session_operations import operation_payload as route_operation_payload
 from app.route_session_operations import submit_operation as submit_route_operation
 from app.execution.truth import (
@@ -425,6 +432,7 @@ from app.schemas import (
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
+    InTransitRerouteRequest,
     LaunchOriginRequest,
     RouteAcquireRequest,
     ExecutionTruthAttestation,
@@ -2613,6 +2621,358 @@ def acquire_route_session(
                 "key": str(target.place_id),
                 "name": target.title,
             },
+        }
+    )
+    return body
+
+
+def _persist_trusted_transit_deviation_event(
+    session: Session,
+    *,
+    journey: Journey,
+    activity: Activity,
+    active_leg_id: str,
+    transit: dict[str, Any],
+    commitment_risk: dict[str, Any],
+    reroute_operation_id: str,
+    route_provider: str,
+    route_provenance: str,
+) -> EventModel | None:
+    """Persist one Guardian-actionable event only for verified, material risk."""
+    source = str(transit.get("location_source") or "").upper()
+    allowed_route_provenance = {
+        "LIVE_PROVIDER_CAPTURE",
+        "LIVE_CAPTURE",
+        "CAPTURED_REPLAY",
+        "SEALED_REAL_REPLAY",
+    }
+    if (
+        source not in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
+        or not transit.get("authoritative")
+        or not transit.get("material")
+        or str(transit.get("state") or "") != "VERIFIED_DEVIATION"
+        or str(commitment_risk.get("state") or "") != "COMMITMENT_AT_RISK"
+        or not route_provider
+        or route_provider.casefold().startswith(("mock", "fixture"))
+        or str(route_provenance or "").upper() not in allowed_route_provenance
+    ):
+        return None
+    observation_id = str(transit.get("location_observation_id") or "")
+    commitment = commitment_risk.get("next_commitment") or {}
+    commitment_id = str(commitment.get("commitment_id") or "")
+    if not observation_id or not commitment_id:
+        return None
+    fingerprint_payload = {
+        "journey_id": str(journey.id),
+        "activity_id": str(activity.id),
+        "active_leg_id": active_leg_id,
+        "location_observation_id": observation_id,
+        "commitment_id": commitment_id,
+        "reroute_operation_id": reroute_operation_id,
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(fingerprint_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    existing_rows = session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.event_type == "TRAFFIC_DELAY",
+            EventModel.provenance == "SYSTEM_DERIVED",
+        )
+    ).all()
+    for existing in existing_rows:
+        try:
+            if json.loads(existing.payload_json or "{}").get("incident_fingerprint") == fingerprint:
+                return existing
+        except (TypeError, json.JSONDecodeError):
+            continue
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="journey-in-transit-route",
+        provenance="SYSTEM_DERIVED",
+        event_type="TRAFFIC_DELAY",
+        severity="MAJOR",
+        status="DETECTED",
+        affected_activity_id=str(commitment.get("activity_id") or "") or None,
+        occurred_at=str(transit.get("location_captured_at") or now),
+        detected_at=now,
+        resolved_at=None,
+        payload_json=json.dumps(
+            {
+                "incident_fingerprint": fingerprint,
+                "derivation": "SYSTEM_DERIVED_TRUSTED_LOCATION_FACT",
+                "predictive_only": False,
+                "location_observation_id": observation_id,
+                "location_source": source,
+                "accuracy_m": transit.get("location_accuracy_m"),
+                "distance_to_route_m": transit.get("distance_to_route_m"),
+                "deviation_threshold_m": transit.get("deviation_threshold_m"),
+                "active_journey_leg_id": active_leg_id,
+                "route_geometry": transit.get("route_geometry"),
+                "reroute_operation_id": reroute_operation_id,
+                "reroute_provider": route_provider,
+                "reroute_provenance": str(route_provenance).upper(),
+                "affected_commitment": commitment_risk,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.in_transit_deviation.materialized",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="guardian",
+        after={
+            "event_type": event.event_type,
+            "incident_fingerprint": fingerprint,
+            "activity_id": activity.id,
+            "active_leg_id": active_leg_id,
+            "affected_commitment_id": commitment_id,
+        },
+    )
+    return event
+
+
+@app.post("/api/v1/journeys/{journey_id}/in-transit/reroute")
+def acquire_in_transit_reroute(
+    journey_id: UUID,
+    request: Request,
+    payload: InTransitRerouteRequest,
+    session: Session = Depends(get_session),
+):
+    """Acquire a fresh route from one current-leg location sample, without plan mutation."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "journey must have an ACTIVE plan")
+    activity = session.get(Activity, str(journey.current_activity_id or ""))
+    if (
+        activity is None
+        or str(activity.plan_version_id) != str(journey.active_plan_version_id)
+        or str(activity.status).upper() != "EN_ROUTE"
+    ):
+        raise HTTPException(409, "IN_TRANSIT_REROUTE_REQUIRES_CURRENT_EN_ROUTE_ACTIVITY")
+
+    principal = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, _member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+
+    observation = session.get(LocationObservation, str(payload.location_observation_id))
+    if observation is None or str(observation.journey_id) != str(journey.id):
+        raise HTTPException(404, "LOCATION_OBSERVATION_NOT_FOUND")
+    if principal is not None:
+        location_audit = session.scalar(
+            select(AuditLog).where(
+                AuditLog.journey_id == journey.id,
+                AuditLog.action == "journey.location.recorded",
+                AuditLog.entity_type == "LocationObservation",
+                AuditLog.entity_id == observation.id,
+                AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                AuditLog.actor_id == principal.traveler_id,
+            ).order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        )
+        if location_audit is None:
+            raise HTTPException(403, "LOCATION_OBSERVATION_PRINCIPAL_MISMATCH")
+
+    transit = in_transit_projection(session, journey)
+    if transit.get("state") == "ARRIVAL_READY":
+        raise HTTPException(409, "IN_TRANSIT_LOCATION_NEAR_TARGET_USE_ARRIVAL_FLOW")
+    if str(transit.get("location_observation_id") or "") != str(observation.id):
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_CURRENT_FOR_ACTIVE_LEG")
+    if not transit.get("can_reroute"):
+        raise HTTPException(409, "IN_TRANSIT_LOCATION_UNAVAILABLE_OR_STALE")
+
+    leg = active_transit_leg(session, journey, activity)
+    if leg is None or not str(leg.mode or "").strip():
+        raise HTTPException(409, "IN_TRANSIT_ROUTE_MODE_UNAVAILABLE")
+    target = session.get(Place, str(activity.place_id or ""))
+    if target is None:
+        raise HTTPException(409, "IN_TRANSIT_EXACT_TARGET_UNAVAILABLE")
+
+    active_plan_before = str(journey.active_plan_version_id)
+    source = str(observation.source or "UNKNOWN").upper()
+    active_leg_id = str(leg.id)
+    route_request = RouteRequest(
+        journey_id=str(journey.id),
+        origin_key=f"location-observation:{observation.id}",
+        target_key=str(target.id),
+        target_activity_id=str(activity.id),
+        requested_mode=str(leg.mode).upper(),
+        provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+        route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+        origin_evidence={
+            "location_observation_id": str(observation.id),
+            "source": source,
+            "captured_at": observation.captured_at,
+            "accuracy_m": float(observation.accuracy_m),
+            "authority": transit.get("route_authority"),
+        },
+    )
+    row, reused = submit_route_operation(session, journey, route_request)
+    body = route_operation_payload(row, reused=reused)
+    result = body.get("result") if isinstance(body.get("result"), dict) else {}
+    completed = str(body.get("status") or "").upper() == "COMPLETED"
+    commitment_risk = (
+        reroute_commitment_risk(
+            session,
+            journey,
+            activity,
+            current_leg_duration_min=int(result["duration_min"]),
+            authority=str(transit.get("route_authority") or "UNKNOWN"),
+        )
+        if completed and result.get("duration_min") is not None
+        else {
+            "state": "UNKNOWN",
+            "authority": str(transit.get("route_authority") or "UNKNOWN"),
+            "future_mobility_basis": "FROZEN_PLAN_EVIDENCE_NOT_FUTURE_LIVE_TRAFFIC",
+        }
+    )
+    reroute_key = reroute_semantic_key(
+        journey_id=str(journey.id),
+        activity_id=str(activity.id),
+        location_observation_id=str(observation.id),
+        target_place_id=str(target.id),
+        mode=str(leg.mode),
+    )
+    session.expire_all()
+    journey_after = session.get(Journey, str(journey_id))
+    activity_after = session.get(Activity, str(activity.id))
+    transit_after = (
+        in_transit_projection(session, journey_after)
+        if journey_after is not None
+        else {}
+    )
+    plan_unchanged = bool(
+        journey_after is not None
+        and str(journey_after.active_plan_version_id or "") == active_plan_before
+    )
+    context_current = bool(
+        journey_after is not None
+        and activity_after is not None
+        and str(journey_after.status).upper() == "ACTIVE"
+        and str(journey_after.current_activity_id or "") == str(activity.id)
+        and str(activity_after.plan_version_id) == active_plan_before
+        and str(activity_after.status).upper() == "EN_ROUTE"
+        and str(transit_after.get("location_observation_id") or "") == str(observation.id)
+        and bool(transit_after.get("can_reroute"))
+    )
+    deviation_event = None
+    guardian_handoff: dict[str, Any] | None = None
+    if context_current:
+        deviation_event = _persist_trusted_transit_deviation_event(
+            session,
+            journey=journey_after,
+            activity=activity_after,
+            active_leg_id=active_leg_id,
+            transit=transit,
+            commitment_risk=commitment_risk,
+            reroute_operation_id=str(row.id),
+            route_provider=str(result.get("provider") or body.get("provider") or ""),
+            route_provenance=str(result.get("provenance") or body.get("provider_provenance") or ""),
+        )
+        if deviation_event is not None:
+            session.commit()
+            enrollment = session.get(AutopilotEnrollment, journey_id)
+            if enrollment is not None and enrollment.enabled:
+                try:
+                    guardian_handoff = scan_guardian(
+                        session, journey_after, include_opportunity_signals=False
+                    )
+                except Exception as exc:  # preserve the route result if Guardian is unavailable
+                    logging.getLogger(__name__).exception(
+                        "R56 Guardian handoff failed for trusted transit deviation %s",
+                        deviation_event.id,
+                    )
+                    guardian_handoff = {
+                        "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+                        "failure_classification": type(exc).__name__,
+                    }
+            else:
+                guardian_handoff = {"status": "NOT_ENROLLED"}
+            session.expire_all()
+            journey_after = session.get(Journey, str(journey_id))
+            activity_after = session.get(Activity, str(activity.id))
+            transit_after = (
+                in_transit_projection(session, journey_after)
+                if journey_after is not None
+                else {}
+            )
+            plan_unchanged = bool(
+                journey_after is not None
+                and str(journey_after.active_plan_version_id or "") == active_plan_before
+            )
+            context_current = bool(
+                journey_after is not None
+                and activity_after is not None
+                and str(journey_after.status).upper() == "ACTIVE"
+                and str(journey_after.current_activity_id or "") == str(activity.id)
+                and str(activity_after.plan_version_id) == active_plan_before
+                and str(activity_after.status).upper() == "EN_ROUTE"
+                and str(transit_after.get("location_observation_id") or "") == str(observation.id)
+                and bool(transit_after.get("can_reroute"))
+            )
+    body.update(
+        {
+            "reroute_state": (
+                "IN_TRANSIT_CONTEXT_STALE"
+                if not context_current
+                else "IN_TRANSIT_REROUTE_ADVISORY_READY"
+                if completed and source == "FOREGROUND_WEB"
+                else "IN_TRANSIT_REROUTE_READY"
+                if completed
+                else "IN_TRANSIT_REROUTE_PROVIDER_DEGRADED"
+            ),
+            "reroute_key": reroute_key,
+            "origin": {
+                "key": f"location-observation:{observation.id}",
+                "authority": transit.get("route_authority"),
+                "source": source,
+                "captured_at": observation.captured_at,
+                "accuracy_m": observation.accuracy_m,
+                "coordinates_exposed": False,
+            },
+            "target": {
+                "activity_id": str(activity.id),
+                "key": str(target.id),
+                "name": activity.title,
+            },
+            "current_activity_status": (
+                str(activity_after.status)
+                if activity_after is not None
+                else "MISSING"
+            ),
+            "active_plan_version_id": active_plan_before,
+            "active_plan_unchanged": plan_unchanged,
+            "original_route_comparison": {
+                "state": transit.get("state"),
+                "route_shape_available": transit.get("route_shape_available"),
+                "distance_to_route_m": transit.get("distance_to_route_m"),
+                "authoritative": transit.get("authoritative"),
+                "material": transit.get("material"),
+            },
+            "commitment_risk": commitment_risk,
+            "deviation_event_id": str(deviation_event.id) if deviation_event is not None else None,
+            "guardian_handoff": guardian_handoff,
+            "principal_bound": principal is not None,
+            "provenance_statement": (
+                "FOREGROUND_WEB_IS_ADVISORY"
+                if source == "FOREGROUND_WEB"
+                else str(result.get("provenance") or "PROVIDER_PROVENANCE_RECORDED")
+            ),
+            "location_freshness_limit_seconds": LOCATION_FRESHNESS_SECONDS,
         }
     )
     return body

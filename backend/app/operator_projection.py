@@ -35,6 +35,7 @@ from app.db.models import (
 )
 from app.agent.transactional_operator import execution_plan_projection
 from app.execution.continuous_journey import continuous_flow_projection
+from app.execution.in_transit_reroute import in_transit_projection
 from app.execution.progress_drift import progress_drift_projection
 from app.agent.journey_ahead import journey_ahead_projection
 from app.agent.overnight_steward import overnight_steward_projection
@@ -478,6 +479,7 @@ def operator_projection(
             or (activity_incident and state in {"INVESTIGATING", "DEGRADED"})
         ),
     )
+    transit = in_transit_projection(session, journey)
     # Journey Ahead is a read-only projection.  Reuse the already persisted
     # predictive Guardian/brain state, but never start a provider call or an
     # action from this GET path.
@@ -613,6 +615,7 @@ def operator_projection(
         "discovery": discovery,
         "operations": operations,
         "flow": flow,
+        "transit": transit,
         "ahead": ahead,
         "progress": progress,
         "overnight": overnight,

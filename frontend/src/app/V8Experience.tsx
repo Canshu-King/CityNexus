@@ -1328,29 +1328,46 @@ export function V8Experience() {
       setBusy(false);
     }
   };
+  const captureForegroundLocation = async (): Promise<string | null> => {
+    if (!data || !navigator.geolocation) return null;
+    return await new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const observation = await v8Request<{ id: string }>(
+              `/api/v1/journeys/${data.journey.id}/location`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  accuracy_m: position.coords.accuracy,
+                  captured_at: new Date(position.timestamp).toISOString(),
+                }),
+              },
+            );
+            await load(data.journey.id);
+            setMessage(
+              t("shell.locationUpdated", {
+                n: Math.round(position.coords.accuracy),
+              }),
+            );
+            resolve(observation.id);
+          } catch {
+            setMessage(t("shell.locationDenied"));
+            resolve(null);
+          }
+        },
+        () => {
+          setMessage(t("shell.locationDenied"));
+          resolve(null);
+        },
+        { enableHighAccuracy: true, maximumAge: 30000 },
+      );
+    });
+  };
   const shareForegroundLocation = async () => {
-    if (!data || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        await v8Request(`/api/v1/journeys/${data.journey.id}/location`, {
-          method: "POST",
-          body: JSON.stringify({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy_m: position.coords.accuracy,
-            captured_at: new Date(position.timestamp).toISOString(),
-          }),
-        });
-        await load(data.journey.id);
-        setMessage(
-          t("shell.locationUpdated", {
-            n: Math.round(position.coords.accuracy),
-          }),
-        );
-      },
-      () => setMessage(t("shell.locationDenied")),
-      { enableHighAccuracy: true, maximumAge: 30000 },
-    );
+    await captureForegroundLocation();
   };
 
   // Derived for the activity-detail surface (reference 08).
@@ -1704,6 +1721,7 @@ export function V8Experience() {
     selectOption,
     triggerRain,
     shareForegroundLocation,
+    captureForegroundLocation,
     changeMode,
     setSheetOpen,
     setPlanAiOpen,

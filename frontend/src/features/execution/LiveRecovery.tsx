@@ -10,7 +10,11 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { cityNexusApi, type JourneyOperatorProjection } from "../../api/citynexus";
+import {
+  cityNexusApi,
+  type InTransitRerouteResult,
+  type JourneyOperatorProjection,
+} from "../../api/citynexus";
 import { travelerAuthHeaders } from "../../lib/travelerSession";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
@@ -152,12 +156,15 @@ export function LiveRecovery({
   journeyId,
   journeyStatus,
   handledEventIds = [],
+  onRefreshLocation,
   onAccepted,
 }: {
   journeyId: string;
   journeyStatus?: string | null;
   /** Event ids the shell already knows are resolved by an accepted replan. */
   handledEventIds?: string[];
+  /** Captures one user-requested foreground location and returns its server observation id. */
+  onRefreshLocation?: () => Promise<string | null>;
   onAccepted?: () => void;
 }) {
   const { locale } = useLocale();
@@ -174,6 +181,7 @@ export function LiveRecovery({
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
+  const [transitReroute, setTransitReroute] = useState<InTransitRerouteResult | null>(null);
   const [intentText, setIntentText] = useState("");
   const [intentResult, setIntentResult] = useState<string | null>(null);
   const [inboxText, setInboxText] = useState("");
@@ -647,6 +655,38 @@ export function LiveRecovery({
     setMessage(zh ? "好的，稍后再提醒你。" : "Okay, we will remind you later.");
 
   const flow = operator?.flow ?? null;
+  const transit = operator?.transit ?? null;
+  const rerouteFromHere = async () => {
+    if (!onRefreshLocation || busy !== null) {
+      setMessage(zh ? "请先允许浏览器获取这次位置。" : "Allow location access to recalculate this route.");
+      return;
+    }
+    setBusy("transit-reroute");
+    setTransitReroute(null);
+    try {
+      const observationId = await onRefreshLocation();
+      if (!observationId) return;
+      const result = await cityNexusApi.rerouteInTransit(journeyId, observationId);
+      setTransitReroute(result);
+      await loadOperator();
+      onAccepted?.();
+      setMessage(
+        result.status === "COMPLETED" && result.reroute_state !== "IN_TRANSIT_CONTEXT_STALE"
+          ? (zh ? "已从刚才的位置重新计算路线；原计划没有改变。" : "A route was recalculated from your current location. Your plan is unchanged.")
+          : result.reroute_state === "IN_TRANSIT_CONTEXT_STALE"
+            ? (zh ? "路线计算期间行程状态已变化；这条路线没有作为当前行程建议。" : "The trip changed while the route was being calculated, so this route was not presented as current advice.")
+            : (zh ? "暂时无法从当前位置取得可靠路线，行程计划未变。" : "A reliable route is not available from here yet. Your plan is unchanged."),
+      );
+    } catch {
+      setMessage(
+        zh
+          ? "暂时无法重新计算路线；你仍可按原计划前往，行程没有改变。"
+          : "We couldn't recalculate the route yet. Your plan is unchanged.",
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
   const advanceFlow = async (transition: "depart" | "arrive" | "begin" | "complete") => {
     const activityId = flow?.current?.id;
     if (!activityId || !flow?.can_confirm || busy !== null) return;
@@ -781,6 +821,58 @@ export function LiveRecovery({
               <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("depart")}>{zh ? "我出发了" : "I’m leaving"}</button>
             ) : null}
           </div>
+        )}
+        {journeyStatus === "ACTIVE" && transit?.activity_status === "EN_ROUTE" && (
+          <section className="journey-transit-reroute" data-testid="journey-transit-reroute" aria-live="polite">
+            <span className="v8-kicker">{zh ? "途中路线" : "On the way"}</span>
+            <strong>
+              {transit.state === "ADVISORY_DEVIATION"
+                ? (zh ? "浏览器位置看起来可能偏离原路线。" : "Your browser location may be off the planned route.")
+                : transit.state === "ARRIVAL_READY"
+                  ? (zh ? "你似乎已接近目的地；可以使用到达确认。" : "You may be near the stop. You can confirm arrival when ready.")
+                  : (zh ? `正在前往：${transit.activity_title ?? "下一站"}` : `Heading to ${transit.activity_title ?? "your next stop"}`)}
+            </strong>
+            {transit.state === "ROUTE_SHAPE_UNAVAILABLE" || !transit.route_shape_available ? (
+              <small>{zh ? "目前没有可比对的原路线形状；不会据此判定偏航，但仍可从你现在的位置重新算路。" : "The original route shape is unavailable, so CityNexus won't claim you are off route. You can still recalculate from your current location."}</small>
+            ) : transit.state === "ADVISORY_DEVIATION" ? (
+              <small>{zh ? "这只是浏览器位置提示，不会触发 Guardian 或修改行程。" : "This browser location is advisory only. It does not trigger Guardian or change your trip."}</small>
+            ) : transit.location_fresh === false ? (
+              <small>{zh ? "位置数据已过时；重新计算时会先获取新位置。" : "The saved location is stale. Recalculation will request a fresh location first."}</small>
+            ) : null}
+            {transit.state !== "ARRIVAL_READY" && (
+              <button
+                type="button"
+                disabled={busy !== null}
+                data-testid="journey-transit-reroute-button"
+                onClick={() => void rerouteFromHere()}
+              >
+                {busy === "transit-reroute"
+                  ? (zh ? "正在重新计算…" : "Recalculating…")
+                  : (zh ? "从我现在的位置重新算路" : "Recalculate from here")}
+              </button>
+            )}
+            {transitReroute?.status === "COMPLETED" && transitReroute.reroute_state !== "IN_TRANSIT_CONTEXT_STALE" && transitReroute.result?.duration_min != null && (
+              <small data-testid="journey-transit-reroute-result">
+                {zh
+                  ? `新路线约 ${transitReroute.result.duration_min} 分钟 · ${transitReroute.provenance_statement ?? transitReroute.result.provenance ?? "来源已记录"} · 原计划未变`
+                  : `New route: about ${transitReroute.result.duration_min} min · ${transitReroute.provenance_statement ?? transitReroute.result.provenance ?? "provenance recorded"} · plan unchanged`}
+              </small>
+            )}
+            {transitReroute?.commitment_risk && transitReroute.reroute_state !== "IN_TRANSIT_CONTEXT_STALE" && (
+              <small data-testid="journey-transit-commitment-risk">
+                {transitReroute.commitment_risk.state === "COMMITMENT_AT_RISK"
+                  ? (zh ? `按当前位置路线估算，后续已确认安排「${transitReroute.commitment_risk.next_commitment?.title ?? "下一项承诺"}」可能赶不上；这是${transitReroute.commitment_risk.authority === "ADVISORY_ROUTE" ? "参考位置" : "当前定位"}判断，后续路段沿用已保存的计划时间。` : `The route estimate may put “${transitReroute.commitment_risk.next_commitment?.title ?? "the next protected stop"}” at risk. This uses ${transitReroute.commitment_risk.authority === "ADVISORY_ROUTE" ? "advisory location" : "trusted location"} and frozen planned times for later legs.`)
+                  : transitReroute.commitment_risk.state === "WITHIN_BUFFER" || transitReroute.commitment_risk.state === "LOW_BUFFER"
+                    ? (zh ? `后续已确认安排「${transitReroute.commitment_risk.next_commitment?.title ?? "下一项承诺"}」预计还剩 ${transitReroute.commitment_risk.slack_after_buffer_min ?? "未知"} 分钟缓冲；后续路段按已保存计划估算，不代表实时路况。` : `Estimated buffer before “${transitReroute.commitment_risk.next_commitment?.title ?? "the next protected stop"}”: ${transitReroute.commitment_risk.slack_after_buffer_min ?? "unknown"} min. Later legs use the saved plan, not live traffic.`)
+                    : null}
+              </small>
+            )}
+            {transitReroute && (transitReroute.status !== "COMPLETED" || transitReroute.reroute_state === "IN_TRANSIT_CONTEXT_STALE") && (
+              <small data-testid="journey-transit-reroute-result">
+                {zh ? "路线服务暂时没有可靠结果；没有修改原计划。" : "The route provider returned no reliable route. Your original plan was not changed."}
+              </small>
+            )}
+          </section>
         )}
         {operator?.progress?.basis && operator.progress.state !== "UNKNOWN_PROGRESS" && (
           <div className={`journey-progress journey-progress-${operator.progress.state.toLowerCase()}`} data-testid="journey-progress" aria-live="polite">

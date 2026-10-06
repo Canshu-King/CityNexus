@@ -501,6 +501,7 @@ export interface JourneyOperatorProjection {
   discovery: JourneyOperatorDiscoveryProjection;
   operations?: JourneyOperatorOperationsProjection | null;
   flow?: JourneyContinuousFlow | null;
+  transit?: JourneyTransitProjection | null;
   progress?: JourneyProgressProjection;
   ahead?: JourneyAheadProjection | null;
   overnight?: JourneyOvernightProjection | null;
@@ -512,6 +513,60 @@ export interface JourneyOperatorProjection {
   reality_conflict?: JourneyRealityConflictProjection | null;
   quiet_mode?: "QUIET" | "NORMAL";
   intent_clarification_result?: { intent_id: string; mission_id: string; outcome: string; agent_status: string };
+}
+
+export interface JourneyTransitProjection {
+  state: string;
+  activity_id?: string | null;
+  activity_title?: string | null;
+  activity_status?: string | null;
+  location_observation_id?: string | null;
+  location_source?: string | null;
+  location_age_seconds?: number | null;
+  location_accuracy_m?: number | null;
+  location_fresh?: boolean;
+  route_shape_available?: boolean;
+  distance_to_route_m?: number | null;
+  deviation_threshold_m?: number | null;
+  authoritative?: boolean;
+  material?: boolean;
+  can_reroute?: boolean;
+  route_authority?: string;
+  reason?: string;
+  active_plan_version_id?: string | null;
+  read_only?: boolean;
+}
+
+export interface InTransitRerouteResult {
+  status: string;
+  outcome?: string | null;
+  reroute_state: string;
+  reused?: boolean;
+  active_plan_unchanged: boolean;
+  current_activity_status: string;
+  provider?: string | null;
+  provider_provenance?: string | null;
+  provenance_statement?: string;
+  result?: {
+    duration_min?: number;
+    distance_m?: number;
+    provider?: string;
+    provenance?: string;
+    mode?: string;
+    geometry?: unknown;
+  } | null;
+  commitment_risk?: {
+    state: string;
+    authority?: string;
+    next_commitment?: {
+      title?: string;
+      scheduled_at?: string;
+      safety_buffer_min?: number;
+    } | null;
+    predicted_arrival_at?: string | null;
+    slack_after_buffer_min?: number | null;
+    future_mobility_basis?: string;
+  } | null;
 }
 
 export interface JourneyProgressProjection {
@@ -1576,6 +1631,17 @@ export const cityNexusApi = {
     return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator", {
       headers: travelerAuthHeaders(),
     });
+  },
+
+  rerouteInTransit(journeyId: string, locationObservationId: string): Promise<InTransitRerouteResult> {
+    return requestJson<InTransitRerouteResult>(
+      "/journeys/" + journeyId + "/in-transit/reroute",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ location_observation_id: locationObservationId }),
+      },
+    );
   },
 
   submitJourneyInboxText(journeyId: string, text: string): Promise<Record<string, unknown>> {

@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.models import CityService, Journey, Place
+from app.db.models import CityService, Journey, LocationObservation, Place
 from app.integrations.mobility.snapshot_capture import (
     MobilitySnapshotCaptureError,
     MobilitySnapshotCaptureResult,
@@ -23,7 +23,9 @@ from app.integrations.mobility.valhalla_http import (
 from app.integrations.mock.providers import MockMobilityProvider
 
 
-def _place_lookup(session: Session, key: str) -> dict[str, float]:
+def _place_lookup(
+    session: Session, key: str, *, journey_id: str | None = None
+) -> dict[str, float]:
     """Resolve a routing key to coordinates.
 
     Two key spaces are in play and they must agree, or every leg reports
@@ -36,6 +38,18 @@ def _place_lookup(session: Session, key: str) -> dict[str, float]:
 
     Trying both keeps the frozen evidence and the gate on one identity.
     """
+
+    if str(key).startswith("location-observation:"):
+        observation_id = str(key).split(":", 1)[1]
+        observation = session.get(LocationObservation, observation_id)
+        if observation is None or (
+            journey_id is not None and str(observation.journey_id) != str(journey_id)
+        ):
+            raise KeyError(f"no journey-scoped location coordinates for {key}")
+        return {
+            "latitude": float(observation.latitude),
+            "longitude": float(observation.longitude),
+        }
 
     candidates = [key]
     if ":arrival-anchor" in key or ":departure-anchor" in key:
@@ -83,6 +97,7 @@ def capture_runtime_mobility_snapshot(
     operation_key: str,
     captured_at: str | None = None,
     require_explicit_facts: bool = False,
+    requested_mode: str | None = None,
 ) -> MobilitySnapshotCaptureResult:
     """Capture one immutable mobility reality for a product operation.
 
@@ -105,7 +120,7 @@ def capture_runtime_mobility_snapshot(
 
     normalized_pairs = tuple(sorted({(str(a), str(b)) for a, b in pairs if a and b and a != b}))
     mock = MockMobilityProvider(
-        place_lookup=lambda key: _place_lookup(session, key),
+        place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
         strict=require_explicit_facts,
     )
     if not settings.live_valhalla_url:
@@ -117,16 +132,26 @@ def capture_runtime_mobility_snapshot(
         )
 
     with httpx.Client(timeout=10.0) as client:
+        requested = str(requested_mode or "WALK").upper()
+        costing_by_mode = {
+            "WALK": "pedestrian",
+            "BICYCLE": "bicycle",
+            "TRANSIT": "multimodal",
+            "AUTO": "auto",
+            "RIDE_HAIL": "auto",
+        }
+        costing = costing_by_mode.get(requested, "pedestrian")
         primary: Any = ValhallaHTTPMobilityProvider(
             client=client,
             base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key),
+            place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+            costing=costing,
         )
         live_auto_fallback: Any = ValhallaHTTPMobilityProvider(
             client=client,
             base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key),
-            costing="auto",
+            place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+            costing=(costing if requested_mode is not None else "auto"),
         )
         try:
             capabilities = primary.status_capabilities()
@@ -169,6 +194,13 @@ def capture_runtime_mobility_snapshot(
         # Offline demos have no fallback pairs, so they keep using their
         # legitimate explicit mock facts as hard truth.
         snapshot = captured.snapshot
+        if requested_mode is not None:
+            requested_product_mode = str(requested_mode).upper()
+            facts = {
+                pair: replace(fact, mode=requested_product_mode)
+                for pair, fact in snapshot.facts.items()
+            }
+            snapshot = replace(snapshot, facts=facts)
         synthetic_fallback_pairs = tuple(
             pair
             for pair in captured.fallback_pairs

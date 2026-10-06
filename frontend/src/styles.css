@@ -1460,6 +1460,9 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .journey-continuous-flow button { justify-self: start; }
 .journey-flow-needs_attention { border-color: #d8a39d; background: #fff5f3; color: #71271e; }
 .journey-flow-day_complete { border-color: #a9c8b2; background: #f3fbf5; color: #24543a; }
+.journey-transit-reroute { display: grid; gap: 6px; padding: 12px; border-radius: 12px; border: 1px solid rgba(31, 91, 114, .24); background: rgba(255, 255, 255, .82); }
+.journey-transit-reroute strong, .journey-transit-reroute small { font-size: 13px; }
+.journey-transit-reroute button { justify-self: start; }
 .journey-ahead { display: grid; gap: 5px; padding: 12px; border-radius: 12px; border: 1px solid rgba(116, 93, 57, .24); background: rgba(255, 252, 244, .86); color: #5d431d; }
 .journey-ahead strong { font-size: 14px; }
 .journey-ahead small, .journey-ahead span { font-size: 13px; }

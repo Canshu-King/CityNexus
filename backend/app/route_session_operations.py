@@ -314,6 +314,7 @@ def _execute(operation_id: str) -> None:
                 [pair],
                 operation_key=f"route-session:{row.id}",
                 require_explicit_facts=True,
+                requested_mode=row.requested_mode,
             )
         except MobilitySnapshotCaptureError as exc:
             live_failure = bool(settings.live_valhalla_url)

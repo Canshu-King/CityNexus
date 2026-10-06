@@ -462,6 +462,14 @@ class RouteAcquireRequest(BaseModel):
     requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
+class InTransitRerouteRequest(BaseModel):
+    """Reroute from one server-stored current location sample to the exact active stop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+
+
 class ExecutionTruthAttestation(BaseModel):
     """Optional evidence class for one execution-state transition.
 

@@ -33,9 +33,10 @@ class RouteRequest:
     requested_mode: str
     provider_policy_version: str = ROUTE_PROVIDER_POLICY_VERSION
     route_truth_policy_version: str = ROUTE_TRUTH_POLICY_VERSION
+    origin_evidence: dict[str, Any] | None = None
 
     def semantic_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "journey_id": str(self.journey_id),
             "origin_key": str(self.origin_key),
             "target_key": str(self.target_key),
@@ -46,6 +47,9 @@ class RouteRequest:
             "provider_policy_version": str(self.provider_policy_version),
             "route_truth_policy_version": str(self.route_truth_policy_version),
         }
+        if self.origin_evidence is not None:
+            payload["origin_evidence"] = dict(self.origin_evidence)
+        return payload
 
 
 def route_request_fingerprint(request: RouteRequest) -> str:
