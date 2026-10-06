@@ -146,11 +146,32 @@ def verdict(
         or []
     )
 
-    def provider_invoked(causal_slot: str) -> bool | None:
+    def provider_invoked(
+        *,
+        run_id: str | None,
+        recovery_epoch_id: str | None,
+        causal_slot: str,
+    ) -> bool | None:
         if external_outcomes:
-            # R32 v2c+ uses coordinator-owned causal slots because sync FastAPI
-            # endpoints run inside AnyIO worker threads under TestClient.  Keep
-            # the old thread-name fallback only for historical evidence.
+            # Preferred evidence is the exact durable AgentRun/recovery-epoch
+            # binding captured by the barrier.  Causal-slot and historical
+            # thread names remain compatibility fallbacks only.
+            exact_hits = [
+                item
+                for item in external_outcomes
+                if isinstance(item, dict)
+                and item.get("agent_run_id") is not None
+            ]
+            if exact_hits and run_id:
+                return any(
+                    str(item.get("agent_run_id")) == str(run_id)
+                    and str(item.get("recovery_epoch_id"))
+                    == str(recovery_epoch_id)
+                    and item.get("server_run_resolution")
+                    == "EXACT_ONE_CURRENT_RUN"
+                    and item.get("provider_call_invoked") is True
+                    for item in exact_hits
+                )
             slot_hits = [
                 item
                 for item in external_outcomes
@@ -174,8 +195,16 @@ def verdict(
             )
         return None
 
-    a_provider_invoked = provider_invoked("A")
-    b_provider_invoked = provider_invoked("B")
+    a_provider_invoked = provider_invoked(
+        run_id=a.get("id"),
+        recovery_epoch_id=r1id,
+        causal_slot="A",
+    )
+    b_provider_invoked = provider_invoked(
+        run_id=b.get("id"),
+        recovery_epoch_id=r2id,
+        causal_slot="B",
+    )
 
     a_external: bool | None = None
     if a.get("id") and a_provider_invoked is not None:
