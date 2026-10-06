@@ -8,6 +8,7 @@ import pytest
 from app.collective_authority import (
     AUTHENTICATED_MEMBER_CONSENT,
     UNANIMOUS_DOMINANCE,
+    authority_receipt_for_allowed_gate,
     issue_collective_authority_receipt,
     receipt_validation,
 )
@@ -371,6 +372,31 @@ def test_r30_verifier_does_not_require_pre_shock_external_agent_runs():
     assert "pre_shock_human_authority_receipt" in source
     assert "real_external_post_shock_recovery_agent" in source
 
+
+
+def test_r32_unanimous_receipt_inherits_proposal_agent_run_lineage():
+    session = _AuthoritySession([])
+    session.proposal.source_agent_run_id = "agent-run-r2"
+
+    receipt = authority_receipt_for_allowed_gate(
+        session,
+        journey_id="journey-1",
+        proposal_id="proposal-1",
+        plan_version_id="plan-1",
+        gate={
+            "allowed": True,
+            "classification": UNANIMOUS_DOMINANCE,
+            "recovery_epoch_id": "recovery-r2",
+            "current_decision_epoch": "decision-r2",
+            "current_material_world_epoch": "world-r2",
+            "candidate_surface_fingerprint": "surface-r2",
+        },
+    )
+
+    assert receipt is not None
+    assert receipt.authority_mode == UNANIMOUS_DOMINANCE
+    assert receipt.recovery_epoch_id == "recovery-r2"
+    assert receipt.source_agent_run_id == "agent-run-r2"
 
 
 def test_r30_exact_receipt_issuance_is_idempotent():
