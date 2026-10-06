@@ -123,6 +123,32 @@ def _location_state(row: LocationObservation | None, now: datetime) -> tuple[str
     return "RECENT", max(0, age)
 
 
+def _observation_authority(row: LocationObservation | None) -> str:
+    if row is None:
+        return "NO_BOUND_LOCATION"
+    source = str(row.source or "").upper()
+    if source in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}:
+        return "TRUSTED_MEMBER_LOCATION"
+    if source == "FOREGROUND_WEB":
+        return "ADVISORY_FOREGROUND_WEB"
+    return "UNKNOWN_BOUND_LOCATION"
+
+
+def _group_authority(rows: dict[str, LocationObservation | None]) -> str:
+    authorities = {
+        _observation_authority(row)
+        for row in rows.values()
+        if row is not None
+    }
+    if not authorities:
+        return "NO_MEMBER_LOCATION"
+    if authorities == {"TRUSTED_MEMBER_LOCATION"}:
+        return "TRUSTED_MEMBER_LOCATION"
+    if authorities == {"ADVISORY_FOREGROUND_WEB"}:
+        return "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED"
+    return "MIXED_MEMBER_LOCATION_AUTHORITY"
+
+
 def _route_eta(
     session: Session,
     journey: Journey,
@@ -282,6 +308,8 @@ def group_presence_projection(
             "authority": "SIGNED_TRAVELER_PRINCIPAL_REQUIRED",
             "members": [],
             "rendezvous": None,
+            "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
+            "viewer_route": None,
             "can_guide": False,
         }
     now = execution_clock.now().astimezone(timezone.utc)
@@ -297,6 +325,8 @@ def group_presence_projection(
             "authority": "SIGNED_TRAVELER_PRINCIPAL_REQUIRED",
             "members": [],
             "rendezvous": None,
+            "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
+            "viewer_route": None,
             "can_guide": False,
         }
     target_pair = rendezvous_target(session, journey)
@@ -331,7 +361,7 @@ def group_presence_projection(
             "location_state": state,
             "group_state": coarse_group[member.id],
             "age_seconds": age,
-            "authority": "ADVISORY_FOREGROUND_WEB" if row else "NO_BOUND_LOCATION",
+            "authority": _observation_authority(row),
             "route_eta_minutes": eta,
             "route_eta_provenance": eta_provenance,
         })
@@ -347,7 +377,7 @@ def group_presence_projection(
     )
     return {
         "state": state,
-        "authority": "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
+        "authority": _group_authority(rows),
         "members": projected,
         "rendezvous": (
             {"activity_id": target_activity.id, "title": target_activity.title,
