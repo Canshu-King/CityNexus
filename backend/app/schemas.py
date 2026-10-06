@@ -795,6 +795,11 @@ class ReplanProposal(BaseModel):
     trigger_event_id: UUID | None = None
     base_plan_version_id: UUID
     proposed_plan_version_id: UUID
+    # Product-visible provenance for autonomous recovery. These are durable
+    # server-owned bindings; clients may explain that an Agent proposed the
+    # change, but must never treat either identifier as mutation authority.
+    recovery_epoch_id: UUID | None = None
+    source_agent_run_id: UUID | None = None
     status: Literal["GENERATED", "PRESENTED", "ACCEPTED", "REJECTED", "EXPIRED", "INVALIDATED"]
     hard_constraints_passed: bool
     locked_commitments_preserved: bool
