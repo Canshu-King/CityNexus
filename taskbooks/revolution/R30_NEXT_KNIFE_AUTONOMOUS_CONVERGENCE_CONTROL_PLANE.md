@@ -419,3 +419,37 @@ without dictating:
     Which tool must the model call next?
 
 That is the next Revolution knife.
+
+
+---
+
+# Local Codex integration note for 7275d155
+
+Codex reported a local-only narrow fix at commit:
+
+    7275d155
+
+That commit is not on GitHub at the time of this relay.
+
+Do NOT use:
+
+    git reset --hard origin/gpt/revolution-r30-consent-epoch-shock-recovery
+
+until the local commit has been preserved.
+
+Safe sequence:
+
+    git status
+    git branch codex/r30-local-7275-safety 7275d155
+    git fetch origin
+    git checkout gpt/revolution-r30-consent-epoch-shock-recovery
+    git rebase origin/gpt/revolution-r30-consent-epoch-shock-recovery
+
+If the local branch already contains 7275d155, rebase it onto the new remote
+head and resolve only real semantic conflicts.
+
+Do not drop the equivalent-candidate normalization merely because GPT advanced
+the remote branch.
+
+After integration, run deterministic tests only. Do not immediately run the
+same old full strike again.
