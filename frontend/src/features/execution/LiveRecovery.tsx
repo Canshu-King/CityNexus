@@ -28,6 +28,8 @@ import {
 type Proposal = {
   id: string;
   status: string;
+  recovery_epoch_id?: string | null;
+  source_agent_run_id?: string | null;
   hard_constraints_passed: boolean;
   locked_commitments_preserved: boolean;
   diff: { removed?: string[]; added?: string[]; moved?: string[] };
@@ -393,6 +395,18 @@ export function LiveRecovery({
               {summary && (
                 <p className="live-summary" data-testid="live-summary">
                   {summary}
+                </p>
+              )}
+              {proposal.source_agent_run_id && (
+                <p
+                  className="v8-muted"
+                  data-testid="live-agent-origin"
+                  data-agent-run-id={proposal.source_agent_run_id}
+                  data-recovery-epoch-id={proposal.recovery_epoch_id ?? ""}
+                >
+                  {zh
+                    ? "这次调整由旅行 Agent 根据最新事实自主提出；最终执行仍受当前行程权限约束。"
+                    : "Your travel Agent proposed this change from the latest facts; execution still follows the Journey's current authority."}
                 </p>
               )}
               <p className="live-unchanged" data-testid="live-unchanged">
