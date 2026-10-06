@@ -67,6 +67,20 @@ def test_cross_midnight_opening_must_cover_full_activity_interval():
     assert partial["status"] == "OUTSIDE_VERIFIED_HOURS"
 
 
+
+def test_after_midnight_activity_can_use_previous_days_overnight_opening():
+    result = classify_opening_hours(
+        activity=activity("2026-10-09T00:30:00+09:00", "2026-10-09T01:30:00+09:00"),
+        place=place(),
+        opening={
+            "status": "NORMALIZED_VALID",
+            "intervals": [{"days": ["Th"], "open": "22:00", "close": "02:00"}],
+        },
+        timezone_name="Asia/Tokyo",
+    )
+    assert result["status"] == "OPEN_COMPATIBLE"
+    assert result["verified_opening_interval"]["opening_day"] == "2026-10-08"
+
 def test_stale_observation_cannot_override_newer_evidence():
     assert observation_is_fresh("2026-10-08T01:00:00+00:00", "2026-10-08T00:59:59+00:00")
     assert not observation_is_fresh("2026-10-08T00:59:59+00:00", "2026-10-08T01:00:00+00:00")
