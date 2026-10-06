@@ -977,8 +977,43 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 "CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status "
                 "ON recovery_epochs(journey_id, status, generation)"
             )
+            if not _table_exists(connection, "agent_execution_leases"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE agent_execution_leases (
+                    id TEXT PRIMARY KEY,
+                    mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    generation INTEGER NOT NULL,
+                    owner_worker_id TEXT NOT NULL,
+                    recovery_epoch_id_at_acquire TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+                    status TEXT NOT NULL DEFAULT 'ACTIVE'
+                        CHECK (status IN ('ACTIVE','EXPIRED','SUPERSEDED','RELEASED')),
+                    acquired_at TEXT NOT NULL,
+                    heartbeat_at TEXT NOT NULL,
+                    expires_at TEXT NOT NULL,
+                    released_at TEXT,
+                    superseded_by_lease_id TEXT REFERENCES agent_execution_leases(id) ON DELETE SET NULL,
+                    UNIQUE(mission_id, generation)
+                    )"""
+                )
+            connection.exec_driver_sql(
+                "CREATE UNIQUE INDEX IF NOT EXISTS "
+                "ux_agent_execution_leases_one_active "
+                "ON agent_execution_leases(mission_id) "
+                "WHERE status = 'ACTIVE'"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS "
+                "idx_agent_execution_leases_mission_status "
+                "ON agent_execution_leases(mission_id, status, generation)"
+            )
             for table, columns in {
-                "agent_runs": {"recovery_epoch_id": "TEXT"},
+                "agent_runs": {
+                    "recovery_epoch_id": "TEXT",
+                    "execution_lease_id": "TEXT",
+                    "execution_lease_generation": "INTEGER",
+                    "worker_id": "TEXT",
+                },
                 "agent_pending_actions": {"recovery_epoch_id": "TEXT"},
                 "action_approvals": {"recovery_epoch_id": "TEXT"},
                 "replan_proposals": {
