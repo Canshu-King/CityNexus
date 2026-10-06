@@ -1,0 +1,38 @@
+Cell 6: for each gateway handler, can its refusal fire? Policy decisions read by running the policy
+with the tightest envelope (auto-accept off, zero cost/loss/drift, no allowed types), plus the refusal
+branches found in the handler body.
+
+action -> decision in each mode:
+   action|ADVISORY|ASSISTED|AUTONOMOUS
+   INSPECT_JOURNEY|ALLOW_AUTO|ALLOW_AUTO|ALLOW_AUTO
+   INSPECT_TWIN|ALLOW_AUTO|ALLOW_AUTO|ALLOW_AUTO
+   LIST_REPLANS|ALLOW_AUTO|ALLOW_AUTO|ALLOW_AUTO
+   SEARCH_CITY_SERVICES|ALLOW_AUTO|ALLOW_AUTO|ALLOW_AUTO
+   REQUEST_REPLAN|ALLOW_AUTO|ALLOW_AUTO|ALLOW_AUTO
+   ACCEPT_REPLAN|DENY|DENY|DENY
+   REPLACE_ACTIVITY|DENY|DENY|DENY
+   RESCHEDULE_ACTIVITY|DENY|DENY|DENY
+   CREATE_BOOKING|DENY|DENY|DENY
+   CANCEL_REFUNDABLE_BOOKING|DENY|DENY|DENY
+   REQUEST_COMMITMENT_CHANGE|DENY|DENY|DENY
+   REPORT_DISRUPTION|ALLOW_AUTO|ALLOW_AUTO|ALLOW_AUTO
+
+handler                      policy action              deny-branches  other refusals (http codes)
+inspect_journey              (none)                     0              none
+inspect_twin                 (none)                     0              none
+list_replans                 (none)                     0              none
+search_city_services         (none)                     0              ['422']
+request_replan               REQUEST_REPLAN             0              ['404', '422']
+accept_replan                ACCEPT_REPLAN              0              ['403', '404', '409', '422']
+replace_activity             REPLACE_ACTIVITY           0              ['404', '409', '422']
+reschedule_activity          RESCHEDULE_ACTIVITY        0              ['422']
+create_booking               CREATE_BOOKING             0              none
+cancel_refundable_booking    CANCEL_REFUNDABLE_BOOKING  0              ['404', '422']
+request_commitment_change    REQUEST_COMMITMENT_CHANGE  0              ['404', '422']
+report_disruption            REPORT_DISRUPTION          0              ['422']
+
+Read: a handler is the fake-gate shape only if its refusal is an unreachable policy DENY. Handlers
+whose action resolves ALLOW_AUTO in every mode (REQUEST_REPLAN, REPORT_DISRUPTION) cannot be refused
+by policy; if such a handler also has no other refusal, its only 'gate' is the allowlist. The typed
+mutation actions (ACCEPT_REPLAN onward) resolve REQUIRE_* / DENY under the tight envelope, so their
+refusals are reachable.
