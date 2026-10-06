@@ -313,12 +313,53 @@ def next_move_projection(
             mobility_raw = json.loads(plan.mobility_evidence_json or "{}")
         except (TypeError, json.JSONDecodeError):
             mobility_raw = {}
+    # Aggregate plan mobility is not enough to answer whether this exact move
+    # is routable.  Only expose the frozen fact for the edge represented by the
+    # current/next activity pair; a different edge must remain UNKNOWN.
     route_evidence = {
-        "state": mobility_raw.get("state") or ("AVAILABLE" if mobility_raw else "UNKNOWN"),
-        "provider": mobility_raw.get("source_provider") or mobility_raw.get("provider_key"),
-        "provenance": mobility_raw.get("aggregate_provenance") or mobility_raw.get("provenance"),
-        "degraded": bool(mobility_raw.get("degraded", False)),
+        "state": "UNKNOWN",
+        "provider": None,
+        "provenance": None,
+        "captured_at": None,
+        "expires_at": None,
+        "minutes": None,
+        "from_activity_id": None,
+        "to_activity_id": None,
+        "edge_match": False,
+        "degraded": False,
+        "reason_code": "NO_TRAVEL_EDGE",
     }
+    edge_origin = current
+    edge_destination = next_activity
+    if edge_destination is not None and edge_origin is None:
+        try:
+            destination_index = active_rows.index(edge_destination)
+        except ValueError:
+            destination_index = 0
+        edge_origin = active_rows[destination_index - 1] if destination_index > 0 else None
+    if plan is not None and edge_origin is not None and edge_destination is not None:
+        facts = mobility_raw.get("facts") if isinstance(mobility_raw, dict) else None
+        facts_by_pair = {
+            (str(item.get("origin_key")), str(item.get("destination_key"))): item
+            for item in (facts or [])
+            if isinstance(item, dict) and item.get("origin_key") and item.get("destination_key")
+        }
+        fact = facts_by_pair.get((str(edge_origin.place_id), str(edge_destination.place_id)))
+        if fact is not None:
+            degraded = bool(fact.get("degraded", mobility_raw.get("degraded", False)))
+            route_evidence = {
+                "state": "DEGRADED" if degraded else "AVAILABLE",
+                "provider": fact.get("provider") or mobility_raw.get("source_provider"),
+                "provenance": fact.get("route_provenance") or fact.get("fact_quality"),
+                "captured_at": fact.get("captured_at") or mobility_raw.get("captured_at"),
+                "expires_at": fact.get("expires_at") or mobility_raw.get("expires_at"),
+                "minutes": fact.get("minutes"),
+                "from_activity_id": str(edge_origin.id),
+                "to_activity_id": str(edge_destination.id),
+                "edge_match": True,
+                "degraded": degraded,
+                "reason_code": "ROUTE_EDGE_MATCHED",
+            }
 
     presence_state = str(presence.get("state") or "LOCATION_UNAVAILABLE")
     if presence_state == "LOCATION_STALE":

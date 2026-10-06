@@ -50,6 +50,15 @@ type GuardianWatch = {
   next_move?: { copy?: string; presence?: { state?: string } } | null;
 };
 
+type DepartureReadiness = {
+  state?: string;
+  target_title?: string | null;
+  starts_at?: string | null;
+  minutes_until_start?: number | null;
+  must_leave_by?: string | null;
+  recommended_action?: string;
+};
+
 type Disruption = {
   id: string;
   type: string;
@@ -129,6 +138,7 @@ export function LiveRecovery({
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [guardianPulse, setGuardianPulse] = useState<GuardianPulse | null>(null);
   const [guardianWatch, setGuardianWatch] = useState<GuardianWatch | null>(null);
+  const [departureReadiness, setDepartureReadiness] = useState<DepartureReadiness | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -176,6 +186,7 @@ export function LiveRecovery({
               ? ({ enabled: true, next_move: body?.watch?.next_move ?? null } as GuardianWatch)
               : null,
           );
+          setDepartureReadiness(body?.readiness ?? null);
         }
       } catch {
         if (!cancelled) setGuardianWatch(null);
@@ -423,6 +434,37 @@ export function LiveRecovery({
         <div className="live-next-move" data-testid="live-next-move" role="status">
           <b>{zh ? "下一步" : "Next move"}</b>
           <span>{guardianWatch.next_move.copy}</span>
+        </div>
+      )}
+
+      {departureReadiness && (
+        <div
+          className={`live-readiness live-readiness-${String(departureReadiness.state ?? "unknown").toLowerCase()}`}
+          data-testid="live-departure-readiness"
+          role="status"
+        >
+          <b>{zh ? "下一站准备情况" : "Ready for next?"}</b>
+          {departureReadiness.target_title && <strong>{departureReadiness.target_title}</strong>}
+          <span>
+            {departureReadiness.state === "READY"
+              ? zh ? "可以出发 · 下一站按计划开放。" : "Ready to go · next stop opens as planned."
+              : departureReadiness.state === "BLOCKED"
+                ? zh ? "先不要出发 · 下一站目前无法前往。" : "Do not leave yet · the next stop is currently unavailable."
+                : departureReadiness.state === "ACTION_NEEDED"
+                  ? zh ? "出发前检查 · 下一站或路线仍需确认。" : "Check before leaving · the next stop or route still needs checking."
+                  : departureReadiness.state === "NOT_DUE"
+                    ? zh ? "还没到出发时间 · 按计划准备即可。" : "Not time to leave yet · stay with the plan."
+                    : zh ? "基本准备好了 · 仍有实时信息未确认。" : "Mostly ready · some live information is unavailable."}
+          </span>
+          {departureReadiness.must_leave_by && (
+            <small>
+              {zh ? "建议在 " : "Leave by "}
+              {new Date(departureReadiness.must_leave_by).toLocaleTimeString(locale, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </small>
+          )}
         </div>
       )}
 

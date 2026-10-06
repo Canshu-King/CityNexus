@@ -103,3 +103,33 @@ def test_missing_route_minutes_never_fabricates_departure_time(monkeypatch):
 
     assert result["must_leave_by"] is None
     assert result["must_leave_by_absent_reason"] == "ROUTE_EVIDENCE_DOES_NOT_EXPOSE_TRAVEL_MINUTES"
+
+
+def test_aggregate_route_minutes_without_matching_edge_never_fabricates_departure_time(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    move = _next_move(now, presence="NEAR_TARGET")
+    move["route_evidence"] = {
+        "state": "AVAILABLE",
+        "minutes": 20,
+        "edge_match": False,
+        "reason_code": "NO_TRAVEL_EDGE",
+    }
+    _patch_basics(monkeypatch, now, move)
+
+    result = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+
+    assert result["must_leave_by"] is None
+    assert result["must_leave_by_absent_reason"] == "NO_TRAVEL_EDGE"
+
+
+def test_readiness_fingerprint_changes_on_material_state_but_not_clock_tick(monkeypatch):
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    _patch_basics(monkeypatch, now, _next_move(now, presence="NEAR_TARGET"))
+    first = module.departure_readiness_projection(SimpleNamespace(), _journey(), now=now)
+    later_same_band = dict(first)
+    later_same_band["minutes_until_start"] = 80
+    changed = dict(first)
+    changed["state"] = "ACTION_NEEDED"
+
+    assert module.readiness_fingerprint(first) == module.readiness_fingerprint(later_same_band)
+    assert module.readiness_fingerprint(first) != module.readiness_fingerprint(changed)

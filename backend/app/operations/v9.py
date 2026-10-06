@@ -1302,6 +1302,10 @@ def notify(
 
 
 def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourneySnapshot:
+    # Keep the offline card as a captured read model.  This deliberately uses
+    # the pure projection, never the notification-producing refresh helper.
+    from app.execution.readiness import departure_readiness_projection
+
     reference = execution_clock.now(journey.timezone)
     window_end = reference + timedelta(hours=24)
     activities = []
@@ -1359,6 +1363,7 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         if stay_offer_id:
             offer = session.get(AccommodationOfferSnapshot, str(stay_offer_id))
     execution = _execution_truth(activities, legs, journey.current_activity_id)
+    readiness = departure_readiness_projection(session, journey, now=reference.astimezone(timezone.utc))
     provider_times = [item.captured_at for item in legs if item.captured_at]
     now = execution_clock.now().isoformat()
     existing = session.get(OfflineJourneySnapshot, journey.id)
@@ -1393,10 +1398,29 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         ],
         "read_only": True,
         "financial_actions_allowed": False,
+        "departure_readiness": {
+            "state": readiness.get("state"),
+            "target_activity_id": readiness.get("target_activity_id"),
+            "target_title": readiness.get("target_title"),
+            "recommended_action": readiness.get("recommended_action"),
+            "must_leave_by": readiness.get("must_leave_by"),
+            "must_leave_by_absent_reason": readiness.get("must_leave_by_absent_reason"),
+            "checks": readiness.get("checks"),
+            "venue_last_known": (readiness.get("next_move") or {}).get("venue_readiness"),
+            "route_evidence": (readiness.get("next_move") or {}).get("route_evidence"),
+            "captured_at": now,
+            "freshness_semantics": "CAPTURED_READ_MODEL",
+        },
     }
     freshness = {
         "latest_provider_capture_at": max(provider_times) if provider_times else None,
         "transit_realtime": "UNKNOWN_REALTIME",
+        "departure_readiness_captured_at": now,
+        "departure_readiness": {
+            "venue": (readiness.get("next_move") or {}).get("venue_readiness", {}).get("observed_at"),
+            "route": (readiness.get("next_move") or {}).get("route_evidence", {}).get("captured_at"),
+            "semantics": "last_known_at_capture",
+        },
     }
     if existing is None:
         existing = OfflineJourneySnapshot(

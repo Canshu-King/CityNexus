@@ -317,6 +317,7 @@ export interface GuardianStatus {
   current_active_plan_version_id: string | null;
   latest: GuardianRun | null;
   runs: GuardianRun[];
+  readiness?: DepartureReadiness | null;
   autopilot?: {
     enabled: boolean;
     interval_seconds: number;
@@ -342,6 +343,22 @@ export interface GuardianStatus {
     payload: Record<string, unknown>;
     updated_at: string;
   } | null;
+}
+
+export interface DepartureReadiness {
+  state: "READY" | "READY_WITH_UNCERTAINTY" | "ACTION_NEEDED" | "BLOCKED" | "NOT_DUE" | "COMPLETE" | "UNKNOWN";
+  target_activity_id: string | null;
+  target_title: string | null;
+  starts_at: string | null;
+  minutes_until_start: number | null;
+  must_leave_by: string | null;
+  must_leave_by_absent_reason?: string | null;
+  blocking_reasons: string[];
+  warning_reasons: string[];
+  checks: Record<string, string | null>;
+  recommended_action: string;
+  authority: string;
+  captured_at?: string;
 }
 
 export interface GuardianWatch {
@@ -1221,6 +1238,10 @@ export const cityNexusApi = {
 
   getGuardianStatus(journeyId: string): Promise<GuardianStatus> {
     return requestJson<GuardianStatus>("/journeys/" + journeyId + "/guardian/status");
+  },
+
+  getGuardianReadiness(journeyId: string): Promise<DepartureReadiness> {
+    return requestJson<DepartureReadiness>("/journeys/" + journeyId + "/guardian/readiness");
   },
 
   getResilience(journeyId: string): Promise<ResilienceSnapshot> {

@@ -1432,6 +1432,11 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .live-next-move { display: grid; gap: 5px; margin: 0 0 16px; padding: 12px 14px; border: 1px solid #c7d8ed; border-radius: 14px; background: #f5f9ff; color: #274765; line-height: 1.45; }
 .live-next-move b { font-size: 14px; }
 .live-next-move span { font-size: 13px; }
+.live-readiness { display: grid; gap: 5px; margin: 0 0 16px; padding: 12px 14px; border: 1px solid #bcd9c7; border-radius: 14px; background: #f5fbf6; color: #24543a; line-height: 1.45; }
+.live-readiness strong { font-size: 14px; }
+.live-readiness span, .live-readiness small { font-size: 13px; }
+.live-readiness-blocked { border-color: #e3a7a0; background: #fff5f3; color: #71271e; }
+.live-readiness-action_needed, .live-readiness-ready_with_uncertainty { border-color: #e5c98f; background: #fffaf0; color: #63491b; }
 @media (max-width: 760px) { .live-guardian-check { grid-template-columns: 1fr; gap: 4px; } }
 .live-disruption b, .live-proposal b { font-size: var(--cn-fs-meta); }
 .live-disruption ul { margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.55; }

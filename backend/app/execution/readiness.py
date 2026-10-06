@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -77,13 +78,20 @@ def _target_commitments(
         ).all()
     )
     if not activity_id:
-        return rows
-    direct = [row for row in rows if str(row.activity_id or "") == str(activity_id)]
-    return direct or rows
+        return []
+    # Commitment.activity_id is the durable plan-local binding.  Do not fall
+    # back to an unrelated C3/C4 row elsewhere in the Journey: that would make
+    # any protected fact appear to block the current next move.
+    return [row for row in rows if str(row.activity_id or "") == str(activity_id)]
 
 
 def _next_reservation(
-    session: Session, journey_id: str, *, now: datetime
+    session: Session,
+    journey_id: str,
+    *,
+    now: datetime,
+    activity_id: str | None = None,
+    target_start_at: datetime | None = None,
 ) -> TransportReservation | None:
     rows = list(
         session.scalars(
@@ -95,10 +103,24 @@ def _next_reservation(
             .order_by(TransportReservation.scheduled_departure_at, TransportReservation.id)
         ).all()
     )
+    if not activity_id:
+        return None
+    commitments = _target_commitments(session, journey_id, activity_id)
+    commitment_ids = {str(row.id) for row in commitments}
     future: list[tuple[datetime, TransportReservation]] = []
     for row in rows:
         departure = _aware(row.scheduled_departure_at)
         if departure is not None and departure >= now - timedelta(minutes=30):
+            if target_start_at is not None and departure > target_start_at + timedelta(hours=2):
+                continue
+            # A confirmed reservation normally points at its C4 commitment.
+            # If an older imported row has no commitment link, only accept it
+            # when its departure is in the current target's bounded window;
+            # never let a remote Journey reservation affect this move.
+            if row.commitment_id and str(row.commitment_id) not in commitment_ids:
+                continue
+            if not row.commitment_id and target_start_at is None:
+                continue
             future.append((departure, row))
     return min(future, key=lambda item: item[0])[1] if future else None
 
@@ -129,7 +151,13 @@ def departure_readiness_projection(
     presence_state = str(presence.get("state") or "LOCATION_UNAVAILABLE")
 
     commitments = _target_commitments(session, journey.id, target_id)
-    reservation = _next_reservation(session, journey.id, now=stamp)
+    reservation = _next_reservation(
+        session,
+        journey.id,
+        now=stamp,
+        activity_id=target_id,
+        target_start_at=starts_at,
+    )
     events = _open_material_events(session, journey.id, target_id)
 
     blocking: list[str] = []
@@ -169,9 +197,18 @@ def departure_readiness_projection(
         warnings.append("LOCATION_UNAVAILABLE")
 
     must_leave_by = None
-    must_leave_reason = "ROUTE_EVIDENCE_DOES_NOT_EXPOSE_TRAVEL_MINUTES"
-    # Only use an explicit duration if the projection already exposes one.
-    route_minutes = route.get("minutes") or route.get("duration_min")
+    if "edge_match" not in route:
+        # Compatibility for callers supplying the older compact route shape;
+        # persisted projections use the explicit NO_TRAVEL_EDGE reason.
+        must_leave_reason = "ROUTE_EVIDENCE_DOES_NOT_EXPOSE_TRAVEL_MINUTES"
+    elif not route.get("edge_match"):
+        must_leave_reason = str(route.get("reason_code") or "NO_TRAVEL_EDGE")
+    elif route_degraded:
+        must_leave_reason = "ROUTE_EVIDENCE_DEGRADED"
+    else:
+        must_leave_reason = "ROUTE_EVIDENCE_UNKNOWN"
+    # Only use an explicit duration from the exact current -> next edge.
+    route_minutes = route.get("minutes") if route.get("edge_match") else None
     try:
         travel_minutes = int(route_minutes) if route_minutes is not None else None
     except (TypeError, ValueError):
@@ -232,3 +269,106 @@ def departure_readiness_projection(
             "reservation_id": reservation.id if reservation is not None else None,
         },
     }
+
+
+def _time_band(minutes_until_start: float | None) -> str:
+    if minutes_until_start is None or minutes_until_start > 120:
+        return "QUIET"
+    if minutes_until_start > 60:
+        return "WINDOW_120_TO_60"
+    if minutes_until_start > 30:
+        return "WINDOW_60_TO_30"
+    if minutes_until_start > 15:
+        return "WINDOW_30_TO_15"
+    return "WINDOW_15_OR_LESS"
+
+
+def readiness_fingerprint(projection: dict[str, Any]) -> str:
+    """Stable identity for one meaningful readiness answer."""
+
+    material = {
+        "journey_target": projection.get("target_activity_id"),
+        "state": projection.get("state"),
+        "blocking": sorted(projection.get("blocking_reasons") or []),
+        "warnings": sorted(projection.get("warning_reasons") or []),
+        "reservation": (projection.get("evidence") or {}).get("reservation_id"),
+        "commitments": sorted((projection.get("evidence") or {}).get("commitment_ids") or []),
+        "band": _time_band(projection.get("minutes_until_start")),
+    }
+    encoded = json.dumps(material, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()[:24]
+
+
+def briefing_priority(projection: dict[str, Any]) -> str | None:
+    """Return a notification priority only when the readiness window is useful."""
+
+    minutes = projection.get("minutes_until_start")
+    if minutes is None or minutes > 60:
+        return None
+    state = str(projection.get("state") or "UNKNOWN")
+    if minutes <= 15 and state == "BLOCKED":
+        return "CRITICAL"
+    if minutes <= 15 and state == "ACTION_NEEDED":
+        return "HIGH"
+    if minutes <= 30 and state in {"ACTION_NEEDED", "READY_WITH_UNCERTAINTY"}:
+        return "HIGH"
+    return "NORMAL"
+
+
+def refresh_departure_readiness(
+    session: Session,
+    journey: Journey,
+    *,
+    now: datetime | None = None,
+    emit_briefing: bool = True,
+    refresh_offline: bool = True,
+) -> dict[str, Any]:
+    """Refresh the read model and, when due, record one deduped briefing."""
+
+    projection = departure_readiness_projection(session, journey, now=now)
+    captured_at = (now or execution_clock.now()).astimezone(timezone.utc).isoformat()
+    notification: dict[str, Any] = {
+        "eligible": False,
+        "created_or_reused": False,
+        "id": None,
+        "dedupe_key": None,
+        "priority": None,
+    }
+    priority = briefing_priority(projection)
+    if emit_briefing and priority is not None:
+        from app.operations.v9 import notify
+
+        fingerprint = readiness_fingerprint(projection)
+        dedupe_key = f"departure-readiness:{journey.id}:{fingerprint}"
+        row = notify(
+            session,
+            journey.id,
+            dedupe_key=dedupe_key,
+            kind="DEPARTURE_READINESS",
+            priority=priority,
+            payload={
+                "target_activity_id": projection.get("target_activity_id"),
+                "state": projection.get("state"),
+                "recommended_action": projection.get("recommended_action"),
+                "must_leave_by": projection.get("must_leave_by"),
+                "summary": projection.get("recommended_action"),
+            },
+        )
+        notification = {
+            "eligible": True,
+            "created_or_reused": True,
+            "id": row.id,
+            "dedupe_key": dedupe_key,
+            "priority": priority,
+            "occurrence_count": row.occurrence_count,
+        }
+    projection = {
+        **projection,
+        "captured_at": captured_at,
+        "notification": notification,
+    }
+    if refresh_offline:
+        from app.operations.v9 import refresh_offline_snapshot
+
+        refresh_offline_snapshot(session, journey)
+    return projection

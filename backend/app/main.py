@@ -222,6 +222,10 @@ from app.security.credential_literals import (  # ORD-0307: 字面量凭据的�
     startup_report as credential_gate_startup,
 )
 from app.execution.clock import execution_clock
+from app.execution.readiness import (
+    departure_readiness_projection,
+    refresh_departure_readiness,
+)
 from app.execution.truth import (
     DEVICE_LOCATION_VERIFIED_EXECUTION,
     OPERATOR_CONFIRMED_EXECUTION,
@@ -1895,6 +1899,7 @@ def get_guardian_autopilot_status(
         if enrollment is not None and enrollment.enabled
         else None
     )
+    readiness = departure_readiness_projection(session, journey)
     return {
         "journey_id": journey.id,
         "enrollment": (
@@ -1910,8 +1915,29 @@ def get_guardian_autopilot_status(
             else None
         ),
         "watch": watch,
+        "readiness": readiness,
         **autorun_status(),
     }
+
+
+@app.get("/api/v1/journeys/{journey_id}/guardian/readiness")
+def get_guardian_departure_readiness(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    return departure_readiness_projection(session, journey)
+
+
+@app.post("/api/v1/journeys/{journey_id}/guardian/readiness/refresh")
+def refresh_guardian_departure_readiness(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    result = refresh_departure_readiness(session, journey)
+    session.commit()
+    return result
 
 
 @app.post(
@@ -1970,6 +1996,7 @@ def get_guardian_status(
         if enrollment is not None and enrollment.enabled
         else None
     )
+    result["readiness"] = departure_readiness_projection(session, journey)
     fixture = session.get(CitySignalFixture, journey.id)
     result["signal_fixture"] = fixture_payload(fixture) if fixture is not None else None
     return result
