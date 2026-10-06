@@ -1,0 +1,87 @@
+{
+ "instrument": "cmdra_0553_census_moved_r20",
+ "rounds": [
+  {
+   "sha": "b2fccfdf2728",
+   "note": "r11 census was taken on this one"
+  },
+  {
+   "sha": "79daa3c4ff8f",
+   "note": "the generation this round's walk was taken on"
+  },
+  {
+   "sha": "ff7f62011821",
+   "note": "the value the lock found when it came to classify"
+  }
+ ],
+ "line_movement": [
+  {
+   "earlier": "b2fccfdf2728",
+   "later": "ff7f62011821",
+   "earlier_is_ancestor": false
+  },
+  {
+   "earlier": "79daa3c4ff8f",
+   "later": "ff7f62011821",
+   "earlier_is_ancestor": false
+  }
+ ],
+ "subject_at_later": "ORD-0574 sibling: anchor_drift_survey_r4 refuses an empty scan by name, with the before/after readings on the same fixture and the positive control on a real tip",
+ "census_totals": {
+  "previous_generation": {
+   "en_tokens": 33,
+   "painted_hits": 38
+  },
+  "this_generation": {
+   "en_tokens": 29,
+   "painted_hits": 32,
+   "zh_tokens": 1
+  }
+ },
+ "token_diff": {
+  "only_in_previous": [
+   "EVIDENCE",
+   "INBOX",
+   "MEMORY",
+   "MULTIMODAL"
+  ],
+  "only_in_this": [],
+  "shared_count": 29
+ },
+ "this_generation_tip_binding": "off-tip by declared reason: authority line rewrote the tip mid-walk; 79daa3c4 is no longer an ancestor of the current tip",
+ "this_generation_arms": [
+  {
+   "id": "every_painted_token_classified",
+   "verdict": "PASS"
+  },
+  {
+   "id": "false_positive_SELECTED_is_copy_word",
+   "verdict": "PASS"
+  },
+  {
+   "id": "false_positive_COMMITMENT_is_copy_word",
+   "verdict": "PASS"
+  },
+  {
+   "id": "contract_status_names_are_server_words",
+   "verdict": "PASS"
+  },
+  {
+   "id": "positive_control_dirty_generation_would_flag",
+   "verdict": "PASS"
+  },
+  {
+   "id": "no_undetermined_left_silent",
+   "verdict": "PASS"
+  },
+  {
+   "id": "zh_arm_has_no_contract_word",
+   "verdict": "PASS"
+  }
+ ],
+ "positive_control": "pre-r2 painted 6 hits ['ARRIVED', 'COMPLETED', 'PROGRESS']; tokens NOT bucketed contract-word=[]; still painted on this generation=[]",
+ "page_errors": [],
+ "entry_on_this_generation": [
+  "index-ay8Jsqaq.js"
+ ]
+}
