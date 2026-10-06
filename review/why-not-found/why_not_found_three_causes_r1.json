@@ -9,7 +9,20 @@
   {
    "cause": "never_registered",
    "query": "天津",
-   "server": {"state": "RESOLVED", "reason_code": "COVERAGE_INCOMPLETE", "recommended_action": "START_HYDRATION", "places": 0, "missing_categories": ["attractions", "food", "nightlife", "lodging", "mobility", "booking"]},
+   "server": {
+    "state": "RESOLVED",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "places": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ]
+   },
    "screen_text": "这座城还没准备过：服务器认得「天津」，但还缺 6 类事实（attractions、food、nightlife、lodging、mobility、booking），所以现在直接规划会缺依据。可以先准备。",
    "screen_basis_line_also_present": "已自动设置：中国 · 人民币 · 中国标准时间",
    "before_this_change": "only the basis line appeared; the server's six missing categories never reached this field"
@@ -17,17 +30,31 @@
   {
    "cause": "no_canonical_identity",
    "query": "贡山独龙族怒族自治县",
-   "server": {"state": "NO_MATCH", "reason_code": "NO_CANONICAL_IDENTITY", "recommended_action": "CHOOSE_ANOTHER_DESTINATION", "places": 0},
+   "server": {
+    "state": "NO_MATCH",
+    "reason_code": "NO_CANONICAL_IDENTITY",
+    "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+    "places": 0
+   },
    "screen_text": "没认出「贡山独龙族怒族自治县」：已退回中立口径 CN / 人民币（CNY）/ Asia/Shanghai 规划，不沿用上一次识别到的城市。换个写法，或在\"看支持的目的地\"里挑一个。",
    "before_this_change": "same sentence (this cause was already honest; this change did not touch it)"
   },
   {
    "cause": "resolved_but_no_coordinate",
    "query": "北京",
-   "server": {"state": "RESOLVED", "reason_code": "PLACES_NO_COORDINATE", "recommended_action": "PREPARE_PLACES", "places": 1, "coordinate_status": ["NO_COORDINATE"]},
+   "server": {
+    "state": "RESOLVED",
+    "reason_code": "PLACES_NO_COORDINATE",
+    "recommended_action": "PREPARE_PLACES",
+    "places": 1,
+    "coordinate_status": [
+     "NO_COORDINATE"
+    ]
+   },
    "scenario": "one catalog row with an identity and no coordinate, written through the product's own ORM the way the discovery path writes places (standing in for a provider that returned an identity without a point)",
-   "screen_text": "这里有地点，但它们没有坐标：服务器认得「北京」，目录里有 1 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。",
-   "before_this_change": "this state could not exist at all: places.latitude/longitude were NOT NULL, so no row could carry an identity without a coordinate"
+   "screen_text": "这里有地点，但它们没有坐标：服务器认得「北京」，目录里有 1 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。",
+   "before_this_change": "this state could not exist at all: places.latitude/longitude were NOT NULL, so no row could carry an identity without a coordinate",
+   "next_step_added_after_ruler_caught_it": "the first version of this sentence named the cause and stopped; the acceptance ruler's third question (does it tell the user what to do next) read False, so the sentence gained the action the server already recommends (PREPARE_PLACES)"
   }
  ],
  "product_bytes_changed": [
@@ -37,5 +64,29 @@
   "backend/app/anywhere_capability.py (REASON_PLACES_NO_COORDINATE + ACTION_PREPARE_PLACES + catalog_coordinate_status() + _resolved_places_lack_coordinates() + per-row coordinate_status in the response)",
   "frontend/src/features/setup/JourneyTrialSetup.tsx (the destination field now reads the server's verdict for the typed name and renders one of the three causes)"
  ],
- "verdict": "THREE_CAUSES_DISTINGUISHED_ON_SCREEN"
+ "verdict": "THREE_CAUSES_DISTINGUISHED_ON_SCREEN",
+ "acceptance_ruler": {
+  "input": "review/why-not-found/ruler_input_three_r1.json",
+  "verdict": "ALL_CAUSES_HONEST",
+  "scenarios": [
+   {
+    "cause": "no_canonical_identity",
+    "names_cause": true,
+    "quotes_server": true,
+    "next_step": true
+   },
+   {
+    "cause": "never_registered",
+    "names_cause": true,
+    "quotes_server": true,
+    "next_step": true
+   },
+   {
+    "cause": "resolved_but_no_coordinate",
+    "names_cause": true,
+    "quotes_server": true,
+    "next_step": true
+   }
+  ]
+ }
 }

@@ -283,8 +283,8 @@ export function notFoundCauseWords(
     return {
       title: zh ? "这里有地点，但它们没有坐标" : "The places are here, but none has a coordinate",
       body: zh
-        ? `服务器认得「${spell}」，目录里有 ${n} 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。`
-        : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing.`,
+        ? `服务器认得「${spell}」，目录里有 ${n} 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。`
+        : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
     };
   }
 
