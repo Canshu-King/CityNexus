@@ -334,14 +334,75 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                 collective = mission
 
         if collective is None:
-            verdicts["authenticated_collective_responses"] = _verdict(
-                CONTRADICTED,
-                "No collective parent mission is reachable from the AgentRun mission.",
+            # R30 may continue without a fresh member round only when the
+            # mutation audit durably records current UNANIMOUS_DOMINANCE.
+            # This is a separate authority path from R28's authenticated
+            # collective response path; an ordinary missing parent remains a
+            # hard verifier failure.
+            dominance_audit = (
+                session.scalar(
+                    select(AuditLog)
+                    .where(
+                        AuditLog.action == "replan.accepted",
+                        AuditLog.entity_type == "ReplanProposal",
+                        AuditLog.entity_id == (proposal.id if proposal else ""),
+                        AuditLog.journey_id == journey.id,
+                    )
+                    .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+                )
+                if proposal is not None
+                else None
             )
-            verdicts["non_selected_proposals_rejected"] = _verdict(
-                NOT_PROVEN,
-                "No collective option set is reachable.",
+            dominance_after = _audit_after(dominance_audit)
+            dominance = dominance_after.get("collective_authority")
+            unanimous_no_round = bool(
+                proposal is not None
+                and isinstance(dominance, dict)
+                and dominance.get("classification") == "UNANIMOUS_DOMINANCE"
+                and dominance_after.get("status") == "ACCEPTED"
             )
+            if unanimous_no_round:
+                option_rows = session.scalars(
+                    select(ReplanProposal).where(
+                        ReplanProposal.journey_id == journey.id,
+                        ReplanProposal.base_plan_version_id
+                        == proposal.base_plan_version_id,
+                        ReplanProposal.trigger_event_id
+                        == proposal.trigger_event_id,
+                        ReplanProposal.id != proposal.id,
+                    )
+                ).all()
+                terminal_options_ok = bool(option_rows) and all(
+                    row.status in {"REJECTED", "INVALIDATED", "EXPIRED"}
+                    for row in option_rows
+                )
+                verdicts["authenticated_collective_responses"] = _verdict(
+                    PROVEN,
+                    "No fresh member round was required: the accepted mutation carries a durable current UNANIMOUS_DOMINANCE classification.",
+                    collective_required=False,
+                    authority_audit_id=dominance_audit.id,
+                    classification=dominance.get("classification"),
+                )
+                verdicts["non_selected_proposals_rejected"] = _verdict(
+                    PROVEN if terminal_options_ok else NOT_PROVEN,
+                    "Every other proposal on the accepted base/trigger surface is terminally non-active."
+                    if terminal_options_ok
+                    else "A non-selected proposal on the accepted base/trigger surface remains actionable.",
+                    proposals=[
+                        {"proposal_id": row.id, "status": row.status}
+                        for row in option_rows
+                    ],
+                    authority_audit_id=dominance_audit.id,
+                )
+            else:
+                verdicts["authenticated_collective_responses"] = _verdict(
+                    CONTRADICTED,
+                    "No collective parent mission is reachable from the AgentRun mission.",
+                )
+                verdicts["non_selected_proposals_rejected"] = _verdict(
+                    NOT_PROVEN,
+                    "No collective option set is reachable.",
+                )
         else:
             collective_payload = _json(collective.clarification_json, {})
             required = {str(item) for item in collective_payload.get("required_member_ids") or []}

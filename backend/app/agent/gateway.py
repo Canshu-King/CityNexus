@@ -1806,8 +1806,24 @@ class AgentToolGateway:
             plan_id = str(item.get("plan_id") or "")
             shape = json.dumps(
                 {
-                    "places": item.get("fit_subject_place_ids") or [],
-                    "tags": item.get("fit_subject_tags") or [],
+                    # A plan's changed-place/tag surface is a set.  Preserve
+                    # the first proposal for an equivalent future even when
+                    # independently generated plans serialize those values in
+                    # a different order.
+                    "places": sorted(
+                        {
+                            str(value)
+                            for value in (item.get("fit_subject_place_ids") or [])
+                            if value
+                        }
+                    ),
+                    "tags": sorted(
+                        {
+                            str(value).strip().lower()
+                            for value in (item.get("fit_subject_tags") or [])
+                            if str(value).strip()
+                        }
+                    ),
                 },
                 sort_keys=True,
                 separators=(",", ":"),
