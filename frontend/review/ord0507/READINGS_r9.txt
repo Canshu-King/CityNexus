@@ -1,0 +1,59 @@
+ORD-0507 item 2 -- r9 generation (the same hand, re-cut because the line moved again)
+Written by k122_make_readings_r9.py; every number is parsed from a run log or from git.
+
+[coordinates]
+  tip this hand rests on   : 32372c7e57611f73782fdc607d929735224cf657
+  branch                   : review/a68b0631-ord0507-clock-attribution-r9, product commit 6639d6f30dcd5de752ac2448f3f8a8e4b878dc8e (the last commit on it carrying product bytes)
+  previous generation      : r8 head 30c5d624f324665773cd8fea3e25b3b6c64763a9, cut at aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+  spec blob                : adce1b1171eb417f528029a59d57615248eea5d8
+  product blobs            : d201903e53c51bacfab2f98457cea15156d440b4 (V8Experience), 5b92f33112b05e3eb8d710c2f1e5fb00c6beae90 (SimulationPanel)
+
+[why a generation was spent]
+  the line moved 169 paths; this hand touches 3 of them, so the intersection is 1
+  -- `frontend/src/app/V8Experience.tsx`, and the two hands sit in different hunks;
+  `git merge-tree --write-tree` against this tip reports 0 conflicts.  The re-cut buys currency.
+
+[the arm that carries the order's two sentences, on this tip's production bundle]
+  guard run      : {"passed": 5}, rc 0, bundle 9.57 s
+  wizard gate    : {"passed": 6}, rc 0
+  language gate  : {"passed": 5}, rc 0
+
+[the two sentences the arm actually read, painted to file]
+  2a-clock-sentence_en : {"sentence": "\"now\" comes from the server's scenario: 9 Oct, 18:00. The server's execution projection has not arrived, so no station is claimed from the cursor.", "paren": null, "cursor_status": "UNKNOWN"}
+  2a-clock-sentence_zh-CN : {"sentence": "“现在”取自服务器场景：10月9日 18:00。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读。现在/接下来由服务器的执行投影给出。", "paren": null, "cursor_status": "ABSENT_FALLBACK"}
+  2b-stage-attribution_en : {"mismatch_sentence": "Note: this screen has no journey in view yet -- you are setting up a new one. The journey on stage (04f35308) is the demo stage's own scenario; the actions below act on it, not on the trip you are creating.", "stage_row": "04f35308 · ACTIVE"}
+  2b-stage-attribution_zh-CN : {"mismatch_sentence": "注意：这一屏还没有正在看的行程，你正在新建的是另一趟。台上那一趟（04f35308）是演示舞台的全局场景，下面的动作打在它身上，不会写进你正在建的这一趟。", "stage_row": "04f35308 · ACTIVE"}
+
+[counter-arms, one mutant at a time so each bite is attributed]
+  m1 (the bracket is never dropped) : {"failed": 2, "passed": 3} -- the red is arm 2a, in both locales:
+     "the sentence claims a server cursor while the cursor is UNKNOWN"
+  m2 (the prop is not wired)        : {"failed": 2, "passed": 3} -- the red is arm 2b, in both locales:
+     "the new-journey screen names a stage journey with 0 counter-sentences"
+  each mutant reddens exactly its own arm's two locales and leaves the other arm green, which is
+  what the previous generation's driver could not show: it applied both mutants before a single
+  run, so a red on 2a could have come from either.  Both product files were restored from memory
+  and re-verified by sha256 after every mutant.
+
+[the language gate, and the red that did not reproduce]
+  this generation : {"passed": 5}, rc 0.
+  previous generation, first run : {"failed": 1, "passed": 4} -- red on ord0208-the-clock-sentence-speaks-human, naming a
+     sentence that claims a server cursor while the cursor is ABSENT_FALLBACK; a paired re-run of
+     that same generation was green with the hand and green at the bare tip, same named test ids.
+  So that red was a state-sensitive reading of that gate, not the hand's damage, and it has not
+  come back at this tip either.  The red reading stays on the record rather than being dropped.
+
+[named in the previous generation, still standing]
+  a. the mutant driver used to apply both mutants before one run, so "each mutant bites its own
+     arm" was not measurable from it; it now runs them separately and the bites are attributed.
+  b. the per-test verdict parser used to read the `--reporter=line` output for tick marks that
+     format does not print, returning an empty map while the run had gone red; the bite is read
+     from the error lines instead.
+
+[named against myself, this generation]
+  a. my runners still carried the previous tip as a constant.  Pointing the pair script at the
+     wrong tip would have compared a tree with itself and printed a clean, meaningless "no new
+     reds"; both are re-pointed and the tip each reading names is parsed, not assumed.
+  b. the readings file named the branch head, which its own commit then staled by one; it now
+     names the last commit on the branch that carries product bytes, which doc commits cannot move.
+
+-- lane a68b0631, r9 generation
