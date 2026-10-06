@@ -30,6 +30,7 @@ from app.db.models import (
     RecoveryEpoch,
 )
 from app.agent.transactional_operator import execution_plan_projection
+from app.execution.continuous_journey import continuous_flow_projection
 
 
 def classify_operator_state(
@@ -366,6 +367,29 @@ def operator_projection(
     timeline = [*_timeline(session, journey.id), *(collective.get("timeline") or [])]
     timeline.sort(key=lambda item: (str(item.get("at") or ""), str(item.get("kind") or "")))
 
+    unresolved_collective = str(collective.get("state") or "") in {
+        "MEDIATING", "COLLECTIVE_STALE", "NEEDS_ATTENTION"
+    }
+    unresolved_operations = bool(
+        operations is not None
+        and operations.get("status") in {"PARTIALLY_APPLIED", "FAILED_SAFE", "NEEDS_ATTENTION"}
+    )
+    activity_incident = bool(
+        open_event is not None
+        and journey.current_activity_id is not None
+        and str(open_event.affected_activity_id or "") == str(journey.current_activity_id)
+    )
+    flow = continuous_flow_projection(
+        session,
+        journey,
+        operator_needs_attention=bool(
+            state == "NEEDS_ATTENTION"
+            or unresolved_collective
+            or unresolved_operations
+            or (activity_incident and state in {"INVESTIGATING", "DEGRADED"})
+        ),
+    )
+
     proposal_diff = _json(proposal.diff_json, {}) if proposal is not None else {}
     approval_payload = None
     if approval is not None and pending is not None and pending.status in {"PENDING", "RESUMING"}:
@@ -450,6 +474,7 @@ def operator_projection(
         "brain": brain,
         "discovery": discovery,
         "operations": operations,
+        "flow": flow,
         "collective": collective,
         "timeline": timeline[-12:],
         "advanced": {

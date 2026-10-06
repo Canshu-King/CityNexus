@@ -454,8 +454,29 @@ export interface JourneyOperatorProjection {
   collective: JourneyOperatorCollectiveProjection;
   discovery: JourneyOperatorDiscoveryProjection;
   operations?: JourneyOperatorOperationsProjection | null;
+  flow?: JourneyContinuousFlow | null;
   timeline: JourneyOperatorTimelineItem[];
   operator: { watching: boolean; will_continue_after_approval: boolean };
+}
+
+export interface JourneyContinuousFlow {
+  state: string;
+  recommended_action: string;
+  can_confirm: boolean;
+  current: { id: string; title: string; status: string; place_id?: string | null; start_at?: string; end_at?: string } | null;
+  next: { id: string; title: string; status: string; place_id?: string | null; start_at?: string; end_at?: string } | null;
+  previous_completed?: { id: string; title: string; status: string; place_id?: string | null } | null;
+  presence?: { state?: string; reason_code?: string };
+  readiness?: { state?: string; must_leave_by?: string | null; target_title?: string | null; recommended_action?: string };
+  route?: { state?: string; exact?: boolean; reason_code?: string; duration_min?: number | null; must_leave_by?: string | null; origin_place_id?: string | null; destination_place_id?: string | null };
+  notification_key?: string;
+  captured_at?: string;
+  read_only?: boolean;
+}
+
+export interface ExecutionTransitionPayload {
+  truth_kind: "OPERATOR_CONFIRMED_EXECUTION";
+  operator_confirmed: true;
 }
 
 export interface DepartureReadiness {
@@ -1203,10 +1224,25 @@ export const cityNexusApi = {
     return requestJson<JourneyTwin>("/journeys/" + journeyId + "/start", { method: "POST" });
   },
 
-  completeActivity(journeyId: string, activityId: string): Promise<JourneyTwin> {
+  completeActivity(journeyId: string, activityId: string, payload?: ExecutionTransitionPayload): Promise<JourneyTwin> {
     return requestJson<JourneyTwin>(
       "/journeys/" + journeyId + "/activities/" + activityId + "/complete",
-      { method: "POST" },
+      { method: "POST", headers: travelerAuthHeaders(), body: payload ? JSON.stringify(payload) : undefined },
+    );
+  },
+
+  transitionActivity(
+    journeyId: string,
+    activityId: string,
+    transition: "depart" | "arrive" | "begin" | "complete",
+  ): Promise<JourneyTwin> {
+    return requestJson<JourneyTwin>(
+      "/journeys/" + journeyId + "/activities/" + activityId + "/" + transition,
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ truth_kind: "OPERATOR_CONFIRMED_EXECUTION", operator_confirmed: true }),
+      },
     );
   },
 

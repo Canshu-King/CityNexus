@@ -11,6 +11,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { cityNexusApi, type JourneyOperatorProjection } from "../../api/citynexus";
+import { travelerAuthHeaders } from "../../lib/travelerSession";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
   isDisruptionAcknowledgedOnly,
@@ -355,7 +356,7 @@ export function LiveRecovery({
         `/api/v1/journeys/${journeyId}/activities/${activityId}/depart`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...travelerAuthHeaders() },
           body: JSON.stringify({
             truth_kind: "OPERATOR_CONFIRMED_EXECUTION",
             operator_confirmed: true,
@@ -566,6 +567,23 @@ export function LiveRecovery({
   const defer = () =>
     setMessage(zh ? "好的，稍后再提醒你。" : "Okay, we will remind you later.");
 
+  const flow = operator?.flow ?? null;
+  const advanceFlow = async (transition: "depart" | "arrive" | "begin" | "complete") => {
+    const activityId = flow?.current?.id;
+    if (!activityId || !flow?.can_confirm || busy !== null) return;
+    setBusy(`flow:${transition}`);
+    setMessage(null);
+    try {
+      await cityNexusApi.transitionActivity(journeyId, activityId, transition);
+      await Promise.all([loadOperator(), twin.refetch(), plans.refetch()]);
+      setMessage(zh ? "已更新行程进度。" : "Trip progress updated.");
+    } catch {
+      setMessage(zh ? "请先登录后确认这一步。" : "Please sign in before confirming this step.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
   return (
     <section className="v8-page" data-testid="live-recovery">
       <div className="v8-page-intro compact">
@@ -612,6 +630,37 @@ export function LiveRecovery({
           <p className="v8-kicker">Journey Operator</p>
           <strong>{operator?.headline ?? (zh ? "把这趟行程交给 CityNexus" : "Let CityNexus take care of this trip")}</strong>
         </div>
+        {flow && (
+          <div className={`journey-continuous-flow journey-flow-${flow.state.toLowerCase()}`} data-testid="journey-continuous-flow">
+            <span className="v8-kicker">{zh ? "今天的行程" : "Today’s journey"}</span>
+            <strong data-testid="journey-flow-state">
+              {flow.state === "DAY_COMPLETE" ? (zh ? "今天的行程完成了。" : "Your journey is complete.")
+                : flow.state === "NEEDS_ATTENTION" ? (zh ? "下一步需要你的注意。" : "The next step needs your attention.")
+                : flow.current ? (zh ? `现在：${flow.current.title}` : `Now: ${flow.current.title}`)
+                : (zh ? "正在准备下一步。" : "Preparing the next step.")}
+            </strong>
+            {flow.next && flow.state !== "DAY_COMPLETE" && (
+              <span>{zh ? `接下来：${flow.next.title}` : `Next: ${flow.next.title}`}</span>
+            )}
+            {flow.route?.exact && flow.route.duration_min != null ? (
+              <small>{zh ? `已找到准确路线 · 约 ${flow.route.duration_min} 分钟` : `Exact route found · about ${flow.route.duration_min} min`}</small>
+            ) : flow.current && ["PREPARING_TO_LEAVE", "NEXT_STOP_PREPARING", "BETWEEN_STOPS"].includes(flow.state) ? (
+              <>
+                <small>{zh ? "路线还需要检查。" : "The route still needs checking."}</small>
+                <button type="button" disabled={busy !== null} onClick={() => void checkRoute()}>{zh ? "检查路线" : "Check route"}</button>
+              </>
+            ) : null}
+            {flow.state === "DAY_COMPLETE" ? null : flow.state === "ARRIVAL_READY" ? (
+              <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("arrive")}>{zh ? "我到了" : "I’m here"}</button>
+            ) : flow.state === "READY_TO_BEGIN" ? (
+              <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("begin")}>{zh ? "开始" : "Start"}</button>
+            ) : flow.state === "READY_TO_COMPLETE" || flow.state === "IN_ACTIVITY" ? (
+              <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("complete")}>{zh ? "完成这站" : "Done"}</button>
+            ) : flow.state === "LEAVE_NOW" || flow.state === "PREPARING_TO_LEAVE" ? (
+              <button type="button" disabled={busy !== null} onClick={() => void advanceFlow("depart")}>{zh ? "我出发了" : "I’m leaving"}</button>
+            ) : null}
+          </div>
+        )}
         {operator?.brain && (
           <div className="journey-operator-brain" data-testid="journey-operator-brain">
             <span className="v8-kicker">Planning brain</span>

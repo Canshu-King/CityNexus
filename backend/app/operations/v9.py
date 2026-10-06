@@ -1461,6 +1461,11 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
             "freshness_semantics": "CAPTURED_READ_MODEL",
         },
     }
+    # R48 continuous day flow is captured alongside the existing offline read
+    # model.  It is projection-only and never advances the execution cursor.
+    from app.execution.continuous_journey import continuous_flow_projection
+
+    payload["continuous_flow"] = continuous_flow_projection(session, journey)
     freshness = {
         "latest_provider_capture_at": max(provider_times) if provider_times else None,
         "transit_realtime": "UNKNOWN_REALTIME",

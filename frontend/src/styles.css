@@ -1445,6 +1445,12 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .journey-operator-collective { display: grid; gap: 8px; margin-top: 8px; padding: 12px; border: 1px solid rgba(93, 116, 141, .24); border-radius: 12px; background: rgba(255, 255, 255, .72); }
 .journey-operator-discovery { display: grid; gap: 4px; margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(91, 122, 146, .08); }
 .journey-operator-operations { display: grid; gap: 4px; margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(116, 93, 57, .10); }
+.journey-continuous-flow { display: grid; gap: 6px; padding: 12px; border-radius: 12px; border: 1px solid rgba(31, 91, 114, .24); background: rgba(255, 255, 255, .78); }
+.journey-continuous-flow strong { font-size: 15px; }
+.journey-continuous-flow small, .journey-continuous-flow span { font-size: 13px; }
+.journey-continuous-flow button { justify-self: start; }
+.journey-flow-needs_attention { border-color: #d8a39d; background: #fff5f3; color: #71271e; }
+.journey-flow-day_complete { border-color: #a9c8b2; background: #f3fbf5; color: #24543a; }
 .journey-operator-members, .journey-operator-collective-options { display: flex; flex-wrap: wrap; gap: 7px; }
 .journey-operator-members span { color: #68788a; font-size: 13px; }
 .journey-operator-approval { display: grid; gap: 7px; padding: 12px; border-radius: 12px; background: #fff; border: 1px solid #d8b46c; color: #5d431d; }

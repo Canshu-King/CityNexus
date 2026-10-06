@@ -11135,6 +11135,17 @@ def _transition_activity_state(
         payload={"execution_truth": truth_record},
     )
     activity.updated_at = captured_at
+    from app.execution.continuous_journey import continuous_flow_projection
+
+    flow = continuous_flow_projection(session, journey)
+    notify(
+        session,
+        journey.id,
+        dedupe_key=str(flow["notification_key"]),
+        kind="JOURNEY_FLOW_MILESTONE",
+        priority="HIGH" if flow["state"] == "NEEDS_ATTENTION" else "NORMAL",
+        payload={"state": flow["state"], "activity_id": str(activity.id)},
+    )
     twin = _twin_snapshot(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
@@ -11359,6 +11370,17 @@ def complete_activity(
             "next_activity_id": journey.current_activity_id,
             "execution_truth": truth_record,
         },
+    )
+    from app.execution.continuous_journey import continuous_flow_projection
+
+    flow = continuous_flow_projection(session, journey)
+    notify(
+        session,
+        journey.id,
+        dedupe_key=str(flow["notification_key"]),
+        kind="JOURNEY_FLOW_MILESTONE",
+        priority="HIGH" if flow["state"] == "NEEDS_ATTENTION" else "NORMAL",
+        payload={"state": flow["state"], "activity_id": flow.get("current", {}).get("id") if flow.get("current") else None},
     )
     twin = _twin_snapshot(session, journey)
     if journey.status == "COMPLETED":
