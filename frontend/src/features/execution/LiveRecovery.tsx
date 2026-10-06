@@ -233,7 +233,14 @@ export function LiveRecovery({
   const acknowledgedOnly = disruptions.filter((d) =>
     isDisruptionAcknowledgedOnly(d, acceptedTriggerIds),
   );
-  const latestWeather = worldContext.find((item) => item.observation_type === "WEATHER") ?? null;
+  const latestWeather =
+    worldContext.find(
+      (item) =>
+        item.observation_type === "WEATHER" &&
+        (item.activity_observations?.length ?? 0) > 0,
+    ) ??
+    worldContext.find((item) => item.observation_type === "WEATHER") ??
+    null;
   const weatherDisruptionOpen = openDisruptions.some((item) => item.type === "WEATHER");
   const benignWeatherContext =
     latestWeather &&
