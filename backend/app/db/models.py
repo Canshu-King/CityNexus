@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -262,6 +262,12 @@ class RecoveryEpoch(Base):
 
     __table_args__ = (
         UniqueConstraint("journey_id", "generation"),
+        Index(
+            "ux_recovery_epochs_one_open",
+            "journey_id",
+            unique=True,
+            sqlite_where=text("status = 'OPEN'"),
+        ),
         Index("idx_recovery_epochs_journey_status", "journey_id", "status", "generation"),
     )
 
