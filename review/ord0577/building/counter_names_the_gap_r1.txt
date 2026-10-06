@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:55044 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59625 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59626 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59627 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59628 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52167 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52136 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/provider-mesh HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51692 - "GET /api/v1/travelers/24c32a36-5825-4ca2-962f-f28f3e7cb2ac/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52135 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57873 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52168 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65425 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64180 - "GET /api/v1/journeys/e75f5a4e-2d0b-4e35-b5e7-db9c340cf396/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65426 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  2) [chromium] › e2e\qoder-8ac89982-ord0577-entry-sets-match-r1.spec.ts:101:5 › ORD-0577 both shapes can reach every screen › entry-sets-en 
+
+    Error: desktop sidebar is missing entries for: trips, me (it paints 15 of the 17 declared screens)
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "trips",
+    +   "me",
+    + ]
+
+      130 |         missingFromDesktop,
+      131 |         `desktop sidebar is missing entries for: ${missingFromDesktop.join(", ")} (it paints ${desktopKeysPainted} of the ${union.length} declared screens)`
+    > 132 |       ).toEqual([]);
+          |         ^
+      133 |
+      134 |             const perScreen: Record<string, unknown>[] = [];
+      135 |       /* The phone shape's set is the union too: the bottom bar carries five, the drawer behind the
+        at D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend\e2e\qoder-8ac89982-ord0577-entry-sets-match-r1.spec.ts:132:9
+
+    Error Context: test-results\qoder-8ac89982-ord0577-ent-eeb10--every-screen-entry-sets-en-chromium\error-context.md
+
+
+  2 failed
+    [chromium] › e2e\qoder-8ac89982-ord0577-entry-sets-match-r1.spec.ts:101:5 › ORD-0577 both shapes can reach every screen › entry-sets-zh 
+    [chromium] › e2e\qoder-8ac89982-ord0577-entry-sets-match-r1.spec.ts:101:5 › ORD-0577 both shapes can reach every screen › entry-sets-en 
+  1 passed (20.9s)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-entry-sets-match-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577entrysets_counter2.db ports 5246/5247 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0577entrysets_counter2 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577entrysets_counter2.log

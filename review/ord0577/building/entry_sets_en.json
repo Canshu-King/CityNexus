@@ -1,0 +1,363 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-entry-sets-match-r1.spec.ts",
+ "arm": "en",
+ "desktop_shape": "1280x900",
+ "phone_shape": "390x844",
+ "screens_in_union": [
+  "hub",
+  "live",
+  "map",
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "agent",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access",
+  "trips",
+  "me"
+ ],
+ "desktop_rows_painted": 17,
+ "phone_bar_keys": [
+  "hub",
+  "trips",
+  "map",
+  "agent",
+  "me"
+ ],
+ "phone_drawer_keys": [
+  "hub",
+  "live",
+  "map",
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "agent",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access",
+  "trips",
+  "me"
+ ],
+ "missing_from_desktop": [],
+ "missing_from_phone": [],
+ "entry_sets_match": true,
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "desktop_marked": 1,
+  "phone_marked": 1
+ },
+ "per_screen": [
+  {
+   "key": "hub",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Today"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "hub",
+   "phone_marked_bar": [
+    "nav-hub"
+   ],
+   "phone_marked_drawer": [
+    "hub"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "live",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Live Journey"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "live",
+   "phone_marked_bar": [
+    "nav-map"
+   ],
+   "phone_marked_drawer": [
+    "live"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "map",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Map"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "map",
+   "phone_marked_bar": [
+    "nav-map"
+   ],
+   "phone_marked_drawer": [
+    "map"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "studio",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Trip Studio"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "studio",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "studio"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "stay",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Stay Explorer"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "stay",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "stay"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "discover",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "City Discovery"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "discover",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "discover"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "import",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Import places"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "import",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "import"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "bookings",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Travel Wallet"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "bookings",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "bookings"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "footprints",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Footprints"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "footprints",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "footprints"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "agent",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Copilot"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "agent",
+   "phone_marked_bar": [
+    "nav-agent"
+   ],
+   "phone_marked_drawer": [
+    "agent"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "authoritative",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Recovery"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "authoritative",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "authoritative"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "intelligence",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Intelligence"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "intelligence",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "intelligence"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "twin",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Traveler Twin"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "twin",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "twin"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "trash",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Recycle bin"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "trash",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "trash"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "access",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Members and access"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "access",
+   "phone_marked_bar": [],
+   "phone_marked_drawer": [
+    "access"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "trips",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Trips"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "trips",
+   "phone_marked_bar": [
+    "nav-trips"
+   ],
+   "phone_marked_drawer": [
+    "trips"
+   ],
+   "phone_box_ok": true
+  },
+  {
+   "key": "me",
+   "desktop_sidebar_rows": 17,
+   "desktop_marked": [
+    "Me"
+   ],
+   "desktop_box": [
+    219,
+    44
+   ],
+   "clicked_row_landed_on": "me",
+   "phone_marked_bar": [
+    "nav-me"
+   ],
+   "phone_marked_drawer": [
+    "me"
+   ],
+   "phone_box_ok": true
+  }
+ ]
+}
