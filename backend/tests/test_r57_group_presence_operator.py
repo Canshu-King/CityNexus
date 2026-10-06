@@ -10,7 +10,17 @@ from sqlalchemy import select
 import app.main as main_module
 import app.traveler_principal as principal_module
 from app.core.config import settings
-from app.db.models import Activity, Event, Journey, JourneyMember, LocationObservation, Traveler
+from app.db.models import (
+    Activity,
+    AuditLog,
+    AutopilotEnrollment,
+    Commitment,
+    Event,
+    Journey,
+    JourneyMember,
+    LocationObservation,
+    Traveler,
+)
 from app.db.session import SessionLocal
 from app.traveler_principal import issue_traveler_token
 from demo_stage import demo_reset_headers
@@ -381,3 +391,247 @@ def test_r57_without_an_exact_active_plan_place_has_no_invented_rendezvous(monke
     assert response.status_code == 409
     assert "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE" in response.text
     assert called is False
+
+
+def _r57_risky_shared_target(journey_id: str) -> tuple[str, str, str]:
+    from app.execution.group_presence import rendezvous_target
+
+    now = datetime.now(timezone.utc)
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        pair = rendezvous_target(session, journey)
+        assert pair is not None
+        target, place = pair
+        scheduled = (now + timedelta(minutes=5)).isoformat()
+        commitment = session.scalar(
+            select(Commitment).where(
+                Commitment.journey_id == journey_id,
+                Commitment.activity_id == target.id,
+                Commitment.status == "ACTIVE",
+                Commitment.level.in_(("C3_Guaranteed", "C4_Anchored")),
+            )
+        )
+        if commitment is None:
+            commitment = Commitment(
+                id=str(uuid4()),
+                journey_id=journey_id,
+                activity_id=target.id,
+                kind="APPOINTMENT",
+                level="C4_Anchored",
+                status="ACTIVE",
+                monetary_value_minor=0,
+                monetary_value_status="KNOWN",
+                currency="JPY",
+                external_ref="R57-SHARED-RENDEZVOUS",
+                policy_json="{}",
+                created_at=now.isoformat(),
+                updated_at=now.isoformat(),
+            )
+            session.add(commitment)
+        commitment.policy_json = __import__("json").dumps(
+            {
+                "scheduled_start_at": scheduled,
+                "safety_buffer_min": 5,
+                "source": "R57_TEST_PROTECTED_SHARED_STOP",
+            },
+            sort_keys=True,
+        )
+        enrollment = session.get(AutopilotEnrollment, journey_id)
+        if enrollment is None:
+            session.add(
+                AutopilotEnrollment(
+                    journey_id=journey_id,
+                    enabled=True,
+                    interval_seconds=60.0,
+                    provider_mesh_json="{}",
+                    last_pulse_at=None,
+                    last_error=None,
+                    created_at=now.isoformat(),
+                    updated_at=now.isoformat(),
+                )
+            )
+        else:
+            enrollment.enabled = True
+        session.commit()
+        return target.id, place.id, commitment.id
+
+
+def test_r57_advisory_member_risk_never_creates_guardian_event(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r57-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    _r57_risky_shared_target(journey_id)
+    now = datetime.now(timezone.utc).isoformat()
+    sample = client.post(
+        f"/api/v1/journeys/{journey_id}/location",
+        headers=_auth(owner_id),
+        json={"latitude": 35.0, "longitude": 135.0, "accuracy_m": 8, "captured_at": now},
+    )
+    assert sample.status_code == 201, sample.text
+
+    class _Route:
+        id = "r57-advisory-route"
+        status = "COMPLETED"
+
+    monkeypatch.setattr(main_module, "submit_route_operation", lambda *_args, **_kwargs: (_Route(), False))
+    monkeypatch.setattr(main_module, "route_operation_payload", lambda *_args, **_kwargs: {
+        "status": "COMPLETED",
+        "outcome": "ROUTE_READY",
+        "provider": "valhalla-http",
+        "provider_provenance": "LIVE_PROVIDER_CAPTURE",
+        "result": {
+            "duration_min": 30,
+            "distance_m": 2400,
+            "provider": "valhalla-http",
+            "provenance": "LIVE_PROVIDER_CAPTURE",
+        },
+    })
+    guardian_calls: list[str] = []
+    monkeypatch.setattr(
+        main_module,
+        "scan_guardian",
+        lambda *_args, **_kwargs: guardian_calls.append("called") or {"status": "COMPLETED"},
+    )
+
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/group-presence/route",
+        headers=_auth(owner_id),
+        json={"location_observation_id": sample.json()["id"], "requested_mode": "WALK"},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["authority"] == "ADVISORY_FOREGROUND_LOCATION"
+    assert body["shared_commitment_risk"]["state"] == "COMMITMENT_AT_RISK"
+    assert body["member_risk_event_id"] is None
+    assert body["guardian_triggered"] is False
+    assert guardian_calls == []
+    with SessionLocal() as session:
+        events = session.scalars(
+            select(Event).where(
+                Event.journey_id == journey_id,
+                Event.provider_key == "journey-group-presence",
+            )
+        ).all()
+        assert events == []
+
+
+def test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r57-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    target_activity_id, _target_place_id, commitment_id = _r57_risky_shared_target(journey_id)
+
+    with SessionLocal() as session:
+        owner_member = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == owner_id,
+            )
+        )
+        assert owner_member is not None
+        owner_member_id = owner_member.id
+
+    def add_trusted_observation() -> str:
+        observation_id = str(uuid4())
+        with SessionLocal() as session:
+            session.add(
+                LocationObservation(
+                    id=observation_id,
+                    journey_id=journey_id,
+                    traveler_id=owner_id,
+                    journey_member_id=owner_member_id,
+                    latitude=35.0,
+                    longitude=135.0,
+                    accuracy_m=8,
+                    captured_at=datetime.now(timezone.utc).isoformat(),
+                    source="DEVICE_ATTESTED",
+                )
+            )
+            session.commit()
+        return observation_id
+
+    route_counter = {"value": 0}
+
+    class _Route:
+        status = "COMPLETED"
+
+        def __init__(self):
+            route_counter["value"] += 1
+            self.id = f"r57-trusted-route-{route_counter['value']}"
+
+    monkeypatch.setattr(main_module, "submit_route_operation", lambda *_args, **_kwargs: (_Route(), False))
+    monkeypatch.setattr(main_module, "route_operation_payload", lambda *_args, **_kwargs: {
+        "status": "COMPLETED",
+        "outcome": "ROUTE_READY",
+        "provider": "valhalla-http",
+        "provider_provenance": "LIVE_PROVIDER_CAPTURE",
+        "result": {
+            "duration_min": 30,
+            "distance_m": 2400,
+            "provider": "valhalla-http",
+            "provenance": "LIVE_PROVIDER_CAPTURE",
+        },
+    })
+    guardian_calls: list[str] = []
+    monkeypatch.setattr(
+        main_module,
+        "scan_guardian",
+        lambda *_args, **_kwargs: guardian_calls.append("called")
+        or {"status": "COMPLETED", "action_status": "NO_ACTION"},
+    )
+
+    first_observation = add_trusted_observation()
+    first = client.post(
+        f"/api/v1/journeys/{journey_id}/group-presence/route",
+        headers=_auth(owner_id),
+        json={"location_observation_id": first_observation, "requested_mode": "WALK"},
+    )
+    assert first.status_code == 200, first.text
+    first_body = first.json()
+    assert first_body["authority"] == "TRUSTED_MEMBER_LOCATION_ROUTE"
+    assert first_body["shared_commitment_risk"]["state"] == "COMMITMENT_AT_RISK"
+    assert first_body["shared_commitment_risk"]["next_commitment"]["commitment_id"] == commitment_id
+    assert first_body["member_risk_event_id"]
+    assert first_body["guardian_triggered"] is True
+    assert first_body["guardian_deduplicated"] is False
+    assert guardian_calls == ["called"]
+    event_id = first_body["member_risk_event_id"]
+
+    second_observation = add_trusted_observation()
+    second = client.post(
+        f"/api/v1/journeys/{journey_id}/group-presence/route",
+        headers=_auth(owner_id),
+        json={"location_observation_id": second_observation, "requested_mode": "WALK"},
+    )
+    assert second.status_code == 200, second.text
+    second_body = second.json()
+    assert second_body["member_risk_event_id"] == event_id
+    assert second_body["guardian_triggered"] is False
+    assert second_body["guardian_deduplicated"] is True
+    assert guardian_calls == ["called"]
+
+    with SessionLocal() as session:
+        events = session.scalars(
+            select(Event).where(
+                Event.journey_id == journey_id,
+                Event.provider_key == "journey-group-presence",
+                Event.event_type == "TRAFFIC_DELAY",
+            )
+        ).all()
+        assert len(events) == 1
+        payload = __import__("json").loads(events[0].payload_json)
+        assert payload["journey_member_id"] == owner_member_id
+        assert payload["rendezvous_activity_id"] == target_activity_id
+        assert payload["affected_commitment_id"] == commitment_id
+        assert events[0].affected_activity_id is None
+
+        handoffs = session.scalars(
+            select(AuditLog).where(
+                AuditLog.action == "journey.group_presence.member_risk.guardian_handoff",
+                AuditLog.entity_id == event_id,
+            )
+        ).all()
+        assert len(handoffs) == 1
