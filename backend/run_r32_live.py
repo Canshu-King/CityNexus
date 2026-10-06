@@ -19,8 +19,83 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from run_r28_live import BACKEND, _api_setup, _configure as _base_configure
+
+
+R32_FRESH_STRIKE_PROTOCOL = "R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1"
+R32_AUTHORIZATION_TASKBOOK_COMMIT = (
+    "03357b7c8f8a9a671c59113be71d6093fab04742"
+)
+R32_REVOLUTION_BRANCH = "gpt/revolution-r32-autonomous-recovery-mesh"
+
+
+def _repo_git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", "-C", str(BACKEND.parent), *args],
+        check=check,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _fresh_strike_gate(output: Path) -> dict[str, Any]:
+    """Refuse live execution from stale source or a pre-existing artifact."""
+
+    if output.exists():
+        raise RuntimeError(
+            f"R32 fresh-strike output already exists: {output}. "
+            "Never overwrite or relabel historical evidence."
+        )
+
+    _repo_git("fetch", "--quiet", "origin", R32_REVOLUTION_BRANCH)
+    head = _repo_git("rev-parse", "HEAD").stdout.strip()
+    remote_head = _repo_git(
+        "rev-parse", f"refs/remotes/origin/{R32_REVOLUTION_BRANCH}"
+    ).stdout.strip()
+    if head != remote_head:
+        raise RuntimeError(
+            "R32 fresh-strike source is not the current remote Revolution "
+            f"head: local={head} remote={remote_head}"
+        )
+
+    ancestor = _repo_git(
+        "merge-base",
+        "--is-ancestor",
+        R32_AUTHORIZATION_TASKBOOK_COMMIT,
+        head,
+        check=False,
+    )
+    if ancestor.returncode != 0:
+        raise RuntimeError(
+            "R32 fresh-strike source predates the authorized exact-run "
+            "causality taskbook."
+        )
+
+    dirty = _repo_git(
+        "status", "--porcelain", "--untracked-files=no"
+    ).stdout.strip()
+    if dirty:
+        raise RuntimeError(
+            "R32 fresh-strike tracked tree is dirty before execution: "
+            + " | ".join(dirty.splitlines())
+        )
+
+    return {
+        "protocol": R32_FRESH_STRIKE_PROTOCOL,
+        "authorization_taskbook_commit": (
+            R32_AUTHORIZATION_TASKBOOK_COMMIT
+        ),
+        "strike_id": str(uuid4()),
+        "strike_started_at": datetime.now(timezone.utc).isoformat(),
+        "git_head": head,
+        "remote_branch": R32_REVOLUTION_BRANCH,
+        "remote_branch_head": remote_head,
+        "head_matches_remote": True,
+        "output_preexisted": False,
+        "output_path": str(output),
+    }
 
 
 def _configure_r32() -> Path:
@@ -97,8 +172,10 @@ def _jsonable(value: Any) -> Any:
     return str(value)
 
 
-def _source_receipt() -> dict[str, Any]:
-    """Bind the live artifact to the exact source state that executed it."""
+def _source_receipt(
+    freshness_gate: dict[str, Any],
+) -> dict[str, Any]:
+    """Bind the live artifact to exact source and fresh-strike identity."""
 
     repo = BACKEND.parent
 
@@ -128,7 +205,18 @@ def _source_receipt() -> dict[str, Any]:
         hashes[relative] = hashlib.sha256(raw).hexdigest()
     dirty = git("status", "--porcelain", "--untracked-files=no")
     return {
+        "protocol": freshness_gate.get("protocol"),
+        "authorization_taskbook_commit": freshness_gate.get(
+            "authorization_taskbook_commit"
+        ),
+        "strike_id": freshness_gate.get("strike_id"),
+        "strike_started_at": freshness_gate.get("strike_started_at"),
         "git_head": git("rev-parse", "HEAD"),
+        "remote_branch": freshness_gate.get("remote_branch"),
+        "remote_branch_head": freshness_gate.get("remote_branch_head"),
+        "head_matches_remote": freshness_gate.get("head_matches_remote"),
+        "output_preexisted": freshness_gate.get("output_preexisted"),
+        "output_path": freshness_gate.get("output_path"),
         "tracked_dirty_before_strike": bool(dirty),
         "tracked_dirty_paths_before_strike": dirty.splitlines(),
         "source_sha256": hashes,
@@ -496,8 +584,8 @@ def _stale_binding_assertion(journey_id: str, run_id: str) -> dict[str, Any]:
         return {"status_code": 200, "typed": False, "detail": "old run unexpectedly remained current"}
 
 
-def run() -> dict[str, Any]:
-    source_receipt = _source_receipt()
+def run(*, freshness_gate: dict[str, Any]) -> dict[str, Any]:
+    source_receipt = _source_receipt(freshness_gate)
     db = _configure_r32()
     # Import application modules only after _configure_r32 has installed the
     # fresh DB and isolated WB2api/Hermes settings.
@@ -731,7 +819,10 @@ def run() -> dict[str, Any]:
             None,
         )
         return {
-            "schema": "citynexus.r32.live-strike.v2.failure.v2",
+            "schema": "citynexus.r32.live-strike.v2.failure.v3",
+            "strike_protocol": R32_FRESH_STRIKE_PROTOCOL,
+            "strike_id": freshness_gate["strike_id"],
+            "strike_started_at": freshness_gate["strike_started_at"],
             "status": "NOT_PROVEN",
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "database": str(db),
@@ -941,7 +1032,10 @@ def run() -> dict[str, Any]:
     stale_assertion = _stale_binding_assertion(journey_id, str(a_run["id"])) if a_run else {"typed": False, "detail": "Agent A run not durable"}
     current_epoch = next((row for row in final["epochs"] if row["status"] == "OPEN"), None)
     result = {
-        "schema": "citynexus.r32.live-strike.v2",
+        "schema": "citynexus.r32.live-strike.v2.1",
+        "strike_protocol": R32_FRESH_STRIKE_PROTOCOL,
+        "strike_id": freshness_gate["strike_id"],
+        "strike_started_at": freshness_gate["strike_started_at"],
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "database": str(db),
         "journey_id": journey_id,
@@ -988,10 +1082,27 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    result = run()
-    output = args.output or (BACKEND / "output" / f"r32-live-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json")
+    output = args.output or (
+        BACKEND
+        / "output"
+        / (
+            "r32-live-"
+            + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            + ".json"
+        )
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(_jsonable(result), ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+    freshness_gate = _fresh_strike_gate(output)
+    result = run(freshness_gate=freshness_gate)
+    output.write_text(
+        json.dumps(
+            _jsonable(result),
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
     print(json.dumps({"output": str(output), "status": result.get("status", "COMPLETED"), "journey_id": result["journey_id"], "r1": result["r1"], "r2": result["r2"], "agent_a_bound": result["agent_a_bound_before_shock_b"], "agent_b_bound": result["agent_b_bound_after_shock_b"], "stale_typed": result["stale_binding_assertion"].get("typed"), "failure": result.get("failure")}, ensure_ascii=False))
     return 2 if result.get("status") == "NOT_PROVEN" else 0
 
