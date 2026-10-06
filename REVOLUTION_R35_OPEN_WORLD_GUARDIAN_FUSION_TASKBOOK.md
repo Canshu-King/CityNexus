@@ -40,6 +40,10 @@ Treat these commits as a proposed implementation that must be verified locally, 
   - adds the bounded product endpoint `POST /api/v1/journeys/{journey_id}/guardian/pulse` for exactly one sensing/evaluation cycle and exposes the latest pulse through Guardian status / latest-pulse read.
 - `4b3e7939cddcab0a47f211b19af6f89d3e4b2ada`
   - live venue conflicts now have durable semantic incident identity; repeated fresh polls refresh the same incident rather than spawning Event storms; a later qualified `OPEN_COMPATIBLE` observation resolves the old conflict and invalidates its pending replan, while UNKNOWN/DEGRADED evidence cannot clear it.
+- `4de29cb60ee08636d424ce87ee0d6c955f332179`
+  - opening-hours classification now evaluates real timezone-aware datetime intervals and considers the previous opening day, so after-midnight activities can correctly fit an overnight venue window.
+- `dd6b67a5ba6eb2b0f4d8857642a5bbc98081922c`
+  - focused regression for previous-day overnight opening-hours semantics.
 
 These changes do not alter the historical R34 live artifact. In particular, the R34 two live intervals were already fully contained in their verified opening windows, so the stricter interval semantics do not turn the original `NO_MATERIAL_CHANGE` into a failure.
 
