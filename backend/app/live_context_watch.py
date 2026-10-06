@@ -298,8 +298,7 @@ def _resolve_live_context_event(
     )
 
 
-def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]:
-    """Refresh exact active-plan venues and classify reality without starting an Agent."""
+def run_live_context_watch(\n    session: Session,\n    journey: Journey,\n    *,\n    activity_ids: tuple[str, ...] | list[str] | None = None,\n) -> dict[str, Any]:\n    """Refresh exact active-plan venues and classify reality without starting an Agent."""
 
     captured_at = datetime.now(timezone.utc).isoformat()
     activities = list(
@@ -311,7 +310,16 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
         if journey.active_plan_version_id
         else []
     )
-    active = [item for item in activities if item.status not in _TERMINAL and item.place_id]
+    allowed_activity_ids = (
+        {str(item) for item in activity_ids} if activity_ids is not None else None
+    )
+    active = [
+        item
+        for item in activities
+        if item.status not in _TERMINAL
+        and item.place_id
+        and (allowed_activity_ids is None or str(item.id) in allowed_activity_ids)
+    ]
     place_ids = list(dict.fromkeys(str(item.place_id) for item in active))
     previous_captures: dict[str, str | None] = {}
     for place_id in place_ids:
