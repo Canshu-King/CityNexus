@@ -1,0 +1,61 @@
+
+[WebServer] INFO:     127.0.0.1:58605 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58607 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58608 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58611 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58612 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58613 - "GET /api/v1/travelers/e3373b8d-ac1e-45e2-af86-6f8be6d46c3d/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59189 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59188 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59190 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54000 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54001 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54002 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54003 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56835 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56834 - "GET /api/v1/journeys/115ac58c-1601-4e3c-baf0-839132cfd85c/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54004 - "GET /api/v1/travelers/e3373b8d-ac1e-45e2-af86-6f8be6d46c3d/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56836 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  2) [chromium] › e2e\qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts:60:5 › ORD-0577 the bar says where you are on every screen › bar-says-where-en 
+
+    Error: en: studio -- the bar answers nothing here (current=[], describedby=null)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      102 |           answeredByButton || answeredByPointer,
+      103 |           `${arm.locale}: ${screen.requested} -- the bar answers nothing here (current=${JSON.stringify(current)}, describedby=${bar.describedby})`
+    > 104 |         ).toBe(true);
+          |           ^
+      105 |         expect(
+      106 |           answeredByButton && answeredByPointer,
+      107 |           `${arm.locale}: ${screen.requested} -- the bar answers twice (a current button and a pointer at once)`
+        at D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend\e2e\qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts:104:11
+
+    Error Context: test-results\qoder-8ac89982-ord0577-bar-43734-ry-screen-bar-says-where-en-chromium\error-context.md
+
+
+  2 failed
+    [chromium] › e2e\qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts:60:5 › ORD-0577 the bar says where you are on every screen › bar-says-where-zh 
+    [chromium] › e2e\qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts:60:5 › ORD-0577 the bar says where you are on every screen › bar-says-where-en 
+  1 passed (33.2s)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577fix_counter.db ports 5210/5211 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=1 RUN_ID=ord0577fix_counter LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577fix_counter.log

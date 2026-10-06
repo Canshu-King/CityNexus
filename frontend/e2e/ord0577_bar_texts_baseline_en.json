@@ -1,0 +1,193 @@
+{
+ "arm": "en",
+ "shape": "390x844",
+ "screens": [
+  {
+   "requested": "hub",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Today"
+  },
+  {
+   "requested": "live",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Live Journey"
+  },
+  {
+   "requested": "map",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Map"
+  },
+  {
+   "requested": "studio",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Trip Studio"
+  },
+  {
+   "requested": "stay",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Stay Explorer"
+  },
+  {
+   "requested": "discover",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "City Discovery"
+  },
+  {
+   "requested": "import",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Import places"
+  },
+  {
+   "requested": "bookings",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Travel Wallet"
+  },
+  {
+   "requested": "footprints",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Footprints"
+  },
+  {
+   "requested": "agent",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Copilot"
+  },
+  {
+   "requested": "authoritative",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Recovery"
+  },
+  {
+   "requested": "intelligence",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Intelligence"
+  },
+  {
+   "requested": "twin",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Traveler Twin"
+  },
+  {
+   "requested": "trash",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Recycle bin"
+  },
+  {
+   "requested": "access",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Members and access"
+  },
+  {
+   "requested": "trips",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Trips"
+  },
+  {
+   "requested": "me",
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ],
+   "breadcrumb": "Me"
+  }
+ ]
+}

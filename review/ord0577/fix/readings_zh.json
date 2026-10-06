@@ -1,0 +1,319 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-bar-says-where-r1.spec.ts",
+ "arm": "zh",
+ "shape": "390x844",
+ "answered_by_button": [
+  "hub",
+  "live",
+  "map",
+  "agent",
+  "trips",
+  "me"
+ ],
+ "answered_by_pointer": [
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access"
+ ],
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "current": [
+   "nav-hub"
+  ],
+  "describedby": null
+ },
+ "rows": [
+  {
+   "requested": "hub",
+   "current": [
+    "nav-hub"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "今天",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "live",
+   "current": [
+    "nav-map"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "实时行程",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "map",
+   "current": [
+    "nav-map"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "地图",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "studio",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "行程工作台",
+   "breadcrumb": "行程工作台",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "stay",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "住宿选择",
+   "breadcrumb": "住宿选择",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "discover",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "城市探索",
+   "breadcrumb": "城市探索",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "import",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "导入地点",
+   "breadcrumb": "导入地点",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "旅行票夹",
+   "breadcrumb": "旅行票夹",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "足迹",
+   "breadcrumb": "足迹",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "agent",
+   "current": [
+    "nav-agent"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "Copilot",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "恢复与执行",
+   "breadcrumb": "恢复与执行",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "智能守护",
+   "breadcrumb": "智能守护",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "twin",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "旅行者画像",
+   "breadcrumb": "旅行者画像",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "trash",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "回收站",
+   "breadcrumb": "回收站",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "access",
+   "current": [],
+   "describedby": "v8-bar-where",
+   "described_text": "成员与权限",
+   "breadcrumb": "成员与权限",
+   "answered_by_button": false,
+   "answered_by_pointer": true,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "trips",
+   "current": [
+    "nav-trips"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "行程",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  },
+  {
+   "requested": "me",
+   "current": [
+    "nav-me"
+   ],
+   "describedby": null,
+   "described_text": null,
+   "breadcrumb": "我的",
+   "answered_by_button": true,
+   "answered_by_pointer": false,
+   "texts": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ]
+  }
+ ]
+}
