@@ -302,7 +302,9 @@ def test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace(monkey
     ]
     assert body["run"]["status"] == "PARTIAL"
     assert body["run"]["completion_contract"]["kind"] == "UNRESOLVED"
-    assert len(calls) == 3
+    # A prose-only answer is not a server terminal fact. The strategy-neutral
+    # supervisor gives one bounded extra model turn without naming a next tool.
+    assert len(calls) == 4
 
     reloaded = client.get(f"/api/v1/journeys/{journey_id}/agent/runs/{body['run']['run_id']}")
     assert reloaded.status_code == 200, reloaded.text
@@ -475,7 +477,9 @@ def test_agent_runtime_stops_search_saturation_before_more_domain_calls(monkeypa
     assert steps[-1]["tool_name"] == "search_city_services"
     assert steps[-1]["decision"] == "STOP_SEARCH_SATURATION"
     assert steps[-1]["status"] == "TOOL_ERROR"
-    assert calls == 7
+    # Search saturation remains a server fact; the terminal supervisor then
+    # gives exactly one neutral free-strategy turn before leaving PARTIAL.
+    assert calls == 8
 
 
 def test_agent_runtime_limits_batched_city_searches_to_one_per_turn(monkeypatch):
@@ -533,7 +537,9 @@ def test_agent_runtime_limits_batched_city_searches_to_one_per_turn(monkeypatch)
         "STOP_SEARCH_BATCH",
         "STOP_SEARCH_BATCH",
     ]
-    assert calls == 2
+    # The batch guard is unchanged. The extra call is the one bounded
+    # strategy-neutral terminal-supervisor turn after prose-only completion.
+    assert calls == 3
 
 
 def test_agent_search_category_culture_expands_to_real_visit_categories():
