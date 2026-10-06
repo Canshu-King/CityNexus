@@ -1,0 +1,34 @@
+{
+ "ruler_branch_sha": "1acdeaafa8c349f52f7919f05381cb5a6f78bda1",
+ "ruler_blob": "d5280febffc8094aa8f1d9eb1fcb80ae1b7664e4",
+ "tip": "ff7f62011821240835572bf4effe2e139ee2bada",
+ "older_tip_base": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "stable_path_used": "backend/app/anywhere_capability.py",
+ "cases": [
+  {
+   "name": "must_read_MISSING",
+   "expected": "MISSING",
+   "verdict": "MISSING",
+   "reason": "tip blob: rc=128 fatal: path 'frontend/src/__no_such_file_stalefree_r1__.tsx' does not exist in 'ff7f62011821240835572bf4effe2e139ee2bada'"
+  },
+  {
+   "name": "must_read_LANDED",
+   "expected": "LANDED",
+   "verdict": "LANDED",
+   "reason": null
+  },
+  {
+   "name": "must_read_CLEAN",
+   "expected": "CLEAN",
+   "verdict": "CLEAN",
+   "reason": null
+  },
+  {
+   "name": "must_read_DRIFTED_ON_TIP",
+   "expected": "DRIFTED_ON_TIP",
+   "verdict": "DRIFTED_ON_TIP",
+   "reason": null
+  }
+ ],
+ "failures": []
+}
