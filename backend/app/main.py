@@ -9496,23 +9496,54 @@ def guide_authenticated_member_to_rendezvous(
     guardian_handoff: dict[str, Any] | None = None
     if member_risk_event is not None:
         session.commit()
-        enrollment = session.get(AutopilotEnrollment, journey.id)
-        if enrollment is not None and enrollment.enabled:
-            try:
-                guardian_handoff = scan_guardian(
-                    session, journey, include_opportunity_signals=False
-                )
-            except Exception as exc:  # route truth remains useful even if Agent recovery is unavailable
-                logging.getLogger(__name__).exception(
-                    "R57 Guardian handoff failed for member rendezvous risk %s",
-                    member_risk_event.id,
-                )
-                guardian_handoff = {
-                    "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
-                    "failure_classification": type(exc).__name__,
-                }
+        prior_handoff = session.scalar(
+            select(AuditLog.id).where(
+                AuditLog.action == "journey.group_presence.member_risk.guardian_handoff",
+                AuditLog.entity_type == "Event",
+                AuditLog.entity_id == member_risk_event.id,
+            )
+        )
+        if prior_handoff is not None:
+            guardian_handoff = {
+                "status": "INCIDENT_ALREADY_HANDED_OFF",
+                "deduplicated": True,
+            }
         else:
-            guardian_handoff = {"status": "NOT_ENROLLED"}
+            enrollment = session.get(AutopilotEnrollment, journey.id)
+            if enrollment is not None and enrollment.enabled:
+                try:
+                    guardian_handoff = scan_guardian(
+                        session, journey, include_opportunity_signals=False
+                    )
+                    record_audit(
+                        session,
+                        action="journey.group_presence.member_risk.guardian_handoff",
+                        entity_type="Event",
+                        entity_id=member_risk_event.id,
+                        journey_id=journey.id,
+                        actor_type="SYSTEM",
+                        actor_id="journey-group-presence",
+                        after={
+                            "event_id": member_risk_event.id,
+                            "guardian_status": (
+                                guardian_handoff.get("status")
+                                if isinstance(guardian_handoff, dict)
+                                else None
+                            ),
+                        },
+                    )
+                    session.commit()
+                except Exception as exc:  # route truth remains useful if Agent recovery is unavailable
+                    logging.getLogger(__name__).exception(
+                        "R57 Guardian handoff failed for member rendezvous risk %s",
+                        member_risk_event.id,
+                    )
+                    guardian_handoff = {
+                        "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+                        "failure_classification": type(exc).__name__,
+                    }
+            else:
+                guardian_handoff = {"status": "NOT_ENROLLED"}
 
     session.expire_all()
     current = session.get(Journey, journey.id)
