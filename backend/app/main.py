@@ -11254,6 +11254,17 @@ def get_journey_twin(
     return result
 
 
+@app.get("/api/v1/journeys/{journey_id}/world-context")
+def get_journey_world_context(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.world_context import latest_world_context
+
+    return latest_world_context(session, journey.id)
+
+
 @app.post(
     "/api/v1/journeys/{journey_id}/weather/refresh",
     response_model=dict[str, Any],
