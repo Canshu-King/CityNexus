@@ -1,0 +1,31 @@
+ORD-0562 r9 -- the three cold files are fixed through the same helper, and the ruler's sixth arm now
+policies the whole tree instead of only the three files this lane owns.
+
+THE THREE FIXES (each a counted English noun that said `1 or more` or `1 failure(s)` in front of a traveller)
+  LiveRecovery.tsx        `Merged N identical suggestion(s).`        -> englishCountNoun(N, "suggestion")
+  simulationAdapter.ts    ` N leg(s)`                               -> englishCountNoun(N, "leg")
+  pretripChecklist.ts     `N feasibility failure(s) on this ...`   -> englishCountNoun(N, "failure")
+  Each file took one import of the helper that already ships (lib/plural.ts). No new wording, no Chinese
+  change, no new screen. The sites list this arm used to print is now empty.
+
+THE ARM GOT STRONGER, NOT JUST GREEN
+  Before: the arm policed only the three files this lane owns and merely counted the rest. Now nothing is
+  exempt: it walks every .ts/.tsx under frontend/src and asserts the inventory is empty everywhere. The
+  counter-arm proof is the point -- planting `suggestion(s)` back into LiveRecovery (a file that used to be
+  only counted) turns the arm red with its own message, and the file is restored byte-for-byte afterwards.
+
+GATES (this generation, nothing inherited)
+  six arms: rc=0, 6 passed (ruler_arms_r9.txt); counter-arm: rc=1, arm 6 red by design (counter_arm_r9.txt)
+  tsc -p tsconfig.check.json --noEmit rc=0, 0 bytes; tsc -p tsconfig.typecheck.json --noEmit rc=0, 0 bytes
+  exposure, same ruler and export shape, base <tip> vs cand <r8 head>: cells_total 6 and 6, modules 334 and
+  334, growth 0, no per-file difference (exposure_pair_r9.txt)
+  readiness at delivery: the five paths this lane now lands read CLEAN on the tip the server holds now
+  (readiness_r9.json). The self-test prints the same aged-out LANDED fixture as the previous block; that is
+  the fixture, not the ruler, and the five real verdicts are unaffected.
+
+WHAT THIS BLOCK DOES NOT CLAIM
+  No new screen read for these three lines. They render inside the live-recovery / simulation / pre-trip
+  panels, which need server state this pass did not stand up; the source-level arm and both typecheck
+  projects cover them, and the hub day-line screen reads from the earlier generation still stand for the hub.
+  The earlier claim about the two dictionary files (LocaleContext, plural.ts) being already on the tip is
+  unchanged; they are not part of this r9 set.

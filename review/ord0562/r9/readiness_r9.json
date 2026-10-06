@@ -1,0 +1,108 @@
+{
+ "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+ "base_tip": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+ "ruler_blob": "d5280febffc8094aa8f1d9eb1fcb80ae1b7664e4",
+ "ruler_branch_sha": "1acdeaafa8c349f52f7919f05381cb5a6f78bda1",
+ "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r8",
+ "items": [
+  {
+   "name": "component_v8",
+   "path": "frontend/src/app/V8Experience.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r8",
+   "base_tip": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "58497bf8dc378409613f6f3327641b7f3ae91fb4",
+   "tip_blob": "4fece5054beef7ab90ea6544cfaf1ce7ad720050",
+   "branch_blob": "3876cbd3eea0a2dc603a46e4999cd8f74106b1c0",
+   "base_blob": "4fece5054beef7ab90ea6544cfaf1ce7ad720050",
+   "verdict": "CLEAN"
+  },
+  {
+   "name": "count_noun_ruler",
+   "path": "frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r8",
+   "base_tip": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "58497bf8dc378409613f6f3327641b7f3ae91fb4",
+   "tip_blob": "fc2c06432044e2870bf9c682e1a27b31dbf83610",
+   "branch_blob": "72d7e989b4269dc5545d20ed1701980e077619fe",
+   "base_blob": "fc2c06432044e2870bf9c682e1a27b31dbf83610",
+   "verdict": "CLEAN"
+  },
+  {
+   "name": "live_recovery",
+   "path": "frontend/src/features/execution/LiveRecovery.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r8",
+   "base_tip": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "58497bf8dc378409613f6f3327641b7f3ae91fb4",
+   "tip_blob": "8181c4a2dbbefcde23cf430d0884018606b92a1c",
+   "branch_blob": "6d6d2e2e5fac6481d0b5b90c0b8e7d44c0363471",
+   "base_blob": "8181c4a2dbbefcde23cf430d0884018606b92a1c",
+   "verdict": "CLEAN"
+  },
+  {
+   "name": "simulation_adapter",
+   "path": "frontend/src/features/simulation/simulationAdapter.ts",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r8",
+   "base_tip": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "58497bf8dc378409613f6f3327641b7f3ae91fb4",
+   "tip_blob": "65989c1cfdbcde95688848a9cedcd9abd1e53875",
+   "branch_blob": "a3befc46b765dc45809e604a3f4f5d699e970efd",
+   "base_blob": "65989c1cfdbcde95688848a9cedcd9abd1e53875",
+   "verdict": "CLEAN"
+  },
+  {
+   "name": "pretrip_checklist",
+   "path": "frontend/src/lib/pretripChecklist.ts",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r8",
+   "base_tip": "79daa3c4ff8f37304d352177b456133d4b9c2a45",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "58497bf8dc378409613f6f3327641b7f3ae91fb4",
+   "tip_blob": "557f26e2f16cddc362d08da821c42c3de075901e",
+   "branch_blob": "7007dae05d2fbe32930af1e9120f0ffa1528a4c6",
+   "base_blob": "557f26e2f16cddc362d08da821c42c3de075901e",
+   "verdict": "CLEAN"
+  }
+ ],
+ "selftest": [
+  {
+   "name": "must_read_DRIFTED_ON_TIP",
+   "path": "frontend/src/app/V8Experience.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "dcc10366e197a35358d3bd0b1b299afb4cc1e23e",
+   "tip_blob": "4fece5054beef7ab90ea6544cfaf1ce7ad720050",
+   "branch_blob": "3a3591253c5e894d6add545c3636f2ed102e85c4",
+   "base_blob": "e45be179efe713cb8e957640008e1c35347ae335",
+   "verdict": "DRIFTED_ON_TIP"
+  },
+  {
+   "name": "must_read_LANDED",
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "branch_sha": "dcc10366e197a35358d3bd0b1b299afb4cc1e23e",
+   "tip_blob": "74f3d6de5779b860b535f48c609d7ef4be7ba429",
+   "branch_blob": "20203fee4744513da320387e7923fabbf054d566",
+   "base_blob": "20203fee4744513da320387e7923fabbf054d566",
+   "verdict": "DRIFTED_ON_TIP"
+  },
+  {
+   "name": "must_read_MISSING",
+   "path": "frontend/src/i18n/NoSuchFile_r1.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "cb218ca3b652248dac49a884149004edc3a3ac88",
+   "verdict": "MISSING",
+   "reason": "tip blob: rc=128 fatal: path 'frontend/src/i18n/NoSuchFile_r1.tsx' does not exist in 'cb218ca3b652248dac49a884149004edc3a3ac88'"
+  }
+ ],
+ "counts": {
+  "CLEAN": 5
+ },
+ "selftest_ok": false
+}
