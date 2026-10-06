@@ -485,14 +485,30 @@ def test_anyio_worker_thread_does_not_define_agent_identity():
 
 def test_clean_precausal_abort_is_not_a_product_contradiction():
     checkpoint = {
-        "schema": "citynexus.r32.live-strike.v2.failure.v2",
+        "schema": "citynexus.r32.live-strike.v2.failure.v3",
+        "strike_protocol": "R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1",
+        "strike_id": "fresh-precausal-abort",
+        "strike_started_at": "2026-10-06T00:00:00+00:00",
+        "timestamp": "2026-10-06T00:00:30+00:00",
         "status": "NOT_PROVEN",
         "failure": {
             "phase": "A_EXTERNAL_RESPONSE_BOUNDARY",
             "message": "Agent A did not reach the boundary",
         },
         "source_receipt": {
+            "protocol": "R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1",
+            "authorization_taskbook_commit": (
+                "03357b7c8f8a9a671c59113be71d6093fab04742"
+            ),
+            "strike_id": "fresh-precausal-abort",
+            "strike_started_at": "2026-10-06T00:00:00+00:00",
             "git_head": "deadbeef",
+            "remote_branch": (
+                "gpt/revolution-r32-autonomous-recovery-mesh"
+            ),
+            "remote_branch_head": "deadbeef",
+            "head_matches_remote": True,
+            "output_preexisted": False,
             "tracked_dirty_before_strike": False,
             "source_sha256": {
                 "backend/run_r32_live.py": "a" * 64,
