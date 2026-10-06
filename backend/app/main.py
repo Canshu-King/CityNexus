@@ -34,6 +34,7 @@ from app.agent.autorun import (
     start_autorun,
     stop_autorun,
 )
+from app.agent.watch_policy import adaptive_watch_policy
 from app.agent.contracts import (
     AgentAction,
     AgentMode,
@@ -1889,6 +1890,11 @@ def get_guardian_autopilot_status(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     enrollment = session.get(AutopilotEnrollment, journey.id)
+    watch = (
+        adaptive_watch_policy(session, journey, enrollment)
+        if enrollment is not None and enrollment.enabled
+        else None
+    )
     return {
         "journey_id": journey.id,
         "enrollment": (
@@ -1903,6 +1909,7 @@ def get_guardian_autopilot_status(
             if enrollment is not None
             else None
         ),
+        "watch": watch,
         **autorun_status(),
     }
 
