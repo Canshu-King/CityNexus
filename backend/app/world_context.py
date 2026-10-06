@@ -25,6 +25,9 @@ def _weather_context(row: ProviderObservation, payload: dict[str, Any]) -> dict[
     risk_facts = snapshot.get("facts") if isinstance(snapshot, dict) else []
     if not isinstance(risk_facts, list):
         risk_facts = []
+    activity_risk_facts = payload.get("activity_risk_facts")
+    if not isinstance(activity_risk_facts, list):
+        activity_risk_facts = []
     return {
         "id": row.id,
         "provider_key": row.provider_key,
@@ -38,7 +41,11 @@ def _weather_context(row: ProviderObservation, payload: dict[str, Any]) -> dict[
         # disruption claims and not mutation authority.
         "activity_observations": activity_observations[:12],
         "risk_facts": risk_facts[:12],
-        "material_risk": bool(risk_facts),
+        "activity_risk_facts": activity_risk_facts[:12],
+        # A provider can forecast material weather at this Place outside the
+        # planned activity window. Only activity-attributed risk is a Journey
+        # materiality claim.
+        "material_risk": bool(activity_risk_facts),
     }
 
 
