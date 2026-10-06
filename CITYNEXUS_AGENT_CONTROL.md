@@ -16588,6 +16588,66 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 自申报下一格（车道 8ac89982 · 绿化工·小许）：把同一问量到抽屉那侧，零产品字节；两处仍各等一句定点
+
+**一、手上三件都已交完**
+
+- ORD-0573 角色那半：枝已推、块已落、回执已发；号令者回执确认已在权威线上。
+- ORD-0550 r1 重切：判定"意图已在尖上、尖上那版更强"已交；号令者回执 `060182fc1c640bc9873c8cd59063f7c091c51364` 收下并落线，判语认"空切不交比交一枚假装有进展的枝好"。
+- ORD-0577 底栏普查：十七屏逐屏量（答六屏、静十一屏、两臂一致），枝 `563f5a4185764b3059106ae4f2a92adc2a266b64` 已推、块已落、回执已发。
+
+**二、下一格（我现在就做，不等定点）**
+
+把 ORD-0577 那同一问量到**抽屉／桌面侧栏**：那十一屏在抽屉里到底有没有被指出来（抽屉那份名单含全部十七枚 key，我在源码里读到它的判据是逐枚比路由，但那是读代码、不是量）。量出来能直接喂给等你裁的甲／乙：若抽屉已经把当前屏指出来，那底栏的静默就只是"底栏这一层的范围问题"，修法乙（明说"不在主路由上"）的代价与说辞就有了现成的对照；若抽屉也静默，那这是整条导航的同一个洞，判据要一起改。仍然零产品字节，只出一枚尺与两臂读数。
+
+**三、仍各等一句定点的两处（我不猜）**
+
+- ORD-0577 的修法：甲（归到最近主路由，需一份产品没有的映射）还是乙（明说"不在主路由上"，只差一句文案）；我倾向乙。
+- ORD-0573 的另一半（四枚标签换词表键）：文案进那枚共享词表，还是开一枚每屏 copy 模块——与上面那句是同一个定点。
+
+**四、旁证收下（不动手）**
+
+车道 2d2d7428 递来一枚：地图地名名牌被 maplibre 补上 `role=button` 与 `aria-label`，会被可达性尺当成控件；他收紧后同趟两个分母（C4 由一百零九改一百零七）。若我日后算"covered 分母"，名牌那一族先剔掉。
+
+**五、纪律**
+
+他人文件零枚改动、权威线移动零次、他人枝零枚、强推零次、`demo/reset` 零次、共享预览库打开零次。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0576 第五件 · 车道 82f55d8a：**闸能采集了**——完整检出里 `npx playwright test --list` 退出码零、`Total: 795 tests in 169 files`，尺的 collect 臂转绿（offenders 零、无假阳、无过期行）；验收①达成，验收②还差三枚"读后端源文件"的。另自报：尺自己有两个解析 bug，是它先红给我看我才发现的
+
+**〇、坐标（现读）。** 尖 `cfda610a99592b6c4111dbc5ee7ce0544a8f2fe2`；枝 `refs/heads/review/82f55d8a-e2e-collection-safe-r2` 头 `d50d26a087396191fef2d106470a21bd6a9cfd16`（本批之前同一枝还有 `c38213f77bae39ea69b75e243c5800031031a215` 与 `7b36622c9c29b274de70b956ca515b8d8a4c0b8c`），`git push --atomic` 后 `ls-remote` 回读同值；改动全在 `frontend/e2e` 与 `tools/`，产品字节零枚、删除零枚。
+
+**一、本批改了什么（再五枚 spec + 尺两处自修）。**
+
+- 四枚把测试包在 `test.describe` 里，上一批那把 codemod 的插入锚只认列零的 `test(`，所以它们原样未动；本批把锚放宽到也认 `test.describe(`（文件作用域的 `test.beforeEach` 对 describe 内的用例同样生效），四枚一起收：`frontend/e2e/qoder-ord0525-entry-reachability-r3.spec.ts`、`frontend/e2e/qoder-ord0545-family-words-r1.spec.ts`、`frontend/e2e/qoder-ord0545s3-refusal-on-glass-r1.spec.ts`、`frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts`。
+- 一枚是另一类，单独处理：`frontend/e2e/qoder-e766b154-checkin-words-real-door-r1.spec.ts` 在模块作用域 `JSON.parse(fs.readFileSync(process.env.CITYNEXUS_E766_REAL_TARGETS || ""))`，空值时 `ENOENT: open ''` 打死整目录。改法是把读取变惰性，并把它 `beforeAll` 里那句裸 `throw new Error("ABORT missing env")` 换成**点名变量**的 `test.skip`（拒绝的力度没变：没有目标文件就不跑，只是不再把采集带走）。
+- 尺的债表清空（`tools/e2e_collection_ruler_r2.py:27` 起那一段现在写的是"这个尖上目录里每一枚 spec 都能采集"）。
+
+**二、验收①的读数（你自己重跑就是这一条命令）。** `cd <完整检出>/frontend && npx playwright test --config playwright.config.ts --list`：退出码零、末段 `Total: 795 tests in 169 files`（原样落在 `D:/moodle/_qoder_82f55d8a_ord0576_export/list_all_after.txt`）。尺 `tools/e2e_collection_ruler_r2.py` 的 collect 臂同一次读数：`list_exit` 零、`tests_collected` 795、`files_collected` 169、`offenders` 零、`unjudged` 空、`stale_debt` 空、整臂 `ok: true`；skips 臂也是零枚裸 skip。件 `D:/moodle/_qoder_82f55d8a_ord0576_export/ruler_r4_green.json`。对照你说的工作树那次 26 条：现在是七百九十五条。
+
+**三、自报：尺自己两个 bug，是它先红我才发现的（不是我看代码看出来的）。**
+
+1. 它把 `Total:` 行从"输出最后一行"里取，而 `--list` 在 Total 之后还印一个空行 ⇒ 明明采到七百九十五条却读成零条。
+2. 它的 `Total` 正则没带 `re.M`，`^` 只匹配整串开头 ⇒ 即便改成全文搜索也仍然搜不到。
+两处修完之后**同一棵树**从 `ok: false` 变成 `ok: true`，中间没有任何产品字节改动——这正是我要求别人（也要求自己）的那种纪律：尺报红先怀疑尺，尺报绿先怀疑分母。
+
+**四、验收②还差什么（具名，不含糊）。** 前端单侧导出里仍有**三枚**在模块作用域读后端源文件、把采集打死，逐枚点名：`frontend/e2e/qoder-45d25bfb-authoritative-status-vocabulary-r1.spec.ts:44`、`frontend/e2e/qoder-cff87c64-ord0551-extraction-status-vocabulary-r1.spec.ts:50`、`frontend/e2e/qoder-cmdra-runtime-identity-vocabulary-r1.spec.ts:43`——三枚与我上批修好的自己那枚同族（`FILES` 表 + `read()` + 模块级 `const = read(...)`），修法是同一套（读取惰性 + 具名跳过）。该导出本轮读数：退出码一、`Total: 0 tests in 0 files`、抛错三枚（`D:/moodle/_qoder_82f55d8a_ord0576_export/list_feonly_final.txt`）。下一批就做这三枚。
+
+**五、没做 / 红线自查**
+
+1. 全程只 `--list`：不起 `webServer`、不开端口、不连 `:8000` `:4781` `:4782` `:8693`；`.db` 按"新于本轮起点"筛出零枚；`_preview.db` 仍是 7213056 B、mtime 2026-09-29 09:20:27；`demo/reset` 零次；basic-auth 文件与任何 API key 零读零印；push 权威线零次、force-push 零次。
+2. 这些 spec 的**通过**与否本轮仍未量（它们要私有栈与证据目录；按单我只负责采集安全）。具名 `NOT_EXECUTED_BY_82f55d8a`。
+3. 后端 pytest 零条执行、`vite build` 零次、`tsc` 两把未跑（改动只在 `e2e/` 与 `tools/`）。
+4. codemod 三版仍只在我自己目录里，没进枝（施工工具不是交付物）。
+
+**六、下一手。** ORD-0576 收尾批：那三枚"读后端源文件"的 spec 改成惰性读 + 具名跳过，交件形状不变（改前改后各量一次：完整检出与前端单侧导出两条 `--list` 的退出码与条数）。我名下另两件仍等落：`refs/heads/review/82f55d8a-trash-zh-wording-r2` 头 `06dd76444df43b753fc6decb3165cbffe85eeb22`、`refs/heads/review/82f55d8a-journeytrash-name-anchors-r2` 头 `f957e3157d3f8b55e4e4a6030d8a1a907d0b6e11`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 89f2e2d6 · 自申报那一格做完了：上格列出的四处「集合为空即判通过」都装上了具名守卫（新 r2 文件，已发布量具一字未改），并交了一枚「空输入必须非零、非空必须放行」的反件
 
 坐标（写这块这一刻现读；`4dfb8d58b14c69baeb092bc505d989e8fe9ef3b2` 与 `d602db8ed6280a56697eda8500cc4effe3484479` 都可 `git cat-file`）
