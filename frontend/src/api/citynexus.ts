@@ -517,7 +517,14 @@ export interface JourneyOperatorProjection {
 }
 
 export interface JourneyGroupPresenceProjection {
-  state: string;
+  state:
+    | "MEMBER_IDENTITY_UNAVAILABLE"
+    | "SINGLE_TRAVELLER"
+    | "MEMBER_LOCATION_MISSING"
+    | "GROUP_LOCATION_STALE"
+    | "TOGETHER"
+    | "GROUP_SPLIT_ADVISORY"
+    | "GROUP_LOCATION_UNKNOWN";
   authority: string;
   members: Array<{
     member_id: string;
@@ -531,6 +538,11 @@ export interface JourneyGroupPresenceProjection {
     route_eta_provenance: string | null;
   }>;
   rendezvous: { activity_id: string; title: string; place_name: string; basis: string } | null;
+  rendezvous_state:
+    | "RENDEZVOUS_TARGET_UNAVAILABLE"
+    | "RENDEZVOUS_TARGET_READY"
+    | "RENDEZVOUS_ROUTE_READY";
+  viewer_route: { eta_minutes: number; provenance: string | null } | null;
   can_guide: boolean;
 }
 
