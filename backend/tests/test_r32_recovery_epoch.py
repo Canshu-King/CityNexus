@@ -16,7 +16,7 @@ import pytest
 from fastapi import HTTPException
 
 import app.main as main_module
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
