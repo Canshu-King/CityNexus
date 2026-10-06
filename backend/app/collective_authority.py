@@ -110,6 +110,20 @@ def issue_collective_authority_receipt(
             raise ValueError(
                 "collective authority receipt response audit principal mismatch"
             )
+        if any(
+            str(after.get("proposal_id") or "") != str(proposal_id)
+            for _item, after in decoded_audits
+        ):
+            raise ValueError(
+                "collective authority receipt response audit selected another proposal"
+            )
+        if any(
+            str(after.get("decision_epoch") or "") != str(decision_epoch)
+            for _item, after in decoded_audits
+        ):
+            raise ValueError(
+                "collective authority receipt response audit decision epoch mismatch"
+            )
 
         audit_members = {
             str(after.get("member_id") or "")
