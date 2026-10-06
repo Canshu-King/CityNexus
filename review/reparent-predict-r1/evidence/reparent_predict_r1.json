@@ -1,0 +1,173 @@
+{
+ "tip": "d602db8ed6280a56697eda8500cc4effe3484479",
+ "tip_tree_paths": 10742,
+ "refs": [
+  {
+   "ref": "refs/heads/review/newlane-ord0500-phone-anchor-form-r5",
+   "head": "da78a2b170e5cb49e5cebd431846011b645fd738",
+   "parents": [
+    "d107131c6f6e65d9f207f6bf1b563d1cc8877f89"
+   ],
+   "paths": [
+    {
+     "path": "backend/tests/test_qoder_ord0500_journey_refusal.py",
+     "base": "dd4bf606865e414775babab7d93763205bf7dd84",
+     "new": "80cfac127a927d49901a46386e8778ad71909133",
+     "tip_blob": "dd4bf606865e414775babab7d93763205bf7dd84",
+     "verdict": "CLEAN_REPLAY"
+    },
+    {
+     "path": "review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json",
+     "base": null,
+     "new": "ac3413c61e683ce989672724545c60f86e8503bd",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json",
+     "base": null,
+     "new": "9907a587cf9e4150c8a2009cb2ee4d8a408857b5",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/evidence/anchor_form_gate_r27.json",
+     "base": null,
+     "new": "4a926e53d066065b204184615dadad3f4d1fa891",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/evidence/anchor_form_manifest_r26.json",
+     "base": null,
+     "new": "cf5dbcf9c9b85c0a83d1a65c4e768c03e9b3ac6f",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/evidence/anchor_form_spec_r26.json",
+     "base": null,
+     "new": "a3d201afb134c5cff8201ad9d0e3b862e0bd14c1",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/run/anchor_form_candidate.py",
+     "base": null,
+     "new": "80cfac127a927d49901a46386e8778ad71909133",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/run/commit_r28_anchor_msg.txt",
+     "base": null,
+     "new": "ca5cf42486cca4161ca093b98b1893ef8611d3d7",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/run/r28_apply_b.txt",
+     "base": null,
+     "new": "7bde6173b6c9a933953f1d709ffb0e5c102748f3",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/run/r28_mutants_b.txt",
+     "base": null,
+     "new": "cb2a4270eed53866b445f8ecfa1164ea965fb82c",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/run/r28_spec_b.txt",
+     "base": null,
+     "new": "c82b17a03973a7f2246771e5357c477a3ea8a39a",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/run/r28_writeset.txt",
+     "base": null,
+     "new": "8ea00400e63a37fdd097a645546b53e7bea4b81b",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/tools/anchor_form_apply_r26.py",
+     "base": null,
+     "new": "c7f59c9ab91efe229ed41f70cc664f04f437928f",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/tools/anchor_form_gate_mutants_r26.py",
+     "base": null,
+     "new": "7a12ca0284364df2860543a10977a9c0c853ea80",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/tools/anchor_form_gate_r26.py",
+     "base": null,
+     "new": "e7e2aa45265e452b09b2349216321481116f16d6",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/tools/anchor_form_gate_r27.py",
+     "base": null,
+     "new": "38981e5e112934cb65b695aba79d8bff78d1971b",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-anchor-form/tools/anchor_form_spec_r26.py",
+     "base": null,
+     "new": "836f4cf30fc74dd02194e27434d6f411b1e5ce66",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    }
+   ],
+   "tally": {
+    "CLEAN_REPLAY": 1,
+    "ADD_IF_FREE": 16
+   }
+  },
+  {
+   "ref": "refs/heads/review/0afdb49b-ord0500-staging-door-r7",
+   "head": "3b035628f33e593e243d02b3d1647f805d191321",
+   "parents": [
+    "d107131c6f6e65d9f207f6bf1b563d1cc8877f89"
+   ],
+   "paths": [
+    {
+     "path": "review/ord0500-staging-door/run/r24_chain_forced.txt",
+     "base": null,
+     "new": "6c900b2002ae352555d318185df7a054b9faf9cc",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-staging-door/run/r24_chain_green.txt",
+     "base": null,
+     "new": "9d784fff6730f8263c680114cd7f599b9a182543",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    },
+    {
+     "path": "review/ord0500-staging-door/tools/r24_chain.sh",
+     "base": null,
+     "new": "b1bd224e1abf680e8f6851b190ea3040f8442f99",
+     "tip_blob": null,
+     "verdict": "ADD_IF_FREE"
+    }
+   ],
+   "tally": {
+    "ADD_IF_FREE": 3
+   }
+  }
+ ],
+ "method": "per-path three-way (branch base, branch new, live tip blob); no merge-tree, because a rebuilt line may leave no usable merge base",
+ "writes": "none: no ref moved, no tree written, nothing landed, no fetch"
+}

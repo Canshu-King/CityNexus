@@ -1,0 +1,19 @@
+reparent prediction r1: would the two waiting branches replay cleanly onto the live tip? (0 product paths)
+
+The 甲 question is the commander's to answer and this hand does not answer it -- no ref moved, no tree
+written, nothing landed.  It makes the answer cheap: a per-path three-way prediction (branch base blob,
+branch new blob, live tip blob) for the two branches waiting on that word.
+
+Why not merge-tree: this line has been rebuilt, so a merge base with the current tip may not exist and a
+merge-tree run would report a whole-tree add that says nothing about the paths each branch actually
+carries.  Comparing the three blobs per path answers the only question a replay has -- has the tip moved
+that path since the branch was cut?
+
+Contents under review/reparent-predict-r1/:
+- tools/reparent_predict_r1.py -- the prediction.
+- evidence/reparent_predict_r1/reparent_predict_r1.json -- the full per-path table.
+- run/reparent_predict_r1.txt -- the printed output.
+- run/reparent_predict_r1_manifest.json, run/commit_reparent_predict_r1_msg.txt -- this publish.
+
+No fetch, no write, no ref moved, no ledger direct write, no product byte.  New file names throughout;
+no landed instrument path is rewritten (CMDR-0925-2128).

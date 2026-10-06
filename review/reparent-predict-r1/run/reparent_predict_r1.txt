@@ -1,0 +1,23 @@
+add_if_free_ord0500_staging_door_r7=3 add_if_free_refs/heads/review/newlane_ord0500_phone_anchor_form_r5=16 clean_replay_refs/heads/review/newlane_ord0500_phone_anchor_form_r5=1 head_ord0500_staging_door_r7=3b035628f33e593e243d02b3d1647f805d191321 head_refs/heads/review/newlane_ord0500_phone_anchor_form_r5=da78a2b170e5cb49e5cebd431846011b645fd738 parents_ord0500_staging_door_r7=1 parents_refs/heads/review/newlane_ord0500_phone_anchor_form_r5=1 paths_ord0500_staging_door_r7=3 paths_refs/heads/review/newlane_ord0500_phone_anchor_form_r5=17 paths_total=20 refs=2 tip=d602db8ed6280a56697eda8500cc4effe3484479 tip_tree_paths=10742 total_add_if_free=19 total_clean_replay=1
+refs/heads/review/newlane-ord0500-phone-anchor-form-r5 head=da78a2b170e5cb49e5cebd431846011b645fd738 parents=1 paths=17 {"CLEAN_REPLAY": 1, "ADD_IF_FREE": 16}
+   backend/tests/test_qoder_ord0500_journey_refusal.py                    base=dd4bf606865e new=80cfac127a92 tip=dd4bf606865e CLEAN_REPLAY
+   review/ord0500-anchor-form/evidence/anchor_form_apply_r26.json         base=- new=ac3413c61e68 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/evidence/anchor_form_gate_mutants_r26.json  base=- new=9907a587cf9e tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/evidence/anchor_form_gate_r27.json          base=- new=4a926e53d066 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/evidence/anchor_form_manifest_r26.json      base=- new=cf5dbcf9c9b8 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/evidence/anchor_form_spec_r26.json          base=- new=a3d201afb134 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/run/anchor_form_candidate.py                base=- new=80cfac127a92 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/run/commit_r28_anchor_msg.txt               base=- new=ca5cf42486cc tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/run/r28_apply_b.txt                         base=- new=7bde6173b6c9 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/run/r28_mutants_b.txt                       base=- new=cb2a4270eed5 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/run/r28_spec_b.txt                          base=- new=c82b17a03973 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/run/r28_writeset.txt                        base=- new=8ea00400e63a tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/tools/anchor_form_apply_r26.py              base=- new=c7f59c9ab91e tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/tools/anchor_form_gate_mutants_r26.py       base=- new=7a12ca028436 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/tools/anchor_form_gate_r26.py               base=- new=e7e2aa45265e tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/tools/anchor_form_gate_r27.py               base=- new=38981e5e1129 tip=- ADD_IF_FREE
+   review/ord0500-anchor-form/tools/anchor_form_spec_r26.py               base=- new=836f4cf30fc7 tip=- ADD_IF_FREE
+refs/heads/review/0afdb49b-ord0500-staging-door-r7 head=3b035628f33e593e243d02b3d1647f805d191321 parents=1 paths=3 {"ADD_IF_FREE": 3}
+   review/ord0500-staging-door/run/r24_chain_forced.txt                   base=- new=6c900b2002ae tip=- ADD_IF_FREE
+   review/ord0500-staging-door/run/r24_chain_green.txt                    base=- new=9d784fff6730 tip=- ADD_IF_FREE
+   review/ord0500-staging-door/tools/r24_chain.sh                         base=- new=b1bd224e1abf tip=- ADD_IF_FREE

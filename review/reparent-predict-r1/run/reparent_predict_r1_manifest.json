@@ -1,0 +1,7 @@
+[
+ ["tools/reparent_predict_r1.py", "tools"],
+ ["evidence/reparent_predict_r1/reparent_predict_r1.json", "evidence"],
+ ["run/reparent_predict_r1.txt", "run"],
+ ["run/reparent_predict_r1_manifest.json", "run"],
+ ["run/commit_reparent_predict_r1_msg.txt", "run"]
+]
