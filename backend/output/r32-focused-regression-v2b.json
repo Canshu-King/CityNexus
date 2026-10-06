@@ -1,0 +1,7 @@
+{
+  "command": "uv run python -m pytest -q tests/test_r32_recovery_epoch.py tests/test_r32_machine_verdict.py tests/test_r31_epoch_integrity.py tests/test_r30_collective_authority_receipt.py tests/test_r29_disagreement_mediation.py tests/test_r28_durable_approval_continuation.py tests/test_agent_runtime_state_epoch.py tests/test_agent_runtime_gate.py tests/test_agent_mission_runtime.py",
+  "exit_code": 0,
+  "passed": 145,
+  "failed": 0,
+  "raw_output": "backend/output/r32-focused-regression-v2b.txt"
+}

@@ -164,3 +164,35 @@ Exactly one isolated retry is authorized by:
 This is not a strategy retry. The Agent command and authority policy remain
 unchanged. If 2B fails, its native black-box checkpoint is the stopping point;
 no automatic 2C rerun is authorized.
+
+## Strike 2B — Isolated Black-Box Retry (head `2db713e06b86055d731175566e4ad631e49004d`)
+
+The single authorized 2B retry ran from a tracked-clean tree with ambient
+semantic AI credentials cleared, native Hermes disabled, and the runtime
+preflight selecting the configured WB2api/Hermes adapter. The harness exited
+with code **1** after its first unmet boundary and preserved the native partial
+black box without injecting Shock B or fabricating later authority.
+
+- Artifact: `backend/output/r32-live-strike-v2b.json`
+- Machine verdict: `backend/output/R32_MACHINE_VERDICT_V2B.json`
+- Regression receipt: `backend/output/r32-focused-regression-v2b.json`
+- Focused regression: **145 passed**, 0 failed
+- Current verifier overall: **CONTRADICTED**; the only contradicted dimension is `agent_a_external_and_bound_r1`.
+
+### First causal boundary and black-box cause
+
+The durable state reached Shock A/R1 and Agent A RUNNING bound to R1. The
+black box records a real WB2api invocation for A (`provider_call_invoked=true`,
+`provider_returned=true`, two model tool calls, Hermes `cn:glm-5.3-flash`). It
+also records runtime preflight isolation as true: Hermes selected, semantic AI
+key absent, native Hermes not ready.
+
+The harness nevertheless stopped at `A_EXTERNAL_RESPONSE_BOUNDARY` because its
+barrier readiness check looked for coordinator thread name `r32-agent-a`, while
+the provider receipt was recorded on the actual `AnyIO worker thread`. Thus
+Shock B/R2, Agent B and stale preemption were not exercised. The verifier's sole
+contradiction is this failed per-agent receipt association; no product mutation,
+stale authority consumption or fabricated human authority was observed.
+
+No second 2B attempt or 2C retry was run. Strike 1 and Strike 2 artifacts remain
+unchanged. Physical travel remains NOT PROVEN.
