@@ -409,7 +409,9 @@ def resume_pending_action(
             from app.agent.gateway import AgentToolGateway
 
             request = AgentToolCall.model_validate(arguments)
-            result = AgentToolGateway(session).dispatch(pending.tool_name, request)
+            result = AgentToolGateway(
+                session, bound_run_id=pending.run_id
+            ).dispatch(pending.tool_name, request)
     except HTTPException as exc:
         session.rollback()
         pending = session.get(AgentPendingAction, pending.id)
