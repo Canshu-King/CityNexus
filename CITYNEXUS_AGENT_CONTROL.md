@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 `6a773af1` · 第二轮那栋楼（路线形状一致）· 第一格：把「规划里没线、屏上却画出一条线」修掉了（有产品字节，判语自算）
+
+**图纸**（账本第 16696 行那条派单）：一条行程里的路线，从规划、渲染、到用户读它，形状必须一致；判据是对同一段行程把三个地方的形状逐点比对，不一致要么修数据、要么在界面上诚实说明。
+
+**代次**：候选枝 `review/6a773af1-ord0577-route-shape-r1` = `cd91ffb8d557f18e4aab9cae241ff74fcf6d31e7`（`ls-remote` 回读同值），parent = `885f2ec18790761b0cf539973e6b17555f52f2ee`。本笔 2 枚产品文件（`backend/app/main.py`、`frontend/src/api/citynexus.ts`）+ 3 枚量具与前后两枚读数件（`review/ord0577/` 下）。
+
+**一、这栋楼的缺口长什么样（修前读数）**。服务端 `_route_feature` 原来对「规划里没有路线」也硬吐一条非空 LineString：坐标为空就给一枚**写死的城市** `[117.19, 39.13]` 复制成两点，只有一个点就把那一点复制成两点。前端 `JourneyMap` 明明写着「不臆造兜底城市」、坐标为空就不画（`frontend/src/components/JourneyMap.tsx` 的 `lineFeatureFor`），可它拿的是服务端那条 feature，**那条「不画」的分支永远等不到**。逐点比对（件 `review/ord0577/readouts/route_shape_20261006T161510Z.json`）：2 枚 case 里 **2 枚三处形状不一致**，判语 `THREE_WAY_SHAPE_MISMATCH`——规划 0 点、屏上 2 点（写死城市）；规划 1 点、屏上 2 点（重复点）。
+
+**二、怎么修的**。`_route_feature` 改成：**点数少于 2 就不吐线**（返回 `None`），不再写死城市、不再复制单点；前端 `JourneyMap` 那条「没有可信坐标就没东西可画」的分支于是能真的走到，不画。配套把 TS 类型 `old_route` 从 `RouteFeature` 改成 `RouteFeature | null`（`frontend/src/api/citynexus.ts`），让类型与「可能没有线」一致。响应里的 `fallback` / `fallback_reason` 不再解引用可能为空的 `old_route`，无路线时回 `ROUTE_HAS_NO_TRAVEL_SEGMENTS`——这就是图纸要的「在界面上诚实说明为什么不同」。
+
+**三、修后读数与反件**（件 `review/ord0577/readouts/route_shape_20261006T162459Z.json`）：三枚 case 逐点比对，**不一致 0 枚**、判语 `THREE_WAY_SHAPE_CONSISTENT`——0 点→不出线、屏上不画；1 点→不出线、屏上不画；两枚真坐标那一格（`real_two_points`）→原样吐出、与规划逐点相同、照画。**非空洞**：同一把尺跑修前那份代码，2 枚 case 全红（写死/复制点都被抓），跑修后这份 0 枚红——尺真的在读形状，不是恒真话。
+
+**四、跑过的门（现读）**。后端「路线/移动」相关测试 **110 枚通过、1 枚跳过**；整仓后端 **1711 枚通过**，另有 **8 枚失败**——这 8 枚是**我改动前就在红**的（stash 掉我的改动在干净树上复跑仍红：anywhere 三族、g3_xproc_http、stay_generation_operations），与这栋楼无关，我不认领也不修。前端类型检查（`tsc -p tsconfig.check.json --noEmit`）**通过**。收集口径：整仓 1736 枚收集、1711 通过 + 8 既有红 + 16 跳过 + 1 xfail。
+
+**五、没做的，具名**。
+1. **屏上当代读数仍缺**：`/v8/*` 的屏读要一份带依赖的现尖工作树，D 盘现读只剩约 5 GiB 开不出来（腿一到腿十四同一条缺因）。所以「屏上不画」这格是**从代码路径证**的，不是屏上截图证。
+2. **这格只钉了「没有线时不说谎」**：有真路线时三处是否逐点全等（顺序、段数、坐标序列逐点）没量——那要一份有真路线的行程做对照，本轮没有这样的样本。
+3. **候选是候选**：`main.py` 是共享热文件，我只在 `review/6a773af1-ord0577-route-shape-r1` 这条枝上落，**没有并进权威线**（权威尖现读 `2e2ddbaf72eed9565fd8b18ea9b8216061269f57`，账号只有单写权在我这格之外）。要不要落、怎么落，等你裁。
+
+**六、现场与下一格**：本轮零枚自建端口、零枚浏览器、零枚 build、没写账本、force-push 0 次、没动任何人的进程。**下一格我自申报**：找一段「有真路线」的行程（现尖或我枝），把规划坐标序列、屏上画的、下游读数的三处逐点全等对一遍（顺序、段数、坐标），把第二格补成真对照——这格不用清盘。
+
+
+### 车道 2d2d7428 · Qoder 00:23 · 承重墙·第四格：源码 41 处「白底且暗色无覆盖」，浏览器实测**暗色下仍是白底的只有 4 处**（hub/trips/agent/me 四屏），33 处两套都没画到是死 CSS（产品字节 0 枚）
+
+- 件与枝：枝 `refs/heads/review/2d2d7428-ord0561-white-surface-map-r4` 远端头现读 `a3f968fe2a7b8f61a73ec66057d92860d3d9140d`，父提 `4156da879a9538b104ea2bce507d120955a6a1cb` 就是现尖 ⇒ 可直接快进合（`git merge-base` 读回 `4156da879a9538b104ea2bce507d120955a6a1cb`、`git merge-tree --write-tree` 退 0、相对现尖只动这一枚件）；件 `review/ord0561/WHITE_SURFACE_MAP_R4.md` 的 blob `6f78f33054753605d7bba484a8e7b62f764ebe87`（现回 3548 字节），件 41 行。
+- 量法：读数代次 `44b47dfdfd167d71597f19055769e6aaf8b38597`，私有栈自有端口与自有库；两套主题 × 五屏 × 手机形，逐枚 `querySelectorAll` 那 41 个选择器，对每个命中元素读 `getComputedStyle().backgroundColor`，只算真可见（有盒、非 display:none、非透明）；选择器查询失败 41 枚。0
+- 结论（分解见 `review/ord0561/WHITE_SURFACE_MAP_R4.md:9`）：源码 **41** 处（规则数）→ 真缺陷 **4** 处；4 处两套都画到但暗色已被别处改色、0 处只一套画到、**33 处两套都没画到（死 CSS）**。41 = 8 + 0 + 33（`review/ord0561/WHITE_SURFACE_MAP_R4.md:9`）。
+- 逐枚点名（亮档画到 / 暗档画到 / 暗档实际色 / 屏，逐行坐标见 `4`）：
+  - `.cn-collect__entry` / 6 处 / 6 处 / `rgb(255, 255, 255)` / `/v8/trips`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+  - `.plan-ranking` / 1 处 / 1 处 / `rgb(255, 255, 255)` / `/v8/hub`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+  - `.v8-agent-progress` / 1 处 / 1 处 / `rgb(255, 255, 255)` / `/v8/agent`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+  - `.v8-me-card` / 7 处 / 7 处 / `rgb(255, 255, 255)` / `/v8/me`　（review/ord0561/WHITE_SURFACE_MAP_R4.md:18）
+- 这四枚与第二格实测翻红的两族**互相对上**：第二格读到暗色下近白字压在纯白底（比值约 1.09），这一格指出是哪几枚选择器干的、画在 hub / trips / agent / me；`/v8/me` 那枚暗档一次画到 7 个元素，影响面最大。review/ord0561/WHITE_SURFACE_MAP_R4.md:18
+- 这一格把判断改了：源码尺的 41 处是**嫌疑**不是缺陷数，真要修的只有 4 处；剩下 4 处「两套都画到但暗色已被别处改色」与 0 处「只一套画到」**不并进缺陷**——把规则数和缺陷数混为一谈，正是这面墙要防的错。review/ord0561/WHITE_SURFACE_MAP_R4.md:29
+- 没做的，具名：本格只读浏览器、零产品字节；四枚怎么改（换 `--cn-surface`／给暗色单列）归号令者裁；只在手机形两套主题五屏上量，宽形与其余屏 `NOT_MEASURED`；死 CSS（33 处）我点数量但不主张删——删不删是产品判断；权威尖我没移动过、已发布 ref 覆盖 0 次（force-push 没用过）；前端 e2e 整套没跑（`NOT_EXECUTED_BY_CMDR`）。review/ord0561/WHITE_SURFACE_MAP_R4.md:34
+- 我自申报的下一格（先读账本 ORDERS 再动）：把第二格的对比度读数按这四枚选择器对齐（哪几枚各自压了多少行、每行差多少），做成一张「选择器 → 影响行数 → 建议动作」的单；仍只读，等您裁怎么改。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### a68b0631 00:18 · 那栋楼（给整套尺装可取回的坐标）第一格交了：清点+ruler 登记表——三枚产反例读数的尺从本机搬上枝、逐枚给可 cat-file 取回的坐标、每枚点名它该红的那一次
 
 **一、要落的枝（只这一枚，枝名逐字）**
