@@ -36,6 +36,22 @@ type Proposal = {
   explanation?: { impact_model?: string; summary?: string };
 };
 
+type WorldObservation = {
+  id: string;
+  provider_key: string;
+  observation_type: string;
+  provenance: string;
+  captured_at: string;
+  material_risk?: boolean;
+  activity_observations?: Array<{
+    activity_id?: string;
+    place_id?: string;
+    at?: string;
+    precipitation_probability?: number | null;
+    weather_code?: number | null;
+  }>;
+};
+
 type Disruption = {
   id: string;
   type: string;
@@ -113,6 +129,7 @@ export function LiveRecovery({
   const twin = useAuthoritativeTwin(journeyId);
   const plans = useAuthoritativePlans(journeyId);
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [worldContext, setWorldContext] = useState<WorldObservation[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -129,6 +146,26 @@ export function LiveRecovery({
   useEffect(() => {
     void loadProposals();
   }, [loadProposals]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const r = await fetch(`/api/v1/journeys/${journeyId}/world-context`);
+        const body = await r.json();
+        if (!cancelled) {
+          setWorldContext(
+            Array.isArray(body?.observations) ? (body.observations as WorldObservation[]) : [],
+          );
+        }
+      } catch {
+        if (!cancelled) setWorldContext([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [journeyId]);
 
   const plan =
     plans.data?.find((p) => p.status === "ACTIVE" || p.status === "SELECTED") ?? null;
@@ -196,6 +233,13 @@ export function LiveRecovery({
   const acknowledgedOnly = disruptions.filter((d) =>
     isDisruptionAcknowledgedOnly(d, acceptedTriggerIds),
   );
+  const latestWeather = worldContext.find((item) => item.observation_type === "WEATHER") ?? null;
+  const weatherDisruptionOpen = openDisruptions.some((item) => item.type === "WEATHER");
+  const benignWeatherContext =
+    latestWeather && latestWeather.material_risk !== true && !weatherDisruptionOpen
+      ? latestWeather
+      : null;
+  const weatherReading = benignWeatherContext?.activity_observations?.[0] ?? null;
 
   // Canonicalise each proposal's semantic diff so two proposals that describe
   // the SAME change cannot appear as two identical "接受新方案" buttons.  The key
@@ -319,6 +363,28 @@ export function LiveRecovery({
         <p className="v8-muted" data-testid="live-completed">
           {t("live.completedProposalIntro")}
         </p>
+      )}
+
+      {benignWeatherContext && (
+        <div
+          className="live-disruption"
+          data-testid="live-world-context"
+          data-provider={benignWeatherContext.provider_key}
+          data-provenance={benignWeatherContext.provenance}
+          data-observation-id={benignWeatherContext.id}
+        >
+          <b>{zh ? "已检查最新天气" : "Latest weather checked"}</b>
+          <p>
+            {zh
+              ? "当前没有发现需要改动行程的天气风险，原计划保持不变。"
+              : "No plan-impacting weather risk was found, so your current Journey stays unchanged."}
+            {weatherReading?.precipitation_probability != null
+              ? zh
+                ? ` · 该时段降水概率 ${weatherReading.precipitation_probability}%`
+                : ` · Precipitation probability for this time: ${weatherReading.precipitation_probability}%`
+              : ""}
+          </p>
+        </div>
       )}
 
       {openDisruptions.length > 0 && (
