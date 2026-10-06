@@ -2958,8 +2958,6 @@ function Hub({
             {dateInZone(data.journey.start_at, locale, journeyTz)} —{" "}
             {dateInZone(data.journey.end_at, locale, journeyTz)}
             {" · "}
-            {t("hub.zoneAttribution", { zone: journeyTz })}
-            {" · "}
             {t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
             {tripDayCount === null
@@ -3235,11 +3233,11 @@ function Hub({
         </div>
         <div className="cn-strip-item">
           <span>{t("hub.arrival")}</span>
-          <b>{dateInZone(data.trip.arrival_anchor.at, locale, journeyTz)}{" · "}{t("hub.zoneAttribution", { zone: journeyTz })}</b>
+          <b>{dateInZone(data.trip.arrival_anchor.at, locale, journeyTz)}</b>
         </div>
         <div className="cn-strip-item">
           <span>{t("hub.departure")}</span>
-          <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}{" · "}{t("hub.zoneAttribution", { zone: journeyTz })}</b>
+          <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}</b>
         </div>
       </div>
       {/* ORD-0392: this anchor is a table now (`hubAnchorPanels` in app/v8PanelRegistry.tsx), so a
