@@ -140,6 +140,39 @@ def issue_collective_authority_receipt(
             raise ValueError(
                 "collective authority receipt principal set does not match response audits"
             )
+    required_json = _json(required_ids)
+    audits_json = _json(audit_ids)
+    actors_json = _json(actor_ids)
+    exact_existing = session.scalar(
+        select(CollectiveAuthorityReceipt)
+        .where(
+            CollectiveAuthorityReceipt.journey_id == str(journey_id),
+            CollectiveAuthorityReceipt.proposal_id == str(proposal_id),
+            CollectiveAuthorityReceipt.plan_version_id == str(plan_version_id),
+            CollectiveAuthorityReceipt.authority_mode == authority_mode,
+            CollectiveAuthorityReceipt.decision_epoch == str(decision_epoch),
+            CollectiveAuthorityReceipt.material_world_epoch
+            == str(material_world_epoch),
+            CollectiveAuthorityReceipt.candidate_surface_fingerprint
+            == str(candidate_surface_fingerprint),
+            CollectiveAuthorityReceipt.classification == str(classification),
+            CollectiveAuthorityReceipt.source_mission_id
+            == (str(source_mission_id) if source_mission_id else None),
+            CollectiveAuthorityReceipt.source_agent_run_id
+            == (str(source_agent_run_id) if source_agent_run_id else None),
+            CollectiveAuthorityReceipt.required_member_ids_json == required_json,
+            CollectiveAuthorityReceipt.response_audit_ids_json == audits_json,
+            CollectiveAuthorityReceipt.principal_actor_ids_json == actors_json,
+            CollectiveAuthorityReceipt.invalidated_at.is_(None),
+        )
+        .order_by(
+            CollectiveAuthorityReceipt.issued_at,
+            CollectiveAuthorityReceipt.id,
+        )
+    )
+    if exact_existing is not None:
+        return exact_existing
+
     receipt = CollectiveAuthorityReceipt(
         id=str(uuid4()),
         journey_id=str(journey_id),
@@ -151,9 +184,9 @@ def issue_collective_authority_receipt(
         candidate_surface_fingerprint=str(candidate_surface_fingerprint),
         source_mission_id=str(source_mission_id) if source_mission_id else None,
         source_agent_run_id=str(source_agent_run_id) if source_agent_run_id else None,
-        required_member_ids_json=_json(required_ids),
-        response_audit_ids_json=_json(audit_ids),
-        principal_actor_ids_json=_json(actor_ids),
+        required_member_ids_json=required_json,
+        response_audit_ids_json=audits_json,
+        principal_actor_ids_json=actors_json,
         classification=str(classification),
         issued_at=_now(),
     )
