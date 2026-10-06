@@ -2662,13 +2662,16 @@ def _persist_trusted_transit_deviation_event(
     commitment_id = str(commitment.get("commitment_id") or "")
     if not observation_id or not commitment_id:
         return None
+    # One continuous deviation is one incident even if the device emits another
+    # trusted sample or the traveller taps reroute again.  Observation/operation
+    # ids are evidence *within* the incident, not the incident identity.
     fingerprint_payload = {
+        "incident_kind": "VERIFIED_ROUTE_DEVIATION",
         "journey_id": str(journey.id),
+        "active_plan_version_id": str(journey.active_plan_version_id or ""),
         "activity_id": str(activity.id),
         "active_leg_id": active_leg_id,
-        "location_observation_id": observation_id,
         "commitment_id": commitment_id,
-        "reroute_operation_id": reroute_operation_id,
     }
     fingerprint = hashlib.sha256(
         json.dumps(fingerprint_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -2676,8 +2679,10 @@ def _persist_trusted_transit_deviation_event(
     existing_rows = session.scalars(
         select(EventModel).where(
             EventModel.journey_id == journey.id,
+            EventModel.provider_key == "journey-in-transit-route",
             EventModel.event_type == "TRAFFIC_DELAY",
             EventModel.provenance == "SYSTEM_DERIVED",
+            EventModel.status.in_(("DETECTED", "ACKNOWLEDGED", "OPEN", "ACTIVE")),
         )
     ).all()
     for existing in existing_rows:
@@ -2695,7 +2700,10 @@ def _persist_trusted_transit_deviation_event(
         event_type="TRAFFIC_DELAY",
         severity="MAJOR",
         status="DETECTED",
-        affected_activity_id=str(commitment.get("activity_id") or "") or None,
+        # The causal target is the activity whose active route is deviating.
+        # The protected commitment is the downstream risk and remains explicit
+        # in payload; conflating the two makes recovery target the wrong stop.
+        affected_activity_id=str(activity.id),
         occurred_at=str(transit.get("location_captured_at") or now),
         detected_at=now,
         resolved_at=None,
@@ -2714,6 +2722,8 @@ def _persist_trusted_transit_deviation_event(
                 "reroute_operation_id": reroute_operation_id,
                 "reroute_provider": route_provider,
                 "reroute_provenance": str(route_provenance).upper(),
+                "source_activity_id": str(activity.id),
+                "affected_commitment_activity_id": str(commitment.get("activity_id") or "") or None,
                 "affected_commitment": commitment_risk,
             },
             ensure_ascii=False,
@@ -2734,9 +2744,11 @@ def _persist_trusted_transit_deviation_event(
         after={
             "event_type": event.event_type,
             "incident_fingerprint": fingerprint,
-            "activity_id": activity.id,
+            "source_activity_id": activity.id,
+            "affected_activity_id": event.affected_activity_id,
             "active_leg_id": active_leg_id,
             "affected_commitment_id": commitment_id,
+            "affected_commitment_activity_id": str(commitment.get("activity_id") or "") or None,
         },
     )
     return event
