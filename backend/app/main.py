@@ -5111,6 +5111,57 @@ def collective_mutation_gate(
     }
 
 
+def collective_authority_preflight(
+    session: Session,
+    journey: Journey,
+    proposal: ReplanProposalModel,
+    target_plan: PlanVersion,
+    *,
+    hard_feasible_plan_ids: set[str] | None = None,
+    resolved_decision: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Resolve the exact current collective receipt before approval or mutation."""
+
+    gate = collective_mutation_gate(
+        session,
+        journey,
+        target_plan,
+        hard_feasible_plan_ids=hard_feasible_plan_ids,
+        resolved_decision=resolved_decision,
+    )
+    if gate.get("allowed") is not True:
+        return gate
+
+    from app.collective_authority import authority_receipt_for_allowed_gate
+
+    try:
+        receipt = authority_receipt_for_allowed_gate(
+            session,
+            journey_id=journey.id,
+            proposal_id=proposal.id,
+            plan_version_id=target_plan.id,
+            gate=gate,
+            resolved_decision=(
+                dict(resolved_decision)
+                if isinstance(resolved_decision, Mapping)
+                else None
+            ),
+        )
+    except ValueError as exc:
+        return {
+            **gate,
+            "allowed": False,
+            "code": str(exc),
+            "classification": gate.get("classification"),
+        }
+    return {
+        **gate,
+        "authority_receipt_id": (
+            receipt.id if receipt is not None else gate.get("authority_receipt_id")
+        ),
+    }
+
+
 def _record_collective_mutation_denial(
     session: Session,
     journey: Journey,
@@ -14964,6 +15015,7 @@ def _accept_replan_impl(
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
     resolved_decision: Mapping[str, Any] | None = None,
+    expected_authority_receipt_id: str | None = None,
 ):
     """Serialize acceptance for one Journey across its whole transaction.
 
@@ -14987,6 +15039,7 @@ def _accept_replan_impl(
         "authorization_decision": authorization_decision,
         "reason_codes": reason_codes,
         "resolved_decision": resolved_decision,
+        "expected_authority_receipt_id": expected_authority_receipt_id,
     }
     located = session.get(ReplanProposalModel, str(proposal_id))
     journey_id = located.journey_id if located is not None else None
@@ -15039,6 +15092,7 @@ def _accept_replan_serialized_impl(
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
     resolved_decision: Mapping[str, Any] | None = None,
+    expected_authority_receipt_id: str | None = None,
 ):
     """Accept a replan, replaying any response this key already produced.
 
@@ -15067,6 +15121,7 @@ def _accept_replan_serialized_impl(
         "authorization_decision": authorization_decision,
         "reason_codes": reason_codes,
         "resolved_decision": resolved_decision,
+        "expected_authority_receipt_id": expected_authority_receipt_id,
     }
     try:
         return _accept_replan_executing(proposal_id, idempotency_key, session, **kwargs)
@@ -15098,6 +15153,7 @@ def _accept_replan_executing(
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
     resolved_decision: Mapping[str, Any] | None = None,
+    expected_authority_receipt_id: str | None = None,
 ):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
