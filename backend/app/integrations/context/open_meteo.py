@@ -13,6 +13,15 @@ class WeatherObservation:
     precipitation_probability: int | None
     weather_code: int | None
 
+    def to_evidence(self) -> dict[str, Any]:
+        """Normalized provider values, whether or not they cross a risk policy."""
+        stamp = self.at if self.at.tzinfo is not None else self.at.replace(tzinfo=timezone.utc)
+        return {
+            "at": stamp.astimezone(timezone.utc).isoformat(),
+            "precipitation_probability": self.precipitation_probability,
+            "weather_code": self.weather_code,
+        }
+
 
 @dataclass(frozen=True)
 class WeatherRisk:
@@ -107,21 +116,86 @@ class OpenMeteoContextProvider:
         return observations
 
     def risks(self, observations: list[WeatherObservation]) -> list[WeatherRisk]:
+        """Classify provider weather without turning every observation into an incident.
+
+        The existing 70% rain policy stays intact. R34 adds condition semantics
+        that were already present in Open-Meteo's weather_code but previously
+        discarded: observed forecast rain, freezing precipitation, snow,
+        thunderstorms and fog may be material to a weather-sensitive Activity
+        even when precipitation probability itself is below the heavy-rain
+        threshold. Clear/cloudy observations remain context only.
+        """
+
+        rain_codes = {51, 53, 55, 61, 63, 65, 80, 81, 82}
+        freezing_codes = {56, 57, 66, 67}
+        snow_codes = {71, 73, 75, 77, 85, 86}
+        thunderstorm_codes = {95, 96, 99}
+        fog_codes = {45, 48}
+
         risks: list[WeatherRisk] = []
         for item in observations:
-            if (
+            evidence = {
+                "precipitation_probability": item.precipitation_probability,
+                "weather_code": item.weather_code,
+            }
+            heavy_rain = (
                 item.precipitation_probability is not None
                 and item.precipitation_probability >= self._rain_threshold
-            ):
+            )
+            if heavy_rain:
                 risks.append(
                     WeatherRisk(
                         code="HEAVY_RAIN_RISK",
                         severity="HIGH",
                         at=item.at,
-                        evidence={
-                            "precipitation_probability": item.precipitation_probability,
-                            "weather_code": item.weather_code,
-                        },
+                        evidence={**evidence, "materiality_basis": "RAIN_PROBABILITY_THRESHOLD"},
+                    )
+                )
+
+            code = item.weather_code
+            if code in thunderstorm_codes:
+                risks.append(
+                    WeatherRisk(
+                        code="THUNDERSTORM_RISK",
+                        severity="HIGH",
+                        at=item.at,
+                        evidence={**evidence, "materiality_basis": "WMO_WEATHER_CODE"},
+                    )
+                )
+            elif code in freezing_codes:
+                risks.append(
+                    WeatherRisk(
+                        code="FREEZING_PRECIPITATION_RISK",
+                        severity="HIGH",
+                        at=item.at,
+                        evidence={**evidence, "materiality_basis": "WMO_WEATHER_CODE"},
+                    )
+                )
+            elif code in snow_codes:
+                risks.append(
+                    WeatherRisk(
+                        code="SNOW_RISK",
+                        severity="HIGH",
+                        at=item.at,
+                        evidence={**evidence, "materiality_basis": "WMO_WEATHER_CODE"},
+                    )
+                )
+            elif code in rain_codes and not heavy_rain:
+                risks.append(
+                    WeatherRisk(
+                        code="RAIN_CONDITION_RISK",
+                        severity="MEDIUM",
+                        at=item.at,
+                        evidence={**evidence, "materiality_basis": "WMO_WEATHER_CODE"},
+                    )
+                )
+            elif code in fog_codes:
+                risks.append(
+                    WeatherRisk(
+                        code="LOW_VISIBILITY_RISK",
+                        severity="MEDIUM",
+                        at=item.at,
+                        evidence={**evidence, "materiality_basis": "WMO_WEATHER_CODE"},
                     )
                 )
         return risks
