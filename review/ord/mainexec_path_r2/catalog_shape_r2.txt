@@ -1,0 +1,5 @@
+Cell 4 catalog shape, read by running the module on this tree.
+V1 size 6 ['accept_replan', 'inspect_journey', 'inspect_twin', 'list_replans', 'request_replan', 'search_city_services']
+V2 size 12
+report_disruption in V1: False
+report_disruption in V2: True
