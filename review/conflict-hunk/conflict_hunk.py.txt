@@ -1,0 +1,114 @@
+# -*- coding: utf-8 -*-
+"""那五枚「要号令者裁」的冲突逐 hunk 量化：逐枚查我的载荷在不在尖上。
+
+上一格把「会撞门」原样交给号令者，但没查清一件事：**撞门的是载荷还是基座**。
+老枝的基座（父链断掉）会与现尖算出整树差异，门把"我枝缺了尖上后来加的东西"读成对撞。
+这一枚查的是：每枚枝**自己引入的独有标记**（data-testid / 具名符号）此刻在不在尖上。
+
+判类：
+- **已落（空切）**：枝引入的独有标记逐枚都在尖上 → 载荷已吸收，交判定、不交枝。
+- **部分落**：一部分在、一部分不在 → 交具名清单，让号令者裁"补哪几行"。
+- **未见落**：独有标记一枚都不在尖上 → 这才是真要人裁的（且要连基座一起重切）。
+
+只读 git；不推枝、不改枝、不动产品字节。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+BRANCHES = [
+    "ord0527-access-identity-r1", "ord0527-access-identity-r2",
+    "ord0527-evidence-r1", "ord0527-evidence-r2",
+    "ord0476-footprint-screen-r1",
+]
+PRODUCT = ("frontend/src/", "backend/app/", "contracts/", "backend/db/")
+TESTID = re.compile(r'data-testid=["\']([^"\']+)["\']')
+BAD: list[str] = []
+
+
+def g(*a, t=900):
+    p = subprocess.run(["git", *a], cwd=WT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return (p.stdout or "").strip()
+
+
+def run(cmd, t=900):
+    p = subprocess.run(cmd, cwd=WT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return p.returncode, (p.stdout or ""), (p.stderr or "")
+
+
+run(["git", "fetch", "-q", "origin", "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*"])
+run(["git", "fetch", "-q", "origin", MIRROR])
+tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+
+# 尖上所有 data-testid（一次性收集，后面比对）
+tip_tests = set()
+for ln in g("ls-tree", "-r", "--name-only", tip, "--", "frontend/src", "backend/app").splitlines():
+    if not ln.strip():
+        continue
+    b = g("rev-parse", "--verify", "-q", "%s:%s" % (tip, ln))
+    if len(b) != 40:
+        continue
+    body = run(["git", "cat-file", "blob", b], 600)[1]
+    tip_tests |= set(TESTID.findall(body))
+
+rows = []
+for name in BRANCHES:
+    ref = "origin/review/1ba48dbf-" + name
+    sha = g("rev-parse", "--verify", "-q", ref)
+    if len(sha) != 40:
+        BAD.append("取不到 " + ref)
+        continue
+    files = [x for x in g("ls-tree", "-r", "--name-only", sha, "--", *PRODUCT).splitlines() if x.strip()]
+    mine_tests = {}
+    for f in files:
+        b = g("rev-parse", "--verify", "-q", "%s:%s" % (sha, f))
+        if len(b) != 40:
+            continue
+        body = run(["git", "cat-file", "blob", b], 600)[1]
+        for t in set(TESTID.findall(body)):
+            mine_tests.setdefault(t, []).append(f)
+    # 这枚枝"独有"的 testid = 我引入、且它自己那枚文件的同名字段也不在尖上。
+    # 简单口径：整个枝的全部 testid 里，逐个查尖上有没有。
+    on_tip = sorted(t for t in mine_tests if t in tip_tests)
+    off_tip = sorted(t for t in mine_tests if t not in tip_tests)
+    # 载荷判据：只看那枚"数据面"上、且看着像这一族新增的 testid（命名带本件号的词）
+    mine_only = [t for t in off_tip if any(w in t for w in
+                  ("access-identity", "identity", "footprint", "stop-checkin", "checkin-notice",
+                   "order-verdict", "journey-order", "stamp", "collect"))]
+    verdict = "已落（空切）" if not off_tip else (
+        "部分落" if on_tip else "未见落")
+    rows.append({"branch": name, "sha": sha, "files": len(files),
+                 "testids_total": len(mine_tests),
+                 "testids_on_tip": len(on_tip), "testids_off_tip": len(off_tip),
+                 "off_tip_examples": off_tip[:8],
+                 "suspected_own_off_tip": mine_only[:8],
+                 "verdict": verdict})
+
+for r in rows:
+    print("%-34s 文件 %-4d testid 共 %-4d 在尖上 %-4d 不在 %-4d ⇒ %s"
+          % (r["branch"][:34], r["files"], r["testids_total"], r["testids_on_tip"],
+             r["testids_off_tip"], r["verdict"]))
+    if r["suspected_own_off_tip"]:
+        print("    疑似本件独有且尖上没有：%s" % r["suspected_own_off_tip"][:5])
+out = {"tip": tip, "tip_testid_count": len(tip_tests), "rows": rows, "BAD": BAD}
+p = os.path.join(ART, "conflict_hunk_%s.json" % time.strftime("%H%M"))
+io.open(p, "w", encoding="utf-8", newline="\n").write(json.dumps(out, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + p)
+if BAD:
+    print("REFUSED:\n  " + "\n  ".join(BAD))
+    sys.exit(1)
