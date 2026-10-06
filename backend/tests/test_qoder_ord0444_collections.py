@@ -201,6 +201,12 @@ def test_the_two_tables_and_the_durability_index_are_in_the_store():
             "owner_traveler_id",
             "created_at",
             "updated_at",
+            # ORD-0531 building three: the collection bin. `deleted_at` is the soft-delete column
+            # that makes 找回 possible at all -- a hard delete would cascade the items away with
+            # the shelf, so there would be nothing to bring back. Same additive rule and same
+            # no-DEFAULT choice as `journeys.deleted_at`: NULL is the only value that says "this
+            # shelf was never binned" without inventing a moment for it.
+            "deleted_at",
         }, sorted(folder_columns)
         assert item_columns == {"id", "folder_id", "place_id", "note", "added_at"}, sorted(item_columns)
         # 成员归属 is not a caption someone hoped would be filled in: `notnull` = 1 is the column

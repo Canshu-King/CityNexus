@@ -430,6 +430,7 @@ from app.schemas import (
     CollectionFolder as CollectionFolderSchema,
 )
 from app.schemas import (
+    CollectionBinFolder as CollectionBinFolderSchema,
     CollectionFolderCreate,
 )
 from app.schemas import (
@@ -3660,7 +3661,14 @@ def _collection_shelves(session: Session, owner_traveler_id: str) -> list[Collec
     return list(
         session.scalars(
             select(CollectionFolder)
-            .where(CollectionFolder.owner_traveler_id == owner_traveler_id)
+            .where(
+                CollectionFolder.owner_traveler_id == owner_traveler_id,
+                # A binned shelf is not in the collection any more -- it is in the bin, and the bin
+                # has its own door. Listing it here too would put the same shelf on two screens at
+                # once, and a traveller who deleted it would still see it in 「我的收藏」. This is the
+                # column the delete door writes, so the two cannot drift.
+                CollectionFolder.deleted_at.is_(None),
+            )
             .order_by(CollectionFolder.created_at, CollectionFolder.id)
         ).all()
     )
@@ -3931,6 +3939,207 @@ def add_collection_item(
 
     stored = session.get(CollectionItem, identifier)
     return collection_item_schema(stored, session.get(Place, stored.place_id))
+
+
+# ---------------------------------------------------------------------------
+# 收藏的回收站 / 找回.  Same shape as the journey bin, deliberately: one soft-delete column, one
+# scoped read, one 找回 that clears the column.  The building asked for exactly this -- a traveller
+# who deletes a shelf must be able to bring it back and be told whether it worked.
+#
+# Two refusals are named here rather than implied, because the building's sentence is that a screen
+# must never hand back an empty list and let it read as 「nothing was deleted」:
+#   COLLECTION_FOLDER_NOT_BINNED  409  the shelf is not in the bin, with `deleted_at: null` as proof
+#   COLLECTION_FOLDER_UNKNOWN     404  no shelf carries that id at all
+# Ownership is checked against the shelf's own `owner_traveler_id` column, so one traveller cannot
+# delete or restore somebody else's shelf -- and a refused row is refused by NAME rather than
+# answered as an empty bin.
+# ---------------------------------------------------------------------------
+
+
+def _collection_items_for(session: Session, folder: CollectionFolder) -> list[tuple[CollectionItem, Place]]:
+    rows = session.execute(
+        select(CollectionItem)
+        .where(CollectionItem.folder_id == folder.id)
+        .order_by(CollectionItem.added_at, CollectionItem.id)
+    ).scalars().all()
+    pairs: list[tuple[CollectionItem, Place]] = []
+    for item in rows:
+        place = session.get(Place, item.place_id)
+        if place is not None:
+            pairs.append((item, place))
+    return pairs
+
+
+def _collection_bin_refusal(
+    session: Session, folder_id: str, traveler_id: str
+) -> tuple[CollectionFolder, HTTPException] | None:
+    """The shelf, or the named refusal that must not be softened into an empty answer."""
+    folder = session.get(CollectionFolder, folder_id)
+    if folder is None:
+        refused = HTTPException(404, "No shelf on this server carries that id.")
+        refused.reason_code = "COLLECTION_FOLDER_UNKNOWN"
+        refused.error_details = {"folder_id": folder_id}
+        return None, refused
+    if folder.owner_traveler_id != traveler_id:
+        refused = HTTPException(
+            404, "That shelf belongs to another traveller, so this server will not answer for it."
+        )
+        refused.reason_code = "COLLECTION_FOLDER_NOT_OWNED"
+        refused.error_details = {"folder_id": folder_id}
+        return None, refused
+    return folder, None
+
+
+@app.delete(
+    "/api/v1/travelers/{traveler_id}/collections/{folder_id}",
+    status_code=204,
+    responses={
+        404: {
+            "description": (
+                "Refused with a named code in `error.reason_code`: COLLECTION_FOLDER_UNKNOWN when "
+                "no shelf carries that id, COLLECTION_FOLDER_NOT_OWNED when the shelf belongs to "
+                "another traveller. Either way nothing was written -- the shelf is still where it "
+                "was, and the bin still does not hold it."
+            )
+        }
+    },
+)
+def delete_collection_for_traveler(
+    traveler_id: str, folder_id: str, session: Session = Depends(get_session)
+):
+    """Put a shelf in the collection bin, by writing one column.
+
+    Soft, not hard: `collection_items.folder_id` cascades on a hard delete, so hard-deleting a shelf
+    would take its places with it and 找回 would have nothing to bring back.  This writes
+    `deleted_at` and leaves every place on the shelf exactly where it was, which is what makes the
+    找回 door below possible at all.
+
+    Refuses rather than silently succeeding on a second tap: a shelf already in the bin is
+    `409 COLLECTION_FOLDER_ALREADY_BINNED` carrying the moment it first went in, so a retried tap
+    cannot rewrite it and cannot read as a second delete.
+    """
+    require(session, Traveler, traveler_id, "Traveler")
+    folder, refused = _collection_bin_refusal(session, folder_id, traveler_id)
+    if refused is not None:
+        raise refused
+    if folder.deleted_at is not None:
+        conflict = HTTPException(409, "That shelf is already in the collection bin.")
+        conflict.reason_code = "COLLECTION_FOLDER_ALREADY_BINNED"
+        conflict.error_details = {"folder_id": folder_id, "deleted_at": folder.deleted_at}
+        raise conflict
+
+    now = datetime.now(timezone.utc).isoformat()
+    folder.deleted_at = now
+    folder.updated_at = now
+    record_audit(
+        session,
+        action="collection.folder.binned",
+        entity_type="CollectionFolder",
+        entity_id=folder.id,
+        before={"deleted_at": None},
+        after={"deleted_at": now, "owner_traveler_id": folder.owner_traveler_id},
+    )
+    session.commit()
+    return Response(status_code=204)
+
+
+@app.post(
+    "/api/v1/travelers/{traveler_id}/collections/{folder_id}/undelete",
+    response_model=CollectionFolderSchema,
+    responses={
+        404: {
+            "description": (
+                "Refused with a named code in `error.reason_code`: COLLECTION_FOLDER_UNKNOWN when "
+                "no shelf carries that id, COLLECTION_FOLDER_NOT_OWNED when the shelf belongs to "
+                "another traveller."
+            )
+        },
+        409: {
+            "description": (
+                "error.reason_code = COLLECTION_FOLDER_NOT_BINNED -- the shelf was not in the bin, "
+                "so nothing was restored. `details.deleted_at` is null, which is the proof; a 200 "
+                "here would be a fake success."
+            )
+        },
+    },
+)
+def undelete_collection_for_traveler(
+    traveler_id: str, folder_id: str, session: Session = Depends(get_session)
+):
+    """Take a shelf back out of the collection bin by clearing the one column that put it there.
+
+    The answer is the ordinary shelf shape, not the bin shape: this row is no longer in the bin, and
+    answering it with `bin_state=IN_COLLECTION_BIN` would tell the caller the opposite of what just
+    happened.  It is read back through the same helper `GET /api/v1/collections` uses, so a screen
+    can show what came back without a second read that might disagree with this one.  The places on
+    it were never touched, so they are on it again the moment the column clears -- that is the whole
+    argument for soft delete over cascade.
+    """
+    require(session, Traveler, traveler_id, "Traveler")
+    folder, refused = _collection_bin_refusal(session, folder_id, traveler_id)
+    if refused is not None:
+        raise refused
+    if folder.deleted_at is None:
+        conflict = HTTPException(409, "That shelf was not in the collection bin.")
+        conflict.reason_code = "COLLECTION_FOLDER_NOT_BINNED"
+        conflict.error_details = {"folder_id": folder_id, "deleted_at": None}
+        raise conflict
+
+    before = folder.deleted_at
+    folder.deleted_at = None
+    folder.updated_at = datetime.now(timezone.utc).isoformat()
+    record_audit(
+        session,
+        action="collection.folder.restored",
+        entity_type="CollectionFolder",
+        entity_id=folder.id,
+        before={"deleted_at": before},
+        after={"deleted_at": None, "owner_traveler_id": folder.owner_traveler_id},
+    )
+    session.commit()
+
+    stored = session.get(CollectionFolder, folder_id)
+    return collection_folder_schema(stored, _collection_items_for(session, stored))
+
+
+@app.get(
+    "/api/v1/travelers/{traveler_id}/collections-bin",
+    response_model=list[CollectionBinFolderSchema],
+)
+def list_collection_bin_for_traveler(
+    traveler_id: str, session: Session = Depends(get_session)
+):
+    """The shelves this traveller put in the collection bin, newest first.
+
+    Scoped to the shelves this traveller owns, for the same reason the journey bin door is scoped:
+    the bin is an answer about somebody's own shelves, not a global listing.  Every row carries
+    `deleted_at` and `bin_state=IN_COLLECTION_BIN` from the stored column rather than from an
+    absence in `GET /api/v1/collections`, so a screen never has to infer 「删掉了」 from a shelf it
+    cannot see.
+
+    An empty answer here means this traveller has binned nothing.  It is deliberately NOT the same
+    answer as a door that could not be reached: that one refuses with a named code instead.
+    """
+    require(session, Traveler, traveler_id, "Traveler")
+    rows = session.scalars(
+        select(CollectionFolder)
+        .where(
+            CollectionFolder.owner_traveler_id == traveler_id,
+            CollectionFolder.deleted_at.is_not(None),
+        )
+        .order_by(CollectionFolder.deleted_at.desc(), CollectionFolder.id)
+    ).all()
+    out: list[CollectionBinFolderSchema] = []
+    for folder in rows:
+        payload = collection_folder_schema(folder, _collection_items_for(session, folder))
+        out.append(
+            CollectionBinFolderSchema(
+                **payload.model_dump(),
+                deleted_at=datetime.fromisoformat(folder.deleted_at),
+                bin_state="IN_COLLECTION_BIN",
+            )
+        )
+    return out
 
 
 @app.get("/api/v1/journeys/{journey_id}")

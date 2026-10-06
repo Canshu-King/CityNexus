@@ -1355,6 +1355,13 @@ class CollectionFolder(Base):
 
     `name` is not unique.  Two shelves can both read 「周末」, so the id is what addresses one, and
     the door that adds a place takes the id and never a name.
+
+    `deleted_at` is the soft-delete column, and it is here so that 找回 has something to clear --
+    the same two facts `journeys` carries for its own bin, named the same way so neither table
+    invents a second vocabulary.  NULL means the shelf is in the collection; not NULL means it is in
+    the bin.  It is deliberately NOT a cascade delete: `collection_items` already cascades from the
+    folder row on a hard delete, so hard-deleting a shelf would take its places with it and there
+    would be nothing left to bring back.  Nothing here may offer a hard delete for that reason.
     """
 
     __tablename__ = "collection_folders"
@@ -1365,6 +1372,7 @@ class CollectionFolder(Base):
     )
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
+    deleted_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class CollectionItem(Base):

@@ -635,6 +635,17 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN aborted_at TEXT")
             if "abort_reason" not in journey_columns:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN abort_reason TEXT")
+            # The collection bin, same additive rule and for the same reason: a shelf written before
+            # this column existed was never binned, so NULL is the only value that says so. No DEFAULT
+            # here either -- a default moment would put words in a traveller's mouth.
+            collection_folder_columns = {
+                row[1]
+                for row in connection.exec_driver_sql("PRAGMA table_info(collection_folders)")
+            }
+            if "deleted_at" not in collection_folder_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE collection_folders ADD COLUMN deleted_at TEXT"
+                )
             _migrate_reservation_identity(connection)
             # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
             # to what a role may do instead of inventing one per screen.

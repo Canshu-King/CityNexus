@@ -1379,6 +1379,101 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/{traveler_id}/collections/{folder_id}:
+    parameters:
+      - {$ref: '#/components/parameters/TravelerId'}
+      - {$ref: '#/components/parameters/CollectionFolderId'}
+    delete:
+      operationId: binCollectionFolder
+      description: >-
+        ORD-0531 收藏的回收站: writes the traveller's own moment into
+        `collection_folders.deleted_at` and nothing else.  Soft, because `collection_items.folder_id`
+        CASCADES on a hard delete -- hard-deleting a shelf would take every place on it with it and
+        找回 would have nothing to bring back.  The places are therefore untouched by this door.
+
+        The scope is the shelf's own `owner_traveler_id` column, so one traveller cannot bin
+        another's shelf.  A shelf already in the bin is refused rather than re-binned, so a retried
+        tap cannot rewrite the moment it first went in and cannot read as a second delete.
+      responses:
+        '204':
+          description: The shelf is in the bin; no body
+        '404':
+          description: >-
+            error.code = NOT_FOUND with error.reason_code = COLLECTION_FOLDER_UNKNOWN (no shelf
+            carries that id) or COLLECTION_FOLDER_NOT_OWNED (the shelf is another traveller's).
+            Either way nothing was written.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: >-
+            error.code = CONFLICT with error.reason_code = COLLECTION_FOLDER_ALREADY_BINNED, and
+            `details.deleted_at` carries the moment it first went in.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/{traveler_id}/collections/{folder_id}/undelete:
+    parameters:
+      - {$ref: '#/components/parameters/TravelerId'}
+      - {$ref: '#/components/parameters/CollectionFolderId'}
+    post:
+      operationId: undeleteCollectionFolder
+      description: >-
+        ORD-0531 找回 for a shelf: writes NULL back to `collection_folders.deleted_at`, so the
+        shelf returns to `GET /api/v1/collections`.  Its places were never touched, so they are on
+        it again the moment the column clears.  Same word pair as the trip's 找回 -- 恢复 and
+        `recover*` stay autonomous recovery here, and 还原 stays the plan-version screen's.
+
+        The answer is the ordinary shelf shape, NOT the bin shape: this row is no longer in the
+        bin, so answering it with `bin_state=IN_COLLECTION_BIN` would state the opposite of what
+        just happened.
+      responses:
+        '200':
+          description: The shelf, back in the collection
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectionFolder'}
+        '404':
+          description: >-
+            error.code = NOT_FOUND with error.reason_code = COLLECTION_FOLDER_UNKNOWN or
+            COLLECTION_FOLDER_NOT_OWNED.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: >-
+            error.code = CONFLICT with error.reason_code = COLLECTION_FOLDER_NOT_BINNED, and
+            `details.deleted_at` is null -- that null is the proof the shelf was never in the bin,
+            so a 200 here would be a fake success.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/{traveler_id}/collections-bin:
+    parameters:
+      - {$ref: '#/components/parameters/TravelerId'}
+    get:
+      operationId: listCollectionBin
+      description: >-
+        ORD-0531 收藏的回收站 (read): the shelves THIS traveller binned, newest deletion first.  Each
+        row carries `deleted_at` and `bin_state=IN_COLLECTION_BIN` from the stored column, so a
+        screen never has to conclude 「删掉了」 from a shelf it cannot see in the collection read.
+
+        An empty list is a real answer and is answered as one -- this traveller has binned nothing.
+        It is deliberately NOT the same answer as a door that could not be reached: that one refuses
+        with a named code instead.
+      responses:
+        '200':
+          description: Shelves in the bin, or an empty list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/CollectionBinFolder'}
+        '404':
+          description: "error.code = NOT_FOUND -- no traveller carries the id named in the path"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /journeys/{journey_id}/constraints:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -3614,6 +3709,19 @@ components:
         updated_at: {type: string}
         item_count: {type: integer}
         items: {type: array, items: {$ref: '#/components/schemas/CollectionItem'}}
+    CollectionBinFolder:
+      # One shelf the collection bin holds. Same two words as the journey bin on purpose:
+      # `deleted_at` is the stored value of `collection_folders.deleted_at` and `bin_state` is the
+      # only value this shape can carry, so a screen never has to conclude 「删掉了」 from a shelf's
+      # absence in `listCollections`. The places travel with it -- soft delete leaves
+      # `collection_items` alone, which is what makes 找回 possible.
+      allOf:
+        - {$ref: '#/components/schemas/CollectionFolder'}
+        - type: object
+          required: [deleted_at, bin_state]
+          properties:
+            deleted_at: {type: string, format: date-time}
+            bin_state: {type: string, enum: [IN_COLLECTION_BIN]}
     RealCityDiscoveryCandidate:
       type: object
       x-fastapi-extra: allow

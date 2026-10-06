@@ -747,6 +747,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/travelers/{traveler_id}/collections/{folder_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * @description ORD-0531 收藏的回收站: writes the traveller's own moment into `collection_folders.deleted_at` and nothing else.  Soft, because `collection_items.folder_id` CASCADES on a hard delete -- hard-deleting a shelf would take every place on it with it and 找回 would have nothing to bring back.  The places are therefore untouched by this door.
+         *     The scope is the shelf's own `owner_traveler_id` column, so one traveller cannot bin another's shelf.  A shelf already in the bin is refused rather than re-binned, so a retried tap cannot rewrite the moment it first went in and cannot read as a second delete.
+         */
+        delete: operations["binCollectionFolder"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/{traveler_id}/collections/{folder_id}/undelete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description ORD-0531 找回 for a shelf: writes NULL back to `collection_folders.deleted_at`, so the shelf returns to `GET /api/v1/collections`.  Its places were never touched, so they are on it again the moment the column clears.  Same word pair as the trip's 找回 -- 恢复 and `recover*` stay autonomous recovery here, and 还原 stays the plan-version screen's.
+         *     The answer is the ordinary shelf shape, NOT the bin shape: this row is no longer in the bin, so answering it with `bin_state=IN_COLLECTION_BIN` would state the opposite of what just happened.
+         */
+        post: operations["undeleteCollectionFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/{traveler_id}/collections-bin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * @description ORD-0531 收藏的回收站 (read): the shelves THIS traveller binned, newest deletion first.  Each row carries `deleted_at` and `bin_state=IN_COLLECTION_BIN` from the stored column, so a screen never has to conclude 「删掉了」 from a shelf it cannot see in the collection read.
+         *     An empty list is a real answer and is answered as one -- this traveller has binned nothing. It is deliberately NOT the same answer as a door that could not be reached: that one refuses with a named code instead.
+         */
+        get: operations["listCollectionBin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/constraints": {
         parameters: {
             query?: never;
@@ -3392,6 +3460,12 @@ export interface components {
             item_count: number;
             items: components["schemas"]["CollectionItem"][];
         };
+        CollectionBinFolder: components["schemas"]["CollectionFolder"] & {
+            /** Format: date-time */
+            deleted_at: string;
+            /** @enum {string} */
+            bin_state: "IN_COLLECTION_BIN";
+        };
         RealCityDiscoveryCandidate: {
             id: string;
             external_id: string;
@@ -5616,6 +5690,117 @@ export interface operations {
             };
             /** @description Body outside the declared bounds */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    binCollectionFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The shelf is in the bin; no body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = COLLECTION_FOLDER_UNKNOWN (no shelf carries that id) or COLLECTION_FOLDER_NOT_OWNED (the shelf is another traveller's). Either way nothing was written. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = COLLECTION_FOLDER_ALREADY_BINNED, and `details.deleted_at` carries the moment it first went in. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    undeleteCollectionFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The shelf, back in the collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionFolder"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = COLLECTION_FOLDER_UNKNOWN or COLLECTION_FOLDER_NOT_OWNED. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = COLLECTION_FOLDER_NOT_BINNED, and `details.deleted_at` is null -- that null is the proof the shelf was never in the bin, so a 200 here would be a fake success. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    listCollectionBin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Shelves in the bin, or an empty list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionBinFolder"][];
+                };
+            };
+            /** @description error.code = NOT_FOUND -- no traveller carries the id named in the path */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

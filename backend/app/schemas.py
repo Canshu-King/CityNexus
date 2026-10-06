@@ -551,6 +551,21 @@ class CollectionFolder(BaseModel):
     items: list[CollectionItem]
 
 
+class CollectionBinFolder(CollectionFolder):
+    """One shelf the collection bin holds, carrying the two facts a screen must not infer.
+
+    Same two words as the journey bin on purpose: `deleted_at` is the stored value of
+    `collection_folders.deleted_at`, and `bin_state` is the only value this shape can hold -- a row
+    appears here because that column is not NULL, so no screen has to conclude 「删掉了」 from a
+    shelf's absence in `GET /api/v1/collections`.  The places on the shelf travel with it, because
+    soft delete leaves `collection_items` alone; a hard delete would cascade them away and there
+    would be nothing to bring back.
+    """
+
+    deleted_at: datetime
+    bin_state: Literal["IN_COLLECTION_BIN"]
+
+
 class RealCityDiscoveryCandidate(BaseModel):
     """One place candidate as `materialize_candidates` emits it -- the single dict
     site the screen's place card reads.
