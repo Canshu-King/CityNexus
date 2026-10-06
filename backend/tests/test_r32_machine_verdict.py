@@ -64,6 +64,7 @@ def _checkpoint() -> dict:
                     "recovery_epoch_id": "r1",
                     "server_run_resolution": "EXACT_ONE_CURRENT_RUN",
                     "provider_call_invoked": True,
+                    "provider_call_started_at": "2026-10-06T00:00:10+00:00",
                     "provider_returned": True,
                 },
                 {
@@ -73,6 +74,7 @@ def _checkpoint() -> dict:
                     "recovery_epoch_id": "r2",
                     "server_run_resolution": "EXACT_ONE_CURRENT_RUN",
                     "provider_call_invoked": True,
+                    "provider_call_started_at": "2026-10-06T00:01:10+00:00",
                     "provider_returned": True,
                 },
             ],
@@ -126,12 +128,14 @@ def _checkpoint() -> dict:
             "epochs": [
                 {
                     "id": r1,
+                    "generation": 1,
                     "status": "SUPERSEDED",
                     "superseded_by_recovery_epoch_id": r2,
                     "opened_at": "2026-10-06T00:00:00+00:00",
                 },
                 {
                     "id": r2,
+                    "generation": 2,
                     "status": "OPEN",
                     "opened_at": "2026-10-06T00:01:00+00:00",
                 },
@@ -296,12 +300,26 @@ def _successful_autonomous_mutation_checkpoint() -> dict:
             "run_id": "agent-b",
             "tool_name": "accept_replan",
             "status": "COMPLETED",
+            "completed_at": "2026-10-06T00:03:00+00:00",
             "result": {
                 "executed": True,
                 "collective_authority_receipt_id": "receipt-r2",
             },
         }
     )
+    checkpoint["agent_responses"] = {
+        "agent_b": {
+            "payload": {
+                "run": {
+                    "status": "COMPLETED",
+                    "completion_contract": {
+                        "kind": "MUTATION_EXECUTED",
+                        "source": "server_trace",
+                    },
+                }
+            }
+        }
+    }
     checkpoint["final"]["audits"] = [
         {
             "action": "replan.accepted",
@@ -355,10 +373,144 @@ def test_complete_b_r2_unanimous_mutation_path_can_prove_core():
         result["dimensions"]["r2_terminal_state_consistent"]["verdict"]
         == "PROVEN"
     )
+    assert (
+        result["dimensions"]["stale_validation_causally_inert"]["verdict"]
+        == "PROVEN"
+    )
+    assert (
+        result["dimensions"]["b_mutation_terminalized"]["verdict"]
+        == "PROVEN"
+    )
     assert "approval_not_retargeted" in result["coverage_not_proven"]
     assert (
         "no_duplicate_continuation_side_effect"
         in result["coverage_not_proven"]
+    )
+
+
+def test_second_active_mutation_is_counted_and_contradicted():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    checkpoint["final"]["steps"].append(
+        {
+            "run_id": "agent-b",
+            "tool_name": "create_booking",
+            "status": "COMPLETED",
+            "completed_at": "2026-10-06T00:03:01+00:00",
+            "result": {"executed": True},
+        }
+    )
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 157, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"][
+            "exactly_one_or_zero_legal_plan_transition"
+        ]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_mutation_requires_server_terminal_completion_contract():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    checkpoint["agent_responses"]["agent_b"]["payload"]["run"][
+        "completion_contract"
+    ] = {"kind": "UNRESOLVED", "source": "server_trace"}
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 157, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["b_mutation_terminalized"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_provider_call_after_committed_mutation_is_contradicted():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    checkpoint["runtime"]["external_call_outcomes"].append(
+        {
+            "thread": "AnyIO worker thread",
+            "causal_slot": "B",
+            "agent_run_id": "agent-b",
+            "recovery_epoch_id": "r2",
+            "server_run_resolution": "EXACT_ONE_CURRENT_RUN",
+            "provider_call_invoked": True,
+            "provider_call_started_at": "2026-10-06T00:04:00+00:00",
+            "provider_returned": True,
+        }
+    )
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 157, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["b_mutation_terminalized"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_stale_validation_cannot_leave_post_r2_successor_epoch():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    checkpoint["final"]["epochs"].append(
+        {
+            "id": "r3-causeless",
+            "generation": 3,
+            "status": "OPEN",
+            "opened_at": "2026-10-06T00:03:01+00:00",
+        }
+    )
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 157, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["stale_validation_causally_inert"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
+
+
+def test_committed_2c_fresh_evidence_survives_stricter_v5_verifier():
+    import json
+
+    backend = Path(__file__).resolve().parents[1]
+    checkpoint = json.loads(
+        (backend / "output" / "r32-live-strike-v2c-fresh.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    regression = json.loads(
+        (
+            backend
+            / "output"
+            / "r32-focused-regression-v2c-fresh.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    result = verdict(checkpoint, regression=regression)
+
+    assert result["schema"] == "citynexus.r32.machine-verdict.v5"
+    assert result["overall"] == "PROVEN"
+    assert result["contradicted"] == []
+    assert (
+        result["dimensions"]["stale_validation_causally_inert"]["verdict"]
+        == "PROVEN"
+    )
+    assert (
+        result["dimensions"]["b_mutation_terminalized"]["verdict"]
+        == "PROVEN"
     )
 
 
