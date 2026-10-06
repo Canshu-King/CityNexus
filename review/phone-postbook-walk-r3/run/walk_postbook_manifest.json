@@ -1,0 +1,8 @@
+[
+ ["tools/walk_postbook.cjs", "tools"],
+ ["tools/nav_reachability_test.cjs", "tools"],
+ ["evidence/walk_postbook.json", "evidence"],
+ ["evidence/nav_reachability.json", "evidence"],
+ ["run/walk_postbook_manifest.json", "run"],
+ ["run/commit_walk_postbook_msg.txt", "run"]
+]
