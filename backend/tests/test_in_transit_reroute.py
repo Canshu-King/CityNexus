@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from fastapi.testclient import TestClient
 
+from app.execution.clock import execution_clock
 from app.execution.in_transit_reroute import (
     classify_transit_deviation,
     deviation_threshold_m,
@@ -239,6 +240,18 @@ def test_operator_transit_projection_marks_browser_deviation_advisory_only():
     assert transit["can_reroute"] is True
     assert transit["authoritative"] is False
     assert "latitude" not in transit and "longitude" not in transit
+
+
+def test_operator_transit_projection_uses_shared_execution_clock_by_default():
+    now = datetime(2026, 10, 7, 1, 0, tzinfo=timezone.utc)
+    journey, _activity, session = _transit_fixture(
+        now, captured_at=(now - timedelta(minutes=1)).isoformat()
+    )
+    with execution_clock.freeze(now):
+        transit = in_transit_projection(session, journey)
+    assert transit["location_age_seconds"] == 60
+    assert transit["location_fresh"] is True
+    assert transit["state"] == "ADVISORY_DEVIATION"
 
 
 def test_operator_transit_projection_ignores_location_from_before_departure():
