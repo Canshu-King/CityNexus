@@ -286,7 +286,26 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             else None
         )
         resume_args = _json(resume_step.arguments_json, {}) if resume_step else {}
+        resume_result = _json(resume_step.result_json, {}) if resume_step else {}
         accept_after = _audit_after(accept_audit) if accept_audit else {}
+        domain_accept_audit = (
+            session.scalar(
+                select(AuditLog)
+                .where(
+                    AuditLog.action == "replan.accepted",
+                    AuditLog.entity_type == "ReplanProposal",
+                    AuditLog.entity_id == proposal.id,
+                )
+                .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+            )
+            if proposal is not None
+            else None
+        )
+        domain_accept_after = (
+            _audit_after(domain_accept_audit)
+            if domain_accept_audit is not None
+            else {}
+        )
         exact_request_ok = bool(
             resume_step is not None
             and accept_audit is not None
@@ -335,9 +354,10 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                 collective = mission
 
         if collective is None:
-            # R30 may continue without a fresh member round only when the
-            # server-issued durable dominance receipt matches the exact
-            # proposal and plan.  An audit line or model claim is not authority.
+            # R30 may continue without a fresh member round only when one
+            # server-issued dominance receipt is bound through the complete
+            # continuation and mutation chain. Merely finding a receipt row is
+            # not authority: a forged/unrelated row must never repair lineage.
             dominance_receipt = (
                 session.scalar(
                     select(CollectiveAuthorityReceipt)
@@ -351,12 +371,103 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                         CollectiveAuthorityReceipt.classification == "UNANIMOUS_DOMINANCE",
                         CollectiveAuthorityReceipt.invalidated_at.is_(None),
                     )
-                    .order_by(CollectiveAuthorityReceipt.issued_at.desc(), CollectiveAuthorityReceipt.id.desc())
+                    .order_by(
+                        CollectiveAuthorityReceipt.issued_at.desc(),
+                        CollectiveAuthorityReceipt.id.desc(),
+                    )
                 )
                 if proposal is not None
                 else None
             )
-            unanimous_no_round = dominance_receipt is not None
+            domain_authority = (
+                domain_accept_after.get("collective_authority")
+                if isinstance(domain_accept_after, dict)
+                else None
+            )
+            domain_authority = (
+                domain_authority if isinstance(domain_authority, dict) else {}
+            )
+            receipt_snapshot = domain_authority.get("receipt")
+            receipt_snapshot = (
+                receipt_snapshot if isinstance(receipt_snapshot, dict) else {}
+            )
+            resume_nested = (
+                resume_result.get("result")
+                if isinstance(resume_result, dict)
+                else None
+            )
+            resume_nested = resume_nested if isinstance(resume_nested, dict) else {}
+
+            expected_receipt_id = (
+                str(dominance_receipt.id)
+                if dominance_receipt is not None
+                else ""
+            )
+            bound_receipt_ids = {
+                "approval": str(
+                    approval.authority_receipt_id
+                    if approval is not None and approval.authority_receipt_id
+                    else ""
+                ),
+                "pending_action": str(
+                    pending.authority_receipt_id
+                    if pending is not None and pending.authority_receipt_id
+                    else ""
+                ),
+                "resume_step": str(
+                    resume_result.get("collective_authority_receipt_id")
+                    or resume_nested.get("collective_authority_receipt_id")
+                    or ""
+                ),
+                "gateway_audit": str(
+                    accept_after.get("collective_authority_receipt_id") or ""
+                ),
+                "domain_audit": str(domain_authority.get("receipt_id") or ""),
+            }
+            snapshot_matches = bool(
+                dominance_receipt is not None
+                and str(receipt_snapshot.get("receipt_id") or "")
+                == expected_receipt_id
+                and str(receipt_snapshot.get("authority_mode") or "")
+                == dominance_receipt.authority_mode
+                and str(receipt_snapshot.get("classification") or "")
+                == dominance_receipt.classification
+                and str(receipt_snapshot.get("decision_epoch") or "")
+                == dominance_receipt.decision_epoch
+                and str(receipt_snapshot.get("material_world_epoch") or "")
+                == dominance_receipt.material_world_epoch
+                and str(
+                    receipt_snapshot.get("candidate_surface_fingerprint") or ""
+                )
+                == dominance_receipt.candidate_surface_fingerprint
+            )
+            receipt_issued = (
+                _dt(dominance_receipt.issued_at)
+                if dominance_receipt is not None
+                else None
+            )
+            domain_accepted = (
+                _dt(domain_accept_audit.created_at)
+                if domain_accept_audit is not None
+                else None
+            )
+            timing_ok = bool(
+                receipt_issued is not None
+                and domain_accepted is not None
+                and receipt_issued <= domain_accepted
+            )
+            receipt_chain_ok = bool(
+                expected_receipt_id
+                and all(
+                    value == expected_receipt_id
+                    for value in bound_receipt_ids.values()
+                )
+                and snapshot_matches
+                and timing_ok
+            )
+            unanimous_no_round = bool(
+                dominance_receipt is not None and receipt_chain_ok
+            )
             if unanimous_no_round:
                 option_rows = session.scalars(
                     select(ReplanProposal).where(
@@ -374,10 +485,13 @@ def build_verdict(run_id: str) -> dict[str, Any]:
                 )
                 verdicts["authenticated_collective_responses"] = _verdict(
                     PROVEN,
-                    "No fresh member round was required: the accepted mutation carries a durable current UNANIMOUS_DOMINANCE classification.",
+                    "No fresh member round was required: one exact durable UNANIMOUS_DOMINANCE receipt is bound through approval, continuation, Gateway, and domain mutation evidence.",
                     collective_required=False,
                     authority_receipt_id=dominance_receipt.id,
                     classification=dominance_receipt.classification,
+                    bound_receipt_ids=bound_receipt_ids,
+                    receipt_snapshot=receipt_snapshot,
+                    receipt_chain_ok=receipt_chain_ok,
                 )
                 verdicts["non_selected_proposals_rejected"] = _verdict(
                     PROVEN if terminal_options_ok else NOT_PROVEN,
@@ -393,11 +507,16 @@ def build_verdict(run_id: str) -> dict[str, Any]:
             else:
                 verdicts["authenticated_collective_responses"] = _verdict(
                     CONTRADICTED,
-                    "No collective parent mission is reachable from the AgentRun mission.",
+                    "No collective parent is reachable and no exact dominance authority receipt is bound through the full mutation chain.",
+                    expected_authority_receipt_id=expected_receipt_id or None,
+                    bound_receipt_ids=bound_receipt_ids,
+                    receipt_snapshot=receipt_snapshot,
+                    snapshot_matches=snapshot_matches,
+                    timing_ok=timing_ok,
                 )
                 verdicts["non_selected_proposals_rejected"] = _verdict(
                     NOT_PROVEN,
-                    "No collective option set is reachable.",
+                    "No machine-bound collective option authority is proven.",
                 )
         else:
             collective_payload = _json(collective.clarification_json, {})
