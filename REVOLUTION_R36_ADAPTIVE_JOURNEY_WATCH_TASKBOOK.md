@@ -291,3 +291,24 @@ First:
 The target is not “more polling.”
 
 The target is that CityNexus begins to have **temporal judgment**: it knows when a Journey deserves attention, when to stay quiet, and when a real unresolved problem justifies heightened vigilance—without confusing vigilance with permission to change the trip.
+
+
+## Phase-aware refinement (code-level review after R35)
+
+The adaptive cadence slice above is necessary but not sufficient by itself. Code review of the live pulse path confirmed that a due pulse still treated every non-terminal activity as equally relevant. R36 therefore also carries a deterministic Journey-phase projection used only for monitoring control.
+
+Required phase projection:
+- `PRE_TRIP`
+- `APPROACHING_NEXT`
+- `IN_TRANSIT`
+- `IN_ACTIVITY`
+- `BETWEEN_ACTIVITIES`
+- `OVERNIGHT`
+- `JOURNEY_COMPLETE`
+- `UNKNOWN`
+
+Execution truth wins over clock inference. In particular, explicit `EN_ROUTE`, `ARRIVED`, and `IN_PROGRESS` activity state must beat a merely scheduled clock window. Clock-derived phase may change cadence/scope but may never claim physical arrival, completion, or provider truth.
+
+The phase projection must expose a bounded `monitored_activity_ids` set. Live venue context refresh must honor that set so an in-progress/approaching Journey does not re-query every future venue in a multi-day plan. The intended first slice is current/destination + at most one following activity. A phase transition alone is not an Event and must not start Hermes, create a RecoveryEpoch, proposal, or mutation.
+
+The phase projection belongs in the existing `watch_policy.py`/Autopilot path, not a parallel Guardian subsystem. `GuardianPulse.result_json` should include it, and the latest-pulse/status projections should expose it without promoting internal phase enum names into normal traveller copy.
