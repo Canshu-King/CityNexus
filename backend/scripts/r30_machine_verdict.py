@@ -411,7 +411,11 @@ def build_verdict(
             == "AUTHENTICATED_MEMBER_CONSENT"
             and pre_shock_receipt.decision_epoch == e1
             and pre_shock_receipt.material_world_epoch == w1
+            and pre_shock_receipt.candidate_surface_fingerprint == e1
+            and pre_shock_receipt.source_mission_id == mediator_id
             and receipt_required_ids == renewed_required
+            and len(receipt_audits) == len(renewed_required)
+            and len(receipt_principal_ids) == len(renewed_required)
             and receipt_response_audit_ids
             == {str(row.id) for row in receipt_audits}
             and receipt_audit_members == renewed_required
