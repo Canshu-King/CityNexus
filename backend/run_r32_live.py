@@ -20,7 +20,71 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from run_r28_live import BACKEND, _api_setup, _configure
+from run_r28_live import BACKEND, _api_setup, _configure as _base_configure
+
+
+def _configure_r32() -> Path:
+    """Create an isolated R32 process environment before importing app code.
+
+    The strike is specifically about the configured Hermes/WB2api Agent
+    runtime.  Ambient DeepSeek/Qwen credentials must not silently insert a
+    separate semantic-compiler provider call in front of the Agent command.
+    """
+
+    db = _base_configure()
+    os.environ.update(
+        {
+            "CITYNEXUS_AI_ENABLED": "false",
+            "CITYNEXUS_AI_API_KEY": "",
+            "DEEPSEEK_API_KEY": "",
+            # Native Hermes is a different execution surface.  R32 exercises
+            # the OpenAI-compatible WB2api runtime only.
+            "CITYNEXUS_HERMES_NATIVE_API_URL": "",
+            "CITYNEXUS_HERMES_API_SERVER_KEY": "",
+        }
+    )
+    return db
+
+
+def _runtime_preflight() -> dict[str, Any]:
+    """Prove which runtime will receive the strike before any AgentRun starts."""
+
+    from app.agent.orchestrator import HermesJourneyAgent, configured_journey_agent
+    from app.core.config import settings
+    from app.integrations.hermes.native_client import native_hermes_status
+
+    native = native_hermes_status()
+    runtime = configured_journey_agent()
+    try:
+        runtime_type = type(runtime).__name__
+        is_hermes = isinstance(runtime, HermesJourneyAgent)
+        receipt = {
+            "runtime_type": runtime_type,
+            "provider_key": getattr(runtime, "provider_key", None),
+            "model_key": getattr(runtime, "model_key", None),
+            "hermes_api_url_configured": bool(settings.hermes_api_url),
+            "hermes_api_key_configured": bool(settings.hermes_api_key),
+            "semantic_ai_api_key_configured": bool(settings.ai_api_key),
+            "native_hermes_configured": bool(native.get("configured")),
+            "native_hermes_ready": bool(native.get("ready")),
+            "selected_openai_compatible_hermes": is_hermes,
+        }
+    finally:
+        runtime.close()
+
+    if receipt["semantic_ai_api_key_configured"]:
+        raise RuntimeError(
+            "R32 preflight found an ambient semantic AI provider before Hermes"
+        )
+    if receipt["native_hermes_ready"]:
+        raise RuntimeError(
+            "R32 preflight found native Hermes ready; strike requires WB2api"
+        )
+    if not receipt["selected_openai_compatible_hermes"]:
+        raise RuntimeError(
+            f"R32 preflight selected unexpected runtime: {runtime_type}"
+        )
+    return receipt
 
 
 def _jsonable(value: Any) -> Any:
@@ -430,9 +494,10 @@ def _stale_binding_assertion(journey_id: str, run_id: str) -> dict[str, Any]:
 
 def run() -> dict[str, Any]:
     source_receipt = _source_receipt()
-    db = _configure()
-    # Import application modules only after _configure has installed the fresh DB
-    # and real configured WB2api settings.
+    db = _configure_r32()
+    # Import application modules only after _configure_r32 has installed the
+    # fresh DB and isolated WB2api/Hermes settings.
+    runtime_preflight = _runtime_preflight()
     setup = _api_setup(db)
     authority_setup = _configure_r32_authority(setup)
     journey_id = str(setup["journey_id"])
@@ -652,6 +717,7 @@ def run() -> dict[str, Any]:
         "journey_id": journey_id,
         "setup": _jsonable(setup),
         "authority_setup": _jsonable(authority_setup),
+        "runtime_preflight": _jsonable(runtime_preflight),
         "source_receipt": source_receipt,
         "runtime": {
             "provider": "WB2api",
