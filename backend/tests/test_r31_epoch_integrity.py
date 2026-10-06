@@ -9,6 +9,7 @@ from app.collective_authority import (
     UNANIMOUS_DOMINANCE,
     authority_receipt_for_allowed_gate,
     candidate_surface_fingerprint,
+    collective_authority_provenance,
     receipt_validation,
     server_semantic_decision_epoch,
 )
@@ -217,3 +218,22 @@ def test_r31_renewed_human_receipt_validates_current_surface_not_its_own_snapsho
         )
         is receipt
     )
+
+
+def test_r32_authority_provenance_names_actual_decision_epoch_builder():
+    human = collective_authority_provenance(
+        AUTHENTICATED_MEMBER_CONSENT
+    )
+    algorithmic = collective_authority_provenance(
+        UNANIMOUS_DOMINANCE
+    )
+
+    assert (
+        human["decision_epoch"]["source"]
+        == "AUTHENTICATED_MEMBER_COLLECTIVE_DECISION_EPOCH"
+    )
+    assert (
+        algorithmic["decision_epoch"]["source"]
+        == "ALGORITHMIC_UNANIMOUS_SEMANTIC_EPOCH"
+    )
+    assert human["decision_epoch"] != algorithmic["decision_epoch"]
