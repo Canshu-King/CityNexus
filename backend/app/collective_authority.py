@@ -348,6 +348,13 @@ def authority_receipt_for_allowed_gate(
         raise ValueError("COLLECTIVE_AUTHORITY_EPOCH_UNAVAILABLE")
 
     classification = str(gate.get("classification") or "")
+    proposal = session.get(ReplanProposal, str(proposal_id))
+    proposal_source_run_id = (
+        str(proposal.source_agent_run_id)
+        if proposal is not None
+        and getattr(proposal, "source_agent_run_id", None)
+        else None
+    )
     if classification == UNANIMOUS_DOMINANCE:
         # The gate is the sole authority for current provenance.  In
         # particular, never manufacture E or W from the candidate surface S.
@@ -370,6 +377,7 @@ def authority_receipt_for_allowed_gate(
             material_world_epoch=material_world_epoch,
             candidate_surface_fingerprint=surface_fingerprint,
             classification=UNANIMOUS_DOMINANCE,
+            source_agent_run_id=proposal_source_run_id,
             recovery_epoch_id=recovery_epoch_id,
         )
         check = receipt_validation(
