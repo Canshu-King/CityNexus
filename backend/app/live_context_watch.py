@@ -345,7 +345,14 @@ def run_live_context_watch(session: Session, journey: Journey) -> dict[str, Any]
             else None
         )
         if place is None or row is None:
-            classifications.append({"activity_id": activity.id, "place_id": activity.place_id, "status": "UNKNOWN", "reason_code": "EXACT_PLACE_EVIDENCE_MISSING"})
+            result = {
+                "activity_id": activity.id,
+                "place_id": activity.place_id,
+                "status": "UNKNOWN",
+                "reason_code": "EXACT_PLACE_EVIDENCE_MISSING",
+            }
+            classifications.append(result)
+            unknown_or_degraded.append(result)
             continue
         observation = _persist_observation(session, journey, place, row, captured_at)
         observation_ids.append(observation.id)
