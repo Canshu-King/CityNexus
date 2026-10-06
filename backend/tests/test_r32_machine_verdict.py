@@ -237,6 +237,12 @@ def _successful_autonomous_mutation_checkpoint() -> dict:
         "human_action_after_shock": False,
     }
     checkpoint["final"]["journey"]["active_plan_version_id"] = "plan-r2"
+    checkpoint["current_epoch_id"] = None
+    for epoch in checkpoint["final"]["epochs"]:
+        if epoch.get("id") == "r2":
+            epoch["status"] = "COMMITTED"
+            epoch["closed_at"] = "2026-10-06T00:03:00+00:00"
+            epoch["close_reason"] = "REPLAN_ACCEPTED"
     checkpoint["final"]["proposals"] = [
         {
             "id": "proposal-r2",
@@ -319,6 +325,10 @@ def test_complete_b_r2_unanimous_mutation_path_can_prove_core():
         result["dimensions"]["current_surface_epoch_pure"]["verdict"]
         == "PROVEN"
     )
+    assert (
+        result["dimensions"]["r2_terminal_state_consistent"]["verdict"]
+        == "PROVEN"
+    )
     assert "approval_not_retargeted" in result["coverage_not_proven"]
     assert (
         "no_duplicate_continuation_side_effect"
@@ -360,6 +370,26 @@ def test_pending_server_approval_is_not_fabricated_human_authority():
         == "NOT_PROVEN"
     )
     assert result["overall"] == "NOT_PROVEN"
+
+
+def test_mutation_with_open_r2_is_contradicted():
+    checkpoint = _successful_autonomous_mutation_checkpoint()
+    for epoch in checkpoint["final"]["epochs"]:
+        if epoch.get("id") == "r2":
+            epoch["status"] = "OPEN"
+            epoch["closed_at"] = None
+            epoch["close_reason"] = None
+
+    result = verdict(
+        checkpoint,
+        regression={"exit_code": 0, "passed": 145, "failed": 0},
+    )
+
+    assert (
+        result["dimensions"]["r2_terminal_state_consistent"]["verdict"]
+        == "CONTRADICTED"
+    )
+    assert result["overall"] == "CONTRADICTED"
 
 
 def test_unanimous_receipt_cannot_borrow_stale_agent_a_lineage():
