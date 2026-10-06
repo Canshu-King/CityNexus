@@ -15,6 +15,7 @@ import { expect, test } from "@playwright/test";
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { englishCountNoun, regularPlural } from "../src/lib/plural";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FILES = {
@@ -192,4 +193,34 @@ test("no user-visible `(s)` survives anywhere under frontend/src", () => {
   expect(elsewhere, "a counted noun somewhere else under frontend/src went back to the `1 or more` dodge").toEqual([]);
   expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
   writeFileSync(EVIDENCE_SITES, elsewhere.join("\n") + (elsewhere.length ? "\n" : ""), "utf8");
+});
+
+/* The three sites this lane fixed in other lanes' files had, until now, only the source-level arm above:
+   the noun went through the helper, but nothing proved what the helper actually renders for n=1 vs n=2.
+   This arm calls the real helpers (imported, not re-implemented, and the plural rule is not restated
+   here) on each of the three nouns, then asserts each call site still routes its count through it. */
+const THREE = [
+  { file: "frontend/src/features/execution/LiveRecovery.tsx", noun: "suggestion", count: "duplicateCount" },
+  { file: "frontend/src/features/simulation/simulationAdapter.ts", noun: "leg", count: "mobility.legs" },
+  { file: "frontend/src/lib/pretripChecklist.ts", noun: "failure", count: "failures.length" },
+];
+
+test("the three nouns the other-lane sites render say one or several, not `1 or more`", () => {
+  const rendered: Record<string, unknown> = {};
+  for (const site of THREE) {
+    const one = englishCountNoun(1, site.noun);
+    const several = englishCountNoun(2, site.noun);
+    rendered[site.noun] = { one, several };
+    expect(one, site.noun + " must not grow a suffix on n=1").toBe(site.noun);
+    expect(several, site.noun + " must take the plural on n=2").toBe(regularPlural(site.noun));
+    expect(one, site.noun + " must differ from its plural or the count says nothing").not.toBe(several);
+  }
+  /* the call site: the counted value must go through englishCountNoun with this noun, not an inline `(s)` */
+  for (const site of THREE) {
+    const src = readFileSync(join(ROOT, site.file), "utf8");
+    const call = `englishCountNoun(${site.count}, "${site.noun}")`;
+    expect(src.includes(call),
+      site.file + " no longer routes " + site.count + " through englishCountNoun(" + site.noun + ")").toBe(true);
+  }
+  if (EVIDENCE) writeFileSync(EVIDENCE, JSON.stringify({ three_site_nouns: rendered }, null, 1) + "\n", "utf8");
 });
