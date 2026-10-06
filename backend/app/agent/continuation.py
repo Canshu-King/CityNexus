@@ -420,6 +420,65 @@ def resume_pending_action(
                 "status": "FAILED",
                 "reason": "PENDING_ACTION_DISAPPEARED",
             }
+
+        detail = exc.detail if isinstance(exc.detail, dict) else None
+        if (
+            exc.status_code == 409
+            and isinstance(detail, dict)
+            and detail.get("code") == RECOVERY_EPOCH_SUPERSEDED
+        ):
+            superseded = {
+                **detail,
+                "status_code": exc.status_code,
+                "decision": RECOVERY_EPOCH_SUPERSEDED,
+            }
+            _append_resume_step(
+                session,
+                pending=pending,
+                arguments=arguments,
+                result=superseded,
+                status="SUPERSEDED",
+            )
+            pending.status = "SUPERSEDED"
+            pending.error_json = _json_text(superseded)
+            pending.updated_at = _now()
+            run = session.get(AgentRun, pending.run_id)
+            mission = session.get(JourneyMission, pending.mission_id)
+            if run is not None:
+                run.status = "SUPERSEDED"
+                run.failure_reason = RECOVERY_EPOCH_SUPERSEDED
+                run.outcome = _json_text(
+                    {"status": "SUPERSEDED", **detail}
+                )
+            if mission is not None:
+                mission.status = "SUPERSEDED"
+                mission.failure_reason = RECOVERY_EPOCH_SUPERSEDED
+            record_audit(
+                session,
+                action="agent.pending_action.superseded",
+                entity_type="AgentPendingAction",
+                entity_id=pending.id,
+                journey_id=pending.journey_id,
+                actor_type="SYSTEM",
+                actor_id="recovery-epoch",
+                after={
+                    "pending_action_id": pending.id,
+                    "approval_id": approval_id,
+                    "run_id": pending.run_id,
+                    "status": pending.status,
+                    **detail,
+                },
+            )
+            session.commit()
+            return {
+                "status": "SUPERSEDED",
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "pending_action_id": pending.id,
+                "run_id": pending.run_id,
+                "mission_id": pending.mission_id,
+                **detail,
+            }
+
         failure = {
             "error": str(exc.detail),
             "status_code": exc.status_code,
