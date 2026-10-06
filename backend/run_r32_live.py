@@ -116,6 +116,10 @@ def _source_receipt() -> dict[str, Any]:
         "backend/app/agent/runtime.py",
         "backend/app/recovery_epoch.py",
         "backend/app/agent/gateway.py",
+        "backend/app/agent/signal_pipeline.py",
+        "backend/app/agent/delegation_policy.py",
+        "backend/app/collective_authority.py",
+        "backend/app/main.py",
         "backend/scripts/r32_machine_verdict.py",
     ]
     hashes: dict[str, str] = {}
