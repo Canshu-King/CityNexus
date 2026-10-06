@@ -20,6 +20,7 @@ from app.agent.predictive import (
     maintain_standby_portfolio,
 )
 from app.agent.signal_pipeline import SignalPipelineResult, refresh_demo_signals
+from app.agent.watch_policy import adaptive_watch_policy, watch_is_due
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import (
@@ -238,6 +239,8 @@ def _due(enrollment: AutopilotEnrollment, *, now: datetime) -> bool:
 
 
 def next_due_seconds(session, *, now: datetime | None = None) -> float | None:
+    """Return the shortest adaptive wait across enabled Journey watches."""
+
     stamp = now or datetime.now(timezone.utc)
     rows = list(
         session.scalars(
@@ -248,17 +251,18 @@ def next_due_seconds(session, *, now: datetime | None = None) -> float | None:
         return None
     waits: list[float] = []
     for row in rows:
-        if not row.last_pulse_at:
-            waits.append(0.0)
+        journey = session.get(Journey, row.journey_id)
+        if journey is None or journey.status != "ACTIVE":
             continue
+        policy = adaptive_watch_policy(session, journey, row, now=stamp)
         try:
-            previous = datetime.fromisoformat(row.last_pulse_at)
-            if previous.tzinfo is None:
-                previous = previous.replace(tzinfo=timezone.utc)
-            waits.append(max(0.0, float(row.interval_seconds) - (stamp - previous).total_seconds()))
-        except ValueError:
+            due_at = datetime.fromisoformat(str(policy["next_due_at"]))
+            if due_at.tzinfo is None:
+                due_at = due_at.replace(tzinfo=timezone.utc)
+            waits.append(max(0.0, (due_at - stamp).total_seconds()))
+        except (KeyError, TypeError, ValueError):
             waits.append(0.0)
-    return min(waits)
+    return min(waits) if waits else None
 
 
 def pulse_journey(session, journey: Journey) -> dict[str, Any]:
@@ -560,7 +564,13 @@ def run_once(
         for journey in journeys:
             enrollment = session.get(AutopilotEnrollment, journey.id)
             if respect_schedule and (
-                enrollment is None or not _due(enrollment, now=datetime.now(timezone.utc))
+                enrollment is None
+                or not watch_is_due(
+                    session,
+                    journey,
+                    enrollment,
+                    now=datetime.now(timezone.utc),
+                )
             ):
                 continue
             mission = session.scalar(
