@@ -139,6 +139,17 @@ class _AuthoritySession:
     def scalars(self, _statement):
         return _ScalarRows(self.audits)
 
+    def scalar(self, _statement):
+        return next(
+            (
+                item
+                for item in self.added
+                if isinstance(item, CollectiveAuthorityReceipt)
+                and item.invalidated_at is None
+            ),
+            None,
+        )
+
     def add(self, value):
         self.added.append(value)
 
@@ -359,3 +370,32 @@ def test_r30_verifier_does_not_require_pre_shock_external_agent_runs():
     assert "real_external_mediator" not in source
     assert "pre_shock_human_authority_receipt" in source
     assert "real_external_post_shock_recovery_agent" in source
+
+
+
+def test_r30_exact_receipt_issuance_is_idempotent():
+    session = _AuthoritySession(
+        [
+            _audit(
+                audit_id="audit-a",
+                member_id="member-a",
+                traveler_id="traveler-a",
+            ),
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    first = _issue(session)
+    second = _issue(session)
+
+    assert second is first
+    assert len(
+        [
+            item
+            for item in session.added
+            if isinstance(item, CollectiveAuthorityReceipt)
+        ]
+    ) == 1
