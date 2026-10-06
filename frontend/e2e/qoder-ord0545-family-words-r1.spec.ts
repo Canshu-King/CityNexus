@@ -23,6 +23,8 @@ import { expect, test } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const TRIP = "22222222-2222-4222-8222-222222222222";
 const PANEL = "frontend/src/features/poiimport/PoiImportPanel.tsx";
 const TABLE = "frontend/src/features/poiimport/poiImportCopy.ts";
@@ -30,9 +32,7 @@ const DICTIONARY = "frontend/src/i18n/LocaleContext.tsx";
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0545", "readouts");
 const TAG = process.env.CITYNEXUS_ORD0545_TAG ?? "r1";
 const BASE_TIP = process.env.CITYNEXUS_ORD0545_BASE_TIP ?? "";
-if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
-  throw new Error("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
-}
+if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) COLLECTION_PREREQ.push("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
 
 const repoRoot = path.join(process.cwd(), "..");
 const read = (rel: string) => fs.readFileSync(path.join(repoRoot, rel), "utf-8");
@@ -116,6 +116,10 @@ async function bootToPanel(page: import("@playwright/test").Page, locale: string
   await page.goto("/v8/import");
   await expect(page.getByTestId("poi-import")).toBeVisible({ timeout: 40_000 });
 }
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test.describe("ORD-0545 slice 2 the moved family owns its own sentences", () => {
   test("G1 这一屏够得着的每一枚句子都在表里成对，字典里不留第二份，t() 归零", () => {

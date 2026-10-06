@@ -24,9 +24,13 @@ const DEMO_TITLE = "One Day in Nexus City";
 const STOP_COUNT = 6;
 
 const EVIDENCE_DIR = (process.env.CITYNEXUS_ORD0472_EVIDENCE ?? "").trim();
-if (!EVIDENCE_DIR) {
-  throw new Error("[ord0472] CITYNEXUS_ORD0472_EVIDENCE must name where evidence is written");
-}
+/* ORD-0576: this refusal is unchanged in force -- no reading is written without a named directory -- but it
+ * used to happen at module scope, where one unset variable aborted Playwright's collection for every spec in
+ * the directory. It is now a named skip inside this file's tests, so the reason reaches the report instead of
+ * the collector. */
+const EVIDENCE_PREREQ = EVIDENCE_DIR
+  ? null
+  : "missing environment variable: CITYNEXUS_ORD0472_EVIDENCE must name where evidence is written";
 
 function write(name: string, body: unknown): string {
   const path = `${EVIDENCE_DIR}/${name}.json`;
@@ -100,6 +104,10 @@ async function hitTest(page: Page, locator: Locator, testId: string) {
   return { box, scrollY, centre, owner };
 }
 
+test.beforeEach(() => {
+  test.skip(EVIDENCE_PREREQ !== null, EVIDENCE_PREREQ ?? undefined);
+});
+
 test("ORD-0472 A1 the poster entry is reachable and its words are on the screen", async ({ browser }) => {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -115,7 +123,7 @@ test("ORD-0472 A1 the poster entry is reachable and its words are on the screen"
   const reach = await hitTest(page, open, "poster-open");
   expect(reach.box, "the entry has to have a box before it can be hit").not.toBeNull();
   expect(reach.owner.isTheButtonOrInsideIt, "the centre of the entry must land on the entry").toBe(true);
-  /* Mobile/touch contract: 44px floor (design-tokens.css and :859). */
+  /* Mobile/touch contract: 44px floor (design-tokens.css:309 and :859). */
   expect(reach.box!.height, "a touch control under 44px is not the contract this project holds")
     .toBeGreaterThanOrEqual(44);
 
@@ -180,7 +188,7 @@ test("ORD-0472 A2 download produces a PNG whose own bytes match what the screen 
   const onScreen = (await page.getByTestId("poster-result").innerText()).trim();
   /* The counted noun has to follow the count. The first drawn picture said "Demo city · 1 days",
      because `{plural:day}` reads the parameter named `n` and this call names its count `days`
-     (`lib/plural.ts`); nothing in these arms would have caught it, so it is asserted now. */
+     (`lib/plural.ts:40`); nothing in these arms would have caught it, so it is asserted now. */
   const subtitle = (await page.getByTestId("poster-subtitle").innerText()).trim();
   expect(subtitle, "one day must read as one day").toBe("Demo city · 1 day");
   const file = pngNumbers(saved);

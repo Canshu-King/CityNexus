@@ -18,7 +18,7 @@
  * Not the acceptance gate: `playwright.config.ts` stays the only thing that can sign one.
  */
 import { expect, test } from "@playwright/test";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,6 +28,10 @@ const FILES = {
   vocabulary: join(ROOT, "frontend", "src", "lib", "displayVocabulary.ts"),
   workbench: join(ROOT, "frontend", "src", "features", "inbox", "JourneyInboxWorkbench.tsx"),
 };
+
+const BACKEND_PREREQ = existsSync(FILES.routes)
+  ? null
+  : `missing file: ${FILES.routes} -- this checkout has no backend/ beside frontend/, so the arms that read the server's own names cannot run here`;
 const EVIDENCE = process.env.CITYNEXUS_EXSTAT_EVIDENCE ?? "";
 const RUN = process.env.CITYNEXUS_EXSTAT_RUN ?? "exstat-unset";
 
@@ -99,10 +103,22 @@ function writeReading(payload: Record<string, unknown>): void {
   writeFileSync(EVIDENCE, JSON.stringify(payload, null, 1), "utf8");
 }
 
-const emitted = emittedStatuses();
-const labelled = labelledStatuses();
-const routes = read("routes");
-const workbench = read("workbench");
+const emitted = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof emittedStatuses>)  // never used: the arms skip above
+  : emittedStatuses();
+const labelled = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof labelledStatuses>)  // never used: the arms skip above
+  : labelledStatuses();
+const routes = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof read>)  // never used: the arms skip above
+  : read("routes");
+const workbench = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof read>)  // never used: the arms skip above
+  : read("workbench");
+
+test.beforeEach(() => {
+  test.skip(BACKEND_PREREQ !== null, BACKEND_PREREQ ?? undefined);
+});
 
 test("the statuses the extraction routes can answer and the statuses the screen can say are one set", () => {
   expect(emitted.length, "a single status value would not be worth a ruler").toBeGreaterThan(1);

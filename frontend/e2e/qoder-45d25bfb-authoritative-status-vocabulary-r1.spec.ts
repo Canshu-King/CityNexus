@@ -16,7 +16,7 @@
  * Not the acceptance gate: `playwright.config.ts` stays the only thing that can sign one.
  */
 import { expect, test } from "@playwright/test";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,6 +28,10 @@ const FILES = {
   vocabulary: join(ROOT, "frontend", "src", "lib", "displayVocabulary.ts"),
   panel: join(ROOT, "frontend", "src", "features", "execution", "V12AuthoritativeJourneyPanel.tsx"),
 };
+
+const BACKEND_PREREQ = existsSync(FILES.contract)
+  ? null
+  : `missing file: ${FILES.contract} -- this checkout has no backend/ beside frontend/, so the arms that read the server's own names cannot run here`;
 const EVIDENCE = process.env.CITYNEXUS_STATUSQ_EVIDENCE ?? "";
 const RUN = process.env.CITYNEXUS_STATUSQ_RUN ?? "statusq-unset";
 
@@ -99,10 +103,18 @@ function fallbackLabels(): Record<string, { zh: string; en: string }> {
   return out;
 }
 
-const { names: contract, line: contractLine } = contractStatuses();
-const keyMap = stateKeyMap();
-const dicts = dictionaries();
-const fallback = fallbackLabels();
+const { names: contract, line: contractLine } = BACKEND_PREREQ
+  ? ({ names: [], line: "" } as ReturnType<typeof contractStatuses>)  // never used: the arms skip above
+  : contractStatuses();
+const keyMap = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof stateKeyMap>)  // never used: the arms skip above
+  : stateKeyMap();
+const dicts = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof dictionaries>)  // never used: the arms skip above
+  : dictionaries();
+const fallback = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof fallbackLabels>)  // never used: the arms skip above
+  : fallbackLabels();
 
 type Resolved = { name: string; via: string; zh: string; en: string };
 function resolve(name: string): Resolved | null {
@@ -124,6 +136,10 @@ function writeReading(payload: Record<string, unknown>): void {
   mkdirSync(dirname(EVIDENCE), { recursive: true });
   writeFileSync(EVIDENCE, JSON.stringify(payload, null, 1), "utf8");
 }
+
+test.beforeEach(() => {
+  test.skip(BACKEND_PREREQ !== null, BACKEND_PREREQ ?? undefined);
+});
 
 test("every status the contract can answer has one wording, in both languages", () => {
   const unworded = contract.filter((n, i) => !resolved[i]).map((n) => n);
