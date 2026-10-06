@@ -9494,6 +9494,7 @@ def guide_authenticated_member_to_rendezvous(
         route_provenance=route_provenance,
     )
     guardian_handoff: dict[str, Any] | None = None
+    guardian_triggered = False
     if member_risk_event is not None:
         session.commit()
         prior_handoff = session.scalar(
@@ -9515,6 +9516,7 @@ def guide_authenticated_member_to_rendezvous(
                     guardian_handoff = scan_guardian(
                         session, journey, include_opportunity_signals=False
                     )
+                    guardian_triggered = True
                     record_audit(
                         session,
                         action="journey.group_presence.member_risk.guardian_handoff",
@@ -9563,10 +9565,10 @@ def guide_authenticated_member_to_rendezvous(
         "authority": route_authority,
         "shared_commitment_risk": commitment_risk,
         "member_risk_event_id": member_risk_event.id if member_risk_event is not None else None,
-        "guardian_triggered": bool(
-            member_risk_event is not None
-            and guardian_handoff is not None
-            and guardian_handoff.get("status") != "NOT_ENROLLED"
+        "guardian_triggered": guardian_triggered,
+        "guardian_deduplicated": bool(
+            isinstance(guardian_handoff, dict)
+            and guardian_handoff.get("status") == "INCIDENT_ALREADY_HANDED_OFF"
         ),
         "guardian": guardian_handoff,
         "plan_unchanged": plan_unchanged,
