@@ -1,0 +1,279 @@
+from __future__ import annotations
+
+import json
+from types import SimpleNamespace
+
+import pytest
+
+from app.collective_authority import (
+    AUTHENTICATED_MEMBER_CONSENT,
+    UNANIMOUS_DOMINANCE,
+    issue_collective_authority_receipt,
+    receipt_validation,
+)
+from app.db.models import (
+    AuditLog,
+    CollectiveAuthorityReceipt,
+    Journey,
+    PlanVersion,
+    ReplanProposal,
+)
+
+
+def _receipt(**overrides):
+    values = {
+        "id": "receipt-1",
+        "journey_id": "journey-1",
+        "proposal_id": "proposal-1",
+        "plan_version_id": "plan-1",
+        "authority_mode": UNANIMOUS_DOMINANCE,
+        "decision_epoch": "decision-1",
+        "material_world_epoch": "world-1",
+        "candidate_surface_fingerprint": "surface-1",
+        "source_mission_id": None,
+        "source_agent_run_id": None,
+        "required_member_ids_json": "[]",
+        "response_audit_ids_json": "[]",
+        "principal_actor_ids_json": "[]",
+        "classification": "UNANIMOUS_DOMINANCE",
+        "issued_at": "2026-10-06T00:00:00+00:00",
+        "invalidated_at": None,
+        "invalidation_code": None,
+    }
+    values.update(overrides)
+    return CollectiveAuthorityReceipt(**values)
+
+
+def _validate(receipt, **overrides):
+    values = {
+        "journey_id": "journey-1",
+        "proposal_id": "proposal-1",
+        "plan_version_id": "plan-1",
+        "decision_epoch": "decision-1",
+        "material_world_epoch": "world-1",
+        "candidate_surface_fingerprint": "surface-1",
+        "authority_mode": UNANIMOUS_DOMINANCE,
+    }
+    values.update(overrides)
+    return receipt_validation(receipt, **values)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "code"),
+    [
+        ("journey_id", "journey-other", "COLLECTIVE_AUTHORITY_RECEIPT_WRONG_JOURNEY"),
+        ("proposal_id", "proposal-other", "COLLECTIVE_AUTHORITY_RECEIPT_WRONG_PROPOSAL"),
+        ("plan_version_id", "plan-other", "COLLECTIVE_AUTHORITY_RECEIPT_WRONG_PLAN"),
+        ("decision_epoch", "decision-new", "COLLECTIVE_AUTHORITY_RECEIPT_STALE_DECISION_EPOCH"),
+        ("material_world_epoch", "world-new", "COLLECTIVE_AUTHORITY_RECEIPT_STALE_WORLD_EPOCH"),
+        (
+            "candidate_surface_fingerprint",
+            "surface-new",
+            "COLLECTIVE_AUTHORITY_RECEIPT_STALE_SURFACE",
+        ),
+    ],
+)
+def test_r30_authority_receipt_exact_scope_rejects_mismatch(field, value, code):
+    check = _validate(_receipt(), **{field: value})
+    assert check == {"valid": False, "code": code}
+
+
+def test_r30_authority_receipt_accepts_only_exact_current_scope():
+    check = _validate(_receipt())
+    assert check["valid"] is True
+    assert check["receipt_id"] == "receipt-1"
+    assert check["authority_mode"] == UNANIMOUS_DOMINANCE
+
+
+def test_r30_invalidated_authority_receipt_remains_history_but_is_unspendable():
+    check = _validate(
+        _receipt(
+            invalidated_at="2026-10-06T00:10:00+00:00",
+            invalidation_code="WORLD_CHANGED",
+        )
+    )
+    assert check == {"valid": False, "code": "WORLD_CHANGED"}
+
+
+def test_r30_authority_mode_cannot_be_substituted():
+    check = _validate(
+        _receipt(authority_mode=AUTHENTICATED_MEMBER_CONSENT),
+        authority_mode=UNANIMOUS_DOMINANCE,
+    )
+    assert check == {
+        "valid": False,
+        "code": "COLLECTIVE_AUTHORITY_RECEIPT_MODE_MISMATCH",
+    }
+
+
+class _ScalarRows:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def all(self):
+        return list(self._rows)
+
+
+class _AuthoritySession:
+    def __init__(self, audits):
+        self.journey = SimpleNamespace(id="journey-1")
+        self.proposal = SimpleNamespace(
+            id="proposal-1",
+            journey_id="journey-1",
+            proposed_plan_version_id="plan-1",
+            status="PRESENTED",
+        )
+        self.plan = SimpleNamespace(id="plan-1", journey_id="journey-1")
+        self.audits = list(audits)
+        self.added = []
+
+    def get(self, model, key):
+        if model is Journey and key == "journey-1":
+            return self.journey
+        if model is ReplanProposal and key == "proposal-1":
+            return self.proposal
+        if model is PlanVersion and key == "plan-1":
+            return self.plan
+        return None
+
+    def scalars(self, _statement):
+        return _ScalarRows(self.audits)
+
+    def add(self, value):
+        self.added.append(value)
+
+    def flush(self):
+        return None
+
+
+def _audit(
+    *,
+    audit_id: str,
+    member_id: str,
+    traveler_id: str,
+    clarification_id: str = "clarification-current",
+    mission_id: str = "mission-current",
+):
+    return SimpleNamespace(
+        id=audit_id,
+        action="agent.collective_decision.response",
+        entity_type="JourneyMission",
+        entity_id=mission_id,
+        journey_id="journey-1",
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=traveler_id,
+        after_json=json.dumps(
+            {
+                "clarification_id": clarification_id,
+                "member_id": member_id,
+                "traveler_id": traveler_id,
+                "status": "RESOLVED",
+            }
+        ),
+    )
+
+
+def _issue(session, **overrides):
+    values = {
+        "journey_id": "journey-1",
+        "proposal_id": "proposal-1",
+        "plan_version_id": "plan-1",
+        "authority_mode": AUTHENTICATED_MEMBER_CONSENT,
+        "decision_epoch": "decision-1",
+        "material_world_epoch": "world-1",
+        "candidate_surface_fingerprint": "surface-1",
+        "classification": "AUTHENTICATED_MEMBER_CONSENT",
+        "required_member_ids": ["member-a", "member-b"],
+        "response_audit_ids": ["audit-a", "audit-b"],
+        "principal_actor_ids": ["traveler-a", "traveler-b"],
+        "source_mission_id": "mission-current",
+        "source_clarification_id": "clarification-current",
+    }
+    values.update(overrides)
+    return issue_collective_authority_receipt(session, **values)
+
+
+def test_r30_human_receipt_requires_same_clarification_and_exact_principals():
+    session = _AuthoritySession(
+        [
+            _audit(
+                audit_id="audit-a",
+                member_id="member-a",
+                traveler_id="traveler-a",
+            ),
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    receipt = _issue(session)
+    assert receipt.authority_mode == AUTHENTICATED_MEMBER_CONSENT
+    assert json.loads(receipt.required_member_ids_json) == ["member-a", "member-b"]
+    assert json.loads(receipt.principal_actor_ids_json) == [
+        "traveler-a",
+        "traveler-b",
+    ]
+
+
+def test_r30_human_receipt_rejects_historical_clarification_audit():
+    session = _AuthoritySession(
+        [
+            _audit(
+                audit_id="audit-a",
+                member_id="member-a",
+                traveler_id="traveler-a",
+                clarification_id="clarification-old",
+            ),
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    with pytest.raises(ValueError, match="another clarification"):
+        _issue(session)
+
+
+def test_r30_human_receipt_rejects_forged_principal_set():
+    session = _AuthoritySession(
+        [
+            _audit(
+                audit_id="audit-a",
+                member_id="member-a",
+                traveler_id="traveler-a",
+            ),
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    with pytest.raises(ValueError, match="principal set"):
+        _issue(
+            session,
+            principal_actor_ids=["traveler-a", "traveler-forged"],
+        )
+
+
+def test_r30_human_receipt_rejects_cross_mission_response_audit():
+    session = _AuthoritySession(
+        [
+            _audit(
+                audit_id="audit-a",
+                member_id="member-a",
+                traveler_id="traveler-a",
+                mission_id="mission-old",
+            ),
+            _audit(
+                audit_id="audit-b",
+                member_id="member-b",
+                traveler_id="traveler-b",
+            ),
+        ]
+    )
+    with pytest.raises(ValueError, match="invalid response audits"):
+        _issue(session)
