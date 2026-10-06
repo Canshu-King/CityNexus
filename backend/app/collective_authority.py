@@ -47,6 +47,7 @@ def issue_collective_authority_receipt(
     principal_actor_ids: Iterable[Any] = (),
     source_mission_id: str | None = None,
     source_agent_run_id: str | None = None,
+    source_clarification_id: str | None = None,
 ) -> CollectiveAuthorityReceipt:
     """Issue a receipt only from server-computed, exact target facts."""
 
@@ -82,15 +83,49 @@ def issue_collective_authority_receipt(
             or item.entity_type != "JourneyMission"
             or item.journey_id != journey.id
             or item.actor_type != "AUTHENTICATED_TRAVELER"
+            or (
+                source_mission_id is not None
+                and item.entity_id != str(source_mission_id)
+            )
             for item in audits
         ):
             raise ValueError("collective authority receipt contains invalid response audits")
-        audit_members = {
-            str(json.loads(item.after_json or "{}").get("member_id") or "")
+
+        decoded_audits = [
+            (item, json.loads(item.after_json or "{}"))
             for item in audits
+        ]
+        if source_clarification_id is not None and any(
+            str(after.get("clarification_id") or "")
+            != str(source_clarification_id)
+            for _item, after in decoded_audits
+        ):
+            raise ValueError(
+                "collective authority receipt mixes response audits from another clarification"
+            )
+        if any(
+            str(after.get("traveler_id") or "") != str(item.actor_id or "")
+            for item, after in decoded_audits
+        ):
+            raise ValueError(
+                "collective authority receipt response audit principal mismatch"
+            )
+
+        audit_members = {
+            str(after.get("member_id") or "")
+            for _item, after in decoded_audits
+        }
+        audit_actors = {
+            str(item.actor_id)
+            for item, _after in decoded_audits
+            if item.actor_id
         }
         if not required_ids.issubset(audit_members):
             raise ValueError("collective authority receipt lacks every required member response")
+        if actor_ids != audit_actors:
+            raise ValueError(
+                "collective authority receipt principal set does not match response audits"
+            )
     receipt = CollectiveAuthorityReceipt(
         id=str(uuid4()),
         journey_id=str(journey_id),
