@@ -16588,6 +16588,101 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 自申报那一格做完了：上格列出的四处「集合为空即判通过」都装上了具名守卫（新 r2 文件，已发布量具一字未改），并交了一枚「空输入必须非零、非空必须放行」的反件
+
+坐标（写这块这一刻现读；`4dfb8d58b14c69baeb092bc505d989e8fe9ef3b2` 与 `d602db8ed6280a56697eda8500cc4effe3484479` 都可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `d602db8ed6280a56697eda8500cc4effe3484479`；交件枝 `refs/heads/review/89f2e2d6-ord0520-vacuous-guards-r1` 现读枝头 = `4dfb8d58b14c69baeb092bc505d989e8fe9ef3b2`，父笔 = `d602db8ed6280a56697eda8500cc4effe3484479`（`git rev-parse 4dfb8d58b14c69baeb092bc505d989e8fe9ef3b2^` 现取），落下去是快进：`git merge-base --is-ancestor d602db8ed6280a56697eda8500cc4effe3484479 4dfb8d58b14c69baeb092bc505d989e8fe9ef3b2` 退码 = `0`（零即「尖已在这枝的祖先里」）
+  - 只读落地面：`git merge-tree --write-tree d602db8ed6280a56697eda8500cc4effe3484479 4dfb8d58b14c69baeb092bc505d989e8fe9ef3b2` 预测树 `42f0fd081e773a305379e729797f15d813e9d663`，含 CONFLICT 的行 = `0` 行；对尖的改动 = 只增 0 枚路径、改写 0 枚、删除 0 枚
+  - 新件 blob：`abort_http_probe_r2.py` = `0c31d03ccc983a8539bab82568a9c04969d52f06`；`abort_glass_provenance_r2.py` = `07b781e6dcc618748ddca442d43a40ff162fe8f3`；`osmt_flake_attribution_r2.py` = `ac5e0dbeadbd87f160f21c3f251becafdba7113e`；反件 `vacuous_guard_arms_r1.py` = `9649e6910137cfdf6a6601632a3ca112370b6b29`
+
+**一、这一格补的是上格那句话的后半截**
+
+  - 上格量出四处「集合为空即判通过」并只指认了现场；这一格把守卫装上去，而且是**新文件**（r2）：本车道规矩是已发布量具不重写。
+  - 守卫只有一枚函数，判语前调用它：`refuse_when_empty(集合, 名字)` —— 集合为空就打印具名理由并以非零退，不再让 `all(...)`／`not 表`／零分母去替人回答。
+
+**二、三处守卫落在哪（坐标是现尖上的行）**
+
+  - `review/ord0520/abort_http_probe_r2.py`：`refuse_when_empty(refusals, ...)` 插在 `verdict = (` 之前——四条拒绝臂一条都没记下时不许算判语。
+  - `review/ord0520/abort_glass_provenance_r2.py`：同一枚守卫插在 `receipt = {` 之前，集合是四条 P 记录里非空的那几条——`failures` 空本身什么也证明不了。
+  - `review/ord0520/osmt_flake_attribution_r2.py`：同一枚守卫插在 `per_state` 开头，集合是那个文件里的逐批行——零行的比率不是结果。
+
+**三、反件（这一格的要件：空输入必须非零，非空必须放行）**
+
+  - 件 `review/ord0520/vacuous_guard_arms_r1.py` 现跑判语 `VERDICT ALL_GUARDS_BITE_AND_ALLOW rc=0`。三枚守卫逐枚：空输入下 `SystemExit` 非零、非空输入下安静放行；任何一枚只拒不放（或只放不拒）就判 `ARM_FAILED` 并以非零退——「拒了一切」是坏仪器，不是修好了。
+  - 三处 r1 原件的 blob 与现尖上那几枚逐字相同（`abort_http_probe_r1.py` = `78e95e6413e85856f1b45291efc38084850f76f1`、`abort_glass_provenance_r1.py` = `89cd05404e5cab9e723772f2a42869da3bf66a84`、`osmt_flake_attribution_r1.py` = `9fa1bc34537bbb24c3512f8d4e515d329505f0d0`），r1→r2 的差是纯新增（每枚各十七行），没有删除、没有改写。
+
+**四、下一格（不等点单）**
+
+  - 第一件：把这三枚 r2 的守卫在**真场景**里跑一遍（那两枚 abort 量具要真栈），证明它们在正常路径上不误伤——现在只证到「空输入拒、非空放行」这一层。
+  - 第二件：g10 的供给那因仍归补给或归号令者裁，不动那枚臂的断言。
+
+边界 A：产品字节零枚（`backend/app/**` 与 `frontend/src/**` 一枚未动）、契约零枚、他人量具零枚改动；新增只有 `review/ord0520/` 下这四枚新名文件；已发布的三枚 r1 未改（blob 逐字相等，见上）。
+边界 B：权威线零移动；push 只落向本车道名下新建枝（本格 `review/89f2e2d6-ord0520-vacuous-guards-r1`），从不改旧枝头；force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮未起任何监听端口；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 `6a773af1` · ORD-0556 第八趟只读腿：把现尖少掉的那五个屏逐枚点名（本手零枚产品字节）
+
+**代次**：枝 `refs/heads/review/6a773af1-ord0556-route-sweep-r1` = `987877c7da5c7ec2cf545ba0f7abc17ce42fd8bd`，`ls-remote` 独立回读同值，parent = `b0a6a6227b176ddae53cc8e64cdad0f7ba5bf5a4`。本腿一笔 2 枚文件（量具一枚 + 读数件一枚），产品路径 0 枚。两枚尖：现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:4`）与屏读那代 `4d43f8bc25a1a2f4e4c752afe08851032ab6c71d`（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:5`）。
+
+**一、差的形状**（件 `review/ord0556/readouts/dropped_routes_20261006T094559Z.json`，判语 `DROPPED_ROUTES_READ`）：现尖路径 6542 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:8`）、屏读那代 10562 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:9`）：只在屏读那代有的 4020 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:87`），**只在现尖有的 0 枚**（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:88`）——现尖是屏读那代的**真子集**。路由键现尖 13 枚、屏读那代 18 枚；丢掉的 5 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:147` 起）、新增的 0 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:154`）。
+
+**二、丢掉的五枚逐枚点名**：
+- `access`：带来它的是 ORD-0436；屏读那代 `nav.access` 有、现尖 没有；只在屏读那代、名字里带它的路径 14 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:162`）
+- `footprints`：带来它的是 ORD-0476；屏读那代 `nav.footprints` 有、现尖 没有；只在屏读那代、名字里带它的路径 37 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:170`）
+- `import`：带来它的是 ORD-0437；屏读那代 `nav.import` 有、现尖 没有；只在屏读那代、名字里带它的路径 4 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:178`）
+- `shared`：带来它的是 ORD-0465；屏读那代 `nav.shared` 没有、现尖 没有；只在屏读那代、名字里带它的路径 9 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:186`）
+- `trash`：带来它的是 ORD-0402；屏读那代 `nav.trash` 有、现尖 没有；只在屏读那代、名字里带它的路径 31 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:194`）
+
+**三、那 4020 枚路径都去哪了（前八个桶）**：`frontend/review` 418 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:91`）、`review/ord0500-checkin` 184 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:95`）、`frontend/e2e` 169 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:99`）、`review/ord0504` 162 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:103`）、`review/evidence` 153 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:107`）、`backend/tests` 144 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:111`）、`review/ord0545` 139 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:115`）、`frontend/src` 115 枚（`review/ord0556/readouts/dropped_routes_20261006T094559Z.json:119`）。
+
+**四、说什么、不说什么**：说——现尖比屏读那代**少五个整屏**，且其中四枚连 `nav.*` 词条一起没了（`shared` 本来就没有 `nav.*`，它按值寻址）；少掉的路径没有一个方向是反的（只在现尖有的 0 枚）。不说——**这是剪枝还是两代不同源，我证不了**：本克隆 shallow、`merge-base --is-ancestor` 判不出祖先（非零返回），推送与重建记录不在我这侧（与腿四、腿五、腿六同一格缺因）。要定因请点名谁能取镜像侧记录。
+
+**五、没改善（具名报缺）**
+1. **屏侧没有数**：这腿全是 git 对象读，一枚浏览器都没开；这五屏在现尖到底「打不开」还是「根本不该有」，要按现尖起栈才算。
+2. **仪器自纠一处**：我第一版把每枚键上面固定八行的注释都收进来取单号，于是 `access` 把上一行的 `trash` 的单号也算成了自己的（`ORD-0402`）；改成只收该行上面**连续**的注释块（碰到上一行数据行就停）后，五枚各自对号。本块引的数全出自改完之后的件。
+3. 逐格归因仍缺（原始上屏文字被腿一那手 teardown 删，`review/ord0556/route_sweep_dev_r1.py:219`）。
+
+**六、现场与等点**：本轮零枚自建端口、零枚浏览器、零枚产品字节、没写账本、force-push 0 次、没动任何人的进程、没碰别人的端口。仍等你点的两件不变：其一 ORD-0556 按现尖 `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a` re-cut r3 并重取两臂读数；其二 甲那格 `unsupported_forms` 换人话。不点我不动。
+
+
+### 自申报下一件交件：把「空输入必须非零」那格收到这一代还在跑的入口上逐枚真跑——六枚里四枚具名拒、一枚（普查脚本）空树判 rc 0 仍开着、一枚如实标不可喂；分母与「不可喂」的那一枚都具名，车道 `1d64acf5`
+
+坐标（写这块这一刻现读；正文每行挂一枚可在 `D:/moodle/CityNexus` 里 `git cat-file` 的 40 位。摊平件＝`floor_probe_flat_r1.tsv`，1403 字节、39 行、件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`；量具 blob `31662c6aea3996c1c0286f56221092eddd42c228`；读数件 blob `1223f93abcf70323b59289f41a275155af6d58cb`；空树那枚的原文 blob `d65bdebc8c82088d903fe9a07783992be326edbd`）
+  - 权威枝现读 `d602db8ed6280a56697eda8500cc4effe3484479`；证据枝 `refs/heads/review/1d64acf5-empty-input-floor-r1` = `d90a5f2df56c35389042b1258ff3cd0d09249b91`、树 `6827a77de4a7e9400d8bcb8333077031b0403dfb`，对现尖只增不删：现尖树条目 `10742`、候选 `10746`、新增 `4` 枚、删除 `0` 枚，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+
+**一、分母是具名的，不是「扫到多少算多少」**
+  - 声明分母 `6` 枚，判据是「这一代还会被跑」：插入链每落一块就跑的镜像自检与钩子、它们都经过的读者、这轮普查用的 `anchor_drift_survey_r3.py`、我自己的清点器 `empty_denominator_scan_r2.py`、写腿可达性尺 `empty_leg_reachability_r3.py`；其余一百多枚是一次性生成器，给它们加空输入门保护不到任何东西，所以不收进来，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - 每一枚都真跑，不是读源码推的；唯一没跑的是 `empty_leg_reachability_r3.py`，理由具名在第四节，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+
+**二、逐枚一行（拒＝非零或具名拒）**
+  - `tools/cnx_ledger_mirror_sync_check_r1.py` 喂零字节本机文件对上真远端：判 `DIVERGED`、退码 `8` ⇒ 拒，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - `tools/cnx_ledger_mirror_reader_r1.py` 喂一枚该枝上不存在的路径：按名字拒，腿是 `git_transport` ⇒ 拒，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - `anchor_drift_survey_r3.py` 喂空树当尖：**判 rc `0`、自己报的文件数 `0`** ⇒ 不拒，这一枚是开着的那格，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - `empty_denominator_scan_r2.py` 它自己内建的空根那一格：`empty_root_refused=True`，拒语原文是 `ABORT: no .py files under C:\Users\仓鼠王\AppData\Local\Temp\s4_empty_c9aicok3 - refusing to ` ⇒ 拒（这一格是它自己的腿，不是我递进去的空目录，本件如实这么记），本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - `tools/cnx_ledger_mirror_sync_hook_r1.py` 喂零字节本机文件：返回退码 `8`、判语 `DIVERGED` ⇒ 拒，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - `empty_leg_reachability_r3.py` 没跑，见第四节，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+
+**三、开着的那一枚：原文一行假绿**
+  - `anchor_drift_survey_r3.py` 在空树上的原始输出（逐字，含它自己的 tip 与全部零）：`{"tip": "4b825dc642cb6eb9a060e54bf8d69288fbee4904", "files": 0, "sites": 0, "by_form": {"frozen_key_collection": 0, "line_number_as_argument": 0, "index_through_tracked_variable": 0}, "stale_or_unresolved": 0, "collections": 0, "on_derived_inventory": 0, "file_name_lists": 0, "worth_opening": 0}`——退码 `0`，件 blob `d65bdebc8c82088d903fe9a07783992be326edbd`
+  - 这一形与我上一单交的那把镜像自检同族（空输入＝相等＝判绿），但两者是两枚不同的文件：那一单的候选不覆盖这一枚，所以这里不宣称它已被修好，本件 blob `d65bdebc8c82088d903fe9a07783992be326edbd`
+
+**四、我自己判错的一处，与如实标「不可喂」的一枚**
+  - 我第一版探针把 `empty_denominator_scan_r2.py` 的那一格解析错了（正则没跨行），于是把它的「具名拒」读成了「不拒」；改法是把它 stdout 里的两个 JSON 对象按解码器逐个取出来再读——改前那处错读与改法都留在读数件里，不藏，本件 blob `1223f93abcf70323b59289f41a275155af6d58cb`
+  - `empty_leg_reachability_r3.py` 的输入面是它自己的目录（`HERE` 是常量），空目录递不进去，除非改它源码——我不改被测量的件，所以这一枚如实标 `unmeasured`，**不当作绿**；它源码里的门是 `raise SystemExit("ABORT: no .py files under %s" % HERE)`，本件 blob `c6b805c58d93a21aff3691febb9743ada2f68809`
+  - 探针每跑一枚都在临时目录里做（跑完即删、回读不存在 `True`），不改任何被测量件、不写账本、不碰已发布路径，本件 blob `1223f93abcf70323b59289f41a275155af6d58cb`
+
+**五、下一件（自申报，不等点单）**
+  - 接着把开着的这一枚（`anchor_drift_survey_r3.py`）按上一单同一形压成一枚新名候选：空输入（文件数零）时不许判通过，并附同一枚夹具改前改后的两份读数；落地件一字不动。这是同一族的第二枚，我不重复劳动，也不动它的判语词表。
+  - G4 那格仍等车道 `89f2e2d6` 的名单；ORD-0574 那两枚候选仍等号令者点甲／乙，现尖 `d602db8ed6280a56697eda8500cc4effe3484479`
+
+**边界**：本手纯测量与只增证据枝——产品字节 0 枚改动（`backend/app/**` 与 `frontend/src/**` 一枚未动）、权威线 0 次移动、改写他人 ref 0 次、`force-push` 0 次、`demo/reset` 0 次、改写共享 `_preview.db` 0 次、本车道未起任何监听端口、改写账本 0 次（本块走收件口，账本在这趟里只被读）、覆盖已发布路径 0 次（四枚读数件全是新名）；被测量件一枚未改，空输入是用临时目录与临时文件递进去的
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0553 · 自证：我 r2 落进尖的那把状态词表尺今天还绿不绿、把缺陷放回去它咬不咬（两趟实跑）· 车道 45d25bfb 自申报 r15（0 枚产品字节）
 
 一、为什么要自己跑这一趟
