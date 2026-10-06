@@ -1,0 +1,39 @@
+{
+ "tip": "ecc6b0ea59140213a4944038d4d29e9b5e250a9e",
+ "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+ "blob": "aa0c8f546f53cd13d347fcd0c45785ef78c1ba29",
+ "predicate_line": 764,
+ "predicate": "const unrecognizedCity = draft.cityName.trim().length > 0 && !facts;",
+ "predicate_call_sites": [
+  905,
+  916,
+  1274
+ ],
+ "call_site_count": 3,
+ "has_missing_categories_in_scope": true,
+ "has_reason_code_in_scope": true,
+ "existing_sentence_line": 280,
+ "sentence_reusable": true,
+ "old_guard_present": false,
+ "additive": true,
+ "patch_shape": "add a second guard next to the existing one, keyed on the server's own reason for this shape, and have it render the sentence the file already carries for that shape; the existing guard and its sentence are not touched, so the cause that is already honest keeps its wording",
+ "ruler_rc": 0,
+ "patched_checks": [
+  {
+   "cause": "no_canonical_identity",
+   "NAMES_CAUSE": true,
+   "QUOTES_SERVER": true,
+   "NEXT_STEP": true,
+   "honest": true
+  },
+  {
+   "cause": "catalog_empty",
+   "NAMES_CAUSE": true,
+   "QUOTES_SERVER": true,
+   "NEXT_STEP": true,
+   "honest": true
+  }
+ ],
+ "patched_verdict": "ALL_CAUSES_HONEST",
+ "patch_turns_both_green": true
+}
