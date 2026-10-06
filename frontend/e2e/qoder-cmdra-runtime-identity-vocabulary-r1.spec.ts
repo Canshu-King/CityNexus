@@ -16,7 +16,7 @@
  * Not the acceptance gate: `playwright.config.ts` stays the only thing that can sign one.
  */
 import { expect, test } from "@playwright/test";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,6 +27,10 @@ const FILES = {
   panel: join(ROOT, "frontend", "src", "features", "intelligence", "ControlTowerPanel.tsx"),
   i18n: join(ROOT, "frontend", "src", "i18n", "LocaleContext.tsx"),
 };
+
+const BACKEND_PREREQ = existsSync(FILES.identities)
+  ? null
+  : `missing file: ${FILES.identities} -- this checkout has no backend/ beside frontend/, so the arms that read the server's own names cannot run here`;
 const EVIDENCE = process.env.CITYNEXUS_RUNTIMEQ_EVIDENCE ?? "";
 const RUN = process.env.CITYNEXUS_RUNTIMEQ_RUN ?? "runtimeq-unset";
 
@@ -98,8 +102,16 @@ function writeReading(payload: Record<string, unknown>): void {
   writeFileSync(EVIDENCE, JSON.stringify(payload, null, 1), "utf8");
 }
 
-const emitted = emittedIdentities();
-const labelled = labelledIdentities();
+const emitted = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof emittedIdentities>)  // never used: the arms skip above
+  : emittedIdentities();
+const labelled = BACKEND_PREREQ
+  ? ({} as ReturnType<typeof labelledIdentities>)  // never used: the arms skip above
+  : labelledIdentities();
+
+test.beforeEach(() => {
+  test.skip(BACKEND_PREREQ !== null, BACKEND_PREREQ ?? undefined);
+});
 
 test("the names the server can write and the names the screen can say are one set", () => {
   expect(emitted.length, "a single identity name would not be worth a ruler").toBeGreaterThan(1);

@@ -1,7 +1,7 @@
 /* ORD-0525 · the cell the commander's own instrument counts: how many calendar words reach the glass
  *
  * Why this file exists separately from the five arms that landed with ORD-0525: the dispatch at 01:48
- * (`CITYNEXUS_AGENT_CONTROL.md`) still lists 屏上零命中 as owed, and that wording comes from the
+ * (`CITYNEXUS_AGENT_CONTROL.md:16604`) still lists 屏上零命中 as owed, and that wording comes from the
  * commander's own phone walk of 23:35 -- a five-cell probe at viewport 390x844 whose readings are
  * booleans and hit counts, not test names.  A green Playwright suite does not answer a
  * "zero hits on screen" reading; only the same measurement does.  So this arm reproduces his shape:
@@ -22,12 +22,12 @@ import { expect, test } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const TRIP = "22222222-2222-4222-8222-222222222222";
 const TAG = process.env.CITYNEXUS_ORD0525_TAG ?? "r3";
 const BASE_TIP = process.env.CITYNEXUS_ORD0525_BASE_TIP ?? "";
-if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
-  throw new Error("CITYNEXUS_ORD0525_BASE_TIP must be the 40-hex tip this was measured on");
-}
+if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) COLLECTION_PREREQ.push("CITYNEXUS_ORD0525_BASE_TIP must be the 40-hex tip this was measured on");
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0525", "readouts");
 
 function writeEvidence(name: string, payload: unknown) {
@@ -39,6 +39,10 @@ function writeEvidence(name: string, payload: unknown) {
     "utf-8",
   );
 }
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test.describe("ORD-0525 the calendar entry, counted the way the commander counts it", () => {
   test("R3 手机竖屏走一遍：日历字命中数、入口中心命中、点下去真拿到文件", async ({ page }) => {

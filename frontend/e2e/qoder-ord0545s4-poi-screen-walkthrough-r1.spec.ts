@@ -46,6 +46,8 @@ import { expect, test } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const TRIP = "22222222-2222-4222-8222-222222222222";
 const PANEL = "frontend/src/features/poiimport/PoiImportPanel.tsx";
 const CARD = "frontend/src/components/PoiCandidateCard.tsx";
@@ -54,9 +56,7 @@ const DICTIONARY = "frontend/src/i18n/LocaleContext.tsx";
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0545", "readouts");
 const TAG = process.env.CITYNEXUS_ORD0545_TAG ?? "r1";
 const BASE_TIP = process.env.CITYNEXUS_ORD0545_BASE_TIP ?? "";
-if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
-  throw new Error("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
-}
+if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) COLLECTION_PREREQ.push("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
 
 const UNMATCHED = "zzz-not-a-place-anywhere zzz";
 /* Both locale arms share ONE copy of the store, so the two legs consume two different catalogue rows:
@@ -131,6 +131,10 @@ type Row = {
   state: string; cell: string; source: string; key: string;
   expected: string; rendered: string; equal: boolean; byte_equal: boolean; css_uppercased: boolean;
 };
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test.describe("ORD-0545 slice 4 the POI import screen, cell by cell", () => {
   for (const locale of ["zh-CN", "en-GB"] as const) {

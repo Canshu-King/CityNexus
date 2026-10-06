@@ -1,6 +1,6 @@
 /* ORD-0545 slice six (CMDR 01:37, option 乙) -- two cells on the import screen, retaken as product bytes.
  *
- * Cell 1 (was `PoiImportPanel.tsx`): the channel slot printed the answer's machine token
+ * Cell 1 (was `PoiImportPanel.tsx:489`): the channel slot printed the answer's machine token
  *   (`LOCAL_TEXT_PARSER`) straight onto the main screen. It now prints this family's own words, and the
  *   token is only available inside a fold a human opens on purpose.
  * Cell 2 (was `:463`): when the device measured no status, the technical cell repeated the refusal
@@ -21,15 +21,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
 
+const COLLECTION_PREREQ: string[] = [];
+
 const CANARY_TRIP = "22222222-2222-4222-8222-222222222222";
 const TABLE = "frontend/src/features/poiimport/poiImportCopy.ts";
 const PANEL = "frontend/src/features/poiimport/PoiImportPanel.tsx";
 const EVIDENCE = path.join(process.cwd(), "..", "review", "ord0545", "readouts");
 const TAG = process.env.CITYNEXUS_ORD0545_TAG ?? "s6r1";
 const BASE_TIP = process.env.CITYNEXUS_ORD0545_BASE_TIP ?? "";
-if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) {
-  throw new Error("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
-}
+if (!/^[0-9a-f]{40}$/.test(BASE_TIP)) COLLECTION_PREREQ.push("CITYNEXUS_ORD0545_BASE_TIP must be the 40-hex tip this was measured on");
 
 const MATCHED_BY_LOCALE: Record<string, string> = { "zh-CN": "Nexus City Park", "en-GB": "Design Library" };
 const READ_CAP = { timeout: 5_000 };
@@ -168,6 +168,10 @@ async function noStatusArm(page: any, context: any, locale: string) {
 }
 
 const collected: any[] = [];
+
+test.beforeEach(() => {
+  test.skip(COLLECTION_PREREQ.length > 0, COLLECTION_PREREQ.join(" | "));
+});
 
 test("Azh zh-CN 渠道格说的是词表的人话，机词只在折叠里", async ({ page }) => {
   await mountPanel(page, "zh-CN");
