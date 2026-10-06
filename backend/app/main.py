@@ -15191,6 +15191,29 @@ def _accept_replan_executing(
         ).get("valid"):
             raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_INVALID")
         authority_receipt_id = authority_receipt.id
+
+    authority_receipt_snapshot: dict[str, Any] = {}
+    if authority_receipt_id:
+        from app.db.models import CollectiveAuthorityReceipt
+
+        bound_authority_receipt = session.get(
+            CollectiveAuthorityReceipt, str(authority_receipt_id)
+        )
+        if bound_authority_receipt is None:
+            raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_MISSING")
+        authority_receipt_snapshot = {
+            "receipt_id": bound_authority_receipt.id,
+            "authority_mode": bound_authority_receipt.authority_mode,
+            "decision_epoch": bound_authority_receipt.decision_epoch,
+            "material_world_epoch": bound_authority_receipt.material_world_epoch,
+            "candidate_surface_fingerprint": (
+                bound_authority_receipt.candidate_surface_fingerprint
+            ),
+            "classification": bound_authority_receipt.classification,
+            "source_mission_id": bound_authority_receipt.source_mission_id,
+            "source_agent_run_id": bound_authority_receipt.source_agent_run_id,
+        }
+
     old_current = (
         session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
     )
@@ -15409,6 +15432,7 @@ def _accept_replan_executing(
             "reason_codes": list(reason_codes),
             "collective_authority": {
                 "receipt_id": authority_receipt_id,
+                "receipt": authority_receipt_snapshot or None,
                 "classification": collective_gate.get("classification"),
                 "code": collective_gate.get("code"),
                 "resolved_decision_epoch": collective_gate.get(
