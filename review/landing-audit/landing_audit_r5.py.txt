@@ -1,0 +1,200 @@
+# -*- coding: utf-8 -*-
+"""落地面复算 r5：只问一个问题——我每次交付加进去的内容行，此刻在不在权威线尖上。
+
+前四枚仪器缺陷逐条留痕（免得下一轮又走回去）：
+- r1：先取 `git diff --name-only 尖 枝` 再在这些文件里比 blob ⇒ 差异集合按定义就是"内容不同"，
+  「等=0」是构造出来的恒零，不是读数。
+- r2：整树 ls-tree 比 blob 得出「等比 93.7%」，但分母是整条线的产品树，跟"我交没交"无关。
+- r3：对 blob 不等的文件数 `+` 行，得出残留 120091 枚次 —— 没剥行尾。实测尖上
+  `backend/app/main.py` 全 LF（14514 行）、我枝上同一枚全 CRLF（13836 行），
+  同一枚文件带 --ignore-cr-at-eol 再数只剩 29 行。
+- r4：剥了行尾，残留降到 17039 枚次，但里面还混着"枝基线上别人的活"（这条权威线是无父重建树，
+  逐枚枝与尖都跑不出 merge-base，实测返回 NONE ⇒ ancestry 用不了）。
+
+r5 的判据：
+- 枝名自带它交付的那件（如 `1ba48dbf-ord0503-product-r1` → ORD-0503），按 subject 含该件号
+  挑出这枚枝上"属于这次交付"的提交；
+- 对每枚这样的提交跑 parent-relative 的 `git show`，取它**加进去的内容行**（剥 \r、去空行、去 diff 头）；
+- 逐枚在尖上那号文件（`git cat-file blob 尖:path`）的行集合里查在不在；
+- 尖上没有这文件 或 该行不在 ⇒ 记为"尖外残留"，具名落件。
+- 全程只读 git，不碰栈、不点屏、不触发任何写路径。 containment 只判"我这行在不在"，
+  不判"这行被谁改过"，所以别人的后续编辑不会造成假残留。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+R1_DIR = r"D:\moodle\_qoder_newlane_ord0444_20260929\scratch"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+PRODUCT_PREFIX = ("frontend/src/", "backend/app/", "contracts/", "frontend/e2e/")
+BAD: list[str] = []
+
+
+def gitb(*a, t=900):
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return p.stdout or "", p.returncode, p.stderr or ""
+
+
+def git(*a, t=900):
+    o, rc, _ = gitb(*a, t=t)
+    return o.strip()
+
+
+tip = git("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+pairs = []
+for line in git("ls-remote", "--refs", "origin", "refs/heads/review/1ba48dbf-*").splitlines():
+    parts = line.split("\t")
+    if len(parts) == 2 and len(parts[0]) == 40:
+        pairs.append((parts[1], parts[0]))
+pairs.sort()
+if not pairs:
+    print("REFUSED: 名下一枚枝都没读到")
+    sys.exit(1)
+_, rc, err = gitb("fetch", "-q", "origin",
+                  "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*")
+if rc != 0:
+    print("REFUSED: fetch 我的枝 rc=%s %s" % (rc, err[:200]))
+    sys.exit(1)
+_, rc, err = gitb("fetch", "-q", "origin", MIRROR)
+if rc != 0:
+    print("REFUSED: fetch 权威线 rc=%s %s" % (rc, err[:200]))
+    sys.exit(1)
+if git("cat-file", "-t", tip) != "commit":
+    print("REFUSED: 现尖本地不可 cat-file")
+    sys.exit(1)
+
+_tipfiles = {}
+
+
+def tip_lines(path):
+    if path not in _tipfiles:
+        blobsha = git("rev-parse", "--verify", "-q", "%s:%s" % (tip, path))
+        if len(blobsha) != 40 or git("cat-file", "-t", blobsha) != "blob":
+            _tipfiles[path] = None
+        else:
+            body, rc, _ = gitb("cat-file", "blob", blobsha)
+            _tipfiles[path] = set(ln.rstrip("\r").strip() for ln in body.splitlines()
+                                  if ln.strip()) if rc == 0 else None
+    return _tipfiles[path]
+
+
+def order_token(ref):
+    m = re.search(r"ord[-_]?(\d{4})", ref)
+    return ("ORD-" + m.group(1)) if m else None
+
+
+rows = []
+for ref, sha in pairs:
+    if git("cat-file", "-t", sha) != "commit":
+        rows.append({"ref": ref, "sha": sha, "status": "对象不是 commit"})
+        continue
+    tok = order_token(ref)
+    log, rc, _ = gitb("log", "--format=%H\x1f%s", sha)
+    subs = []
+    for line in log.splitlines():
+        c, _, s = line.partition("\x1f")
+        subs.append((c, s))
+    mine = [(c, s) for c, s in subs if tok and tok.lower() in s.lower()]
+    if not mine:
+        # 纯证据枝（review/ 路径）与没带件号的：按整枝相对"尖"不判，只记它有没有产品面
+        pt = [p for p in git("ls-tree", "-r", "--name-only", sha, "--", *PRODUCT_PREFIX).splitlines()
+              if p.strip()]
+        rows.append({"ref": ref, "sha": sha, "status": "无件号可归属", "token": tok,
+                     "branch_product_files": len(pt)})
+        continue
+    added_total = 0
+    on_tip = 0
+    resid = []
+    files_touched = set()
+    for c, s in mine:
+        body, rcd, ed = gitb("show", "--no-color", "--format=", "-U0", c, "--", *PRODUCT_PREFIX,
+                             t=600)
+        if rcd != 0:
+            resid.append({"path": "<show失败>", "n": 0, "sample": [ed[:80]], "commit": c[:9]})
+            continue
+        cur = None
+        for ln in body.splitlines():
+            if ln.startswith("+++ b/"):
+                cur = ln[6:].strip()
+                if cur and cur != "/dev/null":
+                    files_touched.add(cur)
+                continue
+            if not ln.startswith("+") or ln.startswith("++"):
+                continue
+            txt = ln[1:].rstrip("\r").strip()
+            if not txt or cur is None:
+                continue
+            added_total += 1
+            tl = tip_lines(cur)
+            if tl is None:
+                resid.append({"path": cur, "n": 1, "sample": [txt[:90]], "commit": c[:9],
+                              "file_on_tip": False})
+            elif txt in tl:
+                on_tip += 1
+            else:
+                resid.append({"path": cur, "n": 1, "sample": [txt[:90]], "commit": c[:9],
+                              "file_on_tip": True})
+    agg = {}
+    for x in resid:
+        k = x["path"]
+        a = agg.setdefault(k, {"path": k, "n": 0, "file_on_tip": x["file_on_tip"],
+                               "sample": []})
+        a["n"] += 1
+        if len(a["sample"]) < 3:
+            a["sample"].append(x["sample"][0])
+    resid_files = sorted(agg.values(), key=lambda x: -x["n"])
+    rows.append({"ref": ref, "sha": sha, "status": "ok", "token": tok,
+                 "own_commits": len(mine), "own_commit_shas": [c[:9] for c, _ in mine],
+                 "product_files_touched": len(files_touched),
+                 "added_lines": added_total, "on_tip": on_tip,
+                 "residual_lines": added_total - on_tip,
+                 "residual_files": resid_files})
+
+ok = [r for r in rows if r.get("status") == "ok"]
+clean = [r for r in ok if r["residual_lines"] == 0]
+dirty = [r for r in ok if r["residual_lines"] > 0]
+print("现尖={} 名下枝={}枚 可归属本次交付的枝={}枚".format(tip, len(rows), len(ok)))
+print("我加的内容行合计={} 枚次，尖上此刻在={} 尖外残留={}（有残留的枝 {} 枚）".format(
+    sum(r["added_lines"] for r in ok), sum(r["on_tip"] for r in ok),
+    sum(r["residual_lines"] for r in ok), len(dirty)))
+for r in sorted(ok, key=lambda x: (-x["residual_lines"], x["ref"])):
+    print("  {n} 件={t} 我的提交={c}枚 碰的产品文件={f} 我行={a} 在尖={o} 残={x}".format(
+        n=r["ref"].replace("refs/heads/review/1ba48dbf-", "")[:52], t=r["token"],
+        c=r["own_commits"], f=r["product_files_touched"], a=r["added_lines"],
+        o=r["on_tip"], x=r["residual_lines"]))
+    for fl in r["residual_files"][:3]:
+        print("      残 {n} 行于 {p}{tag}".format(
+            n=fl["n"], p=fl["path"], tag="" if fl["file_on_tip"] else "（尖上没这文件）"))
+        for smp in fl["sample"][:2]:
+            print("        + {s}".format(s=smp))
+for r in rows:
+    if r.get("status") != "ok":
+        print("  {n} -> {s} 产品面={p}".format(
+            n=r["ref"].replace("refs/heads/review/1ba48dbf-", "")[:52],
+            s=r["status"], p=r.get("branch_product_files", "?")))
+
+out_path = os.path.join(ART, "landing_audit_1ba48dbf_%s.json" % time.strftime("%H%M"))
+io.open(out_path, "w", encoding="utf-8", newline="\n").write(json.dumps(
+    {"tip": tip, "branches": len(rows), "attributable_branches": len(ok),
+     "clean_branches": len(clean), "residual_branches": len(dirty),
+     "added_lines_total": sum(r["added_lines"] for r in ok),
+     "on_tip_total": sum(r["on_tip"] for r in ok),
+     "residual_lines_total": sum(r["residual_lines"] for r in ok),
+     "rows": rows}, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + out_path)
+if BAD:
+    print("REFUSED:\n  " + "\n  ".join(BAD))
+    sys.exit(1)

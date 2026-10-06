@@ -1,0 +1,225 @@
+# -*- coding: utf-8 -*-
+"""r8 = r7 的三刀判据 + recheck 的语义复核，合成一把尺，一次跑完。
+
+判据链（每一刀都有留痕，缺陷都在 docstring 里）：
+1. 按枝名/subject 里的件号（ORD-xxxx）挑出属于这次交付的提交；
+2. `git show -U0` 取这些提交在四条产品前缀路径上加进去的内容行（剥 \r、去空白、去 diff 头）；
+3. 与枝末态该文件的行集合取交（我自己后续提交里改掉/删掉的不算留在尖外）；
+4. 与现尖该文件的行集合取差 = 「尖上没有」的候选；
+5. 每条候选再验两次：尖上同文件全文里有没有它的标识符核（措辞被改）、
+   尖树全仓 git grep 有没有（行挪去了别的文件）；都无 ⇒ 「真·尖外残留」；
+6. 按件聚合：同件多枚枝取"尖外残留最少"的那枚为**代表枝**（包含 0 那枚）——
+   判"落没落地"看的是这次交付最终落下的形态，早期枝被自己后续枝推翻的不重复计。
+这条权威线是无父重建树：枝与尖跑 merge-base 都返回 NONE ⇒ ancestry/merge-tree 不作判据。
+全程只读 git。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+PRODUCT_PREFIX = ("frontend/src/", "backend/app/", "contracts/", "frontend/e2e/")
+IDENT = [
+    re.compile(r'data-testid="([^"]+)"'), re.compile(r"data-testid='([^']+)'"),
+    re.compile(r'className="([^"]+)"'), re.compile(r'"(/api/v1/[^"]+)"'),
+    re.compile(r"\b([A-Za-z_][A-Za-z0-9_]{6,})\s*[=(]"),
+    re.compile(r'"([a-z][a-z0-9]*(?:[._-][a-z0-9]+){1,})"'),
+]
+CJK = re.compile(r"[\u4e00-\u9fff]{4,}")
+
+
+def git(*a, t=900):
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return (p.stdout or "").strip(), p.returncode, p.stderr or ""
+
+
+def g(*a, t=900):
+    o, _, _ = git(*a, t=t)
+    return o
+
+
+def norm(body):
+    return set(ln.rstrip("\r").strip() for ln in body.splitlines() if ln.strip())
+
+
+tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+pairs = []
+for line in g("ls-remote", "--refs", "origin", "refs/heads/review/1ba48dbf-*").splitlines():
+    p = line.split("\t")
+    if len(p) == 2 and len(p[0]) == 40:
+        pairs.append((p[1], p[0]))
+pairs.sort()
+if not pairs:
+    print("REFUSED: 名下一枚枝都没读到")
+    sys.exit(1)
+_, rc, err = git("fetch", "-q", "origin",
+                 "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*")
+if rc != 0:
+    print("REFUSED: fetch 枝 rc=%s %s" % (rc, err[:160]))
+    sys.exit(1)
+_, rc, err = git("fetch", "-q", "origin", MIRROR)
+if rc != 0:
+    print("REFUSED: fetch 权威线 rc=%s %s" % (rc, err[:160]))
+    sys.exit(1)
+if g("cat-file", "-t", tip) != "commit":
+    print("REFUSED: 现尖不可 cat-file")
+    sys.exit(1)
+
+_tc, _tfull = {}, {}
+
+
+def tip_file_body(path):
+    if path not in _tc:
+        b = g("rev-parse", "--verify", "-q", "%s:%s" % (tip, path))
+        if len(b) != 40 or g("cat-file", "-t", b) != "blob":
+            _tc[path] = None
+        else:
+            _tc[path] = g("cat-file", "blob", b, t=600)
+    return _tc[path]
+
+
+def tip_grep(needle):
+    if needle not in _tfull:
+        o, rcd, _ = git("grep", "-F", "-l", "--", needle, tip, "--", *PRODUCT_PREFIX, t=600)
+        _tfull[needle] = (o.splitlines() if rcd == 0 else [])
+    return _tfull[needle]
+
+
+def cores(line):
+    out = []
+    for rx in IDENT:
+        out += rx.findall(line)
+    out += CJK.findall(line)
+    seen, res = set(), []
+    for c in out:
+        if c and c not in seen:
+            seen.add(c)
+            res.append(c)
+    return res
+
+
+branch_rows = []
+for ref, sha in pairs:
+    if g("cat-file", "-t", sha) != "commit":
+        continue
+    m = re.search(r"ord[-_]?(\d{4})", ref)
+    tok = ("ORD-" + m.group(1)) if m else None
+    if not tok:
+        continue
+    mine = []
+    for ln in g("log", "--format=%H\x1f%s", sha).splitlines():
+        c, _, s = ln.partition("\x1f")
+        if tok.lower() in s.lower():
+            mine.append(c)
+    if not mine:
+        branch_rows.append({"ref": ref, "sha": sha, "token": tok,
+                            "status": "枝里无该件号提交", "residual_lines": None})
+        continue
+    introduced = {}
+    for c in mine:
+        body, rcd, _ = git("show", "--no-color", "--format=", "-U0", c, "--",
+                           *PRODUCT_PREFIX, t=600)
+        if rcd != 0:
+            continue
+        cur = None
+        for ln in body.splitlines():
+            if ln.startswith("+++ b/"):
+                cur = ln[6:].strip()
+                if cur == "/dev/null":
+                    cur = None
+                continue
+            if cur is None or not ln.startswith("+") or ln.startswith("++"):
+                continue
+            txt = ln[1:].rstrip("\r").strip()
+            if txt:
+                introduced.setdefault(cur, set()).add(txt)
+    resid = []
+    kept_total = 0
+    for path, s in introduced.items():
+        b = g("rev-parse", "--verify", "-q", "%s:%s" % (sha, path))
+        if len(b) != 40:
+            continue
+        blob_body, rcd, _ = git("cat-file", "blob", b, t=600)
+        if rcd != 0:
+            continue
+        kept = s & norm(blob_body)
+        kept_total += len(kept)
+        tb = tip_file_body(path)
+        miss = kept if tb is None else (kept - norm(tb))
+        for line in sorted(miss):
+            cs = cores(line)
+            # r9：core 抽不出来（注释行、纯符号行）时不许直接判"找不到痕迹"——
+            # 改抽四类令牌（标识符/引号串/中文串/四位以上数字），命中一枚就算语义仍在尖上。
+            toks = cs[:]
+            if not toks:
+                for rx in (re.compile(r"[A-Za-z_][A-Za-z0-9_]{4,}"),
+                           re.compile(r"[\"']([^\"']{4,})[\"']"),
+                           re.compile(r"[一-鿿]{3,}"),
+                           re.compile(r"\d{4,}")):
+                    toks += rx.findall(line)
+            toks = [t for t in dict.fromkeys(toks) if t.lower() not in
+                    ("const", "return", "export", "function", "import", "string", "number",
+                     "false", "true", "undefined", "interface", "expect")]
+            same_file = tb is not None and any(t in tb for t in toks)
+            elsewhere = [f for f in tip_grep(line[:60]) if f] if not same_file else []
+            resid.append({"path": path, "line": line, "cores": toks[:6],
+                          "reworded_on_tip": same_file,
+                          "elsewhere": elsewhere[:3]})
+    branch_rows.append({"ref": ref, "sha": sha, "token": tok, "status": "ok",
+                        "own_commits": len(mine), "files_touched": len(introduced),
+                        "kept_lines": kept_total,
+                        "residual_lines": len(resid), "residual": resid})
+
+by_token = {}
+for r in branch_rows:
+    if r["status"] != "ok":
+        continue
+    t = r["token"]
+    if t not in by_token or r["residual_lines"] < by_token[t]["residual_lines"]:
+        by_token[t] = r
+true_resid = []
+for t, r in sorted(by_token.items()):
+    for x in r["residual"]:
+        if not x["reworded_on_tip"] and not x["elsewhere"]:
+            true_resid.append({"token": t, "ref": r["ref"], **x})
+
+print("现尖={} 可归属的枝={}枚 件号={}个".format(tip, len(by_token), len(by_token)))
+print("按件代表枝口径：尖外残留行={} 枚；其中语义仍在尖上={}，挪去他文件={}，无痕迹={}".format(
+    sum(r["residual_lines"] for r in by_token.values()),
+    sum(1 for t in by_token.values() for x in t["residual"] if x["reworded_on_tip"]),
+    sum(1 for t in by_token.values() for x in t["residual"] if x["elsewhere"]),
+    len(true_resid)))
+for t, r in sorted(by_token.items(), key=lambda kv: -kv[1]["residual_lines"]):
+    print("  {} 代表枝={} 我的提交={} 末态保留={} 尖外={}".format(
+        t, r["ref"].replace("refs/heads/review/1ba48dbf-", ""),
+        r["own_commits"], r["kept_lines"], r["residual_lines"]))
+for x in true_resid[:20]:
+    print("  ! {t} {p}\n      {l}".format(t=x["token"], p=x["path"], l=x["line"][:96]))
+
+out_path = os.path.join(ART, "landing_audit_1ba48dbf_%s.json" % time.strftime("%H%M"))
+io.open(out_path, "w", encoding="utf-8", newline="\n").write(json.dumps(
+    {"tip": tip, "attributable_branches": len(branch_rows),
+     "orders": len(by_token),
+     "residual_lines_by_representative": sum(r["residual_lines"] for r in by_token.values()),
+     "true_off_tip_lines": len(true_resid),
+     "per_order": {t: {"branch": r["ref"], "sha": r["sha"], "own_commits": r["own_commits"],
+                       "kept_lines": r["kept_lines"], "residual_lines": r["residual_lines"],
+                       "reworded": sum(1 for x in r["residual"] if x["reworded_on_tip"]),
+                       "elsewhere": sum(1 for x in r["residual"] if x["elsewhere"])}
+                   for t, r in sorted(by_token.items())},
+     "no_trace": true_resid, "rows": branch_rows},
+    ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + out_path)

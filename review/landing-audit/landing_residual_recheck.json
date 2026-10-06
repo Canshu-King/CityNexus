@@ -1,0 +1,156 @@
+{
+ "from_artifact": "landing_audit_1ba48dbf_0324.json",
+ "tip": "aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f",
+ "sampled": 15,
+ "verdict_tally": {
+  "语义仍在尖上（措辞被改）": 5,
+  "抽不出标识符核": 9,
+  "尖上找不到痕迹": 1
+ },
+ "rows": [
+  {
+   "token": "ORD-0476",
+   "path": "backend/app/main.py",
+   "line": "\"description\": \"error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN\"",
+   "cores": [
+    "reason_code"
+   ],
+   "found": [
+    "reason_code"
+   ],
+   "verdict": "语义仍在尖上（措辞被改）"
+  },
+  {
+   "token": "ORD-0476",
+   "path": "contracts/openapi.yaml",
+   "line": "error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that",
+   "cores": [
+    "reason_code"
+   ],
+   "found": [
+    "reason_code"
+   ],
+   "verdict": "语义仍在尖上（措辞被改）"
+  },
+  {
+   "token": "ORD-0476",
+   "path": "frontend/src/generated/api.ts",
+   "line": "/** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of t",
+   "cores": [
+    "reason_code"
+   ],
+   "found": [
+    "reason_code"
+   ],
+   "verdict": "语义仍在尖上（措辞被改）"
+  },
+  {
+   "token": "ORD-0502",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0502",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+   "cores": [
+    "少一格也算过"
+   ],
+   "found": [],
+   "verdict": "尖上找不到痕迹"
+  },
+  {
+   "token": "ORD-0502",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "await fold.locator(\"summary\").click();",
+   "cores": [
+    "locator"
+   ],
+   "found": [
+    "locator"
+   ],
+   "verdict": "语义仍在尖上（措辞被改）"
+  },
+  {
+   "token": "ORD-0503",
+   "path": "frontend/src/features/access/AccessPanel.tsx",
+   "line": "{!isSelf && choices.length > 0 ? (",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0527",
+   "path": "frontend/src/features/access/AccessPanel.tsx",
+   "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) ",
+   "cores": [
+    "AccessPanel",
+    "initialJourneyId"
+   ],
+   "found": [
+    "AccessPanel",
+    "initialJourneyId"
+   ],
+   "verdict": "语义仍在尖上（措辞被改）"
+  },
+  {
+   "token": "ORD-0561",
+   "path": "frontend/src/styles.css",
+   "line": "/* ORD-0561 ②: the bare `button` rule above carries `padding: 12px 14px` and a 16px font, and the",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0561",
+   "path": "frontend/src/styles.css",
+   "line": "a class-qualified rule that states the padding the circle actually has room for. */",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0561",
+   "path": "frontend/src/styles.css",
+   "line": "avatar circle sets only width/height/font-size -- so the padding survived into a 28px box and the",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0564",
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "line": "/* ORD-0564: this key has no reader — a repo-wide search finds it only in the two dictionary lines",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0564",
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "line": "`features/checkin/footprintCopy`. Left in place on purpose: wiring this key back to a screen",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0564",
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "line": "below (both arms) plus one review artifact, so the CJK inside its English value never reaches a",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  },
+  {
+   "token": "ORD-0564",
+   "path": "frontend/src/features/collections/collectionCopy.ts",
+   "line": "en: \"Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.",
+   "cores": [],
+   "found": [],
+   "verdict": "抽不出标识符核"
+  }
+ ]
+}

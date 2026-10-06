@@ -1,0 +1,4610 @@
+{
+ "tip": "8996eee4fb9fb4e159588305223ef421728c4e72",
+ "attributable_branches": 41,
+ "orders": 10,
+ "residual_lines_by_representative": 44,
+ "true_off_tip_lines": 14,
+ "per_order": {
+  "ORD-0476": {
+   "branch": "refs/heads/review/1ba48dbf-ord0476-checkin-r1",
+   "sha": "dcb90cccc68b81f2317b28db19051dedb9f06c80",
+   "own_commits": 1,
+   "kept_lines": 462,
+   "residual_lines": 3,
+   "reworded": 3,
+   "elsewhere": 0
+  },
+  "ORD-0502": {
+   "branch": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "sha": "c581fdeaac644875e93265493eaa9ce349b384f7",
+   "own_commits": 5,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "reworded": 25,
+   "elsewhere": 1
+  },
+  "ORD-0503": {
+   "branch": "refs/heads/review/1ba48dbf-ord0503-evidence-r1",
+   "sha": "6596143ec42f672ea752ef1b9751d481fb1834b6",
+   "own_commits": 2,
+   "kept_lines": 649,
+   "residual_lines": 1,
+   "reworded": 0,
+   "elsewhere": 0
+  },
+  "ORD-0513": {
+   "branch": "refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r1",
+   "sha": "07c1a776f3426d1dc1913ec596e810756d96484a",
+   "own_commits": 1,
+   "kept_lines": 6,
+   "residual_lines": 0,
+   "reworded": 0,
+   "elsewhere": 0
+  },
+  "ORD-0527": {
+   "branch": "refs/heads/review/1ba48dbf-ord0527-access-identity-r1",
+   "sha": "87f7a2b86536b99a6043c79e2532e0f1ebd39695",
+   "own_commits": 1,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "reworded": 1,
+   "elsewhere": 0
+  },
+  "ORD-0528": {
+   "branch": "refs/heads/review/1ba48dbf-ord0528-rerun-evidence-r1",
+   "sha": "6fd626c86cb85d7bf3bf59a0461a3eb783937a0e",
+   "own_commits": 16,
+   "kept_lines": 871,
+   "residual_lines": 0,
+   "reworded": 0,
+   "elsewhere": 0
+  },
+  "ORD-0538": {
+   "branch": "refs/heads/review/1ba48dbf-ord0538-evidence-r1",
+   "sha": "a46d7bc6ebb252773a76cb80dd67f522e9bd99e6",
+   "own_commits": 2,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "reworded": 0,
+   "elsewhere": 0
+  },
+  "ORD-0561": {
+   "branch": "refs/heads/review/1ba48dbf-ord0561-avatar-evidence-r1",
+   "sha": "036c2b176a71cec84f5b3cdf91932a50235369ba",
+   "own_commits": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "reworded": 0,
+   "elsewhere": 0
+  },
+  "ORD-0564": {
+   "branch": "refs/heads/review/1ba48dbf-ord0564-evidence-r1",
+   "sha": "7890adbc62e653c07dd1dfc6ae2c3a7562aec168",
+   "own_commits": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "reworded": 0,
+   "elsewhere": 0
+  },
+  "ORD-0575": {
+   "branch": "refs/heads/review/1ba48dbf-ord0575-repro-evidence-r1",
+   "sha": "b1da6df48606cd82e78c1714d6475723bf1ae44a",
+   "own_commits": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "reworded": 0,
+   "elsewhere": 0
+  }
+ },
+ "no_trace": [
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+   "cores": [
+    "少一格也算过"
+   ],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "const tokenText = await inner(page, \"details p\");",
+   "cores": [
+    "tokenText"
+   ],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "for (let step = 0; step < 2; step += 1) {",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "hit = await tap(page, \"C1\", open);",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "if (await heading.count()) {",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0502",
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+   "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+   "cores": [
+    "C7 the walk cannot claim green it did not earn"
+   ],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  },
+  {
+   "token": "ORD-0503",
+   "ref": "refs/heads/review/1ba48dbf-ord0503-evidence-r1",
+   "path": "frontend/src/features/access/AccessPanel.tsx",
+   "line": "{!isSelf && choices.length > 0 ? (",
+   "cores": [],
+   "reworded_on_tip": false,
+   "elsewhere": []
+  }
+ ],
+ "rows": [
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0476-checkin-r1",
+   "sha": "dcb90cccc68b81f2317b28db19051dedb9f06c80",
+   "token": "ORD-0476",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 6,
+   "kept_lines": 462,
+   "residual_lines": 3,
+   "residual": [
+    {
+     "path": "backend/app/main.py",
+     "line": "\"description\": \"error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN\"",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "contracts/openapi.yaml",
+     "line": "error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/generated/api.ts",
+     "line": "/** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from \"not yours\" because the two facts deserve two sentences */",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0476-footprint-screen-r1",
+   "sha": "37c6a85aa153cfa1e95b1bb0f95c3dbf8bb67806",
+   "token": "ORD-0476",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 13,
+   "kept_lines": 842,
+   "residual_lines": 63,
+   "residual": [
+    {
+     "path": "frontend/src/app/v8PanelRegistry.tsx",
+     "line": "render: (s) => <FootprintPanel journeyId={s.data.journey?.id ?? null} />,",
+     "cores": [
+      "journeyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": ") : state.kind === \"failed\" ? (",
+     "cores": [
+      "failed"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "- every sentence is a dictionary key (`t(\"checkin.…\")`). No reason code, status number or server",
+     "cores": [
+      "checkin.…"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "/* ORD-0476 slice 2 -- the footprint screen.",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/FootprintPanel.tsx"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<h2>{t(\"checkin.scope\")}</h2>",
+     "cores": [
+      "checkin.scope"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<p className=\"cn-footprints__state\" data-testid=\"footprint-failed\">",
+     "cores": [
+      "footprint-failed",
+      "cn-footprints__state",
+      "className"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<p className=\"cn-footprints__state\">{t(\"checkin.loading\")}</p>",
+     "cores": [
+      "cn-footprints__state",
+      "className",
+      "checkin.loading"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<span className=\"cn-footprints__when\">{moment(stamp.stamped_at)}</span>",
+     "cores": [
+      "cn-footprints__when",
+      "className"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "`backend/app/main.py:3301`), rendered through `Intl` for the traveller's locale;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "activity has left the plan reads back `activity_title: null` -- which is shown as 那一站已不在计划",
+     "cores": [
+      "那一站已不在计划"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "assembled locally: no stamp appears because a tap happened, only because the read returned it;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "const moment = (iso: string) =>",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "day: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract-readings.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0525-calendar-entry-r1.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "export function FootprintPanel({ journeyId }: Props) {",
+     "cores": [
+      "FootprintPanel"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "hour: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/checkinCopy.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintCopy.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "import { useCallback, useEffect, useState } from \"react\";",
+     "cores": [
+      "react"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "message reaches the DOM. The duplicate case in particular is answered with *this* screen's own",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "minute: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/checkinCopy.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintCopy.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "month: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract-readings.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0525-calendar-entry-r1.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "new Intl.DateTimeFormat(locale, {",
+     "cores": [
+      "DateTimeFormat"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintCopy.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintRead.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "rather than as a blank or a substituted name;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "sentence plus a re-read, so the traveller sees the stamp the server kept instead of an overwrite.",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "setState(answer.kind === \"read\" ? { kind: \"read\", stamps: answer.stamps } : { kind: \"failed\" });",
+     "cores": [
+      "setState"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "type Props = { journeyId: string | null };",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{stampLabel(stamp) ?? t(\"checkin.targetGone\")}",
+     "cores": [
+      "stampLabel"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{stamps.map((stamp) => (",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.count\", { count: stamps.length })}",
+     "cores": [
+      "checkin.count"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.empty\")}",
+     "cores": [
+      "checkin.empty"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.noJourney\")}",
+     "cores": [
+      "checkin.noJourney"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.noteAbsent\")}",
+     "cores": [
+      "checkin.noteAbsent"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.readFailed\")}",
+     "cores": [
+      "checkin.readFailed"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.retry\")}",
+     "cores": [
+      "checkin.retry"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "| { kind: \"failed\" };",
+     "cores": [
+      "failed"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "}).format(new Date(iso));",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/trip/ActivityDetail.tsx"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "/** The refusal name, from the envelope -- or `UNRECOGNISED`, which the screen shows as a gap. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const code = typeof error?.reason_code === \"string\" ? error.reason_code : \"\";",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const error = (body as any)?.error;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const known: CheckinRefusal[] = [",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const { refusal } = refusalOf(answer.body);",
+     "cores": [
+      "refusalOf"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {",
+     "cores": [
+      "refusalOf"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "refusal: (known as string[]).includes(code)",
+     "cores": [
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "return { kind: \"refused\", refusal, status: answer.status };",
+     "cores": [
+      "refused"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "status: 0,",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-e766b154-checkin-words-day24-r1.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-plan-ai-thinking.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "| { kind: \"refused\"; refusal: CheckinRefusal; status: number }",
+     "cores": [
+      "refused"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "<p className=\"cn-stop-checkin__notice\" data-testid=\"stop-checkin-notice\">",
+     "cores": [
+      "stop-checkin-notice",
+      "cn-stop-checkin__notice",
+      "className"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "const [stopNotice, setStopNotice] = useState<string | null>(null);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "const stampThisStop = async (activityId: string) => {",
+     "cores": [
+      "stampThisStop"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "screen is the defect this project keeps having to fix. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/generated/api.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "screen's own dictionary words, because a reason code or the server's message on a Chinese",
+     "cores": [
+      "s own dictionary words, because a reason code or the server"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "setStopNotice(null);",
+     "cores": [
+      "setStopNotice"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "setStopNotice(t(\"checkin.duplicate\"));",
+     "cores": [
+      "setStopNotice",
+      "checkin.duplicate"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "setStopNotice(t(\"checkin.refused\"));",
+     "cores": [
+      "setStopNotice",
+      "checkin.refused"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "void stampThisStop(activity.id);",
+     "cores": [
+      "stampThisStop"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "{stopNotice ? (",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "{stopNotice}",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "} else if (answer.kind === \"refused\" && answer.refusal === \"CHECKIN_DUPLICATE_STAMP\") {",
+     "cores": [
+      "refusal"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.duplicate\": \"The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.\",",
+     "cores": [
+      "checkin.duplicate"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.duplicate\": \"服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。\",",
+     "cores": [
+      "checkin.duplicate",
+      "服务器说这一站已经有一枚印了",
+      "所以这次没有覆盖",
+      "行程保留它原有的那一枚"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.refused\": \"The server would not take this stamp, so nothing was added to your footprints.\",",
+     "cores": [
+      "checkin.refused"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.refused\": \"服务器没收下这次打卡，你的足迹里没有多出任何东西。\",",
+     "cores": [
+      "checkin.refused",
+      "服务器没收下这次打卡",
+      "你的足迹里没有多出任何东西"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "backend/app/main.py",
+     "line": "\"description\": \"error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN\"",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "contracts/openapi.yaml",
+     "line": "error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/generated/api.ts",
+     "line": "/** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from \"not yours\" because the two facts deserve two sentences */",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0476-footprint-screen-r2",
+   "sha": "15d65d7f289c628b810cf5ab4a097d858a128821",
+   "token": "ORD-0476",
+   "status": "ok",
+   "own_commits": 6,
+   "files_touched": 13,
+   "kept_lines": 845,
+   "residual_lines": 63,
+   "residual": [
+    {
+     "path": "frontend/src/app/v8PanelRegistry.tsx",
+     "line": "render: (s) => <FootprintPanel journeyId={s.data.journey?.id ?? null} />,",
+     "cores": [
+      "journeyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": ") : state.kind === \"failed\" ? (",
+     "cores": [
+      "failed"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "- every sentence is a dictionary key (`t(\"checkin.…\")`). No reason code, status number or server",
+     "cores": [
+      "checkin.…"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "/* ORD-0476 slice 2 -- the footprint screen.",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/FootprintPanel.tsx"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<h2>{t(\"checkin.scope\")}</h2>",
+     "cores": [
+      "checkin.scope"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<p className=\"cn-footprints__state\" data-testid=\"footprint-failed\">",
+     "cores": [
+      "footprint-failed",
+      "cn-footprints__state",
+      "className"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<p className=\"cn-footprints__state\">{t(\"checkin.loading\")}</p>",
+     "cores": [
+      "cn-footprints__state",
+      "className",
+      "checkin.loading"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "<span className=\"cn-footprints__when\">{moment(stamp.stamped_at)}</span>",
+     "cores": [
+      "cn-footprints__when",
+      "className"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "`backend/app/main.py:3301`), rendered through `Intl` for the traveller's locale;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "activity has left the plan reads back `activity_title: null` -- which is shown as 那一站已不在计划",
+     "cores": [
+      "那一站已不在计划"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "assembled locally: no stamp appears because a tap happened, only because the read returned it;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "const moment = (iso: string) =>",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "day: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract-readings.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0525-calendar-entry-r1.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "export function FootprintPanel({ journeyId }: Props) {",
+     "cores": [
+      "FootprintPanel"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "hour: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/checkinCopy.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintCopy.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "import { useCallback, useEffect, useState } from \"react\";",
+     "cores": [
+      "react"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "message reaches the DOM. The duplicate case in particular is answered with *this* screen's own",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "minute: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/app/V8Experience.tsx",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/checkinCopy.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintCopy.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "month: \"2-digit\",",
+     "cores": [
+      "2-digit"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract-readings.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0525-calendar-entry-r1.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "new Intl.DateTimeFormat(locale, {",
+     "cores": [
+      "DateTimeFormat"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintCopy.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/checkin/footprintRead.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "rather than as a blank or a substituted name;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "sentence plus a re-read, so the traveller sees the stamp the server kept instead of an overwrite.",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "setState(answer.kind === \"read\" ? { kind: \"read\", stamps: answer.stamps } : { kind: \"failed\" });",
+     "cores": [
+      "setState"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "type Props = { journeyId: string | null };",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{stampLabel(stamp) ?? t(\"checkin.targetGone\")}",
+     "cores": [
+      "stampLabel"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{stamps.map((stamp) => (",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.count\", { count: stamps.length })}",
+     "cores": [
+      "checkin.count"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.empty\")}",
+     "cores": [
+      "checkin.empty"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.noJourney\")}",
+     "cores": [
+      "checkin.noJourney"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.noteAbsent\")}",
+     "cores": [
+      "checkin.noteAbsent"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.readFailed\")}",
+     "cores": [
+      "checkin.readFailed"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "{t(\"checkin.retry\")}",
+     "cores": [
+      "checkin.retry"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "| { kind: \"failed\" };",
+     "cores": [
+      "failed"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/FootprintPanel.tsx",
+     "line": "}).format(new Date(iso));",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-bac10f40-ord0530-footprints-by-day.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0438-progress-contract.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/features/trip/ActivityDetail.tsx"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "/** The refusal name, from the envelope -- or `UNRECOGNISED`, which the screen shows as a gap. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const code = typeof error?.reason_code === \"string\" ? error.reason_code : \"\";",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const error = (body as any)?.error;",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const known: CheckinRefusal[] = [",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "const { refusal } = refusalOf(answer.body);",
+     "cores": [
+      "refusalOf"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "function refusalOf(body: unknown): { refusal: CheckinRefusal; status: number } {",
+     "cores": [
+      "refusalOf"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "refusal: (known as string[]).includes(code)",
+     "cores": [
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "return { kind: \"refused\", refusal, status: answer.status };",
+     "cores": [
+      "refused"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "status: 0,",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-e766b154-checkin-words-day24-r1.spec.ts",
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-plan-ai-thinking.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/checkin/checkins.ts",
+     "line": "| { kind: \"refused\"; refusal: CheckinRefusal; status: number }",
+     "cores": [
+      "refused"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "<p className=\"cn-stop-checkin__notice\" data-testid=\"stop-checkin-notice\">",
+     "cores": [
+      "stop-checkin-notice",
+      "cn-stop-checkin__notice",
+      "className"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "const [stopNotice, setStopNotice] = useState<string | null>(null);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "const stampThisStop = async (activityId: string) => {",
+     "cores": [
+      "stampThisStop"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "screen is the defect this project keeps having to fix. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/src/generated/api.ts"
+     ]
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "screen's own dictionary words, because a reason code or the server's message on a Chinese",
+     "cores": [
+      "s own dictionary words, because a reason code or the server"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "setStopNotice(null);",
+     "cores": [
+      "setStopNotice"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "setStopNotice(t(\"checkin.duplicate\"));",
+     "cores": [
+      "setStopNotice",
+      "checkin.duplicate"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "setStopNotice(t(\"checkin.refused\"));",
+     "cores": [
+      "setStopNotice",
+      "checkin.refused"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "void stampThisStop(activity.id);",
+     "cores": [
+      "stampThisStop"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "{stopNotice ? (",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "{stopNotice}",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/features/trip/TripItinerary.tsx",
+     "line": "} else if (answer.kind === \"refused\" && answer.refusal === \"CHECKIN_DUPLICATE_STAMP\") {",
+     "cores": [
+      "refusal"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.duplicate\": \"The server already holds a stamp for this stop, so this trip kept the one it had — nothing was overwritten.\",",
+     "cores": [
+      "checkin.duplicate"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.duplicate\": \"服务器说这一站已经有一枚印了，所以这次没有覆盖，行程保留它原有的那一枚。\",",
+     "cores": [
+      "checkin.duplicate",
+      "服务器说这一站已经有一枚印了",
+      "所以这次没有覆盖",
+      "行程保留它原有的那一枚"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.refused\": \"The server would not take this stamp, so nothing was added to your footprints.\",",
+     "cores": [
+      "checkin.refused"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "\"checkin.refused\": \"服务器没收下这次打卡，你的足迹里没有多出任何东西。\",",
+     "cores": [
+      "checkin.refused",
+      "服务器没收下这次打卡",
+      "你的足迹里没有多出任何东西"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "contracts/openapi.yaml",
+     "line": "error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "backend/app/main.py",
+     "line": "\"description\": \"error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN\"",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/generated/api.ts",
+     "line": "/** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from \"not yours\" because the two facts deserve two sentences */",
+     "cores": [
+      "reason_code"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r1",
+   "sha": "c581fdeaac644875e93265493eaa9ce349b384f7",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 5,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r2",
+   "sha": "67976464cb0f6918f1f8325ae3c50bd0f6d9b13a",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 5,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r3",
+   "sha": "0789750b6393bc8a61fde95c775253a3a764be35",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r4",
+   "sha": "ee8f28db279376d069d72dbf0a3463fc0121a947",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r5",
+   "sha": "62ea6262aa5e7ef577523ca327c8f0db315804e5",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r6",
+   "sha": "7e4832f3e362705507900e08011b8ad671dcda23",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0502-instrument-audit-r7",
+   "sha": "d23e97d831eb9b67ac841a9586c5aea07c77322d",
+   "token": "ORD-0502",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 1,
+   "kept_lines": 301,
+   "residual_lines": 39,
+   "residual": [
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* No journey on this device yet: open the wizard the hub itself offers and create one. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "/* This is the arm that makes \"少一格也算过\" impossible: every cell must have arrived with a",
+     "cores": [
+      "少一格也算过"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await fold.locator(\"summary\").click();",
+     "cores": [
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"trial-city\").fill(\"天津\");",
+     "cores": [
+      "getByTestId",
+      "trial-city"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-anchor-role\").selectOption({ index: 0 });",
+     "cores": [
+      "getByTestId",
+      "selectOption",
+      "v13-2-anchor-role"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await page.getByTestId(\"v13-2-memory\").waitFor({ timeout: 30_000 });",
+     "cores": [
+      "getByTestId",
+      "waitFor",
+      "v13-2-memory"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "await tap(page, \"C6\", page.getByTestId(\"poster-open\"));",
+     "cores": [
+      "getByTestId",
+      "poster-open"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "chain: bad.length ? `INCOMPLETE ${bad.join(\" \")}` : \"GREEN\",",
+     "cores": [
+      ")}` : "
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const fold = page.locator(\"details\").filter({ hasText: /邀请令牌|token/i }).first();",
+     "cores": [
+      "locator",
+      "邀请令牌"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const guest = await browser.newContext({ viewport: PHONE, locale: \"zh-CN\", serviceWorkers: \"block\" });",
+     "cores": [
+      "newContext"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const heading = page.locator('[data-testid=\"today-heading\"]');",
+     "cores": [
+      "today-heading",
+      "heading",
+      "locator"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const next = page.getByTestId(\"trial-next\");",
+     "cores": [
+      "getByTestId",
+      "trial-next"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const open = page.getByTestId(\"trial-open\").or(page.getByRole(\"button\", { name: /试用其他城市|换一个城市/ })).first();",
+     "cores": [
+      "getByTestId",
+      "getByRole",
+      "trial-open",
+      "试用其他城市",
+      "换一个城市"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const token = (tokenText.match(/[A-Za-z0-9_-]{20,}/) ?? [])[0] ?? \"\";",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "const tokenText = await inner(page, \"details p\");",
+     "cores": [
+      "tokenText"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "expect(state, failure ?? \"C6 failed\").toBe(\"PASS\");",
+     "cores": [
+      "C6 failed",
+      "PASS"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `paste-extract POST /inbox/text-extract http_status=${extractLeg.http_status}; pool text=${rendered.slice(0, 80)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "failure = `share-grant POST /share-grants http_status=${grantLeg.http_status}; share-read GET /api/v1/shared/journeys/ http_status=${readLeg.http_status}; refusal screen says ${rendered.slice(0, 60)}`;",
+     "cores": [
+      "failure",
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (const cell of [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "for (let step = 0; step < 2; step += 1) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", open);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "hit = await tap(page, \"C1\", page.getByTestId(\"trial-create\"));",
+     "cores": [
+      "getByTestId",
+      "trial-create"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await heading.count()) {",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (await next.count()) hit = await tap(page, \"C1\", next);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "if (token.length === 0) throw new Error(`no token reached the screen: ${tokenText.slice(0, 120)}`);",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "import { mkdirSync, readFileSync, writeFileSync } from \"node:fs\";",
+     "cores": [
+      "node:fs"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "missing. A NOT_REACHED_UI cell is honest, but it is not green. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "not paint reads as the empty string -- which is what we want to fail on. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": [
+      "8996eee4fb9fb4e159588305223ef421728c4e72:frontend/e2e/qoder-ord0502-phone-mainline.spec.ts"
+     ]
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"access-chosen\"], [data-testid=\"access-panel\"]');",
+     "cores": [
+      "access-chosen",
+      "access-panel",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"shared-refusal-code\"]');",
+     "cores": [
+      "shared-refusal-code",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered = await inner(page, '[data-testid=\"v13-2-memory\"]');",
+     "cores": [
+      "v13-2-memory",
+      "rendered"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "rendered sentence and at least one named leg, or the chain verdict has to say which one is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "return (await page.locator(selector).first().innerText()).replace(/\\s+/g, \" \").trim();",
+     "cores": [
+      "locator",
+      "innerText",
+      "replace"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = extractLeg.http_status === 201 && rendered.includes(\"V10-RAIL-42\") ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status",
+      "includes"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = grantLeg.http_status === 201 && readLeg.http_status === 200 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "http_status"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "state = landed && confirmLeg.http_status < 400 ? \"PASS\" : \"FAIL\";",
+     "cores": [
+      "PASS",
+      "FAIL"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test(\"C7 the walk cannot claim green it did not earn\", async () => {",
+     "cores": [
+      "C7 the walk cannot claim green it did not earn"
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "test.use({ viewport: PHONE, locale: \"zh-CN\", hasTouch: true, serviceWorkers: \"block\" });",
+     "cores": [
+      "zh-CN",
+      "block"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/e2e/qoder-ord0502-phone-mainline.spec.ts",
+     "line": "writeFileSync(path.join(OUT, `walk-${RUN_ID}.json`), JSON.stringify(s, null, 2), \"utf-8\");",
+     "cores": [
+      "writeFileSync",
+      "stringify",
+      "utf-8"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0503-evidence-r1",
+   "sha": "6596143ec42f672ea752ef1b9751d481fb1834b6",
+   "token": "ORD-0503",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 8,
+   "kept_lines": 649,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "{!isSelf && choices.length > 0 ? (",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0503-product-r1",
+   "sha": "431a2e32f9ccba584161c637ffebc3988f3ca892",
+   "token": "ORD-0503",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 8,
+   "kept_lines": 649,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "{!isSelf && choices.length > 0 ? (",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r1",
+   "sha": "07c1a776f3426d1dc1913ec596e810756d96484a",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 1,
+   "kept_lines": 6,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r2",
+   "sha": "49d0961b4d43726eb1fb4fac31e0bd8819c28eac",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 1,
+   "kept_lines": 6,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r3",
+   "sha": "9ad1a698815189d2204ee660b653c8ae0aa071d8",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 1,
+   "kept_lines": 6,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-collection-refusal-copy-r4",
+   "sha": "b039be277a6fe92172bc895c36345c5792701867",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 1,
+   "kept_lines": 6,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r1",
+   "sha": "458225391690fe4603fd663ac295b3254425187d",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r2",
+   "sha": "84d53277e412a51bd603391bcfdc1c8834d5e2bb",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r3",
+   "sha": "2ed6a21da3bfb8f65b462a61b65c79e6c71e37a2",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0513-evidence-r4",
+   "sha": "31c27041210a605f75265b13445cc1d91f0177ab",
+   "token": "ORD-0513",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 1,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0527-access-identity-r1",
+   "sha": "87f7a2b86536b99a6043c79e2532e0f1ebd39695",
+   "token": "ORD-0527",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 4,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {",
+     "cores": [
+      "AccessPanel",
+      "initialJourneyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0527-access-identity-r2",
+   "sha": "57147e28f58b09f678d5fd0efa5883f0a7011d50",
+   "token": "ORD-0527",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 4,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {",
+     "cores": [
+      "AccessPanel",
+      "initialJourneyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0527-access-identity-r3",
+   "sha": "9de7d28fae72fa83e15114ae39aec210ad1bba5e",
+   "token": "ORD-0527",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 4,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {",
+     "cores": [
+      "AccessPanel",
+      "initialJourneyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0527-evidence-r1",
+   "sha": "c35f1fe04a920c03955f596453b11acc6a172c44",
+   "token": "ORD-0527",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 4,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {",
+     "cores": [
+      "AccessPanel",
+      "initialJourneyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0527-evidence-r2",
+   "sha": "e801e310268bc4489d964ed7c2da7ec5f463b3bc",
+   "token": "ORD-0527",
+   "status": "ok",
+   "own_commits": 3,
+   "files_touched": 4,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {",
+     "cores": [
+      "AccessPanel",
+      "initialJourneyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0527-evidence-r4",
+   "sha": "be4b13a8a7b0ff7700859b4f222af3fab6ed8fe6",
+   "token": "ORD-0527",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 4,
+   "kept_lines": 95,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/features/access/AccessPanel.tsx",
+     "line": "export function AccessPanel({ initialJourneyId = null }: { initialJourneyId?: string | null } = {}) {",
+     "cores": [
+      "AccessPanel",
+      "initialJourneyId"
+     ],
+     "reworded_on_tip": true,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0528-rerun-evidence-r1",
+   "sha": "6fd626c86cb85d7bf3bf59a0461a3eb783937a0e",
+   "token": "ORD-0528",
+   "status": "ok",
+   "own_commits": 16,
+   "files_touched": 10,
+   "kept_lines": 871,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0538-evidence-r1",
+   "sha": "a46d7bc6ebb252773a76cb80dd67f522e9bd99e6",
+   "token": "ORD-0538",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 2,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0538-relation-empty-actions-r1",
+   "sha": "989304a0b181697de024b2df3ae4662d926bc129",
+   "token": "ORD-0538",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 2,
+   "kept_lines": 106,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-avatar-evidence-r1",
+   "sha": "036c2b176a71cec84f5b3cdf91932a50235369ba",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 0,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-avatar-evidence-r2",
+   "sha": "52c59451406ef51fa108fd74aa61fc2a35544ae7",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 2,
+   "kept_lines": 8,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/styles.css",
+     "line": "/* ORD-0561 ②: the bare `button` rule above carries `padding: 12px 14px` and a 16px font, and the avatar circle sets only width/height/font-size -- so the padding survived into a 28px box and the two initials needed 48px of it. Element selectors cannot out-rank each other here, so the fix is a class-qualified rule that states the padding the circle actually has room for. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-avatar-r1",
+   "sha": "508c972ac4911f8a4231474105f2f5ca45e719e3",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 2,
+   "kept_lines": 11,
+   "residual_lines": 4,
+   "residual": [
+    {
+     "path": "frontend/src/styles.css",
+     "line": "/* ORD-0561 ②: the bare `button` rule above carries `padding: 12px 14px` and a 16px font, and the",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/styles.css",
+     "line": "a class-qualified rule that states the padding the circle actually has room for. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/styles.css",
+     "line": "avatar circle sets only width/height/font-size -- so the padding survived into a 28px box and the",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/styles.css",
+     "line": "two initials needed 48px of it. Element selectors cannot out-rank each other here, so the fix is",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-avatar-r2",
+   "sha": "62ee41e3d36debdb9db502c8180c386241a46f86",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 2,
+   "kept_lines": 8,
+   "residual_lines": 1,
+   "residual": [
+    {
+     "path": "frontend/src/styles.css",
+     "line": "/* ORD-0561 ②: the bare `button` rule above carries `padding: 12px 14px` and a 16px font, and the avatar circle sets only width/height/font-size -- so the padding survived into a 28px box and the two initials needed 48px of it. Element selectors cannot out-rank each other here, so the fix is a class-qualified rule that states the padding the circle actually has room for. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-screens-r1",
+   "sha": "d9424847a51a04b0a0d8e6fb731a0476606b6137",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 0,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-screens-widths-r1",
+   "sha": "eee1090e2a0e22fe5bf6389d1696c779ff049ff8",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 4,
+   "files_touched": 2,
+   "kept_lines": 7,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0561-widths-evidence-r1",
+   "sha": "2d17ddd87e9750671d9b75756a64b004f12dfc09",
+   "token": "ORD-0561",
+   "status": "ok",
+   "own_commits": 2,
+   "files_touched": 2,
+   "kept_lines": 2,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r1",
+   "sha": "59bf4dd3f00e6162c05d2d865b20909461bf860d",
+   "token": "ORD-0564",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 2,
+   "kept_lines": 6,
+   "residual_lines": 6,
+   "residual": [
+    {
+     "path": "frontend/src/features/collections/collectionCopy.ts",
+     "line": "en: \"Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.\",",
+     "cores": [
+      "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land."
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "/* ORD-0564: this key has no reader — a repo-wide search finds it only in the two dictionary lines",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "`features/checkin/footprintCopy`. Left in place on purpose: wiring this key back to a screen",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "below (both arms) plus one review artifact, so the CJK inside its English value never reaches a",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "traveller. The sentence the Footprints screen shows is the `en` arm of the empty state in",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "would put that machine word on the surface, so the name is written here instead. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0564-cjk-in-en-r2",
+   "sha": "03e891d4c17ff4a08282712420e6ee2b61907e91",
+   "token": "ORD-0564",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 2,
+   "kept_lines": 6,
+   "residual_lines": 6,
+   "residual": [
+    {
+     "path": "frontend/src/features/collections/collectionCopy.ts",
+     "line": "en: \"Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.\",",
+     "cores": [
+      "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land."
+     ],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "/* ORD-0564: this key has no reader — a repo-wide search finds it only in the two dictionary lines",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "`features/checkin/footprintCopy`. Left in place on purpose: wiring this key back to a screen",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "below (both arms) plus one review artifact, so the CJK inside its English value never reaches a",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "traveller. The sentence the Footprints screen shows is the `en` arm of the empty state in",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    },
+    {
+     "path": "frontend/src/i18n/LocaleContext.tsx",
+     "line": "would put that machine word on the surface, so the name is written here instead. */",
+     "cores": [],
+     "reworded_on_tip": false,
+     "elsewhere": []
+    }
+   ]
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0564-evidence-r1",
+   "sha": "7890adbc62e653c07dd1dfc6ae2c3a7562aec168",
+   "token": "ORD-0564",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 0,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0564-nonprimary-evidence-r1",
+   "sha": "890f18404ba6f4841931fc8773a725af1ed4d53a",
+   "token": "ORD-0564",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 0,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  },
+  {
+   "ref": "refs/heads/review/1ba48dbf-ord0575-repro-evidence-r1",
+   "sha": "b1da6df48606cd82e78c1714d6475723bf1ae44a",
+   "token": "ORD-0575",
+   "status": "ok",
+   "own_commits": 1,
+   "files_touched": 0,
+   "kept_lines": 0,
+   "residual_lines": 0,
+   "residual": []
+  }
+ ]
+}

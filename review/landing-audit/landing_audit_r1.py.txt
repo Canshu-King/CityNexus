@@ -1,0 +1,129 @@
+# -*- coding: utf-8 -*-
+"""我名下交付枝的落地面复算：只按 blob 相等判，不按 ancestry。
+理由（写死在这里，免得下一轮又走回去）：这条权威线是无父重建树，
+任何旧枝对尖跑 `git merge-tree` 都退 128，128 只能说明"预测不了"，不能说明"没落地"。
+判据：对每枚枝，取它与现尖在**产品路径**上的差异文件，逐枚比 blob。
+分类：全等（内容已在尖上）/ 部分（有的等有的不等）/ 未落（全不等或尖上没这文件）。"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+PRODUCT_PREFIX = ("frontend/src/", "backend/app/", "contracts/", "frontend/e2e/")
+BAD: list[str] = []
+
+
+def git(*a):
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=600)
+    return (p.stdout or "").strip()
+
+
+def git_rc(*a):
+    p = subprocess.run(["git", "-C", WT, *a], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=600)
+    return p.returncode, (p.stdout or "").strip(), (p.stderr or "").strip()
+
+
+tip = git("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+refs = git("ls-remote", "--refs", "origin", "refs/heads/review/1ba48dbf-*").splitlines()
+pairs = []
+for line in refs:
+    parts = line.split("\t")
+    if len(parts) == 2 and len(parts[0]) == 40:
+        pairs.append((parts[1], parts[0]))
+pairs.sort()
+if not pairs:
+    print("REFUSED: 名下一枚枝都没读到")
+    sys.exit(1)
+
+rc, out, err = git_rc("fetch", "-q", "origin",
+                      "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*")
+if rc != 0:
+    print("REFUSED: fetch 我的枝失败 rc=%s %s" % (rc, err[:160]))
+    sys.exit(1)
+rc, out, err = git_rc("fetch", "-q", "origin", MIRROR)
+if rc != 0:
+    print("REFUSED: fetch 权威线失败")
+    sys.exit(1)
+if git("cat-file", "-t", tip) != "commit":
+    print("REFUSED: 现尖在本地不可 cat-file")
+    sys.exit(1)
+
+
+def blob(rev, path):
+    rc, out, _ = git_rc("rev-parse", "--verify", "-q", "%s:%s" % (rev, path))
+    return out if rc == 0 and len(out) == 40 else None
+
+
+rows = []
+for ref, sha in pairs:
+    if git("cat-file", "-t", sha) not in ("commit",):
+        rows.append({"ref": ref, "sha": sha, "reachable": False})
+        continue
+    diff = git("diff", "--name-only", tip, sha, "--", *PRODUCT_PREFIX)
+    files = [f for f in diff.splitlines() if f.strip()]
+    same, differ, only_branch, only_tip = [], [], [], []
+    for f in files:
+        bt, bs = blob(tip, f), blob(sha, f)
+        if bt is None and bs is None:
+            continue
+        if bt is None:
+            only_branch.append(f)
+        elif bs is None:
+            only_tip.append(f)
+        elif bt == bs:
+            same.append(f)
+        else:
+            differ.append(f)
+    if not files:
+        verdict = "无产品面差"
+    elif not differ and not only_branch and not only_tip:
+        verdict = "全等"
+    elif differ or only_branch or only_tip:
+        verdict = "未落尽"
+    else:
+        verdict = "?"
+    rows.append({"ref": ref, "sha": sha, "reachable": True, "product_files": len(files),
+                 "blob_same": len(same), "blob_differ": len(differ),
+                 "branch_only": only_branch, "tip_only": only_tip, "verdict": verdict,
+                 "differ_files": differ})
+
+tally = {}
+for r in rows:
+    if not r.get("reachable"):
+        k = "对象取不到"
+    else:
+        k = r["verdict"]
+    tally[k] = tally.get(k, 0) + 1
+print("现尖={} 名下枝={}枚 分类={}".format(tip[:12], len(rows), tally))
+for r in rows:
+    if not r.get("reachable"):
+        print("  %-64s 对象取不到 sha=%s" % (r["ref"].replace("refs/heads/review/", ""), r["sha"][:12]))
+        continue
+    print("  {name} 产品面={p} 等={s} 不等={d} 枝独有={bo} 尖独有={to} {v}".format(
+        name=r["ref"].replace("refs/heads/review/", ""), p=r["product_files"],
+        s=r["blob_same"], d=r["blob_differ"], bo=len(r["branch_only"]),
+        to=len(r["tip_only"]), v=r["verdict"]))
+    for f in r["differ_files"][:4]:
+        print("        不等 {} | 尖 blob {} | 枝 blob {}".format(
+            f, blob(tip, f) or "无", blob(r["sha"], f) or "无"))
+    for f in r["branch_only"][:4]:
+        print("        枝独有 {} | 枝 blob {} | 尖上没有这文件".format(f, blob(r["sha"], f)))
+
+out_path = os.path.join(ART, "landing_audit_1ba48dbf_%s.json" % time.strftime("%H%M"))
+io.open(out_path, "w", encoding="utf-8", newline="\n").write(json.dumps(
+    {"tip": tip, "branches": len(rows), "tally": tally, "rows": rows},
+    ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + out_path)
