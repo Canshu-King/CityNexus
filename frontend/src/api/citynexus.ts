@@ -383,6 +383,11 @@ export interface JourneyOperatorAttention {
   pending_count: number;
 }
 
+export interface JourneyOperatorInboxProjection {
+  latest: { id: string; kind: string; headline: string; status: string; impact: string; provenance: string; candidates?: Array<{ id: string; label: string }> } | null;
+  pending_count: number;
+}
+
 export interface JourneyOperatorBrainProjection {
   state: "READY" | "UNCONFIGURED" | "CONFIGURED_UNKNOWN" | "TEMPORARILY_UNAVAILABLE" | "RECOVERING" | "ACTIVE" | "ATTENTION_REQUIRED";
   headline: string;
@@ -493,6 +498,7 @@ export interface JourneyOperatorProjection {
   operator: { watching: boolean; will_continue_after_approval: boolean };
   intents?: JourneyIntentProjection[];
   attention?: JourneyOperatorAttention | null;
+  inbox?: JourneyOperatorInboxProjection;
   quiet_mode?: "QUIET" | "NORMAL";
   intent_clarification_result?: { intent_id: string; mission_id: string; outcome: string; agent_status: string };
 }
@@ -1534,6 +1540,18 @@ export const cityNexusApi = {
   getJourneyOperator(journeyId: string): Promise<JourneyOperatorProjection> {
     return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator", {
       headers: travelerAuthHeaders(),
+    });
+  },
+
+  submitJourneyInboxText(journeyId: string, text: string): Promise<Record<string, unknown>> {
+    return requestJson<Record<string, unknown>>("/journeys/" + journeyId + "/operator/inbox/intake", {
+      method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify({ source_kind: "PASTED_TEXT", text }),
+    });
+  },
+
+  bindJourneyInboxItem(journeyId: string, itemId: string, reservationId: string): Promise<Record<string, unknown>> {
+    return requestJson<Record<string, unknown>>("/journeys/" + journeyId + "/operator/inbox/" + itemId + "/bind", {
+      method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify({ reservation_id: reservationId }),
     });
   },
 

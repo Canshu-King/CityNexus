@@ -1325,6 +1325,31 @@ class ExternalReservationDraft(Base):
     confirmed_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
+class JourneyInboxItem(Base):
+    __tablename__ = "journey_inbox_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    source_kind: Mapped[str] = mapped_column(String)
+    raw_text_hash: Mapped[str] = mapped_column(String)
+    raw_text: Mapped[str] = mapped_column(Text)
+    received_at: Mapped[str] = mapped_column(String)
+    semantic_kind: Mapped[str] = mapped_column(String)
+    reservation_type: Mapped[str] = mapped_column(String)
+    confirmation_ref: Mapped[str | None] = mapped_column(String, nullable=True)
+    change_kind: Mapped[str] = mapped_column(String)
+    extracted_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    provenance: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    linked_reservation_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    linked_commitment_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    impact_status: Mapped[str] = mapped_column(String)
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    __table_args__ = (UniqueConstraint("journey_id", "raw_text_hash"),)
+
+
 class TransportReservation(Base):
     __tablename__ = "transport_reservations"
     id: Mapped[str] = mapped_column(String, primary_key=True)

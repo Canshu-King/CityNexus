@@ -176,6 +176,8 @@ export function LiveRecovery({
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
   const [intentText, setIntentText] = useState("");
   const [intentResult, setIntentResult] = useState<string | null>(null);
+  const [inboxText, setInboxText] = useState("");
+  const [inboxResult, setInboxResult] = useState<string | null>(null);
 
   const loadOperator = useCallback(async () => {
     try {
@@ -220,6 +222,33 @@ export function LiveRecovery({
       setBusy(null);
     }
   }, [intentText, journeyId, loadOperator, onAccepted, zh]);
+
+  const submitJourneyInbox = useCallback(async () => {
+    const text = inboxText.trim();
+    if (!text) return;
+    setBusy("journey-inbox");
+    try {
+      const result = await cityNexusApi.submitJourneyInboxText(journeyId, text) as { status?: string; impact?: string; replayed?: boolean };
+      setInboxResult(result.status === "APPLIED"
+        ? (zh ? "已更新预订信息，CityNexus 正在检查后续影响。" : "Reservation updated. CityNexus is checking what comes next.")
+        : (zh ? "已收到这条预订信息，还需要核对一个细节。" : "Booking update received. One detail needs checking."));
+      setInboxText("");
+      await loadOperator();
+      onAccepted?.();
+    } catch {
+      setInboxResult(zh ? "无法处理这条预订信息，请稍后重试。" : "This booking update could not be processed. Please try again.");
+    } finally { setBusy(null); }
+  }, [inboxText, journeyId, loadOperator, onAccepted, zh]);
+
+  const bindInboxReservation = useCallback(async (itemId: string, reservationId: string) => {
+    setBusy("inbox-binding");
+    try {
+      await cityNexusApi.bindJourneyInboxItem(journeyId, itemId, reservationId);
+      await loadOperator();
+      onAccepted?.();
+    } catch { setMessage(zh ? "无法绑定这项预订，请刷新后重试。" : "That reservation could not be matched. Refresh and try again."); }
+    finally { setBusy(null); }
+  }, [journeyId, loadOperator, onAccepted, zh]);
 
   const answerAttentionIntent = useCallback(async (intentId: string, answer: string) => {
     setBusy("intent-clarification");
@@ -684,6 +713,12 @@ export function LiveRecovery({
                 ))}
               </div>
             )}
+            {operator.attention.action_type === "BIND_INBOX_ITEM" && (
+              <div className="journey-operator-attention-actions">
+                {(operator.attention.options ?? []).map((option) => <button key={option.value} type="button" disabled={busy !== null}
+                  onClick={() => void bindInboxReservation(operator.attention!.source_ref.inbox_item_id, option.value)}>{option.label}</button>)}
+              </div>
+            )}
             {operator.attention.action_type === "REVIEW_APPROVAL" && operator.approval?.required && (
               <button type="button" disabled={busy !== null} onClick={() => void approveOperatorChange()}>{operator.attention.action_label}</button>
             )}
@@ -882,6 +917,21 @@ export function LiveRecovery({
                       ? (zh ? "暂时无法完整照看" : "Needs attention")
                       : (zh ? "正在处理" : "Working")}
         </span>}
+        {operator?.enabled && (
+          <div className="journey-intent-steering" data-testid="journey-inbox-intake">
+            <label htmlFor="journey-inbox-input">
+              <strong>{zh ? "有预订信息变更？" : "Booking update"}</strong>
+              <span>{zh ? "粘贴确认信息、时间变更或取消通知，CityNexus 会先核对对应预订。" : "Paste a confirmation, schedule change, or cancellation. CityNexus will match the reservation first."}</span>
+            </label>
+            <textarea id="journey-inbox-input" data-testid="journey-inbox-input" rows={2} maxLength={1200}
+              value={inboxText} onChange={(event) => setInboxText(event.target.value)}
+              placeholder={zh ? "例如：Booking ZX42 update: departure changed from 17:40 to 18:10. Confirmation AB123." : "Example: Booking ZX42 update: departure changed from 17:40 to 18:10. Confirmation AB123."} />
+            <button type="button" data-testid="journey-inbox-submit" disabled={busy !== null || !inboxText.trim()} onClick={() => void submitJourneyInbox()}>
+              {busy === "journey-inbox" ? (zh ? "正在核对…" : "Checking…") : (zh ? "提交预订变更" : "Add booking update")}
+            </button>
+            {inboxResult && <span role="status" data-testid="journey-inbox-result">{inboxResult}</span>}
+          </div>
+        )}
         {operator?.enabled && (
           <div className="journey-intent-steering" data-testid="journey-intent-steering">
             <label htmlFor="journey-intent-input">

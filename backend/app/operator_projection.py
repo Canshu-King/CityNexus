@@ -23,6 +23,7 @@ from app.db.models import (
     Event,
     GuardianRun,
     Journey,
+    JourneyInboxItem,
     JourneyMission,
     ReplanProposal,
     RecoveryDiscoveryAttempt,
@@ -377,7 +378,25 @@ def operator_projection(
         journey,
         viewer_member_id=viewer_member_id,
     )
+    inbox_rows = session.scalars(
+        select(JourneyInboxItem).where(JourneyInboxItem.journey_id == journey.id)
+        .order_by(JourneyInboxItem.created_at.desc()).limit(10)
+    ).all()
+    inbox_latest = None
+    if inbox_rows:
+        inbox_result = json.loads(inbox_rows[0].result_json or "{}")
+        inbox_latest = {"id": inbox_rows[0].id, "kind": inbox_rows[0].semantic_kind,
+                    "headline": ("Your train time changed" if inbox_rows[0].semantic_kind == "SCHEDULE_CHANGE" else "Booking update needs a detail"),
+                    "status": inbox_rows[0].status, "impact": inbox_rows[0].impact_status,
+                    "provenance": inbox_rows[0].provenance, "candidates": inbox_result.get("candidates", [])}
+    inbox = {
+        "latest": inbox_latest,
+        "pending_count": sum(1 for item in inbox_rows if item.status in {"BINDING_REQUIRED", "NEEDS_REVIEW"}),
+    }
     timeline = [*_timeline(session, journey.id), *(collective.get("timeline") or [])]
+    timeline.extend({"at": item.received_at, "kind": "RESERVATION_UPDATE",
+                     "label": ("Reservation schedule updated" if item.status == "APPLIED" else "Booking update needs a detail")}
+                    for item in inbox_rows[:5])
     timeline.sort(key=lambda item: (str(item.get("at") or ""), str(item.get("kind") or "")))
 
     unresolved_collective = str(collective.get("state") or "") in {
@@ -539,11 +558,13 @@ def operator_projection(
         "ahead": ahead,
         "overnight": overnight,
         "intents": projected_intents,
+        "inbox": inbox,
         "attention": attention_from_operator_projection({
             "operations": operations,
             "approval": approval_payload,
             "collective": collective,
             "intents": projected_intents,
+            "inbox": inbox,
             "flow": flow,
             "overnight": overnight,
             "brain": brain,

@@ -974,6 +974,30 @@ CREATE TABLE IF NOT EXISTS external_reservation_drafts (
     confirmed_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS journey_inbox_items (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    source_kind TEXT NOT NULL,
+    raw_text_hash TEXT NOT NULL,
+    raw_text TEXT NOT NULL,
+    received_at TEXT NOT NULL,
+    semantic_kind TEXT NOT NULL,
+    reservation_type TEXT NOT NULL,
+    confirmation_ref TEXT,
+    change_kind TEXT NOT NULL,
+    extracted_json TEXT NOT NULL DEFAULT '{}',
+    provenance TEXT NOT NULL,
+    status TEXT NOT NULL,
+    linked_reservation_id TEXT,
+    linked_commitment_id TEXT,
+    impact_status TEXT NOT NULL,
+    result_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, raw_text_hash)
+);
+
 CREATE TABLE IF NOT EXISTS transport_reservations (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,

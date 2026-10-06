@@ -1,0 +1,24 @@
+{
+  "capability": "The traveller can now forward a booking confirmation, schedule-change message, cancellation notice, or reservation screenshot to the running Journey, and CityNexus turns it into grounded Journey reality: it binds the message to the right reservation/activity, updates Commitment truth only when sufficiently grounded, asks one clear question when ambiguous, and automatically hands any material impact to the existing Journey Operator for recovery.",
+  "outcome": "JOURNEY_INBOX_CHANGE_TRIGGERED_RECOVERY",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "inbox_item_id": "493bda85-9dd7-4c96-9310-3407db5dd98a",
+  "replay_reused_same_item": true,
+  "confirmation_ref": "AB123",
+  "reservation_id": "1b811178-3c55-4be5-bfd6-a5e972fc0a5a",
+  "scheduled_departure_at": "2026-10-09T18:10:00+00:00",
+  "commitment_scheduled_start_at": "2026-10-09T18:10:00+00:00",
+  "provenance": "USER_PASTED_TEXT",
+  "impact": "RECOVERY_REQUIRED",
+  "current_activity_id_unchanged": true,
+  "current_activity_status": "IN_PROGRESS",
+  "inbox_item_count": 1,
+  "event_count": 1,
+  "agent_run_count": 0,
+  "guardian_run": {
+    "id": "5b893c0f-ed3c-4688-98b8-7e615b28584d",
+    "status": "PARTIAL",
+    "action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+  },
+  "lab_estimate_authority": false
+}

@@ -23,6 +23,7 @@ _PRIORITY = {
     "APPROVAL_REQUIRED": 10,
     "COLLECTIVE_RESPONSE_REQUIRED": 11,
     "INTENT_CLARIFICATION_REQUIRED": 12,
+    "INBOX_BINDING_REQUIRED": 13,
     "CONFIRM_ARRIVAL": 20,
     "CONFIRM_BEGIN": 21,
     "CONFIRM_COMPLETE": 22,
@@ -127,6 +128,19 @@ def attention_from_operator_projection(operator: dict[str, Any]) -> dict[str, An
                     source_ref={"intent_id": intent_id},
                 )
             )
+
+    inbox = operator.get("inbox") or {}
+    latest_inbox = inbox.get("latest") or {}
+    if latest_inbox.get("status") == "BINDING_REQUIRED":
+        item_id = str(latest_inbox.get("id") or "")
+        candidates.append(AttentionCandidate(
+            kind="INBOX_BINDING_REQUIRED", priority=priority_for("INBOX_BINDING_REQUIRED"),
+            blocking=True, semantic_id=f"inbox:{item_id}:binding",
+            title="Which reservation changed?",
+            body="I received a booking update, but I need one detail before I can apply it.",
+            action_label="Choose reservation", action_type="BIND_INBOX_ITEM",
+            source_ref={"inbox_item_id": item_id},
+        ))
 
     flow = operator.get("flow") or {}
     flow_state = str(flow.get("state") or "").upper()
@@ -263,6 +277,12 @@ def _created_at_for(primary: AttentionCandidate, operator: dict[str, Any]) -> st
 
 
 def _options_for(primary: AttentionCandidate, operator: dict[str, Any]) -> list[dict[str, str]]:
+    inbox_item_id = (primary.source_ref or {}).get("inbox_item_id")
+    if inbox_item_id:
+        latest = (operator.get("inbox") or {}).get("latest") or {}
+        if str(latest.get("id") or "") == str(inbox_item_id):
+            return [{"value": str(item["id"]), "label": str(item["label"])}
+                    for item in latest.get("candidates") or [] if item.get("id") and item.get("label")]
     intent_id = (primary.source_ref or {}).get("intent_id")
     if not intent_id:
         return []

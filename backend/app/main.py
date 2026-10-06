@@ -143,6 +143,7 @@ from app.db.models import (
     CounterfactualSimulation,
     EdgeDevice,
     ExternalReservationDraft,
+    JourneyInboxItem,
     GuardianPulse,
     IdempotencyKey,
     ImpactAssessment,
@@ -191,6 +192,11 @@ from app.db.models import (
 )
 from app.db.models import (
     Event as EventModel,
+)
+from app.journey_inbox import (
+    classify_inbox_impact,
+    inbox_artifact_fingerprint,
+    inbox_provenance_for_source,
 )
 from app.db.models import (
     JourneyTwin as JourneyTwinModel,
@@ -7719,6 +7725,176 @@ def import_journey_reservation(
     )
     session.commit()
     return _draft_payload(draft)
+
+
+def _journey_inbox_payload(item: JourneyInboxItem) -> dict[str, Any]:
+    return {
+        "id": item.id, "kind": item.semantic_kind, "status": item.status,
+        "impact": item.impact_status, "confirmation_ref": item.confirmation_ref,
+        "reservation_id": item.linked_reservation_id,
+        "commitment_id": item.linked_commitment_id,
+        "provenance": item.provenance,
+        "result": json.loads(item.result_json or "{}"),
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/inbox/intake", status_code=201)
+def intake_journey_change(journey_id: UUID, request: Request, payload: dict[str, Any], session: Session = Depends(get_session)):
+    """Ground a traveller supplied booking update against an exact reservation reference."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    text_value = " ".join(str(payload.get("text") or "").split()).strip()
+    if not text_value:
+        raise HTTPException(422, "text is required")
+    source_kind = str(payload.get("source_kind") or "PASTED_TEXT").upper()
+    if source_kind != "PASTED_TEXT":
+        raise HTTPException(422, "this intake route accepts pasted text only")
+    fingerprint = inbox_artifact_fingerprint(source_kind=source_kind, normalized_text=text_value)
+    existing = session.scalar(select(JourneyInboxItem).where(
+        JourneyInboxItem.journey_id == journey.id, JourneyInboxItem.raw_text_hash == fingerprint
+    ))
+    if existing is not None:
+        return {**_journey_inbox_payload(existing), "replayed": True}
+    import re
+    ref_match = re.search(r"\b(?:confirmation|ref(?:erence)?)\s*(?:#|:)?\s*([A-Z0-9]{4,})\b", text_value, re.I)
+    if ref_match is None:
+        ref_match = re.search(r"\bbooking\s*(?:#|:)?\s*([A-Z0-9]{4,})\b", text_value, re.I)
+    times = re.findall(r"(?<!\d)([01]?\d|2[0-3]):([0-5]\d)(?!\d)", text_value)
+    old_time = ":".join(times[0]) if len(times) >= 2 else None
+    new_time = ":".join(times[1]) if len(times) >= 2 else None
+    ref = ref_match.group(1).upper() if ref_match else None
+    reservation = session.scalar(select(TransportReservation).where(
+        TransportReservation.journey_id == journey.id,
+        TransportReservation.confirmation_ref == ref,
+        TransportReservation.status == "CONFIRMED",
+    )) if ref else None
+    now = datetime.now(timezone.utc).isoformat()
+    row = JourneyInboxItem(
+        id=str(uuid4()), journey_id=journey.id, traveler_id=journey.traveler_id,
+        source_kind=source_kind, raw_text_hash=fingerprint, raw_text=text_value,
+        received_at=now, semantic_kind="SCHEDULE_CHANGE" if old_time and new_time else "UNKNOWN",
+        reservation_type=reservation.reservation_type if reservation else "TRAIN",
+        confirmation_ref=ref, change_kind="SCHEDULE_CHANGE" if old_time and new_time else "UNKNOWN",
+        extracted_json=json.dumps({"old_departure": old_time, "new_departure": new_time}, sort_keys=True),
+        provenance=inbox_provenance_for_source(source_kind),
+        status="RECEIVED", linked_reservation_id=None, linked_commitment_id=None,
+        impact_status="PENDING", result_json="{}", created_at=now, updated_at=now,
+    )
+    session.add(row)
+    session.flush()
+    if reservation is None or not old_time or not new_time:
+        row.status = "BINDING_REQUIRED" if reservation is None else "NEEDS_REVIEW"
+        row.impact_status = "BINDING_REQUIRED" if reservation is None else "NEEDS_REVIEW"
+        candidates = session.scalars(select(TransportReservation).where(
+            TransportReservation.journey_id == journey.id,
+            TransportReservation.status == "CONFIRMED",
+            TransportReservation.reservation_type == (reservation.reservation_type if reservation else "TRAIN"),
+        ).order_by(TransportReservation.scheduled_departure_at)).all() if reservation is None else []
+        row.result_json = json.dumps({"question": "Which reservation changed?", "candidates": [
+            {"id": item.id, "label": f"{item.reservation_type} · {item.confirmation_ref or 'Booking'}"}
+            for item in candidates
+        ]})
+    else:
+        old_at = datetime.fromisoformat(reservation.scheduled_departure_at.replace("Z", "+00:00"))
+        old_actual = old_at.strftime("%H:%M")
+        if old_actual != old_time:
+            row.status = "NEEDS_REVIEW"
+            row.impact_status = "OLD_VALUE_MISMATCH"
+            row.result_json = json.dumps({"expected_old_departure": old_actual, "provided_old_departure": old_time})
+        else:
+            new_at = old_at.replace(hour=int(new_time[:2]), minute=int(new_time[3:]))
+            delta = int((new_at - old_at).total_seconds() / 60)
+            commitment = session.get(CommitmentModel, reservation.commitment_id) if reservation.commitment_id else None
+            protected = bool(commitment and commitment.level in {"C2_Reserved", "C3_Guaranteed", "C4_Anchored"})
+            decision = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
+                affects_protected_commitment=protected, schedule_delta_min=delta,
+                current_execution_affected=bool(commitment and commitment.activity_id == journey.current_activity_id))
+            reservation.scheduled_departure_at = new_at.isoformat()
+            reservation.source_provenance = row.provenance
+            reservation.captured_at = now
+            if commitment is not None:
+                policy = json.loads(commitment.policy_json or "{}")
+                policy["scheduled_start_at"] = new_at.isoformat()
+                policy["source"] = row.provenance
+                commitment.policy_json = json.dumps(policy, ensure_ascii=False, sort_keys=True)
+                commitment.updated_at = now
+            row.linked_reservation_id = reservation.id
+            row.linked_commitment_id = reservation.commitment_id
+            row.status = "APPLIED"
+            row.impact_status = decision.state
+            row.result_json = json.dumps({"old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(),
+                "schedule_delta_min": delta, "reason": decision.reason}, sort_keys=True)
+            if decision.material:
+                event = EventModel(id=str(uuid4()), journey_id=journey.id, provider_key="user-pasted-change",
+                    provenance="USER_REPORTED", event_type="SCHEDULE_DELAY", severity="MAJOR",
+                    status="DETECTED", affected_activity_id=commitment.activity_id if commitment else None,
+                    occurred_at=now, detected_at=now, resolved_at=None,
+                    payload_json=json.dumps({"inbox_item_id": row.id, "confirmation_ref": ref,
+                        "old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(),
+                        "future_change": new_at > datetime.now(old_at.tzinfo)}, sort_keys=True), created_at=now)
+                session.add(event)
+                session.flush()
+    session.commit()
+    replayed = False
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if row.impact_status == "RECOVERY_REQUIRED" and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey)
+        except Exception:
+            logging.getLogger(__name__).exception("R53 Guardian handoff failed for %s", row.id)
+    return {**_journey_inbox_payload(row), "replayed": replayed}
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/inbox/{item_id}/bind")
+def bind_journey_inbox_item(journey_id: UUID, item_id: UUID, request: Request, payload: dict[str, Any], session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    item = require(session, JourneyInboxItem, str(item_id), "Journey Inbox item")
+    reservation_id = str(payload.get("reservation_id") or "")
+    reservation = session.get(TransportReservation, reservation_id)
+    if item.journey_id != journey.id or reservation is None or reservation.journey_id != journey.id:
+        raise HTTPException(404, "reservation candidate not found")
+    if item.status != "BINDING_REQUIRED":
+        return _journey_inbox_payload(item)
+    candidate_ids = {str(candidate.get("id")) for candidate in json.loads(item.result_json or "{}").get("candidates", [])}
+    if reservation.id not in candidate_ids:
+        raise HTTPException(422, "reservation was not offered as a binding candidate")
+    values = json.loads(item.extracted_json or "{}")
+    old_time, new_time = values.get("old_departure"), values.get("new_departure")
+    if not old_time or not new_time:
+        raise HTTPException(409, "message needs review before binding")
+    old_at = datetime.fromisoformat(reservation.scheduled_departure_at.replace("Z", "+00:00"))
+    if old_at.strftime("%H:%M") != old_time:
+        item.status, item.impact_status = "NEEDS_REVIEW", "OLD_VALUE_MISMATCH"
+        session.commit()
+        return _journey_inbox_payload(item)
+    new_at = old_at.replace(hour=int(new_time[:2]), minute=int(new_time[3:]))
+    delta = int((new_at - old_at).total_seconds() / 60)
+    commitment = session.get(CommitmentModel, reservation.commitment_id) if reservation.commitment_id else None
+    decision = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
+        affects_protected_commitment=bool(commitment and commitment.level in {"C2_Reserved", "C3_Guaranteed", "C4_Anchored"}),
+        schedule_delta_min=delta)
+    now = datetime.now(timezone.utc).isoformat()
+    reservation.scheduled_departure_at, reservation.source_provenance = new_at.isoformat(), item.provenance
+    reservation.captured_at = now
+    if commitment:
+        policy = json.loads(commitment.policy_json or "{}")
+        policy.update({"scheduled_start_at": new_at.isoformat(), "source": item.provenance})
+        commitment.policy_json, commitment.updated_at = json.dumps(policy, ensure_ascii=False, sort_keys=True), now
+    item.confirmation_ref = reservation.confirmation_ref
+    item.linked_reservation_id, item.linked_commitment_id = reservation.id, reservation.commitment_id
+    item.status, item.impact_status, item.updated_at = "APPLIED", decision.state, now
+    item.result_json = json.dumps({"old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(), "schedule_delta_min": delta, "reason": decision.reason}, sort_keys=True)
+    if decision.material:
+        session.add(EventModel(id=str(uuid4()), journey_id=journey.id, provider_key="user-pasted-change", provenance="USER_REPORTED", event_type="SCHEDULE_DELAY", severity="MAJOR", status="DETECTED", affected_activity_id=commitment.activity_id if commitment else None, occurred_at=now, detected_at=now, resolved_at=None, payload_json=json.dumps({"inbox_item_id": item.id, "confirmation_ref": reservation.confirmation_ref, "old_departure": old_at.isoformat(), "new_departure": new_at.isoformat()}, sort_keys=True), created_at=now))
+    session.commit()
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if decision.material and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey)
+        except Exception:
+            logging.getLogger(__name__).exception("R53 Guardian handoff failed for %s", item.id)
+    return _journey_inbox_payload(item)
 
 
 @app.get("/api/v1/journeys/{journey_id}/inbox")
