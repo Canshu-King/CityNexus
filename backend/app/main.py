@@ -5000,6 +5000,9 @@ def collective_mutation_gate(
             "selected_plan_version_id": pending_selection["selected_plan_version_id"],
             "selected_proposal_id": pending_selection["selected_proposal_id"],
             "clarification_id": pending_selection["clarification_id"],
+            "authority_receipt_id": pending_selection.get(
+                "authority_receipt_id"
+            ),
         }
 
     if renewed_consent_selected:
@@ -5046,6 +5049,9 @@ def collective_mutation_gate(
                 "current_decision_epoch": current_decision_epoch,
                 "resolved_material_world_epoch": resolved_world_epoch or None,
                 "current_material_world_epoch": current_world_epoch,
+                "authority_receipt_id": pending_selection.get(
+                    "authority_receipt_id"
+                ),
             }
     else:
         decision = collective_mutation_decision(
