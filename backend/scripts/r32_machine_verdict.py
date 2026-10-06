@@ -583,21 +583,18 @@ def verdict(
             if isinstance(b_response_run, dict)
             else {}
         )
-        mutation_completed_at = max(
-            (
-                str(row.get("completed_at"))
-                for row in mutations
-                if row.get("completed_at")
-            ),
-            default="",
-        )
+        # The durable server commit boundary is the RecoveryEpoch close,
+        # not an optional serialized AgentRunStep timestamp.  Any provider call
+        # starting after this boundary would mean the same run reasoned again
+        # against reality it had already changed.
+        mutation_committed_at = str(r2row.get("closed_at") or "")
         post_mutation_provider_calls = [
             item
             for item in external_outcomes
             if item.get("agent_run_id") == b.get("id")
-            and mutation_completed_at
+            and mutation_committed_at
             and str(item.get("provider_call_started_at") or "")
-            > mutation_completed_at
+            > mutation_committed_at
         ]
         b_mutation_terminalized = bool(
             b_final.get("status") == "COMPLETED"
@@ -605,7 +602,7 @@ def verdict(
             and b_response_run.get("status") == "COMPLETED"
             and completion_contract.get("kind") == "MUTATION_EXECUTED"
             and completion_contract.get("source") == "server_trace"
-            and mutation_completed_at
+            and mutation_committed_at
             and not post_mutation_provider_calls
         )
 
