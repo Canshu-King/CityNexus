@@ -15210,9 +15210,10 @@ def _accept_replan_executing(
     )
     if not gate.passed:
         raise HTTPException(409, f"replan is no longer feasible: {', '.join(gate.failures)}")
-    collective_gate = collective_mutation_gate(
+    collective_gate = collective_authority_preflight(
         session,
         journey,
+        proposal,
         proposed,
         hard_feasible_plan_ids={str(proposed.id)},
         resolved_decision=resolved_decision,
@@ -15231,58 +15232,18 @@ def _accept_replan_executing(
             f"{collective_gate.get('code')}: collective mediation must be resolved before mutation",
         )
     authority_receipt_id = (
-        str((resolved_decision or {}).get("authority_receipt_id") or "") or None
+        str(collective_gate.get("authority_receipt_id") or "") or None
     )
-    if collective_gate.get("classification") == "UNANIMOUS_DOMINANCE":
-        # Dominance has no member response round.  Recompute its receipt from
-        # the current server gate and bind it to this exact proposal/plan
-        # before any plan row is mutated.
-        from app.collective_authority import (
-            UNANIMOUS_DOMINANCE,
-            issue_collective_authority_receipt,
+    if (
+        expected_authority_receipt_id is not None
+        and str(authority_receipt_id or "")
+        != str(expected_authority_receipt_id)
+    ):
+        session.rollback()
+        raise HTTPException(
+            409,
+            "COLLECTIVE_AUTHORITY_RECEIPT_CHANGED_BEFORE_MUTATION",
         )
-        surface = json.dumps(
-            collective_gate.get("candidate_fit_matrix") or [],
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            default=str,
-        )
-        dominance_decision_epoch = str(
-            collective_gate.get("current_decision_epoch")
-            or hashlib.sha256(surface.encode()).hexdigest()
-        )
-        dominance_world_epoch = str(
-            collective_gate.get("current_material_world_epoch")
-            or hashlib.sha256(surface.encode()).hexdigest()
-        )
-        dominance_surface_fingerprint = hashlib.sha256(surface.encode()).hexdigest()
-        authority_receipt = issue_collective_authority_receipt(
-            session,
-            journey_id=journey.id,
-            proposal_id=proposal.id,
-            plan_version_id=proposed.id,
-            authority_mode=UNANIMOUS_DOMINANCE,
-            decision_epoch=dominance_decision_epoch,
-            material_world_epoch=dominance_world_epoch,
-            candidate_surface_fingerprint=dominance_surface_fingerprint,
-            classification="UNANIMOUS_DOMINANCE",
-        )
-        session.flush()
-        reloaded_receipt = session.get(type(authority_receipt), authority_receipt.id)
-        from app.collective_authority import receipt_validation
-        if not receipt_validation(
-            reloaded_receipt,
-            journey_id=journey.id,
-            proposal_id=proposal.id,
-            plan_version_id=proposed.id,
-            decision_epoch=dominance_decision_epoch,
-            material_world_epoch=dominance_world_epoch,
-            candidate_surface_fingerprint=dominance_surface_fingerprint,
-            authority_mode=UNANIMOUS_DOMINANCE,
-        ).get("valid"):
-            raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_INVALID")
-        authority_receipt_id = authority_receipt.id
 
     authority_receipt_snapshot: dict[str, Any] = {}
     if authority_receipt_id:
