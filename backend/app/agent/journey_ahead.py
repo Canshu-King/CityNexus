@@ -203,6 +203,7 @@ def journey_ahead_projection(
     prevention_status: str | None = None,
     provider_degraded: bool = False,
     brain_blocked: bool = False,
+    execution_drift: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Expose a bounded, read-only future horizon beside R48 foreground flow."""
     stamp = (now or execution_clock.now()).astimezone(timezone.utc)
@@ -282,6 +283,34 @@ def journey_ahead_projection(
             ),
         }
         risks.append(item)
+
+    # A material, confirmed execution delay is a distinct Journey Ahead input.
+    # Keep it out of provider weather/mobility labels and preserve its source.
+    if execution_drift and execution_drift.get("material"):
+        target = execution_drift.get("next_risk") or {}
+        target_start = _aware(target.get("start_at"))
+        if target_start is not None and target_start > stamp:
+            risks.append({
+                "activity_id": str(target.get("activity_id") or ""),
+                "title": str(target.get("activity_title") or "Protected commitment"),
+                "start_at": target_start.isoformat(),
+                "starts_at": target_start.isoformat(),
+                "risk_score": 95,
+                "risk_kind": "EXECUTION_DRIFT_EXPOSURE",
+                "failure_modes": ["EXECUTION_DRIFT_EXPOSURE"],
+                "grounded": True,
+                "authority": "SYSTEM_DERIVED_EXECUTION_FACT",
+                "source_execution_activity_id": (execution_drift.get("basis") or {}).get("activity_id"),
+                "source_truth_kind": (execution_drift.get("basis") or {}).get("truth_kind"),
+                "route_slack_minutes": target.get("slack_after_min"),
+                "protected_commitment": True,
+                "risk_identity": _risk_identity(
+                    journey_id=journey.id,
+                    activity_id=str(target.get("activity_id") or ""),
+                    risk_kind="EXECUTION_DRIFT_EXPOSURE",
+                    provenance={"execution_drift": execution_drift.get("basis")},
+                ),
+            })
 
     classified = journey_ahead_state(
         activity_risks=risks,

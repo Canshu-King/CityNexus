@@ -35,6 +35,7 @@ from app.db.models import (
 )
 from app.agent.transactional_operator import execution_plan_projection
 from app.execution.continuous_journey import continuous_flow_projection
+from app.execution.progress_drift import progress_drift_projection
 from app.agent.journey_ahead import journey_ahead_projection
 from app.agent.overnight_steward import overnight_steward_projection
 from app.agent.journey_intent import active_journey_intents, pending_journey_intent_clarifications
@@ -431,6 +432,25 @@ def operator_projection(
             "choices": choices,
         }
     timeline = [*_timeline(session, journey.id), *(collective.get("timeline") or [])]
+    progress = progress_drift_projection(session, journey)
+    drift_event_rows = session.scalars(
+        select(Event).where(
+            Event.journey_id == journey.id,
+            Event.event_type == "SCHEDULE_DELAY",
+            Event.provenance == "SYSTEM_DERIVED",
+        ).order_by(Event.detected_at.desc(), Event.id.desc()).limit(1)
+    ).all()
+    if drift_event_rows:
+        try:
+            drift_event_payload = _json(drift_event_rows[0].payload_json, {})
+            if drift_event_payload.get("execution_drift"):
+                timeline.append({
+                    "at": drift_event_rows[0].occurred_at,
+                    "kind": "EXECUTION_DRIFT",
+                    "label": f"Activity finished {abs(int((drift_event_payload.get('execution_drift') or {}).get('drift_min') or 0))} min later than planned",
+                })
+        except (TypeError, ValueError):
+            pass
     timeline.extend({"at": item.received_at, "kind": "RESERVATION_UPDATE",
                      "label": ("Reservation schedule updated" if item.status == "APPLIED" else "Booking update needs a detail")}
                     for item in inbox_rows[:5])
@@ -482,6 +502,7 @@ def operator_projection(
             resume_projection_state.get("pending")
             and not resume_projection_state.get("safe_to_resume")
         ),
+        execution_drift=progress,
     )
     viewer_traveler_id = journey.traveler_id
     if viewer_member_id:
@@ -593,6 +614,7 @@ def operator_projection(
         "operations": operations,
         "flow": flow,
         "ahead": ahead,
+        "progress": progress,
         "overnight": overnight,
         "intents": projected_intents,
         "inbox": inbox,

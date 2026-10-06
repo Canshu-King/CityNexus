@@ -1465,6 +1465,11 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .journey-ahead small, .journey-ahead span { font-size: 13px; }
 .journey-ahead-future_risk_found, .journey-ahead-prevention_ready, .journey-ahead-waiting_for_approval { border-color: #d8b46c; background: #fff8e8; }
 .journey-ahead-provider_degraded, .journey-ahead-future_risk_uncertain { border-color: #d8a39d; background: #fff5f3; color: #71271e; }
+.journey-progress { display: grid; gap: 5px; padding: 12px; border-radius: 12px; border: 1px solid rgba(52, 115, 94, .24); background: rgba(242, 251, 246, .9); color: #214b3a; }
+.journey-progress strong { font-size: 14px; }
+.journey-progress small, .journey-progress span { font-size: 13px; }
+.journey-progress-commitment_at_risk, .journey-progress-needs_attention { border-color: #d8a39d; background: #fff5f3; color: #71271e; }
+.journey-progress-route_unknown, .journey-progress-reality_contested { border-color: #d8b46c; background: #fff8e8; color: #5d431d; }
 .journey-overnight { display: grid; gap: 5px; padding: 12px; border-radius: 12px; border: 1px solid rgba(84, 119, 102, .24); background: rgba(242, 250, 245, .92); color: #294f3d; }
 .journey-overnight strong { font-size: 14px; }
 .journey-overnight small, .journey-overnight span { font-size: 13px; }

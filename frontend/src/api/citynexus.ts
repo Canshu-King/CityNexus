@@ -501,6 +501,7 @@ export interface JourneyOperatorProjection {
   discovery: JourneyOperatorDiscoveryProjection;
   operations?: JourneyOperatorOperationsProjection | null;
   flow?: JourneyContinuousFlow | null;
+  progress?: JourneyProgressProjection;
   ahead?: JourneyAheadProjection | null;
   overnight?: JourneyOvernightProjection | null;
   timeline: JourneyOperatorTimelineItem[];
@@ -511,6 +512,30 @@ export interface JourneyOperatorProjection {
   reality_conflict?: JourneyRealityConflictProjection | null;
   quiet_mode?: "QUIET" | "NORMAL";
   intent_clarification_result?: { intent_id: string; mission_id: string; outcome: string; agent_status: string };
+}
+
+export interface JourneyProgressProjection {
+  state: string;
+  headline: string;
+  drift_min: number | null;
+  material?: boolean;
+  basis?: {
+    activity_id: string;
+    activity_title?: string;
+    milestone: string;
+    planned_at: string;
+    actual_at: string;
+    truth_kind: string;
+  } | null;
+  next_risk?: {
+    commitment_id: string;
+    activity_id: string;
+    activity_title: string;
+    start_at: string;
+    slack_before_min: number | null;
+    slack_after_min?: number | null;
+  } | null;
+  read_only?: boolean;
 }
 
 export interface JourneyIntentSteeringResponse {

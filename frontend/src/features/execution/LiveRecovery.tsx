@@ -782,6 +782,19 @@ export function LiveRecovery({
             ) : null}
           </div>
         )}
+        {operator?.progress?.basis && operator.progress.state !== "UNKNOWN_PROGRESS" && (
+          <div className={`journey-progress journey-progress-${operator.progress.state.toLowerCase()}`} data-testid="journey-progress" aria-live="polite">
+            <span className="v8-kicker">{zh ? "行程进度" : "Trip progress"}</span>
+            <strong data-testid="journey-progress-headline">{operator.progress.headline}</strong>
+            {operator.progress.next_risk && operator.progress.next_risk.slack_after_min != null && (
+              <small data-testid="journey-progress-slack">
+                {zh
+                  ? `${operator.progress.next_risk.activity_title} 剩余 ${operator.progress.next_risk.slack_after_min} 分钟缓冲`
+                  : `${operator.progress.next_risk.activity_title} has ${operator.progress.next_risk.slack_after_min} min of remaining slack`}
+              </small>
+            )}
+          </div>
+        )}
         {operator?.ahead && (
           <div className={`journey-ahead journey-ahead-${operator.ahead.state.toLowerCase()}`} data-testid="journey-ahead" aria-live="polite">
             <span className="v8-kicker">{zh ? "同时看着后面的行程" : "Looking ahead"}</span>

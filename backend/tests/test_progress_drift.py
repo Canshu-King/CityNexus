@@ -1,4 +1,8 @@
+import json
+from types import SimpleNamespace
+
 from app.execution.progress_drift import (
+    _execution_milestone,
     classify_progress_risk,
     drift_from_milestone,
     execution_drift_fingerprint,
@@ -28,6 +32,22 @@ def test_simulated_execution_cannot_prove_live_progress_drift():
     )
     assert decision.state == "UNKNOWN_PROGRESS"
     assert decision.material is False
+
+
+def test_simulated_milestone_cannot_supply_a_system_drift_event_source():
+    activity = SimpleNamespace(
+        metadata_json=json.dumps({
+            "execution_truth_history": [{
+                "kind": "SIMULATED_STATE_TRANSITION",
+                "transition": "COMPLETED",
+                "captured_at": "2026-10-07T05:28:00+00:00",
+            }],
+            "completed_at_actual": "2026-10-07T05:28:00+00:00",
+        }),
+        start_at="2026-10-07T05:00:00+00:00",
+        end_at="2026-10-07T05:20:00+00:00",
+    )
+    assert _execution_milestone(activity) is None
 
 
 def test_late_but_absorbable_progress_stays_quiet():

@@ -245,6 +245,10 @@ from app.execution.readiness import (
     refresh_departure_readiness,
 )
 from app.execution.departure_activation import departure_activation_projection
+from app.execution.progress_drift import (
+    execution_drift_fingerprint,
+    progress_drift_projection,
+)
 from app.execution.launch_setup import launch_setup_projection
 from app.execution.launch_origin import grounded_launch_origin
 from app.execution.route_session_contract import (
@@ -11746,7 +11750,7 @@ def _transition_activity_state(
             except (KeyError, TypeError, ValueError):
                 raise HTTPException(409, "DEPART_BLOCKED_MISSING_LIVE_EXECUTION_MOBILITY")
     metadata = json.loads(activity.metadata_json or "{}")
-    captured_at = datetime.now(timezone.utc).isoformat()
+    captured_at = execution_clock.now().astimezone(timezone.utc).isoformat()
     truth = _resolve_execution_truth_attestation(
         request,
         session,
@@ -11809,6 +11813,79 @@ def _transition_activity_state(
     refresh_offline_snapshot(session, journey)
     session.commit()
     return twin
+
+
+def _persist_material_execution_drift(
+    session: Session, journey: Journey, activity: Activity
+) -> tuple[EventModel | None, dict[str, Any]]:
+    """Persist one material Event from the real completion milestone only."""
+    progress = progress_drift_projection(session, journey)
+    basis = progress.get("basis") or {}
+    risk = progress.get("next_risk") or {}
+    if (
+        basis.get("activity_id") != activity.id
+        or basis.get("milestone") != "COMPLETED"
+        or not progress.get("material")
+    ):
+        return None, progress
+    fingerprint = execution_drift_fingerprint(
+        journey_id=journey.id,
+        activity_id=activity.id,
+        milestone="COMPLETED",
+        actual_at=str(basis.get("actual_at") or ""),
+        affected_target_id=str(risk.get("commitment_id") or "") or None,
+    )
+    for row in session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.event_type == "SCHEDULE_DELAY",
+            EventModel.provenance == "SYSTEM_DERIVED",
+        )
+    ).all():
+        if _json_object(row.payload_json).get("drift_fingerprint") == fingerprint:
+            return row, progress
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="journey-execution-progress",
+        provenance="SYSTEM_DERIVED",
+        event_type="SCHEDULE_DELAY",
+        severity="MAJOR",
+        status="DETECTED",
+        affected_activity_id=str(risk.get("activity_id") or "") or None,
+        occurred_at=str(basis["actual_at"]),
+        detected_at=now,
+        resolved_at=None,
+        payload_json=json.dumps({
+            "execution_drift": progress,
+            "drift_fingerprint": fingerprint,
+            "source_milestone": basis,
+            "affected_commitment_id": risk.get("commitment_id"),
+            "affected_activity_id": risk.get("activity_id"),
+            "derivation": "SYSTEM_DERIVED_EXECUTION_FACT",
+            "source_execution_provenance": basis.get("truth_kind"),
+            "source_execution_milestone_id": basis.get("activity_id"),
+            "source_execution_milestone": basis.get("milestone"),
+            "source_execution_at": basis.get("actual_at"),
+            "incident_fingerprint": fingerprint,
+            "predictive_only": False,
+        }, ensure_ascii=False, sort_keys=True),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.execution_drift.materialized",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        after={"event_type": event.event_type, "drift_fingerprint": fingerprint,
+               "source_activity_id": activity.id, "affected_activity_id": event.affected_activity_id},
+    )
+    return event, progress
 
 
 def _is_authoritative_execution_plan(plan: PlanVersion | None) -> bool:
@@ -11958,7 +12035,7 @@ def complete_activity(
                 f"INVALID_ACTIVITY_TRANSITION:{activity.status}->COMPLETED; expected=IN_PROGRESS",
             )
     metadata = json.loads(activity.metadata_json or "{}")
-    completed_at = datetime.now(timezone.utc).isoformat()
+    completed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
     truth = _resolve_execution_truth_attestation(
         request,
         session,
@@ -12046,7 +12123,16 @@ def complete_activity(
         _invalidate_pending_replans_after_completion(session, journey, completed_at)
         learn_from_journey(session, journey)
     refresh_offline_snapshot(session, journey)
+    drift_event, _progress = _persist_material_execution_drift(session, journey, activity)
     session.commit()
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if drift_event is not None and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey, include_opportunity_signals=False)
+        except Exception:
+            logging.getLogger(__name__).exception(
+                "R55 Guardian handoff failed for execution drift event %s", drift_event.id
+            )
     return twin
 
 
