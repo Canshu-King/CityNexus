@@ -62,14 +62,25 @@ def verdict(
         == "RECOVERY_EPOCH_SUPERSEDED"
     ]
     runtime = checkpoint.get("runtime") or {}
+    source_receipt = checkpoint.get("source_receipt") or {}
     provider_calls_real = runtime.get("provider_calls_were_real") is True
+    concurrent_barrier = (
+        runtime.get("concurrent_external_barrier_proven") is True
+    )
+    source_traceable = bool(
+        source_receipt.get("git_head")
+        and source_receipt.get("source_sha256")
+        and source_receipt.get("tracked_dirty_before_strike") is False
+    )
     a_external = (
         provider_calls_real
+        and concurrent_barrier
         and a.get("provider_key") == "hermes"
         and any(row.get("run_id") == a.get("id") for row in steps)
     )
     b_external = (
         provider_calls_real
+        and concurrent_barrier
         and b.get("provider_key") == "hermes"
         and any(row.get("run_id") == b.get("id") for row in steps)
     )
@@ -205,6 +216,21 @@ def verdict(
     )
 
     dimensions = {
+        "strike_source_state_traceable": _dim(
+            source_traceable,
+            (
+                f"git_head={source_receipt.get('git_head')} "
+                f"tracked_dirty_before_strike="
+                f"{source_receipt.get('tracked_dirty_before_strike')}"
+            ),
+        ),
+        "concurrent_external_barrier": _dim(
+            concurrent_barrier,
+            (
+                "A and B must each be durably blocked on their first external "
+                "model response before the harness releases either"
+            ),
+        ),
         "recovery_epoch_server_owned": _dim(
             bool(r1id and r2id and r1id != r2id),
             "R1/R2 are distinct persisted server-created ids",
