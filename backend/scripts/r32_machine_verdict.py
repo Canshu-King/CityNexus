@@ -63,27 +63,51 @@ def verdict(
     ]
     runtime = checkpoint.get("runtime") or {}
     source_receipt = checkpoint.get("source_receipt") or {}
-    provider_calls_real = runtime.get("provider_calls_were_real") is True
-    concurrent_barrier = (
-        runtime.get("concurrent_external_barrier_proven") is True
+
+    provider_calls_raw = runtime.get("provider_calls_were_real")
+    provider_calls_real: bool | None = (
+        True
+        if provider_calls_raw is True
+        else False
+        if provider_calls_raw is False
+        else None
     )
-    source_traceable = bool(
-        source_receipt.get("git_head")
-        and source_receipt.get("source_sha256")
-        and source_receipt.get("tracked_dirty_before_strike") is False
+    barrier_raw = runtime.get("concurrent_external_barrier_proven")
+    concurrent_barrier: bool | None = (
+        True if barrier_raw is True else False if barrier_raw is False else None
     )
-    a_external = (
-        provider_calls_real
-        and concurrent_barrier
-        and a.get("provider_key") == "hermes"
-        and any(row.get("run_id") == a.get("id") for row in steps)
-    )
-    b_external = (
-        provider_calls_real
-        and concurrent_barrier
-        and b.get("provider_key") == "hermes"
-        and any(row.get("run_id") == b.get("id") for row in steps)
-    )
+    source_traceable: bool | None = None
+    if source_receipt:
+        source_traceable = bool(
+            source_receipt.get("git_head")
+            and source_receipt.get("source_sha256")
+            and source_receipt.get("tracked_dirty_before_strike") is False
+        )
+
+    a_external: bool | None = None
+    if (
+        provider_calls_real is not None
+        and concurrent_barrier is not None
+        and a.get("id")
+    ):
+        a_external = bool(
+            provider_calls_real
+            and concurrent_barrier
+            and a.get("provider_key") == "hermes"
+            and any(row.get("run_id") == a.get("id") for row in steps)
+        )
+    b_external: bool | None = None
+    if (
+        provider_calls_real is not None
+        and concurrent_barrier is not None
+        and b.get("id")
+    ):
+        b_external = bool(
+            provider_calls_real
+            and concurrent_barrier
+            and b.get("provider_key") == "hermes"
+            and any(row.get("run_id") == b.get("id") for row in steps)
+        )
 
     r1_event_ids = set(r1.get("triggering_event_ids") or [])
     r2_event_ids = set(r2.get("triggering_event_ids") or [])
@@ -240,10 +264,14 @@ def verdict(
             "R1 has provider Event lineage and a recovery fingerprint",
         ),
         "agent_a_external_and_bound_r1": _dim(
-            bool(
-                a_external
-                and a.get("recovery_epoch_id") == r1id
-                and checkpoint.get("agent_a_bound_before_shock_b")
+            (
+                None
+                if a_external is None
+                else bool(
+                    a_external
+                    and a.get("recovery_epoch_id") == r1id
+                    and checkpoint.get("agent_a_bound_before_shock_b")
+                )
             ),
             (
                 f"Agent A provider={a.get('provider_key')} "
@@ -267,10 +295,14 @@ def verdict(
             "R1 SUPERSEDED -> R2 OPEN",
         ),
         "agent_b_external_and_bound_r2": _dim(
-            bool(
-                b_external
-                and b.get("recovery_epoch_id") == r2id
-                and checkpoint.get("agent_b_bound_after_shock_b")
+            (
+                None
+                if b_external is None
+                else bool(
+                    b_external
+                    and b.get("recovery_epoch_id") == r2id
+                    and checkpoint.get("agent_b_bound_after_shock_b")
+                )
             ),
             (
                 f"Agent B provider={b.get('provider_key')} "
