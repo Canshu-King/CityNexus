@@ -72,6 +72,115 @@ def test_r32_external_wait_does_not_hold_database_transaction(monkeypatch):
     assert len(calls) >= 2
 
 
+def test_r32_shock_during_provider_wait_preempts_before_stale_tool(monkeypatch):
+    """A model response born under R1 is discarded if R2 appears in flight."""
+
+    from app.agent.mission import create_mission
+
+    journey_id = _selected_journey()
+    agent = object.__new__(DeepSeekJourneyAgent)
+    agent.model_key = "r32-provider-race-fixture"
+    complete_calls = 0
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        mission = create_mission(
+            session,
+            journey,
+            command="Inspect the current Journey and recover if needed.",
+            requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+            trigger_event_id=None,
+        )
+        session.commit()
+
+        def complete(messages):
+            nonlocal complete_calls
+            complete_calls += 1
+            assert complete_calls == 1
+            # Simulate the server receiving a materially new provider fact
+            # while the external model call is in flight.  This is a separate
+            # durable transaction, just like the live R32 strike.
+            with SessionLocal() as concurrent:
+                concurrent.add(
+                    Event(
+                        id=str(uuid4()),
+                        journey_id=journey_id,
+                        provider_key="r32-concurrent-provider",
+                        provenance="PROVIDER_VERIFIED",
+                        event_type="WEATHER",
+                        severity="MAJOR",
+                        status="DETECTED",
+                        affected_activity_id=None,
+                        occurred_at=datetime.now(timezone.utc).isoformat(),
+                        detected_at=datetime.now(timezone.utc).isoformat(),
+                        resolved_at=None,
+                        payload_json=json.dumps(
+                            {
+                                "incident_fingerprint": (
+                                    "r32-shock-during-provider-wait"
+                                )
+                            },
+                            sort_keys=True,
+                        ),
+                        created_at=datetime.now(timezone.utc).isoformat(),
+                    )
+                )
+                concurrent.commit()
+            # This stale response must never reach Gateway dispatch.
+            return {
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "stale-inspection",
+                        "type": "function",
+                        "function": {
+                            "name": "inspect_journey",
+                            "arguments": json.dumps(
+                                {"journey_id": journey_id}
+                            ),
+                        },
+                    }
+                ],
+            }
+
+        def must_not_dispatch(*args, **kwargs):
+            raise AssertionError(
+                "stale provider response reached Gateway dispatch"
+            )
+
+        monkeypatch.setattr(agent, "_complete", complete)
+        monkeypatch.setattr(
+            "app.agent.gateway.AgentToolGateway.dispatch",
+            must_not_dispatch,
+        )
+        result = agent.run(
+            session,
+            journey=journey,
+            mission=mission,
+        )
+
+    assert complete_calls == 1
+    assert result["status"] == "SUPERSEDED"
+    assert result["completion_contract"]["kind"] == "SUPERSEDED"
+    assert result["completion_contract"]["reason_code"] == (
+        RECOVERY_EPOCH_SUPERSEDED
+    )
+    assert [step["tool_name"] for step in result["tool_steps"]] == [
+        "recovery_epoch_guard"
+    ]
+    guard = result["tool_steps"][0]
+    assert guard["status"] == "SUPERSEDED"
+    assert guard["result"]["code"] == RECOVERY_EPOCH_SUPERSEDED
+    assert guard["result"]["model_response_discarded"] is True
+
+    with SessionLocal() as db:
+        persisted = db.get(AgentRun, result["run_id"])
+        assert persisted is not None
+        assert persisted.status == "SUPERSEDED"
+        assert persisted.failure_reason == RECOVERY_EPOCH_SUPERSEDED
+
+
 def test_negative_indoor_preference_does_not_compile_as_indoor_preferred(monkeypatch):
     command = "我喜欢户外自然景观，不喜欢剧场和室内馆，路线松弛不要赶。"
     capabilities = extract_capabilities_from_text(command)
