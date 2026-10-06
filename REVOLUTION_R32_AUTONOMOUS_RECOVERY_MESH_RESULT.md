@@ -423,3 +423,91 @@ Artifacts:
 - Fresh machine verdict: `backend/output/R32_MACHINE_VERDICT_V2C_FRESH.json`
 - Fresh regression receipt: `backend/output/r32-focused-regression-v2c-fresh.json`
 - Fresh raw regression: `backend/output/r32-focused-regression-v2c-fresh.txt`
+
+
+## GPT final R32 closeout — verifier v5 post-review
+
+R32 is now closed as **PROVEN** within its stated truth boundary.
+
+The original fresh 2C replacement ran at source head
+`9b29532d8cd5c77dd6617054c4803f5caa4ac1c0` and produced the immutable live
+artifact:
+
+`backend/output/r32-live-strike-v2c-fresh.json`
+
+with Git blob SHA:
+
+`243adf105dbcc9abb37b3ba04c3bb698eec5a090`.
+
+After the live strike, GPT deliberately tightened the verifier instead of
+running another live attempt.
+
+Verifier v5 adds hard requirements that were not necessary to make the original
+v4 verdict green:
+
+- the mutation cardinality check now counts the full active mutation surface,
+  including booking and commitment mutations rather than only four replan tools;
+- a successful mutation requires Agent B to finish with server-trace
+  `MUTATION_EXECUTED`;
+- no provider/model call may begin after the durable R2
+  `COMMITTED / REPLAN_ACCEPTED` boundary;
+- stale validation must be causally inert: no RecoveryEpoch newer than R2 may be
+  manufactured by old A/R1 merely discovering that it is stale.
+
+Adversarial tests explicitly demonstrate that each violation is
+`CONTRADICTED`.
+
+The committed 2C-FRESH artifact itself is loaded and replayed by the deterministic
+suite under verifier v5. It remains **PROVEN**.
+
+Final closeout head:
+
+`f7d5bc7824d2e8bb5761cf7105c7be47bda3980f`
+
+Final GitHub Actions result:
+
+**162 passed / 0 failed / 4 deprecation warnings**.
+
+The machine-readable post-review receipt is:
+
+`backend/output/R32_POSTREVIEW_CLOSEOUT.json`
+
+with verdict:
+
+`R32_PROVEN_AND_CLOSED`.
+
+No additional R32 live strike is authorized or useful. The five coverage
+dimensions still marked NOT_PROVEN are separate unexercised historical
+branches, not blockers for the proven exact-run concurrency claim.
+
+### What R32 now proves
+
+Within the replay-backed WB2api/Hermes and non-physical-travel truth boundary,
+CityNexus has live evidence that:
+
+- two external AgentRuns may reason concurrently under different server-owned
+  RecoveryEpoch generations;
+- each provider call is attributable to an exact durable AgentRun and exact
+  RecoveryEpoch, independent of transport thread names;
+- a response computed under superseded reality is discarded before its
+  model-selected tool can spend authority;
+- current B/R2 can independently reason through inspections, search, proposal
+  creation and collective authority;
+- algorithmic unanimous collective authority remains bound to B/R2 proposal
+  lineage;
+- exactly one legal mutation can commit;
+- R2 closes durably `COMMITTED / REPLAN_ACCEPTED`;
+- B terminalizes `COMPLETED / MUTATION_EXECUTED` without another external
+  reasoning turn;
+- stale A/R1 cannot create a successor recovery generation merely by checking
+  its stale binding;
+- stale evidence itself cannot be relabelled into a fresh live proof because
+  source/protocol/freshness identity is machine-enforced.
+
+The next Revolution boundary is therefore no longer "can concurrent Agents
+survive a changing world inside one process?"
+
+It is:
+
+**can the same authority model survive process death, worker takeover and a
+zombie worker returning after its execution lease has been fenced?**
