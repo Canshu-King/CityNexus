@@ -183,7 +183,13 @@ def _already_applied_accept_replan(
         or journey.active_plan_version_id != proposal.proposed_plan_version_id
     ):
         return None
-    return {
+    approval = session.get(ActionApproval, approval_id)
+    authority_receipt_id = (
+        str(approval.authority_receipt_id)
+        if approval is not None and approval.authority_receipt_id
+        else None
+    )
+    recovered = {
         "tool": "accept_replan",
         "decision": "REQUIRE_CONFIRMATION",
         "executed": True,
@@ -204,6 +210,10 @@ def _already_applied_accept_replan(
         },
         "continuation_recovered_from_domain_truth": True,
     }
+    if authority_receipt_id:
+        recovered["collective_authority_receipt_id"] = authority_receipt_id
+        recovered["result"]["collective_authority_receipt_id"] = authority_receipt_id
+    return recovered
 
 
 def reconcile_approved_pending_actions(
@@ -448,6 +458,7 @@ def resume_pending_action(
             "tool": pending.tool_name,
             "status": pending.status,
             "executed": executed,
+            "collective_authority_receipt_id": pending.authority_receipt_id,
         },
     )
     if executed and run is not None:
