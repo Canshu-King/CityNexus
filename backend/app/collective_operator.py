@@ -134,6 +134,17 @@ def _decision_round_is_current(
         base_plan_version_id=journey.active_plan_version_id,
         options=current_options,
         required_member_ids=required_ids,
+        decision_relevant_member_ids=(
+            (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            )
+            if (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            ) is not None
+            else clarification.get(
+                "decision_relevant_member_ids", required_ids
+            )
+        ),
         members=members,
     )
     return current_epoch == expected_epoch
@@ -231,18 +242,19 @@ def collective_operator_projection(
     decision_is_current = _decision_round_is_current(
         session, journey, mission, clarification
     )
+    receipt_is_current = bool(
+        receipt is not None
+        and receipt.invalidated_at is None
+        and receipt.decision_epoch == clarification.get("decision_epoch")
+        and receipt.material_world_epoch == clarification.get("material_world_epoch")
+        and receipt.candidate_surface_fingerprint == clarification.get("candidate_surface_fingerprint")
+        and set(_json(receipt.required_member_ids_json, [])) == required_set
+    )
     state = classify_collective_operator_state(
         member_count=len(required_ids) or len(member_rows),
         status=str(clarification.get("status") or ""),
         response_count=response_count,
-        authority_receipt_present=bool(
-            receipt is not None
-            and receipt.invalidated_at is None
-            and receipt.decision_epoch == clarification.get("decision_epoch")
-            and receipt.material_world_epoch == clarification.get("material_world_epoch")
-            and receipt.candidate_surface_fingerprint == clarification.get("candidate_surface_fingerprint")
-            and set(_json(receipt.required_member_ids_json, [])) == required_set
-        ),
+        authority_receipt_present=receipt_is_current,
         stale=(
             membership_stale
             or not decision_is_current
@@ -260,6 +272,52 @@ def collective_operator_projection(
         for item in clarification.get("candidate_options") or []
         if isinstance(item, dict)
     ]
+    selected_proposal_id = str(clarification.get("selected_proposal_id") or "") or None
+    selected_option = next(
+        (
+            item
+            for item in clarification.get("candidate_options") or []
+            if isinstance(item, dict)
+            and str(item.get("proposal_id") or "") == str(selected_proposal_id or "")
+        ),
+        None,
+    )
+    selected_plan_id = str(selected_option.get("plan_id") or "") if selected_option else ""
+    selected_option_label = (
+        str(
+            selected_option.get("label")
+            or selected_option.get("summary")
+            or "Recovery option"
+        )
+        if selected_option
+        else None
+    )
+    selected_proposal = session.get(ReplanProposal, str(selected_proposal_id)) if selected_proposal_id else None
+    selected_plan = session.get(PlanVersion, selected_plan_id) if selected_plan_id else None
+    selected_proposal_current = bool(
+        selected_proposal is not None
+        and selected_plan is not None
+        and selected_proposal.journey_id == journey.id
+        and selected_proposal.status == "PRESENTED"
+        and selected_proposal.base_plan_version_id == journey.active_plan_version_id
+        and selected_proposal.proposed_plan_version_id == selected_plan.id
+        and selected_plan.status == "CANDIDATE"
+    )
+    viewer_member = active_members.get(str(viewer_member_id or ""))
+    mission_intent = _json(mission.resolved_intent_json, {})
+    group_recovery_context = (
+        mission_intent.get("group_recovery")
+        if isinstance(mission_intent, dict)
+        else None
+    )
+    viewer_can_apply = bool(
+        state == "COLLECTIVE_AUTHORIZED"
+        and decision_is_current
+        and receipt_is_current
+        and selected_proposal_current
+        and viewer_member is not None
+        and viewer_member.role in member_update_roles
+    )
     return {
         "state": state,
         "mission_id": mission.id,
@@ -281,7 +339,26 @@ def collective_operator_projection(
         "members": member_views,
         "options": options,
         "authority_receipt_id": receipt.id if receipt is not None else None,
-        "selected_proposal_id": clarification.get("selected_proposal_id"),
+        "selected_proposal_id": selected_proposal_id,
+        "selected_plan_version_id": selected_plan_id or None,
+        "selected_option_label": selected_option_label,
+        "reconsent_required": bool(
+            isinstance(group_recovery_context, dict)
+            and group_recovery_context.get("reconsent_for_clarification_id")
+        ),
+        "proposal_ids": sorted(
+            {
+                str(item.get("proposal_id"))
+                for item in clarification.get("candidate_options") or []
+                if isinstance(item, dict) and item.get("proposal_id")
+            }
+        ),
+        "viewer_can_apply": viewer_can_apply,
+        "apply_block_reason": None if viewer_can_apply else (
+            "AUTHORIZED_MEMBER_REQUIRED"
+            if state == "COLLECTIVE_AUTHORIZED"
+            else "CURRENT_COLLECTIVE_AUTHORITY_REQUIRED"
+        ),
         "waiting_for_member_count": max(0, len(required_ids) - response_count),
         "mediation_mission_id": _latest_mediation_child(session, journey.id, mission.id),
         "status": clarification.get("status"),

@@ -443,6 +443,7 @@ from app.schemas import (
     LocationObservationRequest,
     GroupPresenceRouteRequest,
     GroupRecoveryRequest,
+    GroupRecoveryApplyRequest,
     InTransitRerouteRequest,
     LaunchOriginRequest,
     RouteAcquireRequest,
@@ -3966,6 +3967,15 @@ def answer_collective_clarification(
         base_plan_version_id=journey.active_plan_version_id,
         options=current_options,
         required_member_ids=required,
+        decision_relevant_member_ids=(
+            (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            )
+            if (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            ) is not None
+            else stored.get("decision_relevant_member_ids", required)
+        ),
         members=members,
     )
     stored_surface_fingerprint = stored.get("candidate_surface_fingerprint")
@@ -6078,6 +6088,18 @@ def _pending_collective_authority_freshness(
                     "required_member_ids"
                 )
                 or [],
+                decision_relevant_member_ids=(
+                    (epoch_receipt.get("collective_mediation") or {}).get(
+                        "decision_relevant_member_ids"
+                    )
+                    if (epoch_receipt.get("collective_mediation") or {}).get(
+                        "decision_relevant_member_ids"
+                    ) is not None
+                    else source_clarification.get(
+                        "decision_relevant_member_ids",
+                        source_clarification.get("required_member_ids") or [],
+                    )
+                ),
                 members=epoch_members,
             )
             semantic_stale = (
@@ -9987,6 +10009,587 @@ def request_group_recovery_plan(
         }
     finally:
         native.close()
+
+
+def _group_recovery_lineage_context(
+    session: Session, mission_id: str | None
+) -> tuple[JourneyMission | None, dict[str, Any]]:
+    """Find the durable R58 root without trusting client-supplied lineage ids."""
+    current = session.get(JourneyMission, str(mission_id)) if mission_id else None
+    seen: set[str] = set()
+    while current is not None and current.id not in seen:
+        seen.add(current.id)
+        intent = _json_object(current.resolved_intent_json or "{}")
+        context = intent.get("group_recovery") if isinstance(intent, dict) else None
+        if isinstance(context, dict) and context.get("incident_key"):
+            return current, dict(context)
+        current = (
+            session.get(JourneyMission, str(current.parent_mission_id))
+            if current.parent_mission_id
+            else None
+        )
+    return None, {}
+
+
+def _group_recovery_room_for_incident(
+    session: Session, journey: Journey, incident_key: str
+) -> tuple[JourneyMission, dict[str, Any], JourneyMission, dict[str, Any]] | None:
+    for mission in session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(False),
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all():
+        clarification = _json_object(mission.clarification_json or "{}")
+        if clarification.get("kind") != "COLLECTIVE_TRADEOFF":
+            continue
+        root, group_context = _group_recovery_lineage_context(session, mission.id)
+        if (
+            root is not None
+            and str(group_context.get("incident_key") or "") == str(incident_key)
+        ):
+            return mission, clarification, root, group_context
+    return None
+
+
+def _is_group_recovery_collective_proposal(
+    session: Session, proposal: ReplanProposalModel
+) -> bool:
+    if proposal.source_agent_run_id:
+        run = session.get(AgentRun, str(proposal.source_agent_run_id))
+        if run is not None:
+            _root, context = _group_recovery_lineage_context(session, run.mission_id)
+            if context:
+                return True
+    for mission in session.scalars(
+        select(JourneyMission).where(JourneyMission.journey_id == proposal.journey_id)
+    ).all():
+        clarification = _json_object(mission.clarification_json or "{}")
+        option_ids = {
+            str(item.get("proposal_id") or "")
+            for item in clarification.get("candidate_options") or []
+            if isinstance(item, dict)
+        }
+        if str(proposal.id) not in option_ids:
+            continue
+        _root, context = _group_recovery_lineage_context(session, mission.id)
+        if context:
+            return True
+    return False
+
+
+def _group_recovery_reconsent_round(
+    session: Session,
+    journey: Journey,
+    stale_mission: JourneyMission,
+    stale_clarification: dict[str, Any],
+    root_mission: JourneyMission,
+    group_context: dict[str, Any],
+    *,
+    stale_reason: str,
+) -> dict[str, Any]:
+    """Preserve stale consent and create/reuse one server-derived successor room."""
+    from app.collective_mediation import collective_decision_epoch, collective_material_world_epoch
+
+    old_id = str(stale_clarification.get("clarification_id") or "")
+    stale_clarification["status"] = "STALE"
+    stale_clarification["stale_reason"] = stale_reason
+    stale_clarification["staled_at"] = datetime.now(timezone.utc).isoformat()
+    stale_mission.clarification_json = json.dumps(
+        stale_clarification, ensure_ascii=False, sort_keys=True
+    )
+    old_receipt_id = str(stale_clarification.get("authority_receipt_id") or "")
+    if old_receipt_id:
+        from app.db.models import CollectiveAuthorityReceipt
+
+        old_receipt = session.get(CollectiveAuthorityReceipt, old_receipt_id)
+        if old_receipt is not None and old_receipt.invalidated_at is None:
+            old_receipt.invalidated_at = datetime.now(timezone.utc).isoformat()
+            old_receipt.invalidation_code = stale_reason[:120]
+
+    trigger_id = str(stale_clarification.get("trigger_event_id") or "")
+    proposals = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == trigger_id,
+            ReplanProposalModel.base_plan_version_id == journey.active_plan_version_id,
+            ReplanProposalModel.status == "PRESENTED",
+        )
+        .order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    proposal_receipt = collective_proposal_receipt(session, journey, proposals)
+    mediation = proposal_receipt.get("collective_mediation") or {}
+    options: list[dict[str, Any]] = []
+    seen_shapes: set[str] = set()
+    for item in (proposal_receipt.get("proposal_collective_decisions") or {}).values():
+        if item.get("status") != "GROUNDED_FEASIBLE":
+            continue
+        proposal_id = str(item.get("proposal_id") or "")
+        proposal = session.get(ReplanProposalModel, proposal_id)
+        plan = session.get(PlanVersion, str(item.get("plan_id") or ""))
+        if (
+            proposal is None
+            or plan is None
+            or proposal.status != "PRESENTED"
+            or proposal.base_plan_version_id != journey.active_plan_version_id
+        ):
+            continue
+        shape = json.dumps(
+            {
+                "places": sorted({str(value) for value in item.get("fit_subject_place_ids") or [] if value}),
+                "tags": sorted({str(value).strip().lower() for value in item.get("fit_subject_tags") or [] if str(value).strip()}),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        shape_key = shape if shape != "{}" else str(plan.id)
+        if shape_key in seen_shapes:
+            continue
+        seen_shapes.add(shape_key)
+        item["material_world_epoch"] = collective_material_world_epoch(
+            collective_material_world_basis(
+                session,
+                journey,
+                plan,
+                fit_subject_place_ids=list(item.get("fit_subject_place_ids") or []),
+            )
+        )
+        options.append(item)
+
+    member_projection = active_journey_members_with_capabilities(session, journey)
+    members = member_projection.get("members", [])
+    member_by_id = {str(item.get("member_id")): item for item in members}
+    relevant_ids = {
+        str(item)
+        for item in mediation.get("decision_relevant_member_ids") or []
+    }
+    required_ids = sorted(
+        member_id
+        for member_id in relevant_ids
+        if bool(member_by_id.get(member_id, {}).get("can_authorize_mutation"))
+    )
+    if len(options) < 2 or not required_ids:
+        session.commit()
+        return {
+            "available": False,
+            "reason": "CURRENT_GROUNDED_OPTIONS_OR_AUTHORIZED_MEMBERS_INSUFFICIENT",
+            "mission_id": None,
+            "clarification_id": None,
+        }
+
+    fingerprint = candidate_surface_fingerprint(
+        proposal_receipt.get("candidate_fit_matrix") or []
+    )
+    generation = int(stale_clarification.get("reconsent_generation") or 0) + 1
+    for existing in session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.parent_mission_id == stale_mission.id,
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all():
+        existing_context = _json_object(existing.resolved_intent_json or "{}").get("group_recovery")
+        existing_round = _json_object(existing.clarification_json or "{}")
+        if not (
+            isinstance(existing_context, dict)
+            and str(existing_context.get("reconsent_for_clarification_id") or "") == old_id
+            and existing_round.get("kind") == "COLLECTIVE_TRADEOFF"
+        ):
+            continue
+        current_epoch = collective_decision_epoch(
+            journey_id=journey.id,
+            mission_id=existing.id,
+            trigger_event_id=trigger_id,
+            base_plan_version_id=journey.active_plan_version_id,
+            options=options,
+            required_member_ids=required_ids,
+            decision_relevant_member_ids=sorted(relevant_ids),
+            members=members,
+        )
+        if (
+            existing_round.get("status") == "WAITING_FOR_MEMBERS"
+            and existing_round.get("decision_epoch") == current_epoch
+            and existing_round.get("candidate_surface_fingerprint") == fingerprint
+        ):
+            session.commit()
+            return {
+                "available": True,
+                "reused": True,
+                "mission_id": existing.id,
+                "clarification_id": existing_round.get("clarification_id"),
+                "required_member_count": len(required_ids),
+            }
+        if existing_round.get("status") != "STALE":
+            existing_round["status"] = "STALE"
+            existing_round["stale_reason"] = "SUCCESSOR_DECISION_EPOCH_CHANGED"
+            existing.clarification_json = json.dumps(existing_round, ensure_ascii=False, sort_keys=True)
+
+    successor = create_mission(
+        session,
+        journey,
+        command="Reconsider the current shared recovery because the previous consent became stale.",
+        requested_autonomy=stale_mission.requested_autonomy,
+        trigger_event_id=trigger_id or stale_mission.trigger_event_id,
+        parent_mission_id=stale_mission.id,
+        use_model_draft=False,
+    )
+    successor.max_cost_delta_minor = stale_mission.max_cost_delta_minor
+    successor.max_loss_minor = stale_mission.max_loss_minor
+    successor.max_schedule_drift_min = stale_mission.max_schedule_drift_min
+    successor.protected_activity_ids_json = stale_mission.protected_activity_ids_json
+    successor.mutable_activity_ids_json = stale_mission.mutable_activity_ids_json
+    successor.allowed_action_classes_json = stale_mission.allowed_action_classes_json
+    successor.status = "WAITING_FOR_MEMBERS"
+    successor.completed_at = None
+    successor.started_at = datetime.now(timezone.utc).isoformat()
+    successor_context = {
+        **group_context,
+        "reconsent_for_clarification_id": old_id,
+        "reconsent_generation": generation,
+    }
+    successor.resolved_intent_json = json.dumps(
+        {"group_recovery": successor_context}, ensure_ascii=False, sort_keys=True
+    )
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=successor.id,
+        trigger_event_id=trigger_id,
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=required_ids,
+        decision_relevant_member_ids=sorted(relevant_ids),
+        members=members,
+    )
+    successor.clarification_json = json.dumps(
+        {
+            "kind": "COLLECTIVE_TRADEOFF",
+            "policy": "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES",
+            "clarification_id": str(uuid4()),
+            "decision_epoch": decision_epoch,
+            "candidate_surface_fingerprint": fingerprint,
+            "trigger_event_id": trigger_id,
+            "base_plan_version_id": journey.active_plan_version_id,
+            "candidate_options": options,
+            "required_member_ids": required_ids,
+            "decision_relevant_member_ids": sorted(relevant_ids),
+            "responses": {},
+            "status": "WAITING_FOR_MEMBERS",
+            "selected_proposal_id": None,
+            "selected_candidate_id": None,
+            "reconsent_generation": generation,
+            "supersedes_clarification_id": old_id,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    record_audit(
+        session,
+        action="journey.group_recovery.reconsent.started",
+        entity_type="JourneyMission",
+        entity_id=successor.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="group-recovery-reconsent",
+        after={
+            "supersedes_mission_id": stale_mission.id,
+            "supersedes_clarification_id": old_id,
+            "incident_key": group_context.get("incident_key"),
+            "required_member_ids": required_ids,
+            "decision_epoch": decision_epoch,
+            "candidate_surface_fingerprint": fingerprint,
+        },
+    )
+    session.commit()
+    return {
+        "available": True,
+        "reused": False,
+        "mission_id": successor.id,
+        "clarification_id": _json_object(successor.clarification_json).get("clarification_id"),
+        "required_member_count": len(required_ids),
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/group-recovery/apply")
+def apply_group_recovery(
+    journey_id: UUID,
+    request: Request,
+    payload: GroupRecoveryApplyRequest,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Apply exactly the current server-selected recovery with signed member authority."""
+    del payload  # Strict empty schema: proposal, member and traveler ids are server-owned.
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        external_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+    internal_key = "gr-" + hashlib.sha256(
+        f"{journey.id}|{principal.traveler_id}|{external_key}".encode("utf-8")
+    ).hexdigest()[:60]
+    internal_scoped_key = f"replan.accept:{internal_key}"
+    with journey_write_lock(journey.id):
+        session.expire_all()
+        journey = require(session, Journey, journey.id, "Journey")
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+
+        # The durable acceptance record is also the exactly-once record for this
+        # human apply action. Bind its key to Journey + authenticated Traveler,
+        # then verify the original selected proposal signature on replay.
+        existing = session.get(IdempotencyKey, internal_scoped_key)
+        if existing is not None:
+            stored_response = _json_object(existing.response_json or "{}")
+            stored_proposal = stored_response.get("proposal") if isinstance(stored_response, dict) else None
+            stored_proposal_id = str(stored_proposal.get("id") or "") if isinstance(stored_proposal, dict) else ""
+            expected_signature = canonical_request_signature({"proposal_id": stored_proposal_id})
+            if (
+                not stored_proposal_id
+                or existing.request_hash != expected_signature
+                or not isinstance(stored_proposal, dict)
+                or str(stored_proposal.get("journey_id") or "") != journey.id
+            ):
+                raise HTTPException(409, "group recovery idempotency record is invalid")
+            return {**stored_response, "replayed": True}
+
+        if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+            raise HTTPException(409, "GROUP_RECOVERY_JOURNEY_NOT_ACTIVE")
+        current_presence = group_presence_projection(
+            session, journey, viewer_member_id=member.id
+        )
+        current_recovery = group_recovery_projection(current_presence)
+        affected = current_recovery.get("affected_member")
+        commitment = current_recovery.get("shared_commitment")
+        if (
+            not current_recovery.get("can_request_planning")
+            or not isinstance(affected, dict)
+            or not isinstance(commitment, dict)
+        ):
+            raise HTTPException(409, "GROUP_RECOVERY_INCIDENT_NO_LONGER_CURRENT")
+        incident_key = group_recovery_incident_key(
+            journey_id=journey.id,
+            active_plan_version_id=str(journey.active_plan_version_id),
+            affected_member_id=str(affected.get("member_id") or ""),
+            rendezvous_activity_id=str(commitment.get("activity_id") or ""),
+        )
+        room_match = _group_recovery_room_for_incident(
+            session, journey, incident_key
+        )
+        if room_match is not None:
+            room_match = (
+                room_match[0],
+                room_match[1],
+                room_match[2],
+                room_match[3],
+            )
+            room, clarification, root_mission, group_context = room_match
+            # Keep the stable server-owned incident identity authoritative even
+            # when the current risk projection has accrued newer observations.
+            if str(group_context.get("incident_key") or "") != incident_key:
+                room_match = None
+        if room_match is None:
+            raise HTTPException(409, "GROUP_RECOVERY_COLLECTIVE_ROOM_UNAVAILABLE")
+        room, clarification, root_mission, group_context = room_match
+
+        # A repeated stale attempt reuses the fresh successor that the first
+        # attempt created. It never rewrites old answers or chooses for members.
+        if clarification.get("status") != "RESOLVED":
+            if clarification.get("status") == "STALE":
+                reconsent = _group_recovery_reconsent_round(
+                    session,
+                    journey,
+                    room,
+                    clarification,
+                    root_mission,
+                    group_context,
+                    stale_reason=str(clarification.get("stale_reason") or "COLLECTIVE_CONSENT_STALE"),
+                )
+                raise HTTPException(
+                    409,
+                    detail={
+                        "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+                        "reconsent": reconsent,
+                    },
+                )
+            if (
+                clarification.get("status") == "WAITING_FOR_MEMBERS"
+                and group_context.get("reconsent_for_clarification_id")
+            ):
+                raise HTTPException(
+                    409,
+                    detail={
+                        "code": "COLLECTIVE_CONSENT_RECONSENT_IN_PROGRESS",
+                        "reconsent": {
+                            "available": True,
+                            "reused": True,
+                            "mission_id": room.id,
+                            "clarification_id": clarification.get("clarification_id"),
+                            "required_member_count": len(
+                                clarification.get("required_member_ids") or []
+                            ),
+                        },
+                    },
+                )
+            raise HTTPException(409, "COLLECTIVE_TRADEOFF_UNRESOLVED")
+
+        trigger_id = str(clarification.get("trigger_event_id") or "")
+        proposal_id = str(clarification.get("selected_proposal_id") or "")
+        proposal = session.get(ReplanProposalModel, proposal_id)
+        trigger = session.get(EventModel, trigger_id) if trigger_id else None
+        if (
+            proposal is None
+            or proposal.journey_id != journey.id
+            or proposal.trigger_event_id != trigger_id
+            or proposal.status != "PRESENTED"
+            or proposal.base_plan_version_id != journey.active_plan_version_id
+            or trigger is None
+            or trigger.journey_id != journey.id
+            or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}
+        ):
+            reconsent = _group_recovery_reconsent_round(
+                session,
+                journey,
+                room,
+                clarification,
+                root_mission,
+                group_context,
+                stale_reason="COLLECTIVE_SELECTED_PROPOSAL_OR_TRIGGER_STALE",
+            )
+            raise HTTPException(
+                409,
+                detail={
+                    "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+                    "reconsent": reconsent,
+                },
+            )
+        child = None
+        for candidate in session.scalars(
+            select(JourneyMission)
+            .where(JourneyMission.parent_mission_id == room.id)
+            .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        ).all():
+            decision = _json_object(candidate.resolved_intent_json or "{}").get("collective_decision")
+            if (
+                isinstance(decision, dict)
+                and str(decision.get("clarification_id") or "")
+                == str(clarification.get("clarification_id") or "")
+                and str(decision.get("selected_proposal_id") or "") == proposal_id
+            ):
+                child = candidate
+                break
+        if child is None:
+            raise HTTPException(409, "COLLECTIVE_RESOLVED_CHILD_UNAVAILABLE")
+        try:
+            resolved = _collective_resolution_for_child(
+                session, journey, proposal, child.id
+            )
+            if not isinstance(resolved, dict):
+                raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_UNAVAILABLE")
+        except HTTPException as exc:
+            session.rollback()
+            if exc.status_code == 409:
+                room = require(session, JourneyMission, room.id, "Journey mission")
+                stale = _json_object(room.clarification_json or "{}")
+                reconsent = _group_recovery_reconsent_round(
+                    session,
+                    journey,
+                    room,
+                    stale,
+                    root_mission,
+                    group_context,
+                    stale_reason=str(exc.detail)[:120],
+                )
+                raise HTTPException(
+                    409,
+                    detail={
+                        "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+                        "cause": str(exc.detail),
+                        "reconsent": reconsent,
+                    },
+                ) from exc
+            raise
+
+        recovery_epoch_id = str(proposal.recovery_epoch_id or "")
+        if not recovery_epoch_id:
+            raise HTTPException(409, "COLLECTIVE_RECOVERY_EPOCH_UNAVAILABLE")
+        before_plan_id = str(journey.active_plan_version_id or "")
+        actor_context = {
+            "kind": "COLLECTIVE_GROUP_RECOVERY_APPLY",
+            "incident_key": group_context.get("incident_key"),
+            "root_mission_id": root_mission.id,
+            "decision_mission_id": room.id,
+            "clarification_id": clarification.get("clarification_id"),
+            "selected_proposal_id": proposal.id,
+            "authority_receipt_id": resolved.get("authority_receipt_id"),
+            "decision_epoch": resolved.get("decision_epoch"),
+            "material_world_epoch": resolved.get("material_world_epoch"),
+            "candidate_surface_fingerprint": resolved.get("candidate_surface_fingerprint"),
+            "recovery_epoch_id": recovery_epoch_id,
+            "recovery_epoch_generation": (
+                session.get(RecoveryEpoch, recovery_epoch_id).generation
+                if session.get(RecoveryEpoch, recovery_epoch_id) is not None
+                else None
+            ),
+            "principal_traveler_id": principal.traveler_id,
+            "journey_member_id": member.id,
+            "member_role": member.role,
+            "before_plan_version_id": before_plan_id,
+        }
+        try:
+            result = _accept_replan_impl(
+                UUID(proposal.id),
+                internal_key,
+                session,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=principal.traveler_id,
+                authorization_decision="COLLECTIVE_AUTHORITY_SPENT",
+                reason_codes=("SIGNED_JOURNEY_UPDATE_MEMBER_APPLY",),
+                resolved_decision=resolved,
+                expected_authority_receipt_id=str(resolved.get("authority_receipt_id") or ""),
+                expected_recovery_epoch_id=recovery_epoch_id,
+                actor_context=actor_context,
+            )
+        except HTTPException as exc:
+            if exc.status_code != 409:
+                raise
+            session.rollback()
+            room = require(session, JourneyMission, room.id, "Journey mission")
+            stale = _json_object(room.clarification_json or "{}")
+            reconsent = _group_recovery_reconsent_round(
+                session,
+                journey,
+                room,
+                stale,
+                root_mission,
+                group_context,
+                stale_reason=str(exc.detail)[:120],
+            )
+            raise HTTPException(
+                409,
+                detail={
+                    "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+                    "cause": str(exc.detail),
+                    "reconsent": reconsent,
+                },
+            ) from exc
+        return result
 
 
 @app.post("/api/v1/travelers/{traveler_id}/push-subscriptions", status_code=201)
@@ -17564,6 +18167,12 @@ def accept_replan(
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
+    proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
+    if _is_group_recovery_collective_proposal(session, proposal):
+        raise HTTPException(
+            409,
+            "GROUP_RECOVERY_REQUIRES_AUTHENTICATED_APPLY",
+        )
     return _accept_replan_impl(proposal_id, idempotency_key, session)
 
 
@@ -17724,6 +18333,18 @@ def _collective_resolution_for_child(
         base_plan_version_id=journey.active_plan_version_id,
         options=options,
         required_member_ids=stored.get("required_member_ids") or [],
+        decision_relevant_member_ids=(
+            (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            )
+            if (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            ) is not None
+            else stored.get(
+                "decision_relevant_member_ids",
+                stored.get("required_member_ids") or [],
+            )
+        ),
         members=members,
     )
     if (
@@ -17837,6 +18458,7 @@ def _collective_resolution_for_child(
         "candidate_surface_fingerprint": stored_surface_fingerprint,
         "clarification_id": stored.get("clarification_id"),
         "authority_receipt_id": authority_receipt.id,
+        "recovery_epoch_id": str(proposal.recovery_epoch_id or "") or None,
     }
 
 
@@ -17853,6 +18475,7 @@ def _accept_replan_impl(
     resolved_decision: Mapping[str, Any] | None = None,
     expected_authority_receipt_id: str | None = None,
     expected_recovery_epoch_id: str | None = None,
+    actor_context: Mapping[str, Any] | None = None,
 ):
     """Serialize acceptance for one Journey across its whole transaction.
 
@@ -17878,6 +18501,7 @@ def _accept_replan_impl(
         "resolved_decision": resolved_decision,
         "expected_authority_receipt_id": expected_authority_receipt_id,
         "expected_recovery_epoch_id": expected_recovery_epoch_id,
+        "actor_context": actor_context,
     }
     located = session.get(ReplanProposalModel, str(proposal_id))
     journey_id = located.journey_id if located is not None else None
@@ -17953,6 +18577,7 @@ def _accept_replan_serialized_impl(
     resolved_decision: Mapping[str, Any] | None = None,
     expected_authority_receipt_id: str | None = None,
     expected_recovery_epoch_id: str | None = None,
+    actor_context: Mapping[str, Any] | None = None,
 ):
     """Accept a replan, replaying any response this key already produced.
 
@@ -17983,6 +18608,7 @@ def _accept_replan_serialized_impl(
         "resolved_decision": resolved_decision,
         "expected_authority_receipt_id": expected_authority_receipt_id,
         "expected_recovery_epoch_id": expected_recovery_epoch_id,
+        "actor_context": actor_context,
     }
     try:
         return _accept_replan_executing(proposal_id, idempotency_key, session, **kwargs)
@@ -18016,6 +18642,7 @@ def _accept_replan_executing(
     resolved_decision: Mapping[str, Any] | None = None,
     expected_authority_receipt_id: str | None = None,
     expected_recovery_epoch_id: str | None = None,
+    actor_context: Mapping[str, Any] | None = None,
 ):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
@@ -18386,6 +19013,21 @@ def _accept_replan_executing(
             },
         )
 
+    group_recovery_spend = None
+    if isinstance(actor_context, Mapping) and actor_context.get("kind") == "COLLECTIVE_GROUP_RECOVERY_APPLY":
+        group_recovery_spend = {
+            **dict(actor_context),
+            "result": "APPLIED",
+            "selected_proposal_id": proposal.id,
+            "authority_receipt_id": authority_receipt_id,
+            "decision_epoch": collective_gate.get("resolved_decision_epoch"),
+            "material_world_epoch": collective_gate.get("resolved_material_world_epoch"),
+            "candidate_surface_fingerprint": collective_gate.get("candidate_surface_fingerprint"),
+            "recovery_epoch_id": current_recovery_epoch.id,
+            "before_plan_version_id": base.id,
+            "after_plan_version_id": proposed.id,
+            "applied_at": decided_at,
+        }
     record_audit(
         session,
         action="replan.accepted",
@@ -18432,6 +19074,7 @@ def _accept_replan_executing(
                     "authority_provenance"
                 ),
             },
+            "group_recovery_spend": group_recovery_spend,
         },
     )
     twin = _twin_snapshot(session, journey)
@@ -18441,6 +19084,8 @@ def _accept_replan_executing(
         "twin": twin,
         "collective_authority_receipt_id": authority_receipt_id,
     }
+    if group_recovery_spend is not None:
+        response["group_recovery_apply"] = group_recovery_spend
     session.add(
         IdempotencyKey(
             key=scoped_key,

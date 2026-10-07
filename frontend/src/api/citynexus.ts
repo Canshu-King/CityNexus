@@ -448,12 +448,19 @@ export interface JourneyOperatorCollectiveProjection {
 
 export interface GroupRecoveryCollectiveDecisionProjection {
   mission_id: string;
-  state: JourneyOperatorCollectiveProjection["state"];
+  state: JourneyOperatorCollectiveProjection["state"] | "RECOVERY_APPLIED";
   required_count: number;
   response_count: number;
   waiting_for_member_count: number;
   viewer_has_responded: boolean;
+  viewer_can_apply?: boolean;
   authority_receipt_id: string | null;
+  selected_proposal_id?: string | null;
+  selected_plan_version_id?: string | null;
+  selected_option_label?: string | null;
+  reconsent_required?: boolean;
+  decision_epoch?: string | null;
+  proposal_ids?: string[];
 }
 
 export interface JourneyOperatorDiscoveryProjection {
@@ -586,6 +593,19 @@ export interface GroupRecoveryProjection {
   can_request_planning: boolean;
   mission?: { mission_id: string; status: string; failure_reason?: string | null; created_at?: string; run_id?: string | null } | null;
   collective_decision?: GroupRecoveryCollectiveDecisionProjection | null;
+  applied?: {
+    selected_proposal_id: string;
+    before_plan_version_id: string;
+    after_plan_version_id: string;
+    authority_receipt_id: string;
+    decision_epoch?: string | null;
+    material_world_epoch?: string | null;
+    recovery_epoch_id?: string | null;
+    recovery_epoch_generation?: number | null;
+    applied_at: string;
+    applied_by_member_id?: string | null;
+    applied_by_role?: string | null;
+  } | null;
 }
 
 export interface GroupRecoveryPlanResult {
@@ -594,6 +614,27 @@ export interface GroupRecoveryPlanResult {
   mission: { id: string; status: string; failure_reason?: string | null };
   run?: { run_id: string; status?: string; runtime_identity: string; events_url?: string; timeline_url?: string } | null;
   group_recovery: GroupRecoveryProjection;
+}
+
+export interface GroupRecoveryApplyResult {
+  journey: { id: string; active_plan_version_id: string };
+  proposal: { id: string; status: string };
+  collective_authority_receipt_id: string;
+  group_recovery_apply: {
+    result: "APPLIED";
+    selected_proposal_id: string;
+    authority_receipt_id: string;
+    before_plan_version_id: string;
+    after_plan_version_id: string;
+    decision_epoch?: string | null;
+    material_world_epoch?: string | null;
+    recovery_epoch_id: string;
+    recovery_epoch_generation?: number | null;
+    applied_at: string;
+    journey_member_id: string;
+    member_role: string;
+  };
+  replayed?: boolean;
 }
 
 export interface GroupRendezvousRouteResult {
@@ -1778,6 +1819,20 @@ export const cityNexusApi = {
       {
         method: "POST",
         headers: travelerAuthHeaders(),
+        body: JSON.stringify({}),
+      },
+    );
+  },
+
+  applyGroupRecovery(journeyId: string, idempotencyKey: string): Promise<GroupRecoveryApplyResult> {
+    return requestJson<GroupRecoveryApplyResult>(
+      "/journeys/" + journeyId + "/group-recovery/apply",
+      {
+        method: "POST",
+        headers: {
+          ...travelerAuthHeaders(),
+          "Idempotency-Key": idempotencyKey,
+        },
         body: JSON.stringify({}),
       },
     );

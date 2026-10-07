@@ -9,8 +9,9 @@
  * endpoint; nothing mutates the plan locally.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  CityNexusApiError,
   cityNexusApi,
   type InTransitRerouteResult,
   type GroupRecoveryPlanResult,
@@ -190,6 +191,7 @@ export function LiveRecovery({
   const [intentResult, setIntentResult] = useState<string | null>(null);
   const [inboxText, setInboxText] = useState("");
   const [inboxResult, setInboxResult] = useState<string | null>(null);
+  const groupRecoveryApplyKey = useRef<string | null>(null);
 
   const loadOperator = useCallback(async () => {
     try {
@@ -662,6 +664,12 @@ export function LiveRecovery({
   const transit = operator?.transit ?? null;
   const groupPresence = operator?.group_presence ?? null;
   const groupRecovery = operator?.group_recovery ?? null;
+  const collectiveProposalIds = new Set(
+    groupRecovery?.collective_decision?.proposal_ids ?? [],
+  );
+  const individuallyActionablePending = pending.filter(
+    (proposal) => !collectiveProposalIds.has(proposal.id),
+  );
   const showGroupRecovery = Boolean(groupRecovery && [
     "ADVISORY_MEMBER_LATE",
     "VERIFIED_MEMBER_RISK",
@@ -676,6 +684,55 @@ export function LiveRecovery({
     "COLLECTIVE_STALE",
     "COLLECTIVE_DECISION_REQUIRED",
   ].includes(groupRecovery.state));
+  const applySharedRecovery = async () => {
+    const decision = groupRecovery?.collective_decision;
+    if (busy !== null || !decision?.viewer_can_apply) return;
+    if (!groupRecoveryApplyKey.current) {
+      const nonce = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      groupRecoveryApplyKey.current = `group-recovery-${nonce}`;
+    }
+    const idempotencyKey = groupRecoveryApplyKey.current;
+    setBusy("group-recovery-apply");
+    setMessage(null);
+    try {
+      const result = await cityNexusApi.applyGroupRecovery(journeyId, idempotencyKey);
+      if (result.group_recovery_apply?.result !== "APPLIED") {
+        throw new Error("GROUP_RECOVERY_APPLY_NOT_CONFIRMED");
+      }
+      groupRecoveryApplyKey.current = null;
+      await Promise.all([loadOperator(), loadProposals(), plans.refetch(), twin.refetch()]);
+      setMessage(zh
+        ? "共同同意的调整已应用；新的行程安排已经生效。"
+        : "The group-approved recovery is applied and the updated Journey is active.");
+      onAccepted?.();
+    } catch (error) {
+      if (error instanceof CityNexusApiError && error.status >= 400 && error.status < 500) {
+        groupRecoveryApplyKey.current = null;
+        if (error.status === 409) {
+          await Promise.all([loadOperator(), loadProposals()]);
+          setMessage(zh
+            ? "原来的共同选择已过期或现实已变化；我刷新了当前状态，没有重复应用旧方案。"
+            : "The shared choice is stale or the trip changed. Current options were refreshed; the old plan was not applied.");
+        } else if (error.status === 401 || error.status === 403) {
+          setMessage(zh
+            ? "当前登录成员没有应用这项共享行程变更的权限。"
+            : "The signed-in traveller is not authorized to apply this shared Journey change.");
+        } else {
+          setMessage(zh ? "暂时无法应用这项共享调整。" : "The shared recovery could not be applied.");
+        }
+      } else {
+        // Keep the key across an ambiguous transport failure so a retry reads
+        // the durable result instead of spending the same consent twice.
+        setMessage(zh
+          ? "暂时没有收到服务器确认；重试会查询同一提交结果，不会再花一次同意。"
+          : "No server confirmation arrived. Retrying will reuse the same idempotency key.");
+      }
+    } finally {
+      setBusy(null);
+    }
+  };
   const guideToGroup = async () => {
     if (!onRefreshLocation || busy !== null || !groupPresence?.can_guide) {
       setMessage(zh ? "请先允许获取你这一次的位置。" : "Allow one fresh location sample to get a route.");
@@ -1049,7 +1106,7 @@ export function LiveRecovery({
                         : (zh ? `恢复任务状态：${groupRecovery.mission.status}` : `Recovery task: ${groupRecovery.mission.status}`)}
                   </small>
                 )}
-                {groupRecovery.collective_decision && (
+                {groupRecovery.collective_decision && groupRecovery.state !== "RECOVERY_APPLIED" && (
                   <small data-testid="journey-group-recovery-collective-state">
                     {groupRecovery.collective_decision.state === "WAITING_FOR_MEMBERS"
                       ? (zh
@@ -1058,10 +1115,39 @@ export function LiveRecovery({
                       : groupRecovery.collective_decision.state === "MEDIATING"
                         ? (zh ? "同行者的选择有分歧；CityNexus 保留分歧并继续寻找可接受的下一步，尚未修改行程。" : "The travellers disagree. CityNexus is preserving that disagreement while looking for an acceptable next step; the Journey is unchanged.")
                         : groupRecovery.collective_decision.state === "COLLECTIVE_AUTHORIZED"
-                          ? (zh ? "服务器已为这个确切方案记录当前集体授权；这不等于方案已批准或已应用。" : "The server has a current collective authority receipt for this exact proposal; that does not mean it has been approved or applied.")
+                          ? (zh
+                            ? `服务器已为“${groupRecovery.collective_decision.selected_option_label ?? "选定方案"}”记录当前集体授权；这不等于方案已应用。`
+                            : `The server has current group authorization for “${groupRecovery.collective_decision.selected_option_label ?? "the selected option"}”; it has not been applied yet.`)
                           : groupRecovery.collective_decision.state === "COLLECTIVE_STALE"
                             ? (zh ? "行程、成员或方案事实已经变化，旧选择按钮已失效；需要重新计算。" : "The trip, membership, or proposal facts changed. Old choices are no longer valid and must be recomputed.")
                             : (zh ? "成员回答已记录，但当前没有可用于推进此方案的集体授权。行程尚未改变。" : "Member responses are recorded, but there is no current collective authority to carry this proposal forward. The Journey is unchanged.")}
+                  </small>
+                )}
+                {groupRecovery.collective_decision?.reconsent_required && (
+                  <small data-testid="journey-group-recovery-reconsent">
+                    {zh
+                      ? "之前的共同选择因行程或事实变化而过期；现在是新一轮决定，旧回答不会自动沿用。"
+                      : "The previous shared choice expired after the Journey or its facts changed. This is a fresh decision round; earlier answers do not carry over."}
+                  </small>
+                )}
+                {groupRecovery.collective_decision?.state === "COLLECTIVE_AUTHORIZED"
+                  && groupRecovery.collective_decision.viewer_can_apply && (
+                  <button
+                    type="button"
+                    className="v8-primary-button"
+                    disabled={busy !== null}
+                    data-testid="journey-group-recovery-apply"
+                    onClick={() => void applySharedRecovery()}
+                  >
+                    {busy === "group-recovery-apply"
+                      ? (zh ? "正在应用共同决定…" : "Applying the group decision…")
+                      : (zh ? "应用共同恢复" : "Apply shared recovery")}
+                  </button>
+                )}
+                {groupRecovery.collective_decision?.state === "COLLECTIVE_AUTHORIZED"
+                  && !groupRecovery.collective_decision.viewer_can_apply && (
+                  <small data-testid="journey-group-recovery-apply-waiting">
+                    {zh ? "共同选择已达成，正在等待有行程编辑权限的成员应用。" : "The group has agreed; waiting for a traveller with Journey editing authority to apply it."}
                   </small>
                 )}
                 {groupRecoveryResult?.status === "RECOVERY_EXTERNAL_AGENT_BLOCKED" && !groupRecovery.mission && (
@@ -1560,8 +1646,8 @@ export function LiveRecovery({
         </p>
       )}
 
-      {pending.length > 0 ? (
-        pending.map((proposal, index) => {
+      {individuallyActionablePending.length > 0 ? (
+        individuallyActionablePending.map((proposal, index) => {
           const removed = proposal.diff?.removed ?? [];
           const added = proposal.diff?.added ?? [];
           const moved = proposal.diff?.moved ?? [];
@@ -1683,7 +1769,11 @@ export function LiveRecovery({
            not "no way forward on this screen". e2e/qoder-ord0407-empty-state-actions.spec.ts judges
            both halves; if this sentence ever gains a button, that cell goes red on purpose. */
         <p className="v8-muted" data-testid="live-no-proposal">
-          {zh ? "当前没有需要你决定的调整。" : "There is nothing for you to decide right now."}
+          {collectiveProposalIds.size > 0
+            ? zh
+              ? "这些方案属于共享恢复，必须按同行者的共同决定处理。"
+              : "These options belong to a shared recovery and can only be handled through the group decision."
+            : zh ? "当前没有需要你决定的调整。" : "There is nothing for you to decide right now."}
         </p>
       )}
 

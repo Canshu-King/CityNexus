@@ -461,6 +461,12 @@ class GroupRecoveryRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class GroupRecoveryApplyRequest(BaseModel):
+    """Spend the server-selected collective recovery; callers choose no proposal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
 class LaunchOriginRequest(BaseModel):
     """Explicit planned-origin confirmation; coordinates and authority are server-owned."""
 

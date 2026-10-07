@@ -27,6 +27,7 @@ from app.db.models import (
     Journey,
     JourneyMember,
     JourneyMission,
+    JourneyRoleCapability,
     Place,
     PlanVersion,
     ProviderObservation,
@@ -40,6 +41,34 @@ from app.traveler_principal import issue_traveler_token
 
 client = TestClient(main_module.app)
 _TEST_SECRET = "r29-disagreement-test-secret-0123456789abcdef"
+
+
+@pytest.fixture
+def admin_journey_update_policy():
+    """Opt a two-signer fixture into ADMIN mutation authority, then restore policy."""
+    key = {"role": "ADMIN", "capability": "JOURNEY_UPDATE"}
+    created = False
+    with SessionLocal() as session:
+        if session.get(JourneyRoleCapability, key) is None:
+            session.add(
+                JourneyRoleCapability(
+                    role="ADMIN",
+                    capability="JOURNEY_UPDATE",
+                    scope_message_key="test.admin.journey_update",
+                    created_at=_now(),
+                )
+            )
+            session.commit()
+            created = True
+    try:
+        yield
+    finally:
+        if created:
+            with SessionLocal() as session:
+                row = session.get(JourneyRoleCapability, key)
+                if row is not None:
+                    session.delete(row)
+                    session.commit()
 
 
 def _now() -> str:
@@ -370,9 +399,9 @@ def test_r59_collective_decision_tool_reuses_same_open_room_without_erasing_resp
         first_id = first["clarification"]["clarification_id"]
         assert first["mission_status"] == "WAITING_FOR_MEMBERS"
         assert first["clarification"]["candidate_surface_fingerprint"]
-        assert set(first["clarification"]["required_member_ids"]) == {
-            str(seeded["owner_member_id"]), str(seeded["admin_member_id"])
-        }
+        assert first["clarification"]["required_member_ids"] == [
+            str(seeded["owner_member_id"])
+        ]
         first["clarification"]["responses"][str(seeded["owner_member_id"])] = {
             "member_id": str(seeded["owner_member_id"]),
             "proposal_id": str(seeded["garden_proposal_id"]),
@@ -445,7 +474,7 @@ def test_r59_member_response_replay_is_idempotent_and_cannot_change_first_choice
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
 
 
-def test_r59_fresh_shared_recovery_gateway_to_signed_members_authority_handoff(monkeypatch) -> None:
+def test_r59_fresh_shared_recovery_gateway_to_signed_members_authority_handoff(monkeypatch, admin_journey_update_policy) -> None:
     """A fresh shared incident opens one room; member answers mint authority, not a plan mutation."""
     previous_secret = settings.traveler_auth_secret
     object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
@@ -598,7 +627,7 @@ def test_r59_fresh_shared_recovery_gateway_to_signed_members_authority_handoff(m
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
 
 
-def test_r29_conflicting_authenticated_responses_create_mediation_child(monkeypatch) -> None:
+def test_r29_conflicting_authenticated_responses_create_mediation_child(monkeypatch, admin_journey_update_policy) -> None:
     previous_secret = settings.traveler_auth_secret
     object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
     seeded = _seed_r29_disagreement_http_fixture()
@@ -1189,7 +1218,7 @@ def test_r29_journey_mediation_lock_clears_only_after_resolved_descendant() -> N
         ) is False
 
 
-def test_r29_fair_compromise_reopens_same_members_for_renewed_consent(monkeypatch) -> None:
+def test_r29_fair_compromise_reopens_same_members_for_renewed_consent(monkeypatch, admin_journey_update_policy) -> None:
     seeded = _seed_r29_disagreement_http_fixture()
     mediator_id = str(uuid4())
     new_plan_id = str(uuid4())
@@ -1411,6 +1440,250 @@ def test_r30_collective_decision_epoch_tracks_semantic_option_meaning() -> None:
         }
     )
     assert changed_fit != baseline
+
+
+def test_r60_read_only_relevant_member_semantics_stale_existing_epoch() -> None:
+    """Fairness-relevant preferences bind consent without adding a signer."""
+    owner_id = "member-owner"
+    read_only_id = "member-collaborator"
+    required_ids = [owner_id]
+    decision_relevant_ids = [owner_id, read_only_id]
+    base_members = [
+        {
+            "member_id": owner_id,
+            "role": "OWNER",
+            "capabilities": ["JOURNEY_READ", "JOURNEY_UPDATE"],
+            "journey_scoped_explicit_preferences": [
+                {"category": "interest", "key": "garden", "value": True}
+            ],
+            "member_state": "MEMBER_IN_FORCE",
+        },
+        {
+            "member_id": read_only_id,
+            "role": "COLLABORATOR",
+            "capabilities": ["JOURNEY_READ", "PLACE_EDIT"],
+            "journey_scoped_explicit_preferences": [
+                {"category": "interest", "key": "craft", "value": True}
+            ],
+            "member_state": "MEMBER_IN_FORCE",
+        },
+    ]
+    base_option = {
+        "proposal_id": "proposal-shared-choice",
+        "plan_id": "plan-shared-choice",
+        "status": "GROUNDED_FEASIBLE",
+        "fit_subject_place_ids": ["place-craft"],
+        "fit_subject_tags": ["craft", "culture"],
+        "fit_subject_basis": "PLAN_DIFF",
+        "member_fits": {
+            owner_id: {
+                "effective_fit": 0.6,
+                "preference_tier": "EXPLICIT",
+                "conflict": None,
+            },
+            read_only_id: {
+                "effective_fit": 0.7,
+                "preference_tier": "EXPLICIT",
+                "conflict": None,
+            },
+        },
+        # Keep aggregate summaries fixed to prove the individual decision
+        # semantics, rather than an aggregate-score change, invalidate consent.
+        "fairness": {
+            "minimum_member_fit": 0.6,
+            "maximum_regret": 0.4,
+            "unacceptable_member_ids": [],
+        },
+    }
+
+    def epoch(*, option, members):
+        return collective_mediation.collective_decision_epoch(
+            journey_id="journey-shared",
+            mission_id="mission-shared",
+            trigger_event_id="event-shared",
+            base_plan_version_id="base-plan-shared",
+            options=[option],
+            required_member_ids=required_ids,
+            decision_relevant_member_ids=decision_relevant_ids,
+            members=members,
+        )
+
+    baseline = epoch(option=base_option, members=base_members)
+    changed_members = [
+        base_members[0],
+        {
+            **base_members[1],
+            "journey_scoped_explicit_preferences": [
+                {"category": "interest", "key": "garden", "value": True}
+            ],
+        },
+    ]
+    changed_option = {
+        **base_option,
+        "member_fits": {
+            **base_option["member_fits"],
+            read_only_id: {
+                "effective_fit": 0.2,
+                "preference_tier": "EXPLICIT",
+                "conflict": "OPPOSED_EXPLICIT_PREFERENCE",
+            },
+        },
+    }
+
+    assert required_ids == [owner_id]
+    assert changed_option["fairness"] == base_option["fairness"]
+    assert epoch(option=changed_option, members=changed_members) != baseline
+
+
+def test_r60_required_signer_capability_loss_blocks_collective_spend(monkeypatch) -> None:
+    """A current role/capability change invalidates consent before plan handover."""
+    seeded = _seed_r29_disagreement_http_fixture()
+    now = _now()
+    mediator_id = str(uuid4())
+    owner_member_id = str(seeded["owner_member_id"])
+    collaborator_member_id = str(seeded["admin_member_id"])
+    required_ids = [owner_member_id]
+    decision_relevant_ids = [owner_member_id, collaborator_member_id]
+    options = [
+        {
+            **item,
+            "member_fits": {
+                owner_member_id: {
+                    "effective_fit": 0.8 if item["proposal_id"] == seeded["garden_proposal_id"] else 0.3,
+                    "preference_tier": "EXPLICIT",
+                    "conflict": None,
+                },
+                collaborator_member_id: {
+                    "effective_fit": 0.3 if item["proposal_id"] == seeded["garden_proposal_id"] else 0.8,
+                    "preference_tier": "EXPLICIT",
+                    "conflict": None,
+                },
+            },
+        }
+        for item in seeded["options"]
+    ]
+
+    def receipt(_session, _journey, _proposals):
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            "collective_mediation": {
+                "decision_relevant_member_ids": decision_relevant_ids,
+            },
+            "candidate_fit_matrix": [],
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", receipt)
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        parent = session.get(JourneyMission, str(seeded["parent_id"]))
+        owner_member = session.get(JourneyMember, owner_member_id)
+        read_only_member = session.get(JourneyMember, collaborator_member_id)
+        selected_proposal = session.get(
+            ReplanProposal, str(seeded["garden_proposal_id"])
+        )
+        assert journey is not None and parent is not None
+        assert owner_member is not None and read_only_member is not None
+        assert selected_proposal is not None
+
+        # ADMIN has no JOURNEY_UPDATE in the current role capability table; use
+        # the explicit read-only product role while retaining its own preference.
+        read_only_member.role = "COLLABORATOR"
+        parent.clarification_json = json.dumps(
+            {
+                "kind": "COLLECTIVE_TRADEOFF",
+                "status": "MEDIATION_REQUIRED",
+                "candidate_options": options,
+                "required_member_ids": required_ids,
+                "decision_relevant_member_ids": decision_relevant_ids,
+            },
+            sort_keys=True,
+        )
+        session.flush()
+
+        before_members = main_module.active_journey_members_with_capabilities(
+            session, journey
+        ).get("members", [])
+        baseline_epoch = collective_mediation.collective_decision_epoch(
+            journey_id=journey.id,
+            mission_id=mediator_id,
+            trigger_event_id=str(seeded["event_id"]),
+            base_plan_version_id=str(seeded["base_id"]),
+            options=options,
+            required_member_ids=required_ids,
+            decision_relevant_member_ids=decision_relevant_ids,
+            members=before_members,
+        )
+        surface_fingerprint = "r60-required-signer-surface"
+        clarification = {
+            "kind": "COLLECTIVE_TRADEOFF",
+            "status": "RESOLVED",
+            "clarification_id": "r60-required-signer-consent",
+            "decision_epoch": baseline_epoch,
+            "candidate_surface_fingerprint": surface_fingerprint,
+            "trigger_event_id": str(seeded["event_id"]),
+            "base_plan_version_id": str(seeded["base_id"]),
+            "candidate_options": options,
+            "required_member_ids": required_ids,
+            "decision_relevant_member_ids": decision_relevant_ids,
+            "selected_proposal_id": str(seeded["garden_proposal_id"]),
+            "responses": {
+                owner_member_id: {
+                    "proposal_id": str(seeded["garden_proposal_id"]),
+                    "source": "AUTHENTICATED_MEMBER_RESPONSE",
+                }
+            },
+        }
+        session.add(
+            JourneyMission(
+                id=mediator_id,
+                journey_id=journey.id,
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=parent.id,
+                user_text="A resolved group choice before role change.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="ANSWERED",
+                resolved_intent_json=json.dumps(
+                    {
+                        "collective_mediation": {
+                            "kind": "DISAGREEMENT_MEDIATION",
+                            "round": 1,
+                            "source_mission_id": parent.id,
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(clarification, sort_keys=True),
+                created_at=now,
+                started_at=now,
+                completed_at=now,
+            )
+        )
+        session.commit()
+
+        # The required signer remains a member, but loses JOURNEY_UPDATE before
+        # spending the consent. The spend gate must recompute the current epoch.
+        owner_member.role = "COLLABORATOR"
+        session.commit()
+        selected_plan = session.get(
+            PlanVersion, str(seeded["options"][0]["plan_id"])
+        )
+        assert selected_plan is not None
+        gate = main_module.collective_mutation_gate(
+            session,
+            journey,
+            selected_plan,
+            hard_feasible_plan_ids={str(selected_plan.id)},
+        )
+
+        assert gate["allowed"] is False
+        assert gate["code"] == "COLLECTIVE_CONSENT_EPOCH_STALE"
+        assert gate["resolved_decision_epoch"] == baseline_epoch
+        assert gate["current_decision_epoch"] != baseline_epoch
+        assert selected_proposal.status == "PRESENTED"
+        assert journey.active_plan_version_id == str(seeded["base_id"])
 
 
 def test_r30_core_gate_rejects_resolved_consent_when_semantic_epoch_changed(
@@ -2882,7 +3155,9 @@ def test_r59_read_only_member_is_not_required_collective_mutation_authority(monk
         admin_member = session.get(JourneyMember, str(seeded["admin_member_id"]))
         mission = session.get(JourneyMission, str(seeded["parent_id"]))
         assert admin_member is not None and mission is not None
-        admin_member.role = "VIEWER"
+        # COLLABORATOR is the product's seeded read-only role (the schema does
+        # not define a separate VIEWER role).
+        admin_member.role = "COLLABORATOR"
         mission.clarification_json = "{}"
         mission.status = "RUNNING"
         session.commit()
@@ -2912,7 +3187,9 @@ def test_r59_signed_read_only_member_cannot_answer_legacy_required_slot() -> Non
             assert admin_member is not None
             # The seeded clarification intentionally still lists this member as
             # required, simulating an older or dirty durable room.
-            admin_member.role = "VIEWER"
+            # Exercise a real signed member whose current role lacks
+            # JOURNEY_UPDATE; VIEWER is not a valid JourneyMember role.
+            admin_member.role = "COLLABORATOR"
             session.commit()
 
         admin_token = issue_traveler_token(str(seeded["admin_id"]))

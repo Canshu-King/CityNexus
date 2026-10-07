@@ -185,6 +185,7 @@ def collective_decision_epoch(
     base_plan_version_id: str | None,
     options: Iterable[Mapping[str, Any]],
     required_member_ids: Iterable[str],
+    decision_relevant_member_ids: Iterable[str] | None = None,
     members: Iterable[Mapping[str, Any]],
 ) -> str:
     """Stable server fingerprint for a collective decision's semantic reality.
@@ -197,7 +198,17 @@ def collective_decision_epoch(
     """
 
     required_ids = sorted({str(item) for item in required_member_ids})
-    required_set = set(required_ids)
+    decision_relevant_ids = sorted(
+        {
+            str(item)
+            for item in (
+                decision_relevant_member_ids
+                if decision_relevant_member_ids is not None
+                else required_ids
+            )
+        }
+    )
+    decision_relevant_set = set(decision_relevant_ids)
 
     normalized_options: list[dict[str, Any]] = []
     for item in options:
@@ -229,7 +240,7 @@ def collective_decision_epoch(
                         "conflict": (fit or {}).get("conflict"),
                     }
                     for member_id, fit in sorted(fits.items(), key=lambda pair: str(pair[0]))
-                    if str(member_id) in required_set
+                    if str(member_id) in decision_relevant_set
                 },
                 "fairness": {
                     "minimum_member_fit": (item.get("fairness") or {}).get("minimum_member_fit"),
@@ -251,6 +262,10 @@ def collective_decision_epoch(
         "base_plan_version_id": str(base_plan_version_id) if base_plan_version_id else None,
         "options": normalized_options,
         "required_member_ids": required_ids,
+        # Decision relevance and mutation-signing authority are separate
+        # facts: read-only members still affect the meaning of consent, but
+        # never become required signers merely by being decision-relevant.
+        "decision_relevant_member_ids": decision_relevant_ids,
         "members": [
             {
                 "member_id": str(item.get("member_id")),
@@ -260,7 +275,7 @@ def collective_decision_epoch(
                 "member_state": item.get("member_state"),
             }
             for item in members
-            if str(item.get("member_id")) in required_set
+            if str(item.get("member_id")) in decision_relevant_set
         ],
     }
     return hashlib.sha256(

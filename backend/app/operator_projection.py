@@ -150,7 +150,14 @@ def attach_collective_recovery_projection(
             collective.get("waiting_for_member_count") or 0
         ),
         "viewer_has_responded": bool(collective.get("viewer_has_responded")),
+        "viewer_can_apply": bool(collective.get("viewer_can_apply")),
         "authority_receipt_id": collective.get("authority_receipt_id"),
+        "selected_proposal_id": collective.get("selected_proposal_id"),
+        "selected_plan_version_id": collective.get("selected_plan_version_id"),
+        "selected_option_label": collective.get("selected_option_label"),
+        "reconsent_required": bool(collective.get("reconsent_required")),
+        "proposal_ids": collective.get("proposal_ids") or [],
+        "decision_epoch": collective.get("decision_epoch"),
     }
     state_map = {
         "WAITING_FOR_MEMBERS": "COLLECTIVE_WAITING_FOR_MEMBERS",
@@ -167,7 +174,7 @@ def attach_collective_recovery_projection(
         group_recovery["headline"] = {
             "COLLECTIVE_WAITING_FOR_MEMBERS": "A shared recovery choice is waiting for the travellers it affects.",
             "COLLECTIVE_MEDIATING": "The travellers chose differently; CityNexus is preserving that disagreement while seeking a fair next step.",
-            "COLLECTIVE_AUTHORIZED": "The group has authorized this exact proposal; the Journey has not changed until normal approval and acceptance complete.",
+            "COLLECTIVE_AUTHORIZED": "The group agreed on this exact recovery. A traveller with Journey editing authority can apply it.",
             "COLLECTIVE_STALE": "The trip or its evidence changed; the old group choices can no longer be used.",
             "COLLECTIVE_DECISION_REQUIRED": "The group response is recorded, but current collective authority is not available to carry this proposal forward.",
         }[group_state]
@@ -602,6 +609,69 @@ def operator_projection(
                 session, group_recovery, collective, candidate.id
             )
             break
+    # An applied group recovery is a fact only when the authenticated spend
+    # audit names the currently active plan. A receipt on its own is never a
+    # terminal projection, and a later plan transition naturally ages this
+    # card out because the active id no longer matches.
+    for accepted in session.scalars(
+        select(AuditLog)
+        .where(
+            AuditLog.journey_id == journey.id,
+            AuditLog.action == "replan.accepted",
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    ).all():
+        accepted_after = _json(accepted.after_json, {})
+        spend = accepted_after.get("group_recovery_spend") if isinstance(accepted_after, dict) else None
+        if not (
+            isinstance(spend, dict)
+            and spend.get("kind") == "COLLECTIVE_GROUP_RECOVERY_APPLY"
+            and spend.get("result") == "APPLIED"
+            and str(spend.get("after_plan_version_id") or "")
+            == str(journey.active_plan_version_id or "")
+        ):
+            continue
+        spender_id = str(spend.get("journey_member_id") or "")
+        group_recovery.update(
+            {
+                "state": "RECOVERY_APPLIED",
+                "headline": "The shared recovery was applied. Everyone is now following the updated Journey.",
+                "can_request_planning": False,
+                "mission": {
+                    "mission_id": spend.get("root_mission_id"),
+                    "status": "COMPLETED",
+                    "failure_reason": None,
+                    "run_id": None,
+                },
+                "collective_decision": {
+                    "mission_id": spend.get("decision_mission_id"),
+                    "state": "RECOVERY_APPLIED",
+                    "required_count": int(collective.get("required_count") or 0),
+                    "response_count": int(collective.get("response_count") or 0),
+                    "waiting_for_member_count": 0,
+                    "viewer_has_responded": bool(collective.get("viewer_has_responded")),
+                    "viewer_can_apply": False,
+                    "authority_receipt_id": spend.get("authority_receipt_id"),
+                    "selected_proposal_id": spend.get("selected_proposal_id"),
+                    "selected_plan_version_id": spend.get("after_plan_version_id"),
+                    "decision_epoch": spend.get("decision_epoch"),
+                },
+                "applied": {
+                    "selected_proposal_id": spend.get("selected_proposal_id"),
+                    "before_plan_version_id": spend.get("before_plan_version_id"),
+                    "after_plan_version_id": spend.get("after_plan_version_id"),
+                    "authority_receipt_id": spend.get("authority_receipt_id"),
+                    "decision_epoch": spend.get("decision_epoch"),
+                    "material_world_epoch": spend.get("material_world_epoch"),
+                    "recovery_epoch_id": spend.get("recovery_epoch_id"),
+                    "recovery_epoch_generation": spend.get("recovery_epoch_generation"),
+                    "applied_at": spend.get("applied_at"),
+                    "applied_by_member_id": spender_id if spender_id == str(viewer_member_id or "") else None,
+                    "applied_by_role": spend.get("member_role"),
+                },
+            }
+        )
+        break
     # Journey Ahead is a read-only projection.  Reuse the already persisted
     # predictive Guardian/brain state, but never start a provider call or an
     # action from this GET path.

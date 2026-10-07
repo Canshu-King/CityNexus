@@ -2195,6 +2195,7 @@ class AgentToolGateway:
             base_plan_version_id=journey.active_plan_version_id,
             options=options,
             required_member_ids=required_ids,
+            decision_relevant_member_ids=sorted(relevant_ids),
             members=members,
         )
         surface_fingerprint = candidate_surface_fingerprint(
@@ -2260,6 +2261,7 @@ class AgentToolGateway:
             "base_plan_version_id": journey.active_plan_version_id,
             "candidate_options": options,
             "required_member_ids": required_ids,
+            "decision_relevant_member_ids": sorted(relevant_ids),
             "responses": {},
             "status": "WAITING_FOR_MEMBERS",
             "selected_proposal_id": None,
