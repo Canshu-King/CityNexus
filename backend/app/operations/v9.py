@@ -12,6 +12,7 @@ from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
+from app.core.budget_fit import BUDGET_FIT_NEUTRAL, budget_fit_for
 from app.replanning.commitment_remap import (
     RemapConflict as CommitmentRemapConflict,
     resolve_commitment_target,
@@ -571,6 +572,7 @@ def materialize_stay_option(
         + sum(int(node.estimated_cost_minor) for node in nodes)
         + sum(int(item.cost_amount_minor or 0) for item in facts)
     )
+    budget_fit = budget_fit_for(journey.budget_amount_minor, total_cost)
     plan = PlanVersion(
         id=plan_id,
         journey_id=journey.id,
@@ -585,20 +587,11 @@ def materialize_stay_option(
         utility_score=min(1.0, max(0.0, float(option.score))),
         score_breakdown_json=_json(
             {
-                "commitment_preservation": 1.0,
-                "stability": min(1.0, max(0.0, float(option.score))),
+                "commitment_preservation": 1.0,                "stability": min(1.0, max(0.0, float(option.score))),
                 "time_reliability": 0.9,
                 "preference_fit": min(1.0, max(0.0, float(option.score))),
                 "mobility_fit": 0.85,
-                "budget_fit": min(
-                    1.0,
-                    max(
-                        0.0,
-                        1.0
-                        - total_cost
-                        / max(1, int(journey.budget_amount_minor)),
-                    ),
-                ),
+                "budget_fit": BUDGET_FIT_NEUTRAL if budget_fit is None else budget_fit,
                 "robustness": 0.85,
                 "opportunity_value": 0.8,
                 "total": min(1.0, max(0.0, float(option.score))),

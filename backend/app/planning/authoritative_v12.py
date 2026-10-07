@@ -22,6 +22,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.temporal import derive_journey_temporal_shape
+from app.core.budget_fit import BUDGET_FIT_NEUTRAL, budget_fit_for
 from app.db.models import (
     Activity,
     AccommodationOfferSnapshot,
@@ -1318,7 +1319,9 @@ def compose_authoritative_multiday(
                 "time_reliability": 0.92,
                 "preference_fit": 0.84,
                 "mobility_fit": 0.88,
-                "budget_fit": max(0.0, min(1.0, 1.0 - (total_cost / max(1, int(journey.budget_amount_minor))))),
+                "budget_fit": BUDGET_FIT_NEUTRAL
+                if (budget_fit := budget_fit_for(journey.budget_amount_minor, total_cost)) is None
+                else budget_fit,
                 "robustness": 0.86,
                 "opportunity_value": 0.9,
                 "total": max(0.0, min(1.0, 0.96 - 0.04 * variation)),

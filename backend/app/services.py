@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 
 from app.execution.traveler_twin import capability_constraint_items
 from app.core.audit import record_audit
+from app.core.budget_fit import BUDGET_FIT_NEUTRAL, budget_fit_for
 from app.db.models import (
     Activity,
     CityService,
@@ -1363,18 +1364,22 @@ def _generic_compose_plans(
     plan_id = deterministic_id(
         f"plan:{journey.id}:{version_no}:generic:{','.join(ordered_ids)}"
     )
-    budget_fit = max(0.0, min(1.0, 1 - total_cost / max(1, journey.budget_amount_minor)))
+    budget_fit = budget_fit_for(journey.budget_amount_minor, total_cost)
     metrics = {
         "commitment_preservation": 1.0,
         "stability": 0.9,
         "time_reliability": 0.9,
         "preference_fit": 0.8,
         "mobility_fit": 0.85,
-        "budget_fit": budget_fit,
+        # No stated budget means this axis was not answered, so the breakdown
+        # carries the neutral value instead of a score against an invented one.
+        "budget_fit": BUDGET_FIT_NEUTRAL if budget_fit is None else budget_fit,
         "robustness": 0.85,
         "opportunity_value": 0.8,
     }
     breakdown = {**metrics, "total": _score(metrics)}
+    if budget_fit is None:
+        breakdown["budget_fit_declared"] = False
     now = iso_now()
     plan = PlanVersion(
         id=plan_id,

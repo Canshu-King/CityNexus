@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
 from app.core.phase_timing import phase
+from app.core.budget_fit import budget_penalty_for
 from app.anywhere_capability import (
     CAPABILITY_STATES,
     REASON_COVERAGE_INCOMPLETE,
@@ -1500,7 +1501,7 @@ def generate_stay_options(
             max(
                 0.0,
                 1.0
-                - total_cost / max(1, int(journey.budget_amount_minor)) * 0.30
+                - budget_penalty_for(journey.budget_amount_minor, total_cost)
                 - walking / 1500
                 + min(margin, 90) / 900
                 + (0.08 if offer.refundable else 0.0)

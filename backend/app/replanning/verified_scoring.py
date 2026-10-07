@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from app.core.budget_fit import BUDGET_FIT_NEUTRAL, budget_fit_for
 from app.replanning.reference_replanner import WEIGHTS, score_metrics
 
 
@@ -40,12 +41,15 @@ def score_replan_candidate(
     stability = 1.0 - min(1.0, changed / max(1, base_activity_count))
     slack = int(after_envelope.get("journey_end_slack_min", 0))
     time_reliability = _clamp(slack / 60.0) if slack >= 0 else 0.0
-    if budget_amount_minor > 0:
-        budget_fit = _clamp(
-            int(after_envelope.get("budget_remaining_minor", 0)) / budget_amount_minor
-        )
-    else:
-        budget_fit = 1.0 if int(after_envelope.get("budget_remaining_minor", 0)) >= 0 else 0.0
+    # A journey with no stated budget has no budget to fit, so this axis is
+    # unanswered rather than perfect; the neutral policy below carries that.
+    # The envelope carries what is left, so the spend is what it was spent from.
+    remaining = after_envelope.get("budget_remaining_minor")
+    budget_fit = (
+        None
+        if remaining is None
+        else budget_fit_for(budget_amount_minor, int(budget_amount_minor) - int(remaining))
+    )
     mobility_fit = 1.0 if travel_delta_min <= 0 else _clamp(1.0 - travel_delta_min / 60.0)
     robustness = 1.0 if bool(after_envelope.get("robust")) else 0.0
     metrics = {
@@ -54,7 +58,7 @@ def score_replan_candidate(
         "time_reliability": time_reliability,
         "preference_fit": 0.5 if preference_fit is None else _clamp(preference_fit),
         "mobility_fit": mobility_fit,
-        "budget_fit": budget_fit,
+        "budget_fit": BUDGET_FIT_NEUTRAL if budget_fit is None else budget_fit,
         "robustness": robustness,
         "opportunity_value": (0.5 if opportunity_value is None else _clamp(opportunity_value)),
     }
@@ -62,4 +66,7 @@ def score_replan_candidate(
         raise ValueError("verified score metrics do not match the frozen utility weights")
     rounded = {name: round(value, 6) for name, value in metrics.items()}
     total = round(score_metrics(rounded), 6)
-    return VerifiedReplanScore(total=total, breakdown={**rounded, "total": total})
+    breakdown: dict[str, Any] = {**rounded, "total": total}
+    if budget_fit is None:
+        breakdown["budget_fit_declared"] = False
+    return VerifiedReplanScore(total=total, breakdown=breakdown)
