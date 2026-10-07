@@ -28,18 +28,12 @@ const intentLabel: Record<string, string> = {
 
 // The what-if feasibility value is an internal enum; the traveller reads a
 // plain sentence.
-function feasibilityLabel(value: string | null | undefined, zh: boolean): string {
+function feasibilityLabel(value: string | null | undefined, t: (key: string) => string): string {
   const key = String(value ?? "").toUpperCase();
-  if (key === "FEASIBLE" || key === "PASS" || key === "PASSED") {
-    return zh ? "可行" : "Feasible";
-  }
-  if (key === "INFEASIBLE" || key === "FAIL" || key === "FAILED") {
-    return zh ? "不可行" : "Not feasible";
-  }
-  if (key.includes("UNKNOWN") || key.includes("NEEDS") || key === "") {
-    return zh ? "需要更多信息" : "Needs more information";
-  }
-  return zh ? "已评估" : "Assessed";
+  if (key === "FEASIBLE" || key === "PASS" || key === "PASSED") return t("agent.feasibilityFeasible");
+  if (key === "INFEASIBLE" || key === "FAIL" || key === "FAILED") return t("agent.feasibilityInfeasible");
+  if (key.includes("UNKNOWN") || key.includes("NEEDS") || key === "") return t("agent.feasibilityUnknown");
+  return t("agent.feasibilityAssessed");
 }
 
 export function AgentComposer({
@@ -232,7 +226,7 @@ export function AgentComposer({
                       </div>
                       <div>
                         <span>{t("agent.feasibility")}</span>
-                        <b>{feasibilityLabel(item.response.what_if.feasibility, locale === "zh-CN")}</b>
+                        <b>{feasibilityLabel(item.response.what_if.feasibility, t)}</b>
                       </div>
                     </div>
                     <small>

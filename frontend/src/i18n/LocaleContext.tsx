@@ -513,6 +513,12 @@ const en: Dict = {
   "agent.aiRunOtherPlan": "The plan in force is a different one than before.",
   "agent.aiRunPlanAppeared": "A plan is in force now (version {version}) that wasn't before.",
   "agent.aiRunNoCurrentPlan": "The read-back found no plan in force at all.",
+  
+  // agent.feasibilityLabel (r26)
+  "agent.feasibilityFeasible": "Feasible",
+  "agent.feasibilityInfeasible": "Not feasible",
+  "agent.feasibilityUnknown": "Needs more information",
+  "agent.feasibilityAssessed": "Assessed",
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -1624,6 +1630,12 @@ const zhCN: Dict = {
   "agent.aiRunOtherPlan": "当前生效的方案已经换成另一个。",
   "agent.aiRunPlanAppeared": "回读时才有了生效方案（第 {version} 版）。",
   "agent.aiRunNoCurrentPlan": "回读时没有任何生效方案。",
+  
+  // agent.feasibilityLabel (r26)
+  "agent.feasibilityFeasible": "可行",
+  "agent.feasibilityInfeasible": "不可行",
+  "agent.feasibilityUnknown": "需要更多信息",
+  "agent.feasibilityAssessed": "已评估",
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
