@@ -2734,7 +2734,7 @@ function Hub({
               <strong>
                 {zh ? "正在搜索住宿" : "Looking for stays"} ·{" "}
                 <span data-testid="hub-stay-elapsed">
-                  {zh ? `已等待 ${stayWaited} 秒` : `waiting ${stayWaited}s`}
+                  {t("hub.stayElapsed", { n: stayWaited })}
                 </span>
               </strong>
               <span>
@@ -2802,7 +2802,7 @@ function Hub({
               </div>
               {stayAttempts > 1 && (
                 <small data-testid="hub-stay-attempts">
-                  {zh ? `第 ${stayAttempts} 次查询` : `attempt ${stayAttempts}`}
+                  {t("hub.stayAttempt", { n: stayAttempts })}
                 </small>
               )}
             </section>
