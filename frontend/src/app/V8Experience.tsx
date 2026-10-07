@@ -4753,8 +4753,8 @@ function Me({
     <section className="v8-page" data-testid="v8-me">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "我的" : "Me"}</p>
-          <h1>{zh ? "我的行程与偏好" : "My trip and preferences"}</h1>
+          <p className="v8-kicker">{t("my.kicker")}</p>
+          <h1>{t("my.title")}</h1>
           <p className="v8-lede">
             {zh
               ? "这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。"
@@ -4765,7 +4765,7 @@ function Me({
 
       <div className="v8-me-grid">
         <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "这趟行程" : "This trip"}</span>
+          <span className="v8-kicker">{t("my.thisTrip")}</span>
           <strong>{cityLabel}</strong>
           <p>
             {t("shell.travelers", { n: data.trip.party_size })} ·{" "}
@@ -4778,7 +4778,7 @@ function Me({
         </article>
 
         <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "住宿" : "Stay"}</span>
+          <span className="v8-kicker">{t("my.stay")}</span>
           <strong>
             {stay
               ? stay.stay.property_name
