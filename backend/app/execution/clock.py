@@ -15,6 +15,21 @@ class ExecutionClock:
     def now(self, timezone_name: str | None = None) -> datetime:
         return self.now_honest(timezone_name)[0]
 
+    def zone_usage(self, timezone_name: str | None) -> tuple[str | None, bool]:
+        """Which zone a name actually resolves to, and whether that is the one asked for.
+
+        The zone half of `now_honest`, for callers that carry a wall-clock column rather than a
+        moment: they still have to say whether the zone they name can be used, and that answer
+        must not be a second implementation of what `now_honest` already decides.
+        """
+        if not timezone_name:
+            return None, False
+        try:
+            ZoneInfo(timezone_name)
+        except (KeyError, ValueError):
+            return "UTC", False
+        return timezone_name, True
+
     def now_honest(self, timezone_name: str | None = None) -> tuple[datetime, str | None, bool]:
         """The clock AND which zone it actually landed in, and whether that zone is the one asked for.
 
@@ -27,13 +42,12 @@ class ExecutionClock:
         value = _frozen_now.get() or datetime.now(timezone.utc)
         if value.tzinfo is None:
             value = value.replace(tzinfo=timezone.utc)
-        if not timezone_name:
+        used_timezone, honoured = self.zone_usage(timezone_name)
+        if used_timezone is None:
             return value, None, False
-        try:
-            zone = ZoneInfo(timezone_name)
-        except (KeyError, ValueError):
-            return value, "UTC", False
-        return value.astimezone(zone), timezone_name, True
+        if not honoured:
+            return value, used_timezone, False
+        return value.astimezone(ZoneInfo(timezone_name)), used_timezone, True
 
     @contextmanager
     def freeze(self, value: datetime) -> Iterator[datetime]:

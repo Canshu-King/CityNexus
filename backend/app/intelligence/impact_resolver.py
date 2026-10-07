@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import Activity, Event, ImpactAssessment, Journey, Place
+from app.execution.clock import execution_clock
 from app.integrations.ai.impact_provider import (
     DeepSeekImpactProvider,
     ImpactProvider,
@@ -118,6 +119,7 @@ def build_impact_context(
             )
         )
     contexts = tuple(contexts_list)
+    zone_usage = execution_clock.zone_usage(journey.timezone)
     context = {
         "event": {
             "event_id": event.id,
@@ -131,6 +133,13 @@ def build_impact_context(
         "journey": {
             "journey_id": journey.id,
             "timezone": journey.timezone,
+            # Which zone the name above resolves to, and whether that is the one asked for.  The
+            # reader is a model deciding which activities an event touches, in a language where
+            # "before" and "after" are only meaningful against a zone -- handed an unusable one it has
+            # no way to tell the name is unusable, which is the shape the trip payload and the
+            # execution clock already answer for.
+            "used_timezone": zone_usage[0],
+            "timezone_honoured": zone_usage[1],
             "city_code": journey.city_code,
         },
         "candidate_activities": [
