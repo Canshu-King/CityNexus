@@ -711,10 +711,19 @@ export function LiveRecovery({
       if (error instanceof CityNexusApiError && error.status >= 400 && error.status < 500) {
         groupRecoveryApplyKey.current = null;
         if (error.status === 409) {
+          const body = error.body as { detail?: unknown } | null;
+          const detail = body && typeof body === "object" ? body.detail : null;
+          const code = detail && typeof detail === "object" && "code" in detail
+            ? String((detail as { code?: unknown }).code ?? "")
+            : "";
           await Promise.all([loadOperator(), loadProposals()]);
-          setMessage(zh
-            ? "原来的共同选择已过期或现实已变化；我刷新了当前状态，没有重复应用旧方案。"
-            : "The shared choice is stale or the trip changed. Current options were refreshed; the old plan was not applied.");
+          setMessage(code === "GROUP_RECOVERY_REPLAN_REQUIRED"
+            ? (zh
+              ? "共同选择仍作为历史保留，但这个具体方案已不再安全可执行；CityNexus 需要先重新规划，而不是让大家对同一个失效方案再投一次。"
+              : "The group’s earlier choice is preserved, but this concrete plan is no longer safe to execute. CityNexus needs a fresh grounded recovery rather than asking everyone to vote on the same invalid plan again.")
+            : (zh
+              ? "原来的共同选择已过期或现实已变化；我刷新了当前状态，没有重复应用旧方案。"
+              : "The shared choice is stale or the trip changed. Current options were refreshed; the old plan was not applied."));
         } else if (error.status === 401 || error.status === 403) {
           setMessage(zh
             ? "当前登录成员没有应用这项共享行程变更的权限。"
