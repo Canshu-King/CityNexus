@@ -4559,7 +4559,7 @@ function Bookings({
         </div>
         <aside className="v9-inbox">
           <span className="v8-kicker">
-            {zh ? "导入预订" : "Import a booking"}
+            {t("bookings.importBooking")}
           </span>
           <p className="v8-lede">
             {zh
