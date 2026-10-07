@@ -871,7 +871,14 @@ def test_r60_operator_hides_apply_when_bound_recovery_epoch_no_longer_matches_re
 
     with SessionLocal() as session:
         journey = session.get(Journey, str(seeded["journey_id"]))
-        assert journey is not None
+        admin_member = session.get(
+            JourneyMember, str(seeded["admin_member_id"])
+        )
+        assert journey is not None and admin_member is not None
+        # Keep both required signers on a role the default capability table
+        # actually allows to edit; this test isolates RecoveryEpoch freshness.
+        admin_member.role = "OWNER"
+        session.commit()
         fresh = collective_operator_projection(
             session,
             journey,
