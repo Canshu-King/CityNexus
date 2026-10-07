@@ -45,6 +45,10 @@ DESTINATION_GRADE_TYPES = frozenset(
 
 #: Reason vocabulary for RUNTIME_FAILURE.  Named separately on purpose: "we could not ask" and
 #: "the answer is no" must never share a code.
+#: These six plus the two below are the words the preparation screen renders: it spells them in
+#: frontend/src/features/discovery/prepFailureCopy.ts, which was holding only three of the eight
+#: (and a CATALOG_STORE_BUSY this module never produces). A new name added here needs its sentence
+#: there, or a traveller reads the generic fallback for a refusal that did happen.
 REASON_TIMEOUT = "PROVIDER_TIMEOUT"
 REASON_UNREACHABLE = "PROVIDER_UNREACHABLE"
 REASON_RATE_LIMITED = "PROVIDER_RATE_LIMITED"

@@ -17,6 +17,13 @@
  *
  * A code this file does not know gets the kind's own fallback sentence, which is a real reading
  * ("this build has no words for that refusal yet") rather than a laundered one.
+ *
+ * The provider-class words below are not chosen here: `integrations/discovery/provider_identity.py`
+ * owns them as REASON_* constants and this file spells them the way that module spells them.
+ * `CATALOG_STORE_BUSY` used to sit in this map and was removed -- no backend site produced it, so it
+ * could only ever be dead copy. What replaced it is the provider layer's actual vocabulary, so a
+ * `reason_code` that really reaches this file now finds words instead of falling through to the
+ * generic sentence.
  */
 
 export type FailureKind = "read" | "check" | "start" | "stop";
@@ -32,7 +39,11 @@ const ARMS: Record<"zh" | "en", Record<string, string>> = {
     "DESTINATION_RESOLVER_UNAVAILABLE": "目的地来源这一次没答上。这不是这座城不能规划，可以再问一次。",
     "DESTINATION_IDENTITY_UNRESOLVED": "这座城还没有能被追溯的来源命名，所以没有可准备的东西。",
     "DESTINATION_AMBIGUOUS": "这个名字对应不止一处，服务器没有替我挑一个。请选一个再说。",
-    "CATALOG_STORE_BUSY": "目录这一会儿腾不出手，稍后再试一次。",
+    "PROVIDER_UNREACHABLE": "去问目的地的那个来源这一会儿联系不上，所以这次没问到。这不是这座城不能规划，可以再问一次。",
+    "PROVIDER_BAD_RESPONSE": "来源答了，但答回来的东西这台设备读不懂，所以这次没法用。可以再问一次。",
+    "PROVIDER_NO_RESULTS": "来源答了，并且说它那边没有这个名字。不是这座城不存在，是这一问没有对应的地方。",
+    "PROVIDER_REFUSED": "来源这一次拒绝作答，所以这次没问到。可以再问一次。",
+    "EMPTY_QUERY": "这一问是空的，所以没有去问来源。请先写下要去的地方。",
     "NETWORK": "这台设备没连上服务器。屏上的判定是上一次读到的，不是这一次的。",
     "HTTP": "服务器这一答不是成功答。屏上没有改成别的结论。",
   },
@@ -44,7 +55,11 @@ const ARMS: Record<"zh" | "en", Record<string, string>> = {
     "DESTINATION_RESOLVER_UNAVAILABLE": "The destination source did not answer this time. That does not mean the city cannot be planned - ask again.",
     "DESTINATION_IDENTITY_UNRESOLVED": "No traceable source names this city yet, so there is nothing to prepare for it.",
     "DESTINATION_AMBIGUOUS": "That name matches more than one place and the server did not pick one. Choose, then ask again.",
-    "CATALOG_STORE_BUSY": "The catalog is busy for the moment. Try again shortly.",
+    "PROVIDER_UNREACHABLE": "The source we ask about destinations could not be reached this time, so nothing was asked of it. That does not mean the city cannot be planned - ask again.",
+    "PROVIDER_BAD_RESPONSE": "The source answered, but what came back could not be read, so this answer is unusable. Asking again is safe.",
+    "PROVIDER_NO_RESULTS": "The source answered and reported that it has no such name. That is not 'this city does not exist' - it is that this question matched nothing.",
+    "PROVIDER_REFUSED": "The source refused to answer this time, so nothing came back. Asking again is safe.",
+    "EMPTY_QUERY": "The question was empty, so no source was asked. Write down where you want to go first.",
     "NETWORK": "This device could not reach the server. What is on screen is the last real reading, not this one.",
     "HTTP": "The server's answer was not a success. Nothing on screen was rewritten to look like one.",
   },
