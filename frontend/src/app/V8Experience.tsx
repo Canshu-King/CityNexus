@@ -2912,7 +2912,7 @@ function Hub({
                     {t("hub.continuationTechnicalDetail")}
                   </summary>
                   <span data-testid="continuation-resume-server-reason">
-                    {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
+                    {`${t("hub.continuationServerReason")}`}
                     {resumeOutcome.serverReason}
                   </span>
                   {/* Q70: the field this device measured, under its contract name, on the element
