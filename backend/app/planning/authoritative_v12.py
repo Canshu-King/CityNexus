@@ -1294,6 +1294,7 @@ def compose_authoritative_multiday(
         )
         now = _now()
         latest_version = int(session.scalar(select(PlanVersion.version_no).where(PlanVersion.journey_id == journey.id).order_by(PlanVersion.version_no.desc()).limit(1)) or 0)
+        budget_fit = budget_fit_for(journey.budget_amount_minor, total_cost)
         plan = PlanVersion(
             id=str(uuid4()),
             journey_id=journey.id,
@@ -1319,9 +1320,7 @@ def compose_authoritative_multiday(
                 "time_reliability": 0.92,
                 "preference_fit": 0.84,
                 "mobility_fit": 0.88,
-                "budget_fit": BUDGET_FIT_NEUTRAL
-                if (budget_fit := budget_fit_for(journey.budget_amount_minor, total_cost)) is None
-                else budget_fit,
+                "budget_fit": BUDGET_FIT_NEUTRAL if budget_fit is None else budget_fit,
                 "robustness": 0.86,
                 "opportunity_value": 0.9,
                 "total": max(0.0, min(1.0, 0.96 - 0.04 * variation)),
