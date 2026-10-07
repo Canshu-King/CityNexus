@@ -415,6 +415,11 @@ const en: Dict = {
   "me.tripContext": "TRIP CONTEXT",
   "me.travelersAdults": "{travelers} travelers · {adults} adults",
   "me.version": "Version {v}.",
+  "me.confirmedBookings": "Confirmed bookings",
+  "me.changePreferences": "Change preferences",
+  "me.allowAutomaticChanges": "Allow automatic changes",
+  "me.delegationScope": "Delegation scope",
+  "me.technicalIdentifiers": "Technical identifiers",
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",
@@ -1532,6 +1537,11 @@ const zhCN: Dict = {
   "me.tripContext": "行程上下文",
   "me.travelersAdults": "{travelers} 位旅行者 · {adults} 位成人",
   "me.version": "版本 {v}。",
+  "me.confirmedBookings": "已确认的预订",
+  "me.changePreferences": "改动偏好",
+  "me.allowAutomaticChanges": "开启自动执行",
+  "me.delegationScope": "委派范围",
+  "me.technicalIdentifiers": "技术标识",
 
   // ── Agent Composer ──
   "agent.kicker": "随时问关于这趟行程的任何事",

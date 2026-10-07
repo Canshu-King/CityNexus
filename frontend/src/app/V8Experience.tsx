@@ -4803,7 +4803,7 @@ function Me({
 
         <article className="v8-me-card">
           <span className="v8-kicker">
-            {zh ? "已确认的预订" : "Confirmed bookings"}
+            {t("me.confirmedBookings")}
           </span>
           <strong>
             {bookings.length
@@ -4827,7 +4827,7 @@ function Me({
 
         <article className="v8-me-card">
           <span className="v8-kicker">
-            {zh ? "改动偏好" : "Change preferences"}
+            {t("me.changePreferences")}
           </span>
           <strong>{freedomLabel(policy?.mode)}</strong>
           <p>
@@ -4836,7 +4836,7 @@ function Me({
               : "Anything affecting a confirmed booking or protected plan asks you first."}
           </p>
           <label className="me-mode-row">
-            <span>{zh ? "开启自动执行" : "Allow automatic changes"}</span>
+            <span>{t("me.allowAutomaticChanges")}</span>
             <input
               type="checkbox"
               data-testid="me-mode-toggle"
@@ -4856,7 +4856,7 @@ function Me({
         <div className="v8-me-grid">
           <article className="v8-me-card">
             <span className="v8-kicker">
-              {zh ? "委派范围" : "Delegation scope"}
+              {t("me.delegationScope")}
             </span>
             <ul>
               <li>
@@ -4884,7 +4884,7 @@ function Me({
           </article>
           <article className="v8-me-card">
             <span className="v8-kicker">
-              {zh ? "技术标识" : "Technical identifiers"}
+              {t("me.technicalIdentifiers")}
             </span>
             <ul className="me-identifiers">
               <li>
