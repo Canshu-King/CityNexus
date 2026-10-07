@@ -425,6 +425,13 @@ const en: Dict = {
   "me.allowAutomaticChanges": "Allow automatic changes",
   "me.delegationScope": "Delegation scope",
   "me.technicalIdentifiers": "Technical identifiers",
+  "me.stayNotChosen": "Not chosen yet",
+  "me.stayConfirmed": "Confirmed stay",
+  "me.stayChooseInTrips": "Choose it in Trips · Stay",
+  "me.bookingsProtected": "Protected bookings; they are never changed automatically.",
+  "me.bookingsImport": "Import a ticket or confirmation in Trips · Bookings.",
+  "me.asksBeforeProtectedChange":
+    "Anything affecting a confirmed booking or protected plan asks you first.",
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",
@@ -1552,6 +1559,12 @@ const zhCN: Dict = {
   "me.allowAutomaticChanges": "开启自动执行",
   "me.delegationScope": "委派范围",
   "me.technicalIdentifiers": "技术标识",
+  "me.stayNotChosen": "还没有选定",
+  "me.stayConfirmed": "已确认的住宿",
+  "me.stayChooseInTrips": "在「行程 · 住宿」里挑选",
+  "me.bookingsProtected": "受保护的预订，不会被自动改动。",
+  "me.bookingsImport": "在「行程 · 预订」里导入你的票或确认单。",
+  "me.asksBeforeProtectedChange": "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。",
 
   // ── Agent Composer ──
   "agent.kicker": "随时问关于这趟行程的任何事",
