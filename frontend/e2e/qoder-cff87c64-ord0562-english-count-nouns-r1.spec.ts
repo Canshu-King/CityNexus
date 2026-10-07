@@ -15,6 +15,8 @@ import { expect, test } from "@playwright/test";
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { CityNexusApiError } from "../src/api/citynexus";
+import { describeFailure } from "../src/features/simulation/simulationAdapter";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FILES = {
@@ -179,4 +181,26 @@ test("no screen under frontend/src softens a counted English noun into `(s)`", (
   }
   expect(hits, "a counted English noun on some screen went back to the `1 or more` dodge").toEqual([]);
   expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
+});
+
+test("the mobility refusal agrees with its own leg count", () => {
+  /* Behavioural, not source-level: build the server error the mobility branch matches and read the
+     sentence it composes. The old shape was `these${legsEn} have`, so one leg read "these 1 leg have
+     facts" and no leg read "these have facts". */
+  const mobility = (gaps: unknown[]) =>
+    new CityNexusApiError(
+      422,
+      { error: { message: "MOBILITY_DATA_UNAVAILABLE", code: "MOBILITY_DATA_UNAVAILABLE", details: { gaps } } },
+      "mobility",
+    );
+  const one = describeFailure(mobility([{ evidence_state: "STALE" }])).en;
+  const two = describeFailure(mobility([{ evidence_state: "STALE" }, { evidence_state: "MISSING" }])).en;
+  const none = describeFailure(mobility([])).en;
+  expect(one, "one leg must read 'this 1 leg has'").toContain("this 1 leg has");
+  expect(two, "two legs must read 'these 2 legs have'").toContain("these 2 legs have");
+  expect(none, "no legs must not claim a leg count").not.toMatch(/these\s+\d+\s+leg|these\s+have/);
+  for (const sentence of [one, two, none]) {
+    expect(sentence, "the broken shape survived").not.toContain("these 1 leg have");
+    expect(sentence, "the sentence must not end a clause with a bare 'these'").not.toMatch(/these\s+facts/);
+  }
 });

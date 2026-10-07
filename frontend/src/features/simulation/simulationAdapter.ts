@@ -155,12 +155,20 @@ export function describeFailure(error: unknown): NamedFailure {
   if (mobility) {
     const states = mobility.states.length ? mobility.states.join("、") : "服务器未给证据状态";
     const legs = mobility.legs > 0 ? ` ${mobility.legs} 段` : "";
-    const legsEn = mobility.legs > 0 ? ` ${englishCountNoun(mobility.legs, "leg")}` : "";
+    /* The sentence used to be `these` + a noun with no number + `have`, so it said "these leg have facts"
+       for every count and named no leg at all in the zero case. The clause now carries the count and
+       agrees with it: "this 1 leg has" / "these 2 legs have" / "the route evidence has". */
+    const legsClause =
+      mobility.legs === 1
+        ? "this 1 leg has"
+        : mobility.legs > 1
+          ? `these ${mobility.legs} ${englishCountNoun(mobility.legs, "leg")} have`
+          : "the route evidence has";
     return {
       code,
       status,
       zh: `重算这一版需要能当作硬依据的路线证据。服务器说这些路程${legs}的证据在档，但达不到可硬用的标准（它给的码：MOBILITY_DATA_UNAVAILABLE，证据状态 ${states}）。所以它没有算出任何替代方案，你现在的方案没有变化——这一步要接上真实的路线数据源才会通。`,
-      en: `Recomputing this plan needs route evidence that can be treated as a hard basis. The server says these${legsEn} have facts on file that do not meet that bar (its code: MOBILITY_DATA_UNAVAILABLE, evidence state ${mobility.states.join(", ") || "not given"}). It produced no alternative, and your current plan is unchanged -- this step needs a real routing data source connected.`,
+      en: `Recomputing this plan needs route evidence that can be treated as a hard basis. The server says ${legsClause} facts on file that do not meet that bar (its code: MOBILITY_DATA_UNAVAILABLE, evidence state ${mobility.states.join(", ") || "not given"}). It produced no alternative, and your current plan is unchanged -- this step needs a real routing data source connected.`,
     };
   }
   if (code.startsWith("INVALID_ACTIVITY_TRANSITION")) {
