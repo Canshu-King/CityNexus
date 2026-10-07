@@ -2890,9 +2890,7 @@ function Hub({
                          other side -- no number reached us, so the screen names that instead of
                          borrowing one. */
                       <span data-testid="continuation-resume-no-server-reason">
-                        {zh
-                          ? "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。"
-                          : "The server sent no reason text -- this sentence is ours, not the server's."}
+                        {t("hub.continuationNoServerReason")}
                       </span>
                     )}
                   </>
@@ -2909,10 +2907,10 @@ function Hub({
                    one element for a gate to read. */
                 <details className="today-continuation-technical" data-testid="continuation-technical-details">
                   <summary data-testid="continuation-technical-toggle">
-                    {zh ? "技术详情" : "Technical detail"}
+                    {t("hub.continuationTechnicalDetail")}
                   </summary>
                   <span data-testid="continuation-resume-server-reason">
-                    {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
+                    {t("hub.continuationServerReason")}
                     {resumeOutcome.serverReason}
                   </span>
                   {/* Q70: the field this device measured, under its contract name, on the element
@@ -2923,9 +2921,7 @@ function Hub({
                     data-cnx-field="http_status"
                     data-cnx-value={String(resumeOutcome.httpStatus)}
                   >
-                    {zh
-                      ? `这台设备看到的回读：HTTP ${resumeOutcome.httpStatus}`
-                      : `This device's reading: HTTP ${resumeOutcome.httpStatus}`}
+                    {t("hub.continuationReading", { status: resumeOutcome.httpStatus })}
                   </span>
                   {/* Q68: the number a traveller could repeat is the one thing this refusal did not
                       send -- `continuePendingPlan` hands back a status and a sentence, no code.  The
@@ -2935,9 +2931,7 @@ function Hub({
                     className="today-continuation-technical-nocode"
                     data-testid="continuation-resume-no-request-id"
                   >
-                    {zh
-                      ? "这一屏没有拿到可复述的编号（这条读取没把它送过来）。"
-                      : "This screen holds no repeatable code -- this read did not carry one."}
+                    {t("hub.continuationNoRequestId")}
                   </span>
                 </details>
               )}
