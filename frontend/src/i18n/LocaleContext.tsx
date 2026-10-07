@@ -47,6 +47,8 @@ const en: Dict = {
   "nav.footprints": "Footprints",
   "checkin.title": "Footprints",
   "checkin.scope": "Every stamp the server recorded on this trip, oldest first.",
+    /* ORD-0531 building three cell 2 expansion: the stay section's inline Chinese/English split */
+    "my.accommodation": zh ? "住宿" : "Stay",
   "checkin.retry": "Read again",
   "checkin.loading": "Reading the footprints…",
   "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
