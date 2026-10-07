@@ -4875,7 +4875,7 @@ function Me({
       </div>
 
       <details className="v8-advanced" data-testid="me-advanced">
-        <summary>{zh ? "高级详情" : "Advanced detail"}</summary>
+        <summary>{t("me.advancedDetail")}</summary>
         <div className="v8-me-grid">
           <article className="v8-me-card">
             <span className="v8-kicker">

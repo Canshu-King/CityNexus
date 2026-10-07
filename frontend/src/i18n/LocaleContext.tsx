@@ -431,6 +431,8 @@ const en: Dict = {
   "me.allowAutomaticChanges": "Allow automatic changes",
   "me.delegationScope": "Delegation scope",
   "me.technicalIdentifiers": "Technical identifiers",
+  "me.advancedDetail": "Advanced detail",
+
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",
@@ -1645,6 +1647,8 @@ const zhCN: Dict = {
   "me.allowAutomaticChanges": "开启自动执行",
   "me.delegationScope": "委派范围",
   "me.technicalIdentifiers": "技术标识",
+  "me.advancedDetail": "高级详情",
+
 
   // ── Agent Composer ──
   "agent.kicker": "随时问关于这趟行程的任何事",
