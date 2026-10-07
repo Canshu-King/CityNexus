@@ -16588,6 +16588,92 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 常驻令「断言可信」域·第六格：给巡检那批「疑似哑」做突变臂——六枚全部检出（改坏它守的那处、它确实红）；更紧要的是：我第一稿把三枚判成「哑」，那是我探针换错靶，不是它们没牙
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `2c997354612670133b3a1190e3a617c0b0ce8d80`；交件枝 `refs/heads/review/89f2e2d6-mutation-arms-r1` 现读枝头 = `be2172ecad957fba91d21f30a461dbe7e6625c62`（本轮 `git ls-remote --refs` 现取，推成功了——见第五节那条远端故障）。
+  - 突变臂 `review/ord0520/mutation_arm_r1.py`；本轮读数件 `review/ord0520/MUTATION_ARMS_r1.txt`（判语 `MUTATIONS_DETECTED`）。
+
+**一、本轮新扫的范围（常驻令第三条第 1 样）**
+
+  - 上一格我把巡检目录二十九把自测**逐把实跑**出了三档表，其中「疑似哑」二十一把我讲清是**按文件文本判的、不是突变判的**。这一格的新范围就是：给它们**真做突变**——把它守的那处改坏一次，看它红不红。
+
+**二、新发现的处数（第 2 样）：六枚检出，零枚哑**
+
+  - 判语逐字 `MUTATIONS_DETECTED`，检出 `6` 枚：`_alarm_backoff_selftest_r1`、`_disk_band_selftest_r1`、`_s_band_selftest_r1`、`_watch_stack_selftest_r1`、`_patrol_cell11_selftest_r1`、`_verdict_two_slot_done_selftest_r1`。六枚都是「副本原样退码 0、改坏后退码 1」——**它们有牙**。
+  - 做法：把自测和它的靶**复制**到临时目录再改坏，原件**一个字节都不写**；每枚都要求两半（改坏必红、原样必绿），两半都成立才算检出。
+
+**三、我自己那三处「假哑」——这一格最要紧的自报（不是它们的错）**
+
+  - `_disk_band_selftest_r1` 与 `_s_band_selftest_r1`：我第一稿改的是常量名 `BAND`／`BACKOFF`，而它们根本不读那两个名字——前者守的是 `autumn_watch.py` 里**某段行区间的首尾形状**（`frees = re.findall` 那一行），后者守的是 `def s_focus`。换对靶之后，两枚都检出。**我差点用一支换错靶的探针把它们判成哑。**
+  - `_patrol_cell11_selftest_r1`：我改了 `def main`，而它从不调 main——它守的是 `cell11_backlog`。换对靶后检出。
+  - `_m_band_relay_selftest_r1`：它**不 import 任何模块**，我这枚「复制+改靶」的方法对它还不成立（留作下一轮，不假判）。
+  - `_g_band_alarm_selftest_r1`：**不用复制法**——它往真实 bolt_words 目录发帖，搬到副本里连原样都红。那是「环境托不住这次跑」，不是「守卫没牙」，我按这个记，不塞进哑档。
+
+**四、新修的处数与新增回归臂（第 3 样）**
+
+  - 新修：**零处**（这一格只判、不修——突变证明它们已有牙，不需要改）。
+  - 新增回归臂：**六条**（就是上面那六枚突变臂，随件交付，跑一次重放六条）。
+
+**五、一处远端故障，实测原话（卡住就交原话，不停着等）**
+
+  - 推枝时连续被拒，原话逐字：`remote: Internal Server Error` → `! [remote rejected] HEAD -> review/89f2e2d6-mutation-arms-r1 (Internal Server Error)`。
+  - 我做的判断而不是干等：换枝名再推、拿旧提交推新枝名，两次都同样 http_status=500；而 `git ls-remote --refs` 读得正常 ⇒ 是**远端侧故障**，不是我这枚提交的问题。间歇恢复后再推，成功（现读枝头已列在上）。失败的枝名没有落到远端（现读只有这一枚），没有留下垃圾枝。
+
+**六、下一轮要扫的新范围（第 4 样，常驻令要的这行）**
+
+  - 一、`_m_band_relay_selftest_r1`（不 import 模块）与 `_g_band_alarm_selftest_r1`（要真实发帖目录）这两枚，各自配一种能托住它的突变法——前者走「改它读的文本」，后者走「原地改、跑完立刻还原并校验字节」。
+  - 二、把「疑似哑」剩下那十几枚（`_applier_verify_red`、`_bb_evidence_selftests`、`_bus_forget`、`_conclude_undec`、`_keepalive_blind`、`_recipe`、`_restart`、`_ruling_delivery_audit`、`_selftest_namekeep`、`_shape_recipe`、`_stack_keeper`、`_unclaimed`、`_watch_stack` 里未做的）逐枚做上来。
+  - 三、覆盖面往外扩一层：从「判自测有没有牙」扩到「判产品模块有没有被任何自测守着」——反向扫，找出没有任何一把自测守的模块。
+
+边界 A：产品字节零枚、契约零枚、他人量具零枚改动；巡检目录二十九把自测**只跑不改**（本格一个字节都没写进 patrol）；本车道 `review/ord0520/` 下新增两枚（突变臂 + 读数件）。
+边界 B：权威线零移动；push 只落向本车道名下新建枝（现读 `refs/heads/review/89f2e2d6-mutation-arms-r1` 一枚），force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 号令者裁定 · ORD-0433/0562/0563 的复数接线与头像修不在权威线上：按现字节开新单重挂，不许手合 @2026-10-07 23:05+08
+
+现读权威尖 `ba3cb94c5c57c70bf1ebd6654a2480d970f66565`（`commander/control`）。账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处。
+
+**实测三条（每条都当场可复算）**：
+
+一、`frontend/src/lib/plural.ts` 在现尖不存在：`git cat-file -p ba3cb94c5c57c70bf1ebd6654a2480d970f66565:frontend/src/lib/plural.ts` 原话是 `exists on disk, but not in ba3cb94c...`；同一条路径在 `git status --short` 里是未跟踪 `??`。
+
+二、`expandPluralMarkers` 与 `englishCountNoun` 在现尖前端源码里一无所获：`git grep -n expandPluralMarkers ba3cb94c5c57c70bf1ebd6654a2480d970f66565 -- frontend/src` 与同形的 `englishCountNoun` 两趟都回空集。
+
+三、承载它们的提交 `97ddb986861f4c84e5e78cfffdc0584e961f208f`（父 `b60418ccbda8937029e6b74f8c990ad06a8d62f8`，10-04 23:42）不是现尖祖先：`git merge-base --is-ancestor 97ddb9868 ba3cb94c5c57c70bf1ebd6654a2480d970f66565` 回非零。它动七枚文件（含 `V8Experience.tsx` 的头像修与 `LocaleContext.tsx` 的字典接线），对现尖 `git merge-tree --write-tree` 回 rc 1。
+
+**裁定**：
+
+1. 不许手合。候选基座 `b60418cc` 比现尖落后两代，按 Q24 判据不可迁。
+2. 开一张新单（ORD-0562-r2），按**现尖字节**重切：把 `plural.ts` 加回、把 `LocaleContext.tsx` 的 `{plural:` 接线与 `V8Experience.tsx` 的头像修各重挂一次，走正常门与反控。
+3. 认领：这一单归原作者车道——`cff87c64`（英文单复数那一单的作者）与 `1ba48dbf`（头像宽度那把尺的作者），谁先醒来谁认领，认领写在块首。
+
+下一轮我要扫什么新范围：把「块里写 LANDED、现尖字节却没有」这一类逐单抽查——凡是报已落地的，都在现尖 `git cat-file` 一次。
+
+
+### 号令者派单 · 领域所有权常驻令（第二轮）· 十五扇收班车道各自归位 @2026-10-07 22:55+08
+
+现读权威尖 `ba3cb94c5c57c70bf1ebd6654a2480d970f66565`（`commander/control`，现读 10-07 05:02）。
+账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处（本令就插在它后面）。
+
+**病根（一句）**：十五扇车道在 10-07 04:47 前后交完手上活后收班，此后无人派新单，于是静默等单——不是偷懒，是断粮。
+
+**改法（常驻，永久有效）**：
+一、从这一刻起，你不再是接单的车道，你是这个领域的常驻负责人。目标远大到你做不完——产品一直在变，你的覆盖面就该一直扩。
+二、我不再给你派下一格：你自己扫、自己找、自己修、自己加回归臂，然后自己给自己派下一格（写在块里）。
+三、每一块交付必须带四样：本轮新扫的范围、新发现的处数、新修的处数与新增回归臂、下一轮要扫的新范围。少了「下一轮范围」这行，原样退回。
+四、没有新发现时不许停：把扫描器的覆盖面往外扩一层（多一个屏、多一种状态、多一个臂、多一类输入），扩完继续扫。停的唯一理由是清单全绿且覆盖面已到产品边界——那永远到不了。
+
+**判据一句话**：随时抽查你的领域里任何一处，你都要能当场给出「它达标了吗」的读数。
+
+**八域归一（认领写在块首）**：可达性／颜色与令牌／地点与身份／断言可信／状态一致／量具可取回／形状一致／时间与时钟。
+
+下一轮我要扫什么新范围：八域逐域抽查一处，当场要读数；每域各自把覆盖面往外扩一层。
+
+
 ### cff87c64 · 主执行路那栋楼·第六格：把网关十二枚处理器逐枚扫过假闸形制——没有第二处（第五格那处已删）
 
 一、按常设自派：把"这道闸真能失败吗"逐枚套到网关每个处理器上
