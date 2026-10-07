@@ -11,6 +11,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { englishCountNoun } from "../../lib/plural";
 import {
   isDisruptionAcknowledgedOnly,
   isDisruptionOpen,
@@ -344,7 +345,7 @@ export function LiveRecovery({
         <p className="v8-muted" data-testid="live-deduped">
           {zh
             ? `已合并 ${duplicateCount} 个内容相同的建议。`
-            : `Merged ${duplicateCount} identical suggestion(s).`}
+            : `Merged ${duplicateCount} identical ${englishCountNoun(duplicateCount, "suggestion")}.`}
         </p>
       )}
 
