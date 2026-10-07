@@ -455,6 +455,12 @@ class GroupPresenceRouteRequest(BaseModel):
     requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
+class GroupRecoveryRequest(BaseModel):
+    """Ask the existing Journey Agent to prepare one bounded group recovery proposal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
 class LaunchOriginRequest(BaseModel):
     """Explicit planned-origin confirmation; coordinates and authority are server-owned."""
 

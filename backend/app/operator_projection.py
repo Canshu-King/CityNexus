@@ -41,7 +41,11 @@ from app.agent.journey_ahead import journey_ahead_projection
 from app.agent.overnight_steward import overnight_steward_projection
 from app.agent.journey_intent import active_journey_intents, pending_journey_intent_clarifications
 from app.execution.clock import execution_clock
-from app.execution.group_presence import group_presence_projection
+from app.execution.group_presence import (
+    group_presence_projection,
+    group_recovery_incident_key,
+    group_recovery_projection,
+)
 from app.operator_attention import attention_from_operator_projection
 
 
@@ -484,6 +488,50 @@ def operator_projection(
     group_presence = group_presence_projection(
         session, journey, viewer_member_id=viewer_member_id
     )
+    group_recovery = group_recovery_projection(group_presence)
+    affected_member = group_recovery.get("affected_member")
+    shared_commitment = group_recovery.get("shared_commitment")
+    if (
+        group_recovery.get("can_request_planning")
+        and isinstance(affected_member, dict)
+        and isinstance(shared_commitment, dict)
+        and journey.active_plan_version_id
+    ):
+        incident_key = group_recovery_incident_key(
+            journey_id=journey.id,
+            active_plan_version_id=str(journey.active_plan_version_id),
+            affected_member_id=str(affected_member.get("member_id") or ""),
+            rendezvous_activity_id=str(shared_commitment.get("activity_id") or ""),
+        )
+        for candidate in session.scalars(
+            select(JourneyMission)
+            .where(JourneyMission.journey_id == journey.id, JourneyMission.is_standing.is_(False))
+            .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+            .limit(30)
+        ).all():
+            try:
+                resolved = json.loads(candidate.resolved_intent_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                continue
+            context = resolved.get("group_recovery") if isinstance(resolved, dict) else None
+            if not isinstance(context, dict) or context.get("incident_key") != incident_key:
+                continue
+            group_recovery["mission"] = {
+                "mission_id": candidate.id,
+                "status": candidate.status,
+                "failure_reason": candidate.failure_reason,
+                "created_at": candidate.created_at,
+                "run_id": context.get("hermes_run_id"),
+            }
+            group_recovery["can_request_planning"] = False
+            if candidate.status == "FAILED_EXTERNAL":
+                group_recovery["state"] = "RECOVERY_EXTERNAL_AGENT_BLOCKED"
+                group_recovery["headline"] = "The configured Agent could not start; the current plan remains unchanged."
+                group_recovery["can_request_planning"] = False
+            elif candidate.status in {"RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}:
+                group_recovery["state"] = "RECOVERY_OPTIONS_READY"
+                group_recovery["headline"] = "CityNexus is preparing a governed group-recovery option."
+            break
     # Journey Ahead is a read-only projection.  Reuse the already persisted
     # predictive Guardian/brain state, but never start a provider call or an
     # action from this GET path.
@@ -621,6 +669,7 @@ def operator_projection(
         "flow": flow,
         "transit": transit,
         "group_presence": group_presence,
+        "group_recovery": group_recovery,
         "ahead": ahead,
         "progress": progress,
         "overnight": overnight,

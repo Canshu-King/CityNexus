@@ -124,7 +124,11 @@ def build_mission_plan(
             requires_authority=True,
         ),
     )
-    if "RECOVER_FROM_CITY_DISRUPTION" in objectives or "PREFER_INDOOR" in objectives:
+    if (
+        "RECOVER_FROM_CITY_DISRUPTION" in objectives
+        or "PREFER_INDOOR" in objectives
+        or "COLLECTIVE_JOURNEY_RECOVERY" in objectives
+    ):
         steps.extend(
             [
                 MissionPlanStep("inspect_affected", "Inspect affected activities", "inspect_journey"),

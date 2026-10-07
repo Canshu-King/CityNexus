@@ -409,6 +409,7 @@ def create_mission(
     trigger_event_id: str | None,
     is_standing: bool = False,
     parent_mission_id: str | None = None,
+    use_model_draft: bool = True,
 ) -> JourneyMission:
     spec = compile_mission(
         session,
@@ -416,7 +417,7 @@ def create_mission(
         command,
         requested_autonomy=requested_autonomy,
     )
-    draft = _model_draft(command)
+    draft = _model_draft(command) if use_model_draft else None
     compiler_provider = "deterministic"
     compiler_model = "mission-compiler-v2-fallback"
     compiler_confidence = 1.0

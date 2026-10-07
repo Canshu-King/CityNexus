@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+import hashlib
 import json
 import math
 from typing import Any
@@ -24,6 +25,8 @@ from app.execution.clock import execution_clock
 LOCATION_FRESHNESS_SECONDS = 300
 MAX_USEFUL_ACCURACY_M = 100.0
 PROTECTED_LEVELS = {"C3_GUARANTEED", "C4_ANCHORED"}
+LIVE_ROUTE_PROVENANCE = {"LIVE_PROVIDER_CAPTURE", "LIVE_CAPTURE"}
+REPLAY_ROUTE_PROVENANCE = {"CAPTURED_REPLAY", "SEALED_REAL_REPLAY"}
 
 
 def _stamp(value: str | None) -> datetime | None:
@@ -154,9 +157,9 @@ def _route_eta(
     journey: Journey,
     row: LocationObservation | None,
     target_activity: Activity | None,
-) -> tuple[int | None, str | None]:
+) -> tuple[int | None, str | None, str]:
     if row is None or target_activity is None:
-        return None, None
+        return None, None, "ROUTE_NOT_CAPTURED"
     route = session.scalar(
         select(RouteAcquisitionOperation)
         .where(
@@ -169,16 +172,116 @@ def _route_eta(
         .order_by(RouteAcquisitionOperation.finished_at.desc(), RouteAcquisitionOperation.id.desc())
     )
     if route is None:
-        return None, None
+        return None, None, "ROUTE_NOT_CAPTURED"
     try:
         result = json.loads(route.result_json or "{}")
         provenance = str(result.get("provenance") or "UNKNOWN").upper()
+        provider = str(result.get("provider") or "").casefold()
         minutes = result.get("duration_min")
-        if minutes is None or provenance != "LIVE_PROVIDER_CAPTURE":
-            return None, None
-        return max(0, int(minutes)), provenance
+        if minutes is None:
+            return None, provenance, "ROUTE_DURATION_MISSING"
+        if provider.startswith(("mock", "fixture")):
+            return None, provenance, "NON_PRODUCT_PROVIDER"
+        if provenance in LIVE_ROUTE_PROVENANCE:
+            return max(0, int(minutes)), provenance, "LIVE_PROVIDER_CAPTURE"
+        if provenance in REPLAY_ROUTE_PROVENANCE:
+            return max(0, int(minutes)), provenance, "CAPTURED_REPLAY"
+        return None, provenance, "PROVENANCE_NOT_AUTHORIZED"
     except (TypeError, ValueError, json.JSONDecodeError):
-        return None, None
+        return None, "UNKNOWN", "ROUTE_RECEIPT_INVALID"
+
+
+def group_recovery_incident_key(
+    *,
+    journey_id: str,
+    active_plan_version_id: str,
+    affected_member_id: str,
+    rendezvous_activity_id: str,
+) -> str:
+    """Stable incident identity; evidence row IDs and repeated taps do not fan out work."""
+    identity = "|".join((
+        str(journey_id),
+        str(active_plan_version_id),
+        str(affected_member_id),
+        str(rendezvous_activity_id),
+    ))
+    return hashlib.sha256(identity.encode("utf-8")).hexdigest()
+
+
+def group_recovery_projection(group_presence: dict[str, Any]) -> dict[str, Any]:
+    """Build a privacy-minimized recovery choice from the member-specific read model."""
+    members = [item for item in group_presence.get("members", []) if isinstance(item, dict)]
+    base = {
+        "state": "INSUFFICIENT_MEMBER_TRUTH",
+        "headline": "There is not enough current route evidence to assess a shared recovery.",
+        "affected_member": None,
+        "shared_commitment": None,
+        "options": [],
+        "decision_authority": "COLLECTIVE_IF_PLAN_CHANGES",
+        "can_request_planning": False,
+    }
+    if group_presence.get("state") == "MEMBER_IDENTITY_UNAVAILABLE":
+        return {**base, "state": "INACTIVE", "headline": "A signed Journey member is required."}
+    if len(members) <= 1:
+        return {**base, "state": "INACTIVE", "headline": "This Journey has no shared group recovery."}
+    if group_presence.get("state") == "TOGETHER":
+        return {**base, "state": "GROUP_TOGETHER", "headline": "Recent member locations show the group together."}
+
+    at_risk = [
+        member for member in members
+        if isinstance(member.get("shared_commitment_risk"), dict)
+        and member["shared_commitment_risk"].get("state") == "COMMITMENT_AT_RISK"
+        and member.get("route_eta_minutes") is not None
+        and member.get("authority") in {
+            "ADVISORY_FOREGROUND_WEB",
+            "TRUSTED_MEMBER_LOCATION",
+        }
+    ]
+    if not at_risk:
+        has_route = any(member.get("route_eta_minutes") is not None for member in members)
+        if has_route:
+            return {**base, "state": "NO_SHARED_RISK", "headline": "Current route evidence does not show a missed protected group commitment."}
+        return base
+
+    at_risk.sort(key=lambda member: (
+        int((member.get("shared_commitment_risk") or {}).get("slack_after_buffer_min") or 0),
+        str(member.get("member_id") or ""),
+    ))
+    member = at_risk[0]
+    risk = member["shared_commitment_risk"]
+    advisory = member.get("authority") == "ADVISORY_FOREGROUND_WEB"
+    state = "ADVISORY_MEMBER_LATE" if advisory else "VERIFIED_MEMBER_RISK"
+    arrival = member.get("route_eta_minutes")
+    commitment = risk.get("next_commitment") if isinstance(risk.get("next_commitment"), dict) else None
+    name = str(member.get("display_name") or "A traveller")
+    title = str((commitment or {}).get("title") or "the next shared commitment")
+    return {
+        **base,
+        "state": state,
+        "headline": (
+            f"{name} may not reach {title} within the protected time buffer."
+            if advisory
+            else f"Trusted member-location evidence shows {name} may miss {title}."
+        ),
+        "affected_member": {
+            "member_id": member.get("member_id"),
+            "display_name": name,
+            "authority": member.get("authority"),
+            "eta_minutes": arrival,
+            "route_provenance": member.get("route_eta_provenance"),
+            "route_evidence_state": member.get("route_eta_state"),
+        },
+        "shared_commitment": {
+            "activity_id": (commitment or {}).get("activity_id"),
+            "title": title,
+            "slack_after_buffer_min": risk.get("slack_after_buffer_min"),
+        },
+        "options": [
+            {"kind": "KEEP_PLAN_MEMBER_CATCH_UP", "mutates_plan": False},
+            {"kind": "ADAPT_REMAINING_JOURNEY", "mutates_plan": True},
+        ],
+        "can_request_planning": True,
+    }
 
 
 def rendezvous_commitment_risk(
@@ -353,7 +456,26 @@ def group_presence_projection(
         traveler = session.get(Traveler, member.traveler_id)
         row = rows[member.id]
         state, age = _location_state(row, now)
-        eta, eta_provenance = _route_eta(session, journey, row, target_activity)
+        eta, eta_provenance, eta_state = _route_eta(
+            session, journey, row, target_activity
+        )
+        route_authority = (
+            "TRUSTED_MEMBER_LOCATION_ROUTE"
+            if _observation_authority(row) == "TRUSTED_MEMBER_LOCATION"
+            else "ADVISORY_FOREGROUND_LOCATION"
+        )
+        commitment_risk = (
+            rendezvous_commitment_risk(
+                session,
+                journey,
+                target_activity,
+                route_duration_min=eta,
+                authority=route_authority,
+                now=now,
+            )
+            if eta is not None and target_activity is not None
+            else None
+        )
         projected.append({
             "member_id": member.id,
             "display_name": traveler.display_name if traveler else "Traveller",
@@ -364,6 +486,8 @@ def group_presence_projection(
             "authority": _observation_authority(row),
             "route_eta_minutes": eta,
             "route_eta_provenance": eta_provenance,
+            "route_eta_state": eta_state,
+            "shared_commitment_risk": commitment_risk,
         })
     state = _group_state(
         members=members,
@@ -372,7 +496,7 @@ def group_presence_projection(
     )
     rendezvous_ready = target_activity is not None and target_place is not None
     viewer_row = rows.get(viewer.id)
-    viewer_eta, viewer_eta_provenance = _route_eta(
+    viewer_eta, viewer_eta_provenance, viewer_eta_state = _route_eta(
         session, journey, viewer_row, target_activity
     )
     return {
@@ -395,8 +519,15 @@ def group_presence_projection(
             {
                 "eta_minutes": viewer_eta,
                 "provenance": viewer_eta_provenance,
+                "evidence_state": viewer_eta_state,
             }
             if viewer_eta is not None
+            else {
+                "eta_minutes": None,
+                "provenance": viewer_eta_provenance,
+                "evidence_state": viewer_eta_state,
+            }
+            if viewer_eta_state != "ROUTE_NOT_CAPTURED"
             else None
         ),
         "can_guide": bool(

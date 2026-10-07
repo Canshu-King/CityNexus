@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   cityNexusApi,
   type InTransitRerouteResult,
+  type GroupRecoveryPlanResult,
   type GroupRendezvousRouteResult,
   type JourneyOperatorProjection,
 } from "../../api/citynexus";
@@ -184,6 +185,7 @@ export function LiveRecovery({
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
   const [transitReroute, setTransitReroute] = useState<InTransitRerouteResult | null>(null);
   const [groupRoute, setGroupRoute] = useState<GroupRendezvousRouteResult | null>(null);
+  const [groupRecoveryResult, setGroupRecoveryResult] = useState<GroupRecoveryPlanResult | null>(null);
   const [intentText, setIntentText] = useState("");
   const [intentResult, setIntentResult] = useState<string | null>(null);
   const [inboxText, setInboxText] = useState("");
@@ -659,6 +661,16 @@ export function LiveRecovery({
   const flow = operator?.flow ?? null;
   const transit = operator?.transit ?? null;
   const groupPresence = operator?.group_presence ?? null;
+  const groupRecovery = operator?.group_recovery ?? null;
+  const showGroupRecovery = Boolean(groupRecovery && [
+    "ADVISORY_MEMBER_LATE",
+    "VERIFIED_MEMBER_RISK",
+    "RECOVERY_OPTIONS_READY",
+    "COLLECTIVE_DECISION_REQUIRED",
+    "RECOVERY_PROPOSAL_READY",
+    "RECOVERY_EXTERNAL_AGENT_BLOCKED",
+    "RECOVERY_APPLIED",
+  ].includes(groupRecovery.state));
   const guideToGroup = async () => {
     if (!onRefreshLocation || busy !== null || !groupPresence?.can_guide) {
       setMessage(zh ? "请先允许获取你这一次的位置。" : "Allow one fresh location sample to get a route.");
@@ -679,6 +691,25 @@ export function LiveRecovery({
       );
     } catch {
       setMessage(zh ? "暂时无法计算到集合点的路线；计划没有改变。" : "Could not calculate a route to the rendezvous. Your plan is unchanged.");
+    } finally {
+      setBusy(null);
+    }
+  };
+  const requestGroupRecovery = async () => {
+    if (busy !== null || !groupRecovery?.can_request_planning) return;
+    setBusy("group-recovery");
+    setGroupRecoveryResult(null);
+    try {
+      const result = await cityNexusApi.requestGroupRecoveryPlan(journeyId);
+      setGroupRecoveryResult(result);
+      await loadOperator();
+      setMessage(
+        result.status === "RECOVERY_EXTERNAL_AGENT_BLOCKED"
+          ? (zh ? "Agent 暂时不可用；当前全组行程没有改变。" : "The Agent is unavailable; the shared plan is unchanged.")
+          : (zh ? "已交给 CityNexus 准备一个受治理的全组方案；它不会自行改行程。" : "CityNexus is preparing a governed group option; it will not change the trip by itself."),
+      );
+    } catch {
+      setMessage(zh ? "暂时无法启动分组恢复；当前行程没有改变。" : "Could not start group recovery; the shared plan is unchanged.");
     } finally {
       setBusy(null);
     }
@@ -938,6 +969,13 @@ export function LiveRecovery({
                       : (zh ? "尚未分享位置" : "No shared location")}
                 {member.age_seconds != null && member.location_state === "RECENT" ? ` · ${member.age_seconds}${zh ? "秒前" : "s ago"}` : ""}
                 {member.route_eta_minutes != null ? ` · ${zh ? `到集合点约 ${member.route_eta_minutes} 分钟` : `about ${member.route_eta_minutes} min to rendezvous`}` : ""}
+                {member.route_eta_minutes != null && member.route_eta_provenance
+                  ? ` · ${member.route_eta_state === "CAPTURED_REPLAY"
+                    ? (zh ? `路线来源 ${member.route_eta_provenance}（回放，不代表当前实时路况）` : `route ${member.route_eta_provenance} (replay, not current live traffic)`)
+                    : (zh ? `路线来源 ${member.route_eta_provenance}` : `route ${member.route_eta_provenance}`)}`
+                  : member.route_eta_state && member.route_eta_state !== "ROUTE_NOT_CAPTURED"
+                    ? ` · ${zh ? `路线证据不可用于产品判断：${member.route_eta_state}` : `route evidence unavailable for product decisions: ${member.route_eta_state}`}`
+                    : ""}
               </small>
             ))}
             {groupPresence.rendezvous && (
@@ -968,6 +1006,60 @@ export function LiveRecovery({
                   ? `按这位成员当前路线估算，「${groupRoute.shared_commitment_risk.next_commitment?.title ?? "下一项共同安排"}」可能赶不上。${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "浏览器位置只作参考，不会因此触发 Guardian。" : "这是可信成员位置形成的风险事实，已沿现有 Guardian 边界处理。"}`
                   : `This member's current route may miss “${groupRoute.shared_commitment_risk.next_commitment?.title ?? "the next shared commitment"}”. ${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "Browser location is advisory and cannot trigger Guardian." : "This risk is grounded in trusted member location and follows the existing Guardian boundary."}`}
               </small>
+            )}
+            {groupRecovery && showGroupRecovery && (
+              <div className="journey-group-recovery" data-testid="journey-group-recovery" data-recovery-state={groupRecovery.state} aria-live="polite">
+                <span className="v8-kicker">{zh ? "一起决定怎么继续" : "Choose how the group continues"}</span>
+                <strong data-testid="journey-group-recovery-headline">{groupRecovery.headline}</strong>
+                {groupRecovery.affected_member && groupRecovery.shared_commitment && (
+                  <small data-testid="journey-group-recovery-risk">
+                    {zh
+                      ? `${groupRecovery.affected_member.display_name} 到「${groupRecovery.shared_commitment.title}」约需 ${groupRecovery.affected_member.eta_minutes} 分钟；安全缓冲 ${groupRecovery.shared_commitment.slack_after_buffer_min ?? "未知"} 分钟。`
+                      : `${groupRecovery.affected_member.display_name} needs about ${groupRecovery.affected_member.eta_minutes} min to reach “${groupRecovery.shared_commitment.title}”; buffer after the safety margin: ${groupRecovery.shared_commitment.slack_after_buffer_min ?? "unknown"} min.`}
+                    {groupRecovery.affected_member.route_evidence_state === "CAPTURED_REPLAY"
+                      ? (zh ? " 这条路线是回放证据，不是当前实时路况。" : " This is replay route evidence, not current live traffic.")
+                      : ""}
+                  </small>
+                )}
+                {groupRecovery.options.some((option) => option.kind === "KEEP_PLAN_MEMBER_CATCH_UP") && (
+                  <small data-testid="journey-group-recovery-keep-plan">
+                    {zh
+                      ? "保持当前行程：其他人的安排不变；这位同行者按集合路线赶上。"
+                      : "Keep the plan: nobody else’s itinerary changes; this traveller follows the rendezvous route and catches up."}
+                  </small>
+                )}
+                {groupRecovery.options.some((option) => option.mutates_plan) && (
+                  <small data-testid="journey-group-recovery-adjust-impact">
+                    {zh
+                      ? "一起调整：CityNexus 只会先准备候选方案。任何改变全组行程的方案仍须经过现有同行者与审批权限。"
+                      : "Adjust together: CityNexus will only prepare a proposal. Any shared-plan change still follows the existing collective and approval rules."}
+                  </small>
+                )}
+                {groupRecovery.mission && (
+                  <small data-testid="journey-group-recovery-agent-status">
+                    {groupRecovery.mission.status === "FAILED_EXTERNAL"
+                      ? (zh ? "Agent 暂时不可用；没有自动改动行程。" : "The Agent could not start; no trip change was made.")
+                      : groupRecovery.mission.status === "RUNNING"
+                        ? (zh ? "CityNexus 正在准备方案；原行程仍然有效。" : "CityNexus is preparing options; the current plan remains active.")
+                        : (zh ? `恢复任务状态：${groupRecovery.mission.status}` : `Recovery task: ${groupRecovery.mission.status}`)}
+                  </small>
+                )}
+                {groupRecoveryResult?.status === "RECOVERY_EXTERNAL_AGENT_BLOCKED" && !groupRecovery.mission && (
+                  <small data-testid="journey-group-recovery-agent-status">{zh ? "Agent 暂时不可用；可以继续按当前集合路线会合。" : "The Agent is unavailable; you can still follow the current rendezvous route."}</small>
+                )}
+                {groupRecovery.can_request_planning && (
+                  <button
+                    type="button"
+                    disabled={busy !== null}
+                    data-testid="journey-group-recovery-adjust"
+                    onClick={() => void requestGroupRecovery()}
+                  >
+                    {busy === "group-recovery"
+                      ? (zh ? "正在准备全组方案…" : "Preparing a group option…")
+                      : (zh ? "帮我们一起调整" : "Adjust together")}
+                  </button>
+                )}
+              </div>
             )}
           </section>
         )}

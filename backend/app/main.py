@@ -266,6 +266,8 @@ from app.execution.in_transit_reroute import (
 from app.execution.group_presence import (
     LOCATION_FRESHNESS_SECONDS as GROUP_LOCATION_FRESHNESS_SECONDS,
     MAX_USEFUL_ACCURACY_M as GROUP_MAX_LOCATION_ACCURACY_M,
+    group_recovery_incident_key,
+    group_recovery_projection,
     group_presence_projection,
     rendezvous_commitment_risk,
     rendezvous_target,
@@ -440,6 +442,7 @@ from app.schemas import (
     JourneyPatch,
     LocationObservationRequest,
     GroupPresenceRouteRequest,
+    GroupRecoveryRequest,
     InTransitRerouteRequest,
     LaunchOriginRequest,
     RouteAcquireRequest,
@@ -9287,6 +9290,7 @@ def _persist_trusted_member_rendezvous_risk_event(
         source not in trusted_sources
         or str(commitment_risk.get("state") or "") != "COMMITMENT_AT_RISK"
         or not commitment_id
+        or not route_operation_id
         or not route_provider
         or route_provider.casefold().startswith(("mock", "fixture"))
         or provenance not in grounded_route_provenance
@@ -9370,6 +9374,7 @@ def _persist_trusted_member_rendezvous_risk_event(
                 "incident_episode": episode,
                 "derivation": "SYSTEM_DERIVED_TRUSTED_MEMBER_RENDEZVOUS_RISK",
                 "predictive_only": False,
+                "active_plan_version_id": str(journey.active_plan_version_id or ""),
                 "traveler_id": str(traveler_id),
                 "journey_member_id": str(member.id),
                 "location_observation_id": str(observation.id),
@@ -9513,7 +9518,7 @@ def guide_authenticated_member_to_rendezvous(
         target_activity=target_activity,
         target_place=target_place,
         commitment_risk=commitment_risk,
-        route_operation_id=str(route.id),
+        route_operation_id=str(getattr(route, "id", "") or ""),
         route_provider=route_provider,
         route_provenance=route_provenance,
     )
@@ -9597,6 +9602,332 @@ def guide_authenticated_member_to_rendezvous(
         "guardian": guardian_handoff,
         "plan_unchanged": plan_unchanged,
     }
+
+
+@app.post("/api/v1/journeys/{journey_id}/group-recovery/adjust")
+def request_group_recovery_plan(
+    journey_id: UUID,
+    request: Request,
+    payload: GroupRecoveryRequest,
+    session: Session = Depends(get_session),
+):
+    """Start one authenticated, PLAN_ONLY Hermes run for the current group-risk incident."""
+    del payload  # All targets and evidence are derived from authenticated server state.
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, requester = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "GROUP_RECOVERY_REQUIRES_ACTIVE_JOURNEY")
+
+    presence = group_presence_projection(
+        session, journey, viewer_member_id=requester.id
+    )
+    recovery = group_recovery_projection(presence)
+    if not recovery.get("can_request_planning"):
+        raise HTTPException(409, f"GROUP_RECOVERY_NOT_ACTIONABLE:{recovery.get('state')}")
+    affected = recovery.get("affected_member")
+    commitment = recovery.get("shared_commitment")
+    if not isinstance(affected, dict) or not isinstance(commitment, dict):
+        raise HTTPException(409, "GROUP_RECOVERY_CONTEXT_INCOMPLETE")
+    incident_key = group_recovery_incident_key(
+        journey_id=journey.id,
+        active_plan_version_id=str(journey.active_plan_version_id),
+        affected_member_id=str(affected.get("member_id") or ""),
+        rendezvous_activity_id=str(commitment.get("activity_id") or ""),
+    )
+
+    existing_mission = None
+    for candidate in session.scalars(
+        select(JourneyMission)
+        .where(JourneyMission.journey_id == journey.id, JourneyMission.is_standing.is_(False))
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        .limit(30)
+    ).all():
+        try:
+            existing_intent = json.loads(candidate.resolved_intent_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        group_context = (
+            existing_intent.get("group_recovery")
+            if isinstance(existing_intent, dict)
+            else None
+        )
+        if isinstance(group_context, dict) and group_context.get("incident_key") == incident_key:
+            existing_mission = candidate
+            break
+    if existing_mission is not None:
+        try:
+            context = json.loads(existing_mission.resolved_intent_json or "{}").get("group_recovery", {})
+        except (TypeError, json.JSONDecodeError):
+            context = {}
+        run_id = str(context.get("hermes_run_id") or "") if isinstance(context, dict) else ""
+        return {
+            "status": (
+                "RECOVERY_EXTERNAL_AGENT_BLOCKED"
+                if existing_mission.status == "FAILED_EXTERNAL"
+                else "RECOVERY_OPTIONS_READY"
+            ),
+            "reused": True,
+            "mission": {
+                "id": existing_mission.id,
+                "status": existing_mission.status,
+                "failure_reason": existing_mission.failure_reason,
+            },
+            "run": ({
+                "run_id": run_id,
+                "runtime_identity": "HERMES_NATIVE_MCP",
+                "events_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{run_id}/events",
+                "timeline_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{run_id}/timeline",
+            } if run_id else None),
+            "group_recovery": recovery,
+        }
+
+    trigger_event_id = None
+    if recovery.get("state") == "VERIFIED_MEMBER_RISK":
+        for event in session.scalars(
+            select(EventModel)
+            .where(
+                EventModel.journey_id == journey.id,
+                EventModel.provider_key == "journey-group-presence",
+                EventModel.event_type == "TRAFFIC_DELAY",
+                EventModel.status.in_(("DETECTED", "ACKNOWLEDGED", "OPEN", "ACTIVE")),
+            )
+            .order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+        ).all():
+            try:
+                event_context = json.loads(event.payload_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if (
+                str(event_context.get("journey_member_id") or "") == str(affected.get("member_id"))
+                and str(event_context.get("rendezvous_activity_id") or "") == str(commitment.get("activity_id"))
+                and str(event_context.get("active_plan_version_id") or "") == str(journey.active_plan_version_id)
+            ):
+                trigger_event_id = event.id
+                break
+        if trigger_event_id is None:
+            raise HTTPException(409, "GROUP_RECOVERY_TRUSTED_RISK_EVENT_UNAVAILABLE")
+    elif recovery.get("state") == "ADVISORY_MEMBER_LATE":
+        # The browser location itself is not promoted into a disruption. The
+        # explicit member action below is the USER_CHANGE: it records a request
+        # for help and retains the advisory label in its payload.
+        for event in session.scalars(
+            select(EventModel)
+            .where(
+                EventModel.journey_id == journey.id,
+                EventModel.provider_key == "journey-group-recovery-request",
+                EventModel.event_type == "USER_CHANGE",
+                EventModel.status.in_(("DETECTED", "ACKNOWLEDGED")),
+            )
+            .order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+        ).all():
+            try:
+                event_context = json.loads(event.payload_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if event_context.get("incident_key") == incident_key:
+                trigger_event_id = event.id
+                break
+        if trigger_event_id is None:
+            now = datetime.now(timezone.utc).isoformat()
+            user_request_event = EventModel(
+                id=str(uuid4()),
+                journey_id=journey.id,
+                provider_key="journey-group-recovery-request",
+                provenance="USER_REPORTED",
+                event_type="USER_CHANGE",
+                severity="MINOR",
+                status="DETECTED",
+                affected_activity_id=str(commitment.get("activity_id") or "") or None,
+                occurred_at=now,
+                detected_at=now,
+                resolved_at=None,
+                payload_json=json.dumps({
+                    "incident_kind": "USER_REQUESTED_GROUP_RECOVERY_PLAN",
+                    "incident_key": incident_key,
+                    "active_plan_version_id": str(journey.active_plan_version_id),
+                    "journey_member_id": str(affected.get("member_id") or ""),
+                    "rendezvous_activity_id": str(commitment.get("activity_id") or ""),
+                    "location_authority": "ADVISORY_FOREGROUND_WEB",
+                    "route_eta_minutes": affected.get("eta_minutes"),
+                    "route_provenance": affected.get("route_provenance"),
+                    "slack_after_buffer_min": commitment.get("slack_after_buffer_min"),
+                    "user_requested": True,
+                    "physical_presence_claim": False,
+                }, ensure_ascii=False, sort_keys=True),
+                created_at=now,
+            )
+            session.add(user_request_event)
+            session.flush()
+            trigger_event_id = user_request_event.id
+            record_audit(
+                session,
+                action="journey.group_recovery.user_requested",
+                entity_type="Event",
+                entity_id=user_request_event.id,
+                journey_id=journey.id,
+                actor_type="USER",
+                actor_id=principal.traveler_id,
+                after={
+                    "requester_member_id": requester.id,
+                    "incident_key": incident_key,
+                    "location_authority": "ADVISORY_FOREGROUND_WEB",
+                    "physical_presence_claim": False,
+                },
+            )
+            session.flush()
+
+    command = (
+        "Help the travellers decide whether a shared group recovery is useful. "
+        "Inspect the current Journey and its member-specific risk context. "
+        "Prepare at most one grounded PLAN_ONLY group-recovery proposal if it is safe and useful; "
+        "otherwise recommend keeping the plan or taking no action. Preserve protected commitments, "
+        "member privacy, collective decision authority, and the normal approval boundary. "
+        "Never execute or accept a plan change."
+    )
+    mission = create_mission(
+        session,
+        journey,
+        command=command,
+        requested_autonomy="PLAN_ONLY",
+        trigger_event_id=trigger_event_id,
+        use_model_draft=False,
+    )
+    objective_codes = json.loads(mission.objective_codes_json or "[]")
+    if "COLLECTIVE_JOURNEY_RECOVERY" not in objective_codes:
+        objective_codes.append("COLLECTIVE_JOURNEY_RECOVERY")
+    mission.objective_codes_json = json.dumps(objective_codes, ensure_ascii=False)
+    intent = json.loads(mission.intent_json or "{}")
+    intent["objective_codes"] = objective_codes
+    mission.intent_json = json.dumps(intent, ensure_ascii=False, sort_keys=True)
+    resolved = json.loads(mission.resolved_intent_json or "{}")
+    resolved["objective_codes"] = objective_codes
+    group_context = {
+        "kind": "R58_SPLIT_GROUP_RECOVERY",
+        "incident_key": incident_key,
+        "source_authority": (
+            "ADVISORY_FOREGROUND_WEB"
+            if recovery.get("state") == "ADVISORY_MEMBER_LATE"
+            else "TRUSTED_MEMBER_LOCATION"
+        ),
+        "affected_member_id": affected.get("member_id"),
+        "affected_display_name": affected.get("display_name"),
+        "route_eta_minutes": affected.get("eta_minutes"),
+        "route_provenance": affected.get("route_provenance"),
+        "route_evidence_state": affected.get("route_evidence_state"),
+        "rendezvous_activity_id": commitment.get("activity_id"),
+        "rendezvous_title": commitment.get("title"),
+        "slack_after_buffer_min": commitment.get("slack_after_buffer_min"),
+        "active_plan_version_id": journey.active_plan_version_id,
+        "requested_by_member_id": requester.id,
+        "incident_key_version": "JOURNEY_PLAN_MEMBER_RENDEZVOUS_V1",
+    }
+    resolved["group_recovery"] = group_context
+    mission.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+    session.commit()  # Durable mission exists before asking the external runtime to start.
+
+    try:
+        native_status = native_hermes_status()
+    except httpx.HTTPError:
+        native_status = {"ready": False, "provider": settings.hermes_native_provider, "model": settings.hermes_native_model}
+    if not native_status.get("ready"):
+        mission.status = "FAILED_EXTERNAL"
+        mission.failure_reason = "NATIVE_HERMES_UNAVAILABLE_FOR_GROUP_RECOVERY"
+        mission.completed_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+        return {
+            "status": "RECOVERY_EXTERNAL_AGENT_BLOCKED",
+            "reused": False,
+            "mission": {"id": mission.id, "status": mission.status, "failure_reason": mission.failure_reason},
+            "run": None,
+            "group_recovery": recovery,
+        }
+
+    native = HermesNativeClient()
+    try:
+        native_plan = mission_plan_for_model(mission)
+        native_run = native.create_run(
+            mission_id=mission.id,
+            journey_id=journey.id,
+            input_text=command,
+            instructions=(
+                "This is a user-requested group recovery assessment. Use only CityNexus MCP tools and the supplied PLAN_ONLY authority envelope. "
+                "Inspect the Journey and Twin, then choose whether to keep the plan, prepare one grounded group-impacting proposal, or recommend no action. "
+                "The affected member's location authority is " + group_context["source_authority"] + ". "
+                "The server-derived context is " + json.dumps(group_context, ensure_ascii=False, sort_keys=True) + ". "
+                "FOREGROUND_WEB is advisory and must never be upgraded to verified physical presence. "
+                "Do not expose coordinates or observation identifiers. Never accept, execute, book, pay, or mutate; normal collective authority and approval remain required. "
+                f"For CityNexus MCP calls use journey_id {journey.id} and mission_id {mission.id}. "
+                "Use one tool at a time and do not assume a recovery action is required."
+            ),
+            autonomy="PLAN_ONLY",
+            mission_plan=native_plan,
+            session_id=f"citynexus-{journey.id}-mission-{mission.id}",
+        )
+        resolved = json.loads(mission.resolved_intent_json or "{}")
+        resolved_group = resolved.get("group_recovery", {})
+        resolved_group["hermes_run_id"] = native_run.run_id
+        resolved["group_recovery"] = resolved_group
+        mission.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+        mission.status = "RUNNING"
+        mission.started_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+        initial_events = _native_citynexus_events(
+            run_id=native_run.run_id,
+            journey_id=journey.id,
+            mission=mission,
+        )
+        record_audit(
+            session,
+            action="journey.group_recovery.hermes_started",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="USER",
+            actor_id=principal.traveler_id,
+            after={
+                "requester_member_id": requester.id,
+                "incident_key": incident_key,
+                "mission_id": mission.id,
+                "runtime_identity": "HERMES_NATIVE_MCP",
+                "autonomy": "PLAN_ONLY",
+            },
+        )
+        session.commit()
+        return {
+            "status": "RECOVERY_OPTIONS_READY",
+            "reused": False,
+            "mission": {"id": mission.id, "status": mission.status},
+            "run": {
+                "run_id": native_run.run_id,
+                "status": native_run.status.upper(),
+                "runtime_identity": "HERMES_NATIVE_MCP",
+                "provider_key": "hermes-native",
+                "model_key": settings.hermes_native_model or f"profile:{settings.hermes_native_profile}",
+                "events_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/events",
+                "timeline_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/timeline",
+                "mission_plan": native_plan,
+                "initial_events": initial_events,
+            },
+            "group_recovery": recovery,
+        }
+    except (httpx.HTTPError, ValueError) as exc:
+        mission.status = "FAILED_EXTERNAL"
+        mission.failure_reason = f"NATIVE_HERMES_GROUP_RECOVERY_START_FAILED:{type(exc).__name__}"
+        mission.completed_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+        return {
+            "status": "RECOVERY_EXTERNAL_AGENT_BLOCKED",
+            "reused": False,
+            "mission": {"id": mission.id, "status": mission.status, "failure_reason": mission.failure_reason},
+            "run": None,
+            "group_recovery": recovery,
+        }
+    finally:
+        native.close()
 
 
 @app.post("/api/v1/travelers/{traveler_id}/push-subscriptions", status_code=201)

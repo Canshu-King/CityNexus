@@ -88,6 +88,140 @@ test("shared Journey shows coarse member presence and guides only the viewer to 
   await expect(page.getByTestId("journey-group-route-result")).toContainText("plan unchanged");
 });
 
+test("R58 distinguishes keeping the shared plan from asking Hermes to prepare a governed group option", async ({ page, context }) => {
+  const token = "r58-signed-traveler-bearer";
+  await page.addInitScript(({ journeyId, bearer }) => {
+    localStorage.setItem("citynexus.v8.journey_id", journeyId);
+    localStorage.setItem("citynexus.locale", "en-US");
+    sessionStorage.setItem("citynexus.traveler.bearer", bearer);
+  }, { journeyId: JOURNEY_ID, bearer: token });
+
+  let recoveryRequests = 0;
+  let recoveryAuthorization = "";
+  let recoveryBody: Record<string, unknown> | null = null;
+  let requested = false;
+  const groupRecovery = () => ({
+    state: "ADVISORY_MEMBER_LATE",
+    headline: "Sam may reach the shared museum after its protected entry buffer.",
+    affected_member: {
+      member_id: "member-friend",
+      display_name: "Sam",
+      authority: "ADVISORY_FOREGROUND_WEB",
+      eta_minutes: 34,
+      route_provenance: "CAPTURED_REPLAY",
+      route_evidence_state: "CAPTURED_REPLAY",
+    },
+    shared_commitment: {
+      activity_id: "shared-museum-activity",
+      title: "Shared museum",
+      slack_after_buffer_min: -9,
+    },
+    options: [
+      { kind: "KEEP_PLAN_MEMBER_CATCH_UP", mutates_plan: false },
+      { kind: "ADAPT_REMAINING_JOURNEY", mutates_plan: true },
+    ],
+    decision_authority: "COLLECTIVE_IF_PLAN_CHANGES",
+    can_request_planning: !requested,
+    mission: requested ? {
+      mission_id: "r58-mission",
+      status: "RUNNING",
+      run_id: "r58-hermes-run",
+    } : null,
+  });
+
+  await page.route(/\/api\/v1\//, async (route) => {
+    const request = route.request();
+    const pathname = new URL(request.url()).pathname;
+    const send = (json: unknown, status = 200) => route.fulfill({
+      status,
+      contentType: "application/json",
+      body: JSON.stringify(json),
+    });
+
+    if (pathname.endsWith("/group-recovery/adjust") && request.method() === "POST") {
+      recoveryRequests += 1;
+      recoveryAuthorization = request.headers()["authorization"] ?? "";
+      recoveryBody = request.postDataJSON() as Record<string, unknown>;
+      requested = true;
+      return send({
+        status: "RECOVERY_OPTIONS_READY",
+        reused: false,
+        mission: { id: "r58-mission", status: "RUNNING" },
+        run: { run_id: "r58-hermes-run", status: "QUEUED", runtime_identity: "HERMES_NATIVE_MCP" },
+        group_recovery: groupRecovery(),
+      });
+    }
+    if (pathname.endsWith("/operator")) return send({
+      journey_id: JOURNEY_ID,
+      state: "WATCHING",
+      headline: "I’m watching your trip.",
+      enabled: true,
+      standing_mission_id: "mission-r57",
+      autonomy: "PLAN_ONLY",
+      incident: null,
+      decision: null,
+      approval: null,
+      brain: { state: "READY", headline: "Ready", configured_runtimes: [], preferred_runtime: null, last_failure_reason: null, recovery_resume: { pending: false, safe_to_resume: true } },
+      collective: { state: "GROUP", mission_id: null, required_count: 0, response_count: 0, viewer_has_responded: false, members: [], options: [] },
+      discovery: { state: "IDLE", attempt_count: 0, max_attempts: 0, raw_candidate_count: 0, materialized_place_count: 0 },
+      flow: null,
+      transit: null,
+      group_presence: {
+        state: "GROUP_SPLIT_ADVISORY",
+        authority: "ADVISORY_FOREGROUND_WEB_NOT_DEVICE_ATTESTED",
+        members: [
+          { member_id: "member-self", display_name: "Alex", is_viewer: true, location_state: "RECENT", group_state: "SPLIT_FROM_GROUP", age_seconds: 12, authority: "ADVISORY_FOREGROUND_WEB", route_eta_minutes: null, route_eta_provenance: null },
+          { member_id: "member-friend", display_name: "Sam", is_viewer: false, location_state: "RECENT", group_state: "SPLIT_FROM_GROUP", age_seconds: 24, authority: "ADVISORY_FOREGROUND_WEB", route_eta_minutes: 34, route_eta_provenance: "CAPTURED_REPLAY", route_eta_state: "CAPTURED_REPLAY" },
+        ],
+        rendezvous: { activity_id: "shared-museum-activity", title: "Shared museum", place_name: "Shared museum", basis: "ACTIVE_PLAN_EXACT_PLACE" },
+        rendezvous_state: "RENDEZVOUS_ROUTE_READY",
+        viewer_route: null,
+        can_guide: false,
+      },
+      group_recovery: groupRecovery(),
+      progress: null,
+      ahead: null,
+      overnight: null,
+      intents: [],
+      attention: null,
+      inbox: { latest: null, pending_count: 0 },
+      timeline: [],
+      operator: { watching: true, will_continue_after_approval: true },
+    });
+    if (pathname.endsWith("/experience")) return send({
+      journey: { id: JOURNEY_ID, status: "ACTIVE", city_code: "NARA", timezone: "Asia/Tokyo", title: "Shared day", start_at: "2026-10-07T05:00:00+09:00", end_at: "2026-10-07T14:00:00+09:00", traveler_id: "traveler-self", budget: { amount_minor: 5000, currency: "JPY" } },
+      trip: { party_size: 2, arrival_anchor: null, departure_anchor: null, stay_budget: { amount_minor: 0, currency: "JPY" } },
+      options: [], selected_option_id: null, mobility_facts: [], offers: [], active_plan: null,
+      experience_flags: { needs_review: false, recovery_required: false, staleness: false, feasibility_failures: [] },
+    });
+    if (pathname.endsWith("/plans") || pathname.endsWith("/replans")) return send([]);
+    if (pathname.endsWith("/twin")) return send({ id: "twin-r58", current_activity_id: "current-r58", context: { execution: { now_activity_id: "current-r58", next_activity_id: "shared-museum-activity", now_state: "IN_PROGRESS", next_state: "NOT_STARTED", cursor_status: "VALID" } } });
+    if (pathname.endsWith("/execution-clock")) return send({ now: "2026-10-07T06:10:00+09:00", timezone: "Asia/Tokyo", current_activity_id: "current-r58" });
+    if (pathname.endsWith("/guardian/pulse/latest")) return send({ pulse: null });
+    if (pathname.endsWith("/guardian/autopilot/status")) return send({ enrollment: { enabled: true }, watch: null, readiness: null });
+    if (pathname.endsWith("/web-observations")) return send({ observations: [] });
+    if (pathname.endsWith("/offline-snapshot")) return send({ snapshot: null });
+    return send({});
+  });
+
+  await page.goto("/v8/live", { waitUntil: "domcontentloaded" });
+  const recovery = page.getByTestId("journey-group-recovery");
+  await expect(recovery).toBeVisible();
+  await expect(recovery).toContainText("Keep the plan");
+  await expect(recovery).toContainText("nobody else’s itinerary changes");
+  await expect(recovery).toContainText("Adjust together");
+  await expect(recovery).toContainText("only prepare a proposal");
+  await expect(recovery).toContainText("replay route evidence, not current live traffic");
+  expect(recoveryRequests).toBe(0);
+
+  await page.getByTestId("journey-group-recovery-adjust").click();
+  await expect.poll(() => recoveryRequests).toBe(1);
+  expect(recoveryAuthorization).toBe(`Bearer ${token}`);
+  expect(recoveryBody).toEqual({});
+  await expect(page.getByTestId("journey-group-recovery-agent-status")).toContainText("preparing options");
+  expect(recoveryRequests).toBe(1);
+});
+
 test("two signed member contexts share independently and see themselves as You", async ({ browser }) => {
   const ownerToken = "r57-owner-signed-bearer";
   const adminToken = "r57-admin-signed-bearer";

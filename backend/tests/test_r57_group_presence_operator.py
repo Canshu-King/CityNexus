@@ -19,6 +19,7 @@ from app.db.models import (
     Journey,
     JourneyMember,
     LocationObservation,
+    RouteAcquisitionOperation,
     Traveler,
 )
 from app.db.session import SessionLocal
@@ -280,7 +281,9 @@ def test_r57_stale_member_location_is_visible_as_stale_but_cannot_start_route(mo
     )
     assert projection.status_code == 200, projection.text
     presence = projection.json()["group_presence"]
-    assert presence["state"] == "GROUP_LOCATION_STALE"
+    # Keep the stale viewer evidence visible, but report the whole-group gap:
+    # another in-force member has no location at all.
+    assert presence["state"] == "MEMBER_LOCATION_MISSING"
     assert presence["members"][0]["location_state"] == "STALE"
 
     called = False
@@ -636,6 +639,7 @@ def test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff(monkeypat
             )
         ).all()
         assert len(handoffs) == 1
+
         first_payload = __import__("json").loads(events[0].payload_json)
         semantic_key = first_payload["incident_semantic_key"]
         assert first_payload["incident_episode"] == 1
@@ -670,3 +674,261 @@ def test_r57_trusted_member_risk_is_one_event_and_one_guardian_handoff(monkeypat
         assert {item["incident_episode"] for item in parsed} == {1, 2}
         assert {item["incident_semantic_key"] for item in parsed} == {semantic_key}
         assert len({item["incident_fingerprint"] for item in parsed}) == 2
+
+
+def _r58_store_route_receipt(
+    journey_id: str,
+    traveler_id: str,
+    *,
+    source: str = "FOREGROUND_WEB",
+    provenance: str = "CAPTURED_REPLAY",
+    provider: str = "valhalla-http",
+    duration_min: int = 30,
+) -> tuple[str, str]:
+    from app.execution.group_presence import rendezvous_target
+
+    now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == traveler_id,
+            JourneyMember.removed_at.is_(None),
+        ))
+        assert member is not None
+        target_pair = rendezvous_target(session, journey)
+        assert target_pair is not None
+        target, place = target_pair
+        observation_id = str(uuid4())
+        session.add(LocationObservation(
+            id=observation_id,
+            journey_id=journey_id,
+            traveler_id=traveler_id,
+            journey_member_id=member.id,
+            latitude=35.001,
+            longitude=135.002,
+            accuracy_m=8,
+            captured_at=now,
+            source=source,
+        ))
+        session.flush()
+        session.add(RouteAcquisitionOperation(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            fingerprint=str(uuid4()),
+            origin_key=f"location-observation:{observation_id}",
+            target_key=str(place.id),
+            target_activity_id=target.id,
+            requested_mode="WALK",
+            provider_policy_version="R58_TEST_PROVIDER_POLICY",
+            route_truth_policy_version="R58_TEST_TRUTH_POLICY",
+            status="COMPLETED",
+            outcome="ROUTE_READY",
+            request_json="{}",
+            result_json=__import__("json").dumps({
+                "duration_min": duration_min,
+                "provider": provider,
+                "provenance": provenance,
+            }),
+            error_json="{}",
+            queued_at=now,
+            started_at=now,
+            finished_at=now,
+            updated_at=now,
+        ))
+        session.commit()
+        return observation_id, member.id
+
+
+def test_r58_trusted_location_row_projects_trusted_authority_not_browser_advisory(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r58-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == owner_id,
+        ))
+        assert member is not None
+        now = datetime.now(timezone.utc).isoformat()
+        session.add(LocationObservation(
+            id=str(uuid4()), journey_id=journey_id, traveler_id=owner_id,
+            journey_member_id=member.id, latitude=35.0, longitude=135.0,
+            accuracy_m=8, captured_at=now, source="LOCATION_ATTESTED",
+        ))
+        session.commit()
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert projection.status_code == 200, projection.text
+    owner = next(item for item in projection.json()["group_presence"]["members"] if item["is_viewer"])
+    assert owner["authority"] == "TRUSTED_MEMBER_LOCATION"
+
+
+def test_r58_replay_eta_is_visible_with_exact_non_live_provenance(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r58-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    _r57_risky_shared_target(journey_id)
+    _r58_store_route_receipt(
+        journey_id, owner_id, provenance="CAPTURED_REPLAY", provider="valhalla-http", duration_min=30
+    )
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert projection.status_code == 200, projection.text
+    body = projection.json()
+    owner = next(item for item in body["group_presence"]["members"] if item["is_viewer"])
+    assert owner["route_eta_minutes"] == 30
+    assert owner["route_eta_provenance"] == "CAPTURED_REPLAY"
+    assert owner["route_eta_state"] == "CAPTURED_REPLAY"
+    assert body["group_recovery"]["state"] == "ADVISORY_MEMBER_LATE"
+    assert body["group_recovery"]["affected_member"]["route_provenance"] == "CAPTURED_REPLAY"
+
+
+def test_r58_mock_route_cannot_become_member_eta_or_recovery_truth(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r58-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    _r57_risky_shared_target(journey_id)
+    _r58_store_route_receipt(
+        journey_id, owner_id, provenance="LIVE_PROVIDER_CAPTURE", provider="mock-mobility", duration_min=30
+    )
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert projection.status_code == 200, projection.text
+    body = projection.json()
+    owner = next(item for item in body["group_presence"]["members"] if item["is_viewer"])
+    assert owner["route_eta_minutes"] is None
+    assert owner["route_eta_state"] == "NON_PRODUCT_PROVIDER"
+    assert body["group_recovery"]["state"] == "INSUFFICIENT_MEMBER_TRUTH"
+
+
+def test_r58_advisory_adjust_is_one_plan_only_hermes_run_and_not_a_gps_disruption(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r58-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    _r57_risky_shared_target(journey_id)
+    _r58_store_route_receipt(journey_id, owner_id, duration_min=30)
+    from app.agent import mission as mission_module
+    monkeypatch.setattr(
+        mission_module, "_model_draft",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("R58 must not spend a second model call compiling the mission")),
+    )
+    monkeypatch.setattr(main_module, "native_hermes_status", lambda: {"ready": True})
+    created_runs: list[dict[str, object]] = []
+
+    class _Run:
+        run_id = "r58-hermes-run"
+        status = "queued"
+
+    class _Native:
+        def create_run(self, **kwargs):
+            created_runs.append(kwargs)
+            return _Run()
+
+        def close(self):
+            return None
+
+    monkeypatch.setattr(main_module, "HermesNativeClient", _Native)
+    before = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()
+    assert before["group_recovery"]["state"] == "ADVISORY_MEMBER_LATE"
+    with SessionLocal() as session:
+        prior_group_events = session.scalars(select(Event).where(
+            Event.journey_id == journey_id,
+            Event.provider_key == "journey-group-presence",
+        )).all()
+        assert prior_group_events == []
+        journey = session.get(Journey, journey_id)
+        active_before = journey.active_plan_version_id
+
+    first = client.post(
+        f"/api/v1/journeys/{journey_id}/group-recovery/adjust",
+        headers=_auth(owner_id), json={},
+    )
+    assert first.status_code == 200, first.text
+    first_body = first.json()
+    assert first_body["status"] == "RECOVERY_OPTIONS_READY"
+    assert first_body["run"]["runtime_identity"] == "HERMES_NATIVE_MCP"
+    assert first_body["run"]["mission_plan"]["autonomy"] == "PLAN_ONLY"
+    assert len(created_runs) == 1
+    assert "ADVISORY_FOREGROUND_WEB" in created_runs[0]["instructions"]
+    assert "coordinates" in created_runs[0]["instructions"]
+    assert "35.001" not in created_runs[0]["instructions"]
+    assert "135.002" not in created_runs[0]["instructions"]
+
+    replay = client.post(
+        f"/api/v1/journeys/{journey_id}/group-recovery/adjust",
+        headers=_auth(owner_id), json={},
+    )
+    assert replay.status_code == 200, replay.text
+    assert replay.json()["reused"] is True
+    assert replay.json()["mission"]["id"] == first_body["mission"]["id"]
+    assert len(created_runs) == 1
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey.active_plan_version_id == active_before
+        explicit_requests = session.scalars(select(Event).where(
+            Event.journey_id == journey_id,
+            Event.provider_key == "journey-group-recovery-request",
+        )).all()
+        assert len(explicit_requests) == 1
+        request_context = __import__("json").loads(explicit_requests[0].payload_json)
+        assert request_context["physical_presence_claim"] is False
+        assert request_context["location_authority"] == "ADVISORY_FOREGROUND_WEB"
+
+
+def test_r58_unavailable_native_agent_is_durable_blocked_without_plan_mutation(monkeypatch):
+    isolated = replace(settings, traveler_auth_secret="r58-test-secret-0123456789abcdef")
+    monkeypatch.setattr(main_module, "settings", isolated)
+    monkeypatch.setattr(principal_module, "settings", isolated)
+    journey_id, owner_id, _other_id = _shared_active_journey()
+    _r57_risky_shared_target(journey_id)
+    _r58_store_route_receipt(journey_id, owner_id, duration_min=30)
+    monkeypatch.setattr(main_module, "native_hermes_status", lambda: {"ready": False})
+
+    class _MustNotStart:
+        def __init__(self):
+            raise AssertionError("an unready native Agent must not be called")
+
+    monkeypatch.setattr(main_module, "HermesNativeClient", _MustNotStart)
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        active_before = journey.active_plan_version_id
+
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/group-recovery/adjust",
+        headers=_auth(owner_id),
+        json={},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["status"] == "RECOVERY_EXTERNAL_AGENT_BLOCKED"
+    assert body["mission"]["status"] == "FAILED_EXTERNAL"
+    assert body["mission"]["failure_reason"] == "NATIVE_HERMES_UNAVAILABLE_FOR_GROUP_RECOVERY"
+    assert body["run"] is None
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        assert journey.active_plan_version_id == active_before
+        request_events = session.scalars(select(Event).where(
+            Event.journey_id == journey_id,
+            Event.provider_key == "journey-group-recovery-request",
+        )).all()
+        assert len(request_events) == 1
+        payload = __import__("json").loads(request_events[0].payload_json)
+        assert payload["user_requested"] is True
+        assert payload["physical_presence_claim"] is False

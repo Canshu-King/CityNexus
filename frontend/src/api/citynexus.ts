@@ -503,6 +503,7 @@ export interface JourneyOperatorProjection {
   flow?: JourneyContinuousFlow | null;
   transit?: JourneyTransitProjection | null;
   group_presence?: JourneyGroupPresenceProjection | null;
+  group_recovery?: GroupRecoveryProjection | null;
   progress?: JourneyProgressProjection;
   ahead?: JourneyAheadProjection | null;
   overnight?: JourneyOvernightProjection | null;
@@ -536,14 +537,52 @@ export interface JourneyGroupPresenceProjection {
     authority: string;
     route_eta_minutes: number | null;
     route_eta_provenance: string | null;
+    route_eta_state?: string;
+    shared_commitment_risk?: {
+      state: string;
+      authority?: string;
+      next_commitment?: { activity_id?: string; title?: string; scheduled_at?: string; safety_buffer_min?: number } | null;
+      slack_after_buffer_min?: number | null;
+      route_duration_min?: number;
+    } | null;
   }>;
   rendezvous: { activity_id: string; title: string; place_name: string; basis: string } | null;
   rendezvous_state:
     | "RENDEZVOUS_TARGET_UNAVAILABLE"
     | "RENDEZVOUS_TARGET_READY"
     | "RENDEZVOUS_ROUTE_READY";
-  viewer_route: { eta_minutes: number; provenance: string | null } | null;
+  viewer_route: { eta_minutes: number | null; provenance: string | null; evidence_state?: string } | null;
   can_guide: boolean;
+}
+
+export interface GroupRecoveryProjection {
+  state: string;
+  headline: string;
+  affected_member: {
+    member_id: string;
+    display_name: string;
+    authority: string;
+    eta_minutes: number;
+    route_provenance: string | null;
+    route_evidence_state: string;
+  } | null;
+  shared_commitment: {
+    activity_id: string | null;
+    title: string;
+    slack_after_buffer_min: number | null;
+  } | null;
+  options: Array<{ kind: string; mutates_plan: boolean }>;
+  decision_authority: string;
+  can_request_planning: boolean;
+  mission?: { mission_id: string; status: string; failure_reason?: string | null; created_at?: string; run_id?: string | null } | null;
+}
+
+export interface GroupRecoveryPlanResult {
+  status: string;
+  reused: boolean;
+  mission: { id: string; status: string; failure_reason?: string | null };
+  run?: { run_id: string; status?: string; runtime_identity: string; events_url?: string; timeline_url?: string } | null;
+  group_recovery: GroupRecoveryProjection;
 }
 
 export interface GroupRendezvousRouteResult {
@@ -1718,6 +1757,17 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify({ location_observation_id: locationObservationId, requested_mode: "WALK" }),
+      },
+    );
+  },
+
+  requestGroupRecoveryPlan(journeyId: string): Promise<GroupRecoveryPlanResult> {
+    return requestJson<GroupRecoveryPlanResult>(
+      "/journeys/" + journeyId + "/group-recovery/adjust",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({}),
       },
     );
   },
