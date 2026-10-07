@@ -147,6 +147,20 @@ def build_mission_plan(
             ),
         ]
     )
+    if "COLLECTIVE_JOURNEY_RECOVERY" in objectives:
+        # A collective decision is not a Journey mutation. It opens the
+        # existing server-owned member-response round only after grounded
+        # proposals expose a real group trade-off. Keep it inside PLAN_ONLY
+        # while accept/execute tools remain outside that envelope.
+        steps.insert(
+            -1,
+            MissionPlanStep(
+                "collective_decision_boundary",
+                "Open one server-owned collective decision when a grounded group trade-off exists",
+                "request_collective_decision",
+                requires_authority=True,
+            ),
+        )
     if autonomy == "PLAN_ONLY":
         # Keep mutation tools visible as an explicit boundary without granting
         # Hermes permission to call them in this mission.
@@ -160,10 +174,16 @@ def build_mission_plan(
     # do not select or activate a plan, so an autonomous real-city mission may
     # use them before recovery mutation. PLAN_ONLY keeps its historical
     # proposal-only surface.
-    if autonomy == "PLAN_ONLY" and "LIVE_JOURNEY_INTENT_STEERING" in objectives:
-        allowed_tools = (*_READ_TOOLS, *_STRATEGY_TOOLS, "request_replan")
-    elif autonomy == "PLAN_ONLY":
-        allowed_tools = (*_READ_TOOLS, "request_replan")
+    if autonomy == "PLAN_ONLY":
+        plan_only_tools = [*_READ_TOOLS]
+        if "LIVE_JOURNEY_INTENT_STEERING" in objectives:
+            plan_only_tools.extend(_STRATEGY_TOOLS)
+        plan_only_tools.append("request_replan")
+        if "COLLECTIVE_JOURNEY_RECOVERY" in objectives:
+            # R58/R59 group recovery may ask the affected members to decide,
+            # but PLAN_ONLY still cannot accept or execute their choice.
+            plan_only_tools.extend(_DECISION_TOOLS)
+        allowed_tools = tuple(dict.fromkeys(plan_only_tools))
     else:
         allowed_tools = (*_READ_TOOLS, *_STRATEGY_TOOLS, *_DECISION_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
     return AgentMissionPlan(
