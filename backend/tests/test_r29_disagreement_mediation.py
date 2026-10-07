@@ -2851,3 +2851,94 @@ def test_r30_harness_refuses_to_manufacture_member_consensus() -> None:
             ["member-a", "member-b"],
             phase="test collective round",
         )
+
+
+def test_r59_read_only_member_is_not_required_collective_mutation_authority(monkeypatch) -> None:
+    """A read-only traveller may affect fairness but cannot be a signing authority."""
+    seeded = _seed_r29_disagreement_http_fixture()
+    options = seeded["options"]
+
+    def receipt(_session, _journey, _proposals):
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            "candidate_fit_matrix": [{"candidate_id": "r59-read-only-surface"}],
+            "collective_mediation": {
+                "classification": "HUMAN_TRADEOFF_REQUIRED",
+                "decision_relevant_member_ids": [
+                    seeded["owner_member_id"], seeded["admin_member_id"]
+                ],
+            },
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", receipt)
+    monkeypatch.setattr(
+        collective_mediation,
+        "collective_decision_epoch",
+        lambda **_kwargs: "r59-read-only-epoch",
+    )
+    with SessionLocal() as session:
+        admin_member = session.get(JourneyMember, str(seeded["admin_member_id"]))
+        mission = session.get(JourneyMission, str(seeded["parent_id"]))
+        assert admin_member is not None and mission is not None
+        admin_member.role = "VIEWER"
+        mission.clarification_json = "{}"
+        mission.status = "RUNNING"
+        session.commit()
+
+        opened = AgentToolGateway(session).request_collective_decision(
+            AgentToolCall(
+                request_id="r59-read-only-room-open",
+                journey_id=UUID(str(seeded["journey_id"])),
+                mission_id=UUID(str(seeded["parent_id"])),
+                trigger_event_id=UUID(str(seeded["event_id"])),
+            )
+        )
+        assert opened["mission_status"] == "WAITING_FOR_MEMBERS"
+        assert opened["clarification"]["required_member_ids"] == [
+            str(seeded["owner_member_id"])
+        ]
+
+
+def test_r59_signed_read_only_member_cannot_answer_legacy_required_slot() -> None:
+    """Identity proves who answered; role capability still decides whether they may."""
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
+    seeded = _seed_r29_disagreement_http_fixture()
+    try:
+        with SessionLocal() as session:
+            admin_member = session.get(JourneyMember, str(seeded["admin_member_id"]))
+            assert admin_member is not None
+            # The seeded clarification intentionally still lists this member as
+            # required, simulating an older or dirty durable room.
+            admin_member.role = "VIEWER"
+            session.commit()
+
+        admin_token = issue_traveler_token(str(seeded["admin_id"]))
+        response = client.post(
+            (
+                f"/api/v1/journeys/{seeded['journey_id']}/missions/"
+                f"{seeded['parent_id']}/collective-clarification/"
+                f"{seeded['admin_member_id']}"
+            ),
+            headers={"Authorization": f"Bearer {admin_token}"},
+            json={
+                "clarification_id": "r29-clarification",
+                "proposal_id": str(seeded["garden_proposal_id"]),
+            },
+        )
+        assert response.status_code == 403, response.text
+        assert "JOURNEY_UPDATE" in response.json()["error"]["message"]
+        with SessionLocal() as session:
+            parent = session.get(JourneyMission, str(seeded["parent_id"]))
+            stored = json.loads(parent.clarification_json or "{}")
+            assert str(seeded["admin_member_id"]) not in (stored.get("responses") or {})
+            receipts = session.scalars(
+                select(CollectiveAuthorityReceipt).where(
+                    CollectiveAuthorityReceipt.journey_id == str(seeded["journey_id"])
+                )
+            ).all()
+            assert receipts == []
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
