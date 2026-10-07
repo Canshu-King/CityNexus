@@ -1,0 +1,750 @@
+{
+  "instrument": "cmdra_0553_slot_tracing_r24",
+  "locale": "en",
+  "viewport": "390x844",
+  "entryAssets": [],
+  "routesWalked": 14,
+  "routeHits": {
+    "/v8/hub": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/live": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/map": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/studio": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/stay": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/discover": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/intelligence": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/trips": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/bookings": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/me": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/twin": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/authoritative": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/trash": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ],
+    "/v8/agent": [
+      {
+        "token": "NO_CANONICAL_IDENTITY",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      },
+      {
+        "token": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+        "ancestors": [
+          {
+            "tag": "div",
+            "class": "cn-onboarding__scroll"
+          },
+          {
+            "tag": "div",
+            "class": "v8-card,trial-card"
+          },
+          {
+            "tag": "details",
+            "class": "trial-supported"
+          },
+          {
+            "tag": "section",
+            "class": "trial-supported-group"
+          },
+          {
+            "tag": "p",
+            "class": "trial-supported-group-rule"
+          }
+        ]
+      }
+    ]
+  },
+  "totals": {
+    "painted_hits": 28,
+    "distinct_tokens": [
+      "NO_CANONICAL_IDENTITY",
+      "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到"
+    ],
+    "routes_with_hits": 14,
+    "server_answer_tokens": 0,
+    "style_only_tokens": 0
+  },
+  "pageErrors": [
+    "page.querySelectorAll is not a function or its return value is not iterable"
+  ]
+}
