@@ -3059,10 +3059,10 @@ function Hub({
               ? "handled"
               : "clear"
         }
-        aria-label={zh ? "需要关注" : "Needs attention"}
+        aria-label={t("today.needsAttentionAria")}
       >
         <div className="cn-attention-head">
-          <span className="v8-kicker">{zh ? "需要关注" : "Attention"}</span>
+          <span className="v8-kicker">{t("today.attentionKicker")}</span>
           <strong
             className={disruptions.length || tripUnlocatable ? "warn" : "green"}
             data-testid="today-attention"
@@ -3109,7 +3109,7 @@ function Hub({
             className="v8-quiet-button cn-attention-cta"
             onClick={() => onNavigate("live")}
           >
-            {zh ? "查看实时行程" : "Review in Live"}
+            {t("today.reviewInLive")}
           </button>
         )}
       </section>
@@ -3121,13 +3121,13 @@ function Hub({
         >
           {currentStop ? (
             <div className="cn-hero-now" data-testid="today-now">
-              <span className="cn-hero-label">{zh ? "现在" : "Now"}</span>
+              <span className="cn-hero-label">{t("today.now")}</span>
               <strong className="cn-hero-now-place">{currentStop.title}</strong>
             </div>
           ) : null}
           <div className="cn-hero-next" data-testid="today-next">
             <span className="cn-hero-label">
-              {nextUp ? (zh ? "接下来" : "Next") : zh ? "今天" : "Today"}
+              {nextUp ? (t("today.next")) : t("today.today")}
             </span>
             <strong className="cn-hero-next-row">
               {nextUp
@@ -3163,7 +3163,7 @@ function Hub({
               data-contrast-role="control"
               onClick={() => onNavigate("live")}
             >
-              {zh ? "查看实时行程" : "Open Live"}
+              {t("today.openLive")}
             </button>
           ) : null}
           {/* ORD-0082 ①: the fallback is allowed, silence is not.  Whichever clock chose these
