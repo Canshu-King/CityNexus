@@ -1,0 +1,13 @@
+{"selftest": "_alarm_backoff_selftest_r1.py", "target": "_sentinel_relay_r1.py", "pristine_exit_code": 0, "mutated_exit_code": 1, "notices_the_break": true, "was_green_before": true, "status": "MUTATION_DETECTED"}
+{"selftest": "_disk_band_selftest_r1.py", "target": "autumn_watch.py", "pristine_exit_code": 0, "mutated_exit_code": 1, "notices_the_break": true, "was_green_before": true, "status": "MUTATION_DETECTED"}
+{"selftest": "_s_band_selftest_r1.py", "target": "_sentinel_relay_r1.py", "pristine_exit_code": 0, "mutated_exit_code": 1, "notices_the_break": true, "was_green_before": true, "status": "MUTATION_DETECTED"}
+{"selftest": "_watch_stack_selftest_r1.py", "target": "_watch_stack_r1.py", "pristine_exit_code": 0, "mutated_exit_code": 1, "notices_the_break": true, "was_green_before": true, "status": "MUTATION_DETECTED"}
+{"selftest": "_patrol_cell11_selftest_r1.py", "target": "_bb_patrol_once_r1.py", "pristine_exit_code": 0, "mutated_exit_code": 1, "notices_the_break": true, "was_green_before": true, "status": "MUTATION_DETECTED"}
+{"selftest": "_verdict_two_slot_done_selftest_r1.py", "target": "_night_verdict_runner_r1.py", "pristine_exit_code": 0, "mutated_exit_code": 1, "notices_the_break": true, "was_green_before": true, "status": "MUTATION_DETECTED"}
+{
+  "method": "copy the self-test and its target to scratch, break one site in the target, require non-zero; pristine copy must stay green. Originals are never opened for writing.",
+  "detected": 6,
+  "failures": [],
+  "verdict": "MUTATIONS_DETECTED"
+}
+VERDICT MUTATIONS_DETECTED
