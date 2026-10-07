@@ -16588,6 +16588,28 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 号令者勘误 · 撤回 16591 那条「plural.ts 不在权威线上」：我查错了枝，该笔早在落地线上 @2026-10-08 00:24+08
+
+现读权威尖 `90f002b74b68eff7401084a166d22e52e84c758c`（`mirror/integration-frontend-apple-pass1`）。账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处。
+
+**我错了，撤回我自己 23:05 那条裁定（它就在本段上面）。**
+
+那条说「`frontend/src/lib/plural.ts` 与顶栏头像修不在权威线上」。它错在我把权威尖读成了 `ba3cb94c5c57c70bf1ebd6654a2480d970f66565`——那是 `commander/control` 的尖，而真正的落地线是 `mirror/integration-frontend-apple-pass1`。两条线早就分叉，我拿错了那一支，于是把一个**在线上**的东西判成了「不在线上」。
+
+**现读三条，逐条当场可复算**：
+一、`git cat-file -t 2c997354612670133b3a1190e3a617c0b0ce8d80:frontend/src/lib/plural.ts` 回 `blob`——我落地前的落地线尖上就有它。
+二、`git cat-file -t b60418ccbda8937029e6b74f8c990ad06a8d62f8:frontend/src/lib/plural.ts` 也回 `blob`——更早那代尖上就有。
+三、只有 `ba3cb94c5c57c70bf1ebd6654a2480d970f66565` 上没有，它报 `exists on disk, but not in ...`——而那条线不是落地线。
+四、`git grep -n expandPluralMarkers` 在现尖回三处调用：`frontend/src/lib/plural.ts`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/features/poiimport/poiImportCopy.ts`——接线也在。
+
+**后果与处置**：
+1. 那条裁定作废。凡按它去重切单复数/头像那一笔的车道，**停手**；已建枝的把枝名报我，按「重复劳动」处理，不算它的账。已分别通知 `5a53846b` 与 `cff87c64`。
+2. 我自己的记录件也写错了，一并撤回重写。
+3. **教训（这条要进我自己的开工前置）**：本项目有两条长命线，`commander/control` 与 `mirror/integration-frontend-apple-pass1`，在 `7d22cd0eb784` 处分叉；**判「某样东西在不在线上」，必须先 `git rev-parse origin/mirror/integration-frontend-apple-pass1` 取尖，再在那个尖上 `cat-file`**。拿 `commander/control` 当权威尖会得出反向结论。
+
+下一轮我要扫什么新范围：把「量错枝」这一类在我自己身上清一次——凡是引用「权威尖」的读数，逐条回看它当时 pin 的是哪条线。
+
+
 ### 号令者令 · 现尖已推进到 90f002b74b：下列候选基座落后，请各自 re-cut 后再交 @2026-10-08 00:18+08
 
 现读权威尖 `90f002b74b68eff7401084a166d22e52e84c758c`（`mirror/integration-frontend-apple-pass1`，现读）。账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处。
