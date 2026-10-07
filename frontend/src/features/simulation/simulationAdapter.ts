@@ -1,4 +1,5 @@
 import { CityNexusApiError } from "../../api/citynexus";
+import { englishCountNoun } from "../../lib/plural";
 
 /**
  * ORD-0059 (b), adapter half -- the calls the Simulation entry makes, and the words it answers
@@ -154,7 +155,7 @@ export function describeFailure(error: unknown): NamedFailure {
   if (mobility) {
     const states = mobility.states.length ? mobility.states.join("、") : "服务器未给证据状态";
     const legs = mobility.legs > 0 ? ` ${mobility.legs} 段` : "";
-    const legsEn = mobility.legs > 0 ? ` ${mobility.legs} leg(s)` : "";
+    const legsEn = mobility.legs > 0 ? ` ${englishCountNoun(mobility.legs, "leg")}` : "";
     return {
       code,
       status,
