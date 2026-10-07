@@ -30,6 +30,7 @@ from app.db.models import (
 )
 from app.db.session import SessionLocal
 from app.traveler_principal import issue_traveler_token
+from app.recovery_epoch import recovery_reality_basis, recovery_reality_fingerprint
 
 
 client = TestClient(main_module.app)
@@ -152,14 +153,18 @@ def _seed_r60_apply_world() -> dict[str, str | list[dict[str, object]]]:
                 created_at=now,
             )
         )
+        session.flush()
+        recovery_fingerprint = recovery_reality_fingerprint(
+            recovery_reality_basis(session, journey)
+        )
         session.add(
             RecoveryEpoch(
                 id=recovery_epoch_id,
                 journey_id=journey_id,
                 generation=1,
                 active_plan_version_id_at_open=base_id,
-                material_world_epoch_at_open=material_world_epoch,
-                recovery_reality_fingerprint="r60-reality-fingerprint",
+                material_world_epoch_at_open=recovery_fingerprint,
+                recovery_reality_fingerprint=recovery_fingerprint,
                 triggering_event_ids_json=json.dumps([event_id]),
                 status="OPEN",
                 opened_at=now,
@@ -663,3 +668,152 @@ def test_r60_stale_apply_preserves_old_answers_and_reuses_one_successor_room(mon
                 )
             session.commit()
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_r60_only_consent_staleness_opens_reconsent_not_execution_failure() -> None:
+    assert (
+        main_module._group_recovery_reconsent_code("STALE_COLLECTIVE_DECISION")
+        == "STALE_COLLECTIVE_DECISION"
+    )
+    assert (
+        main_module._group_recovery_reconsent_code(
+            {"code": "RECOVERY_EPOCH_SUPERSEDED"}
+        )
+        == "RECOVERY_EPOCH_SUPERSEDED"
+    )
+    assert (
+        main_module._group_recovery_reconsent_code(
+            "COLLECTIVE_AUTHORITY_RECEIPT_STALE_WORLD_EPOCH"
+        )
+        == "COLLECTIVE_AUTHORITY_RECEIPT_STALE_WORLD_EPOCH"
+    )
+
+    # These failures say the concrete future is no longer executable. Human
+    # consent cannot repair them and must not be laundered into a fresh vote.
+    assert (
+        main_module._group_recovery_reconsent_code(
+            "replan is no longer feasible: protected commitment violated"
+        )
+        is None
+    )
+    assert (
+        main_module._group_recovery_reconsent_code(
+            "replan mobility evidence is missing or invalid; regenerate proposal"
+        )
+        is None
+    )
+    assert (
+        main_module._group_recovery_reconsent_code(
+            "accepted replan cannot remap an active C4 commitment"
+        )
+        is None
+    )
+
+
+def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
+    monkeypatch,
+) -> None:
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
+    seeded = _seed_r60_apply_world()
+    _enable_r60_apply_path(monkeypatch, seeded)
+
+    def fail_execution(*_args, **_kwargs):
+        raise HTTPException(
+            409,
+            "replan is no longer feasible: protected commitment violated",
+        )
+
+    monkeypatch.setattr(main_module, "_accept_replan_impl", fail_execution)
+    path = f"/api/v1/journeys/{seeded['journey_id']}/group-recovery/apply"
+    try:
+        response = client.post(
+            path,
+            headers=_apply_headers(
+                str(seeded["owner_id"]),
+                idempotency_key="r60-invalid-plan-not-revote",
+            ),
+            json={},
+        )
+        assert response.status_code == 409, response.text
+        detail = response.json()["error"]["details"]
+        assert detail["code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
+        assert detail["reconsent"]["available"] is False
+        assert detail["plan_unchanged"] is True
+
+        with SessionLocal() as session:
+            journey = session.get(Journey, str(seeded["journey_id"]))
+            room = session.get(JourneyMission, str(seeded["room_id"]))
+            receipt = session.get(
+                CollectiveAuthorityReceipt, str(seeded["receipt_id"])
+            )
+            proposal = session.get(
+                ReplanProposal, str(seeded["selected_proposal_id"])
+            )
+            assert journey is not None
+            assert journey.active_plan_version_id == str(seeded["base_id"])
+            assert room is not None
+            stored = json.loads(room.clarification_json or "{}")
+            assert stored["status"] == "RESOLVED"
+            assert receipt is not None and receipt.invalidated_at is None
+            assert proposal is not None and proposal.status == "PRESENTED"
+            reconsent_audits = session.scalars(
+                select(AuditLog).where(
+                    AuditLog.journey_id == str(seeded["journey_id"]),
+                    AuditLog.action == "journey.group_recovery.reconsent.started",
+                )
+            ).all()
+            assert reconsent_audits == []
+            replan_required = session.scalars(
+                select(AuditLog).where(
+                    AuditLog.journey_id == str(seeded["journey_id"]),
+                    AuditLog.action == "journey.group_recovery.replan_required",
+                )
+            ).all()
+            assert len(replan_required) == 1
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_r60_reconsent_lineage_keeps_original_group_recovery_root() -> None:
+    seeded = _seed_r60_apply_world()
+    successor_id = str(uuid4())
+    now = _now()
+    with SessionLocal() as session:
+        session.add(
+            JourneyMission(
+                id=successor_id,
+                journey_id=str(seeded["journey_id"]),
+                traveler_id=str(seeded["owner_id"]),
+                trigger_event_id=str(seeded["event_id"]),
+                parent_mission_id=str(seeded["room_id"]),
+                user_text="Fresh consent round.",
+                requested_autonomy="EXECUTE_WITHIN_BOUNDS",
+                status="WAITING_FOR_MEMBERS",
+                resolved_intent_json=json.dumps(
+                    {
+                        "group_recovery": {
+                            "incident_key": str(seeded["incident_key"]),
+                            "reconsent_for_clarification_id": "old-round",
+                            "reconsent_generation": 1,
+                        }
+                    },
+                    sort_keys=True,
+                ),
+                clarification_json=json.dumps(
+                    {"kind": "COLLECTIVE_TRADEOFF", "status": "WAITING_FOR_MEMBERS"},
+                    sort_keys=True,
+                ),
+                created_at=now,
+                started_at=now,
+            )
+        )
+        session.commit()
+
+        root, context = main_module._group_recovery_lineage_context(
+            session, successor_id
+        )
+        assert root is not None
+        assert root.id == str(seeded["room_id"])
+        assert context["incident_key"] == str(seeded["incident_key"])
+        assert "reconsent_for_clarification_id" not in context
