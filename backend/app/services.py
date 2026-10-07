@@ -7,6 +7,7 @@ from itertools import permutations
 from pathlib import Path
 from typing import Any, Callable
 from uuid import UUID, uuid5
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
@@ -79,6 +80,29 @@ def parse_dt(value: str | datetime) -> datetime:
     if isinstance(value, datetime):
         return value
     return datetime.fromisoformat(value)
+
+
+def journey_zone(item: Journey) -> "ZoneInfo | None":
+    """The journey's own zone, or None when it cannot be used."""
+    try:
+        return ZoneInfo(item.timezone)
+    except (KeyError, ValueError, TypeError):
+        return None
+
+
+def parse_dt_in_journey_zone(value: str | datetime, zone: "ZoneInfo | None") -> datetime:
+    """`parse_dt`, but a naive wall-clock is placed in the journey's zone instead of staying naive.
+
+    A column may hold local wall-clock (`2026-10-09T18:00:00`) rather than an offset-bearing
+    instant.  Left naive it goes out as `18:00` with nothing to say which moment that is, while the
+    payload names a zone beside it -- the two fields disagreeing about the same moment.  A naive
+    value is a fact about a place ("18:00 in Tianjin"), so it is placed in that place's zone.  A
+    value that already carries an offset is untouched: that one is already an instant.
+    """
+    parsed = parse_dt(value)
+    if parsed.tzinfo is not None or zone is None:
+        return parsed
+    return parsed.replace(tzinfo=zone)
 
 
 def dump(value: Any) -> str:
@@ -456,14 +480,16 @@ def journey_live_view(item: Journey) -> JourneyLiveView:
 
 
 def journey_schema(item: Journey) -> JourneySchema:
+    zone = journey_zone(item)
     return JourneySchema(
         id=item.id,
         traveler_id=item.traveler_id,
         title=item.title,
         city_code=item.city_code,
         timezone=item.timezone,
-        start_at=parse_dt(item.start_at),
-        end_at=parse_dt(item.end_at),
+        start_at=parse_dt_in_journey_zone(item.start_at, zone),
+        end_at=parse_dt_in_journey_zone(item.end_at, zone),
+        timezone_honoured=zone is not None,
         budget=Money(amount_minor=item.budget_amount_minor, currency=item.budget_currency),
         planning_mode=item.planning_mode,
         status=item.status,
