@@ -180,3 +180,24 @@ test("no screen under frontend/src softens a counted English noun into `(s)`", (
   expect(hits, "a counted English noun on some screen went back to the `1 or more` dodge").toEqual([]);
   expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
 });
+
+test("the budget hint reads the dictionary on BOTH of its branches, not one", () => {
+  /* This zh sentence appeared twice in the same file -- once plain, once with {currency} -- so "is the
+     inline still there?" would be a vacuous predicate the moment either branch moved. The arm therefore
+     asserts BOTH: both call sites ask the dictionary, and neither inline literal survives anywhere. */
+  const hub = read("hub");
+  const dict = read("dictionary");
+  expect(hub, "the currency branch no longer asks the dictionary")
+    .toContain('t("hub.budgetHintCurrency", { currency })');
+  expect(hub, "the plain branch no longer asks the dictionary").toContain('t("hub.budgetHint")');
+  expect(hub, "an inline budget hint literal survived in the component")
+    .not.toMatch(/budget averaged out|预算平均下来的参考值/);
+  for (const key of ["hub.budgetHint", "hub.budgetHintCurrency"]) {
+    expect(dict.includes(`"${key}"`), `${key} is missing from the dictionary`).toBe(true);
+  }
+  /* the Chinese side must carry the same two keys, or the Chinese arm would fall back */
+  const zhSide = dict.slice(dict.indexOf('"hub.budgetLine": "{days} 天'));
+  for (const key of ["hub.budgetHint", "hub.budgetHintCurrency"]) {
+    expect(zhSide.includes(`"${key}"`), `${key} is missing from the Chinese side`).toBe(true);
+  }
+});

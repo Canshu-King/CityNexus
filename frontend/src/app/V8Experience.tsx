@@ -2451,12 +2451,8 @@ function budgetAdvisory(
         ? TIGHT_CAVEAT_ZH
         : TIGHT_CAVEAT_EN
       : reference.floor_comparable
-        ? zh
-          ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
-          : "This is your own budget averaged out, not a final cost. Real prices come from providers."
-        : zh
-          ? `这是按你的预算平均下来的参考值（以 ${currency} 计），不是最终花费；真实价格以供应商为准。`
-          : `This is your own budget averaged out, in ${currency}, not a final cost. Real prices come from providers.`,
+        ? t("hub.budgetHint")
+        : t("hub.budgetHintCurrency", { currency }),
   };
 }
 
