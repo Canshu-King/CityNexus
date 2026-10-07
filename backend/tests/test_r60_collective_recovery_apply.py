@@ -709,6 +709,18 @@ def test_r60_only_consent_staleness_opens_reconsent_not_execution_failure() -> N
         is None
     )
 
+    available = main_module._group_recovery_stale_or_replan_detail(
+        cause="STALE_COLLECTIVE_DECISION",
+        reconsent={"available": True, "mission_id": "fresh-room"},
+    )
+    assert available["code"] == "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED"
+    unavailable = main_module._group_recovery_stale_or_replan_detail(
+        cause="RECOVERY_EPOCH_SUPERSEDED",
+        reconsent={"available": False},
+    )
+    assert unavailable["code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
+    assert unavailable["consent_stale"] is True
+
 
 def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
     monkeypatch,
