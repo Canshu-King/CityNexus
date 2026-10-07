@@ -2052,7 +2052,12 @@ export function V8Experience() {
                           <span>
                             {item.type.replaceAll("_", " ").toLowerCase()}
                           </span>
-                          <small>{date(item.occurred_at, locale)}</small>
+                          <small>
+                            {dateInZone(item.occurred_at, locale, data.journey.timezone || "UTC")}
+                            {zoneIsUsable(data.journey.timezone)
+                              ? ` · ${t("hub.zoneAttribution", { zone: data.journey.timezone })}`
+                              : ""}
+                          </small>
                         </article>
                       ))
                     ) : (
@@ -4396,6 +4401,11 @@ function Bookings({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  // A ticket's scheduled departure/arrival is a committed instant -- the traveller has to place it,
+  // and a reader in another zone cannot do that from a bare device-clock reading.  Same rule as the
+  // journey anchors on Today, so the two screens cannot drift apart.
+  const ticketTz = data.journey.timezone || "UTC";
+  const ticketTzUsable = zoneIsUsable(data.journey.timezone);
   const [input, setInput] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
   const submit = async () => {
@@ -4503,8 +4513,9 @@ function Bookings({
                   {reservationTitle(item) ?? t("bookings.reservationUnnamed")}
                 </h2>
                 <p>
-                  {date(item.scheduled_departure_at, locale)} →{" "}
-                  {date(item.scheduled_arrival_at, locale)}
+                  {dateInZone(item.scheduled_departure_at, locale, ticketTz)} →{" "}
+                  {dateInZone(item.scheduled_arrival_at, locale, ticketTz)}
+                  {ticketTzUsable ? ` · ${t("hub.zoneAttribution", { zone: ticketTz })}` : ""}
                 </p>
                 {/* The reference is a fact the traveller checks the ticket against, so it stays on the
                     card -- as its own labelled line, not as the title. */}
