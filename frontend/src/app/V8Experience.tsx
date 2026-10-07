@@ -4734,11 +4734,11 @@ function Me({
   const freedomLabel = (mode: string | null | undefined): string => {
     switch (String(mode ?? "").toUpperCase()) {
       case "AUTONOMOUS":
-        return zh ? "自动执行已开启" : "Automatic changes are on";
+        return t("me.autonomyAutonomous");
       case "ASSISTED":
-        return zh ? "重要改动先问你" : "I ask before important changes";
+        return t("me.autonomyAssisted");
       default:
-        return zh ? "仅提供建议" : "Suggestions only";
+        return t("me.autonomySuggestions");
     }
   };
   const citySlug = String(data.journey.city_code || "")
