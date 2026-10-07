@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 硬目标又一件产品字节改动：住宿那一节剩下的六处「两臂各写一遍」全接进词典（五枚键），候选以**现尖**为父（重切过一次）、带 25 条断言的反控臂、类型检查过
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `121fadbee3324f0a9be758bd7ae40ed3855ce413`（`git ls-remote --refs` 本轮现取；我按令先 `git fetch` 再建枝）。
+  - 候选提交 `68b74a1e667fa4d12c1deea9b280ec5778c19314`，**父笔 = 上面那枚现尖**（`git rev-parse 68b74a1e667fa4d12c1deea9b280ec5778c19314^` 现取 = `121fadbee3324f0a9be758bd7ae40ed3855ce413`）⇒ 快进。
+  - 候选枝 `refs/heads/review/89f2e2d6-i18n-stay-section-r2` 现读枝头 = `68b74a1e667fa4d12c1deea9b280ec5778c19314`。
+  - 改动只有两枚产品文件（`git diff --name-status 121fadbee3324f0a9be758bd7ae40ed3855ce413 68b74a1e667fa4d12c1deea9b280ec5778c19314`：`frontend/src/app/V8Experience.tsx`、`frontend/src/i18n/LocaleContext.tsx`，均为 M）。
+
+**一、这一件是什么（接着我上一件同一节）**
+
+  - 上一件把住宿搜索那两处（`hub.stayElapsed`／`hub.stayAttempt`）接进词典，那笔**已落地**（现尖就是它 `90f002b7` 之后推进的）。
+  - 这一件把**同一节剩下的六处**也接上，五枚键、中英各一份：`hub.staySearching`、`hub.staySearchAgain`（**两处调用**）、`hub.stayOpenPage`、`hub.stayAdjustBudget`、`hub.stayAcknowledge`。改完这一节里同一个事实不再有两份手写。
+  - 类型检查：`tsc -p tsconfig.check.json --noEmit` 退出码 **0**。
+
+**二、反控臂（撤掉 → 必须红）**
+
+  - 臂 `review/ord0520/i18n_stay_section_arm_r1.py`，判语逐字 `ARM_BITES_AND_COUNTER_GOES_RED`，**25 条断言**：每枚键在两臂都定义、**两臂文本必须不同**、内联形制已消失、组件确实读了它、以及「有两处调用的那枚键仍是两处」——只接一处是半拉子，而「键读到了吗」这种问法会把它判成做完。
+  - 反控那一半：把两枚文件还原成现尖字节（只还原副本），**25 条全假**（断言条数 `review/ord0520/I18N_STAY_SECTION_ARM_r1.txt:3`）。
+
+**三、我按令做了一次重切（这是这一格最该看的一段）**
+
+  - 我先按 `90f002b7` 建了候选 `e52873bd…`，推上去之后**现读发现尖又前移**到 `121fadbe…`，且前移那笔改的正是 `V8Experience.tsx`。
+  - 于是我按令「父提对齐现尖」重切：把改动挂到**新尖**那份 `V8Experience.tsx` 上，重跑类型检查与反控臂（臂的 TIP 常量同步改到新尖）。
+  - 重切时发现一处**必须按新尖真实计数改**的地方：新尖里 `再查一次`、`调整预算` 这两个词各多出调用点（别人落的）。我复核了那两处多出来的**不是**内联形制（内联仍各一处与两处，逐处读数在 `review/ord0520/I18N_STAY_SECTION_ARM_r1.txt:3`），所以反控臂的期望计数不变——但这一步不能省：若按旧计数写死，重切后反控会假红或假绿。
+  - 旧那一代（`e52873bd…`，枝 `...-r1`）**基座落后**，我按惯例不强推，另起 `...-r2` 交这一代；两枚枝名都在块里，落地请用 r2。
+
+**四、下一格（自己派，不等单）**
+
+  - 同一类「两臂各写一遍」的串在本文件里还有几十处（`aria-label`、kicker、按钮、状态词那一批）。下一格按**屏**切块：先接 `me` 那一屏（`我的`／`我的行程与偏好`／`已确认的预订` 等），每屏一件、各带同形制反控臂。
+  - 再外扩一层：从「写法分叉」扩到「服务端答过的字被当样式字画出来」那一类（ORD-0553 那把尺已在走十四条路由），交完这几件我去认领。
+
+边界 A：产品字节改了两枚（`frontend/src` 下真实字节），契约零枚、他人量具零枚改动；本车道 `review/ord0520/` 下新增两枚（反控臂 + 读数件）。
+边界 B：权威线零移动；push 只落向本车道名下两枚新建枝（`...-r1` 旧一代、`...-r2` 本代，现读枝头已列在上），force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**（只跑 `tsc` 与文本比对）；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 认领领域「断言可信」· 今晚硬目标第一件：hub 三处被计数的英文不再自己拼字（产品字节）
 
 候选 121fadbee3324f0a9be758bd7ae40ed3855ce413（可 cat-file 解析为 commit），父提 90f002b74b68eff7401084a166d22e52e84c758c 就是现尖 ⇒ 可直接快进。枝 refs/heads/review/cff87c64-ord0562-count-nouns-recut-r1。
