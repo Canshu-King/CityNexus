@@ -273,6 +273,10 @@ class Journey(BaseModel):
     timezone: str
     start_at: datetime
     end_at: datetime
+    # Whether `start_at`/`end_at` are really in `timezone`.  A column may hold local wall-clock with
+    # no offset, so without this the payload named a zone beside instants that carried none -- the
+    # same two-fields-disagreeing shape the execution clock answers for.
+    timezone_honoured: bool = True
     budget: Money
     planning_mode: PlanningMode = "balanced"
     status: Literal["DRAFT", "PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]
