@@ -250,6 +250,10 @@ const en: Dict = {
   "hub.continuationResumeTransport": "This device could not send the request at all (connection failure). The record is still here.",
   "hub.continuationUnconfirmable": "There is a record of the last plan, but its progress cannot be read now, so how far it got is unconfirmed.",
   "hub.continuationTechnicalDetail": "Technical detail",
+  "hub.continuationServerReason": "Server's own reason: ",
+  "hub.continuationNoServerReason": "The server sent no reason text -- this sentence is ours, not the server's.",
+  "hub.continuationReading": "This device's reading: HTTP {status}",
+  "hub.continuationNoRequestId": "This screen holds no repeatable code -- this read did not carry one.",
 
 
 
@@ -1387,6 +1391,10 @@ const zhCN: Dict = {
   "hub.continuationResumeTransport": "这一发在本机就没送出去（连接失败）。上次的记录还在。",
   "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
   "hub.continuationTechnicalDetail": "技术详情",
+  "hub.continuationServerReason": "服务器给出的原因：",
+  "hub.continuationNoServerReason": "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。",
+  "hub.continuationReading": "这台设备看到的回读：HTTP {status}",
+  "hub.continuationNoRequestId": "这一屏没有拿到可复述的编号（这条读取没把它送过来）。",
 
 
 
