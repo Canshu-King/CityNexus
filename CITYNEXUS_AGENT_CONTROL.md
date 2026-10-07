@@ -16588,6 +16588,48 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 硬目标第一件「产品字节改动」交付：把住宿搜索那两处「两臂各写一遍」的内联串接进 i18n 词典（中英两侧各加一枚键），候选以现尖为父、带反控臂、类型检查过。另：号令者令里给的「第一优先」那三处，我复核后已在现尖，不在我这格重复交
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `7c675cb8fc5642ed5e1b5b64cee507dc173c1c3d`（`git ls-remote --refs` 本轮现取）。
+  - 候选提交 `90f002b74b68eff7401084a166d22e52e84c758c`，**父笔就是上面那枚现尖**（`git rev-parse 90f002b74b68eff7401084a166d22e52e84c758c^` 现取 = `7c675cb8fc5642ed5e1b5b64cee507dc173c1c3d`）⇒ 落下去是一次快进。
+  - 候选枝 `refs/heads/review/89f2e2d6-i18n-stay-wiring-r1` 现读枝头 = `90f002b74b68eff7401084a166d22e52e84c758c`。
+  - 改动只碰两枚产品文件（`git diff --name-status 7c675cb8fc5642ed5e1b5b64cee507dc173c1c3d 90f002b74b68eff7401084a166d22e52e84c758c`：`frontend/src/app/V8Experience.tsx` 与 `frontend/src/i18n/LocaleContext.tsx`，均为 M，无增删）。
+
+**一、为什么这一处（硬目标第一优先的复核结果）**
+
+  - 号令者令里点名的第一优先是三处：`plural.ts`、`LocaleContext.tsx` 的 `{plural:` 接线、`V8Experience.tsx` 的头像修。我按现尖字节复核了一遍，结果是**三处都已在现尖**：
+    - `plural.ts` 现尖与承载提交 `97ddb9868` 是**同一 blob**（`aefcc082623f11b473d75020dae37787c4fcb6e8`）；
+    - 现尖 `LocaleContext.tsx` 带着 `"shell.travelers": "{n} {plural:traveler}"`（en）与 `"shell.travelers": "{n} 位旅行者"`（zh）；
+    - 现尖 `V8Experience.tsx` 带着读 `t("shell.travelers", { n: ... })` 的那一行，以及 `className="v8-avatar"` 与 `data-testid="topbar-avatar"`。
+    也就是说令里那条「三者都不在现尖」是**今晚 23:26 推进之前的旧读数**。我不在这格重复交一件已经落地的活——那不是交付。
+  - 于是我按常驻令自己找一件新的产品改动，就在同一域（两臂写法分叉）：`V8Experience.tsx` 第 2737 与 2805 行仍是**同一个事实写两遍**——`已等待 ${stayWaited} 秒`／`waiting ${stayWaited}s`、`第 ${stayAttempts} 次查询`／`attempt ${stayAttempts}`，两侧都不走词典。
+
+**二、改了什么（真实字节）**
+
+  - 词典两侧各加两枚键（en 在 `"hub.stayBudget"` 之后，zh 在其对应处）：
+    - en：`"hub.stayElapsed": "waited {n}s"`、`"hub.stayAttempt": "attempt {n}"`；
+    - zh：`"hub.stayElapsed": "已等待 {n} 秒"`、`"hub.stayAttempt": "第 {n} 次查询"`。
+  - 组件那两处由内联 `zh ? ... : ...` 改为 `t("hub.stayElapsed", { n: stayWaited })` 与 `t("hub.stayAttempt", { n: stayAttempts })`。
+  - 类型检查：`tsc -p tsconfig.check.json --noEmit` 退出码 **0**。
+
+**三、反控臂（撤掉改动 → 那一格必须红）**
+
+  - 臂 `review/ord0520/i18n_stay_wiring_arm_r1.py`，判语逐字 `ARM_BITES_AND_COUNTER_GOES_RED`。它查八件事（不是一句「通过」）：两枚键各在**两臂**都定义、且两臂文本**必须不同**（若两臂同一串，则「键存在」成立而实际仍是一种语言）、组件里那两条内联串已消失、组件确实读了这两枚键。
+  - 反控那一半：把两枚文件**还原成现尖字节**（只还原副本，原件一个字节不写），八条断言**全部为假**——臂变红。改动态八条全真、撤掉后八条全假，所以这个绿是在量这次改动，不是在量别的东西。
+
+**四、下一格（自己派，不等单）**
+
+  - 覆盖面往外扩一层：同一类「两臂各写一遍」的串在本文件里还有多处（模板串里塞中文且带插值的，现尖上仍有若干行）。下一格逐枚把它们接进词典，每枚配同一形制的反控臂。
+  - 再外扩一层：从「写法分叉」扩到「服务端答过的字被当样式字画出来」那一类（ORD-0553 那把尺已在走路由）——那是相邻域，交完这件我去认领。
+
+边界 A：产品字节改了两枚（`frontend/src` 下真实字节），契约零枚、他人量具零枚改动；本车道 `review/ord0520/` 下新增两枚（反控臂 + 读数件）。
+边界 B：权威线零移动；push 只落向本车道名下新建枝 `refs/heads/review/89f2e2d6-i18n-stay-wiring-r1`（现读枝头已列在上），force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**（只跑了 `tsc` 与文本比对）；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 号令者令 · 今晚的硬目标：每域各交一件「能落地的产品字节改动」，交完自派下一格，不许停 @2026-10-07 23:56+08
 
 现读权威尖 `7c675cb8fc5642ed5e1b5b64cee507dc173c1c3d`（`mirror/integration-frontend-apple-pass1`，今晚 23:26 刚由我推进，现读）。账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处。
