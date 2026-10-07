@@ -16,7 +16,10 @@ so a reader can tell the two cells apart.
 """
 import sys
 
-WT = "D:/moodle/_qoder_laneE9_i18n_20261008/wt"
+# The root is overridable so this arm can be pointed at a mutated copy of the tree.  An arm that
+# can only read its own author's worktree cannot go red on a snapshot, which makes it a ruler that
+# always says yes.
+WT = sys.argv[1] if len(sys.argv) > 1 else "D:/moodle/_qoder_laneE9_i18n_20261008/wt"
 V8 = WT + "/frontend/src/app/V8Experience.tsx"
 DICT = WT + "/frontend/src/i18n/LocaleContext.tsx"
 DOCK = WT + "/frontend/src/features/agent/CopilotDock.tsx"
