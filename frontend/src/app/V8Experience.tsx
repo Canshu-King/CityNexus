@@ -2975,7 +2975,7 @@ function Hub({
                       place: row.placeName ?? t("hub.droppedCandidateUnknownPlace"),
                       rule: hardRuleLabel(
                         row.ruleCode,
-                        zh,
+                        t,
                         t("hub.droppedCandidateUnknownRule"),
                       ),
                     })}
@@ -4211,10 +4211,11 @@ const BOOKING_TYPES: Record<string, { zh: string; en: string }> = {
 // the door's raw token stays in the door, because `CRUISE` on a Chinese screen answers nobody.
 const BOOKING_TYPE_UNKNOWN = { zh: "其他预订", en: "Other booking" };
 
-function bookingTypeLabel(value: string | null | undefined, zh: boolean): string {
-  const entry = BOOKING_TYPES[String(value ?? "").toUpperCase()];
-  if (entry) return zh ? entry.zh : entry.en;
-  return zh ? BOOKING_TYPE_UNKNOWN.zh : BOOKING_TYPE_UNKNOWN.en;
+function bookingTypeLabel(value: string | null | undefined, t: (key: string) => string): string {
+  const key = String(value ?? "").toUpperCase();
+  if (key === "AUTOMATIC_BOOKING") return t("bookingTypes.automaticBooking");
+  if (key === "MANUAL_BOOKING") return t("bookingTypes.manualBooking");
+  return t("bookingTypes.unknownBooking");
 }
 
 function realtimeLabel(
@@ -4506,7 +4507,7 @@ function Bookings({
               </div>
               <div>
                 <span className="v8-selected-label neutral">
-                  {bookingTypeLabel(item.reservation_type, zh)} ·{" "}
+                  {bookingTypeLabel(item.reservation_type, t)} ·{" "}
                   {realtimeLabel(item.realtime_status, zh, t)}
                 </span>
                 <h2 data-testid="wallet-reservation-title">
@@ -4729,16 +4730,13 @@ function Me({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
-
+  
   // The traveller reads a human sentence, not the internal delegation enum.
-  const freedomLabel = (mode: string | null | undefined): string => {
+  const freedomMode = (mode: string | null | undefined): string => {
     switch (String(mode ?? "").toUpperCase()) {
-      case "AUTONOMOUS":
-        return zh ? "自动执行已开启" : "Automatic changes are on";
-      case "ASSISTED":
-        return zh ? "重要改动先问你" : "I ask before important changes";
-      default:
-        return zh ? "仅提供建议" : "Suggestions only";
+      case "AUTONOMOUS": return t("guardian.freedomAutonomous");
+      case "ASSISTED": return t("guardian.freedomAssisted");
+      default: return t("guardian.freedomDefault");
     }
   };
   const citySlug = String(data.journey.city_code || "")
@@ -4829,7 +4827,7 @@ function Me({
           <span className="v8-kicker">
             {zh ? "改动偏好" : "Change preferences"}
           </span>
-          <strong>{freedomLabel(policy?.mode)}</strong>
+          <strong>{freedomMode(policy?.mode)}</strong>
           <p>
             {zh
               ? "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。"
@@ -4937,16 +4935,15 @@ function Me({
  * does not know gets the caller's "unnamed condition" wording rather than a humanised code -- the
  * `modeLabel` leak this lane already fixed was exactly "an unmapped enum, prettified and printed".
  */
-function hardRuleLabel(code: string | null, zh: boolean, unknown: string): string {
-  const labels: Record<string, { zh: string; en: string }> = {
-    STROLLER: { zh: "婴儿车通行", en: "stroller access" },
-    LUGGAGE: { zh: "大件行李", en: "large luggage" },
-  };
+function hardRuleLabel(code: string | null, t: (key: string) => string, unknown: string): string {
   const key = String(code ?? "")
     .toUpperCase()
     .replace(/_ACCESS_UNAVAILABLE$/, "");
-  const entry = labels[key];
-  return entry ? (zh ? entry.zh : entry.en) : unknown;
+  
+  // ORD-0521 r25: map internal rule codes to traveller-facing words via the dictionary
+  if (key === "STROLLER") return t("hardRule.stroller");
+  if (key === "LUGGAGE") return t("hardRule.luggage");
+  return unknown;
 }
 
 function modeLabel(mode: string, zh: boolean): string {

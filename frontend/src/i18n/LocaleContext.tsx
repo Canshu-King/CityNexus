@@ -352,6 +352,16 @@ const en: Dict = {
   "bookings.realtimeCancelled": "Cancelled",
   "bookings.realtimeNoStatus": "No live status",
   "bookings.realtimeStatusUnknown": "Status unknown",
+  
+  // booking types (r25)
+  "bookingTypes.automaticBooking": "Automatic booking",
+  "bookingTypes.manualBooking": "Manual booking",
+  "bookingTypes.unknownBooking": "Unknown type",
+  // guardian freedom modes (r25)
+  "guardian.freedomAutonomous": "Auto changes on",
+  "guardian.freedomAssisted": "Ask before important changes",
+  "guardian.freedomDefault": "Suggestions only",
+  
   "bookings.title": "Your real reservations, protected.",
   "bookings.lede": "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as a durable commitment.",
   "bookings.stayEvidence": "Stay evidence",
@@ -382,6 +392,10 @@ const en: Dict = {
   "bookings.authorityExplicit": "Authority remains explicit",
   "bookings.authoritySub": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
 
+  /* ORD-0521 r25: hard rule labels */
+  "hardRule.stroller": "Stroller access",
+  "hardRule.luggage": "Luggage access",
+  
   // ── Offline Journey View ──
   "offline.readOnly": "OFFLINE · READ ONLY",
   "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
@@ -1471,6 +1485,16 @@ const zhCN: Dict = {
   "bookings.realtimeCancelled": "已取消",
   "bookings.realtimeNoStatus": "暂无实时状态",
   "bookings.realtimeStatusUnknown": "状态未知",
+  
+  // 预订类型 (r25)
+  "bookingTypes.automaticBooking": "自动预订",
+  "bookingTypes.manualBooking": "手动预订",
+  "bookingTypes.unknownBooking": "未知类型",
+  // 监护器自由模式 (r25)
+  "guardian.freedomAutonomous": "自动更改已开启",
+  "guardian.freedomAssisted": "重要改动前先问你",
+  "guardian.freedomDefault": "仅提供建议",
+  
   "bookings.title": "你的真实预订，受保护。",
   "bookings.lede": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。",
   "bookings.stayEvidence": "住宿证据",
@@ -1495,6 +1519,10 @@ const zhCN: Dict = {
   "bookings.authorityExplicit": "权限始终明确",
   "bookings.authoritySub": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
 
+  /* ORD-0521 r25: hard rule labels */
+  "hardRule.stroller": "Stroller access",
+  "hardRule.luggage": "Luggage access",
+  
   // ── Offline Journey View ──
   "offline.readOnly": "离线 · 只读",
   "offline.readOnlySnapshot": "本地快照 · 只读",
