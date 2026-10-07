@@ -14541,3 +14541,4 @@ def get_commitment(commitment_id: UUID, session: Session = Depends(get_session))
     if item is None:
         raise HTTPException(404, f"Commitment {commitment_id} was not found")
     return _commitment_payload(item)
+
