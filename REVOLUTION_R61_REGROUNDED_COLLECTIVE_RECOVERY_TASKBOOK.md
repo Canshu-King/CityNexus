@@ -112,6 +112,13 @@ GPT directly committed these post-review fixes:
 - `b25a9d73ef7961795ee76251c8f63f581b495935`
   - pins the typed conflict envelope in the focused R60 tests.
 
+- `38b4b199eb2268afb5d8155d8f8adef79bec7cf8`
+  - makes the collective read projection recompute RecoveryEpoch freshness without mutating from GET;
+  - a receipt can no longer leave “Apply shared recovery” visible after the executable recovery generation has become stale.
+
+- `77c80851d3087fdddaefd77c1b1115e9b3241130` + `f9c2c8207c4e464ff5f5f55b6b7ebbad85e66e48`
+  - add and isolate the focused regression proving a recovery-reality change makes the room `COLLECTIVE_STALE` and removes `viewer_can_apply`.
+
 These GPT commits have **not** been run locally by Codex yet.
 
 First run the narrow R60 file plus directly affected collective authority tests. Repair only real failures. Do not loosen the new boundary.
