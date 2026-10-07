@@ -10014,21 +10014,30 @@ def request_group_recovery_plan(
 def _group_recovery_lineage_context(
     session: Session, mission_id: str | None
 ) -> tuple[JourneyMission | None, dict[str, Any]]:
-    """Find the durable R58 root without trusting client-supplied lineage ids."""
+    """Find the durable R58 root without trusting client-supplied lineage ids.
+
+    Re-consent children intentionally carry the same group-recovery context so
+    they can project the incident.  Returning the first matching child would
+    relabel that successor as the root and lose the original incident lineage.
+    Walk all the way up and keep the oldest matching context instead.
+    """
     current = session.get(JourneyMission, str(mission_id)) if mission_id else None
     seen: set[str] = set()
+    root: JourneyMission | None = None
+    root_context: dict[str, Any] = {}
     while current is not None and current.id not in seen:
         seen.add(current.id)
         intent = _json_object(current.resolved_intent_json or "{}")
         context = intent.get("group_recovery") if isinstance(intent, dict) else None
         if isinstance(context, dict) and context.get("incident_key"):
-            return current, dict(context)
+            root = current
+            root_context = dict(context)
         current = (
             session.get(JourneyMission, str(current.parent_mission_id))
             if current.parent_mission_id
             else None
         )
-    return None, {}
+    return root, root_context
 
 
 def _group_recovery_room_for_incident(
@@ -10110,12 +10119,14 @@ def _group_recovery_reconsent_round(
             old_receipt.invalidation_code = stale_reason[:120]
 
     trigger_id = str(stale_clarification.get("trigger_event_id") or "")
+    current_recovery_epoch = ensure_recovery_epoch(session, journey)
     proposals = session.scalars(
         select(ReplanProposalModel)
         .where(
             ReplanProposalModel.journey_id == journey.id,
             ReplanProposalModel.trigger_event_id == trigger_id,
             ReplanProposalModel.base_plan_version_id == journey.active_plan_version_id,
+            ReplanProposalModel.recovery_epoch_id == current_recovery_epoch.id,
             ReplanProposalModel.status == "PRESENTED",
         )
         .order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
@@ -10250,6 +10261,7 @@ def _group_recovery_reconsent_round(
         **group_context,
         "reconsent_for_clarification_id": old_id,
         "reconsent_generation": generation,
+        "reconsent_recovery_epoch_id": current_recovery_epoch.id,
     }
     successor.resolved_intent_json = json.dumps(
         {"group_recovery": successor_context}, ensure_ascii=False, sort_keys=True
@@ -10301,6 +10313,7 @@ def _group_recovery_reconsent_round(
             "required_member_ids": required_ids,
             "decision_epoch": decision_epoch,
             "candidate_surface_fingerprint": fingerprint,
+            "recovery_epoch_id": current_recovery_epoch.id,
         },
     )
     session.commit()
@@ -10311,6 +10324,39 @@ def _group_recovery_reconsent_round(
         "clarification_id": _json_object(successor.clarification_json).get("clarification_id"),
         "required_member_count": len(required_ids),
     }
+
+
+def _group_recovery_reconsent_code(detail: Any) -> str | None:
+    """Return a consent-staleness code only when another human round can help.
+
+    A 409 from the generic replan accept path is not automatically stale
+    consent. Feasibility, mobility, protected-commitment, or cursor failures
+    mean the proposal itself must be replanned/revalidated; asking the same
+    humans to vote again would launder an unexecutable future into a new room.
+    """
+
+    if isinstance(detail, Mapping):
+        raw = str(detail.get("code") or "")
+    else:
+        raw = str(detail or "")
+    code = raw.split(":", 1)[0].strip()
+    exact = {
+        "STALE_COLLECTIVE_DECISION",
+        "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+        "COLLECTIVE_CONSENT_EPOCH_STALE",
+        "COLLECTIVE_TRADEOFF_UNRESOLVED",
+        "COLLECTIVE_CANDIDATE_NOT_SELECTED",
+        "COLLECTIVE_MEDIATION_RENEWED_CONSENT_REQUIRED",
+        "RECOVERY_EPOCH_SUPERSEDED",
+        "COLLECTIVE_AUTHORITY_RECEIPT_CHANGED_BEFORE_MUTATION",
+    }
+    prefixes = (
+        "COLLECTIVE_AUTHORITY_RECEIPT_",
+        "COLLECTIVE_AUTHORITY_SURFACE_",
+    )
+    if code in exact or any(code.startswith(prefix) for prefix in prefixes):
+        return code
+    return None
 
 
 @app.post("/api/v1/journeys/{journey_id}/group-recovery/apply")
@@ -10569,24 +10615,59 @@ def apply_group_recovery(
         except HTTPException as exc:
             if exc.status_code != 409:
                 raise
+            reconsent_code = _group_recovery_reconsent_code(exc.detail)
             session.rollback()
-            room = require(session, JourneyMission, room.id, "Journey mission")
-            stale = _json_object(room.clarification_json or "{}")
-            reconsent = _group_recovery_reconsent_round(
+            if reconsent_code is not None:
+                room = require(session, JourneyMission, room.id, "Journey mission")
+                stale = _json_object(room.clarification_json or "{}")
+                reconsent = _group_recovery_reconsent_round(
+                    session,
+                    journey,
+                    room,
+                    stale,
+                    root_mission,
+                    group_context,
+                    stale_reason=reconsent_code,
+                )
+                raise HTTPException(
+                    409,
+                    detail={
+                        "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+                        "cause": str(exc.detail),
+                        "reconsent": reconsent,
+                    },
+                ) from exc
+
+            # The people may still have agreed, but this concrete future is no
+            # longer executable. Preserve their historical consent and demand
+            # a fresh grounded proposal instead of opening a sham re-vote on
+            # the same invalid plan.
+            record_audit(
                 session,
-                journey,
-                room,
-                stale,
-                root_mission,
-                group_context,
-                stale_reason=str(exc.detail)[:120],
+                action="journey.group_recovery.replan_required",
+                entity_type="ReplanProposal",
+                entity_id=proposal.id,
+                journey_id=journey.id,
+                actor_type="SYSTEM",
+                actor_id="group-recovery-apply",
+                after={
+                    "incident_key": group_context.get("incident_key"),
+                    "decision_mission_id": room.id,
+                    "clarification_id": clarification.get("clarification_id"),
+                    "proposal_id": proposal.id,
+                    "authority_receipt_id": resolved.get("authority_receipt_id"),
+                    "cause": str(exc.detail),
+                    "plan_unchanged": True,
+                },
             )
+            session.commit()
             raise HTTPException(
                 409,
                 detail={
-                    "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+                    "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
                     "cause": str(exc.detail),
-                    "reconsent": reconsent,
+                    "plan_unchanged": True,
+                    "reconsent": {"available": False},
                 },
             ) from exc
         return result
