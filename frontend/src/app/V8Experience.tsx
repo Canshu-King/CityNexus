@@ -4986,3 +4986,5 @@ function cityCodeSlug(name: string): string {
   if (CITY_CODE_SLUGS[lower]) return CITY_CODE_SLUGS[lower];
   return trimmed.toUpperCase().replace(/\s+/g, "-");
 }
+
+// HONEST_ERROR_HOOK: check response.has_insufficient_data before drawing route
