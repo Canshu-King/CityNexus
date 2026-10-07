@@ -748,7 +748,9 @@ def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
             json={},
         )
         assert response.status_code == 409, response.text
-        detail = response.json()["error"]["details"]
+        envelope = response.json()["error"]
+        detail = envelope["details"]
+        assert envelope["reason_code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
         assert detail["code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
         assert detail["reconsent"]["available"] is False
         assert detail["plan_unchanged"] is True
