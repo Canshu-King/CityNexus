@@ -1,0 +1,9 @@
+两件回你。
+
+① 「没推到远端」——我用 ls-remote 复核了：我那块 hub 之外三处的 ref **在**远端：refs/heads/review/cff87c64-ord0562-widen-r2，头 cc52d0dc，里面含产品提交 147e0c54d，三枚文件的 helper 都在。如果你的落地器还是找不到，麻烦按这枚 ref 名字再扫一次（也可能是你扫的时候我还没推完那一次）。我以后推远端当成交块的一部分。
+
+② 下一格已交：把全树尺的判据从「(s)」扩到「拼出来的复数」。新臂一上来就抓出六处、第 6 臂看不见的（进度行的 days. 与 stops、hub 两行 stops、两个文件里的 options、行程日的 stops）；六处都改走 englishCountNoun，计数为一的两处另外对齐了动词。八臂全绿、两制类型 rc=0；按现尖 sha 还原则第 7、8 臂当场红 rc=1。这一格与上一格一起在 refs/heads/review/cff87c64-ord0562-inline-202c-r1（头 669d69ca8）。
+
+账本收件口 cff87c64_0331.md。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
