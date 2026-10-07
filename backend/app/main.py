@@ -10377,6 +10377,17 @@ def _group_recovery_stale_or_replan_detail(
     }
 
 
+def _group_recovery_conflict(detail: Mapping[str, Any]) -> HTTPException:
+    """Expose a typed group-recovery conflict through CityNexus' error envelope."""
+
+    payload = dict(detail)
+    code = str(payload.get("code") or "GROUP_RECOVERY_CONFLICT")
+    exc = HTTPException(409, code)
+    exc.reason_code = code
+    exc.error_details = payload
+    return exc
+
+
 @app.post("/api/v1/journeys/{journey_id}/group-recovery/apply")
 def apply_group_recovery(
     journey_id: UUID,
@@ -10485,23 +10496,21 @@ def apply_group_recovery(
                     group_context,
                     stale_reason=str(clarification.get("stale_reason") or "COLLECTIVE_CONSENT_STALE"),
                 )
-                raise HTTPException(
-                    409,
-                    detail=_group_recovery_stale_or_replan_detail(
+                raise _group_recovery_conflict(
+                    _group_recovery_stale_or_replan_detail(
                         cause=str(
                             clarification.get("stale_reason")
                             or "COLLECTIVE_CONSENT_STALE"
                         ),
                         reconsent=reconsent,
-                    ),
+                    )
                 )
             if (
                 clarification.get("status") == "WAITING_FOR_MEMBERS"
                 and group_context.get("reconsent_for_clarification_id")
             ):
-                raise HTTPException(
-                    409,
-                    detail={
+                raise _group_recovery_conflict(
+                    {
                         "code": "COLLECTIVE_CONSENT_RECONSENT_IN_PROGRESS",
                         "reconsent": {
                             "available": True,
@@ -10512,7 +10521,7 @@ def apply_group_recovery(
                                 clarification.get("required_member_ids") or []
                             ),
                         },
-                    },
+                    }
                 )
             raise HTTPException(409, "COLLECTIVE_TRADEOFF_UNRESOLVED")
 
@@ -10539,12 +10548,11 @@ def apply_group_recovery(
                 group_context,
                 stale_reason="COLLECTIVE_SELECTED_PROPOSAL_OR_TRIGGER_STALE",
             )
-            raise HTTPException(
-                409,
-                detail=_group_recovery_stale_or_replan_detail(
+            raise _group_recovery_conflict(
+                _group_recovery_stale_or_replan_detail(
                     cause="COLLECTIVE_SELECTED_PROPOSAL_OR_TRIGGER_STALE",
                     reconsent=reconsent,
-                ),
+                )
             )
         child = None
         for candidate in session.scalars(
@@ -10583,12 +10591,11 @@ def apply_group_recovery(
                     group_context,
                     stale_reason=str(exc.detail)[:120],
                 )
-                raise HTTPException(
-                    409,
-                    detail=_group_recovery_stale_or_replan_detail(
+                raise _group_recovery_conflict(
+                    _group_recovery_stale_or_replan_detail(
                         cause=str(exc.detail),
                         reconsent=reconsent,
-                    ),
+                    )
                 ) from exc
             raise
 
@@ -10649,12 +10656,11 @@ def apply_group_recovery(
                     group_context,
                     stale_reason=reconsent_code,
                 )
-                raise HTTPException(
-                    409,
-                    detail=_group_recovery_stale_or_replan_detail(
+                raise _group_recovery_conflict(
+                    _group_recovery_stale_or_replan_detail(
                         cause=str(exc.detail),
                         reconsent=reconsent,
-                    ),
+                    )
                 ) from exc
 
             # The people may still have agreed, but this concrete future is no
@@ -10680,14 +10686,13 @@ def apply_group_recovery(
                 },
             )
             session.commit()
-            raise HTTPException(
-                409,
-                detail={
+            raise _group_recovery_conflict(
+                {
                     "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
                     "cause": str(exc.detail),
                     "plan_unchanged": True,
                     "reconsent": {"available": False},
-                },
+                }
             ) from exc
         return result
 
