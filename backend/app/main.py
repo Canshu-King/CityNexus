@@ -10359,6 +10359,24 @@ def _group_recovery_reconsent_code(detail: Any) -> str | None:
     return None
 
 
+def _group_recovery_stale_or_replan_detail(
+    *, cause: str, reconsent: Mapping[str, Any]
+) -> dict[str, Any]:
+    if bool(reconsent.get("available")):
+        return {
+            "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+            "cause": cause,
+            "reconsent": dict(reconsent),
+        }
+    return {
+        "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
+        "cause": cause,
+        "plan_unchanged": True,
+        "consent_stale": True,
+        "reconsent": dict(reconsent),
+    }
+
+
 @app.post("/api/v1/journeys/{journey_id}/group-recovery/apply")
 def apply_group_recovery(
     journey_id: UUID,
@@ -10469,10 +10487,13 @@ def apply_group_recovery(
                 )
                 raise HTTPException(
                     409,
-                    detail={
-                        "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
-                        "reconsent": reconsent,
-                    },
+                    detail=_group_recovery_stale_or_replan_detail(
+                        cause=str(
+                            clarification.get("stale_reason")
+                            or "COLLECTIVE_CONSENT_STALE"
+                        ),
+                        reconsent=reconsent,
+                    ),
                 )
             if (
                 clarification.get("status") == "WAITING_FOR_MEMBERS"
@@ -10520,10 +10541,10 @@ def apply_group_recovery(
             )
             raise HTTPException(
                 409,
-                detail={
-                    "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
-                    "reconsent": reconsent,
-                },
+                detail=_group_recovery_stale_or_replan_detail(
+                    cause="COLLECTIVE_SELECTED_PROPOSAL_OR_TRIGGER_STALE",
+                    reconsent=reconsent,
+                ),
             )
         child = None
         for candidate in session.scalars(
@@ -10564,11 +10585,10 @@ def apply_group_recovery(
                 )
                 raise HTTPException(
                     409,
-                    detail={
-                        "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
-                        "cause": str(exc.detail),
-                        "reconsent": reconsent,
-                    },
+                    detail=_group_recovery_stale_or_replan_detail(
+                        cause=str(exc.detail),
+                        reconsent=reconsent,
+                    ),
                 ) from exc
             raise
 
@@ -10631,11 +10651,10 @@ def apply_group_recovery(
                 )
                 raise HTTPException(
                     409,
-                    detail={
-                        "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
-                        "cause": str(exc.detail),
-                        "reconsent": reconsent,
-                    },
+                    detail=_group_recovery_stale_or_replan_detail(
+                        cause=str(exc.detail),
+                        reconsent=reconsent,
+                    ),
                 ) from exc
 
             # The people may still have agreed, but this concrete future is no
