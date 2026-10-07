@@ -446,6 +446,16 @@ export interface JourneyOperatorCollectiveProjection {
   timeline?: JourneyOperatorTimelineItem[];
 }
 
+export interface GroupRecoveryCollectiveDecisionProjection {
+  mission_id: string;
+  state: JourneyOperatorCollectiveProjection["state"];
+  required_count: number;
+  response_count: number;
+  waiting_for_member_count: number;
+  viewer_has_responded: boolean;
+  authority_receipt_id: string | null;
+}
+
 export interface JourneyOperatorDiscoveryProjection {
   state: "IDLE" | "DISCOVERY_IN_PROGRESS" | "DISCOVERY_EXHAUSTED" | "DISCOVERY_DEGRADED";
   attempt_count: number;
@@ -575,6 +585,7 @@ export interface GroupRecoveryProjection {
   decision_authority: string;
   can_request_planning: boolean;
   mission?: { mission_id: string; status: string; failure_reason?: string | null; created_at?: string; run_id?: string | null } | null;
+  collective_decision?: GroupRecoveryCollectiveDecisionProjection | null;
 }
 
 export interface GroupRecoveryPlanResult {

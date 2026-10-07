@@ -107,6 +107,73 @@ def _json(value: str | None, fallback: Any) -> Any:
         return fallback
 
 
+def _mission_is_within_recovery_lineage(
+    session: Session,
+    mission_id: str | None,
+    recovery_mission_id: str,
+) -> bool:
+    """Keep a collective room attached only to its originating incident."""
+    current_id = str(mission_id or "")
+    seen: set[str] = set()
+    for _ in range(12):
+        if not current_id or current_id in seen:
+            return False
+        if current_id == str(recovery_mission_id):
+            return True
+        seen.add(current_id)
+        row = session.get(JourneyMission, current_id)
+        if row is None:
+            return False
+        current_id = str(row.parent_mission_id or "")
+    return False
+
+
+def attach_collective_recovery_projection(
+    session: Session,
+    group_recovery: dict[str, Any],
+    collective: dict[str, Any],
+    recovery_mission_id: str,
+) -> bool:
+    """Attach a compact room summary when it belongs to this same incident."""
+    collective_mission_id = str(collective.get("mission_id") or "")
+    if not _mission_is_within_recovery_lineage(
+        session, collective_mission_id, recovery_mission_id
+    ):
+        return False
+    collective_state = str(collective.get("state") or "")
+    group_recovery["collective_decision"] = {
+        "mission_id": collective_mission_id,
+        "state": collective_state,
+        "required_count": int(collective.get("required_count") or 0),
+        "response_count": int(collective.get("response_count") or 0),
+        "waiting_for_member_count": int(
+            collective.get("waiting_for_member_count") or 0
+        ),
+        "viewer_has_responded": bool(collective.get("viewer_has_responded")),
+        "authority_receipt_id": collective.get("authority_receipt_id"),
+    }
+    state_map = {
+        "WAITING_FOR_MEMBERS": "COLLECTIVE_WAITING_FOR_MEMBERS",
+        "MEDIATING": "COLLECTIVE_MEDIATING",
+        "COLLECTIVE_AUTHORIZED": "COLLECTIVE_AUTHORIZED",
+        "COLLECTIVE_STALE": "COLLECTIVE_STALE",
+        "COLLECTIVE_READY": "COLLECTIVE_DECISION_REQUIRED",
+        "COLLECTIVE_NEEDS_ATTENTION": "COLLECTIVE_DECISION_REQUIRED",
+    }
+    group_state = state_map.get(collective_state)
+    if group_state:
+        group_recovery["state"] = group_state
+        group_recovery["can_request_planning"] = False
+        group_recovery["headline"] = {
+            "COLLECTIVE_WAITING_FOR_MEMBERS": "A shared recovery choice is waiting for the travellers it affects.",
+            "COLLECTIVE_MEDIATING": "The travellers chose differently; CityNexus is preserving that disagreement while seeking a fair next step.",
+            "COLLECTIVE_AUTHORIZED": "The group has authorized this exact proposal; the Journey has not changed until normal approval and acceptance complete.",
+            "COLLECTIVE_STALE": "The trip or its evidence changed; the old group choices can no longer be used.",
+            "COLLECTIVE_DECISION_REQUIRED": "The group response is recorded, but current collective authority is not available to carry this proposal forward.",
+        }[group_state]
+    return True
+
+
 def _timeline(session: Session, journey_id: str) -> list[dict[str, Any]]:
     """Turn durable audits into a compact traveller-facing story."""
 
@@ -531,6 +598,9 @@ def operator_projection(
             elif candidate.status in {"RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}:
                 group_recovery["state"] = "RECOVERY_OPTIONS_READY"
                 group_recovery["headline"] = "CityNexus is preparing a governed group-recovery option."
+            attach_collective_recovery_projection(
+                session, group_recovery, collective, candidate.id
+            )
             break
     # Journey Ahead is a read-only projection.  Reuse the already persisted
     # predictive Guardian/brain state, but never start a provider call or an

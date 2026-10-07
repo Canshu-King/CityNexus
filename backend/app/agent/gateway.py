@@ -2060,7 +2060,13 @@ class AgentToolGateway:
                 ReplanProposal.status == "PRESENTED",
             ).order_by(ReplanProposal.created_at, ReplanProposal.id)
         ).all()
-        from app.main import collective_proposal_receipt, active_journey_members_with_capabilities
+        from app.main import (
+            active_journey_members_with_capabilities,
+            collective_material_world_basis,
+            collective_proposal_receipt,
+        )
+        from app.collective_authority import candidate_surface_fingerprint
+        from app.collective_mediation import collective_material_world_epoch
         receipt = collective_proposal_receipt(self.session, journey, proposals)
         mediation = receipt.get("collective_mediation") or {}
         options = []
@@ -2098,6 +2104,21 @@ class AgentToolGateway:
                 continue
             seen_option_shapes.add(option_key)
             options.append(item)
+        # Freeze the physical basis for each choice in this decision epoch.
+        # Labels and preference fit alone must not keep an old answer current
+        # after the selected route/canonical facts have materially changed.
+        for option in options:
+            plan = self.session.get(PlanVersion, str(option.get("plan_id") or ""))
+            if plan is None:
+                raise HTTPException(409, "COLLECTIVE_OPTION_PLAN_UNAVAILABLE")
+            option["material_world_epoch"] = collective_material_world_epoch(
+                collective_material_world_basis(
+                    self.session,
+                    journey,
+                    plan,
+                    fit_subject_place_ids=list(option.get("fit_subject_place_ids") or []),
+                )
+            )
         try:
             mission_intent = json.loads(mission.resolved_intent_json or "{}")
         except (TypeError, ValueError, json.JSONDecodeError):
@@ -2167,6 +2188,54 @@ class AgentToolGateway:
             required_member_ids=required_ids,
             members=members,
         )
+        surface_fingerprint = candidate_surface_fingerprint(
+            receipt.get("candidate_fit_matrix") or []
+        )
+        existing_clarification = _mission_json(mission.clarification_json)
+        if existing_clarification.get("kind") == "COLLECTIVE_TRADEOFF":
+            if (
+                str(existing_clarification.get("trigger_event_id") or "") != str(trigger.id)
+                or str(existing_clarification.get("base_plan_version_id") or "")
+                != str(journey.active_plan_version_id or "")
+            ):
+                existing_clarification["status"] = "STALE"
+                mission.clarification_json = json.dumps(
+                    existing_clarification, ensure_ascii=False, sort_keys=True
+                )
+                self.session.commit()
+                raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+            if existing_clarification.get("status") == "WAITING_FOR_MEMBERS":
+                if (
+                    existing_clarification.get("decision_epoch") != decision_epoch
+                    or existing_clarification.get("candidate_surface_fingerprint")
+                    != surface_fingerprint
+                ):
+                    existing_clarification["status"] = "STALE"
+                    mission.clarification_json = json.dumps(
+                        existing_clarification, ensure_ascii=False, sort_keys=True
+                    )
+                    self.session.commit()
+                    raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+                return {
+                    "tool": "request_collective_decision",
+                    "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                    "executed": False,
+                    "reused": True,
+                    "mission_status": mission.status,
+                    "clarification": existing_clarification,
+                    "collective_mediation": mediation,
+                }
+            # A resolved, stale, or mediation-required round is durable history.
+            # Never replace it with an empty response map on tool replay.
+            return {
+                "tool": "request_collective_decision",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "executed": False,
+                "reused": True,
+                "mission_status": mission.status,
+                "clarification": existing_clarification,
+                "collective_mediation": mediation,
+            }
         clarification_id = str(uuid4())
         payload = {
             "kind": "COLLECTIVE_TRADEOFF",
@@ -2177,6 +2246,7 @@ class AgentToolGateway:
             ),
             "clarification_id": clarification_id,
             "decision_epoch": decision_epoch,
+            "candidate_surface_fingerprint": surface_fingerprint,
             "trigger_event_id": trigger.id,
             "base_plan_version_id": journey.active_plan_version_id,
             "candidate_options": options,

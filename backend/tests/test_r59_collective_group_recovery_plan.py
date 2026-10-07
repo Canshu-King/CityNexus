@@ -54,3 +54,33 @@ def test_r59_collective_plus_live_intent_keeps_strategy_tools_but_still_cannot_e
     assert "request_replan" in plan.allowed_tools
     assert "request_collective_decision" in plan.allowed_tools
     assert "accept_replan" not in plan.allowed_tools
+
+
+def test_r59_material_world_change_changes_collective_decision_epoch():
+    from app.collective_mediation import collective_decision_epoch
+
+    shared = {
+        "journey_id": "journey-r59",
+        "mission_id": "mission-r59",
+        "trigger_event_id": "event-r59",
+        "base_plan_version_id": "plan-base",
+        "required_member_ids": ["member-a", "member-b"],
+        "members": [
+            {"member_id": "member-a", "role": "OWNER", "capabilities": ["JOURNEY_UPDATE"]},
+            {"member_id": "member-b", "role": "ADMIN", "capabilities": ["JOURNEY_UPDATE"]},
+        ],
+    }
+    option = {
+        "proposal_id": "proposal-r59",
+        "plan_id": "plan-candidate",
+        "status": "GROUNDED_FEASIBLE",
+        "fit_subject_place_ids": ["place-option"],
+        "fit_subject_tags": ["garden"],
+        "member_fits": {},
+        "fairness": {"minimum_member_fit": 0.4, "maximum_regret": 0.2},
+        "material_world_epoch": "world-before",
+    }
+    first = collective_decision_epoch(**shared, options=[option])
+    option["material_world_epoch"] = "world-after"
+    second = collective_decision_epoch(**shared, options=[option])
+    assert first != second

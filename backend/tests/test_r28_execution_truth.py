@@ -209,13 +209,25 @@ def test_r28_foreground_web_location_cannot_claim_device_verified_execution() ->
                 "longitude": longitude,
                 "accuracy_m": 20.0,
                 "captured_at": _now(),
-                # Ordinary browser JSON cannot choose a trusted persisted source.
-                "source": "DEVICE_ATTESTED",
             },
         )
         assert location.status_code == 201, location.text
         assert location.json()["principal_bound"] is True
         assert location.json()["source"] == "FOREGROUND_WEB"
+
+        # Ordinary browser JSON cannot choose a trusted persisted source.
+        forged_source = client.post(
+            f"/api/v1/journeys/{journey_id}/location",
+            headers=headers,
+            json={
+                "latitude": latitude,
+                "longitude": longitude,
+                "accuracy_m": 20.0,
+                "captured_at": _now(),
+                "source": "DEVICE_ATTESTED",
+            },
+        )
+        assert forged_source.status_code == 422, forged_source.text
 
         from app.execution.presence import presence_projection
 

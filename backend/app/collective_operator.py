@@ -15,6 +15,8 @@ from app.db.models import (
     JourneyMember,
     JourneyMission,
     JourneyRoleCapability,
+    PlanVersion,
+    ReplanProposal,
     Traveler,
 )
 
@@ -50,6 +52,91 @@ def _json(value: str | None, fallback: Any) -> Any:
         return json.loads(value or "")
     except (TypeError, json.JSONDecodeError):
         return fallback
+
+
+def _decision_round_is_current(
+    session: Session,
+    journey: Journey,
+    mission: JourneyMission,
+    clarification: dict[str, Any],
+) -> bool:
+    """Read-only freshness check for the response buttons shown to members."""
+    trigger_id = str(clarification.get("trigger_event_id") or "")
+    expected_epoch = str(clarification.get("decision_epoch") or "")
+    base_plan_id = str(clarification.get("base_plan_version_id") or "")
+    options = [
+        item for item in clarification.get("candidate_options") or []
+        if isinstance(item, dict) and item.get("proposal_id")
+    ]
+    # Preserve the legacy read projection for historical rounds that predate
+    # decision-epoch binding. New rooms always carry all three fields.
+    if not trigger_id or not expected_epoch or not base_plan_id or not options:
+        return True
+    if base_plan_id != str(journey.active_plan_version_id or ""):
+        return False
+
+    from app.collective_authority import candidate_surface_fingerprint
+    from app.collective_mediation import (
+        collective_decision_epoch,
+        collective_material_world_epoch,
+    )
+    from app.main import (
+        active_journey_members_with_capabilities,
+        collective_material_world_basis,
+        collective_proposal_receipt,
+    )
+
+    proposals = session.scalars(
+        select(ReplanProposal).where(
+            ReplanProposal.journey_id == journey.id,
+            ReplanProposal.trigger_event_id == trigger_id,
+            ReplanProposal.status == "PRESENTED",
+        ).order_by(ReplanProposal.created_at, ReplanProposal.id)
+    ).all()
+    receipt = collective_proposal_receipt(session, journey, proposals)
+    stored_surface = clarification.get("candidate_surface_fingerprint")
+    if stored_surface is not None and stored_surface != candidate_surface_fingerprint(
+        receipt.get("candidate_fit_matrix") or []
+    ):
+        return False
+
+    option_ids = {str(item.get("proposal_id") or "") for item in options}
+    current_options = [
+        item
+        for item in (receipt.get("proposal_collective_decisions") or {}).values()
+        if str(item.get("proposal_id") or "") in option_ids
+        and item.get("status") == "GROUNDED_FEASIBLE"
+    ]
+    if {str(item.get("proposal_id") or "") for item in current_options} != option_ids:
+        return False
+    for option in current_options:
+        plan = session.get(PlanVersion, str(option.get("plan_id") or ""))
+        if plan is None:
+            return False
+        option["material_world_epoch"] = collective_material_world_epoch(
+            collective_material_world_basis(
+                session,
+                journey,
+                plan,
+                fit_subject_place_ids=list(option.get("fit_subject_place_ids") or []),
+            )
+        )
+    required_ids = [
+        str(item) for item in clarification.get("required_member_ids") or []
+    ]
+    members = active_journey_members_with_capabilities(session, journey).get(
+        "members", []
+    )
+    current_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=mission.id,
+        trigger_event_id=trigger_id,
+        base_plan_version_id=journey.active_plan_version_id,
+        options=current_options,
+        required_member_ids=required_ids,
+        members=members,
+    )
+    return current_epoch == expected_epoch
 
 
 def collective_operator_projection(
@@ -141,6 +228,9 @@ def collective_operator_projection(
         else None
     )
     response_count = len(set(required_ids).intersection(responses))
+    decision_is_current = _decision_round_is_current(
+        session, journey, mission, clarification
+    )
     state = classify_collective_operator_state(
         member_count=len(required_ids) or len(member_rows),
         status=str(clarification.get("status") or ""),
@@ -153,7 +243,11 @@ def collective_operator_projection(
             and receipt.candidate_surface_fingerprint == clarification.get("candidate_surface_fingerprint")
             and set(_json(receipt.required_member_ids_json, [])) == required_set
         ),
-        stale=membership_stale or str(clarification.get("status") or "").upper() == "STALE",
+        stale=(
+            membership_stale
+            or not decision_is_current
+            or str(clarification.get("status") or "").upper() == "STALE"
+        ),
     )
     options = [
         {
@@ -181,6 +275,7 @@ def collective_operator_projection(
             and viewer_member_id in active_members
             and active_members[viewer_member_id].role in member_update_roles
             and str(clarification.get("status") or "").upper() == "WAITING_FOR_MEMBERS"
+            and decision_is_current
             and viewer_member_id not in responses
         ),
         "members": member_views,
@@ -191,7 +286,7 @@ def collective_operator_projection(
         "mediation_mission_id": _latest_mediation_child(session, journey.id, mission.id),
         "status": clarification.get("status"),
         "mission_status": mission.status,
-        "decision_epoch_current": not membership_stale,
+        "decision_epoch_current": not membership_stale and decision_is_current,
         "timeline": collective_operator_timeline(session, journey.id, member_rows),
     }
 

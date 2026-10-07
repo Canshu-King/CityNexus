@@ -207,6 +207,10 @@ def collective_decision_epoch(
                 "proposal_id": str(item.get("proposal_id")),
                 "plan_id": str(item.get("plan_id")),
                 "status": item.get("status"),
+                # Bind the choice not only to the option's label/fit, but to
+                # the server-computed physical facts that made this future
+                # executable when the room opened (and while it remains open).
+                "material_world_epoch": item.get("material_world_epoch"),
                 "fit_subject_place_ids": sorted(
                     {str(value) for value in (item.get("fit_subject_place_ids") or []) if value}
                 ),

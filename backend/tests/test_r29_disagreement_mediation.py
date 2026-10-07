@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 from uuid import UUID, uuid4
@@ -21,6 +22,7 @@ from app.db.models import (
     ActionApproval,
     Activity,
     AuditLog,
+    CollectiveAuthorityReceipt,
     Event,
     Journey,
     JourneyMember,
@@ -330,6 +332,270 @@ def _seed_r29_disagreement_http_fixture() -> dict[str, str | list[dict[str, obje
         "admin_member_id": admin_member_id, "base_id": base_id, "options": options,
         "garden_proposal_id": garden_proposal_id, "museum_proposal_id": museum_proposal_id,
     }
+
+
+def test_r59_collective_decision_tool_reuses_same_open_room_without_erasing_responses(monkeypatch) -> None:
+    """A replayed Agent tool call is not a second vote round."""
+    seeded = _seed_r29_disagreement_http_fixture()
+    options = seeded["options"]
+
+    def receipt(_session, _journey, _proposals):
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            "candidate_fit_matrix": [{"candidate_id": "server-fit-surface"}],
+            "collective_mediation": {
+                "classification": "HUMAN_TRADEOFF_REQUIRED",
+                "decision_relevant_member_ids": [
+                    seeded["owner_member_id"], seeded["admin_member_id"]
+                ],
+            },
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", receipt)
+    monkeypatch.setattr(collective_mediation, "collective_decision_epoch", lambda **_kwargs: "r59-epoch")
+    with SessionLocal() as session:
+        mission = session.get(JourneyMission, str(seeded["parent_id"]))
+        mission.clarification_json = "{}"
+        mission.status = "RUNNING"
+        session.commit()
+        request = AgentToolCall(
+            request_id="r59-decision-open-001",
+            journey_id=UUID(str(seeded["journey_id"])),
+            mission_id=UUID(str(seeded["parent_id"])),
+            trigger_event_id=UUID(str(seeded["event_id"])),
+        )
+        first = AgentToolGateway(session).request_collective_decision(request)
+        first_id = first["clarification"]["clarification_id"]
+        assert first["mission_status"] == "WAITING_FOR_MEMBERS"
+        assert first["clarification"]["candidate_surface_fingerprint"]
+        assert set(first["clarification"]["required_member_ids"]) == {
+            str(seeded["owner_member_id"]), str(seeded["admin_member_id"])
+        }
+        first["clarification"]["responses"][str(seeded["owner_member_id"])] = {
+            "member_id": str(seeded["owner_member_id"]),
+            "proposal_id": str(seeded["garden_proposal_id"]),
+        }
+        mission.clarification_json = json.dumps(first["clarification"], sort_keys=True)
+        session.commit()
+
+        replay = AgentToolGateway(session).request_collective_decision(request)
+        assert replay["reused"] is True
+        assert replay["clarification"]["clarification_id"] == first_id
+        assert replay["clarification"]["responses"] == first["clarification"]["responses"]
+
+
+def test_r59_member_response_replay_is_idempotent_and_cannot_change_first_choice(monkeypatch) -> None:
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
+    seeded = _seed_r29_disagreement_http_fixture()
+    options = seeded["options"]
+
+    def receipt(_session, _journey, _proposals):
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            "candidate_fit_matrix": [],
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", receipt)
+    monkeypatch.setattr(collective_mediation, "collective_decision_epoch", lambda **_kwargs: "r29-epoch")
+    try:
+        owner_token = issue_traveler_token(str(seeded["owner_id"]))
+        path = (
+            f"/api/v1/journeys/{seeded['journey_id']}/missions/"
+            f"{seeded['parent_id']}/collective-clarification/{seeded['owner_member_id']}"
+        )
+        request = {
+            "clarification_id": "r29-clarification",
+            "proposal_id": seeded["garden_proposal_id"],
+        }
+        headers = {"Authorization": f"Bearer {owner_token}"}
+        first = client.post(path, headers=headers, json=request)
+        assert first.status_code == 200, first.text
+        assert first.json()["status"] == "WAITING_FOR_MEMBERS"
+
+        replay = client.post(path, headers=headers, json=request)
+        assert replay.status_code == 200, replay.text
+        assert replay.json()["replayed"] is True
+        assert replay.json()["responses"] == first.json()["responses"]
+
+        change_vote = client.post(
+            path,
+            headers=headers,
+            json={
+                "clarification_id": "r29-clarification",
+                "proposal_id": seeded["museum_proposal_id"],
+            },
+        )
+        assert change_vote.status_code == 409
+        assert change_vote.json()["error"]["message"] == "COLLECTIVE_RESPONSE_ALREADY_RECORDED"
+        with SessionLocal() as session:
+            parent = session.get(JourneyMission, str(seeded["parent_id"]))
+            stored = json.loads(parent.clarification_json)
+            assert stored["responses"][str(seeded["owner_member_id"])]["proposal_id"] == str(seeded["garden_proposal_id"])
+            audit_rows = session.scalars(select(AuditLog).where(
+                AuditLog.action == "agent.collective_decision.response",
+                AuditLog.entity_id == str(seeded["parent_id"]),
+            )).all()
+            assert len(audit_rows) == 1
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_r59_fresh_shared_recovery_gateway_to_signed_members_authority_handoff(monkeypatch) -> None:
+    """A fresh shared incident opens one room; member answers mint authority, not a plan mutation."""
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
+    seeded = _seed_r29_disagreement_http_fixture()
+    options = seeded["options"]
+    candidate_surface = [
+        {
+            "candidate_id": str(item["proposal_id"]),
+            "status": "GROUNDED_FEASIBLE",
+            "member_fits": {},
+            "fairness": {"unacceptable_member_ids": []},
+        }
+        for item in options
+    ]
+
+    def receipt(_session, _journey, _proposals):
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            "candidate_fit_matrix": candidate_surface,
+            "collective_mediation": {
+                "classification": "HUMAN_TRADEOFF_REQUIRED",
+                "decision_relevant_member_ids": [
+                    seeded["owner_member_id"], seeded["admin_member_id"]
+                ],
+            },
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", receipt)
+    try:
+        with SessionLocal() as session:
+            journey = session.get(Journey, str(seeded["journey_id"]))
+            mission = session.get(JourneyMission, str(seeded["parent_id"]))
+            event = session.get(Event, str(seeded["event_id"]))
+            assert journey is not None and mission is not None and event is not None
+            active_before = str(journey.active_plan_version_id)
+            event.event_type = "USER_CHANGE"
+            event.provenance = "USER_REPORTED"
+            event.provider_key = "journey-group-recovery-request"
+            event.payload_json = json.dumps({"risk_authority": "USER_REPORTED"})
+            mission.clarification_json = "{}"
+            mission.resolved_intent_json = json.dumps(
+                {"objective_codes": ["COLLECTIVE_JOURNEY_RECOVERY"]},
+                sort_keys=True,
+            )
+            mission.requested_autonomy = "PLAN_ONLY"
+            mission.status = "RUNNING"
+            session.commit()
+
+            opened = AgentToolGateway(session).request_collective_decision(
+                AgentToolCall(
+                    request_id="r59-fresh-shared-recovery-open",
+                    journey_id=UUID(str(seeded["journey_id"])),
+                    mission_id=UUID(str(seeded["parent_id"])),
+                    trigger_event_id=UUID(str(seeded["event_id"])),
+                )
+            )
+            assert opened["mission_status"] == "WAITING_FOR_MEMBERS"
+            clarification = opened["clarification"]
+            assert clarification["status"] == "WAITING_FOR_MEMBERS"
+            assert len(clarification["candidate_options"]) == 2
+            assert set(clarification["required_member_ids"]) == {
+                str(seeded["owner_member_id"]), str(seeded["admin_member_id"])
+            }
+            assert not clarification.get("authority_receipt_id")
+            active_after_open = str(journey.active_plan_version_id)
+
+        owner_token = issue_traveler_token(str(seeded["owner_id"]))
+        admin_token = issue_traveler_token(str(seeded["admin_id"]))
+        response_path = (
+            f"/api/v1/journeys/{seeded['journey_id']}/missions/"
+            f"{seeded['parent_id']}/collective-clarification"
+        )
+        answer_payload = {
+            "clarification_id": clarification["clarification_id"],
+            "proposal_id": str(seeded["garden_proposal_id"]),
+        }
+        first = client.post(
+            f"{response_path}/{seeded['owner_member_id']}",
+            headers={"Authorization": f"Bearer {owner_token}"},
+            json=answer_payload,
+        )
+        assert first.status_code == 200, first.text
+        assert first.json()["status"] == "WAITING_FOR_MEMBERS"
+        assert first.json().get("authority_receipt_id") is None
+
+        second = client.post(
+            f"{response_path}/{seeded['admin_member_id']}",
+            headers={"Authorization": f"Bearer {admin_token}"},
+            json=answer_payload,
+        )
+        assert second.status_code == 200, second.text
+        resolved = second.json()
+        assert resolved["status"] == "RESOLVED"
+        assert resolved["baseline_preferences_unchanged"] is True
+        assert resolved["traveler_twin_unchanged"] is True
+        assert resolved["child_mission"]["authority_receipt_id"]
+        with SessionLocal() as verify:
+            journey = verify.get(Journey, str(seeded["journey_id"]))
+            parent = verify.get(JourneyMission, str(seeded["parent_id"]))
+            assert journey is not None and parent is not None
+            stored = json.loads(parent.clarification_json or "{}")
+            authority = verify.get(
+                CollectiveAuthorityReceipt,
+                str(stored["authority_receipt_id"]),
+            )
+            assert authority is not None
+            assert authority.proposal_id == str(seeded["garden_proposal_id"])
+            assert authority.authority_mode == "AUTHENTICATED_MEMBER_CONSENT"
+            assert json.loads(authority.required_member_ids_json) == sorted([
+                str(seeded["owner_member_id"]), str(seeded["admin_member_id"])
+            ])
+            assert str(journey.active_plan_version_id) == active_before == active_after_open
+            assert all(
+                item.status == "PRESENTED"
+                for item in verify.scalars(
+                    select(ReplanProposal).where(
+                        ReplanProposal.journey_id == journey.id
+                    )
+                ).all()
+            )
+            assert parent.status == "ANSWERED"
+            assert json.loads(
+                verify.get(JourneyMember, str(seeded["owner_member_id"])).preferences_json
+            ) == {"preferences": [{"key": "garden"}]}
+            assert json.loads(
+                verify.get(JourneyMember, str(seeded["admin_member_id"])).preferences_json
+            ) == {"preferences": [{"key": "museum"}]}
+            if os.environ.get("CITYNEXUS_R59_EXPERIMENT_RECEIPT") == "1":
+                print(json.dumps({
+                    "journey_id": journey.id,
+                    "member_ids": [seeded["owner_member_id"], seeded["admin_member_id"]],
+                    "event_id": seeded["event_id"],
+                    "event_type": "USER_CHANGE",
+                    "event_provenance": "USER_REPORTED_TEST_INPUT",
+                    "mission_id": parent.id,
+                    "mission_status": parent.status,
+                    "clarification_id": stored["clarification_id"],
+                    "required_member_ids": stored["required_member_ids"],
+                    "proposal_ids": [seeded["garden_proposal_id"], seeded["museum_proposal_id"]],
+                    "proposal_status": "PRESENTED_TEST_FIXTURE_NOT_PROVIDER_GROUNDED",
+                    "authority_receipt_id": authority.id,
+                    "active_plan_before": active_before,
+                    "active_plan_after": str(journey.active_plan_version_id),
+                    "mutation_count": 0,
+                    "external_agent": "NOT_CALLED",
+                }, ensure_ascii=False, sort_keys=True))
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
 
 
 def test_r29_conflicting_authenticated_responses_create_mediation_child(monkeypatch) -> None:

@@ -3927,6 +3927,22 @@ def answer_collective_clarification(
         item for item in receipt.get("proposal_collective_decisions", {}).values()
         if str(item.get("proposal_id")) in option_ids and item.get("status") == "GROUNDED_FEASIBLE"
     ]
+    # Include current physical truth in the decision epoch. A still-selectable
+    # proposal is not necessarily the same executable future after its route
+    # evidence or canonical Place facts have changed.
+    from app.collective_mediation import collective_material_world_epoch
+    for option in current_options:
+        option_plan = session.get(PlanVersion, str(option.get("plan_id") or ""))
+        if option_plan is None:
+            continue
+        option["material_world_epoch"] = collective_material_world_epoch(
+            collective_material_world_basis(
+                session,
+                journey,
+                option_plan,
+                fit_subject_place_ids=list(option.get("fit_subject_place_ids") or []),
+            )
+        )
     members = active_journey_members_with_capabilities(session, journey).get("members", [])
     decision_epoch = collective_decision_epoch(
         journey_id=journey.id,
@@ -3937,12 +3953,40 @@ def answer_collective_clarification(
         required_member_ids=required,
         members=members,
     )
-    if decision_epoch != stored.get("decision_epoch"):
+    stored_surface_fingerprint = stored.get("candidate_surface_fingerprint")
+    current_option_ids = {str(item.get("proposal_id") or "") for item in current_options}
+    if (
+        decision_epoch != stored.get("decision_epoch")
+        or (
+            stored_surface_fingerprint is not None
+            and stored_surface_fingerprint != current_surface_fingerprint
+        )
+        or current_option_ids != option_ids
+        or str(stored.get("base_plan_version_id") or "")
+        != str(journey.active_plan_version_id or "")
+    ):
         stored["status"] = "STALE"
         parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
         session.commit()
         raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
     responses = dict(stored.get("responses") or {})
+    previous_response = responses.get(str(member_id))
+    if isinstance(previous_response, dict):
+        if str(previous_response.get("proposal_id") or "") != str(payload.proposal_id):
+            raise HTTPException(409, "COLLECTIVE_RESPONSE_ALREADY_RECORDED")
+        # A retried transport request must not create another audit, advance a
+        # response count, or reopen a child mission.
+        return {
+            "journey_id": journey.id,
+            "mission_id": parent.id,
+            "clarification_id": stored.get("clarification_id"),
+            "status": stored.get("status"),
+            "responses": responses,
+            "baseline_preferences_unchanged": True,
+            "traveler_twin_unchanged": True,
+            "child_mission": None,
+            "replayed": True,
+        }
     responses[str(member_id)] = {"proposal_id": str(payload.proposal_id), "member_id": str(member_id)}
     stored["responses"] = responses
     if required.issubset(responses):

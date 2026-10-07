@@ -670,6 +670,11 @@ export function LiveRecovery({
     "RECOVERY_PROPOSAL_READY",
     "RECOVERY_EXTERNAL_AGENT_BLOCKED",
     "RECOVERY_APPLIED",
+    "COLLECTIVE_WAITING_FOR_MEMBERS",
+    "COLLECTIVE_MEDIATING",
+    "COLLECTIVE_AUTHORIZED",
+    "COLLECTIVE_STALE",
+    "COLLECTIVE_DECISION_REQUIRED",
   ].includes(groupRecovery.state));
   const guideToGroup = async () => {
     if (!onRefreshLocation || busy !== null || !groupPresence?.can_guide) {
@@ -1044,6 +1049,21 @@ export function LiveRecovery({
                         : (zh ? `恢复任务状态：${groupRecovery.mission.status}` : `Recovery task: ${groupRecovery.mission.status}`)}
                   </small>
                 )}
+                {groupRecovery.collective_decision && (
+                  <small data-testid="journey-group-recovery-collective-state">
+                    {groupRecovery.collective_decision.state === "WAITING_FOR_MEMBERS"
+                      ? (zh
+                        ? `共享恢复选择已开放：${groupRecovery.collective_decision.response_count}/${groupRecovery.collective_decision.required_count} 位相关同行者已回答。${groupRecovery.collective_decision.viewer_has_responded ? "你的选择已记录，正在等其他人。" : "请在下方共享决策区只提交你自己的选择。"} 行程尚未改变。`
+                        : `The shared recovery choice is open: ${groupRecovery.collective_decision.response_count}/${groupRecovery.collective_decision.required_count} affected travellers have answered. ${groupRecovery.collective_decision.viewer_has_responded ? "Your choice is recorded; CityNexus is waiting for the others." : "Choose only for yourself in the shared decision room below."} The Journey has not changed.`)
+                      : groupRecovery.collective_decision.state === "MEDIATING"
+                        ? (zh ? "同行者的选择有分歧；CityNexus 保留分歧并继续寻找可接受的下一步，尚未修改行程。" : "The travellers disagree. CityNexus is preserving that disagreement while looking for an acceptable next step; the Journey is unchanged.")
+                        : groupRecovery.collective_decision.state === "COLLECTIVE_AUTHORIZED"
+                          ? (zh ? "服务器已为这个确切方案记录当前集体授权；这不等于方案已批准或已应用。" : "The server has a current collective authority receipt for this exact proposal; that does not mean it has been approved or applied.")
+                          : groupRecovery.collective_decision.state === "COLLECTIVE_STALE"
+                            ? (zh ? "行程、成员或方案事实已经变化，旧选择按钮已失效；需要重新计算。" : "The trip, membership, or proposal facts changed. Old choices are no longer valid and must be recomputed.")
+                            : (zh ? "成员回答已记录，但当前没有可用于推进此方案的集体授权。行程尚未改变。" : "Member responses are recorded, but there is no current collective authority to carry this proposal forward. The Journey is unchanged.")}
+                  </small>
+                )}
                 {groupRecoveryResult?.status === "RECOVERY_EXTERNAL_AGENT_BLOCKED" && !groupRecovery.mission && (
                   <small data-testid="journey-group-recovery-agent-status">{zh ? "Agent 暂时不可用；可以继续按当前集合路线会合。" : "The Agent is unavailable; you can still follow the current rendezvous route."}</small>
                 )}
@@ -1138,9 +1158,13 @@ export function LiveRecovery({
               {operator.collective.state === "MEDIATING"
                 ? (zh ? "大家的选择不同，CityNexus 正在寻找兼顾彼此的方案。" : "Your choices differ. CityNexus is looking for a compromise that protects everyone.")
                 : operator.collective.state === "COLLECTIVE_AUTHORIZED"
-                  ? (zh ? "大家已同意，正在继续执行共享行程。" : "Everyone agreed. The shared trip is continuing.")
+                  ? (zh ? "服务器已记录此方案所需的集体授权；行程仍须经过正常审批与接受边界。" : "The server recorded collective authority for this proposal; normal approval and acceptance boundaries still apply.")
                   : operator.collective.state === "COLLECTIVE_STALE"
                     ? (zh ? "行程情况已变化，需要重新确认。" : "The trip changed, so this group decision needs to be renewed.")
+                    : operator.collective.state === "WAITING_FOR_MEMBERS"
+                      ? (zh ? `共享恢复方案正在等同行者决定：${operator.collective.response_count}/${operator.collective.required_count} 已回答；行程尚未改变。` : `The shared recovery is waiting for travellers: ${operator.collective.response_count}/${operator.collective.required_count} have answered; the Journey is unchanged.`)
+                      : operator.collective.state === "COLLECTIVE_READY"
+                        ? (zh ? "相关同行者都已回答；服务器仍在核对当前权限，行程没有自动改变。" : "All required travellers have answered; the server is still checking current authority. The Journey has not changed automatically.")
                     : (zh
                       ? `这次变化影响 ${operator.collective.required_count} 位同行者，已回答 ${operator.collective.response_count} 位。`
                       : `This change affects ${operator.collective.required_count} travellers; ${operator.collective.response_count} have responded.`)}
