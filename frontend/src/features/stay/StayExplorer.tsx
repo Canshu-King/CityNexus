@@ -33,6 +33,10 @@ export function StayExplorer({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale === "zh-CN";
+  // The stay's check-in/check-out are committed instants at the stay's own place; read them in the
+  // journey's zone, and name it only when that zone can actually be used.
+  const stayTz = data.journey.timezone || "UTC";
+  const stayTzUsable = zoneIsUsable(data.journey.timezone);
   /* ORD-0511: the empty rung used to be a dead end -- it told the traveller there was nothing and
      offered no way to find out whether the server could produce something. `door` is what this trip
      actually answered to the one call this screen can make; it is never the source of the cards. */
@@ -166,7 +170,10 @@ export function StayExplorer({
             </div>
             <div>
               <dt>{t("stay.checkInOut")}</dt>
-              <dd>{date(selected?.stay.check_in_at, locale)} → {date(selected?.stay.check_out_at, locale)}</dd>
+              <dd>
+                {dateInZone(selected?.stay.check_in_at, locale, stayTz)} → {dateInZone(selected?.stay.check_out_at, locale, stayTz)}
+                {stayTzUsable ? ` · ${t("hub.zoneAttribution", { zone: stayTz })}` : ""}
+              </dd>
             </div>
             <div>
               <dt>{t("stay.cancellation")}</dt>
@@ -307,6 +314,24 @@ function modeLabel(mode: string | undefined, zh: boolean): string {
   return hit ? (zh ? hit[0] : hit[1]) : String(mode ?? "—");
 }
 function date(value?: string, locale = "en") { return value ? new Intl.DateTimeFormat(locale === "zh-CN" ? "zh-CN" : "en-GB", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "—"; }
+
+/** Is this string a zone `Intl` will accept?  Same rule the shell uses, kept local so this file
+ *  does not import the shell's component module back. */
+function zoneIsUsable(zone: string | undefined | null): boolean {
+  if (!zone) return false;
+  try { new Intl.DateTimeFormat("en-GB", { timeZone: zone }); return true; } catch { return false; }
+}
+
+/** A check-in/check-out is a committed instant at the stay's own place, so it is read in the
+ *  journey's zone -- not the device's -- and says which zone when that zone can be used. */
+function dateInZone(value: string | undefined, locale: string, zone: string) {
+  if (!value) return "—";
+  try {
+    return new Intl.DateTimeFormat(locale === "zh-CN" ? "zh-CN" : "en-GB", { timeZone: zone, month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value));
+  } catch {
+    return date(value, locale) + (locale === "zh-CN" ? " · 本设备时间" : " · this device's time");
+  }
+}
 
 // A property with no real captured evidence must not be dressed up as an
 // evidence card.  Absence is reported as absence, never as a 0% confidence

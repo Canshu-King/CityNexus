@@ -1708,6 +1708,7 @@ export function V8Experience() {
     return (
       <OfflineJourneyView
         value={offline}
+        timezone={data?.journey?.timezone ?? null}
         originAnswered={failure?.attribution.evidence_kind === "HTTP_RESPONSE"}
         message={
           message
@@ -2053,7 +2054,12 @@ export function V8Experience() {
                           <span>
                             {item.type.replaceAll("_", " ").toLowerCase()}
                           </span>
-                          <small>{date(item.occurred_at, locale)}</small>
+                          <small>
+                            {dateInZone(item.occurred_at, locale, data.journey.timezone || "UTC")}
+                            {zoneIsUsable(data.journey.timezone)
+                              ? ` · ${t("hub.zoneAttribution", { zone: data.journey.timezone })}`
+                              : ""}
+                          </small>
                         </article>
                       ))
                     ) : (
@@ -3658,7 +3664,7 @@ function Live({
           <p className="v8-kicker">
             {t("live.kicker")}{" "}
             {offline
-              ? t("live.saved", { date: date(offline.updated_at, locale) })
+              ? t("live.savedDevice", { date: date(offline.updated_at, locale) })
               : t("live.syncing")}
           </p>
           <h1>{t("live.title")}</h1>
@@ -4392,6 +4398,10 @@ function Bookings({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  // A ticket's scheduled departure/arrival is a committed instant: rendered in the journey's zone,
+  // and named only when that zone can actually be used.
+  const ticketTz = data.journey.timezone || "UTC";
+  const ticketTzUsable = zoneIsUsable(data.journey.timezone);
   const [input, setInput] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
   const submit = async () => {
@@ -4499,8 +4509,9 @@ function Bookings({
                   {reservationTitle(item) ?? t("bookings.reservationUnnamed")}
                 </h2>
                 <p>
-                  {date(item.scheduled_departure_at, locale)} →{" "}
-                  {date(item.scheduled_arrival_at, locale)}
+                  {dateInZone(item.scheduled_departure_at, locale, ticketTz)} →{" "}
+                  {dateInZone(item.scheduled_arrival_at, locale, ticketTz)}
+                  {ticketTzUsable ? ` · ${t("hub.zoneAttribution", { zone: ticketTz })}` : ""}
                 </p>
                 {/* The reference is a fact the traveller checks the ticket against, so it stays on the
                     card -- as its own labelled line, not as the title. */}
@@ -4602,14 +4613,21 @@ function OfflineJourneyView({
   value,
   message,
   originAnswered = false,
+  timezone,
 }: {
   value: OfflineJourney;
   message: string | null;
   /** Was this copy reached because the origin answered badly (HTTP_RESPONSE), or never answered? */
   originAnswered?: boolean;
+  /* The offline copy carries no zone of its own (see `OfflineJourney`), so the reading has to be
+     told which zone the moments belong to -- otherwise it can only show the device clock, which is
+     a different moment from the one the traveller committed to. */
+  timezone?: string | null;
 }) {
   const t = useT();
   const { locale } = useLocale();
+  const offlineTz = timezone || "UTC";
+  const offlineTzUsable = zoneIsUsable(timezone);
   const stateKey = (s: string) =>
     (
       ({
@@ -4671,7 +4689,8 @@ function OfflineJourneyView({
           <article key={item.id}>
             <b>{item.title}</b>
             <span>
-              {date(item.start_at, locale)} → {date(item.end_at, locale)}
+              {dateInZone(item.start_at, locale, offlineTz)} → {dateInZone(item.end_at, locale, offlineTz)}
+              {offlineTzUsable ? ` · ${t("hub.zoneAttribution", { zone: offlineTz })}` : ""}
             </span>
           </article>
         ))}

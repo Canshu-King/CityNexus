@@ -33,7 +33,10 @@ FORMATTERS = ("Intl.DateTimeFormat", "dateInZone", "toLocaleString", "toLocaleTi
 #    the locale table, so looking for the words at the call site would read the wrong layer.
 ZONE_LABEL = re.compile(
     r"timeZoneName|utcOffset|\bUTC\b|\bGMT\b|\bCST\b|时区|当地时间|本地时间|北京时?间"
-    r"|zoneAttribution|zone_attribution")
+    r"|zoneAttribution|zone_attribution"
+    # a DEVICE-side moment that says so is placed too: "saved on this device at X" answers the
+    # question this scanner asks, and refusing it would push a correct reading into the count.
+    r"|savedDevice|deviceTime|本设备|this device")
 
 
 def src_files():
@@ -97,11 +100,10 @@ def is_render_site(line: str) -> bool:
     handlers as if they were display sites -- counting a definition as a finding.
     """
     s = line.strip()
-    # money and other number formatting also uses toLocaleString; a formatted AMOUNT is not a
-    # moment, and counting it is how a scanner invents findings in someone else's domain.
-    if re.search(r"\bamount|Amount|minor|Minor|currency|Currency|\bcode\b|\bmajor\b", s):
-        return False
-    if s.startswith(("function ", "export function ", "const ", "return new Intl", "new Intl")):
+    # A definition, an event handler, or a bare statement is not a display -- including `try { ... }`
+    # wrappers, which is how my own zone-usability helper slipped into the count as a "finding".
+    if s.startswith(("function ", "export function ", "const ", "return new Intl", "new Intl",
+                     "try {", "} catch", "if (", "return ")):
         return False
     if "onChange=" in s or "onChange:" in s:
         return False
