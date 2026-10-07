@@ -13,6 +13,7 @@ from sqlalchemy import select
 import app.collective_mediation as collective_mediation
 import app.main as main_module
 from app.collective_authority import AUTHENTICATED_MEMBER_CONSENT
+from app.collective_operator import collective_operator_projection
 from app.core.config import settings
 from app.db.models import (
     AuditLog,
@@ -831,3 +832,81 @@ def test_r60_reconsent_lineage_keeps_original_group_recovery_root() -> None:
         assert root.id == str(seeded["room_id"])
         assert context["incident_key"] == str(seeded["incident_key"])
         assert "reconsent_for_clarification_id" not in context
+
+
+def test_r60_operator_hides_apply_when_bound_recovery_epoch_no_longer_matches_reality(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r60_apply_world()
+    options = seeded["options"]
+
+    def current_receipt(_session, _journey, _proposals):
+        return {
+            "proposal_collective_decisions": {
+                str(item["proposal_id"]): item for item in options
+            },
+            "candidate_fit_matrix": [{"candidate_id": "r60-operator-surface"}],
+            "collective_mediation": {
+                "classification": "HUMAN_TRADEOFF_REQUIRED",
+                "decision_relevant_member_ids": [
+                    str(seeded["owner_member_id"]),
+                    str(seeded["admin_member_id"]),
+                ],
+            },
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", current_receipt)
+    monkeypatch.setattr(
+        collective_mediation,
+        "collective_decision_epoch",
+        lambda **_kwargs: str(seeded["decision_epoch"]),
+    )
+    import app.collective_authority as collective_authority
+
+    monkeypatch.setattr(
+        collective_authority,
+        "candidate_surface_fingerprint",
+        lambda _surface: str(seeded["surface_fingerprint"]),
+    )
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        assert journey is not None
+        fresh = collective_operator_projection(
+            session,
+            journey,
+            viewer_member_id=str(seeded["owner_member_id"]),
+        )
+        assert fresh["state"] == "COLLECTIVE_AUTHORIZED"
+        assert fresh["recovery_epoch_current"] is True
+        assert fresh["viewer_can_apply"] is True
+
+        now = _now()
+        session.add(
+            Event(
+                id=str(uuid4()),
+                journey_id=journey.id,
+                provider_key="r60-current-world-change",
+                provenance="SYSTEM_DERIVED",
+                event_type="WEATHER",
+                severity="MAJOR",
+                status="DETECTED",
+                occurred_at=now,
+                detected_at=now,
+                payload_json=json.dumps(
+                    {"incident_fingerprint": "r60-new-world-fact"},
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+        )
+        session.commit()
+
+        stale = collective_operator_projection(
+            session,
+            journey,
+            viewer_member_id=str(seeded["owner_member_id"]),
+        )
+        assert stale["recovery_epoch_current"] is False
+        assert stale["state"] == "COLLECTIVE_STALE"
+        assert stale["viewer_can_apply"] is False
