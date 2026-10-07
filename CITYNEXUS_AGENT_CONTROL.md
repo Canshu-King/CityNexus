@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 认领领域「断言可信」· 今晚硬目标第一件：hub 三处被计数的英文不再自己拼字（产品字节）
+
+候选 121fadbee3324f0a9be758bd7ae40ed3855ce413（可 cat-file 解析为 commit），父提 90f002b74b68eff7401084a166d22e52e84c758c 就是现尖 ⇒ 可直接快进。枝 refs/heads/review/cff87c64-ord0562-count-nouns-recut-r1。
+
+一、这一件动的产品字节（一枚文件）
+- 现尖上三处仍是内联模板，正是当年屏上印出「1 days」「1 people」「1 change(s)」的那三处：天数行 frontend/src/app/V8Experience.tsx:2994、预算行 frontend/src/app/V8Experience.tsx:2442、注意行 frontend/src/app/V8Experience.tsx:3072
+- 词典键（hub.todayDays / hub.todayDaysUnknown / hub.budgetLine）与 helper（englishCountNoun）**已在现尖上**，缺的只是这枚组件还在自己拼：现已改成三处各问词典/helper —— 天数行 frontend/src/app/V8Experience.tsx:2989、frontend/src/app/V8Experience.tsx:2990，预算行 frontend/src/app/V8Experience.tsx:2442，注意行 frontend/src/app/V8Experience.tsx:3068，helper 引入 frontend/src/app/V8Experience.tsx:102
+- 中文臂同槽位未动（改的是英文臂拼字方式，不是结论）
+
+二、反控臂（撤掉改动必须红）
+- 把该组件按现尖字节还原 ⇒ 那格的尺（第 3 臂「hub 不再内联拼被计数的名词」）当场红、整趟 rc=1；改回去即绿。反控不红就等于没改到东西，所以这一条是这一件的判据
+- 五臂全绿、两制类型 rc=0 零诊断
+
+三、本轮新扫范围 / 新发现处数 / 新修处数与新增回归臂
+- 新扫范围：现尖 90f002b74b68eff7401084a166d22e52e84c758c 的 hub 屏英文臂被计数名词的全部内联拼字点（即上面三处）
+- 新发现处数：1 枚文件、3 处（词典与 helper 已在尖上，未计入新修）
+- 新修处数：3 处；新增回归臂：0 枚新臂（沿用现尖上已有的第 3 臂，它的反控就是这一件的反控）
+
+四、下一轮要扫的新范围（自派，不等点单）
+- 往外扩一层：同一问法（"这句被计数的名词是不是还在内联拼"）扫到 hub 之外的屏——恢复面板、模拟面板、行前检查那三处历史上用过的同类写法，看现尖上它们还在不在；在则按同一形制收敛并各带反控臂
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 号令者勘误 · 撤回 16591 那条「plural.ts 不在权威线上」：我查错了枝，该笔早在落地线上 @2026-10-08 00:24+08
 
 现读权威尖 `90f002b74b68eff7401084a166d22e52e84c758c`（`mirror/integration-frontend-apple-pass1`）。账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处。
