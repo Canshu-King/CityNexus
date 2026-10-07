@@ -2706,7 +2706,25 @@ paths:
     get:
       operationId: getJourneyExecutionClock
       responses:
-        '200': {description: Server execution clock for the Journey timezone, content: {application/json: {schema: {type: object}}}}
+        '200':
+          description: >-
+            Server execution clock for the Journey timezone.  `now` is the instant; `timezone` is the
+            zone the journey asked for; `used_timezone` is the zone `now` is actually in and
+            `timezone_honoured` says whether the two are the same.  Without those last two a payload
+            could name one zone and carry an instant from another, with no field to tell.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [journey_id, now, timezone, used_timezone, timezone_honoured, source]
+                properties:
+                  journey_id: {type: string, format: uuid}
+                  now: {type: string, format: date-time}
+                  timezone: {type: string}
+                  used_timezone: {type: string, nullable: true}
+                  timezone_honoured: {type: boolean}
+                  source: {type: string}
+                  current_activity_id: {type: string, format: uuid, nullable: true}
   /journeys/{journey_id}/inbox/{draft_id}/confirm:
     post:
       operationId: confirmJourneyReservation

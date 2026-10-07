@@ -8276,13 +8276,24 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Server execution clock for the Journey timezone */
+            /** @description Server execution clock for the Journey timezone.  `now` is the instant; `timezone` is the zone the journey asked for; `used_timezone` is the zone `now` is actually in and `timezone_honoured` says whether the two are the same.  Without those last two a payload could name one zone and carry an instant from another, with no field to tell. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: date-time */
+                        now: string;
+                        timezone: string;
+                        used_timezone: string | null;
+                        timezone_honoured: boolean;
+                        source: string;
+                        /** Format: uuid */
+                        current_activity_id?: string | null;
+                    };
                 };
             };
         };
