@@ -3906,6 +3906,21 @@ def answer_collective_clarification(
     required = {str(item) for item in stored.get("required_member_ids") or []}
     if str(member_id) not in required:
         raise HTTPException(403, "member is not decision-relevant for this collective trade-off")
+    can_update_journey = session.scalar(
+        select(JourneyRoleCapability).where(
+            JourneyRoleCapability.role == member.role,
+            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+        )
+    )
+    if can_update_journey is None:
+        # UI projections hide response controls for read-only roles, but the
+        # HTTP authority boundary must enforce the same rule independently.
+        # A signed principal proves identity; it does not create a capability
+        # their current Journey role does not have.
+        raise HTTPException(
+            403,
+            "Journey member role does not have JOURNEY_UPDATE authority",
+        )
     options = [item for item in stored.get("candidate_options") or [] if isinstance(item, dict)]
     option_ids = {str(item.get("proposal_id")) for item in options}
     if str(payload.proposal_id) not in option_ids:
