@@ -21,7 +21,11 @@ from uuid import uuid4
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.temporal import derive_journey_temporal_shape
+from app.core.temporal import (
+    ANCHOR_ARRIVAL_UNNAMED,
+    ANCHOR_DEPARTURE_UNNAMED,
+    derive_journey_temporal_shape,
+)
 from app.db.models import (
     Activity,
     AccommodationOfferSnapshot,
@@ -82,6 +86,12 @@ def _load(value: str | None, fallback: Any) -> Any:
         return fallback
 
 
+_UNNAMED_ANCHOR_FOR_KIND = {
+    "arrival": ANCHOR_ARRIVAL_UNNAMED,
+    "departure": ANCHOR_DEPARTURE_UNNAMED,
+}
+
+
 def _journey_day_rhythm(session: Session, journey: Journey) -> DayRhythm | None:
     for item in planning_preference_items(session, journey.traveler_id, journey.id):
         if str(getattr(item, "preference_key", "")) != "day_rhythm":
@@ -97,14 +107,25 @@ def _now() -> str:
 
 
 def _anchor(context: JourneyTripContext | None, journey: Journey, kind: str) -> dict[str, Any]:
+    """One anchor for this planner, in the same shape `stay_mobility._anchor` sends out.
+
+    The moment always answers - it is the journey's own window.  The place does not: the fallback
+    here used to be `kind.title()`, i.e. the strings "Arrival" and "Departure", and this file
+    turns an anchor's location straight into a `Place` name (see `_structural_nodes`), so an
+    unnamed anchor became a stop on the traveller's plan called "Arrival".
+    """
+
     raw = context.arrival_anchor_json if context and kind == "arrival" else (
         context.departure_anchor_json if context else "{}"
     )
     fallback = journey.start_at if kind == "arrival" else journey.end_at
     value = _load(raw, {})
+    named = value.get("location")
+    location = str(named).strip() if named and str(named).strip() else None
     return {
         "at": str(value.get("at") or fallback),
-        "location": str(value.get("location") or kind.title()),
+        "location": location,
+        "location_declared": location is not None,
         "latitude": value.get("latitude"),
         "longitude": value.get("longitude"),
     }
@@ -293,25 +314,42 @@ def _structural_nodes(
     arrival_at = datetime.fromisoformat(arrival["at"])
     departure_at = datetime.fromisoformat(departure["at"])
     center_lat, center_lon = _city_center(journey)
+    # An anchor nobody named still has to become a node the plan can sequence, so the place
+    # exists; what it is called is the part that was a lie.  These two titles used to be the
+    # anchor's own `location`, which read `kind.title()` - so both anchors of an unnamed journey
+    # appeared on the plan as stops called "Arrival" and "Departure".
     arrival_place = _ensure_place(
         session=session,
         journey=journey,
         key="arrival-anchor",
-        title=arrival["location"],
+        title=arrival["location"] or ANCHOR_ARRIVAL_UNNAMED,
         category="arrival",
         latitude=float(arrival.get("latitude") or center_lat - 0.015),
         longitude=float(arrival.get("longitude") or center_lon - 0.02),
-        metadata={"anchor": "ARRIVAL", "commitment_ids": c4_ids},
+        metadata={
+            "anchor": "ARRIVAL",
+            "commitment_ids": c4_ids,
+            # The coordinates above are the planner's own placement around the city centre when
+            # the anchor carried none, so a reader can tell a surveyed point from a stand-in.
+            "location_declared": arrival.get("location_declared"),
+            "coordinates_declared": arrival.get("latitude") is not None
+            and arrival.get("longitude") is not None,
+        },
     )
     departure_place = _ensure_place(
         session=session,
         journey=journey,
         key="departure-anchor",
-        title=departure["location"],
+        title=departure["location"] or ANCHOR_DEPARTURE_UNNAMED,
         category="departure",
         latitude=float(departure.get("latitude") or center_lat + 0.06),
         longitude=float(departure.get("longitude") or center_lon + 0.08),
-        metadata={"anchor": "DEPARTURE"},
+        metadata={
+            "anchor": "DEPARTURE",
+            "location_declared": departure.get("location_declared"),
+            "coordinates_declared": departure.get("latitude") is not None
+            and departure.get("longitude") is not None,
+        },
     )
     stay_place = None
     check_in_place = None
@@ -1165,7 +1203,19 @@ def compose_authoritative_multiday(
                 {
                     "latitude": server_anchor.get("latitude"),
                     "longitude": server_anchor.get("longitude"),
-                    "location": target.get("location") or server_anchor.get("location") or "Journey anchor",
+                    # The planner may have named this anchor since (a discovery run can supply
+                    # one); if neither named it, say so rather than inventing a place name.
+                    "location": (
+                        target.get("location")
+                        or server_anchor.get("location")
+                        or _UNNAMED_ANCHOR_FOR_KIND.get(
+                            "arrival" if target is arrival else "departure",
+                            ANCHOR_ARRIVAL_UNNAMED,
+                        )
+                    ),
+                    "location_declared": bool(
+                        target.get("location") or server_anchor.get("location")
+                    ),
                 }
             )
         if arrival.get("latitude") is None and fallback_anchor.get("latitude") is not None:
@@ -1173,7 +1223,14 @@ def compose_authoritative_multiday(
                 {
                     "latitude": fallback_anchor.get("latitude"),
                     "longitude": fallback_anchor.get("longitude"),
-                    "location": arrival.get("location") or fallback_anchor.get("location") or "Journey anchor",
+                    "location": (
+                        arrival.get("location")
+                        or fallback_anchor.get("location")
+                        or ANCHOR_ARRIVAL_UNNAMED
+                    ),
+                    "location_declared": bool(
+                        arrival.get("location") or fallback_anchor.get("location")
+                    ),
                 }
             )
         if departure.get("latitude") is None and fallback_anchor.get("latitude") is not None:
@@ -1181,7 +1238,14 @@ def compose_authoritative_multiday(
                 {
                     "latitude": fallback_anchor.get("latitude"),
                     "longitude": fallback_anchor.get("longitude"),
-                    "location": departure.get("location") or fallback_anchor.get("location") or "Journey departure",
+                    "location": (
+                        departure.get("location")
+                        or fallback_anchor.get("location")
+                        or ANCHOR_DEPARTURE_UNNAMED
+                    ),
+                    "location_declared": bool(
+                        departure.get("location") or fallback_anchor.get("location")
+                    ),
                 }
             )
     arrival_at = datetime.fromisoformat(arrival["at"])

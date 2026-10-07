@@ -165,3 +165,16 @@ def derive_budget_reference(
         floor_comparable=currency == BUDGET_DAILY_FLOOR_CURRENCY,
         reason=None if currency == BUDGET_DAILY_FLOOR_CURRENCY else FLOOR_NOT_COMPARABLE,
     )
+
+
+# What an anchor with no named place calls itself when something has to put it on screen.
+# Two planners build node titles out of an anchor's location - `planning/authoritative_v12.py`
+# (which writes a `Place` row) and `stay_mobility.build_candidate_nodes` - and both used to fall
+# back to the role words "Arrival" / "Departure".  A role word is not somewhere anyone can arrive
+# at, and these are the two entries guaranteed to be on every plan, so naming them honestly also
+# tells the traveller which two stops are the ones nobody located for them.
+#
+# They live here rather than in either planner because the two import each other, so a shared
+# constant in either one would be a circular import.
+ANCHOR_ARRIVAL_UNNAMED = "Arrival point not named"
+ANCHOR_DEPARTURE_UNNAMED = "Departure point not named"

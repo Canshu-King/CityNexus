@@ -1157,8 +1157,10 @@ def confirm_reservation_draft(
     if context is None:
         context = JourneyTripContext(
             journey_id=journey.id,
-            arrival_anchor_json=_json({"at": journey.start_at, "location": "Arrival"}),
-            departure_anchor_json=_json({"at": journey.end_at, "location": "Departure"}),
+            # An imported reservation names a place only for the leg it is about; the other
+            # anchor stays unnamed rather than carrying the role word as if it were a place.
+            arrival_anchor_json=_json({"at": journey.start_at, "location": None}),
+            departure_anchor_json=_json({"at": journey.end_at, "location": None}),
             party_size=1,
             occupancy_json=_json({"adults": 1}),
             stay_budget_amount_minor=0,
@@ -1184,9 +1186,10 @@ def confirm_reservation_draft(
         context.arrival_anchor_json = _json(
             {
                 "at": str(data["scheduled_arrival_at"]),
-                "location": str(
-                    destination.get("name") or destination.get("location") or "Arrival"
-                ),
+                # A ticket that names no station says nothing about where the traveller arrives.
+                # "Arrival" used to stand in for that, and it reached the screen as the title of
+                # a place on the plan.
+                "location": str(destination.get("name") or destination.get("location") or "") or None,
                 "latitude": destination.get("latitude"),
                 "longitude": destination.get("longitude"),
                 "reservation_id": reservation.id,
@@ -1203,7 +1206,8 @@ def confirm_reservation_draft(
         context.departure_anchor_json = _json(
             {
                 "at": str(data["scheduled_departure_at"]),
-                "location": str(origin.get("name") or origin.get("location") or "Departure"),
+                # Same reasoning as the arrival anchor above.
+                "location": str(origin.get("name") or origin.get("location") or "") or None,
                 "latitude": origin.get("latitude"),
                 "longitude": origin.get("longitude"),
                 "reservation_id": reservation.id,

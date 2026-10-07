@@ -23,6 +23,8 @@ from app.anywhere_capability import (
     READY,
 )
 from app.core.temporal import (
+    ANCHOR_ARRIVAL_UNNAMED,
+    ANCHOR_DEPARTURE_UNNAMED,
     MAX_JOURNEY_DAYS,
     MIN_JOURNEY_DAYS,
     WINDOW_IN,
@@ -168,8 +170,13 @@ def _context(session: Session, journey: Journey) -> JourneyTripContext:
         now = _now()
         row = JourneyTripContext(
             journey_id=journey.id,
-            arrival_anchor_json=_json({"at": journey.start_at, "location": "Arrival"}),
-            departure_anchor_json=_json({"at": journey.end_at, "location": "Departure"}),
+            # The moment is a fact - it is the journey's own window.  The *place* is not: nobody
+            # named one here, and "Arrival" is a word about the role, not somewhere anyone can
+            # arrive at.  It used to be written as the location, and the authoritative planner
+            # turns an anchor's location straight into a Place name, so the two anchors on every
+            # journey that reached this path were titled "Arrival" and "Departure" on screen.
+            arrival_anchor_json=_json({"at": journey.start_at, "location": None}),
+            departure_anchor_json=_json({"at": journey.end_at, "location": None}),
             party_size=1,
             occupancy_json=_json({"adults": 1}),
             stay_budget_amount_minor=0,
@@ -226,12 +233,25 @@ def _operations_context(session: Session, journey: Journey) -> JourneyOperations
 
 
 def _anchor(context: JourneyTripContext, journey: Journey, kind: str) -> dict[str, Any]:
+    """One anchor in the shape that leaves this process.
+
+    `at` always answers, because the journey's own window is a fact.  The *place* does not: this
+    used to fall back to `kind.title()` - the strings "Arrival" and "Departure" - and the
+    authoritative planner turns an anchor's location straight into a `Place` name, so on every
+    journey whose anchor nobody had named, the plan showed two stops called "Arrival" and
+    "Departure" at coordinates the planner had invented around the city centre.  A role word is
+    not somewhere anyone can arrive at, so silence now travels as null with the state beside it.
+    """
+
     raw = context.arrival_anchor_json if kind == "arrival" else context.departure_anchor_json
     fallback_at = journey.start_at if kind == "arrival" else journey.end_at
     value = _load(raw, {})
+    named = value.get("location")
+    location = str(named).strip() if named and str(named).strip() else None
     return {
         "at": str(value.get("at") or fallback_at),
-        "location": str(value.get("location") or kind.title()),
+        "location": location,
+        "location_declared": location is not None,
         "latitude": value.get("latitude"),
         "longitude": value.get("longitude"),
         "reservation_id": value.get("reservation_id"),
@@ -540,10 +560,16 @@ def build_candidate_nodes(
     arrival_lon = float(arrival.get("longitude") or center_lon - 0.028)
     departure_lat = float(departure.get("latitude") or center_lat + 0.072)
     departure_lon = float(departure.get("longitude") or center_lon + 0.095)
+    # Same two anchors as the authoritative planner's, and the same rule: an anchor nobody named
+    # is a moment on the trip, not a place with a name.  Both lists below take these as their
+    # node titles, so leaving the role word in here put "Arrival" on the traveller's plan twice
+    # over - once from here and once from `authoritative_v12`.
+    arrival_title = arrival["location"] or ANCHOR_ARRIVAL_UNNAMED
+    departure_title = departure["location"] or ANCHOR_DEPARTURE_UNNAMED
     events: list[GraphNode] = [
         GraphNode(
             key="arrival-anchor",
-            title=arrival["location"],
+            title=arrival_title,
             role="ARRIVAL",
             start_at=arrival_at.isoformat(),
             end_at=(arrival_at + timedelta(minutes=20)).isoformat(),
@@ -663,7 +689,7 @@ def build_candidate_nodes(
     events.append(
         GraphNode(
             key="departure-anchor",
-            title=departure["location"],
+            title=departure_title,
             role="DEPARTURE",
             start_at=(departure_at - timedelta(minutes=10)).isoformat(),
             end_at=departure_at.isoformat(),
