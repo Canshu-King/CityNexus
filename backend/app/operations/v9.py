@@ -1166,6 +1166,9 @@ def confirm_reservation_draft(
             # An imported reservation says nothing about a lodging budget, so this row records
             # "never asked" rather than inventing either an answer or a price.
             stay_budget_declared=None,
+            # And it says nothing about how many travellers there are, so the headcount is
+            # recorded as unasked too - the 1 beside it is this build's default, not a fact.
+            party_size_declared=None,
             created_at=now,
             updated_at=now,
         )

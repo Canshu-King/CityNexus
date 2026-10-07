@@ -3178,6 +3178,10 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
         # stored as such.  The amount above keeps its 0 so no existing reader of that column
         # changes shape; nothing outside this row may read the 0 as a declared price.
         stay_budget_declared=payload.stay_budget is not None,
+        # ORD-0355's shape for the headcount: `party_size` absent from the request is the
+        # traveller's silence.  The column above keeps its default 1 so no existing reader of
+        # that column changes shape; nothing outside this row may read the 1 as a declared count.
+        party_size_declared="party_size" in payload.model_fields_set,
         created_at=now,
         updated_at=now,
     )

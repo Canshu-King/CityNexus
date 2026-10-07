@@ -142,6 +142,9 @@ const en: Dict = {
   "shell.factsSynced": "Journey facts synced",
   "shell.plansModes": "{plans} plans · 5 modes",
   "shell.travelers": "{n} {plural:traveler}",
+  /* ORD-0355's shape on the headcount: the backend answers null when nobody ever said how many
+     travellers there are, so the screen says that instead of printing the server's default 1. */
+  "shell.travelersUnknown": "headcount not given",
 
   // ── Shell: topbar ──
   "shell.journeys": "Journeys",
@@ -220,6 +223,10 @@ const en: Dict = {
   "hub.todayDays": "{n} {plural:day}",
   "hub.todayDaysUnknown": "length unknown",
   "hub.budgetLine": "{days} {plural:day:days} · {people} {plural:person:people} · about {amount} per person per day",
+  /* The backend declines the per-person step when nobody said how many travellers there are.  The
+     daily figure is still the traveller's own budget over their own trip, so it is still stated -
+     dropping the whole line would discard a true number to avoid printing an invented one. */
+  "hub.budgetLineNoParty": "{days} {plural:day:days} · about {amount} per day for the trip as a whole (headcount not given)",
   "hub.planGlance": "Plan at a glance",
   "hub.everyDay": "Every day, connected.",
   "hub.compareStays": "Compare stays →",
@@ -1278,6 +1285,10 @@ const zhCN: Dict = {
   "shell.factsSynced": "行程事实已同步",
   "shell.plansModes": "{plans} 个方案 · 5 种模式",
   "shell.travelers": "{n} 位旅行者",
+  /* ORD-0355's shape carried onto the headcount: the server answers null when nobody ever said
+     how many travellers there are, so this screen says that instead of printing the server's
+     own default of one. */
+  "shell.travelersUnknown": "人数未填写",
 
   // ── 外壳：顶栏 ──
   "shell.journeys": "行程",
@@ -1356,6 +1367,7 @@ const zhCN: Dict = {
   "hub.todayDays": "{n} 天",
   "hub.todayDaysUnknown": "天数未知",
   "hub.budgetLine": "{days} 天 · {people} 人 · 每人每天约 {amount}",
+  "hub.budgetLineNoParty": "{days} 天 · 整趟每天约 {amount}（人数未填写，所以不给每人每天的口径）",
   "hub.planGlance": "方案概览",
   "hub.everyDay": "每一天，紧密相连。",
   "hub.compareStays": "对比住宿 →",

@@ -690,6 +690,11 @@ CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     -- the question, not an answer of "not declared"; see `stay_budget_declared` in
     -- `app/db/models.py`.  The amount column above keeps its type and nullability unchanged.
     stay_budget_declared INTEGER CHECK (stay_budget_declared IN (0, 1)),
+    -- ORD-0355's three-valued shape applied to the headcount.  `party_size` above is NOT NULL
+    -- DEFAULT 1, so a context no traveller ever answered for carried a number this build
+    -- invented, and the allowance path divided a declared budget by it.  NULL here is a row
+    -- written before this build could ask; see `party_size_declared` in `app/db/models.py`.
+    party_size_declared INTEGER CHECK (party_size_declared IN (0, 1)),
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );

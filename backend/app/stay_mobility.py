@@ -177,6 +177,11 @@ def _context(session: Session, journey: Journey) -> JourneyTripContext:
             # This row was not created by a traveller answering a question, so it declares
             # nothing either way: NULL is "never asked", which is what actually happened here.
             stay_budget_declared=None,
+            # Same reasoning for the headcount.  The 1 above keeps `party_size` NOT NULL
+            # happy and lets every pre-existing reader keep its shape;
+            # `party_size_declared` is what says the number is the build's, not the
+            # traveller's.
+            party_size_declared=None,
             created_at=now,
             updated_at=now,
         )
@@ -204,6 +209,30 @@ def stay_budget_body(context: JourneyTripContext) -> dict[str, Any]:
             None if declared is False else context.stay_budget_amount_minor
         ),
         "currency": context.stay_budget_currency,
+    }
+
+
+def party_size_body(context: JourneyTripContext) -> dict[str, Any]:
+    """The trip's headcount in the exact shape that leaves this process.
+
+    ORD-0355, on the other party fact.  `journey_trip_contexts.party_size` is NOT NULL
+    with a server default of 1, so a context a traveller never answered for - an
+    imported reservation, a context raised lazily by the stay path - carried "1
+    traveller" outward, and the allowance then divided the declared budget by it and
+    reported a per-person figure with no caveat.  Measured before this change: a
+    journey created without `party_size` answered `per_person_per_day_minor = 10000`
+    with `reason = null` - an invented divisor presented as a complete answer.
+
+    Silence now travels as null with `declared` beside it, because null is the
+    traveller's silence and 1 is a headcount.  A row whose state is NULL is *unknown*,
+    not undeclared, and keeps sending its stored number: it may be one a traveller
+    genuinely typed before this column existed.
+    """
+
+    declared = context.party_size_declared
+    return {
+        "declared": declared,
+        "party_size": None if declared is False else context.party_size,
     }
 
 
@@ -1837,8 +1866,9 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         day_count=shape.day_count if shape is not None else None,
         budget_amount_minor=journey.budget_amount_minor,
         budget_currency=journey.budget_currency,
-        party_size=context.party_size,
+        party_size=party_size_body(context)["party_size"],
     )
+    party_size = party_size_body(context)
     return {
         "journey": {
             "id": journey.id,
@@ -1869,7 +1899,11 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         "trip": {
             "arrival_anchor": _anchor(context, journey, "arrival"),
             "departure_anchor": _anchor(context, journey, "departure"),
-            "party_size": context.party_size,
+            # Shape-compatible with `stay_budget`: the bare key keeps its old position so
+            # no existing reader breaks, and `declared` beside it is what makes a
+            # headcount of null mean "nobody asked" rather than "nobody is coming".
+            "party_size": party_size["party_size"],
+            "party_size_declared": party_size["declared"],
             "occupancy": _load(context.occupancy_json, {}),
             "budget_reference": budget_reference.as_payload(),
             "stay_budget": stay_budget_body(context),

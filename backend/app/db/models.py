@@ -812,6 +812,13 @@ class JourneyTripContext(Base):
     arrival_anchor_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     departure_anchor_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     party_size: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
+    # ORD-0355's shape, applied to the other invented party fact.  `party_size` above is
+    # NOT NULL DEFAULT 1, so a build that never asked how many travellers there are stored its
+    # own guess and the allowance path then divided a budget by that guess and reported a
+    # per-person figure with no caveat -- the "a fabricated value treated as fact downstream"
+    # shape ORD-0355 removed for `stay_budget_amount_minor`, still live here.  Same three states
+    # on purpose: True declared, False not declared, NULL recorded by a build that could not ask.
+    party_size_declared: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=None)
     occupancy_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     stay_budget_amount_minor: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     stay_budget_currency: Mapped[str] = mapped_column(String, default="CNY", server_default="CNY")

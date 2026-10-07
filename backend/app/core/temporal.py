@@ -85,6 +85,9 @@ BUDGET_DAILY_FLOOR_CURRENCY = "CNY"
 UNAVAILABLE_NO_BUDGET = "BUDGET_NOT_DECLARED"
 UNAVAILABLE_SHAPE_UNKNOWN = "TRIP_SHAPE_UNKNOWN"
 FLOOR_NOT_COMPARABLE = "FLOOR_DENOMINATED_IN_CNY"
+# The traveller never said how many they are.  The per-person step of the division has no
+# divisor, so the honest answer is "no per-person figure" rather than a budget divided by one.
+UNAVAILABLE_PARTY_UNKNOWN = "PARTY_SIZE_NOT_DECLARED"
 
 
 @dataclass(frozen=True)
@@ -148,12 +151,26 @@ def derive_budget_reference(
     if amount is None or amount <= 0:
         return BudgetReference(
             available=False, amount_minor=amount, currency=currency,
-            party_size=max(1, party_size or 1), day_count=day_count,
+            party_size=party_size, day_count=day_count,
             per_day_minor=None, per_person_per_day_minor=None,
             floor_minor=BUDGET_DAILY_FLOOR_MINOR, floor_currency=BUDGET_DAILY_FLOOR_CURRENCY,
             floor_comparable=False, reason=UNAVAILABLE_NO_BUDGET,
         )
-    party = max(1, party_size or 1)
+    # A headcount of None is the traveller's silence, and the clamp that used to sit here turned
+    # that silence into "one traveller" before dividing by it -- so a journey created without
+    # answering the question reported a per-person allowance with no caveat at all.  The daily
+    # figure is still the traveller's own budget over their own trip, so it is still stated; the
+    # per-person step is what has no divisor.
+    if party_size is None:
+        per_day = _divide_round_half_up(amount, day_count)
+        return BudgetReference(
+            available=False, amount_minor=amount, currency=currency, party_size=None,
+            day_count=day_count, per_day_minor=per_day,
+            per_person_per_day_minor=None,
+            floor_minor=BUDGET_DAILY_FLOOR_MINOR, floor_currency=BUDGET_DAILY_FLOOR_CURRENCY,
+            floor_comparable=False, reason=UNAVAILABLE_PARTY_UNKNOWN,
+        )
+    party = max(1, party_size)
     per_day = _divide_round_half_up(amount, day_count)
     per_person_per_day = _divide_round_half_up(per_day, party)
     return BudgetReference(

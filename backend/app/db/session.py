@@ -869,6 +869,15 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                     "ALTER TABLE journey_trip_contexts ADD COLUMN stay_budget_declared INTEGER"
                     " CHECK (stay_budget_declared IN (0, 1))"
                 )
+            # Same additive shape as `stay_budget_declared`, and for the same reason: no DEFAULT,
+            # so a pre-existing row stays "never asked" instead of being rewritten into "asked and
+            # said no".  A legacy row keeps sending its stored `party_size`, because that number
+            # may be one a traveller really typed before this column existed.
+            if trip_context_columns and "party_size_declared" not in trip_context_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE journey_trip_contexts ADD COLUMN party_size_declared INTEGER"
+                    " CHECK (party_size_declared IN (0, 1))"
+                )
             mobility_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(mobility_facts)")
             }

@@ -1935,7 +1935,11 @@ export function V8Experience() {
             <span>{initialsFrom(cityName)}</span>
             <div>
               <b>{cityName}</b>
-              <small>{t("shell.travelers", { n: data.trip.party_size })}</small>
+              <small>
+                {data.trip.party_size === null
+                  ? t("shell.travelersUnknown")
+                  : t("shell.travelers", { n: data.trip.party_size })}
+              </small>
             </div>
             <em>•••</em>
           </button>
@@ -2421,21 +2425,32 @@ function budgetAdvisory(
   locale: string,
   t: (key: string, params?: Record<string, string | number>) => string,
 ): { tight: boolean; text: string; hint: string } | null {
-  if (!reference || !reference.available) return null;
+  if (!reference) return null;
   const days = reference.day_count;
   const people = reference.party_size;
   const perDay = reference.per_day_minor;
   const perPersonPerDay = reference.per_person_per_day_minor;
   const currency = reference.currency;
-  if (
-    days === null ||
-    people === null ||
-    perDay === null ||
-    perPersonPerDay === null ||
-    !currency ||
-    !budgetMoney(perPersonPerDay, currency, locale)
-  )
+  const DECLINED_COPY = zh
+    ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
+    : "This is your own budget averaged out, not a final cost. Real prices come from providers.";
+  /* The backend declines the per-person step when nobody said how many travellers there are, and
+     it still states the daily figure because that half is the traveller's own budget over their
+     own trip.  Stating the daily figure is what keeps the honest answer from turning into a
+     blank: `available: false` used to take the whole line off the screen, which discards a true
+     number to avoid printing an invented one. */
+  if (days === null || perDay === null || !currency || !budgetMoney(perDay, currency, locale))
     return null;
+  if (
+    people === null ||
+    perPersonPerDay === null ||
+    !budgetMoney(perPersonPerDay, currency, locale)
+  ) {
+    const daily = budgetMoney(perDay, currency, locale);
+    if (!daily) return null;
+    return { tight: false, text: t("hub.budgetLineNoParty", { days, amount: daily }), hint: DECLINED_COPY };
+  }
+  if (!reference.available) return null;
   // `floor_comparable` is the backend saying "this CNY price level applies to your money".
   // For a JPY or SGD budget it is false, and calling the trip tight would be a verdict
   // reached by comparing yen against yuan.
@@ -2989,7 +3004,9 @@ function Hub({
             {dateInZone(data.journey.end_at, locale, journeyTz)}
             {journeyTzUsable ? ` · ${t("hub.zoneAttribution", { zone: journeyTz })}` : ""}
             {" · "}
-            {t("shell.travelers", { n: data.trip.party_size })}
+            {data.trip.party_size === null
+              ? t("shell.travelersUnknown")
+              : t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
             {tripDayCount === null
               ? t("hub.todayDaysUnknown")
@@ -4772,7 +4789,10 @@ function Me({
           <span className="v8-kicker">{t("my.thisTrip")}</span>
           <strong>{cityLabel}</strong>
           <p>
-            {t("shell.travelers", { n: data.trip.party_size })} ·{" "}
+            {data.trip.party_size === null
+              ? t("shell.travelersUnknown")
+              : t("shell.travelers", { n: data.trip.party_size })}{" "}
+            ·{" "}
             {money(
               data.journey.budget.amount_minor,
               data.journey.budget.currency,
