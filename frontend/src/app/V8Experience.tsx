@@ -2738,7 +2738,7 @@ function Hub({
               data-stay-search="searching"
             >
               <strong>
-                {zh ? "正在搜索住宿" : "Looking for stays"} ·{" "}
+                {t("hub.staySearching")} ·{" "}
                 <span data-testid="hub-stay-elapsed">
                   {t("hub.stayElapsed", { n: stayWaited })}
                 </span>
@@ -2768,7 +2768,7 @@ function Hub({
                 data-testid="hub-stay-retry"
                 onClick={onRetryStays}
               >
-                {zh ? "再查一次" : "Search again"}
+                {t("hub.staySearchAgain")}
               </button>
             </div>
           )}
@@ -2796,14 +2796,14 @@ function Hub({
                   data-testid="hub-stay-retry"
                   onClick={onRetryStays}
                 >
-                  {zh ? "再查一次" : "Search again"}
+                  {t("hub.staySearchAgain")}
                 </button>
                 <button
                   type="button"
                   className="v8-quiet-button"
                   onClick={() => onNavigate("stay")}
                 >
-                  {zh ? "去住宿页看看" : "Open the stay page"}
+                  {t("hub.stayOpenPage")}
                 </button>
               </div>
               {stayAttempts > 1 && (
@@ -2833,7 +2833,7 @@ function Hub({
                   data-testid="budget-advisory-edit"
                   onClick={onNewJourney}
                 >
-                  {zh ? "调整预算" : "Adjust budget"}
+                  {t("hub.stayAdjustBudget")}
                 </button>
                 <button
                   type="button"
@@ -2841,7 +2841,7 @@ function Hub({
                   data-testid="budget-advisory-continue"
                   onClick={() => setAdvisoryDismissed(true)}
                 >
-                  {zh ? "我知道了，继续" : "Got it, continue"}
+                  {t("hub.stayAcknowledge")}
                 </button>
               </div>
             </div>
