@@ -46,6 +46,7 @@ from app.execution.group_presence import (
     group_recovery_incident_key,
     group_recovery_projection,
 )
+from app.execution.group_recovery_followthrough import followthrough_projection
 from app.operator_attention import attention_from_operator_projection
 
 
@@ -784,6 +785,23 @@ def operator_projection(
             }
         )
         break
+    # The shared recovery remains a live user-facing workflow until each
+    # required in-force traveller explicitly confirms their own arrival at the
+    # server-derived rendezvous.  GET only projects those durable receipts; it
+    # never marks a member arrived or closes the incident.
+    if viewer_member_id:
+        followthrough = followthrough_projection(
+            session, journey, viewer_member_id=viewer_member_id
+        )
+        if followthrough is not None:
+            group_recovery.update(
+                {
+                    "state": followthrough["state"],
+                    "headline": followthrough["headline"],
+                    "can_request_planning": False,
+                    "followthrough": followthrough,
+                }
+            )
     # Journey Ahead is a read-only projection.  Reuse the already persisted
     # predictive Guardian/brain state, but never start a provider call or an
     # action from this GET path.

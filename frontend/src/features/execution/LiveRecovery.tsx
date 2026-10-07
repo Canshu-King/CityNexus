@@ -664,6 +664,7 @@ export function LiveRecovery({
   const transit = operator?.transit ?? null;
   const groupPresence = operator?.group_presence ?? null;
   const groupRecovery = operator?.group_recovery ?? null;
+  const recoveryFollowthrough = groupRecovery?.followthrough ?? null;
   const collectiveProposalIds = new Set(
     groupRecovery?.collective_decision?.proposal_ids ?? [],
   );
@@ -685,6 +686,10 @@ export function LiveRecovery({
     "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED",
     "RECOVERY_REGROUND_NO_FEASIBLE_OPTION",
     "RECOVERY_APPLIED",
+    "RECOVERY_APPLIED_REJOIN_PENDING",
+    "REJOIN_IN_PROGRESS",
+    "REJOIN_CONFIRMATION_REQUIRED",
+    "RECOVERY_CLOSED",
     "COLLECTIVE_WAITING_FOR_MEMBERS",
     "COLLECTIVE_MEDIATING",
     "COLLECTIVE_AUTHORIZED",
@@ -749,6 +754,33 @@ export function LiveRecovery({
         setMessage(zh
           ? "暂时没有收到服务器确认；重试会查询同一提交结果，不会再花一次同意。"
           : "No server confirmation arrived. Retrying will reuse the same idempotency key.");
+      }
+    } finally {
+      setBusy(null);
+    }
+  };
+  const confirmGroupRejoin = async () => {
+    if (busy !== null || !recoveryFollowthrough?.viewer_can_confirm) return;
+    setBusy("group-recovery-rejoin");
+    setMessage(null);
+    try {
+      const rendezvousActivityId = recoveryFollowthrough.rendezvous?.activity_id;
+      if (!rendezvousActivityId) return;
+      await cityNexusApi.transitionActivity(journeyId, rendezvousActivityId, "arrive");
+      await loadOperator();
+      await twin.refetch();
+      setMessage(zh
+        ? "已通过行程到达状态记录你的本人确认；正在更新全组会合进度。"
+        : "Your arrival was recorded through the Journey execution flow. Group rejoin progress is refreshing.");
+      onAccepted?.();
+    } catch (error) {
+      if (error instanceof CityNexusApiError && (error.status === 401 || error.status === 403)) {
+        setMessage(zh ? "请用自己的有效 Journey 成员账号确认；不能替其他同行者确认。" : "Sign in as yourself to confirm; you cannot report for another traveller.");
+      } else if (error instanceof CityNexusApiError && error.status === 409) {
+        await loadOperator();
+        setMessage(zh ? "行程或成员状态已经变化，我刷新了当前会合状态；旧确认没有被套用。" : "The Journey or membership changed. Current rejoin state was refreshed; no stale confirmation was applied.");
+      } else {
+        setMessage(zh ? "暂时无法记录会合确认，请刷新后重试。" : "Could not save the rejoin confirmation. Refresh and try again.");
       }
     } finally {
       setBusy(null);
@@ -1092,8 +1124,80 @@ export function LiveRecovery({
             )}
             {groupRecovery && showGroupRecovery && (
               <div className="journey-group-recovery" data-testid="journey-group-recovery" data-recovery-state={groupRecovery.state} aria-live="polite">
-                <span className="v8-kicker">{zh ? "一起决定怎么继续" : "Choose how the group continues"}</span>
+                <span className="v8-kicker">{recoveryFollowthrough
+                  ? (zh ? "恢复后的会合与继续" : "Rejoin and continue")
+                  : (zh ? "一起决定怎么继续" : "Choose how the group continues")}</span>
                 <strong data-testid="journey-group-recovery-headline">{groupRecovery.headline}</strong>
+                {recoveryFollowthrough ? (
+                  <div data-testid="group-recovery-followthrough" data-followthrough-state={recoveryFollowthrough.state}>
+                    {recoveryFollowthrough.rendezvous && (
+                      <small data-testid="group-recovery-rendezvous">
+                        {zh
+                          ? "新的共同集合点：" + recoveryFollowthrough.rendezvous.title + "（" + recoveryFollowthrough.rendezvous.place_name + "）"
+                          : "Shared rendezvous: " + recoveryFollowthrough.rendezvous.title + " (" + recoveryFollowthrough.rendezvous.place_name + ")"}
+                      </small>
+                    )}
+                    <small data-testid="group-recovery-progress-count">
+                      {zh
+                        ? recoveryFollowthrough.confirmed_count + "/" + recoveryFollowthrough.required_count + " 位仍在旅程中的同行者已确认会合。"
+                        : recoveryFollowthrough.confirmed_count + "/" + recoveryFollowthrough.required_count + " current travellers have confirmed rejoining."}
+                    </small>
+                    {recoveryFollowthrough.members.map((member) => (
+                      <small key={member.member_id} data-testid="group-recovery-member-progress">
+                        {member.is_viewer ? (zh ? "你" : "You") : member.display_name}: {member.state === "REJOINED"
+                          ? (zh ? "已确认会合" : "confirmed rejoining")
+                          : member.state === "MOVING"
+                            ? (zh ? "正在前往集合点" : "moving to rendezvous")
+                            : member.state === "NO_LONGER_REQUIRED"
+                            ? (zh ? "已退出或成员资格过期" : "no longer in force")
+                            : member.is_viewer
+                              ? (zh ? "等待你本人确认" : "waiting for your confirmation")
+                              : (zh ? "等待本人确认" : "waiting for their own confirmation")}
+                      </small>
+                    ))}
+                    {recoveryFollowthrough.membership_reconfirmation_required && (
+                      <small data-testid="group-recovery-membership-change">
+                        {zh
+                          ? "成员或角色在恢复过程中发生变化；为避免漏掉同行者，系统不会自动关闭这次恢复。"
+                          : "Membership or role changed during recovery. CityNexus will not close it while a traveller may be missing."}
+                      </small>
+                    )}
+                    {recoveryFollowthrough.evidence_level === "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH" && (
+                      <small data-testid="group-recovery-evidence-boundary">
+                        {zh
+                          ? (recoveryFollowthrough.physical_presence_verified
+                            ? "每位同行者通过自己的账号完成到达确认；本次还包含设备验证的位置证据。"
+                            : "每位同行者通过自己的账号完成行程到达确认；路线、预计时间或普通浏览器定位不会被当成到场证明。")
+                          : "Each traveller uses their own authenticated Journey arrival action. ETA, route data, and ordinary browser location are not proof of presence."}
+                      </small>
+                    )}
+                    {recoveryFollowthrough.viewer_has_confirmed && recoveryFollowthrough.state !== "RECOVERY_CLOSED" && (
+                      <small data-testid="group-recovery-viewer-waiting">
+                        {zh ? "你的确认已保存；正在等其他同行者本人确认。" : "Your confirmation is saved; waiting for the other travellers to confirm for themselves."}
+                      </small>
+                    )}
+                    {recoveryFollowthrough.viewer_can_confirm && (
+                      <button
+                        type="button"
+                        disabled={busy !== null}
+                        data-testid="group-recovery-confirm-rejoin"
+                        onClick={() => void confirmGroupRejoin()}
+                      >
+                        {busy === "group-recovery-rejoin"
+                          ? (zh ? "正在记录…" : "Saving…")
+                          : (zh ? "我已到达集合点" : "I’ve reached the rendezvous")}
+                      </button>
+                    )}
+                    {recoveryFollowthrough.state === "RECOVERY_CLOSED" && (
+                      <small data-testid="group-recovery-closed">
+                        {zh
+                          ? "这次恢复已关闭，原行程计划没有因关闭动作再次变化；下面继续显示当前 Journey。"
+                          : "This recovery is closed. Closing it did not change the active plan; the current Journey continues below."}
+                      </small>
+                    )}
+                  </div>
+                ) : (
+                  <>
                 {groupRecovery.old_decision && groupRecovery.state.startsWith("RECOVERY_REGROUND") && (
                   <small data-testid="journey-group-recovery-old-decision">
                     {zh
@@ -1220,6 +1324,8 @@ export function LiveRecovery({
                       ? (zh ? "正在准备全组方案…" : "Preparing a group option…")
                       : (zh ? "帮我们一起调整" : "Adjust together")}
                   </button>
+                )}
+                  </>
                 )}
               </div>
             )}

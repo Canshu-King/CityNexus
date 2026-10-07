@@ -1356,7 +1356,7 @@ CREATE INDEX IF NOT EXISTS idx_journey_members_journey
 -- not a string).  Seeded once by `db/session.py`, so it is readable without being editable per trip.
 CREATE TABLE IF NOT EXISTS journey_role_capabilities (
     role TEXT NOT NULL CHECK (role IN ('OWNER','ADMIN','COLLABORATOR')),
-    capability TEXT NOT NULL CHECK (capability IN ('JOURNEY_READ','JOURNEY_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')),
+    capability TEXT NOT NULL CHECK (capability IN ('JOURNEY_READ','JOURNEY_UPDATE','JOURNEY_EXECUTION_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')),
     scope_message_key TEXT NOT NULL,
     created_at TEXT NOT NULL,
     PRIMARY KEY (role, capability)

@@ -633,6 +633,33 @@ export interface GroupRecoveryProjection {
     applied_by_member_id?: string | null;
     applied_by_role?: string | null;
   } | null;
+  followthrough?: GroupRecoveryFollowThroughProjection | null;
+}
+
+export interface GroupRecoveryFollowThroughProjection {
+  state: "RECOVERY_APPLIED_REJOIN_PENDING" | "REJOIN_IN_PROGRESS" | "REJOIN_CONFIRMATION_REQUIRED" | "RECOVERY_CLOSED" | string;
+  headline: string;
+  applied_plan_version_id: string;
+  applied_proposal_id?: string | null;
+  recovery_epoch_id?: string | null;
+  rendezvous: { activity_id: string; title: string; place_id: string; place_name: string } | null;
+  members: Array<{
+    member_id: string;
+    display_name: string;
+    role: string;
+    is_viewer: boolean;
+    state: "REJOINED" | "MOVING" | "WAITING" | "NO_LONGER_REQUIRED";
+    confirmed_at?: string | null;
+  }>;
+  required_count: number;
+  confirmed_count: number;
+  viewer_has_confirmed: boolean;
+  viewer_can_confirm: boolean;
+  membership_reconfirmation_required: boolean;
+  evidence_level: "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH";
+  physical_presence_verified: boolean;
+  plan_unchanged_by_closure: boolean;
+  closed_at?: string | null;
 }
 
 export interface GroupRecoveryPlanResult {

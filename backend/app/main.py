@@ -273,6 +273,13 @@ from app.execution.group_presence import (
     rendezvous_commitment_risk,
     rendezvous_target,
 )
+from app.execution.group_recovery_followthrough import (
+    active_group_recovery_spend,
+    build_followthrough_snapshot,
+    close_recovery_if_rejoined,
+    followthrough_projection,
+    register_execution_arrival,
+)
 from app.route_session_operations import operation_payload as route_operation_payload
 from app.route_session_operations import submit_operation as submit_route_operation
 from app.execution.truth import (
@@ -11118,6 +11125,7 @@ def apply_group_recovery(
             "decision_mission_id": room.id,
             "clarification_id": clarification.get("clarification_id"),
             "selected_proposal_id": proposal.id,
+            "trigger_event_id": trigger_id,
             "authority_receipt_id": resolved.get("authority_receipt_id"),
             "decision_epoch": resolved.get("decision_epoch"),
             "material_world_epoch": resolved.get("material_world_epoch"),
@@ -13948,11 +13956,13 @@ def _resolve_execution_truth_attestation(
             "STRONG_EXECUTION_TRUTH_REQUIRES_AUTHENTICATED_TRAVELER",
         )
 
-    from app.traveler_principal import resolve_journey_member_principal
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
 
     principal, member = resolve_journey_member_principal(
         request, session, journey_id=journey.id
     )
+    if not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+        raise HTTPException(403, "Journey member role cannot report execution progress")
 
     if requested == OPERATOR_CONFIRMED_EXECUTION:
         if attestation is None or attestation.operator_confirmed is not True:
@@ -14073,6 +14083,78 @@ def _transition_activity_state(
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
+    # Shared Activity state advances once, but each traveller reports their own
+    # authenticated arrival at this exact recovery rendezvous through the same
+    # execution endpoint and server truth boundary.
+    if target_state == "ARRIVED" and activity.status in {"ARRIVED", "IN_PROGRESS"}:
+        applied = active_group_recovery_spend(session, journey)
+        snapshot = applied[2] if applied else None
+        if (
+            isinstance(snapshot, dict)
+            and str(snapshot.get("rendezvous_activity_id") or "") == str(activity.id)
+            and str(snapshot.get("applied_plan_version_id") or "") == str(activity.plan_version_id)
+        ):
+            captured_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            truth = _resolve_execution_truth_attestation(
+                request,
+                session,
+                journey=journey,
+                activity=activity,
+                transition="ARRIVED",
+                captured_at=captured_at,
+                attestation=attestation,
+            )
+            if truth.get("kind") not in {
+                OPERATOR_CONFIRMED_EXECUTION,
+                DEVICE_LOCATION_VERIFIED_EXECUTION,
+            }:
+                raise HTTPException(
+                    409,
+                    "GROUP_RECOVERY_REJOIN_REQUIRES_AUTHENTICATED_EXECUTION",
+                )
+            member_id = str((truth.get("evidence") or {}).get("member_id") or "")
+            projection = followthrough_projection(
+                session, journey, viewer_member_id=member_id
+            )
+            if projection is None:
+                raise HTTPException(409, "GROUP_RECOVERY_FOLLOWTHROUGH_NOT_CURRENT")
+            if projection.get("viewer_has_confirmed"):
+                return _twin_snapshot(session, journey)
+            if not projection.get("viewer_can_confirm"):
+                raise HTTPException(409, "GROUP_RECOVERY_REJOIN_CONFIRMATION_REQUIRED")
+
+            metadata = _json_object(activity.metadata_json)
+            metadata["arrived_at"] = captured_at
+            metadata["actual_arrived_at"] = captured_at
+            truth_record = append_execution_truth(
+                metadata,
+                kind=str(truth["kind"]),
+                transition="ARRIVED",
+                captured_at=captured_at,
+                actor_type=str(truth["actor_type"]),
+                actor_id=str(truth["actor_id"]),
+                evidence=dict(truth.get("evidence") or {}),
+            )
+            activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+            activity.updated_at = captured_at
+            _record_outcome_event(
+                session,
+                journey,
+                activity=activity,
+                event_type="ACTIVITY_ARRIVED",
+                actor_type=str(truth["actor_type"]),
+                actor_id=str(truth["actor_id"]),
+                occurred_at_actual=captured_at,
+                payload={"execution_truth": truth_record, "group_recovery_member_progress": True},
+            )
+            if not register_execution_arrival(
+                session, journey, activity=activity, truth_record=truth_record
+            ):
+                raise HTTPException(409, "GROUP_RECOVERY_ARRIVAL_NOT_ACCEPTED")
+            close_recovery_if_rejoined(session, journey)
+            session.commit()
+            return _twin_snapshot(session, journey)
+
     predecessors = allowed_predecessors.get(target_state, set())
     if activity.status not in predecessors:
         expected = ", ".join(sorted(predecessors)) or "none"
@@ -14107,6 +14189,18 @@ def _transition_activity_state(
         captured_at=captured_at,
         attestation=attestation,
     )
+    applied_recovery = active_group_recovery_spend(session, journey)
+    recovery_snapshot = applied_recovery[2] if applied_recovery else None
+    if (
+        target_state in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"}
+        and isinstance(recovery_snapshot, dict)
+        and str(recovery_snapshot.get("rendezvous_activity_id") or "") == str(activity.id)
+        and truth.get("kind") == SIMULATED_STATE_TRANSITION
+    ):
+        raise HTTPException(
+            409,
+            "GROUP_RECOVERY_REJOIN_REQUIRES_AUTHENTICATED_EXECUTION",
+        )
     actual_key = {
         "EN_ROUTE": "en_route_at",
         "ARRIVED": "arrived_at",
@@ -14144,6 +14238,11 @@ def _transition_activity_state(
         occurred_at_actual=captured_at,
         payload={"execution_truth": truth_record},
     )
+    if target_state == "ARRIVED":
+        register_execution_arrival(
+            session, journey, activity=activity, truth_record=truth_record
+        )
+        close_recovery_if_rejoined(session, journey)
     activity.updated_at = captured_at
     from app.execution.continuous_journey import continuous_flow_projection
 
@@ -14370,6 +14469,27 @@ def complete_activity(
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
+    applied_recovery = active_group_recovery_spend(session, journey)
+    rejoin_snapshot = applied_recovery[2] if applied_recovery else None
+    if (
+        isinstance(rejoin_snapshot, dict)
+        and str(rejoin_snapshot.get("rendezvous_activity_id") or "") == str(activity.id)
+    ):
+        rejoin_state = followthrough_projection(
+            session, journey, viewer_member_id=None
+        )
+        if (
+            rejoin_state is not None
+            and rejoin_state.get("state") != "RECOVERY_CLOSED"
+            and (
+                rejoin_state.get("membership_reconfirmation_required")
+                or rejoin_state.get("confirmed_count") != rejoin_state.get("required_count")
+            )
+        ):
+            raise HTTPException(
+                409,
+                "GROUP_RECOVERY_WAITING_FOR_MEMBER_REJOIN; keep the rendezvous activity current",
+            )
     plan = session.get(PlanVersion, journey.active_plan_version_id)
     authoritative_execution = _is_authoritative_execution_plan(plan)
     if activity.status != "IN_PROGRESS":
@@ -19624,6 +19744,17 @@ def _accept_replan_executing(
 
     group_recovery_spend = None
     if isinstance(actor_context, Mapping) and actor_context.get("kind") == "COLLECTIVE_GROUP_RECOVERY_APPLY":
+        followthrough = build_followthrough_snapshot(
+            session,
+            journey,
+            incident_key=str(actor_context.get("incident_key") or ""),
+            proposal_id=proposal.id,
+            plan_version_id=proposed.id,
+            recovery_epoch_id=current_recovery_epoch.id,
+            authority_receipt_id=authority_receipt_id,
+            trigger_event_id=str(actor_context.get("trigger_event_id") or "") or None,
+            applied_at=decided_at,
+        )
         group_recovery_spend = {
             **dict(actor_context),
             "result": "APPLIED",
@@ -19636,6 +19767,7 @@ def _accept_replan_executing(
             "before_plan_version_id": base.id,
             "after_plan_version_id": proposed.id,
             "applied_at": decided_at,
+            "followthrough": followthrough,
         }
     record_audit(
         session,

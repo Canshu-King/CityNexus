@@ -240,21 +240,36 @@ def _backfill_legacy_hydration_rows(connection) -> None:
 JOURNEY_ROLE_CAPABILITIES = (
     ("OWNER", "JOURNEY_READ", "member.scope.owner"),
     ("OWNER", "JOURNEY_UPDATE", "member.scope.owner"),
+    ("OWNER", "JOURNEY_EXECUTION_UPDATE", "member.scope.owner"),
     ("OWNER", "PLACE_EDIT", "member.scope.owner"),
     ("OWNER", "MEMBER_MANAGE", "member.scope.owner"),
     ("OWNER", "SHARE_GRANT_MANAGE", "member.scope.owner"),
     ("ADMIN", "JOURNEY_READ", "member.scope.admin"),
+    ("ADMIN", "JOURNEY_EXECUTION_UPDATE", "member.scope.admin"),
     ("ADMIN", "PLACE_EDIT", "member.scope.admin"),
     ("ADMIN", "MEMBER_MANAGE", "member.scope.admin"),
     ("COLLABORATOR", "JOURNEY_READ", "member.scope.collaborator"),
+    ("COLLABORATOR", "JOURNEY_EXECUTION_UPDATE", "member.scope.collaborator"),
     ("COLLABORATOR", "PLACE_EDIT", "member.scope.collaborator"),
 )
 
 
 def _seed_journey_acl(connection) -> int:
     """Insert the role/capability rows when the table is still empty.  Returns rows added."""
-    if connection.exec_driver_sql("SELECT COUNT(*) FROM journey_role_capabilities").scalar():
-        return 0
+    existing = int(connection.exec_driver_sql("SELECT COUNT(*) FROM journey_role_capabilities").scalar() or 0)
+    if existing:
+        # R62 adds only self-reported execution progress authority.  Backfill
+        # this narrowly on existing databases without rewriting other ACL rows.
+        added = 0
+        for role in ("OWNER", "ADMIN", "COLLABORATOR"):
+            result = connection.exec_driver_sql(
+                "INSERT OR IGNORE INTO journey_role_capabilities"
+                " (role, capability, scope_message_key, created_at)"
+                " VALUES (?, 'JOURNEY_EXECUTION_UPDATE', ?, datetime('now'))",
+                (role, f"member.scope.{role.lower()}"),
+            )
+            added += int(result.rowcount or 0)
+        return added
     for role, capability, message_key in JOURNEY_ROLE_CAPABILITIES:
         connection.exec_driver_sql(
             "INSERT INTO journey_role_capabilities"
@@ -262,6 +277,32 @@ def _seed_journey_acl(connection) -> int:
             (role, capability, message_key),
         )
     return len(JOURNEY_ROLE_CAPABILITIES)
+
+
+def _migrate_journey_execution_capability(connection) -> None:
+    """Extend the SQLite ACL vocabulary while preserving every existing grant."""
+    row = connection.exec_driver_sql(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='journey_role_capabilities'"
+    ).first()
+    schema = str(row[0] or "") if row else ""
+    if not schema or "JOURNEY_EXECUTION_UPDATE" in schema:
+        return
+    connection.exec_driver_sql(
+        "ALTER TABLE journey_role_capabilities RENAME TO journey_role_capabilities_pre_r62"
+    )
+    connection.exec_driver_sql(
+        "CREATE TABLE journey_role_capabilities ("
+        "role TEXT NOT NULL CHECK (role IN ('OWNER','ADMIN','COLLABORATOR')),"
+        "capability TEXT NOT NULL CHECK (capability IN "
+        "('JOURNEY_READ','JOURNEY_UPDATE','JOURNEY_EXECUTION_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')) ,"
+        "scope_message_key TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (role, capability))"
+    )
+    connection.exec_driver_sql(
+        "INSERT INTO journey_role_capabilities (role, capability, scope_message_key, created_at) "
+        "SELECT role, capability, scope_message_key, created_at "
+        "FROM journey_role_capabilities_pre_r62"
+    )
+    connection.exec_driver_sql("DROP TABLE journey_role_capabilities_pre_r62")
 
 
 def _table_exists(connection, name: str) -> bool:
@@ -754,6 +795,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             _migrate_reservation_identity(connection)
             # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
             # to what a role may do instead of inventing one per screen.
+            _migrate_journey_execution_capability(connection)
             _seed_journey_acl(connection)
             event_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(events)")
