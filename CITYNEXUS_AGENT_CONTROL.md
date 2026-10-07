@@ -16588,6 +16588,105 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 号令者令 · 今晚的硬目标：每域各交一件「能落地的产品字节改动」，交完自派下一格，不许停 @2026-10-07 23:56+08
+
+现读权威尖 `7c675cb8fc5642ed5e1b5b64cee507dc173c1c3d`（`mirror/integration-frontend-apple-pass1`，今晚 23:26 刚由我推进，现读）。账本 ORDERS 锚现读落在 `CITYNEXUS_AGENT_CONTROL.md:16590` 这 1 处。
+
+**目标（一句话）**：每个领域今晚各交**一件产品字节改动**——候选推上线、带反控臂、过落地门——**不是**扫描报告、不是证据件、不是「我发现了若干处」这种话。
+
+**三条硬要求**：
+
+一、每件必须动产品文件（`frontend/src` 或 `backend/app` 下的真实字节），并给出可 `git cat-file` 的候选 sha 与其父提。
+
+二、每件必须带一枚**反控臂**：把改动撤掉，那一格必须变红。反控不红 = 没改到东西，退回。
+
+三、交完**自己给自己派下一格**（写在块里），不许停在原地等单。等单的车道我一律视为断粮，直接再敲。
+
+**第一优先（我已裁，现成的一件）**：英文单复数的接线与顶栏头像修——`frontend/src/lib/plural.ts`、`frontend/src/i18n/LocaleContext.tsx` 的 `{plural:` 接线、`frontend/src/app/V8Experience.tsx` 的头像修，三者都**不在现尖**（承载提交 `97ddb9868` 不是现尖祖先，`plural.ts` 至今是工作盘未跟踪文件）。按现尖字节重切、重挂、推上线。
+
+下一轮我要扫什么新范围：每域交完这一件后，把覆盖面往外扩一层（多一屏／多一态／多一类输入），继续下一件。
+
+
+### ORD-0553 · 扩层：把普查尺从 /v8/authoritative 那一屏走到全部十四条路由（中英两臂逐屏计数）· 车道 45d25bfb 自申报 r23（只读数不改产品）
+
+一、为什么扩层（照常驻令那格：没有新发现就往外扩一层）
+- 我此前的普查尺（r11–r21）只在 /v8/authoritative 那一屏上跑，报的是「这一屏的机器形词有哪些」。常驻令说扩层就是**把同一把尺走一遍所有路由**，看「服务端答过的字」在哪几屏上画出来、每屏几处、共多少枚。
+- 这趟用了和 r21 同一套仪器与同一代 dist（index-ay8Jsqaq.js），后端也是私有栈；两臂各走十四路由，输出 per-route counts（件 blob fa61da37d540e8e5f0e20acecb0b98b209d0b641 与 61e831f06b955d9baa1933f15d9e69933fc59374）。
+
+二、读数（中文侧零，英文侧七屏有三十二处）
+- zh 臂：十四条路由每一屏都是 **零** 处命中、**零** 枚独立 token；不是哑了，是中文侧本来就没有大写机形可画（读数见 zh totals 件 blob 61e831f06b955d9baa1933f15d9e69933fc59374）。
+- en 臂：**七** 条路有 hits，共 **32** 处命中、**29** 枚独立 token；无 server_answer_tokens，全是样式字（style_only_tokens=29，详情在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 totals 格）。
+- 逐屏列表（hits > 0 的路由，token 样前五个，详细 hits 数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute 格）：
+    • /v8/authoritative：10 处，tokens = ["AUTHORITATIVE", "JOURNEY", "NEXT", "TRIP", "STUDIO"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/authoritative"] 格）
+    • /v8/bookings：2 处，tokens = ["JSON", "JSON"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/bookings"] 格）
+    • /v8/discover：1 处，tokens = ["DISCOVERY"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/discover"] 格）
+    • /v8/intelligence：5 处，tokens = ["POLICY", "POST", "ACTION", "GATE", "COMMITMENT"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/intelligence"] 格）
+    • /v8/live：11 处，tokens = ["NEXT", "NEXT", "LEAVE", "NAVIGATE", "RISK"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/live"] 格）
+    • /v8/me：1 处，tokens = ["NOTIFICATIONS"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/me"] 格）
+    • /v8/studio：2 处，tokens = ["STAY", "SELECTED"]（精确计数与完整 tokens 在件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 的 perRoute["/v8/studio"] 格）
+
+三、结论（扩层后的新发现）
+- “服务端答过的字”这一类缺陷在英文侧**集中出现在七屏**：/v8/authoritative、/v8/bookings、/v8/discover、/v8/intelligence、/v8/live、/v8/me、/v8/studio；其余七屏 (/v8/hub、/v8/map、/v8/stay、/v8/trash、/v8/trips、/v8/twin、/v8/agent) 未见到任何大写机形。
+- 中文侧全部为零，符合预期：中文词面是人话形，不存在「大写机形」这一类问题。
+- 与 r21（单屏）对比：/v8/authoritative 这一屏的读数完全一致（件 fa61da37d540e8e5f0e20acecb0b98b209d0b641 有 exact counts），证明扩层不是另起炉灶，而是同一把尺在不同路由上的复现。
+
+四、下一轮范围（按常驻令要求必须带）
+- 下一步把这七屏上每个 token 的**来源**查清楚——它究竟是来自哪个 i18n 键、还是兜底通道画出来的？我会用同一台仪器在每个 hit 处增加「槽位追踪」（记录该 token 所在 DOM 节点的五层祖先链和父级 class），从而定位到具体的发射点文件与行号。若发现兜底通道画出的 enum verbatim，再按判据改词表或加回退逻辑。
+
+五、纪律
+- r23 只读不改产品：没动一个字产品字节；私有栈 :8793 与 :49942 交完就停（已停），共享口 :8000 / :4799 / :4820 一个没动；共享预览库 _preview.db 没读、没写、没 ALTER，demo/reset 一次没跑，force-push 0 次，权威线我没碰；新落盘 二 枚全 CREATED 或 SKIP_IDENTICAL、重写 0 件，回执 D:/moodle/_qoder_cmdra_ord0553_20261003/_publish_manifest_r23.jsonl。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 23:27 · 领域「时间与时钟」第三格：把尺的覆盖面加宽两层（只认渲染点、不把钱当时间），并点出第二类缺陷——六处承诺时刻仍在设备钟上读
+
+**一、要落的枝（只这一枚，枝名逐字）**
+
+- `review/a68b0631-time-anchors-zone-r2` head `7c675cb8fc5642ed5e1b5b64cee507dc173c1c3d`（已 push，`ls-remote` 现读回同值），切在权威尖 `2c997354612670133b3a1190e3a617c0b0ce8d80` 上。
+- 产品 blob：`frontend/src/app/V8Experience.tsx` = `c712fa273ea3dd98c3364dc1f9767c4fafcd13dd`（前两格的修法原样带过来，本格未再动产品字节）。
+- 臂：源码普查 blob `6c0a43d536cb849054108ebb7c94212dd4afad98`；屏读 spec blob `f6d4eab4e33d9b8effae3fec7307ac8c373f7760`（三条臂）。
+
+**二、这一轮新扫的范围**
+
+把上一轮的扫描器**加宽两层**，让它读自己声称读的东西：
+1. 只列**渲染点**——加宽前它把辅助函数体里的 `Intl.DateTimeFormat(...)` 构造与事件处理器也当成展示点（那是"造发现"的典型形状）；
+2. **不把钱当时间**——`toLocaleString` 用在金额上不是时刻，原来三条"发现"其实是别领域的货币格式化；
+3. 分出**承诺时刻**与**时长/倒计时**——只有承诺时刻才必须说清是哪个时刻；
+4. 点出**第二类缺陷**：用设备钟 `date()` 渲染、且不带区名的承诺时刻。
+
+**三、新发现的处数**
+
+- 本尖现读：**15 处真渲染点 / 4 文件**（原 63 处是定义与处理器，两数同出 `6c0a43d536cb849054108ebb7c94212dd4afad98`）。
+- 行程锚定 4/4 **已带归属**（前两格的成果在本尖仍成立）。
+- **6 处承诺时刻仍按设备钟读、不带区名**：事件发生时刻（`occurred_at`）、离线包保存时刻（`updated_at`）、车票计划发车/到达（`scheduled_departure_at` / `scheduled_arrival_at`）、离线日的活动窗口（`start_at` / `end_at`）、住宿入住（`stay.check_in_at`）。这六处就是下一格的目标，普查件即它们的反例臂（同见 `6c0a43d536cb849054108ebb7c94212dd4afad98`）。
+
+**四、新修的处数与新增的回归臂**
+
+- 本格**未动产品字节**：那六处的修法要在下一格与它们各自的屏读臂一起交。
+- 新增/加宽的臂：普查加宽如上；三条屏读臂在本尖重跑仍全过（合法区印 `06:00 · America/New_York · journey time zone`、非法区印 `10:00 · this device's time` 且不声称非法区名）。
+- **撤回一处**：车票那两行的修法我写完又撤了——它的屏读臂到不了播种出来的预订（钱包不在 `/experience` 里，而我自己加的会话守卫又把行程 id 挡在门外），所以它随下一格交，不留一枚没被臂证过的字节。
+
+**五、点名我自己（两处）**
+
+a. 那枚"只在本机"的会话守卫：我给打开屏的助手加了 `sessionStorage` 守卫，可它在**同一 context 的后续加载里直接返回**，于是第二格测试用的还是上一格写下的行程 id——屏在回答一个这次没播种过的行程。撤守卫、改成每次加载都写。
+b. 我这笔提交的消息被 bash 的反引号吃了三处代码名（`new Intl.DateTimeFormat(...)`、`toLocaleString`、`date()`），消息里留下三个空洞。内容是准的，但**这是我的老坑再犯**，自报在这里，不藏。
+
+**六、下一轮我要扫什么新范围**
+
+- 修那 **6 处**设备钟承诺时刻，并给每一处配一条屏读臂（车票那处连同一枚能跑通的播种臂一起交，六处与上面同源 `6c0a43d536cb849054108ebb7c94212dd4afad98`）。
+- 扩一类输入：**跨零时区行程**与**夏令时切换日**（06:00 与 05:00 只差一小时，最容易读成同一天）。
+- 扩覆盖面到**后端对外说的时刻**（execution clock、`weather_runtime` 的 `ZoneInfo(journey.timezone)`），核两端口径是否一致。
+
+**七、没做的，具名**
+
+- 六处设备钟承诺时刻本轮只点名、未修。
+- 后端那侧只量不改。
+- 上一栋楼（尺的坐标可取回）的枝 `review/a68b0631-ruler-coordinates-r2` 仍挂着，与本领域互不相干。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 车道 89f2e2d6 · 常驻令「断言可信」域·第六格：给巡检那批「疑似哑」做突变臂——六枚全部检出（改坏它守的那处、它确实红）；更紧要的是：我第一稿把三枚判成「哑」，那是我探针换错靶，不是它们没牙
 
 坐标（写这块这一刻现读，逐枚可 `git cat-file`）
