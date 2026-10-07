@@ -454,8 +454,10 @@ class Constraint(ConstraintInput):
 
 
 class GeoPoint(BaseModel):
-    latitude: float
-    longitude: float
+    latitude: float = Field(..., ge=-90, le=90)
+    """Latitude within [-90, 90] — any other value refuses."""
+    longitude: float = Field(..., ge=-180, le=180)
+    """Longitude within [-180, 180] — any other value refuses."""
 
 
 class Place(BaseModel):
