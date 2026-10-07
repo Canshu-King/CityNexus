@@ -249,6 +249,7 @@ const en: Dict = {
   "hub.continuationResumeDeadline": "This wait reached the limit this screen allows. The request may or may not have arrived -- refresh to check before pressing again.",
   "hub.continuationResumeTransport": "This device could not send the request at all (connection failure). The record is still here.",
   "hub.continuationUnconfirmable": "There is a record of the last plan, but its progress cannot be read now, so how far it got is unconfirmed.",
+  "hub.continuationTechnicalDetail": "Technical detail",
 
 
 
@@ -1379,6 +1380,7 @@ const zhCN: Dict = {
   "hub.continuationResumeDeadline": "这一次等待到了本屏幕允许的时限。请求可能已经到达、也可能没有——请先刷新确认，不要连着再点。",
   "hub.continuationResumeTransport": "这一发在本机就没送出去（连接失败）。上次的记录还在。",
   "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+  "hub.continuationTechnicalDetail": "技术详情",
 
 
 

@@ -2909,7 +2909,7 @@ function Hub({
                    one element for a gate to read. */
                 <details className="today-continuation-technical" data-testid="continuation-technical-details">
                   <summary data-testid="continuation-technical-toggle">
-                    {zh ? "技术详情" : "Technical detail"}
+                    {t("hub.continuationTechnicalDetail")}
                   </summary>
                   <span data-testid="continuation-resume-server-reason">
                     {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
