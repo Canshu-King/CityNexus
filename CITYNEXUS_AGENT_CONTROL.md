@@ -16588,6 +16588,68 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cff87c64 · 认领领域「断言可信」· 第二件重投（基座换到最新现尖，父提即现尖⇒快进）
+
+候选 147e0c54ddca501d9e96a983cfc61a1e36dd8616（可 cat-file 解析为 commit），父提 96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9 = 现尖。枝 refs/heads/review/cff87c64-ord0562-widen-r2。
+
+一、这一件动的产品字节（三枚文件，与上一块同一处改动、换基座）
+- 现尖上 hub 之外三处被计数的英文仍在软化：恢复面板 frontend/src/features/execution/LiveRecovery.tsx:347（suggestion(s)）、行前检查 frontend/src/lib/pretripChecklist.ts:75（failure(s)）、模拟面板 frontend/src/features/simulation/simulationAdapter.ts:157（leg(s)）
+- 三处都走已在现尖上的 englishCountNoun：frontend/src/features/execution/LiveRecovery.tsx:348、frontend/src/lib/pretripChecklist.ts:77、frontend/src/features/simulation/simulationAdapter.ts:158。中文臂同槽位未动
+- 上一块（候选 37d5fdd9a，父提是上一代现尖）因基座落后一代被落地门退；本块以最新现尖为父重切，同一处改动、同一把反控臂
+
+二、反控臂（撤掉改动必须红）
+- 新第 6 臂 frontend/e2e/qoder-cff87c64-ord0562-english-count-nouns-r1.spec.ts:166：走遍 frontend/src 下每个 .ts/.tsx，逐**处**判有没有 `(s)` 软化，断言清单为空
+- 本块基座上的判别性实测：把这三枚文件按**现尖字节**还原 ⇒ 第 6 臂当场红、整趟 rc=1；换回本块字节即绿（六臂全绿）
+- 一次读数纠错（我自己的）：第一遍我用 `git checkout --` 还原，它取的是本块提交而不是现尖，所以那次"撤掉仍绿"是量错了还原对象，不是臂不咬；改成按现尖 sha 还原后即红
+
+三、本轮新扫范围 / 新发现处数 / 新修处数与新增回归臂 / 下一轮范围
+- 新扫范围：frontend/src 全树（hub 之外三屏）
+- 新发现处数：三处（上一行三枚 file:行 锚，逐处可取回）
+- 新修处数：三处（同上三枚锚）；新增回归臂：全树那一条，其 file:行 锚已给在本段第二行
+- 下一轮要扫的新范围：把同一把全树尺的判据从「模板串里的 (s)」扩到「拼出来的复数」——`${n} day` / `${n} person` 这类不带 (s) 却仍把复数写死的内联拼字，按同一形制收敛并各带反控臂
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 车道 89f2e2d6 · 硬目标下一件：「今天／下一站」那一片七处内联双语接进词典（七枚键）——父笔=现尖、快进、类型检查过、反控臂 30 条全绿。这一片有两处形状是全局替换会改错的，我都按形状处理并让臂能判别
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9`（按令先 `git fetch` 再建枝；令给的尖与本轮现读同值）。
+  - 候选提交 `a80e32615087305eed4bbd26cc485c02f38b8f58`，**父笔 = 上面那枚现尖**（`git rev-parse a80e3261…^` 现取 = `96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9`）⇒ 快进（`git merge-base --is-ancestor` 退码 0；只读落地面 `git merge-tree --write-tree` 预测树 `d3939f37e57384acb3f02d0d275d7e1a81fd23bb`，含 CONFLICT 的行 0 行）。
+  - 候选枝 `refs/heads/review/89f2e2d6-i18n-today-strip-r1` 现读枝头 = `a80e32615087305eed4bbd26cc485c02f38b8f58`（`git ls-remote --refs` 本轮现取，已推）。
+  - 改动只有两枚产品文件（`git diff --name-status 96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9 a80e3261…`：两枚均 M，无增删）。
+
+**一、本轮新扫的范围**
+
+  - 号令者盘点块说：现尖上 `frontend/src/app/V8Experience.tsx` 仍有**三十处** `zh ? "..." : "..."` 内联双语。我按行号分桶现读复核，**现读计数与盘点一致**，分布是（同文件内）：`frontend/src/app/V8Experience.tsx:2000-2499` 一处、`:2500-2999` 两处、`:3000-3499` 八处、`:4000-4499` 六处、`:4500-4999` 十二处、`:5000-5499` 一处。
+  - 这一格挑 `frontend/src/app/V8Experience.tsx:3000-3499` 那一片（「需要关注」与「下一站」），按常驻令「挑一处、四样齐全」。
+
+**二、新发现的处数**
+
+  - 这一片八处里，**七处是手写文案**（已接进词典）；剩下**一处是查表取值**，本就不该改，留在下一格逐处判。
+  - 两处形状是全局替换会改错的，我都按形状处理：
+    - **`需要关注` 在这一片出现两次**——一处是 `aria-label`（英文 `Needs attention`），一处是 kicker（英文 `Attention`）。**两个英文不一样**，所以给两枚键；合并成一枚就等于替其中一处悄悄挑了一个英文拼法。
+    - **`今天` 与 `接下来` 共用一行**（`nextUp ? ... : ...` 三元），所以改写必须在这一行里走**两段**，不能按行整换。
+
+**三、新修的处数与新增回归臂**
+
+  - 动产品字节两枚：七枚键（`today.needsAttentionAria`、`today.attentionKicker`、`today.reviewInLive`、`today.now`、`today.next`、`today.today`、`today.openLive`），中英各一份；组件那七处改为 `t(...)`。
+  - 类型检查：`tsc -p tsconfig.check.json --noEmit` 退出码 **0**（在**现尖字节**上跑的）。
+  - 新增回归臂：`review/ord0520/i18n_today_strip_arm_r1.py`，判语逐字 `ARM_BITES_AND_COUNTER_GOES_RED`，**30 条断言**（条数 `review/ord0520/I18N_TODAY_STRIP_ARM_r1.txt:3`）：每枚键在两臂都定义、**两臂文本必须不同**、其内联形制已消失、组件确实读了它、这一片已无 `zh ?` 残留、以及**两处 `需要关注` 仍是两枚不同的键**。
+  - 反控那一半：把两枚文件还原成现尖字节（只还原副本、原件零写），**逐条为假**（`review/ord0520/I18N_TODAY_STRIP_ARM_r1.txt:3` 那一份读数件里 `reverted_passing` 为空）⇒ 这个绿是在量这件改动。
+
+**四、下一格（自己派，不等单）**
+
+  - 继续按行号分桶推剩下三片：先 `frontend/src/app/V8Experience.tsx:4000-4499` 那一带（状态词那六处，多半是**函数返回**），再 `frontend/src/app/V8Experience.tsx:4500-4999` 那一带（十二处，含上一格点名的那三处函数返回值）。
+  - 每片一件、各带同形制反控臂；建枝前一律先 `git fetch` 对齐现尖（今晚尖已动数笔）。
+
+边界 A：产品字节改了两枚（`frontend/src` 下真实字节），契约零枚、他人量具零枚改动；本车道 `review/ord0520/` 下新增两枚（反控臂 + 读数件）。
+边界 B：权威线零移动；push 只落向本车道名下 `refs/heads/review/` 下的新枝（现读 `refs/heads/review/89f2e2d6-i18n-today-strip-r1` 一枚），force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**（只跑 `tsc` 与文本比对）；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 6a150e1e 车道 · 领域「断言可信」· `me` 屏标题与标签接进词典（四枚键、四处，产品字节改动）
 
 **〇、坐标**。权威尖现读 `96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`），候选 `36424a6fc02f2669953a31cacac8443c8132caf2` 父提 = 现尖，已推至 `review/6a150e1e-me-i18n-r1`。本块交收件口后由代插器取 `git diff` 逐枚核对。
