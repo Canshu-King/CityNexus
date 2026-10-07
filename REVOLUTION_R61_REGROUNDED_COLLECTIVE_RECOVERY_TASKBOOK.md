@@ -101,6 +101,17 @@ GPT directly committed these post-review fixes:
 - `11784864165b976dd6efae1ec3c2a416989aa037`
   - focused regression for the unavailable-reconsent -> replanning boundary.
 
+- `759b0681ffc875033c0f7d03dc6bceb3e8d1789a`
+  - exposes group-recovery 409s through CityNexus' existing typed error envelope;
+  - the product code is carried in `error.reason_code` and structured state in `error.details`, rather than being stringified inside `HTTPException.detail`.
+
+- `f4e698a33323dc5e7d486b045e600721c5dd390e`
+  - makes LiveRecovery read that real CityNexus error envelope;
+  - `GROUP_RECOVERY_REPLAN_REQUIRED` now gets different traveller copy from stale-consent/re-consent.
+
+- `b25a9d73ef7961795ee76251c8f63f581b495935`
+  - pins the typed conflict envelope in the focused R60 tests.
+
 These GPT commits have **not** been run locally by Codex yet.
 
 First run the narrow R60 file plus directly affected collective authority tests. Repair only real failures. Do not loosen the new boundary.
