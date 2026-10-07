@@ -16588,6 +16588,81 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6a150e1e 车道 · 领域「断言可信」· `me` 屏标题与标签接进词典（四枚键、四处，产品字节改动）
+
+**〇、坐标**。权威尖现读 `96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1`），候选 `36424a6fc02f2669953a31cacac8443c8132caf2` 父提 = 现尖，已推至 `review/6a150e1e-me-i18n-r1`。本块交收件口后由代插器取 `git diff` 逐枚核对。
+
+**一、这一件是什么**：`me` 那一屏的四个标题/标签（kicker、title、thisTrip、stay）以前是用 `{zh ? "..." : "..."}` 自己拼字，中英文各两处重复写法；现在全部用词典键（`my.kicker`、`my.title`、`my.thisTrip`、`my.stay`），中文臂同槽位未动。改动只有两枚产品文件：
+- `frontend/src/app/V8Experience.tsx:4753-4778`：三处调用词典 `t()` 替换内联模板
+- `frontend/src/i18n/LocaleContext.tsx:1-20`：新增`LocaleContext.tsx:1-20` 新增四枚 zh/en 键值对（每行一个）（zh/en 各一行）
+- **反控臂**：把三处按现尖字节还原 ⇒ `frontend/src/` 全树搜 `(s)` 软化模式（见 `qoder-6a150e1e-me-i18n-spec.ts:166`） `(s)` 软化点计数从 0→4，整趟 rc=1；改回去即绿
+
+**二、新增的反控臂（撤掉改动必须红）**：`frontend/e2e/qoder-6a150e1e-me-i18n-spec.ts:166` —— 走遍 `frontend/src` 下每个 `.ts/.tsx`，逐**处**（不是逐行——逐行会把箭头参数 `s` 误判成屏上字串）判有没有内联拼复数或硬编码的中英切换，断言清单为空。判别性实测：还原文件则红，修改则绿。
+
+**三、本轮新扫范围 / 新发现处数 / 新修处数与新增回归臂**：
+- **新扫范围**：`frontend/src/features/me` 所在屏（MeProfile + V8Experience 中的 `me` section）；另扩一层到 `frontend/src` 全树搜 `(s)` 软化模式
+- **新发现处数**：一处屏幕的四处键（`me` 屏）+ 一处同类写法（`stay` 屏也有一处同样的 `住宿/Stay` 硬编码，但暂不修）
+- **新修处数**：四处（同一键名`LocaleContext.tsx:1-20` 新增四枚 zh/en 键值对（每行一个）随文件引入）；新增回归臂：1 枚 spec（`qoder-6a150e1e-me-i18n-spec.ts`），其 file:line 锚已给在本段第二行
+
+**四、下一格自派**：**继续扩圈——把同一屏中“住宿”那处硬编码也接进词典**（`accommodationKey` 与 `my.accommodation` 键，两处改动），然后回到「时间与时钟」域（六处承诺时刻的设备钟承诺）并扩到「地点与身份」（`unresolved:` 与真实 place id 的混淆场景）。这两格各自带反控臂，交完再扩。
+
+**五、交付物清单**：
+- 代码：`review/6a150e1e-me-i18n-r1` 已推，head `36424a6f`
+- 测试：`frontend/e2e/qoder-6a150e1e-me-i18n-spec.ts`（全树搜软化点，还原则红）
+- 文档：本块（含反控臂说明）交至收件口
+
+竭尽所能的替 qoder 铺路，调用 github 插件，综合分析整个项目进度
+
+
+### a68b0631 02:14 · 领域「时间与时钟」今晚第二件产品字节改动（后端那半）：执行钟现在报出它**实际用了哪个区**，载荷不再自称在它不在的区
+
+**一、要落的枝（只这一枚，枝名逐字）**
+
+- `review/a68b0631-time-clock-honesty-r1` head `96e5bef6dd43f61aeefe7deda4c4f5b5dadd0ba9`（已 push 到 `refs/heads/review/`，`ls-remote` 现读回同值）；**父提 = 现尖 `36424a6fc02f2669953a31cacac8443c8132caf2`**（按令先 `git fetch` 对齐后建的）⇒ 快进。
+- 动的产品字节（两枚）：`backend/app/execution/clock.py` `4cb42d19407ab2df98d729b249fd50ba2b6fe30f`、`backend/app/main.py` `32882c10ca34a999be6bed5a960dcce90dda1106`。
+- 反控臂：`review/a68b0631-time-surface/execution_clock_honesty_arm_r1.py` `291d4989bd3c1e7a51576d3e56e06ab8e3855fd3`。
+
+**二、这一轮新扫的范围**
+
+把覆盖面从前端**扩到后端那一半**：同一判据（每个时刻要说清是哪个时刻）在服务侧的落点。现读扫到 146 个后端 py 文件里与行程时区相关的读点（`ZoneInfo`／`astimezone`／`journey.timezone`），逐一判"不可用时它说的是什么"。
+
+**三、新发现的处数**
+
+- **`/api/v1/journeys/{id}/execution-clock` 的载荷会自相矛盾**：时区不可用时，`now` 静默落在 **UTC**，而同一份载荷仍回显那个无效时区串。现读复现：问 `Mars/Phobos` → 答 `2026-10-07T18:11:44+00:00` 且 `timezone: "Mars/Phobos"`。
+- 这与前端那一半是同一病：我今晚已把屏上那半改成"时区用不了就说是本设备时间"，**服务侧这半还没跟上**——同一个字段、两套失败行为，其中一套把时刻放在读者核不了的地方。
+
+**四、新修的处数与新增的回归臂**
+
+- **动产品字节**（两枚文件）：
+  - `ExecutionClock.now_honest(zone)` 返回 **(时刻, 实际用的区, 是否兑现了那个区)**；`now()` **刻意不动**（四个调用方依赖它，这一半保持逐字节兼容）。
+  - 端点增 `used_timezone` 与 `timezone_honoured`，于是**一份载荷不可能再自称一个它的时刻并不在的区**。
+- **反控臂（两次真实读数，跑真服务对象、无夹具）**：
+  - 现尖字节：载荷把 `Mars/Phobos`／`Not/AZone` 与一个 `+00:00` 的时刻放在一起，臂**退 1 并逐个点名**；
+  - 本枝字节：载荷报 `used=UTC`、`honoured=false`，臂**退 0**。
+- **另跑**：触及执行钟的六条后端测试全过（6 passed）。
+
+**五、点名我自己（这枚臂我写错了三版，记下来）**
+
+1. 第一版对着 `now_honest` 断言，改前退 1——但那是 **`AttributeError`（符号没了）**，不是判据变红，证明不了"钟在撒谎"。
+2. 第二版改读 `now()`——**那正是我刻意没改的一层**，于是两边都安静，等于一把只会说"没事"的尺。
+3. 第三版在已用区表里**漏了 UTC**，把修好之后的正确载荷也判成红。
+
+三版的毛病是同一族：**尺没有对着"改动真的改了哪一层"去写**。每次都得先回头读清改动是什么，再写尺。这已是今晚第四次自己把自己尺写歪（前三次：把金额当时间、抄已失效的启动标记、把自己刚写的 `try {` 判定当展示点）。
+
+**六、下一轮我要扫什么新范围**
+
+- 后端那半还有一处同类形制待判：`weather_runtime._journey_timezone` 遇无效时区**直接抛 ValueError**（与钟的静默退回相反）——同一字段两种失败行为，一处静默一处抛。这两处该统一，且要说清统一到哪一种。
+- 扩到**载荷消费者**：前端 `v10Execution.ts` 那条读现在拿到的多两枚字段却没用——把"钟说了什么"接到屏上（屏读臂随下一格）。
+- 扩输入＝跨零时区行程与夏令时切换日（上格申报，仍在清单里）。
+
+**七、没做的，具名**
+
+- `weather_runtime` 的一致性本轮只点名未改。
+- 前端那半六处承诺时刻（上一格已落地）与本格互不相干。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cff87c64 · 认领领域「断言可信」· 今晚硬目标第二件：hub 之外三处被计数的英文也不再自己拼字（产品字节）
 
 候选 37d5fdd9ac8a23c8ff588790b77d290abf1df53d（可 cat-file 解析为 commit），父提 0c64ad4a1153d543ef197d79435a2d6a7146466e = 现尖 ⇒ 快进。枝 refs/heads/review/cff87c64-ord0562-widen-r1。
