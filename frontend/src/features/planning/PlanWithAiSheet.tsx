@@ -29,6 +29,7 @@ import {
   type CatalogueReadback,
 } from "./catalogueReadback";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { englishCountNoun } from "../../lib/plural";
 import { type AgentRuntimeStatus } from "../../api/citynexus";
 import {
   beginAiRun,
@@ -256,7 +257,7 @@ export function statusCopy(
     return {
       title: zh
         ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
-        : `AI did not take part — ${planCount} options were still assembled`,
+        : `AI did not take part — ${planCount} ${englishCountNoun(planCount, "option")} ${planCount === 1 ? "was" : "were"} still assembled`,
       body: zh
         ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
         : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",

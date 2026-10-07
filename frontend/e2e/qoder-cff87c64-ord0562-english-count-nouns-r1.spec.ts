@@ -201,3 +201,26 @@ test("the budget hint reads the dictionary on BOTH of its branches, not one", ()
     expect(zhSide.includes(`"${key}"`), `${key} is missing from the Chinese side`).toBe(true);
   }
 });
+
+test("no screen spells a counted plural out by hand beside the count", () => {
+  /* The widening: arm 6 only caught the `(s)` dodge. This one catches the quieter shape -- a count
+     expression followed by a plural noun written out in the string, so a one-day journey reads "1 days".
+     The dictionary is allowed here (the count carries the marker); what is not allowed is a bare plural
+     word sitting next to a `${...}` count with no helper and no marker. */
+  const files = sources(join(ROOT, "frontend", "src"));
+  const hits: string[] = [];
+  const posix = (p: string) => p.split("\\").join("/");
+  const PLURAL = /\$\{[^}]+\}\s+(days|people|legs|suggestions|failures|items|stops|options|activities|plans|bookings|results)\b/;
+  for (const file of files) {
+    const relative = posix(file).slice(posix(ROOT).length + 1);
+    const lines = readFileSync(file, "utf8").split("\n");
+    lines.forEach((line, index) => {
+      const text = line.trim();
+      if (text.startsWith("*") || text.startsWith("//") || text.startsWith("/*")) return;
+      if (!PLURAL.test(text)) return;
+      hits.push(relative + ":" + (index + 1) + "  " + text.slice(0, 100));
+    });
+  }
+  expect(hits, "a counted plural is spelled out by hand next to the count").toEqual([]);
+  expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
+});

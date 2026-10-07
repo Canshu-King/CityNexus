@@ -3137,14 +3137,14 @@ function Hub({
                 {todayStops.length
                   ? zh
                     ? `今天还有 ${todayStops.length} 项安排`
-                    : `${todayStops.length} stops today`
+                    : `${todayStops.length} ${englishCountNoun(todayStops.length, "stop")} today`
                   : /* An empty calendar day says nothing about whether further stops exist -- only
                        the server's sequence does.  "暂无安排" beside a real later stop was the same
                        contradiction in a smaller font. */
                     remainingAfterNext > 0
                       ? zh
                         ? `后面还有 ${remainingAfterNext} 站`
-                        : `${remainingAfterNext} stops after this`
+                        : `${remainingAfterNext} ${englishCountNoun(remainingAfterNext, "stop")} after this`
                       : zh
                         ? "这一趟到下一站就结束了"
                         : "This trip ends at the next stop"}

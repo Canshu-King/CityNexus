@@ -11,6 +11,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { englishCountNoun } from "../../lib/plural";
 import { readCheckins, stampStop } from "../checkin/checkins";
 import type { CheckinRefusalFacts } from "../checkin/checkins";
 import {
@@ -452,7 +453,7 @@ export function TripItinerary({
             >
               <span>{day.label}</span>
               <small>
-                {zh ? `${day.activities.length} 项` : `${day.activities.length} stops`}
+                {zh ? `${day.activities.length} 项` : `${day.activities.length} ${englishCountNoun(day.activities.length, "stop")}`}
               </small>
             </button>
           );
