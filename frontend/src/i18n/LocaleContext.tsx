@@ -48,7 +48,7 @@ const en: Dict = {
   "checkin.title": "Footprints",
   "checkin.scope": "Every stamp the server recorded on this trip, oldest first.",
     /* ORD-0531 building three cell 2 expansion: the stay section's inline Chinese/English split */
-    "my.accommodation": zh ? "住宿" : "Stay",
+    "my.accommodation": "Stay",
   "checkin.retry": "Read again",
   "checkin.loading": "Reading the footprints…",
   "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
@@ -1130,9 +1130,32 @@ const en: Dict = {
   "sharedPoster.download": "Save this picture",
   "sharedPoster.made": "Saved as a PNG.",
   "sharedPoster.failed": "The picture was not made: this device's drawing surface refused to draw.",
+    /* ORD-0531 building three cell 3 expansion: realtime labels from function returns */
+    "bookings.realtimeOnTime": "On time",
+    "realtimeDelayed": "Delayed",
+    "realtimeCancelled": "Cancelled",
+    "realtimeNoStatus": "No live status",
+    "realtimeStatusUnknown": "Status unknown",
+    /* ORD-0531 building three cell 3 expansion: switch labels from function returns */
+    "autoChangesOn": "Automatic changes are on",
+    "askBeforeImportantChanges": "I ask before important changes",
+    "suggestionsOnly": "Suggestions only",
 };
 
 const zhCN: Dict = {
+  /* ORD-0531 building three cell 2 expansion: the stay section's inline Chinese/English split */
+  "my.accommodation": "住宿",
+
+  /* ORD-0531 building three cell 3 expansion: realtime labels from function returns */
+  "bookings.realtimeOnTime": "准点",
+  "realtimeDelayed": "延误",
+  "realtimeCancelled": "已取消",
+  "realtimeNoStatus": "暂无实时状态",
+  "realtimeStatusUnknown": "状态未知",
+  /* ORD-0531 building three cell 3 expansion: switch labels from function returns */
+  "autoChangesOn": "自动执行已开启",
+  "askBeforeImportantChanges": "重要改动先问你",
+  "suggestionsOnly": "仅提供建议",
   // ── 导航标签 ──
   "nav.hub": "今天",
   "nav.studio": "行程工作台",

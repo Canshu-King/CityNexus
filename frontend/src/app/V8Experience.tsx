@@ -4190,15 +4190,15 @@ function bookingTypeLabel(value: string | null | undefined, zh: boolean): string
   return zh ? BOOKING_TYPE_UNKNOWN.zh : BOOKING_TYPE_UNKNOWN.en;
 }
 
-function realtimeLabel(value: string | null | undefined, zh: boolean): string {
+function realtimeLabel(value: string | null | undefined, zh: boolean, t: (key: string, params?: Record<string, string | number>) => string): string {
   const key = String(value ?? "").toUpperCase();
-  if (key === "ON_TIME" || key === "NORMAL") return zh ? "准点" : "On time";
-  if (key === "DELAYED") return zh ? "延误" : "Delayed";
-  if (key === "CANCELLED") return zh ? "已取消" : "Cancelled";
+  if (key === "ON_TIME" || key === "NORMAL") return t("bookings.realtimeOnTime");
+  if (key === "DELAYED") return t("realtimeDelayed");
+  if (key === "CANCELLED") return t("realtimeCancelled");
   if (key === "UNKNOWN_REALTIME" || key === "UNKNOWN" || !key) {
-    return zh ? "暂无实时状态" : "No live status";
+    return t("realtimeNoStatus");
   }
-  return zh ? "状态未知" : "Status unknown";
+  return t("realtimeStatusUnknown");
 }
 
 /* ORD-0517: a card's title is a name the server wrote, never an identifier. The key order below is
@@ -4472,7 +4472,7 @@ function Bookings({
               <div>
                 <span className="v8-selected-label neutral">
                   {bookingTypeLabel(item.reservation_type, zh)} ·{" "}
-                  {realtimeLabel(item.realtime_status, zh)}
+                  {realtimeLabel(item.realtime_status, zh, t)}
                 </span>
                 <h2 data-testid="wallet-reservation-title">
                   {reservationTitle(item) ?? t("bookings.reservationUnnamed")}
@@ -4687,14 +4687,14 @@ function Me({
   const zh = locale.startsWith("zh");
 
   // The traveller reads a human sentence, not the internal delegation enum.
-  const freedomLabel = (mode: string | null | undefined): string => {
+  const freedomLabel = (mode: string | null | undefined, zh: boolean, t: (key: string, params?: Record<string, string | number>) => string): string => {
     switch (String(mode ?? "").toUpperCase()) {
       case "AUTONOMOUS":
-        return zh ? "自动执行已开启" : "Automatic changes are on";
+        return t("autoChangesOn");
       case "ASSISTED":
-        return zh ? "重要改动先问你" : "I ask before important changes";
+        return t("askBeforeImportantChanges");
       default:
-        return zh ? "仅提供建议" : "Suggestions only";
+        return t("suggestionsOnly");
     }
   };
   const citySlug = String(data.journey.city_code || "")
@@ -4785,7 +4785,7 @@ function Me({
           <span className="v8-kicker">
             {zh ? "改动偏好" : "Change preferences"}
           </span>
-          <strong>{freedomLabel(policy?.mode)}</strong>
+          <strong>{freedomLabel(policy?.mode, zh, t)}</strong>
           <p>
             {zh
               ? "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。"
