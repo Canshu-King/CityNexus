@@ -16,6 +16,7 @@ from app.db.models import (
     JourneyMission,
     JourneyRoleCapability,
     PlanVersion,
+    RecoveryEpoch,
     ReplanProposal,
     Traveler,
 )
@@ -250,6 +251,40 @@ def collective_operator_projection(
         and receipt.candidate_surface_fingerprint == clarification.get("candidate_surface_fingerprint")
         and set(_json(receipt.required_member_ids_json, [])) == required_set
     )
+    # Read-side RecoveryEpoch freshness must match the write boundary. Do not
+    # call ensure_recovery_epoch() from this GET projection because that would
+    # mutate history. Recompute the semantic reality fingerprint read-only and
+    # refuse to advertise spendable authority when the bound generation is no
+    # longer the current world.
+    from app.recovery_epoch import recovery_reality_basis, recovery_reality_fingerprint
+
+    selected_for_epoch_id = str(clarification.get("selected_proposal_id") or "")
+    selected_for_epoch = (
+        session.get(ReplanProposal, selected_for_epoch_id)
+        if selected_for_epoch_id
+        else None
+    )
+    bound_epoch = (
+        session.get(RecoveryEpoch, str(selected_for_epoch.recovery_epoch_id))
+        if selected_for_epoch is not None and selected_for_epoch.recovery_epoch_id
+        else None
+    )
+    current_reality_fingerprint = recovery_reality_fingerprint(
+        recovery_reality_basis(session, journey)
+    )
+    recovery_epoch_current = bool(
+        bound_epoch is not None
+        and bound_epoch.status == "OPEN"
+        and str(bound_epoch.active_plan_version_id_at_open or "")
+        == str(journey.active_plan_version_id or "")
+        and str(bound_epoch.recovery_reality_fingerprint or "")
+        == current_reality_fingerprint
+        and (
+            receipt is None
+            or not receipt.recovery_epoch_id
+            or str(receipt.recovery_epoch_id) == str(bound_epoch.id)
+        )
+    )
     state = classify_collective_operator_state(
         member_count=len(required_ids) or len(member_rows),
         status=str(clarification.get("status") or ""),
@@ -258,6 +293,7 @@ def collective_operator_projection(
         stale=(
             membership_stale
             or not decision_is_current
+            or not recovery_epoch_current
             or str(clarification.get("status") or "").upper() == "STALE"
         ),
     )
@@ -314,6 +350,7 @@ def collective_operator_projection(
         state == "COLLECTIVE_AUTHORIZED"
         and decision_is_current
         and receipt_is_current
+        and recovery_epoch_current
         and selected_proposal_current
         and viewer_member is not None
         and viewer_member.role in member_update_roles
@@ -364,6 +401,7 @@ def collective_operator_projection(
         "status": clarification.get("status"),
         "mission_status": mission.status,
         "decision_epoch_current": not membership_stale and decision_is_current,
+        "recovery_epoch_current": recovery_epoch_current,
         "timeline": collective_operator_timeline(session, journey.id, member_rows),
     }
 
