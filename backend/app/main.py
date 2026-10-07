@@ -6719,11 +6719,16 @@ def list_journey_web_observations(journey_id: UUID, session: Session = Depends(g
 @app.get("/api/v1/journeys/{journey_id}/execution-clock")
 def get_journey_execution_clock(journey_id: UUID, session: Session = Depends(get_session)):
     journey = require(session, Journey, str(journey_id), "Journey")
-    now = execution_clock.now(journey.timezone)
+    now, used_timezone, honoured = execution_clock.now_honest(journey.timezone)
     return {
         "journey_id": journey.id,
         "now": now.isoformat(),
         "timezone": journey.timezone,
+        # Which zone `now` is actually in, and whether it is the one the journey asked for.  Without
+        # these two the payload could name a zone and carry a moment from another one, and a reader
+        # had no way to tell.
+        "used_timezone": used_timezone,
+        "timezone_honoured": honoured,
         "source": "EXECUTION_CLOCK",
         "current_activity_id": journey.current_activity_id,
     }
