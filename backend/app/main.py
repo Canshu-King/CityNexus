@@ -140,6 +140,7 @@ from app.db.models import (
     AutopilotEnrollment,
     CityService,
     CitySignalFixture,
+    CollectiveAuthorityReceipt,
     CounterfactualSimulation,
     EdgeDevice,
     ExternalReservationDraft,
@@ -10186,7 +10187,11 @@ def _group_recovery_reconsent_round(
         session.commit()
         return {
             "available": False,
-            "reason": "CURRENT_GROUNDED_OPTIONS_OR_AUTHORIZED_MEMBERS_INSUFFICIENT",
+            "reason": (
+                "CURRENT_GROUNDED_OPTIONS_INSUFFICIENT"
+                if len(options) < 2
+                else "AUTHORIZED_MEMBER_REQUIRED"
+            ),
             "mission_id": None,
             "clarification_id": None,
         }
@@ -10388,6 +10393,472 @@ def _group_recovery_conflict(detail: Mapping[str, Any]) -> HTTPException:
     return exc
 
 
+def _group_recovery_failure_class(detail: Any) -> str:
+    """Collapse internal apply failures into a small, safe product vocabulary."""
+
+    raw = str(detail.get("code") or "") if isinstance(detail, Mapping) else str(detail or "")
+    value = raw.casefold()
+    if "recovery_epoch" in value or "recovery epoch" in value:
+        return "RECOVERY_EPOCH_CHANGED"
+    if "protected" in value or "commitment" in value or "c4" in value:
+        return "PROTECTED_COMMITMENT_CHANGED"
+    if "mobility" in value or "route evidence" in value:
+        return "MOBILITY_EVIDENCE_INVALID"
+    if "cursor" in value or "current activity" in value or "execution state" in value:
+        return "EXECUTION_CURSOR_CHANGED"
+    if "feasib" in value or "constraint" in value or "schedule" in value:
+        return "FEASIBILITY_CHANGED"
+    if "proposal" in value or "trigger" in value or "base plan" in value:
+        return "PROPOSAL_NO_LONGER_CURRENT"
+    return "UNKNOWN_FAIL_CLOSED"
+
+
+def _group_recovery_reground_mission_for_key(
+    session: Session, journey_id: str, reground_key: str
+) -> JourneyMission | None:
+    for mission in session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey_id,
+            JourneyMission.is_standing.is_(False),
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all():
+        context = _json_object(mission.resolved_intent_json or "{}").get("group_recovery")
+        if isinstance(context, dict) and context.get("reground_key") == reground_key:
+            return mission
+    return None
+
+
+def _group_recovery_reground_state(mission: JourneyMission | None) -> str:
+    if mission is None:
+        return "RECOVERY_REPLAN_REQUIRED"
+    if mission.status == "FAILED_EXTERNAL":
+        return "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+    if mission.status in {"CREATED", "RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}:
+        return "RECOVERY_REGROUNDING"
+    return "RECOVERY_REGROUNDED"
+
+
+def _group_recovery_reground_after_failed_apply(
+    session: Session,
+    request: Request,
+    journey_id: str,
+    room_id: str,
+    root_mission_id: str,
+    proposal_id: str,
+    *,
+    failure_detail: Any,
+) -> dict[str, Any]:
+    """Durably retire an unexecutable group choice and start one PLAN_ONLY re-ground.
+
+    The helper is called only after the failed apply transaction is rolled back.
+    It preserves old member answers as history, invalidates their spend receipt,
+    binds the next mission to the currently open RecoveryEpoch, and never accepts
+    or activates a proposal.
+    """
+
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    now = datetime.now(timezone.utc).isoformat()
+    journey = require(session, Journey, journey_id, "Journey")
+    room = require(session, JourneyMission, room_id, "Journey mission")
+    root = require(session, JourneyMission, root_mission_id, "Journey mission")
+    proposal = session.get(ReplanProposalModel, proposal_id)
+    if proposal is None:
+        raise HTTPException(409, "GROUP_RECOVERY_FAILED_PROPOSAL_UNAVAILABLE")
+    principal, requester = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    clarification = _json_object(room.clarification_json or "{}")
+    root_context = _json_object(root.resolved_intent_json or "{}").get("group_recovery")
+    if not isinstance(root_context, dict):
+        root_context = {}
+    incident_key = str(root_context.get("incident_key") or "")
+    cause_class = _group_recovery_failure_class(failure_detail)
+    cause_detail = str(
+        failure_detail.get("code") or failure_detail
+        if isinstance(failure_detail, Mapping)
+        else failure_detail
+    )[:500]
+
+    # R61 continuation is only justified when the original user-requested
+    # group recovery is still the same live incident and a current member can
+    # authorize eventual Journey mutation. Planning itself remains PLAN_ONLY.
+    presence = group_presence_projection(session, journey, viewer_member_id=requester.id)
+    recovery = group_recovery_projection(presence)
+    affected = recovery.get("affected_member")
+    commitment = recovery.get("shared_commitment")
+    current_incident = (
+        group_recovery_incident_key(
+            journey_id=journey.id,
+            active_plan_version_id=str(journey.active_plan_version_id or ""),
+            affected_member_id=str(affected.get("member_id") or ""),
+            rendezvous_activity_id=str(commitment.get("activity_id") or ""),
+        )
+        if isinstance(affected, dict) and isinstance(commitment, dict) and journey.active_plan_version_id
+        else ""
+    )
+    member_projection = active_journey_members_with_capabilities(session, journey)
+    has_authorized_member = any(
+        bool(item.get("can_authorize_mutation"))
+        for item in member_projection.get("members", [])
+        if isinstance(item, dict)
+    )
+    may_continue = bool(
+        journey.status == "ACTIVE"
+        and journey.active_plan_version_id
+        and root_context.get("requested_by_member_id")
+        and incident_key
+        and incident_key == current_incident
+        and recovery.get("can_request_planning")
+        and has_authorized_member
+        and member_has_capability(session, requester, "JOURNEY_UPDATE")
+    )
+
+    current_epoch = ensure_recovery_epoch(session, journey)
+    reground_key = f"group-recovery-reground:{journey.id}:{incident_key}:{current_epoch.id}"
+
+    # A later world generation supersedes any still-running older re-ground;
+    # it does not reuse its proposals or human responses.
+    for older in session.scalars(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(False),
+        )
+    ).all():
+        older_context = _json_object(older.resolved_intent_json or "{}").get("group_recovery")
+        if not (
+            isinstance(older_context, dict)
+            and older_context.get("kind") == "R61_REGROUNDED_COLLECTIVE_RECOVERY"
+            and older_context.get("incident_key") == incident_key
+            and older_context.get("recovery_epoch_id") != current_epoch.id
+            and older.status in {"CREATED", "RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}
+        ):
+            continue
+        older.status = "SUPERSEDED"
+        older.failure_reason = "RECOVERY_EPOCH_SUPERSEDED"
+        older.completed_at = now
+        older_clarification = _json_object(older.clarification_json or "{}")
+        older_clarification["state"] = "STALE"
+        older_clarification["stale_reason"] = "RECOVERY_EPOCH_SUPERSEDED"
+        older.clarification_json = json.dumps(older_clarification, ensure_ascii=False, sort_keys=True)
+
+    old_clarification_id = str(clarification.get("clarification_id") or "")
+    old_receipt_id = str(clarification.get("authority_receipt_id") or "")
+    if not old_receipt_id:
+        for child in session.scalars(
+            select(JourneyMission).where(JourneyMission.parent_mission_id == room.id)
+        ).all():
+            decision = _json_object(child.resolved_intent_json or "{}").get("collective_decision")
+            if (
+                isinstance(decision, dict)
+                and str(decision.get("clarification_id") or "") == old_clarification_id
+            ):
+                old_receipt_id = str(decision.get("authority_receipt_id") or "")
+                if old_receipt_id:
+                    break
+    clarification["status"] = "STALE"
+    clarification["stale_reason"] = "RECOVERY_PLAN_UNEXECUTABLE"
+    clarification["stale_cause_class"] = cause_class
+    clarification["staled_at"] = clarification.get("staled_at") or now
+    clarification["r61_state"] = "RECOVERY_REPLAN_REQUIRED"
+    clarification["r61_reground_key"] = reground_key
+    clarification["r61_recovery_epoch_id"] = current_epoch.id
+    room.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+
+    receipt = session.get(CollectiveAuthorityReceipt, old_receipt_id) if old_receipt_id else None
+    if receipt is not None and receipt.invalidated_at is None:
+        receipt.invalidated_at = now
+        receipt.invalidation_code = "RECOVERY_PLAN_UNEXECUTABLE"
+    if proposal.status == "PRESENTED":
+        proposal.status = "INVALIDATED"
+    failed_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id or ""))
+    if failed_plan is not None and failed_plan.status == "CANDIDATE":
+        failed_plan.status = "REJECTED"
+
+    existing_transition = None
+    for audit in session.scalars(
+        select(AuditLog)
+        .where(
+            AuditLog.journey_id == journey.id,
+            AuditLog.action == "journey.group_recovery.replan_required",
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    ).all():
+        after = _json_object(audit.after_json or "{}")
+        if after.get("reground_key") == reground_key:
+            existing_transition = after
+            break
+    if existing_transition is None:
+        record_audit(
+            session,
+            action="journey.group_recovery.replan_required",
+            entity_type="ReplanProposal",
+            entity_id=proposal.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            actor_id="group-recovery-apply",
+            after={
+                "kind": "GROUP_RECOVERY_REPLAN_REQUIRED",
+                "incident_key": incident_key,
+                "failed_proposal_id": proposal.id,
+                "failed_decision_mission_id": room.id,
+                "old_clarification_id": old_clarification_id,
+                "old_authority_receipt_id": old_receipt_id or None,
+                "old_recovery_epoch_id": proposal.recovery_epoch_id,
+                "current_recovery_epoch_id": current_epoch.id,
+                "current_recovery_epoch_generation": current_epoch.generation,
+                "old_active_plan_version_id": journey.active_plan_version_id,
+                "cause_class": cause_class,
+                "cause": cause_detail,
+                "reground_key": reground_key,
+                "plan_unchanged": True,
+            },
+        )
+
+    reground_mission = _group_recovery_reground_mission_for_key(
+        session, journey.id, reground_key
+    )
+    reground_reused = reground_mission is not None
+    if reground_mission is None and may_continue:
+        command = (
+            "Re-ground the previously requested shared Journey recovery against the current reality. "
+            "Inspect the current Journey, member-specific context, protected commitments, and only current grounded options. "
+            "Use PLAN_ONLY authority; propose no mutation, booking, payment, or commitment change. "
+            "If the current evidence does not support a safe shared option, say so rather than reusing stale proposals or answers."
+        )
+        trigger_id = str(clarification.get("trigger_event_id") or room.trigger_event_id or "") or None
+        reground_mission = create_mission(
+            session,
+            journey,
+            command=command,
+            requested_autonomy="PLAN_ONLY",
+            trigger_event_id=trigger_id,
+            parent_mission_id=room.id,
+            use_model_draft=False,
+        )
+        # The deterministic primary key makes incident+epoch idempotency
+        # durable even if a retry lands on another API process.
+        reground_mission.id = str(uuid5(NAMESPACE_URL, reground_key))
+        try:
+            objective_codes = json.loads(reground_mission.objective_codes_json or "[]")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            objective_codes = []
+        reground_mission.objective_codes_json = json.dumps(
+            sorted(set(objective_codes if isinstance(objective_codes, list) else []) | {
+                "COLLECTIVE_JOURNEY_RECOVERY",
+                "COLLECTIVE_RECOVERY_REGROUND",
+            }),
+            ensure_ascii=False,
+        )
+        reground_mission.parent_mission_id = room.id
+        reground_mission.max_cost_delta_minor = min(
+            int(root.max_cost_delta_minor), int(room.max_cost_delta_minor)
+        )
+        reground_mission.max_loss_minor = min(int(root.max_loss_minor), int(room.max_loss_minor))
+        reground_mission.max_schedule_drift_min = min(
+            int(root.max_schedule_drift_min), int(room.max_schedule_drift_min)
+        )
+        reground_mission.protected_activity_ids_json = root.protected_activity_ids_json
+        reground_mission.mutable_activity_ids_json = root.mutable_activity_ids_json
+        reground_mission.allowed_action_classes_json = '["REQUEST_REPLAN"]'
+        reground_context = {
+            **root_context,
+            "kind": "R61_REGROUNDED_COLLECTIVE_RECOVERY",
+            "incident_key": incident_key,
+            "reground_key": reground_key,
+            "reground_generation": current_epoch.generation,
+            "recovery_epoch_id": current_epoch.id,
+            "recovery_epoch_generation": current_epoch.generation,
+            "failed_decision_mission_id": room.id,
+            "failed_clarification_id": old_clarification_id,
+            "failed_proposal_id": proposal.id,
+            "failed_authority_receipt_id": old_receipt_id or None,
+            "cause_class": cause_class,
+            "active_plan_version_id": journey.active_plan_version_id,
+            "hermes_run_id": None,
+        }
+        reground_resolved = _json_object(reground_mission.resolved_intent_json or "{}")
+        reground_resolved["objective_codes"] = json.loads(reground_mission.objective_codes_json)
+        reground_resolved["group_recovery"] = reground_context
+        reground_mission.resolved_intent_json = json.dumps(
+            reground_resolved, ensure_ascii=False, sort_keys=True
+        )
+        reground_intent = _json_object(reground_mission.intent_json or "{}")
+        reground_intent["objective_codes"] = json.loads(reground_mission.objective_codes_json)
+        reground_mission.intent_json = json.dumps(reground_intent, ensure_ascii=False, sort_keys=True)
+        reground_mission.clarification_json = json.dumps(
+            {
+                "kind": "GROUP_RECOVERY_REGROUND",
+                "state": "RECOVERY_REGROUNDING",
+                "incident_key": incident_key,
+                "reground_key": reground_key,
+                "failed_proposal_id": proposal.id,
+                "old_clarification_id": old_clarification_id,
+                "recovery_epoch_id": current_epoch.id,
+                "recovery_epoch_generation": current_epoch.generation,
+                "plan_unchanged": True,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        reground_mission.started_at = now
+        reground_mission.status = "CREATED"
+        session.flush()
+        record_audit(
+            session,
+            action="journey.group_recovery.reground.created",
+            entity_type="JourneyMission",
+            entity_id=reground_mission.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            actor_id="group-recovery-reground",
+            after={
+                "incident_key": incident_key,
+                "reground_key": reground_key,
+                "failed_proposal_id": proposal.id,
+                "old_clarification_id": old_clarification_id,
+                "recovery_epoch_id": current_epoch.id,
+                "recovery_epoch_generation": current_epoch.generation,
+                "requested_autonomy": "PLAN_ONLY",
+            },
+        )
+        session.commit()  # The bounded re-ground mission is durable before Hermes is contacted.
+
+        try:
+            native_status = native_hermes_status()
+        except httpx.HTTPError:
+            native_status = {
+                "ready": False,
+                "provider": settings.hermes_native_provider,
+                "model": settings.hermes_native_model,
+            }
+        if not native_status.get("ready"):
+            reground_mission.status = "FAILED_EXTERNAL"
+            reground_mission.failure_reason = "NATIVE_HERMES_UNAVAILABLE_FOR_GROUP_RECOVERY_REGROUND"
+            reground_mission.completed_at = datetime.now(timezone.utc).isoformat()
+            reground_state = _json_object(reground_mission.clarification_json or "{}")
+            reground_state["state"] = "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+            reground_mission.clarification_json = json.dumps(
+                reground_state, ensure_ascii=False, sort_keys=True
+            )
+            session.commit()
+        else:
+            native = HermesNativeClient()
+            try:
+                native_plan = mission_plan_for_model(reground_mission)
+                if "accept_replan" in native_plan.get("allowed_tools", []):
+                    raise RuntimeError("PLAN_ONLY_REGROUND_EXPOSED_ACCEPT_REPLAN")
+                native_run = native.create_run(
+                    mission_id=reground_mission.id,
+                    journey_id=journey.id,
+                    input_text=command,
+                    instructions=(
+                        "This is a bounded R61 re-grounding continuation of an already requested collective recovery. "
+                        "Inspect current Journey/Twin and current grounded proposals; old proposals and member answers are history only. "
+                        "Use current provider facts and deterministic feasibility. You may prepare current proposals but never accept, execute, book, pay, or mutate. "
+                        "Only request a new collective decision if the current server classification is HUMAN_TRADEOFF_REQUIRED with at least two current grounded feasible options. "
+                        f"For CityNexus MCP calls use journey_id {journey.id} and mission_id {reground_mission.id}."
+                    ),
+                    autonomy="PLAN_ONLY",
+                    mission_plan=native_plan,
+                    session_id=f"citynexus-{journey.id}-mission-{reground_mission.id}",
+                )
+                current_resolved = _json_object(reground_mission.resolved_intent_json or "{}")
+                current_context = current_resolved.get("group_recovery")
+                if isinstance(current_context, dict):
+                    current_context["hermes_run_id"] = native_run.run_id
+                    current_resolved["group_recovery"] = current_context
+                reground_mission.resolved_intent_json = json.dumps(
+                    current_resolved, ensure_ascii=False, sort_keys=True
+                )
+                reground_mission.status = "RUNNING"
+                reground_mission.started_at = datetime.now(timezone.utc).isoformat()
+                session.commit()
+                record_audit(
+                    session,
+                    action="journey.group_recovery.reground.started",
+                    entity_type="JourneyMission",
+                    entity_id=reground_mission.id,
+                    journey_id=journey.id,
+                    actor_type="SYSTEM",
+                    actor_id="group-recovery-reground",
+                    after={
+                        "incident_key": incident_key,
+                        "reground_key": reground_key,
+                        "recovery_epoch_id": current_epoch.id,
+                        "runtime_identity": "HERMES_NATIVE_MCP",
+                        "autonomy": "PLAN_ONLY",
+                    },
+                )
+                session.commit()
+            except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                reground_mission.status = "FAILED_EXTERNAL"
+                reground_mission.failure_reason = (
+                    f"NATIVE_HERMES_GROUP_RECOVERY_REGROUND_START_FAILED:{type(exc).__name__}"
+                )
+                reground_mission.completed_at = datetime.now(timezone.utc).isoformat()
+                state = _json_object(reground_mission.clarification_json or "{}")
+                state["state"] = "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+                reground_mission.clarification_json = json.dumps(
+                    state, ensure_ascii=False, sort_keys=True
+                )
+                session.commit()
+            finally:
+                native.close()
+        session.refresh(reground_mission)
+    elif reground_mission is None:
+        # Keep the old decision unspendable even when the incident has ended,
+        # the plan changed, or no member currently has mutation authority.
+        session.commit()
+
+    return {
+        "state": _group_recovery_reground_state(reground_mission) if may_continue else "RECOVERY_REPLAN_REQUIRED",
+        "mission_id": reground_mission.id if reground_mission is not None else None,
+        "mission_status": reground_mission.status if reground_mission is not None else None,
+        "reused": reground_reused,
+        "reground_key": reground_key,
+        "current_recovery_epoch_id": current_epoch.id,
+        "current_recovery_epoch_generation": current_epoch.generation,
+        "incident_key": incident_key,
+        "cause_class": cause_class,
+        "failed_proposal_id": proposal.id,
+        "old_clarification_id": old_clarification_id,
+        "plan_unchanged": journey.active_plan_version_id == str(root_context.get("active_plan_version_id") or journey.active_plan_version_id),
+    }
+
+
+def _group_recovery_reground_conflict(
+    session: Session,
+    request: Request,
+    journey: Journey,
+    room: JourneyMission,
+    root_mission: JourneyMission,
+    proposal_id: str,
+    *,
+    failure_detail: Any,
+) -> HTTPException:
+    reground = _group_recovery_reground_after_failed_apply(
+        session,
+        request,
+        journey.id,
+        room.id,
+        root_mission.id,
+        proposal_id,
+        failure_detail=failure_detail,
+    )
+    return _group_recovery_conflict(
+        {
+            "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
+            "state": reground["state"],
+            "cause_class": reground["cause_class"],
+            "plan_unchanged": True,
+            "reground": reground,
+        }
+    )
+
+
 @app.post("/api/v1/journeys/{journey_id}/group-recovery/apply")
 def apply_group_recovery(
     journey_id: UUID,
@@ -10482,11 +10953,34 @@ def apply_group_recovery(
         if room_match is None:
             raise HTTPException(409, "GROUP_RECOVERY_COLLECTIVE_ROOM_UNAVAILABLE")
         room, clarification, root_mission, group_context = room_match
+        room_intent = _json_object(room.resolved_intent_json or "{}")
+        room_context = room_intent.get("group_recovery")
 
         # A repeated stale attempt reuses the fresh successor that the first
         # attempt created. It never rewrites old answers or chooses for members.
         if clarification.get("status") != "RESOLVED":
             if clarification.get("status") == "STALE":
+                if clarification.get("r61_state") == "RECOVERY_REPLAN_REQUIRED":
+                    reground = _group_recovery_reground_after_failed_apply(
+                        session,
+                        request,
+                        journey.id,
+                        room.id,
+                        root_mission.id,
+                        str(clarification.get("selected_proposal_id") or ""),
+                        failure_detail={
+                            "code": clarification.get("stale_cause_class") or "UNKNOWN_FAIL_CLOSED"
+                        },
+                    )
+                    raise _group_recovery_conflict(
+                        {
+                            "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
+                            "state": reground["state"],
+                            "cause_class": reground["cause_class"],
+                            "plan_unchanged": True,
+                            "reground": reground,
+                        }
+                    )
                 reconsent = _group_recovery_reconsent_round(
                     session,
                     journey,
@@ -10507,7 +11001,8 @@ def apply_group_recovery(
                 )
             if (
                 clarification.get("status") == "WAITING_FOR_MEMBERS"
-                and group_context.get("reconsent_for_clarification_id")
+                and isinstance(room_context, dict)
+                and room_context.get("reconsent_for_clarification_id")
             ):
                 raise _group_recovery_conflict(
                     {
@@ -10591,6 +11086,19 @@ def apply_group_recovery(
                     group_context,
                     stale_reason=str(exc.detail)[:120],
                 )
+                if reconsent.get("reason") == "CURRENT_GROUNDED_OPTIONS_INSUFFICIENT":
+                    raise _group_recovery_reground_conflict(
+                        session,
+                        request,
+                        journey,
+                        room,
+                        root_mission,
+                        proposal.id,
+                        failure_detail={
+                            "code": "PROPOSAL_NO_LONGER_CURRENT_AFTER_CONSENT_STALE",
+                            "cause": str(exc.detail)[:300],
+                        },
+                    ) from exc
                 raise _group_recovery_conflict(
                     _group_recovery_stale_or_replan_detail(
                         cause=str(exc.detail),
@@ -10656,6 +11164,19 @@ def apply_group_recovery(
                     group_context,
                     stale_reason=reconsent_code,
                 )
+                if reconsent.get("reason") == "CURRENT_GROUNDED_OPTIONS_INSUFFICIENT":
+                    raise _group_recovery_reground_conflict(
+                        session,
+                        request,
+                        journey,
+                        room,
+                        root_mission,
+                        proposal.id,
+                        failure_detail={
+                            "code": "PROPOSAL_NO_LONGER_CURRENT_AFTER_CONSENT_STALE",
+                            "cause": str(exc.detail)[:300],
+                        },
+                    ) from exc
                 raise _group_recovery_conflict(
                     _group_recovery_stale_or_replan_detail(
                         cause=str(exc.detail),
@@ -10667,32 +11188,15 @@ def apply_group_recovery(
             # longer executable. Preserve their historical consent and demand
             # a fresh grounded proposal instead of opening a sham re-vote on
             # the same invalid plan.
-            record_audit(
+            session.rollback()
+            raise _group_recovery_reground_conflict(
                 session,
-                action="journey.group_recovery.replan_required",
-                entity_type="ReplanProposal",
-                entity_id=proposal.id,
-                journey_id=journey.id,
-                actor_type="SYSTEM",
-                actor_id="group-recovery-apply",
-                after={
-                    "incident_key": group_context.get("incident_key"),
-                    "decision_mission_id": room.id,
-                    "clarification_id": clarification.get("clarification_id"),
-                    "proposal_id": proposal.id,
-                    "authority_receipt_id": resolved.get("authority_receipt_id"),
-                    "cause": str(exc.detail),
-                    "plan_unchanged": True,
-                },
-            )
-            session.commit()
-            raise _group_recovery_conflict(
-                {
-                    "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
-                    "cause": str(exc.detail),
-                    "plan_unchanged": True,
-                    "reconsent": {"available": False},
-                }
+                request,
+                journey,
+                room,
+                root_mission,
+                proposal.id,
+                failure_detail=exc.detail,
             ) from exc
         return result
 

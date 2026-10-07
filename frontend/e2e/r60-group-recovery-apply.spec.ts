@@ -9,19 +9,32 @@ const SELECTED = "proposal-r60-selected";
 const SIBLING = "proposal-r60-sibling";
 
 type Viewer = "owner" | "admin";
-type Stage = "authorized" | "applied" | "stale";
+type Stage = "authorized" | "applied" | "stale" | "regrounding" | "regrounded";
 
 function operatorFor(viewer: Viewer, stage: Stage) {
-  const authorized = stage !== "stale";
+  const authorized = stage === "authorized" || stage === "applied";
   const applied = stage === "applied";
-  const waiting = stage === "stale";
-  const missionId = waiting ? "r60-fresh-round" : "r60-shared-round";
-  const clarificationId = waiting ? "r60-fresh-clarification" : "r60-current-clarification";
-  const collectiveState = waiting ? "WAITING_FOR_MEMBERS" : applied ? "COLLECTIVE_STALE" : "COLLECTIVE_AUTHORIZED";
-  const options = [
-    { proposal_id: waiting ? "proposal-r60-fresh-a" : SELECTED, label: "Keep the garden stop", schedule_delta_min: 5 },
-    { proposal_id: waiting ? "proposal-r60-fresh-b" : SIBLING, label: "Wait together for the museum", schedule_delta_min: 15 },
-  ];
+  const waiting = stage === "stale" || stage === "regrounded";
+  const regrounding = stage === "regrounding";
+  const regrounded = stage === "regrounded";
+  const missionId = regrounding || regrounded
+    ? "r61-reground-mission"
+    : waiting ? "r60-fresh-round" : "r60-shared-round";
+  const clarificationId = regrounded
+    ? "r61-fresh-clarification"
+    : waiting ? "r60-fresh-clarification" : "r60-current-clarification";
+  const collectiveState = waiting
+    ? "WAITING_FOR_MEMBERS"
+    : applied || regrounding ? "COLLECTIVE_STALE" : "COLLECTIVE_AUTHORIZED";
+  const options = regrounded
+    ? [
+        { proposal_id: "proposal-r61-fresh-a", label: "Current garden option", schedule_delta_min: 5 },
+        { proposal_id: "proposal-r61-fresh-b", label: "Current museum option", schedule_delta_min: 15 },
+      ]
+    : [
+        { proposal_id: waiting ? "proposal-r60-fresh-a" : SELECTED, label: "Keep the garden stop", schedule_delta_min: 5 },
+        { proposal_id: waiting ? "proposal-r60-fresh-b" : SIBLING, label: "Wait together for the museum", schedule_delta_min: 15 },
+      ];
   return {
     journey_id: JOURNEY_ID,
     state: "INVESTIGATING",
@@ -71,33 +84,67 @@ function operatorFor(viewer: Viewer, stage: Stage) {
       can_guide: false,
     },
     group_recovery: {
-      state: applied ? "RECOVERY_APPLIED" : waiting ? "COLLECTIVE_WAITING_FOR_MEMBERS" : "COLLECTIVE_AUTHORIZED",
+      state: applied
+        ? "RECOVERY_APPLIED"
+        : regrounding
+          ? "RECOVERY_REGROUNDING"
+          : regrounded
+            ? "RECOVERY_REGROUNDED_DECISION_REQUIRED"
+            : waiting ? "COLLECTIVE_WAITING_FOR_MEMBERS" : "COLLECTIVE_AUTHORIZED",
       headline: applied
         ? "The shared recovery was applied. Everyone is now following the updated Journey."
-        : waiting
-          ? "A fresh shared decision is waiting for current member responses."
-          : "The group agreed on this exact recovery. A traveller with Journey editing authority can apply it.",
+        : regrounding
+          ? "CityNexus is checking the changed trip against current evidence. The Journey has not changed."
+          : regrounded
+            ? "A fresh grounded shared decision is waiting for current member responses."
+            : waiting
+              ? "A fresh shared decision is waiting for current member responses."
+              : "The group agreed on this exact recovery. A traveller with Journey editing authority can apply it.",
+      old_decision: regrounding || regrounded
+        ? {
+            clarification_id: "r60-old-clarification",
+            authority_receipt_id: "r60-old-receipt",
+            selected_proposal_id: "proposal-r60-dead-choice",
+          }
+        : undefined,
+      reground_result: regrounded
+        ? {
+            state: "RECOVERY_REGROUNDED_DECISION_REQUIRED",
+            collective_classification: "HUMAN_TRADEOFF_REQUIRED",
+            current_proposal_ids: ["proposal-r61-fresh-a", "proposal-r61-fresh-b"],
+            grounded_feasible_proposal_ids: ["proposal-r61-fresh-a", "proposal-r61-fresh-b"],
+            current_options: [
+              { proposal_id: "proposal-r61-fresh-a", status: "GROUNDED_FEASIBLE", place_names: ["Current garden option"] },
+              { proposal_id: "proposal-r61-fresh-b", status: "GROUNDED_FEASIBLE", place_names: ["Current museum option"] },
+            ],
+            plan_unchanged: true,
+          }
+        : undefined,
       affected_member: { member_id: "member-admin-r60", display_name: "Bo", authority: "ADVISORY_FOREGROUND_WEB", eta_minutes: 34, route_provenance: "CAPTURED_REPLAY", route_evidence_state: "CAPTURED_REPLAY" },
       shared_commitment: { activity_id: "protected-arrival-r60", title: "Protected arrival", slack_after_buffer_min: -8 },
       options: [{ kind: "KEEP_PLAN_MEMBER_CATCH_UP", mutates_plan: false }, { kind: "ADAPT_REMAINING_JOURNEY", mutates_plan: true }],
       decision_authority: "COLLECTIVE_IF_PLAN_CHANGES",
       can_request_planning: false,
       mission: { mission_id: missionId, status: waiting ? "WAITING_FOR_MEMBERS" : applied ? "COMPLETED" : "ANSWERED" },
-      collective_decision: {
-        mission_id: missionId,
-        state: applied ? "RECOVERY_APPLIED" : collectiveState,
-        required_count: 2,
-        response_count: waiting ? 0 : 2,
-        waiting_for_member_count: waiting ? 2 : 0,
-        viewer_has_responded: !waiting,
-        viewer_can_apply: !waiting && !applied && viewer === "owner",
-        authority_receipt_id: authorized ? "receipt-r60-current" : null,
-        selected_proposal_id: authorized ? SELECTED : null,
-        selected_plan_version_id: authorized ? NEW_PLAN : null,
-        selected_option_label: authorized ? "Keep the garden stop" : null,
-        reconsent_required: waiting,
-        proposal_ids: waiting ? ["proposal-r60-fresh-a", "proposal-r60-fresh-b"] : [SELECTED, SIBLING],
-      },
+      collective_decision: regrounding
+        ? undefined
+        : {
+            mission_id: missionId,
+            state: applied ? "RECOVERY_APPLIED" : collectiveState,
+            required_count: 2,
+            response_count: waiting ? 0 : 2,
+            waiting_for_member_count: waiting ? 2 : 0,
+            viewer_has_responded: !waiting,
+            viewer_can_apply: !waiting && !applied && viewer === "owner",
+            authority_receipt_id: authorized ? "receipt-r60-current" : null,
+            selected_proposal_id: authorized ? SELECTED : null,
+            selected_plan_version_id: authorized ? NEW_PLAN : null,
+            selected_option_label: authorized ? "Keep the garden stop" : null,
+            reconsent_required: waiting,
+            proposal_ids: regrounded
+              ? ["proposal-r61-fresh-a", "proposal-r61-fresh-b"]
+              : waiting ? ["proposal-r60-fresh-a", "proposal-r60-fresh-b"] : [SELECTED, SIBLING],
+          },
       ...(applied ? {
         applied: {
           selected_proposal_id: SELECTED,
@@ -116,8 +163,10 @@ function operatorFor(viewer: Viewer, stage: Stage) {
 }
 
 function proposals(stage: Stage) {
-  if (stage === "applied") return [];
-  const ids = stage === "stale" ? ["proposal-r60-fresh-a", "proposal-r60-fresh-b"] : [SELECTED, SIBLING];
+  if (stage === "applied" || stage === "regrounding") return [];
+  const ids = stage === "regrounded"
+    ? ["proposal-r61-fresh-a", "proposal-r61-fresh-b"]
+    : stage === "stale" ? ["proposal-r60-fresh-a", "proposal-r60-fresh-b"] : [SELECTED, SIBLING];
   return ids.map((id) => ({
     id,
     status: "PRESENTED",
@@ -300,6 +349,55 @@ test("R60 stale consent is visibly expired and both members see one fresh round"
     await expect(adminPage.getByTestId("journey-operator-collective")).toContainText("0/2 have answered");
     await expect(adminPage.locator(".journey-operator-collective-options button")).toHaveCount(2);
     expect(applyCount).toBe(1);
+  } finally {
+    await ownerContext.close();
+    await adminContext.close();
+  }
+});
+
+test("R61 re-grounding remains read-only and opens one genuinely fresh room for both members", async ({ browser }) => {
+  const ownerContext = await browser.newContext();
+  const adminContext = await browser.newContext();
+  let currentStage: Stage = "regrounding";
+  const ownerPlans: string[] = [];
+  const adminPlans: string[] = [];
+  try {
+    const ownerPage = await ownerContext.newPage();
+    const adminPage = await adminContext.newPage();
+    await prepareViewer(ownerContext, ownerPage, "owner", () => currentStage, {
+      observedActivePlans: ownerPlans,
+    });
+    await prepareViewer(adminContext, adminPage, "admin", () => currentStage, {
+      observedActivePlans: adminPlans,
+    });
+    await Promise.all([ownerPage.goto("/v8/live"), adminPage.goto("/v8/live")]);
+
+    for (const page of [ownerPage, adminPage]) {
+      const recovery = page.getByTestId("journey-group-recovery");
+      await expect(recovery.getByTestId("journey-group-recovery-old-decision")).toBeVisible();
+      await expect(recovery.getByTestId("journey-group-recovery-regrounding")).toContainText("cannot apply a plan");
+      await expect(recovery.getByTestId("journey-group-recovery-apply")).toHaveCount(0);
+      await expect(page.getByTestId("live-accept")).toHaveCount(0);
+    }
+    expect(ownerPlans.every((id) => id === OLD_PLAN)).toBe(true);
+    expect(adminPlans.every((id) => id === OLD_PLAN)).toBe(true);
+
+    currentStage = "regrounded";
+    await Promise.all([ownerPage.reload(), adminPage.reload()]);
+    for (const page of [ownerPage, adminPage]) {
+      const recovery = page.getByTestId("journey-group-recovery");
+      await expect(recovery.getByTestId("journey-group-recovery-old-decision")).toBeVisible();
+      await expect(recovery.getByTestId("journey-group-recovery-collective-state")).toContainText("0/2");
+      await expect(page.getByTestId("journey-operator-collective")).toContainText("0/2 have answered");
+      const freshOptions = page.locator(".journey-operator-collective-options button");
+      await expect(freshOptions).toHaveCount(2);
+      await expect(freshOptions.nth(0)).toContainText("Current garden option");
+      await expect(freshOptions.nth(1)).toContainText("Current museum option");
+      await expect(recovery.getByTestId("journey-group-recovery-apply")).toHaveCount(0);
+      await expect(page.getByTestId("live-accept")).toHaveCount(0);
+    }
+    expect(ownerPlans.every((id) => id === OLD_PLAN)).toBe(true);
+    expect(adminPlans.every((id) => id === OLD_PLAN)).toBe(true);
   } finally {
     await ownerContext.close();
     await adminContext.close();

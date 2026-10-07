@@ -433,6 +433,10 @@ def _acceptance_requested(mission: JourneyMission) -> bool:
 
 def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) -> str:
     traveler_twin = snapshot_payload(refresh_snapshot(session, journey.traveler_id))
+    try:
+        objective_codes = set(json.loads(mission.objective_codes_json or "[]"))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        objective_codes = set()
     return (
         "You are the CityNexus Delegated Autonomous Journey Agent. "
         "Use only the CityNexus tools supplied by the server. "
@@ -470,6 +474,11 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "Use the server-returned per-member fit matrix and mediation classification: seek a grounded compromise before asking people, never majority-vote, and never ask a member about opening, cost, mobility, or provider identity. "
         "A compromise candidate must be revalidated by CityNexus for every member; member IDs and Place IDs in tool results are evidence to evaluate, not permission to mutate. "
         "For shared Journeys, treat the server-returned member fit, mediation classification, and collective authority receipt as the authority boundary. Preserve every member's explicit choice, never majority-vote or invent member IDs, and use available tools to gather facts or present unresolved authority without prescribing a tool order. "
+        + (
+            "For R61 re-grounding, use only proposals returned for this current RecoveryEpoch. A stale prior proposal or member response is history, never a current option. Open a new collective decision only when current grounded proposals return HUMAN_TRADEOFF_REQUIRED; otherwise use the typed NO_ACTION conclusion to record the server-derived current result. This mission is PLAN_ONLY and must never mutate the Journey. "
+            if "COLLECTIVE_RECOVERY_REGROUND" in objective_codes
+            else ""
+        )
         + (
             "This is PLAN_ONLY: do not accept or execute a mutating action."
             if mission.requested_autonomy == "PLAN_ONLY"
@@ -756,6 +765,38 @@ def _server_completion_contract(
         and item.get("status") != "TOOL_ERROR"
     ]
     requested = conclusions[-1] if conclusions else None
+    r61_conclusion = next(
+        (
+            item.get("result", {}).get("r61_completion")
+            for item in reversed(tool_steps)
+            if item.get("tool_name") == "conclude_recovery"
+            and isinstance(item.get("result"), dict)
+            and item.get("status") != "TOOL_ERROR"
+            and isinstance(item.get("result", {}).get("r61_completion"), dict)
+        ),
+        None,
+    )
+    if (
+        requested == "NO_ACTION"
+        and isinstance(r61_conclusion, dict)
+        and r61_conclusion.get("state")
+        in {
+            "RECOVERY_REGROUNDED_NO_ACTION",
+            "RECOVERY_REGROUNDED_DOMINANT",
+            "RECOVERY_REGROUND_NO_FEASIBLE_OPTION",
+        }
+        and r61_conclusion.get("plan_unchanged") is True
+        and r61_conclusion.get("mutation_count") == 0
+    ):
+        return {
+            "kind": "NO_ACTION",
+            "source": "server_trace",
+            "r61_state": r61_conclusion["state"],
+            "incident_key": r61_conclusion.get("incident_key"),
+            "recovery_epoch_id": r61_conclusion.get("recovery_epoch_id"),
+            "collective_classification": r61_conclusion.get("collective_classification"),
+            "current_proposal_ids": r61_conclusion.get("current_proposal_ids") or [],
+        }
     if requested == "MUTATION_EXECUTED" and executed:
         return {"kind": requested, "source": "server_trace"}
     if requested == "APPROVAL_PENDING" and approval_pending:
@@ -849,6 +890,8 @@ def _terminal_agent_status(
 
     run_status = "COMPLETED" if has_final_text else "PARTIAL"
     completion = _server_completion_contract(tool_steps, run_status=run_status)
+    if completion.get("r61_state"):
+        run_status = "COMPLETED"
     waiting_for_approval = completion["kind"] == "APPROVAL_PENDING"
     if waiting_for_approval:
         run_status = "WAITING_FOR_APPROVAL"

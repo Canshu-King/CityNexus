@@ -677,6 +677,13 @@ export function LiveRecovery({
     "COLLECTIVE_DECISION_REQUIRED",
     "RECOVERY_PROPOSAL_READY",
     "RECOVERY_EXTERNAL_AGENT_BLOCKED",
+    "RECOVERY_REPLAN_REQUIRED",
+    "RECOVERY_REGROUNDING",
+    "RECOVERY_REGROUNDED_NO_ACTION",
+    "RECOVERY_REGROUNDED_DOMINANT",
+    "RECOVERY_REGROUNDED_DECISION_REQUIRED",
+    "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED",
+    "RECOVERY_REGROUND_NO_FEASIBLE_OPTION",
     "RECOVERY_APPLIED",
     "COLLECTIVE_WAITING_FOR_MEMBERS",
     "COLLECTIVE_MEDIATING",
@@ -1087,6 +1094,41 @@ export function LiveRecovery({
               <div className="journey-group-recovery" data-testid="journey-group-recovery" data-recovery-state={groupRecovery.state} aria-live="polite">
                 <span className="v8-kicker">{zh ? "一起决定怎么继续" : "Choose how the group continues"}</span>
                 <strong data-testid="journey-group-recovery-headline">{groupRecovery.headline}</strong>
+                {groupRecovery.old_decision && groupRecovery.state.startsWith("RECOVERY_REGROUND") && (
+                  <small data-testid="journey-group-recovery-old-decision">
+                    {zh
+                      ? "之前的共同选择仍保留在历史中，但旧方案和旧回答已不能用于当前行程；当前 Journey 没有改变。"
+                      : "The earlier group choice remains in history, but its proposal and answers cannot be reused for the current trip. The Journey is unchanged."}
+                  </small>
+                )}
+                {groupRecovery.state === "RECOVERY_REPLAN_REQUIRED" && (
+                  <small data-testid="journey-group-recovery-replan-required">
+                    {zh
+                      ? "旧决定已停止生效；当前状态没有允许自动重新规划，因此不会重复询问或套用旧方案。"
+                      : "The old decision is no longer spendable. Current conditions do not permit an automatic re-ground, so no old option or answer will be reused."}
+                  </small>
+                )}
+                {groupRecovery.state === "RECOVERY_REGROUNDING" && (
+                  <small data-testid="journey-group-recovery-regrounding">
+                    {zh
+                      ? "CityNexus 正在按当前行程和当前事实重新找方案；这一步不会应用计划。"
+                      : "CityNexus is checking the current Journey and current evidence for new options. This planning step cannot apply a plan."}
+                  </small>
+                )}
+                {groupRecovery.state === "RECOVERY_REGROUND_NO_FEASIBLE_OPTION" && (
+                  <small data-testid="journey-group-recovery-no-feasible">
+                    {zh
+                      ? "暂时找不到满足当前保护承诺与现实证据的共享调整；大家仍可按现有集合指引继续会合。"
+                      : "No shared adjustment currently satisfies the protected commitments and available evidence. The existing rendezvous guidance remains available."}
+                  </small>
+                )}
+                {groupRecovery.reground_result?.state === "RECOVERY_REGROUNDED_DOMINANT" && (
+                  <small data-testid="journey-group-recovery-regrounded-option">
+                    {zh
+                      ? `已按当前现实重新核验出 ${groupRecovery.reground_result.grounded_feasible_proposal_ids?.length ?? 0} 个可行共享方案${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).length ? `：${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).join("、")}` : ""}。行程尚未改变；这只是新方案，不会自动应用，后续仍走现有集体授权。`
+                      : `${groupRecovery.reground_result.grounded_feasible_proposal_ids?.length ?? 0} grounded shared option(s) were rechecked against the current trip${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).length ? `: ${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).join(", ")}` : ""}. The Journey is unchanged; this is a proposal, not an automatic plan change, and existing collective authority still applies.`}
+                  </small>
+                )}
                 {groupRecovery.affected_member && groupRecovery.shared_commitment && (
                   <small data-testid="journey-group-recovery-risk">
                     {zh

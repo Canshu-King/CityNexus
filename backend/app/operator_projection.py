@@ -174,7 +174,7 @@ def attach_collective_recovery_projection(
         group_recovery["headline"] = {
             "COLLECTIVE_WAITING_FOR_MEMBERS": "A shared recovery choice is waiting for the travellers it affects.",
             "COLLECTIVE_MEDIATING": "The travellers chose differently; CityNexus is preserving that disagreement while seeking a fair next step.",
-            "COLLECTIVE_AUTHORIZED": "The group agreed on this exact recovery. A traveller with Journey editing authority can apply it.",
+            "COLLECTIVE_AUTHORIZED": "The Journey has not changed. The group agreed on this exact recovery; a traveller with Journey editing authority can apply it.",
             "COLLECTIVE_STALE": "The trip or its evidence changed; the old group choices can no longer be used.",
             "COLLECTIVE_DECISION_REQUIRED": "The group response is recorded, but current collective authority is not available to carry this proposal forward.",
         }[group_state]
@@ -577,6 +577,7 @@ def operator_projection(
             affected_member_id=str(affected_member.get("member_id") or ""),
             rendezvous_activity_id=str(shared_commitment.get("activity_id") or ""),
         )
+        r61_mission_found = False
         for candidate in session.scalars(
             select(JourneyMission)
             .where(JourneyMission.journey_id == journey.id, JourneyMission.is_standing.is_(False))
@@ -590,6 +591,85 @@ def operator_projection(
             context = resolved.get("group_recovery") if isinstance(resolved, dict) else None
             if not isinstance(context, dict) or context.get("incident_key") != incident_key:
                 continue
+            if context.get("kind") == "R61_REGROUNDED_COLLECTIVE_RECOVERY":
+                r61_mission_found = True
+                clarification = _json(candidate.clarification_json, {})
+                bound_epoch_id = str(context.get("recovery_epoch_id") or "")
+                current_epoch = session.scalars(
+                    select(RecoveryEpoch)
+                    .where(
+                        RecoveryEpoch.journey_id == journey.id,
+                        RecoveryEpoch.status == "OPEN",
+                    )
+                    .order_by(RecoveryEpoch.generation.desc(), RecoveryEpoch.id.desc())
+                ).first()
+                epoch_is_current = bool(
+                    current_epoch is not None and str(current_epoch.id) == bound_epoch_id
+                )
+                reground_state = str(
+                    clarification.get("state")
+                    or (
+                        "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+                        if candidate.status == "FAILED_EXTERNAL"
+                        else "RECOVERY_REGROUNDING"
+                        if candidate.status in {"CREATED", "RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}
+                        else "RECOVERY_REGROUNDED_NO_ACTION"
+                    )
+                )
+                if not epoch_is_current:
+                    reground_state = "RECOVERY_REPLAN_REQUIRED"
+                state_headlines = {
+                    "RECOVERY_REPLAN_REQUIRED": "The previous group choice is preserved as history; the trip changed again and needs current re-grounding.",
+                    "RECOVERY_REGROUNDING": "CityNexus is checking a new shared recovery against the current trip. The Journey has not changed.",
+                    "RECOVERY_REGROUNDED_NO_ACTION": "The current Journey remains the safest shared choice; no plan was changed.",
+                    "RECOVERY_REGROUNDED_DOMINANT": "A current grounded shared option is ready; the Journey has not changed.",
+                    "RECOVERY_REGROUNDED_DECISION_REQUIRED": "The situation changed and a fresh group decision is ready; earlier answers did not carry over.",
+                    "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED": "The configured Agent could not re-check the changed trip; the old choice is history and the Journey remains unchanged.",
+                    "RECOVERY_REGROUND_NO_FEASIBLE_OPTION": "No safe shared adjustment is available right now. The current Journey has not changed.",
+                }
+                group_recovery.update(
+                    {
+                        "state": reground_state,
+                        "headline": state_headlines.get(reground_state, state_headlines["RECOVERY_REGROUNDING"]),
+                        "can_request_planning": False,
+                        "incident_key": incident_key,
+                        "failed_proposal_id": context.get("failed_proposal_id"),
+                        "cause_class": context.get("cause_class"),
+                        "old_decision": {
+                            "clarification_id": context.get("failed_clarification_id"),
+                            "authority_receipt_id": context.get("failed_authority_receipt_id"),
+                            "selected_proposal_id": context.get("failed_proposal_id"),
+                        },
+                        "current_recovery_epoch_id": bound_epoch_id,
+                        "reground_result": {
+                            "state": reground_state,
+                            "collective_classification": clarification.get("collective_classification") if epoch_is_current else None,
+                            "current_proposal_ids": (clarification.get("current_proposal_ids") or []) if epoch_is_current else [],
+                            "grounded_feasible_proposal_ids": (clarification.get("grounded_feasible_proposal_ids") or []) if epoch_is_current else [],
+                            "current_options": (clarification.get("current_options") or []) if epoch_is_current else [],
+                            "plan_unchanged": bool(epoch_is_current and clarification.get("plan_unchanged") is True),
+                        },
+                        "reground_mission": {
+                            "id": candidate.id,
+                            "status": candidate.status,
+                            "recovery_epoch_generation": context.get("recovery_epoch_generation"),
+                        },
+                        "mission": {
+                            "mission_id": candidate.id,
+                            "status": candidate.status,
+                            "failure_reason": candidate.failure_reason,
+                            "created_at": candidate.created_at,
+                            "run_id": context.get("hermes_run_id"),
+                        },
+                    }
+                )
+                if str(collective.get("mission_id") or "") != str(
+                    context.get("failed_decision_mission_id") or ""
+                ):
+                    attach_collective_recovery_projection(
+                        session, group_recovery, collective, candidate.id
+                    )
+                break
             group_recovery["mission"] = {
                 "mission_id": candidate.id,
                 "status": candidate.status,
@@ -609,6 +689,38 @@ def operator_projection(
                 session, group_recovery, collective, candidate.id
             )
             break
+        if not r61_mission_found:
+            for audit in session.scalars(
+                select(AuditLog)
+                .where(
+                    AuditLog.journey_id == journey.id,
+                    AuditLog.action == "journey.group_recovery.replan_required",
+                )
+                .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+            ).all():
+                transition = _json(audit.after_json, {})
+                if not isinstance(transition, dict) or transition.get("incident_key") != incident_key:
+                    continue
+                if str(transition.get("old_active_plan_version_id") or journey.active_plan_version_id) != str(journey.active_plan_version_id):
+                    continue
+                group_recovery.update(
+                    {
+                        "state": "RECOVERY_REPLAN_REQUIRED",
+                        "headline": "The earlier group choice is preserved as history, but CityNexus cannot safely continue it under the current trip state.",
+                        "can_request_planning": False,
+                        "incident_key": incident_key,
+                        "failed_proposal_id": transition.get("failed_proposal_id"),
+                        "cause_class": transition.get("cause_class"),
+                        "old_decision": {
+                            "clarification_id": transition.get("old_clarification_id"),
+                            "authority_receipt_id": transition.get("old_authority_receipt_id"),
+                            "selected_proposal_id": transition.get("failed_proposal_id"),
+                        },
+                        "current_recovery_epoch_id": transition.get("current_recovery_epoch_id"),
+                        "reground_mission": None,
+                    }
+                )
+                break
     # An applied group recovery is a fact only when the authenticated spend
     # audit names the currently active plan. A receipt on its own is never a
     # terminal projection, and a later plan transition naturally ages this

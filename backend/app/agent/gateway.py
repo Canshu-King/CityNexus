@@ -675,6 +675,83 @@ class AgentToolGateway:
         return None
 
     @staticmethod
+    def _r61_reground_context(mission: JourneyMission | None) -> dict[str, Any] | None:
+        if mission is None:
+            return None
+        try:
+            objectives = json.loads(mission.objective_codes_json or "[]")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            objectives = []
+        context = _mission_json(mission.resolved_intent_json).get("group_recovery")
+        if (
+            "COLLECTIVE_RECOVERY_REGROUND" not in objectives
+            or not isinstance(context, dict)
+            or context.get("kind") != "R61_REGROUNDED_COLLECTIVE_RECOVERY"
+        ):
+            return None
+        return context
+
+    def _r61_current_scope(
+        self,
+        journey: Journey,
+        mission: JourneyMission,
+        *,
+        trigger_event_id: str | None = None,
+    ) -> tuple[dict[str, Any], Event, list[ReplanProposal]]:
+        """Resolve only the current incident/epoch proposal surface for R61."""
+        context = self._r61_reground_context(mission)
+        if context is None or mission.requested_autonomy != "PLAN_ONLY":
+            raise HTTPException(409, "R61_REGROUND_MISSION_BINDING_INVALID")
+        if mission.status not in {"CREATED", "RUNNING"}:
+            raise HTTPException(409, "R61_REGROUND_MISSION_NOT_ACTIVE")
+        if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+            raise HTTPException(409, "R61_JOURNEY_NOT_ACTIVE")
+        if str(context.get("active_plan_version_id") or "") != str(journey.active_plan_version_id):
+            raise HTTPException(409, "STALE_COLLECTIVE_RECOVERY_PLAN")
+
+        expected_trigger_id = str(
+            mission.trigger_event_id or context.get("trigger_event_id") or ""
+        )
+        if not expected_trigger_id or (
+            trigger_event_id is not None and str(trigger_event_id) != expected_trigger_id
+        ):
+            raise HTTPException(409, "R61_TRIGGER_SCOPE_MISMATCH")
+        trigger = self.session.get(Event, expected_trigger_id)
+        if (
+            trigger is None
+            or trigger.journey_id != journey.id
+            or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}
+        ):
+            raise HTTPException(409, "R61_INCIDENT_NOT_ACTIONABLE")
+
+        epoch_id = str(context.get("recovery_epoch_id") or "")
+        try:
+            epoch = validate_recovery_epoch_binding(self.session, journey.id, epoch_id)
+        except RecoveryEpochSuperseded as exc:
+            raise HTTPException(409, detail=exc.facts) from exc
+        bound_generation = context.get("recovery_epoch_generation")
+        if bound_generation is not None:
+            try:
+                generation_matches = int(bound_generation) == int(epoch.generation)
+            except (TypeError, ValueError, OverflowError):
+                generation_matches = False
+            if not generation_matches:
+                raise HTTPException(409, "RECOVERY_EPOCH_GENERATION_MISMATCH")
+
+        proposals = self.session.scalars(
+            select(ReplanProposal)
+            .where(
+                ReplanProposal.journey_id == journey.id,
+                ReplanProposal.trigger_event_id == trigger.id,
+                ReplanProposal.base_plan_version_id == journey.active_plan_version_id,
+                ReplanProposal.recovery_epoch_id == epoch.id,
+                ReplanProposal.status == "PRESENTED",
+            )
+            .order_by(ReplanProposal.created_at, ReplanProposal.id)
+        ).all()
+        return context, trigger, proposals
+
+    @staticmethod
     def catalog() -> list[dict[str, object]]:
         return tool_catalog()
 
@@ -974,6 +1051,23 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _replan_payload
 
+        mission = (
+            self.session.get(JourneyMission, str(request.mission_id))
+            if request.mission_id is not None
+            else None
+        )
+        r61_context = self._r61_reground_context(mission)
+        if r61_context is not None:
+            expected_trigger = str(
+                mission.trigger_event_id or r61_context.get("trigger_event_id") or ""
+            )
+            if request.trigger_event_id is not None and str(request.trigger_event_id) != expected_trigger:
+                raise HTTPException(409, "R61_TRIGGER_SCOPE_MISMATCH")
+            if expected_trigger:
+                request = request.model_copy(
+                    update={"trigger_event_id": UUID(expected_trigger)}
+                )
+
         trigger, actionable_events, selection_error = _resolve_actionable_event(
             self.session, journey.id, request.trigger_event_id
         )
@@ -1006,17 +1100,25 @@ class AgentToolGateway:
                 "returned": 0,
                 "truncated": False,
             }
-        filters = [ReplanProposal.journey_id == journey.id]
-        if trigger is not None:
-            # Do not make an autonomous run compare the current disruption with
-            # stale proposals generated for an older event. An empty scoped set
-            # is a truthful signal to request a fresh deterministic replan.
-            filters.append(ReplanProposal.trigger_event_id == trigger.id)
-        proposals = self.session.scalars(
-            select(ReplanProposal)
-            .where(*filters)
-            .order_by(ReplanProposal.created_at.desc(), ReplanProposal.id.desc())
-        ).all()
+        if r61_context is not None:
+            if mission is None or trigger is None:
+                raise HTTPException(409, "R61_REGROUND_SCOPE_UNAVAILABLE")
+            _context, _trigger, proposals = self._r61_current_scope(
+                journey, mission, trigger_event_id=trigger.id
+            )
+            proposals.reverse()
+        else:
+            filters = [ReplanProposal.journey_id == journey.id]
+            if trigger is not None:
+                # Do not make an autonomous run compare the current disruption with
+                # stale proposals generated for an older event. An empty scoped set
+                # is a truthful signal to request a fresh deterministic replan.
+                filters.append(ReplanProposal.trigger_event_id == trigger.id)
+            proposals = self.session.scalars(
+                select(ReplanProposal)
+                .where(*filters)
+                .order_by(ReplanProposal.created_at.desc(), ReplanProposal.id.desc())
+            ).all()
         total = len(proposals)
         items = [_replan_payload(item) for item in proposals[: self.LIST_REPLANS_MAX_ITEMS]]
 
@@ -1068,6 +1170,10 @@ class AgentToolGateway:
             "CLARIFICATION_REQUIRED",
         }:
             raise HTTPException(422, "outcome must be a supported recovery conclusion")
+        if request.mission_id is not None:
+            mission = self.session.get(JourneyMission, str(request.mission_id))
+            if self._r61_reground_context(mission) is not None:
+                return self._conclude_r61_reground(request, requested, mission)
         if requested == "CLARIFICATION_REQUIRED":
             if request.journey_id is None or request.mission_id is None:
                 raise HTTPException(422, "CLARIFICATION_REQUIRES_JOURNEY_AND_MISSION")
@@ -1210,6 +1316,195 @@ class AgentToolGateway:
             "requested_outcome": requested,
             "reason": reason or None,
             "horizon_decision": request.horizon_decision,
+        }
+
+    def _conclude_r61_reground(
+        self,
+        request: AgentToolCall,
+        requested: str,
+        mission: JourneyMission,
+    ) -> dict[str, Any]:
+        if requested != "NO_ACTION":
+            raise HTTPException(
+                422,
+                "R61_REGROUND_TERMINAL_OUTCOME_MUST_BE_NO_ACTION_OR_FRESH_COLLECTIVE_DECISION",
+            )
+        if request.horizon_decision not in {None, "NO_ACTION"}:
+            raise HTTPException(422, "R61_REGROUND_DOES_NOT_ACCEPT_HORIZON_ACTIONS")
+        if request.journey_id is None or str(request.journey_id) != mission.journey_id:
+            raise HTTPException(409, "R61_REGROUND_JOURNEY_MISMATCH")
+
+        prior = _mission_json(mission.clarification_json)
+        terminal_states = {
+            "RECOVERY_REGROUNDED_NO_ACTION",
+            "RECOVERY_REGROUNDED_DOMINANT",
+            "RECOVERY_REGROUND_NO_FEASIBLE_OPTION",
+        }
+        if (
+            mission.status == "COMPLETED"
+            and prior.get("kind") == "GROUP_RECOVERY_REGROUND"
+            and prior.get("outcome") == "NO_ACTION"
+            and prior.get("state") in terminal_states
+        ):
+            return {
+                "tool": "conclude_recovery",
+                "decision": AuthorizationDecision.ALLOW_AUTO.value,
+                "requested_outcome": "NO_ACTION",
+                "reason": prior["state"],
+                "replayed": True,
+                "r61_completion": {
+                    "state": prior["state"],
+                    "incident_key": prior.get("incident_key"),
+                    "recovery_epoch_id": prior.get("recovery_epoch_id"),
+                    "collective_classification": prior.get("collective_classification"),
+                    "current_proposal_ids": prior.get("current_proposal_ids") or [],
+                    "grounded_feasible_proposal_ids": prior.get("grounded_feasible_proposal_ids") or [],
+                    "current_options": prior.get("current_options") or [],
+                    "plan_unchanged": prior.get("plan_unchanged") is True,
+                    "mutation_count": 0,
+                },
+            }
+
+        journey = _require_journey(self.session, request.journey_id)
+        context, trigger, proposals = self._r61_current_scope(
+            journey,
+            mission,
+            trigger_event_id=(str(request.trigger_event_id) if request.trigger_event_id else None),
+        )
+        from app.main import collective_proposal_receipt
+
+        receipt = collective_proposal_receipt(self.session, journey, proposals) if proposals else {
+            "collective_mediation": {"classification": "NO_CURRENT_PROPOSALS"},
+            "proposal_collective_decisions": {},
+        }
+        mediation = receipt.get("collective_mediation") or {}
+        classification = str(mediation.get("classification") or "INSUFFICIENT_WORLD_FACTS")
+        decisions = receipt.get("proposal_collective_decisions") or {}
+        feasible_ids = sorted(
+            str(proposal_id)
+            for proposal_id, decision in decisions.items()
+            if isinstance(decision, dict)
+            and decision.get("status") == "GROUNDED_FEASIBLE"
+        )
+
+        if proposals and classification in {"INSUFFICIENT_WORLD_FACTS", "AUTHORITY_CONFLICT"}:
+            raise HTTPException(409, f"R61_COLLECTIVE_FACTS_OR_AUTHORITY_INCOMPLETE:{classification}")
+        if not proposals:
+            state = "RECOVERY_REGROUNDED_NO_ACTION"
+        elif not feasible_ids:
+            state = "RECOVERY_REGROUND_NO_FEASIBLE_OPTION"
+        elif classification in {"UNANIMOUS_DOMINANCE", "COMPROMISE_AVAILABLE"}:
+            state = "RECOVERY_REGROUNDED_DOMINANT"
+        elif classification == "HUMAN_TRADEOFF_REQUIRED":
+            state = "RECOVERY_REGROUNDED_NO_ACTION"
+        else:
+            raise HTTPException(409, f"R61_COLLECTIVE_CLASSIFICATION_UNRESOLVED:{classification}")
+
+        fit_place_ids = sorted(
+            {
+                str(place_id)
+                for decision in decisions.values()
+                if isinstance(decision, dict)
+                for place_id in (decision.get("fit_subject_place_ids") or [])
+                if place_id
+            }
+        )
+        fit_places = {
+            str(place.id): str(place.name)
+            for place in self.session.scalars(
+                select(Place).where(Place.id.in_(fit_place_ids))
+            ).all()
+        } if fit_place_ids else {}
+        current_options = []
+        for proposal in proposals:
+            decision = decisions.get(str(proposal.id), {})
+            subject_place_ids = [
+                str(value)
+                for value in (decision.get("fit_subject_place_ids") or [])
+                if value
+            ]
+            current_options.append(
+                {
+                    "proposal_id": str(proposal.id),
+                    "status": str(decision.get("status") or "REVALIDATION_REQUIRED"),
+                    "place_names": [fit_places[value] for value in subject_place_ids if value in fit_places],
+                    "fit_subject_tags": list(decision.get("fit_subject_tags") or [])[:8],
+                }
+            )
+
+        if str(journey.active_plan_version_id or "") != str(context.get("active_plan_version_id") or ""):
+            raise HTTPException(409, "STALE_COLLECTIVE_RECOVERY_PLAN")
+        completed_at = datetime.now(timezone.utc).isoformat()
+        clarification = {
+            "kind": "GROUP_RECOVERY_REGROUND",
+            "state": state,
+            "incident_key": context.get("incident_key"),
+            "reground_key": context.get("reground_key"),
+            "failed_proposal_id": context.get("failed_proposal_id"),
+            "old_clarification_id": context.get("failed_clarification_id"),
+            "recovery_epoch_id": context.get("recovery_epoch_id"),
+            "recovery_epoch_generation": context.get("recovery_epoch_generation"),
+            "trigger_event_id": trigger.id,
+            "current_proposal_ids": [str(item.id) for item in proposals],
+            "grounded_feasible_proposal_ids": feasible_ids,
+            "current_options": current_options,
+            "collective_classification": classification,
+            "outcome": "NO_ACTION",
+            "completed_at": completed_at,
+            "plan_unchanged": True,
+        }
+        mission.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+        mission.status = "COMPLETED"
+        mission.completed_at = completed_at
+        resolved = _mission_json(mission.resolved_intent_json)
+        current_context = resolved.get("group_recovery")
+        if isinstance(current_context, dict):
+            current_context["terminal_state"] = state
+            current_context["terminal_at"] = completed_at
+            resolved["group_recovery"] = current_context
+            mission.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+        record_audit(
+            self.session,
+            action="journey.group_recovery.reground.concluded",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="AI_AGENT",
+            actor_id=request.agent_id,
+            after={
+                "state": state,
+                "incident_key": context.get("incident_key"),
+                "reground_key": context.get("reground_key"),
+                "recovery_epoch_id": context.get("recovery_epoch_id"),
+                "trigger_event_id": trigger.id,
+                "collective_classification": classification,
+                "current_proposal_ids": [str(item.id) for item in proposals],
+                "grounded_feasible_proposal_ids": feasible_ids,
+                "current_options": current_options,
+                "plan_unchanged": True,
+                "mutation_count": 0,
+            },
+        )
+        # Native Hermes calls arrive through the public tool route rather than
+        # the local AgentRun loop, so this terminal state must commit here.
+        # The saved conclusion is also the idempotent replay receipt.
+        self.session.commit()
+        return {
+            "tool": "conclude_recovery",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "requested_outcome": "NO_ACTION",
+            "reason": state,
+            "r61_completion": {
+                "state": state,
+                "incident_key": context.get("incident_key"),
+                "recovery_epoch_id": context.get("recovery_epoch_id"),
+                "collective_classification": classification,
+                "current_proposal_ids": [str(item.id) for item in proposals],
+                "grounded_feasible_proposal_ids": feasible_ids,
+                "current_options": current_options,
+                "plan_unchanged": True,
+                "mutation_count": 0,
+            },
         }
 
     def apply_clarified_horizon_choice(self, request: AgentToolCall) -> dict[str, Any]:
@@ -1838,6 +2133,24 @@ class AgentToolGateway:
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
+        mission = (
+            self.session.get(JourneyMission, str(request.mission_id))
+            if request.mission_id is not None
+            else None
+        )
+        r61_context = self._r61_reground_context(mission)
+        if r61_context is not None:
+            expected_trigger = str(
+                mission.trigger_event_id or r61_context.get("trigger_event_id") or ""
+            )
+            if request.trigger_event_id is not None and str(request.trigger_event_id) != expected_trigger:
+                raise HTTPException(409, "R61_TRIGGER_SCOPE_MISMATCH")
+            _context, _trigger, _proposals = self._r61_current_scope(
+                journey, mission, trigger_event_id=expected_trigger
+            )
+            request = request.model_copy(
+                update={"trigger_event_id": UUID(expected_trigger)}
+            )
         trigger, events, selection_error = _resolve_actionable_event(
             self.session, journey.id, request.trigger_event_id
         )
@@ -2050,16 +2363,22 @@ class AgentToolGateway:
         mission = self.session.get(JourneyMission, str(request.mission_id))
         if mission is None or mission.journey_id != journey.id:
             raise HTTPException(404, "Journey mission was not found")
-        trigger = self.session.get(Event, str(request.trigger_event_id))
+        r61_context = self._r61_reground_context(mission)
+        if r61_context is not None:
+            _context, trigger, proposals = self._r61_current_scope(
+                journey, mission, trigger_event_id=str(request.trigger_event_id)
+            )
+        else:
+            trigger = self.session.get(Event, str(request.trigger_event_id))
+            proposals = self.session.scalars(
+                select(ReplanProposal).where(
+                    ReplanProposal.journey_id == journey.id,
+                    ReplanProposal.trigger_event_id == str(request.trigger_event_id),
+                    ReplanProposal.status == "PRESENTED",
+                ).order_by(ReplanProposal.created_at, ReplanProposal.id)
+            ).all()
         if trigger is None or trigger.journey_id != journey.id or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}:
             raise HTTPException(409, "collective decision trigger is not actionable")
-        proposals = self.session.scalars(
-            select(ReplanProposal).where(
-                ReplanProposal.journey_id == journey.id,
-                ReplanProposal.trigger_event_id == trigger.id,
-                ReplanProposal.status == "PRESENTED",
-            ).order_by(ReplanProposal.created_at, ReplanProposal.id)
-        ).all()
         from app.main import (
             active_journey_members_with_capabilities,
             collective_material_world_basis,
@@ -2267,6 +2586,16 @@ class AgentToolGateway:
             "selected_proposal_id": None,
             "selected_candidate_id": None,
         }
+        if r61_context is not None:
+            payload["state"] = "RECOVERY_REGROUNDED_DECISION_REQUIRED"
+            payload["r61_reground"] = {
+                "incident_key": r61_context.get("incident_key"),
+                "reground_key": r61_context.get("reground_key"),
+                "recovery_epoch_id": r61_context.get("recovery_epoch_id"),
+                "recovery_epoch_generation": r61_context.get("recovery_epoch_generation"),
+                "plan_unchanged": str(journey.active_plan_version_id)
+                == str(r61_context.get("active_plan_version_id") or ""),
+            }
         if mediation_progress is not None:
             payload["mediation_progress"] = mediation_progress
         mission.clarification_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)

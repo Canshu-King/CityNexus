@@ -176,13 +176,17 @@ def build_mission_plan(
     # proposal-only surface.
     if autonomy == "PLAN_ONLY":
         plan_only_tools = [*_READ_TOOLS]
-        if "LIVE_JOURNEY_INTENT_STEERING" in objectives:
+        if objectives & {"LIVE_JOURNEY_INTENT_STEERING", "COLLECTIVE_RECOVERY_REGROUND"}:
             plan_only_tools.extend(_STRATEGY_TOOLS)
         plan_only_tools.append("request_replan")
         if "COLLECTIVE_JOURNEY_RECOVERY" in objectives:
             # R58/R59 group recovery may ask the affected members to decide,
             # but PLAN_ONLY still cannot accept or execute their choice.
             plan_only_tools.extend(_DECISION_TOOLS)
+        if "COLLECTIVE_RECOVERY_REGROUND" in objectives:
+            # A re-ground run needs a typed, server-owned terminal result. This
+            # records NO_ACTION/dominant/no-feasible without granting mutation.
+            plan_only_tools.append(_CONCLUSION_TOOL)
         allowed_tools = tuple(dict.fromkeys(plan_only_tools))
     else:
         allowed_tools = (*_READ_TOOLS, *_STRATEGY_TOOLS, *_DECISION_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)

@@ -575,6 +575,33 @@ export interface JourneyGroupPresenceProjection {
 export interface GroupRecoveryProjection {
   state: string;
   headline: string;
+  incident_key?: string | null;
+  failed_proposal_id?: string | null;
+  cause_class?: string | null;
+  current_recovery_epoch_id?: string | null;
+  old_decision?: {
+    clarification_id?: string | null;
+    authority_receipt_id?: string | null;
+    selected_proposal_id?: string | null;
+  } | null;
+  reground_mission?: {
+    id: string;
+    status: string;
+    recovery_epoch_generation?: number | null;
+  } | null;
+  reground_result?: {
+    state: string;
+    collective_classification?: string | null;
+    current_proposal_ids?: string[];
+    grounded_feasible_proposal_ids?: string[];
+    current_options?: Array<{
+      proposal_id: string;
+      status: string;
+      place_names: string[];
+      fit_subject_tags: string[];
+    }>;
+    plan_unchanged: boolean;
+  } | null;
   affected_member: {
     member_id: string;
     display_name: string;

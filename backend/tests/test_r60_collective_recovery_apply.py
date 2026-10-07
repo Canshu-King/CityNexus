@@ -12,9 +12,11 @@ from sqlalchemy import select
 
 import app.collective_mediation as collective_mediation
 import app.main as main_module
+import app.operator_projection as operator_projection_module
 from app.collective_authority import AUTHENTICATED_MEMBER_CONSENT
 from app.collective_operator import collective_operator_projection
 from app.core.config import settings
+from app.agent.gateway import AgentToolGateway
 from app.db.models import (
     AuditLog,
     CollectiveAuthorityReceipt,
@@ -30,6 +32,7 @@ from app.db.models import (
     Traveler,
 )
 from app.db.session import SessionLocal
+from app.schemas import AgentToolCall
 from app.traveler_principal import issue_traveler_token
 from app.recovery_epoch import recovery_reality_basis, recovery_reality_fingerprint
 
@@ -223,7 +226,14 @@ def _seed_r60_apply_world() -> dict[str, str | list[dict[str, object]]]:
             requested_autonomy="EXECUTE_WITHIN_BOUNDS",
             status="ANSWERED",
             resolved_intent_json=json.dumps(
-                {"group_recovery": {"incident_key": incident_key, "hermes_run_id": "r60-test-run"}},
+                {
+                    "group_recovery": {
+                        "incident_key": incident_key,
+                        "hermes_run_id": "r60-test-run",
+                        "requested_by_member_id": owner_member_id,
+                        "active_plan_version_id": base_id,
+                    }
+                },
                 sort_keys=True,
             ),
             clarification_json=json.dumps(clarification, sort_keys=True),
@@ -311,6 +321,60 @@ def _seed_r60_apply_world() -> dict[str, str | list[dict[str, object]]]:
         "surface_fingerprint": surface_fingerprint,
         "options": options,
     }
+
+
+def _create_r61_reground_mission(session, seeded) -> JourneyMission:
+    journey_id = str(seeded["journey_id"])
+    mission_id = str(uuid4())
+    now = _now()
+    context = {
+        "kind": "R61_REGROUNDED_COLLECTIVE_RECOVERY",
+        "incident_key": str(seeded["incident_key"]),
+        "reground_key": f"group-recovery-reground:{journey_id}:{seeded['incident_key']}:{seeded['recovery_epoch_id']}",
+        "recovery_epoch_id": str(seeded["recovery_epoch_id"]),
+        "recovery_epoch_generation": 1,
+        "trigger_event_id": str(seeded["event_id"]),
+        "active_plan_version_id": str(seeded["base_id"]),
+        "failed_decision_mission_id": str(seeded["room_id"]),
+        "failed_clarification_id": "r60-resolved-clarification",
+        "failed_proposal_id": str(seeded["selected_proposal_id"]),
+    }
+    mission = JourneyMission(
+        id=mission_id,
+        journey_id=journey_id,
+        traveler_id=str(seeded["owner_id"]),
+        trigger_event_id=str(seeded["event_id"]),
+        user_text="Re-ground the same shared recovery against current reality.",
+        objective_codes_json=json.dumps(
+            ["COLLECTIVE_JOURNEY_RECOVERY", "COLLECTIVE_RECOVERY_REGROUND"]
+        ),
+        protected_activity_ids_json="[]",
+        mutable_activity_ids_json="[]",
+        intent_json="{}",
+        resolved_intent_json=json.dumps({"group_recovery": context}, sort_keys=True),
+        allowed_action_classes_json='["REQUEST_REPLAN"]',
+        parent_mission_id=str(seeded["room_id"]),
+        max_cost_delta_minor=1000,
+        max_loss_minor=500,
+        max_schedule_drift_min=15,
+        requested_autonomy="PLAN_ONLY",
+        status="RUNNING",
+        created_at=now,
+        started_at=now,
+        clarification_json=json.dumps(
+            {
+                "kind": "GROUP_RECOVERY_REGROUND",
+                "state": "RECOVERY_REGROUNDING",
+                "incident_key": str(seeded["incident_key"]),
+                "recovery_epoch_id": str(seeded["recovery_epoch_id"]),
+                "plan_unchanged": True,
+            },
+            sort_keys=True,
+        ),
+    )
+    session.add(mission)
+    session.flush()
+    return mission
 
 
 def _enable_r60_apply_path(
@@ -723,13 +787,19 @@ def test_r60_only_consent_staleness_opens_reconsent_not_execution_failure() -> N
     assert unavailable["consent_stale"] is True
 
 
-def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
+def test_r61_unexecutable_proposal_invalidates_old_authority_and_reuses_one_reground(
     monkeypatch,
 ) -> None:
     previous_secret = settings.traveler_auth_secret
     object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
     seeded = _seed_r60_apply_world()
     _enable_r60_apply_path(monkeypatch, seeded)
+    hermes_checks = []
+    monkeypatch.setattr(
+        main_module,
+        "native_hermes_status",
+        lambda: hermes_checks.append("called") or {"ready": False, "provider": "fixture", "model": "fixture"},
+    )
 
     def fail_execution(*_args, **_kwargs):
         raise HTTPException(
@@ -753,8 +823,11 @@ def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
         detail = envelope["details"]
         assert envelope["reason_code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
         assert detail["code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
-        assert detail["reconsent"]["available"] is False
+        assert detail["state"] == "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+        assert detail["cause_class"] == "PROTECTED_COMMITMENT_CHANGED"
+        assert detail["reground"]["reused"] is False
         assert detail["plan_unchanged"] is True
+        first_reground_id = detail["reground"]["mission_id"]
 
         with SessionLocal() as session:
             journey = session.get(Journey, str(seeded["journey_id"]))
@@ -769,9 +842,24 @@ def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
             assert journey.active_plan_version_id == str(seeded["base_id"])
             assert room is not None
             stored = json.loads(room.clarification_json or "{}")
-            assert stored["status"] == "RESOLVED"
-            assert receipt is not None and receipt.invalidated_at is None
-            assert proposal is not None and proposal.status == "PRESENTED"
+            assert stored["status"] == "STALE"
+            assert stored["r61_state"] == "RECOVERY_REPLAN_REQUIRED"
+            assert set(stored["responses"]) == {
+                str(seeded["owner_member_id"]),
+                str(seeded["admin_member_id"]),
+            }
+            assert receipt is not None and receipt.invalidated_at is not None
+            assert proposal is not None and proposal.status == "INVALIDATED"
+            reground = session.get(JourneyMission, first_reground_id)
+            assert reground is not None
+            assert reground.status == "FAILED_EXTERNAL"
+            assert reground.requested_autonomy == "PLAN_ONLY"
+            reground_context = json.loads(reground.resolved_intent_json or "{}")["group_recovery"]
+            assert reground_context["recovery_epoch_id"] == str(seeded["recovery_epoch_id"])
+            reground_clarification = json.loads(reground.clarification_json or "{}")
+            assert reground_clarification["kind"] == "GROUP_RECOVERY_REGROUND"
+            assert reground_clarification["state"] == "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+            assert reground_clarification.get("responses") is None
             reconsent_audits = session.scalars(
                 select(AuditLog).where(
                     AuditLog.journey_id == str(seeded["journey_id"]),
@@ -786,6 +874,157 @@ def test_r60_unexecutable_proposal_requires_replan_without_invalidating_consent(
                 )
             ).all()
             assert len(replan_required) == 1
+
+        repeated = client.post(
+            path,
+            headers=_apply_headers(
+                str(seeded["owner_id"]),
+                idempotency_key="r60-invalid-plan-not-revote",
+            ),
+            json={},
+        )
+        assert repeated.status_code == 409, repeated.text
+        repeated_detail = repeated.json()["error"]["details"]
+        assert repeated_detail["reground"]["mission_id"] == first_reground_id
+        assert repeated_detail["reground"]["reused"] is True
+        assert hermes_checks == ["called"]
+        with SessionLocal() as session:
+            reground_missions = [
+                row
+                for row in session.scalars(
+                    select(JourneyMission).where(
+                        JourneyMission.journey_id == str(seeded["journey_id"]),
+                        JourneyMission.is_standing.is_(False),
+                    )
+                ).all()
+                if json.loads(row.resolved_intent_json or "{}").get("group_recovery", {}).get("kind")
+                == "R61_REGROUNDED_COLLECTIVE_RECOVERY"
+            ]
+            assert len(reground_missions) == 1
+
+        # A fresh read request projects the persisted R61 state; it does not
+        # depend on the original apply response or browser memory.
+        monkeypatch.setattr(
+            operator_projection_module,
+            "group_presence_projection",
+            lambda *_args, **_kwargs: {"state": "GROUP_SPLIT_ADVISORY"},
+        )
+        monkeypatch.setattr(
+            operator_projection_module,
+            "group_recovery_projection",
+            lambda _presence: {
+                "can_request_planning": True,
+                "affected_member": {"member_id": str(seeded["admin_member_id"])},
+                "shared_commitment": {"activity_id": "r60-rendezvous"},
+                "options": [],
+            },
+        )
+        monkeypatch.setattr(
+            operator_projection_module,
+            "group_recovery_incident_key",
+            lambda **_kwargs: str(seeded["incident_key"]),
+        )
+        refreshed = client.get(
+            f"/api/v1/journeys/{seeded['journey_id']}/operator",
+            headers={"Authorization": f"Bearer {issue_traveler_token(str(seeded['owner_id']))}"},
+        )
+        assert refreshed.status_code == 200, refreshed.text
+        projected = refreshed.json()["group_recovery"]
+        assert projected["state"] == "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+        assert projected["old_decision"]["clarification_id"] == "r60-resolved-clarification"
+        assert projected["failed_proposal_id"] == str(seeded["selected_proposal_id"])
+        assert projected["reground_mission"]["id"] == first_reground_id
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_r61_superseded_consent_without_current_options_starts_one_reground(
+    monkeypatch,
+) -> None:
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", _TEST_SECRET)
+    seeded = _seed_r60_apply_world()
+    _enable_r60_apply_path(monkeypatch, seeded)
+    monkeypatch.setattr(
+        main_module,
+        "native_hermes_status",
+        lambda: {"ready": False, "provider": "fixture", "model": "fixture"},
+    )
+
+    def stale_epoch(*_args, **_kwargs):
+        raise HTTPException(409, "RECOVERY_EPOCH_SUPERSEDED")
+
+    monkeypatch.setattr(main_module, "_accept_replan_impl", stale_epoch)
+    with SessionLocal() as session:
+        epoch = session.get(RecoveryEpoch, str(seeded["recovery_epoch_id"]))
+        assert epoch is not None
+        epoch.status = "SUPERSEDED"
+        epoch.closed_at = _now()
+        epoch.close_reason = "R61_TEST_WORLD_CHANGED"
+        session.commit()
+
+    path = f"/api/v1/journeys/{seeded['journey_id']}/group-recovery/apply"
+    headers = _apply_headers(
+        str(seeded["owner_id"]),
+        idempotency_key="r61-superseded-consent-reground",
+    )
+    try:
+        first = client.post(path, headers=headers, json={})
+        assert first.status_code == 409, first.text
+        detail = first.json()["error"]["details"]
+        assert detail["code"] == "GROUP_RECOVERY_REPLAN_REQUIRED"
+        assert detail["state"] == "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+        assert detail["cause_class"] == "PROPOSAL_NO_LONGER_CURRENT"
+        reground_id = detail["reground"]["mission_id"]
+        assert detail["reground"]["reused"] is False
+        assert detail["reground"]["current_recovery_epoch_generation"] == 2
+
+        with SessionLocal() as session:
+            journey = session.get(Journey, str(seeded["journey_id"]))
+            old_room = session.get(JourneyMission, str(seeded["room_id"]))
+            old_receipt = session.get(
+                CollectiveAuthorityReceipt, str(seeded["receipt_id"])
+            )
+            old_proposal = session.get(
+                ReplanProposal, str(seeded["selected_proposal_id"])
+            )
+            reground = session.get(JourneyMission, reground_id)
+            assert journey is not None
+            assert journey.active_plan_version_id == str(seeded["base_id"])
+            assert old_room is not None and old_receipt is not None and old_proposal is not None
+            old_state = json.loads(old_room.clarification_json or "{}")
+            assert old_state["status"] == "STALE"
+            assert set(old_state["responses"]) == {
+                str(seeded["owner_member_id"]),
+                str(seeded["admin_member_id"]),
+            }
+            assert old_receipt.invalidated_at is not None
+            assert old_proposal.status == "INVALIDATED"
+            assert reground is not None and reground.status == "FAILED_EXTERNAL"
+            reground_context = json.loads(reground.resolved_intent_json or "{}")["group_recovery"]
+            assert reground_context["recovery_epoch_id"] != str(seeded["recovery_epoch_id"])
+            assert reground_context["recovery_epoch_generation"] == 2
+            assert json.loads(reground.clarification_json or "{}").get("responses") is None
+
+        replay = client.post(path, headers=headers, json={})
+        assert replay.status_code == 409, replay.text
+        replay_detail = replay.json()["error"]["details"]
+        assert replay_detail["reground"]["mission_id"] == reground_id
+        assert replay_detail["reground"]["reused"] is True
+        with SessionLocal() as session:
+            regrounds = [
+                row
+                for row in session.scalars(
+                    select(JourneyMission).where(
+                        JourneyMission.journey_id == str(seeded["journey_id"]),
+                        JourneyMission.is_standing.is_(False),
+                    )
+                ).all()
+                if json.loads(row.resolved_intent_json or "{}").get("group_recovery", {}).get(
+                    "kind"
+                ) == "R61_REGROUNDED_COLLECTIVE_RECOVERY"
+            ]
+            assert [row.id for row in regrounds] == [reground_id]
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
 
@@ -832,6 +1071,340 @@ def test_r60_reconsent_lineage_keeps_original_group_recovery_root() -> None:
         assert root.id == str(seeded["room_id"])
         assert context["incident_key"] == str(seeded["incident_key"])
         assert "reconsent_for_clarification_id" not in context
+
+
+def test_r61_plan_only_reground_has_research_tools_but_no_mutation_authority() -> None:
+    from app.agent.mission_plan import build_mission_plan
+
+    plan = build_mission_plan(
+        autonomy="PLAN_ONLY",
+        objective_codes=[
+            "COLLECTIVE_JOURNEY_RECOVERY",
+            "COLLECTIVE_RECOVERY_REGROUND",
+        ],
+    )
+    allowed = set(plan.allowed_tools)
+    assert {
+        "inspect_journey",
+        "inspect_twin",
+        "list_replans",
+        "search_city_services",
+        "acquire_place_facts",
+        "estimate_place_facts",
+        "generate_plans",
+        "request_replan",
+        "request_collective_decision",
+        "conclude_recovery",
+    } <= allowed
+    assert not {
+        "accept_replan",
+        "activate_standby",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+    } & allowed
+
+
+def test_r61_terminal_conclusion_is_epoch_scoped_and_keeps_active_plan_unchanged(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r60_apply_world()
+    stale_epoch_id, stale_proposal_id = str(uuid4()), str(uuid4())
+    now = _now()
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        assert journey is not None
+        session.add(
+            RecoveryEpoch(
+                id=stale_epoch_id,
+                journey_id=journey.id,
+                generation=0,
+                active_plan_version_id_at_open=str(seeded["base_id"]),
+                material_world_epoch_at_open=None,
+                recovery_reality_fingerprint="superseded-r60-world",
+                triggering_event_ids_json=json.dumps([seeded["event_id"]]),
+                status="SUPERSEDED",
+                opened_at=now,
+                closed_at=now,
+                close_reason="R61_TEST_OLD_WORLD",
+            )
+        )
+        session.flush()
+        session.add(
+            ReplanProposal(
+                id=stale_proposal_id,
+                journey_id=journey.id,
+                trigger_event_id=str(seeded["event_id"]),
+                base_plan_version_id=str(seeded["base_id"]),
+                proposed_plan_version_id=str(seeded["sibling_plan_id"]),
+                status="PRESENTED",
+                hard_constraints_passed=True,
+                locked_commitments_preserved=True,
+                utility_score=0.0,
+                score_breakdown_json="{}",
+                diff_json="{}",
+                explanation_json="{}",
+                created_at=now,
+                recovery_epoch_id=stale_epoch_id,
+            )
+        )
+        mission = _create_r61_reground_mission(session, seeded)
+        session.commit()
+        mission_id = mission.id
+
+    observed_proposal_ids: list[str] = []
+
+    def current_receipt(_session, _journey, proposals):
+        observed_proposal_ids.extend(str(item.id) for item in proposals)
+        current_ids = {str(item.id) for item in proposals}
+        return {
+            "collective_mediation": {"classification": "UNANIMOUS_DOMINANCE"},
+            "proposal_collective_decisions": {
+                proposal_id: {
+                    "proposal_id": proposal_id,
+                    "status": "GROUNDED_FEASIBLE",
+                    "plan_id": str(seeded["selected_plan_id"]),
+                }
+                for proposal_id in current_ids
+            },
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", current_receipt)
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        assert journey is not None
+        before_plan_id = journey.active_plan_version_id
+        gateway = AgentToolGateway(session)
+        result = gateway.conclude_recovery(
+            AgentToolCall(
+                request_id="r61-terminal-conclusion",
+                journey_id=str(seeded["journey_id"]),
+                mission_id=mission_id,
+                trigger_event_id=str(seeded["event_id"]),
+                outcome="NO_ACTION",
+            )
+        )
+        session.commit()
+        assert result["r61_completion"]["state"] == "RECOVERY_REGROUNDED_DOMINANT"
+        assert result["r61_completion"]["plan_unchanged"] is True
+        assert result["r61_completion"]["mutation_count"] == 0
+        replay = gateway.conclude_recovery(
+            AgentToolCall(
+                request_id="r61-terminal-conclusion-replay",
+                journey_id=str(seeded["journey_id"]),
+                mission_id=mission_id,
+                trigger_event_id=str(seeded["event_id"]),
+                outcome="NO_ACTION",
+            )
+        )
+        assert replay["replayed"] is True
+        assert replay["r61_completion"] == result["r61_completion"]
+        assert str(stale_proposal_id) not in observed_proposal_ids
+        assert set(observed_proposal_ids) == {
+            str(seeded["selected_proposal_id"]),
+            str(seeded["sibling_proposal_id"]),
+        }
+        session.refresh(journey)
+        assert journey.active_plan_version_id == before_plan_id == str(seeded["base_id"])
+        mission = session.get(JourneyMission, mission_id)
+        assert mission is not None
+        assert mission.status == "COMPLETED"
+        state = json.loads(mission.clarification_json)
+        assert state["state"] == "RECOVERY_REGROUNDED_DOMINANT"
+        assert state["current_proposal_ids"] == sorted(observed_proposal_ids)
+        assert state["grounded_feasible_proposal_ids"] == sorted(observed_proposal_ids)
+
+
+def test_r61_malformed_bound_epoch_generation_fails_closed(monkeypatch) -> None:
+    seeded = _seed_r60_apply_world()
+    with SessionLocal() as session:
+        mission = _create_r61_reground_mission(session, seeded)
+        context = json.loads(mission.resolved_intent_json)
+        context["group_recovery"]["recovery_epoch_generation"] = "not-a-generation"
+        mission.resolved_intent_json = json.dumps(context)
+        session.commit()
+        mission_id = mission.id
+
+    with SessionLocal() as session:
+        gateway = AgentToolGateway(session)
+        with pytest.raises(HTTPException) as exc_info:
+            gateway.list_replans(
+                AgentToolCall(
+                    request_id="r61-malformed-epoch-generation",
+                    journey_id=str(seeded["journey_id"]),
+                    mission_id=mission_id,
+                    trigger_event_id=str(seeded["event_id"]),
+                )
+            )
+        assert exc_info.value.status_code == 409
+        assert exc_info.value.detail == "RECOVERY_EPOCH_GENERATION_MISMATCH"
+
+
+def test_r61_fresh_collective_room_uses_current_epoch_only_and_has_no_old_answers(
+    monkeypatch,
+) -> None:
+    seeded = _seed_r60_apply_world()
+    stale_epoch_id, stale_proposal_id = str(uuid4()), str(uuid4())
+    now = _now()
+    with SessionLocal() as session:
+        journey = session.get(Journey, str(seeded["journey_id"]))
+        assert journey is not None
+        session.add(
+            RecoveryEpoch(
+                id=stale_epoch_id,
+                journey_id=journey.id,
+                generation=0,
+                active_plan_version_id_at_open=str(seeded["base_id"]),
+                material_world_epoch_at_open=None,
+                recovery_reality_fingerprint="superseded-r60-world",
+                triggering_event_ids_json=json.dumps([seeded["event_id"]]),
+                status="SUPERSEDED",
+                opened_at=now,
+                closed_at=now,
+                close_reason="R61_TEST_OLD_WORLD",
+            )
+        )
+        session.flush()
+        session.add(
+            ReplanProposal(
+                id=stale_proposal_id,
+                journey_id=journey.id,
+                trigger_event_id=str(seeded["event_id"]),
+                base_plan_version_id=str(seeded["base_id"]),
+                proposed_plan_version_id=str(seeded["sibling_plan_id"]),
+                status="PRESENTED",
+                hard_constraints_passed=True,
+                locked_commitments_preserved=True,
+                utility_score=0.0,
+                score_breakdown_json="{}",
+                diff_json="{}",
+                explanation_json="{}",
+                created_at=now,
+                recovery_epoch_id=stale_epoch_id,
+            )
+        )
+        mission = _create_r61_reground_mission(session, seeded)
+        session.commit()
+        mission_id = mission.id
+
+    observed_proposal_ids: list[str] = []
+    matrix = [
+        {"candidate_id": str(seeded["selected_proposal_id"])},
+        {"candidate_id": str(seeded["sibling_proposal_id"])},
+    ]
+
+    def current_receipt(_session, _journey, proposals):
+        observed_proposal_ids.extend(str(item.id) for item in proposals)
+        return {
+            "collective_mediation": {
+                "classification": "HUMAN_TRADEOFF_REQUIRED",
+                "decision_relevant_member_ids": [
+                    str(seeded["owner_member_id"]),
+                    str(seeded["admin_member_id"]),
+                ],
+            },
+            "proposal_collective_decisions": {
+                str(seeded["selected_proposal_id"]): {
+                    "proposal_id": str(seeded["selected_proposal_id"]),
+                    "plan_id": str(seeded["selected_plan_id"]),
+                    "status": "GROUNDED_FEASIBLE",
+                    "fit_subject_place_ids": ["place-r60-garden"],
+                    "fit_subject_tags": ["garden"],
+                    "member_fits": {},
+                    "fairness": {},
+                },
+                str(seeded["sibling_proposal_id"]): {
+                    "proposal_id": str(seeded["sibling_proposal_id"]),
+                    "plan_id": str(seeded["sibling_plan_id"]),
+                    "status": "GROUNDED_FEASIBLE",
+                    "fit_subject_place_ids": ["place-r60-museum"],
+                    "fit_subject_tags": ["museum"],
+                    "member_fits": {},
+                    "fairness": {},
+                },
+            },
+            "candidate_fit_matrix": matrix,
+            "member_count": 2,
+        }
+
+    monkeypatch.setattr(main_module, "collective_proposal_receipt", current_receipt)
+    monkeypatch.setattr(
+        main_module,
+        "active_journey_members_with_capabilities",
+        lambda *_args, **_kwargs: {
+            "members": [
+                {"member_id": str(seeded["owner_member_id"]), "can_authorize_mutation": True},
+                {"member_id": str(seeded["admin_member_id"]), "can_authorize_mutation": True},
+            ],
+            "member_count": 2,
+            "candidate_fit_matrix": matrix,
+        },
+    )
+    with SessionLocal() as session:
+        gateway = AgentToolGateway(session)
+        result = gateway.request_collective_decision(
+            AgentToolCall(
+                request_id="r61-fresh-room-request",
+                journey_id=str(seeded["journey_id"]),
+                mission_id=mission_id,
+                trigger_event_id=str(seeded["event_id"]),
+            )
+        )
+        assert result["mission_status"] == "WAITING_FOR_MEMBERS"
+        clarification = result["clarification"]
+        assert clarification["status"] == "WAITING_FOR_MEMBERS"
+        assert clarification["responses"] == {}
+        assert clarification["state"] == "RECOVERY_REGROUNDED_DECISION_REQUIRED"
+        assert clarification["r61_reground"]["plan_unchanged"] is True
+        assert str(stale_proposal_id) not in observed_proposal_ids
+        assert set(observed_proposal_ids) == {
+            str(seeded["selected_proposal_id"]),
+            str(seeded["sibling_proposal_id"]),
+        }
+        stored_mission = session.get(JourneyMission, mission_id)
+        assert stored_mission is not None
+        persisted = json.loads(stored_mission.clarification_json)
+        assert persisted["responses"] == {}
+        assert persisted["r61_reground"]["recovery_epoch_id"] == str(
+            seeded["recovery_epoch_id"]
+        )
+
+
+def test_r61_typed_terminal_receipt_completes_plan_only_run_after_proposal_generation() -> None:
+    from app.agent.runtime import _server_completion_contract, _terminal_agent_status
+
+    trace = [
+        {
+            "tool_name": "request_replan",
+            "status": "COMPLETED",
+            "result": {"proposal": {"id": "current-proposal"}},
+        },
+        {
+            "tool_name": "conclude_recovery",
+            "status": "COMPLETED",
+            "result": {
+                "requested_outcome": "NO_ACTION",
+                "r61_completion": {
+                    "state": "RECOVERY_REGROUNDED_DOMINANT",
+                    "incident_key": "incident-current",
+                    "recovery_epoch_id": "epoch-current",
+                    "collective_classification": "UNANIMOUS_DOMINANCE",
+                    "current_proposal_ids": ["current-proposal"],
+                    "grounded_feasible_proposal_ids": ["current-proposal"],
+                    "plan_unchanged": True,
+                    "mutation_count": 0,
+                },
+            },
+        },
+    ]
+    completion = _server_completion_contract(trace, run_status="COMPLETED")
+    assert completion["kind"] == "NO_ACTION"
+    assert completion["r61_state"] == "RECOVERY_REGROUNDED_DOMINANT"
+    assert _terminal_agent_status(
+        trace, has_final_text=False, clarification=False
+    ) == ("COMPLETED", "COMPLETED")
 
 
 def test_r60_operator_hides_apply_when_bound_recovery_epoch_no_longer_matches_reality(
