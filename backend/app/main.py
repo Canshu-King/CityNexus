@@ -13673,10 +13673,18 @@ def _copilot_context(session: Session, journey: Journey) -> dict[str, Any]:
         )
     capabilities = capability_payload(session, journey.traveler_id, journey.id)
     mobility_evidence = _json_object(plan.mobility_evidence_json) if plan is not None else {}
+    # `timezone` above names a zone; this says which zone it actually resolves to and whether that
+    # is the one the journey asked for.  Without the pair the name could point at a zone nothing can
+    # be placed in and the reader -- the copilot's own prompt, built from this dict -- had no way to
+    # tell, which is the shape `execution_clock.now_honest` answers for and `journey_schema` now
+    # answers for the trip payload.  Same vocabulary, one source of truth for "can this zone be used".
+    _, used_timezone, timezone_honoured = execution_clock.now_honest(journey.timezone)
     return {
         "journey_id": journey.id,
         "city_code": journey.city_code,
         "timezone": journey.timezone,
+        "used_timezone": used_timezone,
+        "timezone_honoured": timezone_honoured,
         "currency": journey.budget_currency,
         "status": journey.status,
         "current_activity_id": journey.current_activity_id,
@@ -13722,6 +13730,11 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
             "id": context["journey_id"],
             "city_code": context["city_code"],
             "timezone": context["timezone"],
+            # Whether the zone above can be used, so the model never names a moment in a zone nothing
+            # can be placed in: an unusable zone is stated as unusable rather than rendered as if
+            # honoured.  The pair comes from the context dict, which is the one place that resolves it.
+            "used_timezone": context.get("used_timezone"),
+            "timezone_honoured": context.get("timezone_honoured"),
             "status": context["status"],
         },
         "selected_plan": {
