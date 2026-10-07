@@ -4217,15 +4217,19 @@ function bookingTypeLabel(value: string | null | undefined, zh: boolean): string
   return zh ? BOOKING_TYPE_UNKNOWN.zh : BOOKING_TYPE_UNKNOWN.en;
 }
 
-function realtimeLabel(value: string | null | undefined, zh: boolean): string {
+function realtimeLabel(
+  value: string | null | undefined,
+  zh: boolean,
+  t: (key: string) => string,
+): string {
   const key = String(value ?? "").toUpperCase();
-  if (key === "ON_TIME" || key === "NORMAL") return zh ? "准点" : "On time";
-  if (key === "DELAYED") return zh ? "延误" : "Delayed";
-  if (key === "CANCELLED") return zh ? "已取消" : "Cancelled";
+  if (key === "ON_TIME" || key === "NORMAL") return t("bookings.realtimeOnTime");
+  if (key === "DELAYED") return t("bookings.realtimeDelayed");
+  if (key === "CANCELLED") return t("bookings.realtimeCancelled");
   if (key === "UNKNOWN_REALTIME" || key === "UNKNOWN" || !key) {
-    return zh ? "暂无实时状态" : "No live status";
+    return t("bookings.realtimeNoStatus");
   }
-  return zh ? "状态未知" : "Status unknown";
+  return t("bookings.realtimeStatusUnknown");
 }
 
 /* ORD-0517: a card's title is a name the server wrote, never an identifier. The key order below is
@@ -4503,7 +4507,7 @@ function Bookings({
               <div>
                 <span className="v8-selected-label neutral">
                   {bookingTypeLabel(item.reservation_type, zh)} ·{" "}
-                  {realtimeLabel(item.realtime_status, zh)}
+                  {realtimeLabel(item.realtime_status, zh, t)}
                 </span>
                 <h2 data-testid="wallet-reservation-title">
                   {reservationTitle(item) ?? t("bookings.reservationUnnamed")}

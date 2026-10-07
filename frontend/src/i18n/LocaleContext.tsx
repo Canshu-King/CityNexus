@@ -347,6 +347,11 @@ const en: Dict = {
 
   // ── Bookings ──
   "bookings.kicker": "Journey Inbox · Travel Wallet",
+  "bookings.realtimeOnTime": "On time",
+  "bookings.realtimeDelayed": "Delayed",
+  "bookings.realtimeCancelled": "Cancelled",
+  "bookings.realtimeNoStatus": "No live status",
+  "bookings.realtimeStatusUnknown": "Status unknown",
   "bookings.title": "Your real reservations, protected.",
   "bookings.lede": "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as a durable commitment.",
   "bookings.stayEvidence": "Stay evidence",
@@ -1461,6 +1466,11 @@ const zhCN: Dict = {
 
   // ── Bookings ──
   "bookings.kicker": "行程收件箱 · 旅行票夹",
+  "bookings.realtimeOnTime": "准点",
+  "bookings.realtimeDelayed": "延误",
+  "bookings.realtimeCancelled": "已取消",
+  "bookings.realtimeNoStatus": "暂无实时状态",
+  "bookings.realtimeStatusUnknown": "状态未知",
   "bookings.title": "你的真实预订，受保护。",
   "bookings.lede": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。",
   "bookings.stayEvidence": "住宿证据",
