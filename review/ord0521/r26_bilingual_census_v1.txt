@@ -1,0 +1,31 @@
+# ORD-0521 r26 bilingual census
+## Summary
+- Total files: 63
+- Total patterns: 24
+- Hardcoded returns: 22
+- Entry lookups: 1
+- Intl formats: 1
+
+## Hardcoded Returns (needs dictionary migration)
+- `features\agent\AgentComposer.tsx:34`: return zh ? "可行" : "Feasible";
+- `features\agent\AgentComposer.tsx:37`: return zh ? "不可行" : "Not feasible";
+- `features\agent\AgentComposer.tsx:40`: return zh ? "需要更多信息" : "Needs more information";
+- `features\agent\AgentComposer.tsx:42`: return zh ? "已评估" : "Assessed";
+- `features\agent\CopilotDock.tsx:547`: if (!key) return zh ? "处理中" : "Working";
+- `features\agent\CopilotDock.tsx:548`: return zh ? "处理中" : "Working";
+- `features\inbox\JourneyInboxWorkbench.tsx:254`: if (!raw) return zh ? "待确认" : "To confirm";
+- `features\inbox\JourneyInboxWorkbench.tsx:268`: if (!Number.isFinite(value)) return zh ? "金额待确认" : "Amount to confirm";
+- `features\inbox\JourneyInboxWorkbench.tsx:275`: if (value === null || value === undefined || value === "") return zh ? "待确认" : "
+- `features\setup\JourneyTrialSetup.tsx:251`: if (!row.answered) return zh ? "身份还没读到" : "identity not read yet";
+- `features\setup\JourneyTrialSetup.tsx:252`: if (row.canonical_destination_id) return zh ? "服务器给了身份" : "the server named it";
+- `features\setup\JourneyTrialSetup.tsx:253`: return zh ? "还没有身份" : "no identity yet";
+- `features\setup\JourneyTrialSetup.tsx:268`: return zh ? "服务器说这座城现在就能规划" : "the server says this destination can be planned n
+- `features\setup\JourneyTrialSetup.tsx:276`: return zh ? "问了，这一轮没人回答" : "it was asked, and nothing answered this round";
+- `features\setup\JourneyTrialSetup.tsx:283`: return zh ? "服务器给了别的判定" : "the server gave some other verdict";
+- `features\stay\StayExplorer.tsx:301`: if (!value) return zh ? "房型未知" : "Room type unknown";
+- `features\stay\StayExplorer.tsx:303`: return zh ? "酒店" : "Hotel";
+- `features\stay\StayExplorer.tsx:357`: if (!text) return zh ? "退改政策未知" : "Cancellation terms unknown";
+- `features\stay\StayExplorer.tsx:360`: if (/non-refundable/i.test(text)) return zh ? "不可取消" : "Non-refundable";
+- `features\stay\StayExplorer.tsx:361`: if (/free cancellation/i.test(text)) return zh ? "入住前可免费取消" : "Free cancellation
+- `features\stay\StayExplorer.tsx:368`: return zh ? "暂无供应商证据" : "No provider evidence";
+- `features\stay\StayExplorer.tsx:488`: return zh ? "zh-CN" : "en";
