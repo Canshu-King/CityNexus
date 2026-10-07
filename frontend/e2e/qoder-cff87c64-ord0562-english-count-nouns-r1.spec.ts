@@ -12,7 +12,7 @@
  * in review/ord0562/.
  */
 import { expect, test } from "@playwright/test";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -126,4 +126,57 @@ test("the ruler read what it claims to have read", () => {
     }, null, 1), "utf8");
   }
   expect(entries.length, "the parse is empty").toBeGreaterThan(1000);
+});
+
+/* The hub was only the first screen. This arm walks every .ts/.tsx under frontend/src so a counted
+   English noun cannot soften itself into `(s)` on some other screen while the ruler only guards three
+   files. The decision is per occurrence, not per line: a line can hold both an arrow parameter named `s`
+   and a real screen string, and a per-line test produced a false positive on the first run. Comment lines
+   are skipped, because plural.ts's own header names the dodge it rejects. */
+function sources(dir: string, into: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) sources(full, into);
+    else if (/\.(ts|tsx)$/.test(entry)) into.push(full);
+  }
+  return into;
+}
+
+function softenedInStrings(line: string): number[] {
+  const found: number[] = [];
+  let quote = "";
+  for (let i = 0; i < line.length; i += 1) {
+    const ch = line[i];
+    if (quote) {
+      const rest = line.slice(i);
+      if (ch === "(" && /^\(s\)/.test(rest) && !/^\(s\)\s*=>/.test(rest)) found.push(i);
+      if (ch === quote && line[i - 1] !== "\\") quote = "";
+      continue;
+    }
+    if (ch === "`" || ch === '"' || ch === "'") { quote = ch; continue; }
+    if (ch !== "(") continue;
+    const rest = line.slice(i);
+    if (!/^\(s\)/.test(rest)) continue;
+    if (/^\(s\)\s*=>/.test(rest)) continue;
+    found.push(i);
+  }
+  return found;
+}
+
+test("no screen under frontend/src softens a counted English noun into `(s)`", () => {
+  const files = sources(join(ROOT, "frontend", "src"));
+  const hits: string[] = [];
+  const posix = (p: string) => p.split("\\").join("/");
+  for (const file of files) {
+    const relative = posix(file).slice(posix(ROOT).length + 1);
+    const lines = readFileSync(file, "utf8").split("\n");
+    lines.forEach((line, index) => {
+      const text = line.trim();
+      if (text.startsWith("*") || text.startsWith("//") || text.startsWith("/*")) return;
+      if (!softenedInStrings(text).length) return;
+      hits.push(relative + ":" + (index + 1) + "  " + text.slice(0, 100));
+    });
+  }
+  expect(hits, "a counted English noun on some screen went back to the `1 or more` dodge").toEqual([]);
+  expect(files.length, "the walk found almost no sources, so this arm would pass on nothing").toBeGreaterThan(100);
 });
