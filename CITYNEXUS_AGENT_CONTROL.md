@@ -16588,6 +16588,48 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 车道 89f2e2d6 · 硬目标下一件：实时状态那五枚标签从「函数返回值里的手写文案」改成走词典（这一格比前几片难一档：函数在模块层、没有 `t` 可用，得先给它取词函数）
+
+坐标（写这块这一刻现读，逐枚可 `git cat-file`）
+  - 权威镜像枝 `refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `588680a602123b39b4b16699f4ced2fa2d2ae79a`（按令先 `git fetch` 对齐现尖；令给的尖与本轮现读同值）。
+  - 候选提交 `3f63337ae261fa81e60fcaf35fca6eb550049b2f`，**父笔 = 上面那枚现尖**（`git rev-parse 3f63337a…^` 现取 = `588680a602123b39b4b16699f4ced2fa2d2ae79a`）⇒ 快进（`git merge-base --is-ancestor` 退码 0；只读落地面 `git merge-tree --write-tree` 预测树 `cf8a98b4ad54c22e1dead0db4e28f5e23077eed0`）。
+  - 候选枝 `refs/heads/review/89f2e2d6-i18n-realtime-status-r1` 现读枝头 = `3f63337ae261fa81e60fcaf35fca6eb550049b2f`（`git ls-remote --refs` 本轮现取，已推在 `refs/heads/review/` 下）。
+  - 改动只有两枚产品文件（`git diff --name-status 588680a602123b39b4b16699f4ced2fa2d2ae79a 3f63337a…`：两枚均 M，无增删）。
+
+**一、本轮新扫的范围**
+
+  - 号令者交接总账说：现尖上 `frontend/src/app/V8Experience.tsx` 仍有**三十处**两臂内联双语。我按行号现读复核：**现读剩二十四处**——比总账少的那几处，正是我上一格落的「今天／下一站」那片（它已进现尖，我逐枚点过：`today.reviewInLive` 与 `my.stay` 在现尖词典里各两处、组件各读了一处）。
+  - 这一格挑 `frontend/src/app/V8Experience.tsx:4222-4228` 那五枚**实时状态标签**（准点／延误／已取消／暂无实时状态／状态未知）。
+
+**二、新发现的处数：这一片与前几片不同类（这是本格真正的发现）**
+
+  - 前几片改的都是 JSX 里的 `zh ? ... : ...`。这五枚**不是**内联——它们是 `realtimeLabel(value, zh)` 的 **`return` 语句**，那个函数在**模块层**、作用域里**没有 `t`**。所以前几片那种「把内联换成 `t(...)`」的做法在这里**根本不成立**：要么换个函数签名把取词函数传进来，要么就得留着手写文案。
+  - 我选了前者：`realtimeLabel(value, zh, t)`。这个发现也说明盘点那一句「三十处内联」的口径**不完整**——它数的是 `zh ?` 形状，而**函数返回值里手写两臂文案**不在其中。下一格我按这个更宽的口径重扫一遍。
+
+**三、新修的处数与新增回归臂**
+
+  - 动产品字节两枚：五枚键（`bookings.realtimeOnTime`、`realtimeDelayed`、`realtimeCancelled`、`realtimeNoStatus`、`realtimeStatusUnknown`），中英各一份；`realtimeLabel` 改为收取词函数，函数体读词典，调用点传 `t`。
+  - 类型检查：`tsc -p tsconfig.check.json --noEmit` 退出码 **0**（在**现尖字节**上跑的）。
+  - 新增回归臂：`review/ord0520/i18n_realtime_status_arm_r1.py`，判语逐字 `ARM_BITES_AND_COUNTER_GOES_RED`，**18 条断言**（条数 `review/ord0520/I18N_REALTIME_STATUS_ARM_r1.txt:3`）：每枚键在两臂都定义、**两臂文本必须不同**、函数体里已无任何手写那一对、函数体确实读每枚键、**函数签名收了取词函数**、**每一个调用点都传了**。
+  - 「每一个调用点都传了」这条是为了以后：现在调用点只有一个，但将来多一个时不会悄悄留旧形。
+  - 反控那一半：把两枚文件还原成现尖字节（只还原副本、原件零写），**逐条为假**（`review/ord0520/I18N_REALTIME_STATUS_ARM_r1.txt:3` 那份读数件里 `reverted_passing` 为空）⇒ 这个绿是在量这件改动。
+
+**四、我自己一条判据写错、在正确的树上报红，当场修（写出来免得下一个人照抄）**
+
+  - 我那条「所有调用点都传了取词函数」的正则，把**函数定义本身**也当成调用点（它的命中是 `t: (key: string)`），于是一棵对的树被判红。**在错的行上喊红的探测器比没有探测器更坏**，所以现在把定义显式排除。
+
+**五、下一格（自己派，不等单）**
+
+  - **先扩口径再往下推**：用「函数返回值里的手写两臂文案」这个更宽的口径重扫 `frontend/src/app/V8Experience.tsx`（现有那类里至少还有「我的」屏那三处函数返回、以及委托范围那三处），出一张「内联 `zh ?` 形状」与「函数返回手写形状」分开的清单，两个口径都带分母。
+  - 然后按屏继续推剩余片，每片一件、各带同形制反控臂；建枝前一律先 `git fetch` 对齐现尖。
+
+边界 A：产品字节改了两枚（`frontend/src` 下真实字节），契约零枚、他人量具零枚改动；本车道 `review/ord0520/` 下新增两枚（反控臂 + 读数件）。
+边界 B：权威线零移动；push 只落向本车道名下 `refs/heads/review/` 下的新枝（现读 `refs/heads/review/89f2e2d6-i18n-realtime-status-r1` 一枚），force-push 零次、他人枝零枚改动、旧枝零枚删除。
+边界 C：账本零直写（本块走收件口）；`demo/reset` 零次；共享 `_preview.db` 零次写；本车道本轮**未起任何监听端口**（只跑 `tsc` 与文本比对）；未碰 `:8000`、`:4781`、`:4782`、`:8693`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 号令者交接 · 今晚值守总账（回溯口径，不是我一笔一笔数的）@2026-10-08 02:55+08
 
 现读权威尖 `588680a602123b39b4b16699f4ced2fa2d2ae79a`（`mirror/integration-frontend-apple-pass1`，现读）。
