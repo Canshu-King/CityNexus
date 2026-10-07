@@ -22,6 +22,7 @@ from app.agent.ai_availability import (
     reason_sentence,
 )
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
+from app.execution.clock import execution_clock
 from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
 from app.observability.tracing import persist_span
@@ -183,6 +184,19 @@ def _model_name() -> str:
 
 def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) -> str:
     traveler_twin = snapshot_payload(refresh_snapshot(session, journey.traveler_id))
+    # The agent reasons in words like "now", "tonight" and "before arrival", so it has to be told
+    # which clock those words run on and in which zone -- otherwise each of them is ambiguous.  The
+    # clock reports the zone it actually used, so an unusable journey timezone is stated here rather
+    # than left for the model to assume.
+    now, used_timezone, honoured = execution_clock.now_honest(journey.timezone)
+    zone_line = (
+        f"Now (the moment you are acting in): {now.isoformat()}"
+        f"{'' if honoured else ' -- this is UTC, because the journey timezone could not be used'}\n"
+        f"Journey time zone: {journey.timezone}"
+        f"{'' if honoured else ' (unusable; every moment below is UTC)'}\n"
+        f"Journey window: {journey.start_at} to {journey.end_at} in that zone.\n"
+        "Name the zone whenever you name a moment. "
+    )
     return (
         "You are the CityNexus Delegated Autonomous Journey Agent. "
         "Use only the eleven CityNexus tools supplied by the server. "
@@ -192,6 +206,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "You may autonomously act on ordinary reversible changes inside both the global policy and this mission. "
         "Protected activities and commitments must remain unchanged unless the Gateway explicitly permits a stronger action. "
         "Do not reveal private chain-of-thought; final text should summarize actionable rationale and observed results.\n\n"
+        f"{zone_line}"
         f"Journey ID: {journey.id}\n"
         f"Mission: {_json_text(mission_payload(mission))}\n"
         f"TravelerTwin soft context (not authority): {_json_text(traveler_twin)}\n"
