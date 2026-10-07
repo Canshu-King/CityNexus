@@ -4807,20 +4807,12 @@ function Me({
         <article className="v8-me-card">
           <span className="v8-kicker">{t("my.stay")}</span>
           <strong>
-            {stay
-              ? stay.stay.property_name
-              : zh
-                ? "还没有选定"
-                : "Not chosen yet"}
+            {stay ? stay.stay.property_name : t("me.stayNotChosen")}
           </strong>
           <p>
             {stay
-              ? zh
-                ? "已确认的住宿"
-                : "Confirmed stay"
-              : zh
-                ? "在「行程 · 住宿」里挑选"
-                : "Choose it in Trips · Stay"}
+              ? t("me.stayConfirmed")
+              : t("me.stayChooseInTrips")}
           </p>
         </article>
 
@@ -4839,12 +4831,8 @@ function Me({
           </strong>
           <p>
             {bookings.length
-              ? zh
-                ? "受保护的预订，不会被自动改动。"
-                : "Protected bookings; they are never changed automatically."
-              : zh
-                ? "在「行程 · 预订」里导入你的票或确认单。"
-                : "Import a ticket or confirmation in Trips · Bookings."}
+              ? t("me.bookingsProtected")
+              : t("me.bookingsImport")}
           </p>
         </article>
 
@@ -4854,9 +4842,7 @@ function Me({
           </span>
           <strong>{freedomLabel(policy?.mode)}</strong>
           <p>
-            {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。"
-              : "Anything affecting a confirmed booking or protected plan asks you first."}
+            {t("me.asksBeforeProtectedChange")}
           </p>
           <label className="me-mode-row">
             <span>{t("me.allowAutomaticChanges")}</span>
