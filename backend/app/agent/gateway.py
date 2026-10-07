@@ -2175,7 +2175,16 @@ class AgentToolGateway:
                 str(item)
                 for item in (mediation.get("decision_relevant_member_ids") or [])
             }
-        required_ids = sorted(relevant_ids.intersection(member_by_id))
+        # A member may affect fairness without holding Journey mutation
+        # authority. Keep their fit in the decision epoch, but never place a
+        # read-only role into the set whose signatures can mint collective
+        # mutation authority.
+        authorizing_member_ids = {
+            member_id
+            for member_id, item in member_by_id.items()
+            if bool(item.get("can_authorize_mutation"))
+        }
+        required_ids = sorted(relevant_ids.intersection(authorizing_member_ids))
         if not required_ids:
             raise HTTPException(409, "COLLECTIVE_MUTATION_AUTHORITY_CONFLICT")
         from app.collective_mediation import collective_decision_epoch
