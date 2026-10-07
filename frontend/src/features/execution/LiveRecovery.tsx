@@ -711,11 +711,16 @@ export function LiveRecovery({
       if (error instanceof CityNexusApiError && error.status >= 400 && error.status < 500) {
         groupRecoveryApplyKey.current = null;
         if (error.status === 409) {
-          const body = error.body as { detail?: unknown } | null;
-          const detail = body && typeof body === "object" ? body.detail : null;
-          const code = detail && typeof detail === "object" && "code" in detail
-            ? String((detail as { code?: unknown }).code ?? "")
-            : "";
+          const body = error.body as {
+            error?: {
+              reason_code?: unknown;
+              details?: unknown;
+            };
+          } | null;
+          const details = body?.error?.details;
+          const code = details && typeof details === "object" && "code" in details
+            ? String((details as { code?: unknown }).code ?? "")
+            : String(body?.error?.reason_code ?? "");
           await Promise.all([loadOperator(), loadProposals()]);
           setMessage(code === "GROUP_RECOVERY_REPLAN_REQUIRED"
             ? (zh
