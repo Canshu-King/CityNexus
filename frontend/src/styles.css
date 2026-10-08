@@ -351,7 +351,11 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
    what lets a flex child actually shrink instead of pushing the drawer taller. The floor on the
    body is one heading plus two rows: a group is never reduced to a sliver a traveller cannot read. */
 .v8-nav-group-section { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; }
-.v8-nav-group { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; margin: 14px 12px 5px; padding: 0; border: 0; background: transparent; color: var(--cn-ink-secondary); font-size: 9px; font-weight: 800; letter-spacing: .14em; cursor: pointer; text-align: left; flex: 0 0 auto; }
+/* Scoped to the drawer: the desktop rail renders the same class name on a plain heading span
+   (`V8Experience.tsx:1955`), and an unscoped rule here turned that span into a full-width flex row
+   with a pointer cursor. Measured at 1280x800 -- before this scope the rail heading went
+   display block -> flex, cursor auto -> pointer, width 195 -> 219 (the rail's own width). */
+#v8-nav-drawer .v8-nav-group { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; margin: 14px 12px 5px; padding: 0; border: 0; background: transparent; color: var(--cn-ink-secondary); font-size: 9px; font-weight: 800; letter-spacing: .14em; cursor: pointer; text-align: left; flex: 0 0 auto; }
 .v8-nav-group-caret { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform var(--cn-motion-fast) ease; opacity: .7; }
 .v8-nav-group[aria-expanded="false"] .v8-nav-group-caret { transform: rotate(-45deg); }
 /* The group body is the bounded, independently-scrollable region. It owns its own overflow and is
