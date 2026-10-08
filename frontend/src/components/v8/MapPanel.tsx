@@ -25,6 +25,16 @@ export function activityCoordinate(item: {
 }): { latitude: number; longitude: number; coordinate_system: string | null } | null {
   const location = item.location;
   if (!location || location.latitude == null || location.longitude == null) return null;
+  // A number past the WGS84 range is not a place: it drops a pin in nowhere and the map paints that
+  // as fact. The server already refuses these on the way in (backend/app/schemas.py, `GeoPoint`);
+  // the render path refuses them too, so "this activity has a coordinate" means the same thing
+  // wherever it is asked.
+  if (
+    location.latitude < -90 || location.latitude > 90 ||
+    location.longitude < -180 || location.longitude > 180
+  ) {
+    return null;
+  }
   return {
     latitude: location.latitude,
     longitude: location.longitude,
