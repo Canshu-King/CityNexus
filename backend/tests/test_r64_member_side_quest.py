@@ -1326,6 +1326,94 @@ def test_r67_live_zero_and_provider_failure_are_distinct_and_unnamed_osm_is_not_
     assert len(unnamed_calls) == 1
 
 
+
+def test_r67_live_scout_excludes_shared_plan_stops_and_rendezvous(monkeypatch):
+    journey_id, owner_id, _other_id = _active_shared_journey()
+    observation_id = _r67_location(journey_id, owner_id)
+    shared_external_id = "overpass:node/88990011"
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        activity = session.scalar(
+            select(Activity).where(
+                Activity.plan_version_id == str(journey.active_plan_version_id),
+                Activity.place_id.is_not(None),
+            ).order_by(Activity.sequence_no)
+        )
+        assert activity is not None
+        shared_place = session.get(Place, activity.place_id)
+        assert shared_place is not None
+        shared_place.provider_key = "overpass"
+        shared_place.external_id = shared_external_id
+        shared_place.name = "R67 shared itinerary museum"
+        shared_place.category = "museum"
+        shared_place.latitude = 5.123956
+        shared_place.longitude = 10.654321
+        session.commit()
+
+    candidates = [
+        _r67_candidate(
+            osm_id="88990011",
+            name="R67 shared itinerary museum",
+            latitude=5.123956,
+            longitude=10.654321,
+        ),
+        _r67_candidate(
+            osm_id="88990012",
+            name="R67 genuinely new museum",
+            latitude=5.124456,
+            longitude=10.654321,
+        ),
+    ]
+    _install_r67_provider(
+        monkeypatch,
+        candidates=candidates,
+        attempts=[{"endpoint": "https://overpass.example/api/interpreter", "answered": True, "http_status": 200}],
+    )
+    response = _r67_live_request(journey_id, owner_id, observation_id)
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["scout_state"] == "LIVE_RESULTS"
+    assert [item["name"] for item in body["candidates"]] == ["R67 genuinely new museum"]
+
+
+def test_r67_live_scout_cannot_select_after_shared_rendezvous_has_passed(monkeypatch):
+    journey_id, owner_id, _other_id = _active_shared_journey()
+    observation_id = _r67_location(journey_id, owner_id)
+    candidate = _r67_candidate(osm_id="88990013", name="R67 late-night museum")
+    _install_r67_provider(
+        monkeypatch,
+        candidates=[candidate],
+        attempts=[{"endpoint": "https://overpass.example/api/interpreter", "answered": True, "http_status": 200}],
+    )
+    response = _r67_live_request(journey_id, owner_id, observation_id)
+    assert response.status_code == 200, response.text
+    receipt_id = response.json()["receipt_id"]
+    candidate_id = response.json()["candidates"][0]["candidate_id"]
+    with SessionLocal() as session:
+        receipt = session.get(MemberLiveMomentScoutReceipt, receipt_id)
+        assert receipt is not None
+        activity = session.get(Activity, receipt.rendezvous_activity_id)
+        assert activity is not None
+        activity.start_at = (
+            execution_clock.now().astimezone(timezone.utc) - timedelta(minutes=1)
+        ).isoformat()
+        session.commit()
+    selection = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout/live/select",
+        headers=_auth(owner_id),
+        json={
+            "receipt_id": receipt_id,
+            "candidate_id": candidate_id,
+            "confirm_return_to_rendezvous": True,
+        },
+    )
+    assert selection.status_code == 409, selection.text
+    assert "LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED" in selection.text
+    assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == 0
+    assert _count(Place, Place.provider_key == "overpass", Place.external_id == candidate.external_id) == 0
+
+
 def test_r67_live_osm_selection_materializes_only_after_owner_confirmation_and_is_idempotent(monkeypatch):
     journey_id, owner_id, other_id = _active_shared_journey()
     observation_id = _r67_location(journey_id, owner_id)
