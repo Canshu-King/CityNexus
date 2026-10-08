@@ -12663,7 +12663,14 @@ def generate_replan(
         #     could satisfy the CHECK with a *lexicographically* smaller value
         #     and be rejected by the database (an intermittent HTTP 500 during
         #     replan).  Storing one offset per plan keeps the ordering real.
-        journey_tz = ZoneInfo(journey.timezone or "UTC")
+        #     A zone that cannot be used falls back to UTC rather than raising: this door
+        #     normalises instants, and refusing to plan at all because of a bad zone would turn a
+        #     correctable field into a 500 on a trip that can otherwise be replanned.  This is the
+        #     same rule the two other normalisation sites in this file already use.
+        try:
+            journey_tz = ZoneInfo(journey.timezone or "UTC")
+        except (ZoneInfoNotFoundError, ValueError):
+            journey_tz = ZoneInfo("UTC")
         for row in copied_rows:
             for field in ("start_at", "end_at"):
                 try:
