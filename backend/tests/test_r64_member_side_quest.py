@@ -32,6 +32,7 @@ from app.db.models import (
     MemberPlaceInvitation,
     MemberPlaceInvitationProgress,
     MemberPlaceInvitationRecipient,
+    MemberPlacePromotion,
     MemberSideQuest,
     MemberSideQuestReturnReport,
     MobilityFact,
@@ -79,6 +80,24 @@ def _restore_live_place_provider_settings():
 
 def _auth(traveler_id: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {issue_traveler_token(traveler_id)}"}
+
+
+def _find_promotion(payload: object, promotion_id: str) -> dict:
+    if isinstance(payload, dict):
+        if payload.get("promotion_id") == promotion_id:
+            return payload
+        for value in payload.values():
+            try:
+                return _find_promotion(value, promotion_id)
+            except LookupError:
+                continue
+    elif isinstance(payload, (list, tuple)):
+        for value in payload:
+            try:
+                return _find_promotion(value, promotion_id)
+            except LookupError:
+                continue
+    raise LookupError(f"promotion {promotion_id} was not present in the response")
 
 
 def _active_shared_journey() -> tuple[str, str, str]:
@@ -2204,6 +2223,45 @@ def _create_r71_invitation(
     return str(invitation_id), side_quest_id, place_id
 
 
+def _member_place_invitation_audience_token(
+    journey_id: str, invitation_id: str, traveler_id: str
+) -> str:
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(traveler_id)
+    )
+    assert projection.status_code == 200, projection.text
+    boards = projection.json()["member_place_invitations"]
+    invitation = next(
+        row
+        for group in ("sent", "joined")
+        for row in boards[group]
+        if row["invitation_id"] == invitation_id
+    )
+    token = invitation["own_progress"]["share_audience_token"]
+    assert isinstance(token, str) and len(token) == 64
+    return token
+
+
+def _post_member_place_invitation_progress(
+    journey_id: str,
+    invitation_id: str,
+    traveler_id: str,
+    action: str,
+    *,
+    audience_token: str | None = None,
+):
+    payload = {"action": action}
+    if action.startswith("SHARE_"):
+        payload["share_audience_token"] = audience_token or _member_place_invitation_audience_token(
+            journey_id, invitation_id, traveler_id
+        )
+    return client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/progress",
+        headers=_auth(traveler_id),
+        json=payload,
+    )
+
+
 def test_r70_place_invitation_is_member_scoped_and_accept_creates_own_stop():
     journey_id, owner_id, recipient_id = _active_shared_journey()
     now = datetime.now(timezone.utc).isoformat()
@@ -2599,12 +2657,12 @@ def test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent(
     anonymous_cannot_report = client.post(progress_path, json={"action": "SHARE_ARRIVAL"})
     assert anonymous_cannot_report.status_code in {401, 403}
 
-    b_cannot_report_before_r64_arrival = client.post(
-        progress_path, headers=_auth(recipient_id), json={"action": "SHARE_ARRIVAL"}
+    b_cannot_report_before_r64_arrival = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_ARRIVAL"
     )
     assert b_cannot_report_before_r64_arrival.status_code == 409
-    a_cannot_report_before_r64_arrival = client.post(
-        progress_path, headers=_auth(owner_id), json={"action": "SHARE_ARRIVAL"}
+    a_cannot_report_before_r64_arrival = _post_member_place_invitation_progress(
+        journey_id, invitation_id, owner_id, "SHARE_ARRIVAL"
     )
     assert a_cannot_report_before_r64_arrival.status_code == 409
 
@@ -2648,13 +2706,19 @@ def test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent(
     assert b_after_expiry["member_side_quest"]["id"] == recipient_quest_id
     assert b_after_expiry["member_place_invitations"]["joined"][0]["state"] == "EXPIRED"
 
-    b_shared = client.post(progress_path, headers=_auth(recipient_id), json={"action": "SHARE_ARRIVAL"})
+    b_shared = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_ARRIVAL"
+    )
     assert b_shared.status_code == 200, b_shared.text
     b_reported_at = b_shared.json()["member_place_invitations"]["joined"][0]["participants"][1]["at_invited_place"]["reported_at"]
-    b_shared_again = client.post(progress_path, headers=_auth(recipient_id), json={"action": "SHARE_ARRIVAL"})
+    b_shared_again = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_ARRIVAL"
+    )
     assert b_shared_again.status_code == 200, b_shared_again.text
     assert b_shared_again.json()["member_place_invitations"]["joined"][0]["participants"][1]["at_invited_place"]["reported_at"] == b_reported_at
-    a_shared = client.post(progress_path, headers=_auth(owner_id), json={"action": "SHARE_ARRIVAL"})
+    a_shared = _post_member_place_invitation_progress(
+        journey_id, invitation_id, owner_id, "SHARE_ARRIVAL"
+    )
     assert a_shared.status_code == 200, a_shared.text
     withdrawn_invitation = client.post(
         f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw",
@@ -2680,10 +2744,8 @@ def test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent(
             headers=_auth(traveler_id),
         )
         assert completed.status_code == 200, completed.text
-        cannot_share_before_r65 = client.post(
-            progress_path,
-            headers=_auth(traveler_id),
-            json={"action": "SHARE_HEADING_BACK"},
+        cannot_share_before_r65 = _post_member_place_invitation_progress(
+            journey_id, invitation_id, traveler_id, "SHARE_HEADING_BACK"
         )
         assert cannot_share_before_r65.status_code == 409
         headed_back = client.post(
@@ -2692,11 +2754,13 @@ def test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent(
         )
         assert headed_back.status_code == 200, headed_back.text
 
-    b_shared_return = client.post(
-        progress_path, headers=_auth(recipient_id), json={"action": "SHARE_HEADING_BACK"}
+    b_shared_return = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_HEADING_BACK"
     )
     assert b_shared_return.status_code == 200, b_shared_return.text
-    a_shared_return = client.post(progress_path, headers=_auth(owner_id), json={"action": "SHARE_HEADING_BACK"})
+    a_shared_return = _post_member_place_invitation_progress(
+        journey_id, invitation_id, owner_id, "SHARE_HEADING_BACK"
+    )
     assert a_shared_return.status_code == 200, a_shared_return.text
 
     owner_view = client.get(
@@ -2765,8 +2829,8 @@ def test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent(
     )
     assert replacement_quest.status_code == 201, replacement_quest.text
     assert replacement_quest.json()["member_side_quest"]["id"] != recipient_quest_id
-    stale_quest_report = client.post(
-        progress_path, headers=_auth(recipient_id), json={"action": "SHARE_ARRIVAL"}
+    stale_quest_report = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_ARRIVAL"
     )
     assert stale_quest_report.status_code == 409
     owner_keeps_historical_return = client.get(
@@ -2782,8 +2846,8 @@ def test_r72_invited_micro_group_progress_is_opt_in_member_bound_and_persistent(
         assert journey is not None
         journey.active_plan_version_id = None
         session.commit()
-    stale_plan_report = client.post(
-        progress_path, headers=_auth(owner_id), json={"action": "SHARE_ARRIVAL"}
+    stale_plan_report = _post_member_place_invitation_progress(
+        journey_id, invitation_id, owner_id, "SHARE_ARRIVAL"
     )
     assert stale_plan_report.status_code == 409
     with SessionLocal() as session:
@@ -3645,10 +3709,8 @@ def test_r72_joined_member_can_share_after_inviter_finishes_own_split():
         owner_quest.state = "INVALIDATED"
         session.commit()
 
-    b_shared = client.post(
-        f"{path}/progress",
-        headers=_auth(recipient_id),
-        json={"action": "SHARE_ARRIVAL"},
+    b_shared = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_ARRIVAL"
     )
     assert b_shared.status_code == 200, b_shared.text
     b_view = b_shared.json()["member_place_invitations"]["joined"][0]
@@ -3658,10 +3720,8 @@ def test_r72_joined_member_can_share_after_inviter_finishes_own_split():
         and participant["at_invited_place"] is not None
         for participant in b_view["participants"]
     )
-    a_cannot_report_old_trip = client.post(
-        f"{path}/progress",
-        headers=_auth(owner_id),
-        json={"action": "SHARE_ARRIVAL"},
+    a_cannot_report_old_trip = _post_member_place_invitation_progress(
+        journey_id, invitation_id, owner_id, "SHARE_ARRIVAL"
     )
     assert a_cannot_report_old_trip.status_code == 409
 
@@ -3709,10 +3769,8 @@ def test_r72_late_joiner_does_not_inherit_prior_opt_in_status():
             headers=_auth(recipient_id),
         )
         assert result.status_code == 200, result.text
-    first_report = client.post(
-        f"{path}/progress",
-        headers=_auth(recipient_id),
-        json={"action": "SHARE_ARRIVAL"},
+    first_report = _post_member_place_invitation_progress(
+        journey_id, invitation_id, recipient_id, "SHARE_ARRIVAL"
     )
     assert first_report.status_code == 200, first_report.text
     b_member_id = next(
@@ -3723,24 +3781,642 @@ def test_r72_late_joiner_does_not_inherit_prior_opt_in_status():
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
     ).json()["member_place_invitations"]["sent"][0]["participants"]
     assert next(item for item in owner_before if item["member_id"] == b_member_id)["at_invited_place"] is not None
+    b_withdrew_before_reconfirm = client.post(
+        f"{path}/progress", headers=_auth(recipient_id),
+        json={"action": "WITHDRAW_ARRIVAL"},
+    )
+    assert b_withdrew_before_reconfirm.status_code == 200
+    # This is the immutable audience snapshot held by B's open confirmation.
+    b_consent_token_before_c_joins = _member_place_invitation_audience_token(
+        journey_id, invitation_id, recipient_id
+    )
 
     c_accepted = accept(third_id)
     c_board = c_accepted["member_place_invitations"]["joined"][0]["participants"]
     b_for_late_c = next(item for item in c_board if item["member_id"] == b_member_id)
     assert b_for_late_c["at_invited_place"] is None
 
-    # B consents again *after* C joined; only that newly made disclosure can
-    # appear in C's board. Previously observed facts are not revoked from A.
-    assert client.post(
-        f"{path}/progress", headers=_auth(recipient_id),
-        json={"action": "WITHDRAW_ARRIVAL"},
-    ).status_code == 200
-    reshared = client.post(
-        f"{path}/progress", headers=_auth(recipient_id),
-        json={"action": "SHARE_ARRIVAL"},
+    # An old confirmation cannot disclose to a member who joined after the
+    # dialog opened. B must review the refreshed audience and explicitly agree.
+    stale_consent = _post_member_place_invitation_progress(
+        journey_id,
+        invitation_id,
+        recipient_id,
+        "SHARE_ARRIVAL",
+        audience_token=b_consent_token_before_c_joins,
+    )
+    assert stale_consent.status_code == 409, stale_consent.text
+    assert stale_consent.json()["error"]["message"] == "PLACE_INVITATION_PROGRESS_AUDIENCE_CHANGED"
+    c_still_sees_nothing = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(third_id)
+    ).json()["member_place_invitations"]["joined"][0]["participants"]
+    assert next(item for item in c_still_sees_nothing if item["member_id"] == b_member_id)["at_invited_place"] is None
+
+    refreshed_consent_token = _member_place_invitation_audience_token(
+        journey_id, invitation_id, recipient_id
+    )
+    reshared = _post_member_place_invitation_progress(
+        journey_id,
+        invitation_id,
+        recipient_id,
+        "SHARE_ARRIVAL",
+        audience_token=refreshed_consent_token,
     )
     assert reshared.status_code == 200, reshared.text
     c_after = client.get(
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(third_id)
     ).json()["member_place_invitations"]["joined"][0]["participants"]
     assert next(item for item in c_after if item["member_id"] == b_member_id)["at_invited_place"] is not None
+
+
+def test_r73_shared_stop_without_grounded_route_evidence_stays_blocked(monkeypatch):
+    journey_id, owner_id, _recipient_id = _active_shared_journey()
+    invitation_id, _side_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    monkeypatch.setattr(main_module, "_ensure_opportunity_window_event", lambda _session, _journey: None)
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        original_plan_id = str(journey.active_plan_version_id)
+        original_cursor_id = str(journey.current_activity_id or "")
+        original_proposal_count = int(
+            session.scalar(select(func.count()).select_from(ReplanProposal).where(
+                ReplanProposal.journey_id == journey_id,
+            )) or 0
+        )
+
+    headers = {
+        **_auth(owner_id),
+        "Idempotency-Key": "r73-no-route-evidence-01",
+    }
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        headers=headers,
+        json={"dwell_minutes": 20},
+    )
+    assert response.status_code == 201, response.text
+    projection = response.json()["member_place_invitations"]
+    assert len(projection["promotions"]) == 1
+    promotion_view = projection["promotions"][0]
+    assert promotion_view["state"] == "BLOCKED"
+    assert promotion_view["state_detail"]["feasibility"] == "FEASIBILITY_UNKNOWN"
+    assert promotion_view["state_detail"]["next_action"] == "NEEDS_ROUTE_EVIDENCE"
+    assert promotion_view["proposal_id"] is None
+    with SessionLocal() as session:
+        assert int(
+            session.scalar(select(func.count()).select_from(ReplanProposal).where(
+                ReplanProposal.journey_id == journey_id,
+            )) or 0
+        ) == original_proposal_count
+
+    # A generic replan accept URL cannot bypass the promotion's explicit
+    # unanimous-consent/apply boundary, even if a caller presents a proposal
+    # row carrying the R73 marker.
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        promotion_row = session.scalar(
+            select(MemberPlacePromotion).where(MemberPlacePromotion.journey_id == journey_id)
+        )
+        assert promotion_row is not None
+        base_plan = session.get(PlanVersion, str(journey.active_plan_version_id))
+        assert base_plan is not None
+        candidate_plan_id = str(uuid4())
+        session.add(PlanVersion(
+            id=candidate_plan_id,
+            journey_id=journey_id,
+            version_no=int(base_plan.version_no) + 1,
+            planning_mode=str(base_plan.planning_mode),
+            status="CANDIDATE",
+            lifecycle="ACTIVE",
+            trigger_contract_json="{}",
+            source="REPLAN",
+            parent_plan_version_id=str(base_plan.id),
+            total_cost_minor=int(base_plan.total_cost_minor),
+            currency=str(base_plan.currency),
+            estimated_duration_min=int(base_plan.estimated_duration_min),
+            utility_score=base_plan.utility_score,
+            score_breakdown_json=base_plan.score_breakdown_json,
+            explanation_json=base_plan.explanation_json,
+            mobility_snapshot_id=base_plan.mobility_snapshot_id,
+            mobility_evidence_json=base_plan.mobility_evidence_json,
+            created_at=datetime.now(timezone.utc).isoformat(),
+        ))
+        proposal_id = str(uuid4())
+        session.add(ReplanProposal(
+            id=proposal_id,
+            journey_id=journey_id,
+            trigger_event_id=None,
+            base_plan_version_id=str(base_plan.id),
+            proposed_plan_version_id=candidate_plan_id,
+            status="PRESENTED",
+            hard_constraints_passed=True,
+            locked_commitments_preserved=True,
+            utility_score=0.0,
+            score_breakdown_json="{}",
+            diff_json=json.dumps({"r73_shared_stop": {"promotion_id": promotion_row.id}}),
+            explanation_json="{}",
+            created_at=datetime.now(timezone.utc).isoformat(),
+        ))
+        session.commit()
+    bypass = client.post(
+        f"/api/v1/replans/{proposal_id}/accept",
+        headers={"Idempotency-Key": "r73-generic-bypass-01"},
+    )
+    assert bypass.status_code == 409, bypass.text
+    assert "R73_SHARED_PLACE_PROMOTION_AUTHORITY_REQUIRED" in bypass.text
+
+    replay = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        headers=headers,
+        json={"dwell_minutes": 20},
+    )
+    assert replay.status_code == 201, replay.text
+    assert len(replay.json()["member_place_invitations"]["promotions"]) == 1
+    conflict = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        headers=headers,
+        json={"dwell_minutes": 30},
+    )
+    assert conflict.status_code == 409, conflict.text
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        persisted = session.scalars(
+            select(MemberPlacePromotion).where(MemberPlacePromotion.journey_id == journey_id)
+        ).all()
+        assert len(persisted) == 1
+        assert journey.active_plan_version_id == original_plan_id
+        assert str(journey.current_activity_id or "") == original_cursor_id
+        assert int(
+            session.scalar(select(func.count()).select_from(ReplanProposal).where(
+                ReplanProposal.journey_id == journey_id,
+            )) or 0
+        ) == original_proposal_count + 1  # explicit generic-accept bypass fixture above
+
+
+def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_successor(monkeypatch):
+    from app.integrations.discovery.real_city import DiscoveryCandidate
+    from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureResult
+    from app.replanning.provider_snapshots import EXPLICIT_FROZEN_FIXTURE, MobilitySnapshot
+
+    journey_id, owner_id, companion_id = _active_shared_journey()
+    # This success-path fixture models three independently authenticated
+    # members who are all authorized to sign shared-plan changes. The normal
+    # COLLABORATOR role remains read-only for JOURNEY_UPDATE.
+    with SessionLocal() as session:
+        companion = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == companion_id,
+            )
+        )
+        assert companion is not None
+        companion.role = "OWNER"
+        session.commit()
+
+    # Give the controlled replay a real, bounded insertion window before the
+    # next shared stop. These are test schedule facts, not provider evidence.
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None and journey.active_plan_version_id
+        rows = session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == journey.active_plan_version_id)
+            .order_by(Activity.sequence_no)
+        ).all()
+        current = next((row for row in rows if row.id == journey.current_activity_id), None)
+        assert current is not None
+        rendezvous = next(
+            row for row in rows
+            if row.sequence_no > current.sequence_no
+            and row.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+        )
+        now = execution_clock.now().astimezone(timezone.utc)
+        current.start_at = (now - timedelta(minutes=60)).isoformat()
+        current.end_at = (now - timedelta(minutes=15)).isoformat()
+        current.status = "IN_PROGRESS"
+        original_duration = max(
+            30,
+            int((datetime.fromisoformat(rendezvous.end_at) - datetime.fromisoformat(rendezvous.start_at)).total_seconds() // 60),
+        )
+        anchor_start = now + timedelta(minutes=180)
+        rendezvous.start_at = anchor_start.isoformat()
+        rendezvous.end_at = (anchor_start + timedelta(minutes=original_duration)).isoformat()
+        cursor = datetime.fromisoformat(rendezvous.end_at)
+        for row in rows:
+            if row.sequence_no <= rendezvous.sequence_no:
+                continue
+            duration = max(
+                30,
+                int((datetime.fromisoformat(row.end_at) - datetime.fromisoformat(row.start_at)).total_seconds() // 60),
+            )
+            start = cursor + timedelta(minutes=20)
+            row.start_at = start.isoformat()
+            row.end_at = (start + timedelta(minutes=duration)).isoformat()
+            cursor = datetime.fromisoformat(row.end_at)
+        for activity in rows:
+            if not activity.place_id:
+                continue
+            place = session.get(Place, str(activity.place_id))
+            if place is None:
+                continue
+            place.opening_hours_json = json.dumps({
+                "status": "NORMALIZED_VALID",
+                "open": "00:00",
+                "close": "24:00",
+                "intervals": [{"days": ["*"], "open": "00:00", "close": "24:00"}],
+                "fixture_class": "TEST_REPLAY",
+            })
+            metadata = json.loads(place.metadata_json or "{}")
+            metadata["opening_hours_fixture"] = {
+                "fixture_class": "TEST_REPLAY",
+                "source": "R73_CONTROLLED_ACTIVE_PLAN_FIXTURE",
+            }
+            place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+        journey.start_at = current.start_at
+        session.commit()
+
+    location_id = _r67_location(journey_id, owner_id)
+    candidate = DiscoveryCandidate(
+        provider_key="overpass",
+        external_id="overpass:node/987654322",
+        name="R73 controlled OSM public garden",
+        category="museum",
+        latitude=5.123956,
+        longitude=10.654321,
+        tags=("museum", "real_city"),
+        opening_hours={"status": "NORMALIZED_VALID", "open": "00:00", "close": "24:00"},
+        metadata={
+            "osm_id": "node/987654322",
+            "tags": {
+                "name": "R73 controlled OSM public garden",
+                "tourism": "museum",
+                "fee": "no",
+                "opening_hours": "24/7",
+            },
+        },
+        distance_m=None,
+    )
+    _install_r67_provider(
+        monkeypatch,
+        candidates=[candidate],
+        attempts=[{"endpoint": "https://overpass.example/api/interpreter", "answered": True, "http_status": 200}],
+    )
+    discovered = _r67_live_request(journey_id, owner_id, location_id)
+    assert discovered.status_code == 200, discovered.text
+    assert discovered.json()["scout_state"] == "LIVE_RESULTS"
+    candidate_id = discovered.json()["candidates"][0]["candidate_id"]
+    selected = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout/live/select",
+        headers=_auth(owner_id),
+        json={
+            "receipt_id": discovered.json()["receipt_id"],
+            "candidate_id": candidate_id,
+            "confirm_return_to_rendezvous": True,
+        },
+    )
+    assert selected.status_code == 201, selected.text
+    owner_quest_id = selected.json()["member_side_quest"]["id"]
+    place_id = selected.json()["member_side_quest"]["destination"]["place_id"]
+    with SessionLocal() as session:
+        place = session.get(Place, place_id)
+        assert place is not None
+        metadata = json.loads(place.metadata_json or "{}")
+        metadata["tags"] = {**metadata.get("tags", {}), "fee": "no", "opening_hours": "24/7"}
+        metadata["cost_evidence"] = {
+            "status": "KNOWN",
+            "amount_minor": 0,
+            "currency": None,
+            "currency_agnostic": True,
+            "evidence_basis": "OSM_FEE_NO",
+            "source": "TEST_REPLAY_CONTROLLED_OVERPASS_FIXTURE",
+        }
+        place.opening_hours_json = json.dumps({
+            "status": "NORMALIZED_VALID",
+            "open": "00:00",
+            "close": "24:00",
+            "intervals": [{"days": ["*"], "open": "00:00", "close": "24:00"}],
+        })
+        place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+        session.commit()
+
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    invitation_id = sent.json()["member_place_invitations"]["sent"][0]["invitation_id"]
+    feasibility = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview",
+        headers=_auth(companion_id),
+        json={
+            "consent_route_provider": True,
+            "location_observation_id": None,
+            "dwell_minutes": 30,
+            "requested_mode": "WALK",
+        },
+    )
+    assert feasibility.status_code == 200, feasibility.text
+    assert feasibility.json()["state"] == "UNKNOWN"
+    accepted = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(companion_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "feasibility_token": feasibility.json()["feasibility_token"],
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+
+    # C is a current Journey member but was not addressed by or accepted into
+    # the frozen R70 micro-group. The R73 collective round must still include C.
+    third_id = str(uuid4())
+    stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        session.add(Traveler(
+            id=third_id,
+            display_name="R73 C outside the invitation group",
+            email=None,
+            locale="en-US",
+            timezone="UTC",
+            created_at=stamp,
+            updated_at=stamp,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            traveler_id=third_id,
+            role="OWNER",
+            invited_by=owner_id,
+            expires_at=None,
+            joined_at=stamp,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=stamp,
+            updated_at=stamp,
+        ))
+        session.flush()
+        anchor = session.get(Activity, str(journey.current_activity_id))
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        assert invitation is not None
+        anchor = session.get(Activity, str(invitation.rendezvous_activity_id))
+        assert anchor is not None
+        anchor_place = session.get(Place, str(anchor.place_id)) if anchor.place_id else None
+        semantic_key = (
+            json.loads(anchor.metadata_json or "{}").get("semantic_key")
+            or anchor.place_id
+            or anchor.city_service_id
+        )
+        session.add(Commitment(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            activity_id=anchor.id,
+            kind="APPOINTMENT",
+            level="C4_Anchored",
+            status="ACTIVE",
+            monetary_value_minor=0,
+            currency=str(journey.budget_currency or "CNY"),
+            external_ref="R73_CONTROLLED_REPLAY_RENDEZVOUS",
+            policy_json=json.dumps({
+                "semantic_key": str(semantic_key or ""),
+                "scheduled_start_at": anchor.start_at,
+                "evidence_class": "TEST_REPLAY",
+            }),
+            created_at=stamp,
+            updated_at=stamp,
+        ))
+        active_plan_before = str(journey.active_plan_version_id)
+        session.commit()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        authority_members = main_module.active_journey_members_with_capabilities(
+            session, journey
+        )["members"]
+        assert all(item["can_authorize_mutation"] for item in authority_members), json.dumps(
+            [{"member_id": item["member_id"], "role": item["role"], "capabilities": item["capabilities"]}
+             for item in authority_members],
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    c_invitation_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(third_id)
+    )
+    assert c_invitation_view.status_code == 200, c_invitation_view.text
+    assert c_invitation_view.json()["member_place_invitations"]["incoming"] == []
+
+    def create_test_replay_event(session, journey):
+        from app.db.models import Event as EventModel
+
+        current = session.get(Activity, str(journey.current_activity_id))
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        assert current is not None and invitation is not None
+        anchor = session.get(Activity, str(invitation.rendezvous_activity_id))
+        assert anchor is not None
+        current_end = datetime.fromisoformat(current.end_at)
+        anchor_start = datetime.fromisoformat(anchor.start_at)
+        departure = anchor_start - timedelta(minutes=15)
+        available = int((departure - current_end).total_seconds() // 60)
+        assert available >= 30
+        event_id = str(uuid4())
+        now_text = execution_clock.now().astimezone(timezone.utc).isoformat()
+        payload = {
+            "signal_kind": "OPPORTUNITY_WINDOW",
+            "opens_at": current.end_at,
+            "must_depart_by": departure.isoformat(),
+            "available_minutes": available,
+            "minimum_actionable_window_min": 30,
+            "current_activity_id": current.id,
+            "current_execution_activity_id": current.id,
+            "current_execution_location": current.place_id or current.city_service_id,
+            "next_activity_id": anchor.id,
+            "next_activity_start": anchor.start_at,
+            "next_commitment_start": anchor.start_at,
+            "next_commitment_semantic_key": anchor.place_id or anchor.city_service_id,
+            "safety_buffer_min": 15,
+            "active_plan_version_id": journey.active_plan_version_id,
+            "twin_snapshot_at": now_text,
+            "mobility_snapshot_id": "R73-TEST-REPLAY-EXPLICIT-FIXTURE",
+            "mobility_provider": "EXPLICIT_FROZEN_FIXTURE",
+            "fixture_class": "TEST_REPLAY",
+        }
+        event = EventModel(
+            id=event_id,
+            journey_id=journey.id,
+            provider_key="citynexus-twin-opportunity",
+            provenance="SYSTEM_DERIVED",
+            event_type="OPPORTUNITY_WINDOW",
+            severity="INFO",
+            status="DETECTED",
+            affected_activity_id=None,
+            occurred_at=current.end_at,
+            detected_at=now_text,
+            resolved_at=None,
+            payload_json=json.dumps(payload, ensure_ascii=False, sort_keys=True),
+            created_at=now_text,
+        )
+        session.add(event)
+        session.commit()
+        session.refresh(event)
+        return event
+
+    def capture_test_replay(_session, _journey, pairs, *, operation_key, captured_at=None, **_kwargs):
+        facts = {tuple(pair): 6 for pair in pairs}
+        snapshot = MobilitySnapshot.from_minutes(
+            source_provider_key="R73-TEST-REPLAY-EXPLICIT-FIXTURE",
+            minutes=facts,
+            captured_at=captured_at,
+            operation_key=operation_key,
+            fact_quality=EXPLICIT_FROZEN_FIXTURE,
+            provider_capabilities={"fixture_class": "TEST_REPLAY"},
+        )
+        return MobilitySnapshotCaptureResult(
+            snapshot=snapshot,
+            failed_primary_pairs=(),
+            fallback_pairs=(),
+        )
+
+    monkeypatch.setattr(main_module, "_ensure_opportunity_window_event", create_test_replay_event)
+    monkeypatch.setattr(main_module, "capture_runtime_mobility_snapshot", capture_test_replay)
+
+    # Exercise the explicit decline boundary first: it ends this round without
+    # changing the active shared plan, then a fresh proposal requires new votes.
+    declined_create = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-decline-create"},
+        json={"dwell_minutes": 30},
+    )
+    assert declined_create.status_code == 201, declined_create.text
+    declined_promotions = declined_create.json()["member_place_invitations"]["promotions"]
+    assert any(item["state"] == "WAITING_FOR_MEMBERS" for item in declined_promotions), json.dumps(
+        declined_promotions, ensure_ascii=False, sort_keys=True
+    )
+    declined_row = next(item for item in declined_promotions if item["state"] == "WAITING_FOR_MEMBERS")
+    assert declined_row["place"]["place_id"] == place_id
+    decline = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-promotions/{declined_row['promotion_id']}/respond",
+        headers=_auth(companion_id),
+        json={"clarification_id": declined_row["clarification_id"], "decision": "DECLINE"},
+    )
+    assert decline.status_code == 200, decline.text
+    assert _find_promotion(decline.json(), declined_row["promotion_id"])["state"] == "DECLINED"
+    assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == active_plan_before
+
+    proposed = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-success-create"},
+        json={"dwell_minutes": 30},
+    )
+    assert proposed.status_code == 201, proposed.text
+    waiting = next(
+        item for item in proposed.json()["member_place_invitations"]["promotions"]
+        if item["state"] == "WAITING_FOR_MEMBERS"
+    )
+    assert waiting["place"]["place_id"] == place_id
+    assert waiting["state_detail"]["feasibility"] == "GROUNDED_FEASIBLE"
+    assert len(waiting["responses"]) == 3
+    assert {item["decision"] for item in waiting["responses"]} == {"WAITING"}
+    c_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(third_id)
+    )
+    assert c_projection.status_code == 200, c_projection.text
+    c_offer = _find_promotion(c_projection.json(), waiting["promotion_id"])
+    assert c_offer["viewer_can_decide"] is True
+
+    response_url = f"/api/v1/journeys/{journey_id}/member-place-promotions/{waiting['promotion_id']}/respond"
+    for traveler_id in (owner_id, companion_id):
+        answer = client.post(
+            response_url,
+            headers=_auth(traveler_id),
+            json={"clarification_id": waiting["clarification_id"], "decision": "APPROVE"},
+        )
+        assert answer.status_code == 200, answer.text
+    after_ab = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    still_waiting = _find_promotion(after_ab.json(), waiting["promotion_id"])
+    assert still_waiting["state"] == "WAITING_FOR_MEMBERS"
+    assert sum(item["decision"] == "APPROVE" for item in still_waiting["responses"]) == 2
+    assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == active_plan_before
+
+    final_answer = client.post(
+        response_url,
+        headers=_auth(third_id),
+        json={"clarification_id": waiting["clarification_id"], "decision": "APPROVE"},
+    )
+    assert final_answer.status_code == 200, final_answer.text
+    authorized = _find_promotion(final_answer.json(), waiting["promotion_id"])
+    assert authorized["state"] == "AUTHORIZED"
+    assert authorized["viewer_can_apply"] is True
+    apply = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-promotions/{waiting['promotion_id']}/apply",
+        headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-success-apply"},
+    )
+    assert apply.status_code == 200, apply.text
+    applied = _find_promotion(apply.json(), waiting["promotion_id"])
+    assert applied["state"] == "APPLIED"
+    assert applied["applied_plan_version_id"] != active_plan_before
+    normal_experience = client.get(f"/api/v1/journeys/{journey_id}/experience")
+    assert normal_experience.status_code == 200, normal_experience.text
+    active_after = normal_experience.json()["active_plan"]
+    assert active_after["id"] == applied["applied_plan_version_id"]
+    assert sum(item.get("place_id") == place_id for item in active_after["activities"]) == 1
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        plan = session.get(PlanVersion, str(active_after["id"]))
+        assert plan is not None and plan.status == "ACTIVE"
+        old_plan = session.get(PlanVersion, active_plan_before)
+        assert old_plan is not None and old_plan.status == "SUPERSEDED"
+        assert session.scalar(
+            select(func.count()).select_from(PlanVersion).where(
+                PlanVersion.journey_id == journey_id,
+                PlanVersion.status == "ACTIVE",
+            )
+        ) == 1
+        inserted = session.scalars(
+            select(Activity).where(
+                Activity.plan_version_id == plan.id,
+                Activity.place_id == place_id,
+            )
+        ).all()
+        assert len(inserted) == 1 and inserted[0].activity_type.lower() == "visit"
+        protected_commitment = session.scalar(
+            select(Commitment).where(
+                Commitment.journey_id == journey_id,
+                Commitment.external_ref == "R73_CONTROLLED_REPLAY_RENDEZVOUS",
+                Commitment.status == "ACTIVE",
+            )
+        )
+        assert protected_commitment is not None
+        assert session.get(Activity, protected_commitment.activity_id).plan_version_id == plan.id
+        recipient_c = session.scalar(
+            select(MemberPlaceInvitationRecipient).where(
+                MemberPlaceInvitationRecipient.invitation_id == invitation_id,
+                MemberPlaceInvitationRecipient.recipient_traveler_id == third_id,
+            )
+        )
+        assert recipient_c is None
+        promotion = session.get(MemberPlacePromotion, waiting["promotion_id"])
+        assert promotion is not None and promotion.state == "APPLIED"
+        proposal = session.get(ReplanProposal, str(promotion.proposal_id))
+        assert proposal is not None and proposal.status == "ACCEPTED"
+        evidence = json.loads(plan.mobility_evidence_json or "{}")
+        assert evidence.get("source_provider") == "R73-TEST-REPLAY-EXPLICIT-FIXTURE"
+        assert {item.get("fact_quality") for item in evidence.get("facts", [])} == {EXPLICIT_FROZEN_FIXTURE}

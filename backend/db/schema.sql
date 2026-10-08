@@ -776,6 +776,42 @@ CREATE TABLE IF NOT EXISTS member_place_invitation_progress (
 CREATE INDEX IF NOT EXISTS idx_member_place_invitation_progress_invitation_status
     ON member_place_invitation_progress(invitation_id, status, signal_type);
 
+CREATE TABLE IF NOT EXISTS member_place_promotions (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    actor_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    actor_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    trigger_event_id TEXT REFERENCES events(id) ON DELETE SET NULL,
+    proposal_id TEXT REFERENCES replan_proposals(id) ON DELETE SET NULL,
+    mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+    request_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    dwell_minutes INTEGER NOT NULL CHECK (dwell_minutes IN (10, 20, 30)),
+    state TEXT NOT NULL DEFAULT 'PENDING_ROUTE'
+        CHECK (state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED', 'APPLIED', 'DECLINED', 'STALE', 'BLOCKED')),
+    state_detail_json TEXT NOT NULL DEFAULT '{}',
+    decision_epoch TEXT,
+    material_world_epoch TEXT,
+    candidate_surface_fingerprint TEXT,
+    authority_receipt_id TEXT,
+    applied_plan_version_id TEXT REFERENCES plan_versions(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    decided_at TEXT,
+    applied_at TEXT,
+    UNIQUE(journey_id, request_key)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_place_promotions_one_pending
+    ON member_place_promotions(journey_id, active_plan_version_id, invitation_id, place_id)
+    WHERE state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED');
+CREATE INDEX IF NOT EXISTS idx_member_place_promotions_journey_state_updated
+    ON member_place_promotions(journey_id, state, updated_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

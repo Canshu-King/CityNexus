@@ -507,6 +507,24 @@ class MemberPlaceInvitationProgressRequest(BaseModel):
         "SHARE_HEADING_BACK",
         "WITHDRAW_HEADING_BACK",
     ]
+    share_audience_token: str | None = Field(default=None, min_length=64, max_length=64)
+
+
+class MemberPlacePromotionCreateRequest(BaseModel):
+    """One deliberate request to propose an invited Place as a shared stop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    dwell_minutes: Literal[10, 20, 30]
+
+
+class MemberPlacePromotionDecisionRequest(BaseModel):
+    """One current Journey member's independent decision on a shared-stop proposal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    clarification_id: str = Field(min_length=1, max_length=128)
+    decision: Literal["APPROVE", "DECLINE"]
 
 
 class MomentScoutRequest(BaseModel):
@@ -997,6 +1015,11 @@ class ReplanGenerateRequest(BaseModel):
     # Candidate hints are not authority; the server reloads and revalidates
     # every Place and every mobility edge before materializing a plan.
     place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
+    # R73's typed adapter binds a user-selected dwell to one server-derived
+    # invited public Place. It never grants authority to apply the result.
+    promotion_id: UUID | None = None
+    promotion_invitation_id: UUID | None = None
+    promotion_dwell_minutes: Literal[10, 20, 30] | None = None
 
 
 # === WP04 COMMERCE API SCHEMAS (generated) ===

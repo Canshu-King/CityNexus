@@ -502,6 +502,52 @@ test("R72 shares invited-place progress only after each member's explicit consen
     expect(uninvolvedProjection.member_place_invitations?.joined ?? []).toEqual([]);
     expect(uninvolvedProjection.member_place_invitations?.incoming ?? []).toEqual([]);
 
+    // R73 begins from this exact invited public Place. Dwell is an explicit
+    // member choice; the proposal is visible to the full Journey, including C
+    // who never joined the temporary invitation group.
+    const activeBeforePromotion = await api<{ active_plan: { id: string } }>(
+      request,
+      journeyPath + "/experience",
+    );
+    const promotionOffer = owner.page.getByTestId("member-place-promotion-offer").first();
+    await expect(promotionOffer).toBeVisible();
+    await promotionOffer.getByTestId("member-place-promotion-dwell").selectOption("30");
+    const promotionResponsePromise = owner.page.waitForResponse((response) =>
+      response.request().method() === "POST" && response.url().endsWith(`/member-place-invitations/${invitationId}/promotions`),
+    );
+    await promotionOffer.getByTestId("member-place-promotion-create").click();
+    const promotionResponse = await promotionResponsePromise;
+    expect(promotionResponse.ok()).toBeTruthy();
+    expect(promotionResponse.request().postDataJSON()).toEqual({ dwell_minutes: 30 });
+    expect(promotionResponse.request().headers()["idempotency-key"]).toMatch(/^r73-create-/);
+
+    const promotionProjection = await api<{
+      journey: { active_plan_version_id: string };
+      member_place_invitations: {
+        promotions: Array<{ state: string; place: { place_id: string }; dwell_minutes: number; responses: Array<{ member_id: string; decision: string }> }>;
+      };
+    }>(request, journeyPath + "/operator", { token: ownerToken });
+    expect(promotionProjection.member_place_invitations.promotions).toHaveLength(1);
+    const promotion = promotionProjection.member_place_invitations.promotions[0];
+    expect(promotion.place.place_id).toBe(place.id);
+    expect(promotion.dwell_minutes).toBe(30);
+    expect(["BLOCKED", "WAITING_FOR_MEMBERS"]).toContain(promotion.state);
+    expect(promotionProjection.journey.active_plan_version_id).toBe(activeBeforePromotion.active_plan.id);
+
+    await Promise.all([owner.page.reload({ waitUntil: "domcontentloaded" }), joined.page.reload({ waitUntil: "domcontentloaded" }), uninvolvedPage.page.reload({ waitUntil: "domcontentloaded" })]);
+    await expect(owner.page.getByTestId("member-place-promotion")).toHaveCount(1);
+    await expect(joined.page.getByTestId("member-place-promotion")).toHaveCount(1);
+    await expect(uninvolvedPage.page.getByTestId("member-place-promotion")).toHaveCount(1);
+    if (promotion.state === "BLOCKED") {
+      await expect(uninvolvedPage.page.getByTestId("member-place-promotion-unknown")).toBeVisible();
+    } else {
+      // A successful route result still has no authority by default. Every
+      // current member, including C, sees their own independent decision.
+      expect(promotion.responses.every((item) => item.decision === "WAITING")).toBeTruthy();
+      await expect(uninvolvedPage.page.getByTestId("member-place-promotion-approve")).toBeVisible();
+      await expect(owner.page.getByTestId("member-place-promotion-approve")).toBeVisible();
+    }
+
     for (const [token, questId] of [[ownerToken, ownerQuestId], [companionToken, companionQuestId]] as const) {
       await api(request, journeyPath + "/member-side-quests/" + questId + "/start", { method: "POST", token });
       await api(request, journeyPath + "/member-side-quests/" + questId + "/arrive", { method: "POST", token });
@@ -514,7 +560,7 @@ test("R72 shares invited-place progress only after each member's explicit consen
     await joined.page.getByTestId("member-place-progress-share-arrival").click();
     const consent = joined.page.getByTestId("member-place-progress-consent");
     await expect(consent).toBeVisible();
-    await expect(consent).toContainText("Only members who joined");
+    await expect(consent.getByTestId("member-place-progress-consent-audience")).toContainText("Current progress-board members");
     await expect(consent).toContainText("not GPS-verified presence");
     await expect(ownerBoard).toContainText("No arrival report shared");
     const arrivalResponsePromise = joined.page.waitForResponse((response) =>
@@ -523,7 +569,9 @@ test("R72 shares invited-place progress only after each member's explicit consen
     await consent.getByTestId("member-place-progress-consent-confirm").click();
     const arrivalResponse = await arrivalResponsePromise;
     expect(arrivalResponse.ok()).toBeTruthy();
-    expect(arrivalResponse.request().postDataJSON()).toEqual({ action: "SHARE_ARRIVAL" });
+    const arrivalPayload = arrivalResponse.request().postDataJSON() as { action: string; share_audience_token: string };
+    expect(arrivalPayload.action).toBe("SHARE_ARRIVAL");
+    expect(arrivalPayload.share_audience_token).toMatch(/^[a-f0-9]{64}$/);
     await owner.page.reload({ waitUntil: "domcontentloaded" });
     await expect(owner.page.getByTestId("member-place-progress-sent-invitation")).toContainText("Reported here");
     await expect(uninvolvedPage.page.getByTestId("member-place-progress-board")).toHaveCount(0);
@@ -537,7 +585,9 @@ test("R72 shares invited-place progress only after each member's explicit consen
     await ownerConsent.getByTestId("member-place-progress-consent-confirm").click();
     const ownerArrivalResponse = await ownerArrivalResponsePromise;
     expect(ownerArrivalResponse.ok()).toBeTruthy();
-    expect(ownerArrivalResponse.request().postDataJSON()).toEqual({ action: "SHARE_ARRIVAL" });
+    const ownerArrivalPayload = ownerArrivalResponse.request().postDataJSON() as { action: string; share_audience_token: string };
+    expect(ownerArrivalPayload.action).toBe("SHARE_ARRIVAL");
+    expect(ownerArrivalPayload.share_audience_token).toMatch(/^[a-f0-9]{64}$/);
     await joined.page.reload({ waitUntil: "domcontentloaded" });
     await expect(joined.page.getByTestId("member-place-invitation-joined")).toContainText("Reported here");
 
@@ -560,7 +610,9 @@ test("R72 shares invited-place progress only after each member's explicit consen
       await returnConsent.getByTestId("member-place-progress-consent-confirm").click();
       const returnResponse = await returnResponsePromise;
       expect(returnResponse.ok()).toBeTruthy();
-      expect(returnResponse.request().postDataJSON()).toEqual({ action: "SHARE_HEADING_BACK" });
+      const returnPayload = returnResponse.request().postDataJSON() as { action: string; share_audience_token: string };
+      expect(returnPayload.action).toBe("SHARE_HEADING_BACK");
+      expect(returnPayload.share_audience_token).toMatch(/^[a-f0-9]{64}$/);
     }
     await owner.page.reload({ waitUntil: "domcontentloaded" });
     await joined.page.reload({ waitUntil: "domcontentloaded" });

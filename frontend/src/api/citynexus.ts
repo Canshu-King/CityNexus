@@ -768,6 +768,33 @@ export interface MemberPlaceInvitationProjection {
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
   }>;
+  promotions: MemberPlacePromotionProjection[];
+}
+
+export interface MemberPlacePromotionProjection {
+  promotion_id: string;
+  invitation_id: string;
+  state: "PENDING_ROUTE" | "WAITING_FOR_MEMBERS" | "AUTHORIZED" | "APPLIED" | "DECLINED" | "STALE" | "BLOCKED";
+  state_detail: {
+    code?: string;
+    feasibility?: string;
+    next_action?: string;
+    shared_plan_changed?: boolean;
+    required_member_count?: number;
+    child_mission_id?: string;
+  };
+  place: MemberPlaceInvitationPlace;
+  rendezvous: MemberPlaceInvitationRendezvous;
+  dwell_minutes: 10 | 20 | 30;
+  base_plan_version_id: string;
+  proposal_id: string | null;
+  mission_id: string | null;
+  clarification_id: string | null;
+  responses: Array<{ member_id: string; display_name: string; decision: "APPROVE" | "DECLINE" | "WAITING" }>;
+  viewer_decision: "APPROVE" | "DECLINE" | null;
+  viewer_can_decide: boolean;
+  viewer_can_apply: boolean;
+  applied_plan_version_id: string | null;
 }
 
 export interface MemberPlaceInvitationProgressParticipant {
@@ -791,6 +818,7 @@ export interface MemberPlaceInvitationOwnProgress {
   arrival_shared: boolean;
   can_share_heading_back: boolean;
   heading_back_shared: boolean;
+  share_audience_token: string | null;
 }
 
 export type MomentScoutInterest = "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
@@ -2309,13 +2337,63 @@ export const cityNexusApi = {
     journeyId: string,
     invitationId: string,
     action: "SHARE_ARRIVAL" | "WITHDRAW_ARRIVAL" | "SHARE_HEADING_BACK" | "WITHDRAW_HEADING_BACK",
+    shareAudienceToken?: string,
   ): Promise<JourneyOperatorProjection> {
     return requestJson<JourneyOperatorProjection>(
       "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/progress",
       {
         method: "POST",
         headers: travelerAuthHeaders(),
-        body: JSON.stringify({ action }),
+        body: JSON.stringify({
+          action,
+          ...(shareAudienceToken ? { share_audience_token: shareAudienceToken } : {}),
+        }),
+      },
+    );
+  },
+
+  createMemberPlacePromotion(
+    journeyId: string,
+    invitationId: string,
+    dwellMinutes: 10 | 20 | 30,
+    idempotencyKey: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/promotions",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ dwell_minutes: dwellMinutes }),
+      },
+    );
+  },
+
+  respondToMemberPlacePromotion(
+    journeyId: string,
+    promotionId: string,
+    clarificationId: string,
+    decision: "APPROVE" | "DECLINE",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-promotions/" + promotionId + "/respond",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ clarification_id: clarificationId, decision }),
+      },
+    );
+  },
+
+  applyMemberPlacePromotion(
+    journeyId: string,
+    promotionId: string,
+    idempotencyKey: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-promotions/" + promotionId + "/apply",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
       },
     );
   },

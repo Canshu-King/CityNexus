@@ -24,9 +24,14 @@ from app.db.models import (
     MemberPlaceInvitation,
     MemberPlaceInvitationProgress,
     MemberPlaceInvitationRecipient,
+    MemberPlacePromotion,
     MemberSideQuest,
     MemberSideQuestReturnReport,
     Place,
+    JourneyMission,
+    JourneyRoleCapability,
+    PlanVersion,
+    ReplanProposal,
     Traveler,
 )
 from app.execution.clock import execution_clock
@@ -1130,6 +1135,7 @@ def update_member_place_invitation_progress(
     traveler_id: str,
     invitation_id: str,
     action: str,
+    share_audience_token: str | None = None,
     now: datetime | None = None,
 ) -> MemberPlaceInvitationProgress | None:
     current = _now(now)
@@ -1151,6 +1157,24 @@ def update_member_place_invitation_progress(
     if selected is None:
         raise HTTPException(422, "PLACE_INVITATION_PROGRESS_ACTION_INVALID")
     signal_type, sharing = selected
+    if sharing:
+        recipients = session.scalars(
+            select(MemberPlaceInvitationRecipient).where(
+                MemberPlaceInvitationRecipient.invitation_id == invitation.id
+            )
+        ).all()
+        participants = _invitation_progress_participants(
+            session,
+            invitation=invitation,
+            recipients=recipients,
+            now=current,
+        )
+        expected_audience_token = _progress_audience_token(invitation, participants)
+        if (
+            not share_audience_token
+            or not hmac.compare_digest(str(share_audience_token), expected_audience_token)
+        ):
+            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_AUDIENCE_CHANGED")
     existing = session.scalar(
         select(MemberPlaceInvitationProgress).where(
             MemberPlaceInvitationProgress.invitation_id == invitation.id,
@@ -1272,15 +1296,13 @@ def _progress_can_be_shared(
     return True
 
 
-def _invitation_progress_board(
+def _invitation_progress_participants(
     session: Session,
     *,
-    journey: Journey,
     invitation: MemberPlaceInvitation,
     recipients: list[MemberPlaceInvitationRecipient],
-    viewer: JourneyMember,
     now: datetime,
-) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+) -> list[tuple[JourneyMember, Traveler | None, MemberPlaceInvitationRecipient | None, str]]:
     participants: list[tuple[JourneyMember, Traveler | None, MemberPlaceInvitationRecipient | None, str]] = []
     owner = session.get(JourneyMember, str(invitation.owner_member_id))
     owner_traveler = session.get(Traveler, str(invitation.owner_traveler_id))
@@ -1301,6 +1323,55 @@ def _invitation_progress_board(
             and str(member.traveler_id) == str(response.recipient_traveler_id)
         ):
             participants.append((member, traveler, response, "JOINED"))
+    return participants
+
+
+def _progress_audience_token(
+    invitation: MemberPlaceInvitation,
+    participants: list[tuple[JourneyMember, Traveler | None, MemberPlaceInvitationRecipient | None, str]],
+) -> str:
+    audience = [
+        {
+            "member_id": str(member.id),
+            "traveler_id": str(member.traveler_id),
+            "membership": role,
+            "response_id": str(response.id) if response is not None else None,
+            "accepted_at": (
+                str(response.responded_at or response.updated_at)
+                if response is not None
+                else None
+            ),
+        }
+        for member, _traveler, response, role in participants
+    ]
+    audience.sort(key=lambda row: (row["member_id"], row["membership"]))
+    payload = {
+        "version": 1,
+        "invitation_id": str(invitation.id),
+        "active_plan_version_id": str(invitation.active_plan_version_id),
+        "members": audience,
+    }
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def _invitation_progress_board(
+    session: Session,
+    *,
+    journey: Journey,
+    invitation: MemberPlaceInvitation,
+    recipients: list[MemberPlaceInvitationRecipient],
+    viewer: JourneyMember,
+    now: datetime,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    participants = _invitation_progress_participants(
+        session,
+        invitation=invitation,
+        recipients=recipients,
+        now=now,
+    )
+    audience_token = _progress_audience_token(invitation, participants)
 
     active_signals = session.scalars(
         select(MemberPlaceInvitationProgress).where(
@@ -1378,6 +1449,7 @@ def _invitation_progress_board(
         "arrival_shared": bool(own_view and own_view["at_invited_place"]),
         "can_share_heading_back": False,
         "heading_back_shared": bool(own_view and own_view["heading_back"]),
+        "share_audience_token": audience_token if own_context is not None else None,
     }
     if own_context is not None:
         response, role = own_context
@@ -1419,7 +1491,9 @@ def invitation_projection(
     viewer = session.get(JourneyMember, str(viewer_member_id))
     if not _member_in_force(viewer, current):
         return None
-    output: dict[str, list[dict[str, Any]]] = {"sent": [], "incoming": [], "joined": []}
+    output: dict[str, list[dict[str, Any]]] = {
+        "sent": [], "incoming": [], "joined": [], "promotions": []
+    }
     parent_query = select(MemberPlaceInvitation).where(
         MemberPlaceInvitation.journey_id == journey.id
     )
@@ -1545,5 +1619,106 @@ def invitation_projection(
             "can_respond": (
                 response_state == "INVITED" and parent_state == "OPEN"
             ) or response_state == "ACCEPTANCE_NEEDS_COMPLETION",
+        })
+
+    # R73's shared-stop proposal is a Journey-level collective decision, so it
+    # is projected to every current Journey member, including members outside
+    # the temporary R70/R72 invitation group.
+    viewer_capability = session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == viewer.role,
+            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+        )
+    )
+    promotions = session.scalars(
+        select(MemberPlacePromotion)
+        .where(MemberPlacePromotion.journey_id == journey.id)
+        .order_by(MemberPlacePromotion.updated_at.desc(), MemberPlacePromotion.id.desc())
+        .limit(20)
+    ).all()
+    for promotion in promotions:
+        invitation = session.get(MemberPlaceInvitation, str(promotion.invitation_id))
+        if invitation is None:
+            continue
+        try:
+            snapshot = json.loads(str(invitation.disclosure_snapshot_json or "{}"))
+            place_view = snapshot.get("place")
+            rendezvous_view = snapshot.get("rendezvous")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if not isinstance(place_view, dict) or not isinstance(rendezvous_view, dict):
+            continue
+        mission = (
+            session.get(JourneyMission, str(promotion.mission_id))
+            if promotion.mission_id
+            else None
+        )
+        clarification = (
+            json.loads(str(mission.clarification_json or "{}"))
+            if mission is not None
+            else {}
+        )
+        responses = clarification.get("responses")
+        responses = responses if isinstance(responses, dict) else {}
+        required_ids = [str(item) for item in clarification.get("required_member_ids") or []]
+        viewer_response = responses.get(str(viewer.id))
+        proposal = (
+            session.get(ReplanProposal, str(promotion.proposal_id))
+            if promotion.proposal_id
+            else None
+        )
+        active_plan = session.get(PlanVersion, str(journey.active_plan_version_id)) if journey.active_plan_version_id else None
+        state = str(promotion.state)
+        if (
+            state == "AUTHORIZED"
+            and proposal is not None
+            and active_plan is not None
+            and str(active_plan.id) == str(proposal.proposed_plan_version_id)
+        ):
+            state = "APPLIED"
+        response_views = []
+        for member_id in required_ids:
+            member = session.get(JourneyMember, member_id)
+            traveler = session.get(Traveler, str(member.traveler_id)) if member else None
+            response = responses.get(member_id)
+            response_views.append({
+                "member_id": member_id,
+                "display_name": str(traveler.display_name if traveler else "Traveller"),
+                "decision": (
+                    "APPROVE" if isinstance(response, dict) and response.get("proposal_id")
+                    else "DECLINE" if isinstance(response, dict) and response.get("decision") == "DECLINE"
+                    else "WAITING"
+                ),
+            })
+        try:
+            state_detail = json.loads(str(promotion.state_detail_json or "{}"))
+        except (TypeError, json.JSONDecodeError):
+            state_detail = {}
+        output["promotions"].append({
+            "promotion_id": str(promotion.id),
+            "invitation_id": str(invitation.id),
+            "state": state,
+            "state_detail": state_detail,
+            "place": place_view,
+            "rendezvous": rendezvous_view,
+            "dwell_minutes": int(promotion.dwell_minutes),
+            "base_plan_version_id": str(promotion.active_plan_version_id),
+            "proposal_id": str(promotion.proposal_id) if promotion.proposal_id else None,
+            "mission_id": str(promotion.mission_id) if promotion.mission_id else None,
+            "clarification_id": clarification.get("clarification_id"),
+            "responses": response_views,
+            "viewer_decision": (
+                "APPROVE" if isinstance(viewer_response, dict) and viewer_response.get("proposal_id")
+                else "DECLINE" if isinstance(viewer_response, dict) and viewer_response.get("decision") == "DECLINE"
+                else None
+            ),
+            "viewer_can_decide": (
+                state == "WAITING_FOR_MEMBERS"
+                and str(viewer.id) in set(required_ids)
+                and not isinstance(viewer_response, dict)
+                and viewer_capability is not None
+            ),
+            "viewer_can_apply": state == "AUTHORIZED" and viewer_capability is not None,
+            "applied_plan_version_id": str(promotion.applied_plan_version_id) if promotion.applied_plan_version_id else None,
         })
     return output

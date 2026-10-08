@@ -157,7 +157,9 @@ from app.db.models import (
     JourneyMember as JourneyMemberModel,
     MemberPlaceInvitation,
     MemberPlaceInvitationRecipient,
+    MemberPlacePromotion,
     MemberSideQuest,
+    PlannedSplitMeetupHandshake,
     JourneyRoleCapability,
     JourneyShareGrant,
     JourneyOutcomeEvent,
@@ -176,6 +178,7 @@ from app.db.models import (
     RecoveryEpoch,
     ProviderObservation,
     RealPlaceCandidate,
+    RecoveryExecutionPlan,
     StayJourneyOption,
     TransportReservation,
     Traveler,
@@ -475,6 +478,8 @@ from app.schemas import (
     MemberPlaceInvitationDecisionRequest,
     MemberPlaceInvitationFeasibilityPreviewRequest,
     MemberPlaceInvitationProgressRequest,
+    MemberPlacePromotionCreateRequest,
+    MemberPlacePromotionDecisionRequest,
     MomentScoutRequest,
     MomentScoutSelectRequest,
     LiveMomentScoutRequest,
@@ -4009,14 +4014,13 @@ def answer_collective_clarification(
             )
         )
     members = active_journey_members_with_capabilities(session, journey).get("members", [])
-    decision_epoch = collective_decision_epoch(
-        journey_id=journey.id,
-        mission_id=parent.id,
-        trigger_event_id=str(stored.get("trigger_event_id")),
-        base_plan_version_id=journey.active_plan_version_id,
-        options=current_options,
-        required_member_ids=required,
-        decision_relevant_member_ids=(
+    r73_shared_stop = _json_object(parent.resolved_intent_json or "{}").get(
+        "r73_shared_stop"
+    )
+    stored_decision_relevant_ids = (
+        stored.get("decision_relevant_member_ids", required)
+        if isinstance(r73_shared_stop, dict)
+        else (
             (receipt.get("collective_mediation") or {}).get(
                 "decision_relevant_member_ids"
             )
@@ -4024,7 +4028,16 @@ def answer_collective_clarification(
                 "decision_relevant_member_ids"
             ) is not None
             else stored.get("decision_relevant_member_ids", required)
-        ),
+        )
+    )
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=parent.id,
+        trigger_event_id=str(stored.get("trigger_event_id")),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=current_options,
+        required_member_ids=required,
+        decision_relevant_member_ids=stored_decision_relevant_ids,
         members=members,
     )
     stored_surface_fingerprint = stored.get("candidate_surface_fingerprint")
@@ -6529,6 +6542,25 @@ def collective_mutation_gate(
         current_world_epoch_for_gate = collective_material_world_epoch(
             world_basis
         )
+    r73_shared_stop_consent = bool(
+        isinstance(resolved_decision, Mapping)
+        and resolved_decision.get("r73_shared_stop") is True
+    )
+    if r73_shared_stop_consent and target_window_status == "GROUNDED_FEASIBLE":
+        from app.collective_mediation import collective_material_world_epoch
+
+        candidate = (target_window or {}).get("candidate") or {}
+        world_basis = collective_material_world_basis(
+            session,
+            journey,
+            target_plan,
+            fit_subject_place_ids=list(
+                candidate.get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch_for_gate = collective_material_world_epoch(
+            world_basis
+        )
     effective_resolved_decision = resolved_decision
     renewed_consent_selected = bool(
         pending_selection is not None
@@ -6573,7 +6605,91 @@ def collective_mutation_gate(
             ),
         }
 
-    if renewed_consent_selected:
+    if r73_shared_stop_consent:
+        selected_proposal_id = str(
+            resolved_decision.get("selected_proposal_id") or ""
+        )
+        selected_plan_id = str(
+            resolved_decision.get("selected_plan_version_id") or ""
+        )
+        resolved_epoch = str(resolved_decision.get("decision_epoch") or "")
+        resolved_world_epoch = str(
+            resolved_decision.get("material_world_epoch") or ""
+        )
+        resolved_surface = str(
+            resolved_decision.get("candidate_surface_fingerprint") or ""
+        )
+        resolved_recovery_epoch = str(
+            resolved_decision.get("recovery_epoch_id") or ""
+        )
+        if (
+            target_proposal is None
+            or selected_proposal_id != str(target_proposal.id)
+            or selected_plan_id != str(target_plan.id)
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_CANDIDATE_NOT_SELECTED",
+                "classification": "R73_MEMBER_CONSENT_TARGET_MISMATCH",
+            }
+        elif (
+            not resolved_epoch
+            or not resolved_world_epoch
+            or not resolved_surface
+            or not resolved_decision.get("authority_receipt_id")
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_AUTHORITY_RECEIPT_MISSING",
+                "classification": "R73_MEMBER_CONSENT_INCOMPLETE",
+            }
+        elif (
+            resolved_recovery_epoch != str(recovery_epoch.id)
+            or (
+                proposal_epoch_id := str(target_proposal.recovery_epoch_id or "")
+            )
+            and proposal_epoch_id != str(recovery_epoch.id)
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "classification": "STALE_RECOVERY_EPOCH",
+            }
+        elif target_window_status != "GROUNDED_FEASIBLE":
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
+                "classification": "R73_MEMBER_CONSENT_PLAN_STALE",
+            }
+        elif current_world_epoch_for_gate != resolved_world_epoch:
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+                "classification": "R73_MEMBER_CONSENT_WORLD_STALE",
+                "resolved_material_world_epoch": resolved_world_epoch,
+                "current_material_world_epoch": current_world_epoch_for_gate,
+            }
+        else:
+            decision = {
+                "allowed": True,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": None,
+                "classification": "RENEWED_COLLECTIVE_CONSENT",
+                "authority_receipt_id": str(
+                    resolved_decision.get("authority_receipt_id")
+                ),
+                "resolved_decision_epoch": resolved_epoch,
+                "current_decision_epoch": resolved_epoch,
+                "resolved_material_world_epoch": resolved_world_epoch,
+                "current_material_world_epoch": current_world_epoch_for_gate,
+                "candidate_surface_fingerprint": resolved_surface,
+            }
+    elif renewed_consent_selected:
         # Semantic staleness and physical infeasibility are intentionally
         # separate R30 authority failures.  A plan can still be selectable
         # while the meaning of the human decision has changed.
@@ -6689,7 +6805,9 @@ def collective_mutation_gate(
         "current_material_world_epoch": decision.get(
             "current_material_world_epoch", current_world_epoch_for_gate
         ),
-        "candidate_surface_fingerprint": current_surface_fingerprint,
+        "candidate_surface_fingerprint": decision.get(
+            "candidate_surface_fingerprint", current_surface_fingerprint
+        ),
         "candidate_surface_scope": (
             "RECOVERY_EPOCH_TRIGGER"
             if candidate_surface_recovery_epoch_id
@@ -6703,7 +6821,11 @@ def collective_mutation_gate(
         ),
         "authority_provenance": collective_authority_provenance(
             AUTHENTICATED_MEMBER_CONSENT
-            if renewed_consent_selected
+            if (
+                renewed_consent_selected
+                or decision.get("classification")
+                == "RENEWED_COLLECTIVE_CONSENT"
+            )
             else UNANIMOUS_DOMINANCE
             if str(mediation.get("classification") or "")
             == UNANIMOUS_DOMINANCE
@@ -10230,6 +10352,7 @@ def _update_member_place_invitation_progress(
         traveler_id=principal.traveler_id,
         invitation_id=str(invitation_id),
         action=payload.action,
+        share_audience_token=payload.share_audience_token,
     )
     return operator_projection(session, journey, viewer_member_id=member.id)
 
@@ -10252,6 +10375,804 @@ def update_member_place_invitation_progress_route(
             request=request,
             session=session,
         )
+
+
+def _r73_member_can_update(session: Session, member: JourneyMemberModel) -> bool:
+    return session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == member.role,
+            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+        )
+    ) is not None
+
+
+def _r73_recovery_handoff_reason(session: Session, journey: Journey) -> str | None:
+    active_execution = session.scalar(
+        select(RecoveryExecutionPlan.id)
+        .where(
+            RecoveryExecutionPlan.journey_id == journey.id,
+            RecoveryExecutionPlan.status.not_in(("COMPLETED", "CANCELLED", "SUPERSEDED")),
+        )
+        .limit(1)
+    )
+    if active_execution:
+        return "RECOVERY_EXECUTION_ACTIVE"
+    now_text = execution_clock.now().astimezone(timezone.utc).isoformat()
+    pending_handshake = session.scalar(
+        select(PlannedSplitMeetupHandshake.id)
+        .where(
+            PlannedSplitMeetupHandshake.journey_id == journey.id,
+            PlannedSplitMeetupHandshake.state == "PENDING",
+            PlannedSplitMeetupHandshake.expires_at > now_text,
+        )
+        .limit(1)
+    )
+    if pending_handshake:
+        return "RENDEZVOUS_HANDSHAKE_ACTIVE"
+    waiting_missions = session.scalars(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.status == "WAITING_FOR_MEMBERS",
+        )
+    ).all()
+    if any(
+        _json_object(item.clarification_json or "{}").get("kind") == "COLLECTIVE_TRADEOFF"
+        for item in waiting_missions
+    ):
+        return "COLLECTIVE_DECISION_ALREADY_ACTIVE"
+    return None
+
+
+def _r73_invitation_context_reason(
+    session: Session,
+    journey: Journey,
+    invitation: MemberPlaceInvitation,
+    promotion: MemberPlacePromotion,
+) -> str | None:
+    from app.execution.member_place_invitation import _invitation_context_is_current
+
+    place = session.get(Place, str(invitation.place_id))
+    rendezvous = session.get(Activity, str(invitation.rendezvous_activity_id))
+    now = execution_clock.now().astimezone(timezone.utc)
+    try:
+        expires_at = datetime.fromisoformat(str(invitation.expires_at).replace("Z", "+00:00"))
+    except ValueError:
+        return "INVITATION_EXPIRY_INVALID"
+    if (
+        journey.status != "ACTIVE"
+        or not journey.active_plan_version_id
+        or journey.active_plan_version_id != promotion.active_plan_version_id
+        or journey.current_activity_id != promotion.current_activity_id
+    ):
+        return "ACTIVE_PLAN_OR_CURSOR_CHANGED"
+    if (
+        invitation.journey_id != journey.id
+        or invitation.state != "OPEN"
+        or expires_at.tzinfo is None
+        or expires_at.astimezone(timezone.utc) <= now
+    ):
+        return "INVITATION_STALE_OR_EXPIRED"
+    if (
+        place is None
+        or str(place.provider_key or "") != str(invitation.place_provider_key or "")
+        or str(place.external_id or "") != str(invitation.place_external_id or "")
+        or str(place.id) != str(promotion.place_id)
+        or rendezvous is None
+        or str(rendezvous.plan_version_id) != str(promotion.active_plan_version_id)
+        or str(rendezvous.id) != str(promotion.rendezvous_activity_id)
+        or str(invitation.rendezvous_activity_id) != str(promotion.rendezvous_activity_id)
+    ):
+        return "CANONICAL_PLACE_OR_RENDEZVOUS_CHANGED"
+    if not _invitation_context_is_current(session, journey, invitation, now=now):
+        return "INVITATION_CONTEXT_STALE"
+    return None
+
+
+def _r73_block_promotion(
+    session: Session,
+    journey: Journey,
+    promotion: MemberPlacePromotion,
+    *,
+    code: str,
+    feasibility: str = "FEASIBILITY_UNKNOWN",
+    proposal: ReplanProposalModel | None = None,
+) -> None:
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    promotion.state = "BLOCKED"
+    promotion.state_detail_json = json.dumps(
+        {
+            "code": code,
+            "feasibility": feasibility,
+            "next_action": "NEEDS_ROUTE_EVIDENCE" if feasibility == "FEASIBILITY_UNKNOWN" else "REVIEW_CANONICAL_FACTS",
+            "shared_plan_changed": False,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    promotion.updated_at = now
+    if proposal is not None:
+        proposal.status = "REJECTED"
+        proposal.decided_at = now
+        proposed_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
+        if proposed_plan is not None and proposed_plan.status == "CANDIDATE":
+            proposed_plan.status = "REJECTED"
+    record_audit(
+        session,
+        action="journey.member_place_promotion.blocked",
+        entity_type="MemberPlacePromotion",
+        entity_id=promotion.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="r73-grounded-promotion-gate",
+        after={"code": code, "feasibility": feasibility, "shared_plan_changed": False},
+    )
+    session.commit()
+
+
+def _create_member_place_promotion(
+    *,
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlacePromotionCreateRequest,
+    request: Request,
+    idempotency_key: str | None,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, actor = resolve_journey_member_principal(request, session, journey_id=journey.id)
+    if not _r73_member_can_update(session, actor):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        request_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    signature = canonical_request_signature(
+        {
+            "journey_id": journey.id,
+            "invitation_id": str(invitation_id),
+            "actor_member_id": actor.id,
+            "actor_traveler_id": principal.traveler_id,
+            "dwell_minutes": payload.dwell_minutes,
+        }
+    )
+    existing = session.scalar(
+        select(MemberPlacePromotion).where(
+            MemberPlacePromotion.journey_id == journey.id,
+            MemberPlacePromotion.request_key == request_key,
+        )
+    )
+    if existing is not None:
+        if existing.request_hash != signature:
+            raise HTTPException(409, "same idempotency key used for a different request")
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    if invitation.journey_id != journey.id:
+        raise HTTPException(404, "Place invitation was not found")
+    is_inviter = str(invitation.owner_member_id) == str(actor.id)
+    is_joined = session.scalar(
+        select(MemberPlaceInvitationRecipient.id).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation.id,
+            MemberPlaceInvitationRecipient.recipient_member_id == actor.id,
+            MemberPlaceInvitationRecipient.recipient_traveler_id == principal.traveler_id,
+            MemberPlaceInvitationRecipient.state == "ACCEPTED_OWN_STOP_READY",
+        )
+    ) is not None
+    if not (is_inviter or is_joined):
+        raise HTTPException(403, "SHARED_PLACE_PROMOTION_REQUIRES_INVITATION_PARTICIPANT")
+    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_ACTIVE_JOURNEY")
+    # The invitation and the exact Place are server authority; callers can only
+    # choose the explicitly requested dwell duration.
+    provisional = MemberPlacePromotion(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        invitation_id=invitation.id,
+        actor_member_id=actor.id,
+        actor_traveler_id=principal.traveler_id,
+        active_plan_version_id=str(journey.active_plan_version_id),
+        place_id=str(invitation.place_id),
+        rendezvous_activity_id=str(invitation.rendezvous_activity_id),
+        current_activity_id=str(journey.current_activity_id) if journey.current_activity_id else None,
+        request_key=request_key,
+        request_hash=signature,
+        dwell_minutes=payload.dwell_minutes,
+        state="PENDING_ROUTE",
+        state_detail_json="{}",
+        created_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
+        updated_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
+    )
+    existing_pending = session.scalar(
+        select(MemberPlacePromotion).where(
+            MemberPlacePromotion.journey_id == journey.id,
+            MemberPlacePromotion.active_plan_version_id == journey.active_plan_version_id,
+            MemberPlacePromotion.invitation_id == invitation.id,
+            MemberPlacePromotion.place_id == invitation.place_id,
+            MemberPlacePromotion.state.in_(("PENDING_ROUTE", "WAITING_FOR_MEMBERS", "AUTHORIZED")),
+        )
+    )
+    if existing_pending is not None:
+        if int(existing_pending.dwell_minutes) == int(payload.dwell_minutes):
+            return operator_projection(session, journey, viewer_member_id=actor.id)
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_ALREADY_PENDING")
+    session.add(provisional)
+    try:
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raced = session.scalar(
+            select(MemberPlacePromotion).where(
+                MemberPlacePromotion.journey_id == journey.id,
+                MemberPlacePromotion.active_plan_version_id == journey.active_plan_version_id,
+                MemberPlacePromotion.invitation_id == invitation.id,
+                MemberPlacePromotion.place_id == invitation.place_id,
+                MemberPlacePromotion.state.in_(("PENDING_ROUTE", "WAITING_FOR_MEMBERS", "AUTHORIZED")),
+            )
+        )
+        if raced is not None and int(raced.dwell_minutes) == int(payload.dwell_minutes):
+            return operator_projection(session, journey, viewer_member_id=actor.id)
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_ALREADY_PENDING") from exc
+    session.refresh(provisional)
+
+    context_problem = _r73_invitation_context_reason(session, journey, invitation, provisional)
+    if context_problem:
+        _r73_block_promotion(session, journey, provisional, code=context_problem)
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    recovery_problem = _r73_recovery_handoff_reason(session, journey)
+    if recovery_problem:
+        _r73_block_promotion(session, journey, provisional, code=recovery_problem)
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    trigger_event = _ensure_opportunity_window_event(session, journey)
+    if trigger_event is None:
+        _r73_block_promotion(session, journey, provisional, code="ROUTE_WINDOW_NOT_GROUNDED")
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    try:
+        generated = generate_replan(
+            journey_id=journey_id,
+            body=ReplanGenerateRequest(
+                trigger_event_id=UUID(str(trigger_event.id)),
+                candidate_count=1,
+                place_ids=[str(invitation.place_id)],
+                promotion_id=UUID(str(provisional.id)),
+                promotion_invitation_id=UUID(str(invitation.id)),
+                promotion_dwell_minutes=payload.dwell_minutes,
+            ),
+            request=request,
+            idempotency_key="r73p-" + hashlib.sha256(provisional.id.encode("utf-8")).hexdigest()[:32],
+            session=session,
+        )
+    except HTTPException as exc:
+        session.rollback()
+        current = session.get(MemberPlacePromotion, provisional.id)
+        if current is None:
+            raise
+        detail = str(exc.detail or "ROUTE_EVIDENCE_UNAVAILABLE")
+        feasibility = "FEASIBILITY_UNKNOWN" if any(
+            token in detail.upper() for token in ("ROUTE", "MOBILITY", "OPPORTUNITY", "EVIDENCE")
+        ) else "BLOCKED"
+        _r73_block_promotion(
+            session,
+            journey,
+            current,
+            code=detail[:180],
+            feasibility=feasibility,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    proposal_id = str(getattr(generated, "id", "") or (generated.get("id") if isinstance(generated, dict) else ""))
+    proposal = session.get(ReplanProposalModel, proposal_id) if proposal_id else None
+    if proposal is None or proposal.status != "PRESENTED":
+        _r73_block_promotion(session, journey, provisional, code="ROUTE_CANDIDATE_NOT_PRESENTED")
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    collective_proposals = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == str(trigger_event.id),
+            ReplanProposalModel.status == "PRESENTED",
+        )
+        .order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    proposal_receipt = collective_proposal_receipt(session, journey, collective_proposals)
+    proposal_decision = (proposal_receipt.get("proposal_collective_decisions") or {}).get(proposal.id)
+    if not isinstance(proposal_decision, dict) or proposal_decision.get("status") != "GROUNDED_FEASIBLE":
+        _r73_block_promotion(
+            session,
+            journey,
+            provisional,
+            code="COLLECTIVE_FEASIBILITY_NOT_GROUNDED",
+            feasibility="FEASIBILITY_UNKNOWN",
+            proposal=proposal,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    members_projection = active_journey_members_with_capabilities(session, journey)
+    members = members_projection.get("members", [])
+    required_ids = sorted({str(item.get("member_id") or "") for item in members if item.get("member_id")})
+    if not required_ids or any(not item.get("can_authorize_mutation") for item in members):
+        _r73_block_promotion(
+            session,
+            journey,
+            provisional,
+            code="CURRENT_MEMBER_AUTHORITY_UNAVAILABLE",
+            feasibility="BLOCKED",
+            proposal=proposal,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    from app.collective_mediation import collective_decision_epoch, collective_material_world_epoch
+
+    target_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
+    if target_plan is None:
+        _r73_block_promotion(session, journey, provisional, code="ROUTE_CANDIDATE_PLAN_MISSING", proposal=proposal)
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    option = dict(proposal_decision)
+    world_basis = collective_material_world_basis(
+        session,
+        journey,
+        target_plan,
+        fit_subject_place_ids=list(option.get("fit_subject_place_ids") or []),
+    )
+    option["material_world_epoch"] = collective_material_world_epoch(world_basis)
+    options = [option]
+    decision_relevant_ids = list(required_ids)
+    fingerprint = candidate_surface_fingerprint(proposal_receipt.get("candidate_fit_matrix") or [])
+    mission = create_mission(
+        session,
+        journey,
+        command="Promote the invited public Place into the active shared Journey after unanimous current-member consent.",
+        requested_autonomy="PLAN_ONLY",
+        trigger_event_id=str(trigger_event.id),
+        use_model_draft=False,
+    )
+    resolved_mission_intent = _json_object(mission.resolved_intent_json or "{}")
+    resolved_mission_intent["r73_shared_stop"] = {
+        "promotion_id": provisional.id,
+        "invitation_id": invitation.id,
+        "place_id": invitation.place_id,
+        "proposal_id": proposal.id,
+        "active_plan_version_id": journey.active_plan_version_id,
+        "current_activity_id": journey.current_activity_id,
+        "rendezvous_activity_id": invitation.rendezvous_activity_id,
+    }
+    mission.resolved_intent_json = json.dumps(
+        resolved_mission_intent, ensure_ascii=False, sort_keys=True
+    )
+    # The decision epoch names the actual server-generated mission identity.
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=mission.id,
+        trigger_event_id=str(trigger_event.id),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=required_ids,
+        decision_relevant_member_ids=decision_relevant_ids,
+        members=members,
+    )
+    mission.status = "WAITING_FOR_MEMBERS"
+    mission.started_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    mission.clarification_json = json.dumps(
+        {
+            "kind": "COLLECTIVE_TRADEOFF",
+            "policy": "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES",
+            "clarification_id": str(uuid4()),
+            "decision_epoch": decision_epoch,
+            "material_world_epoch": option["material_world_epoch"],
+            "candidate_surface_fingerprint": fingerprint,
+            "trigger_event_id": str(trigger_event.id),
+            "base_plan_version_id": str(journey.active_plan_version_id),
+            "candidate_options": options,
+            "required_member_ids": required_ids,
+            "decision_relevant_member_ids": decision_relevant_ids,
+            "responses": {},
+            "status": "WAITING_FOR_MEMBERS",
+            "selected_proposal_id": None,
+            "selected_candidate_id": None,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    provisional.mission_id = mission.id
+    provisional.trigger_event_id = str(trigger_event.id)
+    provisional.proposal_id = proposal.id
+    provisional.decision_epoch = decision_epoch
+    provisional.material_world_epoch = option["material_world_epoch"]
+    provisional.candidate_surface_fingerprint = fingerprint
+    provisional.state = "WAITING_FOR_MEMBERS"
+    provisional.state_detail_json = json.dumps(
+        {
+            "feasibility": "GROUNDED_FEASIBLE",
+            "route_evidence": "SERVER_REVALIDATED_PROPOSAL",
+            "shared_plan_changed": False,
+            "required_member_count": len(required_ids),
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    provisional.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    record_audit(
+        session,
+        action="journey.member_place_promotion.proposed",
+        entity_type="MemberPlacePromotion",
+        entity_id=provisional.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=principal.traveler_id,
+        after={
+            "invitation_id": invitation.id,
+            "place_id": invitation.place_id,
+            "proposal_id": proposal.id,
+            "mission_id": mission.id,
+            "required_member_ids": required_ids,
+            "decision_epoch": decision_epoch,
+            "shared_plan_changed": False,
+        },
+    )
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=actor.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+    status_code=201,
+)
+def create_member_place_promotion_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlacePromotionCreateRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _create_member_place_promotion(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            idempotency_key=idempotency_key,
+            session=session,
+        )
+
+
+def _respond_to_member_place_promotion(
+    *,
+    journey_id: UUID,
+    promotion_id: UUID,
+    payload: MemberPlacePromotionDecisionRequest,
+    request: Request,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
+    if not _r73_member_can_update(session, member):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    promotion = require(session, MemberPlacePromotion, str(promotion_id), "Shared-stop promotion")
+    if promotion.journey_id != journey.id:
+        raise HTTPException(404, "Shared-stop promotion was not found")
+    mission = session.get(JourneyMission, str(promotion.mission_id)) if promotion.mission_id else None
+    clarification = _json_object(mission.clarification_json or "{}") if mission is not None else {}
+    required_ids = {
+        str(item) for item in clarification.get("required_member_ids") or []
+    }
+    if str(member.id) not in required_ids:
+        raise HTTPException(403, "member is not required for this shared Journey decision")
+    if clarification.get("clarification_id") != payload.clarification_id:
+        raise HTTPException(409, "collective clarification id does not match")
+    responses = clarification.get("responses") if isinstance(clarification.get("responses"), dict) else {}
+    previous = responses.get(str(member.id))
+    if isinstance(previous, dict):
+        previous_decision = "APPROVE" if previous.get("proposal_id") else previous.get("decision")
+        if previous_decision != payload.decision:
+            raise HTTPException(409, "COLLECTIVE_RESPONSE_ALREADY_RECORDED")
+        if payload.decision == "APPROVE" and clarification.get("status") == "WAITING_FOR_MEMBERS":
+            pass
+        else:
+            return operator_projection(session, journey, viewer_member_id=member.id)
+    if promotion.state != "WAITING_FOR_MEMBERS" or clarification.get("status") != "WAITING_FOR_MEMBERS":
+        raise HTTPException(409, "shared-stop promotion is not waiting for members")
+    invitation = require(session, MemberPlaceInvitation, str(promotion.invitation_id), "Place invitation")
+    context_problem = _r73_invitation_context_reason(session, journey, invitation, promotion)
+    if context_problem:
+        promotion.state = "STALE"
+        promotion.state_detail_json = json.dumps({"code": context_problem}, sort_keys=True)
+        clarification["status"] = "STALE"
+        mission.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+        promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+        raise HTTPException(409, context_problem)
+    if payload.decision == "APPROVE":
+        proposal_id = str(promotion.proposal_id or "")
+        if not proposal_id:
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_PROPOSAL_MISSING")
+        try:
+            answer = answer_collective_clarification(
+                journey_id=journey_id,
+                mission_id=UUID(str(promotion.mission_id)),
+                member_id=UUID(str(member.id)),
+                request=request,
+                payload=CollectiveClarificationAnswer(
+                    clarification_id=payload.clarification_id,
+                    proposal_id=UUID(proposal_id),
+                ),
+                session=session,
+            )
+        except HTTPException as exc:
+            session.expire_all()
+            mission = session.get(JourneyMission, str(promotion.mission_id))
+            current_promotion = session.get(MemberPlacePromotion, str(promotion.id))
+            current_round = _json_object(mission.clarification_json or "{}") if mission else {}
+            if current_round.get("status") == "STALE" and current_promotion is not None:
+                current_promotion.state = "STALE"
+                current_promotion.state_detail_json = json.dumps(
+                    {"code": "STALE_COLLECTIVE_DECISION"}, sort_keys=True
+                )
+                current_promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+                session.commit()
+            raise exc
+        session.expire_all()
+        current_promotion = session.get(MemberPlacePromotion, str(promotion.id))
+        current_mission = session.get(JourneyMission, str(promotion.mission_id))
+        current_round = _json_object(current_mission.clarification_json or "{}") if current_mission else {}
+        if current_round.get("status") == "RESOLVED" and current_round.get("authority_receipt_id"):
+            current_promotion.state = "AUTHORIZED"
+            current_promotion.authority_receipt_id = str(current_round["authority_receipt_id"])
+            current_promotion.decided_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            current_promotion.state_detail_json = json.dumps(
+                {
+                    "child_mission_id": str((answer.get("child_mission") or {}).get("id") or ""),
+                    "required_member_count": len(current_round.get("required_member_ids") or []),
+                    "all_required_members_approved": True,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            current_promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            session.commit()
+        return operator_projection(session, journey, viewer_member_id=member.id)
+
+    # A single explicit decline ends this promotion round without applying any
+    # shared-plan mutation. Previously recorded approvals are kept as audit.
+    responses = dict(responses)
+    responses[str(member.id)] = {"decision": "DECLINE", "member_id": str(member.id)}
+    clarification["responses"] = responses
+    clarification["status"] = "DECLINED"
+    clarification["declined_by_member_id"] = str(member.id)
+    mission.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+    mission.status = "ANSWERED"
+    mission.completed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    proposal = session.get(ReplanProposalModel, str(promotion.proposal_id)) if promotion.proposal_id else None
+    if proposal is not None:
+        proposal.status = "REJECTED"
+        proposal.decided_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        candidate = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
+        if candidate is not None and candidate.status == "CANDIDATE":
+            candidate.status = "REJECTED"
+    promotion.state = "DECLINED"
+    promotion.decided_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    promotion.state_detail_json = json.dumps(
+        {"declined_by_member_id": str(member.id), "shared_plan_changed": False}, sort_keys=True
+    )
+    promotion.updated_at = promotion.decided_at
+    record_audit(
+        session,
+        action="agent.collective_decision.response",
+        entity_type="JourneyMission",
+        entity_id=mission.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=principal.traveler_id,
+        after={
+            "clarification_id": clarification.get("clarification_id"),
+            "member_id": str(member.id),
+            "traveler_id": principal.traveler_id,
+            "proposal_id": str(promotion.proposal_id or ""),
+            "decision_epoch": clarification.get("decision_epoch"),
+            "decision": "DECLINE",
+            "status": "DECLINED",
+        },
+    )
+    record_audit(
+        session,
+        action="journey.member_place_promotion.declined",
+        entity_type="MemberPlacePromotion",
+        entity_id=promotion.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=principal.traveler_id,
+        after={"member_id": str(member.id), "shared_plan_changed": False},
+    )
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-promotions/{promotion_id}/respond"
+)
+def respond_to_member_place_promotion_route(
+    journey_id: UUID,
+    promotion_id: UUID,
+    payload: MemberPlacePromotionDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _respond_to_member_place_promotion(
+            journey_id=journey_id,
+            promotion_id=promotion_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-promotions/{promotion_id}/apply")
+def apply_member_place_promotion_route(
+    journey_id: UUID,
+    promotion_id: UUID,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
+        if not _r73_member_can_update(session, member):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+        if idempotency_key is None:
+            raise HTTPException(422, "Idempotency-Key header is required")
+        try:
+            idempotency_key = validate_idempotency_key(idempotency_key)
+        except CommerceValidationError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        promotion = require(session, MemberPlacePromotion, str(promotion_id), "Shared-stop promotion")
+        if promotion.journey_id != journey.id or promotion.state != "AUTHORIZED":
+            if (
+                promotion.journey_id == journey.id
+                and promotion.state == "APPLIED"
+                and journey.active_plan_version_id == promotion.applied_plan_version_id
+            ):
+                return operator_projection(session, journey, viewer_member_id=member.id)
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_NOT_AUTHORIZED")
+        # `_accept_replan_impl` commits the authoritative plan transition before
+        # this adapter records its APPLIED projection. If the process stops in
+        # that narrow gap, recover from the durable accepted proposal + active
+        # plan + the exact collective receipt instead of treating the now-new
+        # cursor as a stale invitation and stranding an already-applied stop.
+        accepted_proposal = (
+            session.get(ReplanProposalModel, str(promotion.proposal_id))
+            if promotion.proposal_id
+            else None
+        )
+        if (
+            accepted_proposal is not None
+            and accepted_proposal.status == "ACCEPTED"
+            and str(accepted_proposal.base_plan_version_id)
+            == str(promotion.active_plan_version_id)
+            and str(accepted_proposal.proposed_plan_version_id)
+            == str(journey.active_plan_version_id)
+            and promotion.authority_receipt_id
+        ):
+            from app.db.models import CollectiveAuthorityReceipt
+
+            receipt = session.get(
+                CollectiveAuthorityReceipt, str(promotion.authority_receipt_id)
+            )
+            if (
+                receipt is not None
+                and str(receipt.journey_id) == str(journey.id)
+                and str(receipt.proposal_id) == str(accepted_proposal.id)
+                and str(receipt.plan_version_id)
+                == str(accepted_proposal.proposed_plan_version_id)
+                and receipt.invalidated_at is None
+            ):
+                now = execution_clock.now().astimezone(timezone.utc).isoformat()
+                promotion.state = "APPLIED"
+                promotion.applied_plan_version_id = str(accepted_proposal.proposed_plan_version_id)
+                promotion.applied_at = now
+                promotion.updated_at = now
+                recovered_detail = _json_object(promotion.state_detail_json or "{}")
+                promotion.state_detail_json = json.dumps(
+                    {
+                        **recovered_detail,
+                        "applied_by_member_id": str(member.id),
+                        "applied_plan_version_id": str(accepted_proposal.proposed_plan_version_id),
+                        "authority_receipt_id": str(receipt.id),
+                        "reconciled_after_authoritative_accept": True,
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+                record_audit(
+                    session,
+                    action="journey.member_place_promotion.applied",
+                    entity_type="MemberPlacePromotion",
+                    entity_id=promotion.id,
+                    journey_id=journey.id,
+                    actor_type="AUTHENTICATED_TRAVELER",
+                    actor_id=principal.traveler_id,
+                    after={
+                        "proposal_id": accepted_proposal.id,
+                        "plan_version_id": accepted_proposal.proposed_plan_version_id,
+                        "authority_receipt_id": receipt.id,
+                        "reconciled_after_authoritative_accept": True,
+                    },
+                )
+                session.commit()
+                return operator_projection(session, journey, viewer_member_id=member.id)
+        invitation = require(session, MemberPlaceInvitation, str(promotion.invitation_id), "Place invitation")
+        context_problem = _r73_invitation_context_reason(session, journey, invitation, promotion)
+        if context_problem:
+            promotion.state = "STALE"
+            promotion.state_detail_json = json.dumps({"code": context_problem}, sort_keys=True)
+            promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            session.commit()
+            raise HTTPException(409, context_problem)
+        recovery_problem = _r73_recovery_handoff_reason(session, journey)
+        if recovery_problem:
+            raise HTTPException(409, recovery_problem)
+        proposal = require(session, ReplanProposalModel, str(promotion.proposal_id), "Replan proposal")
+        detail = _json_object(promotion.state_detail_json or "{}")
+        child_mission_id = str(detail.get("child_mission_id") or "")
+        resolved = _collective_resolution_for_child(
+            session,
+            journey,
+            proposal,
+            child_mission_id or None,
+        )
+        if (
+            resolved is None
+            or str(resolved.get("authority_receipt_id") or "")
+            != str(promotion.authority_receipt_id or "")
+        ):
+            raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_MISMATCH")
+        result = _accept_replan_impl(
+            UUID(str(proposal.id)),
+            idempotency_key,
+            session,
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=principal.traveler_id,
+            resolved_decision=resolved,
+            expected_authority_receipt_id=str(promotion.authority_receipt_id),
+            expected_recovery_epoch_id=str(proposal.recovery_epoch_id or "") or None,
+        )
+        accepted = session.get(ReplanProposalModel, str(proposal.id))
+        if accepted is None or accepted.status != "ACCEPTED":
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_PLAN_NOT_APPLIED")
+        promotion.state = "APPLIED"
+        promotion.applied_plan_version_id = str(accepted.proposed_plan_version_id)
+        promotion.applied_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        promotion.updated_at = promotion.applied_at
+        promotion.state_detail_json = json.dumps(
+            {
+                **detail,
+                "applied_by_member_id": str(member.id),
+                "applied_plan_version_id": str(accepted.proposed_plan_version_id),
+                "authority_receipt_id": str(promotion.authority_receipt_id),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        session.commit()
+        return {**operator_projection(session, journey, viewer_member_id=member.id), "promotion_apply": result}
 
 
 MOMENT_SCOUT_SPLIT_COMMAND = (
@@ -17394,6 +18315,7 @@ def _normalize_replan_schedule_time(value: str, journey: Journey) -> str:
 def generate_replan(
     journey_id: UUID,
     body: ReplanGenerateRequest,
+    request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
@@ -17419,6 +18341,77 @@ def generate_replan(
     if handled is not None:
         raise HTTPException(409, "trigger event has already been handled by an accepted replan")
 
+    promotion: MemberPlacePromotion | None = None
+    promotion_invitation: MemberPlaceInvitation | None = None
+    promotion_fields = (
+        body.promotion_id,
+        body.promotion_invitation_id,
+        body.promotion_dwell_minutes,
+    )
+    if any(value is not None for value in promotion_fields):
+        if not all(value is not None for value in promotion_fields):
+            raise HTTPException(422, "SHARED_PLACE_PROMOTION_BINDING_REQUIRED")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_invitation import _invitation_context_is_current
+
+        principal, actor = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        promotion = session.get(MemberPlacePromotion, str(body.promotion_id))
+        promotion_invitation = session.get(
+            MemberPlaceInvitation, str(body.promotion_invitation_id)
+        )
+        if (
+            promotion is None
+            or promotion_invitation is None
+            or promotion.journey_id != journey.id
+            or promotion.invitation_id != promotion_invitation.id
+            or promotion.actor_member_id != actor.id
+            or promotion.actor_traveler_id != principal.traveler_id
+            or promotion.state != "PENDING_ROUTE"
+            or promotion.proposal_id is not None
+            or promotion.active_plan_version_id != base.id
+            or promotion_invitation.journey_id != journey.id
+            or promotion_invitation.active_plan_version_id != base.id
+            or promotion_invitation.state != "OPEN"
+            or promotion_invitation.place_id != promotion.place_id
+            or promotion_invitation.rendezvous_activity_id
+            != promotion.rendezvous_activity_id
+            or int(promotion.dwell_minutes) != int(body.promotion_dwell_minutes)
+            or list(body.place_ids or []) != [str(promotion.place_id)]
+            or int(body.candidate_count) != 1
+        ):
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_BINDING_STALE")
+        if (
+            actor.id != promotion_invitation.owner_member_id
+            and session.scalar(
+                select(MemberPlaceInvitationRecipient.id).where(
+                    MemberPlaceInvitationRecipient.invitation_id
+                    == promotion_invitation.id,
+                    MemberPlaceInvitationRecipient.recipient_member_id == actor.id,
+                    MemberPlaceInvitationRecipient.recipient_traveler_id
+                    == principal.traveler_id,
+                    MemberPlaceInvitationRecipient.state == "ACCEPTED_OWN_STOP_READY",
+                )
+            )
+            is None
+        ):
+            raise HTTPException(403, "SHARED_PLACE_PROMOTION_REQUIRES_INVITATION_PARTICIPANT")
+        now = execution_clock.now().astimezone(timezone.utc)
+        expires_at = datetime.fromisoformat(
+            str(promotion_invitation.expires_at).replace("Z", "+00:00")
+        )
+        if (
+            expires_at.tzinfo is None
+            or expires_at.astimezone(timezone.utc) <= now
+            or not _invitation_context_is_current(
+                session, journey, promotion_invitation, now=now
+            )
+        ):
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_INVITATION_STALE")
+        if trigger_event.event_type != "OPPORTUNITY_WINDOW":
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_GROUNDED_OPPORTUNITY_WINDOW")
+
     generation_idempotency_key: str | None = None
     generation_signature: str | None = None
     if idempotency_key is not None:
@@ -17433,6 +18426,8 @@ def generate_replan(
                 "trigger_event_id": trigger_id,
                 "candidate_count": body.candidate_count,
                 "place_ids": list(body.place_ids or []),
+                "promotion_id": str(body.promotion_id or ""),
+                "promotion_dwell_minutes": body.promotion_dwell_minutes,
             }
         )
         generation_idempotency_key = f"replan.generate:{header_key}"
@@ -17970,6 +18965,13 @@ def generate_replan(
             or payload.get("next_activity_id") != opportunity_anchor.id
         ):
             raise HTTPException(409, "OPPORTUNITY_WINDOW_STALE_OR_UNBOUND")
+        if promotion_invitation is not None and (
+            len(hinted_ids) != 1
+            or hinted_ids[0] != str(promotion_invitation.place_id)
+            or str(opportunity_anchor.id)
+            != str(promotion_invitation.rendezvous_activity_id)
+        ):
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_RENDEZVOUS_CHANGED")
         effective_event_time = max(
             effective_event_time, datetime.fromisoformat(current_execution.end_at)
         )
@@ -18016,7 +19018,11 @@ def generate_replan(
             }:
                 candidate_failures.append({"place_id": hinted_id, "reason": "OPENING_UNKNOWN"})
                 continue
-            visit_minutes = int(candidate_meta.get("typical_visit_minutes") or 30)
+            visit_minutes = int(
+                body.promotion_dwell_minutes
+                if promotion is not None
+                else (candidate_meta.get("typical_visit_minutes") or 30)
+            )
             if visit_minutes <= 0 or visit_minutes > 240:
                 candidate_failures.append({"place_id": hinted_id, "reason": "VISIT_DURATION_UNSUPPORTED"})
                 continue
@@ -18345,8 +19351,14 @@ def generate_replan(
         if not value:
             return None
         hour, minute = (int(part) for part in str(value).split(":", 1))
+        local_date = effective_event_time.date()
+        if hour == 24 and minute == 0:
+            # Normalized opening-hours data uses 24:00 for the end of the
+            # local day. Represent it as midnight on the following day.
+            local_date += timedelta(days=1)
+            hour = 0
         return datetime.combine(
-            effective_event_time.date(),
+            local_date,
             datetime.min.time().replace(hour=hour, minute=minute),
             effective_event_time.tzinfo,
         )
@@ -19996,6 +21008,31 @@ def generate_replan(
         )
 
     created.sort(key=_proposal_rank)
+    if promotion is not None:
+        if len(created) != 1:
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_CANDIDATE_NOT_UNIQUE")
+        proposal = created[0]
+        # Persist the proposal row before the promotion's foreign key points
+        # at it. A later recovery-epoch lookup can autoflush the promotion on
+        # SQLite, where the ORM otherwise has no relationship edge to order
+        # these two rows.
+        session.flush()
+        promotion.trigger_event_id = trigger_event.id
+        promotion.proposal_id = proposal.id
+        proposal.recovery_epoch_id = ensure_recovery_epoch(session, journey).id
+        proposal_diff = _json_object(proposal.diff_json or "{}")
+        proposal_diff["r73_shared_stop"] = {
+            "promotion_id": promotion.id,
+            "invitation_id": promotion.invitation_id,
+            "place_id": promotion.place_id,
+            "rendezvous_activity_id": promotion.rendezvous_activity_id,
+            "current_activity_id": promotion.current_activity_id,
+            "active_plan_version_id": promotion.active_plan_version_id,
+            "dwell_minutes": promotion.dwell_minutes,
+        }
+        proposal.diff_json = json.dumps(
+            proposal_diff, ensure_ascii=False, sort_keys=True, default=str
+        )
     response = _replan_payload(created[0])
     if generation_idempotency_key is not None and generation_signature is not None:
         now = datetime.now(timezone.utc)
@@ -20199,14 +21236,41 @@ def _collective_resolution_for_child(
     ]
     members = active_journey_members_with_capabilities(session, journey).get("members", [])
     from app.collective_mediation import collective_decision_epoch
-    epoch = collective_decision_epoch(
-        journey_id=journey.id,
-        mission_id=parent.id,
-        trigger_event_id=str(proposal.trigger_event_id),
-        base_plan_version_id=journey.active_plan_version_id,
-        options=options,
-        required_member_ids=stored.get("required_member_ids") or [],
-        decision_relevant_member_ids=(
+    r73_shared_stop = _json_object(parent.resolved_intent_json or "{}").get(
+        "r73_shared_stop"
+    )
+    if isinstance(r73_shared_stop, dict):
+        current_surface_fingerprint = candidate_surface_fingerprint(
+            receipt.get("candidate_fit_matrix") or []
+        )
+        if current_surface_fingerprint != str(
+            stored.get("candidate_surface_fingerprint") or ""
+        ):
+            raise HTTPException(
+                409, "COLLECTIVE_AUTHORITY_SURFACE_CHANGED_BEFORE_MUTATION"
+            )
+        # R73 adds a server-derived material-world epoch to its collective
+        # option after the generic proposal receipt is built. Keep that frozen
+        # value for decision-epoch comparison; the current world is recomputed
+        # and checked against it below before accepting the proposal.
+        stored_options_by_id = {
+            str(item.get("proposal_id") or ""): item
+            for item in stored.get("candidate_options") or []
+            if isinstance(item, dict)
+        }
+        options = [
+            {
+                **item,
+                "material_world_epoch": stored_options_by_id.get(
+                    str(item.get("proposal_id") or ""), {}
+                ).get("material_world_epoch"),
+            }
+            for item in options
+        ]
+    stored_decision_relevant_ids = (
+        stored.get("decision_relevant_member_ids", stored.get("required_member_ids") or [])
+        if isinstance(r73_shared_stop, dict)
+        else (
             (receipt.get("collective_mediation") or {}).get(
                 "decision_relevant_member_ids"
             )
@@ -20217,7 +21281,16 @@ def _collective_resolution_for_child(
                 "decision_relevant_member_ids",
                 stored.get("required_member_ids") or [],
             )
-        ),
+        )
+    )
+    epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=parent.id,
+        trigger_event_id=str(proposal.trigger_event_id),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=stored.get("required_member_ids") or [],
+        decision_relevant_member_ids=stored_decision_relevant_ids,
         members=members,
     )
     if (
@@ -20332,6 +21405,7 @@ def _collective_resolution_for_child(
         "clarification_id": stored.get("clarification_id"),
         "authority_receipt_id": authority_receipt.id,
         "recovery_epoch_id": str(proposal.recovery_epoch_id or "") or None,
+        "r73_shared_stop": isinstance(r73_shared_stop, dict),
     }
 
 
@@ -20539,6 +21613,44 @@ def _accept_replan_executing(
     if proposal.status != "PRESENTED":
         raise HTTPException(409, "replan proposal is no longer actionable")
     journey = require(session, Journey, proposal.journey_id, "Journey")
+    r73_marker = _json_object(proposal.diff_json or "{}").get("r73_shared_stop")
+    if isinstance(r73_marker, dict):
+        promotion = session.get(MemberPlacePromotion, str(r73_marker.get("promotion_id") or ""))
+        if (
+            actor_type != "AUTHENTICATED_TRAVELER"
+            or not actor_id
+            or promotion is None
+            or promotion.journey_id != journey.id
+            or promotion.state != "AUTHORIZED"
+            or str(promotion.proposal_id or "") != str(proposal.id)
+            or str(promotion.invitation_id or "") != str(r73_marker.get("invitation_id") or "")
+            or str(promotion.place_id or "") != str(r73_marker.get("place_id") or "")
+            or str(promotion.active_plan_version_id or "") != str(proposal.base_plan_version_id)
+            or str(promotion.authority_receipt_id or "")
+            != str(expected_authority_receipt_id or "")
+            or str(journey.active_plan_version_id or "")
+            != str(promotion.active_plan_version_id or "")
+            or str(journey.current_activity_id or "")
+            != str(promotion.current_activity_id or "")
+        ):
+            raise HTTPException(409, "R73_SHARED_PLACE_PROMOTION_AUTHORITY_REQUIRED")
+        signed_actor_member = session.scalar(
+            select(JourneyMemberModel).where(
+                JourneyMemberModel.journey_id == journey.id,
+                JourneyMemberModel.traveler_id == str(actor_id),
+                JourneyMemberModel.removed_at.is_(None),
+            )
+        )
+        if signed_actor_member is None or not _r73_member_can_update(session, signed_actor_member):
+            raise HTTPException(403, "R73_SHARED_PLACE_PROMOTION_REQUIRES_CURRENT_AUTHENTICATED_MEMBER")
+        invitation = session.get(MemberPlaceInvitation, str(promotion.invitation_id))
+        if invitation is None or _r73_invitation_context_reason(
+            session, journey, invitation, promotion
+        ):
+            raise HTTPException(409, "R73_SHARED_PLACE_PROMOTION_CONTEXT_STALE")
+        recovery_problem = _r73_recovery_handoff_reason(session, journey)
+        if recovery_problem:
+            raise HTTPException(409, recovery_problem)
     bound_recovery_epoch_id = expected_recovery_epoch_id or proposal.recovery_epoch_id
     try:
         current_recovery_epoch = (

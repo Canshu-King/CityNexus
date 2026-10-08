@@ -605,6 +605,93 @@ class MemberPlaceInvitationProgress(Base):
     )
 
 
+class MemberPlacePromotion(Base):
+    """One explicitly proposed, collectively authorized shared stop."""
+
+    __tablename__ = "member_place_promotions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    actor_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    actor_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    active_plan_version_id: Mapped[str] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="RESTRICT")
+    )
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    rendezvous_activity_id: Mapped[str] = mapped_column(
+        ForeignKey("activities.id", ondelete="RESTRICT")
+    )
+    current_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    trigger_event_id: Mapped[str | None] = mapped_column(
+        ForeignKey("events.id", ondelete="SET NULL"), nullable=True
+    )
+    proposal_id: Mapped[str | None] = mapped_column(
+        ForeignKey("replan_proposals.id", ondelete="SET NULL"), nullable=True
+    )
+    mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    request_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    dwell_minutes: Mapped[int] = mapped_column(Integer)
+    state: Mapped[str] = mapped_column(String, default="PENDING_ROUTE", server_default="PENDING_ROUTE")
+    state_detail_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    decision_epoch: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch: Mapped[str | None] = mapped_column(String, nullable=True)
+    candidate_surface_fingerprint: Mapped[str | None] = mapped_column(String, nullable=True)
+    authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    applied_plan_version_id: Mapped[str | None] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="SET NULL"), nullable=True
+    )
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    applied_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        CheckConstraint(
+            "dwell_minutes IN (10, 20, 30)",
+            name="ck_member_place_promotions_dwell",
+        ),
+        CheckConstraint(
+            "state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED', 'APPLIED', "
+            "'DECLINED', 'STALE', 'BLOCKED')",
+            name="ck_member_place_promotions_state",
+        ),
+        UniqueConstraint(
+            "journey_id", "request_key", name="ux_member_place_promotions_request_key"
+        ),
+        Index(
+            "ux_member_place_promotions_one_pending",
+            "journey_id",
+            "active_plan_version_id",
+            "invitation_id",
+            "place_id",
+            unique=True,
+            sqlite_where=text(
+                "state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED')"
+            ),
+            postgresql_where=text(
+                "state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED')"
+            ),
+        ),
+        Index(
+            "idx_member_place_promotions_journey_state_updated",
+            "journey_id",
+            "state",
+            "updated_at",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

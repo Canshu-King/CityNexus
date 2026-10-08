@@ -1,10 +1,12 @@
 import { useState } from "react";
 import {
+  CityNexusApiError,
   cityNexusApi,
   type MemberPlaceInvitationFeasibilityPreviewResult,
   type MemberPlaceInvitationOwnProgress,
   type MemberPlaceInvitationProgressParticipant,
   type MemberPlaceInvitationProjection,
+  type MemberPlacePromotionProjection,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
 import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
@@ -30,13 +32,17 @@ export function MemberPlaceInvitationPanel({
     invitationId: string;
     placeName: string;
     action: "SHARE_ARRIVAL" | "SHARE_HEADING_BACK";
+    shareAudienceToken: string;
+    audienceNames: string[];
   } | null>(null);
   const [feasibilityById, setFeasibilityById] = useState<Record<string, MemberPlaceInvitationFeasibilityPreviewResult | null>>({});
   const [dwellById, setDwellById] = useState<Record<string, 10 | 20 | 30>>({});
+  const [promotionDwellById, setPromotionDwellById] = useState<Record<string, 10 | 20 | 30>>({});
   const invitations = projection?.incoming ?? [];
   const sentInvitations = projection?.sent ?? [];
   const joinedInvitations = projection?.joined ?? [];
-  if (!invitations.length && !sentInvitations.length && !joinedInvitations.length) return null;
+  const promotions = projection?.promotions ?? [];
+  if (!invitations.length && !sentInvitations.length && !joinedInvitations.length && !promotions.length) return null;
 
   const respond = async (
     invitationId: string,
@@ -93,17 +99,35 @@ export function MemberPlaceInvitationPanel({
   const updateProgress = async (
     invitationId: string,
     action: "SHARE_ARRIVAL" | "WITHDRAW_ARRIVAL" | "SHARE_HEADING_BACK" | "WITHDRAW_HEADING_BACK",
+    shareAudienceToken?: string,
   ) => {
     if (busyId) return;
     setBusyId(invitationId);
     setMessage(null);
     try {
-      await cityNexusApi.updateMemberPlaceInvitationProgress(journeyId, invitationId, action);
+      await cityNexusApi.updateMemberPlaceInvitationProgress(
+        journeyId,
+        invitationId,
+        action,
+        shareAudienceToken,
+      );
       await onUpdated();
       setMessage(action.startsWith("SHARE_")
         ? (zh ? "已向本次邀请中已加入的同行者分享你的自述；它不是 GPS 验证。" : "Your self-report is shared with members who joined this invitation; it is not GPS verified.")
         : (zh ? "已停止在后续视图中分享；此前已看见的信息无法撤回。" : "Future views no longer show this report; information already seen cannot be recalled."));
-    } catch {
+    } catch (error) {
+      const body = error instanceof CityNexusApiError && error.body && typeof error.body === "object"
+        ? error.body as { detail?: unknown; error?: { message?: unknown } }
+        : null;
+      const detail = String(body?.detail ?? body?.error?.message ?? "");
+      if (detail === "PLACE_INVITATION_PROGRESS_AUDIENCE_CHANGED") {
+        setProgressConsent(null);
+        setMessage(zh
+          ? "邀请中的成员名单刚有变化。为避免把自述分享给你尚未确认的对象，本次分享已取消；请查看刷新后的名单并重新确认。"
+          : "The invitation audience changed. This share was cancelled so you can review the updated members and confirm again.");
+        await onUpdated();
+        return;
+      }
       setMessage(zh
         ? "无法更新分享状态。你的行程没有被更改；刷新后可查看当前进度。"
         : "The sharing status could not be updated. Your Journey was not changed; refresh to review progress.");
@@ -111,6 +135,213 @@ export function MemberPlaceInvitationPanel({
     } finally {
       setBusyId(null);
     }
+  };
+
+  const createPromotion = async (invitationId: string) => {
+    if (busyId) return;
+    setBusyId(invitationId);
+    setMessage(null);
+    try {
+      await cityNexusApi.createMemberPlacePromotion(
+        journeyId,
+        invitationId,
+        promotionDwellById[invitationId] ?? 20,
+        `r73-create-${crypto.randomUUID()}`,
+      );
+      await onUpdated();
+      setMessage(zh
+        ? "已提交共享站点提议；只有路线与承诺核验通过、所有当前成员各自同意后，才可由成员应用到共享行程。"
+        : "Shared-stop proposal submitted. It can be applied only after route and commitment checks pass and every current member approves independently.");
+    } catch {
+      setMessage(zh
+        ? "提议未能进入可执行状态。共享行程未改变；请刷新查看具体路线证据或当前恢复状态。"
+        : "The proposal did not become executable. The shared Journey is unchanged; refresh to review route evidence or an active recovery.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const answerPromotion = async (
+    promotion: MemberPlacePromotionProjection,
+    decision: "APPROVE" | "DECLINE",
+  ) => {
+    if (busyId || !promotion.clarification_id) return;
+    setBusyId(promotion.promotion_id);
+    setMessage(null);
+    try {
+      await cityNexusApi.respondToMemberPlacePromotion(
+        journeyId,
+        promotion.promotion_id,
+        promotion.clarification_id,
+        decision,
+      );
+      await onUpdated();
+    } catch {
+      setMessage(zh
+        ? "决策轮可能已经过期或行程事实发生变化；共享计划未被本次操作切换。请刷新查看新状态。"
+        : "This decision round may be stale or Journey facts may have changed. This action did not switch the shared plan; refresh to review its status.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const applyPromotion = async (promotion: MemberPlacePromotionProjection) => {
+    if (busyId) return;
+    setBusyId(promotion.promotion_id);
+    setMessage(null);
+    try {
+      await cityNexusApi.applyMemberPlacePromotion(
+        journeyId,
+        promotion.promotion_id,
+        `r73-apply-${crypto.randomUUID()}`,
+      );
+      await onUpdated();
+      setMessage(zh ? "已通过集体授权应用新的共享 PlanVersion。" : "The new shared PlanVersion was applied after collective authorization.");
+    } catch {
+      setMessage(zh
+        ? "应用前复核发现计划、成员、路线或恢复状态已变化；没有应用过期提案。请刷新并重新检查。"
+        : "The plan, membership, route, or recovery state changed before apply. The stale proposal was not applied; refresh and review it.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const renderPromotionOffer = (
+    invitationId: string,
+    placeName: string,
+    rendezvousTitle: string,
+    current: boolean,
+  ) => (
+    <section data-testid="member-place-promotion-offer" data-invitation-id={invitationId}>
+      <strong>{zh ? "把发现加入共同旅程？" : "Promote this discovery to the shared Journey?"}</strong>
+      <small>
+        {zh
+          ? "这是新的集体计划提议。系统会用服务器掌握的公开地点、路线与承诺证据重新核验；所有当前成员（包括未加入临时小队的成员）都要分别同意。原计划只会在全体同意后由成员明确应用时切换。"
+          : "This is a collective plan proposal. The server rechecks the canonical public Place, route, and protected commitments. Every current Journey member, including people outside this micro-group, must approve independently. The plan switches only after unanimous approval and an explicit member apply."}
+      </small>
+      <label htmlFor={`member-place-promotion-dwell-${invitationId}`}>
+        {zh ? "计划停留时间" : "Planned dwell time"}
+      </label>
+      <select
+        id={`member-place-promotion-dwell-${invitationId}`}
+        data-testid="member-place-promotion-dwell"
+        value={promotionDwellById[invitationId] ?? 20}
+        disabled={!current || busyId !== null}
+        onChange={(event) => setPromotionDwellById((values) => ({
+          ...values,
+          [invitationId]: Number(event.target.value) as 10 | 20 | 30,
+        }))}
+      >
+        <option value={10}>{zh ? "10 分钟" : "10 minutes"}</option>
+        <option value={20}>{zh ? "20 分钟" : "20 minutes"}</option>
+        <option value={30}>{zh ? "30 分钟" : "30 minutes"}</option>
+      </select>
+      <small>{zh ? `地点：${placeName}；下一会合：${rendezvousTitle}。` : `Place: ${placeName}; next rendezvous: ${rendezvousTitle}.`}</small>
+      <button
+        type="button"
+        data-testid="member-place-promotion-create"
+        disabled={!current || busyId !== null}
+        onClick={() => void createPromotion(invitationId)}
+      >
+        {busyId === invitationId
+          ? (zh ? "正在核验并提议…" : "Checking and proposing…")
+          : (zh ? "提议加入共同旅程" : "Propose as a shared stop")}
+      </button>
+    </section>
+  );
+
+  const renderPromotion = (promotion: MemberPlacePromotionProjection) => {
+    const stateText = promotion.state === "PENDING_ROUTE"
+      ? (zh ? "正在检查路线证据" : "Checking route evidence")
+      : promotion.state === "WAITING_FOR_MEMBERS"
+        ? (zh ? "等待所有当前成员分别决策" : "Waiting for each current member")
+        : promotion.state === "AUTHORIZED"
+          ? (zh ? "所有必要成员已同意；等待成员明确应用" : "All required members approved; awaiting explicit apply")
+          : promotion.state === "APPLIED"
+            ? (zh ? "已加入共享行程" : "Added to the shared Journey")
+            : promotion.state === "DECLINED"
+              ? (zh ? "有成员不同意；共享计划保持原样" : "A member declined; the shared plan stayed unchanged")
+              : promotion.state === "STALE"
+                ? (zh ? "计划或成员事实已变化；需要重新提议" : "Plan or membership changed; a new proposal is needed")
+                : (zh ? "当前证据不足，不能切换共享计划" : "Current evidence is insufficient; the shared plan cannot change");
+    return (
+      <article key={promotion.promotion_id} data-testid="member-place-promotion" data-state={promotion.state}>
+        <span className="v8-kicker">{zh ? "共享站点决策" : "Shared-stop decision"}</span>
+        <strong>{promotion.place.name} · {promotion.dwell_minutes}{zh ? " 分钟" : " min"}</strong>
+        <small>{zh ? `下一会合点：${promotion.rendezvous.title} · ${promotion.rendezvous.place_name}` : `Next rendezvous: ${promotion.rendezvous.title} · ${promotion.rendezvous.place_name}`}</small>
+        <small data-testid="member-place-promotion-state">{stateText}</small>
+        {promotion.state === "BLOCKED" && promotion.state_detail.feasibility === "FEASIBILITY_UNKNOWN" && (
+          <small data-testid="member-place-promotion-unknown">
+            {zh
+              ? `没有足够的服务器路线/时间证据（${promotion.state_detail.code ?? "UNKNOWN"}）；状态为 NEEDS_ROUTE_EVIDENCE，不创建绿色候选，原计划不变。`
+              : `The server has no qualifying route/timing evidence (${promotion.state_detail.code ?? "UNKNOWN"}). Status is NEEDS_ROUTE_EVIDENCE; no green candidate was created and the current plan remains unchanged.`}
+          </small>
+        )}
+        {promotion.responses.length > 0 && (
+          <ul data-testid="member-place-promotion-responses">
+            {promotion.responses.map((response) => (
+              <li key={response.member_id}>
+                {response.display_name}: {response.decision === "APPROVE"
+                  ? (zh ? "已同意" : "approved")
+                  : response.decision === "DECLINE"
+                    ? (zh ? "不同意" : "declined")
+                    : (zh ? "待决策" : "waiting")}
+              </li>
+            ))}
+          </ul>
+        )}
+        {promotion.viewer_decision && (
+          <small>{zh ? `你已${promotion.viewer_decision === "APPROVE" ? "同意" : "拒绝"}；本轮不能替其他成员决策。` : `You ${promotion.viewer_decision.toLowerCase()}; this does not decide for anyone else.`}</small>
+        )}
+        {promotion.viewer_can_decide && (
+          <div className="journey-side-quest-actions">
+            <button type="button" data-testid="member-place-promotion-approve" disabled={busyId !== null} onClick={() => void answerPromotion(promotion, "APPROVE")}>
+              {zh ? "我同意这个共享站点" : "I approve this shared stop"}
+            </button>
+            <button type="button" data-testid="member-place-promotion-decline" disabled={busyId !== null} onClick={() => void answerPromotion(promotion, "DECLINE")}>
+              {zh ? "不同意，保留原计划" : "Decline and keep the current plan"}
+            </button>
+          </div>
+        )}
+        {promotion.viewer_can_apply && promotion.state === "AUTHORIZED" && (
+          <button type="button" data-testid="member-place-promotion-apply" disabled={busyId !== null} onClick={() => void applyPromotion(promotion)}>
+            {zh ? "应用已获全体同意的新计划" : "Apply the unanimously approved plan"}
+          </button>
+        )}
+        {promotion.state !== "APPLIED" && promotion.state !== "BLOCKED" && promotion.state !== "DECLINED" && (
+          <small>{zh ? "共享计划在成功应用前保持不变；本流程不会预订、下单或付款。" : "The shared plan remains unchanged until apply succeeds. This flow does not book, order, or pay."}</small>
+        )}
+      </article>
+    );
+  };
+
+  const requestProgressConsent = (
+    invitationId: string,
+    placeName: string,
+    action: "SHARE_ARRIVAL" | "SHARE_HEADING_BACK",
+    participants: MemberPlaceInvitationProgressParticipant[],
+    ownProgress: MemberPlaceInvitationOwnProgress,
+  ) => {
+    const shareAudienceToken = ownProgress.share_audience_token;
+    if (!shareAudienceToken) {
+      setMessage(zh
+        ? "无法取得当前邀请成员名单。请刷新后再查看和确认分享对象。"
+        : "The current invitation audience is unavailable. Refresh before reviewing and confirming who will see this report.");
+      return;
+    }
+    setMessage(null);
+    setProgressConsent({
+      invitationId,
+      placeName,
+      action,
+      shareAudienceToken,
+      audienceNames: participants.map((participant) =>
+        `${participant.display_name} (${participant.membership === "INVITER" ? (zh ? "发起者" : "inviter") : (zh ? "已加入" : "joined")})`,
+      ),
+    });
   };
 
   const renderProgressBoard = (
@@ -169,7 +400,7 @@ export function MemberPlaceInvitationPanel({
             type="button"
             data-testid="member-place-progress-share-arrival"
             disabled={busyId !== null}
-            onClick={() => setProgressConsent({ invitationId, placeName, action: "SHARE_ARRIVAL" })}
+            onClick={() => requestProgressConsent(invitationId, placeName, "SHARE_ARRIVAL", participants, ownProgress)}
           >
             {zh ? "分享我报告已到达…" : "Share that I reported arriving…"}
           </button>
@@ -189,7 +420,7 @@ export function MemberPlaceInvitationPanel({
             type="button"
             data-testid="member-place-progress-share-heading-back"
             disabled={busyId !== null}
-            onClick={() => setProgressConsent({ invitationId, placeName, action: "SHARE_HEADING_BACK" })}
+            onClick={() => requestProgressConsent(invitationId, placeName, "SHARE_HEADING_BACK", participants, ownProgress)}
           >
             {zh ? "分享我报告正在返回…" : "Share that I reported heading back…"}
           </button>
@@ -240,6 +471,12 @@ export function MemberPlaceInvitationPanel({
             zh ? "同行进度" : "Companion progress",
             invitation.state,
           )}
+          {renderPromotionOffer(
+            invitation.invitation_id,
+            invitation.place.name,
+            invitation.rendezvous.title,
+            invitation.state === "OPEN",
+          )}
         </article>
       ))}
       {joinedInvitations.map((invitation) => (
@@ -255,8 +492,20 @@ export function MemberPlaceInvitationPanel({
             zh ? "同行进度" : "Companion progress",
             invitation.state,
           )}
+          {renderPromotionOffer(
+            invitation.invitation_id,
+            invitation.place.name,
+            invitation.rendezvous.title,
+            invitation.state === "OPEN",
+          )}
         </article>
       ))}
+      {promotions.length > 0 && (
+        <section data-testid="member-place-promotions">
+          <span className="v8-kicker">{zh ? "全体同行者共享站点决策" : "Shared-stop decisions for the whole Journey"}</span>
+          {promotions.map(renderPromotion)}
+        </section>
+      )}
       {invitations.length > 0 && (
       <div data-testid="member-place-invitations-incoming">
       {invitations.map((invitation) => {
@@ -511,8 +760,13 @@ export function MemberPlaceInvitationPanel({
           </strong>
           <p>
             {zh
-              ? "你将只向“" + progressConsent.placeName + "”邀请中已加入的成员分享这一粗粒度状态。内容是你自己的报告，不是 GPS 到场验证，也不含坐标或路线。你可以停止后续展示；别人已经看见的信息无法撤回。"
-              : "Only members who joined the invitation for “" + progressConsent.placeName + "” will see this coarse status. It is your report, not GPS-verified presence, and contains no coordinates or route. You can stop future projections; information already seen cannot be recalled."}
+              ? "你将为“" + progressConsent.placeName + "”分享这一粗粒度状态。内容是你自己的报告，不是 GPS 到场验证，也不含坐标或路线。你可以停止后续展示；别人已经看见的信息无法撤回。"
+              : "You are sharing a coarse status for “" + progressConsent.placeName + "”. It is your report, not GPS-verified presence, and contains no coordinates or route. You can stop future projections; information already seen cannot be recalled."}
+          </p>
+          <p data-testid="member-place-progress-consent-audience">
+            {zh
+              ? "当前进度板成员（包括你）：" + (progressConsent.audienceNames.join("、") || "暂无") + "。若确认前名单变化，本次分享会取消并要求你重新确认。"
+              : "Current progress-board members, including you: " + (progressConsent.audienceNames.join(", ") || "none") + ". If the audience changes before confirmation, this share will be cancelled and require a fresh review."}
           </p>
           <div className="journey-side-quest-actions">
             <button
@@ -521,7 +775,8 @@ export function MemberPlaceInvitationPanel({
               disabled={busyId !== null}
               onClick={() => {
                 const consent = progressConsent;
-                void updateProgress(consent.invitationId, consent.action).then(() => setProgressConsent(null));
+                void updateProgress(consent.invitationId, consent.action, consent.shareAudienceToken)
+                  .then(() => setProgressConsent(null));
               }}
             >
               {zh ? "同意并分享这条自述" : "Agree and share this self-report"}
