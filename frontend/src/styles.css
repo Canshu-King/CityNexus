@@ -1363,6 +1363,40 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
   opacity: 1;
   font-weight: 650;
 }
+/* Tab switching: smooth the active-state change, give the roving tab a visible
+   focus ring, and fade the panel in as its key changes. */
+.trips-tabs button {
+  transition: background-color 0.22s ease, color 0.22s ease, opacity 0.22s ease,
+    transform 0.22s ease;
+}
+.trips-tabs button:hover {
+  opacity: 0.85;
+}
+.trips-tabs button:focus-visible {
+  outline: 2px solid var(--v8-accent, #0f766e);
+  outline-offset: 2px;
+}
+.trips-tabpanel {
+  animation: trips-tab-fade 0.24s ease both;
+}
+@keyframes trips-tab-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trips-tabs button {
+    transition: none;
+  }
+  .trips-tabpanel {
+    animation: none;
+  }
+}
 .hotel-list { display: grid; gap: 12px; }
 .hotel-card {
   display: grid;
