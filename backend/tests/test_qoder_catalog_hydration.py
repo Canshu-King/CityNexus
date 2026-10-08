@@ -631,7 +631,9 @@ def test_a_resolver_that_could_not_be_reached_does_not_make_a_destination_unavai
         f"期望：解析器到不了是运行时事实，目的地保持可重试（R1）；实际：{body['capability']}"
         f" / reason {body['reason_code']}"
     )
-    assert body["provider_status"] == [{"status": "UNREACHABLE", "stage": "resolving"}], body
+    assert body["provider_status"] == [
+        {"status": "UNREACHABLE", "stage": "resolving", "provider": "destination_resolver"}
+    ], body
 
 
 def test_an_observation_is_either_one_of_the_four_or_absent(seeded) -> None:

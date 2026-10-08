@@ -536,6 +536,37 @@ def _provider_identity_resolver() -> Any:
         client.close()
 
 
+def _provider_observation_element(item: dict[str, Any]) -> dict[str, Any]:
+    """One `provider_status` entry in the shape a reader renders.
+
+    The screen shows the provider's name and its message (`DestinationPreparationPanel.tsx`), so an
+    entry that only carries `{status, stage, reason, detail}` makes it fall back to "unnamed" and
+    drop the cause.  Both keys are filled from the attempt evidence that already exists on this
+    observation; when nothing was attempted the provider is named from the stage and the message is
+    the named reason, never invented prose.
+    """
+
+    element = dict(item)
+    attempts = element.get("attempts")
+    first = attempts[0] if isinstance(attempts, list) and attempts and isinstance(attempts[0], dict) else {}
+    provider = element.get("provider") or first.get("provider") or _provider_name_of_stage(element.get("stage"))
+    if provider:
+        element["provider"] = provider
+    message = element.get("message") or element.get("detail") or element.get("reason") or first.get("reason")
+    if message:
+        element["message"] = str(message)
+    return element
+
+
+_STAGE_PROVIDERS = {"resolving": "destination_resolver", "resolving_destination": "destination_resolver"}
+
+
+def _provider_name_of_stage(stage: Any) -> str | None:
+    """The leg's own name, so an unattempted observation is still attributable."""
+
+    return _STAGE_PROVIDERS.get(str(stage)) if stage is not None else None
+
+
 def _provider_status_of(resolution: Any) -> str:
     """Map the typed answer onto the frozen `provider_status` vocabulary.
 
@@ -1574,7 +1605,9 @@ def evaluate_capability(
     # say "not measured"; a default `OK` would be a fabricated measurement.
     if provider_observations:
         body["provider_status"] = [
-            item for item in provider_observations if item.get("status") in PROVIDER_STATUSES
+            _provider_observation_element(item)
+            for item in provider_observations
+            if item.get("status") in PROVIDER_STATUSES
         ]
     # `reason_code` stays the frozen *class* (DESTINATION_RESOLVER_UNAVAILABLE); these four are the
     # distinct cause underneath it.  Collapsing seven provider shapes into the one class name is
@@ -1600,7 +1633,9 @@ def evaluate_capability(
             isinstance(item, dict) and item.get("stage") == observation.get("stage")
             for item in existing
         ):
-            body["provider_status"] = [*existing, observation]
+            body["provider_status"] = [*existing, _provider_observation_element(observation)]
     if resolution.resolver_status and not body.get("provider_status"):
-        body["provider_status"] = [{"status": resolution.resolver_status, "stage": "resolving"}]
+        body["provider_status"] = [
+            _provider_observation_element({"status": resolution.resolver_status, "stage": "resolving"})
+        ]
     return body
