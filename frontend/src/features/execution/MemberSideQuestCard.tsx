@@ -69,6 +69,20 @@ export function MemberSideQuestCard({
   const [fitPreviewReceipt, setFitPreviewReceipt] = useState<{ key: string; value: MemberSideQuestFitPreview } | null>(null);
   const [privateRouteReceipt, setPrivateRouteReceipt] = useState<{ key: string; value: MemberSideQuestNavigationResult } | null>(null);
 
+  // One-time live routing guidance must not stay on screen indefinitely.
+  // These timers only expire a displayed snapshot; they do not query the
+  // device's location, poll a provider, or change Journey execution state.
+  useEffect(() => {
+    if (!fitPreviewReceipt) return;
+    const timeout = window.setTimeout(() => setFitPreviewReceipt(null), 30_000);
+    return () => window.clearTimeout(timeout);
+  }, [fitPreviewReceipt]);
+  useEffect(() => {
+    if (!privateRouteReceipt) return;
+    const timeout = window.setTimeout(() => setPrivateRouteReceipt(null), 30_000);
+    return () => window.clearTimeout(timeout);
+  }, [privateRouteReceipt]);
+
   useEffect(() => {
     if (!currentSplitActive) {
       setPlacesReady(true);
@@ -399,6 +413,7 @@ export function MemberSideQuestCard({
           <button type="button" data-testid="member-side-quest-navigate" disabled={busy} onClick={() => void navigateToPrivateStop()}>
             {busy ? (zh ? "正在获取路线…" : "Getting route…") : (zh ? "带我去私人地点" : "Take me to my private stop")}
           </button>
+          <small>{zh ? "路线与最晚离开时间是单次快照，会很快过期；路况变化后请重新检查。" : "Routes and leave-by times are one-time snapshots that expire shortly. Check again when conditions change."}</small>
         </div>
       )}
       {fitPreview && (
