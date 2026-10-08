@@ -251,7 +251,11 @@ export const REFUSAL_SENTENCES: Record<string, AccessCopyKey> = {
   MEMBER_ROLE_UNCHANGED: "access.refuseRoleUnchanged",
   MEMBER_SELF_EXIT_NOT_A_MEMBER: "access.refuseSelfExitNotAMember",
   SHARE_GRANT_ALREADY_REVOKED: "access.refuseGrantAlreadyRevoked",
-  SHARE_GRANT_CREATOR_EMPTY: "access.refuseExpiryUnreadable",
+  // This one said 到期时刻 (the expiry) for a refusal whose server message names the *creator*
+  // (`main.py`: "A share grant needs the person or device that created it", field `created_by`).
+  // A sentence describing a field the server did not refuse on is the exact failure this file's
+  // header forbids, so it has its own row now.
+  SHARE_GRANT_CREATOR_EMPTY: "access.refuseCreatorEmpty",
   SHARE_GRANT_EXPIRY_IN_PAST: "access.refuseExpiryInPast",
   SHARE_GRANT_EXPIRY_NO_OFFSET: "access.refuseExpiryNoOffset",
   SHARE_GRANT_EXPIRY_UNREADABLE: "access.refuseExpiryUnreadable",
