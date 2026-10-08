@@ -111,6 +111,10 @@ OUTCOME_QUALIFIER_OFFLINE_SOURCE = "OFFLINE_SOURCE_SUPPLIED"
 OUTCOME_QUALIFIER_ALREADY_HELD = "ALREADY_HELD_IN_STORE"
 OUTCOME_PENDING_UNAPPLIED = "PENDING_CANDIDATES_UNAPPLIED"
 OUTCOME_ABANDONED = "ABANDONED_BY_TRAVELLER"
+#: Also emitted as `error.code` (and `reason_code`) by `_failure_payload` on the two lost-worker
+#: endings below, which is the surface the preparation screen's `failureSentence` reads: both words
+#: are spelled in frontend/src/features/discovery/prepFailureCopy.ts, and a rename here that misses
+#: that file leaves a traveller with the generic fallback instead of the named ending.
 OUTCOME_WORKER_LOST = "WORKER_LOST"
 # ORD-0167: two endings that were previously indistinguishable from "this place has no source".
 # An ambiguous query can be fixed by choosing; a resolver that broke can be fixed by retrying.
