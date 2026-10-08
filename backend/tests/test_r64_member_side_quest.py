@@ -2011,9 +2011,95 @@ def test_r69_one_peer_ack_in_three_person_journey_does_not_claim_group_together(
     assert presence["state"] != "TOGETHER"
     resolved = presence["meetup_handshake"]["resolved"]
     assert len(resolved) == 1
+    assert resolved[0]["viewer_acknowledged"] is False
     assert resolved[0]["physical_presence_verified"] is False
     assert resolved[0]["planned_split_state"] == "PLANNED_SPLIT_ENDED"
+    acknowledger_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(third_id)
+    )
+    assert acknowledger_view.status_code == 200, acknowledger_view.text
+    assert acknowledger_view.json()["group_presence"]["meetup_handshake"]["resolved"][0][
+        "viewer_acknowledged"
+    ] is True
     assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == plan_before
+
+
+
+def test_r69_new_side_trip_gets_a_new_meetup_action_not_old_success():
+    journey_id, owner_id, peer_id = _active_shared_journey()
+    first_split = _start_split(journey_id, owner_id)
+    first_place = _private_place(journey_id, first_split.get("rendezvous_place_id"))
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": first_place.id},
+    )
+    assert created.status_code == 201, created.text
+    first_quest_id = created.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive", "complete"):
+        reply = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{first_quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert reply.status_code == 200, reply.text
+    first_report = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{first_quest_id}/meetup-report",
+        headers=_auth(owner_id),
+    )
+    assert first_report.status_code == 200, first_report.text
+    first_handshake_id = first_report.json()["group_presence"]["meetup_handshake"]["owner"]["id"]
+    ack = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{first_handshake_id}/acknowledge",
+        headers=_auth(peer_id),
+    )
+    assert ack.status_code == 200, ack.text
+    past_success = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["group_presence"]["meetup_handshake"]["owner"]
+    assert past_success["state"] == "PEER_ACKNOWLEDGED"
+
+    second_split = _start_split(journey_id, owner_id)
+    assert second_split["intent_id"] != first_split["intent_id"]
+    during_new_split = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["group_presence"]["meetup_handshake"]
+    # The previous completed meetup must not be presented as current
+    # while the member is away again and has not finished this side quest.
+    assert during_new_split["owner"] is None
+
+    second_place = _private_place(
+        journey_id, second_split.get("rendezvous_place_id"), first_place.id
+    )
+    second = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": second_place.id},
+    )
+    assert second.status_code == 201, second.text
+    second_quest_id = second.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive", "complete"):
+        advanced = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{second_quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert advanced.status_code == 200, advanced.text
+    current_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["group_presence"]["meetup_handshake"]["owner"]
+    assert current_view["state"] == "NOT_REPORTED"
+    assert current_view["can_report"] is True
+
+    new_report = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{second_quest_id}/meetup-report",
+        headers=_auth(owner_id),
+    )
+    assert new_report.status_code == 200, new_report.text
+    owner_meetup = new_report.json()["group_presence"]["meetup_handshake"]["owner"]
+    assert owner_meetup["state"] == "PENDING"
+    assert owner_meetup["id"] != first_handshake_id
+    with SessionLocal() as session:
+        first_row = session.get(PlannedSplitMeetupHandshake, first_handshake_id)
+        assert first_row is not None and first_row.state == "PEER_ACKNOWLEDGED"
 
 
 def test_r69_expired_request_cannot_be_acknowledged_and_can_be_resent():
