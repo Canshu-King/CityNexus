@@ -7,6 +7,7 @@ import {
   OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
 import { formatWhen } from "../../lib/formatWhen";
+import { CnxSelect } from "../../components/CnxSelect";
 import { extractionStatusLabel, summaryHeldLabel } from "../../lib/displayVocabulary";
 import {
   artifactTypeLabel as artifactTypeLabelShared,
@@ -663,17 +664,18 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         >
           <label>
             {t("inbox.manualType")}
-            <select
+            <CnxSelect
               data-testid="manual-type"
               value={manualType}
-              onChange={(event) => setManualType(event.target.value)}
-            >
-              <option value="FLIGHT">{t("inbox.typeFlight")}</option>
-              <option value="RAIL">{t("inbox.typeRail")}</option>
-              <option value="HOTEL">{t("inbox.typeHotel")}</option>
-              <option value="TICKET">{t("inbox.typeTicket")}</option>
-              <option value="RESERVATION">{t("inbox.typeReservation")}</option>
-            </select>
+              onChange={(next) => setManualType(next)}
+              options={[
+                { value: "FLIGHT", label: t("inbox.typeFlight") },
+                { value: "RAIL", label: t("inbox.typeRail") },
+                { value: "HOTEL", label: t("inbox.typeHotel") },
+                { value: "TICKET", label: t("inbox.typeTicket") },
+                { value: "RESERVATION", label: t("inbox.typeReservation") },
+              ]}
+            />
           </label>
           <label>
             {t("inbox.manualTitle")}
@@ -897,12 +899,18 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           <section className="v13-2-review" data-testid="v13-2-review" aria-label={t("inbox.reviewSemantic")}>
             <label>
               {t("inbox.anchorRole")}
-              <select data-testid="v13-2-anchor-role" value={role} onChange={(event) => setRole(event.target.value)} disabled={draft.status === "CONFIRMED"}>
-                <option value="UNKNOWN">{t("inbox.roleUnknown")}</option>
-                <option value="ARRIVAL">{t("inbox.roleArrival")}</option>
-                <option value="MID_TRIP">{t("inbox.roleMidTrip")}</option>
-                <option value="DEPARTURE">{t("inbox.roleDeparture")}</option>
-              </select>
+              <CnxSelect
+                data-testid="v13-2-anchor-role"
+                value={role}
+                onChange={(next) => setRole(next)}
+                disabled={draft.status === "CONFIRMED"}
+                options={[
+                  { value: "UNKNOWN", label: t("inbox.roleUnknown") },
+                  { value: "ARRIVAL", label: t("inbox.roleArrival") },
+                  { value: "MID_TRIP", label: t("inbox.roleMidTrip") },
+                  { value: "DEPARTURE", label: t("inbox.roleDeparture") },
+                ]}
+              />
             </label>
             <label>
               {t("inbox.scheduledDeparture")}
