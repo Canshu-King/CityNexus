@@ -1668,7 +1668,7 @@ function Hub({
             aria-controls="hub-days-container"
           >
             <span className="v8-days-toggle-caret" aria-hidden="true">{daysExpanded ? "▼" : "▶"}</span>
-            {zh ? (daysExpanded ? "收起预览" : "展开预览") : (daysExpanded ? "Collapse" : "Expand")}
+            {daysExpanded ? t("hub.collapsePreview") : t("hub.expandPreview")}
           </button>
         </div>
       </div>

@@ -118,6 +118,8 @@ const en: Dict = {
   "hub.planGlance": "Plan at a glance",
   "hub.everyDay": "Every day, connected.",
   "hub.compareStays": "Compare stays →",
+  "hub.expandPreview": "Expand",
+  "hub.collapsePreview": "Collapse",
   "hub.day": "DAY {n}",
   "hub.anchor": "{type} anchor",
 
@@ -755,6 +757,8 @@ const zhCN: Dict = {
   "hub.planGlance": "方案概览",
   "hub.everyDay": "每一天，紧密相连。",
   "hub.compareStays": "对比住宿 →",
+  "hub.expandPreview": "展开预览",
+  "hub.collapsePreview": "收起预览",
   "hub.day": "第 {n} 天",
   "hub.anchor": "{type}锚点",
 
