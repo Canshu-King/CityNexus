@@ -1464,6 +1464,12 @@ function Hub({
   const handledDisruptions = planDisruptions.filter((item) => isHandledDisruption(item));
   const nextClock = nextStop ? clockInZone(nextStop.start_at, journeyTz) : null;
 
+  // Information hierarchy: day cards are secondary preview data that can be
+  // folded away to reduce screen clutter when traveller focuses on immediate
+  // needs (next stop, stay choice, attention items). Defaults to collapsed
+  // until explicitly expanded.
+  const [daysExpanded, setDaysExpanded] = useState(false);
+
   return (
     <section className="v8-page">
       <div className="v8-page-intro">
@@ -1651,47 +1657,54 @@ function Hub({
           <p className="v8-kicker">{t("hub.planGlance")}</p>
           <h2>{t("hub.everyDay")}</h2>
         </div>
-        <button className="v8-text-button" onClick={() => onNavigate("stay")}>
-          {t("hub.compareStays")}
+        <button 
+          className="v8-text-button" 
+          onClick={() => setDaysExpanded(!daysExpanded)}
+          aria-expanded={daysExpanded}
+        >
+          {zh ? (daysExpanded ? "收起预览" : "展开预览") : (daysExpanded ? "Collapse" : "Expand")}
         </button>
       </div>
-      {/* The day cards belong to a stay *option*, not to a chosen plan.  Until
-          the traveller has actually chosen a plan they are a preview of one
-          candidate stay, so they must say so — otherwise an option's day plan
-          reads as the trip the traveller is on. */}
-      {!hasChosenPlan && selected && (
-        <p className="v8-muted" data-testid="hub-glance-caveat">
-          {zh
-            ? `以下只是其中一个候选方案的预览，你还没有采用它。`
-            : `Preview of one candidate option — you have not chosen a plan yet.`}
-        </p>
-      )}
-      {!selected && (
-        <div className="v8-empty-state" data-testid="hub-glance-empty">
-          <b>{zh ? "还没有可以预览的行程" : "Nothing to preview yet"}</b>
-          <p>
+      <div className={`v8-day-container${!daysExpanded && selected ? " collapsed" : ""}`} data-testid="hub-days-container">
+        {!hasChosenPlan && selected && (
+          <p className="v8-muted" data-testid="hub-glance-caveat">
             {zh
-              ? "选定方案后，这里会显示每天的安排。"
-              : "Choose a plan and the day-by-day plan appears here."}
+              ? `以下只是其中一个候选方案的预览，你还没有采用它。`
+              : `Preview of one candidate option — you have not chosen a plan yet.`}
           </p>
+        )}
+        {!selected && (
+          <div className="v8-empty-state" data-testid="hub-glance-empty">
+            <b>{zh ? "还没有可以预览的行程" : "Nothing to preview yet"}</b>
+            <p>
+              {zh
+                ? "选定方案后，这里会显示每天的安排。"
+                : "Choose a plan and the day-by-day plan appears here."}
+            </p>
+          </div>
+        )}
+        <div className="v8-day-row">
+          {selected?.days.map((day) => (
+            <button
+              key={day.day}
+              className="v8-day-card"
+              onClick={() => hasChosenPlan && setDaysExpanded(!daysExpanded)}
+            >
+              <span>{t("hub.day", { n: day.day })}</span>
+              <strong>{day.label.split(" · ")[0]}</strong>
+              <p>{day.activities.join(" · ")}</p>
+              <small>
+                <span className="mode-mark">{day.mode}</span>{" "}
+                {t("hub.anchor", { type: day.anchor })}
+              </small>
+            </button>
+          ))}
+          {!hasChosenPlan && selected && (
+            <div className="v8-empty-state" data-testid="hub-glance-collapse-hint">
+              <b>{zh ? "先选定方案再看每日预览" : "Choose a plan to see daily previews"}</b>
+            </div>
+          )}
         </div>
-      )}
-      <div className="v8-day-row">
-        {selected?.days.map((day) => (
-          <button
-            key={day.day}
-            className="v8-day-card"
-            onClick={() => onNavigate(hasChosenPlan ? "studio" : "hub")}
-          >
-            <span>{t("hub.day", { n: day.day })}</span>
-            <strong>{day.label.split(" · ")[0]}</strong>
-            <p>{day.activities.join(" · ")}</p>
-            <small>
-              <span className="mode-mark">{day.mode}</span>{" "}
-              {t("hub.anchor", { type: day.anchor })}
-            </small>
-          </button>
-        ))}
       </div>
     </section>
   );
