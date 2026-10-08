@@ -2217,6 +2217,7 @@ export const cityNexusApi = {
     journeyId: string,
     invitationId: string,
     locationObservationId: string | null,
+    dwellMinutes: 10 | 20 | 30 = 20,
   ): Promise<MemberPlaceInvitationFeasibilityPreviewResult> {
     return requestJson<MemberPlaceInvitationFeasibilityPreviewResult>(
       "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/feasibility-preview",
@@ -2226,7 +2227,7 @@ export const cityNexusApi = {
         body: JSON.stringify({
           consent_route_provider: true,
           location_observation_id: locationObservationId,
-          dwell_minutes: 20,
+          dwell_minutes: dwellMinutes,
           requested_mode: "WALK",
         }),
       },
