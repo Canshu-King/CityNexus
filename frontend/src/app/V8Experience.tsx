@@ -588,6 +588,35 @@ const drawerRoutes = [
   ),
 ];
 
+/* The two mobile-only routes carry no group code, so the drawer used to trail them under the last
+   heading with nothing of their own -- the tail of a list nobody could name. Trips is where a
+   traveller plans, and Me is where they manage themselves, so both join a group that already
+   exists instead of the drawer growing a fifth heading: the four headings are a read surface
+   other orders pin (ORD-0420), and a heading with no group code behind it is the same untranslated
+   machine token problem that order was about. */
+const DRAWER_GROUP_FALLBACK: Record<string, string> = { trips: "PLAN", me: "SYSTEM" };
+
+function drawerGroupOf(item: (typeof drawerRoutes)[number]): string {
+  if ("group" in item) return item.group;
+  return DRAWER_GROUP_FALLBACK[(item as { key: string }).key] ?? "SYSTEM";
+}
+
+/* Grouped in first-appearance order, which is the order the registry already reads in
+   (TODAY, PLAN, TRAVEL, SYSTEM), so grouping reorders nothing a traveller already saw. */
+const drawerGroups: { group: string; items: (typeof drawerRoutes)[number][] }[] = (() => {
+  const order: string[] = [];
+  const byGroup = new Map<string, (typeof drawerRoutes)[number][]>();
+  for (const item of drawerRoutes) {
+    const g = drawerGroupOf(item);
+    if (!byGroup.has(g)) {
+      byGroup.set(g, []);
+      order.push(g);
+    }
+    byGroup.get(g)!.push(item);
+  }
+  return order.map((group) => ({ group, items: byGroup.get(group)! }));
+})();
+
 function greetingFor(hour: number, t: (key: string) => string) {
   if (hour < 5) return t("hub.greeting.night");
   if (hour < 12) return t("hub.greeting.morning");
@@ -668,6 +697,18 @@ export function V8Experience() {
   const [artifactImportedAt, setArtifactImportedAt] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  /* ORD drawer grouping: every group starts open. Collapsing one turns its body into a
+     zero-height, independently-scrollable region, so the drawer's own scroll never has to grow
+     with the list -- the whole point of the grouping. */
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const toggleGroup = useCallback((group: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(group)) next.delete(group);
+      else next.add(group);
+      return next;
+    });
+  }, []);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [offline, setOffline] = useState<OfflineJourney | null>(null);
@@ -2198,27 +2239,51 @@ export function V8Experience() {
                 {t("shell.close")}
               </button>
             </div>
-            {drawerRoutes.map((item, index) => (
-              <div key={item.key}>
-                {"group" in item &&
-                  (index === 0 ||
-                    !("group" in drawerRoutes[index - 1]) ||
-                    (drawerRoutes[index - 1] as { group?: string }).group !==
-                      item.group) && (
-                    <span className="v8-nav-group">
-                      {"group" in item ? t(navGroupKey(item.group)) : t("nav.groupOther")}
-                    </span>
-                  )}
-                <button
-                  className={route === item.key ? "active" : ""}
-                  data-testid={"v8-drawer-entry-" + item.key}
-                  onClick={() => navigate(item.key)}
+            {drawerGroups.map(({ group, items }) => {
+              const collapsed = collapsedGroups.has(group);
+              const headingId = "v8-nav-group-" + group.toLowerCase();
+              const bodyId = "v8-nav-group-" + group.toLowerCase() + "-body";
+              return (
+                <section
+                  key={group}
+                  className="v8-nav-group-section"
+                  data-group={group}
                 >
-                  <Icon name={item.icon} />
-                  <span>{t("nav." + item.key)}</span>
-                </button>
-              </div>
-            ))}
+                  <button
+                    type="button"
+                    className="v8-nav-group"
+                    data-testid={"v8-drawer-group-" + group}
+                    aria-expanded={!collapsed}
+                    aria-controls={bodyId}
+                    id={headingId}
+                    onClick={() => toggleGroup(group)}
+                  >
+                    <span>{t(navGroupKey(group))}</span>
+                    <span className="v8-nav-group-caret" aria-hidden="true" />
+                  </button>
+                  <div
+                    className="v8-nav-group-body"
+                    id={bodyId}
+                    data-testid={"v8-drawer-group-body-" + group}
+                    role="group"
+                    aria-labelledby={headingId}
+                    hidden={collapsed}
+                  >
+                    {items.map((item) => (
+                      <button
+                        key={item.key}
+                        className={route === item.key ? "active" : ""}
+                        data-testid={"v8-drawer-entry-" + item.key}
+                        onClick={() => navigate(item.key)}
+                      >
+                        <Icon name={item.icon} />
+                        <span>{t("nav." + item.key)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
           </nav>
         </>
       )}
