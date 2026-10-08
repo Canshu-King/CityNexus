@@ -39,6 +39,9 @@ a button that goes nowhere is the fake this project keeps paying to remove.
 | spend | `spend-empty` | names the count of unpriced lines, so "no total yet" and "nothing to look at" stay distinct |
 | shared journey | `shared-plan-empty` | public read-only view at `/v8/shared/<token>`; there is no owned app to navigate into |
 | shared poster | `shared-poster-plan-empty` | same |
+| collections | `collection-empty` | its sentence points at the block **directly above it on the same route** (`RealCityDiscoveryPanel`), by that panel's own header ("the one empty sentence points at the block that is actually above it"). The honest action would be a same-screen scroll, not a route change, and the real capture entry (`CollectInto`) lives on the trip itinerary. Left to the round that owns that copy rather than rewritten here. |
+| plan with AI — short request | `plan-ai-empty-request` | a field-validation hint: the input that fixes it is on the same screen and focused. Not an empty set. |
+| poi import — no shelf | `poi-import-shelf-empty` | a sub-state inside the shelf picker, not a screen-level dead end; the flow around it continues. |
 
 ## What a future cell should know
 
