@@ -139,18 +139,19 @@
 /* ORD-0449 -- the invitation form and the two lists it writes back into. `width: auto` on the row
    action is load-bearing: the global sheet sets `button { width: 100% }`, which would stretch a
    撤销 button across the whole row and overlap the sentence beside it. */
+/* The control itself is declared once for every form in the product -- see the shared field box in
+   design-tokens.css.  This block keeps only the invitation form's own rhythm, now on the same
+   spacing tokens the wizard uses: `var(--cn-s-4)` is the 4px gap it already had, and
+   `var(--cn-s-8)` is the 8px margin it already had.  The `min-height: 44px` and `padding: 6px 8px`
+   that used to live here are gone on purpose -- 44px was a bare number that applied at every
+   viewport width, while every other field takes the 34px fine-pointer density and the >=44px touch
+   contract below 680px.  Read that as the one deliberate size change in this file: wider than
+   680px this control is 34px tall, and on a phone it is still 44px. */
 .cn-access-field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 8px 0;
-}
-
-.cn-access-field select,
-.cn-access-field input {
-  min-height: 44px;
-  font: inherit;
-  padding: 6px 8px;
+  gap: var(--cn-s-4);
+  margin: var(--cn-s-8) 0;
 }
 
 .cn-access-rows {
