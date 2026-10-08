@@ -5,6 +5,7 @@ import {
   commitmentLevelLabel,
   commitmentStatusLabel,
 } from "../lib/displayVocabulary";
+import { Badge, badgeToneForDisruption, loudestBadgeTone } from "../components/Badge";
 import { Icon } from "../components/v8/Icon";
 import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { mapCopy } from "../i18n/mapPanelCopy";
@@ -746,6 +747,14 @@ export function V8Experience() {
   const disruptions = useMemo(
     () => allDisruptions.filter((item) => !isHandledDisruption(item)),
     [allDisruptions, isHandledDisruption],
+  );
+  /**
+   * The bell counts these events, so it wears the loudest severity among them rather
+   * than one fixed red for a CRITICAL outage and an INFO note alike.
+   */
+  const disruptionBadgeTone = useMemo(
+    () => loudestBadgeTone(disruptions.map((item) => badgeToneForDisruption(item))),
+    [disruptions],
   );
   /** Disruptions the traveller has already acted on; explained, not escalated. */
   const handledDisruptions = useMemo(
@@ -2030,7 +2039,15 @@ export function V8Experience() {
               >
                 ◌
                 {disruptions.length > 0 && (
-                  <i className="v8-alert-badge">{disruptions.length}</i>
+                  <Badge
+                    tone={disruptionBadgeTone}
+                    variant="solid"
+                    count={disruptions.length}
+                    anchor
+                    decorative
+                    testId="v8-alert-badge"
+                    label={t("shell.notifActive", { n: disruptions.length })}
+                  />
                 )}
               </button>
               {alertsOpen && (
