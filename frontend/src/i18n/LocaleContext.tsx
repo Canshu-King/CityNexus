@@ -524,6 +524,16 @@ const en: Dict = {
   "agent.aiRunOtherPlan": "The plan in force is a different one than before.",
   "agent.aiRunPlanAppeared": "A plan is in force now (version {version}) that wasn't before.",
   "agent.aiRunNoCurrentPlan": "The read-back found no plan in force at all.",
+  "agent.proposalHeading": "Suggestions & protected plans",
+  "agent.proposalReady": "A suggestion is ready; open advanced detail to see how it was produced.",
+  "agent.proposalNone": "There is nothing for you to decide yet.",
+  "agent.protectedCommitment": "Protected commitment",
+  "agent.protectedActivity": "Protected activity",
+  "agent.needsConfirmation": "Needs your confirmation",
+  "agent.confirmScope": "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically.",
+  "agent.approve": "Approve",
+  "agent.reject": "Reject",
+  "agent.modifyReview": "Modify / Review",
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -1646,6 +1656,16 @@ const zhCN: Dict = {
   "agent.aiRunOtherPlan": "当前生效的方案已经换成另一个。",
   "agent.aiRunPlanAppeared": "回读时才有了生效方案（第 {version} 版）。",
   "agent.aiRunNoCurrentPlan": "回读时没有任何生效方案。",
+  "agent.proposalHeading": "建议与受保护安排",
+  "agent.proposalReady": "已经生成建议，展开高级详情可以看到过程。",
+  "agent.proposalNone": "还没有需要你决定的改动。",
+  "agent.protectedCommitment": "受保护承诺",
+  "agent.protectedActivity": "受保护活动",
+  "agent.needsConfirmation": "需要你确认",
+  "agent.confirmScope": "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。",
+  "agent.approve": "批准",
+  "agent.reject": "拒绝",
+  "agent.modifyReview": "修改 / 审核",
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",

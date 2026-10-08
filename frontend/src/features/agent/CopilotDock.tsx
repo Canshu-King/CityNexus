@@ -437,34 +437,32 @@ export function NativeMissionTimeline({
       )}
 
       <div className="cn-native-proposal">
-        <b>{zh ? "建议与受保护安排" : "Suggestions & protected plans"}</b>
+        <b>{t("agent.proposalHeading")}</b>
         <span>
           {proposalEvent
-            ? zh ? "已经生成建议，展开高级详情可以看到过程。" : "A suggestion is ready; open advanced detail to see how it was produced."
-            : zh ? "还没有需要你决定的改动。" : "There is nothing for you to decide yet."}
+            ? t("agent.proposalReady")
+            : t("agent.proposalNone")}
         </span>
         <div className="cn-protected-badges">
           {(run.protected_commitments ?? []).map((commitment, index) => (
-            <span key={String(commitment.id ?? index)}>{zh ? "受保护承诺" : "Protected commitment"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</span>
+            <span key={String(commitment.id ?? index)}>{t("agent.protectedCommitment")}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</span>
           ))}
           {!run.protected_commitments?.length && run.mission_plan?.protected_activity_ids.map((id) => (
-            <span key={id}>{zh ? "受保护活动" : "Protected activity"} · {id.slice(0, 8)}</span>
+            <span key={id}>{t("agent.protectedActivity")} · {id.slice(0, 8)}</span>
           ))}
         </div>
       </div>
 
       {approvalEvent && (
         <div className="cn-copilot-approval" data-testid="native-hermes-approval">
-          <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
+          <b>{t("agent.needsConfirmation")}</b>
           <span>
-            {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
-              : "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically."}
+            {t("agent.confirmScope")}
           </span>
           <div>
-            <button type="button" className="v8-primary" onClick={() => void approve()}>{zh ? "批准" : "Approve"}</button>
-            <button type="button" className="v8-secondary" onClick={() => void stop()}>{zh ? "拒绝" : "Reject"}</button>
-            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{zh ? "修改 / 审核" : "Modify / Review"}</button>
+            <button type="button" className="v8-primary" onClick={() => void approve()}>{t("agent.approve")}</button>
+            <button type="button" className="v8-secondary" onClick={() => void stop()}>{t("agent.reject")}</button>
+            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{t("agent.modifyReview")}</button>
           </div>
         </div>
       )}
