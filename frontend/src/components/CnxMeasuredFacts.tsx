@@ -1,5 +1,6 @@
 import { type RawFacts } from "../lib/rawFacts";
 import { readErrorReceipt, receiptLabel } from "../lib/errorReceipt";
+import { useT } from "../i18n/LocaleContext";
 
 /**
  * The same three device-measured fields RawFactsPanel prints, mounted the way Q70 asks for them:
@@ -24,12 +25,13 @@ export function CnxMeasuredFacts({
   envelope?: unknown;
 }) {
   const receipt = readErrorReceipt(envelope);
+  const t = useT();
   const fields: Array<{ name: string; value: string | null; label: string }> = [
     { name: "http_status", value: facts.http_status === null ? null : String(facts.http_status),
-      label: zh ? "这台设备看到的回读：HTTP" : "This device's reading: HTTP" },
-    { name: "content_type", value: facts.content_type, label: zh ? "回读的媒体类型" : "Media type read back" },
+      label: t("detail.measuredHttpLabel") },
+    { name: "content_type", value: facts.content_type, label: t("detail.measuredContentType") },
     { name: "body_bytes", value: facts.bytes === null ? null : String(facts.bytes),
-      label: zh ? "这台设备数到的字节" : "Octets this device counted" },
+      label: t("detail.measuredBytes") },
   ];
   return (
     <>
@@ -45,7 +47,7 @@ export function CnxMeasuredFacts({
             : { "data-cnx-field": field.name, "data-cnx-value": field.value })}
         >
           {field.value === null
-            ? zh ? `${field.label}：这台设备没量到` : `${field.label}: this device measured none`
+            ? t("detail.measuredNoneSuffix", { label: field.label })
             : `${field.label} ${field.value}`}
         </span>
       ))}
@@ -63,7 +65,7 @@ export function CnxMeasuredFacts({
           approached from the other side. */}
       <details className="cnx-measured-fact-fold" data-testid={`${testId}-receipt-fold`} open>
         <summary data-testid={`${testId}-receipt-summary`}>
-          {zh ? "这台设备量到的回读与服务器回执号" : "What this device read back, and the server's receipt"}
+          {t("detail.receiptFoldSummary")}
         </summary>
         <span
           className="cnx-measured-fact"
@@ -74,19 +76,23 @@ export function CnxMeasuredFacts({
             : { "data-cnx-value": String(facts.http_status) })}
         >
           {facts.http_status === null
-            ? zh ? "这台设备看到的回读：HTTP 没量到" : "This device's reading: HTTP measured none"
-            : `${zh ? "这台设备看到的回读：HTTP" : "This device's reading: HTTP"} ${facts.http_status}`}
+            ? t("detail.receiptHttpNone")
+            : `${t("detail.measuredHttpLabel")} ${facts.http_status}`}
         </span>
         <span className="cnx-measured-fact" data-testid={`${testId}-receipt`} {...receipt.attrs}>
-          {`${receiptLabelOf(receipt.present, zh)} ${receipt.text}`}
+          {`${receiptLabelOf(receipt.present, t)} ${receipt.text}`}
         </span>
       </details>
     </>
   );
 }
 
-function receiptLabelOf(present: boolean, zh: boolean): string {
-  return present
-    ? zh ? "服务器回执号" : "server receipt"
-    : zh ? "服务器未给回执号" : "no server receipt";
+/* This lives outside the component, so there is no hook in scope: the word function is passed in
+   rather than reached for. `zh` is gone from this signature because the language choice now belongs
+   to the dictionary lookup, not to a boolean threaded through the call. */
+function receiptLabelOf(
+  present: boolean,
+  t: (key: string, params?: Record<string, string | number>) => string,
+): string {
+  return present ? t("detail.receiptLabel") : t("detail.receiptLabelAbsent");
 }
