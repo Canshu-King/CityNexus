@@ -14083,6 +14083,29 @@ def _transition_activity_state(
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
+    applied_followthrough = active_group_recovery_spend(session, journey)
+    followthrough_snapshot = (
+        applied_followthrough[2] if applied_followthrough else None
+    )
+    if (
+        target_state == "IN_PROGRESS"
+        and isinstance(followthrough_snapshot, dict)
+        and str(followthrough_snapshot.get("rendezvous_activity_id") or "")
+        == str(activity.id)
+    ):
+        rejoin_state = followthrough_projection(
+            session, journey, viewer_member_id=None
+        )
+        if (
+            rejoin_state is not None
+            and rejoin_state.get("state") != "RECOVERY_CLOSED"
+        ):
+            raise HTTPException(
+                409,
+                "GROUP_RECOVERY_WAITING_FOR_MEMBER_REJOIN; "
+                "keep the shared rendezvous at ARRIVED until recovery closes",
+            )
+
     # Shared Activity state advances once, but each traveller reports their own
     # authenticated arrival at this exact recovery rendezvous through the same
     # execution endpoint and server truth boundary.
