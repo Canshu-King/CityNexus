@@ -413,12 +413,31 @@ def meetup_handshake_projection(
             PlannedSplitMeetupHandshake.id.desc(),
         )
     ).all()
-    latest_owner: dict[str, PlannedSplitMeetupHandshake] = {}
-    for row in rows:
-        latest_owner.setdefault(str(row.owner_member_id), row)
     owner_payload = None
-    own = latest_owner.get(str(viewer.id))
     viewer_context = _current_context(session, journey, viewer, now=current)
+    # A completed handshake belongs to its old split/quest. If this member
+    # starts a fresh planned split, the new meetup must have a fresh action
+    # entry point rather than inheriting "PEER_ACKNOWLEDGED" from last time.
+    owner_rows = [
+        row for row in rows if str(row.owner_member_id) == str(viewer.id)
+    ]
+    if viewer_context is not None:
+        current_split, current_quest = viewer_context
+        own = next(
+            (
+                row for row in owner_rows
+                if str(row.planned_separation_intent_id) == str(current_split["intent"].id)
+                and str(row.member_side_quest_id) == str(current_quest.id)
+                and str(row.active_plan_version_id) == str(journey.active_plan_version_id)
+                and str(row.rendezvous_activity_id) == str(current_split["target"].id)
+                and str(row.rendezvous_place_id) == str(current_split["place"].id)
+            ),
+            None,
+        )
+    else:
+        # After the split ends, retain the last result on refresh as truthful
+        # history, until a new current split supersedes the owner foreground.
+        own = owner_rows[0] if owner_rows else None
     if own is not None:
         display_state = str(own.state)
         owner = session.get(JourneyMember, str(own.owner_member_id))
@@ -520,6 +539,10 @@ def meetup_handshake_projection(
                     "id": str(row.id),
                     "owner_display_name": owner_traveler.display_name if owner_traveler else "Traveller",
                     "responder_display_name": responder_traveler.display_name if responder_traveler else "Traveller",
+                    # A third traveller viewing this group history did NOT
+                    # countersign. The UI must not say "you and Alice met"
+                    # to someone who has never acknowledged the request.
+                    "viewer_acknowledged": str(row.responder_member_id or "") == str(viewer.id),
                     "rendezvous": {"title": rendezvous_activity.title, "place_name": rendezvous_place.name},
                     "reported_at": row.reported_at,
                     "decided_at": row.decided_at,
