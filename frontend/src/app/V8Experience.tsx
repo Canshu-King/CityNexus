@@ -904,7 +904,18 @@ export function V8Experience() {
           }
         }
         if (!journeyId) {
-          if (!cancelled) setSetupOpen(true);
+          /* ORD-deeplink: an address that NAMES a screen is not a request to be taken to the
+             create-a-trip wizard.  A traveller who opened `/v8/import` from a chat, or `/v8/footprints`
+             from a note, asked for that screen; answering them with a form for a trip they never
+             mentioned made the link look broken and hid the screen entirely.  The wizard is the right
+             answer only when the address asked for nothing (bare `/v8/`, a bare `/`) -- there is no
+             screen to keep and nothing else to say.  When the address DID name a screen, this boot
+             keeps that screen as the destination and lets the shell below answer it honestly (the
+             screen's own empty state names it and offers the create door), instead of a whole-screen
+             detour.  A journey address (`/v8/<uuid>`) and an unknown one still go to the wizard /
+             Today respectively: neither names a screen to keep. */
+          const askedForAScreen = deepLink.kind === "screen" && deepLink.route !== "shared";
+          if (!cancelled && !askedForAScreen) setSetupOpen(true);
           if (!cancelled) setBusy(false);
           return;
         }
@@ -1720,6 +1731,43 @@ export function V8Experience() {
             : null)
         }
       />
+    );
+  /* ORD-deeplink: the address named a screen and this device holds no journey, so the shell has no
+     `data` to draw that screen with.  Answering with the generic 「没有可显示的行程」 loading box
+     would hide which screen the link asked for -- the traveller who opened `/v8/import` from a chat
+     sees nothing that mentions import.  Naming the screen the address asked for, saying plainly
+     that this device holds no trip yet, and leaving the create-a-trip door one press away keeps the
+     link's meaning on screen instead of replacing it with an unrelated form.  The screen key is
+     printed verbatim rather than through `t("nav." + key)`: that lookup falls back to the key itself
+     when the dictionary has no entry (the same trap `v8PanelRegistry.tsx` documents), so a label read
+     this way can never claim a translation that does not exist. */
+  if (!data && deepLink.kind === "screen" && deepLink.route !== "shared")
+    return (
+      <main className="v8-page" data-testid="deeplink-no-journey">
+        <p className="v8-page-kicker">
+          {locale.startsWith("zh") ? "这个地址要打开的屏是" : "This link opens"}
+          {" "}
+          <strong data-testid="deeplink-screen-key">{deepLink.route}</strong>
+        </p>
+        <h1>
+          {locale.startsWith("zh")
+            ? "这台设备上还没有行程，所以这一屏暂时没有内容"
+            : "This device holds no trip yet, so this screen has nothing to show"}
+        </h1>
+        <p>
+          {locale.startsWith("zh")
+            ? "新建一个行程，或回到今天，这屏就会按这个地址显示。"
+            : "Create a trip, or go back to Today, and this screen will answer this address."}
+        </p>
+        <div className="v8-page-actions">
+          <button type="button" onClick={() => setSetupOpen(true)}>
+            {locale.startsWith("zh") ? "新建行程" : "Create a trip"}
+          </button>
+          <button type="button" onClick={() => navigate("hub")}>
+            {locale.startsWith("zh") ? "回到今天" : "Back to Today"}
+          </button>
+        </div>
+      </main>
     );
   if (!data)
     return (
