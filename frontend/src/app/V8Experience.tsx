@@ -1468,7 +1468,7 @@ function Hub({
   // folded away to reduce screen clutter when traveller focuses on immediate
   // needs (next stop, stay choice, attention items). Defaults to collapsed
   // until explicitly expanded.
-  const [daysExpanded, setDaysExpanded] = useState(selected ? false : false);
+  const [daysExpanded, setDaysExpanded] = useState(false);
 
   return (
     <section className="v8-page">
@@ -1657,15 +1657,20 @@ function Hub({
           <p className="v8-kicker">{t("hub.planGlance")}</p>
           <h2>{t("hub.everyDay")}</h2>
         </div>
-        <button 
-          className="v8-text-button" 
-          onClick={() => setDaysExpanded(!daysExpanded)}
-          aria-expanded={daysExpanded}
-          style={{display: 'flex', alignItems: 'center', gap: '6px'}}
-        >
-          {daysExpanded ? "▼" : "▶"} {" "}
-          {zh ? (daysExpanded ? "收起预览" : "展开预览") : (daysExpanded ? "Collapse" : "Expand")}
-        </button>
+        <div className="v8-section-heading-actions">
+          <button className="v8-text-button" onClick={() => onNavigate("stay")}>
+            {t("hub.compareStays")}
+          </button>
+          <button
+            className="v8-text-button v8-days-toggle"
+            onClick={() => setDaysExpanded(!daysExpanded)}
+            aria-expanded={daysExpanded}
+            aria-controls="hub-days-container"
+          >
+            <span className="v8-days-toggle-caret" aria-hidden="true">{daysExpanded ? "▼" : "▶"}</span>
+            {zh ? (daysExpanded ? "收起预览" : "展开预览") : (daysExpanded ? "Collapse" : "Expand")}
+          </button>
+        </div>
       </div>
       <div className={`v8-day-container${!daysExpanded && selected ? " collapsed" : ""}`} data-testid="hub-days-container">
         {!hasChosenPlan && selected && (
@@ -1690,7 +1695,7 @@ function Hub({
             <button
               key={day.day}
               className="v8-day-card"
-              onClick={() => hasChosenPlan && setDaysExpanded(!daysExpanded)}
+              onClick={() => onNavigate(hasChosenPlan ? "studio" : "hub")}
             >
               <span>{t("hub.day", { n: day.day })}</span>
               <strong>{day.label.split(" · ")[0]}</strong>
