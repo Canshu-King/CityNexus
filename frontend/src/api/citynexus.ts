@@ -747,6 +747,7 @@ export interface MemberPlaceInvitationProjection {
     recipients: Array<{ member_id: string; display_name: string; state: string }>;
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
+    viewer_can_propose: boolean;
   }>;
   incoming: Array<{
     invitation_id: string;
@@ -767,6 +768,7 @@ export interface MemberPlaceInvitationProjection {
     rendezvous: MemberPlaceInvitationRendezvous;
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
+    viewer_can_propose: boolean;
   }>;
   promotions: MemberPlacePromotionProjection[];
 }
@@ -786,6 +788,19 @@ export interface MemberPlacePromotionProjection {
   place: MemberPlaceInvitationPlace;
   rendezvous: MemberPlaceInvitationRendezvous;
   dwell_minutes: 10 | 20 | 30;
+  tradeoff: {
+    added_count: number;
+    removed_count: number;
+    moved_count: number;
+    cost_delta_minor: number | null;
+    travel_delta_min: number | null;
+    end_time_delta_min: number | null;
+    currency: string;
+    protected_commitments_preserved: boolean;
+    hard_constraints_passed: boolean;
+    route_provider: string;
+    route_fact_qualities: string[];
+  } | null;
   base_plan_version_id: string;
   proposal_id: string | null;
   mission_id: string | null;
