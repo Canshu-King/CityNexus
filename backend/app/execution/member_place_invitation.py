@@ -10,7 +10,8 @@ from typing import Any
 from uuid import uuid4
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -21,8 +22,10 @@ from app.db.models import (
     JourneyMember,
     LocationObservation,
     MemberPlaceInvitation,
+    MemberPlaceInvitationProgress,
     MemberPlaceInvitationRecipient,
     MemberSideQuest,
+    MemberSideQuestReturnReport,
     Place,
     Traveler,
 )
@@ -38,6 +41,9 @@ INVITATION_FEASIBILITY_TTL_SECONDS = 120
 OWNER_QUEST_STATES = {"READY", "EN_ROUTE", "ARRIVED"}
 OPEN_QUEST_STATES = {"DESTINATION_UNRESOLVED", "READY", "EN_ROUTE", "ARRIVED"}
 PROTECTED_COMMITMENT_LEVELS = {"C3_Guaranteed", "C4_Anchored"}
+PROGRESS_CONSENT_VERSION = "R72_MICRO_GROUP_PROGRESS_V1"
+AT_PLACE_SIGNAL = "AT_INVITED_PLACE_SELF_REPORTED"
+HEADING_BACK_SIGNAL = "HEADING_BACK_SELF_REPORTED"
 
 
 def _b64url(raw: bytes) -> str:
@@ -1002,6 +1008,398 @@ def recipient_conflict_reason(
     return None
 
 
+def _authorized_invitation_participant(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    invitation_id: str,
+    now: datetime,
+) -> tuple[MemberPlaceInvitation, MemberPlaceInvitationRecipient | None, str]:
+    invitation = session.scalar(
+        select(MemberPlaceInvitation).where(
+            MemberPlaceInvitation.id == str(invitation_id),
+            MemberPlaceInvitation.journey_id == str(journey.id),
+        )
+    )
+    if invitation is None or not _member_in_force(member, now):
+        raise HTTPException(404, "PLACE_INVITATION_NOT_FOUND")
+    if (
+        str(invitation.owner_member_id) == str(member.id)
+        and str(invitation.owner_traveler_id) == str(traveler_id)
+        and str(member.traveler_id) == str(traveler_id)
+    ):
+        return invitation, None, "INVITER"
+    response = session.scalar(
+        select(MemberPlaceInvitationRecipient).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation.id,
+            MemberPlaceInvitationRecipient.recipient_member_id == str(member.id),
+            MemberPlaceInvitationRecipient.recipient_traveler_id == str(traveler_id),
+        )
+    )
+    if response is None or response.state != "ACCEPTED_OWN_STOP_READY":
+        # Pending, declined, and guessed IDs all get the same non-disclosing result.
+        raise HTTPException(404, "PLACE_INVITATION_NOT_FOUND")
+    return invitation, response, "JOINED"
+
+
+def _validated_invitation_progress_binding(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    invitation: MemberPlaceInvitation,
+    response: MemberPlaceInvitationRecipient | None,
+    role: str,
+    signal_type: str,
+    now: datetime,
+) -> tuple[MemberSideQuest, str]:
+    if (
+        str(journey.status or "").upper() != "ACTIVE"
+        or not journey.active_plan_version_id
+        or str(journey.active_plan_version_id) != str(invitation.active_plan_version_id)
+    ):
+        raise HTTPException(409, "PLACE_INVITATION_PROGRESS_PLAN_CHANGED")
+
+    if role == "INVITER":
+        expected_quest_id = str(invitation.owner_side_quest_id)
+        expected_split_id = str(invitation.owner_split_intent_id)
+    else:
+        if response is None or not response.accepted_side_quest_id or not response.accepted_split_intent_id:
+            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_ACCEPTED_STOP_UNAVAILABLE")
+        expected_quest_id = str(response.accepted_side_quest_id)
+        expected_split_id = str(response.accepted_split_intent_id)
+
+    from app.execution.member_side_quest import _member_side_quest_for_action
+
+    allowed_states = (
+        frozenset({"ARRIVED"})
+        if signal_type == AT_PLACE_SIGNAL
+        else frozenset({"COMPLETED", "CANCELLED"})
+    )
+    quest, split, place = _member_side_quest_for_action(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=str(traveler_id),
+        quest_id=expected_quest_id,
+        allowed_states=allowed_states,
+    )
+    if (
+        str(quest.planned_separation_intent_id) != expected_split_id
+        or str(split["intent"].id) != expected_split_id
+        or str(quest.active_plan_version_id) != str(invitation.active_plan_version_id)
+        or str(quest.side_place_id or "") != str(invitation.place_id)
+        or str(place.id) != str(invitation.place_id)
+        or str(quest.rendezvous_activity_id) != str(invitation.rendezvous_activity_id)
+        or str(quest.rendezvous_place_id) != str(invitation.rendezvous_place_id)
+    ):
+        raise HTTPException(409, "PLACE_INVITATION_PROGRESS_BINDING_CHANGED")
+
+    if role == "JOINED":
+        owner = session.get(JourneyMember, str(invitation.owner_member_id))
+        if (
+            owner is None
+            or not _member_in_force(owner, now)
+            or str(owner.traveler_id) != str(invitation.owner_traveler_id)
+        ):
+            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_OWNER_NO_LONGER_ACTIVE")
+        owner_quest, owner_split, owner_place = _member_side_quest_for_action(
+            session,
+            journey=journey,
+            member=owner,
+            traveler_id=str(invitation.owner_traveler_id),
+            quest_id=str(invitation.owner_side_quest_id),
+            allowed_states=frozenset({"READY", "EN_ROUTE", "ARRIVED", "COMPLETED", "CANCELLED"}),
+        )
+        if (
+            str(owner_split["intent"].id) != str(invitation.owner_split_intent_id)
+            or str(owner_quest.planned_separation_intent_id) != str(invitation.owner_split_intent_id)
+            or str(owner_quest.active_plan_version_id) != str(invitation.active_plan_version_id)
+            or str(owner_quest.side_place_id or "") != str(invitation.place_id)
+            or str(owner_place.id) != str(invitation.place_id)
+            or str(owner_quest.rendezvous_activity_id) != str(invitation.rendezvous_activity_id)
+            or str(owner_quest.rendezvous_place_id) != str(invitation.rendezvous_place_id)
+        ):
+            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_OWNER_BINDING_CHANGED")
+
+    if signal_type == HEADING_BACK_SIGNAL:
+        receipt = session.scalar(
+            select(MemberSideQuestReturnReport).where(
+                MemberSideQuestReturnReport.journey_id == journey.id,
+                MemberSideQuestReturnReport.member_id == member.id,
+                MemberSideQuestReturnReport.traveler_id == str(traveler_id),
+                MemberSideQuestReturnReport.side_quest_id == quest.id,
+                MemberSideQuestReturnReport.planned_separation_intent_id == expected_split_id,
+                MemberSideQuestReturnReport.active_plan_version_id == invitation.active_plan_version_id,
+                MemberSideQuestReturnReport.status == "RETURN_STARTED_REPORTED",
+            )
+        )
+        if receipt is None:
+            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_HEAD_BACK_REPORT_REQUIRED")
+    return quest, expected_split_id
+
+
+def update_member_place_invitation_progress(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    invitation_id: str,
+    action: str,
+    now: datetime | None = None,
+) -> MemberPlaceInvitationProgress | None:
+    current = _now(now)
+    invitation, response, role = _authorized_invitation_participant(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=str(traveler_id),
+        invitation_id=str(invitation_id),
+        now=current,
+    )
+    actions = {
+        "SHARE_ARRIVAL": (AT_PLACE_SIGNAL, True),
+        "WITHDRAW_ARRIVAL": (AT_PLACE_SIGNAL, False),
+        "SHARE_HEADING_BACK": (HEADING_BACK_SIGNAL, True),
+        "WITHDRAW_HEADING_BACK": (HEADING_BACK_SIGNAL, False),
+    }
+    selected = actions.get(str(action))
+    if selected is None:
+        raise HTTPException(422, "PLACE_INVITATION_PROGRESS_ACTION_INVALID")
+    signal_type, sharing = selected
+    existing = session.scalar(
+        select(MemberPlaceInvitationProgress).where(
+            MemberPlaceInvitationProgress.invitation_id == invitation.id,
+            MemberPlaceInvitationProgress.member_id == member.id,
+            MemberPlaceInvitationProgress.signal_type == signal_type,
+        )
+    )
+
+    if not sharing:
+        if existing is None or existing.status == "WITHDRAWN":
+            return existing
+        stamp = _iso(current)
+        changed = session.execute(
+            update(MemberPlaceInvitationProgress)
+            .where(
+                MemberPlaceInvitationProgress.id == existing.id,
+                MemberPlaceInvitationProgress.status == "ACTIVE",
+            )
+            .values(status="WITHDRAWN", withdrawn_at=stamp, updated_at=stamp)
+        )
+        session.commit()
+        return session.get(MemberPlaceInvitationProgress, existing.id) if changed.rowcount else session.scalar(
+            select(MemberPlaceInvitationProgress).where(
+                MemberPlaceInvitationProgress.invitation_id == invitation.id,
+                MemberPlaceInvitationProgress.member_id == member.id,
+                MemberPlaceInvitationProgress.signal_type == signal_type,
+            )
+        )
+
+    quest, split_id = _validated_invitation_progress_binding(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=str(traveler_id),
+        invitation=invitation,
+        response=response,
+        role=role,
+        signal_type=signal_type,
+        now=current,
+    )
+    if existing is not None and existing.status == "ACTIVE":
+        return existing
+
+    stamp = _iso(current)
+    values = {
+        "journey_id": str(journey.id),
+        "invitation_id": str(invitation.id),
+        "member_id": str(member.id),
+        "traveler_id": str(traveler_id),
+        "signal_type": signal_type,
+        "active_plan_version_id": str(invitation.active_plan_version_id),
+        "planned_separation_intent_id": split_id,
+        "side_quest_id": str(quest.id),
+        "place_id": str(invitation.place_id),
+        "consent_version": PROGRESS_CONSENT_VERSION,
+        "status": "ACTIVE",
+        "reported_at": stamp,
+        "withdrawn_at": None,
+        "updated_at": stamp,
+    }
+    if existing is not None:
+        changed = session.execute(
+            update(MemberPlaceInvitationProgress)
+            .where(
+                MemberPlaceInvitationProgress.id == existing.id,
+                MemberPlaceInvitationProgress.status == "WITHDRAWN",
+            )
+            .values(**{key: value for key, value in values.items() if key != "created_at"})
+        )
+        if changed.rowcount == 1:
+            session.commit()
+            return session.get(MemberPlaceInvitationProgress, existing.id)
+        session.rollback()
+    else:
+        session.add(MemberPlaceInvitationProgress(id=str(uuid4()), created_at=stamp, **values))
+        try:
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+
+    winner = session.scalar(
+        select(MemberPlaceInvitationProgress).where(
+            MemberPlaceInvitationProgress.invitation_id == invitation.id,
+            MemberPlaceInvitationProgress.member_id == member.id,
+            MemberPlaceInvitationProgress.signal_type == signal_type,
+        )
+    )
+    if winner is None:
+        raise HTTPException(409, "PLACE_INVITATION_PROGRESS_WRITE_CONFLICT")
+    return winner
+
+
+def _progress_can_be_shared(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    invitation: MemberPlaceInvitation,
+    response: MemberPlaceInvitationRecipient | None,
+    role: str,
+    signal_type: str,
+    now: datetime,
+) -> bool:
+    try:
+        _validated_invitation_progress_binding(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=traveler_id,
+            invitation=invitation,
+            response=response,
+            role=role,
+            signal_type=signal_type,
+            now=now,
+        )
+    except HTTPException:
+        return False
+    return True
+
+
+def _invitation_progress_board(
+    session: Session,
+    *,
+    journey: Journey,
+    invitation: MemberPlaceInvitation,
+    recipients: list[MemberPlaceInvitationRecipient],
+    viewer: JourneyMember,
+    now: datetime,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    participants: list[tuple[JourneyMember, Traveler | None, MemberPlaceInvitationRecipient | None, str]] = []
+    owner = session.get(JourneyMember, str(invitation.owner_member_id))
+    owner_traveler = session.get(Traveler, str(invitation.owner_traveler_id))
+    if (
+        owner is not None
+        and _member_in_force(owner, now)
+        and str(owner.traveler_id) == str(invitation.owner_traveler_id)
+    ):
+        participants.append((owner, owner_traveler, None, "INVITER"))
+    for response in recipients:
+        if response.state != "ACCEPTED_OWN_STOP_READY":
+            continue
+        member = session.get(JourneyMember, str(response.recipient_member_id))
+        traveler = session.get(Traveler, str(response.recipient_traveler_id))
+        if (
+            member is not None
+            and _member_in_force(member, now)
+            and str(member.traveler_id) == str(response.recipient_traveler_id)
+        ):
+            participants.append((member, traveler, response, "JOINED"))
+
+    active_signals = session.scalars(
+        select(MemberPlaceInvitationProgress).where(
+            MemberPlaceInvitationProgress.invitation_id == invitation.id,
+            MemberPlaceInvitationProgress.status == "ACTIVE",
+        )
+    ).all()
+    signal_by_participant: dict[tuple[str, str], MemberPlaceInvitationProgress] = {}
+    for signal in active_signals:
+        signal_by_participant[(str(signal.member_id), str(signal.signal_type))] = signal
+
+    views: list[dict[str, Any]] = []
+    own_context: tuple[MemberPlaceInvitationRecipient | None, str] | None = None
+    for participant, traveler, response, role in participants:
+        expected_quest_id = (
+            str(invitation.owner_side_quest_id)
+            if role == "INVITER"
+            else str(response.accepted_side_quest_id or "")
+        )
+        progress: dict[str, dict[str, Any] | None] = {}
+        for signal_type, field in ((AT_PLACE_SIGNAL, "at_invited_place"), (HEADING_BACK_SIGNAL, "heading_back")):
+            signal = signal_by_participant.get((str(participant.id), signal_type))
+            if (
+                signal is None
+                or str(signal.traveler_id) != str(participant.traveler_id)
+                or str(signal.side_quest_id) != expected_quest_id
+                or str(signal.place_id) != str(invitation.place_id)
+                or str(signal.active_plan_version_id) != str(invitation.active_plan_version_id)
+            ):
+                progress[field] = None
+            else:
+                progress[field] = {
+                    "reported_at": signal.reported_at,
+                    "claim": signal_type,
+                    "physical_presence_verified": False,
+                }
+        views.append({
+            "member_id": str(participant.id),
+            "display_name": str(traveler.display_name if traveler else "Traveller"),
+            "membership": role,
+            **progress,
+        })
+        if str(participant.id) == str(viewer.id):
+            own_context = (response, role)
+
+    own_view = next((row for row in views if str(row["member_id"]) == str(viewer.id)), None)
+    own_progress = {
+        "can_share_arrival": False,
+        "arrival_shared": bool(own_view and own_view["at_invited_place"]),
+        "can_share_heading_back": False,
+        "heading_back_shared": bool(own_view and own_view["heading_back"]),
+    }
+    if own_context is not None:
+        response, role = own_context
+        own_progress["can_share_arrival"] = _progress_can_be_shared(
+            session,
+            journey=journey,
+            member=viewer,
+            traveler_id=str(viewer.traveler_id),
+            invitation=invitation,
+            response=response,
+            role=role,
+            signal_type=AT_PLACE_SIGNAL,
+            now=now,
+        )
+        own_progress["can_share_heading_back"] = _progress_can_be_shared(
+            session,
+            journey=journey,
+            member=viewer,
+            traveler_id=str(viewer.traveler_id),
+            invitation=invitation,
+            response=response,
+            role=role,
+            signal_type=HEADING_BACK_SIGNAL,
+            now=now,
+        )
+    return views, own_progress
+
+
 def invitation_projection(
     session: Session,
     journey: Journey,
@@ -1015,7 +1413,7 @@ def invitation_projection(
     viewer = session.get(JourneyMember, str(viewer_member_id))
     if not _member_in_force(viewer, current):
         return None
-    output: dict[str, list[dict[str, Any]]] = {"sent": [], "incoming": []}
+    output: dict[str, list[dict[str, Any]]] = {"sent": [], "incoming": [], "joined": []}
     parent_query = select(MemberPlaceInvitation).where(
         MemberPlaceInvitation.journey_id == journey.id
     )
@@ -1062,6 +1460,14 @@ def invitation_projection(
         except (TypeError, KeyError, json.JSONDecodeError):
             continue
         if str(invitation.owner_member_id) == str(viewer.id):
+            progress_board, own_progress = _invitation_progress_board(
+                session,
+                journey=journey,
+                invitation=invitation,
+                recipients=recipients,
+                viewer=viewer,
+                now=current,
+            )
             recipient_views: list[dict[str, Any]] = []
             for response in recipients:
                 member = session.get(JourneyMember, str(response.recipient_member_id))
@@ -1086,6 +1492,8 @@ def invitation_projection(
                 "place": place_view,
                 "rendezvous": rendezvous_view,
                 "recipients": recipient_views,
+                "participants": progress_board,
+                "own_progress": own_progress,
             })
             continue
 
@@ -1098,7 +1506,27 @@ def invitation_projection(
                 response_state = parent_state
             elif str(owner.journey_id if owner else "") != str(journey.id) or not _member_in_force(owner, current):
                 response_state = "STALE"
-        if response_state in {"DECLINED", "ACCEPTED_OWN_STOP_READY"}:
+        if response_state == "DECLINED":
+            continue
+        if response_state == "ACCEPTED_OWN_STOP_READY":
+            progress_board, own_progress = _invitation_progress_board(
+                session,
+                journey=journey,
+                invitation=invitation,
+                recipients=recipients,
+                viewer=viewer,
+                now=current,
+            )
+            output["joined"].append({
+                "invitation_id": str(invitation.id),
+                "state": parent_state,
+                "inviter_display_name": owner_name,
+                "created_at": invitation.created_at,
+                "place": place_view,
+                "rendezvous": rendezvous_view,
+                "participants": progress_board,
+                "own_progress": own_progress,
+            })
             continue
         output["incoming"].append({
             "invitation_id": str(invitation.id),

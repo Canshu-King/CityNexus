@@ -745,6 +745,8 @@ export interface MemberPlaceInvitationProjection {
     place: MemberPlaceInvitationPlace;
     rendezvous: MemberPlaceInvitationRendezvous;
     recipients: Array<{ member_id: string; display_name: string; state: string }>;
+    participants: MemberPlaceInvitationProgressParticipant[];
+    own_progress: MemberPlaceInvitationOwnProgress;
   }>;
   incoming: Array<{
     invitation_id: string;
@@ -756,6 +758,39 @@ export interface MemberPlaceInvitationProjection {
     rendezvous: MemberPlaceInvitationRendezvous;
     can_respond: boolean;
   }>;
+  joined: Array<{
+    invitation_id: string;
+    state: "OPEN" | "WITHDRAWN" | "EXPIRED" | "STALE";
+    inviter_display_name: string;
+    created_at: string;
+    place: MemberPlaceInvitationPlace;
+    rendezvous: MemberPlaceInvitationRendezvous;
+    participants: MemberPlaceInvitationProgressParticipant[];
+    own_progress: MemberPlaceInvitationOwnProgress;
+  }>;
+}
+
+export interface MemberPlaceInvitationProgressParticipant {
+  member_id: string;
+  display_name: string;
+  membership: "INVITER" | "JOINED";
+  at_invited_place: {
+    reported_at: string;
+    claim: "AT_INVITED_PLACE_SELF_REPORTED";
+    physical_presence_verified: false;
+  } | null;
+  heading_back: {
+    reported_at: string;
+    claim: "HEADING_BACK_SELF_REPORTED";
+    physical_presence_verified: false;
+  } | null;
+}
+
+export interface MemberPlaceInvitationOwnProgress {
+  can_share_arrival: boolean;
+  arrival_shared: boolean;
+  can_share_heading_back: boolean;
+  heading_back_shared: boolean;
 }
 
 export type MomentScoutInterest = "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
@@ -2267,6 +2302,21 @@ export const cityNexusApi = {
     return requestJson<JourneyOperatorProjection>(
       "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/withdraw",
       { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  updateMemberPlaceInvitationProgress(
+    journeyId: string,
+    invitationId: string,
+    action: "SHARE_ARRIVAL" | "WITHDRAW_ARRIVAL" | "SHARE_HEADING_BACK" | "WITHDRAW_HEADING_BACK",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/progress",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ action }),
+      },
     );
   },
 

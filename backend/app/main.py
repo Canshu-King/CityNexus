@@ -474,6 +474,7 @@ from app.schemas import (
     MemberPlaceInvitationCreateRequest,
     MemberPlaceInvitationDecisionRequest,
     MemberPlaceInvitationFeasibilityPreviewRequest,
+    MemberPlaceInvitationProgressRequest,
     MomentScoutRequest,
     MomentScoutSelectRequest,
     LiveMomentScoutRequest,
@@ -10200,6 +10201,51 @@ def respond_to_member_place_invitation(
     with journey_write_lock(str(journey_id)):
         session.expire_all()
         return _respond_to_member_place_invitation(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+def _update_member_place_invitation_progress(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationProgressRequest,
+    request: Request,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.execution.member_place_invitation import update_member_place_invitation_progress
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    update_member_place_invitation_progress(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        invitation_id=str(invitation_id),
+        action=payload.action,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/progress")
+def update_member_place_invitation_progress_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationProgressRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Share or withdraw only the signed-in inviter's or accepted member's own report."""
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _update_member_place_invitation_progress(
             journey_id=journey_id,
             invitation_id=invitation_id,
             payload=payload,

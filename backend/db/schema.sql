@@ -753,6 +753,29 @@ CREATE TABLE IF NOT EXISTS member_place_invitation_recipients (
 CREATE INDEX IF NOT EXISTS idx_member_place_invitation_recipients_member_state
     ON member_place_invitation_recipients(recipient_member_id, state, invited_at);
 
+CREATE TABLE IF NOT EXISTS member_place_invitation_progress (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    signal_type TEXT NOT NULL
+        CHECK (signal_type IN ('AT_INVITED_PLACE_SELF_REPORTED', 'HEADING_BACK_SELF_REPORTED')),
+    active_plan_version_id TEXT NOT NULL,
+    planned_separation_intent_id TEXT NOT NULL,
+    side_quest_id TEXT NOT NULL,
+    place_id TEXT NOT NULL,
+    consent_version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'WITHDRAWN')),
+    reported_at TEXT NOT NULL,
+    withdrawn_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(invitation_id, member_id, signal_type)
+);
+CREATE INDEX IF NOT EXISTS idx_member_place_invitation_progress_invitation_status
+    ON member_place_invitation_progress(invitation_id, status, signal_type);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

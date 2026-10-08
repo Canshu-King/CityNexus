@@ -496,6 +496,19 @@ class MemberPlaceInvitationFeasibilityPreviewRequest(BaseModel):
     requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
+class MemberPlaceInvitationProgressRequest(BaseModel):
+    """An invitation participant explicitly shares or withdraws one coarse status."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal[
+        "SHARE_ARRIVAL",
+        "WITHDRAW_ARRIVAL",
+        "SHARE_HEADING_BACK",
+        "WITHDRAW_HEADING_BACK",
+    ]
+
+
 class MomentScoutRequest(BaseModel):
     """One-time owner-only discovery request; location is always server-bound."""
 

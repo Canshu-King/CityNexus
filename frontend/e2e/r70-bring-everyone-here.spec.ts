@@ -273,7 +273,13 @@ test("R71 checks invitation feasibility with honest UNKNOWN and keeps it recipie
     await incoming.getByTestId("member-place-invitation-check-feasibility").click();
     const routeConsent = invited.page.getByTestId("member-place-invitation-route-consent");
     await expect(routeConsent).toBeVisible();
-    await expect(routeConsent).toContainText("one foreground location");
+    await expect(routeConsent).toContainText("identity-bound foreground location observation");
+    await expect(routeConsent).toContainText("exact coordinates");
+    await expect(routeConsent).toContainText("coarse group-presence status may update");
+    const dwellControl = routeConsent.getByTestId("member-place-invitation-dwell");
+    await expect(dwellControl).toHaveValue("20");
+    await dwellControl.selectOption("30");
+    await expect(dwellControl).toHaveValue("30");
     const feasibilityResponsePromise = invited.page.waitForResponse((response) =>
       response.request().method() === "POST"
         && response.url().endsWith(`/member-place-invitations/${createdInvitation.invitation_id}/feasibility-preview`),
@@ -284,11 +290,14 @@ test("R71 checks invitation feasibility with honest UNKNOWN and keeps it recipie
     const feasibilityBody = await feasibilityResponse.json() as {
       state: string;
       travel_duration_min: number | null;
+      dwell_minutes: number;
       plan_unchanged: boolean;
       feasibility_token: string;
     };
     expect(feasibilityBody.state).toBe("UNKNOWN");
     expect(feasibilityBody.travel_duration_min).toBeNull();
+    expect(feasibilityBody.dwell_minutes).toBe(30);
+    expect(feasibilityResponse.request().postDataJSON()).toMatchObject({ dwell_minutes: 30 });
     expect(feasibilityBody.plan_unchanged).toBe(true);
     expect(feasibilityBody.feasibility_token).toBeTruthy();
     expect(JSON.stringify(feasibilityBody)).not.toContain("latitude");
@@ -362,5 +371,203 @@ test("R71 checks invitation feasibility with honest UNKNOWN and keeps it recipie
     expect(after.active_plan.id).toBe(experience.active_plan.id);
   } finally {
     await Promise.all([owner.close(), invited.close(), uninvolvedPage?.close() ?? Promise.resolve()]);
+  }
+});
+
+test("R72 shares invited-place progress only after each member's explicit consent", async ({ browser, request }) => {
+  test.setTimeout(120_000);
+  const resetToken = process.env.CITYNEXUS_DEMO_RESET_TOKEN;
+  if (!resetToken) throw new Error("R72 E2E requires CITYNEXUS_DEMO_RESET_TOKEN for its fresh SQLite database");
+  const reset = await api<{ journey_id: string; traveler_id: string; city_code: string }>(request, "/api/v1/demo/reset", {
+    method: "POST",
+    headers: { "X-Demo-Reset-Token": resetToken },
+  });
+  const journeyId = reset.journey_id;
+  const journeyPath = "/api/v1/journeys/" + journeyId;
+  const ownerId = reset.traveler_id;
+  const ownerToken = travelerToken(ownerId);
+  const plans = await api<Array<{ id: string }>>(request, journeyPath + "/plans/generate", {
+    method: "POST",
+    data: { candidate_count: 1 },
+  });
+  const planId = plans[0]?.id;
+  if (!planId) throw new Error("R72 E2E could not create a demo PlanVersion");
+  await api(request, journeyPath + "/plans/" + planId + "/select", { method: "POST" });
+  await api(request, journeyPath + "/start", { method: "POST" });
+
+  const companion = await api<Traveler>(request, "/api/v1/travelers", {
+    method: "POST",
+    data: { display_name: "R72 Joined Companion", locale: "en-US", timezone: "Asia/Shanghai" },
+  });
+  const companionToken = travelerToken(companion.id);
+  await api(request, journeyPath + "/members", {
+    method: "POST",
+    data: { traveler_id: companion.id, role: "COLLABORATOR", invited_by: ownerId },
+  });
+  await api(request, journeyPath + "/operator/start", {
+    method: "POST",
+    token: ownerToken,
+    data: { interval_seconds: 3600 },
+  });
+  const experience = await api<{
+    journey: { city_code: string };
+    active_plan: { activities: Array<{ place_id: string | null }> };
+  }>(request, journeyPath + "/experience");
+  const places = await api<Place[]>(request, "/api/v1/places?city_code=" + encodeURIComponent(experience.journey.city_code));
+  const plannedPlaceIds = new Set(experience.active_plan.activities.map((activity) => activity.place_id).filter(Boolean));
+  const place = places.find((candidate) => !plannedPlaceIds.has(candidate.id));
+  if (!place) throw new Error("R72 E2E needs a known public Place outside the shared plan");
+
+  await api(request, journeyPath + "/agent/commands", {
+    method: "POST",
+    token: ownerToken,
+    data: {
+      command: "I want to go alone for a while and meet at the next shared stop.",
+      requested_autonomy: "PLAN_ONLY",
+    },
+  });
+  const ownerQuest = await api<{ member_side_quest: { id: string } }>(
+    request,
+    journeyPath + "/member-side-quests",
+    { method: "POST", token: ownerToken, data: { place_id: place.id } },
+  );
+  const ownerQuestId = ownerQuest.member_side_quest.id;
+  const invitationPreview = await api<{ audience_snapshot: string }>(
+    request,
+    journeyPath + "/member-side-quests/" + ownerQuestId + "/place-invitation-preview",
+    { token: ownerToken },
+  );
+  const sent = await api<{ member_place_invitations: { sent: Array<{ invitation_id: string }> } }>(
+    request,
+    journeyPath + "/member-side-quests/" + ownerQuestId + "/place-invitations",
+    {
+      method: "POST",
+      token: ownerToken,
+      data: { confirm_public_place_sharing: true, audience_snapshot: invitationPreview.audience_snapshot },
+    },
+  );
+  const invitationId = sent.member_place_invitations.sent[0]?.invitation_id;
+  if (!invitationId) throw new Error("R72 E2E did not persist the Place invitation");
+  const invitationPath = journeyPath + "/member-place-invitations/" + invitationId;
+  const feasibility = await api<{ state: string; dwell_minutes: number; feasibility_token: string }>(
+    request,
+    invitationPath + "/feasibility-preview",
+    {
+      method: "POST",
+      token: companionToken,
+      data: { consent_route_provider: true, location_observation_id: null, dwell_minutes: 30, requested_mode: "WALK" },
+    },
+  );
+  expect(feasibility.state).toBe("UNKNOWN");
+  expect(feasibility.dwell_minutes).toBe(30);
+  const accepted = await api<{ member_side_quest: { id: string } }>(
+    request,
+    invitationPath + "/respond",
+    {
+      method: "POST",
+      token: companionToken,
+      data: {
+        decision: "ACCEPT",
+        confirm_exact_public_place: true,
+        feasibility_token: feasibility.feasibility_token,
+        acknowledge_feasibility_unknown: true,
+      },
+    },
+  );
+  const companionQuestId = accepted.member_side_quest.id;
+
+  const uninvolved = await api<Traveler>(request, "/api/v1/travelers", {
+    method: "POST",
+    data: { display_name: "R72 Uninvolved Companion", locale: "en-US", timezone: "Asia/Shanghai" },
+  });
+  const uninvolvedToken = travelerToken(uninvolved.id);
+  await api(request, journeyPath + "/members", {
+    method: "POST",
+    data: { traveler_id: uninvolved.id, role: "COLLABORATOR", invited_by: ownerId },
+  });
+
+  const owner = await openJourneyPage(browser, journeyId, ownerToken);
+  const joined = await openJourneyPage(browser, journeyId, companionToken);
+  const uninvolvedPage = await openJourneyPage(browser, journeyId, uninvolvedToken);
+  try {
+    const ownerBoard = owner.page.getByTestId("member-place-progress-sent-invitation");
+    const joinedBoard = joined.page.getByTestId("member-place-invitation-joined");
+    await expect(ownerBoard).toBeVisible();
+    await expect(joinedBoard).toBeVisible();
+    await expect(joinedBoard).toContainText("No arrival report shared");
+    await expect(uninvolvedPage.page.getByTestId("member-place-progress-board")).toHaveCount(0);
+    const uninvolvedProjection = await api<{
+      member_place_invitations?: { joined?: unknown[]; incoming?: unknown[] } | null;
+    }>(request, journeyPath + "/operator", { token: uninvolvedToken });
+    expect(uninvolvedProjection.member_place_invitations?.joined ?? []).toEqual([]);
+    expect(uninvolvedProjection.member_place_invitations?.incoming ?? []).toEqual([]);
+
+    for (const [token, questId] of [[ownerToken, ownerQuestId], [companionToken, companionQuestId]] as const) {
+      await api(request, journeyPath + "/member-side-quests/" + questId + "/start", { method: "POST", token });
+      await api(request, journeyPath + "/member-side-quests/" + questId + "/arrive", { method: "POST", token });
+    }
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    await joined.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(joined.page.getByTestId("member-place-progress-share-arrival")).toBeVisible();
+    await expect(joinedBoard).toContainText("timing remains unverified here");
+
+    await joined.page.getByTestId("member-place-progress-share-arrival").click();
+    const consent = joined.page.getByTestId("member-place-progress-consent");
+    await expect(consent).toBeVisible();
+    await expect(consent).toContainText("Only members who joined");
+    await expect(consent).toContainText("not GPS-verified presence");
+    await expect(ownerBoard).toContainText("No arrival report shared");
+    const arrivalResponsePromise = joined.page.waitForResponse((response) =>
+      response.request().method() === "POST" && response.url().endsWith(invitationPath.slice("/api/v1".length) + "/progress"),
+    );
+    await consent.getByTestId("member-place-progress-consent-confirm").click();
+    const arrivalResponse = await arrivalResponsePromise;
+    expect(arrivalResponse.ok()).toBeTruthy();
+    expect(arrivalResponse.request().postDataJSON()).toEqual({ action: "SHARE_ARRIVAL" });
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(owner.page.getByTestId("member-place-progress-sent-invitation")).toContainText("Reported here");
+    await expect(uninvolvedPage.page.getByTestId("member-place-progress-board")).toHaveCount(0);
+
+    await owner.page.getByTestId("member-place-progress-share-arrival").click();
+    const ownerConsent = owner.page.getByTestId("member-place-progress-consent");
+    await expect(ownerConsent).toBeVisible();
+    const ownerArrivalResponsePromise = owner.page.waitForResponse((response) =>
+      response.request().method() === "POST" && response.url().endsWith(invitationPath.slice("/api/v1".length) + "/progress"),
+    );
+    await ownerConsent.getByTestId("member-place-progress-consent-confirm").click();
+    const ownerArrivalResponse = await ownerArrivalResponsePromise;
+    expect(ownerArrivalResponse.ok()).toBeTruthy();
+    expect(ownerArrivalResponse.request().postDataJSON()).toEqual({ action: "SHARE_ARRIVAL" });
+    await joined.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(joined.page.getByTestId("member-place-invitation-joined")).toContainText("Reported here");
+
+    for (const [token, questId] of [[ownerToken, ownerQuestId], [companionToken, companionQuestId]] as const) {
+      await api(request, journeyPath + "/member-side-quests/" + questId + "/complete", { method: "POST", token });
+      await api(request, journeyPath + "/member-side-quests/" + questId + "/head-back", { method: "POST", token });
+    }
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    await joined.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(joined.page.getByTestId("member-place-progress-share-heading-back")).toBeVisible();
+    await expect(owner.page.getByTestId("member-place-progress-share-heading-back")).toBeVisible();
+
+    for (const page of [owner.page, joined.page]) {
+      await page.getByTestId("member-place-progress-share-heading-back").click();
+      const returnConsent = page.getByTestId("member-place-progress-consent");
+      await expect(returnConsent).toBeVisible();
+      const returnResponsePromise = page.waitForResponse((response) =>
+        response.request().method() === "POST" && response.url().endsWith(invitationPath.slice("/api/v1".length) + "/progress"),
+      );
+      await returnConsent.getByTestId("member-place-progress-consent-confirm").click();
+      const returnResponse = await returnResponsePromise;
+      expect(returnResponse.ok()).toBeTruthy();
+      expect(returnResponse.request().postDataJSON()).toEqual({ action: "SHARE_HEADING_BACK" });
+    }
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    await joined.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(owner.page.getByTestId("member-place-progress-sent-invitation")).toContainText("Reported heading back");
+    await expect(joined.page.getByTestId("member-place-invitation-joined")).toContainText("Reported heading back");
+    await expect(uninvolvedPage.page.getByTestId("member-place-progress-board")).toHaveCount(0);
+  } finally {
+    await Promise.all([owner.close(), joined.close(), uninvolvedPage.close()]);
   }
 });

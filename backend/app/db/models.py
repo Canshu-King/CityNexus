@@ -560,6 +560,51 @@ class MemberPlaceInvitationRecipient(Base):
     )
 
 
+class MemberPlaceInvitationProgress(Base):
+    """A participant's explicit, revocable disclosure about one invited public Place."""
+
+    __tablename__ = "member_place_invitation_progress"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    signal_type: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    side_quest_id: Mapped[str] = mapped_column(String)
+    place_id: Mapped[str] = mapped_column(String)
+    consent_version: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    reported_at: Mapped[str] = mapped_column(String)
+    withdrawn_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "invitation_id", "member_id", "signal_type",
+            name="ux_member_place_invitation_progress_member_signal",
+        ),
+        CheckConstraint(
+            "signal_type IN ('AT_INVITED_PLACE_SELF_REPORTED', 'HEADING_BACK_SELF_REPORTED')",
+            name="ck_member_place_invitation_progress_signal",
+        ),
+        CheckConstraint(
+            "status IN ('ACTIVE', 'WITHDRAWN')",
+            name="ck_member_place_invitation_progress_status",
+        ),
+        Index(
+            "idx_member_place_invitation_progress_invitation_status",
+            "invitation_id",
+            "status",
+            "signal_type",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

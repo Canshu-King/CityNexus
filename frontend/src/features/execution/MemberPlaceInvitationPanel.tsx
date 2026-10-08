@@ -2,6 +2,8 @@ import { useState } from "react";
 import {
   cityNexusApi,
   type MemberPlaceInvitationFeasibilityPreviewResult,
+  type MemberPlaceInvitationOwnProgress,
+  type MemberPlaceInvitationProgressParticipant,
   type MemberPlaceInvitationProjection,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
@@ -24,10 +26,17 @@ export function MemberPlaceInvitationPanel({
   const [message, setMessage] = useState<string | null>(null);
   const [pinConsentId, setPinConsentId] = useState<string | null>(null);
   const [routeConsentId, setRouteConsentId] = useState<string | null>(null);
+  const [progressConsent, setProgressConsent] = useState<{
+    invitationId: string;
+    placeName: string;
+    action: "SHARE_ARRIVAL" | "SHARE_HEADING_BACK";
+  } | null>(null);
   const [feasibilityById, setFeasibilityById] = useState<Record<string, MemberPlaceInvitationFeasibilityPreviewResult | null>>({});
   const [dwellById, setDwellById] = useState<Record<string, 10 | 20 | 30>>({});
   const invitations = projection?.incoming ?? [];
-  if (!invitations.length) return null;
+  const sentInvitations = projection?.sent ?? [];
+  const joinedInvitations = projection?.joined ?? [];
+  if (!invitations.length && !sentInvitations.length && !joinedInvitations.length) return null;
 
   const respond = async (
     invitationId: string,
@@ -81,6 +90,124 @@ export function MemberPlaceInvitationPanel({
     }
   };
 
+  const updateProgress = async (
+    invitationId: string,
+    action: "SHARE_ARRIVAL" | "WITHDRAW_ARRIVAL" | "SHARE_HEADING_BACK" | "WITHDRAW_HEADING_BACK",
+  ) => {
+    if (busyId) return;
+    setBusyId(invitationId);
+    setMessage(null);
+    try {
+      await cityNexusApi.updateMemberPlaceInvitationProgress(journeyId, invitationId, action);
+      await onUpdated();
+      setMessage(action.startsWith("SHARE_")
+        ? (zh ? "已向本次邀请中已加入的同行者分享你的自述；它不是 GPS 验证。" : "Your self-report is shared with members who joined this invitation; it is not GPS verified.")
+        : (zh ? "已停止在后续视图中分享；此前已看见的信息无法撤回。" : "Future views no longer show this report; information already seen cannot be recalled."));
+    } catch {
+      setMessage(zh
+        ? "无法更新分享状态。你的行程没有被更改；刷新后可查看当前进度。"
+        : "The sharing status could not be updated. Your Journey was not changed; refresh to review progress.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const renderProgressBoard = (
+    invitationId: string,
+    placeName: string,
+    rendezvousTitle: string,
+    participants: MemberPlaceInvitationProgressParticipant[],
+    ownProgress: MemberPlaceInvitationOwnProgress,
+    title: string,
+    parentState?: string,
+  ) => (
+    <section className="journey-member-place-progress" data-testid="member-place-progress-board">
+      <strong>{title} · {placeName}</strong>
+      <small>
+        {zh
+          ? `共同会合点：${rendezvousTitle}。停留时长只是计划估计；本进度板不验证路线或准时情况，时间按未核实处理。`
+          : `Shared rendezvous: ${rendezvousTitle}. Visit duration is a plan estimate; this board does not verify route or arrival timing, so timing remains unverified here.`}
+      </small>
+      <small>{zh ? "仅显示已加入者主动分享的粗粒度状态；所有报告均为成员自述，未经 GPS 验证。" : "Only coarse statuses explicitly shared by joined members appear here. Every status is member-reported and not GPS verified."}</small>
+      {parentState && parentState !== "OPEN" && (
+        <small>
+          {zh
+            ? "邀请已过期、撤回或失效，不再接受新加入；已加入成员的独立支线与历史自愿报告保留。"
+            : "This invitation is expired, withdrawn, or stale and cannot accept new members; joined members’ own trips and prior voluntary reports remain."}
+        </small>
+      )}
+      <ul>
+        {participants.map((participant) => (
+          <li key={participant.member_id} data-testid="member-place-progress-participant">
+            <strong>
+              {participant.display_name}{" "}
+              <span>{participant.membership === "INVITER" ? (zh ? "· 发起者" : "· inviter") : (zh ? "· 已加入" : "· joined")}</span>
+            </strong>
+            {participant.at_invited_place ? (
+              <small>
+                {zh ? "报告已到达 · " : "Reported here · "}
+                {new Date(participant.at_invited_place.reported_at).toLocaleString(locale)}
+                {zh ? " · 自述，非 GPS 验证" : " · self-reported, not GPS verified"}
+              </small>
+            ) : (
+              <small>{zh ? "尚无已分享的到达报告" : "No arrival report shared"}</small>
+            )}
+            {participant.heading_back && (
+              <small>
+                {zh ? "报告正在返回 · " : "Reported heading back · "}
+                {new Date(participant.heading_back.reported_at).toLocaleString(locale)}
+                {zh ? " · 自述，非 GPS 验证" : " · self-reported, not GPS verified"}
+              </small>
+            )}
+          </li>
+        ))}
+      </ul>
+      <div className="journey-side-quest-actions">
+        {ownProgress.can_share_arrival && !ownProgress.arrival_shared && (
+          <button
+            type="button"
+            data-testid="member-place-progress-share-arrival"
+            disabled={busyId !== null}
+            onClick={() => setProgressConsent({ invitationId, placeName, action: "SHARE_ARRIVAL" })}
+          >
+            {zh ? "分享我报告已到达…" : "Share that I reported arriving…"}
+          </button>
+        )}
+        {ownProgress.arrival_shared && (
+          <button
+            type="button"
+            data-testid="member-place-progress-withdraw-arrival"
+            disabled={busyId !== null}
+            onClick={() => void updateProgress(invitationId, "WITHDRAW_ARRIVAL")}
+          >
+            {zh ? "停止分享我的到达状态" : "Stop sharing my arrival status"}
+          </button>
+        )}
+        {ownProgress.can_share_heading_back && !ownProgress.heading_back_shared && (
+          <button
+            type="button"
+            data-testid="member-place-progress-share-heading-back"
+            disabled={busyId !== null}
+            onClick={() => setProgressConsent({ invitationId, placeName, action: "SHARE_HEADING_BACK" })}
+          >
+            {zh ? "分享我报告正在返回…" : "Share that I reported heading back…"}
+          </button>
+        )}
+        {ownProgress.heading_back_shared && (
+          <button
+            type="button"
+            data-testid="member-place-progress-withdraw-heading-back"
+            disabled={busyId !== null}
+            onClick={() => void updateProgress(invitationId, "WITHDRAW_HEADING_BACK")}
+          >
+            {zh ? "停止分享我的返程状态" : "Stop sharing my return status"}
+          </button>
+        )}
+      </div>
+    </section>
+  );
+
   const openPlacePin = (invitationId: string) => {
     const invitation = invitations.find((row) => row.invitation_id === invitationId);
     if (!invitation) return;
@@ -100,7 +227,38 @@ export function MemberPlaceInvitationPanel({
   };
 
   return (
-    <div className="journey-member-place-invitations" data-testid="member-place-invitations-incoming">
+    <div className="journey-member-place-invitations" data-testid="member-place-invitations">
+      {sentInvitations.map((invitation) => (
+        <article key={invitation.invitation_id} data-testid="member-place-progress-sent-invitation">
+          <span className="v8-kicker">{zh ? "你发起的临时同行" : "Your invited micro-adventure"}</span>
+          {renderProgressBoard(
+            invitation.invitation_id,
+            invitation.place.name,
+            invitation.rendezvous.title,
+            invitation.participants,
+            invitation.own_progress,
+            zh ? "同行进度" : "Companion progress",
+            invitation.state,
+          )}
+        </article>
+      ))}
+      {joinedInvitations.map((invitation) => (
+        <article key={invitation.invitation_id} data-testid="member-place-invitation-joined">
+          <span className="v8-kicker">{zh ? "你已加入的临时同行" : "An invited micro-adventure you joined"}</span>
+          <strong>{invitation.inviter_display_name} · {invitation.place.name}</strong>
+          {renderProgressBoard(
+            invitation.invitation_id,
+            invitation.place.name,
+            invitation.rendezvous.title,
+            invitation.participants,
+            invitation.own_progress,
+            zh ? "同行进度" : "Companion progress",
+            invitation.state,
+          )}
+        </article>
+      ))}
+      {invitations.length > 0 && (
+      <div data-testid="member-place-invitations-incoming">
       {invitations.map((invitation) => {
         const canRespond = invitation.can_respond;
         const completing = ["ACCEPTANCE_NEEDS_COMPLETION", "ACCEPTANCE_IN_PROGRESS"].includes(invitation.state);
@@ -248,6 +406,8 @@ export function MemberPlaceInvitationPanel({
           </article>
         );
       })}
+      </div>
+      )}
       {routeConsentId && invitations.some((row) => row.invitation_id === routeConsentId) && (
         <section
           role="dialog"
@@ -332,6 +492,41 @@ export function MemberPlaceInvitationPanel({
               {zh ? "同意并打开 OpenStreetMap" : "Agree and open OpenStreetMap"}
             </button>
             <button type="button" onClick={() => setPinConsentId(null)}>
+              {zh ? "取消" : "Cancel"}
+            </button>
+          </div>
+        </section>
+      )}
+      {progressConsent && (
+        <section
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="member-place-progress-consent-title"
+          data-testid="member-place-progress-consent"
+        >
+          <strong id="member-place-progress-consent-title">
+            {progressConsent.action === "SHARE_ARRIVAL"
+              ? (zh ? "要向已加入的同行者分享这条到达自述吗？" : "Share this arrival self-report with joined companions?")
+              : (zh ? "要向已加入的同行者分享这条返程自述吗？" : "Share this return self-report with joined companions?")}
+          </strong>
+          <p>
+            {zh
+              ? "你将只向“" + progressConsent.placeName + "”邀请中已加入的成员分享这一粗粒度状态。内容是你自己的报告，不是 GPS 到场验证，也不含坐标或路线。你可以停止后续展示；别人已经看见的信息无法撤回。"
+              : "Only members who joined the invitation for “" + progressConsent.placeName + "” will see this coarse status. It is your report, not GPS-verified presence, and contains no coordinates or route. You can stop future projections; information already seen cannot be recalled."}
+          </p>
+          <div className="journey-side-quest-actions">
+            <button
+              type="button"
+              data-testid="member-place-progress-consent-confirm"
+              disabled={busyId !== null}
+              onClick={() => {
+                const consent = progressConsent;
+                void updateProgress(consent.invitationId, consent.action).then(() => setProgressConsent(null));
+              }}
+            >
+              {zh ? "同意并分享这条自述" : "Agree and share this self-report"}
+            </button>
+            <button type="button" onClick={() => setProgressConsent(null)}>
               {zh ? "取消" : "Cancel"}
             </button>
           </div>
