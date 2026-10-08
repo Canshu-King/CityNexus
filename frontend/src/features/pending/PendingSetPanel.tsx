@@ -589,6 +589,20 @@ export function PendingSetPanel({
                 {say("pending.empty.action")}
               </button>
             )}
+            {/* ORD-0470: the paste door was reachable from the drawer and from the sidebar, but not
+                from the one sentence that tells a traveller there is nothing to plan yet -- which is
+                exactly when they would want it.  Same row, same named destination as the nav. */}
+            {derived.rows.length === 0 && onNavigate && (
+              <button
+                type="button"
+                className="v8-quiet-button"
+                data-testid="pending-empty-import"
+                data-contrast-role="control"
+                onClick={() => onNavigate("import")}
+              >
+                {say("pending.empty.import")}
+              </button>
+            )}
             <button
               type="button"
               className="v8-quiet-button"

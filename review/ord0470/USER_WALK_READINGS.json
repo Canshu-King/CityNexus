@@ -1,0 +1,258 @@
+{
+  "seeded": {
+    "journey": "fc366ebc-7cbf-4b99-86ce-1978c371a552"
+  },
+  "arms": [
+    {
+      "arm": "A hub-empty-door zh",
+      "checks": [
+        {
+          "check": "the named cell is still the named cell",
+          "pass": true,
+          "detail": "这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴一段文字。 去城市探索 导入地点 再读一次"
+        },
+        {
+          "check": "the sentence now points at both doors",
+          "pass": true,
+          "detail": "这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴一段文字。 去城市探索 导入地点 再读一次"
+        },
+        {
+          "check": "the import door is mounted once",
+          "pass": true,
+          "detail": "count=1"
+        },
+        {
+          "check": "it says the nav's own word",
+          "pass": true,
+          "detail": "导入地点"
+        },
+        {
+          "check": "it is a 44px tap",
+          "pass": true,
+          "detail": "h=44"
+        },
+        {
+          "check": "nothing covers its centre",
+          "pass": true,
+          "detail": "BUTTON.v8-quiet-button"
+        },
+        {
+          "check": "clicking it puts the import screen on the glass",
+          "pass": true,
+          "detail": "url=http://127.0.0.1:4611/v8/import poi-import=1"
+        },
+        {
+          "check": "the address moved with it",
+          "pass": true,
+          "detail": "http://127.0.0.1:4611/v8/import"
+        }
+      ]
+    },
+    {
+      "arm": "B empty-cell zh",
+      "checks": [
+        {
+          "check": "the door really extracted nothing",
+          "pass": true,
+          "detail": "{\"extracted\":0,\"resolved\":0,\"ambiguous\":0,\"unresolved\":0,\"addable\":0}"
+        },
+        {
+          "check": "the cell reads as copy only",
+          "pass": true,
+          "detail": "这段文字里没有可拆的条目。请一行写一个地点，或者把笔记正文贴进来而不是链接。"
+        },
+        {
+          "check": "the cell now has its own row of moves",
+          "pass": true,
+          "detail": "{\"testids\":[\"poi-import-empty-clear\",\"poi-import-empty-discover\"],\"labels\":[\"清空重写\",\"去城市探索\"],\"heights\":[44,44],\"row_top\":1361,\"sentence_bottom\":1356}"
+        },
+        {
+          "check": "both doors are mounted",
+          "pass": true,
+          "detail": "[\"poi-import-empty-clear\",\"poi-import-empty-discover\"]"
+        },
+        {
+          "check": "both are 44px taps",
+          "pass": true,
+          "detail": "[44,44]"
+        },
+        {
+          "check": "the clear door is hit-testable",
+          "pass": true,
+          "detail": "{\"x\":34,\"y\":595.768798828125,\"width\":64,\"height\":44}"
+        },
+        {
+          "check": "clearing emptied the box",
+          "pass": true,
+          "detail": "{\"value\":\"\",\"focused\":\"poi-import-text\",\"charCount\":\"0 字\",\"cellGone\":true,\"parseDisabled\":true}"
+        },
+        {
+          "check": "the caret is back in the box",
+          "pass": true,
+          "detail": "poi-import-text"
+        },
+        {
+          "check": "the count says zero",
+          "pass": true,
+          "detail": "0 字"
+        },
+        {
+          "check": "the dead result went away",
+          "pass": true,
+          "detail": "{\"value\":\"\",\"focused\":\"poi-import-text\",\"charCount\":\"0 字\",\"cellGone\":true,\"parseDisabled\":true}"
+        },
+        {
+          "check": "识别 is disabled again",
+          "pass": true,
+          "detail": "{\"value\":\"\",\"focused\":\"poi-import-text\",\"charCount\":\"0 字\",\"cellGone\":true,\"parseDisabled\":true}"
+        },
+        {
+          "check": "the second door lands on City Discovery",
+          "pass": true,
+          "detail": "url=http://127.0.0.1:4611/v8/discover prep-panel=1"
+        }
+      ]
+    },
+    {
+      "arm": "C drawer-door zh",
+      "checks": [
+        {
+          "check": "the drawer still names it",
+          "pass": true,
+          "detail": "count=1"
+        },
+        {
+          "check": "and still arrives",
+          "pass": true,
+          "detail": "http://127.0.0.1:4611/v8/import"
+        }
+      ]
+    },
+    {
+      "arm": "A hub-empty-door en",
+      "checks": [
+        {
+          "check": "the named cell is still the named cell",
+          "pass": true,
+          "detail": "No place is waiting for a day on this trip. To add one, capture places for this trip, or paste a list of places into the import screen. Open City Discovery Import places Read it again"
+        },
+        {
+          "check": "the sentence now points at both doors",
+          "pass": true,
+          "detail": "No place is waiting for a day on this trip. To add one, capture places for this trip, or paste a list of places into the import screen. Open City Discovery Import places Read it again"
+        },
+        {
+          "check": "the import door is mounted once",
+          "pass": true,
+          "detail": "count=1"
+        },
+        {
+          "check": "it says the nav's own word",
+          "pass": true,
+          "detail": "Import places"
+        },
+        {
+          "check": "it is a 44px tap",
+          "pass": true,
+          "detail": "h=44"
+        },
+        {
+          "check": "nothing covers its centre",
+          "pass": true,
+          "detail": "BUTTON.v8-quiet-button"
+        },
+        {
+          "check": "clicking it puts the import screen on the glass",
+          "pass": true,
+          "detail": "url=http://127.0.0.1:4611/v8/import poi-import=1"
+        },
+        {
+          "check": "the address moved with it",
+          "pass": true,
+          "detail": "http://127.0.0.1:4611/v8/import"
+        }
+      ]
+    },
+    {
+      "arm": "B empty-cell en",
+      "checks": [
+        {
+          "check": "the door really extracted nothing",
+          "pass": true,
+          "detail": "{\"extracted\":0,\"resolved\":0,\"ambiguous\":0,\"unresolved\":0,\"addable\":0}"
+        },
+        {
+          "check": "the cell reads as copy only",
+          "pass": true,
+          "detail": "Nothing separable came out of that text. Add one place per line, or paste the note body instead of a link."
+        },
+        {
+          "check": "the cell now has its own row of moves",
+          "pass": true,
+          "detail": "{\"testids\":[\"poi-import-empty-clear\",\"poi-import-empty-discover\"],\"labels\":[\"Clear and write again\",\"Open City Discovery\"],\"heights\":[44,44],\"row_top\":1375,\"sentence_bottom\":1370}"
+        },
+        {
+          "check": "both doors are mounted",
+          "pass": true,
+          "detail": "[\"poi-import-empty-clear\",\"poi-import-empty-discover\"]"
+        },
+        {
+          "check": "both are 44px taps",
+          "pass": true,
+          "detail": "[44,44]"
+        },
+        {
+          "check": "the clear door is hit-testable",
+          "pass": true,
+          "detail": "{\"x\":34,\"y\":596.15625,\"width\":149.046875,\"height\":44}"
+        },
+        {
+          "check": "clearing emptied the box",
+          "pass": true,
+          "detail": "{\"value\":\"\",\"focused\":\"poi-import-text\",\"charCount\":\"0 characters\",\"cellGone\":true,\"parseDisabled\":true}"
+        },
+        {
+          "check": "the caret is back in the box",
+          "pass": true,
+          "detail": "poi-import-text"
+        },
+        {
+          "check": "the count says zero",
+          "pass": true,
+          "detail": "0 characters"
+        },
+        {
+          "check": "the dead result went away",
+          "pass": true,
+          "detail": "{\"value\":\"\",\"focused\":\"poi-import-text\",\"charCount\":\"0 characters\",\"cellGone\":true,\"parseDisabled\":true}"
+        },
+        {
+          "check": "识别 is disabled again",
+          "pass": true,
+          "detail": "{\"value\":\"\",\"focused\":\"poi-import-text\",\"charCount\":\"0 characters\",\"cellGone\":true,\"parseDisabled\":true}"
+        },
+        {
+          "check": "the second door lands on City Discovery",
+          "pass": true,
+          "detail": "url=http://127.0.0.1:4611/v8/discover prep-panel=1"
+        }
+      ]
+    },
+    {
+      "arm": "C drawer-door en",
+      "checks": [
+        {
+          "check": "the drawer still names it",
+          "pass": true,
+          "detail": "count=1"
+        },
+        {
+          "check": "and still arrives",
+          "pass": true,
+          "detail": "http://127.0.0.1:4611/v8/import"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

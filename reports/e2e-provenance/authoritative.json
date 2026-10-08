@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "scfull3",
+  "runId": "poientry_r4",
   "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
   "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-  "frontendPort": 4237,
-  "backendPort": 8072,
-  "databaseUrl": "sqlite:///./_scfull3.db",
+  "frontendPort": 4611,
+  "backendPort": 4612,
+  "databaseUrl": "sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_r4.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-09-19T17:35:31.628Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4237 backend=:8072 db=sqlite:///./_scfull3.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-10-08T12:18:48.282Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_r4.db ai=disabled reuseExistingServer=false"
 }
