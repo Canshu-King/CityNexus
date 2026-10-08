@@ -437,6 +437,16 @@ def journey_memory_payload(session: Session, journey: Journey) -> dict[str, Any]
             if isinstance(extracted.get("destination"), dict)
             else None
         )
+        # ORD-0428: only the first branch below puts a *name* in `label`; the other two put a reference
+        # number or the reservation's type code there.  A screen cannot tell those apart by looking at
+        # the string, so the payload states which branch it took.  The value itself is unchanged.
+        label_kind = (
+            "PLACE_NAME"
+            if location
+            else "CONFIRMATION_REF"
+            if reservation.confirmation_ref
+            else "RESERVATION_TYPE"
+        )
         items.append(
             {
                 "id": reservation.id,
@@ -448,6 +458,7 @@ def journey_memory_payload(session: Session, journey: Journey) -> dict[str, Any]
                     "MID_TRIP": "Journey commitment",
                 }.get(role, "Travel fact"),
                 "label": location or reservation.confirmation_ref or reservation.reservation_type,
+                "label_kind": label_kind,
                 "at": policy.get("scheduled_start_at")
                 or reservation.scheduled_departure_at,
                 "status": "PROTECTED",
@@ -477,6 +488,9 @@ def journey_memory_payload(session: Session, journey: Journey) -> dict[str, Any]
                 "role": str(policy.get("anchor_role") or "MID_TRIP"),
                 "title": activity.title,
                 "label": activity.title,
+                # The activity's own title is a name the server wrote for the thing itself, so this
+                # row's name slot is a name -- unlike the reservation rows above.
+                "label_kind": "ACTIVITY_TITLE",
                 "at": policy.get("scheduled_start_at") or activity.start_at,
                 "status": "PROTECTED",
                 "protected": True,

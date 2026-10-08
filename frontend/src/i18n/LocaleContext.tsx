@@ -787,6 +787,12 @@ const en: Dict = {
      ORD-0517 names the gap the same way on every card: what is missing is a name from the server,
      and saying so beats showing the row's identifier as if it were a title. */
   "inbox.unnamedArtifact": "The server gave no name for this confirmation",
+  /* ORD-0428: the saved-trip-fact rows are named by `label`, which the server fills from a place name,
+     a reference number or a booking type (`semantic_intake.py`).  The latter two are not names, so the
+     row states which of them it got instead of passing one off as the trip fact's name. */
+  "inbox.memoryUnnamedPlace": "The server gave no place name for this trip fact",
+  "inbox.memoryRefInsteadOfName": "The server gave a reference number for this trip fact, not a place name",
+  "inbox.memoryTypeInsteadOfName": "The server gave a booking type for this trip fact, not a place name",
   "inbox.readyToConfirm": "The server says this one is ready to accept",
   "inbox.openReview": "Open to review",
   "inbox.pendingUnreadable": "The review list could not be read:",
@@ -1923,6 +1929,9 @@ const zhCN: Dict = {
   "inbox.pendingQueue": "等你审核的确认单",
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
   "inbox.unnamedArtifact": "服务器没有给这张确认单的名字",
+  "inbox.memoryUnnamedPlace": "服务器没有给这条行程事实的地点名字",
+  "inbox.memoryRefInsteadOfName": "服务器只给了这条行程事实的确认号，没有给地点名字",
+  "inbox.memoryTypeInsteadOfName": "服务器只给了这条行程事实的预订类型，没有给地点名字",
   "inbox.readyToConfirm": "服务器说这条可以收下了",
   "inbox.openReview": "打开核对",
   "inbox.pendingUnreadable": "待审清单读不出来：",
