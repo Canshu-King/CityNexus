@@ -413,6 +413,18 @@ def test_one_device_verified_member_does_not_upgrade_whole_group_presence():
     ids = _seed_applied_recovery()
     now = _now()
     with SessionLocal() as session:
+        accepted_json = session.scalar(
+            select(AuditLog.after_json).where(
+                AuditLog.journey_id == ids["journey_id"],
+                AuditLog.action == "replan.accepted",
+            )
+        )
+        assert accepted_json is not None
+        recovery_epoch_id = json.loads(accepted_json)[
+            "group_recovery_spend"
+        ]["recovery_epoch_id"]
+        activity = session.get(Activity, ids["activity_id"])
+        assert activity is not None
         receipts = (
             (
                 ids["owner_member_id"],
@@ -431,24 +443,9 @@ def test_one_device_verified_member_does_not_upgrade_whole_group_presence():
                 "incident_key": ids["incident_key"],
                 "applied_proposal_id": "fixture-proposal",
                 "applied_plan_version_id": ids["plan_id"],
-                "recovery_epoch_id": session.scalar(
-                    select(AuditLog.after_json).where(
-                        AuditLog.journey_id == ids["journey_id"],
-                        AuditLog.action == "replan.accepted",
-                    )
-                )
-                and json.loads(
-                    session.scalar(
-                        select(AuditLog.after_json).where(
-                            AuditLog.journey_id == ids["journey_id"],
-                            AuditLog.action == "replan.accepted",
-                        )
-                    )
-                )["group_recovery_spend"]["recovery_epoch_id"],
+                "recovery_epoch_id": recovery_epoch_id,
                 "rendezvous_activity_id": ids["activity_id"],
-                "rendezvous_place_id": session.get(
-                    Activity, ids["activity_id"]
-                ).place_id,
+                "rendezvous_place_id": activity.place_id,
                 "journey_member_id": member_id,
                 "traveler_id": traveler_id,
                 "role_at_confirmation": (
