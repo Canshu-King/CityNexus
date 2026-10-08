@@ -455,6 +455,15 @@ class GroupPresenceRouteRequest(BaseModel):
     requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
+class MemberSideQuestCreateRequest(BaseModel):
+    """Create or replace the authenticated member's private side-quest destination."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    destination_text: str | None = Field(default=None, max_length=240)
+    place_id: str | None = Field(default=None, min_length=1, max_length=128)
+
+
 class GroupRecoveryRequest(BaseModel):
     """Ask the existing Journey Agent to prepare one bounded group recovery proposal."""
 

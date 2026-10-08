@@ -639,6 +639,7 @@ def group_presence_projection(
                 "scheduled_at": route_target.start_at,
             }
             planned_members.append({
+                "member_id": str(member.id),
                 "display_name": traveler.display_name if traveler else "Traveller",
                 "is_viewer": member.id == viewer.id,
                 "planned_separation": True,

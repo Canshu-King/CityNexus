@@ -275,6 +275,11 @@ from app.execution.group_presence import (
     rendezvous_commitment_risk,
     rendezvous_target,
 )
+from app.execution.member_side_quest import (
+    create_or_replace_member_side_quest,
+    invalidate_member_side_quests_for_intents,
+    transition_member_side_quest,
+)
 from app.execution.group_recovery_followthrough import (
     active_group_recovery_spend,
     build_followthrough_snapshot,
@@ -452,6 +457,7 @@ from app.schemas import (
     JourneyPatch,
     LocationObservationRequest,
     GroupPresenceRouteRequest,
+    MemberSideQuestCreateRequest,
     GroupRecoveryRequest,
     GroupRecoveryApplyRequest,
     InTransitRerouteRequest,
@@ -9715,6 +9721,120 @@ def guide_authenticated_member_to_rendezvous(
         "guardian": guardian_handoff,
         "plan_unchanged": plan_unchanged,
     }
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests", status_code=201)
+def create_member_side_quest(
+    journey_id: UUID,
+    payload: MemberSideQuestCreateRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Create or replace only the signed-in member's private stop for an active R63 split."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    create_or_replace_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        destination_text=payload.destination_text,
+        place_id=payload.place_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+def _advance_member_side_quest(
+    *,
+    journey_id: UUID,
+    side_quest_id: str,
+    action: str,
+    request: Request,
+    session: Session,
+) -> dict[str, Any]:
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    transition_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+        action=action,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/start")
+def start_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="START",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/arrive")
+def arrive_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="ARRIVE",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/complete")
+def complete_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="COMPLETE",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/cancel")
+def cancel_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="CANCEL",
+        request=request,
+        session=session,
+    )
 
 
 @app.post("/api/v1/journeys/{journey_id}/group-recovery/adjust")
@@ -20313,6 +20433,13 @@ def _run_planned_separation_command(
             intent.cancelled_at = now_text
             intent.updated_at = now_text
             intent.evaluation_state = "PLANNED_SPLIT_ENDED_BY_MEMBER"
+        invalidate_member_side_quests_for_intents(
+            session,
+            journey=journey,
+            intent_ids=[str(intent.id) for intent in own_rows],
+            reason_code="R63_SPLIT_ENDED_BY_MEMBER",
+            now=now,
+        )
         record_audit(
             session,
             action="journey.planned_separation.ended",
@@ -20387,6 +20514,13 @@ def _run_planned_separation_command(
         old.status = "SUPERSEDED"
         old.superseded_at = now_text
         old.updated_at = now_text
+    invalidate_member_side_quests_for_intents(
+        session,
+        journey=journey,
+        intent_ids=[str(intent.id) for intent in own_rows],
+        reason_code="R63_SPLIT_SUPERSEDED",
+        now=now,
+    )
     metadata = {
         "kind": "PLANNED_SEPARATION",
         "active_plan_version_id": str(journey.active_plan_version_id),

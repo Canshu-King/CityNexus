@@ -533,6 +533,7 @@ export interface JourneyOperatorProjection {
   flow?: JourneyContinuousFlow | null;
   transit?: JourneyTransitProjection | null;
   group_presence?: JourneyGroupPresenceProjection | null;
+  member_side_quest?: MemberSideQuestProjection | null;
   group_recovery?: GroupRecoveryProjection | null;
   progress?: JourneyProgressProjection;
   ahead?: JourneyAheadProjection | null;
@@ -572,6 +573,10 @@ export interface JourneyGroupPresenceProjection {
     route_eta_provenance: string | null;
     route_eta_state?: string;
     planned_separation?: boolean;
+    personal_stop?: {
+      planned_personal_stop: true;
+      state: "AWAY" | "RETURNING" | "FINISHED";
+    };
     return_state?: string | null;
     planned_rendezvous?: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
     shared_commitment_risk?: {
@@ -593,6 +598,7 @@ export interface JourneyGroupPresenceProjection {
     active_plan_version_id: string;
     rendezvous: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
     members: Array<{
+      member_id: string;
       display_name: string;
       is_viewer: boolean;
       planned_separation: boolean;
@@ -604,6 +610,30 @@ export interface JourneyGroupPresenceProjection {
     shared_plan_changed: false;
   } | null;
   can_guide: boolean;
+}
+
+export interface MemberSideQuestProjection {
+  id: string;
+  state: "DESTINATION_UNRESOLVED" | "READY" | "EN_ROUTE" | "ARRIVED" | "COMPLETED" | "CANCELLED" | "INVALIDATED";
+  destination: {
+    place_id: string | null;
+    title: string;
+    authority: "EXACT_KNOWN_PLACE" | "DESCRIPTIVE_ONLY";
+  };
+  rendezvous: {
+    activity_id: string;
+    title: string;
+    place_name: string;
+    scheduled_at: string | null;
+  };
+  return_state: string;
+  shared_plan_changed: false;
+  arrival_claim: "MEMBER_REPORTED_NOT_PHYSICAL_PRESENCE_PROOF" | null;
+  created_at: string;
+  started_at: string | null;
+  arrived_at: string | null;
+  completed_at: string | null;
+  cancelled_at: string | null;
 }
 
 export interface GroupRecoveryProjection {
@@ -1879,6 +1909,34 @@ export const cityNexusApi = {
     return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator", {
       headers: travelerAuthHeaders(),
     });
+  },
+
+  createMemberSideQuest(
+    journeyId: string,
+    destination: { destinationText?: string; placeId?: string },
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-side-quests",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          destination_text: destination.destinationText,
+          place_id: destination.placeId,
+        }),
+      },
+    );
+  },
+
+  advanceMemberSideQuest(
+    journeyId: string,
+    sideQuestId: string,
+    action: "start" | "arrive" | "complete" | "cancel",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/" + action,
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
   },
 
   rerouteInTransit(journeyId: string, locationObservationId: string): Promise<InTransitRerouteResult> {

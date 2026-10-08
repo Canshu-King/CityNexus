@@ -47,6 +47,7 @@ from app.execution.group_presence import (
     group_recovery_projection,
 )
 from app.execution.group_recovery_followthrough import followthrough_projection
+from app.execution.member_side_quest import attach_member_side_quest_projection
 from app.operator_attention import attention_from_operator_projection
 
 
@@ -563,6 +564,12 @@ def operator_projection(
     group_presence = group_presence_projection(
         session, journey, viewer_member_id=viewer_member_id
     )
+    member_side_quest = attach_member_side_quest_projection(
+        session,
+        journey,
+        viewer_member_id=viewer_member_id,
+        group_presence=group_presence,
+    )
     group_recovery = group_recovery_projection(group_presence)
     affected_member = group_recovery.get("affected_member")
     shared_commitment = group_recovery.get("shared_commitment")
@@ -944,6 +951,7 @@ def operator_projection(
         "flow": flow,
         "transit": transit,
         "group_presence": group_presence,
+        "member_side_quest": member_side_quest,
         "group_recovery": group_recovery,
         "ahead": ahead,
         "progress": progress,

@@ -33,6 +33,7 @@ import {
   useAuthoritativePlans,
   useAuthoritativeTwin,
 } from "../../api/v12Authoritative";
+import { MemberSideQuestCard } from "./MemberSideQuestCard";
 
 type Proposal = {
   id: string;
@@ -1111,6 +1112,15 @@ export function LiveRecovery({
                                 ? (zh ? "当前只有参考路线；它不代表可信位置，也不会单独触发 Guardian。" : "Only an advisory route is available; it is not trusted location and cannot trigger Guardian by itself.")
                               : (zh ? "返程状态未知：目前没有可靠路线 ETA。" : "Return status unknown: no reliable route ETA is available.")}
                     </small>
+                    {member.is_viewer && member.rendezvous && (
+                      <MemberSideQuestCard
+                        journeyId={journeyId}
+                        sideQuest={operator?.member_side_quest ?? null}
+                        rendezvous={member.rendezvous}
+                        currentSplitActive
+                        onUpdated={loadOperator}
+                      />
+                    )}
                   </div>
                 ))}
                 <small data-testid="journey-planned-separation-plan-unchanged">
@@ -1132,6 +1142,15 @@ export function LiveRecovery({
                       ? (zh ? "定位精度不足" : "Location is too imprecise")
                       : (zh ? "尚未分享位置" : "No shared location")}
                 {member.age_seconds != null && member.location_state === "RECENT" ? ` · ${member.age_seconds}${zh ? "秒前" : "s ago"}` : ""}
+                {member.personal_stop && (
+                  <span data-testid="journey-member-personal-stop" data-state={member.personal_stop.state}>
+                    {member.personal_stop.state === "AWAY"
+                      ? (zh ? " · 有一项按计划的私人停留（具体地点仅本人可见）" : " · has a planned personal stop (destination visible only to them)")
+                      : member.personal_stop.state === "RETURNING"
+                        ? (zh ? " · 私人停留已结束，正转回共同会合点" : " · personal stop has ended; returning to the shared rendezvous")
+                        : (zh ? " · 私人停留已结束" : " · personal stop finished")}
+                  </span>
+                )}
                 {member.route_eta_minutes != null ? ` · ${zh ? `到集合点约 ${member.route_eta_minutes} 分钟` : `about ${member.route_eta_minutes} min to rendezvous`}` : ""}
                 {member.route_eta_minutes != null && member.route_eta_provenance
                   ? ` · ${member.route_eta_state === "CAPTURED_REPLAY"
@@ -1379,6 +1398,15 @@ export function LiveRecovery({
               </div>
             )}
           </section>
+        )}
+        {operator?.member_side_quest && !plannedSeparation && (
+          <MemberSideQuestCard
+            journeyId={journeyId}
+            sideQuest={operator.member_side_quest}
+            rendezvous={operator.member_side_quest.rendezvous}
+            currentSplitActive={false}
+            onUpdated={loadOperator}
+          />
         )}
         {operator?.progress?.basis && operator.progress.state !== "UNKNOWN_PROGRESS" && (
           <div className={`journey-progress journey-progress-${operator.progress.state.toLowerCase()}`} data-testid="journey-progress" aria-live="polite">

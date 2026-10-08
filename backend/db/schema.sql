@@ -606,6 +606,39 @@ CREATE TABLE IF NOT EXISTS journey_intents (
 CREATE INDEX IF NOT EXISTS idx_journey_intents_active_scope
     ON journey_intents(journey_id, status, scope_start_at, scope_end_at);
 
+CREATE TABLE IF NOT EXISTS member_side_quests (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    planned_separation_intent_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL,
+    rendezvous_place_id TEXT NOT NULL,
+    rendezvous_title TEXT NOT NULL,
+    rendezvous_place_name TEXT NOT NULL,
+    rendezvous_scheduled_at TEXT,
+    side_place_id TEXT,
+    side_title TEXT NOT NULL,
+    destination_authority TEXT NOT NULL
+        CHECK (destination_authority IN ('EXACT_KNOWN_PLACE', 'DESCRIPTIVE_ONLY')),
+    state TEXT NOT NULL
+        CHECK (state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED',
+                         'COMPLETED', 'CANCELLED', 'INVALIDATED')),
+    created_at TEXT NOT NULL,
+    started_at TEXT,
+    arrived_at TEXT,
+    completed_at TEXT,
+    cancelled_at TEXT,
+    invalidated_at TEXT,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_side_quests_one_open_per_split
+    ON member_side_quests(journey_id, member_id, planned_separation_intent_id)
+    WHERE state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED');
+CREATE INDEX IF NOT EXISTS idx_member_side_quests_journey_member_updated
+    ON member_side_quests(journey_id, member_id, updated_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

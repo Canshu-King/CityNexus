@@ -302,6 +302,62 @@ class JourneyIntent(Base):
     )
 
 
+class MemberSideQuest(Base):
+    """Private execution state for one traveller's stop during an R63 split."""
+
+    __tablename__ = "member_side_quests"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    rendezvous_activity_id: Mapped[str] = mapped_column(String)
+    rendezvous_place_id: Mapped[str] = mapped_column(String)
+    rendezvous_title: Mapped[str] = mapped_column(String)
+    rendezvous_place_name: Mapped[str] = mapped_column(String)
+    rendezvous_scheduled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    side_place_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    side_title: Mapped[str] = mapped_column(Text)
+    destination_authority: Mapped[str] = mapped_column(String)
+    state: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    arrived_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    invalidated_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "destination_authority IN ('EXACT_KNOWN_PLACE', 'DESCRIPTIVE_ONLY')",
+            name="ck_member_side_quests_destination_authority",
+        ),
+        CheckConstraint(
+            "state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED', "
+            "'COMPLETED', 'CANCELLED', 'INVALIDATED')",
+            name="ck_member_side_quests_state",
+        ),
+        Index(
+            "ux_member_side_quests_one_open_per_split",
+            "journey_id",
+            "member_id",
+            "planned_separation_intent_id",
+            unique=True,
+            sqlite_where=text(
+                "state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED')"
+            ),
+        ),
+        Index(
+            "idx_member_side_quests_journey_member_updated",
+            "journey_id",
+            "member_id",
+            "updated_at",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 
