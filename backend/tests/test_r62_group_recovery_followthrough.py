@@ -335,3 +335,72 @@ def test_role_without_execution_capability_cannot_report_arrival():
             )
             session.commit()
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_durable_member_receipts_survive_shared_activity_history_loss():
+    """Reunion progress must not depend on one concurrently mutable metadata blob."""
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", TEST_SECRET)
+    ids = _seed_applied_recovery()
+    endpoint = (
+        f"/api/v1/journeys/{ids['journey_id']}/activities/"
+        f"{ids['activity_id']}/arrive"
+    )
+    try:
+        first = client.post(
+            endpoint,
+            headers=_auth_headers(ids["owner_id"]),
+            json=_arrival_payload(),
+        )
+        assert first.status_code == 200, first.text
+
+        # Simulate the failure mode of concurrent shared-Activity metadata:
+        # another writer preserved the Activity state but overwrote the JSON
+        # execution history. The independent member receipt must remain enough
+        # to remember the first traveller.
+        with SessionLocal() as session:
+            activity = session.get(Activity, ids["activity_id"])
+            journey = session.get(Journey, ids["journey_id"])
+            assert activity is not None and journey is not None
+            activity.metadata_json = "{}"
+            session.commit()
+
+            projected = followthrough_projection(
+                session,
+                journey,
+                viewer_member_id=ids["owner_member_id"],
+            )
+            assert projected is not None
+            assert projected["confirmed_count"] == 1
+            assert projected["viewer_has_confirmed"] is True
+            assert (
+                projected["arrival_progress_authority"]
+                == "DURABLE_MEMBER_EXECUTION_RECEIPTS"
+            )
+
+        second = client.post(
+            endpoint,
+            headers=_auth_headers(ids["companion_id"]),
+            json=_arrival_payload(),
+        )
+        assert second.status_code == 200, second.text
+        with SessionLocal() as session:
+            journey = session.get(Journey, ids["journey_id"])
+            assert journey is not None
+            final = followthrough_projection(
+                session,
+                journey,
+                viewer_member_id=ids["owner_member_id"],
+            )
+            assert final is not None
+            assert final["state"] == "RECOVERY_CLOSED"
+            assert final["confirmed_count"] == final["required_count"] == 2
+            closures = session.scalars(
+                select(AuditLog).where(
+                    AuditLog.journey_id == ids["journey_id"],
+                    AuditLog.action == "journey.group_recovery.rejoined",
+                )
+            ).all()
+            assert len(closures) == 1
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
