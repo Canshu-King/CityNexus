@@ -45,6 +45,13 @@ MODES = ("WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL")
 MIN_DAY_COUNT = 1
 MAX_DAY_COUNT = 7
 
+# Whether a stored coordinate was measured or placed.  Recorded in `Place.source_coordinate_system`,
+# whose contract is already "what a provider actually handed us" - a point this planner invented
+# around the city centre came from no provider, and leaving the column NULL said "nothing to say"
+# when in fact there was something important to say.
+COORDINATE_FROM_EVIDENCE = "WGS84"
+COORDINATE_PLACED_BY_PLANNER = "PLANNER_PLACEMENT"
+
 
 @dataclass(frozen=True)
 class ComposeNode:
@@ -125,6 +132,7 @@ def _ensure_place(
     latitude: float,
     longitude: float,
     metadata: dict[str, Any] | None = None,
+    coordinate_origin: str = COORDINATE_FROM_EVIDENCE,
 ) -> Place:
     provider_key = "citynexus-v12-authoritative"
     external_id = f"{journey.id}:{key}"
@@ -147,6 +155,14 @@ def _ensure_place(
             opening_hours_json=_json({"status": "NORMALIZED", "always_available": True}),
             tags_json=_json(["v12-authoritative", category]),
             metadata_json=_json(metadata or {}),
+            # The column above records the system the stored geometry is in; this one records
+            # whether anybody measured it at all.  A point this planner placed around the city
+            # centre is WGS-84 like any other and is still not a measurement, and the reader
+            # that turns two points into minutes on the traveller's plan cannot tell the two
+            # apart without being told here.
+            source_coordinate_system=(
+                None if coordinate_origin == COORDINATE_FROM_EVIDENCE else coordinate_origin
+            ),
             updated_at=_now(),
         )
         session.add(row)
@@ -293,6 +309,13 @@ def _structural_nodes(
     arrival_at = datetime.fromisoformat(arrival["at"])
     departure_at = datetime.fromisoformat(departure["at"])
     center_lat, center_lon = _city_center(journey)
+    # The offsets below are this planner's own placement, so each anchor says which of the two it
+    # got.  `_distance_minutes` turns a pair of points into minutes on the traveller's plan and
+    # `_solve_day_assignment` sorts the days on that number, so a point nobody measured was
+    # deciding how far apart two stops were - measured here at 590 minutes between a placed
+    # arrival and a real POI, against 3 minutes when both sit at the same placed point.
+    arrival_placed = arrival.get("latitude") is None or arrival.get("longitude") is None
+    departure_placed = departure.get("latitude") is None or departure.get("longitude") is None
     arrival_place = _ensure_place(
         session=session,
         journey=journey,
@@ -301,7 +324,14 @@ def _structural_nodes(
         category="arrival",
         latitude=float(arrival.get("latitude") or center_lat - 0.015),
         longitude=float(arrival.get("longitude") or center_lon - 0.02),
-        metadata={"anchor": "ARRIVAL", "commitment_ids": c4_ids},
+        metadata={
+            "anchor": "ARRIVAL",
+            "commitment_ids": c4_ids,
+            "coordinates_declared": not arrival_placed,
+        },
+        coordinate_origin=(
+            COORDINATE_PLACED_BY_PLANNER if arrival_placed else COORDINATE_FROM_EVIDENCE
+        ),
     )
     departure_place = _ensure_place(
         session=session,
@@ -311,7 +341,10 @@ def _structural_nodes(
         category="departure",
         latitude=float(departure.get("latitude") or center_lat + 0.06),
         longitude=float(departure.get("longitude") or center_lon + 0.08),
-        metadata={"anchor": "DEPARTURE"},
+        metadata={"anchor": "DEPARTURE", "coordinates_declared": not departure_placed},
+        coordinate_origin=(
+            COORDINATE_PLACED_BY_PLANNER if departure_placed else COORDINATE_FROM_EVIDENCE
+        ),
     )
     stay_place = None
     check_in_place = None
