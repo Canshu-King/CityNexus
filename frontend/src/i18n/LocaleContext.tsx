@@ -390,6 +390,7 @@ const en: Dict = {
   "bookings.neverInvented": "Critical origin, destination, time, provider and reference facts are never invented.",
   "bookings.authorityExplicit": "Authority remains explicit",
   "bookings.authoritySub": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
+  "bookings.simulatedCommitment": "simulated commitment",
 
   // ── Offline Journey View ──
   "offline.readOnly": "OFFLINE · READ ONLY",
@@ -1517,6 +1518,7 @@ const zhCN: Dict = {
   "bookings.neverInvented": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
   "bookings.authorityExplicit": "权限始终明确",
   "bookings.authoritySub": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+  "bookings.simulatedCommitment": "模拟承诺",
 
   // ── Offline Journey View ──
   "offline.readOnly": "离线 · 只读",

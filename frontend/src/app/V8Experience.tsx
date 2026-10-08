@@ -4304,7 +4304,7 @@ function WalletCommitments({
                 {simulated && (
                   <b data-testid="wallet-commitment-simulated">
                     {" · "}
-                    {zh ? "模拟承诺" : "simulated commitment"}
+                    {t("bookings.simulatedCommitment")}
                   </b>
                 )}
               </span>
