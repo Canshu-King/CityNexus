@@ -177,12 +177,38 @@ def _context(session: Session, journey: Journey) -> JourneyTripContext:
             # This row was not created by a traveller answering a question, so it declares
             # nothing either way: NULL is "never asked", which is what actually happened here.
             stay_budget_declared=None,
+            # The headcount above is a schema floor (NOT NULL DEFAULT 1), not an answer. False
+            # here is "nobody gave one", which is what keeps the stay flow from sending "one
+            # traveller" to a supplier. NULL is left to rows written before this column existed,
+            # so a stored number there is never re-attributed to a traveller.
+            party_size_declared=False,
             created_at=now,
             updated_at=now,
         )
         session.add(row)
         session.flush()
     return row
+
+
+def declared_party_size(context: JourneyTripContext) -> int | None:
+    """The headcount the traveller actually gave, or None when nobody ever gave one.
+
+    `JourneyTripContext.party_size` is NOT NULL DEFAULT 1, so a row the stay flow created on
+    its own reads back as one traveller. Reading the column alone therefore turns "never asked"
+    into a party of one, which is then divided by and forwarded to suppliers. The declared
+    column is what distinguishes the two; a legacy row that predates it keeps its stored
+    number, because a traveller may really have typed one.
+    """
+
+    if context.party_size_declared is True:
+        party = context.party_size
+        return int(party) if party else None
+    if context.party_size_declared is False:
+        return None
+    # NULL: a row written before this column existed. Its headcount may be a number a traveller
+    # really typed, so it is kept rather than discarded - the same reason ORD-0355 does not fold
+    # a NULL stay budget into "the traveller said zero".
+    return int(context.party_size)
 
 
 def stay_budget_body(context: JourneyTripContext) -> dict[str, Any]:
@@ -367,7 +393,7 @@ def capture_accommodation_offers(
     result: list[AccommodationOfferSnapshot] = []
     try:
         drafts = provider.discover(
-            city_code=journey.city_code, party_size=context.party_size, nights=nights
+            city_code=journey.city_code, party_size=declared_party_size(context), nights=nights
         )
     finally:
         close = getattr(provider, "close", None)
@@ -409,7 +435,7 @@ def capture_accommodation_offers(
                 coordinate_crs=draft.coordinate_crs,
                 room_type=draft.room_type,
                 occupancy_json=_json(
-                    {"party_size": context.party_size, **_load(context.occupancy_json, {})}
+                    {"party_size": declared_party_size(context), **_load(context.occupancy_json, {})}
                 ),
                 check_in_at=check_in.isoformat(),
                 check_out_at=check_out.isoformat(),
@@ -1837,7 +1863,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         day_count=shape.day_count if shape is not None else None,
         budget_amount_minor=journey.budget_amount_minor,
         budget_currency=journey.budget_currency,
-        party_size=context.party_size,
+        party_size=declared_party_size(context),
     )
     return {
         "journey": {
@@ -1869,7 +1895,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         "trip": {
             "arrival_anchor": _anchor(context, journey, "arrival"),
             "departure_anchor": _anchor(context, journey, "departure"),
-            "party_size": context.party_size,
+            "party_size": declared_party_size(context),
             "occupancy": _load(context.occupancy_json, {}),
             "budget_reference": budget_reference.as_payload(),
             "stay_budget": stay_budget_body(context),

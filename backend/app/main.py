@@ -3136,8 +3136,13 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     occupancy = dict(payload.occupancy)
     occupancy.setdefault("adults", payload.party_size)
     if "rooms" not in occupancy:
-        occupancy["rooms"] = suggested_room_count(payload.party_size)
-        occupancy["rooms_source"] = "SUGGESTED"
+        # A headcount that was never stated has no room count to suggest; the occupancy keeps
+        # the two keys it can honestly carry and the rooms question stays unanswered.
+        if payload.party_size is not None:
+            occupancy["rooms"] = suggested_room_count(payload.party_size)
+            occupancy["rooms_source"] = "SUGGESTED"
+        else:
+            occupancy["rooms_source"] = "UNSTATED_HEADCOUNT"
     else:
         occupancy["rooms_source"] = "USER"
     journey = Journey(
@@ -3170,7 +3175,7 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
             else {},
             ensure_ascii=False,
         ),
-        party_size=payload.party_size,
+        party_size=payload.party_size if payload.party_size is not None else 1,
         occupancy_json=json.dumps(occupancy, ensure_ascii=False),
         stay_budget_amount_minor=payload.stay_budget.amount_minor if payload.stay_budget else 0,
         stay_budget_currency=payload.stay_budget.currency if payload.stay_budget else payload.budget.currency,
@@ -3178,6 +3183,10 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
         # stored as such.  The amount above keeps its 0 so no existing reader of that column
         # changes shape; nothing outside this row may read the 0 as a declared price.
         stay_budget_declared=payload.stay_budget is not None,
+        # A headcount absent from the request is the traveller's silence, stored as such.  The
+        # NOT NULL party_size column keeps its floor of 1, but the declared flag is what keeps a
+        # future reader from treating a lazy default as a stated answer.
+        party_size_declared=payload.party_size is not None,
         created_at=now,
         updated_at=now,
     )

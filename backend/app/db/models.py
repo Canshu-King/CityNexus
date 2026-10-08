@@ -822,6 +822,13 @@ class JourneyTripContext(Base):
     # therefore cannot say.  NULL is deliberately not folded into False, because a legacy row
     # may hold an amount a traveller really typed.
     stay_budget_declared: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=None)
+    # A headcount nobody stated. The `party_size` column above is NOT NULL with a default of 1,
+    # so it cannot tell "the traveller said one" from "nobody ever asked" - and a context row is
+    # created lazily by the stay flow without any traveller ever being asked. Three states on
+    # purpose: True declared, False asked and left empty, NULL written by a build that never
+    # asked. A NULL is deliberately not folded into False, because a legacy row may hold a
+    # headcount a traveller really typed.
+    party_size_declared: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=None)
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
 

@@ -249,13 +249,14 @@ def test_the_allowance_divides_half_up_so_an_exact_half_cannot_print_two_ways() 
     ).per_person_per_day_minor == 1667
 
 
-def test_a_party_of_zero_never_reaches_the_division() -> None:
-    """Two guards, and only one of them owns the invariant.
+def test_a_party_of_zero_is_not_claimed_as_one() -> None:
+    """A headcount of zero is nobody's answer, so it stays unanswered - not a party of one.
 
     `journey_trip_contexts.party_size >= 1` is a SQL CHECK, so a stored zero is not a state
-    the projection can be reached in - pinning that here is what keeps the next reader from
-    "fixing" a case that cannot exist.  The clamp inside `derive_budget_reference` is
-    therefore belt-and-braces for a caller that hands it a bad number, not the guarantee.
+    the projection can be reached in; pinning that here is what keeps the next reader from
+    "fixing" a case that cannot exist.  But a caller that hands `derive_budget_reference` a bad
+    number must not have it silently turned into a one-person division: the per-person axis is
+    left unanswered instead, the same way an omitted headcount is.
     """
 
     from sqlalchemy.exc import IntegrityError
@@ -268,13 +269,14 @@ def test_a_party_of_zero_never_reaches_the_division() -> None:
     except IntegrityError as exc:
         assert "party_size" in str(exc), exc
     else:
-        raise AssertionError("the party_size CHECK stopped enforcing; the clamp is now load-bearing")
+        raise AssertionError("the party_size CHECK stopped enforcing")
 
-    clamped = derive_budget_reference(
+    unanswered = derive_budget_reference(
         day_count=1, budget_amount_minor=20000, budget_currency="CNY", party_size=0
     )
-    assert clamped.party_size == 1, clamped
-    assert clamped.per_person_per_day_minor == 20000, clamped
+    assert unanswered.party_size is None, unanswered
+    assert unanswered.per_person_per_day_minor is None, unanswered
+    assert unanswered.per_day_minor == 20000, unanswered
 
 
 # ------------------------------------------------------------------ the currency half

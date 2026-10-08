@@ -869,6 +869,14 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                     "ALTER TABLE journey_trip_contexts ADD COLUMN stay_budget_declared INTEGER"
                     " CHECK (stay_budget_declared IN (0, 1))"
                 )
+            # Same reasoning for a headcount: additive, and deliberately without a DEFAULT, so a
+            # row written before this column keeps whatever it already says instead of being
+            # rewritten into "the traveller was asked and said one".
+            if trip_context_columns and "party_size_declared" not in trip_context_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE journey_trip_contexts ADD COLUMN party_size_declared INTEGER"
+                    " CHECK (party_size_declared IN (0, 1))"
+                )
             mobility_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(mobility_facts)")
             }

@@ -218,7 +218,10 @@ class JourneyCreate(BaseModel):
     planning_mode: PlanningMode = "balanced"
     arrival_anchor: JourneyAnchor | None = None
     departure_anchor: JourneyAnchor | None = None
-    party_size: int = Field(default=1, ge=1, le=20)
+    # No default: an omitted headcount is the traveller's silence, not a party of one. The
+    # stored column keeps its NOT NULL floor, so the absence is carried by
+    # `JourneyTripContext.party_size_declared` rather than by this field.
+    party_size: int | None = Field(default=None, ge=1, le=20)
     occupancy: dict[str, Any] = Field(default_factory=dict)
     stay_budget: Money | None = None
 

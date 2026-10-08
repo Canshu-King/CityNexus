@@ -148,14 +148,16 @@ def derive_budget_reference(
     if amount is None or amount <= 0:
         return BudgetReference(
             available=False, amount_minor=amount, currency=currency,
-            party_size=max(1, party_size or 1), day_count=day_count,
+            party_size=party_size, day_count=day_count,
             per_day_minor=None, per_person_per_day_minor=None,
             floor_minor=BUDGET_DAILY_FLOOR_MINOR, floor_currency=BUDGET_DAILY_FLOOR_CURRENCY,
             floor_comparable=False, reason=UNAVAILABLE_NO_BUDGET,
         )
-    party = max(1, party_size or 1)
+    # An unstated headcount is not a one-person trip: dividing by an invented 1 states a
+    # per-person figure nobody gave. The per-person axis stays unanswered instead.
+    party = party_size if party_size is not None and party_size > 0 else None
     per_day = _divide_round_half_up(amount, day_count)
-    per_person_per_day = _divide_round_half_up(per_day, party)
+    per_person_per_day = _divide_round_half_up(per_day, party) if party else None
     return BudgetReference(
         available=True, amount_minor=amount, currency=currency, party_size=party,
         day_count=day_count, per_day_minor=per_day,

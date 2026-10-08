@@ -1166,6 +1166,9 @@ def confirm_reservation_draft(
             # An imported reservation says nothing about a lodging budget, so this row records
             # "never asked" rather than inventing either an answer or a price.
             stay_budget_declared=None,
+            # An imported reservation says nothing about a headcount either, so this row
+            # records "nobody said" rather than claiming a party of one.
+            party_size_declared=False,
             created_at=now,
             updated_at=now,
         )
