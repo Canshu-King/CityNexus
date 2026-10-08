@@ -2348,7 +2348,7 @@ function TripsWorkspace({
         className="trips-tabs"
         data-testid="trips-tabs"
         role="tablist"
-        aria-label={zh ? "行程分区" : "Trip sections"}
+        aria-label={t("hub.tripsSectionsAria")}
       >
         {tabs.map((item) => (
           <button
@@ -4304,7 +4304,7 @@ function WalletCommitments({
                 {simulated && (
                   <b data-testid="wallet-commitment-simulated">
                     {" · "}
-                    {zh ? "模拟承诺" : "simulated commitment"}
+                    {t("bookings.commitmentSimulated")}
                   </b>
                 )}
               </span>
