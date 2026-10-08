@@ -139,22 +139,34 @@ def main() -> int:
             bad.append("the en arm lost its own text: %s" % en_text)
 
     # ---- denominator: the file's inline shape count ---------------------------
+    # The count is the absence's DENOMINATOR, not the change's proof: a sibling cell in the same
+    # file lowers it further, so asserting an exact number would go falsely red on the tree where
+    # both cells have landed.  The change itself is pinned by the fold assertion above, which names
+    # the element this cell owns and stays true whoever else edits the file.
     checks += 1
     shape = len([l for l in lines if 'zh ? "' in l])
-    if shape != 37:
+    if shape > 37:
         bad.append(
-            "CopilotDock.tsx holds %d `zh ? \"` lines, expected 37 (the parent held 44)" % shape
+            "CopilotDock.tsx holds %d `zh ? \"` lines, more than the parent's 44 minus this cell's 7"
+            % shape
         )
-    print("  denominator: CopilotDock.tsx `zh ? \"` lines now %d (parent 44)" % shape)
+    print("  denominator: CopilotDock.tsx `zh ? \"` lines now %d (parent 44, this cell removes 7)" % shape)
 
     # ---- survival assertions (green in BOTH states by design) -----------------
     # The language-code buckets are NOT copy; the fold's own line 416 must keep its own.
+    # Asserted by COUNT, not by line number: a sibling cell editing the same file shifts every line
+    # below its own edit, so pinning 138/140/300/416 would go falsely red once that lands.  What must
+    # hold is that all four buckets still exist and the fold's own one still sits inside the fold.
     checks += 1
     lang_lines = [i + 1 for i, l in enumerate(lines) if LANG_CODE in l]
-    if lang_lines != [138, 140, 300, 416]:
+    if len(lang_lines) != 4:
         bad.append(
-            "the language-code bucket lines moved or changed: %s (expected [138, 140, 300, 416])"
-            % lang_lines
+            "the language-code bucket count changed: %d (expected 4): %s"
+            % (len(lang_lines), lang_lines)
+        )
+    elif fold and not (fold[0] < lang_lines[-1] < fold[0] + 14):
+        bad.append(
+            "the fold's language-code bucket no longer sits inside the fold: %s" % lang_lines
         )
     else:
         print("  counter: language-code buckets still at CopilotDock.tsx:%s" % ",".join(str(n) for n in lang_lines))
