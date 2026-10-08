@@ -169,6 +169,12 @@ test("R65 previews a private detour and heads back through the shared rendezvous
     await expect(fitResult).toHaveAttribute("data-state", "UNKNOWN");
     await expect(fitResult).toContainText("We can't confirm whether this private stop fits");
 
+    // Changing the dwell time makes an earlier leave-by estimate stale.
+    await ownerCard.getByTestId("member-side-quest-dwell").selectOption("30");
+    await expect(fitResult).toHaveCount(0);
+    await ownerCard.getByTestId("member-side-quest-fit-preview").click();
+    await expect(fitResult).toHaveAttribute("data-state", "UNKNOWN");
+
     await ownerCard.getByTestId("member-side-quest-navigate").click();
     const privateRoute = ownerCard.getByTestId("member-side-quest-private-route");
     await expect(privateRoute).toBeVisible();
@@ -184,6 +190,10 @@ test("R65 previews a private detour and heads back through the shared rendezvous
 
     await ownerCard.getByTestId("member-side-quest-start").click();
     await expect(ownerCard).toHaveAttribute("data-state", "EN_ROUTE");
+    // Neither a preview nor a private route from READY may masquerade as
+    // guidance for the new execution state, even after an async completion.
+    await expect(fitResult).toHaveCount(0);
+    await expect(privateRoute).toHaveCount(0);
     await ownerCard.getByTestId("member-side-quest-arrive").click();
     await expect(ownerCard).toHaveAttribute("data-state", "ARRIVED");
     await expect(ownerCard.getByTestId("member-side-quest-arrival-boundary")).toContainText("not device-verified physical presence");
