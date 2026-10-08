@@ -207,7 +207,8 @@ def test_two_members_arrive_through_existing_execution_route_and_close_once():
             headers=_auth_headers(ids["owner_id"]),
             json=_arrival_payload(),
         )
-        assert begin.status_code == 200, begin.text
+        assert begin.status_code == 409, begin.text
+        assert "GROUP_RECOVERY_WAITING_FOR_MEMBER_REJOIN" in begin.text
         early_complete = client.post(
             f"/api/v1/journeys/{ids['journey_id']}/activities/{ids['activity_id']}/complete",
             headers=_auth_headers(ids["owner_id"]),
@@ -222,6 +223,15 @@ def test_two_members_arrive_through_existing_execution_route_and_close_once():
         assert second.status_code == 200, second.text
         replay = client.post(endpoint, headers=_auth_headers(ids["owner_id"]), json=_arrival_payload())
         assert replay.status_code == 200, replay.text
+
+        # Once the reunion is durably closed, normal shared Journey execution
+        # owns the cursor again and the same activity can begin.
+        resumed_begin = client.post(
+            f"/api/v1/journeys/{ids['journey_id']}/activities/{ids['activity_id']}/begin",
+            headers=_auth_headers(ids["owner_id"]),
+            json=_arrival_payload(),
+        )
+        assert resumed_begin.status_code == 200, resumed_begin.text
 
         with SessionLocal() as session:
             journey = session.get(Journey, ids["journey_id"])
@@ -256,6 +266,14 @@ def test_two_members_arrive_through_existing_execution_route_and_close_once():
                 select(IdempotencyKey).where(IdempotencyKey.operation == "group_recovery.close")
             ).all()
             assert len([row for row in close_keys if ids["journey_id"] in row.key or row.response_json and ids["incident_key"] in row.response_json]) == 1
+
+        operator = client.get(
+            f"/api/v1/journeys/{ids['journey_id']}/operator",
+            headers=_auth_headers(ids["owner_id"]),
+        )
+        assert operator.status_code == 200, operator.text
+        assert operator.json()["group_recovery"]["followthrough"]["state"] == "RECOVERY_CLOSED"
+        assert operator.json()["group_recovery"]["foreground"] is False
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
 
