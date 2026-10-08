@@ -323,6 +323,8 @@ def followthrough_projection(
             "REJOINED" if confirmed else "MOVING" if member_id in moving
             else "WAITING" if in_force else "NO_LONGER_REQUIRED"
         )
+        arrival = arrivals.get(member_id, {})
+        confirmation_kind = str(arrival.get("kind") or "") or None
         members_projection.append(
             {
                 "member_id": member_id,
@@ -330,7 +332,11 @@ def followthrough_projection(
                 "role": member.role,
                 "is_viewer": member_id == str(viewer_member_id or ""),
                 "state": status,
-                "confirmed_at": arrivals.get(member_id, {}).get("captured_at"),
+                "confirmed_at": arrival.get("captured_at"),
+                "confirmation_kind": confirmation_kind,
+                "physical_presence_verified": (
+                    confirmation_kind == "DEVICE_LOCATION_VERIFIED_EXECUTION"
+                ),
             }
         )
 
@@ -356,6 +362,16 @@ def followthrough_projection(
             if state == "RECOVERY_APPLIED_REJOIN_PENDING"
             else "CityNexus cannot identify a safe shared rendezvous yet."
         )
+
+    verified_presence_ids = {
+        member_id
+        for member_id in active_original
+        if str(arrivals.get(member_id, {}).get("kind") or "")
+        == "DEVICE_LOCATION_VERIFIED_EXECUTION"
+    }
+    all_required_physical_presence_verified = bool(active_original) and (
+        active_original.issubset(verified_presence_ids)
+    )
 
     viewer_id = str(viewer_member_id or "")
     viewer = member_by_id.get(viewer_id)
@@ -423,10 +439,11 @@ def followthrough_projection(
             if durable_arrivals
             else "ACTIVITY_EXECUTION_HISTORY_FALLBACK"
         ),
-        "physical_presence_verified": any(
-            item.get("kind") == "DEVICE_LOCATION_VERIFIED_EXECUTION"
-            for item in arrivals.values()
-        ),
+        # Group-level verification means every currently required
+        # traveller has device/location-verified arrival. A single verified
+        # member must never upgrade other self-reported arrivals.
+        "physical_presence_verified": all_required_physical_presence_verified,
+        "physical_presence_verified_member_count": len(verified_presence_ids),
         "plan_unchanged_by_closure": bool(closure and closure.get("plan_unchanged_by_closure") is True),
         "closed_at": closure.get("closed_at") if closure else None,
     }
@@ -574,6 +591,9 @@ def close_recovery_if_rejoined(session: Session, journey: Journey) -> dict[str, 
             "closed_at": closed_at,
             "evidence_level": "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH",
             "physical_presence_verified": projection["physical_presence_verified"],
+            "physical_presence_verified_member_count": projection.get(
+                "physical_presence_verified_member_count", 0
+            ),
             "plan_unchanged_by_closure": journey.active_plan_version_id
             == str(snapshot.get("applied_plan_version_id") or ""),
         }
