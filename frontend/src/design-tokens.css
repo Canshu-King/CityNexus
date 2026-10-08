@@ -957,10 +957,15 @@
    mode chips were legacy hardcoded greys/blues that the light theme had never
    been checked against.
    --------------------------------------------------------------------------- */
+/* .v8-aside-heading button is added to this list because it is the same family of text consumer
+   and was left out: measured on the live screen it still took --v8-indigo (#0a66ff) while every
+   button beside it on the same screen read --cn-accent-text (#0a5cd6), so the screen carried two
+   blues at once. */
 .v8-kicker,
 .v8-text-button,
 .v8-quiet-button,
-.v8-compare-button {
+.v8-compare-button,
+.v8-aside-heading button {
   color: var(--cn-accent-text);
 }
 .v8-brand span,
