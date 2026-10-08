@@ -2493,52 +2493,61 @@ function Me({
         </div>
       </div>
 
-      <div className="v8-me-grid">
-        <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "这趟行程" : "This trip"}</span>
-          <strong>{cityLabel}</strong>
-          <p>
-            {t("shell.travelers", { n: data.trip.party_size })} ·{" "}
-            {money(data.journey.budget.amount_minor, data.journey.budget.currency, locale)}
-          </p>
-        </article>
+      {/* 分组 1: 这趟行程 - 应用/旅程级别 */}
+      <div className="v8-section-group" data-testid="me-journey-section">
+        <h2 className="v8-section-title">{zh ? "这趟行程" : "This trip"}</h2>
+        <div className="v8-me-grid">
+          <article className="v8-me-card">
+            <span className="v8-kicker">{zh ? "目的地" : "Destination"}</span>
+            <strong>{cityLabel}</strong>
+            <p>
+              {t("shell.travelers", { n: data.trip.party_size })} ·{" "}
+              {money(data.journey.budget.amount_minor, data.journey.budget.currency, locale)}
+            </p>
+          </article>
 
-        <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "住宿" : "Stay"}</span>
-          <strong>{stay ? stay.stay.property_name : zh ? "还没有选定" : "Not chosen yet"}</strong>
-          <p>
-            {stay
-              ? zh
-                ? "已确认的住宿"
-                : "Confirmed stay"
-              : zh
-                ? "在「行程 · 住宿」里挑选"
-                : "Choose it in Trips · Stay"}
-          </p>
-        </article>
+          <article className="v8-me-card">
+            <span className="v8-kicker">{zh ? "住宿" : "Stay"}</span>
+            <strong>{stay ? stay.stay.property_name : zh ? "还没有选定" : "Not chosen yet"}</strong>
+            <p>
+              {stay
+                ? zh
+                  ? "已确认的住宿"
+                  : "Confirmed stay"
+                : zh
+                  ? "在「行程 · 住宿」里挑选"
+                  : "Choose it in Trips · Stay"}
+            </p>
+          </article>
 
-        <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "已确认的预订" : "Confirmed bookings"}</span>
-          <strong>
-            {bookings.length
-              ? zh
-                ? `${bookings.length} 项`
-                : `${bookings.length}`
-              : zh
-                ? "还没有"
-                : "None yet"}
-          </strong>
-          <p>
-            {bookings.length
-              ? zh
-                ? "受保护的预订，不会被自动改动。"
-                : "Protected bookings; they are never changed automatically."
-              : zh
-                ? "在「行程 · 预订」里导入你的票或确认单。"
-                : "Import a ticket or confirmation in Trips · Bookings."}
-          </p>
-        </article>
+          <article className="v8-me-card">
+            <span className="v8-kicker">{zh ? "已确认的预订" : "Confirmed bookings"}</span>
+            <strong>
+              {bookings.length
+                ? zh
+                  ? `${bookings.length} 项`
+                  : `${bookings.length}`
+                : zh
+                  ? "还没有"
+                  : "None yet"}
+            </strong>
+            <p>
+              {bookings.length
+                ? zh
+                  ? "受保护的预订，不会被自动改动。"
+                  : "Protected bookings; they are never changed automatically."
+                : zh
+                  ? "在「行程 · 预订」里导入你的票或确认单。"
+                  : "Import a ticket or confirmation in Trips · Bookings."}
+            </p>
+          </article>
+        </div>
+      </div>
 
+      {/* 分组 2: 账户与自动化 - 账户级别 */}
+      <div className="v8-section-group" data-testid="me-account-section">
+        <h2 className="v8-section-title">{zh ? "账户与自动化" : "Account & automation"}</h2>
+        
         <article className="v8-me-card">
           <span className="v8-kicker">{zh ? "改动偏好" : "Change preferences"}</span>
           <strong>{freedomLabel(policy?.mode)}</strong>
@@ -2561,47 +2570,51 @@ function Me({
         <PushCapabilityCard travelerId={data.journey.traveler_id} />
       </div>
 
+      {/* 高级详情 - 技术级别 */}
       <details className="v8-advanced" data-testid="me-advanced">
-        <summary>{zh ? "高级详情" : "Advanced detail"}</summary>
-        <div className="v8-me-grid">
-          <article className="v8-me-card">
-            <span className="v8-kicker">{zh ? "委派范围" : "Delegation scope"}</span>
-            <ul>
-              <li>
-                {t("me.maxCost")}{" "}
-                {money(policy?.max_auto_replan_cost_delta_minor ?? 5000, data.journey.budget.currency, locale)}
-              </li>
-              <li>
-                {t("me.maxLoss")} {money(policy?.max_auto_loss_minor ?? 0, data.journey.budget.currency, locale)}
-              </li>
-              <li>
-                {t("me.scheduleDrift")} {policy?.max_auto_schedule_drift_min ?? 20} {t("me.minutes")}
-              </li>
-              <li>{t("me.protectedMoments")}</li>
-            </ul>
-          </article>
-          <article className="v8-me-card">
-            <span className="v8-kicker">{zh ? "技术标识" : "Technical identifiers"}</span>
-            <ul className="me-identifiers">
-              <li>
-                <b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>
-              </li>
-              <li>
-                <b>version</b> <code>{policy?.version ?? "—"}</code>
-              </li>
-              <li>
-                <b>city_code</b> <code>{data.journey.city_code}</code>
-              </li>
-            </ul>
-            <button type="button" className="v8-outline-button" onClick={() => setShowAdvanced(!showAdvanced)}>
-              {showAdvanced ? (zh ? "收起" : "Hide") : zh ? "查看策略详情" : "View policy detail"}
-            </button>
-            {showAdvanced && (
-              <pre className="me-policy-json" data-testid="me-policy-json">
-                {JSON.stringify(policy ?? {}, null, 2)}
-              </pre>
-            )}
-          </article>
+        <summary>{zh ? "高级详情（技术要求登录）" : "Advanced detail (login required)"}</summary>
+        <div className="v8-section-group">
+          <h3 className="v8-section-subtitle">{zh ? "技术要求" : "Technical requirements"}</h3>
+          <div className="v8-me-grid">
+            <article className="v8-me-card">
+              <span className="v8-kicker">{zh ? "委派范围" : "Delegation scope"}</span>
+              <ul>
+                <li>
+                  {t("me.maxCost")}{" "}
+                  {money(policy?.max_auto_replan_cost_delta_minor ?? 5000, data.journey.budget.currency, locale)}
+                </li>
+                <li>
+                  {t("me.maxLoss")} {money(policy?.max_auto_loss_minor ?? 0, data.journey.budget.currency, locale)}
+                </li>
+                <li>
+                  {t("me.scheduleDrift")} {policy?.max_auto_schedule_drift_min ?? 20} {t("me.minutes")}
+                </li>
+                <li>{t("me.protectedMoments")}</li>
+              </ul>
+            </article>
+            <article className="v8-me-card">
+              <span className="v8-kicker">{zh ? "技术标识" : "Technical identifiers"}</span>
+              <ul className="me-identifiers">
+                <li>
+                  <b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>
+                </li>
+                <li>
+                  <b>version</b> <code>{policy?.version ?? "—"}</code>
+                </li>
+                <li>
+                  <b>city_code</b> <code>{data.journey.city_code}</code>
+                </li>
+              </ul>
+              <button type="button" className="v8-outline-button" onClick={() => setShowAdvanced(!showAdvanced)}>
+                {showAdvanced ? (zh ? "收起" : "Hide") : zh ? "查看策略详情" : "View policy detail"}
+              </button>
+              {showAdvanced && (
+                <pre className="me-policy-json" data-testid="me-policy-json">
+                  {JSON.stringify(policy ?? {}, null, 2)}
+                </pre>
+              )}
+            </article>
+          </div>
         </div>
       </details>
     </section>
