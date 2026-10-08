@@ -152,6 +152,17 @@ const en: Dict = {
   "trial.verdictRetryable": "it was asked, and nothing answered this round",
   "trial.verdictRowsShort": "the server names it, holds {rows} rows and is short {missing} categories",
   "trial.verdictOther": "the server gave some other verdict",
+  /* Wizard buttons and the inline default mark. `trial.create` already exists meaning
+     "Create journey", which is not what this button prints, so this takes its own key rather than
+     borrowing that one and rewording the screen. The aria prefix keeps its trailing space: the
+     review-row gate measures that label, and a missing space doubles the words for the traveller. */
+  "trial.changeThisAria": "Change ",
+  "trial.changeThis": "Change",
+  "trial.filledForYou": "we filled this in for you",
+  "trial.retry": "Retry",
+  "trial.back": "Back",
+  "trial.next": "Next",
+  "trial.createTrip": "Create trip",
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
@@ -1405,6 +1416,16 @@ const zhCN: Dict = {
   "trial.verdictRetryable": "问了，这一轮没人回答",
   "trial.verdictRowsShort": "服务器认得它，目录里有 {rows} 条，还缺 {missing} 类事实",
   "trial.verdictOther": "服务器给了别的判定",
+  /* 向导按钮与那枚「替你填的」标记。`trial.create` 这枚键早就存在，值是「创建行程」，
+     与这枚按钮实际印出的字不同，所以这里另起键，不借它、也不改屏上的话。
+     无障碍前缀那枚保留句末全角冒号，逐字照旧。 */
+  "trial.changeThisAria": "改这一项：",
+  "trial.changeThis": "改这一项",
+  "trial.filledForYou": "我们替你填的",
+  "trial.retry": "重试",
+  "trial.back": "返回",
+  "trial.next": "下一步",
+  "trial.createTrip": "确认创建",
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",
   "shell.factsSynced": "行程事实已同步",
