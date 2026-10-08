@@ -1491,6 +1491,13 @@ def invitation_projection(
     viewer = session.get(JourneyMember, str(viewer_member_id))
     if not _member_in_force(viewer, current):
         return None
+    # A signed collaborator does not automatically carry JOURNEY_UPDATE.
+    viewer_capability = session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == viewer.role,
+            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+        )
+    )
     output: dict[str, list[dict[str, Any]]] = {
         "sent": [], "incoming": [], "joined": [], "promotions": []
     }
@@ -1574,6 +1581,7 @@ def invitation_projection(
                 "recipients": recipient_views,
                 "participants": progress_board,
                 "own_progress": own_progress,
+                "viewer_can_propose": viewer_capability is not None,
             })
             continue
 
@@ -1606,6 +1614,7 @@ def invitation_projection(
                 "rendezvous": rendezvous_view,
                 "participants": progress_board,
                 "own_progress": own_progress,
+                "viewer_can_propose": viewer_capability is not None,
             })
             continue
         output["incoming"].append({
@@ -1624,12 +1633,6 @@ def invitation_projection(
     # R73's shared-stop proposal is a Journey-level collective decision, so it
     # is projected to every current Journey member, including members outside
     # the temporary R70/R72 invitation group.
-    viewer_capability = session.scalar(
-        select(JourneyRoleCapability.role).where(
-            JourneyRoleCapability.role == viewer.role,
-            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
-        )
-    )
     promotions = session.scalars(
         select(MemberPlacePromotion)
         .where(MemberPlacePromotion.journey_id == journey.id)
@@ -1694,6 +1697,46 @@ def invitation_projection(
             state_detail = json.loads(str(promotion.state_detail_json or "{}"))
         except (TypeError, json.JSONDecodeError):
             state_detail = {}
+        # Project only bounded, server-derived decision facts, not raw routes,
+        # coordinates or private journey/Place search context.
+        tradeoff = None
+        if proposal is not None:
+            try:
+                proposal_diff = json.loads(str(proposal.diff_json or "{}"))
+            except (TypeError, json.JSONDecodeError):
+                proposal_diff = {}
+            if not isinstance(proposal_diff, dict):
+                proposal_diff = {}
+            verified = proposal_diff.get("verified_evidence")
+            mobility = verified.get("mobility") if isinstance(verified, dict) else None
+            mobility = mobility if isinstance(mobility, dict) else {}
+            snapshot = mobility.get("snapshot")
+            snapshot = snapshot if isinstance(snapshot, dict) else {}
+            qualities = sorted({
+                str(item.get("fact_quality") or "UNKNOWN")
+                for item in snapshot.get("facts") or []
+                if isinstance(item, dict)
+            })
+            def _safe_int(value: Any) -> int | None:
+                if value is None or isinstance(value, bool):
+                    return None
+                try:
+                    return int(value)
+                except (TypeError, ValueError, OverflowError):
+                    return None
+            tradeoff = {
+                "added_count": len(proposal_diff.get("added") or []),
+                "removed_count": len(proposal_diff.get("removed") or []),
+                "moved_count": len(proposal_diff.get("moved") or []),
+                "cost_delta_minor": _safe_int(proposal_diff.get("cost_delta_minor")),
+                "travel_delta_min": _safe_int(proposal_diff.get("travel_delta_min")),
+                "end_time_delta_min": _safe_int(proposal_diff.get("end_time_delta_min")),
+                "currency": str(journey.budget_currency or ""),
+                "protected_commitments_preserved": bool(proposal.locked_commitments_preserved),
+                "hard_constraints_passed": bool(proposal.hard_constraints_passed),
+                "route_provider": str(mobility.get("provider") or snapshot.get("source_provider") or "UNKNOWN"),
+                "route_fact_qualities": qualities,
+            }
         output["promotions"].append({
             "promotion_id": str(promotion.id),
             "invitation_id": str(invitation.id),
@@ -1702,6 +1745,7 @@ def invitation_projection(
             "place": place_view,
             "rendezvous": rendezvous_view,
             "dwell_minutes": int(promotion.dwell_minutes),
+            "tradeoff": tradeoff,
             "base_plan_version_id": str(promotion.active_plan_version_id),
             "proposal_id": str(promotion.proposal_id) if promotion.proposal_id else None,
             "mission_id": str(promotion.mission_id) if promotion.mission_id else None,
