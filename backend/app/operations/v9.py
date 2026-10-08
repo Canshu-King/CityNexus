@@ -1293,7 +1293,7 @@ def notify(
 
 
 def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourneySnapshot:
-    reference = execution_clock.now(journey.timezone)
+    reference, used_timezone, timezone_honoured = execution_clock.now_honest(journey.timezone)
     window_end = reference + timedelta(hours=24)
     activities = []
     legs = []
@@ -1359,6 +1359,11 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         "active_plan_version_id": journey.active_plan_version_id,
         "current_activity_id": journey.current_activity_id,
         "reference_at": reference.isoformat(),
+        # Which zone `reference_at` is actually in, and whether it is the one the journey asked for.
+        # This snapshot is what a device reads while offline, so a moment it cannot place is one it
+        # cannot act on -- and a zone that could not be used must say so rather than read as honoured.
+        "used_timezone": used_timezone,
+        "timezone_honoured": timezone_honoured,
         "next_24h": next_day,
         "execution": execution,
         "now": execution["now"],
@@ -1540,7 +1545,7 @@ def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
         )
         .order_by(Commitment.created_at)
     )
-    execution_now = execution_clock.now(journey.timezone)
+    execution_now, used_timezone, timezone_honoured = execution_clock.now_honest(journey.timezone)
     c4_countdown = None
     if c4:
         scheduled = _load(c4.policy_json, {}).get("scheduled_start_at")
@@ -1575,6 +1580,11 @@ def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
     return {
         "sequence": device.last_sequence,
         "time": execution_now.isoformat(),
+        # Which zone `time` is actually in, and whether it is the one the journey asked for.  The device
+        # reads this while it may be offline, so a moment it cannot place is one it cannot act on, and
+        # an unusable zone must say so rather than read as honoured.
+        "used_timezone": used_timezone,
+        "timezone_honoured": timezone_honoured,
         "journey_state": journey.status,
         # "Nothing is due" and "the record contradicts itself" are different
         # facts; the device must not be told the journey is complete because the
