@@ -246,7 +246,7 @@ const seedAndEnter = async (page: Page) => {
 test.describe("ORD-0415 on the running screen", () => {
   test("fixture-lands-in-payload — the six words arrive from the server, not from my DOM", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    const { journeyId, applied } = await seedAndEnter(page);
+    const { journeyId, applied, readBack } = await seedAndEnter(page);
     push("fixture-applied", { journey_id: journeyId, applied });
 
     push("fixture-read-back", { journey_id: journeyId, read_back: readBack });
