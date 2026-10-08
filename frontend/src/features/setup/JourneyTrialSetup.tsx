@@ -247,40 +247,38 @@ export function groupOfDestination(row: DestinationReading): DestinationGroup {
  * traveller's own words, the folded form of them and any operation token are *not* identities, so
  * none of them may stand in this slot (see `DestinationResolution` in `anywhere_capability.py`).
  */
-export function identityWords(row: DestinationReading, zh: boolean): string {
-  if (!row.answered) return zh ? "身份还没读到" : "identity not read yet";
-  if (row.canonical_destination_id) return zh ? "服务器给了身份" : "the server named it";
-  return zh ? "还没有身份" : "no identity yet";
+/* These two helpers live at module scope, so they cannot call useT() the way the component body
+   does -- that is why their two languages used to be written out inline.  They now take the very
+   reader the component already holds (`ReturnType<typeof useT>`, not a hand-rolled signature that
+   could drift from it), and every sentence moved into the dictionary unchanged. */
+export function identityWords(row: DestinationReading, t: ReturnType<typeof useT>): string {
+  if (!row.answered) return t("trial.identityNotRead");
+  if (row.canonical_destination_id) return t("trial.identityGiven");
+  return t("trial.identityNone");
 }
 
 /** What the server answered, said once in plain words and once in the route's own field values. */
-function verdictWords(row: DestinationReading, zh: boolean): string {
+function verdictWords(row: DestinationReading, t: ReturnType<typeof useT>): string {
   if (!row.answered) {
-    return row.failure
-      ? zh
-        ? "这一轮没读到服务器的判定（读不到不等于服务器说不知道）"
-        : "no server verdict was read this round (a failed read is not the server saying it does not know)"
-      : zh
-        ? "还没问过服务器"
-        : "the server has not been asked yet";
+    return row.failure ? t("trial.verdictNoRead") : t("trial.verdictNotAsked");
   }
   if (row.capability === "READY") {
-    return zh ? "服务器说这座城现在就能规划" : "the server says this destination can be planned now";
+    return t("trial.verdictReady");
   }
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
-    return zh
-      ? "服务器的词表和目录里都没有这个名字，要它联网解析才有答案"
-      : "nothing the server consults names this spelling; it would have to resolve it over the network";
+    return t("trial.verdictNoCanonical");
   }
   if (row.capability === "UNKNOWN_RETRYABLE") {
-    return zh ? "问了，这一轮没人回答" : "it was asked, and nothing answered this round";
+    return t("trial.verdictRetryable");
   }
   if (row.canonical_destination_id) {
-    return zh
-      ? `服务器认得它，目录里有 ${row.place_count ?? 0} 条，还缺 ${row.missing_categories.length} 类事实`
-      : `the server names it, holds ${row.place_count ?? 0} rows and is short ${row.missing_categories.length} categories`;
+    /* The two numbers stay what the route measured; only the sentence around them moved. */
+    return t("trial.verdictRowsShort", {
+      rows: row.place_count ?? 0,
+      missing: row.missing_categories.length,
+    });
   }
-  return zh ? "服务器给了别的判定" : "the server gave some other verdict";
+  return t("trial.verdictOther");
 }
 
 const GROUP_HEAD: Record<DestinationGroup, [string, string, string]> = {
@@ -985,9 +983,9 @@ export function JourneyTrialSetup({
                             className="trial-supported-identity"
                             data-testid={`trial-supported-identity-${row.spelling}`}
                           >
-                            {identityWords(row, zh)}
+                            {identityWords(row, t)}
                           </span>
-                          <span className="trial-supported-verdict">{verdictWords(row, zh)}</span>
+                          <span className="trial-supported-verdict">{verdictWords(row, t)}</span>
                           <span
                             className="trial-supported-fields"
                             data-testid={`trial-supported-fields-${row.spelling}`}

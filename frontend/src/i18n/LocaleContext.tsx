@@ -139,6 +139,19 @@ const en: Dict = {
   "trial.cancel": "Back to current journey",
   "trial.newJourney": "Try another city",
   "trial.createdLiveHint": "Journey created. Open City Discovery to use live providers for this city.",
+  /* The destination-reading words, moved out of the module-scope helpers that could not reach useT().
+     Every string here is the sentence the screen already printed, kept byte-for-byte: the honest
+     destinations gate asserts these exact words, so a migration must not "reword" anything. */
+  "trial.identityNotRead": "identity not read yet",
+  "trial.identityGiven": "the server named it",
+  "trial.identityNone": "no identity yet",
+  "trial.verdictNoRead": "no server verdict was read this round (a failed read is not the server saying it does not know)",
+  "trial.verdictNotAsked": "the server has not been asked yet",
+  "trial.verdictReady": "the server says this destination can be planned now",
+  "trial.verdictNoCanonical": "nothing the server consults names this spelling; it would have to resolve it over the network",
+  "trial.verdictRetryable": "it was asked, and nothing answered this round",
+  "trial.verdictRowsShort": "the server names it, holds {rows} rows and is short {missing} categories",
+  "trial.verdictOther": "the server gave some other verdict",
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
@@ -1373,6 +1386,18 @@ const zhCN: Dict = {
   "trial.cancel": "返回当前行程",
   "trial.newJourney": "试用其他城市",
   "trial.createdLiveHint": "行程已创建。进入“城市探索”后可使用该城市的实时数据源。",
+  /* 与英文块同键集：取词器在两边都取不到时会把键名印到屏上，那正是「不许回落到原始 id」要防的那一形。
+     每一句都是这一屏原本就印出来的字，逐字未动。 */
+  "trial.identityNotRead": "身份还没读到",
+  "trial.identityGiven": "服务器给了身份",
+  "trial.identityNone": "还没有身份",
+  "trial.verdictNoRead": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+  "trial.verdictNotAsked": "还没问过服务器",
+  "trial.verdictReady": "服务器说这座城现在就能规划",
+  "trial.verdictNoCanonical": "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+  "trial.verdictRetryable": "问了，这一轮没人回答",
+  "trial.verdictRowsShort": "服务器认得它，目录里有 {rows} 条，还缺 {missing} 类事实",
+  "trial.verdictOther": "服务器给了别的判定",
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",
   "shell.factsSynced": "行程事实已同步",
