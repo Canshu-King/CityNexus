@@ -871,6 +871,24 @@ const en: Dict = {
   "stay.cancellation": "Cancellation",
   "stay.provider": "Provider",
   "stay.priceUnavailable": "Price not available",
+  // StayExplorer's own words, carried over verbatim from the inline ternaries this
+  // panel used to hold. They are deliberately not merged with the near-synonyms above
+  // (`stay.priceUnavailable`, `stay.nonRefundable`, `stay.nightly`): those render
+  // different text, and re-using them would silently rewrite what the screen says.
+  "stay.noCandidates": "No stay candidates yet",
+  "stay.rankedThisRun": "Candidates ranked this run",
+  "stay.returnedThisRun": "Stays this server returned",
+  "stay.travelerCount": "{n} travelers",
+  "stay.priceUnknown": "Price unavailable",
+  "stay.noProviderRate": " (no provider rate)",
+  "stay.totalSeparator": " total · ",
+  "stay.perNightSeparator": " / night",
+  "stay.roomTypeUnknown": "Room type unknown",
+  "stay.roomHotel": "Hotel",
+  "stay.cancellationUnknown": "Cancellation terms unknown",
+  "stay.termNonRefundable": "Non-refundable",
+  "stay.termFreeCancelBefore": "Free cancellation before arrival",
+  "stay.noProviderEvidence": "No provider evidence",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2071,6 +2089,20 @@ const zhCN: Dict = {
   "stay.cancellation": "取消政策",
   "stay.provider": "供应商",
   "stay.priceUnavailable": "暂无价格",
+  "stay.noCandidates": "还没有可用的住宿候选",
+  "stay.rankedThisRun": "这一轮排定的候选数",
+  "stay.returnedThisRun": "这台服务器交回的住宿数",
+  "stay.travelerCount": "{n} 位旅客",
+  "stay.priceUnknown": "价格未知",
+  "stay.noProviderRate": "（供应商未提供房价）",
+  "stay.totalSeparator": " 合计 · ",
+  "stay.perNightSeparator": " / 晚",
+  "stay.roomTypeUnknown": "房型未知",
+  "stay.roomHotel": "酒店",
+  "stay.cancellationUnknown": "退改政策未知",
+  "stay.termNonRefundable": "不可取消",
+  "stay.termFreeCancelBefore": "入住前可免费取消",
+  "stay.noProviderEvidence": "暂无供应商证据",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
