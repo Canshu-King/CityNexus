@@ -853,6 +853,7 @@ const en: Dict = {
 
   // ── Stay Explorer ──
   "stay.kicker": "Stay Explorer · captured evidence",
+  "stay.label": "Stay",
   "stay.title": "Choose the anchor, see the journey.",
   "stay.lede": "Every rate is explicit about currency, room, occupancy, refundability, freshness, and the travel plan it shapes.",
   "stay.capturedReplay": "Captured replay",
@@ -1987,6 +1988,7 @@ const zhCN: Dict = {
 
   // ── 住宿选择 ──
   "stay.kicker": "住宿选择 · 已采集证据",
+  "stay.label": "住宿",
   "stay.title": "选择锚点，看见行程。",
   "stay.lede": "每个费率都明确标注币种、房型、入住人数、退改政策、新鲜度和它所塑造的行程。",
   "stay.capturedReplay": "已采集回放",

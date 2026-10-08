@@ -3243,7 +3243,7 @@ function Hub({
           one action, lodging is secondary context (GPT Hero rules). */}
       <div className="cn-hero-strip" data-testid="today-strip">
         <div className="cn-strip-item">
-          <span>{zh ? "住宿" : "Stay"}</span>
+          <span>{t("stay.label")}</span>
           <strong data-testid="today-stay">
             {chosenStay
               ? chosenStay.stay.property_name
