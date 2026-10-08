@@ -214,6 +214,7 @@ export function MemberPlaceInvitationPanel({
     placeName: string,
     rendezvousTitle: string,
     current: boolean,
+    canPropose: boolean,
   ) => (
     <section data-testid="member-place-promotion-offer" data-invitation-id={invitationId}>
       <strong>{zh ? "把发现加入共同旅程？" : "Promote this discovery to the shared Journey?"}</strong>
@@ -229,7 +230,7 @@ export function MemberPlaceInvitationPanel({
         id={`member-place-promotion-dwell-${invitationId}`}
         data-testid="member-place-promotion-dwell"
         value={promotionDwellById[invitationId] ?? 20}
-        disabled={!current || busyId !== null}
+        disabled={!current || !canPropose || busyId !== null}
         onChange={(event) => setPromotionDwellById((values) => ({
           ...values,
           [invitationId]: Number(event.target.value) as 10 | 20 | 30,
@@ -240,10 +241,17 @@ export function MemberPlaceInvitationPanel({
         <option value={30}>{zh ? "30 分钟" : "30 minutes"}</option>
       </select>
       <small>{zh ? `地点：${placeName}；下一会合：${rendezvousTitle}。` : `Place: ${placeName}; next rendezvous: ${rendezvousTitle}.`}</small>
+      {!canPropose && (
+        <small data-testid="member-place-promotion-role-blocked">
+          {zh
+            ? "你当前的 Journey 成员角色没有 JOURNEY_UPDATE 权限，因此不能提交共享计划变更提议。请由有权限的成员发起；系统不会借用其他人的身份。"
+            : "Your current Journey role lacks JOURNEY_UPDATE authority, so you cannot submit a shared-plan change. A member with this authority must propose it; CityNexus will not act as another member."}
+        </small>
+      )}
       <button
         type="button"
         data-testid="member-place-promotion-create"
-        disabled={!current || busyId !== null}
+        disabled={!current || !canPropose || busyId !== null}
         onClick={() => void createPromotion(invitationId)}
       >
         {busyId === invitationId
@@ -273,6 +281,31 @@ export function MemberPlaceInvitationPanel({
         <strong>{promotion.place.name} · {promotion.dwell_minutes}{zh ? " 分钟" : " min"}</strong>
         <small>{zh ? `下一会合点：${promotion.rendezvous.title} · ${promotion.rendezvous.place_name}` : `Next rendezvous: ${promotion.rendezvous.title} · ${promotion.rendezvous.place_name}`}</small>
         <small data-testid="member-place-promotion-state">{stateText}</small>
+        {promotion.tradeoff && (
+          <section data-testid="member-place-promotion-tradeoff">
+            <strong>{zh ? "决定前请核对共享行程变化" : "Review the shared itinerary changes before deciding"}</strong>
+            <small>
+              {zh
+                ? `新增 ${promotion.tradeoff.added_count} 站、移除 ${promotion.tradeoff.removed_count} 站、移动 ${promotion.tradeoff.moved_count} 站。`
+                : `${promotion.tradeoff.added_count} added, ${promotion.tradeoff.removed_count} removed, ${promotion.tradeoff.moved_count} moved stop(s).`}
+            </small>
+            <small>
+              {zh
+                ? `行程结束时间变化：${promotion.tradeoff.end_time_delta_min === null ? "未知" : `${promotion.tradeoff.end_time_delta_min >= 0 ? "+" : ""}${promotion.tradeoff.end_time_delta_min} 分钟`}；路程时间变化：${promotion.tradeoff.travel_delta_min === null ? "未知" : `${promotion.tradeoff.travel_delta_min >= 0 ? "+" : ""}${promotion.tradeoff.travel_delta_min} 分钟`}。`
+                : `Trip end delta: ${promotion.tradeoff.end_time_delta_min === null ? "unknown" : `${promotion.tradeoff.end_time_delta_min >= 0 ? "+" : ""}${promotion.tradeoff.end_time_delta_min} min`}; travel delta: ${promotion.tradeoff.travel_delta_min === null ? "unknown" : `${promotion.tradeoff.travel_delta_min >= 0 ? "+" : ""}${promotion.tradeoff.travel_delta_min} min`}.`}
+            </small>
+            <small>
+              {zh
+                ? `预算变化：${promotion.tradeoff.cost_delta_minor === null ? "未知" : `${promotion.tradeoff.cost_delta_minor >= 0 ? "+" : ""}${promotion.tradeoff.cost_delta_minor} ${promotion.tradeoff.currency} 最小货币单位`}。受保护承诺：${promotion.tradeoff.protected_commitments_preserved ? "候选计划中保留" : "未确认保留"}。`
+                : `Budget delta: ${promotion.tradeoff.cost_delta_minor === null ? "unknown" : `${promotion.tradeoff.cost_delta_minor >= 0 ? "+" : ""}${promotion.tradeoff.cost_delta_minor} minor units (${promotion.tradeoff.currency})`}. Protected commitments: ${promotion.tradeoff.protected_commitments_preserved ? "retained in candidate" : "not confirmed retained"}.`}
+            </small>
+            <small>
+              {zh
+                ? `路线证据来源：${promotion.tradeoff.route_provider}；证据类别：${promotion.tradeoff.route_fact_qualities.join(", ") || "未标注"}。这是候选估计，不是实时到场证明，应用前仍会复核。`
+                : `Route evidence: ${promotion.tradeoff.route_provider}; fact classes: ${promotion.tradeoff.route_fact_qualities.join(", ") || "unspecified"}. These are candidate estimates, not physical-arrival proof; the server rechecks before apply.`}
+            </small>
+          </section>
+        )}
         {promotion.state === "BLOCKED" && promotion.state_detail.feasibility === "FEASIBILITY_UNKNOWN" && (
           <small data-testid="member-place-promotion-unknown">
             {zh
@@ -476,6 +509,7 @@ export function MemberPlaceInvitationPanel({
             invitation.place.name,
             invitation.rendezvous.title,
             invitation.state === "OPEN",
+            invitation.viewer_can_propose,
           )}
         </article>
       ))}
@@ -497,6 +531,7 @@ export function MemberPlaceInvitationPanel({
             invitation.place.name,
             invitation.rendezvous.title,
             invitation.state === "OPEN",
+            invitation.viewer_can_propose,
           )}
         </article>
       ))}
