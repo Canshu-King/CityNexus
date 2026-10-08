@@ -27,6 +27,10 @@ except ImportError:  # pragma: no cover - compatibility fallback
 
 MIN_ACTIONABLE_CONFIDENCE = 0.55
 TERMINAL_ACTIVITY_STATUSES = frozenset({"COMPLETED", "SKIPPED", "CANCELLED"})
+# A scope check that could not be run, because one side has no coordinate to compare.  Named
+# rather than inlined so a screen and a gate can refer to the same fact, and deliberately not
+# spelled like the `_MISMATCH` family: those mean "compared, and it fell outside".
+GEOSPATIAL_SCOPE_UNVERIFIABLE = "GEOSPATIAL_SCOPE_UNVERIFIABLE"
 _STRUCTURED_TIME_KEYS = (
     "valid_from",
     "valid_until",
@@ -80,18 +84,30 @@ def _overlaps_event_window(activity: ImpactActivityContext, payload: Mapping[str
     return activity.start_at < valid_until and activity.end_at > valid_from
 
 
-def _within_scope(activity: ImpactActivityContext, payload: Mapping[str, Any]) -> bool:
+def _within_scope(activity: ImpactActivityContext, payload: Mapping[str, Any]) -> bool | None:
+    """Whether the event's own geometry covers this stop, or None when that cannot be told.
+
+    Three states, because "nobody knows where this stop is" is not the same answer as "this stop
+    is outside the flood": an unreadable radius and an unlocated stop were both returning False,
+    and `_corroboration` turns a False into `GEOSPATIAL_SCOPE_MISMATCH`, which its caller treats
+    as a rejection - so a stop the planner never located had its disruption silently dropped as
+    if a distance check had ruled it out.  A missing event coordinate already answered True on
+    the same reasoning (cannot rule it out, so do not reject), and this makes the two halves say
+    the same thing.
+    """
+
     try:
         latitude = float(payload["latitude"])
         longitude = float(payload["longitude"])
     except (KeyError, TypeError, ValueError):
+        # No geometry to compare against: cannot rule the stop out, so do not reject on it.
         return True
     if activity.latitude is None or activity.longitude is None:
-        return False
+        return None
     try:
         radius_m = float(payload.get("radius_m", payload.get("radius_meters", 2_000)))
     except (TypeError, ValueError):
-        return False
+        return None
     return _haversine_meters(latitude, longitude, activity.latitude, activity.longitude) <= max(
         0.0, radius_m
     )
@@ -295,16 +311,21 @@ def _values(payload: Mapping[str, Any], keys: tuple[str, ...]) -> tuple[str, ...
 
 def _corroboration(
     activity: ImpactActivityContext, payload: Mapping[str, Any]
-) -> tuple[tuple[str, ...], tuple[str, ...], bool]:
-    """Return independent evidence refs, reasons, and whether a ref is strong.
+) -> tuple[tuple[str, ...], tuple[str, ...], bool, tuple[str, ...]]:
+    """Return independent evidence refs, reasons, whether a ref is strong, and what stayed open.
 
     Candidate-provided ``evidence_refs`` are intentionally not read here. Only
     server-owned event scope, time, geometry, route, service, and name facts
     can corroborate an AI hypothesis.
+
+    ``undecidable`` names the checks that could not be made - a scope comparison against a
+    coordinate the server does not have is one.  It is deliberately neither a rejection nor a
+    reference: the candidate is neither discarded nor credited with a check that never ran.
     """
 
     refs: list[str] = []
     reasons: list[str] = []
+    undecidable: list[str] = []
     strong_reference = False
 
     explicit_activity = payload.get("_event_affected_activity_id")
@@ -312,7 +333,7 @@ def _corroboration(
     explicit_activity = explicit_activity or payload.get("activity_id")
     if explicit_activity not in (None, ""):
         if str(explicit_activity) != activity.activity_id:
-            return (), ("STRUCTURED_ACTIVITY_MISMATCH",), True
+            return (), ("STRUCTURED_ACTIVITY_MISMATCH",), True, ()
         refs.append("event.affected_activity_id")
         strong_reference = True
 
@@ -329,14 +350,14 @@ def _corroboration(
             value for value in (activity.place_id, activity.city_service_id) if value
         }
         if not any(value in activity_places for value in place_values):
-            return (), ("STRUCTURED_PLACE_MISMATCH",), True
+            return (), ("STRUCTURED_PLACE_MISMATCH",), True, ()
         refs.append("event.payload.place_id")
         strong_reference = True
 
     city_service_values = _values(payload, ("city_service_id", "affected_city_service_id"))
     if city_service_values:
         if activity.city_service_id is None or activity.city_service_id not in city_service_values:
-            return (), ("STRUCTURED_CITY_SERVICE_MISMATCH",), True
+            return (), ("STRUCTURED_CITY_SERVICE_MISMATCH",), True, ()
         refs.append("event.payload.city_service_id")
         strong_reference = True
 
@@ -352,7 +373,7 @@ def _corroboration(
     if scoped_values:
         activity_keys = {value for value in (activity.place_id, activity.city_service_id) if value}
         if not any(value in activity_keys for value in scoped_values):
-            return (), ("PROVIDER_SCOPE_MISMATCH",), True
+            return (), ("PROVIDER_SCOPE_MISMATCH",), True, ()
         if payload.get("route_intersection_place_ids"):
             refs.append("event.payload.route_intersection")
         elif payload.get("provider_scope_place_ids"):
@@ -364,23 +385,31 @@ def _corroboration(
     if _polygon_rings(payload):
         geometry_ref = _geometry_scope_ref(activity, payload)
         if geometry_ref is None:
-            return (), ("GEOSPATIAL_POLYGON_MISMATCH",), False
+            return (), ("GEOSPATIAL_POLYGON_MISMATCH",), False, ()
         refs.append(geometry_ref)
 
     if any(payload.get(key) not in (None, "") for key in ("latitude", "longitude")):
-        if not _within_scope(activity, payload):
-            return (), ("GEOSPATIAL_SCOPE_MISMATCH",), False
-        refs.append("event.payload.geo_scope")
+        in_scope = _within_scope(activity, payload)
+        # None is "this comparison cannot be made", not "it fell outside".  Rejecting on it
+        # dropped the traveller's disruption for a stop the server never located, and counting
+        # it as a reference would be claiming a distance check that never happened - so it ends
+        # up in neither bucket and is reported through `undecidable` instead.
+        if in_scope is False:
+            return (), ("GEOSPATIAL_SCOPE_MISMATCH",), False, ()
+        if in_scope is True:
+            refs.append("event.payload.geo_scope")
+        else:
+            undecidable.append(GEOSPATIAL_SCOPE_UNVERIFIABLE)
 
     if any(payload.get(key) not in (None, "") for key in _STRUCTURED_TIME_KEYS):
         if not _overlaps_event_window(activity, payload):
-            return (), ("TEMPORAL_SCOPE_MISMATCH",), False
+            return (), ("TEMPORAL_SCOPE_MISMATCH",), False, ()
         refs.append("event.payload.time_scope")
 
     if _text_mentions_activity(activity, payload):
         refs.append("event.payload.server_name_match")
 
-    return tuple(dict.fromkeys(refs)), tuple(reasons), strong_reference
+    return tuple(dict.fromkeys(refs)), tuple(reasons), strong_reference, tuple(undecidable)
 
 
 def _stage_for(
@@ -448,7 +477,9 @@ def validate_impact_candidates(
             rejected.append(candidate.activity_id)
             reasons.append("PROMPT_INJECTION_TEXT_REJECTED")
             continue
-        evidence_refs, evidence_reasons, strong_reference = _corroboration(activity, payload)
+        evidence_refs, evidence_reasons, strong_reference, undecided = _corroboration(
+            activity, payload
+        )
         if evidence_reasons:
             rejected.append(candidate.activity_id)
             reasons.extend(evidence_reasons)
@@ -467,6 +498,9 @@ def validate_impact_candidates(
         stage, minimum_required = _stage_for(evidence_refs, strong_reference=strong_reference)
         candidate_reasons = list(candidate.reason_codes)
         candidate_reasons.extend(evidence_refs)
+        # A check that could not be made is said out loud on the candidate, so a stop nobody
+        # located no longer looks like one a distance check cleared.
+        candidate_reasons.extend(undecided)
         actionable = True
         lifecycle_path = ["AI_HYPOTHESIS", "STRUCTURALLY_ELIGIBLE"]
         if stage == "AI_ONLY":
