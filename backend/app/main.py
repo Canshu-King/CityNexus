@@ -281,6 +281,7 @@ from app.execution.member_side_quest import (
     invalidate_member_side_quests_for_intents,
     navigate_member_side_quest_destination,
     preview_member_side_quest_fit,
+    resolve_member_side_quest_navigation_target,
     start_member_side_quest_return_report,
     transition_member_side_quest,
 )
@@ -10195,6 +10196,29 @@ def navigate_to_member_side_quest(
         quest_id=side_quest_id,
         location_observation_id=str(payload.location_observation_id),
         requested_mode=payload.requested_mode,
+    )
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/navigation-targets")
+def get_member_side_quest_navigation_target(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Resolve an exact current map pin for the signed-in member only."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return resolve_member_side_quest_navigation_target(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
     )
 
 

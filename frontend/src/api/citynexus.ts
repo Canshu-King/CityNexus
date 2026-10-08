@@ -735,6 +735,26 @@ export interface MemberSideQuestNavigationResult {
   plan_unchanged: true;
 }
 
+export interface MemberSideQuestNavigationTarget {
+  kind: "PRIVATE_STOP" | "SHARED_RENDEZVOUS";
+  place_id: string;
+  name: string;
+  latitude: number | null;
+  longitude: number | null;
+  coordinate_system: string;
+  provenance: {
+    provider_key: string;
+    external_id: string;
+    source_coordinate_system: string | null;
+  };
+  navigation_available: boolean;
+  unavailable_reason: string | null;
+}
+
+export interface MemberSideQuestNavigationTargetResult {
+  target: MemberSideQuestNavigationTarget;
+}
+
 export interface MemberSideQuestFitPreview {
   state: "FITS_WITH_BUFFER" | "TIGHT_RETURN" | "DOES_NOT_FIT" | "UNKNOWN";
   dwell_minutes: number;
@@ -2177,6 +2197,16 @@ export const cityNexusApi = {
         headers: travelerAuthHeaders(),
         body: JSON.stringify({ location_observation_id: locationObservationId, requested_mode: "WALK" }),
       },
+    );
+  },
+
+  getMemberSideQuestNavigationTarget(
+    journeyId: string,
+    sideQuestId: string,
+  ): Promise<MemberSideQuestNavigationTargetResult> {
+    return requestJson<MemberSideQuestNavigationTargetResult>(
+      "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/navigation-targets",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 

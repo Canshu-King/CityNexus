@@ -15,6 +15,7 @@ import app.main as main_module
 from app.core.config import settings
 from app.db.models import (
     ActionApproval,
+    AgentRun,
     Activity,
     AuditLog,
     Commitment,
@@ -1067,6 +1068,190 @@ def test_descriptive_destination_and_invalid_transitions_never_fabricate_a_place
     assert replaced.json()["member_side_quest"]["state"] == "READY"
     assert replaced.json()["member_side_quest"]["id"] == quest_id
     assert replaced.json()["member_side_quest"]["destination"]["place_id"] == exact_place.id
+
+
+def test_r68_navigation_target_is_owner_only_exact_and_read_only(monkeypatch):
+    import app.agent.autorun as autorun_module
+
+    autorun_module.stop_autorun()
+    monkeypatch.setattr(main_module, "start_autorun", lambda **_kwargs: {"enabled": False})
+    journey_id, owner_id, other_id = _active_shared_journey()
+    split = _start_split(journey_id, owner_id)
+    private_place = _private_place(journey_id, split.get("rendezvous_place_id"))
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": private_place.id},
+    )
+    assert created.status_code == 201, created.text
+    quest_id = created.json()["member_side_quest"]["id"]
+    endpoint = f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/navigation-targets"
+
+    shared_models = (PlanVersion, Activity, ReplanProposal, GuardianPulse, AgentRun)
+
+    def shared_snapshot() -> dict[str, tuple[tuple[object, ...], ...]]:
+        with SessionLocal() as session:
+            result: dict[str, tuple[tuple[object, ...], ...]] = {}
+            for model in shared_models:
+                if model is Activity:
+                    rows = session.scalars(select(Activity).where(
+                        Activity.plan_version_id.in_(
+                            select(PlanVersion.id).where(PlanVersion.journey_id == journey_id)
+                        )
+                    )).all()
+                else:
+                    rows = session.scalars(
+                        select(model).where(model.journey_id == journey_id)
+                    ).all()
+                result[model.__name__] = tuple(sorted(
+                    [
+                        tuple(getattr(row, column.name) for column in model.__table__.columns)
+                        for row in rows
+                    ],
+                    key=repr,
+                ))
+            return result
+
+    before_read = shared_snapshot()
+    owner_target = client.get(endpoint, headers=_auth(owner_id))
+    assert owner_target.status_code == 200, owner_target.text
+    private_target = owner_target.json()["target"]
+    assert private_target == {
+        "kind": "PRIVATE_STOP",
+        "place_id": private_place.id,
+        "name": private_place.name,
+        "latitude": private_place.latitude,
+        "longitude": private_place.longitude,
+        "coordinate_system": "WGS84",
+        "provenance": {
+            "provider_key": private_place.provider_key,
+            "external_id": private_place.external_id,
+            "source_coordinate_system": private_place.source_coordinate_system,
+        },
+        "navigation_available": True,
+        "unavailable_reason": None,
+    }
+    serialized_target = json.dumps(owner_target.json(), ensure_ascii=False).casefold()
+    assert "origin" not in serialized_target
+    assert "location_observation" not in serialized_target
+    assert shared_snapshot() == before_read
+
+    foreign = client.get(endpoint, headers=_auth(other_id))
+    assert foreign.status_code == 404
+    collaborator_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(other_id)
+    )
+    assert collaborator_projection.status_code == 200
+    assert private_place.name not in json.dumps(collaborator_projection.json(), ensure_ascii=False)
+
+    for action in ("start", "arrive", "complete"):
+        advanced = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert advanced.status_code == 200, advanced.text
+    return_target = client.get(endpoint, headers=_auth(owner_id))
+    assert return_target.status_code == 200, return_target.text
+    rendezvous = return_target.json()["target"]
+    with SessionLocal() as session:
+        rendezvous_activity = session.get(Activity, split["rendezvous_activity_id"])
+        journey = session.get(Journey, journey_id)
+        assert rendezvous_activity is not None and journey is not None
+        rendezvous_place = session.get(Place, rendezvous_activity.place_id)
+        assert rendezvous_place is not None
+        assert str(journey.active_plan_version_id) == split["active_plan_version_id"]
+    assert rendezvous["kind"] == "SHARED_RENDEZVOUS"
+    assert rendezvous["place_id"] == rendezvous_place.id
+    assert rendezvous["latitude"] == rendezvous_place.latitude
+    assert rendezvous["longitude"] == rendezvous_place.longitude
+    assert _count(MemberSideQuestReturnReport, MemberSideQuestReturnReport.journey_id == journey_id) == 0
+    owner_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()
+    assert owner_projection["member_side_quest"]["return_state"] == "RETURN_UNKNOWN"
+    assert owner_projection["member_side_quest"]["return_report"] is None
+
+
+def test_r68_navigation_rejects_descriptive_and_stale_targets():
+    journey_id, owner_id, _other_id = _active_shared_journey()
+    split = _start_split(journey_id, owner_id)
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"destination_text": "the little blue room beside the station"},
+    )
+    assert created.status_code == 201, created.text
+    quest_id = created.json()["member_side_quest"]["id"]
+    endpoint = f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/navigation-targets"
+    unresolved = client.get(endpoint, headers=_auth(owner_id))
+    assert unresolved.status_code == 409
+
+    place = _private_place(journey_id, split.get("rendezvous_place_id"))
+    exact = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": place.id},
+    )
+    assert exact.status_code == 201, exact.text
+    stale_endpoint = (
+        f"/api/v1/journeys/{journey_id}/member-side-quests/"
+        f"{exact.json()['member_side_quest']['id']}/navigation-targets"
+    )
+    assert client.get(stale_endpoint, headers=_auth(owner_id)).status_code == 200
+
+    ended = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/commands",
+        headers=_auth(owner_id),
+        json={"command": "I'm back with the group.", "requested_autonomy": "PLAN_ONLY"},
+    )
+    assert ended.status_code == 200, ended.text
+    assert client.get(stale_endpoint, headers=_auth(owner_id)).status_code == 409
+
+    replacement_split = _start_split(journey_id, owner_id)
+    replacement_place = _private_place(journey_id, replacement_split.get("rendezvous_place_id"))
+    replacement = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": replacement_place.id},
+    )
+    assert replacement.status_code == 201, replacement.text
+    replacement_endpoint = (
+        f"/api/v1/journeys/{journey_id}/member-side-quests/"
+        f"{replacement.json()['member_side_quest']['id']}/navigation-targets"
+    )
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == owner_id,
+        ))
+        assert journey is not None and member is not None
+        active_plan_id = str(journey.active_plan_version_id)
+        rendezvous_activity = session.get(Activity, replacement.json()["member_side_quest"]["rendezvous"]["activity_id"])
+        assert rendezvous_activity is not None
+        original_activity_status = rendezvous_activity.status
+        rendezvous_activity.status = "COMPLETED"
+        session.commit()
+    assert client.get(replacement_endpoint, headers=_auth(owner_id)).status_code == 409
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        rendezvous_activity = session.get(Activity, replacement.json()["member_side_quest"]["rendezvous"]["activity_id"])
+        assert journey is not None and rendezvous_activity is not None
+        rendezvous_activity.status = original_activity_status
+        journey.active_plan_version_id = None
+        session.commit()
+    assert client.get(replacement_endpoint, headers=_auth(owner_id)).status_code == 409
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == owner_id,
+        ))
+        assert journey is not None and member is not None
+        journey.active_plan_version_id = active_plan_id
+        member.removed_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+    assert client.get(replacement_endpoint, headers=_auth(owner_id)).status_code != 200
 
 
 def test_r63_end_invalidates_the_side_quest_and_removed_members_cannot_advance():

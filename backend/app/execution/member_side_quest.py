@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import unicodedata
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
@@ -420,6 +421,104 @@ def _member_side_quest_for_action(
     if place is None or str(place.city_code) != str(journey.city_code):
         raise HTTPException(409, "SIDE_QUEST_PLACE_NO_LONGER_AVAILABLE")
     return quest, split, place
+
+
+def resolve_member_side_quest_navigation_target(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    quest_id: str,
+) -> dict:
+    """Resolve only the signed-in member's current, plan-bound map target."""
+    quest = session.scalar(
+        select(MemberSideQuest).where(
+            MemberSideQuest.id == str(quest_id),
+            MemberSideQuest.journey_id == journey.id,
+            MemberSideQuest.member_id == member.id,
+            MemberSideQuest.traveler_id == str(traveler_id),
+        )
+    )
+    if quest is None:
+        raise HTTPException(404, "SIDE_QUEST_NOT_FOUND")
+
+    split = _active_split(session, journey, member)
+    if not _current_binding_matches(
+        session, journey=journey, member=member, quest=quest
+    ):
+        raise HTTPException(409, "SIDE_QUEST_NAVIGATION_CONTEXT_STALE")
+    rows = _quest_rows_for_split(
+        session, journey.id, member.id, str(split["intent"].id)
+    )
+    if not rows or str(rows[0].id) != str(quest.id):
+        raise HTTPException(409, "SIDE_QUEST_NAVIGATION_CONTEXT_STALE")
+
+    if quest.state == "DESTINATION_UNRESOLVED":
+        raise HTTPException(409, "SIDE_QUEST_DESTINATION_NOT_EXACT")
+    if quest.state in {"READY", "EN_ROUTE"}:
+        if quest.destination_authority != "EXACT_KNOWN_PLACE" or not quest.side_place_id:
+            raise HTTPException(409, "SIDE_QUEST_DESTINATION_NOT_EXACT")
+        place = session.get(Place, str(quest.side_place_id))
+        target_kind = "PRIVATE_STOP"
+    elif quest.state in {"COMPLETED", "CANCELLED"}:
+        place = split["place"]
+        target_kind = "SHARED_RENDEZVOUS"
+        if (
+            str(place.id) != str(quest.rendezvous_place_id)
+            or str(split["target"].id) != str(quest.rendezvous_activity_id)
+        ):
+            raise HTTPException(409, "SIDE_QUEST_NAVIGATION_CONTEXT_STALE")
+    else:
+        raise HTTPException(409, "SIDE_QUEST_NAVIGATION_STATE_UNAVAILABLE")
+
+    if place is None or str(place.city_code) != str(journey.city_code):
+        raise HTTPException(409, "SIDE_QUEST_NAVIGATION_PLACE_UNAVAILABLE")
+
+    coordinate_system = str(place.coordinate_system or "").strip().upper()
+    latitude: float | None = None
+    longitude: float | None = None
+    unavailable_reason: str | None = None
+    if coordinate_system != "WGS84":
+        unavailable_reason = "PLACE_COORDINATES_NOT_WGS84"
+    else:
+        try:
+            candidate_latitude = float(place.latitude)
+            candidate_longitude = float(place.longitude)
+        except (TypeError, ValueError, OverflowError):
+            unavailable_reason = "PLACE_COORDINATES_INVALID"
+        else:
+            if (
+                not math.isfinite(candidate_latitude)
+                or not math.isfinite(candidate_longitude)
+                or not -90 <= candidate_latitude <= 90
+                or not -180 <= candidate_longitude <= 180
+            ):
+                unavailable_reason = "PLACE_COORDINATES_INVALID"
+            else:
+                latitude = candidate_latitude
+                longitude = candidate_longitude
+
+    target = {
+        "kind": target_kind,
+        "place_id": str(place.id),
+        "name": str(place.name),
+        "latitude": latitude,
+        "longitude": longitude,
+        "coordinate_system": coordinate_system,
+        "provenance": {
+            "provider_key": str(place.provider_key or ""),
+            "external_id": str(place.external_id or ""),
+            "source_coordinate_system": (
+                str(place.source_coordinate_system)
+                if place.source_coordinate_system is not None
+                else None
+            ),
+        },
+        "navigation_available": unavailable_reason is None,
+        "unavailable_reason": unavailable_reason,
+    }
+    return {"target": target}
 
 
 def _fresh_member_observation(

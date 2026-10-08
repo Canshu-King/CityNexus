@@ -4,15 +4,25 @@ import {
   type GroupRendezvousRouteResult,
   type MemberSideQuestFitPreview,
   type MemberSideQuestNavigationResult,
+  type MemberSideQuestNavigationTarget,
   type MemberSideQuestProjection,
   type PlaceRecord,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
+import {
+  buildGoogleWalkingDirectionsUrl,
+  buildOpenStreetMapPinUrl,
+} from "./memberSideQuestNavigationLinks";
 
 type Rendezvous = {
   title: string;
   place_name: string;
   scheduled_at?: string | null;
+};
+
+type NavigationConsent = {
+  key: string;
+  target: MemberSideQuestNavigationTarget;
 };
 
 function routeSketch(geometry: number[][]): string | null {
@@ -68,6 +78,8 @@ export function MemberSideQuestCard({
   // must never resurrect a route/leave-by captured for an earlier reality.
   const [fitPreviewReceipt, setFitPreviewReceipt] = useState<{ key: string; value: MemberSideQuestFitPreview } | null>(null);
   const [privateRouteReceipt, setPrivateRouteReceipt] = useState<{ key: string; value: MemberSideQuestNavigationResult } | null>(null);
+  const [navigationConsent, setNavigationConsent] = useState<NavigationConsent | null>(null);
+  const [navigationBusy, setNavigationBusy] = useState(false);
 
   // One-time live routing guidance must not stay on screen indefinitely.
   // These timers only expire a displayed snapshot; they do not query the
@@ -132,6 +144,91 @@ export function MemberSideQuestCard({
   const previewContextKey = JSON.stringify([routeContextKey, dwellMinutes]);
   const fitPreview = fitPreviewReceipt?.key === previewContextKey ? fitPreviewReceipt.value : null;
   const privateRoute = privateRouteReceipt?.key === routeContextKey ? privateRouteReceipt.value : null;
+  const navigationKind = state === "READY" || state === "EN_ROUTE"
+    ? "PRIVATE_STOP"
+    : state === "COMPLETED" || state === "CANCELLED"
+      ? "SHARED_RENDEZVOUS"
+      : null;
+
+  useEffect(() => {
+    setNavigationConsent((current) => current?.key === routeContextKey ? current : null);
+  }, [routeContextKey]);
+
+  const prepareExternalNavigation = async () => {
+    if (!sideQuest || !navigationKind || !currentSplitActive || navigationBusy || busy) return;
+    setNavigationBusy(true);
+    setMessage(null);
+    setNavigationConsent(null);
+    try {
+      const { target } = await cityNexusApi.getMemberSideQuestNavigationTarget(journeyId, sideQuest.id);
+      if (target.kind !== navigationKind) {
+        throw new Error("The current navigation target changed.");
+      }
+      if (!target.navigation_available) {
+        setMessage(zh
+          ? "这个地点没有可用的 WGS84 精确坐标，无法安全打开地图；你仍可按支线手动前往。"
+          : "Exact WGS84 coordinates are unavailable, so maps cannot open safely. You can still follow the stop manually.");
+        return;
+      }
+      setNavigationConsent({ key: routeContextKey, target });
+    } catch {
+      setMessage(zh
+        ? "导航目标已变化或暂时不可用；我已刷新当前支线状态。"
+        : "The navigation target changed or is unavailable. Current side-quest state was refreshed.");
+      await onUpdated();
+    } finally {
+      setNavigationBusy(false);
+    }
+  };
+
+  const launchExternalNavigation = async (provider: "GOOGLE" | "OPENSTREETMAP") => {
+    const consent = navigationConsent;
+    if (
+      !consent || consent.key !== routeContextKey || !sideQuest
+      || !navigationKind || !currentSplitActive || navigationBusy
+    ) return;
+    const popup = window.open("about:blank", "_blank");
+    if (!popup) {
+      setMessage(zh
+        ? "浏览器阻止了新窗口；允许此站点打开新窗口后再试。"
+        : "The browser blocked the new tab. Allow popups for this site and try again.");
+      return;
+    }
+    popup.opener = null;
+    setNavigationBusy(true);
+    setMessage(null);
+    try {
+      // Revalidate at the user's final consent click. The external URL is only
+      // assigned if the signed owner still has the same exact current target.
+      const { target } = await cityNexusApi.getMemberSideQuestNavigationTarget(journeyId, sideQuest.id);
+      const stillSameTarget = target.navigation_available
+        && target.kind === consent.target.kind
+        && target.place_id === consent.target.place_id
+        && target.name === consent.target.name
+        && target.latitude === consent.target.latitude
+        && target.longitude === consent.target.longitude
+        && target.coordinate_system === consent.target.coordinate_system;
+      if (!stillSameTarget || target.kind !== navigationKind) {
+        throw new Error("The navigation target changed after consent was shown.");
+      }
+      popup.location.href = provider === "GOOGLE"
+        ? buildGoogleWalkingDirectionsUrl(target)
+        : buildOpenStreetMapPinUrl(target);
+      setNavigationConsent(null);
+      setMessage(zh
+        ? "已打开外部地图。路线与路况由地图服务提供；这不会报告到达、返程或已与大家会合。"
+        : "External maps opened. Its route and traffic are separate; this does not report arrival, return, or reunion.");
+    } catch {
+      popup.close();
+      setNavigationConsent(null);
+      setMessage(zh
+        ? "共同计划或导航目标刚刚变化；没有打开旧地点，请刷新后重新确认。"
+        : "The plan or target just changed. No stale destination was opened; refresh and review it again.");
+      await onUpdated();
+    } finally {
+      setNavigationBusy(false);
+    }
+  };
 
   if (!displayedRendezvous) return null;
 
@@ -413,7 +510,18 @@ export function MemberSideQuestCard({
           <button type="button" data-testid="member-side-quest-navigate" disabled={busy} onClick={() => void navigateToPrivateStop()}>
             {busy ? (zh ? "正在获取路线…" : "Getting route…") : (zh ? "带我去私人地点" : "Take me to my private stop")}
           </button>
+          <button
+            type="button"
+            data-testid="member-side-quest-open-walking-maps"
+            disabled={busy || navigationBusy}
+            onClick={() => void prepareExternalNavigation()}
+          >
+            {navigationBusy
+              ? (zh ? "正在核对地点…" : "Checking destination…")
+              : (zh ? "打开步行导航" : "Open walking directions")}
+          </button>
           <small>{zh ? "路线与最晚离开时间是单次快照，会很快过期；路况变化后请重新检查。" : "Routes and leave-by times are one-time snapshots that expire shortly. Check again when conditions change."}</small>
+          <small>{zh ? "外部地图使用自己的路线和定位权限；CityNexus 不会为此发送你的起点。" : "External maps use their own routing and location permissions. CityNexus does not send your origin for this handoff."}</small>
         </div>
       )}
       {fitPreview && (
@@ -491,6 +599,16 @@ export function MemberSideQuestCard({
       )}
       {currentSplitActive && (state === "COMPLETED" || state === "CANCELLED") && !editing && (
         <div className="journey-side-quest-actions">
+          <button
+            type="button"
+            data-testid="member-side-quest-map-back"
+            disabled={busy || navigationBusy}
+            onClick={() => void prepareExternalNavigation()}
+          >
+            {navigationBusy
+              ? (zh ? "正在核对会合点…" : "Checking rendezvous…")
+              : (zh ? "导航回共同会合点" : "Navigate to everyone")}
+          </button>
           <button type="button" data-testid="member-side-quest-head-back" disabled={busy} onClick={() => void startReturnToGroup()}>
             {busy
               ? (zh ? "正在记录返程…" : "Saving your return…")
@@ -502,6 +620,51 @@ export function MemberSideQuestCard({
             {zh ? "再安排一个私人停留" : "Plan another private stop"}
           </button>
         </div>
+      )}
+      {navigationConsent?.key === routeContextKey && (
+        <section
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="member-side-quest-navigation-title"
+          data-testid="member-side-quest-navigation-consent"
+        >
+          <strong id="member-side-quest-navigation-title">
+            {navigationConsent.target.kind === "PRIVATE_STOP"
+              ? (zh ? `打开到「${navigationConsent.target.name}」的步行导航？` : `Open walking directions to ${navigationConsent.target.name}?`)
+              : (zh ? `打开到「${navigationConsent.target.name}」的地图？` : `Open a map to ${navigationConsent.target.name}?`)}
+          </strong>
+          <p>
+            {zh
+              ? "你选择的地点名称和精确坐标会发送给你选中的地图服务。CityNexus 不会发送你的起点；地图服务可能按自己的权限使用设备位置。打开地图不代表到达、已返程或已与大家会合。"
+              : "The selected place name and exact coordinates will be sent to the maps provider you choose. CityNexus will not send your origin; that provider may use device location under its own permissions. Opening maps does not report arrival, return, or reunion."}
+          </p>
+          <div className="journey-side-quest-actions">
+            <button
+              type="button"
+              data-testid="member-side-quest-consent-google"
+              disabled={navigationBusy}
+              onClick={() => void launchExternalNavigation("GOOGLE")}
+            >
+              {zh ? "同意并打开 Google Maps 步行导航" : "Agree and open Google Maps walking directions"}
+            </button>
+            <button
+              type="button"
+              data-testid="member-side-quest-consent-osm"
+              disabled={navigationBusy}
+              onClick={() => void launchExternalNavigation("OPENSTREETMAP")}
+            >
+              {zh ? "同意并打开 OpenStreetMap 地图标记" : "Agree and open OpenStreetMap pin"}
+            </button>
+            <button
+              type="button"
+              data-testid="member-side-quest-consent-cancel"
+              disabled={navigationBusy}
+              onClick={() => setNavigationConsent(null)}
+            >
+              {zh ? "取消" : "Cancel"}
+            </button>
+          </div>
+        </section>
       )}
       {message && <small data-testid="member-side-quest-message">{message}</small>}
     </div>

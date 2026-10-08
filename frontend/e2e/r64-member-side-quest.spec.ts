@@ -1,5 +1,10 @@
 import { createHmac } from "node:crypto";
 import { expect, test, type APIRequestContext, type Browser, type Page } from "@playwright/test";
+import type { MemberSideQuestNavigationTarget } from "../src/api/citynexus";
+import {
+  buildGoogleWalkingDirectionsUrl,
+  buildOpenStreetMapPinUrl,
+} from "../src/features/execution/memberSideQuestNavigationLinks";
 
 const API = `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`;
 
@@ -184,7 +189,10 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     } else if ((scoutResult.rendezvous.minutes_until ?? 0) < 30) {
       await expect(scoutCard.getByTestId("moment-scout-rendezvous-time-warning")).toContainText("less than your 30-minute preference");
     }
-    const privateStopName = scoutResult.candidates[0].name;
+    const selectedCandidate = scoutResult.candidates[0];
+    const privateStopName = selectedCandidate.name;
+    const selectedPrivatePlace = places.find((place) => place.id === selectedCandidate.place_id);
+    expect(selectedPrivatePlace).toBeTruthy();
     await scoutCard.getByTestId("moment-scout-choose").first().click();
     await expect(scoutCard.getByTestId("moment-scout-confirmation")).toContainText(
       `Go to ${privateStopName}, then rejoin at`,
@@ -213,6 +221,51 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     await expect(privateRoute).toHaveAttribute("data-state", "UNKNOWN");
     await expect(privateRoute).toContainText("No reliable route is available");
 
+    await ownerCard.getByTestId("member-side-quest-open-walking-maps").click();
+    const outboundConsent = ownerCard.getByTestId("member-side-quest-navigation-consent");
+    await expect(outboundConsent).toBeVisible();
+    await expect(outboundConsent).toContainText(privateStopName);
+    await expect(outboundConsent).toContainText("exact coordinates will be sent");
+    const cancelledPopup = owner.page.waitForEvent("popup", { timeout: 1000 })
+      .then(() => true)
+      .catch(() => false);
+    await outboundConsent.getByTestId("member-side-quest-consent-cancel").click();
+    expect(await cancelledPopup).toBe(false);
+
+    await owner.page.context().route("https://www.google.com/maps/**", (route) => route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><title>Maps fixture</title>",
+    }));
+    const outboundTargetResponse = owner.page.waitForResponse((response) =>
+      response.request().method() === "GET"
+        && response.url().includes(`/journeys/${journeyId}/member-side-quests/`)
+        && response.url().endsWith("/navigation-targets"),
+    );
+    await ownerCard.getByTestId("member-side-quest-open-walking-maps").click();
+    const outboundTarget = await (await outboundTargetResponse).json() as {
+      target: { kind: string; place_id: string; name: string; latitude: number; longitude: number; coordinate_system: string };
+    };
+    expect(outboundTarget.target.kind).toBe("PRIVATE_STOP");
+    expect(outboundTarget.target.place_id).toBe(selectedPrivatePlace!.id);
+    expect(outboundTarget.target.coordinate_system).toBe("WGS84");
+    await expect(outboundConsent).toBeVisible();
+    const googlePopupPromise = owner.page.waitForEvent("popup");
+    await outboundConsent.getByTestId("member-side-quest-consent-google").click();
+    const googlePopup = await googlePopupPromise;
+    await expect.poll(() => new URL(googlePopup.url()).hostname).toBe("www.google.com");
+    const googleUrl = new URL(googlePopup.url());
+    expect(googleUrl.pathname).toBe("/maps/dir/");
+    expect(googleUrl.searchParams.get("api")).toBe("1");
+    expect(googleUrl.searchParams.get("travelmode")).toBe("walking");
+    expect(googleUrl.searchParams.get("destination")).toBe(
+      `${outboundTarget.target.latitude},${outboundTarget.target.longitude}`,
+    );
+    expect(googleUrl.searchParams.get("destination_label")).toBe(outboundTarget.target.name);
+    expect(googleUrl.searchParams.has("origin")).toBe(false);
+    await googlePopup.close();
+    await owner.page.context().unroute("https://www.google.com/maps/**");
+
     await collaboratorSession.page.reload();
     const safeAway = collaboratorSession.page.getByTestId("journey-member-personal-stop");
     await expect(safeAway).toHaveAttribute("data-state", "PLANNED");
@@ -235,6 +288,37 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     await expect(ownerCard.getByTestId("member-side-quest-return-state")).toContainText("Return status unknown");
     await expect(ownerCard).toContainText("shared Journey is unchanged");
     await expect(owner.page.getByTestId("moment-scout")).toHaveCount(0);
+
+    await owner.page.context().route("https://www.openstreetmap.org/**", (route) => route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><title>OpenStreetMap fixture</title>",
+    }));
+    const rendezvousTargetResponse = owner.page.waitForResponse((response) =>
+      response.request().method() === "GET"
+        && response.url().includes(`/journeys/${journeyId}/member-side-quests/`)
+        && response.url().endsWith("/navigation-targets"),
+    );
+    await ownerCard.getByTestId("member-side-quest-map-back").click();
+    const rendezvousTarget = await (await rendezvousTargetResponse).json() as {
+      target: { kind: string; name: string; latitude: number; longitude: number; coordinate_system: string };
+    };
+    expect(rendezvousTarget.target.kind).toBe("SHARED_RENDEZVOUS");
+    expect(rendezvousTarget.target.coordinate_system).toBe("WGS84");
+    const returnConsent = ownerCard.getByTestId("member-side-quest-navigation-consent");
+    await expect(returnConsent).toBeVisible();
+    await expect(returnConsent).toContainText(rendezvousTarget.target.name);
+    const osmPopupPromise = owner.page.waitForEvent("popup");
+    await returnConsent.getByTestId("member-side-quest-consent-osm").click();
+    const osmPopup = await osmPopupPromise;
+    await expect.poll(() => new URL(osmPopup.url()).hostname).toBe("www.openstreetmap.org");
+    const osmUrl = new URL(osmPopup.url());
+    expect(osmUrl.searchParams.get("mlat")).toBe(String(rendezvousTarget.target.latitude));
+    expect(osmUrl.searchParams.get("mlon")).toBe(String(rendezvousTarget.target.longitude));
+    expect(osmUrl.hash).toBe(`#map=18/${rendezvousTarget.target.latitude}/${rendezvousTarget.target.longitude}`);
+    await osmPopup.close();
+    await owner.page.context().unroute("https://www.openstreetmap.org/**");
+    await expect(ownerCard.getByTestId("member-side-quest-return-state")).toContainText("Return status unknown");
 
     await collaboratorSession.page.reload();
     const safeReturning = collaboratorSession.page.getByTestId("journey-member-personal-stop");
@@ -260,6 +344,31 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     const planRowsAfter = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans`);
     expect(finalExperience.active_plan.id).toBe(activePlanIdBefore);
     expect(planRowsAfter.map((row) => row.id).sort()).toEqual(planRowsBefore.map((row) => row.id).sort());
+
+    // A modal is only a consent prompt, never a cached authorization. If the
+    // split ends after it opens, the final owner-bound target read must refuse
+    // the stale return destination and no external URL may be assigned.
+    await ownerCard.getByTestId("member-side-quest-map-back").click();
+    const staleConsent = ownerCard.getByTestId("member-side-quest-navigation-consent");
+    await expect(staleConsent).toBeVisible();
+    const endedSplit = await api<{
+      planned_separation_result: { physical_reunion_claimed: boolean };
+    }>(request, `/api/v1/journeys/${journeyId}/agent/commands`, {
+      method: "POST",
+      token: ownerToken,
+      data: { command: "I'm back with the group.", requested_autonomy: "PLAN_ONLY" },
+    });
+    expect(endedSplit.planned_separation_result.physical_reunion_claimed).toBe(false);
+    const staleNavigationResponse = owner.page.waitForResponse((response) =>
+      response.request().method() === "GET"
+        && response.url().endsWith("/navigation-targets"),
+    );
+    const stalePopupPromise = owner.page.waitForEvent("popup");
+    await staleConsent.getByTestId("member-side-quest-consent-google").click();
+    const stalePopup = await stalePopupPromise;
+    expect((await staleNavigationResponse).status()).toBe(409);
+    await expect.poll(() => stalePopup.isClosed()).toBe(true);
+    await expect(owner.page.getByTestId("member-side-quest-navigation-consent")).toHaveCount(0);
   } finally {
     await Promise.all([owner.close(), collaboratorSession.close()]);
   }
@@ -399,4 +508,37 @@ test("R67 explicit nearby search and selection use a controlled local Overpass f
   } finally {
     await Promise.all([owner.close(), collaboratorSession.close()]);
   }
+});
+
+
+test("R68 map URL builders encode exact WGS84 targets and reject unsupported coordinates", () => {
+  const target: MemberSideQuestNavigationTarget = {
+    kind: "PRIVATE_STOP",
+    place_id: "place-r68-encoded",
+    name: "Café & Tea 雨",
+    latitude: 39.105,
+    longitude: 117.19,
+    coordinate_system: "WGS84",
+    provenance: {
+      provider_key: "fixture",
+      external_id: "r68-encoded",
+      source_coordinate_system: null,
+    },
+    navigation_available: true,
+    unavailable_reason: null,
+  };
+  const google = new URL(buildGoogleWalkingDirectionsUrl(target));
+  expect(google.searchParams.get("travelmode")).toBe("walking");
+  expect(google.searchParams.get("destination")).toBe("39.105,117.19");
+  expect(google.searchParams.get("destination_label")).toBe("Café & Tea 雨");
+  expect(google.search).toContain("%26");
+  expect(google.search).toContain("%E9%9B%A8");
+
+  const osm = new URL(buildOpenStreetMapPinUrl(target));
+  expect(osm.searchParams.get("mlat")).toBe("39.105");
+  expect(osm.searchParams.get("mlon")).toBe("117.19");
+  expect(osm.hash).toBe("#map=18/39.105/117.19");
+
+  expect(() => buildGoogleWalkingDirectionsUrl({ ...target, coordinate_system: "GCJ-02" })).toThrow();
+  expect(() => buildOpenStreetMapPinUrl({ ...target, latitude: 91 })).toThrow();
 });
