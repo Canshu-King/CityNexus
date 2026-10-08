@@ -32,6 +32,7 @@ This is social coordination in the physical world, NOT a new shared PlanVersion,
 
 ## Implementation seams
 - `backend/app/execution/member_place_invitation.py`, `MemberPlaceInvitationRecipient` and server-side member authorization, `backend/app/operator_projection.py`.
+- **Concrete R70 projection seam:** `invitation_projection` currently omits recipients whose state is `ACCEPTED_OWN_STOP_READY` from `incoming`, and `MemberPlaceInvitationPanel` returns `null` when `incoming` is empty. R72 must add an explicitly authorized **joined invitation** read/board (or owner-scoped equivalent) for B *after acceptance*; otherwise B cannot see or share micro-group progress. Do not restore access for declined, uninvolved, or merely pending members.
 - `backend/app/execution/member_side_quest.py`: R64 states and R65 `MemberSideQuestReturnReport`, source of authentic signed member reports. Avoid public generic route/read stores.
 - `backend/app/execution/planned_split_meetup_handshake.py` and R69: original shared rendezvous completion; do **not** reuse its “yes, we're together” as proof of gathering at the side Place.
 - `frontend/src/features/execution/MemberPlaceInvitationPanel.tsx`, `MemberSideQuestCard.tsx`, `LiveRecovery.tsx`: render one compact, persistent user journey, not a separate demo.
