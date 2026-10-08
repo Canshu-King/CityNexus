@@ -67,3 +67,21 @@
   width: auto;
   margin: 0 0 var(--cn-s-6);
 }
+/* ORD-0470: the two doors under the nothing-extracted sentence.  `.v8-message` carries a -7px bottom
+   margin because the shell pads the row under it, so these need their own gap and their own side
+   inset -- the same 46px/17px the message band itself uses, or the buttons would sit outside the
+   sentence they belong to. */
+.poi-import-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+  margin: var(--cn-s-10) 46px 0;
+}
+@media (max-width: 680px) {
+  .poi-import-empty-actions {
+    margin: var(--cn-s-10) 17px 0;
+  }
+  .poi-import-empty-actions button {
+    min-height: var(--cn-touch-min);
+  }
+}

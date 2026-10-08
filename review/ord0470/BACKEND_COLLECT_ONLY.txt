@@ -1,0 +1,4 @@
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1777 tests collected in 17.99s
+typecheck rc=0 (tsc -p tsconfig.check.json --noEmit)

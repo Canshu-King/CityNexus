@@ -206,6 +206,9 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
           travelerId={s.data.journey.traveler_id ?? null}
           firstDay={dates[0] ?? (s.data.journey.start_at || "").slice(0, 10) ?? null}
           onOpenPlan={() => s.navigate("authoritative")}
+          /* ORD-0470: the second door on the nothing-extracted cell is the shell's own navigate to the
+             route the drawer already uses -- no second navigation mechanism is invented here. */
+          onOpenDiscover={() => s.navigate("discover")}
         />
       );
     },

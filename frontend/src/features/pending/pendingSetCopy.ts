@@ -41,8 +41,12 @@ export const pendingSetCopy = {
       "No plan is chosen on this server yet, so there is no day anything could be outside of.",
     "pending.empty": "No place is waiting for a day on this trip.",
     "pending.filterEmpty": "No place in this filter. There are still {n} in All.",
-    "pending.empty.next": "To add one, capture places for this trip.",
+    "pending.empty.next":
+      "To add one, capture places for this trip, or paste a list of places into the import screen.",
     "pending.empty.action": "Open City Discovery",
+    /* ORD-0470: the second way in.  Named with the nav's own word, because a traveller reading the
+       drawer and reading this row has to arrive at the same name for the same screen. */
+    "pending.empty.import": "Import places",
     "pending.reread": "Read it again",
     "pending.candidatesAbsent":
       "This server answered the list of places captured for this trip without a list in it, so this screen has no set to show.",
@@ -112,8 +116,12 @@ export const pendingSetCopy = {
     "pending.noPlan": "这台服务器还没有选定方案，所以没有「哪一天」可比。",
     "pending.empty": "这一程没有待规划的地点。",
     "pending.filterEmpty": "这个筛选里现在没有地点，「全部」下还有 {n} 个。",
-    "pending.empty.next": "想收进新的地点，去城市探索捕获这一程的地点。",
+    "pending.empty.next":
+      "想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴一段文字。",
     "pending.empty.action": "去城市探索",
+    /* ORD-0470: the second way in.  Named with the nav's own word, because a traveller reading the
+       drawer and reading this row has to arrive at the same name for the same screen. */
+    "pending.empty.import": "导入地点",
     "pending.reread": "再读一次",
     "pending.candidatesAbsent":
       "这台服务器答这一程捕获的地点清单时没有带出清单，所以这一屏没有可显示的集合。",

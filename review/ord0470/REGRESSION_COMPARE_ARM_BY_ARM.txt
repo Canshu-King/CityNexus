@@ -1,0 +1,7 @@
+baseline_totals={'failed': '20', 'passed': '4'}
+mine_totals={'failed': '20', 'passed': '11'}
+baseline_failed=20
+mine_failed_on_shared=20
+NEW_RED_vs_baseline=0
+RED_IN_BASELINE_ONLY=0
+mine_own_spec_failed=0
