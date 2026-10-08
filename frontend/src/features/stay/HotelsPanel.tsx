@@ -46,7 +46,7 @@ type StayOption = {
 const EXPLAINABLE_REFUSALS = ["STAY_ITINERARY_CONFLICT", "STAY_PINNED_CONFLICT"];
 
 export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSelected?: () => void }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const [options, setOptions] = useState<StayOption[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -148,7 +148,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       <section className="v8-page" data-testid="hotels-empty">
         <div className="v8-page-intro compact">
           <div>
-            <p className="v8-kicker">{zh ? "住宿" : "Stay"}</p>
+            <p className="v8-kicker">{t("hub.stayLabel")}</p>
             <h1>{zh ? "暂时没有可比较的住宿" : "No stays to compare yet"}</h1>
             <p className="v8-lede">
               {zh
@@ -165,7 +165,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
     <section className="v8-page" data-testid="hotels-panel">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "住宿" : "Stay"}</p>
+          <p className="v8-kicker">{t("hub.stayLabel")}</p>
           <h1>{zh ? "选一家住的地方" : "Choose where to stay"}</h1>
           <p className="v8-lede">
             {zh
