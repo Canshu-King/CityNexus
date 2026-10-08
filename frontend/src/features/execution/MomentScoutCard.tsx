@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  CityNexusApiError,
   cityNexusApi,
   type MomentScoutInterest,
   type MomentScoutResult,
@@ -97,12 +98,30 @@ export function MomentScoutCard({
           ? "私人停留已保存；页面刷新失败，请手动刷新查看当前状态。"
           : "Your private stop is saved, but the screen did not refresh. Reload to see its current state.");
       }
-    } catch {
+    } catch (error) {
       setReceipt(null);
       setSelectedPlaceId("");
-      setMessage(zh
-        ? "推荐或会合状态已变化；请重新查找。若 R63 分开行动已生效，刷新后可继续选择。"
-        : "The suggestion or rendezvous changed. Scout again; if the R63 split was created, refresh to continue selecting.");
+      const detail = error instanceof CityNexusApiError
+        && error.body && typeof error.body === "object" && "detail" in error.body
+        ? String(error.body.detail ?? "")
+        : "";
+      if (detail.includes("Start the Journey Operator before planning a side trip")) {
+        setMessage(zh
+          ? "请先在本页点击「照看这趟行程」开启 Journey Operator，再重新查找并确认私人停留。尚未创建私人支线。"
+          : "First tap 'Take care of this trip' to start Journey Operator on this page, then scout and confirm again. No private stop was created.");
+      } else if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
+        setMessage(zh
+          ? "你的行程成员身份无效或已失效，请重新登录自己的账号。没有替其他成员创建私人支线。"
+          : "Your Journey membership or sign-in is no longer valid. Sign in as yourself; no stop was created for another member.");
+      } else if (error instanceof CityNexusApiError && error.status === 409) {
+        setMessage(zh
+          ? "推荐、共同会合安排或当前私人支线状态已经变化。请刷新再查找；如果分离意图已生效，可以继续完成私人地点选择。"
+          : "The suggestion, rendezvous or private-stop state changed. Refresh and scout again; if a split was created, continue choosing your stop.");
+      } else {
+        setMessage(zh
+          ? "暂时无法完成地点选择，请刷新确认当前状态后再试。"
+          : "The destination could not be selected. Refresh to check the current state before trying again.");
+      }
       try {
         await onUpdated();
       } catch {
