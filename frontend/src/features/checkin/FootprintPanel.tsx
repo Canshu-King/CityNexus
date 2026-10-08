@@ -124,21 +124,29 @@ export function FootprintPanel({ journeyId, timezone = null, onNavigate }: Props
           {footprintCopy(locale, "unreachable")}
         </p>
       ) : stamps.length === 0 ? (
-        <div className="cn-footprints__empty" data-testid="footprint-empty">
-          <p className="cn-footprints__state">{footprintCopy(locale, "empty")}</p>
-          <p className="cn-footprints__empty-why">{footprintCopy(locale, "emptyWhy")}</p>
-          {onNavigate ? (
-            <button
-              type="button"
-              className="v8-primary-button"
-              data-testid="footprint-empty-action"
-              data-contrast-role="control"
-              onClick={() => onNavigate("trips")}
-            >
-              {footprintCopy(locale, "emptyAction")}
-            </button>
-          ) : null}
-        </div>
+        <>
+          {/* The testid stays on the sentence that names the state and nothing else: ORD-0530's own
+              `answered_empty` arm asserts this block's text is exactly `empty` (EQUALITY, not
+              `toContain`), so the reason and the control are siblings of it rather than children.
+              Folding them in here is what made that arm red on ORD-0599. */}
+          <p className="cn-footprints__state" data-testid="footprint-empty">
+            {footprintCopy(locale, "empty")}
+          </p>
+          <div className="cn-footprints__empty">
+            <p className="cn-footprints__empty-why">{footprintCopy(locale, "emptyWhy")}</p>
+            {onNavigate ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="footprint-empty-action"
+                data-contrast-role="control"
+                onClick={() => onNavigate("trips")}
+              >
+                {footprintCopy(locale, "emptyAction")}
+              </button>
+            ) : null}
+          </div>
+        </>
       ) : (
         <>
           <p className="cn-footprints__zone" data-testid="footprint-day-zone">

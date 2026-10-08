@@ -263,20 +263,28 @@ export function JourneyTrashPanel({
       )}
 
       {read.phase === "ready" && rows.length === 0 && (
-        <div className="cn-trash-empty" data-testid="trash-empty">
-          <p className="cn-trash-empty-why">{say("trash.empty.why")}</p>
-          {onNavigate ? (
-            <button
-              type="button"
-              className="v8-primary-button"
-              data-testid="trash-empty-action"
-              data-contrast-role="control"
-              onClick={() => onNavigate("trips")}
-            >
-              {say("trash.empty.action")}
-            </button>
-          ) : null}
-        </div>
+        <>
+          {/* The testid names the state and nothing else -- ORD-0535 reads this block's text to prove
+              the empty station and the unanswered one are NOT the same sentence, so the reason and the
+              control sit beside it rather than inside it. */}
+          <p className="v8-muted" data-testid="trash-empty">
+            {say("trash.empty")}
+          </p>
+          <div className="cn-trash-empty">
+            <p className="cn-trash-empty-why">{say("trash.empty.why")}</p>
+            {onNavigate ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="trash-empty-action"
+                data-contrast-role="control"
+                onClick={() => onNavigate("trips")}
+              >
+                {say("trash.empty.action")}
+              </button>
+            ) : null}
+          </div>
+        </>
       )}
 
       {read.phase === "ready" && rows.length > 0 && (
