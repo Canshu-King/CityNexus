@@ -355,6 +355,10 @@ def consent_row_for_snapshot(
     if expiry is None or expiry <= now:
         active.status = "EXPIRED"
         active.updated_at = now.isoformat()
+        # Release the partial-unique ACTIVE consent slot *before* the caller
+        # adds its replacement receipt. The flush stays in this transaction;
+        # a later failed confirmation still rolls the retirement back.
+        session.flush()
         return None
     if current_group_share(session, journey, invitation, now=now)["shared"]:
         if (
@@ -367,6 +371,10 @@ def consent_row_for_snapshot(
             return active
     active.status = "STALE"
     active.updated_at = now.isoformat()
+    # A changed audience/cursor/source may be reconfirmed in the same
+    # request. Flush the retiring row before inserting the new ACTIVE row:
+    # an ORM commit need not order unrelated UPDATEs ahead of INSERTs.
+    session.flush()
     return None
 
 
