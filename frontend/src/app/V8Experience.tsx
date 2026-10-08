@@ -1672,7 +1672,7 @@ function Hub({
           </button>
         </div>
       </div>
-      <div className={`v8-day-container${!daysExpanded && selected ? " collapsed" : ""}`} data-testid="hub-days-container">
+      <div className={`v8-day-container${!daysExpanded && selected ? " collapsed" : ""}`} id="hub-days-container" data-testid="hub-days-container">
         {!hasChosenPlan && selected && (
           <p className="v8-muted" data-testid="hub-glance-caveat">
             {zh
