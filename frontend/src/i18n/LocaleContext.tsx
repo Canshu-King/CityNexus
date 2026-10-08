@@ -428,6 +428,15 @@ const en: Dict = {
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",
+  "agent.streamUnreadable": "A runtime event could not be read",
+  "agent.streamReconnecting": "Reconnecting to runtime events",
+  "agent.streamUnavailable": "Event stream unavailable; received events are preserved",
+  "agent.stopping": "Stopping…",
+  "agent.stoppedThrough": "Stopped through CityNexus",
+  "agent.approvalOffline": "Approval is disabled while offline",
+  "agent.approvalNoId": "CityNexus approval_id is not available; review in Recovery",
+  "agent.approvalRecording": "Recording CityNexus approval…",
+  "agent.approvalRecorded": "Approval recorded; CityNexus still owns execution authorization",
   "agent.title": "What do you want to change?",
   "agent.lede": "Ask a question, try a what-if, or tell me something changed. Anything that touches your trip is explained before it is applied, and your confirmed bookings stay protected.",
   "agent.twinActive": "Twin context active",
@@ -1555,6 +1564,15 @@ const zhCN: Dict = {
 
   // ── Agent Composer ──
   "agent.kicker": "随时问关于这趟行程的任何事",
+  "agent.streamUnreadable": "运行事件暂时无法解析",
+  "agent.streamReconnecting": "正在重新连接运行事件",
+  "agent.streamUnavailable": "运行事件流不可用；已保留已收到的事件",
+  "agent.stopping": "正在停止…",
+  "agent.stoppedThrough": "已通过 CityNexus 停止",
+  "agent.approvalOffline": "离线时不能确认方案",
+  "agent.approvalNoId": "缺少 CityNexus approval_id，需打开恢复中心审核",
+  "agent.approvalRecording": "正在记录 CityNexus 确认…",
+  "agent.approvalRecorded": "确认已记录；仍需由 CityNexus 执行授权",
   "agent.title": "你想改什么？",
   "agent.lede": "可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。",
   "agent.twinActive": "画像上下文已激活",

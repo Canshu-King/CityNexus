@@ -239,7 +239,7 @@ export function NativeMissionTimeline({
             source = null;
           }
         } catch {
-          setStreamError(zh ? "运行事件暂时无法解析" : "A runtime event could not be read");
+          setStreamError(t("agent.streamUnreadable"));
         }
       };
       source.addEventListener("message", handleEvent);
@@ -250,10 +250,10 @@ export function NativeMissionTimeline({
         source = null;
         attempts += 1;
         if (attempts <= 3) {
-          setStreamError(zh ? "正在重新连接运行事件" : "Reconnecting to runtime events");
+          setStreamError(t("agent.streamReconnecting"));
           retryTimer = window.setTimeout(connect, Math.min(5000, 500 * 2 ** (attempts - 1)));
         } else {
-          setStreamError(zh ? "运行事件流不可用；已保留已收到的事件" : "Event stream unavailable; received events are preserved");
+          setStreamError(t("agent.streamUnavailable"));
         }
       };
     };
@@ -354,11 +354,11 @@ export function NativeMissionTimeline({
 
   const stop = async () => {
     if (!active) return;
-    setActionState(zh ? "正在停止…" : "Stopping…");
+    setActionState(t("agent.stopping"));
     try {
       await cityNexusApi.stopNativeHermesRun(data.journey.id, run.run_id);
       setRunState("stopped");
-      setActionState(zh ? "已通过 CityNexus 停止" : "Stopped through CityNexus");
+      setActionState(t("agent.stoppedThrough"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -368,17 +368,17 @@ export function NativeMissionTimeline({
 
   const approve = async () => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
-      setActionState(zh ? "离线时不能确认方案" : "Approval is disabled while offline");
+      setActionState(t("agent.approvalOffline"));
       return;
     }
     if (!approvalEvent?.approval_id) {
-      setActionState(zh ? "缺少 CityNexus approval_id，需打开恢复中心审核" : "CityNexus approval_id is not available; review in Recovery");
+      setActionState(t("agent.approvalNoId"));
       return;
     }
-    setActionState(zh ? "正在记录 CityNexus 确认…" : "Recording CityNexus approval…");
+    setActionState(t("agent.approvalRecording"));
     try {
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
-      setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
+      setActionState(t("agent.approvalRecorded"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
