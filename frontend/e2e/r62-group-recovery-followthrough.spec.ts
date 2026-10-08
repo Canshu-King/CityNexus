@@ -88,6 +88,7 @@ function operatorFor(viewer: Viewer, phase: Phase) {
     },
     group_recovery: {
       state: closed ? "RECOVERY_CLOSED" : "REJOIN_IN_PROGRESS",
+      foreground: !closed,
       headline: closed
         ? "Everyone has rejoined. CityNexus is continuing the Journey."
         : "The shared recovery is active. Rejoining the group.",
@@ -219,12 +220,9 @@ test("R62 shows member-specific progress, records self arrival through Journey e
     phase = "closed";
     await Promise.all([ownerPage.reload(), adminPage.reload()]);
     for (const page of [ownerPage, adminPage]) {
-      const recovery = page.getByTestId("journey-group-recovery");
-      await expect(recovery.getByTestId("group-recovery-progress-count")).toContainText("2/2");
-      await expect(recovery.getByTestId("group-recovery-closed")).toBeVisible();
-      await expect(recovery.getByTestId("group-recovery-confirm-rejoin")).toHaveCount(0);
-      await expect(recovery.getByTestId("journey-group-recovery-apply")).toHaveCount(0);
-      await expect(recovery.getByTestId("journey-group-recovery-collective-state")).toHaveCount(0);
+      // Closure remains in the server read model, but the old recovery room no
+      // longer owns the foreground. Normal Journey execution is primary again.
+      await expect(page.getByTestId("journey-group-recovery")).toHaveCount(0);
       await expect(page.getByTestId("journey-continuous-flow")).toContainText("Now: Shared rendezvous");
     }
   } finally {
