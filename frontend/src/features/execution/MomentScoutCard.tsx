@@ -33,6 +33,16 @@ export function MomentScoutCard({
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    // If Journey Live switches trips without remounting, one member's private
+    // search results must never carry into the next Journey UI.
+    setReceipt(null);
+    setSelectedPlaceId("");
+    setLiveReceipt(null);
+    setLiveSelectedCandidateId("");
+    setShowLiveConsent(false);
+  }, [journeyId]);
+
+  useEffect(() => {
     if (!receipt) return;
     const timeout = window.setTimeout(() => {
       setReceipt(null);
@@ -295,6 +305,9 @@ export function MomentScoutCard({
             setBudgetMinutes(Number(event.target.value) as 15 | 30 | 45);
             setReceipt(null);
             setSelectedPlaceId("");
+            setLiveReceipt(null);
+            setLiveSelectedCandidateId("");
+            setShowLiveConsent(false);
           }}
         >
           <option value={15}>{zh ? "15 分钟" : "15 minutes"}</option>
@@ -312,6 +325,9 @@ export function MomentScoutCard({
             setInterest(event.target.value as MomentScoutInterest);
             setReceipt(null);
             setSelectedPlaceId("");
+            setLiveReceipt(null);
+            setLiveSelectedCandidateId("");
+            setShowLiveConsent(false);
           }}
         >
           <option value="ANYTHING">{zh ? "随便看看" : "Anything"}</option>
