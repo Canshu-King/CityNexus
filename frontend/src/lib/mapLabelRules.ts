@@ -25,6 +25,9 @@
  * gates still read one definition rather than a copy.
  */
 
+export const MAP_LABEL_FIELDS = ["title", "category", "role"] as const;
+export type MapLabelField = (typeof MAP_LABEL_FIELDS)[number];
+
 /**
  * ORD-0412 — the scope of `MAP_LABEL_FORBIDDEN`: which strings this rule has any authority over.
  *

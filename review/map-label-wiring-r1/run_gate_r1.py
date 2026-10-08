@@ -44,6 +44,8 @@ WATCHED = [
     "frontend/src/components/v8/MapPanel.tsx",
     "frontend/src/components/JourneyMap.tsx",
     "frontend/e2e/_mapLabelRules.ts",
+    "frontend/e2e/qoder-map-ord0415-forbidden-off-the-glass.spec.ts",
+    "review/map-label-wiring-r1/stop_rename_fixture_r1.py",
 ]
 
 
@@ -84,9 +86,19 @@ def pick_ports(count: int, base: int) -> list[int]:
 def provenance(tag: str, run_id: str, ports: list[int], db: Path) -> dict:
     head = sh("git", "rev-parse", "HEAD")
     blobs = {}
+    worktree = {}
     for path in WATCHED:
         out = subprocess.run(["git", "rev-parse", f"HEAD:{path}"], cwd=str(ROOT), capture_output=True, text=True)
         blobs[path] = out.stdout.strip() if out.returncode == 0 else "absent-at-HEAD"
+        # The bytes the run actually served, not the bytes HEAD claims: the before-run deliberately
+        # checks three of these files back out to the base line, and a reading that could not tell the
+        # two apart would be worthless.
+        target = ROOT / path
+        worktree[path] = (
+            subprocess.run(["git", "hash-object", path], cwd=str(ROOT), capture_output=True, text=True).stdout.strip()
+            if target.exists()
+            else "absent-on-disk"
+        )
     dirty = [line.split()[1] for line in sh("git", "status", "--porcelain").splitlines() if line.strip()]
     return {
         "tag": tag,
@@ -94,6 +106,7 @@ def provenance(tag: str, run_id: str, ports: list[int], db: Path) -> dict:
         "head": head,
         "head_subject": sh("git", "log", "-1", "--format=%h %ad %s", "--date=iso", head),
         "watched_blobs": blobs,
+        "watched_worktree_blobs": worktree,
         "dirty_files": dirty,
         "frontend_port": ports[0],
         "backend_port": ports[1],

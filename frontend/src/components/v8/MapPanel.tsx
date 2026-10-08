@@ -509,21 +509,10 @@ export function MapPanel({
     labelNodes.current = [];
     markerEls.current = [];
     points.forEach((point, index) => {
-      /* ORD-0512 chose the field; ORD-0415 decides what of that field may reach the glass. One call
-         feeds both surfaces a stop has, because the accepted map gates read a marker's `aria-label`
-         as part of the judged corpus (`qoder-map-ord0403-*.spec.ts`, `qoder-map-ord0412-*.spec.ts`):
-         cutting the chip alone would leave the clock or the price on the announcement for the same
-         pin. A stop whose every candidate word is forbidden gets its painted ordinal as the
-         accessible name -- the number the pin already shows -- and never a word this rule rejects. */
-      const label = stopLabel(point);
       const marker = document.createElement("div");
       marker.className = `v9-map-marker ${point.role === "STAY" ? "stay" : ""} ${point.protected ? "protected" : ""} ${point.current ? "current" : ""} ${point.disrupted ? "disrupted" : ""}`;
       marker.textContent = String(index + 1);
-      const hadAName = `${point.place_name ?? ""}${point.title ?? ""}`.trim().length > 0;
-      marker.setAttribute(
-        "aria-label",
-        label ? label.text : hadAName ? String(index + 1) : point.title,
-      );
+      marker.setAttribute("aria-label", point.title);
       /* ORD-0390: a marker used to be a painted dot — `aria-label` for a screen reader and nothing
          else.  It is now a real button that selects the stop it stands for, and `aria-pressed`
          carries the shared selection so the state is readable without a class-name convention.
@@ -551,20 +540,14 @@ export function MapPanel({
       /* ORD-0512: the name itself, on the glass. `aria-hidden` is not a loss of information — the pin
          beside it is a button whose accessible name is already this stop's word, so announcing the chip
          as well would read every stop twice. What the chip adds is what an eye can use and a screen
-         reader never needed: which number is which place, without tapping.
-         ORD-0415: a stop whose word is entirely forbidden gets no chip at all rather than a word the
-         rule rejects -- the pin, its hit target and its node stay, which is what the accepted map gates
-         count as the proof a located stop is still pickable. */
+         reader never needed: which number is which place, without tapping. */
+      const label = stopLabel(point);
       if (label) {
         const chip = document.createElement("div");
         chip.className = "v8-map-stop-label";
         chip.setAttribute("data-testid", "v8-map-stop-label");
         chip.setAttribute("data-stop-ordinal", String(index + 1));
         chip.setAttribute("data-name-source", label.from);
-        /* Which classes were taken out of this word, in an attribute and not on the glass: a machine
-           word belongs in an attribute (the same convention `data-placement` follows), and it is the
-           only reading that tells a gate the rule fired rather than the data happening to be clean. */
-        chip.setAttribute("data-forbidden-removed", label.removed.join(",") || "nothing");
         chip.setAttribute("aria-hidden", "true");
         chip.textContent = label.text;
         const at: [number, number] = [point.longitude, point.latitude];

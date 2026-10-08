@@ -22,14 +22,10 @@
  *      count as the proof that a located stop is still pickable (see `src/map-selection.css`, the
  *      `.filtered-out` note from ORD-0497).
  *
- * What is deliberately NOT here: a second copy of the forbidden list. The classes that may never
- * reach the glass are owned by `lib/mapLabelRules.ts`, and this file consults it through
- * `takeOffGlass()` -- ORD-0415's wiring, which is what turned the list from a judgement the test
- * gate made about a corpus nothing produced into a rule the map applies before it paints. The gate
- * and the product read that one module, so the rule keeps a single owner.
+ * What is deliberately NOT here: the whitelist of forbidden classes. That stays in
+ * `e2e/_mapLabelRules.ts`, where ORD-0415 put it, because the compliance list is a judgement the gate
+ * makes about whatever ends up painted — copying it into the product would give the rule two owners.
  */
-
-import { takeOffGlass } from "./mapLabelRules";
 
 export type MapNameableStop = {
   /** the place row's own name, when the payload carries one */
@@ -40,17 +36,7 @@ export type MapNameableStop = {
 
 export type MapLabelSource = "place_name" | "title" | "none";
 
-export type MapStopLabel = {
-  text: string;
-  from: MapLabelSource;
-  /**
-   * Which forbidden classes this word was cut of before it reached the glass, and therefore which
-   * classes were dropped from the fields that yielded no word at all. `[]` means the server's word
-   * was already paintable -- that distinction is what lets a gate tell the rule firing apart from
-   * clean data, which look identical in a corpus with no hits.
-   */
-  removed: string[];
-};
+export type MapStopLabel = { text: string; from: MapLabelSource };
 
 /** Trim a server string the way the glass needs it: an empty or whitespace-only name is no name. */
 function named(value: string | null | undefined): string | null {
@@ -59,22 +45,10 @@ function named(value: string | null | undefined): string | null {
 }
 
 export function stopLabel(stop: MapNameableStop): MapStopLabel | null {
-  /* The two fields are tried in the order the screen's own rule states them, and each is cut to what
-     may be painted before it is judged to exist: a name made only of a clock is not a name the glass
-     is allowed to show, so it reads as "no word from this field" and the next field is asked. */
-  const dropped: string[] = [];
   const fromPlace = named(stop.place_name);
-  if (fromPlace) {
-    const cut = takeOffGlass(fromPlace);
-    if (cut.text) return { text: cut.text, from: "place_name", removed: [...dropped, ...cut.removed] };
-    dropped.push(...cut.removed);
-  }
+  if (fromPlace) return { text: fromPlace, from: "place_name" };
   const fromTitle = named(stop.title);
-  if (fromTitle) {
-    const cut = takeOffGlass(fromTitle);
-    if (cut.text) return { text: cut.text, from: "title", removed: [...dropped, ...cut.removed] };
-    dropped.push(...cut.removed);
-  }
+  if (fromTitle) return { text: fromTitle, from: "title" };
   return null;
 }
 

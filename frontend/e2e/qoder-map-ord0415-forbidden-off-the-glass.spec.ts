@@ -145,7 +145,7 @@ const countHits = (strings: string[]) =>
     .map((text) => ({ text, classes: mapLabelViolations(text) }))
     .filter((entry) => entry.classes.length > 0);
 
-test.describe.serial("ORD-0415 forbidden classes off the map glass", () => {
+test.describe("ORD-0415 forbidden classes off the map glass", () => {
   test("cut-is-subtractive — the cut removes what the list names and keeps the rest of the word", async () => {
     const rows = CASES.map((item) => {
       const cut = takeOffGlass(item.painted);
@@ -197,18 +197,24 @@ test.describe.serial("ORD-0415 forbidden classes off the map glass", () => {
   });
 });
 
-test.describe.serial("ORD-0415 on the running screen", () => {
-  let journeyId = "";
+/** Put the six words on this run's plan and land on the map that reads them.
+ *  Every browser arm calls this itself: the before-run is expected to fail one of these arms, and an
+ *  arm that only worked because a sibling arm seeded it would be skipped with it -- which is how a
+ *  reading goes missing instead of going red. */
+const seedAndEnter = async (page: Page) => {
+  await enterMap(page);
+  const journeyId = await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id") ?? "");
+  expect(journeyId.length, node("fixture", "the shell has no journey to put stops on")).toBeGreaterThan(8);
+  const applied = runFixture("--apply", journeyId);
+  expect(applied.ok, node("fixture", `the fixture did not land every case: ${JSON.stringify(applied)}`)).toBe(true);
+  return { journeyId, applied };
+};
 
+test.describe("ORD-0415 on the running screen", () => {
   test("fixture-lands-in-payload — the six words arrive from the server, not from my DOM", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await enterMap(page);
-    journeyId = await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id") ?? "");
-    expect(journeyId.length, node("B1", "the shell has no journey to put stops on")).toBeGreaterThan(8);
-
-    const applied = runFixture("--apply", journeyId);
+    const { journeyId, applied } = await seedAndEnter(page);
     push("fixture-applied", { journey_id: journeyId, applied });
-    expect(applied.ok, node("B1", `the fixture did not land every case: ${JSON.stringify(applied)}`)).toBe(true);
 
     const bodies: unknown[] = [];
     page.on("response", async (response) => {
@@ -255,7 +261,7 @@ test.describe.serial("ORD-0415 on the running screen", () => {
 
   test("glass-carries-no-class — nothing the list forbids is rendered, and the cut words still are", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await enterMap(page);
+    await seedAndEnter(page);
     const glass = await readGlass(page);
     const judged = judgedStrings(glass);
     const offenders = countHits(judged);
@@ -290,7 +296,7 @@ test.describe.serial("ORD-0415 on the running screen", () => {
 
   test("whole-word-stops-keep-pin — a stop with no paintable word is still a stop a finger can hit", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await enterMap(page);
+    await seedAndEnter(page);
     const glass = await readGlass(page);
     const clockOrdinal = glass.renderedChips.find((chip) => chip.text.includes("19:30"));
     const noChipForTheClock = !clockOrdinal;
@@ -318,7 +324,7 @@ test.describe.serial("ORD-0415 on the running screen", () => {
 
   test("attribution-still-reads — ORD-0412's sentence survives the wiring untouched", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await enterMap(page);
+    await seedAndEnter(page);
     const glass = await readGlass(page);
     const authoredEn = mapCopy("en", "attributionRaster");
     const authoredZh = mapCopy("zh", "attributionRaster");

@@ -6,7 +6,6 @@ import type { JourneyTwin } from "../contracts/journeyTwin";
 import type { ReplanProposal } from "../contracts/replan";
 import { useT, useLocale } from "../i18n/LocaleContext";
 import { mapCopy } from "../i18n/mapPanelCopy";
-import { takeOffGlass } from "../lib/mapLabelRules";
 import "../map-attribution.css";
 
 interface JourneyMapProps {
@@ -175,14 +174,7 @@ export function JourneyMap({
           return {
             type: "Feature" as const,
             properties: {
-              /* ORD-0415: this is the value the `symbol` layer below paints verbatim
-                 (`"text-field": ["get", "title"]`), so it is where the map's own forbidden classes
-                 have to leave -- the rule lived in `mapLabelRules.ts` as a judgement about a corpus
-                 nothing produced, and this line is what makes it a rule about the glass. Only the
-                 painted text is cut: `activity.title` itself is untouched, so the card, the route
-                 evidence and the DOM basemap attribution (which ORD-0412 exempts and the tile
-                 licence requires) all keep the server's full words. */
-              title: takeOffGlass(activity.title).text,
+              title: activity.title,
               role:
                 activity.id === twin.current_activity_id
                   ? "current"

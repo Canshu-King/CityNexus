@@ -114,17 +114,36 @@ def apply(db: Path, journey_id: str) -> int:
         return 4
     # Deterministic pairing: the first `len(CASES)` located stops in sequence order.
     targets = list(stops[: len(CASES)])
+    # Idempotent: every browser arm of the gate calls this, and a second pass must not record the dirty
+    # word it wrote itself as the name to restore. The first plan file's `previous_title` wins.
+    previous_plan: dict[str, dict] = {}
+    path = plan_file(db)
+    if path.exists():
+        for row in json.loads(path.read_text(encoding="utf-8")).get("written", []):
+            previous_plan[row["activity_id"]] = row
+    if previous_plan and {row["activity_id"] for row in targets} != set(previous_plan):
+        # The plan file is what `--revert` restores from. Pairing a different set of stops now would
+        # leave rows renamed with no record of their original words, so this refuses instead.
+        print(json.dumps({
+            "ok": False,
+            "reason": "the plan file pairs a different set of activities than this apply would",
+            "planned": sorted(previous_plan),
+            "targets": sorted(row["activity_id"] for row in targets),
+        }, ensure_ascii=False))
+        return 4
     written = []
     with connect(db) as connection:
         for (case, title), stop in zip(CASES, targets):
             connection.execute("update activities set title = ? where id = ?", (title, stop["activity_id"]))
+            carried = previous_plan.get(stop["activity_id"], {})
             written.append({
                 "case": case,
                 "painted_word": title,
                 "activity_id": stop["activity_id"],
                 "sequence_no": stop["sequence_no"],
-                "previous_title": stop["current_title"],
-                "previous_place_name": stop["place_name"],
+                "previous_title": carried.get("previous_title", stop["current_title"]),
+                "previous_place_name": carried.get("previous_place_name", stop["place_name"]),
+                "reused_original_title": stop["activity_id"] in previous_plan,
             })
         connection.commit()
     plan_file(db).write_text(json.dumps({"journey_id": journey_id, "written": written}, ensure_ascii=False, indent=1), encoding="utf-8")
