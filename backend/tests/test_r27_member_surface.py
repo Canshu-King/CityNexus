@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 from fastapi.testclient import TestClient
+import pytest
 
 import app.main as main_module
+from app.core.config import settings
+from app.traveler_principal import issue_traveler_token
 from app.agent.autorun import stop_autorun
 from demo_stage import demo_reset_headers
 
@@ -10,7 +13,17 @@ from demo_stage import demo_reset_headers
 client = TestClient(main_module.app)
 
 
-def test_r27_member_projection_keeps_owner_and_collaborator_context_separate() -> None:
+@pytest.fixture
+def _signed_member_secret():
+    previous = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", "r74-signed-member-surface-test-secret-012345")
+    try:
+        yield
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous)
+
+
+def test_r27_member_projection_keeps_owner_and_collaborator_context_separate(_signed_member_secret) -> None:
     stop_autorun()
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     second = client.post(
@@ -20,10 +33,12 @@ def test_r27_member_projection_keeps_owner_and_collaborator_context_separate() -
     member = client.post(
         f"/api/v1/journeys/{ids['journey_id']}/members",
         json={"traveler_id": second["id"], "role": "COLLABORATOR", "invited_by": ids["traveler_id"]},
+        headers={"Authorization": f"Bearer {issue_traveler_token(ids['traveler_id'])}"},
     ).json()
     preferences = client.put(
         f"/api/v1/journeys/{ids['journey_id']}/members/{member['id']}/preferences",
         json={"preferences": [{"category": "interest", "key": "craft", "value": True, "weight": 1.0}]},
+        headers={"Authorization": f"Bearer {issue_traveler_token(second['id'])}"},
     )
     assert preferences.status_code == 200, preferences.text
 
@@ -44,7 +59,8 @@ def test_r27_member_projection_keeps_owner_and_collaborator_context_separate() -
     assert by_traveler[ids["traveler_id"]]["capabilities"] != by_traveler[second["id"]]["capabilities"]
 
     withdrawn = client.post(
-        f"/api/v1/journeys/{ids['journey_id']}/members/{member['id']}/withdraw"
+        f"/api/v1/journeys/{ids['journey_id']}/members/{member['id']}/withdraw",
+        headers={"Authorization": f"Bearer {issue_traveler_token(ids['traveler_id'])}"},
     )
     assert withdrawn.status_code == 200, withdrawn.text
     response = client.post(
@@ -54,3 +70,52 @@ def test_r27_member_projection_keeps_owner_and_collaborator_context_separate() -
     assert [item["traveler_id"] for item in response.json()["collective_journey"]["members"]] == [
         ids["traveler_id"]
     ]
+
+
+def test_r74_membership_mutations_require_signed_manager_and_server_bound_inviter(_signed_member_secret) -> None:
+    stop_autorun()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
+    journey_id = ids["journey_id"]
+    owner_id = ids["traveler_id"]
+    target = client.post(
+        "/api/v1/travelers",
+        json={"display_name": "R74 target", "email": None, "locale": "en-US", "timezone": "UTC"},
+    ).json()
+    stranger = client.post(
+        "/api/v1/travelers",
+        json={"display_name": "R74 stranger", "email": None, "locale": "en-US", "timezone": "UTC"},
+    ).json()
+    add_url = f"/api/v1/journeys/{journey_id}/members"
+    payload = {"traveler_id": target["id"], "role": "COLLABORATOR", "invited_by": owner_id}
+
+    unsigned = client.post(add_url, json=payload)
+    assert unsigned.status_code in {401, 403}, unsigned.text
+    foreign = client.post(
+        add_url,
+        json={**payload, "invited_by": stranger["id"]},
+        headers={"Authorization": f"Bearer {issue_traveler_token(stranger['id'])}"},
+    )
+    assert foreign.status_code in {401, 403}, foreign.text
+    fake_inviter = client.post(
+        add_url,
+        json={**payload, "invited_by": stranger["id"]},
+        headers={"Authorization": f"Bearer {issue_traveler_token(owner_id)}"},
+    )
+    assert fake_inviter.status_code == 403, fake_inviter.text
+    self_owner = client.post(
+        add_url,
+        json={"traveler_id": stranger["id"], "role": "OWNER", "invited_by": stranger["id"]},
+        headers={"Authorization": f"Bearer {issue_traveler_token(stranger['id'])}"},
+    )
+    assert self_owner.status_code in {401, 403}, self_owner.text
+
+    unsigned_withdraw = client.post(
+        f"{add_url}/not-a-member/withdraw"
+    )
+    assert unsigned_withdraw.status_code in {401, 403}, unsigned_withdraw.text
+    members = client.get(
+        add_url,
+        headers={"Authorization": f"Bearer {issue_traveler_token(owner_id)}"},
+    )
+    assert members.status_code == 200, members.text
+    assert {item["traveler_id"] for item in members.json()} == {owner_id}

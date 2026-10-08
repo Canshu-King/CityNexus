@@ -187,6 +187,7 @@ def collective_decision_epoch(
     required_member_ids: Iterable[str],
     decision_relevant_member_ids: Iterable[str] | None = None,
     members: Iterable[Mapping[str, Any]],
+    authority_scope_facts: Iterable[Mapping[str, Any]] | None = None,
 ) -> str:
     """Stable server fingerprint for a collective decision's semantic reality.
 
@@ -277,6 +278,13 @@ def collective_decision_epoch(
             for item in members
             if str(item.get("member_id")) in decision_relevant_set
         ],
+        # R74 adds narrowly scoped authority for the exact R73 shared-stop
+        # decision. Keep those signed grant facts in the same existing epoch
+        # that governs collective consent; they never become role capabilities.
+        "authority_scope_facts": sorted(
+            [dict(item) for item in (authority_scope_facts or [])],
+            key=lambda item: (str(item.get("member_id") or ""), str(item.get("grant_id") or "")),
+        ),
     }
     return hashlib.sha256(
         json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")

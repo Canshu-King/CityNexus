@@ -527,6 +527,20 @@ class MemberPlacePromotionDecisionRequest(BaseModel):
     decision: Literal["APPROVE", "DECLINE"]
 
 
+class SharedStopCoPlanningGrantCreateRequest(BaseModel):
+    """Offer one named Journey collaborator bounded authority for one public Place."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    grantee_member_id: str = Field(min_length=1, max_length=128)
+
+
+class SharedStopCoPlanningGrantDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+
+
 class MomentScoutRequest(BaseModel):
     """One-time owner-only discovery request; location is always server-bound."""
 

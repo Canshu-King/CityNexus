@@ -1567,3 +1567,39 @@ CREATE TABLE IF NOT EXISTS journey_role_capabilities (
     created_at TEXT NOT NULL,
     PRIMARY KEY (role, capability)
 );
+
+-- R74: a collaborator may answer only one explicitly accepted shared-stop round.
+-- The grant is Journey-, invitation-, base-plan-, member- and grantor-bound; the
+-- proposal id and decision epoch are attached when R73 opens that exact round.
+CREATE TABLE IF NOT EXISTS shared_stop_coplanning_grants (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    base_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    grantee_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    grantee_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    grantor_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    grantor_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    promotion_id TEXT REFERENCES member_place_promotions(id) ON DELETE CASCADE,
+    purpose TEXT NOT NULL DEFAULT 'R73_SHARED_STOP_ONLY'
+        CHECK (purpose = 'R73_SHARED_STOP_ONLY'),
+    status TEXT NOT NULL DEFAULT 'OFFERED'
+        CHECK (status IN ('OFFERED','ACCEPTED','DECLINED','REVOKED')),
+    request_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    accepted_at TEXT,
+    declined_at TEXT,
+    revoked_at TEXT,
+    decision_epoch TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, request_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_grantee_scope
+    ON shared_stop_coplanning_grants(
+        journey_id, invitation_id, base_plan_version_id, grantee_member_id, status
+    );
+CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_promotion
+    ON shared_stop_coplanning_grants(promotion_id, decision_epoch);

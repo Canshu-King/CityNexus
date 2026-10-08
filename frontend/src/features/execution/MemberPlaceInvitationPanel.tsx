@@ -7,6 +7,7 @@ import {
   type MemberPlaceInvitationProgressParticipant,
   type MemberPlaceInvitationProjection,
   type MemberPlacePromotionProjection,
+  type SharedStopCoPlanningGrantProjection,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
 import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
@@ -38,11 +39,13 @@ export function MemberPlaceInvitationPanel({
   const [feasibilityById, setFeasibilityById] = useState<Record<string, MemberPlaceInvitationFeasibilityPreviewResult | null>>({});
   const [dwellById, setDwellById] = useState<Record<string, 10 | 20 | 30>>({});
   const [promotionDwellById, setPromotionDwellById] = useState<Record<string, 10 | 20 | 30>>({});
+  const [coPlanningSelectionByInvitation, setCoPlanningSelectionByInvitation] = useState<Record<string, string>>({});
   const invitations = projection?.incoming ?? [];
   const sentInvitations = projection?.sent ?? [];
   const joinedInvitations = projection?.joined ?? [];
   const promotions = projection?.promotions ?? [];
-  if (!invitations.length && !sentInvitations.length && !joinedInvitations.length && !promotions.length) return null;
+  const coPlanningGrants = projection?.co_planning_grants ?? [];
+  if (!invitations.length && !sentInvitations.length && !joinedInvitations.length && !promotions.length && !coPlanningGrants.length) return null;
 
   const respond = async (
     invitationId: string,
@@ -162,6 +165,77 @@ export function MemberPlaceInvitationPanel({
     }
   };
 
+  const offerCoPlanning = async (invitationId: string, memberId: string) => {
+    if (busyId || !memberId) return;
+    setBusyId(invitationId);
+    setMessage(null);
+    try {
+      await cityNexusApi.offerSharedStopCoPlanningGrant(
+        journeyId,
+        invitationId,
+        memberId,
+        `r74-coplan-${crypto.randomUUID()}`,
+      );
+      await onUpdated();
+      setMessage(zh
+        ? "已发出仅限这个公开地点的一次共同规划授权；对方必须用自己的签名身份接受。"
+        : "A one-stop co-planning offer was sent. The collaborator must accept it with their own signed identity.");
+    } catch {
+      setMessage(zh
+        ? "授权未发出；行程和权限没有变化。请刷新检查邀请、当前计划和成员状态。"
+        : "The offer was not issued; Journey and role permissions are unchanged. Refresh to review the invitation, plan, and member state.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const respondCoPlanning = async (
+    grant: SharedStopCoPlanningGrantProjection,
+    decision: "ACCEPT" | "DECLINE",
+  ) => {
+    if (busyId) return;
+    setBusyId(grant.grant_id);
+    setMessage(null);
+    try {
+      await cityNexusApi.respondSharedStopCoPlanningGrant(
+        journeyId,
+        grant.invitation_id,
+        grant.grant_id,
+        decision,
+      );
+      await onUpdated();
+      setMessage(decision === "ACCEPT"
+        ? (zh ? "已接受这个地点的一次共同规划；你的全局角色权限没有改变。" : "You accepted one co-planning round for this Place. Your global role permissions did not change.")
+        : (zh ? "已拒绝这次共同规划授权。" : "You declined this co-planning offer."));
+    } catch {
+      setMessage(zh
+        ? "授权邀请已过期或当前计划已变化；没有扩大你的权限。请刷新查看。"
+        : "The offer expired or the active plan changed. No broader permission was granted; refresh to review.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const revokeCoPlanning = async (grant: SharedStopCoPlanningGrantProjection) => {
+    if (busyId) return;
+    setBusyId(grant.grant_id);
+    try {
+      await cityNexusApi.revokeSharedStopCoPlanningGrant(
+        journeyId,
+        grant.invitation_id,
+        grant.grant_id,
+      );
+      await onUpdated();
+    } catch {
+      setMessage(zh ? "授权无法撤回或已不再有效；请刷新查看。" : "The grant could not be revoked or is no longer active; refresh to review.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   const answerPromotion = async (
     promotion: MemberPlacePromotionProjection,
     decision: "APPROVE" | "DECLINE",
@@ -215,7 +289,22 @@ export function MemberPlaceInvitationPanel({
     rendezvousTitle: string,
     current: boolean,
     canPropose: boolean,
-  ) => (
+    coPlanningOptions: MemberPlaceInvitationProjection["sent"][number]["co_planning_options"],
+  ) => {
+    const coPlanningReady = coPlanningOptions.every((item) => item.state === "ACCEPTED");
+    const selectable = coPlanningOptions.filter((item) => !["OFFERED", "ACCEPTED"].includes(item.state));
+    const selectedMemberId = coPlanningSelectionByInvitation[invitationId] ?? selectable[0]?.member_id ?? "";
+    const stateLabel = (state: string) => ({
+      NOT_OFFERED: zh ? "尚未邀请" : "not offered",
+      OFFERED: zh ? "等待成员接受" : "awaiting acceptance",
+      ACCEPTED: zh ? "已接受，可共同决策" : "accepted for this stop",
+      DECLINED: zh ? "已拒绝" : "declined",
+      REVOKED: zh ? "已撤销" : "revoked",
+      EXPIRED: zh ? "已过期" : "expired",
+      BOUND: zh ? "已绑定到上一决策轮" : "bound to a prior round",
+      STALE: zh ? "已失效" : "stale",
+    } as Record<string, string>)[state] ?? state;
+    return (
     <section data-testid="member-place-promotion-offer" data-invitation-id={invitationId}>
       <strong>{zh ? "把发现加入共同旅程？" : "Promote this discovery to the shared Journey?"}</strong>
       <small>
@@ -223,6 +312,50 @@ export function MemberPlaceInvitationPanel({
           ? "这是新的集体计划提议。系统会用服务器掌握的公开地点、路线与承诺证据重新核验；所有当前成员（包括未加入临时小队的成员）都要分别同意。原计划只会在全体同意后由成员明确应用时切换。"
           : "This is a collective plan proposal. The server rechecks the canonical public Place, route, and protected commitments. Every current Journey member, including people outside this micro-group, must approve independently. The plan switches only after unanimous approval and an explicit member apply."}
       </small>
+      {canPropose && coPlanningOptions.length > 0 && (
+        <section data-testid="member-place-coplanning-manager">
+          <strong>{zh ? "仅限这个地点的共同规划授权" : "Co-planning authority for this Place only"}</strong>
+          {coPlanningOptions.map((item) => (
+            <small key={item.member_id} data-testid="member-place-coplanning-status">
+              {item.display_name}: {stateLabel(item.state)}
+            </small>
+          ))}
+          {selectable.length > 0 && (
+            <div className="journey-side-quest-actions">
+              <label htmlFor={`member-place-coplanning-${invitationId}`}>
+                {zh ? "选择同行者" : "Choose a collaborator"}
+              </label>
+              <select
+                id={`member-place-coplanning-${invitationId}`}
+                data-testid="member-place-coplanning-member"
+                value={selectedMemberId}
+                disabled={busyId !== null}
+                onChange={(event) => setCoPlanningSelectionByInvitation((values) => ({
+                  ...values,
+                  [invitationId]: event.target.value,
+                }))}
+              >
+                {selectable.map((item) => (
+                  <option key={item.member_id} value={item.member_id}>{item.display_name}</option>
+                ))}
+              </select>
+              <button
+                type="button"
+                data-testid="member-place-coplanning-offer"
+                disabled={!current || busyId !== null || !selectedMemberId}
+                onClick={() => void offerCoPlanning(invitationId, selectedMemberId)}
+              >
+                {zh ? "邀请共同规划这一站" : "Offer co-planning for this stop"}
+              </button>
+            </div>
+          )}
+          {!coPlanningReady && (
+            <small data-testid="member-place-coplanning-pending">
+              {zh ? "每位普通协作者都需先用自己的身份接受；未接受前不创建候选计划。" : "Each read-only collaborator must accept with their own identity before a candidate plan is created."}
+            </small>
+          )}
+        </section>
+      )}
       <label htmlFor={`member-place-promotion-dwell-${invitationId}`}>
         {zh ? "计划停留时间" : "Planned dwell time"}
       </label>
@@ -230,7 +363,7 @@ export function MemberPlaceInvitationPanel({
         id={`member-place-promotion-dwell-${invitationId}`}
         data-testid="member-place-promotion-dwell"
         value={promotionDwellById[invitationId] ?? 20}
-        disabled={!current || !canPropose || busyId !== null}
+        disabled={!current || !canPropose || !coPlanningReady || busyId !== null}
         onChange={(event) => setPromotionDwellById((values) => ({
           ...values,
           [invitationId]: Number(event.target.value) as 10 | 20 | 30,
@@ -256,10 +389,13 @@ export function MemberPlaceInvitationPanel({
       >
         {busyId === invitationId
           ? (zh ? "正在核验并提议…" : "Checking and proposing…")
-          : (zh ? "提议加入共同旅程" : "Propose as a shared stop")}
+          : (!coPlanningReady
+            ? (zh ? "等待同行者接受共同规划" : "Waiting for co-planning acceptance")
+            : (zh ? "提议加入共同旅程" : "Propose as a shared stop"))}
       </button>
     </section>
-  );
+    );
+  };
 
   const renderPromotion = (promotion: MemberPlacePromotionProjection) => {
     const stateText = promotion.state === "PENDING_ROUTE"
@@ -328,6 +464,13 @@ export function MemberPlaceInvitationPanel({
         )}
         {promotion.viewer_decision && (
           <small>{zh ? `你已${promotion.viewer_decision === "APPROVE" ? "同意" : "拒绝"}；本轮不能替其他成员决策。` : `You ${promotion.viewer_decision.toLowerCase()}; this does not decide for anyone else.`}</small>
+        )}
+        {promotion.viewer_scoped_authority_expires_at && (
+          <small data-testid="member-place-promotion-scoped-authority">
+            {zh
+              ? `你仅可对这一轮共享站点决策投票；授权于 ${new Date(promotion.viewer_scoped_authority_expires_at).toLocaleString(locale)} 到期。`
+              : `Your authority covers only this shared-stop decision and expires ${new Date(promotion.viewer_scoped_authority_expires_at).toLocaleString(locale)}.`}
+          </small>
         )}
         {promotion.viewer_can_decide && (
           <div className="journey-side-quest-actions">
@@ -510,6 +653,7 @@ export function MemberPlaceInvitationPanel({
             invitation.rendezvous.title,
             invitation.state === "OPEN",
             invitation.viewer_can_propose,
+            invitation.co_planning_options,
           )}
         </article>
       ))}
@@ -532,6 +676,7 @@ export function MemberPlaceInvitationPanel({
             invitation.rendezvous.title,
             invitation.state === "OPEN",
             invitation.viewer_can_propose,
+            invitation.co_planning_options,
           )}
         </article>
       ))}
@@ -539,6 +684,37 @@ export function MemberPlaceInvitationPanel({
         <section data-testid="member-place-promotions">
           <span className="v8-kicker">{zh ? "全体同行者共享站点决策" : "Shared-stop decisions for the whole Journey"}</span>
           {promotions.map(renderPromotion)}
+        </section>
+      )}
+      {coPlanningGrants.length > 0 && (
+        <section data-testid="member-place-coplanning-grants">
+          <span className="v8-kicker">{zh ? "单站共同规划授权" : "One-stop co-planning offers"}</span>
+          {coPlanningGrants.map((grant) => (
+            <article key={grant.grant_id} data-testid="member-place-coplanning-grant" data-state={grant.state}>
+              <strong>{grant.place.name}</strong>
+              <small>
+                {zh
+                  ? `${grant.grantor_name} 邀请 ${grant.grantee_name} 共同规划这一站。授权只绑定此地点、当前计划与一次集体决策，24 小时后过期；不会增加 JOURNEY_UPDATE 或预订权限。`
+                  : `${grant.grantor_name} invited ${grant.grantee_name} to co-plan this one stop. The grant binds this Place, the current plan, and one collective decision; it expires after 24 hours and adds no JOURNEY_UPDATE or booking permission.`}
+              </small>
+              <small>{zh ? `状态：${grant.state}；会合点：${grant.rendezvous.title}。` : `State: ${grant.state}; rendezvous: ${grant.rendezvous.title}.`}</small>
+              {grant.viewer_can_respond && (
+                <div className="journey-side-quest-actions">
+                  <button type="button" data-testid="member-place-coplanning-accept" disabled={busyId !== null} onClick={() => void respondCoPlanning(grant, "ACCEPT")}>
+                    {zh ? "接受这次共同规划" : "Accept co-planning for this one stop"}
+                  </button>
+                  <button type="button" data-testid="member-place-coplanning-decline" disabled={busyId !== null} onClick={() => void respondCoPlanning(grant, "DECLINE")}>
+                    {zh ? "拒绝" : "Decline"}
+                  </button>
+                </div>
+              )}
+              {grant.viewer_can_revoke && ["OFFERED", "ACCEPTED", "BOUND"].includes(grant.state) && (
+                <button type="button" data-testid="member-place-coplanning-revoke" disabled={busyId !== null} onClick={() => void revokeCoPlanning(grant)}>
+                  {zh ? "撤回这次授权" : "Revoke this one-stop grant"}
+                </button>
+              )}
+            </article>
+          ))}
         </section>
       )}
       {invitations.length > 0 && (

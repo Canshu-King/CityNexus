@@ -692,6 +692,74 @@ class MemberPlacePromotion(Base):
     )
 
 
+class SharedStopCoPlanningGrant(Base):
+    """A member's short-lived, one-promotion authority to answer an R73 decision."""
+
+    __tablename__ = "shared_stop_coplanning_grants"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    base_plan_version_id: Mapped[str] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="RESTRICT")
+    )
+    grantee_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    grantee_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    grantor_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    grantor_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    promotion_id: Mapped[str | None] = mapped_column(
+        ForeignKey("member_place_promotions.id", ondelete="CASCADE"), nullable=True
+    )
+    purpose: Mapped[str] = mapped_column(String, default="R73_SHARED_STOP_ONLY")
+    status: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
+    request_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    accepted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    declined_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    decision_epoch: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "purpose = 'R73_SHARED_STOP_ONLY'",
+            name="ck_shared_stop_coplanning_grant_purpose",
+        ),
+        CheckConstraint(
+            "status IN ('OFFERED', 'ACCEPTED', 'DECLINED', 'REVOKED')",
+            name="ck_shared_stop_coplanning_grant_status",
+        ),
+        UniqueConstraint(
+            "journey_id", "request_key", name="ux_shared_stop_coplanning_request_key"
+        ),
+        Index(
+            "idx_shared_stop_coplanning_grantee_scope",
+            "journey_id",
+            "invitation_id",
+            "base_plan_version_id",
+            "grantee_member_id",
+            "status",
+        ),
+        Index(
+            "idx_shared_stop_coplanning_promotion",
+            "promotion_id",
+            "decision_epoch",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

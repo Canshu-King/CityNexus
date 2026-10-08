@@ -748,6 +748,14 @@ export interface MemberPlaceInvitationProjection {
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
     viewer_can_propose: boolean;
+    co_planning_options: Array<{
+      member_id: string;
+      display_name: string;
+      role: string;
+      grant_id: string | null;
+      state: "NOT_OFFERED" | "OFFERED" | "ACCEPTED" | "DECLINED" | "REVOKED" | "EXPIRED" | "BOUND" | "STALE";
+      expires_at: string | null;
+    }>;
   }>;
   incoming: Array<{
     invitation_id: string;
@@ -769,8 +777,34 @@ export interface MemberPlaceInvitationProjection {
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
     viewer_can_propose: boolean;
+    co_planning_options: Array<{
+      member_id: string;
+      display_name: string;
+      role: string;
+      grant_id: string | null;
+      state: "NOT_OFFERED" | "OFFERED" | "ACCEPTED" | "DECLINED" | "REVOKED" | "EXPIRED" | "BOUND" | "STALE";
+      expires_at: string | null;
+    }>;
   }>;
   promotions: MemberPlacePromotionProjection[];
+  co_planning_grants: SharedStopCoPlanningGrantProjection[];
+}
+
+export interface SharedStopCoPlanningGrantProjection {
+  grant_id: string;
+  invitation_id: string;
+  base_plan_version_id: string;
+  state: "OFFERED" | "ACCEPTED" | "DECLINED" | "REVOKED" | "EXPIRED" | "BOUND" | "STALE";
+  purpose: "R73_SHARED_STOP_ONLY";
+  expires_at: string;
+  place: MemberPlaceInvitationPlace;
+  rendezvous: MemberPlaceInvitationRendezvous;
+  grantor_member_id: string;
+  grantor_name: string;
+  grantee_member_id: string;
+  grantee_name: string;
+  viewer_can_respond: boolean;
+  viewer_can_revoke: boolean;
 }
 
 export interface MemberPlacePromotionProjection {
@@ -808,6 +842,7 @@ export interface MemberPlacePromotionProjection {
   responses: Array<{ member_id: string; display_name: string; decision: "APPROVE" | "DECLINE" | "WAITING" }>;
   viewer_decision: "APPROVE" | "DECLINE" | null;
   viewer_can_decide: boolean;
+  viewer_scoped_authority_expires_at: string | null;
   viewer_can_apply: boolean;
   applied_plan_version_id: string | null;
 }
@@ -2380,6 +2415,49 @@ export const cityNexusApi = {
         headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
         body: JSON.stringify({ dwell_minutes: dwellMinutes }),
       },
+    );
+  },
+
+  offerSharedStopCoPlanningGrant(
+    journeyId: string,
+    invitationId: string,
+    granteeMemberId: string,
+    idempotencyKey: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/co-planning-grants",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ grantee_member_id: granteeMemberId }),
+      },
+    );
+  },
+
+  respondSharedStopCoPlanningGrant(
+    journeyId: string,
+    invitationId: string,
+    grantId: string,
+    decision: "ACCEPT" | "DECLINE",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/co-planning-grants/" + grantId + "/respond",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ decision }),
+      },
+    );
+  },
+
+  revokeSharedStopCoPlanningGrant(
+    journeyId: string,
+    invitationId: string,
+    grantId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/co-planning-grants/" + grantId + "/revoke",
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 

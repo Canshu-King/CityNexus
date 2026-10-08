@@ -158,6 +158,7 @@ from app.db.models import (
     MemberPlaceInvitation,
     MemberPlaceInvitationRecipient,
     MemberPlacePromotion,
+    SharedStopCoPlanningGrant,
     MemberSideQuest,
     PlannedSplitMeetupHandshake,
     JourneyRoleCapability,
@@ -480,6 +481,8 @@ from app.schemas import (
     MemberPlaceInvitationProgressRequest,
     MemberPlacePromotionCreateRequest,
     MemberPlacePromotionDecisionRequest,
+    SharedStopCoPlanningGrantCreateRequest,
+    SharedStopCoPlanningGrantDecisionRequest,
     MomentScoutRequest,
     MomentScoutSelectRequest,
     LiveMomentScoutRequest,
@@ -3961,21 +3964,16 @@ def answer_collective_clarification(
     required = {str(item) for item in stored.get("required_member_ids") or []}
     if str(member_id) not in required:
         raise HTTPException(403, "member is not decision-relevant for this collective trade-off")
-    can_update_journey = session.scalar(
-        select(JourneyRoleCapability).where(
-            JourneyRoleCapability.role == member.role,
-            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
-        )
+    # Ordinary members remain read-only for general planning. An R73 grant is
+    # accepted only as a one-round extension of this existing collective gate.
+    _require_r73_response_scope(
+        session=session,
+        journey=journey,
+        mission=parent,
+        member=member,
+        principal=authenticated_principal,
+        clarification=stored,
     )
-    if can_update_journey is None:
-        # UI projections hide response controls for read-only roles, but the
-        # HTTP authority boundary must enforce the same rule independently.
-        # A signed principal proves identity; it does not create a capability
-        # their current Journey role does not have.
-        raise HTTPException(
-            403,
-            "Journey member role does not have JOURNEY_UPDATE authority",
-        )
     options = [item for item in stored.get("candidate_options") or [] if isinstance(item, dict)]
     option_ids = {str(item.get("proposal_id")) for item in options}
     if str(payload.proposal_id) not in option_ids:
@@ -4017,6 +4015,27 @@ def answer_collective_clarification(
     r73_shared_stop = _json_object(parent.resolved_intent_json or "{}").get(
         "r73_shared_stop"
     )
+    authority_scope_facts = None
+    if isinstance(r73_shared_stop, dict):
+        current_member_ids = {
+            str(item.get("member_id") or "") for item in members if item.get("member_id")
+        }
+        if current_member_ids != required:
+            stored["status"] = "STALE"
+            parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+            session.commit()
+            raise HTTPException(409, "STALE_COLLECTIVE_MEMBERSHIP")
+        from app.shared_stop_coplanning import decision_scope_facts
+
+        authority_scope_facts, _scope_grants = decision_scope_facts(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(r73_shared_stop.get("invitation_id") or ""),
+            base_plan_version_id=str(stored.get("base_plan_version_id") or ""),
+            promotion_id=str(r73_shared_stop.get("promotion_id") or ""),
+            decision_epoch=str(stored.get("decision_epoch") or ""),
+            required_member_ids=sorted(required),
+        )
     stored_decision_relevant_ids = (
         stored.get("decision_relevant_member_ids", required)
         if isinstance(r73_shared_stop, dict)
@@ -4039,6 +4058,7 @@ def answer_collective_clarification(
         required_member_ids=required,
         decision_relevant_member_ids=stored_decision_relevant_ids,
         members=members,
+        authority_scope_facts=authority_scope_facts,
     )
     stored_surface_fingerprint = stored.get("candidate_surface_fingerprint")
     current_option_ids = {str(item.get("proposal_id") or "") for item in current_options}
@@ -7370,16 +7390,36 @@ def _member_expiry(raw: str | None) -> str | None:
     return parsed.astimezone(timezone.utc).isoformat()
 
 
+def _require_membership_manager(
+    request: Request, journey_id: str, session: Session
+):
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    principal, actor = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    if not member_has_capability(session, actor, "MEMBER_MANAGE"):
+        raise HTTPException(403, "Journey member role does not have MEMBER_MANAGE authority")
+    return principal, actor
+
+
 def _add_journey_member(
-    journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
+    journey_id: UUID,
+    payload: JourneyMemberCreate,
+    request: Request,
+    session: Session = Depends(get_session),
 ):
     require(session, Journey, str(journey_id), "Journey")
-    inviter = payload.invited_by.strip()
-    if not inviter:
-        raise _share_refusal(
-            422, "A membership needs the person or device that granted it.",
-            "MEMBER_INVITER_EMPTY", {"field": "invited_by"},
-        )
+    principal, manager = _require_membership_manager(request, str(journey_id), session)
+    # `invited_by` is display/audit metadata only. In strict mode it must name
+    # the authenticated manager; the persisted value is always server-derived.
+    supplied_inviter = payload.invited_by.strip()
+    if supplied_inviter not in {str(principal.traveler_id), str(manager.id)}:
+        raise HTTPException(403, "INVITED_BY_MUST_MATCH_AUTHENTICATED_MANAGER")
+    if payload.role in {"OWNER", "ADMIN"} and str(manager.role) != "OWNER":
+        raise HTTPException(403, "ONLY_OWNER_CAN_ASSIGN_OWNER_OR_ADMIN")
     traveler_id = str(payload.traveler_id)
     if session.get(Traveler, traveler_id) is None:
         raise _share_refusal(
@@ -7407,7 +7447,7 @@ def _add_journey_member(
         journey_id=str(journey_id),
         traveler_id=traveler_id,
         role=payload.role,
-        invited_by=inviter,
+        invited_by=str(principal.traveler_id),
         expires_at=expires_at,
         joined_at=stamp,
         removed_at=None,
@@ -7415,22 +7455,38 @@ def _add_journey_member(
         updated_at=stamp,
     )
     session.add(member)
+    record_audit(
+        session,
+        action="journey.member.assigned",
+        entity_type="JourneyMember",
+        entity_id=member.id,
+        journey_id=str(journey_id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal.traveler_id),
+        after={"member_id": member.id, "traveler_id": traveler_id, "role": member.role},
+    )
     session.commit()
     return _member_payload(member)
 
 
 @app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)
 def add_journey_member(
-    journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
+    journey_id: UUID,
+    payload: JourneyMemberCreate,
+    request: Request,
+    session: Session = Depends(get_session),
 ):
     with journey_write_lock(str(journey_id)):
         session.expire_all()
-        return _add_journey_member(journey_id, payload, session)
+        return _add_journey_member(journey_id, payload, request, session)
 
 
 @app.get("/api/v1/journeys/{journey_id}/members", response_model=list[JourneyMember])
-def list_journey_members(journey_id: UUID, session: Session = Depends(get_session)):
+def list_journey_members(journey_id: UUID, request: Request, session: Session = Depends(get_session)):
     require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    resolve_journey_member_principal(request, session, journey_id=str(journey_id))
     rows = session.scalars(
         select(JourneyMemberModel)
         .where(JourneyMemberModel.journey_id == str(journey_id))
@@ -7446,12 +7502,22 @@ def replace_journey_member_preferences(
     journey_id: UUID,
     member_id: str,
     payload: JourneyMemberPreferenceUpdate,
+    request: Request,
     session: Session = Depends(get_session),
 ):
     """Store explicit preference context for this member in this Journey only."""
     member = session.get(JourneyMemberModel, member_id)
     if member is None or member.journey_id != str(journey_id):
         raise _share_refusal(404, "No member of this journey carries that id.", "MEMBER_UNKNOWN", {})
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    _principal, actor = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    if str(actor.id) != str(member.id):
+        raise HTTPException(403, "members may update only their own Journey preferences")
     member.preferences_json = json.dumps(
         {"scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": [item.model_dump() for item in payload.preferences]},
         ensure_ascii=False,
@@ -7462,7 +7528,12 @@ def replace_journey_member_preferences(
     return {"journey_id": str(journey_id), "member_id": member.id, "scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": payload.preferences}
 
 
-def _withdraw_journey_member(journey_id: UUID, member_id: str, session: Session):
+def _withdraw_journey_member(
+    journey_id: UUID,
+    member_id: str,
+    principal_traveler_id: str,
+    session: Session,
+):
     member = session.get(JourneyMemberModel, member_id)
     if member is None or member.journey_id != str(journey_id):
         raise _share_refusal(
@@ -7481,6 +7552,27 @@ def _withdraw_journey_member(journey_id: UUID, member_id: str, session: Session)
     stamp = datetime.now(timezone.utc).isoformat()
     member.removed_at = stamp
     member.updated_at = stamp
+    for grant in session.scalars(
+        select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == str(journey_id),
+            SharedStopCoPlanningGrant.status.in_(("OFFERED", "ACCEPTED")),
+            (SharedStopCoPlanningGrant.grantee_member_id == str(member.id))
+            | (SharedStopCoPlanningGrant.grantor_member_id == str(member.id)),
+        )
+    ).all():
+        grant.status = "REVOKED"
+        grant.revoked_at = stamp
+        grant.updated_at = stamp
+    record_audit(
+        session,
+        action="journey.member.withdrawn",
+        entity_type="JourneyMember",
+        entity_id=member.id,
+        journey_id=str(journey_id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal_traveler_id),
+        after={"member_id": member.id, "role": member.role},
+    )
     session.commit()
     return _member_payload(member)
 
@@ -7489,10 +7581,19 @@ def _withdraw_journey_member(journey_id: UUID, member_id: str, session: Session)
     "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
     response_model=JourneyMember,
 )
-def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session = Depends(get_session)):
+def withdraw_journey_member(
+    journey_id: UUID,
+    member_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
     with journey_write_lock(str(journey_id)):
         session.expire_all()
-        return _withdraw_journey_member(journey_id, member_id, session)
+        require(session, Journey, str(journey_id), "Journey")
+        principal, _manager = _require_membership_manager(request, str(journey_id), session)
+        return _withdraw_journey_member(
+            journey_id, member_id, principal.traveler_id, session
+        )
 
 
 @app.get("/api/v1/journeys/{journey_id}/acl/roles", response_model=list[JourneyRoleRule])
@@ -10386,6 +10487,383 @@ def _r73_member_can_update(session: Session, member: JourneyMemberModel) -> bool
     ) is not None
 
 
+def _r73_member_can_manage_members(session: Session, member: JourneyMemberModel) -> bool:
+    return session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == member.role,
+            JourneyRoleCapability.capability == "MEMBER_MANAGE",
+        )
+    ) is not None
+
+
+def _require_r73_response_scope(
+    *,
+    session: Session,
+    journey: Journey,
+    mission: JourneyMission,
+    member: JourneyMemberModel,
+    principal: Any,
+    clarification: dict[str, Any],
+    expected_promotion_id: str | None = None,
+) -> None:
+    if _r73_member_can_update(session, member):
+        return
+    if principal is None or not getattr(principal, "traveler_id", None):
+        raise HTTPException(403, "SIGNED_TRAVELER_IDENTITY_REQUIRED_FOR_SCOPED_AUTHORITY")
+    marker = _json_object(mission.resolved_intent_json or "{}").get("r73_shared_stop")
+    required = {str(item) for item in clarification.get("required_member_ids") or []}
+    if (
+        not isinstance(marker, dict)
+        or str(member.id) not in required
+        or (expected_promotion_id and str(marker.get("promotion_id") or "") != str(expected_promotion_id))
+        or str(marker.get("active_plan_version_id") or "")
+        != str(clarification.get("base_plan_version_id") or "")
+        or not marker.get("promotion_id")
+        or not marker.get("invitation_id")
+        or not marker.get("proposal_id")
+    ):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    bound_promotion = session.get(
+        MemberPlacePromotion, str(marker.get("promotion_id") or "")
+    )
+    if (
+        bound_promotion is None
+        or str(bound_promotion.journey_id) != str(journey.id)
+        or str(bound_promotion.state) != "WAITING_FOR_MEMBERS"
+        or str(journey.active_plan_version_id or "")
+        != str(marker.get("active_plan_version_id") or "")
+    ):
+        raise HTTPException(409, "SCOPED_COPLANNING_DECISION_ALREADY_CLOSED_OR_STALE")
+    from app.shared_stop_coplanning import require_scoped_response_authority
+
+    require_scoped_response_authority(
+        session,
+        journey_id=str(journey.id),
+        promotion_id=str(marker["promotion_id"]),
+        invitation_id=str(marker["invitation_id"]),
+        base_plan_version_id=str(marker["active_plan_version_id"]),
+        decision_epoch=str(clarification.get("decision_epoch") or ""),
+        member=member,
+        traveler_id=str(principal.traveler_id),
+    )
+
+
+def _shared_stop_grant_payload(
+    grant: SharedStopCoPlanningGrant, *, now: datetime | None = None
+) -> dict[str, Any]:
+    from app.shared_stop_coplanning import grant_status_for_projection
+
+    return {
+        "grant_id": str(grant.id),
+        "journey_id": str(grant.journey_id),
+        "invitation_id": str(grant.invitation_id),
+        "base_plan_version_id": str(grant.base_plan_version_id),
+        "grantee_member_id": str(grant.grantee_member_id),
+        "grantee_traveler_id": str(grant.grantee_traveler_id),
+        "grantor_member_id": str(grant.grantor_member_id),
+        "purpose": str(grant.purpose),
+        "state": grant_status_for_projection(grant, now=now),
+        "expires_at": str(grant.expires_at),
+        "accepted_at": grant.accepted_at,
+        "promotion_id": grant.promotion_id,
+        "decision_epoch": grant.decision_epoch,
+    }
+
+
+def _offer_shared_stop_coplanning_grant(
+    *,
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: SharedStopCoPlanningGrantCreateRequest,
+    request: Request,
+    idempotency_key: str | None,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.shared_stop_coplanning import member_is_in_force
+
+    principal, manager = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    if not _r73_member_can_manage_members(session, manager):
+        raise HTTPException(403, "Journey member role does not have MEMBER_MANAGE authority")
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        request_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    if invitation.journey_id != journey.id:
+        raise HTTPException(404, "Place invitation was not found")
+    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "SCOPED_COPLANNING_REQUIRES_ACTIVE_JOURNEY")
+    from app.execution.member_place_invitation import _invitation_context_is_current
+
+    now = execution_clock.now().astimezone(timezone.utc)
+    if (
+        str(invitation.state) != "OPEN"
+        or not _invitation_context_is_current(session, journey, invitation, now=now)
+    ):
+        raise HTTPException(409, "SCOPED_COPLANNING_INVITATION_STALE")
+    grantee = session.get(JourneyMemberModel, str(payload.grantee_member_id))
+    if (
+        grantee is None
+        or str(grantee.journey_id) != str(journey.id)
+        or not member_is_in_force(grantee, now=now)
+    ):
+        raise HTTPException(404, "SCOPED_COPLANNING_GRANTEE_NOT_IN_FORCE")
+    if str(grantee.id) == str(manager.id) or _r73_member_can_update(session, grantee):
+        raise HTTPException(409, "SCOPED_COPLANNING_ONLY_FOR_READ_ONLY_COLLABORATORS")
+    signature = canonical_request_signature(
+        {
+            "journey_id": str(journey.id),
+            "invitation_id": str(invitation.id),
+            "base_plan_version_id": str(journey.active_plan_version_id),
+            "grantee_member_id": str(grantee.id),
+            "grantor_member_id": str(manager.id),
+            "grantor_traveler_id": str(principal.traveler_id),
+            "purpose": "R73_SHARED_STOP_ONLY",
+        }
+    )
+    replay = session.scalar(
+        select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == str(journey.id),
+            SharedStopCoPlanningGrant.request_key == request_key,
+        )
+    )
+    if replay is not None:
+        if replay.request_hash != signature:
+            raise HTTPException(409, "IDEMPOTENCY_KEY_REUSED_FOR_DIFFERENT_SCOPED_GRANT")
+        return operator_projection(session, journey, viewer_member_id=manager.id)
+    # Repeated offers before a decision round are naturally idempotent even if
+    # the client generated a fresh transport key.
+    existing = session.scalars(
+        select(SharedStopCoPlanningGrant)
+        .where(
+            SharedStopCoPlanningGrant.journey_id == str(journey.id),
+            SharedStopCoPlanningGrant.invitation_id == str(invitation.id),
+            SharedStopCoPlanningGrant.base_plan_version_id == str(journey.active_plan_version_id),
+            SharedStopCoPlanningGrant.grantee_member_id == str(grantee.id),
+            SharedStopCoPlanningGrant.promotion_id.is_(None),
+            SharedStopCoPlanningGrant.status.in_(("OFFERED", "ACCEPTED")),
+        )
+        .order_by(SharedStopCoPlanningGrant.updated_at.desc())
+    ).first()
+    if existing is not None and datetime.fromisoformat(existing.expires_at) > now:
+        return operator_projection(session, journey, viewer_member_id=manager.id)
+    stamp = now.isoformat()
+    grant = SharedStopCoPlanningGrant(
+        id=str(uuid4()),
+        journey_id=str(journey.id),
+        invitation_id=str(invitation.id),
+        base_plan_version_id=str(journey.active_plan_version_id),
+        grantee_member_id=str(grantee.id),
+        grantee_traveler_id=str(grantee.traveler_id),
+        grantor_member_id=str(manager.id),
+        grantor_traveler_id=str(principal.traveler_id),
+        purpose="R73_SHARED_STOP_ONLY",
+        status="OFFERED",
+        request_key=request_key,
+        request_hash=signature,
+        expires_at=(now + timedelta(hours=24)).isoformat(),
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    session.add(grant)
+    record_audit(
+        session,
+        action="journey.shared_stop_coplanning.offered",
+        entity_type="SharedStopCoPlanningGrant",
+        entity_id=grant.id,
+        journey_id=str(journey.id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal.traveler_id),
+        after={
+            "grant_id": grant.id,
+            "invitation_id": str(invitation.id),
+            "base_plan_version_id": str(journey.active_plan_version_id),
+            "grantee_member_id": str(grantee.id),
+            "purpose": grant.purpose,
+            "expires_at": grant.expires_at,
+        },
+    )
+    try:
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raced = session.scalar(
+            select(SharedStopCoPlanningGrant).where(
+                SharedStopCoPlanningGrant.journey_id == str(journey.id),
+                SharedStopCoPlanningGrant.request_key == request_key,
+            )
+        )
+        if raced is not None and raced.request_hash == signature:
+            return operator_projection(session, journey, viewer_member_id=manager.id)
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_CONFLICT") from exc
+    return operator_projection(session, journey, viewer_member_id=manager.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants",
+    status_code=201,
+)
+def offer_shared_stop_coplanning_grant_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: SharedStopCoPlanningGrantCreateRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _offer_shared_stop_coplanning_grant(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            idempotency_key=idempotency_key,
+            session=session,
+        )
+
+
+def _respond_shared_stop_coplanning_grant(
+    *,
+    journey_id: UUID,
+    invitation_id: UUID,
+    grant_id: UUID,
+    payload: SharedStopCoPlanningGrantDecisionRequest,
+    request: Request,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.shared_stop_coplanning import member_is_in_force
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    grant = require(session, SharedStopCoPlanningGrant, str(grant_id), "Scoped co-planning grant")
+    if grant.journey_id != journey.id or grant.invitation_id != str(invitation_id):
+        raise HTTPException(404, "SCOPED_COPLANNING_GRANT_NOT_FOUND")
+    if grant.grantee_member_id != member.id or grant.grantee_traveler_id != principal.traveler_id:
+        raise HTTPException(403, "SCOPED_COPLANNING_GRANT_REQUIRES_GRANTEE_IDENTITY")
+    if grant.promotion_id is not None:
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_ALREADY_BOUND_TO_DECISION")
+    now = execution_clock.now().astimezone(timezone.utc)
+    expiry = datetime.fromisoformat(str(grant.expires_at).replace("Z", "+00:00"))
+    if expiry.tzinfo is None or expiry <= now:
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_EXPIRED")
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    from app.execution.member_place_invitation import _invitation_context_is_current
+
+    if (
+        journey.active_plan_version_id != grant.base_plan_version_id
+        or not member_is_in_force(member, now=now)
+        or not _invitation_context_is_current(session, journey, invitation, now=now)
+    ):
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_STALE")
+    already_decided_status = "ACCEPTED" if payload.decision == "ACCEPT" else "DECLINED"
+    if grant.status == already_decided_status:
+        return operator_projection(session, journey, viewer_member_id=member.id)
+    if grant.status != "OFFERED":
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_ALREADY_DECIDED")
+    stamp = now.isoformat()
+    grant.status = "ACCEPTED" if payload.decision == "ACCEPT" else "DECLINED"
+    if payload.decision == "ACCEPT":
+        grant.accepted_at = stamp
+    else:
+        grant.declined_at = stamp
+    grant.updated_at = stamp
+    record_audit(
+        session,
+        action="journey.shared_stop_coplanning." + payload.decision.lower(),
+        entity_type="SharedStopCoPlanningGrant",
+        entity_id=grant.id,
+        journey_id=str(journey.id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal.traveler_id),
+        after={
+            "grant_id": grant.id,
+            "member_id": str(member.id),
+            "invitation_id": str(invitation.id),
+            "base_plan_version_id": str(grant.base_plan_version_id),
+            "purpose": grant.purpose,
+            "decision": payload.decision,
+        },
+    )
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/respond"
+)
+def respond_shared_stop_coplanning_grant_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    grant_id: UUID,
+    payload: SharedStopCoPlanningGrantDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _respond_shared_stop_coplanning_grant(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            grant_id=grant_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/revoke"
+)
+def revoke_shared_stop_coplanning_grant_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    grant_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        principal, manager = _require_membership_manager(request, str(journey.id), session)
+        grant = require(session, SharedStopCoPlanningGrant, str(grant_id), "Scoped co-planning grant")
+        if grant.journey_id != journey.id or grant.invitation_id != str(invitation_id):
+            raise HTTPException(404, "SCOPED_COPLANNING_GRANT_NOT_FOUND")
+        if grant.grantor_member_id != manager.id or grant.status not in {"OFFERED", "ACCEPTED"}:
+            raise HTTPException(409, "SCOPED_COPLANNING_GRANT_NOT_REVOCABLE")
+        stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+        grant.status = "REVOKED"
+        grant.revoked_at = stamp
+        grant.updated_at = stamp
+        record_audit(
+            session,
+            action="journey.shared_stop_coplanning.revoked",
+            entity_type="SharedStopCoPlanningGrant",
+            entity_id=grant.id,
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={"grant_id": grant.id, "promotion_id": grant.promotion_id},
+        )
+        session.commit()
+        return operator_projection(session, journey, viewer_member_id=manager.id)
+
+
 def _r73_recovery_handoff_reason(session: Session, journey: Journey) -> str | None:
     active_execution = session.scalar(
         select(RecoveryExecutionPlan.id)
@@ -10568,6 +11046,30 @@ def _create_member_place_promotion(
         raise HTTPException(403, "SHARED_PLACE_PROMOTION_REQUIRES_INVITATION_PARTICIPANT")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_ACTIVE_JOURNEY")
+    # Do not manufacture a candidate (and its route work) until every current
+    # read-only collaborator has independently accepted a grant for this exact
+    # invitation and active plan. This keeps the ordinary-owner flow honest and
+    # includes members outside the temporary R70/R72 invite group.
+    preflight_members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    preflight_ids = sorted({str(item.get("member_id") or "") for item in preflight_members if item.get("member_id")})
+    if not preflight_ids:
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_CURRENT_MEMBERS")
+    from app.shared_stop_coplanning import find_accepted_grant
+
+    for member_projection in preflight_members:
+        member_id = str(member_projection.get("member_id") or "")
+        if member_projection.get("can_authorize_mutation"):
+            continue
+        grantee = session.get(JourneyMemberModel, member_id)
+        if grantee is None or find_accepted_grant(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(invitation.id),
+            base_plan_version_id=str(journey.active_plan_version_id),
+            grantee=grantee,
+            require_unbound=True,
+        ) is None:
+            raise HTTPException(409, "SCOPED_COPLANNING_ACCEPTANCE_REQUIRED")
     # The invitation and the exact Place are server authority; callers can only
     # choose the explicitly requested dwell duration.
     provisional = MemberPlacePromotion(
@@ -10696,18 +11198,41 @@ def _create_member_place_promotion(
     members_projection = active_journey_members_with_capabilities(session, journey)
     members = members_projection.get("members", [])
     required_ids = sorted({str(item.get("member_id") or "") for item in members if item.get("member_id")})
-    if not required_ids or any(not item.get("can_authorize_mutation") for item in members):
+    if not required_ids:
         _r73_block_promotion(
             session,
             journey,
             provisional,
-            code="CURRENT_MEMBER_AUTHORITY_UNAVAILABLE",
+            code="CURRENT_MEMBERS_UNAVAILABLE",
             feasibility="BLOCKED",
             proposal=proposal,
         )
         return operator_projection(session, journey, viewer_member_id=actor.id)
 
     from app.collective_mediation import collective_decision_epoch, collective_material_world_epoch
+    from app.shared_stop_coplanning import decision_scope_facts
+
+    try:
+        authority_scope_facts, scoped_grants = decision_scope_facts(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(invitation.id),
+            base_plan_version_id=str(journey.active_plan_version_id),
+            promotion_id=str(provisional.id),
+            decision_epoch=None,
+            required_member_ids=required_ids,
+            bind_unbound=True,
+        )
+    except HTTPException:
+        _r73_block_promotion(
+            session,
+            journey,
+            provisional,
+            code="SCOPED_COPLANNING_GRANT_CHANGED_DURING_PROPOSAL",
+            feasibility="BLOCKED",
+            proposal=proposal,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
 
     target_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
     if target_plan is None:
@@ -10755,7 +11280,10 @@ def _create_member_place_promotion(
         required_member_ids=required_ids,
         decision_relevant_member_ids=decision_relevant_ids,
         members=members,
+        authority_scope_facts=authority_scope_facts,
     )
+    for grant in scoped_grants.values():
+        grant.decision_epoch = decision_epoch
     mission.status = "WAITING_FOR_MEMBERS"
     mission.started_at = execution_clock.now().astimezone(timezone.utc).isoformat()
     mission.clarification_json = json.dumps(
@@ -10857,13 +11385,22 @@ def _respond_to_member_place_promotion(
     from app.traveler_principal import resolve_journey_member_principal
 
     principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
-    if not _r73_member_can_update(session, member):
-        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
     promotion = require(session, MemberPlacePromotion, str(promotion_id), "Shared-stop promotion")
     if promotion.journey_id != journey.id:
         raise HTTPException(404, "Shared-stop promotion was not found")
     mission = session.get(JourneyMission, str(promotion.mission_id)) if promotion.mission_id else None
     clarification = _json_object(mission.clarification_json or "{}") if mission is not None else {}
+    if mission is None:
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_MISSION_MISSING")
+    _require_r73_response_scope(
+        session=session,
+        journey=journey,
+        mission=mission,
+        member=member,
+        principal=principal,
+        clarification=clarification,
+        expected_promotion_id=str(promotion.id),
+    )
     required_ids = {
         str(item) for item in clarification.get("required_member_ids") or []
     }
@@ -14053,7 +14590,12 @@ def get_plan(plan_version_id: UUID, session: Session = Depends(get_session)):
 
 
 @app.post("/api/v1/journeys/{journey_id}/plans/{plan_version_id}/select")
-def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depends(get_session)):
+def select_plan(
+    journey_id: UUID,
+    plan_version_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
     journey = session.scalar(
         select(Journey)
         .where(Journey.id == str(journey_id))
@@ -14061,6 +14603,14 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     )
     if journey is None:
         raise HTTPException(404, f"Journey {journey_id} was not found")
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        _principal, actor = resolve_journey_member_principal(
+            request, session, journey_id=str(journey.id)
+        )
+        if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
     plan = session.scalar(
         select(PlanVersion).where(
             PlanVersion.id == str(plan_version_id), PlanVersion.journey_id == journey.id
@@ -21074,10 +21624,20 @@ def get_replan(proposal_id: UUID, session: Session = Depends(get_session)):
 @app.post("/api/v1/replans/{proposal_id}/accept")
 def accept_replan(
     proposal_id: UUID,
+    request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
     proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
+    if settings.traveler_auth_secret:
+        journey = require(session, Journey, str(proposal.journey_id), "Journey")
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        _principal, actor = resolve_journey_member_principal(
+            request, session, journey_id=str(journey.id)
+        )
+        if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
     if _is_group_recovery_collective_proposal(session, proposal):
         raise HTTPException(
             409,
@@ -21239,7 +21799,29 @@ def _collective_resolution_for_child(
     r73_shared_stop = _json_object(parent.resolved_intent_json or "{}").get(
         "r73_shared_stop"
     )
+    authority_scope_facts = None
     if isinstance(r73_shared_stop, dict):
+        current_member_ids = {
+            str(item.get("member_id") or "") for item in members if item.get("member_id")
+        }
+        stored_member_ids = {
+            str(item) for item in stored.get("required_member_ids") or []
+        }
+        if current_member_ids != stored_member_ids:
+            raise HTTPException(409, "STALE_COLLECTIVE_MEMBERSHIP")
+        from app.shared_stop_coplanning import decision_scope_facts
+
+        authority_scope_facts, _scope_grants = decision_scope_facts(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(r73_shared_stop.get("invitation_id") or ""),
+            base_plan_version_id=str(stored.get("base_plan_version_id") or ""),
+            promotion_id=str(r73_shared_stop.get("promotion_id") or ""),
+            decision_epoch=str(stored.get("decision_epoch") or ""),
+            required_member_ids=[
+                str(item) for item in stored.get("required_member_ids") or []
+            ],
+        )
         current_surface_fingerprint = candidate_surface_fingerprint(
             receipt.get("candidate_fit_matrix") or []
         )
@@ -21292,6 +21874,7 @@ def _collective_resolution_for_child(
         required_member_ids=stored.get("required_member_ids") or [],
         decision_relevant_member_ids=stored_decision_relevant_ids,
         members=members,
+        authority_scope_facts=authority_scope_facts,
     )
     if (
         epoch != stored.get("decision_epoch")

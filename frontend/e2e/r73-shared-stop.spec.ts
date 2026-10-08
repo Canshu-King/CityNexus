@@ -18,6 +18,9 @@ type Promotion = {
   dwell_minutes: number;
   clarification_id: string;
   responses: Array<{ member_id: string; display_name: string; decision: string }>;
+  tradeoff: { added_count: number; route_provider: string; route_fact_qualities: string[] } | null;
+  viewer_can_decide: boolean;
+  viewer_can_apply: boolean;
 };
 
 function travelerToken(travelerId: string): string {
@@ -107,7 +110,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
   });
   const planId = plans[0]?.id;
   if (!planId) throw new Error("R73 E2E could not generate a demo PlanVersion");
-  await api(request, `${journeyPath}/plans/${planId}/select`, { method: "POST" });
+  await api(request, `${journeyPath}/plans/${planId}/select`, { method: "POST", token: ownerToken });
   await api(request, `${journeyPath}/start`, { method: "POST" });
 
   const companion = await api<Traveler>(request, "/api/v1/travelers", {
@@ -117,6 +120,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
   const companionToken = travelerToken(companion.id);
   await api(request, `${journeyPath}/members`, {
     method: "POST",
+    token: ownerToken,
     data: { traveler_id: companion.id, role: "COLLABORATOR", invited_by: ownerId },
   });
   await api(request, `${journeyPath}/operator/start`, {
@@ -252,6 +256,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
   const uninvolvedToken = travelerToken(uninvolved.id);
   await api(request, `${journeyPath}/members`, {
     method: "POST",
+    token: ownerToken,
     data: { traveler_id: uninvolved.id, role: "COLLABORATOR", invited_by: ownerId },
   });
   const uninvolvedProjection = await api<{
@@ -261,16 +266,13 @@ test("R73 promotes one discovered Place through signed collective consent to the
   expect(uninvolvedProjection.member_place_invitations?.joined ?? []).toEqual([]);
   expect(JSON.stringify(uninvolvedProjection)).not.toContain(discoveryTarget.name);
 
-  const authorityFixture = await api<{ fixture_class: string; authorized_member_count: number }>(
+  const currentMembers = await api<Array<{ traveler_id: string; role: string }>>(
     request,
-    `/__test/r73/authorize-members/${journeyId}`,
-    {
-    method: "POST",
-    headers: { "X-R73-Test-Fixture-Token": fixtureToken },
-    },
+    `${journeyPath}/members`,
+    { token: ownerToken },
   );
-  expect(authorityFixture.fixture_class).toBe("TEST_REPLAY");
-  expect(authorityFixture.authorized_member_count).toBe(3);
+  expect(currentMembers.filter((member) => member.role === "OWNER")).toHaveLength(1);
+  expect(currentMembers.filter((member) => member.role === "COLLABORATOR")).toHaveLength(2);
 
   const baseline = await api<{
     agent_run_count: number;
@@ -296,12 +298,34 @@ test("R73 promotes one discovered Place through signed collective consent to the
 
     const offer = owner.page.getByTestId("member-place-promotion-offer");
     await expect(offer).toBeVisible();
-    await offer.getByTestId("member-place-promotion-dwell").selectOption("30");
+
+    // A offers the exact place-scoped grant. B and C independently accept
+    // with their own signed sessions; no test fixture upgrades either role.
+    await offer.getByTestId("member-place-coplanning-member").selectOption({ label: companion.display_name });
+    await offer.getByTestId("member-place-coplanning-offer").click();
+    await joined.page.reload({ waitUntil: "domcontentloaded" });
+    const bGrant = joined.page.getByTestId("member-place-coplanning-grant");
+    await expect(bGrant).toContainText(discoveryTarget.name);
+    await bGrant.getByTestId("member-place-coplanning-accept").click();
+
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    const refreshedOffer = owner.page.getByTestId("member-place-promotion-offer");
+    await refreshedOffer.getByTestId("member-place-coplanning-member").selectOption({ label: uninvolved.display_name });
+    await refreshedOffer.getByTestId("member-place-coplanning-offer").click();
+    await uninvolvedPage.page.reload({ waitUntil: "domcontentloaded" });
+    const cGrant = uninvolvedPage.page.getByTestId("member-place-coplanning-grant");
+    await expect(cGrant).toContainText(discoveryTarget.name);
+    await cGrant.getByTestId("member-place-coplanning-accept").click();
+
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    const readyOffer = owner.page.getByTestId("member-place-promotion-offer");
+    await expect(readyOffer.getByTestId("member-place-coplanning-pending")).toHaveCount(0);
+    await readyOffer.getByTestId("member-place-promotion-dwell").selectOption("30");
     const createResponsePromise = owner.page.waitForResponse((response) =>
       response.request().method() === "POST"
         && response.url().endsWith(`/member-place-invitations/${invitationId}/promotions`),
     );
-    await offer.getByTestId("member-place-promotion-create").click();
+    await readyOffer.getByTestId("member-place-promotion-create").click();
     const createResponse = await createResponsePromise;
     expect(createResponse.ok()).toBeTruthy();
     expect(createResponse.request().postDataJSON()).toEqual({ dwell_minutes: 30 });

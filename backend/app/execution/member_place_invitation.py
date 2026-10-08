@@ -25,6 +25,7 @@ from app.db.models import (
     MemberPlaceInvitationProgress,
     MemberPlaceInvitationRecipient,
     MemberPlacePromotion,
+    SharedStopCoPlanningGrant,
     MemberSideQuest,
     MemberSideQuestReturnReport,
     Place,
@@ -1499,8 +1500,73 @@ def invitation_projection(
         )
     )
     output: dict[str, list[dict[str, Any]]] = {
-        "sent": [], "incoming": [], "joined": [], "promotions": []
+        "sent": [], "incoming": [], "joined": [], "promotions": [], "co_planning_grants": []
     }
+    can_manage_members = session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == viewer.role,
+            JourneyRoleCapability.capability == "MEMBER_MANAGE",
+        )
+    ) is not None
+
+    def _co_planning_options(invitation: MemberPlaceInvitation) -> list[dict[str, Any]]:
+        if not can_manage_members or not journey.active_plan_version_id:
+            return []
+        from app.shared_stop_coplanning import grant_status_for_projection, member_is_in_force
+
+        rows = session.scalars(
+            select(JourneyMember)
+            .where(JourneyMember.journey_id == str(journey.id))
+            .order_by(JourneyMember.created_at, JourneyMember.id)
+        ).all()
+        options: list[dict[str, Any]] = []
+        for candidate in rows:
+            if (
+                str(candidate.id) == str(viewer.id)
+                or not member_is_in_force(candidate, now=current)
+                or session.scalar(
+                    select(JourneyRoleCapability.role).where(
+                        JourneyRoleCapability.role == candidate.role,
+                        JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+                    )
+                ) is not None
+            ):
+                continue
+            grants = session.scalars(
+                select(SharedStopCoPlanningGrant)
+                .where(
+                    SharedStopCoPlanningGrant.journey_id == str(journey.id),
+                    SharedStopCoPlanningGrant.invitation_id == str(invitation.id),
+                    SharedStopCoPlanningGrant.base_plan_version_id == str(journey.active_plan_version_id),
+                    SharedStopCoPlanningGrant.grantee_member_id == str(candidate.id),
+                )
+                .order_by(
+                    SharedStopCoPlanningGrant.updated_at.desc(),
+                    SharedStopCoPlanningGrant.id.desc(),
+                )
+            ).all()
+            latest = grants[0] if grants else None
+            state = "NOT_OFFERED"
+            grant_id = None
+            expires_at = None
+            if latest is not None:
+                state = grant_status_for_projection(latest, now=current)
+                if latest.promotion_id:
+                    state = "BOUND"
+                grant_id = str(latest.id)
+                expires_at = str(latest.expires_at)
+            traveler = session.get(Traveler, str(candidate.traveler_id))
+            options.append(
+                {
+                    "member_id": str(candidate.id),
+                    "display_name": str(traveler.display_name if traveler else "Traveller"),
+                    "role": str(candidate.role),
+                    "grant_id": grant_id,
+                    "state": state,
+                    "expires_at": expires_at,
+                }
+            )
+        return options
     parent_query = select(MemberPlaceInvitation).where(
         MemberPlaceInvitation.journey_id == journey.id
     )
@@ -1582,6 +1648,7 @@ def invitation_projection(
                 "participants": progress_board,
                 "own_progress": own_progress,
                 "viewer_can_propose": viewer_capability is not None,
+                "co_planning_options": _co_planning_options(invitation),
             })
             continue
 
@@ -1615,6 +1682,7 @@ def invitation_projection(
                 "participants": progress_board,
                 "own_progress": own_progress,
                 "viewer_can_propose": viewer_capability is not None,
+                "co_planning_options": _co_planning_options(invitation),
             })
             continue
         output["incoming"].append({
@@ -1629,6 +1697,82 @@ def invitation_projection(
                 response_state == "INVITED" and parent_state == "OPEN"
             ) or response_state == "ACCEPTANCE_NEEDS_COMPLETION",
         })
+
+    # A scoped R73 offer is visible to its named grantee even when they were
+    # never part of the temporary R70/R72 invitation audience. Managers see
+    # only grants they issued (the roster options are projected on their sent
+    # invitation above).
+    grant_query = select(SharedStopCoPlanningGrant).where(
+        SharedStopCoPlanningGrant.journey_id == str(journey.id),
+        (SharedStopCoPlanningGrant.grantee_member_id == str(viewer.id))
+        | (SharedStopCoPlanningGrant.grantor_member_id == str(viewer.id)),
+    )
+    for grant in session.scalars(
+        grant_query.order_by(
+            SharedStopCoPlanningGrant.updated_at.desc(),
+            SharedStopCoPlanningGrant.id.desc(),
+        ).limit(30)
+    ).all():
+        invitation = session.get(MemberPlaceInvitation, str(grant.invitation_id))
+        if invitation is None:
+            continue
+        try:
+            frozen = json.loads(str(invitation.disclosure_snapshot_json or "{}"))
+        except (TypeError, json.JSONDecodeError):
+            continue
+        place_view = frozen.get("place") if isinstance(frozen, dict) else None
+        rendezvous_view = frozen.get("rendezvous") if isinstance(frozen, dict) else None
+        if not isinstance(place_view, dict) or not isinstance(rendezvous_view, dict):
+            continue
+        from app.shared_stop_coplanning import grant_status_for_projection, find_accepted_grant
+
+        grantee = session.get(JourneyMember, str(grant.grantee_member_id))
+        grant_state = grant_status_for_projection(grant, now=current)
+        if grant_state == "ACCEPTED" and (
+            grantee is None
+            or find_accepted_grant(
+                session,
+                journey_id=str(journey.id),
+                invitation_id=str(grant.invitation_id),
+                base_plan_version_id=str(grant.base_plan_version_id),
+                grantee=grantee,
+                promotion_id=str(grant.promotion_id) if grant.promotion_id else None,
+                decision_epoch=str(grant.decision_epoch) if grant.decision_epoch else None,
+                require_unbound=grant.promotion_id is None,
+                now=current,
+            ) is None
+        ):
+            grant_state = "STALE"
+        elif grant.promotion_id and grant_state == "ACCEPTED":
+            grant_state = "BOUND"
+        grantor = session.get(JourneyMember, str(grant.grantor_member_id))
+        grantor_traveler = session.get(Traveler, str(grant.grantor_traveler_id))
+        grantee_traveler = session.get(Traveler, str(grant.grantee_traveler_id))
+        output["co_planning_grants"].append(
+            {
+                "grant_id": str(grant.id),
+                "invitation_id": str(invitation.id),
+                "base_plan_version_id": str(grant.base_plan_version_id),
+                "state": grant_state,
+                "purpose": str(grant.purpose),
+                "expires_at": str(grant.expires_at),
+                "place": place_view,
+                "rendezvous": rendezvous_view,
+                "grantor_member_id": str(grant.grantor_member_id),
+                "grantor_name": str(grantor_traveler.display_name if grantor_traveler else "Traveller"),
+                "grantee_member_id": str(grant.grantee_member_id),
+                "grantee_name": str(grantee_traveler.display_name if grantee_traveler else "Traveller"),
+                "viewer_can_respond": (
+                    str(viewer.id) == str(grant.grantee_member_id)
+                    and grant_state == "OFFERED"
+                    and grant.promotion_id is None
+                ),
+                "viewer_can_revoke": (
+                    str(viewer.id) == str(grant.grantor_member_id)
+                    and grant_state in {"OFFERED", "ACCEPTED", "BOUND"}
+                ),
+            }
+        )
 
     # R73's shared-stop proposal is a Journey-level collective decision, so it
     # is projected to every current Journey member, including members outside
@@ -1737,6 +1881,20 @@ def invitation_projection(
                 "route_provider": str(mobility.get("provider") or snapshot.get("source_provider") or "UNKNOWN"),
                 "route_fact_qualities": qualities,
             }
+        viewer_scoped_grant = None
+        if viewer_capability is None and state == "WAITING_FOR_MEMBERS":
+            from app.shared_stop_coplanning import find_accepted_grant
+
+            viewer_scoped_grant = find_accepted_grant(
+                session,
+                journey_id=str(journey.id),
+                invitation_id=str(promotion.invitation_id),
+                base_plan_version_id=str(promotion.active_plan_version_id),
+                grantee=viewer,
+                promotion_id=str(promotion.id),
+                decision_epoch=str(promotion.decision_epoch or ""),
+                now=current,
+            )
         output["promotions"].append({
             "promotion_id": str(promotion.id),
             "invitation_id": str(invitation.id),
@@ -1760,7 +1918,10 @@ def invitation_projection(
                 state == "WAITING_FOR_MEMBERS"
                 and str(viewer.id) in set(required_ids)
                 and not isinstance(viewer_response, dict)
-                and viewer_capability is not None
+                and (viewer_capability is not None or viewer_scoped_grant is not None)
+            ),
+            "viewer_scoped_authority_expires_at": (
+                str(viewer_scoped_grant.expires_at) if viewer_scoped_grant is not None else None
             ),
             "viewer_can_apply": state == "AUTHORIZED" and viewer_capability is not None,
             "applied_plan_version_id": str(promotion.applied_plan_version_id) if promotion.applied_plan_version_id else None,

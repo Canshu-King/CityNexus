@@ -281,32 +281,6 @@ def prepare_r73_fixture(
         }
 
 
-@app.post("/__test/r73/authorize-members/{journey_id}")
-def authorize_r73_fixture_members(
-    journey_id: str,
-    x_r73_test_fixture_token: str | None = Header(default=None, alias="X-R73-Test-Fixture-Token"),
-):
-    _require_fixture_token(x_r73_test_fixture_token)
-    with SessionLocal() as session:
-        if session.get(Journey, journey_id) is None:
-            raise HTTPException(status_code=404, detail="JOURNEY_NOT_FOUND")
-        active_members = session.scalars(
-            select(JourneyMember).where(
-                JourneyMember.journey_id == journey_id,
-                JourneyMember.joined_at.is_not(None),
-                JourneyMember.removed_at.is_(None),
-            )
-        ).all()
-        if len(active_members) != 3:
-            raise HTTPException(status_code=409, detail="R73_TEST_REPLAY_REQUIRES_SIGNED_A_B_C")
-        # Preserve the production role/capability rules. This controlled flow
-        # gives each signed test identity the existing JOURNEY_UPDATE authority.
-        for member in active_members:
-            member.role = "OWNER"
-        session.commit()
-        return {"fixture_class": "TEST_REPLAY", "authorized_member_count": len(active_members)}
-
-
 @app.get("/__test/r73/evidence/{journey_id}")
 def r73_evidence(
     journey_id: str,

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
+from threading import Barrier
 from uuid import uuid4
 
 import httpx
@@ -33,6 +35,7 @@ from app.db.models import (
     MemberPlaceInvitationProgress,
     MemberPlaceInvitationRecipient,
     MemberPlacePromotion,
+    SharedStopCoPlanningGrant,
     MemberSideQuest,
     MemberSideQuestReturnReport,
     MobilityFact,
@@ -110,7 +113,10 @@ def _active_shared_journey() -> tuple[str, str, str]:
     )
     assert plans.status_code == 201, plans.text
     plan_id = plans.json()[0]["id"]
-    assert client.post(f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select").status_code == 200
+    assert client.post(
+        f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select",
+        headers=_auth(str(reset.json()["traveler_id"])),
+    ).status_code == 200
     assert client.post(f"/api/v1/journeys/{journey_id}/start").status_code == 200
     now = datetime.now(timezone.utc).isoformat()
     other_id = str(uuid4())
@@ -3830,8 +3836,32 @@ def test_r72_late_joiner_does_not_inherit_prior_opt_in_status():
 
 
 def test_r73_shared_stop_without_grounded_route_evidence_stays_blocked(monkeypatch):
-    journey_id, owner_id, _recipient_id = _active_shared_journey()
+    journey_id, owner_id, recipient_id = _active_shared_journey()
     invitation_id, _side_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    with SessionLocal() as session:
+        recipient_member_id = str(session.scalar(
+            select(JourneyMember.id).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == recipient_id,
+            )
+        ))
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    offered = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(owner_id), "Idempotency-Key": "r73-no-route-scoped-grant"},
+        json={"grantee_member_id": recipient_member_id},
+    )
+    assert offered.status_code == 201, offered.text
+    grant = next(
+        item for item in offered.json()["member_place_invitations"]["co_planning_grants"]
+        if item["grantee_member_id"] == recipient_member_id and item["state"] == "OFFERED"
+    )
+    accepted = client.post(
+        invitation_url + f"/co-planning-grants/{grant['grant_id']}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT"},
+    )
+    assert accepted.status_code == 200, accepted.text
     monkeypatch.setattr(main_module, "_ensure_opportunity_window_event", lambda _session, _journey: None)
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
@@ -3920,7 +3950,7 @@ def test_r73_shared_stop_without_grounded_route_evidence_stays_blocked(monkeypat
         session.commit()
     bypass = client.post(
         f"/api/v1/replans/{proposal_id}/accept",
-        headers={"Idempotency-Key": "r73-generic-bypass-01"},
+        headers={**_auth(owner_id), "Idempotency-Key": "r73-generic-bypass-01"},
     )
     assert bypass.status_code == 409, bypass.text
     assert "R73_SHARED_PLACE_PROMOTION_AUTHORITY_REQUIRED" in bypass.text
@@ -3961,19 +3991,7 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     from app.replanning.provider_snapshots import EXPLICIT_FROZEN_FIXTURE, MobilitySnapshot
 
     journey_id, owner_id, companion_id = _active_shared_journey()
-    # This success-path fixture models three independently authenticated
-    # members who are all authorized to sign shared-plan changes. The normal
-    # COLLABORATOR role remains read-only for JOURNEY_UPDATE.
-    with SessionLocal() as session:
-        companion = session.scalar(
-            select(JourneyMember).where(
-                JourneyMember.journey_id == journey_id,
-                JourneyMember.traveler_id == companion_id,
-            )
-        )
-        assert companion is not None
-        companion.role = "OWNER"
-        session.commit()
+    # A remains OWNER; B and C stay ordinary signed COLLABORATORs throughout.
 
     # Give the controlled replay a real, bounded insertion window before the
     # next shared stop. These are test schedule facts, not provider evidence.
@@ -4161,7 +4179,7 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
             id=str(uuid4()),
             journey_id=journey_id,
             traveler_id=third_id,
-            role="OWNER",
+            role="COLLABORATOR",
             invited_by=owner_id,
             expires_at=None,
             joined_at=stamp,
@@ -4208,7 +4226,7 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
         authority_members = main_module.active_journey_members_with_capabilities(
             session, journey
         )["members"]
-        assert all(item["can_authorize_mutation"] for item in authority_members), json.dumps(
+        assert sum(bool(item["can_authorize_mutation"]) for item in authority_members) == 1, json.dumps(
             [{"member_id": item["member_id"], "role": item["role"], "capabilities": item["capabilities"]}
              for item in authority_members],
             ensure_ascii=False,
@@ -4294,10 +4312,128 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     monkeypatch.setattr(main_module, "_ensure_opportunity_window_event", create_test_replay_event)
     monkeypatch.setattr(main_module, "capture_runtime_mobility_snapshot", capture_test_replay)
 
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    promotion_url = invitation_url + "/promotions"
+    scoped_travelers = {companion_id, third_id}
+
+    def offer_and_accept_scoped_grants(round_key: str) -> dict[str, str]:
+        with SessionLocal() as session:
+            rows = session.scalars(
+                select(JourneyMember).where(
+                    JourneyMember.journey_id == journey_id,
+                    JourneyMember.traveler_id.in_(scoped_travelers),
+                )
+            ).all()
+            member_by_traveler = {str(row.traveler_id): str(row.id) for row in rows}
+        assert set(member_by_traveler) == scoped_travelers
+        grant_ids: dict[str, str] = {}
+        for traveler_id in sorted(scoped_travelers):
+            offered = client.post(
+                invitation_url + "/co-planning-grants",
+                headers={**_auth(owner_id), "Idempotency-Key": f"{round_key}-{traveler_id[:12]}"},
+                json={"grantee_member_id": member_by_traveler[traveler_id]},
+            )
+            assert offered.status_code == 201, offered.text
+            owner_projection = offered.json()["member_place_invitations"]
+            matching_grants = [
+                item for item in owner_projection["co_planning_grants"]
+                if item["grantee_member_id"] == member_by_traveler[traveler_id]
+            ]
+            grant_view = next(
+                (item for item in matching_grants if item["state"] in {"OFFERED", "ACCEPTED"}),
+                None,
+            )
+            assert grant_view is not None, f"no current grant for {traveler_id}: {matching_grants}"
+            assert grant_view["invitation_id"] == invitation_id
+            grant_ids[traveler_id] = grant_view["grant_id"]
+            if grant_view["state"] == "OFFERED":
+                accept_url = invitation_url + f"/co-planning-grants/{grant_view['grant_id']}/respond"
+                if round_key == "r74-decline-round" and traveler_id == companion_id:
+                    barrier = Barrier(2)
+
+                    def accept_in_parallel():
+                        barrier.wait(timeout=10)
+                        return client.post(
+                            accept_url,
+                            headers=_auth(traveler_id),
+                            json={"decision": "ACCEPT"},
+                        )
+
+                    with ThreadPoolExecutor(max_workers=2) as pool:
+                        parallel_results = [
+                            pool.submit(accept_in_parallel),
+                            pool.submit(accept_in_parallel),
+                        ]
+                        accept_responses = [result.result(timeout=15) for result in parallel_results]
+                    assert all(response.status_code == 200 for response in accept_responses), [
+                        response.text for response in accept_responses
+                    ]
+                    with SessionLocal() as session:
+                        accept_audit_count = session.scalar(
+                            select(func.count()).select_from(AuditLog).where(
+                                AuditLog.action == "journey.shared_stop_coplanning.accept",
+                                AuditLog.entity_id == str(grant_view["grant_id"]),
+                            )
+                        )
+                    assert int(accept_audit_count or 0) == 1
+                    accepted_grant = accept_responses[-1]
+                else:
+                    accepted_grant = client.post(
+                        accept_url,
+                        headers=_auth(traveler_id),
+                        json={"decision": "ACCEPT"},
+                    )
+                    assert accepted_grant.status_code == 200, accepted_grant.text
+                assert any(
+                    item["grant_id"] == grant_view["grant_id"] and item["state"] == "ACCEPTED"
+                    for item in accepted_grant.json()["member_place_invitations"]["co_planning_grants"]
+                )
+        return grant_ids
+
+    blocked_before_opt_in = client.post(
+        promotion_url,
+        headers={**_auth(owner_id), "Idempotency-Key": "r74-blocked-before-opt-in"},
+        json={"dwell_minutes": 30},
+    )
+    assert blocked_before_opt_in.status_code == 409, blocked_before_opt_in.text
+    assert "SCOPED_COPLANNING_ACCEPTANCE_REQUIRED" in blocked_before_opt_in.text
+    first_round_grants = offer_and_accept_scoped_grants("r74-decline-round")
+
+    # A stale timestamp and an explicit revocation each remove only that
+    # collaborator's consent. The owner must obtain fresh acceptance before
+    # proposing the shared stop.
+    with SessionLocal() as session:
+        expired_grant = session.get(SharedStopCoPlanningGrant, first_round_grants[third_id])
+        assert expired_grant is not None
+        expired_grant.expires_at = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
+        session.commit()
+    expired_consent = client.post(
+        promotion_url,
+        headers={**_auth(owner_id), "Idempotency-Key": "r74-expired-consent"},
+        json={"dwell_minutes": 30},
+    )
+    assert expired_consent.status_code == 409, expired_consent.text
+    assert "SCOPED_COPLANNING_ACCEPTANCE_REQUIRED" in expired_consent.text
+
+    renewed_after_expiry = offer_and_accept_scoped_grants("r74-renew-expired-consent")
+    revoked = client.post(
+        invitation_url + f"/co-planning-grants/{renewed_after_expiry[companion_id]}/revoke",
+        headers=_auth(owner_id),
+    )
+    assert revoked.status_code == 200, revoked.text
+    revoked_consent = client.post(
+        promotion_url,
+        headers={**_auth(owner_id), "Idempotency-Key": "r74-revoked-consent"},
+        json={"dwell_minutes": 30},
+    )
+    assert revoked_consent.status_code == 409, revoked_consent.text
+    assert "SCOPED_COPLANNING_ACCEPTANCE_REQUIRED" in revoked_consent.text
+    offer_and_accept_scoped_grants("r74-renew-revoked-consent")
+
     # Exercise the explicit decline boundary first: it ends this round without
     # changing the active shared plan, then a fresh proposal requires new votes.
     declined_create = client.post(
-        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        promotion_url,
         headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-decline-create"},
         json={"dwell_minutes": 30},
     )
@@ -4317,8 +4453,12 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     assert _find_promotion(decline.json(), declined_row["promotion_id"])["state"] == "DECLINED"
     assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == active_plan_before
 
+    # The declined round consumed its grants; a new exact decision needs fresh
+    # consent from both ordinary collaborators.
+    offer_and_accept_scoped_grants("r74-success-round")
+
     proposed = client.post(
-        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+        promotion_url,
         headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-success-create"},
         json={"dwell_minutes": 30},
     )
@@ -4348,6 +4488,37 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     assert c_projection.status_code == 200, c_projection.text
     c_offer = _find_promotion(c_projection.json(), waiting["promotion_id"])
     assert c_offer["viewer_can_decide"] is True
+    assert c_offer["viewer_scoped_authority_expires_at"]
+    assert c_offer["tradeoff"] == waiting["tradeoff"]
+
+    with SessionLocal() as session:
+        collaborator_member_id = str(session.scalar(
+            select(JourneyMember.id).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == companion_id,
+            )
+        ))
+    generic_select = client.post(
+        f"/api/v1/journeys/{journey_id}/plans/{active_plan_before}/select",
+        headers=_auth(companion_id),
+    )
+    assert generic_select.status_code == 403, generic_select.text
+    generic_accept = client.post(
+        f"/api/v1/replans/{waiting['proposal_id']}/accept",
+        headers={**_auth(companion_id), "Idempotency-Key": "r74-scoped-generic-accept"},
+    )
+    assert generic_accept.status_code == 403, generic_accept.text
+    collaborator_withdraw = client.post(
+        f"/api/v1/journeys/{journey_id}/members/{collaborator_member_id}/withdraw",
+        headers=_auth(companion_id),
+    )
+    assert collaborator_withdraw.status_code == 403, collaborator_withdraw.text
+    wrong_journey_grant_use = client.post(
+        f"/api/v1/journeys/{uuid4()}/member-place-invitations/{invitation_id}/co-planning-grants/{uuid4()}/respond",
+        headers=_auth(companion_id),
+        json={"decision": "ACCEPT"},
+    )
+    assert wrong_journey_grant_use.status_code == 404, wrong_journey_grant_use.text
 
     response_url = f"/api/v1/journeys/{journey_id}/member-place-promotions/{waiting['promotion_id']}/respond"
     for traveler_id in (owner_id, companion_id):
@@ -4364,6 +4535,11 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     assert still_waiting["state"] == "WAITING_FOR_MEMBERS"
     assert sum(item["decision"] == "APPROVE" for item in still_waiting["responses"]) == 2
     assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == active_plan_before
+    premature_apply = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-promotions/{waiting['promotion_id']}/apply",
+        headers={**_auth(owner_id), "Idempotency-Key": "r74-premature-apply"},
+    )
+    assert premature_apply.status_code == 409, premature_apply.text
 
     final_answer = client.post(
         response_url,
@@ -4373,7 +4549,11 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     assert final_answer.status_code == 200, final_answer.text
     authorized = _find_promotion(final_answer.json(), waiting["promotion_id"])
     assert authorized["state"] == "AUTHORIZED"
-    assert authorized["viewer_can_apply"] is True
+    assert authorized["viewer_can_apply"] is False
+    owner_authorized = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert _find_promotion(owner_authorized.json(), waiting["promotion_id"])["viewer_can_apply"] is True
     apply = client.post(
         f"/api/v1/journeys/{journey_id}/member-place-promotions/{waiting['promotion_id']}/apply",
         headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-success-apply"},
@@ -4387,6 +4567,12 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     active_after = normal_experience.json()["active_plan"]
     assert active_after["id"] == applied["applied_plan_version_id"]
     assert sum(item.get("place_id") == place_id for item in active_after["activities"]) == 1
+    post_apply_scoped_replay = client.post(
+        response_url,
+        headers=_auth(companion_id),
+        json={"clarification_id": waiting["clarification_id"], "decision": "APPROVE"},
+    )
+    assert post_apply_scoped_replay.status_code == 409, post_apply_scoped_replay.text
 
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
