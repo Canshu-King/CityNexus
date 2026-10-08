@@ -97,6 +97,14 @@ def main(argv: list[str]) -> int:
         "clean_control_on_glass": glass.get("clean_control_on_glass"),
         "rule_fired_on": glass.get("rule_fired_on"),
         "no_chip_for_the_clock": pins.get("no_chip_for_the_clock"),
+        # "hiding a word is not deleting a stop" needs its own denominator: how many pins the screen
+        # really painted, and which of them are still buttons without a rendered word beside them.
+        "pin_count": pins.get("pin_count"),
+        "chip_node_count": glass.get("chip_nodes"),
+        "pins_still_buttons_without_a_word": [
+            row.get("painted") for row in pins.get("pins_without_a_rendered_word") or []
+            if row.get("role") == "button" and row.get("rendered") is True
+        ],
         "pins_announcing_a_forbidden_class": len(pins.get("pins_announcing_a_forbidden_class", [])),
         "attribution_rendered": attribution.get("rendered"),
         "attribution_text": attribution.get("on_screen"),

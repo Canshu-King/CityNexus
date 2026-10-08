@@ -144,6 +144,13 @@
   }
  ],
  "no_chip_for_the_clock": true,
+ "pin_count": 9,
+ "chip_node_count": 8,
+ "pins_still_buttons_without_a_word": [
+  "1",
+  "7",
+  "8"
+ ],
  "pins_announcing_a_forbidden_class": 0,
  "attribution_rendered": true,
  "attribution_text": "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",

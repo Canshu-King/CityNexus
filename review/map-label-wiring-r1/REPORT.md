@@ -1,8 +1,8 @@
 # ORD-0415 — 地图标注的禁项规则接到渲染路径（车道：地图标注接线）
 
-- 候选枝 `refs/heads/review/map-label-wiring-r1`，本报告的生成基准尖 `8590c4a7e0b802fe353bf40784ef548b3914af73`。
+- 候选枝 `refs/heads/review/map-label-wiring-r1`，本报告的生成基准尖 `6bb44ab39a547d520bf93f4ddca37fd62fed6d3f`。
 - 权威尖现读 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = `cf5915ea948579b4dc80aa57a299639b5440150e`；本枝与它的 `merge-base` 现读 `cf5915ea948579b4dc80aa57a299639b5440150e`。
-- 两枚读数出自同一个仪表提交 `8590c4a7e0b802fe353bf40784ef548b3914af73`，区别只在三枚渲染文件的工作树字节。
+- 两枚读数出自同一个仪表提交 `6bb44ab39a547d520bf93f4ddca37fd62fed6d3f`，区别只在三枚渲染文件的工作树字节。
 
 ## 一、两枚读数（同一把尺，两次运行）
 

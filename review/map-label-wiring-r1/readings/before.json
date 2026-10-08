@@ -243,6 +243,12 @@
  "clean_control_on_glass": true,
  "rule_fired_on": [],
  "no_chip_for_the_clock": false,
+ "pin_count": 9,
+ "chip_node_count": 9,
+ "pins_still_buttons_without_a_word": [
+  "7",
+  "8"
+ ],
  "pins_announcing_a_forbidden_class": 5,
  "attribution_rendered": true,
  "attribution_text": "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
