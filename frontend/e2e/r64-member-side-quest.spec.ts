@@ -175,6 +175,10 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     expect(JSON.stringify(scoutResult)).not.toContain("longitude");
     expect(scoutResult.rendezvous.time_state).not.toBe("PAST");
     await expect(scoutCard.getByTestId("moment-scout-results")).toContainText(scoutResult.rendezvous.place_name);
+    // Live discovery is an explicit alternative even if the local catalogue
+    // has a few entries (including demo/fixture entries). No external request
+    // occurs merely because this opt-in is visible.
+    await expect(scoutCard.getByTestId("moment-scout-live-opt-in")).toBeVisible();
     if (scoutResult.rendezvous.time_state === "UNKNOWN") {
       await expect(scoutCard.getByTestId("moment-scout-rendezvous-time-warning")).toContainText("time is unknown");
     } else if ((scoutResult.rendezvous.minutes_until ?? 0) < 30) {
