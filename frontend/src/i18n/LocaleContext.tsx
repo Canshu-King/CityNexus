@@ -836,6 +836,7 @@ const en: Dict = {
   "mobility.note": "Costs are shown only when captured from a provider. Unknown is not treated as zero.",
 
   // ── Stay Explorer ──
+  "stay.label": "Stay",
   "stay.kicker": "Stay Explorer · captured evidence",
   "stay.title": "Choose the anchor, see the journey.",
   "stay.lede": "Every rate is explicit about currency, room, occupancy, refundability, freshness, and the travel plan it shapes.",
@@ -1949,6 +1950,7 @@ const zhCN: Dict = {
   "mobility.note": "费用仅在从供应商采集时显示。未知不被视为零。",
 
   // ── 住宿选择 ──
+  "stay.label": "住宿",
   "stay.kicker": "住宿选择 · 已采集证据",
   "stay.title": "选择锚点，看见行程。",
   "stay.lede": "每个费率都明确标注币种、房型、入住人数、退改政策、新鲜度和它所塑造的行程。",
