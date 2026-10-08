@@ -63,8 +63,11 @@ export function MemberSideQuestCard({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [dwellMinutes, setDwellMinutes] = useState<10 | 20 | 30>(20);
-  const [fitPreview, setFitPreview] = useState<MemberSideQuestFitPreview | null>(null);
-  const [privateRoute, setPrivateRoute] = useState<MemberSideQuestNavigationResult | null>(null);
+  // Keep one-time navigation advice bound to the exact private quest state.
+  // A changed destination, dwell time, shared meetup, or quest transition
+  // must never resurrect a route/leave-by captured for an earlier reality.
+  const [fitPreviewReceipt, setFitPreviewReceipt] = useState<{ key: string; value: MemberSideQuestFitPreview } | null>(null);
+  const [privateRouteReceipt, setPrivateRouteReceipt] = useState<{ key: string; value: MemberSideQuestNavigationResult } | null>(null);
 
   useEffect(() => {
     if (!currentSplitActive) {
@@ -102,6 +105,19 @@ export function MemberSideQuestCard({
   const canNavigate = currentSplitActive
     && (state === "READY" || state === "EN_ROUTE")
     && sideQuest?.destination.authority === "EXACT_KNOWN_PLACE";
+  const routeContextKey = JSON.stringify([
+    journeyId,
+    sideQuest?.id ?? null,
+    state,
+    sideQuest?.destination.place_id ?? null,
+    sideQuest?.destination.title ?? null,
+    sideQuest?.rendezvous.activity_id ?? null,
+    sideQuest?.rendezvous.scheduled_at ?? null,
+    currentSplitActive,
+  ]);
+  const previewContextKey = JSON.stringify([routeContextKey, dwellMinutes]);
+  const fitPreview = fitPreviewReceipt?.key === previewContextKey ? fitPreviewReceipt.value : null;
+  const privateRoute = privateRouteReceipt?.key === routeContextKey ? privateRouteReceipt.value : null;
 
   if (!displayedRendezvous) return null;
 
@@ -156,8 +172,8 @@ export function MemberSideQuestCard({
     if (!sideQuest || busy || !currentSplitActive) return;
     setBusy(true);
     setMessage(null);
-    setFitPreview(null);
-    setPrivateRoute(null);
+    setFitPreviewReceipt(null);
+    setPrivateRouteReceipt(null);
     try {
       const observationId = await onRefreshLocation?.() ?? null;
       const result = await cityNexusApi.previewMemberSideQuestFit(
@@ -166,7 +182,7 @@ export function MemberSideQuestCard({
         observationId,
         dwellMinutes,
       );
-      setFitPreview(result);
+      setFitPreviewReceipt({ key: previewContextKey, value: result });
     } catch {
       setMessage(zh
         ? "暂时无法确认这条支线是否赶得上；共享行程没有改变。你仍可按原计划手动执行，或直接返回共同会合点。"
@@ -183,7 +199,7 @@ export function MemberSideQuestCard({
     }
     setBusy(true);
     setMessage(null);
-    setPrivateRoute(null);
+    setPrivateRouteReceipt(null);
     try {
       const observationId = await onRefreshLocation();
       if (!observationId) {
@@ -197,7 +213,7 @@ export function MemberSideQuestCard({
         sideQuest.id,
         observationId,
       );
-      setPrivateRoute(result);
+      setPrivateRouteReceipt({ key: routeContextKey, value: result });
       setMessage(result.status === "COMPLETED"
         ? (zh ? "已取得只对你显示的私人路线；共享行程没有改变。" : "A private route is ready for you; the shared Journey is unchanged.")
         : (zh ? "路线服务没有可靠结果；你仍可手动前往，计划没有改变。" : "No reliable route is available. You can still go manually; the plan is unchanged."));
