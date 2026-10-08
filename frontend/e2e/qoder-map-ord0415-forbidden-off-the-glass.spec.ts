@@ -229,12 +229,18 @@ test.describe("ORD-0415 forbidden classes off the map glass", () => {
  *  arm that only worked because a sibling arm seeded it would be skipped with it -- which is how a
  *  reading goes missing instead of going red. */
 const seedAndEnter = async (page: Page) => {
-  await enterMap(page);
+  /* Write first, load second. An arm that loads and then renames measures whatever the previous arm
+     left on screen, which is how the r1 of this file read 5 pins and 7 chips in two arms of one run.
+     `/v8` is opened only to read the journey the shell already owns. */
+  await page.goto("/v8", { waitUntil: "load", timeout: 90_000 });
+  await page.waitForTimeout(800);
   const journeyId = await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id") ?? "");
   expect(journeyId.length, node("fixture", "the shell has no journey to put stops on")).toBeGreaterThan(8);
   const applied = runFixture("--apply", journeyId);
   expect(applied.ok, node("fixture", `the fixture did not land every case: ${JSON.stringify(applied)}`)).toBe(true);
-  return { journeyId, applied };
+  const readBack = runFixture("--read", journeyId);
+  await enterMap(page);
+  return { journeyId, applied, readBack };
 };
 
 test.describe("ORD-0415 on the running screen", () => {
@@ -243,6 +249,7 @@ test.describe("ORD-0415 on the running screen", () => {
     const { journeyId, applied } = await seedAndEnter(page);
     push("fixture-applied", { journey_id: journeyId, applied });
 
+    push("fixture-read-back", { journey_id: journeyId, read_back: readBack });
     const bodies: unknown[] = [];
     page.on("response", async (response) => {
       if (!response.url().includes("/api/v1/")) return;
@@ -302,6 +309,8 @@ test.describe("ORD-0415 on the running screen", () => {
     push("glass-carries-no-class", {
       chip_nodes: glass.chips.length,
       rendered_chips: glass.renderedChips.length,
+      rendered_chip_texts: glass.renderedChips.map((chip) => ({ text: chip.text, ordinal: chip.ordinal, removed: chip.removed })),
+      pin_arias: glass.renderedPins.map((pin) => ({ painted: pin.painted, aria: pin.aria })),
       rendered_pins: glass.renderedPins.length,
       judged_string_count: judged.length,
       /* The before-picture, in the instrument's own words: on product bytes that never consulted the
