@@ -11,6 +11,13 @@ action", so the two halves contradicted each other.
 The prompt now reads both numbers from the same source that grants them.  An arm that only checked
 "the word eleven is gone" would pass on a prompt that hardcoded "five" instead, so R4 compares the
 stated grant against `mission_plan_for_model` itself.
+
+The same opening block also asserted "You may autonomously act on ordinary reversible changes"
+to every mission, two sentences above "do not accept or execute a mutating action" for the one
+level that holds no executing tool at all - so R4 pins the authority claim too.  The plan already
+names that limit as its `approval_boundary` step and the prompt now quotes it; the whole plan is
+also dumped into the prompt as JSON, so R4b pins the quote as an instruction, not the words
+appearing anywhere, which would be vacuously true with or without the fix.
 """
 
 from __future__ import annotations
@@ -191,3 +198,87 @@ def test_r3b_the_grant_still_agrees_with_the_permission_the_runtime_enforces() -
     granted = set(plan.get("allowed_tools") or ())
     assert "accept_replan" not in granted, granted
     assert "create_booking" not in granted, granted
+
+
+# ------------------------------------------- R4: the authority the prompt claims
+
+
+FLAT_CLAIM = "You may autonomously act on ordinary reversible changes"
+EXECUTING_CLAIM = re.compile(
+    r"act on ordinary reversible changes using the (\d+) executing tools this mission grants"
+)
+NO_EXECUTION_CLAIM = "grants you no tool that carries a change out"
+
+
+def test_r4_a_plan_only_prompt_does_not_claim_a_change_carrying_authority() -> None:
+    """The before-fix reading: one flat sentence telling every mission it may act on reversible
+    changes, sitting two sentences above "do not accept or execute a mutating action"."""
+
+    prompt, granted, _supplied = _prompt_for("PLAN_ONLY")
+
+    assert FLAT_CLAIM not in prompt, prompt[:400]
+    assert NO_EXECUTION_CLAIM in prompt, prompt[:400]
+
+
+def test_r4b_the_boundary_the_plan_itself_sets_is_quoted_not_paraphrased() -> None:
+    """The server already wrote this mission's limit as a step. It is also already present in the
+    prompt as data, because the whole plan is dumped as JSON - so "the words appear somewhere"
+    would be a vacuous judgement. What this pins is that the instruction block quotes it, which is
+    the only place a model reads it as a rule rather than as a field."""
+
+    from app.agent.mission_plan import mission_plan_for_model
+
+    prompt, _granted, _supplied = _prompt_for("PLAN_ONLY")
+    plan = mission_plan_for_model(
+        type("_M", (), {
+            "requested_autonomy": "PLAN_ONLY",
+            "protected_activity_ids_json": "[]",
+            "objective_codes_json": "[]",
+        })()
+    )
+    boundary = next(
+        str(step.get("operation"))
+        for step in (plan.get("steps") or [])
+        if isinstance(step, dict) and step.get("id") == "approval_boundary"
+    )
+
+    assert f"Your boundary: {boundary}." in prompt, (boundary, prompt[:400])
+
+
+def test_r4c_a_mission_that_does_hold_executing_tools_says_so_with_a_number() -> None:
+    """The other direction, so the fix cannot pass by never granting anything: ASSISTED holds six
+    executing tools and the prompt has to state that rather than leave it implied."""
+
+    from app.agent.runtime import _MUTATION_TOOLS
+
+    prompt, _granted, _supplied = _prompt_for("ASSISTED")
+
+    stated = EXECUTING_CLAIM.search(prompt)
+    assert stated is not None, prompt[:400]
+
+    from app.agent.mission_plan import mission_plan_for_model
+
+    plan = mission_plan_for_model(
+        type("_M", (), {
+            "requested_autonomy": "ASSISTED",
+            "protected_activity_ids_json": "[]",
+            "objective_codes_json": "[]",
+        })()
+    )
+    allowed = set(plan.get("allowed_tools") or ())
+    executing = len((allowed & set(_MUTATION_TOOLS)) - {"request_replan"})
+    assert executing > 0, allowed
+    assert int(stated.group(1)) == executing, (executing, stated.group(1))
+    assert NO_EXECUTION_CLAIM not in prompt, prompt[:400]
+
+
+def test_r4d_the_prompt_no_longer_holds_both_halves_of_one_contradiction() -> None:
+    """A PLAN_ONLY prompt must not tell the model it may act and must not act in the same breath."""
+
+    prompt, _granted, _supplied = _prompt_for("PLAN_ONLY")
+    claims_it_may_act = FLAT_CLAIM in prompt or EXECUTING_CLAIM.search(prompt) is not None
+    forbids_action = "do not accept or execute a mutating action" in prompt
+
+    assert not (claims_it_may_act and forbids_action), (
+        "the prompt asserts an execution authority and withdraws it in the same text"
+    )
