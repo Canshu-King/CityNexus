@@ -410,6 +410,7 @@ const en: Dict = {
 
   // ── Me ──
   "me.kicker": "Me",
+  "me.advancedDetail": "Advanced detail",
   "me.title": "My trip and preferences",
   "me.lede": "The facts of this trip: party, budget, stay and confirmed bookings.",
   "me.currentMode": "CURRENT MODE",
@@ -431,7 +432,6 @@ const en: Dict = {
   "me.allowAutomaticChanges": "Allow automatic changes",
   "me.delegationScope": "Delegation scope",
   "me.technicalIdentifiers": "Technical identifiers",
-  "me.advancedDetail": "Advanced detail",
 
 
   // ── Agent Composer ──
@@ -1626,6 +1626,7 @@ const zhCN: Dict = {
 
   // ── Me ──
   "me.kicker": "我的",
+  "me.advancedDetail": "高级详情",
   "me.title": "我的行程与偏好",
   "me.lede": "这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。",
   "me.currentMode": "当前模式",
@@ -1647,7 +1648,6 @@ const zhCN: Dict = {
   "me.allowAutomaticChanges": "开启自动执行",
   "me.delegationScope": "委派范围",
   "me.technicalIdentifiers": "技术标识",
-  "me.advancedDetail": "高级详情",
 
 
   // ── Agent Composer ──
