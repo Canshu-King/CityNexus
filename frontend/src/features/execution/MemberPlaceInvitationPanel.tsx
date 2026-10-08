@@ -66,10 +66,14 @@ export function MemberPlaceInvitationPanel({
       );
       setFeasibilityById((current) => ({ ...current, [invitationId]: result }));
     } catch {
-      setFeasibilityById((current) => ({ ...current, [invitationId]: null }));
+      setFeasibilityById((current) => {
+        const next = { ...current };
+        delete next[invitationId];
+        return next;
+      });
       setMessage(zh
-        ? "目前無法取得路線證據；你仍可謝絕，或明確選擇在時間未核實的情況下接受。"
-        : "Route evidence is unavailable. You can decline or explicitly accept while timing remains unverified.");
+        ? "路线检查未完成，不能把请求失败当作已确认的“时间未核实”结果。请刷新重试；如不愿共享位置，可在同意弹窗中主动选择跳过。"
+        : "The route check failed; this is not a verified UNKNOWN preview. Refresh and retry, or explicitly skip location sharing in the consent dialog.");
     } finally {
       setBusyId(null);
     }
@@ -122,8 +126,8 @@ export function MemberPlaceInvitationPanel({
             </small>
             <small>
               {zh
-                ? "路线检查会单独征求同意：只采集一次前台位置，并将它与公开地点、会合点用于路线估算。它不会打开地图；导航仍需另行确认。"
-                : "A route check asks separately: it captures one foreground location and uses it with the public Place and rendezvous for a route estimate. It does not open a map; navigation still needs separate consent."}
+                ? "路线检查会单独征求同意：获取一次前台位置并记录为本人 Journey 位置观察，用于路线估算。它可能更新其他成员可见的粗粒度团队状态，但不会把精确坐标直接显示给同行者。地图导航仍需另行确认。"
+                : "A route check asks separately: it records one foreground location observation on your Journey for route estimation. This may update coarse group-presence status seen by companions, but does not show them your exact coordinates. Map navigation needs separate consent."}
             </small>
             {canRespond && !completing && (
               <button
@@ -254,8 +258,8 @@ export function MemberPlaceInvitationPanel({
           </strong>
           <p>
             {zh
-              ? "同意后，CityNexus 会请求一次前台位置，并仅为本次估算把起点、已分享的公开地点和共同会合点交给已配置的路线服务。位置与路线不会展示给邀请者或其他同行者，也不会写入共享行程。拒绝定位或缺少路线证据时结果会是“时间未核实”。"
-              : "If you agree, CityNexus requests one foreground location and uses your origin, the shared public Place, and rendezvous for this one estimate with the configured route service. Your location and route are not shown to the inviter or other companions and are not written to the shared plan. Denying location or missing route evidence will return unverified timing."}
+              ? "同意后，CityNexus 会记录一条与你的身份绑定的 Journey 前台位置观察，并把起点、公开地点和会合点交给已配置的路线服务估算。其他成员不会在团队视图中看到你的精确坐标或私有路线，但可能看到更新后的粗粒度团队状态。不会改动共享计划；拒绝定位或缺少路线证据时结果是“时间未核实”。"
+              : "If you agree, CityNexus records one identity-bound foreground location observation on your Journey and sends your origin, the public Place, and rendezvous to the configured route service for this estimate. Companions do not see your exact coordinates or private route in the group view, but their coarse group-presence status may update. The shared plan is unchanged. Denied location or missing route evidence means unverified timing."}
           </p>
           <div className="journey-side-quest-actions">
             <button
