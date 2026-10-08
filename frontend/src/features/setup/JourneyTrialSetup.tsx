@@ -434,10 +434,12 @@ const STEP_OF_TARGET: Record<string, 1 | 2 | 3> = {
 function ReviewEdit({
   row,
   zh,
+  t,
   onEdit,
 }: {
   row: ReviewTarget;
   zh: boolean;
+  t: ReturnType<typeof useT>;
   onEdit: (target: string) => void;
 }) {
   return (
@@ -446,10 +448,10 @@ function ReviewEdit({
       className="trial-review-edit"
       data-testid={`review-edit-${row.name}`}
       data-target={row.target}
-      aria-label={(zh ? "改这一项：" : "Change ") + (zh ? row.zh : row.en)}
+      aria-label={t("trial.changeThisAria") + (zh ? row.zh : row.en)}
       onClick={() => onEdit(row.target)}
     >
-      {zh ? "改这一项" : "Change"}
+      {t("trial.changeThis")}
     </button>
   );
 }
@@ -483,11 +485,11 @@ const REVIEW_ROWS: ReviewTarget[] = [
  * same style as answers that were typed, beside an honest 「—」 for interests.  One screen, two
  * vocabularies.  This marker is the third state: chosen, unanswered (「—」), and filled in for you.
  */
-function DefaultMark({ zh }: { zh: boolean }) {
+function DefaultMark({ t }: { t: ReturnType<typeof useT> }) {
   return (
     <span className="trial-default-mark" data-testid="review-default-mark">
       {" "}
-      · {zh ? "我们替你填的" : "we filled this in for you"}
+      · {t("trial.filledForYou")}
     </span>
   );
 }
@@ -601,7 +603,7 @@ export function JourneyTrialSetup({
   const reviewEdit = (name: string) => {
     const row = REVIEW_ROWS.find((item) => item.name === name);
     if (!row) return null;
-    return <ReviewEdit row={row} zh={zh} onEdit={jumpToField} />;
+    return <ReviewEdit row={row} zh={zh} t={t} onEdit={jumpToField} />;
   };
   const [step, setStep] = useState<1 | 2 | 3>(restored.step);
 
@@ -1304,21 +1306,21 @@ export function JourneyTrialSetup({
               <dt>{zh ? "人数 / 房间" : "Travellers / rooms"}{reviewEdit("party")}</dt>
               <dd data-testid="review-party">
                 {draft.partySize} · {draft.rooms}
-                {!touched.has("partySize") && <DefaultMark zh={zh} />}
+                {!touched.has("partySize") && <DefaultMark t={t} />}
               </dd>
             </div>
             <div>
               <dt>{zh ? "总预算 / 住宿" : "Total / stay budget"}{reviewEdit("budget")}</dt>
               <dd data-testid="review-budget">
                 {draft.currency} {draft.budgetMajor} / {draft.stayBudgetMajor}
-                {(!touched.has("budgetMajor") || !touched.has("stayBudgetMajor")) && <DefaultMark zh={zh} />}
+                {(!touched.has("budgetMajor") || !touched.has("stayBudgetMajor")) && <DefaultMark t={t} />}
               </dd>
             </div>
             <div>
               <dt>{zh ? "节奏" : "Pace"}{reviewEdit("pace")}</dt>
               <dd data-testid="review-pace">
                 {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
-                {!touched.has("pace") && <DefaultMark zh={zh} />}
+                {!touched.has("pace") && <DefaultMark t={t} />}
               </dd>
             </div>
             <div>
@@ -1515,7 +1517,7 @@ export function JourneyTrialSetup({
             disabled={busy}
             onClick={() => void onUseSealedDemo()}
           >
-            {zh ? "重试" : "Retry"}
+            {t("trial.retry")}
           </button>
         </div>
       )}
@@ -1548,7 +1550,7 @@ export function JourneyTrialSetup({
             disabled={busy}
             onClick={() => setStep((current) => (current === 3 ? 2 : 1))}
           >
-            {zh ? "返回" : "Back"}
+            {t("trial.back")}
           </button>
         )}
         {step < 3 && (
@@ -1572,7 +1574,7 @@ export function JourneyTrialSetup({
               setStep((current) => (current === 1 ? 2 : 3));
             }}
           >
-            {zh ? "下一步" : "Next"}
+            {t("trial.next")}
           </button>
         )}
         {step === 3 && (
@@ -1596,7 +1598,7 @@ export function JourneyTrialSetup({
               void submit();
             }}
           >
-            {busy ? t("trial.creating") : zh ? "确认创建" : "Create trip"}
+            {busy ? t("trial.creating") : t("trial.createTrip")}
           </button>
         )}
       </div>
