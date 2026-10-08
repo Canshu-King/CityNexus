@@ -21,7 +21,10 @@ from app.db.models import (
     IdempotencyKey,
 )
 from app.db.session import SessionLocal
-from app.execution.group_recovery_followthrough import followthrough_projection
+from app.execution.group_recovery_followthrough import (
+    close_recovery_if_rejoined,
+    followthrough_projection,
+)
 from app.traveler_principal import issue_traveler_token
 
 
@@ -404,3 +407,110 @@ def test_durable_member_receipts_survive_shared_activity_history_loss():
             assert len(closures) == 1
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_one_device_verified_member_does_not_upgrade_whole_group_presence():
+    ids = _seed_applied_recovery()
+    now = _now()
+    with SessionLocal() as session:
+        receipts = (
+            (
+                ids["owner_member_id"],
+                ids["owner_id"],
+                "DEVICE_LOCATION_VERIFIED_EXECUTION",
+            ),
+            (
+                ids["companion_member_id"],
+                ids["companion_id"],
+                "OPERATOR_CONFIRMED_EXECUTION",
+            ),
+        )
+        for member_id, traveler_id, kind in receipts:
+            payload = {
+                "journey_id": ids["journey_id"],
+                "incident_key": ids["incident_key"],
+                "applied_proposal_id": "fixture-proposal",
+                "applied_plan_version_id": ids["plan_id"],
+                "recovery_epoch_id": session.scalar(
+                    select(AuditLog.after_json).where(
+                        AuditLog.journey_id == ids["journey_id"],
+                        AuditLog.action == "replan.accepted",
+                    )
+                )
+                and json.loads(
+                    session.scalar(
+                        select(AuditLog.after_json).where(
+                            AuditLog.journey_id == ids["journey_id"],
+                            AuditLog.action == "replan.accepted",
+                        )
+                    )
+                )["group_recovery_spend"]["recovery_epoch_id"],
+                "rendezvous_activity_id": ids["activity_id"],
+                "rendezvous_place_id": session.get(
+                    Activity, ids["activity_id"]
+                ).place_id,
+                "journey_member_id": member_id,
+                "traveler_id": traveler_id,
+                "role_at_confirmation": (
+                    "OWNER"
+                    if member_id == ids["owner_member_id"]
+                    else "ADMIN"
+                ),
+                "confirmed_at": now,
+                "execution_truth_kind": kind,
+                "evidence_level": "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH",
+                "physical_presence_verified": (
+                    kind == "DEVICE_LOCATION_VERIFIED_EXECUTION"
+                ),
+            }
+            session.add(
+                IdempotencyKey(
+                    key=f"r62-mixed-presence-{member_id}",
+                    operation="group_recovery.execution_arrival",
+                    request_hash=f"hash-{member_id}",
+                    response_status=200,
+                    response_json=json.dumps(payload, sort_keys=True),
+                    created_at=now,
+                    expires_at="9999-12-31T23:59:59+00:00",
+                )
+            )
+        session.commit()
+
+        journey = session.get(Journey, ids["journey_id"])
+        assert journey is not None
+        projected = followthrough_projection(
+            session,
+            journey,
+            viewer_member_id=ids["owner_member_id"],
+        )
+        assert projected is not None
+        assert projected["confirmed_count"] == projected["required_count"] == 2
+        assert projected["physical_presence_verified_member_count"] == 1
+        assert projected["physical_presence_verified"] is False
+        owner = next(
+            item
+            for item in projected["members"]
+            if item["member_id"] == ids["owner_member_id"]
+        )
+        companion = next(
+            item
+            for item in projected["members"]
+            if item["member_id"] == ids["companion_member_id"]
+        )
+        assert owner["physical_presence_verified"] is True
+        assert companion["physical_presence_verified"] is False
+
+        closed = close_recovery_if_rejoined(session, journey)
+        session.commit()
+        assert closed is not None
+        assert closed["state"] == "RECOVERY_CLOSED"
+        closure = session.scalar(
+            select(AuditLog).where(
+                AuditLog.journey_id == ids["journey_id"],
+                AuditLog.action == "journey.group_recovery.rejoined",
+            )
+        )
+        assert closure is not None
+        facts = json.loads(closure.after_json or "{}")
+        assert facts["physical_presence_verified"] is False
+        assert facts["physical_presence_verified_member_count"] == 1
