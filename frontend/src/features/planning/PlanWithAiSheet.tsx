@@ -292,17 +292,23 @@ export function PlanWithAiSheet({
           </button>
         </header>
 
-        <label className="plan-ai-field">
-          <span className="v8-sr-only">{zh ? "旅行需求" : "Trip request"}</span>
+        <div className="plan-ai-field-container">
+          <label htmlFor="plan-ai-input" className="plan-ai-label sr-only">{zh ? "旅行需求描述" : "Describe your trip request"}</label>
           <textarea
+            id="plan-ai-input"
             data-testid="plan-ai-input"
+            aria-label={zh ? "旅行需求描述" : "Trip request description"}
+            aria-describedby="plan-ai-hint plan-ai-examples"
             rows={5}
             value={text}
             disabled={busy}
             onChange={(event) => setText(event.target.value)}
-            placeholder={zh ? EXAMPLES[0].zh : EXAMPLES[0].en}
+            placeholder={zh ? `${EXAMPLES[0].zh}\n\n${EXAMPLES[1].zh}` : `${EXAMPLES[0].en}\n\n${EXAMPLES[1].en}`}
           />
-        </label>
+          <div id="plan-ai-hint" className="plan-ai-hint" aria-hidden="true">
+            {zh ? "支持自然语言描述，例如人数、地点、偏好等细节。点击下方示例快速开始。" : "Supports natural language descriptions with details like party size, locations, preferences. Click example buttons below for quick start."}
+          </div>
+        </div>
 
         <div className="plan-ai-examples">
           {EXAMPLES.map((item) => (

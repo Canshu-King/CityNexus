@@ -340,6 +340,10 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .cn-copilot-form { align-items: end; }
 .cn-copilot-form textarea { flex: 1; min-width: 0; resize: vertical; padding: 10px; border: 1px solid #dbe1eb; border-radius: 9px; color: var(--v8-ink); background: #fff; font: inherit; font-size: 11px; line-height: 1.45; }
 .cn-copilot-form .v8-primary { flex: none; min-height: 44px; padding: 0 13px; }
+/* Search box accessibility enhancements */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.copilot-hint { color: #758196; font-size: 10px; margin-top: 4px; line-height: 1.4; display: flex; gap: 4px; }
+.copilot-history-indicator { display: inline-flex; align-items: center; gap: 4px; color: var(--v8-indigo); font-size: 10px; font-weight: 700; background: #f4f5ff; padding: 3px 7px; border-radius: 4px; }
 .cn-copilot-error { margin: 0; color: #9a3f37; font-size: 10px; }
 .cn-agent-rail { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
 .cn-agent-step { display: flex; align-items: start; gap: 8px; animation: cn-step-in 180ms var(--cn-ease-enter) both; }
@@ -713,6 +717,12 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   background: #fff;
   color: inherit;
   resize: vertical;
+}
+.plan-ai-hint {
+  color: #758196;
+  font-size: 10px;
+  margin-top: 6px;
+  line-height: 1.4;
 }
 .plan-ai-examples {
   display: flex;

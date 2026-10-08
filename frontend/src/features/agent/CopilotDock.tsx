@@ -694,9 +694,28 @@ export function CopilotDock({
             />
           )}
           {error && <p className="cn-copilot-error" role="alert">{error}</p>}
-          <form className="cn-copilot-form" onSubmit={(event) => { event.preventDefault(); void send(); }}>
-            <textarea value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={t("agent.inputPlaceholder")} aria-label={t("agent.message")} rows={2} />
-            <button className="v8-primary" type="submit" disabled={sending || draft.trim().length < 2}>{sending ? t("agent.working") : t("agent.send")}</button>
+          <form className="cn-copilot-form" onSubmit={(event) => { event.preventDefault(); void send(); }} role="search" aria-label={zh ? "AI 助手对话" : "AI assistant chat"}>
+            <label htmlFor="copilot-input" className="sr-only">{zh ? "输入你的问题或请求" : "Type your question or request"}</label>
+            <textarea 
+              id="copilot-input"
+              value={draft} 
+              onChange={(event) => setDraft(event.target.value)} 
+              placeholder={zh ? "可以问为什么这样安排、试算一个假设、搜索地点，或报告正在发生的中断…\n例如：为什么我的行程要这么安排？有没有更快的路线？找附近的海鲜餐厅。" : "Ask why this is arranged, try a what-if scenario, search for places, or report a disruption...\nExamples: Why is my itinerary arranged this way? Are there faster routes? Find seafood restaurants nearby."} 
+              aria-label={t("agent.message")}
+              aria-describedby="copilot-hint copilot-history-count"
+              aria-live="polite"
+              rows={2}
+              data-testid="copilot-textarea"
+            />
+            <div id="copilot-hint" className="copilot-hint sr-only">
+              {zh ? "支持自然语言提问，查看对话历史" : "Supports natural language queries, view conversation history"}
+            </div>
+            {messages.length > 0 && (
+              <span id="copilot-history-count" className="copilot-history-indicator" aria-label={`${messages.length} ${zh ? '条历史消息' : 'history messages'}`}>
+                {zh}: {messages.length} {zh ? '条' : 'messages'}
+              </span>
+            )}
+            <button className="v8-primary" type="submit" disabled={sending || draft.trim().length < 2} aria-label={sending ? (zh ? "发送中" : "Sending...") : (zh ? "发送消息" : "Send message")}>{sending ? t("agent.working") : t("agent.send")}</button>
           </form>
         </div>
       )}
