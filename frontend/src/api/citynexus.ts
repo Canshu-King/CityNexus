@@ -638,6 +638,7 @@ export interface JourneyGroupPresenceProjection {
       id: string;
       owner_display_name: string;
       responder_display_name: string;
+      viewer_acknowledged: boolean;
       rendezvous: { title: string; place_name: string };
       reported_at: string;
       decided_at: string | null;
