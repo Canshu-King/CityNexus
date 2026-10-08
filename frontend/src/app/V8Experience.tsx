@@ -1468,7 +1468,7 @@ function Hub({
   // folded away to reduce screen clutter when traveller focuses on immediate
   // needs (next stop, stay choice, attention items). Defaults to collapsed
   // until explicitly expanded.
-  const [daysExpanded, setDaysExpanded] = useState(false);
+  const [daysExpanded, setDaysExpanded] = useState(selected ? false : false);
 
   return (
     <section className="v8-page">
@@ -1661,7 +1661,9 @@ function Hub({
           className="v8-text-button" 
           onClick={() => setDaysExpanded(!daysExpanded)}
           aria-expanded={daysExpanded}
+          style={{display: 'flex', alignItems: 'center', gap: '6px'}}
         >
+          {daysExpanded ? "▼" : "▶"} {" "}
           {zh ? (daysExpanded ? "收起预览" : "展开预览") : (daysExpanded ? "Collapse" : "Expand")}
         </button>
       </div>
