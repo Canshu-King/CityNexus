@@ -74,6 +74,47 @@ export function mapLabelViolations(painted: string): string[] {
 }
 
 /**
+ * ORD-0415 — how wide a span each class is cut over, and what counts as that class for the eye.
+ *
+ * Kept separate from `MAP_LABEL_FORBIDDEN` on purpose: that list is what four accepted gates judge
+ * with (`ord0403`, `ord0412`, `ord0415-r1`, `0512`), so widening its patterns would move their
+ * assertions under somebody else's hand. This table only answers "what do I take out once the class
+ * is there", measured against what a traveller actually reads:
+ *
+ *  - `money`: the pattern matches the glyph `¥` alone, so cutting exactly what it matches paints
+ *    「瓷房子 门票 60」 -- the price is still on the glass, wearing a different coat.
+ *  - `duration`: measured on the strings a Chinese plan carries, the accepted pattern
+ *    `/\d+\s*(?:分钟|min)\b/i` cannot fire at all -- the trailing `\b` needs a word character next to
+ *    钟, and 「45 分钟」, 「45分钟」 and 「需45分钟时间」 all answer false while 「45 min walk」 answers
+ *    true (probe in `review/map-label-wiring-r1/readings/`). The judge therefore misses a duration
+ *    painted beside a pin; the cut does not, and the gate reports both readings separately rather
+ *    than letting the narrow one hide the wide one.
+ *
+ * A class with no entry here is cut exactly as the judge matches it.
+ */
+const CUT_SPANS: Readonly<Record<string, RegExp>> = {
+  money: /(?:[¥$€£]\s*\d+(?:[.,]\d+)?|\d+(?:[.,]\d+)?\s*(?:元|CNY|USD))/gi,
+  duration: /(?:\d+\s*分钟|\d+\s*min\b)/gi,
+};
+
+/** A non-global copy of a pattern: `test()` on a `/g` regex advances `lastIndex`, so a helper that is
+ *  called once per painted label would answer differently on the second label than on the first. */
+function once(pattern: RegExp): RegExp {
+  return new RegExp(pattern.source, pattern.flags.replace("g", ""));
+}
+
+/** Which classes a traveller would say are in this word, cutting as wide as `takeOffGlass()` does.
+ *  `mapLabelViolations()` stays the accepted judge -- four gates assert against it -- and this is the
+ *  reading that tells a reviewer whether the two agree on a given string. They diverge on exactly the
+ *  classes named in `CUT_SPANS`, and a gate that only ever used the narrow one could not see the gap. */
+export function mapLabelSpanViolations(painted: string): string[] {
+  return MAP_LABEL_FORBIDDEN.filter((rule) => {
+    const span = CUT_SPANS[rule.name];
+    return once(rule.pattern).test(painted) || (!!span && once(span).test(painted));
+  }).map((rule) => rule.name);
+}
+
+/**
  * ORD-0415 — take the forbidden classes off the glass, keep the rest of the word.
  *
  * The list above was a judgement with no effect: nothing cut the strings before they were painted,
@@ -99,12 +140,17 @@ export function takeOffGlass(painted: string): { text: string; removed: string[]
   const removed: string[] = [];
   let text = painted;
   for (const rule of MAP_LABEL_FORBIDDEN) {
-    if (!rule.pattern.test(text)) continue;
+    const span = CUT_SPANS[rule.name];
+    /* Fired on either reading: the accepted pattern, or the span a traveller reads as the same class.
+       `duration` is the case that matters -- the pattern cannot reach a Chinese label, so a cut keyed
+       only to it would paint 「五大道 45 分钟 骑行」 and pass the judge. */
+    if (!once(rule.pattern).test(text) && !(span && once(span).test(text))) continue;
     removed.push(rule.name);
     /* A global copy because a label can carry the same class twice ("08:30 ... 10:15"), and the
        patterns in this list are written without the flag on purpose: `mapLabelViolations` asks
        "is this class present", which must not inherit a lastIndex from the previous call. */
-    const every = new RegExp(rule.pattern.source, `${rule.pattern.flags.replace("g", "")}g`);
+    const source = span ?? rule.pattern;
+    const every = new RegExp(source.source, `${source.flags.replace("g", "")}g`);
     text = text.replace(every, " ");
   }
   return { text: text.replace(/\s+/g, " ").trim(), removed };

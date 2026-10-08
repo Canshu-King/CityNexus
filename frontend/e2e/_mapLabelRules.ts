@@ -27,6 +27,7 @@ export {
   MAP_LABEL_FORBIDDEN,
   MAP_LABEL_SCOPE,
   mapLabelTextField,
+  mapLabelSpanViolations,
   mapLabelViolations,
   takeOffGlass,
 } from "../src/lib/mapLabelRules";

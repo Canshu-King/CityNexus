@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { MAP_LABEL_FORBIDDEN, MAP_LABEL_SCOPE, mapLabelViolations, takeOffGlass } from "./_mapLabelRules";
+import { MAP_LABEL_FORBIDDEN, MAP_LABEL_SCOPE, mapLabelSpanViolations, mapLabelViolations, takeOffGlass } from "./_mapLabelRules";
 import { stopLabel } from "../src/lib/mapStopLabels";
 import { mapCopy } from "../src/i18n/mapPanelCopy";
 import { evidencePath } from "./_qoderEvidence";
@@ -67,10 +67,13 @@ const push = (arm: string, body: Record<string, unknown>) => {
 const node = (arm: string, detail: string) => `${FILE} :: ${arm} — ${detail}`;
 
 /** The sqlite file this run owns, and the interpreter that may write it. Authoritative mode requires
- *  both (`playwrightEnv.ts`), so nothing here borrows another lane's database. */
+ *  both (`playwrightEnv.ts`), so nothing here borrows another lane's database.
+ *  Three slashes, the same way `playwrightEnv.ts` reads it back: `sqlite:///D:/…` is a Windows absolute
+ *  path with its own leading slash, and stripping two gives `/D:/…`, which `existsSync` answers false
+ *  for -- a parse bug that reads as "this run has no database". */
 const databasePath = (): string => {
   const url = process.env.CITYNEXUS_DATABASE_URL ?? "";
-  return url.startsWith("sqlite:///") ? url.replace(/^sqlite:\/\//, "") : "";
+  return url.startsWith("sqlite:///") ? url.replace(/^sqlite:\/\/\//, "") : "";
 };
 
 const runFixture = (mode: "--apply" | "--revert" | "--read", journeyId?: string): Record<string, unknown> => {
@@ -140,10 +143,21 @@ const judgedStrings = (glass: Awaited<ReturnType<typeof readGlass>>) => [
   ...glass.renderedPins.map((pin) => pin.aria),
 ];
 
-const countHits = (strings: string[]) =>
-  strings
-    .map((text) => ({ text, classes: mapLabelViolations(text) }))
-    .filter((entry) => entry.classes.length > 0);
+/** Two judges, both reported, never one folded into the other: `mapLabelViolations` is the list the
+ *  four accepted gates judge with, and `mapLabelSpanViolations` is as wide as the cut the product
+ *  makes. They disagree on `duration` (the accepted pattern cannot reach a Chinese label, measured in
+ *  `review/map-label-wiring-r1/`) and a single number would hide which one is being claimed. */
+const countHits = (strings: string[]) => {
+  const rows = strings.map((text) => ({
+    text,
+    accepted_classes: mapLabelViolations(text),
+    span_classes: mapLabelSpanViolations(text),
+  }));
+  return {
+    accepted: rows.filter((row) => row.accepted_classes.length > 0),
+    span: rows.filter((row) => row.span_classes.length > 0),
+  };
+};
 
 test.describe("ORD-0415 forbidden classes off the map glass", () => {
   test("cut-is-subtractive — the cut removes what the list names and keeps the rest of the word", async () => {
@@ -155,12 +169,25 @@ test.describe("ORD-0415 forbidden classes off the map glass", () => {
         text: cut.text,
         removed: cut.removed,
         violations_after_cut: mapLabelViolations(cut.text),
+        span_violations_after_cut: mapLabelSpanViolations(cut.text),
+        /* Would the ORIGINAL word have been flagged by each judge? Recorded per case so the gap between
+           the two is this run's measurement, not my reading of a regex. */
+        accepted_before_cut: mapLabelViolations(item.painted),
+        span_before_cut: mapLabelSpanViolations(item.painted),
       };
     });
-    push("cut-is-subtractive", { rows, forbidden_classes: MAP_LABEL_FORBIDDEN.map((rule) => rule.name) });
+    push("cut-is-subtractive", {
+      rows,
+      forbidden_classes: MAP_LABEL_FORBIDDEN.map((rule) => rule.name),
+      /* The classes the accepted judge cannot see on a Chinese word while the cut removes them:
+         the reason this gate reports a span-judged hit count next to the accepted one. */
+      judges_disagree_on: rows.filter((row) => row.span_before_cut.length !== row.accepted_before_cut.length)
+        .map((row) => ({ case: row.case, accepted: row.accepted_before_cut, span: row.span_before_cut })),
+    });
     for (const row of rows) {
       const wanted = CASES.find((item) => item.case === row.case)!;
       expect(row.violations_after_cut, node("A1", `${row.case}: the cut left ${JSON.stringify(row.violations_after_cut)} behind in「${row.text}」`)).toEqual([]);
+      expect(row.span_violations_after_cut, node("A1", `${row.case}: the cut left ${JSON.stringify(row.span_violations_after_cut)} behind as a traveller reads it:「${row.text}」`)).toEqual([]);
       if (wanted.must_lose) {
         expect(row.removed, node("A1", `${row.case}: the class ${wanted.must_lose} was not taken off ${row.painted}`)).toContain(wanted.must_lose);
       } else {
@@ -264,7 +291,8 @@ test.describe("ORD-0415 on the running screen", () => {
     await seedAndEnter(page);
     const glass = await readGlass(page);
     const judged = judgedStrings(glass);
-    const offenders = countHits(judged);
+    const hits = countHits(judged);
+    const offenders = hits.span;
     const shownChipTexts = glass.renderedChips.map((chip) => chip.text);
     const cutLanded = CASES.filter((item) => item.keeps && item.keeps !== item.painted)
       .map((item) => ({ case: item.case, on_glass: shownChipTexts.includes(item.keeps) }));
@@ -280,6 +308,8 @@ test.describe("ORD-0415 on the running screen", () => {
          list these are the rendered strings that carry a class, and this is the count the order asks
          for before the wiring. */
       rendered_strings_with_forbidden_class: offenders.length,
+      /* 处 under the accepted list, in case the two judges disagree on what is on this screen. */
+      rendered_strings_with_accepted_class: hits.accepted.length,
       offenders,
       cut_words_on_glass: cutLanded,
       clean_control_on_glass: controlLanded,
@@ -287,6 +317,7 @@ test.describe("ORD-0415 on the running screen", () => {
     });
     expect(glass.renderedChips.length, node("B2", "no label rendered at all, so a zero-hit reading would be vacuous")).toBeGreaterThan(0);
     expect(offenders, node("B2", `forbidden class rendered on the glass: ${JSON.stringify(offenders)}`)).toEqual([]);
+    expect(hits.accepted, node("B2", `class flagged by the accepted list: ${JSON.stringify(hits.accepted)}`)).toEqual([]);
     for (const row of cutLanded) {
       expect(row.on_glass, node("B2", `${row.case}: the word was hidden instead of cut — the traveller lost the name, not the clock`)).toBe(true);
     }
@@ -303,7 +334,7 @@ test.describe("ORD-0415 on the running screen", () => {
     const pinsWithoutAWord = glass.renderedPins.filter(
       (pin) => !glass.renderedChips.some((chip) => chip.ordinal === pin.painted),
     );
-    const announcedForbidden = glass.renderedPins.filter((pin) => mapLabelViolations(pin.aria).length > 0);
+    const announcedForbidden = glass.renderedPins.filter((pin) => mapLabelSpanViolations(pin.aria).length > 0);
     push("whole-word-stops-keep-pin", {
       chip_carrying_the_clock: clockOrdinal ?? null,
       no_chip_for_the_clock: noChipForTheClock,
