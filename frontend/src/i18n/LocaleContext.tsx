@@ -871,6 +871,28 @@ const en: Dict = {
   "stay.cancellation": "Cancellation",
   "stay.provider": "Provider",
   "stay.priceUnavailable": "Price not available",
+  /* StayExplorer's own words, lifted out of its inline `zh ? "…" : "…"` pairs. Every value here is
+     byte-identical to the string it replaces, on purpose: three of those strings are asserted
+     verbatim by e2e specs written by other lanes, so moving them into the dictionary may not also
+     move the words the traveller reads. `stay.priceUnavailable` and `stay.nonRefundable` above are
+     near-synonyms with different wording -- which one the screen should say is a product call, so it
+     is left standing and reported, not silently merged here. */
+  "stay.noCandidatesTitle": "No stay candidates yet",
+  "stay.rankedThisRun": "Candidates ranked this run",
+  "stay.returnedByServer": "Stays this server returned",
+  "stay.partyTravellers": "travelers",
+  "stay.minWalk": "min walk",
+  "stay.minSlack": "min slack",
+  "stay.priceUnknown": "Price unavailable",
+  "stay.noProviderRate": " (no provider rate)",
+  "stay.totalSeparator": " total · ",
+  "stay.perNight": " / night",
+  "stay.roomTypeUnknown": "Room type unknown",
+  "stay.roomTypeHotel": "Hotel",
+  "stay.cancellationUnknown": "Cancellation terms unknown",
+  "stay.cancellationNonRefundable": "Non-refundable",
+  "stay.cancellationFreeBefore": "Free cancellation before arrival",
+  "stay.noProviderEvidence": "No provider evidence",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2071,6 +2093,22 @@ const zhCN: Dict = {
   "stay.cancellation": "取消政策",
   "stay.provider": "供应商",
   "stay.priceUnavailable": "暂无价格",
+  "stay.noCandidatesTitle": "还没有可用的住宿候选",
+  "stay.rankedThisRun": "这一轮排定的候选数",
+  "stay.returnedByServer": "这台服务器交回的住宿数",
+  "stay.partyTravellers": "位旅客",
+  "stay.minWalk": "分钟步行",
+  "stay.minSlack": "分钟余量",
+  "stay.priceUnknown": "价格未知",
+  "stay.noProviderRate": "（供应商未提供房价）",
+  "stay.totalSeparator": " 合计 · ",
+  "stay.perNight": " / 晚",
+  "stay.roomTypeUnknown": "房型未知",
+  "stay.roomTypeHotel": "酒店",
+  "stay.cancellationUnknown": "退改政策未知",
+  "stay.cancellationNonRefundable": "不可取消",
+  "stay.cancellationFreeBefore": "入住前可免费取消",
+  "stay.noProviderEvidence": "暂无供应商证据",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
