@@ -1,0 +1,91 @@
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4173 backend=:8000 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+
+Running 19 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4173 backend=:8000 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+
+[1/19] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=30ca1378-54e1-47a1-bbd1-bc6052cb52c3 options=4 chosen=77220ff6-18f4-4c41-83c8-bdb3efdc44fa (Haihe Riverside Hotel)
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4173 backend=:8000 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+
+[2/19] [chromium] › e2e\drawer-collapse-r1.spec.ts:3:1 › DRAWER COLLAPSE toggling a group header hides its body
+[chromium] › e2e\drawer-collapse-r1.spec.ts:3:1 › DRAWER COLLAPSE toggling a group header hides its body
+DRAWER_COLLAPSE {"drawerScroll":0,"bodyHidden":true,"headerExpanded":"false"}
+
+[3/19] [chromium] › e2e\drawer-groups-r1.spec.ts:31:1 › DRAWER GROUPS every row in every group is clickable
+[chromium] › e2e\drawer-groups-r1.spec.ts:31:1 › DRAWER GROUPS every row in every group is clickable
+DRAWER_GROUPS {"total":17,"unreachable":[],"scrollTopByGroup":{"TODAY":101,"PLAN":152,"TRAVEL":101,"SYSTEM":187},"groupCount":4}
+
+[4/19] [chromium] › e2e\drawer-receipt-r1.spec.ts:27:1 › DRAWER RECEIPT
+[chromium] › e2e\drawer-receipt-r1.spec.ts:27:1 › DRAWER RECEIPT
+DRAWER_RECEIPT viewport=390x844 drawerOverflow=0 drawerClientHeight=844 drawerScrollHeight=844 groupSections=4 routeRows=17 clickableRows=17 iconWidth=17 bodyScrollOverflow=today=101,plan=152,travel=101,system=187
+
+[5/19] [chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE small-phone 360x640
+[chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE small-phone 360x640
+DRAWER_SHAPE {"shape":"small-phone","w":360,"h":640,"ham":1,"hamVisible":true,"drawerOpen":1,"routeRows":17,"clickableRows":17,"geom":{"drawerOverflow":0,"sections":4,"bodiesScrollAlone":[139,208,139,260],"drawerOverflowStyle":"auto"}}
+
+[6/19] [chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE phone 390x844
+[chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE phone 390x844
+DRAWER_SHAPE {"shape":"phone","w":390,"h":844,"ham":1,"hamVisible":true,"drawerOpen":1,"routeRows":17,"clickableRows":17,"geom":{"drawerOverflow":0,"sections":4,"bodiesScrollAlone":[101,152,101,187],"drawerOverflowStyle":"auto"}}
+
+[7/19] [chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE phone-large 414x896
+[chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE phone-large 414x896
+DRAWER_SHAPE {"shape":"phone-large","w":414,"h":896,"ham":1,"hamVisible":true,"drawerOpen":1,"routeRows":17,"clickableRows":17,"geom":{"drawerOverflow":0,"sections":4,"bodiesScrollAlone":[91,137,91,170],"drawerOverflowStyle":"auto"}}
+
+[8/19] [chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE landscape-phone 740x360
+[chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE landscape-phone 740x360
+DRAWER_SHAPE {"shape":"landscape-phone","w":740,"h":360,"ham":1,"hamVisible":false,"drawerOpen":0}
+
+[9/19] [chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE tablet 768x1024
+[chromium] › e2e\drawer-shape-sweep-r1.spec.ts:25:3 › DRAWER SHAPE tablet 768x1024
+DRAWER_SHAPE {"shape":"tablet","w":768,"h":1024,"ham":1,"hamVisible":false,"drawerOpen":0}
+
+[10/19] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:109:1 › ORD-0480 zh 390x844 arm=close_button 关闭 really takes the drawer away
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:109:1 › ORD-0480 zh 390x844 arm=close_button 关闭 really takes the drawer away
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: close_button — {"locale":"zh-CN","viewport":{"width":390,"height":844},"ham_box":{"x":17,"y":19,"w":46,"h":27},"close_box":{"x":241,"y":18,"w":32,"h":44},"entries_before":17,"after":{"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}}
+
+[11/19] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:127:1 › ORD-0480 zh 390x844 arm=backdrop a press outside the panel takes it away
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:127:1 › ORD-0480 zh 390x844 arm=backdrop a press outside the panel takes it away
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: backdrop — {"locale":"zh-CN","viewport":{"width":390,"height":844},"ham_box":{"x":17,"y":19,"w":46,"h":27},"press_point":{"x":350,"y":400},"hit_before":"button.v8-drawer-backdrop","entries_before":17,"after":{"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}}
+
+[12/19] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:145:1 › ORD-0480 zh 390x844 arm=escape Escape takes it away
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:145:1 › ORD-0480 zh 390x844 arm=escape Escape takes it away
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: escape — {"locale":"zh-CN","viewport":{"width":390,"height":844},"ham_box":{"x":17,"y":19,"w":46,"h":27},"key":"Escape","entries_before":17,"after":{"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}}
+
+[13/19] [chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:155:1 › ORD-0480 zh 390x844 the three arms write their readings
+[chromium] › e2e\qoder-bac10f40-ord0480-drawer-close-arms.spec.ts:155:1 › ORD-0480 zh 390x844 the three arms write their readings
+e2e/qoder-bac10f40-ord0480-drawer-close-arms.spec.ts :: closed_baseline — {"locale":"zh-CN","viewport":{"width":390,"height":844},"drawer_nodes":0,"backdrop_nodes":0,"entry_nodes":0,"close_button_present":false,"ham_text":"菜单","ham_box":{"x":17,"y":19,"w":46,"h":27},"ham_centre":{"x":40,"y":33},"ham_expanded":"false","ham_visible":true,"hit_at_ham_centre":"button.v8-mobile-menu","hit_is_ham":true}
+
+[14/19] [chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:110:1 › Q420 A1 the four drawer headings are Chinese on the zh arm
+[chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:110:1 › Q420 A1 the four drawer headings are Chinese on the zh arm
+Q420 A1 zh surface=drawer viewport=390x844 headings=["今日","规划","出行","系统"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=["全部路由"] close=["关闭"] row_count=25 seal=null
+
+[15/19] [chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:120:1 › Q420 A2 the en arm still shows the four words it showed before
+[chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:120:1 › Q420 A2 the en arm still shows the four words it showed before
+Q420 A2 en surface=drawer viewport=390x844 headings=["TODAY","PLAN","TRAVEL","SYSTEM"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=["All routes"] close=["Close"] row_count=25 seal=null
+
+[16/19] [chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:128:1 › Q420 A4 the desktop rail's headings come from the same dictionary on both arms
+[chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:128:1 › Q420 A4 the desktop rail's headings come from the same dictionary on both arms
+Q420 A4 zh desktop surface=desktop viewport=1280x800 headings=["今日","规划","出行","系统"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=[] close=[] row_count=15 seal=null
+
+Q420 A4 en desktop surface=desktop viewport=1280x800 headings=["TODAY","PLAN","TRAVEL","SYSTEM"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=[] close=[] row_count=15 seal=null
+
+[17/19] [chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:140:1 › Q420 A3 the drawer's own neighbours stay dictionary-fed on both arms
+[chromium] › e2e\qoder-ord0420-drawer-group-headings.spec.ts:140:1 › Q420 A3 the drawer's own neighbours stay dictionary-fed on both arms
+Q420 A3 zh surface=drawer viewport=390x844 headings=["今日","规划","出行","系统"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=["全部路由"] close=["关闭"] row_count=25 seal=null
+
+Q420 A3 en surface=drawer viewport=390x844 headings=["TODAY","PLAN","TRAVEL","SYSTEM"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=["All routes"] close=["Close"] row_count=25 seal=null
+
+[18/19] [chromium] › e2e\qoder-ord0426-drawer-last-row-hit.spec.ts:63:1 › ORD-0426 zh 390x844 the drawer's last row is hit-testable once the list is at its end
+[chromium] › e2e\qoder-ord0426-drawer-last-row-hit.spec.ts:63:1 › ORD-0426 zh 390x844 the drawer's last row is hit-testable once the list is at its end
+O426 gate zh 390x844 {"rows":22,"last_row_text":"Me","last_row_bottom":740,"hit_line":768,"nav_height":76,"scroller_client_width":271,"client_width":390,"scroller_padding_bottom":"0px","scrolled":187,"at_end":0,"hit_inside":true,"hit_tag":"button"}
+
+[19/19] [chromium] › e2e\rail-heading-shape-r1.spec.ts:17:1 › RAIL HEADING stays a label, not the drawer's toggle control
+[chromium] › e2e\rail-heading-shape-r1.spec.ts:17:1 › RAIL HEADING stays a label, not the drawer's toggle control
+RAIL_HEADING_SHAPE {"tag":"span","display":"block","cursor":"auto","width":195,"railWidth":219,"headings":4}
+
+  19 passed (1.7m)
