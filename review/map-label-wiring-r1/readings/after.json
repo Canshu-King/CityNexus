@@ -1,0 +1,148 @@
+{
+ "tag": "after",
+ "head": "c796547c1dc2e1e463f7e7c1e14f8945e6937b7a",
+ "head_subject": "c796547c1 2026-10-08 20:50:43 +0800 the arm that reads the store back destructures what the helper returns",
+ "watched_blobs": {
+  "frontend/src/lib/mapLabelRules.ts": "6888dd3804938229c1a6db45f4732cbd905aec0e",
+  "frontend/src/lib/mapStopLabels.ts": "d94f2ffb1c1576928148e07c20e772a686c44448",
+  "frontend/src/components/v8/MapPanel.tsx": "1d5ef0efbd275d12f3d0d82b1f3eff82728f0d66",
+  "frontend/src/components/JourneyMap.tsx": "fab224fd0e9c4f8be492c0f1d105c9dcd8c25fff",
+  "frontend/e2e/_mapLabelRules.ts": "caea356e7f88a1c54e27aa298d2f2ea085d3fbf0",
+  "frontend/e2e/qoder-map-ord0415-forbidden-off-the-glass.spec.ts": "37c97c11a4da2acf3b4936745ab3cd0fa934d8a1",
+  "review/map-label-wiring-r1/stop_rename_fixture_r1.py": "6ae2e6f80e7704c3c2fb388706552ea42e7879dd"
+ },
+ "database": "D:\\moodle\\_qoder_maplabel_wiring_20261008\\wt\\backend\\_ord0415205242.db",
+ "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "python_version": "Python 3.12.14",
+ "node_version": "v24.14.0",
+ "exit_code": 0,
+ "fixture_landed_cases": 6,
+ "fixture_renamed": null,
+ "rendered_chip_count": 6,
+ "judged_string_count": 15,
+ "forbidden_rendered_hits": 0,
+ "forbidden_rendered_hits_by_class": {},
+ "forbidden_rendered_hits_by_accepted_class": {},
+ "rendered_strings_with_accepted_class": 0,
+ "rendered_chip_texts": [
+  {
+   "text": "天津之眼 摩天轮",
+   "ordinal": "2",
+   "removed": "clock-time"
+  },
+  {
+   "text": "瓷房子 门票",
+   "ordinal": "3",
+   "removed": "money"
+  },
+  {
+   "text": "五大道 骑行",
+   "ordinal": "4",
+   "removed": "duration"
+  },
+  {
+   "text": "海河 游船码头",
+   "ordinal": "5",
+   "removed": "source"
+  },
+  {
+   "text": "古文化街牌坊",
+   "ordinal": "6",
+   "removed": "nothing"
+  },
+  {
+   "text": "Departure",
+   "ordinal": "9",
+   "removed": "nothing"
+  }
+ ],
+ "pin_arias": [
+  {
+   "painted": "1",
+   "aria": "1"
+  },
+  {
+   "painted": "2",
+   "aria": "天津之眼 摩天轮"
+  },
+  {
+   "painted": "3",
+   "aria": "瓷房子 门票"
+  },
+  {
+   "painted": "4",
+   "aria": "五大道 骑行"
+  },
+  {
+   "painted": "5",
+   "aria": "海河 游船码头"
+  },
+  {
+   "painted": "6",
+   "aria": "古文化街牌坊"
+  },
+  {
+   "painted": "7",
+   "aria": "Overnight · Haihe Riverside Hotel"
+  },
+  {
+   "painted": "8",
+   "aria": "Check out · Haihe Riverside Hotel"
+  },
+  {
+   "painted": "9",
+   "aria": "Departure"
+  }
+ ],
+ "offender_texts": [],
+ "offender_classes": [],
+ "cut_words_on_glass": [
+  {
+   "case": "clock_inside_word",
+   "on_glass": true
+  },
+  {
+   "case": "money_inside_word",
+   "on_glass": true
+  },
+  {
+   "case": "duration_inside_word",
+   "on_glass": true
+  },
+  {
+   "case": "source_inside_word",
+   "on_glass": true
+  }
+ ],
+ "clean_control_on_glass": true,
+ "rule_fired_on": [
+  {
+   "text": "天津之眼 摩天轮",
+   "removed": "clock-time"
+  },
+  {
+   "text": "瓷房子 门票",
+   "removed": "money"
+  },
+  {
+   "text": "五大道 骑行",
+   "removed": "duration"
+  },
+  {
+   "text": "海河 游船码头",
+   "removed": "source"
+  }
+ ],
+ "no_chip_for_the_clock": true,
+ "pins_announcing_a_forbidden_class": 0,
+ "attribution_rendered": true,
+ "attribution_text": "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
+ "attribution_matches_authored_arm": true,
+ "attribution_box": {
+  "w": 330,
+  "h": 35
+ },
+ "attribution_violations_if_fed": [
+  "source"
+ ]
+}

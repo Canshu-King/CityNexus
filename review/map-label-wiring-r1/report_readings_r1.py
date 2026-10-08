@@ -53,17 +53,29 @@ def main(argv: list[str]) -> int:
     offenders = glass.get("offenders", [])
     # 处 = one rendered string on the glass that carries at least one forbidden class. The same string
     # carrying two classes is still one place where a traveller reads something the rule forbids, so the
-    # per-class tally is reported separately rather than folded into this count.
-    per_class: dict[str, int] = {}
-    for entry in offenders:
-        for name in entry.get("classes", []):
-            per_class[name] = per_class.get(name, 0) + 1
+    # per-class tally is reported separately rather than folded into this count. Two tallies, because the
+    # gate writes two judges: `span_classes` is as wide as the cut, `accepted_classes` is the list the
+    # four accepted gates judge with, and they disagree on `duration` on a Chinese word.
+    def tally(key: str) -> dict:
+        counts: dict[str, int] = {}
+        for entry in offenders:
+            for name in entry.get(key, []):
+                counts[name] = counts.get(name, 0) + 1
+        return counts
+
+    per_class = tally("span_classes")
+    per_class_accepted = tally("accepted_classes")
 
     summary = {
         "tag": args.tag,
         "head": (bundle["provenance"] or {}).get("head"),
         "head_subject": (bundle["provenance"] or {}).get("head_subject"),
         "watched_blobs": (bundle["provenance"] or {}).get("watched_blobs"),
+        # The bytes the run actually served. `watched_blobs` is what HEAD claims, and in the
+        # before-run the two differ deliberately: the render files were checked out to the authority
+        # line while the instrument itself stayed at HEAD.
+        "watched_worktree_blobs": (bundle["provenance"] or {}).get("watched_worktree_blobs"),
+        "dirty_files": (bundle["provenance"] or {}).get("dirty_files"),
         "database": (bundle["provenance"] or {}).get("database"),
         "python": (bundle["provenance"] or {}).get("python"),
         "python_version": (bundle["provenance"] or {}).get("python_version"),
@@ -75,7 +87,12 @@ def main(argv: list[str]) -> int:
         "judged_string_count": glass.get("judged_string_count"),
         "forbidden_rendered_hits": glass.get("rendered_strings_with_forbidden_class", len(offenders)),
         "forbidden_rendered_hits_by_class": per_class,
+        "forbidden_rendered_hits_by_accepted_class": per_class_accepted,
+        "rendered_strings_with_accepted_class": glass.get("rendered_strings_with_accepted_class"),
+        "rendered_chip_texts": glass.get("rendered_chip_texts"),
+        "pin_arias": glass.get("pin_arias"),
         "offender_texts": [entry.get("text") for entry in offenders],
+        "offender_classes": [{"text": e.get("text"), "span": e.get("span_classes"), "accepted": e.get("accepted_classes")} for e in offenders],
         "cut_words_on_glass": glass.get("cut_words_on_glass"),
         "clean_control_on_glass": glass.get("clean_control_on_glass"),
         "rule_fired_on": glass.get("rule_fired_on"),
