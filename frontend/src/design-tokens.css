@@ -31,6 +31,18 @@
      call. This deeper blue clears 4.5:1 on both canvas (#f5f5f7 → 5.49:1) and
      surface (#ffffff → 5.97:1) without changing hue. */
   --cn-accent-text: #0a5cd6;
+  /* Links.  Before this, the running screen proved three different inks for what is one
+     kind of control (--cn-accent #0a66ff at 4.32:1, `inherit` at 0.75 opacity, and the
+     evidence row's body ink), and hovering one of eight controls changed zero computed
+     properties.  Links bind to --cn-accent-text, the only accent that clears AA as text
+     in both schemes; hover and active deepen within the same hue rather than re-tinting,
+     and each step is measured to stay above 4.5:1. */
+  --cn-link: var(--cn-accent-text);
+  --cn-link-hover: #084cae;
+  --cn-link-active: #063d8c;
+  --cn-link-rule: 1px;
+  --cn-link-rule-hover: 2px;
+  --cn-link-rule-offset: 2px;
   /* Success as *text*: #248a3d is a good fill/badge colour but only reaches
      4.04:1 as 13px text on the light attention panel. */
   --cn-success-text: #17672f;
@@ -179,6 +191,13 @@
     /* #0a84ff on the #000000 dark canvas is 5.76:1 — already AA, so the dark
        theme keeps the brighter accent for text. */
     --cn-accent-text: #0a84ff;
+    /* Links stop being an alias of the text accent under dark.  Measured on the running
+       wizard: #0a84ff only reaches 3.82:1 inside the nested panel whose canvas is
+       rgb(44,44,46), which is under AA, so the link ladder lifts a step and keeps two
+       visible steps above it.  Worst measured background wins, not the page black. */
+    --cn-link: #4da3ff;
+    --cn-link-hover: #7dbcff;
+    --cn-link-active: #9ccdff;
     --cn-success-text: #30d158;
     --cn-success: #30d158;
     --cn-warning: #ff9f0a;
@@ -310,6 +329,65 @@
 
 /* Focus-visible ring (keyboard), Apple-ish soft accent. */
 .v8-page :focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 2px; border-radius: var(--cn-r-control); }
+
+/* Link baseline -- one ink, one rule under it, one transition.  The list is explicit because
+   these controls are buttons styled as links (the whole tree carries two real <a>), and the
+   generic shell transition above only names transform/box-shadow: color and rule steps have to
+   be declared or they snap instead of easing.  That generic rule is `.v8-page button:not(...)`,
+   which out-specifies a plain class pair, so each wizard selector repeats its :not() guard --
+   measured, without it the computed transition stayed `transform, box-shadow` and the colour
+   change had no easing at all.  .cn-copilot-link needs no guard: the dock is a sibling of
+   .v8-page rather than inside it, so nothing competes with it.
+   :active comes after :hover on purpose -- they are the same weight, and a pointer that is
+   pressing is always also hovering, so the last declaration is the one that has to win. */
+.v8-page .trial-back-link:not(.cn-no-motion),
+.v8-page .trial-missing-jump:not(.cn-no-motion),
+.v8-page .trial-review-edit:not(.cn-no-motion),
+.cn-copilot-link {
+  color: var(--cn-link);
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: var(--cn-link-rule);
+  text-underline-offset: var(--cn-link-rule-offset);
+  transition: color var(--cn-t-hover) var(--cn-ease-standard),
+    opacity var(--cn-t-hover) var(--cn-ease-standard),
+    text-decoration-thickness var(--cn-t-hover) var(--cn-ease-standard),
+    text-underline-offset var(--cn-t-hover) var(--cn-ease-standard),
+    transform var(--cn-t-hover) var(--cn-ease-standard),
+    box-shadow var(--cn-t-hover) var(--cn-ease-standard);
+}
+@media (hover: hover) {
+  .v8-page .trial-back-link:not(.cn-no-motion):hover,
+  .v8-page .trial-missing-jump:not(.cn-no-motion):hover,
+  .v8-page .trial-review-edit:not(.cn-no-motion):hover,
+  .cn-copilot-link:hover {
+    color: var(--cn-link-hover);
+    text-decoration-thickness: var(--cn-link-rule-hover);
+    text-underline-offset: calc(var(--cn-link-rule-offset) + 1px);
+  }
+}
+.v8-page .trial-back-link:not(.cn-no-motion):active,
+.v8-page .trial-missing-jump:not(.cn-no-motion):active,
+.v8-page .trial-review-edit:not(.cn-no-motion):active,
+.cn-copilot-link:active { color: var(--cn-link-active); }
+/* The evidence row is a real link, but it is a two-line card row: the title carries the link
+   ink and the rule, the domain line stays metadata. */
+.v10-evidence-row b {
+  color: var(--cn-link);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--cn-link-rule);
+  text-underline-offset: var(--cn-link-rule-offset);
+  transition: color var(--cn-t-hover) var(--cn-ease-standard),
+    text-decoration-thickness var(--cn-t-hover) var(--cn-ease-standard);
+}
+@media (hover: hover) {
+  .v10-evidence-row:hover b {
+    color: var(--cn-link-hover);
+    text-decoration-thickness: var(--cn-link-rule-hover);
+  }
+}
+/* After :hover for the same reason as the block above: pressing is also hovering. */
+.v10-evidence-row:active b { color: var(--cn-link-active); }
 
 /* Touch targets >=44px on primary controls. */
 .v8-page button, .v8-page a.v8-cta, .v8-nav button { min-height: 44px; }

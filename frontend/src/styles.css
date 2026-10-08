@@ -382,7 +382,7 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .cn-copilot-bubble small { color: #8994a4; font-size: 9px; font-weight: 780; }
 .cn-copilot-bubble p { margin: 5px 0 0; color: #526078; font-size: 11px; line-height: 1.5; }
 .cn-copilot-chip { display: inline-block; margin: 8px var(--cn-s-6) 0 0; padding: var(--cn-s-4) var(--cn-s-6); border-radius: var(--cn-r-4); color: #5b55a8; background: #eeeaff; font-size: 8px; font-weight: 800; letter-spacing: .04em; }
-.cn-copilot-link { display: block; margin-top: 8px; padding: 0; border: 0; color: var(--v8-indigo); background: transparent; cursor: pointer; font-size: 9px; font-weight: 800; }
+.cn-copilot-link { display: block; margin-top: 8px; padding: 0; border: 0; background: transparent; cursor: pointer; font-size: 9px; font-weight: 800; }
 .cn-copilot-form { align-items: end; }
 .cn-copilot-form textarea { flex: 1; min-width: 0; resize: vertical; padding: var(--cn-s-10); border: 1px solid #dbe1eb; border-radius: var(--cn-r-8); color: var(--v8-ink); background: #fff; font: inherit; font-size: 11px; line-height: 1.45; }
 .cn-copilot-form .v8-primary { flex: none; min-height: 44px; padding: 0 13px; }
@@ -613,9 +613,6 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
   border: 0;
   padding: var(--cn-s-4) 0;
   font-size: 12px;
-  text-decoration: underline;
-  opacity: 0.75;
-  color: inherit;
   cursor: pointer;
 }
 .trial-secondary {
@@ -639,14 +636,12 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
   margin: 0;
   padding: 0;
   border: 0;
-  color: var(--v8-accent, #0f766e);
   background: transparent;
   cursor: pointer;
   font: inherit;
   font-weight: 750;
   line-height: inherit;
   vertical-align: baseline;
-  text-decoration: underline;
 }
 
 /* ORD-0193: the destination-preparation flow.  The verdict, the missing categories and the job's
