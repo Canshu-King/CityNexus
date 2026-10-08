@@ -181,9 +181,13 @@ export function MemberMeetupHandshakePanel({
       {showGroup && projection.resolved.map((result) => (
         <article key={result.id} data-testid="member-meetup-resolved" data-state={result.state}>
           <strong>
-            {zh
-              ? `你和${result.owner_display_name}都报告在「${result.rendezvous.place_name}」会合；其分开行动已结束，共同行程可以继续。`
-              : `You and ${result.owner_display_name} reported meeting at ${result.rendezvous.place_name}. Their planned side trip ended; the shared Journey can continue.`}
+            {result.viewer_acknowledged
+              ? (zh
+                ? `你和${result.owner_display_name}都报告在「${result.rendezvous.place_name}」会合；其分开行动已结束，共同行程可以继续。`
+                : `You and ${result.owner_display_name} reported meeting at ${result.rendezvous.place_name}. Their planned side trip ended; the shared Journey can continue.`)
+              : (zh
+                ? `${result.owner_display_name}和${result.responder_display_name}双方报告在「${result.rendezvous.place_name}」会合；只是这两位成员的报告，其他同行者并未确认。`
+                : `${result.owner_display_name} and ${result.responder_display_name} reported meeting at ${result.rendezvous.place_name}. Only those two travellers reported this meeting; other group members have not confirmed.`)}
           </strong>
           <small>
             {zh
