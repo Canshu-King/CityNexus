@@ -4,7 +4,9 @@ import json
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
+import httpx
 import pytest
+from demo_stage import demo_reset_headers
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
@@ -22,22 +24,23 @@ from app.db.models import (
     JourneyIntent,
     JourneyMember,
     LocationObservation,
+    MemberLiveMomentScoutReceipt,
+    MemberSideQuest,
     MemberSideQuestReturnReport,
     MobilityFact,
-    MemberSideQuest,
     Place,
     PlanVersion,
-    ReplanProposal,
+    ProviderCall,
+    RealPlaceCandidate,
     RecoveryEpoch,
+    ReplanProposal,
     RouteAcquisitionOperation,
     Traveler,
 )
 from app.db.session import SessionLocal
-from app.integrations.mobility import runtime as mobility_runtime
 from app.execution.clock import execution_clock
+from app.integrations.mobility import runtime as mobility_runtime
 from app.traveler_principal import issue_traveler_token
-from demo_stage import demo_reset_headers
-
 
 client = TestClient(main_module.app)
 TEST_SECRET = "r64-member-side-quest-test-secret-0123456789"
@@ -51,6 +54,17 @@ def _signed_traveler_tokens():
         yield
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+@pytest.fixture(autouse=True)
+def _restore_live_place_provider_settings():
+    previous_enabled = settings.real_city_enabled
+    previous_mode = settings.real_city_mode
+    try:
+        yield
+    finally:
+        object.__setattr__(settings, "real_city_enabled", previous_enabled)
+        object.__setattr__(settings, "real_city_mode", previous_mode)
 
 
 def _auth(traveler_id: str) -> dict[str, str]:
@@ -1135,3 +1149,326 @@ def test_r63_end_invalidates_the_side_quest_and_removed_members_cannot_advance()
         headers=_auth(owner_id),
     )
     assert removed.status_code == 403
+
+
+def _r67_location(
+    journey_id: str,
+    traveler_id: str,
+    *,
+    latitude: float = 5.123456,
+    longitude: float = 10.654321,
+    accuracy: float = 8,
+    age_seconds: int = 0,
+) -> str:
+    captured_at = (
+        execution_clock.now().astimezone(timezone.utc) - timedelta(seconds=age_seconds)
+    ).isoformat()
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/location",
+        headers=_auth(traveler_id),
+        json={
+            "latitude": latitude,
+            "longitude": longitude,
+            "accuracy_m": accuracy,
+            "captured_at": captured_at,
+        },
+    )
+    assert response.status_code == 201, response.text
+    return response.json()["id"]
+
+
+def _r67_candidate(
+    *,
+    osm_id: str = "123456789",
+    name: str = "R67 controlled-provider museum",
+    latitude: float = 5.123956,
+    longitude: float = 10.654321,
+):
+    from app.integrations.discovery.real_city import DiscoveryCandidate
+
+    return DiscoveryCandidate(
+        provider_key="overpass",
+        external_id=f"overpass:node/{osm_id}",
+        name=name,
+        category="museum",
+        latitude=latitude,
+        longitude=longitude,
+        tags=("museum", "real_city"),
+        opening_hours={"status": "UNKNOWN"},
+        metadata={"osm_id": f"node/{osm_id}", "tags": {"name": name, "tourism": "museum"}},
+        distance_m=None,
+    )
+
+
+def _install_r67_provider(monkeypatch, *, candidates=None, attempts=None, error=None):
+    import app.execution.live_moment_scout as live_module
+
+    calls = []
+
+    class ControlledOverpassProvider:
+        def search_with_evidence(self, query, **kwargs):
+            calls.append({"query": query, **kwargs})
+            if error is not None:
+                raise error
+            return list(candidates or []), list(attempts or [])
+
+        def close(self):
+            return None
+
+    monkeypatch.setattr(live_module, "OverpassPOIProvider", ControlledOverpassProvider)
+    object.__setattr__(settings, "real_city_enabled", True)
+    object.__setattr__(settings, "real_city_mode", "live")
+    return calls
+
+
+def _r67_live_request(
+    journey_id: str,
+    traveler_id: str,
+    observation_id: str,
+    *,
+    consent: bool | None = True,
+):
+    payload = {
+        "location_observation_id": observation_id,
+        "interest": "CULTURE",
+        "budget_minutes": 30,
+        "radius_m": 1200,
+    }
+    if consent is not None:
+        payload["consent_external_location"] = consent
+    return client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout/live",
+        headers=_auth(traveler_id),
+        json=payload,
+    )
+
+
+def test_r67_live_search_requires_consent_and_rejects_unusable_location_without_provider_call(monkeypatch):
+    journey_id, owner_id, other_id = _active_shared_journey()
+    observation_id = _r67_location(journey_id, owner_id)
+    calls = _install_r67_provider(
+        monkeypatch,
+        candidates=[_r67_candidate()],
+        attempts=[{
+            "endpoint": "https://overpass.example/api/interpreter",
+            "answered": True,
+            "http_status": 200,
+        }],
+    )
+
+    missing_consent = _r67_live_request(journey_id, owner_id, observation_id, consent=None)
+    declined = _r67_live_request(journey_id, owner_id, observation_id, consent=False)
+    assert missing_consent.status_code == 422
+    assert declined.status_code == 422
+    assert calls == []
+
+    object.__setattr__(settings, "real_city_enabled", False)
+    disabled = _r67_live_request(journey_id, owner_id, observation_id)
+    assert disabled.status_code == 200, disabled.text
+    assert disabled.json()["scout_state"] == "PROVIDER_DISABLED"
+    assert calls == []
+    object.__setattr__(settings, "real_city_enabled", True)
+
+    foreign_observation_id = _r67_location(journey_id, other_id)
+    foreign = _r67_live_request(journey_id, owner_id, foreign_observation_id)
+    stale_observation_id = _r67_location(journey_id, owner_id, age_seconds=900)
+    stale = _r67_live_request(journey_id, owner_id, stale_observation_id)
+    imprecise_observation_id = _r67_location(
+        journey_id, owner_id, accuracy=10_000
+    )
+    imprecise = _r67_live_request(journey_id, owner_id, imprecise_observation_id)
+    assert foreign.status_code == stale.status_code == imprecise.status_code == 200
+    assert all(
+        response.json()["scout_state"] == "LOCATION_UNAVAILABLE"
+        for response in (foreign, stale, imprecise)
+    )
+    assert calls == []
+
+
+def test_r67_live_zero_and_provider_failure_are_distinct_and_unnamed_osm_is_not_actionable(monkeypatch):
+    journey_id, owner_id, _other_id = _active_shared_journey()
+    observation_id = _r67_location(journey_id, owner_id)
+    failed_calls = _install_r67_provider(
+        monkeypatch,
+        error=httpx.ReadTimeout("request data must not be echoed"),
+    )
+    failed = _r67_live_request(journey_id, owner_id, observation_id)
+    assert failed.status_code == 200, failed.text
+    assert failed.json()["scout_state"] == "PROVIDER_UNAVAILABLE"
+    assert "request data must not be echoed" not in failed.text
+    assert len(failed_calls) == 1
+
+    answered_attempt = [{
+        "endpoint": "https://overpass.example/api/interpreter?token=secret",
+        "answered": True,
+        "http_status": 200,
+        "elapsed_ms": 14,
+        "elements": 1,
+    }]
+    zero_calls = _install_r67_provider(
+        monkeypatch, candidates=[], attempts=answered_attempt
+    )
+    zero = _r67_live_request(journey_id, owner_id, observation_id)
+    assert zero.json()["scout_state"] == "LIVE_ZERO_RESULTS"
+    assert zero.json()["candidates"] == []
+    assert "token=secret" not in zero.text
+    assert len(zero_calls) == 1
+
+    unnamed_calls = _install_r67_provider(
+        monkeypatch,
+        candidates=[_r67_candidate(name="OSM museum")],
+        attempts=answered_attempt,
+    )
+    unnamed = _r67_live_request(journey_id, owner_id, observation_id)
+    assert unnamed.json()["scout_state"] == "LIVE_ZERO_RESULTS"
+    assert unnamed.json()["empty_reason"] == "NO_ACTIONABLE_POIS"
+    assert unnamed.json()["candidates"] == []
+    assert len(unnamed_calls) == 1
+
+
+def test_r67_live_osm_selection_materializes_only_after_owner_confirmation_and_is_idempotent(monkeypatch):
+    journey_id, owner_id, other_id = _active_shared_journey()
+    observation_id = _r67_location(journey_id, owner_id)
+    candidate = _r67_candidate(
+        osm_id="987654321", name="R67 controlled-provider museum"
+    )
+    attempts = [{
+        "endpoint": "https://overpass.example/api/interpreter?lat=private",
+        "answered": True,
+        "http_status": 200,
+        "elapsed_ms": 17,
+        "elements": 1,
+    }]
+    calls = _install_r67_provider(monkeypatch, candidates=[candidate], attempts=attempts)
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        active_plan_id = str(journey.active_plan_version_id)
+    place_count_before = _count(
+        Place,
+        Place.provider_key == "overpass",
+        Place.external_id == candidate.external_id,
+    )
+    plan_count_before = _count(PlanVersion, PlanVersion.journey_id == journey_id)
+    intent_count_before = _count(JourneyIntent, JourneyIntent.journey_id == journey_id)
+    quest_count_before = _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id)
+    event_count_before = _count(Event, Event.journey_id == journey_id)
+    public_candidate_count_before = _count(
+        RealPlaceCandidate, RealPlaceCandidate.journey_id == journey_id
+    )
+    provider_call_count_before = _count(ProviderCall)
+
+    discovered = _r67_live_request(journey_id, owner_id, observation_id)
+    assert discovered.status_code == 200, discovered.text
+    result = discovered.json()
+    assert result["scout_state"] == "LIVE_RESULTS"
+    assert result["provider_provenance"] == "LIVE_OPENSTREETMAP_OVERPASS"
+    assert result["attribution"] == "© OpenStreetMap contributors"
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["name"] == candidate.name
+    assert result["candidates"][0]["opening_state"] == "UNKNOWN"
+    assert result["candidates"][0]["fit_authority"] == "UNVERIFIED"
+    assert "5.123456" not in discovered.text and "10.654321" not in discovered.text
+    assert "lat=private" not in discovered.text
+    assert calls == [{
+        "query": "museum",
+        "latitude": 5.123,
+        "longitude": 10.654,
+        "radius_m": 1200,
+        "limit": 12,
+    }]
+    assert _count(
+        Place,
+        Place.provider_key == "overpass",
+        Place.external_id == candidate.external_id,
+    ) == place_count_before
+    assert _count(PlanVersion, PlanVersion.journey_id == journey_id) == plan_count_before
+    assert _count(JourneyIntent, JourneyIntent.journey_id == journey_id) == intent_count_before
+    assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == quest_count_before
+    assert _count(
+        RealPlaceCandidate, RealPlaceCandidate.journey_id == journey_id
+    ) == public_candidate_count_before
+    assert _count(ProviderCall) == provider_call_count_before
+    assert _count(Event, Event.journey_id == journey_id) == event_count_before
+
+    receipt_id = result["receipt_id"]
+    candidate_id = result["candidates"][0]["candidate_id"]
+    foreign_select = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout/live/select",
+        headers=_auth(other_id),
+        json={
+            "receipt_id": receipt_id,
+            "candidate_id": candidate_id,
+            "confirm_return_to_rendezvous": True,
+        },
+    )
+    assert foreign_select.status_code == 404
+
+    collaborator_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(other_id)
+    )
+    assert collaborator_projection.status_code == 200
+    assert candidate.name not in collaborator_projection.text
+    assert candidate.external_id not in collaborator_projection.text
+    assert receipt_id not in collaborator_projection.text
+
+    selected = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout/live/select",
+        headers=_auth(owner_id),
+        json={
+            "receipt_id": receipt_id,
+            "candidate_id": candidate_id,
+            "confirm_return_to_rendezvous": True,
+        },
+    )
+    assert selected.status_code == 201, selected.text
+    assert selected.json()["member_side_quest"]["state"] == "READY"
+    assert selected.json()["member_side_quest"]["destination"]["title"] == candidate.name
+    collaborator_after = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(other_id)
+    )
+    assert candidate.name not in collaborator_after.text
+    assert candidate.external_id not in collaborator_after.text
+
+    with SessionLocal() as session:
+        receipt = session.get(MemberLiveMomentScoutReceipt, receipt_id)
+        assert receipt is not None
+        assert receipt.status == "SELECTED"
+        assert receipt.side_quest_id == selected.json()["member_side_quest"]["id"]
+        assert "5.123456" not in receipt.provider_attempts_json
+        assert "10.654321" not in receipt.provider_attempts_json
+        current_journey = session.get(Journey, journey_id)
+        assert current_journey is not None
+        assert str(current_journey.active_plan_version_id) == active_plan_id
+    assert _count(
+        Place,
+        Place.provider_key == "overpass",
+        Place.external_id == candidate.external_id,
+    ) == 1
+    assert _count(PlanVersion, PlanVersion.journey_id == journey_id) == plan_count_before
+    assert _count(JourneyIntent, JourneyIntent.journey_id == journey_id) == intent_count_before + 1
+    assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == quest_count_before + 1
+    assert _count(
+        RealPlaceCandidate, RealPlaceCandidate.journey_id == journey_id
+    ) == public_candidate_count_before
+    assert _count(ProviderCall) == provider_call_count_before
+    assert _count(Event, Event.journey_id == journey_id) == event_count_before
+
+    repeated = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout/live/select",
+        headers=_auth(owner_id),
+        json={
+            "receipt_id": receipt_id,
+            "candidate_id": candidate_id,
+            "confirm_return_to_rendezvous": True,
+        },
+    )
+    assert repeated.status_code == 201, repeated.text
+    assert repeated.json()["member_side_quest"]["id"] == selected.json()["member_side_quest"]["id"]
+    assert _count(
+        Place,
+        Place.provider_key == "overpass",
+        Place.external_id == candidate.external_id,
+    ) == 1
+    assert _count(JourneyIntent, JourneyIntent.journey_id == journey_id) == intent_count_before + 1
+    assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == quest_count_before + 1

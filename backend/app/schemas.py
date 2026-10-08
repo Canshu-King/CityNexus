@@ -481,6 +481,28 @@ class MomentScoutSelectRequest(MomentScoutRequest):
     scout_context: str = Field(min_length=32, max_length=64)
 
 
+class LiveMomentScoutRequest(BaseModel):
+    """One bounded external lookup, called only after explicit location-transfer consent."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    consent_external_location: Literal[True]
+    location_observation_id: UUID
+    budget_minutes: Literal[15, 30, 45] = 30
+    interest: Literal["ANYTHING", "COFFEE_FOOD", "CULTURE", "NATURE"] = "ANYTHING"
+    radius_m: int = Field(default=1200, ge=800, le=2000)
+
+
+class LiveMomentScoutSelectRequest(BaseModel):
+    """Select a server-held live result and confirm its exact shared rendezvous."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    receipt_id: UUID
+    candidate_id: UUID
+    confirm_return_to_rendezvous: Literal[True]
+
+
 class MemberSideQuestFitPreviewRequest(BaseModel):
     """One-time owner-only detour fit check; current location is optional for UNKNOWN."""
 

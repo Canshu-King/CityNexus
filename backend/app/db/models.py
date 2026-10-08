@@ -358,6 +358,47 @@ class MemberSideQuest(Base):
     )
 
 
+class MemberLiveMomentScoutReceipt(Base):
+    """Short-lived member-private results from an explicitly consented OSM lookup."""
+
+    __tablename__ = "member_live_moment_scout_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    location_observation_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    split_intent_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    rendezvous_activity_id: Mapped[str] = mapped_column(String)
+    rendezvous_place_id: Mapped[str] = mapped_column(String)
+    budget_minutes: Mapped[int] = mapped_column(Integer)
+    interest: Mapped[str] = mapped_column(String)
+    candidates_json: Mapped[str] = mapped_column(Text)
+    provider_attempts_json: Mapped[str] = mapped_column(Text)
+    provider_key: Mapped[str] = mapped_column(String)
+    captured_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    selected_candidate_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    selected_place_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    side_quest_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('OPEN', 'SELECTING', 'SELECTED', 'EXPIRED')",
+            name="ck_member_live_moment_scout_receipts_status",
+        ),
+        Index(
+            "idx_member_live_moment_scout_receipts_owner_expiry",
+            "journey_id",
+            "member_id",
+            "expires_at",
+        ),
+    )
+
+
 class MemberSideQuestReturnReport(Base):
     """Member-owned, idempotent report that a completed private stop is heading back."""
 

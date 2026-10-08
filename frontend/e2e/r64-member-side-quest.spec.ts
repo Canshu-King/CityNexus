@@ -260,3 +260,139 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     await Promise.all([owner.close(), collaboratorSession.close()]);
   }
 });
+
+
+test("R67 explicit nearby search and selection use a controlled local Overpass fixture simulation", async ({ browser, request }) => {
+  test.skip(
+    process.env.CITYNEXUS_R67_TEST_PROVIDER !== "fixture",
+    "R67 live E2E uses a local controlled Overpass fixture; it never calls a public provider.",
+  );
+  const fixtureBase = process.env.CITYNEXUS_R67_OVERPASS_FIXTURE_URL ?? "http://127.0.0.1:8367";
+  const fixtureStats = async () => {
+    const response = await request.get(`${fixtureBase}/stats`);
+    expect(response.ok()).toBeTruthy();
+    return await response.json() as { request_count: number; mode: string };
+  };
+  const startingFixtureRequestCount = (await fixtureStats()).request_count;
+
+  const reset = await api<{ journey_id: string; traveler_id: string }>(request, "/api/v1/demo/reset", {
+    method: "POST",
+    headers: { "X-Demo-Reset-Token": process.env.CITYNEXUS_DEMO_RESET_TOKEN ?? "" },
+  });
+  const journeyId = reset.journey_id;
+  const ownerId = reset.traveler_id;
+  const ownerToken = travelerToken(ownerId);
+  const candidates = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans/generate`, {
+    method: "POST",
+    data: { candidate_count: 1 },
+  });
+  const planId = candidates[0]?.id;
+  if (!planId) throw new Error("the demo Journey needs one selectable plan");
+  await api(request, `/api/v1/journeys/${journeyId}/plans/${planId}/select`, { method: "POST" });
+  await api(request, `/api/v1/journeys/${journeyId}/start`, { method: "POST" });
+
+  const collaborator = await api<Traveler>(request, "/api/v1/travelers", {
+    method: "POST",
+    data: { display_name: "R67 Collaborator", locale: "en-US", timezone: "Asia/Tokyo" },
+  });
+  await api(request, `/api/v1/journeys/${journeyId}/members`, {
+    method: "POST",
+    data: { traveler_id: collaborator.id, role: "COLLABORATOR", invited_by: ownerId },
+  });
+  const collaboratorToken = travelerToken(collaborator.id);
+  await api(request, `/api/v1/journeys/${journeyId}/operator/start`, {
+    method: "POST",
+    token: ownerToken,
+    data: { interval_seconds: 3600 },
+  });
+  const experienceBefore = await api<{
+    journey: { city_code: string };
+    active_plan: { id: string };
+  }>(request, `/api/v1/journeys/${journeyId}/experience`);
+  const planRowsBefore = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans`);
+  const location = { latitude: 5.123456, longitude: 10.654321, accuracy: 8 };
+  const owner = await openJourneyPage(browser, journeyId, ownerToken, location);
+  const collaboratorSession = await openJourneyPage(browser, journeyId, collaboratorToken);
+  try {
+    const scoutCard = owner.page.getByTestId("moment-scout");
+    await expect(scoutCard).toBeVisible();
+    await scoutCard.getByTestId("moment-scout-interest").selectOption("CULTURE");
+    const localPromise = owner.page.waitForResponse((response) =>
+      response.request().method() === "POST"
+        && response.url().endsWith(`/journeys/${journeyId}/moment-scout`),
+    );
+    await scoutCard.getByTestId("moment-scout-submit").click();
+    const local = await localPromise;
+    expect(local.ok()).toBeTruthy();
+    expect((await local.json()).scout_state).toBe("NO_GROUNDED_OPTIONS");
+    await expect(scoutCard.getByTestId("moment-scout-live-opt-in")).toBeVisible();
+    expect((await fixtureStats()).request_count).toBe(startingFixtureRequestCount);
+
+    await scoutCard.getByTestId("moment-scout-live-opt-in").click();
+    const consent = scoutCard.getByTestId("moment-scout-live-consent");
+    await expect(consent).toContainText("external OpenStreetMap");
+    await consent.getByTestId("moment-scout-live-consent-cancel").click();
+    expect((await fixtureStats()).request_count).toBe(startingFixtureRequestCount);
+
+    await scoutCard.getByTestId("moment-scout-live-opt-in").click();
+    const livePromise = owner.page.waitForResponse((response) =>
+      response.request().method() === "POST"
+        && response.url().endsWith(`/journeys/${journeyId}/moment-scout/live`),
+    );
+    await scoutCard.getByTestId("moment-scout-live-consent-confirm").click();
+    const liveResponse = await livePromise;
+    expect(liveResponse.ok()).toBeTruthy();
+    const liveResult = await liveResponse.json() as {
+      scout_state: string;
+      receipt_id: string;
+      candidates: Array<{ candidate_id: string; name: string }>;
+    };
+    expect(liveResult.scout_state).toBe("LIVE_RESULTS");
+    expect(liveResult.candidates).toHaveLength(1);
+    expect(liveResult.candidates[0].name).toBe("R67 Fixture OSM Museum");
+    expect(JSON.stringify(liveResult)).not.toContain("5.123456");
+    expect(JSON.stringify(liveResult)).not.toContain("10.654321");
+    expect((await fixtureStats()).request_count).toBe(startingFixtureRequestCount + 1);
+
+    const liveResults = scoutCard.getByTestId("moment-scout-live-results");
+    await expect(liveResults).toHaveAttribute("data-state", "LIVE_RESULTS");
+    await expect(liveResults).toContainText("R67 Fixture OSM Museum");
+    await collaboratorSession.page.reload();
+    await expect(collaboratorSession.page.locator("body")).not.toContainText("R67 Fixture OSM Museum");
+    await expect(collaboratorSession.page.locator("body")).not.toContainText(liveResult.receipt_id);
+
+    await liveResults.getByTestId("moment-scout-live-choose").click();
+    await expect(scoutCard.getByTestId("moment-scout-live-confirmation")).toContainText(
+      "return to the current shared rendezvous",
+    );
+    const selectionPromise = owner.page.waitForResponse((response) =>
+      response.request().method() === "POST"
+        && response.url().endsWith(`/journeys/${journeyId}/moment-scout/live/select`),
+    );
+    await scoutCard.getByTestId("moment-scout-live-confirm").click();
+    const selection = await selectionPromise;
+    expect(selection.status()).toBe(201);
+    await expect(owner.page.getByTestId("member-side-quest-card")).toBeVisible();
+    await expect(owner.page.getByTestId("member-side-quest-card")).toContainText("R67 Fixture OSM Museum");
+
+    await collaboratorSession.page.reload();
+    const coarseStatus = collaboratorSession.page.getByTestId("journey-member-personal-stop");
+    await expect(coarseStatus).toHaveAttribute("data-state", "PLANNED");
+    await expect(collaboratorSession.page.locator("body")).not.toContainText("R67 Fixture OSM Museum");
+
+    const places = await api<Place[]>(
+      request,
+      `/api/v1/places?city_code=${encodeURIComponent(experienceBefore.journey.city_code)}`,
+    );
+    expect(places.filter((place) => place.name === "R67 Fixture OSM Museum")).toHaveLength(1);
+    const experienceAfter = await api<{ active_plan: { id: string } }>(
+      request,
+      `/api/v1/journeys/${journeyId}/experience`,
+    );
+    const planRowsAfter = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans`);
+    expect(experienceAfter.active_plan.id).toBe(experienceBefore.active_plan.id);
+    expect(planRowsAfter.map((row) => row.id).sort()).toEqual(planRowsBefore.map((row) => row.id).sort());
+  } finally {
+    await Promise.all([owner.close(), collaboratorSession.close()]);
+  }
+});

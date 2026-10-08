@@ -160,6 +160,7 @@ from app.db.models import (
     JourneyOutcomeEvent,
     JourneyTripContext,
     JourneyLaunchContext,
+    MemberLiveMomentScoutReceipt,
     RouteAcquisitionOperation,
     LocationObservation,
     MobilityFact,
@@ -464,6 +465,8 @@ from app.schemas import (
     MemberSideQuestCreateRequest,
     MomentScoutRequest,
     MomentScoutSelectRequest,
+    LiveMomentScoutRequest,
+    LiveMomentScoutSelectRequest,
     MemberSideQuestFitPreviewRequest,
     MemberSideQuestNavigateRequest,
     GroupRecoveryRequest,
@@ -9908,6 +9911,145 @@ def select_member_moment_scout_candidate(
         place_id=payload.place_id,
     )
     return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout/live")
+def scout_live_member_moment(
+    journey_id: UUID,
+    payload: LiveMomentScoutRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Run one external nearby search after explicit signed-member consent."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    from app.execution.live_moment_scout import discover_live_moment_scout
+
+    return discover_live_moment_scout(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        location_observation_id=str(payload.location_observation_id),
+        budget_minutes=payload.budget_minutes,
+        interest=payload.interest,
+        radius_m=payload.radius_m,
+        consent_external_location=payload.consent_external_location,
+        rendezvous_context=rendezvous_context,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout/live/select", status_code=201)
+def select_live_member_moment_scout_candidate(
+    journey_id: UUID,
+    payload: LiveMomentScoutSelectRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Consume the owner's short-lived receipt and enter the existing R63/R64 flow."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    from app.execution.live_moment_scout import (
+        materialize_selected_live_place,
+        validate_live_scout_selection,
+    )
+
+    receipt, candidate, already_selected = validate_live_scout_selection(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        receipt_id=str(payload.receipt_id),
+        candidate_id=str(payload.candidate_id),
+        rendezvous_context=rendezvous_context,
+    )
+    if already_selected:
+        session.expire_all()
+        current_journey = session.get(Journey, journey.id)
+        return operator_projection(session, current_journey, viewer_member_id=member.id)
+
+    if receipt.status == "OPEN":
+        receipt.status = "SELECTING"
+        receipt.selected_candidate_id = str(payload.candidate_id)
+        receipt.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+
+    selected_place = materialize_selected_live_place(
+        session,
+        journey=journey,
+        candidate=candidate,
+        captured_at=str(receipt.captured_at),
+    )
+    session.flush()
+
+    if rendezvous_context["split_intent_id"] is None:
+        _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=MOMENT_SCOUT_SPLIT_COMMAND,
+            action="START",
+            now=execution_clock.now().astimezone(timezone.utc),
+            resolved_rendezvous=(
+                rendezvous_context["target"],
+                rendezvous_context["place"],
+                rendezvous_context["resolution_basis"],
+                rendezvous_context["safety_buffer_min"],
+            ),
+        )
+        session.expire(journey)
+        rendezvous_context = _moment_scout_rendezvous_context(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+        if (
+            rendezvous_context["split_intent_id"] is None
+            or str(rendezvous_context["target"].id) != str(receipt.rendezvous_activity_id)
+            or str(rendezvous_context["place"].id) != str(receipt.rendezvous_place_id)
+        ):
+            raise HTTPException(409, "SCOUT_EXPIRED")
+        receipt.split_intent_id = str(rendezvous_context["split_intent_id"])
+        receipt.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+
+    quest = create_or_replace_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        destination_text=None,
+        place_id=str(selected_place.id),
+    )
+    receipt.status = "SELECTED"
+    receipt.selected_place_id = str(selected_place.id)
+    receipt.side_quest_id = str(quest.id)
+    receipt.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    session.commit()
+    session.expire_all()
+    current_journey = session.get(Journey, journey.id)
+    return operator_projection(session, current_journey, viewer_member_id=member.id)
 
 
 def _advance_member_side_quest(

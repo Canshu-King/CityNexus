@@ -671,6 +671,50 @@ export interface MomentScoutResult {
   candidates: MomentScoutCandidate[];
 }
 
+export interface LiveMomentScoutCandidate {
+  candidate_id: string;
+  name: string;
+  category: string;
+  straight_line_distance_m: number;
+  osm_type: "node" | "way" | "relation";
+  osm_id: string;
+  source_url: string;
+  opening_state: "UNKNOWN";
+  availability_confidence: "UNVERIFIED";
+  fit_authority: "UNVERIFIED";
+}
+
+export interface LiveMomentScoutResult {
+  scout_state:
+    | "LIVE_RESULTS"
+    | "LIVE_ZERO_RESULTS"
+    | "PROVIDER_UNAVAILABLE"
+    | "PROVIDER_DISABLED"
+    | "LOCATION_UNAVAILABLE";
+  budget_minutes: 15 | 30 | 45;
+  interest: MomentScoutInterest;
+  radius_m: number;
+  message: string;
+  provider?: string;
+  provider_provenance?: string;
+  captured_at?: string;
+  receipt_id?: string;
+  expires_at?: string;
+  attribution?: string;
+  attribution_url?: string;
+  attempts?: Array<{
+    endpoint: string;
+    answered: boolean;
+    http_status: number | null;
+    elapsed_ms: number | null;
+    elements: number | null;
+    failure_class: string | null;
+  }>;
+  rendezvous?: MomentScoutResult["rendezvous"];
+  evidence_boundary?: string;
+  candidates: LiveMomentScoutCandidate[];
+}
+
 export interface MemberSideQuestRouteCapture {
   duration_min: number;
   distance_m: number | null;
@@ -2019,6 +2063,48 @@ export const cityNexusApi = {
           location_observation_id: locationObservationId,
           budget_minutes: budgetMinutes,
           interest,
+        }),
+      },
+    );
+  },
+
+  scoutLiveMemberMoment(
+    journeyId: string,
+    locationObservationId: string,
+    budgetMinutes: 15 | 30 | 45,
+    interest: MomentScoutInterest,
+    radiusM = 1200,
+  ): Promise<LiveMomentScoutResult> {
+    return requestJson<LiveMomentScoutResult>(
+      "/journeys/" + journeyId + "/moment-scout/live",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          consent_external_location: true,
+          location_observation_id: locationObservationId,
+          budget_minutes: budgetMinutes,
+          interest,
+          radius_m: radiusM,
+        }),
+      },
+    );
+  },
+
+  selectLiveMomentScoutCandidate(
+    journeyId: string,
+    receiptId: string,
+    candidateId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/moment-scout/live/select",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          receipt_id: receiptId,
+          candidate_id: candidateId,
+          confirm_return_to_rendezvous: true,
         }),
       },
     );

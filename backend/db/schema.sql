@@ -639,6 +639,34 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_member_side_quests_one_open_per_split
 CREATE INDEX IF NOT EXISTS idx_member_side_quests_journey_member_updated
     ON member_side_quests(journey_id, member_id, updated_at);
 
+CREATE TABLE IF NOT EXISTS member_live_moment_scout_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    location_observation_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    split_intent_id TEXT,
+    rendezvous_activity_id TEXT NOT NULL,
+    rendezvous_place_id TEXT NOT NULL,
+    budget_minutes INTEGER NOT NULL,
+    interest TEXT NOT NULL,
+    candidates_json TEXT NOT NULL,
+    provider_attempts_json TEXT NOT NULL,
+    provider_key TEXT NOT NULL,
+    captured_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'OPEN'
+        CHECK (status IN ('OPEN', 'SELECTING', 'SELECTED', 'EXPIRED')),
+    selected_candidate_id TEXT,
+    selected_place_id TEXT,
+    side_quest_id TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_member_live_moment_scout_receipts_owner_expiry
+    ON member_live_moment_scout_receipts(journey_id, member_id, expires_at);
+
 CREATE TABLE IF NOT EXISTS member_side_quest_return_reports (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
