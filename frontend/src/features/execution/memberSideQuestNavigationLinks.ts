@@ -22,12 +22,14 @@ export function buildGoogleWalkingDirectionsUrl(target: MemberSideQuestNavigatio
   const [latitude, longitude] = exactWgs84Coordinates(target);
   const url = new URL("https://www.google.com/maps/dir/");
   url.searchParams.set("api", "1");
-  // Google Maps accepts a destination label or a comma-separated coordinate
-  // pair. Use coordinates as the actual route target; keep the authorized
-  // place label separate so it cannot change geocoding of the exact pin.
+  // The documented Maps URL contract supports exact destination coordinates,
+  // walking mode and dir_action=navigate. The previously used
+  // "destination_label" is not a documented directions parameter; do not
+  // rely on it to identify an OSM-backed Place in Google Maps.
+  // Origin remains omitted: Maps asks for device location under its own consent.
   url.searchParams.set("destination", `${latitude},${longitude}`);
-  url.searchParams.set("destination_label", target.name);
   url.searchParams.set("travelmode", "walking");
+  url.searchParams.set("dir_action", "navigate");
   return url.toString();
 }
 
