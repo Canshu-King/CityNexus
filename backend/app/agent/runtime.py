@@ -425,6 +425,12 @@ class DeepSeekJourneyAgent:
         sequence = 0
         tool_trace: list[dict[str, Any]] = []
         seen_calls: set[tuple[str, str]] = set()
+        # Whether the loop ran out of steps rather than the model finishing. This has to be its own
+        # fact: the line below used to ask `if final_text`, but the step-limit branch had just
+        # written a non-empty sentence into `final_text`, so a run that stopped on the budget was
+        # recorded COMPLETED beside its own outcome saying it stopped on the budget - and the
+        # `PARTIAL` answer was unreachable.
+        steps_exhausted = False
         try:
             for _ in range(max_steps):
                 message = self._complete(messages)
@@ -635,8 +641,9 @@ class DeepSeekJourneyAgent:
                 if final_text:
                     break
             else:
+                steps_exhausted = True
                 final_text = "Agent reached the configured tool-step limit."
-            run.status = "COMPLETED" if final_text else "PARTIAL"
+            run.status = "PARTIAL" if steps_exhausted or not final_text else "COMPLETED"
             mission.status = "COMPLETED" if run.status == "COMPLETED" else "PARTIAL"
             run.outcome = final_text or "Tool loop completed without a final summary."
         except AgentRuntimeUnavailable as exc:
