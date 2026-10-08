@@ -18,6 +18,12 @@ level that holds no executing tool at all - so R4 pins the authority claim too. 
 names that limit as its `approval_boundary` step and the prompt now quotes it; the whole plan is
 also dumped into the prompt as JSON, so R4b pins the quote as an instruction, not the words
 appearing anywhere, which would be vacuously true with or without the fix.
+
+The prompt also promises that "the Gateway refuses the N outside that grant", and until R5 the
+Gateway decided that from its own hard-coded set of six names beside a `requested_autonomy` test -
+two rules that happened to agree. The refusal now reads the same grant. Reverting only that half
+leaves R5 red alone, which is what makes it a judgement about the enforcement rather than about
+the sentence.
 """
 
 from __future__ import annotations
@@ -282,3 +288,69 @@ def test_r4d_the_prompt_no_longer_holds_both_halves_of_one_contradiction() -> No
     assert not (claims_it_may_act and forbids_action), (
         "the prompt asserts an execution authority and withdraws it in the same text"
     )
+
+
+# ------------------------------- R5: one rule, one source (prompt and enforcement)
+
+
+def test_r5_the_enforcement_refuses_by_the_grant_the_prompt_quotes() -> None:
+    """The prompt now tells the model how many tools the Gateway withholds. Until the refusal also
+    reads the grant, that sentence was a promise computed from one source and honoured by another:
+    they agreed only because someone had written six names out twice, and nothing would have said
+    so when a seventh tool or a new autonomy level broke the coincidence."""
+
+    import inspect
+
+    from app.agent import runtime as rt
+    from app.agent.mission_plan import mission_plan_for_model
+
+    source = inspect.getsource(rt)
+    # The old refusal spoke from its own rule; that sentence is gone. A literal list of tool names
+    # is not checked here, because the definitions table legitimately names them too - what
+    # matters is which branch decides the refusal.
+    assert "mission is PLAN_ONLY; proposal generation is allowed" not in source, (
+        "the refusal still speaks from a second rule"
+    )
+    assert "tool_name not in granted_tool_names" in source, (
+        "the refusal no longer reads the grant"
+    )
+
+    for autonomy in ("PLAN_ONLY", "ASSISTED", "AUTONOMOUS"):
+        mission = type("_M", (), {
+            "requested_autonomy": autonomy,
+            "protected_activity_ids_json": "[]",
+            "objective_codes_json": "[]",
+        })()
+        granted = set(mission_plan_for_model(mission).get("allowed_tools") or ())
+        for name in (d["function"]["name"] for d in rt.citynexus_tool_definitions()):
+            outside = name not in granted
+            if outside:
+                assert autonomy == "PLAN_ONLY", (autonomy, name)
+
+
+def test_r5b_prompt_and_grant_never_disagree_across_levels_and_tools() -> None:
+    """The cell-by-cell table: for every level and every supplied tool, the number the prompt
+    states must equal what the grant actually withholds."""
+
+    from app.agent.mission_plan import mission_plan_for_model
+    from app.agent.runtime import citynexus_tool_definitions
+
+    supplied = {d["function"]["name"] for d in citynexus_tool_definitions()}
+    checked = 0
+    for autonomy in ("PLAN_ONLY", "ASSISTED", "AUTONOMOUS"):
+        mission = type("_M", (), {
+            "requested_autonomy": autonomy,
+            "protected_activity_ids_json": "[]",
+            "objective_codes_json": "[]",
+        })()
+        granted = set(mission_plan_for_model(mission).get("allowed_tools") or ())
+        assert granted <= supplied, (autonomy, granted - supplied)
+        prompt, _granted, _supplied = _prompt_for(autonomy)
+        withheld = len(supplied) - len(granted)
+        if withheld:
+            assert f"refuses the {withheld} outside that grant" in prompt, (autonomy, withheld)
+        else:
+            assert "refuses the" not in prompt, (autonomy, prompt[:300])
+        checked += len(supplied)
+
+    assert checked == 3 * len(supplied), checked

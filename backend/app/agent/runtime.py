@@ -451,6 +451,14 @@ class DeepSeekJourneyAgent:
                 "content": mission.user_text,
             },
         ]
+        # The refusal below and the system prompt above must read one rule, not two. The prompt now
+        # tells the model how many tools the grant withholds; until this line the enforcement came
+        # from a hard-coded set of six names beside a `requested_autonomy` test, so the two agreed
+        # only by coincidence and nothing would have said so when a seventh tool, or a new
+        # autonomy level, broke it - the model would then be promised a refusal that did not happen.
+        granted_tool_names = frozenset(
+            mission_plan_for_model(mission).get("allowed_tools") or ()
+        )
         inspected = False
         final_text = ""
         sequence = 0
@@ -523,17 +531,13 @@ class DeepSeekJourneyAgent:
                             "tool": tool_name,
                             "error": "inspect_journey or inspect_twin is required before mutation",
                         }
-                    elif mission.requested_autonomy == "PLAN_ONLY" and tool_name in {
-                        "accept_replan",
-                        "replace_activity",
-                        "reschedule_activity",
-                        "create_booking",
-                        "cancel_refundable_booking",
-                        "request_commitment_change",
-                    }:
+                    elif tool_name not in granted_tool_names:
                         result = {
                             "tool": tool_name,
-                            "error": "mission is PLAN_ONLY; proposal generation is allowed but mutation is not",
+                            "error": (
+                                f"this mission grants {len(granted_tool_names)} tools and this one "
+                                "is not among them; propose instead and let the traveller approve"
+                            ),
                         }
                     else:
                         try:
