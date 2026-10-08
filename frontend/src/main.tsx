@@ -95,6 +95,27 @@ function commitmentActivity(
   return activityForId(plan, commitment.activity_id);
 }
 
+/* A commitment row's title is a name the server wrote, never a machine address.  The linked
+   activity's title wins; otherwise the policy's `semantic_key` is resolved to the activity that
+   carries it (`place_id` / `city_service_id`), the same lookup `semanticTitle` already does for
+   these objects.  When neither yields a name the row says so instead of printing the raw id or the
+   internal `semantic_key`, which is what the card used to do. */
+function commitmentRowTitle(
+  plan: PlanVersion | null,
+  commitment: Commitment,
+): string {
+  const direct = commitmentActivity(plan, commitment)?.title?.trim();
+  if (direct) return direct;
+  const key = commitment.policy.semantic_key?.trim();
+  if (key) {
+    const resolved = plan?.activities.find(
+      (item) => item.place_id === key || item.city_service_id === key,
+    )?.title?.trim();
+    if (resolved) return resolved;
+  }
+  return "";
+}
+
 function semanticTitle(key: string, plan: PlanVersion | null): string {
   const activity = plan?.activities.find(
     (item) => item.place_id === key || item.city_service_id === key,
@@ -1568,10 +1589,10 @@ function LegacyApp() {
           <div data-testid={testIds.upcomingCommitments} className="upcoming-list">
             <strong>Upcoming commitments from JourneyTwin</strong>
             {twin?.upcoming_commitments.map((commitment) => {
-              const linked = commitmentActivity(plan, commitment);
+              const title = commitmentRowTitle(plan, commitment);
               return (
-                <span key={commitment.id}>
-                  {linked?.title ?? commitment.policy.semantic_key ?? commitment.id} ·{" "}
+                <span key={commitment.id} data-testid="upcoming-commitment-row">
+                  {title || "未命名承诺 · 服务器没给名字"} ·{" "}
                   {formatTime(commitment.policy.scheduled_start_at)} · {commitment.level}
                 </span>
               );
