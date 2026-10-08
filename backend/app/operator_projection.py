@@ -794,12 +794,17 @@ def operator_projection(
             session, journey, viewer_member_id=viewer_member_id
         )
         if followthrough is not None:
+            closed = followthrough.get("state") == "RECOVERY_CLOSED"
             group_recovery.update(
                 {
                     "state": followthrough["state"],
                     "headline": followthrough["headline"],
                     "can_request_planning": False,
                     "followthrough": followthrough,
+                    # Closure remains durable history, but the recovery room no
+                    # longer owns the foreground after the group has rejoined.
+                    # Normal Journey execution becomes primary again.
+                    "foreground": not closed,
                 }
             )
     # Journey Ahead is a read-only projection.  Reuse the already persisted
