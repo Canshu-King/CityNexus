@@ -150,6 +150,58 @@ def _count(model, *criteria) -> int:
         return int(session.scalar(select(func.count()).select_from(model).where(*criteria)) or 0)
 
 
+
+def test_r66_dense_catalog_cap_preserves_nearest_even_if_older(monkeypatch):
+    # Bounded shortlist must not be newest-records-first: older nearby venues
+    # are valid discoveries when a dense city has many newer, farther rows.
+    import app.execution.moment_scout as scout_module
+
+    journey_id, _owner_id, _other_id = _active_shared_journey()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        nearby_id, farther_id = str(uuid4()), str(uuid4())
+        common = {
+            "city_code": journey.city_code,
+            "category": "cafe",
+            "opening_hours_json": "{}",
+            "tags_json": "[]",
+            "metadata_json": "{}",
+            "coordinate_system": "WGS84",
+        }
+        session.add_all([
+            Place(
+                id=nearby_id,
+                provider_key="r66-locality-regression",
+                external_id=nearby_id,
+                name="Older nearest venue",
+                latitude=70.0,
+                longitude=30.0,
+                updated_at="2000-01-01T00:00:00+00:00",
+                **common,
+            ),
+            Place(
+                id=farther_id,
+                provider_key="r66-locality-regression",
+                external_id=farther_id,
+                name="Newer but distant venue",
+                latitude=70.04,
+                longitude=30.0,
+                updated_at="2100-01-01T00:00:00+00:00",
+                **common,
+            ),
+        ])
+        session.commit()
+        monkeypatch.setattr(scout_module, "MAX_CITY_SHORTLIST_ROWS", 1)
+        rows = scout_module._bounded_place_query(
+            session,
+            city_code=journey.city_code,
+            latitude=70.0,
+            longitude=30.0,
+        )
+        assert [row.id for row in rows] == [nearby_id]
+
+
 def test_r66_moment_scout_is_private_read_only_and_revalidates_explicit_selection():
     journey_id, owner_id, other_id = _active_shared_journey()
     place = _private_place(journey_id)
