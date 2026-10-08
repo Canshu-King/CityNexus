@@ -477,10 +477,14 @@ def attach_member_side_quest_projection(
                     return_state=str(planned_row or "RETURN_UNKNOWN"),
                 )
             continue
-        if quest.state in OPEN_STATES:
-            summary_state = "AWAY"
+        # A scheduled stop is not proof of departure. Finishing it is not
+        # proof that the traveller has started returning to the group.
+        if quest.state in {"DESTINATION_UNRESOLVED", "READY"}:
+            summary_state = "PLANNED"
+        elif quest.state in {"EN_ROUTE", "ARRIVED"}:
+            summary_state = "ACTIVE_SELF_REPORTED"
         elif quest.state in {"COMPLETED", "CANCELLED"}:
-            summary_state = "RETURNING"
+            summary_state = "FINISHED_RETURN_UNCONFIRMED"
         else:
             continue
         item["personal_stop"] = {
