@@ -1894,3 +1894,64 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
     min-height: var(--cn-touch-min);
   }
 }
+
+/* --- Shared progress surface (components/Progress.tsx) -------------------------------
+   One height and one accent in every screen, so "CityNexus is working" is learned once.
+   The fill animates its width on a real change (smooth, GPU-cheap), and an indeterminate
+   bar carries a sweep with no digits -- an invented percentage is worse than none. */
+.cn-progress {
+  --cn-progress-h: 8px;
+  --cn-progress-fill: var(--v8-accent);
+  --cn-progress-track: var(--cn-hairline);
+  display: grid;
+  gap: var(--cn-s-6);
+  margin: var(--cn-s-8) 0;
+}
+.cn-progress__track {
+  position: relative;
+  height: var(--cn-progress-h);
+  border-radius: var(--cn-r-pill);
+  background: var(--cn-progress-track);
+  overflow: hidden;
+}
+.cn-progress__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  border-radius: var(--cn-r-pill);
+  background: var(--cn-progress-fill);
+  transform-origin: left center;
+}
+/* Determinate: glide to the new width when a real step lands. */
+.cn-progress--determinate .cn-progress__fill {
+  transition: width var(--cn-t-reveal) var(--cn-ease-out);
+}
+/* Indeterminate: a soft sweep, only under a traveller who has not asked for calm. */
+.cn-progress--indeterminate .cn-progress__fill {
+  width: 40%;
+  opacity: 0.85;
+}
+@keyframes cn-progress-sweep {
+  0% { transform: translate3d(-100%, 0, 0); }
+  100% { transform: translate3d(340%, 0, 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cn-progress--indeterminate .cn-progress__fill {
+    animation: cn-progress-sweep 1.4s var(--cn-ease-standard) infinite;
+  }
+}
+.cn-progress__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--cn-s-8);
+  font-size: var(--cn-fs-caption);
+}
+.cn-progress__caption {
+  color: var(--cn-ink-secondary);
+}
+.cn-progress__percent {
+  color: var(--v8-accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+}

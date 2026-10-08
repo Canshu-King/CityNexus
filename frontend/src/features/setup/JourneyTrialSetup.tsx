@@ -3,6 +3,7 @@ import { useLocale, useT } from "../../i18n/LocaleContext";
 import { cityNexusApi, type DestinationCapability } from "../../api/citynexus";
 import { classifyReadFailure } from "../../lib/failureAttribution";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
+import { Progress } from "../../components/Progress";
 import type { RawFacts } from "../../lib/rawFacts";
 import { useElapsedSeconds } from "../../lib/waitClock";
 import { ENTRY_FIELDS, entryFieldBounds, entryFieldLabel, entryFieldName, entryFieldSuffix } from "../../lib/entryLimits";
@@ -967,6 +968,18 @@ export function JourneyTrialSetup({
         </button>
       </div>
 
+      {/* The wizard owns its own denominator -- three fixed steps, this screen counts them --
+          so this bar may state a real percentage.  It reads step position, not task completion.
+          It sits ABOVE the step row on purpose: ORD-0338 (甲) gates the band between
+          `[data-testid=trial-steps]` and the first field's label (≤60px, no text-bearing node
+          inside it), and a bar placed in that band would re-open the very defect that order closed. */}
+      <Progress
+        complete={step}
+        total={stepTitle.length}
+        label={zh ? `第 ${step} 步，共 ${stepTitle.length} 步` : `Step ${step} of ${stepTitle.length}`}
+        valueText={zh ? `第 ${step} 步，共 ${stepTitle.length} 步` : `Step ${step} of ${stepTitle.length}`}
+      />
+
       <ol className="trial-steps" data-testid="trial-steps">
         {stepTitle.map((label, index) => {
           const n = (index + 1) as 1 | 2 | 3;
@@ -1584,6 +1597,12 @@ export function JourneyTrialSetup({
               ? "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。"
               : "A cold city's first search measured about two minutes. The server reports nothing until it finishes, so this is measured seconds — not an invented number."}
           </p>
+          {/* No denominator reaches us for a create, so the sweep carries no percentage -- it
+              shares the wizard's height and accent, only moving more smoothly than the dot. */}
+          <Progress
+            label={zh ? "服务器仍在处理这一请求…" : "The server is still working on this request…"}
+            valueText={zh ? "正在处理，无进度百分比" : "Working, no percentage published"}
+          />
           {onStopWaiting && (
             <button
               type="button"
