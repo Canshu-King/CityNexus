@@ -492,6 +492,13 @@ const en: Dict = {
   "agent.stopFailed": "Couldn't stop.",
   "agent.approvalFailed": "Couldn't approve.",
   "agent.toolWorking": "Working",
+  "agent.missionWorking": "Working on your request",
+  "agent.ranAgainstFacts": "Ran against your journey facts",
+  "agent.checkingFacts": "Checking your journey facts…",
+  "agent.runtimeDetails": "Runtime details",
+  "agent.viewMissionPlan": "View safe mission plan",
+  "agent.citynexusAuthority": "CityNexus authority",
+  "agent.stopMission": "Stop mission",
   /* ORD-0382: the three-stage AI wait.  Every sentence here is one a traveller reads while a run is
      going, while they are away from it, or after they stopped it, and each says only what this device
      measured.  `agent.aiRunViewChat` / `agent.aiRunContinue` are the two doors the waiting state has
@@ -1617,6 +1624,13 @@ const zhCN: Dict = {
   "agent.stopFailed": "没能停止",
   "agent.approvalFailed": "没能确认",
   "agent.toolWorking": "处理中",
+  "agent.missionWorking": "正在为你处理",
+  "agent.ranAgainstFacts": "已按你的行程事实执行",
+  "agent.checkingFacts": "正在核对你的行程事实…",
+  "agent.runtimeDetails": "运行详情",
+  "agent.viewMissionPlan": "查看安全任务计划",
+  "agent.citynexusAuthority": "CityNexus 授权",
+  "agent.stopMission": "停止任务",
   /* ORD-0382：三段式生成态的文案。等待中的这一屏必须能离开、能回看、能继续，两个出口就是下面
      aiRunViewChat 与 aiRunContinue；进度只报这台设备量得到的单位，服务器没回过的天数不报。 */
   "agent.aiRunWorking": "正在处理",
