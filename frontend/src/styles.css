@@ -1195,7 +1195,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   gap: 10px;
   margin: 16px 0 4px;
 }
-.today-actions > div {
+.today-action {
   display: grid;
   gap: 3px;
   padding: 12px;
@@ -1203,6 +1203,21 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   border: 1px solid rgba(127, 127, 127, 0.2);
   background: rgba(127, 127, 127, 0.04);
   min-width: 0;
+}
+.today-actions button.today-action {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.today-actions button.today-action:hover {
+  border-color: #b8c0f1;
+  background: rgba(127, 127, 127, 0.08);
+}
+.today-actions button.today-action:active {
+  transform: translateY(1px);
 }
 .today-actions span {
   font-size: 10px;
@@ -1222,6 +1237,9 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 }
 @media (max-width: 480px) {
   .today-actions { grid-template-columns: 1fr; }
+  .today-actions .is-next { order: 1; }
+  .today-actions .is-attention { order: 2; }
+  .today-actions .is-stay { order: 3; }
 }
 
 /* R6: while a sheet, drawer or Live proposal is open the Copilot dock must not

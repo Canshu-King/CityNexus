@@ -1565,7 +1565,12 @@ function Hub({
             </button>
           </div>
           <div className="today-actions" data-testid="today-next">
-            <div>
+            <button
+              type="button"
+              className="today-action is-next is-pressable"
+              onClick={() => onNavigate("live")}
+              aria-label={zh ? "在实时行程中查看下一步" : "View your next step in Live"}
+            >
               <span>{zh ? "下一步" : "Next"}</span>
               <strong>
                 {nextStop
@@ -1583,8 +1588,8 @@ function Hub({
                     ? "今天没有安排"
                     : "Nothing today"}
               </small>
-            </div>
-            <div>
+            </button>
+            <div className="today-action is-stay">
               <span>{zh ? "住宿" : "Stay"}</span>
               <strong data-testid="today-stay">
                 {chosenStay
@@ -1603,7 +1608,12 @@ function Hub({
                     : "Choose in Trips · Stay"}
               </small>
             </div>
-            <div>
+            <button
+              type="button"
+              className="today-action is-attention is-pressable"
+              onClick={() => onNavigate("live")}
+              aria-label={zh ? "在实时行程中查看需要关注的变更" : "Review changes that need attention in Live"}
+            >
               <span>{zh ? "需要关注" : "Attention"}</span>
               <strong
                 className={disruptions.length ? "warn" : "green"}
@@ -1634,7 +1644,7 @@ function Hub({
                       ? "没有影响行程的变化"
                       : "Nothing affecting your trip"}
               </small>
-            </div>
+            </button>
           </div>
           <div className="v8-anchor-row">
             <div>
