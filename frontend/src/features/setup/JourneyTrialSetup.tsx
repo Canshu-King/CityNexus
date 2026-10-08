@@ -827,8 +827,8 @@ export function JourneyTrialSetup({
   const missingLine = missingNow.length
     ? step === 3
       ? zh
-        ? `还需要填写：${missingNow.map((field) => `${field.label} 未填写 · 必填`).join("、")}`
-        : `Still needed: ${missingNow.map((field) => `${field.label} not filled in · required`).join(", ")}`
+        ? `还需要填写：${missingNow.map((field) => `${field.label} ${t("trial.fieldRequired")}`).join("、")}`
+        : `Still needed: ${missingNow.map((field) => `${field.label} ${t("trial.fieldRequired")}`).join(", ")}`
       : zh
         ? `还需要填写：${missingNow.map((field) => field.label).join("、")}`
         : `Still needed: ${missingNow.map((field) => field.label).join(", ")}`
@@ -1286,7 +1286,7 @@ export function JourneyTrialSetup({
                 data-testid="review-arrival"
                 data-missing={draft.arrivalLocation.trim() ? undefined : "true"}
               >
-                {draft.arrivalLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {draft.arrivalLocation.trim() || t("trial.fieldRequired")}
                 {" · "}
                 {draft.startAt.replace("T", " ")}
               </dd>
@@ -1297,7 +1297,7 @@ export function JourneyTrialSetup({
                 data-testid="review-departure"
                 data-missing={draft.departureLocation.trim() ? undefined : "true"}
               >
-                {draft.departureLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {draft.departureLocation.trim() || t("trial.fieldRequired")}
                 {" · "}
                 {draft.endAt.replace("T", " ")}
               </dd>
@@ -1433,7 +1433,7 @@ export function JourneyTrialSetup({
               {/* ORD-0135 ③: the review step's rows already say 未填写 · 必填 for this field, and the
                   reason the blocked 确认创建 points at should be that same sentence rather than a
                   second phrasing of it. */}
-              {step === 3 ? (zh ? " 未填写 · 必填" : " not filled in · required") : ""}
+              {step === 3 ? t("trial.fieldRequiredInline") : ""}
             </span>
           ))}
         </p>
