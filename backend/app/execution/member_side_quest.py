@@ -739,11 +739,12 @@ def preview_member_side_quest_fit(
         )
         available = int((scheduled_at - preview_now).total_seconds() // 60)
         buffer_minutes = protected_buffer or 0
-        recommended_leave_by = (
-            scheduled_at - timedelta(
-                minutes=int(hypothetical_return["duration_min"]) + buffer_minutes
-            )
-        ).isoformat()
+        earliest_private_departure = preview_now + timedelta(
+            minutes=int(outbound["duration_min"]) + dwell_minutes
+        )
+        candidate_leave_by = scheduled_at - timedelta(
+            minutes=int(hypothetical_return["duration_min"]) + buffer_minutes
+        )
         authority = (
             "ADVISORY_PROTECTED_COMMITMENT"
             if protected
@@ -751,11 +752,17 @@ def preview_member_side_quest_fit(
         )
         if available < raw_need:
             state = "DOES_NOT_FIT"
+            reason_code = "INSUFFICIENT_TIME_FOR_PRIVATE_DETOUR"
         elif protected and available >= raw_need + buffer_minutes:
             state = "FITS_WITH_BUFFER"
         else:
             # An unprotected rendezvous has no server-promised safety buffer.
             state = "TIGHT_RETURN"
+        # Do not label an already impossible deadline "recommended".
+        # A TIGHT_RETURN may reach the rendezvous but miss its protected
+        # buffer; showing the unreachable protected leave-by is misleading.
+        if state != "DOES_NOT_FIT" and earliest_private_departure <= candidate_leave_by:
+            recommended_leave_by = candidate_leave_by.isoformat()
 
     return {
         "state": state,
