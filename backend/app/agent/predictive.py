@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from datetime import datetime, time, timedelta, timezone
 from typing import Any
 from uuid import uuid4
@@ -411,16 +412,59 @@ def build_resilience_snapshot(session: Session, journey: Journey) -> JourneyResi
     return snapshot
 
 
+@dataclass(frozen=True)
+class ScenarioPremise:
+    """Whether the frozen mobility evidence can carry the scenario's own premise.
+
+    A what-if is only a what-if if every leg it moves a real anchor by is a leg somebody
+    actually measured.  The solver raises `KeyError` on a pair it was not given, so a
+    partially covered matrix cannot silently produce a plan either -- it fails with an
+    exception that names no reason.  This states the shortfall up front, and says how much
+    of the premise was evidence rather than arithmetic.
+    """
+
+    required_pairs: int
+    evidenced_pairs: int
+    missing_pairs: tuple[tuple[str, str], ...]
+    mobility_snapshot_id: str | None
+    observed: bool
+
+    @property
+    def complete(self) -> bool:
+        return not self.missing_pairs
+
+    @property
+    def reason(self) -> str | None:
+        if self.complete:
+            return None
+        # Two different gaps, two different words: no observation at all means nobody asked
+        # the provider, while a partial observation means it was asked and did not cover this
+        # route.  Collapsing them into one string is how "unknown" becomes "pending" upstream.
+        return "MOBILITY_NOT_OBSERVED" if not self.observed else "MOBILITY_PREMISE_INCOMPLETE"
+
+    def as_evidence(self) -> dict[str, Any]:
+        return {
+            "required_pairs": self.required_pairs,
+            "evidenced_pairs": self.evidenced_pairs,
+            "missing_pair_count": len(self.missing_pairs),
+            "complete": self.complete,
+            "reason": self.reason,
+            "mobility_snapshot_id": self.mobility_snapshot_id,
+            "observed": self.observed,
+        }
+
+
 def _scenario_problem(
     session: Session,
     journey: Journey,
     *,
     scenario_type: str,
     parameters: dict[str, Any],
-) -> tuple[SolverV2Problem | None, list[Activity], list[SolverV2Anchor]]:
+) -> tuple[SolverV2Problem | None, list[Activity], list[SolverV2Anchor], ScenarioPremise]:
     activities = _active_activities(session, journey)
+    empty = ScenarioPremise(0, 0, (), None, False)
     if not activities:
-        return None, [], []
+        return None, [], [], empty
     journey_start = _dt(journey.start_at)
     journey_end_min = max(1, int((_dt(journey.end_at) - journey_start).total_seconds() // 60))
     places = {
@@ -476,14 +520,36 @@ def _scenario_problem(
     mobility = _load(latest_mobility.payload_json if latest_mobility else None, {})
     current_minutes = mobility.get("current_minutes") or {}
     travel: dict[tuple[str, str], int] = {}
+    missing_pairs: list[tuple[str, str]] = []
+    evidenced_pairs = 0
     for origin in all_locations:
         for destination in all_locations:
             if origin == destination:
+                # A location to itself is zero by definition, not a leg anybody measured.  It is
+                # not counted as evidence below, or a journey with no observation at all would
+                # report a sixth of its matrix covered.
                 travel[(origin, destination)] = 0
-            else:
-                travel[(origin, destination)] = (
-                    int(current_minutes.get(f"{origin}|{destination}", 15)) + scenario_delta
-                )
+                continue
+            captured = current_minutes.get(f"{origin}|{destination}")
+            if captured is None:
+                missing_pairs.append((origin, destination))
+                continue
+            evidenced_pairs += 1
+            travel[(origin, destination)] = int(captured) + scenario_delta
+    # A scenario whose premise is a number this build made up is not a what-if, it is a fiction
+    # wearing a solver's fingerprint: the invented leg moved real anchors, so `feasible`,
+    # `c4_preserved` and the drift it published all describe a trip nobody routed.  There is no
+    # honest figure to substitute -- 15 minutes is as unfounded as any other -- so the scenario
+    # declines, and the refusal travels beside the numbers as a named reason.
+    premise = ScenarioPremise(
+        required_pairs=evidenced_pairs + len(missing_pairs),
+        evidenced_pairs=evidenced_pairs,
+        missing_pairs=tuple(missing_pairs),
+        mobility_snapshot_id=mobility.get("snapshot_id"),
+        observed=latest_mobility is not None,
+    )
+    if missing_pairs:
+        return None, activities, anchors, premise
     slots: list[SolverV2Slot] = []
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
     for activity in activities:
@@ -575,7 +641,7 @@ def _scenario_problem(
                 )
             )
     if not slots:
-        return None, activities, anchors
+        return None, activities, anchors, premise
     base_cost = sum(item.estimated_cost_minor for item in activities)
     problem = SolverV2Problem(
         journey_id=journey.id,
@@ -593,10 +659,32 @@ def _scenario_problem(
         max_schedule_drift_min=180,
         top_k=3,
     )
-    return problem, activities, anchors
+    return problem, activities, anchors, premise
 
 
 def counterfactual_payload(row: CounterfactualSimulation) -> dict[str, Any]:
+    evidence = _load(row.evidence_json, {})
+    # A row written by an older build has no `premise_holds`.  Absence is not a claim that the
+    # premise held, so a legacy row keeps the old shape rather than being back-filled into a
+    # verdict this build cannot support; only rows this build wrote get the triple.
+    premise_holds = evidence.get("premise_holds") if isinstance(evidence, dict) else None
+    if premise_holds is False:
+        return {
+            "id": row.id,
+            "journey_id": row.journey_id,
+            "snapshot_id": row.snapshot_id,
+            "scenario_key": row.scenario_key,
+            "scenario_type": row.scenario_type,
+            "parameters": _load(row.parameters_json, {}),
+            "answered": False,
+            "feasible": None,
+            "c4_preserved": None,
+            "cost_delta_minor": None,
+            "schedule_drift_min": None,
+            "plan_changes": None,
+            "evidence": evidence,
+            "created_at": row.created_at,
+        }
     return {
         "id": row.id,
         "journey_id": row.journey_id,
@@ -604,12 +692,13 @@ def counterfactual_payload(row: CounterfactualSimulation) -> dict[str, Any]:
         "scenario_key": row.scenario_key,
         "scenario_type": row.scenario_type,
         "parameters": _load(row.parameters_json, {}),
+        "answered": premise_holds is not False,
         "feasible": bool(row.feasible),
         "c4_preserved": bool(row.c4_preserved),
         "cost_delta_minor": row.cost_delta_minor,
         "schedule_drift_min": row.schedule_drift_min,
         "plan_changes": _load(row.plan_changes_json, []),
-        "evidence": _load(row.evidence_json, {}),
+        "evidence": evidence,
         "created_at": row.created_at,
     }
 
@@ -712,7 +801,7 @@ def simulate_counterfactuals(
     )
     result: list[CounterfactualSimulation] = []
     for scenario_key, scenario_type, parameters in scenarios:
-        problem, activities, anchors = _scenario_problem(
+        problem, activities, anchors, premise = _scenario_problem(
             session,
             journey,
             scenario_type=scenario_key,
@@ -730,10 +819,38 @@ def simulate_counterfactuals(
             for assignment in (plan.assignments if plan else ())
             if assignment.action != "KEEP" or assignment.schedule_drift_min
         ]
+        # "No feasible plan" and "this build never asked the provider" were the same two words
+        # (`INFEASIBLE`, `feasible=false`) for a scenario that never got to run.  A caller reading
+        # feasible=false is told the traveller's trip is impossible; the truth is that this
+        # journey has no frozen matrix covering the routes the scenario would move.  So the
+        # premise failure gets its own solver status, and nothing downstream may read a verdict
+        # out of the feasibility flag it leaves behind.
+        if problem is None and not premise.complete:
+            solver_status = "PREMISE_NOT_EVIDENCED"
+        elif plan is not None:
+            solver_status = "FEASIBLE"
+        else:
+            solver_status = "INFEASIBLE"
+        premise_holds = premise.complete
+        # Every figure below that describes *this scenario's* outcome is null when the premise
+        # failed, rather than 0.  A 0 here reads downstream as "switching costs nothing" and
+        # "disrupts nothing" -- verdicts about a trip nobody routed.  `expected_failure_risk`
+        # is the one exception: it is read off the resilience snapshot, which is a fact about
+        # the journey whether or not a what-if could be run against it.
+        switching_cost_minor = (
+            max(0, int(plan.cost_delta_minor)) if plan is not None else None
+        )
+        disruption_penalty_min = (
+            max(0, int(max([item["schedule_drift_min"] for item in changes] or [0])))
+            if plan is not None
+            else None
+        )
         evidence = {
             "engine": "JourneyTwin + CP-SAT V2",
-            "solver_kind": plan.generator_kind if plan else "NO_FEASIBLE_PLAN",
-            "solver_status": "FEASIBLE" if plan else "INFEASIBLE",
+            "solver_kind": plan.generator_kind if plan is not None else solver_status,
+            "solver_status": solver_status,
+            "premise_holds": premise_holds,
+            "premise": premise.as_evidence(),
             "problem_fingerprint": solver_v2_problem_fingerprint(problem) if problem else None,
             "bounded": True,
             "domain_truth_mutated": False,
@@ -745,16 +862,12 @@ def simulate_counterfactuals(
                 "scenario_parameters": parameters,
             },
             "expected_failure_risk": round(float(snapshot.score) / 100, 3),
-            "expected_switching_cost_minor": max(0, int(plan.cost_delta_minor if plan else 0)),
-            "schedule_disruption_penalty_min": max(
-                0, int(max([item["schedule_drift_min"] for item in changes] or [0]))
-            ),
+            "expected_switching_cost_minor": switching_cost_minor,
+            "schedule_disruption_penalty_min": disruption_penalty_min,
             "preventive_value": {
                 "risk_reduction_value": round(float(snapshot.score) / 100, 3),
-                "switching_cost_minor": max(0, int(plan.cost_delta_minor if plan else 0)),
-                "schedule_disruption_penalty_min": max(
-                    0, int(max([item["schedule_drift_min"] for item in changes] or [0]))
-                ),
+                "switching_cost_minor": switching_cost_minor,
+                "schedule_disruption_penalty_min": disruption_penalty_min,
                 "decision": "INSPECTABLE_INPUTS_ONLY",
             },
         }
@@ -774,6 +887,10 @@ def simulate_counterfactuals(
             session.add(row)
         row.snapshot_id = snapshot.id
         row.parameters_json = _json(parameters)
+        # The columns stay booleans because that is what the store holds; whether they mean
+        # anything is `premise_holds` in the evidence, and `counterfactual_payload` refuses to
+        # publish them as a verdict when the premise failed.  Writing 0 here is the mechanical
+        # "no plan object was produced", not the traveller-facing "their trip is impossible".
         row.feasible = bool(plan)
         row.c4_preserved = bool(plan and len(plan.protected_anchors) == len(anchors))
         row.cost_delta_minor = int(plan.cost_delta_minor if plan else 0)
