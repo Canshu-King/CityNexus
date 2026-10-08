@@ -44,6 +44,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [chosen, setChosen] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -78,7 +79,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
     return () => {
       cancelled = true;
     };
-  }, [journeyId]);
+  }, [journeyId, attempt]);
 
   const select = async (optionId: string) => {
     setBusy(optionId);
@@ -131,27 +132,30 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             <h1>{zh ? "暂时没有可比较的住宿" : "No stays to compare yet"}</h1>
             <p className="v8-lede">
               {zh
-                ? "这个城市还没有拿到可用的住宿数据。换个城市或稍后再试——我们不会编造酒店。"
-                : "No provider-backed accommodation is available for this city yet. Try again later — we will not invent hotels."}
+                ? "这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。"
+                : "No provider-backed accommodation is available for this city yet. Re-run the acquisition, or look at another city — we will not invent hotels."}
             </p>
           </div>
         </div>
         <div className="hotels-empty-actions" data-testid="hotels-empty-actions">
-          <button 
-            type="button" 
-            className="v8-outline-button" 
-            onClick={() => window.location.href = '/v8/hub'}
-            data-testid="hotels-empty-explore-btn"
-          >
-            {zh ? "探索其他城市" : "Explore other cities"}
-          </button>
-          <button 
-            type="button" 
-            className="v8-primary-button" 
-            onClick={onSelected}
+          <button
+            type="button"
+            className="v8-primary-button"
+            onClick={() => setAttempt((current) => current + 1)}
             data-testid="hotels-empty-retry-btn"
           >
-            {zh ? "稍后再试" : "Try again later"}
+            {zh ? "重新采集这家城市的住宿" : "Re-acquire stays for this city"}
+          </button>
+          <button
+            type="button"
+            className="v8-outline-button"
+            onClick={() => {
+              window.history.pushState({}, "", "/v8/hub");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
+            data-testid="hotels-empty-explore-btn"
+          >
+            {zh ? "换个城市看看" : "Look at another city"}
           </button>
         </div>
       </section>

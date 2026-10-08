@@ -127,10 +127,13 @@ export function TripItinerary({
           >
             {zh ? "AI 帮我规划" : "Plan my trip with AI"}
           </button>
-          <button 
-            type="button" 
-            className="v8-outline-button" 
-            onClick={() => window.location.href = '/v8/hub'}
+          <button
+            type="button"
+            className="v8-outline-button"
+            onClick={() => {
+              window.history.pushState({}, "", "/v8/hub");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
             data-testid="itinerary-empty-hub-btn"
           >
             {zh ? "去今天首页" : "Go to Today"}
