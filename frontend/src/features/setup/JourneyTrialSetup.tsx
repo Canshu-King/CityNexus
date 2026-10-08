@@ -633,6 +633,11 @@ export function JourneyTrialSetup({
      written back -- otherwise the second blocked tap, the one where the traveller is sure they
      pressed it, would be silent. */
   const [spokenReason, setSpokenReason] = useState("");
+  /* A refused press is what earns a per-field reason.  Until the traveller actually tries to
+     advance, the fields are not wrong -- they are untouched -- and printing a caption under
+     each one would grow the wizard by three rows before anything was asked of the traveller.
+     ORD-0338 measured what that growth does to the sticky CTA, so this stays press-gated. */
+  const [reasonsRevealed, setReasonsRevealed] = useState(false);
   /* ORD-0220 ②: the sentence belongs to a particular set of missing fields.  When that set changes
      the announcement is no longer a report of anything, so it stops being spoken. */
   const [spokenKey, setSpokenKey] = useState<string | null>(null);
@@ -822,6 +827,23 @@ export function JourneyTrialSetup({
   /* The identity of "what is missing right now", used to retire an announcement that no longer
      matches the screen (ORD-0220 ②). */
   const missingKey = missingNow.map((field) => field.target).join("|");
+  /* The summary names every missing field at once, below the fold, so the control itself stayed
+     silent: until now only the backend's rejection ever reached the slot under a field
+     (.trial-field-problem).  A client-side "not filled in" takes that same slot, which is why a
+     refused press explains itself where the traveller was looking.  The wording is the review
+     step's existing one, not a second phrasing of the same fact. */
+  const missingHere = (target: string) =>
+    reasonsRevealed && missingNow.some((field) => field.target === target);
+  const reasonLine = (target: string) =>
+    missingHere(target) ? (
+      <span
+        className="trial-field-reason"
+        id={`${target}-reason`}
+        data-testid={`${target}-reason`}
+      >
+        {zh ? "未填写 · 必填" : "not filled in · required"}
+      </span>
+    ) : null;
   /* One sentence, read by the visible hint and by the announcement a blocked tap makes, so
      what a sighted traveller sees and what a screen reader says cannot diverge. */
   const missingLine = missingNow.length
@@ -902,9 +924,17 @@ export function JourneyTrialSetup({
               value={draft.cityName}
               onChange={(event) => applyCity(event.target.value)}
               placeholder={zh ? "例如：天津、东京、新加坡" : "e.g. Tianjin, Tokyo, Singapore"}
-              aria-describedby={unrecognizedCity ? "trial-city-warning" : undefined}
+              aria-describedby={
+                [
+                  unrecognizedCity ? "trial-city-warning" : undefined,
+                  missingHere("trial-city") ? "trial-city-reason" : undefined,
+                ]
+                  .filter(Boolean)
+                  .join(" ") || undefined
+              }
               autoFocus
             />
+            {reasonLine("trial-city")}
           </label>
 
           {facts ? (
@@ -1021,11 +1051,16 @@ export function JourneyTrialSetup({
                 draft.arrivalLocation.trim() && !arrivalProblem ? undefined : true
               }
               aria-describedby={
-                arrivalProblem
-                  ? "trial-required-hint trial-arrival-problem"
-                  : draft.arrivalLocation.trim()
-                    ? undefined
-                    : "trial-required-hint"
+                [
+                  arrivalProblem
+                    ? "trial-required-hint trial-arrival-problem"
+                    : draft.arrivalLocation.trim()
+                      ? undefined
+                      : "trial-required-hint",
+                  missingHere("trial-arrival") ? "trial-arrival-reason" : undefined,
+                ]
+                  .filter(Boolean)
+                  .join(" ") || undefined
               }
             />
             {arrivalProblem && (
@@ -1033,6 +1068,7 @@ export function JourneyTrialSetup({
                 {arrivalProblem}
               </span>
             )}
+            {reasonLine("trial-arrival")}
           </label>
           <label className="trial-field">
             <span>{zh ? (identifiedCity ? `离开${identifiedCity}` : "离开地点") : "Depart from"}</span>
@@ -1050,11 +1086,16 @@ export function JourneyTrialSetup({
                 draft.departureLocation.trim() && !departureProblem ? undefined : true
               }
               aria-describedby={
-                departureProblem
-                  ? "trial-required-hint trial-departure-problem"
-                  : draft.departureLocation.trim()
-                    ? undefined
-                    : "trial-required-hint"
+                [
+                  departureProblem
+                    ? "trial-required-hint trial-departure-problem"
+                    : draft.departureLocation.trim()
+                      ? undefined
+                      : "trial-required-hint",
+                  missingHere("trial-departure") ? "trial-departure-reason" : undefined,
+                ]
+                  .filter(Boolean)
+                  .join(" ") || undefined
               }
             />
             {departureProblem && (
@@ -1062,6 +1103,7 @@ export function JourneyTrialSetup({
                 {departureProblem}
               </span>
             )}
+            {reasonLine("trial-departure")}
           </label>
           <div className="trial-row">
             <label className="trial-field">
@@ -1147,6 +1189,7 @@ export function JourneyTrialSetup({
                 data-testid="trial-party"
                 type="number"
                 {...entryFieldBounds("party")}
+                aria-describedby={missingHere("trial-party") ? "trial-party-reason" : undefined}
                 value={draft.partySize}
                 onChange={(event) => {
                   const partySize = Number(event.target.value);
@@ -1157,6 +1200,7 @@ export function JourneyTrialSetup({
                   }));
                 }}
               />
+              {reasonLine("trial-party")}
             </label>
             <label className="trial-field">
               <span data-testid="trial-rooms-label">{`${t("trial.rooms")}${entryFieldSuffix("rooms", zh)}`}</span>
@@ -1180,9 +1224,11 @@ export function JourneyTrialSetup({
                 data-testid="trial-budget"
                 type="number"
                 {...entryFieldBounds("budget")}
+                aria-describedby={missingHere("trial-budget") ? "trial-budget-reason" : undefined}
                 value={draft.budgetMajor}
                 onChange={(event) => update("budgetMajor", Number(event.target.value))}
               />
+              {reasonLine("trial-budget")}
             </label>
             <label className="trial-field">
               <span data-testid="trial-stay-budget-label">{`${t("trial.stayBudget")}${entryFieldSuffix("stayBudget", zh)}`}</span>
@@ -1567,6 +1613,7 @@ export function JourneyTrialSetup({
             aria-describedby={blockedNow ? "trial-required-hint" : undefined}
             onClick={() => {
               if (blockedNow) {
+                setReasonsRevealed(true);
                 speak(missingLine, missingKey);
                 revealReason();
                 return;
@@ -1591,6 +1638,7 @@ export function JourneyTrialSetup({
             aria-describedby={blockedNow ? "trial-required-hint" : undefined}
             onClick={() => {
               if (blockedNow) {
+                setReasonsRevealed(true);
                 speak(missingLine, missingKey);
                 revealReason();
                 return;

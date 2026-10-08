@@ -1177,26 +1177,71 @@ body {
   }
 }
 
+/* The field as a stack: label above control, one gap between them.  `.plan-ai-field` had no rule of
+   its own at all, so its label and its control were separated by whatever the UA felt like while
+   the other two forms set a gap.  Font size is deliberately not stated here -- the wizard's labels
+   are 12px today and the planner sheet's are body size, and pulling either one is a readability
+   change this order did not set out to make. */
+.trial-field,
+.plan-ai-field,
+.cn-access-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cn-s-4);
+  min-width: 0;
+}
 /* Form fields were UA-white: a white slab floating on a dark card, and a
-   black-on-black label wherever the page carried no inherited colour. */
+   black-on-black label wherever the page carried no inherited colour.
+   One field box for the three vocabularies the product grew: the wizard's `.trial-field`, the
+   planner sheet's `.plan-ai-field` and the invitation form's `.cn-access-field`.  Each used to
+   restate the control from scratch, and `.cn-access-field` restated it short -- no border, no
+   radius, and a bare `6px 8px` where every other field takes the spacing token, so the same
+   "required text input" arrived as three different boxes.  Shape and density are declared once
+   here; the surface a control sits on stays with the card that owns it, because that is a theme
+   decision a field cannot make. */
 .trial-field input,
 .trial-field textarea,
-.trial-field select {
+.trial-field select,
+.plan-ai-field input,
+.plan-ai-field textarea,
+.plan-ai-field select,
+.cn-access-field input,
+.cn-access-field select {
+  width: 100%;
+  box-sizing: border-box;
   min-height: 34px; /* fine-pointer compact density; mobile/touch takes the >=44px contract below */
   padding: 0 var(--cn-s-12);
   border: 1px solid var(--cn-control-border);
   border-radius: var(--cn-r-control);
-  background: var(--v8-panel);
   color: var(--v8-ink);
   font: inherit;
 }
 @media (max-width: 680px) {
   .trial-field input,
-  .trial-field select { min-height: var(--cn-touch-min); }
+  .trial-field select,
+  .plan-ai-field input,
+  .plan-ai-field select,
+  .cn-access-field input,
+  .cn-access-field select { min-height: var(--cn-touch-min); }
 }
-.trial-field textarea { padding: var(--cn-s-12); }
+.trial-field textarea,
+.plan-ai-field textarea { padding: var(--cn-s-12); }
+/* The planner sheet's prompt is prose a traveller reads back after typing it, so it keeps the body
+   size instead of the 12px the wizard inherits; `font: inherit` above would otherwise take it down. */
+.plan-ai-field textarea { font-size: var(--cn-fs-body); }
 .trial-field input::placeholder,
-.trial-field textarea::placeholder { color: var(--cn-ink-tertiary); }
+.trial-field textarea::placeholder,
+.plan-ai-field input::placeholder,
+.plan-ai-field textarea::placeholder,
+.cn-access-field input::placeholder { color: var(--cn-ink-tertiary); }
+/* The pair below is the one ORD-0035's contrast pass already cleared in both themes; the
+   invitation form had no background of its own, so it takes this one rather than a new pairing. */
+.trial-field input,
+.trial-field textarea,
+.trial-field select,
+.cn-access-field input,
+.cn-access-field select { background: var(--v8-panel); }
+.plan-ai-field textarea { background: var(--cn-surface); }
 /* Native date pickers paint their own chrome; without this they stay light. */
 .trial-field input[type="datetime-local"] { color-scheme: light dark; }
 
@@ -1245,9 +1290,12 @@ body {
   font-size: var(--cn-fs-body);
   line-height: 1.45;
 }
-/* The backend's own sentence, shown under the field it is about. Full ink in both themes:
-   a rejection explanation cannot be the weakest text on the screen. */
-.trial-field-problem {
+/* The backend's own sentence, shown under the field it is about, and the client-side "not filled
+   in" that now takes the same slot.  One shape for both: a reason about a field is not two visual
+   categories depending on which side produced it.  Full ink in both themes: a rejection
+   explanation cannot be the weakest text on the screen. */
+.trial-field-problem,
+.trial-field-reason {
   margin-top: var(--cn-s-4);
   color: var(--v8-ink);
   font-size: var(--cn-fs-caption);
