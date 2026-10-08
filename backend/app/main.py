@@ -1847,6 +1847,12 @@ def refresh_journey_resilience(
             )
         except RuntimeError as exc:
             raise HTTPException(503, str(exc)) from exc
+        except ValueError as exc:
+            # Same wrong-argument case as the discover routes: a sealed replay asked for a city it
+            # was not captured in is a refusal to name, not a fault to leak as a 500.
+            refused = HTTPException(422, str(exc))
+            refused.message_key = "discovery.captured_replay_city_mismatch"
+            raise refused from exc
     snapshot = build_resilience_snapshot(session, journey)
     simulations = simulate_counterfactuals(session, journey, snapshot)
     session.commit()
@@ -1947,6 +1953,13 @@ def discover_real_city_services(
         )
     except RuntimeError as exc:
         raise HTTPException(503, str(exc)) from exc
+    except ValueError as exc:
+        # The sealed replay is captured for one city only, so asking for it elsewhere is a wrong
+        # argument rather than a fault of this deployment.  It used to escape as an unhandled
+        # exception (a 500 with no envelope) because only RuntimeError was named here.
+        refused = HTTPException(422, str(exc))
+        refused.message_key = "discovery.captured_replay_city_mismatch"
+        raise refused from exc
     session.commit()
     return result
 
