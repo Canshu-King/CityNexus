@@ -1168,6 +1168,7 @@ const en: Dict = {
   "sharedPoster.download": "Save this picture",
   "sharedPoster.made": "Saved as a PNG.",
   "sharedPoster.failed": "The picture was not made: this device's drawing surface refused to draw.",
+  "trips.sections": "Trip sections",
 };
 
 const zhCN: Dict = {
@@ -2253,6 +2254,7 @@ const zhCN: Dict = {
   "sharedPoster.download": "存下这张图",
   "sharedPoster.made": "已存为 PNG。",
   "sharedPoster.failed": "图没有生成：这台设备的画布没有交出可用的绘制上下文。",
+  "trips.sections": "行程分区",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
