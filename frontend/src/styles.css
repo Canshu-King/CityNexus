@@ -1061,7 +1061,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 }
 
 /* ------------------------------------------------------------------ *
- * Activity detail (reference screen 08).
+ * Activity detail (reference screen 08) — refactored information hierarchy.
  * ------------------------------------------------------------------ */
 .activity-back {
   margin: 0 0 14px;
@@ -1074,6 +1074,95 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   cursor: pointer;
 }
 .activity-detail .v8-page-intro h1 { font-size: 24px; line-height: 1.25; }
+
+/* Core info section — always visible in first screen */
+.activity-core-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+.activity-core-item {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--v8-line);
+  border-radius: 10px;
+  background: #fff;
+}
+.activity-core-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9aa4b3;
+}
+.activity-core-item strong {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--v8-ink);
+}
+
+/* Foldable details section */
+.activity-details-section {
+  margin: 0 0 16px;
+  border: 1px solid var(--v8-line);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.activity-details-section > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--v8-indigo);
+  list-style: none;
+}
+.activity-details-section > summary::-webkit-details-marker {
+  display: none;
+}
+.activity-details-section[open] > summary {
+  border-bottom: 1px solid var(--v8-line);
+}
+.activity-details-section[open] > summary::after {
+  content: "−";
+  font-size: 20px;
+  font-weight: 400;
+}
+.activity-details-section:not([open]) > summary::after {
+  content: "+";
+  font-size: 20px;
+  font-weight: 400;
+}
+.activity-details-section dl {
+  margin: 0;
+  padding: 12px 14px;
+  display: grid;
+  gap: 10px;
+}
+.activity-details-section div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(127,127,127,0.1);
+}
+.activity-details-section dt {
+  font-size: 11px;
+  opacity: 0.65;
+}
+.activity-details-section dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
 .activity-facts { margin-top: 4px; }
 .activity-facts div { padding: 10px 0; border-bottom: 1px solid rgba(127,127,127,0.14); }
 .activity-facts dt { font-size: 11px; opacity: 0.6; }

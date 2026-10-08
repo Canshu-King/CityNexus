@@ -142,6 +142,8 @@ export function ActivityDetail({
           ? `${duration} 分钟`
           : `${duration} min`;
 
+  const [showDetailsOpen, setShowDetailsOpen] = useState(true);
+
   return (
     <section className="v8-page activity-detail" data-testid="activity-detail">
       <button type="button" className="activity-back" data-testid="activity-back" onClick={onBack}>
@@ -167,26 +169,17 @@ export function ActivityDetail({
         </div>
       </div>
 
-      <dl className="trial-review activity-facts">
+      {/* Core info — always visible in first screen */}
+      <div className="activity-core-info" data-testid="activity-core-info">
         {durationText && (
-          <div>
-            <dt>{zh ? "停留时长" : "Duration"}</dt>
-            <dd data-testid="activity-duration">{durationText}</dd>
+          <div className="activity-core-item" data-testid="activity-core-duration">
+            <span className="activity-core-label">{zh ? "停留时长" : "Duration"}</span>
+            <strong data-testid="activity-duration">{durationText}</strong>
           </div>
         )}
-        {activity.travel_from_prev_min != null && activity.travel_from_prev_min > 0 && (
-          <div>
-            <dt>{zh ? "从上一站出发" : "Travel from previous stop"}</dt>
-            <dd>
-              {zh
-                ? `${activity.travel_from_prev_min} 分钟`
-                : `${activity.travel_from_prev_min} min`}
-            </dd>
-          </div>
-        )}
-        <div>
-          <dt>{zh ? "费用" : "Cost"}</dt>
-          <dd data-testid="activity-cost" data-cost-status={
+        <div className="activity-core-item" data-testid="activity-core-cost">
+          <span className="activity-core-label">{zh ? "费用" : "Cost"}</span>
+          <strong data-testid="activity-cost" data-cost-status={
             knownFree ? "KNOWN_FREE" : knownPaid ? "KNOWN_PAID" : "UNKNOWN"
           }>
             {knownFree
@@ -198,43 +191,77 @@ export function ActivityDetail({
                 : zh
                   ? "暂无价格"
                   : "Price unavailable"}
-          </dd>
+          </strong>
         </div>
-        <div>
-          <dt>{zh ? "营业时间" : "Opening hours"}</dt>
-          <dd data-testid="activity-hours">
-            {openingKnown
-              ? opening?.raw || (zh ? "已提供" : "Provided")
-              : zh
-                ? "暂无数据"
-                : "Not available"}
-          </dd>
-        </div>
-        {meta.category && (
-          <div>
-            <dt>{zh ? "类型" : "Category"}</dt>
-            <dd data-testid="activity-category">{categoryLabel(meta.category, zh)}</dd>
+        {activity.travel_from_prev_min != null && activity.travel_from_prev_min > 0 && (
+          <div className="activity-core-item" data-testid="activity-core-travel">
+            <span className="activity-core-label">{zh ? "从上一站出发" : "Travel from previous stop"}</span>
+            <strong>
+              {zh
+                ? `${activity.travel_from_prev_min} 分钟`
+                : `${activity.travel_from_prev_min} min`}
+            </strong>
           </div>
         )}
-        {(activity.kind || activity.type || meta.role) && (
+      </div>
+
+      {/* Foldable details section */}
+      <details className="activity-details-section" open={showDetailsOpen} data-testid="activity-details-section">
+        <summary 
+          className="activity-details-summary" 
+          onClick={(e) => e.preventDefault()}
+          style={{ cursor: 'pointer' }}
+        >
+          {zh ? "详细信息" : "Details"}
+        </summary>
+        
+        <dl className="trial-review activity-facts">
+          {activity.travel_from_prev_min != null && activity.travel_from_prev_min > 0 && (
+            <div>
+              <dt>{zh ? "从上一站出发" : "Travel from previous stop"}</dt>
+              <dd>
+                {zh
+                  ? `${activity.travel_from_prev_min} 分钟`
+                  : `${activity.travel_from_prev_min} min`}
+              </dd>
+            </div>
+          )}
           <div>
-            <dt>{zh ? "活动类型" : "Activity type"}</dt>
-            <dd data-testid="activity-kind">
-              {roleLabel(activity.kind || activity.type || meta.role, zh)}
+            <dt>{zh ? "营业时间" : "Opening hours"}</dt>
+            <dd data-testid="activity-hours">
+              {openingKnown
+                ? opening?.raw || (zh ? "已提供" : "Provided")
+                : zh
+                  ? "暂无数据"
+                  : "Not available"}
             </dd>
           </div>
-        )}
-        <div>
-          <dt>{zh ? "位置" : "Location"}</dt>
-          <dd data-testid="activity-location">
-            {hasCoords
-              ? `${Number(meta.latitude).toFixed(4)}, ${Number(meta.longitude).toFixed(4)}`
-              : zh
-                ? "暂无坐标"
-                : "No coordinates"}
-          </dd>
-        </div>
-      </dl>
+          {meta.category && (
+            <div>
+              <dt>{zh ? "类型" : "Category"}</dt>
+              <dd data-testid="activity-category">{categoryLabel(meta.category, zh)}</dd>
+            </div>
+          )}
+          {(activity.kind || activity.type || meta.role) && (
+            <div>
+              <dt>{zh ? "活动类型" : "Activity type"}</dt>
+              <dd data-testid="activity-kind">
+                {roleLabel(activity.kind || activity.type || meta.role, zh)}
+              </dd>
+            </div>
+          )}
+          <div>
+            <dt>{zh ? "位置" : "Location"}</dt>
+            <dd data-testid="activity-location">
+              {hasCoords
+                ? `${Number(meta.latitude).toFixed(4)}, ${Number(meta.longitude).toFixed(4)}`
+                : zh
+                  ? "暂无坐标"
+                  : "No coordinates"}
+            </dd>
+          </div>
+        </dl>
+      </details>
 
       <div className="activity-actions">
         <button
