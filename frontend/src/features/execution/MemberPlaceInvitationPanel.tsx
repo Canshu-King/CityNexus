@@ -25,6 +25,7 @@ export function MemberPlaceInvitationPanel({
   const [pinConsentId, setPinConsentId] = useState<string | null>(null);
   const [routeConsentId, setRouteConsentId] = useState<string | null>(null);
   const [feasibilityById, setFeasibilityById] = useState<Record<string, MemberPlaceInvitationFeasibilityPreviewResult | null>>({});
+  const [dwellById, setDwellById] = useState<Record<string, 10 | 20 | 30>>({});
   const invitations = projection?.incoming ?? [];
   if (!invitations.length) return null;
 
@@ -63,6 +64,7 @@ export function MemberPlaceInvitationPanel({
         journeyId,
         invitationId,
         observationId,
+        dwellById[invitationId] ?? 20,
       );
       setFeasibilityById((current) => ({ ...current, [invitationId]: result }));
     } catch {
@@ -261,6 +263,28 @@ export function MemberPlaceInvitationPanel({
               ? "同意后，CityNexus 会记录一条与你的身份绑定的 Journey 前台位置观察，并把起点、公开地点和会合点交给已配置的路线服务估算。其他成员不会在团队视图中看到你的精确坐标或私有路线，但可能看到更新后的粗粒度团队状态。不会改动共享计划；拒绝定位或缺少路线证据时结果是“时间未核实”。"
               : "If you agree, CityNexus records one identity-bound foreground location observation on your Journey and sends your origin, the public Place, and rendezvous to the configured route service for this estimate. Companions do not see your exact coordinates or private route in the group view, but their coarse group-presence status may update. The shared plan is unchanged. Denied location or missing route evidence means unverified timing."}
           </p>
+          <label htmlFor="member-place-invitation-dwell">
+            {zh ? "你计划在这里停留多久？" : "How long would you stay?"}
+          </label>
+          <select
+            id="member-place-invitation-dwell"
+            data-testid="member-place-invitation-dwell"
+            value={dwellById[routeConsentId] ?? 20}
+            disabled={busyId !== null}
+            onChange={(event) => {
+              const minutes = Number(event.target.value) as 10 | 20 | 30;
+              setDwellById((current) => ({ ...current, [routeConsentId]: minutes }));
+              setFeasibilityById((current) => {
+                const next = { ...current };
+                delete next[routeConsentId];
+                return next;
+              });
+            }}
+          >
+            <option value={10}>{zh ? "10 分钟" : "10 minutes"}</option>
+            <option value={20}>{zh ? "20 分钟" : "20 minutes"}</option>
+            <option value={30}>{zh ? "30 分钟" : "30 minutes"}</option>
+          </select>
           <div className="journey-side-quest-actions">
             <button
               type="button"
