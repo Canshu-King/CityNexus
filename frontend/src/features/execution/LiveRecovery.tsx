@@ -18,6 +18,10 @@ import {
 } from "../../lib/disruptionState";
 import { riskReasonLabel } from "../../lib/displayVocabulary";
 import {
+  deviceKnownRefusalSentence,
+  unreachableServerSentence,
+} from "../../lib/refusalFallback";
+import {
   fetchWithWriteDeadline,
   isWriteDeadlineMissed,
   writeDeadlineCopy,
@@ -258,7 +262,9 @@ export function LiveRecovery({
         const copy = writeDeadlineCopy(zh);
         setMessage(`${copy.title}｜${copy.body}`);
       } else {
-        setMessage(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+        // Asked of the one outlet rather than copied here: an answer that came back unusable is a
+        // different fact from no answer at all, and this panel used to call both 「连不上服务器」.
+        setMessage(deviceKnownRefusalSentence(error, zh) ?? unreachableServerSentence(zh));
       }
     } finally {
       setBusy(null);

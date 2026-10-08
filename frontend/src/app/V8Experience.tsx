@@ -27,7 +27,6 @@ import {
   OriginResponseUnusableError,
   clearJourneyReferences,
   copyFor,
-  isOriginResponseUnusable,
   recordAttribution,
   withCachedCopyFact,
   type Attribution,
@@ -35,9 +34,9 @@ import {
 } from "../lib/failureAttribution";
 import {
   fetchWithReadDeadline,
-  isReadDeadlineMissed,
   READ_DEADLINE_MS,
 } from "../lib/readDeadline";
+import { deviceKnownRefusalSentence } from "../lib/refusalFallback";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import {
   clearPendingContinuation,
@@ -252,6 +251,10 @@ class V8Rejection extends Error {
  * whether an answer came at all, and with what status.  An upstream sentence is never the wording,
  * and `error.message` is not a safe stand-in for "our own words" -- whichever helper threw decides
  * what that string carries, and since Q64=1 that includes whatever the server's body happened to say.
+ *
+ * The two verdicts that are shared across screens (an answer that was not usable, and no answer at
+ * all) come from `lib/refusalFallback`, which is their one home; only the HTTP refusal stays composed
+ * here, because only this screen carries the refusal's own facts.
  */
 function refusalSentence(error: unknown, zh: boolean, fallback: string): string {
   if (error instanceof V8Rejection) {
@@ -259,17 +262,7 @@ function refusalSentence(error: unknown, zh: boolean, fallback: string): string 
       ? `服务器拒绝了这一步（HTTP ${error.status}）。你的行程没有因此改变，可以检查后重试。`
       : `The server refused this step (HTTP ${error.status}). Your trip is unchanged; check the details and try again.`;
   }
-  if (isOriginResponseUnusable(error)) {
-    return zh
-      ? `服务器答了 HTTP ${error.status}，可带回来的不是这一屏能用的数据（Content-Type: ${error.content_type ?? "未知"}）。`
-      : `The server answered HTTP ${error.status}, but not with data this screen can use (Content-Type: ${error.content_type ?? "unknown"}).`;
-  }
-  if (isReadDeadlineMissed(error) || error instanceof TypeError) {
-    return zh
-      ? "连不上服务器，请重试。"
-      : "Could not reach the server. Try again.";
-  }
-  return fallback;
+  return deviceKnownRefusalSentence(error, zh) ?? fallback;
 }
 
 /** The reading a failure carries, if any: only an answered HTTP refusal has one. */

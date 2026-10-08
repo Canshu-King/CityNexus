@@ -14,6 +14,10 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { namedCodeIn, readResponseFacts, type RawFacts } from "../../lib/rawFacts";
+import {
+  deviceKnownRefusalSentence,
+  unreachableServerSentence,
+} from "../../lib/refusalFallback";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
 
 type StayOption = {
@@ -128,8 +132,10 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       }
       setChosen(optionId);
       onSelected?.();
-    } catch {
-      setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+    } catch (error) {
+      // Asked of the one outlet rather than copied here: with no error bound this panel called every
+      // failure 「连不上服务器」, including one where the server did answer.
+      setError(deviceKnownRefusalSentence(error, zh) ?? unreachableServerSentence(zh));
     } finally {
       setBusy(null);
     }
