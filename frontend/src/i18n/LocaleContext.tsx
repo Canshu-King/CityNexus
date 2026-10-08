@@ -223,6 +223,7 @@ const en: Dict = {
   "hub.planGlance": "Plan at a glance",
   "hub.everyDay": "Every day, connected.",
   "hub.compareStays": "Compare stays →",
+  "hub.tripsSectionsAria": "Trip sections",
   "hub.day": "DAY {n}",
   "hub.anchor": "{type} anchor",
   // ORD-0232: why the plan has fewer stops than the traveller asked for.  The count sits in
@@ -381,6 +382,7 @@ const en: Dict = {
      that lands on one side only is a type error -- that is what keeps every tier paired. */
   "bookings.reservationUnnamed": "The server gave no name for this booking",
   "bookings.commitmentUnnamed": "The server gave no name for this commitment",
+  "bookings.commitmentSimulated": "simulated commitment",
   "bookings.orderRef": "Reference",
   "bookings.protectedC4": "Protected C4",
   "bookings.importKicker": "IMPORT CONFIRMATION",
@@ -1389,6 +1391,7 @@ const zhCN: Dict = {
   "hub.planGlance": "方案概览",
   "hub.everyDay": "每一天，紧密相连。",
   "hub.compareStays": "对比住宿 →",
+  "hub.tripsSectionsAria": "行程分区",
   "hub.day": "第 {n} 天",
   "hub.anchor": "{type}锚点",
   // ORD-0232：为什么行程里的地点比旅客要的少。数量放在括号里，这里就不发明复数规则。
@@ -1527,6 +1530,7 @@ const zhCN: Dict = {
   "bookings.priceUnknown": "价格未知",
   "bookings.reservationUnnamed": "服务器没有给这单预订的名字",
   "bookings.commitmentUnnamed": "服务器没有给这项承诺的名字",
+  "bookings.commitmentSimulated": "模拟承诺",
   "bookings.orderRef": "订单号",
   "bookings.protectedC4": "受保护 C4",
   "bookings.importKicker": "导入确认",
