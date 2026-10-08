@@ -137,6 +137,14 @@ export function MomentScoutCard({
         && error.body && typeof error.body === "object" && "detail" in error.body
         ? String(error.body.detail ?? "")
         : "";
+      if (detail.includes("LIVE_MOMENT_SCOUT_CONTEXT_CHANGED")
+        || detail.includes("LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED")) {
+        setLiveReceipt(null);
+        setMessage(zh
+          ? "外部查询期间共同会合时间、行程或成员状态已变化，未把这次地点线索用于私人支线。请刷新当前行程后重新选择。"
+          : "The shared meetup, Journey or member status changed while searching. These live leads were not used. Refresh the Journey before choosing a stop.");
+        return;
+      }
       const locationUnavailable = detail.includes("LOCATION_OBSERVATION")
         || detail.includes("SIDE_QUEST_LOCATION")
         || detail.includes("MOMENT_SCOUT_LOCATION");
@@ -189,7 +197,13 @@ export function MomentScoutCard({
         && error.body && typeof error.body === "object" && "detail" in error.body
         ? String(error.body.detail ?? "")
         : "";
-      if (detail.includes("SCOUT_EXPIRED")) {
+      if (detail.includes("LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED")) {
+        setLiveReceipt(null);
+        setLiveSelectedCandidateId("");
+        setMessage(zh
+          ? "共同会合时间已过，不能继续创建私人停留；请先跟进当前共享行程。"
+          : "The shared rendezvous time has passed. Don't start a new private stop; check the current shared Journey.");
+      } else if (detail.includes("SCOUT_EXPIRED")) {
         setLiveReceipt(null);
         setLiveSelectedCandidateId("");
         setMessage(zh
