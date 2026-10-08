@@ -3243,7 +3243,7 @@ function Hub({
           one action, lodging is secondary context (GPT Hero rules). */}
       <div className="cn-hero-strip" data-testid="today-strip">
         <div className="cn-strip-item">
-          <span>{zh ? "住宿" : "Stay"}</span>
+          <span>{t("hub.stayLabel")}</span>
           <strong data-testid="today-stay">
             {chosenStay
               ? chosenStay.stay.property_name
@@ -3287,7 +3287,7 @@ function Hub({
       )}
       {!selected && (
         <div className="v8-empty-state" data-testid="hub-glance-empty">
-          <b>{zh ? "还没有可以预览的行程" : "Nothing to preview yet"}</b>
+          <b>{t("hub.nothingToPreview")}</b>
           <p>
             {zh
               ? "选定方案后，这里会显示每天的安排。"
