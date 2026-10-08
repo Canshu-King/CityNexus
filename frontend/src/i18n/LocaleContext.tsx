@@ -1031,6 +1031,11 @@ const en: Dict = {
   "recovery.technicalDetail": "Technical detail",
   "recovery.serverReason": "Reason the server gave",
   "recovery.deviceReason": "This device's own reading (the server sent no sentence)",
+  "recovery.diffRemoved": "Removed",
+  "recovery.diffAdded": "Replaced with",
+  "recovery.diffMoved": "Moved",
+  "recovery.affectedPrefix": " · Affected: ",
+  "recovery.suggestedChange": "Suggested change",
 
   /* ORD-0422 -- the traveler-facing sentences these three panels used to hardcode in English:
      features/traveler-twin/TwinPanel.tsx, features/recovery/V14RecoveryTruthPanel.tsx,
@@ -2138,6 +2143,11 @@ const zhCN: Dict = {
   "recovery.technicalDetail": "技术详情",
   "recovery.serverReason": "服务器给出的原因",
   "recovery.deviceReason": "这台设备自己的读数（服务器没给句子）",
+  "recovery.diffRemoved": "移出",
+  "recovery.diffAdded": "换成",
+  "recovery.diffMoved": "调整时间",
+  "recovery.affectedPrefix": " · 受影响：",
+  "recovery.suggestedChange": "推荐怎么改",
 
   /* ORD-0422 -- the traveler-facing sentences these three panels used to hardcode in English:
      features/traveler-twin/TwinPanel.tsx, features/recovery/V14RecoveryTruthPanel.tsx,
