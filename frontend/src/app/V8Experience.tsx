@@ -2350,23 +2350,52 @@ function TripsWorkspace({
         role="tablist"
         aria-label={t("hub.tripsSectionsAria")}
       >
-        {tabs.map((item) => (
-          <button
-            key={item.key}
-            type="button"
-            role="tab"
-            id={`trips-tab-${item.key}`}
-            aria-selected={tab === item.key}
-            className={tab === item.key ? "active" : ""}
-            data-testid={`trips-tab-${item.key}`}
-            onClick={() => setTab(item.key)}
-          >
-            {zh ? item.zh : item.en}
-          </button>
-        ))}
+        {tabs.map((item) => {
+          const selected = tab === item.key;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              role="tab"
+              id={`trips-tab-${item.key}`}
+              aria-selected={selected}
+              aria-controls="trips-tabpanel"
+              tabIndex={selected ? 0 : -1}
+              className={selected ? "active" : ""}
+              data-testid={`trips-tab-${item.key}`}
+              onClick={() => setTab(item.key)}
+              onKeyDown={(e) => {
+                const order = tabs.map((x) => x.key);
+                const i = order.indexOf(item.key);
+                let n = -1;
+                if (e.key === "ArrowRight") n = (i + 1) % order.length;
+                else if (e.key === "ArrowLeft") n = (i - 1 + order.length) % order.length;
+                else if (e.key === "Home") n = 0;
+                else if (e.key === "End") n = order.length - 1;
+                else return;
+                e.preventDefault();
+                const nk = order[n];
+                setTab(nk);
+                const el = document.getElementById(`trips-tab-${nk}`);
+                if (el) el.focus();
+              }}
+            >
+              {zh ? item.zh : item.en}
+            </button>
+          );
+        })}
       </nav>
 
-      {renderPanels(tripsTabPanels, tripsTabScope)}
+      <div
+        role="tabpanel"
+        id="trips-tabpanel"
+        aria-labelledby={`trips-tab-${tab}`}
+        tabIndex={0}
+        className="trips-tabpanel"
+        key={tab}
+      >
+        {renderPanels(tripsTabPanels, tripsTabScope)}
+      </div>
     </>
   );
 }
