@@ -1,0 +1,2 @@
+RAIL_HEADING_SHAPE {"tag":"span","display":"flex","cursor":"pointer","width":219,"railWidth":219,"headings":4}
+    Error: the rail heading may not inherit the drawer's flex toggle row
