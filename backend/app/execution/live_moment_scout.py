@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import (
+    Activity,
     Journey,
     JourneyMember,
     MemberLiveMomentScoutReceipt,
@@ -22,6 +23,7 @@ from app.db.models import (
     Place,
 )
 from app.execution.clock import execution_clock
+from app.execution.group_presence import _member_in_force, planned_separation_for_member
 from app.execution.member_side_quest import _fresh_member_observation
 from app.execution.moment_scout import _haversine_m, build_moment_scout
 from app.integrations.discovery.real_city import DiscoveryCandidate, OverpassPOIProvider
@@ -227,6 +229,9 @@ def discover_live_moment_scout(
             )
         raise
 
+    if local_context["rendezvous"]["time_state"] == "PAST":
+        raise HTTPException(409, "LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED")
+
     observation = _fresh_member_observation(
         session,
         journey=journey,
@@ -272,6 +277,48 @@ def discover_live_moment_scout(
     finally:
         provider.close()
 
+    # A network call can span membership revocation, split replacement or
+    # a shared-plan change. Re-load from the DB before returning private leads
+    # or writing a member-owned receipt; the initial authorization is not a
+    # timeless grant.
+    session.expire_all()
+    current_now = execution_clock.now().astimezone(timezone.utc)
+    if (
+        str(journey.status or "").upper() != "ACTIVE"
+        or journey.deleted_at is not None
+        or not journey.active_plan_version_id
+        or str(member.traveler_id) != str(traveler_id)
+        or str(member.journey_id) != str(journey.id)
+        or not _member_in_force(member, current_now)
+    ):
+        raise HTTPException(409, "LIVE_MOMENT_SCOUT_CONTEXT_CHANGED")
+    current_split = planned_separation_for_member(
+        session, journey, member, now=current_now
+    )
+    current_split_id = str(current_split["intent"].id) if current_split else ""
+    expected_split_id = str(rendezvous_context.get("split_intent_id") or "")
+    if current_split_id != expected_split_id:
+        raise HTTPException(409, "LIVE_MOMENT_SCOUT_CONTEXT_CHANGED")
+    try:
+        local_context = build_moment_scout(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=traveler_id,
+            location_observation_id=location_observation_id,
+            budget_minutes=budget_minutes,
+            interest=interest,
+            rendezvous_context=rendezvous_context,
+        )
+    except HTTPException:
+        raise HTTPException(409, "LIVE_MOMENT_SCOUT_CONTEXT_CHANGED") from None
+    if (
+        local_context["rendezvous"]["time_state"] == "PAST"
+        or str(local_context["rendezvous"]["activity_id"])
+        != str(rendezvous_context["target"].id)
+    ):
+        raise HTTPException(409, "LIVE_MOMENT_SCOUT_CONTEXT_CHANGED")
+
     safe_attempts = _safe_attempts(attempts)
     answered = any(item["answered"] for item in safe_attempts)
     captured_at = execution_clock.now().astimezone(timezone.utc)
@@ -302,6 +349,43 @@ def discover_live_moment_scout(
         )
         is not None
     ]
+    # External OSM discovery must not re-suggest the already selected shared
+    # itinerary or the rendezvous as a "new private adventure".
+    active_plan_id = str(journey.active_plan_version_id or "")
+    shared_place_ids = {
+        str(value)
+        for value in session.scalars(
+            select(Activity.place_id).where(
+                Activity.plan_version_id == active_plan_id,
+                Activity.place_id.is_not(None),
+            )
+        ).all()
+        if value
+    }
+    shared_place_ids.add(str(rendezvous_context["place"].id))
+    shared_places = session.scalars(
+        select(Place).where(Place.id.in_(shared_place_ids))
+    ).all()
+    shared_external_ids = {
+        str(place.external_id)
+        for place in shared_places
+        if str(place.provider_key) == "overpass"
+    }
+    def is_shared_stop(item: dict) -> bool:
+        if str(item["external_id"]) in shared_external_ids:
+            return True
+        normalized_name = " ".join(str(item["name"]).casefold().split())
+        return any(
+            normalized_name == " ".join(str(place.name or "").casefold().split())
+            and _haversine_m(
+                float(item["latitude"]),
+                float(item["longitude"]),
+                float(place.latitude),
+                float(place.longitude),
+            ) <= 20
+            for place in shared_places
+        )
+    valid = [item for item in valid if not is_shared_stop(item)]
     valid.sort(key=lambda item: (item["straight_line_distance_m"], item["name"].casefold()))
     valid = valid[:3]
     shared_rendezvous = local_context["rendezvous"]
@@ -329,7 +413,6 @@ def discover_live_moment_scout(
             **response_base,
         )
 
-    active_plan_id = str(journey.active_plan_version_id or "")
     target = rendezvous_context["target"]
     rendezvous_place = rendezvous_context["place"]
     receipt_id = str(uuid4())
@@ -438,6 +521,17 @@ def validate_live_scout_selection(
         raise HTTPException(409, "SCOUT_EXPIRED")
     if receipt.status == "OPEN" and current_split_id != saved_split_id:
         raise HTTPException(409, "SCOUT_EXPIRED")
+
+    if receipt.status != "SELECTED":
+        # R66 rejects selection after the shared meeting time. Live discovery
+        # has the same product boundary, including a provider response that
+        # arrives just as the rendezvous becomes overdue.
+        scheduled = rendezvous_context["target"].start_at
+        if scheduled is not None:
+            from app.execution.moment_scout import _scheduled_datetime
+            meeting_at = _scheduled_datetime(scheduled)
+            if meeting_at is not None and meeting_at < now:
+                raise HTTPException(409, "LIVE_MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED")
 
     if receipt.status == "SELECTED":
         _fresh_member_observation(
