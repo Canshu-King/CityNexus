@@ -926,9 +926,29 @@ def get_native_hermes_capabilities() -> dict[str, Any]:
     return native_hermes_status()
 
 
+def _hermes_client() -> HermesNativeClient:
+    """Build the native client, turning "this deployment has none" into a named refusal.
+
+    `HermesNativeClient()` raises `ValueError` when the loopback URL or bearer key is unset, and it
+    is constructed *before* each handler's `try` - so an unconfigured deployment answered every
+    Hermes route with an unhandled exception (a 500 with no envelope) instead of the typed answer the
+    screen reads.  The condition is a deployment fact rather than an upstream failure, so it is
+    refused as `503` with the `agent.hermes.not_configured` message key, never laundered into the 502
+    the caller reserves for a configured-but-unreachable gateway.  (`503` renders under the shared
+    `REQUEST_ERROR` code like every other 503 this app raises; the key is what names the condition.)
+    """
+
+    try:
+        return HermesNativeClient()
+    except ValueError as exc:
+        refused = HTTPException(503, "native Hermes API is not configured")
+        refused.message_key = "agent.hermes.not_configured"
+        raise refused from exc
+
+
 @app.get("/api/v1/agent/hermes/runs/{run_id}")
 def get_native_hermes_run(run_id: str) -> dict[str, Any]:
-    client = HermesNativeClient()
+    client = _hermes_client()
     try:
         return client.get_run(run_id)
     except (httpx.HTTPError, ValueError) as exc:
@@ -1033,7 +1053,30 @@ def _native_citynexus_events(
 
 
 def _native_event_stream(run_id: str, journey_id: str | None = None):
-    client = HermesNativeClient()
+    # This is a generator, so it only starts running once the response has already begun: a refusal
+    # raised here could not become a status code.  A deployment with no native client therefore
+    # answers through the same named failure event a broken upstream stream uses.
+    try:
+        client = _hermes_client()
+    except HTTPException as exc:
+        detail = getattr(exc, "message_key", None) or "agent.hermes.unavailable"
+        failed = normalize_hermes_event(
+            {
+                "event_type": "run.failed",
+                "run_id": run_id,
+                "source": "HERMES_NATIVE",
+                "status": "failed",
+                "result": {"error": str(detail)},
+            },
+            run_id=run_id,
+        )
+        if failed is not None:
+            _persist_native_event(failed, journey_id=journey_id)
+            yield (
+                f"event: {failed['event_type']}\n"
+                f"data: {json.dumps(failed, ensure_ascii=False, sort_keys=True)}\n\n"
+            )
+        return
     try:
         try:
             for item in client.iter_events(run_id):
@@ -1083,7 +1126,7 @@ def get_journey_native_hermes_run(
     journey_id: UUID, run_id: str, session: Session = Depends(get_session)
 ) -> dict[str, Any]:
     require(session, Journey, str(journey_id), "Journey")
-    client = HermesNativeClient()
+    client = _hermes_client()
     try:
         payload = client.get_run(run_id)
     except (httpx.HTTPError, ValueError) as exc:
@@ -1139,8 +1182,12 @@ def get_native_hermes_timeline(
     # leaving the UI permanently in ``running``.  This is status hydration,
     # not simulated progress, and it never copies Hermes output or secrets.
     if terminal is None:
-        client = HermesNativeClient()
+        # Hydration is an enrichment of an already-answerable timeline: when no native client can be
+        # built, the timeline still answers from its own audit rows.  So the construction sits inside
+        # the try, and "not configured" degrades here instead of refusing the whole request.
+        client: HermesNativeClient | None = None
         try:
+            client = HermesNativeClient()
             upstream = client.get_run(run_id)
             upstream_status = str(upstream.get("status") or "").lower()
             if upstream_status in {"completed", "failed", "cancelled", "canceled", "stopped", "error"}:
@@ -1169,7 +1216,8 @@ def get_native_hermes_timeline(
         except (httpx.HTTPError, ValueError):
             pass
         finally:
-            client.close()
+            if client is not None:
+                client.close()
     return {
         "run_id": run_id,
         "journey_id": str(journey_id),
@@ -1217,7 +1265,7 @@ def stream_journey_native_hermes_events(
 def stop_native_hermes_run(journey_id: UUID, run_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
     """Stop a native run through CityNexus; Hermes is never called directly by the UI."""
     require(session, Journey, str(journey_id), "Journey")
-    client = HermesNativeClient()
+    client = _hermes_client()
     try:
         return client.stop(run_id)
     except (httpx.HTTPError, ValueError) as exc:
