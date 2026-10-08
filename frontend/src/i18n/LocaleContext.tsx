@@ -213,7 +213,6 @@ const en: Dict = {
   "hub.review": "Review",
   "hub.weatherAware": "weather-aware",
   "hub.arrival": "Arrival",
-  "hub.tripsSectionsAria": "Trip sections",
   "hub.departure": "Departure",
   "hub.zoneAttribution": "{zone} · journey time zone",
   "hub.deviceTime": "this device's time",
@@ -224,6 +223,7 @@ const en: Dict = {
   "hub.planGlance": "Plan at a glance",
   "hub.everyDay": "Every day, connected.",
   "hub.compareStays": "Compare stays →",
+  "hub.tripsSectionsAria": "Trip sections",
   "hub.day": "DAY {n}",
   "hub.anchor": "{type} anchor",
   // ORD-0232: why the plan has fewer stops than the traveller asked for.  The count sits in
@@ -1362,7 +1362,6 @@ const zhCN: Dict = {
   "hub.review": "待审核",
   "hub.weatherAware": "天气感知",
   "hub.arrival": "到达",
-  "hub.tripsSectionsAria": "行程分区",
   "hub.departure": "出发",
   "hub.zoneAttribution": "{zone} · 行程时区",
   "hub.deviceTime": "本设备时间",
@@ -1373,6 +1372,7 @@ const zhCN: Dict = {
   "hub.planGlance": "方案概览",
   "hub.everyDay": "每一天，紧密相连。",
   "hub.compareStays": "对比住宿 →",
+  "hub.tripsSectionsAria": "行程分区",
   "hub.day": "第 {n} 天",
   "hub.anchor": "{type}锚点",
   // ORD-0232：为什么行程里的地点比旅客要的少。数量放在括号里，这里就不发明复数规则。
