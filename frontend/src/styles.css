@@ -333,8 +333,37 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 
 /* Mobile navigation drawer (hamburger in the topbar) */
 .v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; }
-#v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; }
-.v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--cn-s-10); padding: 0 12px; }
+/* The drawer is a top-level scroll container for the four group sections, not for the entire route
+   list. Each group body carries its own bounded scroll (see .v8-nav-group-body), so the drawer's
+   own height never has to grow with the number of routes -- the list no longer overflows 3668px
+   because nothing is one unbounded column. The mobile bottom bar claims the bottom band, so the
+   drawer's own scroll is inset by that band, which is why the last row used to land under it. */
+#v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: flex; flex-direction: column; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; overscroll-behavior: contain; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; }
+/* ORD-0426 measured the drawer's last row ending at 820px while the fixed bottom bar starts at
+   768px: the drawer's 24px bottom padding never accounted for the 76px bar that sits on top of it,
+   so the end of the list was drawn underneath a control that is painted over it. The drawer is
+   only reachable on the phone shape, which is the only shape that bar exists on, so the clearance
+   belongs on the drawer and reuses the bar's own token. */
+@media (max-width: 680px) { #v8-nav-drawer { padding-bottom: calc(var(--cn-nav-h) + 24px); } }
+.v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--cn-s-10); padding: 0 12px; flex: 0 0 auto; }
+/* ORD drawer grouping: one section per group. A section may shrink (flex:0 1 auto) and hands what
+   it cannot show to its own body's scroll rather than to the drawer's height -- min-height:0 is
+   what lets a flex child actually shrink instead of pushing the drawer taller. The floor on the
+   body is one heading plus two rows: a group is never reduced to a sliver a traveller cannot read. */
+.v8-nav-group-section { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; }
+.v8-nav-group { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; margin: 14px 12px 5px; padding: 0; border: 0; background: transparent; color: var(--cn-ink-secondary); font-size: 9px; font-weight: 800; letter-spacing: .14em; cursor: pointer; text-align: left; flex: 0 0 auto; }
+.v8-nav-group-caret { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform var(--cn-motion-fast) ease; opacity: .7; }
+.v8-nav-group[aria-expanded="false"] .v8-nav-group-caret { transform: rotate(-45deg); }
+/* The group body is the bounded, independently-scrollable region. It owns its own overflow and is
+   capped so a long group cannot stretch the whole drawer; closing a group drops its height to 0 via
+   the [hidden] attribute, which is what keeps the total height from climbing again. */
+/* No min-height floor: a floor that is smaller than a group's own content would cap the body and
+   clip its last row (the exact unreachable-row defect this order must not introduce). Bodies take
+   their natural height up to the cap, so short groups show in full and only a genuinely long group
+   scrolls on its own -- which is the grouping's whole point. */
+.v8-nav-group-body { display: flex; flex-direction: column; gap: var(--cn-s-4); max-height: min(46vh, 320px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.v8-nav-group-body[hidden] { display: none; }
+.v8-nav-drawer-head + .v8-nav-group-section .v8-nav-group { margin-top: 4px; }
 #v8-nav-drawer button:not(.v8-quiet-button) { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: var(--cn-r-8); color: var(--cn-ink-secondary); background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
 /* Descendant, not child: the drawer wraps each button in a <div> that also carries the group heading
    (`V8Experience.tsx`), so `> button svg` matched none of the 14 rows and each icon grew to the

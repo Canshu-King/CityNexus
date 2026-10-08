@@ -27,11 +27,17 @@ const LAST_ROW = () => {
   const doc = document;
   const drawer = doc.querySelector("#v8-nav-drawer");
   const nav = doc.querySelector(".v8-mobile-nav");
-  const scroller = (drawer && (drawer.querySelector(".cn-onboarding__scroll")
-    || drawer.querySelector("[class*=scroll]"))) || drawer;
+  // Under drawer grouping the route rows live inside their own group body, which is the scroller
+  // that owns the list's end. The whole-drawer scroller is a fallback for any shape that has no
+  // grouped bodies.
   const rows = Array.from((drawer || doc).querySelectorAll("#v8-nav-drawer button"))
     .filter((b) => (b.textContent || "").trim());
   const last = rows[rows.length - 1] as HTMLElement | undefined;
+  const scroller = (last &&
+    (last.closest(".v8-nav-group-body") as HTMLElement | null)) ||
+    (drawer && (drawer.querySelector(".cn-onboarding__scroll") ||
+      drawer.querySelector("[class*=scroll]")) as HTMLElement | null) ||
+    drawer;
   if (!last || !nav || !scroller) return null;
   const lb = last.getBoundingClientRect(), nb = nav.getBoundingClientRect(), sb = scroller.getBoundingClientRect();
   const mid = { x: Math.round(lb.x + lb.width / 2), y: Math.round(lb.y + lb.height / 2) };
@@ -59,8 +65,16 @@ test("ORD-0426 zh 390x844 the drawer's last row is hit-testable once the list is
   await openDrawer(page);
   await page.evaluate(() => {
     const drawer = document.querySelector("#v8-nav-drawer");
-    const scroller = (drawer && (drawer.querySelector(".cn-onboarding__scroll")
-      || drawer.querySelector("[class*=scroll]"))) || drawer;
+    if (!drawer) return;
+    // Scroll the last row's own group body to its end -- under drawer grouping that body is the
+    // scroller that owns the list's end, and a whole-drawer scroll would never surface an inner row.
+    const rows = Array.from(drawer.querySelectorAll<HTMLElement>("#v8-nav-drawer button"))
+      .filter((b) => (b.textContent || "").trim());
+    const last = rows[rows.length - 1];
+    const body = last && (last.closest(".v8-nav-group-body") as HTMLElement | null);
+    if (body) body.scrollTop = body.scrollHeight;
+    const scroller = (drawer.querySelector(".cn-onboarding__scroll")
+      || drawer.querySelector("[class*=scroll]")) || drawer;
     if (scroller) (scroller as HTMLElement).scrollTop = (scroller as HTMLElement).scrollHeight;
   });
   await page.waitForTimeout(600);
