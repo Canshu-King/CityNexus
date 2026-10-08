@@ -1144,11 +1144,11 @@ export function LiveRecovery({
                 {member.age_seconds != null && member.location_state === "RECENT" ? ` · ${member.age_seconds}${zh ? "秒前" : "s ago"}` : ""}
                 {member.personal_stop && (
                   <span data-testid="journey-member-personal-stop" data-state={member.personal_stop.state}>
-                    {member.personal_stop.state === "AWAY"
-                      ? (zh ? " · 有一项按计划的私人停留（具体地点仅本人可见）" : " · has a planned personal stop (destination visible only to them)")
-                      : member.personal_stop.state === "RETURNING"
-                        ? (zh ? " · 私人停留已结束，正转回共同会合点" : " · personal stop has ended; returning to the shared rendezvous")
-                        : (zh ? " · 私人停留已结束" : " · personal stop finished")}
+                    {member.personal_stop.state === "PLANNED"
+                      ? (zh ? " · 已计划一项私人停留（地点仅本人可见，尚未报告出发）" : " · has a planned personal stop (destination visible only to them; departure not reported)")
+                      : member.personal_stop.state === "ACTIVE_SELF_REPORTED"
+                        ? (zh ? " · 本人已报告开始私人停留（地点仅本人可见）" : " · has reported starting a personal stop (destination visible only to them)")
+                        : (zh ? " · 私人停留已结束，尚未确认开始返程" : " · personal stop ended; return has not been confirmed")}
                   </span>
                 )}
                 {member.route_eta_minutes != null ? ` · ${zh ? `到集合点约 ${member.route_eta_minutes} 分钟` : `about ${member.route_eta_minutes} min to rendezvous`}` : ""}
