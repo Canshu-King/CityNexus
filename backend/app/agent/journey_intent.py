@@ -195,7 +195,7 @@ def intent_scopes_overlap(
     right_end: str | None,
     right_targets: list[str],
 ) -> bool:
-    if left_kind == "NEXT_STOP" or right_kind == "NEXT_STOP":
+    if left_kind in {"NEXT_STOP", "UNTIL_RENDEZVOUS"} or right_kind in {"NEXT_STOP", "UNTIL_RENDEZVOUS"}:
         return bool(set(left_targets).intersection(right_targets))
 
     def parse(value: str | None, *, fallback: datetime) -> datetime:
@@ -221,6 +221,13 @@ def journey_intent_payload(intent: Any) -> dict[str, Any]:
         except (TypeError, ValueError, json.JSONDecodeError):
             return fallback
 
+    envelope = load("semantic_envelope_json", {})
+    planned_separation = (
+        envelope.get("r63_planned_separation")
+        if isinstance(envelope, dict) and isinstance(envelope.get("r63_planned_separation"), dict)
+        else None
+    )
+
     return {
         "id": str(intent.id),
         "journey_id": str(intent.journey_id),
@@ -237,6 +244,7 @@ def journey_intent_payload(intent: Any) -> dict[str, Any]:
         "constraints": load("constraints_json", []),
         "capabilities": load("capabilities_json", []),
         "preference_hints": load("preference_hints_json", {}),
+        "planned_separation": planned_separation,
         "source": intent.source,
         "compiler": {
             "provider_key": intent.compiler_provider_key,
@@ -280,10 +288,18 @@ def active_journey_intents(
         ):
             continue
         targets = _safe_json_list(row.target_activity_ids_json)
-        if row.scope_kind == "NEXT_STOP" and targets:
+        if row.scope_kind in {"NEXT_STOP", "UNTIL_RENDEZVOUS"} and targets:
             target = session.get(Activity, str(targets[0]))
             if target is None or str(target.status).upper() in {"COMPLETED", "SKIPPED", "CANCELLED"}:
                 continue
+            if row.intent_kind == "PLANNED_SEPARATION":
+                metadata = _safe_json_object(row.semantic_envelope_json).get("r63_planned_separation")
+                if (
+                    not isinstance(metadata, dict)
+                    or str(metadata.get("active_plan_version_id") or "") != str(journey.active_plan_version_id or "")
+                    or str(target.plan_version_id) != str(journey.active_plan_version_id or "")
+                ):
+                    continue
         active.append(journey_intent_payload(row))
     return active
 
@@ -363,7 +379,7 @@ def expire_journey_intents(session: Any, journey: Any, *, now: datetime) -> int:
                 expired = parsed.tzinfo is not None and stamp >= parsed.astimezone(timezone.utc)
             except ValueError:
                 expired = True
-        if row.scope_kind == "NEXT_STOP" and row.target_activity_ids_json:
+        if row.scope_kind in {"NEXT_STOP", "UNTIL_RENDEZVOUS"} and row.target_activity_ids_json:
             target_ids = _safe_json_list(row.target_activity_ids_json)
             if target_ids:
                 from app.db.models import Activity
@@ -372,6 +388,13 @@ def expire_journey_intents(session: Any, journey: Any, *, now: datetime) -> int:
                 expired = expired or target is None or str(target.status).upper() in {
                     "COMPLETED", "SKIPPED", "CANCELLED"
                 }
+                if row.intent_kind == "PLANNED_SEPARATION":
+                    metadata = _safe_json_object(row.semantic_envelope_json).get("r63_planned_separation")
+                    expired = expired or (
+                        not isinstance(metadata, dict)
+                        or str(metadata.get("active_plan_version_id") or "") != str(journey.active_plan_version_id or "")
+                        or (target is not None and str(target.plan_version_id) != str(journey.active_plan_version_id or ""))
+                    )
         if str(journey.status).upper() == "COMPLETED":
             expired = True
         if expired:

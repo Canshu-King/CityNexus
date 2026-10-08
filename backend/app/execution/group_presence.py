@@ -14,6 +14,7 @@ from app.db.models import (
     Activity,
     Commitment,
     Journey,
+    JourneyIntent,
     JourneyMember,
     LocationObservation,
     Place,
@@ -90,6 +91,116 @@ def rendezvous_target(session: Session, journey: Journey) -> tuple[Activity, Pla
     target = next((row for row in eligible if row.id in protected_ids), eligible[0])
     place = session.get(Place, str(target.place_id))
     return (target, place) if place is not None else None
+
+
+def _active_planned_separations(
+    session: Session,
+    journey: Journey,
+    members: list[JourneyMember],
+    *,
+    now: datetime,
+) -> dict[str, dict[str, Any]]:
+    """Resolve current member-owned split intents against the active shared plan."""
+    from app.agent.journey_intent import intent_is_active
+
+    member_by_id = {str(member.id): member for member in members}
+    rows = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        ).order_by(JourneyIntent.created_at.desc(), JourneyIntent.id.desc())
+    ).all()
+    resolved: dict[str, dict[str, Any]] = {}
+    for intent in rows:
+        member_id = str(intent.created_by_member_id or "")
+        member = member_by_id.get(member_id)
+        if member is None or str(intent.created_by_traveler_id) != str(member.traveler_id):
+            continue
+        if not intent_is_active(
+            status=intent.status,
+            starts_at=intent.scope_start_at or "",
+            ends_at=intent.scope_end_at,
+            now=now,
+        ):
+            continue
+        try:
+            target_ids = json.loads(intent.target_activity_ids_json or "[]")
+            envelope = json.loads(intent.semantic_envelope_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+        metadata = envelope.get("r63_planned_separation") if isinstance(envelope, dict) else None
+        if not isinstance(metadata, dict) or not target_ids:
+            continue
+        if str(metadata.get("active_plan_version_id") or "") != str(journey.active_plan_version_id or ""):
+            continue
+        target = session.get(Activity, str(target_ids[0]))
+        if (
+            target is None
+            or str(target.plan_version_id) != str(journey.active_plan_version_id or "")
+            or str(target.status or "").upper() in {"COMPLETED", "SKIPPED", "CANCELLED"}
+        ):
+            # A plan change or terminal rendezvous invalidates suppression. The
+            # old intent stays durable history; it is never treated as current.
+            continue
+        place = session.get(Place, str(target.place_id or "")) if target.place_id else None
+        if place is None:
+            continue
+        resolved.setdefault(member_id, {
+            "intent": intent,
+            "target": target,
+            "place": place,
+            "metadata": metadata,
+        })
+    return resolved
+
+
+def planned_separation_for_member(
+    session: Session,
+    journey: Journey,
+    member: JourneyMember,
+    *,
+    now: datetime | None = None,
+) -> dict[str, Any] | None:
+    """Return only this in-force member's current, active-plan-bound split target."""
+    reference = (now or execution_clock.now()).astimezone(timezone.utc)
+    if str(member.journey_id) != str(journey.id) or not _member_in_force(member, reference):
+        return None
+    return _active_planned_separations(
+        session, journey, [member], now=reference
+    ).get(str(member.id))
+
+
+def _planned_return_state(
+    *,
+    row: LocationObservation | None,
+    eta: int | None,
+    eta_state: str,
+    target: Activity,
+    commitment_risk: dict[str, Any] | None,
+    now: datetime,
+) -> str:
+    if eta is None or row is None:
+        return "RETURN_UNKNOWN"
+    authority = _observation_authority(row)
+    if authority != "TRUSTED_MEMBER_LOCATION":
+        return "ADVISORY_RETURN_RISK" if (
+            isinstance(commitment_risk, dict)
+            and commitment_risk.get("state") == "COMMITMENT_AT_RISK"
+        ) else "ADVISORY_ROUTE_ONLY" if eta is not None else "RETURN_UNKNOWN"
+    if eta_state != "LIVE_PROVIDER_CAPTURE":
+        return "RETURN_UNKNOWN"
+    if isinstance(commitment_risk, dict):
+        state = str(commitment_risk.get("state") or "")
+        if state == "COMMITMENT_AT_RISK":
+            return "RETURN_RISK"
+        if state in {"WITHIN_BUFFER", "LOW_BUFFER"}:
+            return "ON_TRACK" if state == "WITHIN_BUFFER" else "LOW_BUFFER"
+    scheduled = _stamp(target.start_at)
+    if scheduled is None:
+        return "RETURN_UNKNOWN"
+    slack_min = int((scheduled - (now + timedelta(minutes=eta))).total_seconds() // 60) - 5
+    return "RETURN_RISK" if slack_min < 0 else "ON_TRACK"
 
 
 def _member_observation(
@@ -236,6 +347,13 @@ def group_recovery_projection(group_presence: dict[str, Any]) -> dict[str, Any]:
             "ADVISORY_FOREGROUND_WEB",
             "TRUSTED_MEMBER_LOCATION",
         }
+        and (
+            not member.get("planned_separation")
+            or (
+                member.get("authority") == "TRUSTED_MEMBER_LOCATION"
+                and member.get("route_eta_state") == "LIVE_PROVIDER_CAPTURE"
+            )
+        )
     ]
     if not at_risk:
         has_route = any(member.get("route_eta_minutes") is not None for member in members)
@@ -434,12 +552,14 @@ def group_presence_projection(
         }
     target_pair = rendezvous_target(session, journey)
     target_activity, target_place = target_pair if target_pair else (None, None)
+    planned_separations = _active_planned_separations(
+        session, journey, members, now=now
+    )
     rows = {member.id: _member_observation(session, journey, member) for member in members}
     location_states = {member_id: _location_state(row, now)[0] for member_id, row in rows.items()}
     coarse_group = {member.id: "UNKNOWN" for member in members}
-    precise = [member for member in members if location_states[member.id] == "RECENT"]
-    if len(precise) < 2:
-        precise = []
+    unplanned = [member for member in members if member.id not in planned_separations]
+    precise = [member for member in unplanned if location_states[member.id] == "RECENT"]
     for member in precise:
         comparisons = []
         row = rows[member.id]
@@ -450,14 +570,31 @@ def group_presence_projection(
             threshold = max(250.0, 3.0 * (float(row.accuracy_m) + float(other_row.accuracy_m)))
             comparisons.append(_distance_m(row, other_row) <= threshold)
         coarse_group[member.id] = "WITH_GROUP" if all(comparisons) else "SPLIT_FROM_GROUP"
+    # Planned travellers are excluded from the remaining group's cohesion test.
+    # Otherwise the existing pairwise projection marks both people in a two-person
+    # group as unexpectedly split when only one is intentionally away.
+    for member_id in planned_separations:
+        row = rows.get(member_id)
+        if row is None or location_states.get(member_id) != "RECENT":
+            continue
+        comparisons = []
+        for other in precise:
+            other_row = rows[other.id]
+            threshold = max(250.0, 3.0 * (float(row.accuracy_m) + float(other_row.accuracy_m)))
+            comparisons.append(_distance_m(row, other_row) <= threshold)
+        if comparisons:
+            coarse_group[member_id] = "WITH_GROUP" if all(comparisons) else "SPLIT_FROM_GROUP"
 
     projected = []
+    planned_members: list[dict[str, Any]] = []
     for member in members:
         traveler = session.get(Traveler, member.traveler_id)
         row = rows[member.id]
         state, age = _location_state(row, now)
+        planned = planned_separations.get(str(member.id))
+        route_target = planned["target"] if planned else target_activity
         eta, eta_provenance, eta_state = _route_eta(
-            session, journey, row, target_activity
+            session, journey, row, route_target
         )
         route_authority = (
             "TRUSTED_MEMBER_LOCATION_ROUTE"
@@ -468,14 +605,47 @@ def group_presence_projection(
             rendezvous_commitment_risk(
                 session,
                 journey,
-                target_activity,
+                route_target,
                 route_duration_min=eta,
                 authority=route_authority,
                 now=now,
             )
-            if eta is not None and target_activity is not None
+            if eta is not None and route_target is not None
             else None
         )
+        return_state = None
+        planned_rendezvous = None
+        if planned:
+            # A saved replay is useful context, but it is not a current route
+            # for waking Guardian on an intentional split.
+            if (
+                _observation_authority(row) == "TRUSTED_MEMBER_LOCATION"
+                and eta_state != "LIVE_PROVIDER_CAPTURE"
+            ):
+                commitment_risk = None
+            return_state = _planned_return_state(
+                row=row,
+                eta=eta,
+                eta_state=eta_state,
+                target=route_target,
+                commitment_risk=commitment_risk,
+                now=now,
+            )
+            place = planned["place"]
+            planned_rendezvous = {
+                "activity_id": str(route_target.id),
+                "title": str(route_target.title),
+                "place_name": str(place.name),
+                "scheduled_at": route_target.start_at,
+            }
+            planned_members.append({
+                "display_name": traveler.display_name if traveler else "Traveller",
+                "is_viewer": member.id == viewer.id,
+                "planned_separation": True,
+                "return_state": return_state,
+                "route_provenance": eta_provenance,
+                "rendezvous": planned_rendezvous,
+            })
         projected.append({
             "member_id": member.id,
             "display_name": traveler.display_name if traveler else "Traveller",
@@ -488,16 +658,53 @@ def group_presence_projection(
             "route_eta_provenance": eta_provenance,
             "route_eta_state": eta_state,
             "shared_commitment_risk": commitment_risk,
+            "planned_separation": bool(planned),
+            "return_state": return_state,
+            "planned_rendezvous": planned_rendezvous,
         })
-    state = _group_state(
-        members=members,
-        location_states=location_states,
-        coarse_group=coarse_group,
+    unexpected_split = any(
+        coarse_group.get(member.id) == "SPLIT_FROM_GROUP"
+        and member.id not in planned_separations
+        for member in members
     )
+    if planned_separations and not unexpected_split:
+        returns = [item["return_state"] for item in planned_members]
+        if "RETURN_RISK" in returns:
+            state = "PLANNED_SPLIT_RETURN_RISK"
+        elif returns and all(value in {"ON_TRACK", "LOW_BUFFER"} for value in returns):
+            state = "PLANNED_SPLIT_ON_TRACK"
+        else:
+            state = "PLANNED_SPLIT_RETURN_UNKNOWN"
+    else:
+        state = _group_state(
+            members=members,
+            location_states=location_states,
+            coarse_group=coarse_group,
+        )
     rendezvous_ready = target_activity is not None and target_place is not None
     viewer_row = rows.get(viewer.id)
+    viewer_planned = planned_separations.get(str(viewer.id))
     viewer_eta, viewer_eta_provenance, viewer_eta_state = _route_eta(
-        session, journey, viewer_row, target_activity
+        session,
+        journey,
+        viewer_row,
+        viewer_planned["target"] if viewer_planned else target_activity,
+    )
+    viewer_planned_member = next((item for item in planned_members if item["is_viewer"]), None)
+    planned_rendezvous = (
+        viewer_planned_member.get("rendezvous")
+        if viewer_planned_member
+        else planned_members[0].get("rendezvous") if planned_members else None
+    )
+    planned_state = state if state.startswith("PLANNED_SPLIT_") else None
+    viewer_return_state = (
+        viewer_planned_member.get("return_state") if viewer_planned_member else None
+    )
+    viewer_next_action = (
+        "RETURN_SOON" if viewer_return_state in {"RETURN_RISK", "LOW_BUFFER", "ADVISORY_RETURN_RISK"}
+        else "ROUTE_TO_RENDEZVOUS" if viewer_return_state == "RETURN_UNKNOWN"
+        else "CONTINUE_PERSONAL_EXCURSION" if viewer_planned_member
+        else None
     )
     return {
         "state": state,
@@ -528,6 +735,18 @@ def group_presence_projection(
                 "evidence_state": viewer_eta_state,
             }
             if viewer_eta_state != "ROUTE_NOT_CAPTURED"
+            else None
+        ),
+        "planned_separation": (
+            {
+                "state": planned_state,
+                "active_plan_version_id": str(journey.active_plan_version_id),
+                "rendezvous": planned_rendezvous,
+                "members": planned_members,
+                "viewer_next_action": viewer_next_action,
+                "shared_plan_changed": False,
+            }
+            if planned_members
             else None
         ),
         "can_guide": bool(

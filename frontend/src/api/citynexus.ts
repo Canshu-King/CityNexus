@@ -365,6 +365,19 @@ export interface JourneyIntentProjection {
   evaluation_state: string;
   created_at: string;
   expired_at?: string | null;
+  planned_separation?: {
+    kind: "PLANNED_SEPARATION";
+    active_plan_version_id: string;
+    rendezvous_activity_id: string;
+    rendezvous_place_id: string;
+    rendezvous_title: string;
+    rendezvous_place_name: string;
+    scheduled_at?: string | null;
+    safety_buffer_min?: number | null;
+    resolution_basis: string;
+    member_id: string;
+    side_destination_authority: "DESCRIPTIVE_ONLY_UNLESS_SEPARATELY_VERIFIED";
+  };
   clarification?: { question?: string; status?: string; options?: Array<{ value: string; label: string }> };
 }
 
@@ -542,6 +555,9 @@ export interface JourneyGroupPresenceProjection {
     | "GROUP_LOCATION_STALE"
     | "TOGETHER"
     | "GROUP_SPLIT_ADVISORY"
+    | "PLANNED_SPLIT_ON_TRACK"
+    | "PLANNED_SPLIT_RETURN_RISK"
+    | "PLANNED_SPLIT_RETURN_UNKNOWN"
     | "GROUP_LOCATION_UNKNOWN";
   authority: string;
   members: Array<{
@@ -555,6 +571,9 @@ export interface JourneyGroupPresenceProjection {
     route_eta_minutes: number | null;
     route_eta_provenance: string | null;
     route_eta_state?: string;
+    planned_separation?: boolean;
+    return_state?: string | null;
+    planned_rendezvous?: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
     shared_commitment_risk?: {
       state: string;
       authority?: string;
@@ -569,6 +588,21 @@ export interface JourneyGroupPresenceProjection {
     | "RENDEZVOUS_TARGET_READY"
     | "RENDEZVOUS_ROUTE_READY";
   viewer_route: { eta_minutes: number | null; provenance: string | null; evidence_state?: string } | null;
+  planned_separation?: {
+    state: "PLANNED_SPLIT_ON_TRACK" | "PLANNED_SPLIT_RETURN_RISK" | "PLANNED_SPLIT_RETURN_UNKNOWN";
+    active_plan_version_id: string;
+    rendezvous: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
+    members: Array<{
+      display_name: string;
+      is_viewer: boolean;
+      planned_separation: boolean;
+      return_state: string;
+      route_provenance: string | null;
+      rendezvous: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
+    }>;
+    viewer_next_action: "CONTINUE_PERSONAL_EXCURSION" | "ROUTE_TO_RENDEZVOUS" | "RETURN_SOON" | null;
+    shared_plan_changed: false;
+  } | null;
   can_guide: boolean;
 }
 

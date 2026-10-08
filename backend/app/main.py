@@ -7,6 +7,7 @@ import hmac
 import logging
 import math
 import os
+import re
 import secrets
 import time
 from collections.abc import Mapping
@@ -270,6 +271,7 @@ from app.execution.group_presence import (
     group_recovery_incident_key,
     group_recovery_projection,
     group_presence_projection,
+    planned_separation_for_member,
     rendezvous_commitment_risk,
     rendezvous_target,
 )
@@ -1362,6 +1364,16 @@ def run_agent_command(
     start_request_budget(SCENARIO_AGENT_COMMANDS)
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
+    planned_action = _planned_separation_command_action(payload.command)
+    if planned_action is not None:
+        return _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=payload.command,
+            action=planned_action,
+            now=now_dt,
+        )
     context = _copilot_context(session, journey)
     interpretation = _copilot_fallback_or_ai(payload.command, context)
     if _is_live_journey_intent_request(payload.command, interpretation):
@@ -9547,10 +9559,20 @@ def guide_authenticated_member_to_rendezvous(
         raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_STALE")
     if float(observation.accuracy_m) > GROUP_MAX_LOCATION_ACCURACY_M:
         raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_IMPRECISE")
-    target_pair = rendezvous_target(session, journey)
-    if target_pair is None:
-        raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE")
-    target_activity, target_place = target_pair
+    planned = planned_separation_for_member(
+        session,
+        journey,
+        member,
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
+    if planned is not None:
+        target_activity = planned["target"]
+        target_place = planned["place"]
+    else:
+        target_pair = rendezvous_target(session, journey)
+        if target_pair is None:
+            raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE")
+        target_activity, target_place = target_pair
     route_request = RouteRequest(
         journey_id=journey.id,
         origin_key=f"location-observation:{observation.id}",
@@ -9598,19 +9620,21 @@ def guide_authenticated_member_to_rendezvous(
     route_provenance = str(
         result.get("provenance") or body.get("provider_provenance") or ""
     )
-    member_risk_event = _persist_trusted_member_rendezvous_risk_event(
-        session,
-        journey=journey,
-        member=member,
-        traveler_id=principal.traveler_id,
-        observation=observation,
-        target_activity=target_activity,
-        target_place=target_place,
-        commitment_risk=commitment_risk,
-        route_operation_id=str(getattr(route, "id", "") or ""),
-        route_provider=route_provider,
-        route_provenance=route_provenance,
-    )
+    member_risk_event = None
+    if planned is None or route_provenance.upper() == "LIVE_PROVIDER_CAPTURE":
+        member_risk_event = _persist_trusted_member_rendezvous_risk_event(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            observation=observation,
+            target_activity=target_activity,
+            target_place=target_place,
+            commitment_risk=commitment_risk,
+            route_operation_id=str(getattr(route, "id", "") or ""),
+            route_provider=route_provider,
+            route_provenance=route_provenance,
+        )
     guardian_handoff: dict[str, Any] | None = None
     guardian_triggered = False
     if member_risk_event is not None:
@@ -20125,6 +20149,312 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         )
     except (DeepSeekResponsesError, TypeError, ValueError, json.JSONDecodeError, httpx.HTTPError):
         return fallback
+
+
+def _planned_separation_command_action(message: str) -> str | None:
+    """Recognize explicit self-owned split/end commands without an LLM guess."""
+    text = str(message or "").casefold().replace("’", "'")
+    end_markers = (
+        "i'm back with the group", "i am back with the group", "i'm back",
+        "i am back", "end my side trip", "cancel my planned split", "done with my side trip",
+        "我回来了", "我回到队伍了", "结束我的分开行动", "结束单独行动", "取消我的分开计划",
+    )
+    if any(marker in text for marker in end_markers):
+        return "END"
+    negated_split_markers = (
+        "not alone", "not by myself", "don't want to be alone", "do not want to be alone",
+        "don't want a side trip", "do not want a side trip", "don't want to split",
+        "do not want to split", "don't split", "do not split", "don't go alone",
+        "do not go alone", "don't go by myself", "do not go by myself",
+        "不想一个人", "不要一个人", "不想单独", "不要单独", "不想分开", "不要分开",
+        "不想自己去", "不想自己行动", "不和大家分开",
+    )
+    if any(marker in text for marker in negated_split_markers):
+        return None
+    split_markers = (
+        "by myself", "on my own", "alone", "split off", "side trip", "go solo",
+        "我自己去", "我一个人", "单独行动", "分开行动", "暂时分开",
+    )
+    if any(marker in text for marker in split_markers):
+        return "START"
+    return None
+
+
+def _r63_normalized_text(value: str) -> str:
+    return re.sub(r"[^\w]+", "", str(value or "").casefold())
+
+
+def _resolve_planned_rendezvous(
+    session: Session,
+    journey: Journey,
+    command: str,
+) -> tuple[Activity, Place, str, int | None] | None:
+    """Resolve only exact active-plan stops; never accept a model/client Place id."""
+    if not journey.active_plan_version_id:
+        return None
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == journey.active_plan_version_id)
+        .order_by(Activity.sequence_no, Activity.id)
+    ).all()
+    current = next((row for row in rows if str(row.id) == str(journey.current_activity_id or "")), None)
+    terminal = {"COMPLETED", "SKIPPED", "CANCELLED"}
+    future = [
+        row for row in rows
+        if str(row.status or "").upper() not in terminal
+        and row.place_id
+        and (current is None or row.sequence_no > current.sequence_no)
+    ]
+    folded = _r63_normalized_text(command)
+    explicit: dict[str, tuple[Activity, Place]] = {}
+    for activity in future:
+        place = session.get(Place, str(activity.place_id))
+        if place is None:
+            continue
+        for label in (str(activity.title or ""), str(place.name or "")):
+            normalized = _r63_normalized_text(label)
+            if len(normalized) >= 4 and normalized in folded:
+                explicit[str(activity.id)] = (activity, place)
+    if len(explicit) > 1:
+        return None
+    if len(explicit) == 1:
+        activity, place = next(iter(explicit.values()))
+        basis = "EXPLICIT_EXISTING_ACTIVE_PLAN_ACTIVITY"
+    else:
+        # rendezvous_target() is also used for live group-presence guidance and
+        # may legitimately return the current stop while a Journey is ACTIVE.
+        # A planned side trip needs a future return point, so resolve from this
+        # already-filtered future set instead of accepting the current activity.
+        future_ids = [str(row.id) for row in future]
+        commitments = session.scalars(
+            select(CommitmentModel).where(
+                CommitmentModel.journey_id == journey.id,
+                CommitmentModel.activity_id.in_(future_ids),
+                CommitmentModel.status == "ACTIVE",
+            )
+        ).all() if future_ids else []
+        protected_ids = {
+            str(item.activity_id)
+            for item in commitments
+            if str(item.level or "").upper() in {"C3_GUARANTEED", "C4_ANCHORED"}
+        }
+        target = next(
+            (row for row in future if str(row.id) in protected_ids),
+            future[0] if future else None,
+        )
+        if target is None:
+            return None
+        activity = target
+        place = session.get(Place, str(activity.place_id))
+        if place is None:
+            return None
+        protected = next(
+            (item for item in commitments if str(item.level or "").upper() in {"C3_GUARANTEED", "C4_ANCHORED"}),
+            None,
+        )
+        basis = "NEXT_PROTECTED_SHARED_COMMITMENT" if protected else "NEXT_EXACT_ACTIVE_PLAN_STOP"
+    buffer_min = None
+    commitments = session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.activity_id == activity.id,
+            CommitmentModel.status == "ACTIVE",
+        )
+    ).all()
+    for commitment in commitments:
+        if str(commitment.level or "").upper() not in {"C3_GUARANTEED", "C4_ANCHORED"}:
+            continue
+        try:
+            policy = json.loads(commitment.policy_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            policy = {}
+        for key in ("safety_buffer_min", "required_buffer_min", "resilience_buffer_min"):
+            try:
+                if policy.get(key) is not None:
+                    buffer_min = max(0, int(policy[key]))
+                    break
+            except (TypeError, ValueError):
+                continue
+        if buffer_min is not None:
+            break
+    return activity, place, basis, buffer_min
+
+
+def _run_planned_separation_command(
+    *,
+    request: Request,
+    session: Session,
+    journey: Journey,
+    command: str,
+    action: str,
+    now: datetime,
+) -> dict[str, Any]:
+    """Create/end only the authenticated member's temporary split intent."""
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if str(journey.status or "").upper() != "ACTIVE":
+        raise HTTPException(409, "A planned side trip requires an active Journey")
+    now_text = now.astimezone(timezone.utc).isoformat()
+    own_rows = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_member_id == member.id,
+            JourneyIntent.created_by_traveler_id == principal.traveler_id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        )
+    ).all()
+    if action == "END":
+        for intent in own_rows:
+            intent.status = "CANCELLED"
+            intent.cancelled_at = now_text
+            intent.updated_at = now_text
+            intent.evaluation_state = "PLANNED_SPLIT_ENDED_BY_MEMBER"
+        record_audit(
+            session,
+            action="journey.planned_separation.ended",
+            entity_type="Journey",
+            entity_id=journey.id,
+            journey_id=journey.id,
+            actor_type="TRAVELER",
+            actor_id=principal.traveler_id,
+            after={"member_id": member.id, "cancelled_intent_count": len(own_rows), "physical_reunion_claimed": False},
+        )
+        session.commit()
+        result = operator_projection(session, journey, viewer_member_id=member.id)
+        result["planned_separation_result"] = {
+            "outcome": "PLANNED_SPLIT_ENDED",
+            "message": "Your planned side trip has ended. Current location evidence still determines whether the group is together.",
+            "physical_reunion_claimed": False,
+        }
+        return result
+
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    standing = session.scalar(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if enrollment is None or not enrollment.enabled or standing is None:
+        raise HTTPException(409, "Start the Journey Operator before planning a side trip")
+    rendezvous = _resolve_planned_rendezvous(session, journey, command)
+    if rendezvous is None:
+        result = operator_projection(session, journey, viewer_member_id=member.id)
+        result["planned_separation_result"] = {
+            "outcome": "PLANNED_SPLIT_RENDEZVOUS_UNRESOLVED",
+            "message": "I could not resolve a future shared Journey stop for your return. Name an existing stop or ask for the next shared commitment.",
+            "physical_reunion_claimed": False,
+        }
+        return result
+    activity, place, basis, buffer_min = rendezvous
+    source = " ".join(command.casefold().split())
+    fingerprint_material = json.dumps(
+        {
+            "journey_id": journey.id,
+            "traveler_id": principal.traveler_id,
+            "member_id": member.id,
+            "kind": "PLANNED_SEPARATION",
+            "active_plan_version_id": journey.active_plan_version_id,
+            "rendezvous_activity_id": activity.id,
+            "source": source,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    fingerprint = hashlib.sha256(fingerprint_material.encode("utf-8")).hexdigest()
+    existing = session.scalar(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.semantic_fingerprint == fingerprint,
+        )
+    )
+    if existing is not None and existing.status == "ACTIVE":
+        result = operator_projection(session, journey, viewer_member_id=member.id)
+        result["planned_separation_result"] = {
+            "outcome": "PLANNED_SPLIT_ALREADY_ACTIVE",
+            "message": f"Your planned side trip is already active. Rejoin at {place.name}.",
+            "intent_id": existing.id,
+            "physical_reunion_claimed": False,
+        }
+        return result
+
+    for old in own_rows:
+        old.status = "SUPERSEDED"
+        old.superseded_at = now_text
+        old.updated_at = now_text
+    metadata = {
+        "kind": "PLANNED_SEPARATION",
+        "active_plan_version_id": str(journey.active_plan_version_id),
+        "rendezvous_activity_id": str(activity.id),
+        "rendezvous_place_id": str(place.id),
+        "rendezvous_title": str(activity.title),
+        "rendezvous_place_name": str(place.name),
+        "scheduled_at": activity.start_at,
+        "safety_buffer_min": buffer_min,
+        "resolution_basis": basis,
+        "member_id": member.id,
+        "authority": "SIGNED_MEMBER_OWN_TEMPORARY_INTENT",
+        "side_destination_authority": "DESCRIPTIVE_ONLY_UNLESS_SEPARATELY_VERIFIED",
+    }
+    intent = existing or JourneyIntent(id=str(uuid4()), journey_id=journey.id)
+    intent.created_by_traveler_id = principal.traveler_id
+    intent.created_by_member_id = member.id
+    intent.source_text = command
+    intent.intent_kind = "PLANNED_SEPARATION"
+    intent.scope_kind = "UNTIL_RENDEZVOUS"
+    intent.scope_start_at = now_text
+    intent.scope_end_at = None
+    intent.local_date = None
+    intent.target_activity_ids_json = json.dumps([str(activity.id)])
+    intent.canonical_dimensions_json = json.dumps([f"journey-intent:planned-separation:{member.id}"])
+    intent.constraints_json = "[]"
+    intent.capabilities_json = "[]"
+    intent.preference_hints_json = "{}"
+    intent.semantic_envelope_json = json.dumps({"r63_planned_separation": metadata}, ensure_ascii=False, sort_keys=True)
+    intent.source = "USER_TEMPORARY_INTENT"
+    intent.compiler_provider_key = "server-rule"
+    intent.compiler_model_key = "planned-separation-v1"
+    intent.compiler_confidence = 1.0
+    intent.status = "ACTIVE"
+    intent.evaluation_state = "PLANNED_SPLIT_ACTIVE"
+    intent.semantic_fingerprint = fingerprint
+    intent.created_at = intent.created_at or now_text
+    intent.updated_at = now_text
+    session.add(intent)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.planned_separation.created",
+        entity_type="JourneyIntent",
+        entity_id=intent.id,
+        journey_id=journey.id,
+        actor_type="TRAVELER",
+        actor_id=principal.traveler_id,
+        after={
+            "member_id": member.id,
+            "active_plan_version_id": journey.active_plan_version_id,
+            "rendezvous_activity_id": activity.id,
+            "resolution_basis": basis,
+            "side_destination_authority": "DESCRIPTIVE_ONLY_UNLESS_SEPARATELY_VERIFIED",
+        },
+    )
+    session.commit()
+    result = operator_projection(session, journey, viewer_member_id=member.id)
+    result["planned_separation_result"] = {
+        "outcome": "PLANNED_SPLIT_CREATED",
+        "message": f"Your planned side trip is active. Rejoin the shared Journey at {place.name}.",
+        "intent_id": intent.id,
+        "member_id": member.id,
+        "active_plan_version_id": journey.active_plan_version_id,
+        "rendezvous_activity_id": activity.id,
+        "physical_reunion_claimed": False,
+    }
+    return result
 
 
 def _is_live_journey_intent_request(message: str, interpretation: CopilotInterpretation) -> bool:

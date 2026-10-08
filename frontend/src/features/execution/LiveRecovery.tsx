@@ -663,6 +663,7 @@ export function LiveRecovery({
   const flow = operator?.flow ?? null;
   const transit = operator?.transit ?? null;
   const groupPresence = operator?.group_presence ?? null;
+  const plannedSeparation = groupPresence?.planned_separation ?? null;
   const groupRecovery = operator?.group_recovery ?? null;
   const recoveryFollowthrough = groupRecovery?.followthrough ?? null;
   const collectiveProposalIds = new Set(
@@ -1063,7 +1064,13 @@ export function LiveRecovery({
           >
             <span className="v8-kicker">{zh ? "同行者位置" : "Group presence"}</span>
             <strong>
-              {groupPresence.state === "SINGLE_TRAVELLER"
+              {groupPresence.state === "PLANNED_SPLIT_ON_TRACK"
+                ? (zh ? "有人按计划暂时分开行动；当前路线仍能赶上会合点。" : "A traveller is on a planned side trip and the current route still reaches the rendezvous in time.")
+                : groupPresence.state === "PLANNED_SPLIT_RETURN_RISK"
+                  ? (zh ? "计划中的分开行动已接近或错过共同会合的安全缓冲。" : "The planned side trip may now threaten the shared rendezvous buffer.")
+                  : groupPresence.state === "PLANNED_SPLIT_RETURN_UNKNOWN"
+                    ? (zh ? "分开行动是有计划的，但目前没有可靠的返程时间。" : "The split is planned, but CityNexus does not have a reliable return ETA yet.")
+                    : groupPresence.state === "SINGLE_TRAVELLER"
                 ? (zh ? "这趟行程目前只有你一位有效成员。" : "You are the only active member on this Journey.")
                 : groupPresence.state === "GROUP_SPLIT_ADVISORY"
                   ? (zh ? "同行者的位置显示队伍可能已经分开。" : "Recent member locations suggest the group may be split.")
@@ -1075,6 +1082,42 @@ export function LiveRecovery({
                         ? (zh ? "正在等待同行者主动分享一次当前位置。" : "Waiting for travellers to share a fresh location.")
                         : (zh ? "目前还不能可靠判断队伍是否在一起。" : "There is not enough current evidence to classify the group yet.")}
             </strong>
+            {plannedSeparation && (
+              <div className="journey-planned-separation" data-testid="journey-planned-separation" data-state={plannedSeparation.state}>
+                {plannedSeparation.members.map((member) => (
+                  <div key={`${member.display_name}-${member.rendezvous?.activity_id ?? "rendezvous"}`} data-testid="journey-planned-separation-member">
+                    <strong>
+                      {member.is_viewer
+                        ? (zh ? "你正在按计划暂时单独行动" : "You’re on a planned side trip")
+                        : (zh ? `${member.display_name} 正在按计划暂时单独行动` : `${member.display_name} is on a planned side trip`)}
+                    </strong>
+                    {member.rendezvous && (
+                      <span data-testid="journey-planned-separation-rendezvous">
+                        {zh
+                          ? `在「${member.rendezvous.place_name}」会合${member.rendezvous.scheduled_at ? ` · 计划时间 ${new Date(member.rendezvous.scheduled_at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}` : ""}`
+                          : `Rejoin at ${member.rendezvous.place_name}${member.rendezvous.scheduled_at ? ` · scheduled ${new Date(member.rendezvous.scheduled_at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}` : ""}`}
+                      </span>
+                    )}
+                    <small data-testid="journey-planned-separation-return-state">
+                      {member.return_state === "ON_TRACK"
+                        ? (zh ? "返程状态：按当前实时路线可按时会合。" : "Return status: on track on the current provider route.")
+                        : member.return_state === "LOW_BUFFER"
+                          ? (zh ? "返程缓冲较少，建议尽快返回。" : "Return buffer is low; consider heading back soon.")
+                          : member.return_state === "RETURN_RISK"
+                            ? (zh ? "可信的当前位置与实时路线显示会合承诺可能受影响。" : "Trusted current location and live route evidence show the rendezvous may be at risk.")
+                            : member.return_state === "ADVISORY_RETURN_RISK"
+                              ? (zh ? "参考定位路线提示时间可能紧张；这不是可信设备位置。" : "An advisory browser route suggests time may be tight; it is not trusted device location.")
+                              : member.return_state === "ADVISORY_ROUTE_ONLY"
+                                ? (zh ? "当前只有参考路线；它不代表可信位置，也不会单独触发 Guardian。" : "Only an advisory route is available; it is not trusted location and cannot trigger Guardian by itself.")
+                              : (zh ? "返程状态未知：目前没有可靠路线 ETA。" : "Return status unknown: no reliable route ETA is available.")}
+                    </small>
+                  </div>
+                ))}
+                <small data-testid="journey-planned-separation-plan-unchanged">
+                  {zh ? "共享行程保持不变；分开行动不等于已经重新会合。" : "The shared Journey is unchanged. Ending a side trip does not itself prove physical reunion."}
+                </small>
+              </div>
+            )}
             {groupPresence.members.map((member) => (
               <small key={member.member_id} data-testid="journey-group-member">
                 {member.is_viewer ? (zh ? "你" : "You") : member.display_name}: {member.location_state === "RECENT"
@@ -1524,8 +1567,8 @@ export function LiveRecovery({
         {operator?.enabled && (
           <div className="journey-intent-steering" data-testid="journey-intent-steering">
             <label htmlFor="journey-intent-input">
-              <strong>{zh ? "想调整接下来的行程？" : "Want to steer the rest of your Journey?"}</strong>
-              <span>{zh ? "用自己的话告诉 CityNexus；只影响这趟行程，并会自动到期。" : "Tell CityNexus in your own words. It applies to this Journey and expires automatically."}</span>
+              <strong>{zh ? "想调整行程，或暂时和同行者分开行动？" : "Want to steer the Journey or split off briefly?"}</strong>
+              <span>{zh ? "告诉 CityNexus 你的临时安排；分开行动会绑定到服务器确认的下一处共同会合点。" : "Tell CityNexus your temporary plan. A side trip stays tied to a server-resolved shared rendezvous."}</span>
             </label>
             <textarea
               id="journey-intent-input"
@@ -1534,7 +1577,7 @@ export function LiveRecovery({
               maxLength={500}
               value={intentText}
               onChange={(event) => setIntentText(event.target.value)}
-              placeholder={zh ? "比如：今天剩下的行程轻松一点，少走路。" : "For example: Make the rest of today easier and keep walking low."}
+              placeholder={zh ? "比如：我想一个人逛一会儿，下一处共同安排时和大家会合。" : "For example: I’d like to explore on my own for a while and meet everyone at the next shared stop."}
             />
             <button
               type="button"
