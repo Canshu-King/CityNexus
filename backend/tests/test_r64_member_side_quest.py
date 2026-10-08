@@ -411,9 +411,25 @@ def test_other_member_sees_only_coarse_private_stop_state_and_can_own_an_indepen
     )
     assert owner_summary["personal_stop"] == {
         "planned_personal_stop": True,
-        "state": "AWAY",
+        "state": "PLANNED",
     }
     assert owner_place.name not in json.dumps(other_json, ensure_ascii=False)
+
+    # Only an authenticated start report advances the coarse member status.
+    started = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{created.json()['member_side_quest']['id']}/start",
+        headers=_auth(owner_id),
+    )
+    assert started.status_code == 200, started.text
+    active_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(other_id)
+    ).json()
+    active_summary = next(
+        item for item in active_projection["group_presence"]["members"]
+        if item["member_id"] == owner_member_id
+    )
+    assert active_summary["personal_stop"]["state"] == "ACTIVE_SELF_REPORTED"
+    assert owner_place.name not in json.dumps(active_projection, ensure_ascii=False)
 
     other_split = _start_split(journey_id, other_id)
     other_place = _private_place(
