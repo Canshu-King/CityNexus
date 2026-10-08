@@ -133,7 +133,7 @@ function formatDuration(value: number) {
   return `${(value / 1000).toFixed(1)} s`;
 }
 
-function summaryText(event: NativeRuntimeEvent, zh: boolean) {
+function summaryText(event: NativeRuntimeEvent, zh: boolean, t: (key: string) => string) {
   if (event.tool_name && toolLabels[event.tool_name]) {
     return toolLabels[event.tool_name][zh ? "zh" : "en"];
   }
@@ -297,8 +297,8 @@ export function NativeMissionTimeline({
     // engineering vocabulary).  Show the human label for the tool, or a human
     // status when the tool is unmapped.  The raw name stays in Advanced.
     const humanStep = event.tool_name
-      ? (toolLabels[event.tool_name]?.[zh ? "zh" : "en"] ?? humanAgentStatus(event.status, zh))
-      : humanAgentStatus(event.status, zh);
+      ? (toolLabels[event.tool_name]?.[zh ? "zh" : "en"] ?? humanAgentStatus(event.status, zh, t))
+      : humanAgentStatus(event.status, zh, t);
     const runMeta: ReactNode = (
       /* The number on screen stays this screen's own formatting, but the element carrying it says
          which allowed field it measured, under the contract name (Q70) -- so a gauge binds the
@@ -319,7 +319,7 @@ export function NativeMissionTimeline({
     );
     return {
       id: `${index}-${eventKey(event)}`,
-      label: summaryText(event, zh),
+      label: summaryText(event, zh, t),
       status: statusForEvent(event),
       /* `result_summary` is left out on purpose: the server builds it from whatever a tool
          returned, so it can carry a sentence this screen cannot vouch for.  Q64 lets the allowed
@@ -418,7 +418,7 @@ export function NativeMissionTimeline({
             <span><b>{zh ? "工具" : "tool"}</b> <code>{currentTool}</code></span>
           )}
           <span><b>{zh ? "耗时" : "duration"}</b> {formatDuration(totalDuration)}</span>
-          <span><b>{zh ? "执行方式" : "execution"}</b> {lastRuntimeLabel(executed, zh)}</span>
+          <span><b>{zh ? "执行方式" : "execution"}</b> {lastRuntimeLabel(executed, zh, t)}</span>
         </div>
       </details>
 
@@ -528,7 +528,7 @@ const ACTION_LABELS: Record<string, { zh: string; en: string }> = {
 
 // Agent lifecycle statuses are internal enum values.  A traveller reads a
 // plain sentence; the raw value only appears under Advanced.
-function humanAgentStatus(value: string | null | undefined, zh: boolean): string {
+function humanAgentStatus(value: string | null | undefined, zh: boolean, t: (key: string) => string): string {
   const key = String(value ?? "").toUpperCase();
   const map: Record<string, { zh: string; en: string }> = {
     RUNNING: { zh: "正在处理", en: "Working" },
@@ -544,29 +544,29 @@ function humanAgentStatus(value: string | null | undefined, zh: boolean): string
   };
   const entry = map[key];
   if (entry) return zh ? entry.zh : entry.en;
-  if (!key) return zh ? "处理中" : "Working";
-  return zh ? "处理中" : "Working";
+  if (!key) return t("agent.statusWorking");
+  return t("agent.statusWorking");
 }
 
-function lastRuntimeLabel(executed: boolean, zh: boolean): string {
+function lastRuntimeLabel(executed: boolean, zh: boolean, t: (key: string) => string): string {
   return executed
-    ? zh ? "已按行程事实执行" : "Executed against journey facts"
-    : zh ? "仅在本机规划" : "Planned locally only";
+    ? t("agent.executedAgainstFacts")
+    : t("agent.plannedLocally");
 }
 
-function humanIntent(value: string, zh: boolean): string {
+function humanIntent(value: string, zh: boolean, t: (key: string) => string): string {
   const entry = INTENT_LABELS[String(value).toUpperCase()];
-  return entry ? (zh ? entry.zh : entry.en) : (zh ? "问题" : "Question");
+  return entry ? (zh ? entry.zh : entry.en) : t("agent.intentQuestion");
 }
 
-function humanVerification(value: string, zh: boolean): string {
+function humanVerification(value: string, zh: boolean, t: (key: string) => string): string {
   const entry = VERIFICATION_LABELS[String(value).toUpperCase()];
-  return entry ? (zh ? entry.zh : entry.en) : (zh ? "核验状态未知" : "Verification unknown");
+  return entry ? (zh ? entry.zh : entry.en) : t("agent.verificationUnknown");
 }
 
-function humanAction(value: string, zh: boolean): string {
+function humanAction(value: string, zh: boolean, t: (key: string) => string): string {
   const entry = ACTION_LABELS[String(value).toUpperCase()];
-  return entry ? (zh ? entry.zh : entry.en) : (zh ? "继续" : "Continue");
+  return entry ? (zh ? entry.zh : entry.en) : t("agent.actionContinue");
 }
 
 type Band = { left: number; top: number; right: number; bottom: number };
@@ -890,10 +890,10 @@ export function CopilotDock({
                 <small>{item.role === "user" ? (locale === "zh-CN" ? "你" : "You") : "CityNexus"}</small>
                 <p>{item.text}</p>
                 {item.response?.intent && (
-                  <span className="cn-copilot-chip">{humanIntent(item.response.intent.name, zh)}</span>
+                  <span className="cn-copilot-chip">{humanIntent(item.response.intent.name, zh, t)}</span>
                 )}
                 {item.response?.verification && (
-                  <span className="cn-copilot-chip">{humanVerification(item.response.verification.status, zh)}</span>
+                  <span className="cn-copilot-chip">{humanVerification(item.response.verification.status, zh, t)}</span>
                 )}
                 {item.response?.action?.type && (
                   <button
@@ -901,7 +901,7 @@ export function CopilotDock({
                     className="cn-copilot-link"
                     onClick={() => continueAction(item.response?.action?.type)}
                   >
-                    {humanAction(item.response.action.type, zh)}
+                    {humanAction(item.response.action.type, zh, t)}
                   </button>
                 )}
               </article>
