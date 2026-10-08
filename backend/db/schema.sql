@@ -639,6 +639,22 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_member_side_quests_one_open_per_split
 CREATE INDEX IF NOT EXISTS idx_member_side_quests_journey_member_updated
     ON member_side_quests(journey_id, member_id, updated_at);
 
+CREATE TABLE IF NOT EXISTS member_side_quest_return_reports (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    side_quest_id TEXT NOT NULL UNIQUE REFERENCES member_side_quests(id) ON DELETE CASCADE,
+    planned_separation_intent_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'RETURN_STARTED_REPORTED'
+        CHECK (status = 'RETURN_STARTED_REPORTED'),
+    reported_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_member_side_quest_return_reports_journey_member
+    ON member_side_quest_return_reports(journey_id, member_id, reported_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

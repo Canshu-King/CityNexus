@@ -42,20 +42,52 @@ async function api<T>(request: APIRequestContext, path: string, options: {
   return JSON.parse(text) as T;
 }
 
-async function openJourneyPage(browser: Browser, journeyId: string, token: string): Promise<{ page: Page; close: () => Promise<void> }> {
-  const context = await browser.newContext();
+async function openJourneyPage(
+  browser: Browser,
+  journeyId: string,
+  token: string,
+  geolocation?: { latitude: number; longitude: number; accuracy: number },
+): Promise<{ page: Page; close: () => Promise<void> }> {
+  const context = await browser.newContext(geolocation
+    ? { permissions: ["geolocation"], geolocation }
+    : {});
   const page = await context.newPage();
   await page.addInitScript(({ id, bearer }) => {
     localStorage.setItem("citynexus.v8.journey_id", id);
     localStorage.setItem("citynexus.locale", "en-US");
     sessionStorage.setItem("citynexus.traveler.bearer", bearer);
   }, { id: journeyId, bearer: token });
+  if (geolocation) {
+    await page.addInitScript((point) => {
+      Object.defineProperty(navigator, "geolocation", {
+        configurable: true,
+        value: {
+          getCurrentPosition(success: (position: GeolocationPosition) => void) {
+            queueMicrotask(() => success({
+              coords: {
+                latitude: point.latitude,
+                longitude: point.longitude,
+                accuracy: point.accuracy,
+                altitude: null,
+                altitudeAccuracy: null,
+                heading: null,
+                speed: null,
+                toJSON: () => ({}),
+              },
+              timestamp: Date.now(),
+              toJSON: () => ({}),
+            } as GeolocationPosition));
+          },
+        },
+      });
+    }, geolocation);
+  }
   await page.goto("/v8/live", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("journey-group-presence")).toBeVisible();
   return { page, close: () => context.close() };
 }
 
-test("R64 executes a private stop through real writes and keeps the collaborator projection coarse", async ({ browser, request }) => {
+test("R65 previews a private detour and heads back through the shared rendezvous flow", async ({ browser, request }) => {
   const resetToken = process.env.CITYNEXUS_DEMO_RESET_TOKEN;
   if (!resetToken) throw new Error("R64 E2E requires CITYNEXUS_DEMO_RESET_TOKEN for its isolated demo database");
   const reset = await api<{ journey_id: string; traveler_id: string; city_code: string }>(request, "/api/v1/demo/reset", {
@@ -111,7 +143,11 @@ test("R64 executes a private stop through real writes and keeps the collaborator
   const planRowsBefore = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans`);
   const activePlanIdBefore = experience.active_plan.id;
 
-  const owner = await openJourneyPage(browser, journeyId, ownerToken);
+  const owner = await openJourneyPage(browser, journeyId, ownerToken, {
+    latitude: 35.0,
+    longitude: 135.0,
+    accuracy: 10,
+  });
   const collaboratorSession = await openJourneyPage(browser, journeyId, collaboratorToken);
   try {
     const ownerCard = owner.page.getByTestId("member-side-quest-card");
@@ -126,6 +162,18 @@ test("R64 executes a private stop through real writes and keeps the collaborator
     await expect(ownerCard).toHaveAttribute("data-state", "READY");
     await expect(ownerCard.getByTestId("member-side-quest-owner-state")).toContainText(privatePlace.name);
     await expect(ownerCard).toContainText("shared Journey");
+
+    await ownerCard.getByTestId("member-side-quest-fit-preview").click();
+    const fitResult = ownerCard.getByTestId("member-side-quest-fit-result");
+    await expect(fitResult).toBeVisible();
+    await expect(fitResult).toHaveAttribute("data-state", "UNKNOWN");
+    await expect(fitResult).toContainText("We can't confirm whether this private stop fits");
+
+    await ownerCard.getByTestId("member-side-quest-navigate").click();
+    const privateRoute = ownerCard.getByTestId("member-side-quest-private-route");
+    await expect(privateRoute).toBeVisible();
+    await expect(privateRoute).toHaveAttribute("data-state", "UNKNOWN");
+    await expect(privateRoute).toContainText("No reliable route is available");
 
     await collaboratorSession.page.reload();
     const safeAway = collaboratorSession.page.getByTestId("journey-member-personal-stop");
@@ -152,6 +200,18 @@ test("R64 executes a private stop through real writes and keeps the collaborator
     await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
     await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
     await expect(collaboratorSession.page.locator("body")).not.toContainText("You are physically rejoined");
+
+    await ownerCard.getByTestId("member-side-quest-head-back").click();
+    await expect(ownerCard.getByTestId("member-side-quest-return-state")).toContainText(
+      "You reported heading back; this does not verify your location or reunion.",
+    );
+    await expect(ownerCard.getByTestId("member-side-quest-message")).toContainText("Your return report is saved");
+    await collaboratorSession.page.reload();
+    const safeHeadedBack = collaboratorSession.page.getByTestId("journey-member-personal-stop");
+    await expect(safeHeadedBack).toHaveAttribute("data-state", "RETURN_STARTED_REPORTED");
+    await expect(safeHeadedBack).toContainText("has reported heading back (location and reunion are unverified)");
+    await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
+    await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
 
     const finalExperience = await api<{ active_plan: { id: string } }>(request, `/api/v1/journeys/${journeyId}/experience`);
     const planRowsAfter = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans`);

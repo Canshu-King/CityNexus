@@ -464,6 +464,25 @@ class MemberSideQuestCreateRequest(BaseModel):
     place_id: str | None = Field(default=None, min_length=1, max_length=128)
 
 
+class MemberSideQuestFitPreviewRequest(BaseModel):
+    """One-time owner-only detour fit check; current location is optional for UNKNOWN."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID | None = None
+    dwell_minutes: Literal[10, 20, 30] = 20
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
+class MemberSideQuestNavigateRequest(BaseModel):
+    """Route only the authenticated member from a fresh one-time location to their stop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
 class GroupRecoveryRequest(BaseModel):
     """Ask the existing Journey Agent to prepare one bounded group recovery proposal."""
 

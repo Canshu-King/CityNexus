@@ -794,6 +794,15 @@ export function LiveRecovery({
       setBusy(null);
     }
   };
+  const requestFreshGroupRoute = async (): Promise<GroupRendezvousRouteResult | null> => {
+    if (!onRefreshLocation || !groupPresence?.can_guide) return null;
+    const observationId = await onRefreshLocation();
+    if (!observationId) return null;
+    const result = await cityNexusApi.routeToGroupRendezvous(journeyId, observationId);
+    setGroupRoute(result);
+    await loadOperator();
+    return result;
+  };
   const guideToGroup = async () => {
     if (!onRefreshLocation || busy !== null || !groupPresence?.can_guide) {
       setMessage(zh ? "请先允许获取你这一次的位置。" : "Allow one fresh location sample to get a route.");
@@ -802,11 +811,11 @@ export function LiveRecovery({
     setBusy("group-route");
     setGroupRoute(null);
     try {
-      const observationId = await onRefreshLocation();
-      if (!observationId) return;
-      const result = await cityNexusApi.routeToGroupRendezvous(journeyId, observationId);
-      setGroupRoute(result);
-      await loadOperator();
+      const result = await requestFreshGroupRoute();
+      if (!result) {
+        setMessage(zh ? "没有取得这一次的位置；共同会合点保持不变。" : "No one-time location was available; the shared rendezvous is unchanged.");
+        return;
+      }
       setMessage(
         result.status === "COMPLETED" && result.route.duration_min != null
           ? (zh ? `到「${result.target.title}」约 ${result.route.duration_min} 分钟；位置只用于这次路线，行程计划未变。` : `About ${result.route.duration_min} min to ${result.target.title}. This one-time location was used for routing; your plan is unchanged.`)
@@ -814,6 +823,18 @@ export function LiveRecovery({
       );
     } catch {
       setMessage(zh ? "暂时无法计算到集合点的路线；计划没有改变。" : "Could not calculate a route to the rendezvous. Your plan is unchanged.");
+    } finally {
+      setBusy(null);
+    }
+  };
+  const routeAfterPrivateStop = async (): Promise<GroupRendezvousRouteResult | null> => {
+    if (busy !== null || !onRefreshLocation || !groupPresence?.can_guide) return null;
+    setBusy("side-quest-head-back-route");
+    setGroupRoute(null);
+    try {
+      return await requestFreshGroupRoute();
+    } catch {
+      return null;
     } finally {
       setBusy(null);
     }
@@ -1118,6 +1139,8 @@ export function LiveRecovery({
                         sideQuest={operator?.member_side_quest ?? null}
                         rendezvous={member.rendezvous}
                         currentSplitActive
+                        onRefreshLocation={onRefreshLocation}
+                        onHeadBack={routeAfterPrivateStop}
                         onUpdated={loadOperator}
                       />
                     )}
@@ -1148,7 +1171,9 @@ export function LiveRecovery({
                       ? (zh ? " · 已计划一项私人停留（地点仅本人可见，尚未报告出发）" : " · has a planned personal stop (destination visible only to them; departure not reported)")
                       : member.personal_stop.state === "ACTIVE_SELF_REPORTED"
                         ? (zh ? " · 本人已报告开始私人停留（地点仅本人可见）" : " · has reported starting a personal stop (destination visible only to them)")
-                        : (zh ? " · 私人停留已结束，尚未确认开始返程" : " · personal stop ended; return has not been confirmed")}
+                        : member.personal_stop.state === "RETURN_STARTED_REPORTED"
+                          ? (zh ? " · 本人已报告开始返程（未验证当前位置或实际会合）" : " · has reported heading back (location and reunion are unverified)")
+                          : (zh ? " · 私人停留已结束，尚未确认开始返程" : " · personal stop ended; return has not been confirmed")}
                   </span>
                 )}
                 {member.route_eta_minutes != null ? ` · ${zh ? `到集合点约 ${member.route_eta_minutes} 分钟` : `about ${member.route_eta_minutes} min to rendezvous`}` : ""}

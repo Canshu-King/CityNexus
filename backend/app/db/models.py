@@ -358,6 +358,41 @@ class MemberSideQuest(Base):
     )
 
 
+class MemberSideQuestReturnReport(Base):
+    """Member-owned, idempotent report that a completed private stop is heading back."""
+
+    __tablename__ = "member_side_quest_return_reports"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    side_quest_id: Mapped[str] = mapped_column(
+        ForeignKey("member_side_quests.id", ondelete="CASCADE"), unique=True
+    )
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(
+        String,
+        default="RETURN_STARTED_REPORTED",
+        server_default="RETURN_STARTED_REPORTED",
+    )
+    reported_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status = 'RETURN_STARTED_REPORTED'",
+            name="ck_member_side_quest_return_reports_status",
+        ),
+        Index(
+            "idx_member_side_quest_return_reports_journey_member",
+            "journey_id",
+            "member_id",
+            "reported_at",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

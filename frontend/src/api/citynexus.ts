@@ -575,7 +575,7 @@ export interface JourneyGroupPresenceProjection {
     planned_separation?: boolean;
     personal_stop?: {
       planned_personal_stop: true;
-      state: "PLANNED" | "ACTIVE_SELF_REPORTED" | "FINISHED_RETURN_UNCONFIRMED";
+      state: "PLANNED" | "ACTIVE_SELF_REPORTED" | "FINISHED_RETURN_UNCONFIRMED" | "RETURN_STARTED_REPORTED";
     };
     return_state?: string | null;
     planned_rendezvous?: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
@@ -627,6 +627,11 @@ export interface MemberSideQuestProjection {
     scheduled_at: string | null;
   };
   return_state: string;
+  return_report?: {
+    status: "RETURN_STARTED_REPORTED";
+    reported_at: string;
+    physical_presence_verified: false;
+  } | null;
   shared_plan_changed: false;
   arrival_claim: "MEMBER_REPORTED_NOT_PHYSICAL_PRESENCE_PROOF" | null;
   created_at: string;
@@ -634,6 +639,47 @@ export interface MemberSideQuestProjection {
   arrived_at: string | null;
   completed_at: string | null;
   cancelled_at: string | null;
+}
+
+export interface MemberSideQuestRouteCapture {
+  duration_min: number;
+  distance_m: number | null;
+  provider: string;
+  provenance: string;
+  captured_at: string;
+  age_seconds: number;
+  mode: string;
+  geometry: number[][];
+}
+
+export interface MemberSideQuestNavigationResult {
+  status: "COMPLETED" | "UNKNOWN";
+  destination: { title: string };
+  route: MemberSideQuestRouteCapture | null;
+  authority: string;
+  origin_basis: "AUTHENTICATED_FRESH_MEMBER_LOCATION";
+  plan_unchanged: true;
+}
+
+export interface MemberSideQuestFitPreview {
+  state: "FITS_WITH_BUFFER" | "TIGHT_RETURN" | "DOES_NOT_FIT" | "UNKNOWN";
+  dwell_minutes: number;
+  outbound_eta_minutes: number | null;
+  return_eta_minutes: number | null;
+  recommended_leave_by: string | null;
+  rendezvous_scheduled_at: string | null;
+  safety_buffer_minutes: number | null;
+  provenance: {
+    outbound: MemberSideQuestRouteCapture | null;
+    return: MemberSideQuestRouteCapture | null;
+  };
+  origin_basis: {
+    outbound: "AUTHENTICATED_FRESH_MEMBER_LOCATION" | null;
+    return: "HYPOTHETICAL_SIDE_PLACE";
+  };
+  authority: string;
+  reason_code: string | null;
+  plan_unchanged: true;
 }
 
 export interface GroupRecoveryProjection {
@@ -1935,6 +1981,51 @@ export const cityNexusApi = {
   ): Promise<JourneyOperatorProjection> {
     return requestJson<JourneyOperatorProjection>(
       "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/" + action,
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  previewMemberSideQuestFit(
+    journeyId: string,
+    sideQuestId: string,
+    locationObservationId: string | null,
+    dwellMinutes: 10 | 20 | 30,
+  ): Promise<MemberSideQuestFitPreview> {
+    return requestJson<MemberSideQuestFitPreview>(
+      "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/fit-preview",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          location_observation_id: locationObservationId,
+          dwell_minutes: dwellMinutes,
+          requested_mode: "WALK",
+        }),
+      },
+    );
+  },
+
+  navigateMemberSideQuest(
+    journeyId: string,
+    sideQuestId: string,
+    locationObservationId: string,
+  ): Promise<MemberSideQuestNavigationResult> {
+    return requestJson<MemberSideQuestNavigationResult>(
+      "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/navigate",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ location_observation_id: locationObservationId, requested_mode: "WALK" }),
+      },
+    );
+  },
+
+  startMemberSideQuestReturn(
+    journeyId: string,
+    sideQuestId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/head-back",
       { method: "POST", headers: travelerAuthHeaders() },
     );
   },

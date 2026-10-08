@@ -278,6 +278,9 @@ from app.execution.group_presence import (
 from app.execution.member_side_quest import (
     create_or_replace_member_side_quest,
     invalidate_member_side_quests_for_intents,
+    navigate_member_side_quest_destination,
+    preview_member_side_quest_fit,
+    start_member_side_quest_return_report,
     transition_member_side_quest,
 )
 from app.execution.group_recovery_followthrough import (
@@ -458,6 +461,8 @@ from app.schemas import (
     LocationObservationRequest,
     GroupPresenceRouteRequest,
     MemberSideQuestCreateRequest,
+    MemberSideQuestFitPreviewRequest,
+    MemberSideQuestNavigateRequest,
     GroupRecoveryRequest,
     GroupRecoveryApplyRequest,
     InTransitRerouteRequest,
@@ -9835,6 +9840,87 @@ def cancel_member_side_quest(
         request=request,
         session=session,
     )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/fit-preview")
+def preview_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    payload: MemberSideQuestFitPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Return owner-only advisory timing without persisting route keys or geometry."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return preview_member_side_quest_fit(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+        location_observation_id=(
+            str(payload.location_observation_id)
+            if payload.location_observation_id is not None
+            else None
+        ),
+        dwell_minutes=payload.dwell_minutes,
+        requested_mode=payload.requested_mode,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/navigate")
+def navigate_to_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    payload: MemberSideQuestNavigateRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Capture a private, member-bound outbound route without a Journey-wide route record."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return navigate_member_side_quest_destination(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+        location_observation_id=str(payload.location_observation_id),
+        requested_mode=payload.requested_mode,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/head-back")
+def start_member_side_quest_head_back(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Persist a voluntary return report before requesting any fresh location."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    start_member_side_quest_return_report(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
 
 
 @app.post("/api/v1/journeys/{journey_id}/group-recovery/adjust")

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import {
   cityNexusApi,
+  type GroupRendezvousRouteResult,
+  type MemberSideQuestFitPreview,
+  type MemberSideQuestNavigationResult,
   type MemberSideQuestProjection,
   type PlaceRecord,
 } from "../../api/citynexus";
@@ -12,17 +15,42 @@ type Rendezvous = {
   scheduled_at?: string | null;
 };
 
+function routeSketch(geometry: number[][]): string | null {
+  const points = geometry.filter((point) =>
+    Array.isArray(point) && point.length >= 2
+      && Number.isFinite(point[0]) && Number.isFinite(point[1]),
+  );
+  if (points.length < 2) return null;
+  const xs = points.map((point) => point[0]);
+  const ys = points.map((point) => point[1]);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const width = Math.max(maxX - minX, Number.EPSILON);
+  const height = Math.max(maxY - minY, Number.EPSILON);
+  return points.map((point, index) => {
+    const x = 8 + ((point[0] - minX) / width) * 304;
+    const y = 8 + ((maxY - point[1]) / height) * 64;
+    return `${index === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+}
+
 export function MemberSideQuestCard({
   journeyId,
   sideQuest,
   rendezvous,
   currentSplitActive = true,
+  onRefreshLocation,
+  onHeadBack,
   onUpdated,
 }: {
   journeyId: string;
   sideQuest: MemberSideQuestProjection | null;
   rendezvous: Rendezvous | null;
   currentSplitActive?: boolean;
+  onRefreshLocation?: () => Promise<string | null>;
+  onHeadBack?: () => Promise<GroupRendezvousRouteResult | null>;
   onUpdated: () => Promise<void>;
 }) {
   const { locale } = useLocale();
@@ -34,6 +62,9 @@ export function MemberSideQuestCard({
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [dwellMinutes, setDwellMinutes] = useState<10 | 20 | 30>(20);
+  const [fitPreview, setFitPreview] = useState<MemberSideQuestFitPreview | null>(null);
+  const [privateRoute, setPrivateRoute] = useState<MemberSideQuestNavigationResult | null>(null);
 
   useEffect(() => {
     if (!currentSplitActive) {
@@ -68,6 +99,9 @@ export function MemberSideQuestCard({
   const canChooseDestination = currentSplitActive && (!sideQuest
     || state === "DESTINATION_UNRESOLVED"
     || ((state === "COMPLETED" || state === "CANCELLED" || state === "READY") && editing));
+  const canNavigate = currentSplitActive
+    && (state === "READY" || state === "EN_ROUTE")
+    && sideQuest?.destination.authority === "EXACT_KNOWN_PLACE";
 
   if (!displayedRendezvous) return null;
 
@@ -118,6 +152,99 @@ export function MemberSideQuestCard({
     }
   };
 
+  const requestFitPreview = async () => {
+    if (!sideQuest || busy || !currentSplitActive) return;
+    setBusy(true);
+    setMessage(null);
+    setFitPreview(null);
+    setPrivateRoute(null);
+    try {
+      const observationId = await onRefreshLocation?.() ?? null;
+      const result = await cityNexusApi.previewMemberSideQuestFit(
+        journeyId,
+        sideQuest.id,
+        observationId,
+        dwellMinutes,
+      );
+      setFitPreview(result);
+    } catch {
+      setMessage(zh
+        ? "暂时无法确认这条支线是否赶得上；共享行程没有改变。你仍可按原计划手动执行，或直接返回共同会合点。"
+        : "We can't confirm whether this stop fits right now. The shared Journey is unchanged; you can continue manually or head back to the rendezvous.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const navigateToPrivateStop = async () => {
+    if (!sideQuest || busy || !onRefreshLocation) {
+      setMessage(zh ? "请在你允许后获取这一次的当前位置。" : "Allow one fresh location sample to route to your private stop.");
+      return;
+    }
+    setBusy(true);
+    setMessage(null);
+    setPrivateRoute(null);
+    try {
+      const observationId = await onRefreshLocation();
+      if (!observationId) {
+        setMessage(zh
+          ? "没有取得这一次的位置；私人导航不可用，支线仍可手动执行。"
+          : "No one-time location was available. Private navigation is unavailable; you can still follow the stop manually.");
+        return;
+      }
+      const result = await cityNexusApi.navigateMemberSideQuest(
+        journeyId,
+        sideQuest.id,
+        observationId,
+      );
+      setPrivateRoute(result);
+      setMessage(result.status === "COMPLETED"
+        ? (zh ? "已取得只对你显示的私人路线；共享行程没有改变。" : "A private route is ready for you; the shared Journey is unchanged.")
+        : (zh ? "路线服务没有可靠结果；你仍可手动前往，计划没有改变。" : "No reliable route is available. You can still go manually; the plan is unchanged."));
+    } catch {
+      setMessage(zh
+        ? "私人路线暂时不可用；请刷新状态或按原计划手动前往。"
+        : "The private route is unavailable right now. Refresh or continue manually.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const startReturnToGroup = async () => {
+    if (!sideQuest || busy) return;
+    setBusy(true);
+    setMessage(null);
+    try {
+      const updated = await cityNexusApi.startMemberSideQuestReturn(journeyId, sideQuest.id);
+      await onUpdated();
+      const reportSaved = updated.member_side_quest?.return_report?.status === "RETURN_STARTED_REPORTED";
+      if (!reportSaved) {
+        setMessage(zh ? "返程报告已提交；正在刷新当前状态。" : "Your return report was submitted. Refreshing the current state.");
+      }
+      let route: GroupRendezvousRouteResult | null = null;
+      try {
+        route = await onHeadBack?.() ?? null;
+      } catch {
+        route = null;
+      }
+      setMessage(route?.status === "COMPLETED" && route.route.duration_min != null
+        ? (zh
+          ? `已记录你本人开始返程的报告；到「${route.target.place_name}」约 ${route.route.duration_min} 分钟（${route.route.provenance ?? route.route.provider ?? "来源已记录"}）。这不是定位证明。`
+          : `Your return report is saved; about ${route.route.duration_min} min to ${route.target.place_name} (${route.route.provenance ?? route.route.provider ?? "source recorded"}). This does not verify your location.`)
+        : (zh
+          ? `已记录你本人开始返程的报告；目前没有可靠路线或定位。共同会合点仍是「${displayedRendezvous?.place_name ?? "当前会合点"}」，这不是定位证明。`
+          : `Your return report is saved, but no reliable location or route is available. The shared rendezvous is ${displayedRendezvous?.place_name ?? "unchanged"}; this does not verify your location.`));
+      await onUpdated();
+    } catch {
+      setMessage(zh
+        ? "无法保存返程报告；未请求位置或路线。请刷新后重试。"
+        : "The return report could not be saved. No location or route was requested; refresh and retry.");
+      await onUpdated();
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const returnCopy = (returnState: string) => {
     if (returnState === "ON_TRACK") return zh ? "返程状态：当前路线可按时到达会合点。" : "Return status: the current route reaches the rendezvous in time.";
     if (returnState === "LOW_BUFFER") return zh ? "返程缓冲较少，建议尽快返回。" : "Return status: the safety buffer is low; head back soon.";
@@ -153,7 +280,11 @@ export function MemberSideQuestCard({
               {zh ? "这是你本人报告已到达，不是设备定位证明。" : "This is your report of arrival, not device-verified physical presence."}
             </small>
           )}
-          <small data-testid="member-side-quest-return-state">{returnCopy(sideQuest.return_state)}</small>
+          <small data-testid="member-side-quest-return-state">
+            {sideQuest.return_report?.status === "RETURN_STARTED_REPORTED"
+              ? (zh ? "你已报告开始返程；这不是定位或实际会合证明。" : "You reported heading back; this does not verify your location or reunion.")
+              : returnCopy(sideQuest.return_state)}
+          </small>
           {state === "INVALIDATED" && (
             <small>{zh ? "共同会合安排已变化；这条支线保留为历史，不能继续执行。" : "The shared rendezvous changed. This side quest remains as history and can no longer be executed."}</small>
           )}
@@ -231,6 +362,82 @@ export function MemberSideQuestCard({
           </button>
         </div>
       )}
+      {canNavigate && !editing && (
+        <div className="journey-side-quest-actions">
+          <label>
+            {zh ? "预计私人停留" : "Planned time at your stop"}
+            <select
+              data-testid="member-side-quest-dwell"
+              value={dwellMinutes}
+              disabled={busy}
+              onChange={(event) => setDwellMinutes(Number(event.target.value) as 10 | 20 | 30)}
+            >
+              <option value={10}>{zh ? "10 分钟" : "10 minutes"}</option>
+              <option value={20}>{zh ? "20 分钟" : "20 minutes"}</option>
+              <option value={30}>{zh ? "30 分钟" : "30 minutes"}</option>
+            </select>
+          </label>
+          <button type="button" data-testid="member-side-quest-fit-preview" disabled={busy} onClick={() => void requestFitPreview()}>
+            {busy ? (zh ? "正在检查…" : "Checking…") : (zh ? "这条支线赶得上吗？" : "Will this detour fit?")}
+          </button>
+          <button type="button" data-testid="member-side-quest-navigate" disabled={busy} onClick={() => void navigateToPrivateStop()}>
+            {busy ? (zh ? "正在获取路线…" : "Getting route…") : (zh ? "带我去私人地点" : "Take me to my private stop")}
+          </button>
+        </div>
+      )}
+      {fitPreview && (
+        <div data-testid="member-side-quest-fit-result" data-state={fitPreview.state} aria-live="polite">
+          <strong>
+            {fitPreview.state === "FITS_WITH_BUFFER"
+              ? (zh ? "按当前路线和约定缓冲，预计能赶上。" : "The current routes fit with the protected buffer.")
+              : fitPreview.state === "TIGHT_RETURN"
+                ? fitPreview.authority === "ADVISORY_PROTECTED_COMMITMENT"
+                  ? (fitPreview.safety_buffer_minutes
+                    ? (zh ? "路线估算仍赶得上受保护会合点，但没有达到规定的安全缓冲。" : "The route estimate reaches the protected rendezvous but leaves less than its required safety buffer.")
+                    : (zh ? "路线估算赶得上受保护会合点；该承诺没有额外安全缓冲，因此仍需谨慎。" : "The route estimate reaches the protected rendezvous, but no additional safety buffer is configured."))
+                  : (zh ? "按当前路线估算能赶上计划会合时间，但没有受保护的安全缓冲；这只是参考。" : "Current route estimates fit before the planned rendezvous, but there is no protected safety buffer; this is advisory.")
+                : fitPreview.state === "DOES_NOT_FIT"
+                  ? (zh ? "按当前路线估算，这段私人停留赶不上会合时间。" : "The current route estimate does not fit before the rendezvous.")
+                  : (zh ? "无法确认这条私人支线是否赶得上；共享行程保持不变。" : "We can't confirm whether this private stop fits. The shared Journey is unchanged.")}
+          </strong>
+          {fitPreview.recommended_leave_by && (
+            <small data-testid="member-side-quest-leave-by">
+              {zh ? "建议最晚离开私人地点：" : "Recommended leave-by from the private stop: "}
+              {new Date(fitPreview.recommended_leave_by).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
+              {fitPreview.safety_buffer_minutes == null
+                ? (zh ? "（参考估算，无受保护缓冲）" : " (advisory; no protected buffer)")
+                : (zh ? `（含 ${fitPreview.safety_buffer_minutes} 分钟缓冲）` : ` (${fitPreview.safety_buffer_minutes} min buffer)`)}
+            </small>
+          )}
+          <small>
+            {zh ? "去程" : "Outbound"}: {fitPreview.outbound_eta_minutes == null ? (zh ? "未知" : "unknown") : `${fitPreview.outbound_eta_minutes} min`}
+            {fitPreview.provenance.outbound ? ` · ${fitPreview.provenance.outbound.provider} / ${fitPreview.provenance.outbound.provenance}` : ""}
+            {" · "}{zh ? "返程" : "Return"}: {fitPreview.return_eta_minutes == null ? (zh ? "未知" : "unknown") : `${fitPreview.return_eta_minutes} min`}
+            {fitPreview.provenance.return ? ` · ${fitPreview.provenance.return.provider} / ${fitPreview.provenance.return.provenance}` : ""}
+          </small>
+        </div>
+      )}
+      {privateRoute && (
+        <div data-testid="member-side-quest-private-route" data-state={privateRoute.status}>
+          {privateRoute.route && (
+            <>
+              <small>
+                {zh ? `到私人地点约 ${privateRoute.route.duration_min} 分钟` : `About ${privateRoute.route.duration_min} min to your private stop`}
+                {privateRoute.route.distance_m != null ? ` · ${Math.round(privateRoute.route.distance_m)} m` : ""}
+                {` · ${privateRoute.route.provider} / ${privateRoute.route.provenance}`}
+              </small>
+              {routeSketch(privateRoute.route.geometry) && (
+                <svg viewBox="0 0 320 80" role="img" aria-label={zh ? "本人可见的私人路线示意" : "Private route sketch visible only to you"}>
+                  <path d={routeSketch(privateRoute.route.geometry) ?? undefined} fill="none" stroke="currentColor" strokeWidth="3" />
+                </svg>
+              )}
+            </>
+          )}
+          {!privateRoute.route && (
+            <small>{zh ? "没有可靠路线；私人支线仍可手动执行。" : "No reliable route is available; you can still follow the stop manually."}</small>
+          )}
+        </div>
+      )}
       {currentSplitActive && state === "EN_ROUTE" && (
         <div className="journey-side-quest-actions">
           <button type="button" data-testid="member-side-quest-arrive" disabled={busy} onClick={() => void advance("arrive")}>
@@ -252,9 +459,18 @@ export function MemberSideQuestCard({
         </div>
       )}
       {currentSplitActive && (state === "COMPLETED" || state === "CANCELLED") && !editing && (
-        <button type="button" data-testid="member-side-quest-another" disabled={busy} onClick={() => setEditing(true)}>
-          {zh ? "再安排一个私人停留" : "Plan another private stop"}
-        </button>
+        <div className="journey-side-quest-actions">
+          <button type="button" data-testid="member-side-quest-head-back" disabled={busy} onClick={() => void startReturnToGroup()}>
+            {busy
+              ? (zh ? "正在记录返程…" : "Saving your return…")
+              : sideQuest.return_report?.status === "RETURN_STARTED_REPORTED"
+                ? (zh ? "重新获取会合路线" : "Get an updated route to the group")
+                : (zh ? "开始返程，带我去共同会合点" : "Head back to the shared rendezvous")}
+          </button>
+          <button type="button" data-testid="member-side-quest-another" disabled={busy} onClick={() => setEditing(true)}>
+            {zh ? "再安排一个私人停留" : "Plan another private stop"}
+          </button>
+        </div>
       )}
       {message && <small data-testid="member-side-quest-message">{message}</small>}
     </div>

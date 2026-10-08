@@ -133,6 +133,7 @@ def reset_all(session: Session) -> None:
         "agent_run_steps",
         "agent_runs",
         "journey_missions",
+        "member_side_quest_return_reports",
         "guardian_pulses",
         "provider_observations",
         "journey_outcome_events",
