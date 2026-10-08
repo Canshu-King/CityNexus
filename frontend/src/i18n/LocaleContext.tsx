@@ -906,6 +906,14 @@ const en: Dict = {
   "stay.cancellationNonRefundable": "Non-refundable",
   "stay.cancellationFreeBefore": "Free cancellation before arrival",
   "stay.noProviderEvidence": "No provider evidence",
+  /* The four pairs that were split across lines or built as templates, so the `zh ? "…"` count the
+     self-claim grid uses never saw them. Values are byte-identical to what they replace. The list
+     separator is its own key because the two languages do not join a list with the same mark. */
+  "stay.emptyExplanation": "We have no real accommodation data yet, so we will not show you an invented price card. Choose your plan first, then come back to search stays.",
+  "stay.reloadAbsentExplanation": "This run was answered, but this screen was not handed a way to re-read, so the cards cannot appear here -- this line is the screen reporting its own missing capability, not the server's answer.",
+  "stay.confirmedLine": "Recorded by this server as the stay for this trip: {name}",
+  "stay.protectedStations": "Protected stops in the trip: {stops}",
+  "stay.listSeparator": ", ",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2131,6 +2139,11 @@ const zhCN: Dict = {
   "stay.cancellationNonRefundable": "不可取消",
   "stay.cancellationFreeBefore": "入住前可免费取消",
   "stay.noProviderEvidence": "暂无供应商证据",
+  "stay.emptyExplanation": "我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。",
+  "stay.reloadAbsentExplanation": "这一轮服务器答完了，但这一屏没有从外层拿到重新读取的能力，所以卡片不会出现在这里——这一句是本屏自己报的缺，不是服务器的答复。",
+  "stay.confirmedLine": "已按这台服务器的记录排定：{name}",
+  "stay.protectedStations": "行程里受保护的站：{stops}",
+  "stay.listSeparator": "、",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
