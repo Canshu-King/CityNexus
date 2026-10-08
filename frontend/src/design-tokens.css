@@ -255,7 +255,19 @@
      80 = 76 measured + 4 of margin. If the nav's content grows, this grows with it, and the gate
      `nav-reservation-covers-the-rendered-bar` goes red when it does not. */
   --cn-nav-h: 80px;
-  --cn-nav-clearance: calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px));
+  /* The rendered bar, published by lib/navHeight.ts once the bar has been measured. The declared
+     number above is a first-paint default and a floor; this is the box the traveller actually sees.
+     Preferring it is what stops every bottom-anchored surface from drifting whenever the row's
+     content (a taller label, a larger icon, a second line) changes the bar's height. Declared second
+     so the two readings cannot be swapped by a later edit. */
+  --cn-nav-h-rendered: var(--cn-nav-h-measured, var(--cn-nav-h));
+  /* One band, and the safe-area inset is added to it rather than baked into it: the home indicator
+     and the app's own chrome are separate, so a surface that needs to clear both says so once here
+     instead of restating the arithmetic (and getting the order wrong) at every call site. */
+  --cn-nav-clearance: calc(var(--cn-nav-h-rendered) + env(safe-area-inset-bottom, 0px));
+  /* Breathing room between a bottom-anchored overlay and the top edge of the bar it must clear. */
+  --cn-nav-stand-off: 8px;
+  --cn-nav-stand-off-total: calc(var(--cn-nav-clearance) + var(--cn-nav-stand-off));
   --cn-safe-top: env(safe-area-inset-top, 0px);
 }
 

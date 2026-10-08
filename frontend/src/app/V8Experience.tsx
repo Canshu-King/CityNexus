@@ -21,6 +21,7 @@ import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
 import { installVisualViewportVars } from "../lib/visualViewport";
+import { installNavHeightVar } from "../lib/navHeight";
 import {
   classifyHealthProbe,
   classifyReadFailure,
@@ -939,6 +940,12 @@ export function V8Experience() {
   /* ORD-0134 ①: bottom-anchored surfaces are bounded by what is actually visible, not by `vh`.
      Installed once here because every overlay that owns a footer needs the same numbers. */
   useEffect(() => installVisualViewportVars(), []);
+
+  /* Bottom-safe-area r1: the rendered bar is the truth, not the declared floor. The installer
+     watches for the bar to mount, because a journey-addressed boot renders the setup screen first
+     and the bottom bar only once the journey is in hand; it has its own no-op for the pre-Journey
+     screens, which have no bottom navigation on purpose (Amendment F #1). */
+  useEffect(() => installNavHeightVar(), []);
 
   useEffect(() => {
     if (!navOpen && !alertsOpen) return;

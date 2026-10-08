@@ -443,9 +443,16 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v8-empty-note, .v8-capability-disclosure { color: #8b95a3; font-size: 11px; line-height: 1.5; }
 
 @media (max-width: 680px) {
-  .cn-copilot-dock { right: 12px; bottom: 72px; left: 12px; width: auto; }
+  /* Bottom-safe-area r1: was `bottom: 72px`, a snapshot of a bar that renders 76px tall, so the
+     dock sat 4px clear of the nav with no safe-area term at all -- on any device with a home
+     indicator the bar grows by the inset and the dock went under it. `--cn-nav-stand-off-total` is
+     the rendered bar + the home indicator + a gap, read from the measurement the bar publishes. */
+  .cn-copilot-dock { right: 12px; bottom: var(--cn-nav-stand-off-total); left: 12px; width: auto; }
   .cn-copilot-edge { min-height: 50px; border-radius: var(--cn-r-12); }
-  .cn-copilot-panel { max-height: calc(100vh - 92px); border-radius: var(--cn-r-16); }
+  /* The open panel is anchored to the same top edge the collapsed dock was, so it inherits the new
+     bottom offset: a panel sized from `100vh` while its own dock moved up is a panel that runs off
+     the top of the screen on a short viewport. */
+  .cn-copilot-panel { max-height: calc(100vh - var(--cn-nav-stand-off-total) - 8px); border-radius: var(--cn-r-16); }
   .cn-copilot-form .v8-primary { padding: 0 11px; }
   .cn-copilot-panel { padding: 13px; gap: 9px; }
   .cn-copilot-history { max-height: 220px; }
@@ -750,10 +757,15 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
  * most of the screen; the panel scrolls internally instead.
  * ------------------------------------------------------------------ */
 @media (max-width: 680px) {
+  /* Bottom-safe-area r1: was `calc(84px + env(...))`. 84 was item floor + 8 + 7 + 4 of gap, which
+     is a smaller bar than the one in this breakpoint actually renders. Tracking the rendered height
+     plus the standard stand-off means the dock stays one gap above the bar on every device, and the
+     home indicator is no longer double-counted (the bar already says it carries the inset, and
+     `--cn-nav-stand-off-total` is the whole band plus a gap). */
   .cn-copilot-dock {
     right: 10px;
     left: 10px;
-    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    bottom: var(--cn-nav-stand-off-total);
     width: auto;
   }
   .cn-copilot-edge {
@@ -1719,9 +1731,13 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 @media (max-width: 680px) {
+  /* Bottom-safe-area r1: was `calc(var(--cn-nav-clearance, 76px) + env(...))`, which adds the home
+     indicator twice -- `--cn-nav-clearance` already contains it. The stand-off token is the whole
+     band plus a gap, and its fallback is the declared floor, so the strip still clears the bar on
+     the first paint before the measurement lands. */
   .plan-ai-run-strip {
     right: var(--cn-s-12);
-    bottom: calc(var(--cn-nav-clearance, 76px) + env(safe-area-inset-bottom, 0px));
+    bottom: var(--cn-nav-stand-off-total, calc(80px + env(safe-area-inset-bottom, 0px) + 8px));
     left: var(--cn-s-12);
     align-items: stretch;
     flex-direction: column;
