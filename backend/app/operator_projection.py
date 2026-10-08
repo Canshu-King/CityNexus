@@ -555,6 +555,7 @@ def operator_projection(
     flow = continuous_flow_projection(
         session,
         journey,
+        viewer_member_id=viewer_member_id,
         operator_needs_attention=bool(
             state == "NEEDS_ATTENTION"
             or unresolved_collective

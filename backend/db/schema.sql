@@ -776,6 +776,38 @@ CREATE TABLE IF NOT EXISTS member_place_invitation_progress (
 CREATE INDEX IF NOT EXISTS idx_member_place_invitation_progress_invitation_status
     ON member_place_invitation_progress(invitation_id, status, signal_type);
 
+CREATE TABLE IF NOT EXISTS member_place_group_share_consents (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    owner_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    owner_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    owner_split_intent_id TEXT NOT NULL REFERENCES journey_intents(id) ON DELETE CASCADE,
+    owner_side_quest_id TEXT NOT NULL REFERENCES member_side_quests(id) ON DELETE CASCADE,
+    base_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    base_cursor_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    place_snapshot_json TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    rendezvous_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    audience_snapshot_json TEXT NOT NULL,
+    audience_snapshot_hash TEXT NOT NULL,
+    plan_snapshot_hash TEXT NOT NULL,
+    source_snapshot_hash TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'ACTIVE'
+        CHECK (status IN ('ACTIVE', 'WITHDRAWN', 'EXPIRED', 'STALE')),
+    consented_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    withdrawn_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_place_group_share_consents_one_active
+    ON member_place_group_share_consents(journey_id, invitation_id)
+    WHERE status = 'ACTIVE';
+CREATE INDEX IF NOT EXISTS idx_member_place_group_share_consents_invitation_created
+    ON member_place_group_share_consents(journey_id, invitation_id, created_at);
+
 CREATE TABLE IF NOT EXISTS member_place_promotions (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
@@ -1581,6 +1613,7 @@ CREATE TABLE IF NOT EXISTS shared_stop_coplanning_grants (
     grantor_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
     grantor_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
     promotion_id TEXT REFERENCES member_place_promotions(id) ON DELETE CASCADE,
+    active_slot INTEGER NOT NULL DEFAULT 1,
     purpose TEXT NOT NULL DEFAULT 'R73_SHARED_STOP_ONLY'
         CHECK (purpose = 'R73_SHARED_STOP_ONLY'),
     status TEXT NOT NULL DEFAULT 'OFFERED'
@@ -1601,5 +1634,10 @@ CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_grantee_scope
     ON shared_stop_coplanning_grants(
         journey_id, invitation_id, base_plan_version_id, grantee_member_id, status
     );
+CREATE UNIQUE INDEX IF NOT EXISTS ux_shared_stop_coplanning_one_unbound_active_grant
+    ON shared_stop_coplanning_grants(
+        journey_id, invitation_id, base_plan_version_id, grantee_member_id
+    )
+    WHERE active_slot = 1;
 CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_promotion
     ON shared_stop_coplanning_grants(promotion_id, decision_epoch);

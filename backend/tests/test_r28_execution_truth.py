@@ -55,6 +55,17 @@ def _set_secret(value: str | None) -> str | None:
 
 
 def _start_authoritative_journey() -> tuple[str, str, str]:
+    # The V12 fixture setup itself predates signed-member enforcement. Keep
+    # that setup outside the R28 auth assertion, then restore strict auth for
+    # the endpoint under test.
+    previous = _set_secret(None)
+    try:
+        return _start_authoritative_journey_fixture()
+    finally:
+        _set_secret(previous)
+
+
+def _start_authoritative_journey_fixture() -> tuple[str, str, str]:
     journey_id, place_ids, commitment_id = _journey_with_inputs()
     composed = client.post(
         f"/api/v1/journeys/{journey_id}/plans/authoritative-compose",
@@ -190,7 +201,7 @@ def test_r28_foreground_web_location_cannot_claim_device_verified_execution() ->
     previous = _set_secret(_TEST_SECRET)
     try:
         journey_id, activity_id, traveler_id = _start_authoritative_journey()
-        _ensure_owner_member(journey_id, traveler_id)
+        member_id = _ensure_owner_member(journey_id, traveler_id)
         token = issue_traveler_token(traveler_id)
         headers = {"Authorization": f"Bearer {token}"}
 
@@ -233,7 +244,9 @@ def test_r28_foreground_web_location_cannot_claim_device_verified_execution() ->
 
         with SessionLocal() as session:
             journey = session.get(Journey, journey_id)
-            presence = presence_projection(session, journey)
+            presence = presence_projection(
+                session, journey, viewer_member_id=member_id
+            )
         assert presence["state"] == "NEAR_TARGET"
         assert presence["authority"] == "ADVISORY_FOREGROUND"
         assert presence["arrival_transition_allowed"] is False

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 
 from pathlib import Path
 from typing import Generator
@@ -725,6 +726,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             _quarantine_existing_duplicates(connection)
             _collapse_duplicate_active_plans(connection)
             _retire_duplicate_active_anchors(connection)
+            _prepare_shared_stop_grant_slot(connection)
             # ORD-0167: parked before the script so the new table is the one in `db/schema.sql`.
             _preserve_legacy_hydration_table(connection)
         if hasattr(raw, "executescript"):
@@ -1527,6 +1529,62 @@ def _reconcile_real_place_candidate_scope(connection) -> None:
         "ON real_place_candidates(journey_id, captured_at)"
     )
     connection.exec_driver_sql("PRAGMA foreign_keys = ON")
+
+
+def _prepare_shared_stop_grant_slot(connection) -> None:
+    """Add and backfill the cross-process uniqueness slot before schema indexes run."""
+
+    table = connection.exec_driver_sql(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='shared_stop_coplanning_grants'"
+    ).first()
+    if table is None:
+        return
+    columns = {
+        row[1]
+        for row in connection.exec_driver_sql("PRAGMA table_info(shared_stop_coplanning_grants)")
+    }
+    added_column = "active_slot" not in columns
+    if added_column:
+        # Historical rows default inactive. Below, retain at most the newest
+        # live grant in each natural invitation/plan/member scope.
+        connection.exec_driver_sql(
+            "ALTER TABLE shared_stop_coplanning_grants "
+            "ADD COLUMN active_slot INTEGER NOT NULL DEFAULT 0"
+        )
+    index_exists = connection.exec_driver_sql(
+        "SELECT 1 FROM sqlite_master WHERE type='index' "
+        "AND name='ux_shared_stop_coplanning_one_unbound_active_grant'"
+    ).first() is not None
+    if not added_column and index_exists:
+        return
+
+    connection.exec_driver_sql("UPDATE shared_stop_coplanning_grants SET active_slot=0")
+    rows = connection.exec_driver_sql(
+        "SELECT id, journey_id, invitation_id, base_plan_version_id, grantee_member_id, "
+        "expires_at FROM shared_stop_coplanning_grants "
+        "WHERE promotion_id IS NULL AND status IN ('OFFERED', 'ACCEPTED') "
+        "ORDER BY updated_at DESC, id DESC"
+    ).all()
+    now = datetime.now(timezone.utc)
+    retained: set[tuple[str, str, str, str]] = set()
+    for row in rows:
+        grant_id, journey_id, invitation_id, plan_id, grantee_id, expires_at = row
+        try:
+            expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            continue
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
+        if expiry <= now:
+            continue
+        scope = (str(journey_id), str(invitation_id), str(plan_id), str(grantee_id))
+        if scope in retained:
+            continue
+        retained.add(scope)
+        connection.exec_driver_sql(
+            "UPDATE shared_stop_coplanning_grants SET active_slot=1 WHERE id=?",
+            (str(grant_id),),
+        )
 
 
 def get_session() -> Generator[Session, None, None]:

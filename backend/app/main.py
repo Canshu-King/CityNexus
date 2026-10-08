@@ -157,6 +157,7 @@ from app.db.models import (
     JourneyMember as JourneyMemberModel,
     MemberPlaceInvitation,
     MemberPlaceInvitationRecipient,
+    MemberPlaceGroupShareConsent,
     MemberPlacePromotion,
     SharedStopCoPlanningGrant,
     MemberSideQuest,
@@ -479,6 +480,7 @@ from app.schemas import (
     MemberPlaceInvitationDecisionRequest,
     MemberPlaceInvitationFeasibilityPreviewRequest,
     MemberPlaceInvitationProgressRequest,
+    MemberPlaceGroupShareConsentRequest,
     MemberPlacePromotionCreateRequest,
     MemberPlacePromotionDecisionRequest,
     SharedStopCoPlanningGrantCreateRequest,
@@ -4027,6 +4029,15 @@ def answer_collective_clarification(
             raise HTTPException(409, "STALE_COLLECTIVE_MEMBERSHIP")
         from app.shared_stop_coplanning import decision_scope_facts
 
+        source_invitation = session.get(
+            MemberPlaceInvitation, str(r73_shared_stop.get("invitation_id") or "")
+        )
+        if source_invitation is None or str(source_invitation.journey_id) != str(journey.id):
+            raise HTTPException(409, "NOT_SHARED_TO_GROUP")
+        from app.execution.member_place_group_share import require_group_share
+
+        require_group_share(session, journey, source_invitation)
+
         authority_scope_facts, _scope_grants = decision_scope_facts(
             session,
             journey_id=str(journey.id),
@@ -7561,6 +7572,7 @@ def _withdraw_journey_member(
         )
     ).all():
         grant.status = "REVOKED"
+        grant.active_slot = False
         grant.revoked_at = stamp
         grant.updated_at = stamp
     record_audit(
@@ -10089,6 +10101,15 @@ def _withdraw_member_place_invitation(
         invitation.state = "WITHDRAWN"
         invitation.withdrawn_at = now
         invitation.updated_at = now
+        session.execute(
+            update(MemberPlaceGroupShareConsent)
+            .where(
+                MemberPlaceGroupShareConsent.journey_id == str(journey.id),
+                MemberPlaceGroupShareConsent.invitation_id == str(invitation.id),
+                MemberPlaceGroupShareConsent.status == "ACTIVE",
+            )
+            .values(status="WITHDRAWN", withdrawn_at=now, updated_at=now)
+        )
         session.commit()
     return operator_projection(session, journey, viewer_member_id=member.id)
 
@@ -10108,6 +10129,197 @@ def withdraw_member_place_invitation(
             request=request,
             session=session,
         )
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/preview")
+def preview_member_place_group_share(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_group_share import group_share_preview
+
+    principal, owner = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    return group_share_preview(
+        session,
+        journey=journey,
+        invitation=invitation,
+        owner_member_id=str(owner.id),
+        owner_traveler_id=str(principal.traveler_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/confirm")
+def confirm_member_place_group_share(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceGroupShareConsentRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_group_share import (
+            _current_facts,
+            build_consent_row,
+            consent_row_for_snapshot,
+            legacy_full_audience_consent,
+        )
+
+        principal, owner = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+        invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+        if (
+            str(invitation.owner_member_id) != str(owner.id)
+            or str(invitation.owner_traveler_id) != str(principal.traveler_id)
+        ):
+            raise HTTPException(403, "GROUP_SHARE_REQUIRES_SIGNED_SOURCE_OWNER")
+        if payload.confirm_full_journey_place_sharing is not True:
+            raise HTTPException(422, "GROUP_SHARE_CONFIRMATION_REQUIRED")
+
+        now = execution_clock.now().astimezone(timezone.utc)
+        facts, _audience = _current_facts(session, journey, invitation, now=now)
+        if str(payload.audience_snapshot) != str(facts["audience_snapshot_hash"]):
+            raise HTTPException(409, "AUDIENCE_CHANGED")
+        if str(payload.plan_snapshot) != str(facts["plan_snapshot_hash"]):
+            raise HTTPException(409, "PLAN_CHANGED")
+        if str(payload.source_snapshot) != str(facts["source_snapshot_hash"]):
+            raise HTTPException(409, "INVITER_SPLIT_STALE")
+        if legacy_full_audience_consent(session, journey, invitation, facts=facts):
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+
+        existing = consent_row_for_snapshot(
+            session=session,
+            journey=journey,
+            invitation=invitation,
+            owner=owner,
+            traveler_id=str(principal.traveler_id),
+            facts=facts,
+            now=now,
+        )
+        if existing is not None:
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+
+        consent = build_consent_row(
+            journey=journey,
+            invitation=invitation,
+            owner=owner,
+            traveler_id=str(principal.traveler_id),
+            facts=facts,
+            now=now,
+        )
+        session.add(consent)
+        record_audit(
+            session,
+            action="journey.member_place_group_share.consented",
+            entity_type="MemberPlaceGroupShareConsent",
+            entity_id=consent.id,
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={
+                "invitation_id": str(invitation.id),
+                "owner_member_id": str(owner.id),
+                "base_plan_version_id": str(journey.active_plan_version_id),
+                "audience_snapshot_hash": consent.audience_snapshot_hash,
+                "expires_at": consent.expires_at,
+            },
+        )
+        try:
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            raced = session.scalar(
+                select(MemberPlaceGroupShareConsent).where(
+                    MemberPlaceGroupShareConsent.journey_id == str(journey.id),
+                    MemberPlaceGroupShareConsent.invitation_id == str(invitation.id),
+                    MemberPlaceGroupShareConsent.status == "ACTIVE",
+                )
+            )
+            if (
+                raced is not None
+                and str(raced.owner_member_id) == str(owner.id)
+                and str(raced.owner_traveler_id) == str(principal.traveler_id)
+                and str(raced.audience_snapshot_hash) == str(facts["audience_snapshot_hash"])
+                and str(raced.plan_snapshot_hash) == str(facts["plan_snapshot_hash"])
+                and str(raced.source_snapshot_hash) == str(facts["source_snapshot_hash"])
+            ):
+                return operator_projection(session, journey, viewer_member_id=owner.id)
+            raise HTTPException(409, "GROUP_SHARE_CONSENT_CONFLICT") from exc
+        return operator_projection(session, journey, viewer_member_id=owner.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/withdraw")
+def withdraw_member_place_group_share(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_group_share import current_group_share
+
+        principal, owner = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+        invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+        if (
+            str(invitation.owner_member_id) != str(owner.id)
+            or str(invitation.owner_traveler_id) != str(principal.traveler_id)
+        ):
+            raise HTTPException(403, "GROUP_SHARE_REQUIRES_SIGNED_SOURCE_OWNER")
+        state = current_group_share(session, journey, invitation)
+        consent = state.get("receipt")
+        if consent is None:
+            if state.get("status") == "SHARED_BY_ORIGINAL_INVITATION":
+                raise HTTPException(409, "ORIGINAL_INVITATION_ALREADY_SHARED_TO_FULL_AUDIENCE")
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+        if str(consent.status) != "ACTIVE":
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+
+        stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+        changed = session.execute(
+            update(MemberPlaceGroupShareConsent)
+            .where(
+                MemberPlaceGroupShareConsent.id == str(consent.id),
+                MemberPlaceGroupShareConsent.journey_id == str(journey.id),
+                MemberPlaceGroupShareConsent.invitation_id == str(invitation.id),
+                MemberPlaceGroupShareConsent.owner_member_id == str(owner.id),
+                MemberPlaceGroupShareConsent.owner_traveler_id == str(principal.traveler_id),
+                MemberPlaceGroupShareConsent.status == "ACTIVE",
+            )
+            .values(status="WITHDRAWN", withdrawn_at=stamp, updated_at=stamp)
+        )
+        if int(changed.rowcount or 0) != 1:
+            session.rollback()
+            current = session.get(MemberPlaceGroupShareConsent, str(consent.id))
+            if current is not None and str(current.status) == "WITHDRAWN":
+                return operator_projection(session, journey, viewer_member_id=owner.id)
+            raise HTTPException(409, "INVITER_CONSENT_CHANGED_DURING_WITHDRAWAL")
+        record_audit(
+            session,
+            action="journey.member_place_group_share.withdrawn",
+            entity_type="MemberPlaceGroupShareConsent",
+            entity_id=str(consent.id),
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={"invitation_id": str(invitation.id), "future_projection_disabled": True},
+        )
+        session.commit()
+        return operator_projection(session, journey, viewer_member_id=owner.id)
 
 
 @app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview")
@@ -10590,6 +10802,8 @@ def _offer_shared_stop_coplanning_grant(
     )
     if not _r73_member_can_manage_members(session, manager):
         raise HTTPException(403, "Journey member role does not have MEMBER_MANAGE authority")
+    if not _r73_member_can_update(session, manager):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
     try:
@@ -10609,6 +10823,16 @@ def _offer_shared_stop_coplanning_grant(
         or not _invitation_context_is_current(session, journey, invitation, now=now)
     ):
         raise HTTPException(409, "SCOPED_COPLANNING_INVITATION_STALE")
+    from app.execution.member_place_group_share import require_group_share_sponsor
+
+    require_group_share_sponsor(
+        session,
+        journey,
+        invitation,
+        actor=manager,
+        traveler_id=str(principal.traveler_id),
+        now=now,
+    )
     grantee = session.get(JourneyMemberModel, str(payload.grantee_member_id))
     if (
         grantee is None
@@ -10648,13 +10872,19 @@ def _offer_shared_stop_coplanning_grant(
             SharedStopCoPlanningGrant.invitation_id == str(invitation.id),
             SharedStopCoPlanningGrant.base_plan_version_id == str(journey.active_plan_version_id),
             SharedStopCoPlanningGrant.grantee_member_id == str(grantee.id),
-            SharedStopCoPlanningGrant.promotion_id.is_(None),
-            SharedStopCoPlanningGrant.status.in_(("OFFERED", "ACCEPTED")),
+            SharedStopCoPlanningGrant.active_slot.is_(True),
         )
         .order_by(SharedStopCoPlanningGrant.updated_at.desc())
     ).first()
-    if existing is not None and datetime.fromisoformat(existing.expires_at) > now:
-        return operator_projection(session, journey, viewer_member_id=manager.id)
+    if existing is not None:
+        if datetime.fromisoformat(existing.expires_at) > now:
+            return operator_projection(session, journey, viewer_member_id=manager.id)
+        # Release the DB-enforced active grant slot before issuing a fresh
+        # invitation. The status transition and replacement offer commit in
+        # the same transaction.
+        existing.active_slot = False
+        existing.updated_at = now.isoformat()
+        session.flush()
     stamp = now.isoformat()
     grant = SharedStopCoPlanningGrant(
         id=str(uuid4()),
@@ -10665,6 +10895,7 @@ def _offer_shared_stop_coplanning_grant(
         grantee_traveler_id=str(grantee.traveler_id),
         grantor_member_id=str(manager.id),
         grantor_traveler_id=str(principal.traveler_id),
+        active_slot=True,
         purpose="R73_SHARED_STOP_ONLY",
         status="OFFERED",
         request_key=request_key,
@@ -10701,7 +10932,23 @@ def _offer_shared_stop_coplanning_grant(
                 SharedStopCoPlanningGrant.request_key == request_key,
             )
         )
-        if raced is not None and raced.request_hash == signature:
+        if raced is not None:
+            if raced.request_hash == signature:
+                return operator_projection(session, journey, viewer_member_id=manager.id)
+            raise HTTPException(
+                409, "IDEMPOTENCY_KEY_REUSED_FOR_DIFFERENT_SCOPED_GRANT"
+            ) from exc
+        raced_active = session.scalar(
+            select(SharedStopCoPlanningGrant).where(
+                SharedStopCoPlanningGrant.journey_id == str(journey.id),
+                SharedStopCoPlanningGrant.invitation_id == str(invitation.id),
+                SharedStopCoPlanningGrant.base_plan_version_id == str(journey.active_plan_version_id),
+                SharedStopCoPlanningGrant.grantee_member_id == str(grantee.id),
+                SharedStopCoPlanningGrant.active_slot.is_(True),
+                SharedStopCoPlanningGrant.expires_at > now.isoformat(),
+            )
+        )
+        if raced_active is not None:
             return operator_projection(session, journey, viewer_member_id=manager.id)
         raise HTTPException(409, "SCOPED_COPLANNING_GRANT_CONFLICT") from exc
     return operator_projection(session, journey, viewer_member_id=manager.id)
@@ -10769,6 +11016,9 @@ def _respond_shared_stop_coplanning_grant(
         or not _invitation_context_is_current(session, journey, invitation, now=now)
     ):
         raise HTTPException(409, "SCOPED_COPLANNING_GRANT_STALE")
+    from app.execution.member_place_group_share import require_group_share
+
+    require_group_share(session, journey, invitation, now=now)
     already_decided_status = "ACCEPTED" if payload.decision == "ACCEPT" else "DECLINED"
     if grant.status == already_decided_status:
         return operator_projection(session, journey, viewer_member_id=member.id)
@@ -10780,6 +11030,7 @@ def _respond_shared_stop_coplanning_grant(
         grant.accepted_at = stamp
     else:
         grant.declined_at = stamp
+        grant.active_slot = False
     grant.updated_at = stamp
     record_audit(
         session,
@@ -10848,6 +11099,7 @@ def revoke_shared_stop_coplanning_grant_route(
             raise HTTPException(409, "SCOPED_COPLANNING_GRANT_NOT_REVOCABLE")
         stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
         grant.status = "REVOKED"
+        grant.active_slot = False
         grant.revoked_at = stamp
         grant.updated_at = stamp
         record_audit(
@@ -10943,6 +11195,11 @@ def _r73_invitation_context_reason(
         return "CANONICAL_PLACE_OR_RENDEZVOUS_CHANGED"
     if not _invitation_context_is_current(session, journey, invitation, now=now):
         return "INVITATION_CONTEXT_STALE"
+    from app.execution.member_place_group_share import current_group_share
+
+    group_share = current_group_share(session, journey, invitation, now=now)
+    if not group_share.get("shared"):
+        return str(group_share.get("status") or "NOT_SHARED_TO_GROUP")
     return None
 
 
@@ -11004,6 +11261,19 @@ def _create_member_place_promotion(
     principal, actor = resolve_journey_member_principal(request, session, journey_id=journey.id)
     if not _r73_member_can_update(session, actor):
         raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    if invitation.journey_id != journey.id:
+        raise HTTPException(404, "Place invitation was not found")
+    from app.execution.member_place_group_share import require_group_share_sponsor
+
+    require_group_share_sponsor(
+        session,
+        journey,
+        invitation,
+        actor=actor,
+        traveler_id=str(principal.traveler_id),
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
     try:
@@ -11030,9 +11300,6 @@ def _create_member_place_promotion(
             raise HTTPException(409, "same idempotency key used for a different request")
         return operator_projection(session, journey, viewer_member_id=actor.id)
 
-    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
-    if invitation.journey_id != journey.id:
-        raise HTTPException(404, "Place invitation was not found")
     is_inviter = str(invitation.owner_member_id) == str(actor.id)
     is_joined = session.scalar(
         select(MemberPlaceInvitationRecipient.id).where(
@@ -21810,6 +22077,15 @@ def _collective_resolution_for_child(
         if current_member_ids != stored_member_ids:
             raise HTTPException(409, "STALE_COLLECTIVE_MEMBERSHIP")
         from app.shared_stop_coplanning import decision_scope_facts
+
+        source_invitation = session.get(
+            MemberPlaceInvitation, str(r73_shared_stop.get("invitation_id") or "")
+        )
+        if source_invitation is None or str(source_invitation.journey_id) != str(journey.id):
+            raise HTTPException(409, "NOT_SHARED_TO_GROUP")
+        from app.execution.member_place_group_share import require_group_share
+
+        require_group_share(session, journey, source_invitation)
 
         authority_scope_facts, _scope_grants = decision_scope_facts(
             session,

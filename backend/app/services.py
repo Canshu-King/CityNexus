@@ -133,6 +133,7 @@ def reset_all(session: Session) -> None:
         "agent_run_steps",
         "agent_runs",
         "journey_missions",
+        "member_place_group_share_consents",
         "member_place_promotions",
         "member_place_invitation_progress",
         "member_place_invitation_recipients",

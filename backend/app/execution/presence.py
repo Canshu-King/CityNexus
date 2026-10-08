@@ -78,10 +78,11 @@ def presence_projection(
     session: Session,
     journey: Journey,
     *,
+    viewer_member_id: str | None = None,
     target_activity_id: str | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Project location relative to an exact planned Place without mutating execution."""
+    """Project only the signed viewer's location relative to an exact planned Place."""
 
     target = _target_activity(session, journey, target_activity_id)
     base: dict[str, Any] = {
@@ -97,11 +98,19 @@ def presence_projection(
         "distance_to_target_m": None,
         "maximum_near_distance_m": None,
         "arrival_transition_allowed": False,
-        "reason_code": "NO_LOCATION_OBSERVATION",
+        "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
     }
+    # Location is member-private. System projections, legacy rows without a
+    # bound member, and callers without a signed viewer must never fall back to
+    # the latest Journey-wide observation.
+    if not viewer_member_id:
+        return base
     latest = session.scalar(
         select(LocationObservation)
-        .where(LocationObservation.journey_id == journey.id)
+        .where(
+            LocationObservation.journey_id == journey.id,
+            LocationObservation.journey_member_id == str(viewer_member_id),
+        )
         .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
     )
     if latest is None:

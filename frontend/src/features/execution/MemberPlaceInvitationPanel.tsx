@@ -3,6 +3,7 @@ import {
   CityNexusApiError,
   cityNexusApi,
   type MemberPlaceInvitationFeasibilityPreviewResult,
+  type MemberPlaceGroupSharePreviewResult,
   type MemberPlaceInvitationOwnProgress,
   type MemberPlaceInvitationProgressParticipant,
   type MemberPlaceInvitationProjection,
@@ -36,6 +37,9 @@ export function MemberPlaceInvitationPanel({
     shareAudienceToken: string;
     audienceNames: string[];
   } | null>(null);
+  const [groupSharePreviewById, setGroupSharePreviewById] = useState<
+    Record<string, MemberPlaceGroupSharePreviewResult | null>
+  >({});
   const [feasibilityById, setFeasibilityById] = useState<Record<string, MemberPlaceInvitationFeasibilityPreviewResult | null>>({});
   const [dwellById, setDwellById] = useState<Record<string, 10 | 20 | 30>>({});
   const [promotionDwellById, setPromotionDwellById] = useState<Record<string, 10 | 20 | 30>>({});
@@ -159,6 +163,80 @@ export function MemberPlaceInvitationPanel({
       setMessage(zh
         ? "提议未能进入可执行状态。共享行程未改变；请刷新查看具体路线证据或当前恢复状态。"
         : "The proposal did not become executable. The shared Journey is unchanged; refresh to review route evidence or an active recovery.");
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const previewGroupShare = async (invitationId: string) => {
+    if (busyId) return;
+    setBusyId(invitationId);
+    setMessage(null);
+    try {
+      const preview = await cityNexusApi.previewMemberPlaceGroupShare(journeyId, invitationId);
+      setGroupSharePreviewById((current) => ({ ...current, [invitationId]: preview }));
+    } catch (error) {
+      const body = error instanceof CityNexusApiError && error.body && typeof error.body === "object"
+        ? error.body as { detail?: unknown; error?: { message?: unknown } }
+        : null;
+      const code = String(body?.detail ?? body?.error?.message ?? "");
+      setMessage(code === "AUDIENCE_CHANGED"
+        ? (zh ? "同行成员名单发生变化；没有扩大分享。请刷新后重新查看名单。" : "The Journey audience changed. Nothing was shared; refresh and review the current list.")
+        : code === "GROUP_SHARE_REQUIRES_ACCEPTED_INVITEE"
+          ? (zh ? "先等待至少一位受邀同行者接受，再发起全组分享。" : "Wait for an invited companion to accept before sharing with the whole Journey.")
+          : (zh ? "无法创建当前分享预览；地点仍只对原邀请对象可见。" : "The current sharing preview is unavailable; the Place remains visible only to the original invitees."));
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const confirmGroupShare = async (
+    invitationId: string,
+    preview: MemberPlaceGroupSharePreviewResult,
+  ) => {
+    if (busyId) return;
+    setBusyId(invitationId);
+    setMessage(null);
+    try {
+      await cityNexusApi.confirmMemberPlaceGroupShare(journeyId, invitationId, preview);
+      setGroupSharePreviewById((current) => ({ ...current, [invitationId]: null }));
+      await onUpdated();
+      setMessage(zh
+        ? "已向预览中的当前同行者分享这个公开地点；改变共同计划仍需他们逐人另行决定。"
+        : "The public Place was shared with the reviewed Journey audience. Any shared-plan change still needs separate decisions from every required member.");
+    } catch (error) {
+      const body = error instanceof CityNexusApiError && error.body && typeof error.body === "object"
+        ? error.body as { detail?: unknown; error?: { message?: unknown } }
+        : null;
+      const code = String(body?.detail ?? body?.error?.message ?? "");
+      setGroupSharePreviewById((current) => ({ ...current, [invitationId]: null }));
+      setMessage(code === "AUDIENCE_CHANGED"
+        ? (zh ? "名单在确认前变化；没有分享。请重新打开预览核对新名单。" : "The audience changed before confirmation; nothing was shared. Reopen the preview to review the new list.")
+        : code === "PLAN_CHANGED"
+          ? (zh ? "共享计划或当前执行点已变化；本次分享没有生效。" : "The shared plan or current execution cursor changed; this share was not applied.")
+          : code === "INVITER_SPLIT_STALE"
+            ? (zh ? "你的独立探索或会合信息已变化；本次分享没有生效。" : "Your private split or rendezvous context changed; this share was not applied.")
+            : (zh ? "分享未生效；原行程和成员权限没有改变。" : "The share was not applied; the Journey plan and member roles are unchanged."));
+      await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const withdrawGroupShare = async (invitationId: string) => {
+    if (busyId) return;
+    setBusyId(invitationId);
+    setMessage(null);
+    try {
+      await cityNexusApi.withdrawMemberPlaceGroupShare(journeyId, invitationId);
+      await onUpdated();
+      setMessage(zh
+        ? "已停止后续投影和新提议；此前已经看到地点的成员无法被当作从未见过。"
+        : "Future projections and new proposals are disabled. Members who already saw the Place cannot be treated as if they never saw it.");
+    } catch {
+      setMessage(zh ? "无法撤回全组分享；刷新查看当前状态。" : "The group share could not be withdrawn; refresh to review its current state.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -289,6 +367,8 @@ export function MemberPlaceInvitationPanel({
     rendezvousTitle: string,
     current: boolean,
     canPropose: boolean,
+    canUpdate: boolean,
+    groupShareStatus: string,
     coPlanningOptions: MemberPlaceInvitationProjection["sent"][number]["co_planning_options"],
   ) => {
     const coPlanningReady = coPlanningOptions.every((item) => item.state === "ACCEPTED");
@@ -374,11 +454,18 @@ export function MemberPlaceInvitationPanel({
         <option value={30}>{zh ? "30 分钟" : "30 minutes"}</option>
       </select>
       <small>{zh ? `地点：${placeName}；下一会合：${rendezvousTitle}。` : `Place: ${placeName}; next rendezvous: ${rendezvousTitle}.`}</small>
-      {!canPropose && (
+      {!canUpdate && (
         <small data-testid="member-place-promotion-role-blocked">
           {zh
             ? "你当前的 Journey 成员角色没有 JOURNEY_UPDATE 权限，因此不能提交共享计划变更提议。请由有权限的成员发起；系统不会借用其他人的身份。"
             : "Your current Journey role lacks JOURNEY_UPDATE authority, so you cannot submit a shared-plan change. A member with this authority must propose it; CityNexus will not act as another member."}
+        </small>
+      )}
+      {canUpdate && !canPropose && (
+        <small data-testid="member-place-promotion-share-blocked">
+          {zh
+            ? `原地点分享者尚未向全组授权，或授权已失效（${groupShareStatus}）；请由分享者确认后再提议。`
+            : `The original Place sharer has not authorized full-Journey disclosure, or that consent is stale (${groupShareStatus}). The sharer must confirm before a proposal can be sponsored.`}
         </small>
       )}
       <button
@@ -394,6 +481,62 @@ export function MemberPlaceInvitationPanel({
             : (zh ? "提议加入共同旅程" : "Propose as a shared stop"))}
       </button>
     </section>
+    );
+  };
+
+  const renderGroupShareControl = (
+    invitationId: string,
+    placeName: string,
+    status: string,
+    canManage: boolean,
+  ) => {
+    const preview = groupSharePreviewById[invitationId];
+    const statusText: Record<string, string> = {
+      SHARED_TO_GROUP: zh ? "已由你明确分享给当前全组。" : "You explicitly shared this Place with the current Journey audience.",
+      SHARED_BY_ORIGINAL_INVITATION: zh ? "创建原邀请时已选择当前全组；不需要重复确认。" : "The original invitation already named every current Journey member.",
+      NOT_SHARED_TO_GROUP: zh ? "目前只有原邀请对象能看到这个地点。" : "Only the original invitees can currently see this Place.",
+      AUDIENCE_CHANGED: zh ? "成员名单变化已使之前的分享失效。" : "A membership change invalidated the previous sharing snapshot.",
+      PLAN_CHANGED: zh ? "共享计划或执行点变化已使之前的分享失效。" : "A plan or execution-cursor change invalidated the previous sharing snapshot.",
+      INVITER_SPLIT_STALE: zh ? "独立探索或会合上下文变化已使分享失效。" : "The inviter's split or rendezvous context invalidated the previous share.",
+      INVITER_CONSENT_WITHDRAWN: zh ? "你已撤回全组分享；已经看过的人无法被视为从未见过。" : "You withdrew full-Journey sharing; people who already saw the Place cannot be made to unsee it.",
+      INVITER_CONSENT_EXPIRED: zh ? "全组分享已过期；需要重新核对并确认。" : "The group-share consent expired and needs a fresh review.",
+    };
+    return (
+      <section data-testid="member-place-group-share" data-state={status}>
+        {canManage ? (
+          <>
+            <strong>{zh ? "把这个发现分享给全体同行者" : "Share this discovery with the whole Journey"}</strong>
+            <small>{statusText[status] ?? statusText.NOT_SHARED_TO_GROUP}</small>
+            {status === "SHARED_TO_GROUP" ? (
+              <button type="button" data-testid="member-place-group-share-withdraw" disabled={busyId !== null} onClick={() => void withdrawGroupShare(invitationId)}>
+                {zh ? "撤回后续全组分享" : "Withdraw future group sharing"}
+              </button>
+            ) : (
+              <button type="button" data-testid="member-place-group-share-preview" disabled={busyId !== null} onClick={() => void previewGroupShare(invitationId)}>
+                {zh ? "查看分享名单与内容…" : "Review audience and shared details…"}
+              </button>
+            )}
+            {preview && (
+              <section data-testid="member-place-group-share-confirmation">
+                <strong>{preview.place.name} · {preview.audience.length}{zh ? " 位同行者" : " companions"}</strong>
+                <ul>
+                  {preview.audience.map((person) => <li key={person.member_id}>{person.display_name}</li>)}
+                </ul>
+                <small>{preview.disclosure}</small>
+                <small>{zh ? `下一会合点：${preview.rendezvous.title}。计划变更还需全体逐人决策。` : `Next rendezvous: ${preview.rendezvous.title}. A plan change still requires each member's separate decision.`}</small>
+                <button type="button" data-testid="member-place-group-share-confirm" disabled={busyId !== null} onClick={() => void confirmGroupShare(invitationId, preview)}>
+                  {zh ? "确认向以上成员分享地点" : "Confirm sharing this Place with these members"}
+                </button>
+                <button type="button" disabled={busyId !== null} onClick={() => setGroupSharePreviewById((current) => ({ ...current, [invitationId]: null }))}>
+                  {zh ? "取消" : "Cancel"}
+                </button>
+              </section>
+            )}
+          </>
+        ) : status !== "SHARED_TO_GROUP" && status !== "SHARED_BY_ORIGINAL_INVITATION" ? (
+          <small data-testid="member-place-group-share-waiting">{statusText[status] ?? statusText.NOT_SHARED_TO_GROUP}</small>
+        ) : null}
+      </section>
     );
   };
 
@@ -638,6 +781,12 @@ export function MemberPlaceInvitationPanel({
       {sentInvitations.map((invitation) => (
         <article key={invitation.invitation_id} data-testid="member-place-progress-sent-invitation">
           <span className="v8-kicker">{zh ? "你发起的临时同行" : "Your invited micro-adventure"}</span>
+          {renderGroupShareControl(
+            invitation.invitation_id,
+            invitation.place.name,
+            invitation.group_share_status,
+            invitation.viewer_can_manage_group_share,
+          )}
           {renderProgressBoard(
             invitation.invitation_id,
             invitation.place.name,
@@ -653,6 +802,8 @@ export function MemberPlaceInvitationPanel({
             invitation.rendezvous.title,
             invitation.state === "OPEN",
             invitation.viewer_can_propose,
+            invitation.viewer_has_journey_update,
+            invitation.group_share_status,
             invitation.co_planning_options,
           )}
         </article>
@@ -661,6 +812,12 @@ export function MemberPlaceInvitationPanel({
         <article key={invitation.invitation_id} data-testid="member-place-invitation-joined">
           <span className="v8-kicker">{zh ? "你已加入的临时同行" : "An invited micro-adventure you joined"}</span>
           <strong>{invitation.inviter_display_name} · {invitation.place.name}</strong>
+          {renderGroupShareControl(
+            invitation.invitation_id,
+            invitation.place.name,
+            invitation.group_share_status,
+            invitation.viewer_can_manage_group_share,
+          )}
           {renderProgressBoard(
             invitation.invitation_id,
             invitation.place.name,
@@ -676,6 +833,8 @@ export function MemberPlaceInvitationPanel({
             invitation.rendezvous.title,
             invitation.state === "OPEN",
             invitation.viewer_can_propose,
+            invitation.viewer_has_journey_update,
+            invitation.group_share_status,
             invitation.co_planning_options,
           )}
         </article>

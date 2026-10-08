@@ -1612,6 +1612,25 @@ def invitation_projection(
                 continue
         except (TypeError, KeyError, json.JSONDecodeError):
             continue
+        from app.execution.member_place_group_share import current_group_share
+
+        group_share = current_group_share(session, journey, invitation, now=current)
+        viewer_is_source = str(invitation.owner_member_id) == str(viewer.id)
+        viewer_is_accepted_recipient = any(
+            str(row.recipient_member_id) == str(viewer.id)
+            and str(row.recipient_traveler_id) == str(viewer.traveler_id)
+            and str(row.state) == "ACCEPTED_OWN_STOP_READY"
+            for row in recipients
+        )
+        viewer_can_manage_group_share = (
+            viewer_is_source
+            and group_share.get("status") != "SHARED_BY_ORIGINAL_INVITATION"
+            and group_share.get("status") != "GROUP_SHARE_REQUIRES_ACCEPTED_INVITEE"
+        )
+        viewer_can_propose_group_share = (
+            group_share.get("shared")
+            and (viewer_is_source or viewer_is_accepted_recipient)
+        )
         if str(invitation.owner_member_id) == str(viewer.id):
             progress_board, own_progress = _invitation_progress_board(
                 session,
@@ -1647,8 +1666,14 @@ def invitation_projection(
                 "recipients": recipient_views,
                 "participants": progress_board,
                 "own_progress": own_progress,
-                "viewer_can_propose": viewer_capability is not None,
-                "co_planning_options": _co_planning_options(invitation),
+                "viewer_can_propose": viewer_capability is not None and viewer_can_propose_group_share,
+                "viewer_has_journey_update": viewer_capability is not None,
+                "group_share_status": str(group_share.get("status") or "NOT_SHARED_TO_GROUP"),
+                "group_share_receipt_id": (
+                    str(group_share["receipt"].id) if group_share.get("receipt") is not None else None
+                ),
+                "viewer_can_manage_group_share": viewer_can_manage_group_share,
+                "co_planning_options": _co_planning_options(invitation) if group_share.get("shared") else [],
             })
             continue
 
@@ -1681,8 +1706,14 @@ def invitation_projection(
                 "rendezvous": rendezvous_view,
                 "participants": progress_board,
                 "own_progress": own_progress,
-                "viewer_can_propose": viewer_capability is not None,
-                "co_planning_options": _co_planning_options(invitation),
+                "viewer_can_propose": viewer_capability is not None and viewer_can_propose_group_share,
+                "viewer_has_journey_update": viewer_capability is not None,
+                "group_share_status": str(group_share.get("status") or "NOT_SHARED_TO_GROUP"),
+                "group_share_receipt_id": (
+                    str(group_share["receipt"].id) if group_share.get("receipt") is not None else None
+                ),
+                "viewer_can_manage_group_share": False,
+                "co_planning_options": _co_planning_options(invitation) if group_share.get("shared") else [],
             })
             continue
         output["incoming"].append({
@@ -1715,6 +1746,10 @@ def invitation_projection(
     ).all():
         invitation = session.get(MemberPlaceInvitation, str(grant.invitation_id))
         if invitation is None:
+            continue
+        from app.execution.member_place_group_share import current_group_share
+
+        if not current_group_share(session, journey, invitation, now=current).get("shared"):
             continue
         try:
             frozen = json.loads(str(invitation.disclosure_snapshot_json or "{}"))
@@ -1786,6 +1821,10 @@ def invitation_projection(
     for promotion in promotions:
         invitation = session.get(MemberPlaceInvitation, str(promotion.invitation_id))
         if invitation is None:
+            continue
+        from app.execution.member_place_group_share import current_group_share
+
+        if not current_group_share(session, journey, invitation, now=current).get("shared"):
             continue
         try:
             snapshot = json.loads(str(invitation.disclosure_snapshot_json or "{}"))

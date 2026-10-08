@@ -90,7 +90,7 @@ function catalogInterest(category: string): "COFFEE_FOOD" | "CULTURE" | "NATURE"
   return null;
 }
 
-test("R73 promotes one discovered Place through signed collective consent to the shared itinerary", async ({ browser, request }) => {
+test("R75 lets an ordinary explorer share a Place before signed collective consent promotes it", async ({ browser, request }) => {
   test.setTimeout(180_000);
   const resetToken = process.env.CITYNEXUS_DEMO_RESET_TOKEN;
   const fixtureToken = process.env.CITYNEXUS_R73_TEST_FIXTURE_TOKEN;
@@ -118,6 +118,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
     data: { display_name: "R73 Signed Companion B", locale: "en-US", timezone: "Asia/Tokyo" },
   });
   const companionToken = travelerToken(companion.id);
+  const sourceToken = companionToken;
   await api(request, `${journeyPath}/members`, {
     method: "POST",
     token: ownerToken,
@@ -149,7 +150,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
   // Place catalog. It is test data, not device GPS or a live external search.
   const observation = await api<{ id: string }>(request, `${journeyPath}/location`, {
     method: "POST",
-    token: ownerToken,
+    token: sourceToken,
     data: {
       latitude: discoveryTarget.location.latitude,
       longitude: discoveryTarget.location.longitude,
@@ -164,7 +165,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
     evidence_boundary: string;
   }>(request, `${journeyPath}/moment-scout`, {
     method: "POST",
-    token: ownerToken,
+    token: sourceToken,
     data: { location_observation_id: observation.id, budget_minutes: 30, interest },
   });
   expect(scout.scout_state).toBe("OPTIONS_AVAILABLE");
@@ -180,7 +181,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
     `${journeyPath}/moment-scout/select`,
     {
       method: "POST",
-      token: ownerToken,
+      token: sourceToken,
       data: {
         location_observation_id: observation.id,
         budget_minutes: 30,
@@ -190,7 +191,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
       },
     },
   );
-  const ownerQuestId = selected.member_side_quest.id;
+  const sourceQuestId = selected.member_side_quest.id;
   expect(selected.member_side_quest.state).toBe("READY");
 
   // Ground the controlled time window before the invitation captures its exact
@@ -203,7 +204,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
     active_member_count: number;
   }>(request, `/__test/r73/prepare/${journeyId}`, {
     method: "POST",
-    data: { side_quest_id: ownerQuestId },
+    data: { side_quest_id: sourceQuestId },
     headers: { "X-R73-Test-Fixture-Token": fixtureToken },
   });
   expect(fixture.fixture_class).toBe("TEST_REPLAY");
@@ -212,15 +213,15 @@ test("R73 promotes one discovered Place through signed collective consent to the
 
   const invitePreview = await api<{ audience_snapshot: string }>(
     request,
-    `${journeyPath}/member-side-quests/${ownerQuestId}/place-invitation-preview`,
-    { token: ownerToken },
+    `${journeyPath}/member-side-quests/${sourceQuestId}/place-invitation-preview`,
+    { token: sourceToken },
   );
   const sent = await api<{ member_place_invitations: { sent: Array<{ invitation_id: string }> } }>(
     request,
-    `${journeyPath}/member-side-quests/${ownerQuestId}/place-invitations`,
+    `${journeyPath}/member-side-quests/${sourceQuestId}/place-invitations`,
     {
       method: "POST",
-      token: ownerToken,
+      token: sourceToken,
       data: { confirm_public_place_sharing: true, audience_snapshot: invitePreview.audience_snapshot },
     },
   );
@@ -232,14 +233,14 @@ test("R73 promotes one discovered Place through signed collective consent to the
     `${invitationPath}/feasibility-preview`,
     {
       method: "POST",
-      token: companionToken,
+      token: ownerToken,
       data: { consent_route_provider: true, location_observation_id: null, dwell_minutes: 30, requested_mode: "WALK" },
     },
   );
   expect(feasibility.state).toBe("UNKNOWN");
-  const accepted = await api<{ member_side_quest: { id: string } }>(request, `${invitationPath}/respond`, {
+  await api(request, `${invitationPath}/respond`, {
     method: "POST",
-    token: companionToken,
+    token: ownerToken,
     data: {
       decision: "ACCEPT",
       confirm_exact_public_place: true,
@@ -247,8 +248,6 @@ test("R73 promotes one discovered Place through signed collective consent to the
       acknowledge_feasibility_unknown: true,
     },
   });
-  const companionQuestId = accepted.member_side_quest.id;
-
   const uninvolved = await api<Traveler>(request, "/api/v1/travelers", {
     method: "POST",
     data: { display_name: "R73 Signed Journey Member C", locale: "en-US", timezone: "Asia/Shanghai" },
@@ -266,13 +265,23 @@ test("R73 promotes one discovered Place through signed collective consent to the
   expect(uninvolvedProjection.member_place_invitations?.joined ?? []).toEqual([]);
   expect(JSON.stringify(uninvolvedProjection)).not.toContain(discoveryTarget.name);
 
-  const currentMembers = await api<Array<{ traveler_id: string; role: string }>>(
+  const currentMembers = await api<Array<{ id: string; traveler_id: string; role: string }>>(
     request,
     `${journeyPath}/members`,
     { token: ownerToken },
   );
   expect(currentMembers.filter((member) => member.role === "OWNER")).toHaveLength(1);
   expect(currentMembers.filter((member) => member.role === "COLLABORATOR")).toHaveLength(2);
+  const ownerMemberId = currentMembers.find((member) => member.traveler_id === ownerId)?.id;
+  const cMemberId = currentMembers.find((member) => member.traveler_id === uninvolved.id)?.id;
+  expect(ownerMemberId).toBeTruthy();
+  expect(cMemberId).toBeTruthy();
+  const expectedShareAudience = await api<{
+    audience: Array<{ member_id: string; display_name: string }>;
+  }>(request, `${invitationPath}/group-share/preview`, { token: sourceToken });
+  expect(expectedShareAudience.audience.map((person) => person.member_id).sort()).toEqual(
+    [ownerMemberId, cMemberId].sort(),
+  );
 
   const baseline = await api<{
     agent_run_count: number;
@@ -283,28 +292,50 @@ test("R73 promotes one discovered Place through signed collective consent to the
   });
 
   const owner = await openJourneyPage(browser, journeyId, ownerToken);
-  const joined = await openJourneyPage(browser, journeyId, companionToken);
+  const source = await openJourneyPage(browser, journeyId, sourceToken);
   const uninvolvedPage = await openJourneyPage(browser, journeyId, uninvolvedToken);
   try {
-    const ownerBoard = owner.page.getByTestId("member-place-progress-sent-invitation");
-    const joinedBoard = joined.page.getByTestId("member-place-invitation-joined");
+    const ownerBoard = owner.page.getByTestId("member-place-invitation-joined");
+    const sourceBoard = source.page.getByTestId("member-place-progress-sent-invitation");
     await expect(ownerBoard).toBeVisible();
-    await expect(joinedBoard).toBeVisible();
-    await expect(joinedBoard).toContainText(discoveryTarget.name);
+    await expect(sourceBoard).toBeVisible();
+    await expect(ownerBoard).toContainText(discoveryTarget.name);
     await expect(uninvolvedPage.page.getByTestId("member-place-progress-board")).toHaveCount(0);
+
+    // Before B's consent, A cannot sponsor a proposal and C sees no trace of
+    // B's Place or private side quest.
+    await expect(ownerBoard.getByTestId("member-place-promotion-create")).toBeDisabled();
+    const beforeShareC = await api<unknown>(request, `${journeyPath}/operator`, { token: uninvolvedToken });
+    expect(JSON.stringify(beforeShareC)).not.toContain(discoveryTarget.name);
+    expect(JSON.stringify(beforeShareC)).not.toContain(sourceQuestId);
+
+    const groupShare = sourceBoard.getByTestId("member-place-group-share");
+    await expect(groupShare).toHaveAttribute("data-state", "NOT_SHARED_TO_GROUP");
+    await groupShare.getByTestId("member-place-group-share-preview").click();
+    const disclosure = groupShare.getByTestId("member-place-group-share-confirmation");
+    await expect(disclosure).toBeVisible();
+    for (const person of expectedShareAudience.audience) {
+      await expect(disclosure).toContainText(person.display_name);
+    }
+    await expect(disclosure).not.toContainText(companion.display_name);
+    await expect(disclosure).toContainText(discoveryTarget.name);
+    await disclosure.getByTestId("member-place-group-share-confirm").click();
+    await expect(groupShare).toHaveAttribute("data-state", "SHARED_TO_GROUP");
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
 
     const beforePromotion = await api<{ active_plan: { id: string } }>(request, `${journeyPath}/experience`);
     expect(beforePromotion.active_plan.id).toBe(fixture.active_plan_version_id);
 
     const offer = owner.page.getByTestId("member-place-promotion-offer");
     await expect(offer).toBeVisible();
+    await expect(offer.getByTestId("member-place-promotion-role-blocked")).toHaveCount(0);
 
     // A offers the exact place-scoped grant. B and C independently accept
     // with their own signed sessions; no test fixture upgrades either role.
     await offer.getByTestId("member-place-coplanning-member").selectOption({ label: companion.display_name });
     await offer.getByTestId("member-place-coplanning-offer").click();
-    await joined.page.reload({ waitUntil: "domcontentloaded" });
-    const bGrant = joined.page.getByTestId("member-place-coplanning-grant");
+    await source.page.reload({ waitUntil: "domcontentloaded" });
+    const bGrant = source.page.getByTestId("member-place-coplanning-grant");
     await expect(bGrant).toContainText(discoveryTarget.name);
     await bGrant.getByTestId("member-place-coplanning-accept").click();
 
@@ -316,6 +347,10 @@ test("R73 promotes one discovered Place through signed collective consent to the
     const cGrant = uninvolvedPage.page.getByTestId("member-place-coplanning-grant");
     await expect(cGrant).toContainText(discoveryTarget.name);
     await cGrant.getByTestId("member-place-coplanning-accept").click();
+    const afterConsentC = await api<unknown>(request, `${journeyPath}/operator`, { token: uninvolvedToken });
+    expect(JSON.stringify(afterConsentC)).toContain(discoveryTarget.name);
+    expect(JSON.stringify(afterConsentC)).not.toContain(sourceQuestId);
+    expect(JSON.stringify(afterConsentC)).not.toContain(observation.id);
 
     await owner.page.reload({ waitUntil: "domcontentloaded" });
     const readyOffer = owner.page.getByTestId("member-place-promotion-offer");
@@ -335,6 +370,16 @@ test("R73 promotes one discovered Place through signed collective consent to the
       member_place_invitations: { promotions: Promotion[] };
     };
     expect(created.member_place_invitations.promotions).toHaveLength(1);
+    const promotionCreateKey = createResponse.request().headers()["idempotency-key"];
+    const retriedCreate = await api<{
+      member_place_invitations: { promotions: Promotion[] };
+    }>(request, `${invitationPath}/promotions`, {
+      method: "POST",
+      token: ownerToken,
+      headers: { "Idempotency-Key": promotionCreateKey },
+      data: { dwell_minutes: 30 },
+    });
+    expect(retriedCreate.member_place_invitations.promotions).toHaveLength(1);
     const promotion = created.member_place_invitations.promotions[0];
     expect(promotion.state).toBe("WAITING_FOR_MEMBERS");
     expect(promotion.state_detail.feasibility).toBe("GROUNDED_FEASIBLE");
@@ -344,11 +389,11 @@ test("R73 promotes one discovered Place through signed collective consent to the
 
     await Promise.all([
       owner.page.reload({ waitUntil: "domcontentloaded" }),
-      joined.page.reload({ waitUntil: "domcontentloaded" }),
+      source.page.reload({ waitUntil: "domcontentloaded" }),
       uninvolvedPage.page.reload({ waitUntil: "domcontentloaded" }),
     ]);
     await expect(owner.page.getByTestId("member-place-promotion")).toHaveAttribute("data-state", "WAITING_FOR_MEMBERS");
-    await expect(joined.page.getByTestId("member-place-promotion")).toHaveAttribute("data-state", "WAITING_FOR_MEMBERS");
+    await expect(source.page.getByTestId("member-place-promotion")).toHaveAttribute("data-state", "WAITING_FOR_MEMBERS");
     await expect(uninvolvedPage.page.getByTestId("member-place-promotion")).toHaveAttribute("data-state", "WAITING_FOR_MEMBERS");
 
     const respond = async (page: Page) => {
@@ -361,7 +406,7 @@ test("R73 promotes one discovered Place through signed collective consent to the
       expect(response.ok()).toBeTruthy();
     };
     await respond(owner.page);
-    await respond(joined.page);
+    await respond(source.page);
 
     const afterAB = await api<{ active_plan: { id: string } }>(request, `${journeyPath}/experience`);
     expect(afterAB.active_plan.id).toBe(beforePromotion.active_plan.id);
@@ -389,12 +434,25 @@ test("R73 promotes one discovered Place through signed collective consent to the
     const applyResponse = await applyResponsePromise;
     expect(applyResponse.ok()).toBeTruthy();
     expect(applyResponse.request().headers()["idempotency-key"]).toMatch(/^r73-apply-/);
+    const applyKey = applyResponse.request().headers()["idempotency-key"];
+    await api<unknown>(request,
+      `${journeyPath}/member-place-promotions/${promotion.promotion_id}/apply`,
+      {
+        method: "POST",
+        token: ownerToken,
+        headers: { "Idempotency-Key": applyKey },
+      },
+    );
 
     const afterApply = await api<{
       active_plan: { id: string; activities: Array<{ place_id: string | null; activity_type: string }> };
     }>(request, `${journeyPath}/experience`);
     expect(afterApply.active_plan.id).not.toBe(beforePromotion.active_plan.id);
     expect(afterApply.active_plan.activities.filter((item) => item.place_id === discoveryTarget.id)).toHaveLength(1);
+    const sourceAfterApply = await api<{
+      member_side_quest: { id: string; state: string } | null;
+    }>(request, `${journeyPath}/operator`, { token: sourceToken });
+    expect(sourceAfterApply.member_side_quest?.id).toBe(sourceQuestId);
 
     const evidence = await api<{
       fixture_class: string;
@@ -428,13 +486,13 @@ test("R73 promotes one discovered Place through signed collective consent to the
     expect(evidence.promotions[0].state).toBe("APPLIED");
     expect(evidence.promotions[0].applied_plan_version_id).toBe(afterApply.active_plan.id);
 
-    for (const page of [owner.page, joined.page]) {
+    for (const page of [owner.page, source.page]) {
       await page.goto("/v8/trips", { waitUntil: "domcontentloaded" });
       const itinerary = page.getByTestId("trip-itinerary");
       await expect(itinerary).toBeVisible();
       await expect(itinerary.getByTestId("trip-stop").filter({ hasText: discoveryTarget.name })).toHaveCount(1);
     }
   } finally {
-    await Promise.allSettled([owner.close(), joined.close(), uninvolvedPage.close()]);
+    await Promise.allSettled([owner.close(), source.close(), uninvolvedPage.close()]);
   }
 });

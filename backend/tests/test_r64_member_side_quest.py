@@ -3838,6 +3838,16 @@ def test_r72_late_joiner_does_not_inherit_prior_opt_in_status():
 def test_r73_shared_stop_without_grounded_route_evidence_stays_blocked(monkeypatch):
     journey_id, owner_id, recipient_id = _active_shared_journey()
     invitation_id, _side_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    accepted_invitation = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert accepted_invitation.status_code == 200, accepted_invitation.text
     with SessionLocal() as session:
         recipient_member_id = str(session.scalar(
             select(JourneyMember.id).where(
@@ -4238,6 +4248,30 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     assert c_invitation_view.status_code == 200, c_invitation_view.text
     assert c_invitation_view.json()["member_place_invitations"]["incoming"] == []
 
+    # The original invitation only named the initial companion and was created
+    # before C joined. Its signed source owner must widen this disclosure.
+    group_share_url = (
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share"
+    )
+    group_share_preview = client.get(group_share_url + "/preview", headers=_auth(owner_id))
+    assert group_share_preview.status_code == 200, group_share_preview.text
+    group_share = group_share_preview.json()
+    assert {item["display_name"] for item in group_share["audience"]} == {
+        "R64同行者",
+        "R73 C outside the invitation group",
+    }
+    group_share_confirmed = client.post(
+        group_share_url + "/confirm",
+        headers=_auth(owner_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": group_share["audience_snapshot"],
+            "plan_snapshot": group_share["plan_snapshot"],
+            "source_snapshot": group_share["source_snapshot"],
+        },
+    )
+    assert group_share_confirmed.status_code == 200, group_share_confirmed.text
+
     def create_test_replay_event(session, journey):
         from app.db.models import Event as EventModel
 
@@ -4559,13 +4593,18 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
         headers={**_auth(owner_id), "Idempotency-Key": "r73-controlled-success-apply"},
     )
     assert apply.status_code == 200, apply.text
-    applied = _find_promotion(apply.json(), waiting["promotion_id"])
-    assert applied["state"] == "APPLIED"
-    assert applied["applied_plan_version_id"] != active_plan_before
+    # Applying the unanimous decision advances the active plan, which makes
+    # the one-plan disclosure receipt stale. The projection therefore stops
+    # listing the old invitation/promotion; verify the durable application row.
+    with SessionLocal() as session:
+        applied = session.get(MemberPlacePromotion, waiting["promotion_id"])
+        assert applied is not None and applied.state == "APPLIED"
+        applied_plan_version_id = str(applied.applied_plan_version_id)
+    assert applied_plan_version_id != active_plan_before
     normal_experience = client.get(f"/api/v1/journeys/{journey_id}/experience")
     assert normal_experience.status_code == 200, normal_experience.text
     active_after = normal_experience.json()["active_plan"]
-    assert active_after["id"] == applied["applied_plan_version_id"]
+    assert active_after["id"] == applied_plan_version_id
     assert sum(item.get("place_id") == place_id for item in active_after["activities"]) == 1
     post_apply_scoped_replay = client.post(
         response_url,
@@ -4659,3 +4698,555 @@ def test_r73_read_only_collaborator_sees_no_fake_promote_authority():
                 MemberPlacePromotion.journey_id == journey_id
             )
         ) == 0
+
+
+def _add_r75_member(
+    journey_id: str,
+    invited_by: str,
+    name: str,
+    *,
+    role: str = "COLLABORATOR",
+) -> tuple[str, str]:
+    traveler_id = str(uuid4())
+    member_id = str(uuid4())
+    stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        session.add(Traveler(
+            id=traveler_id,
+            display_name=name,
+            email=None,
+            locale="en-US",
+            timezone="Asia/Shanghai",
+            created_at=stamp,
+            updated_at=stamp,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=member_id,
+            journey_id=journey_id,
+            traveler_id=traveler_id,
+            role=role,
+            invited_by=invited_by,
+            expires_at=None,
+            joined_at=stamp,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=stamp,
+            updated_at=stamp,
+        ))
+        session.commit()
+    return traveler_id, member_id
+
+
+def _accept_r75_source_invitation(journey_id: str, invitation_id: str, traveler_id: str) -> None:
+    accepted = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(traveler_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+
+
+def test_r75_source_consent_gates_grants_projection_and_withdrawal():
+    from app.db.models import MemberPlaceGroupShareConsent
+
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, _quest_id, place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    late_id, late_member_id = _add_r75_member(
+        journey_id, sponsor_id, "R75 late Journey companion C"
+    )
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+
+    with SessionLocal() as session:
+        place = session.get(Place, place_id)
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        source_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == source_id,
+        ))
+        assert place is not None and invitation is not None and source_member is not None
+        place_name = str(place.name)
+        source_quest_id = str(invitation.owner_side_quest_id)
+        assert source_member.role == "COLLABORATOR"
+        assert session.scalar(select(func.count()).select_from(main_module.JourneyRoleCapability).where(
+            main_module.JourneyRoleCapability.role == source_member.role,
+            main_module.JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+        )) == 0
+
+    # A signed manager who accepted the invitation still cannot widen B's
+    # audience before B's own disclosure confirmation.
+    preconsent_grant = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-before-consent-grant"},
+        json={"grantee_member_id": late_member_id},
+    )
+    assert preconsent_grant.status_code == 409
+    assert preconsent_grant.json()["error"]["message"] == "NOT_SHARED_TO_GROUP"
+    preconsent_promotion = client.post(
+        invitation_url + "/promotions",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-before-consent-promotion"},
+        json={"dwell_minutes": 20},
+    )
+    assert preconsent_promotion.status_code == 409
+    assert preconsent_promotion.json()["error"]["message"] == "NOT_SHARED_TO_GROUP"
+
+    before = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id)
+    )
+    assert before.status_code == 200, before.text
+    assert place_name not in before.text
+    assert source_quest_id not in before.text
+    assert before.json()["member_place_invitations"]["co_planning_grants"] == []
+    assert before.json()["member_place_invitations"]["promotions"] == []
+
+    preview_response = client.get(
+        invitation_url + "/group-share/preview", headers=_auth(source_id)
+    )
+    assert preview_response.status_code == 200, preview_response.text
+    preview = preview_response.json()
+    assert preview["place"]["place_id"] == place_id
+    assert {item["display_name"] for item in preview["audience"]} == {
+        "Alex Chen",
+        "R75 late Journey companion C",
+    }
+    assert "device location" in preview["disclosure"]
+
+    forged_by_sponsor = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(sponsor_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview["audience_snapshot"],
+            "plan_snapshot": preview["plan_snapshot"],
+            "source_snapshot": preview["source_snapshot"],
+        },
+    )
+    assert forged_by_sponsor.status_code == 403
+    forged_by_c = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(late_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview["audience_snapshot"],
+            "plan_snapshot": preview["plan_snapshot"],
+            "source_snapshot": preview["source_snapshot"],
+        },
+    )
+    assert forged_by_c.status_code == 403
+
+    consented = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview["audience_snapshot"],
+            "plan_snapshot": preview["plan_snapshot"],
+            "source_snapshot": preview["source_snapshot"],
+        },
+    )
+    assert consented.status_code == 200, consented.text
+    retried_consent = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview["audience_snapshot"],
+            "plan_snapshot": preview["plan_snapshot"],
+            "source_snapshot": preview["source_snapshot"],
+        },
+    )
+    assert retried_consent.status_code == 200, retried_consent.text
+    with SessionLocal() as session:
+        receipt = session.scalar(select(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.journey_id == journey_id,
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        ))
+        assert receipt is not None and receipt.status == "ACTIVE"
+        assert receipt.owner_member_id != receipt.owner_traveler_id
+        assert receipt.place_id == place_id
+        assert receipt.audience_snapshot_hash == preview["audience_snapshot"]
+        assert receipt.base_plan_version_id == session.get(Journey, journey_id).active_plan_version_id
+        assert session.scalar(select(func.count()).select_from(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.journey_id == journey_id,
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+            MemberPlaceGroupShareConsent.status == "ACTIVE",
+        )) == 1
+
+    offered = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-after-consent-grant"},
+        json={"grantee_member_id": late_member_id},
+    )
+    assert offered.status_code == 201, offered.text
+    repeated_offer = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-after-consent-grant-retry"},
+        json={"grantee_member_id": late_member_id},
+    )
+    assert repeated_offer.status_code == 201, repeated_offer.text
+    with SessionLocal() as session:
+        original_grant = session.scalar(select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == journey_id,
+            SharedStopCoPlanningGrant.invitation_id == invitation_id,
+            SharedStopCoPlanningGrant.grantee_member_id == late_member_id,
+            SharedStopCoPlanningGrant.active_slot.is_(True),
+        ))
+        assert original_grant is not None
+        from sqlalchemy.exc import IntegrityError
+
+        duplicate_active_grant = SharedStopCoPlanningGrant(
+            id=str(uuid4()),
+            journey_id=original_grant.journey_id,
+            invitation_id=original_grant.invitation_id,
+            base_plan_version_id=original_grant.base_plan_version_id,
+            grantee_member_id=original_grant.grantee_member_id,
+            grantee_traveler_id=original_grant.grantee_traveler_id,
+            grantor_member_id=original_grant.grantor_member_id,
+            grantor_traveler_id=original_grant.grantor_traveler_id,
+            promotion_id=None,
+            active_slot=True,
+            purpose=original_grant.purpose,
+            status="OFFERED",
+            request_key="r75-duplicate-active-slot-" + str(uuid4()),
+            request_hash="r75-duplicate-active-slot",
+            expires_at=original_grant.expires_at,
+            accepted_at=None,
+            declined_at=None,
+            revoked_at=None,
+            decision_epoch=None,
+            created_at=original_grant.created_at,
+            updated_at=original_grant.updated_at,
+        )
+        session.add(duplicate_active_grant)
+        with pytest.raises(IntegrityError):
+            session.flush()
+        session.rollback()
+    source_observation_id = str(uuid4())
+    with SessionLocal() as session:
+        source_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == source_id,
+        ))
+        assert source_member is not None
+        session.add(LocationObservation(
+            id=source_observation_id,
+            journey_id=journey_id,
+            traveler_id=source_id,
+            journey_member_id=source_member.id,
+            latitude=35.0,
+            longitude=135.0,
+            accuracy_m=8,
+            captured_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
+            source="FOREGROUND_WEB",
+        ))
+        session.commit()
+    after_consent = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id)
+    )
+    assert after_consent.status_code == 200, after_consent.text
+    assert place_name in after_consent.text
+    assert source_quest_id not in after_consent.text
+    assert source_observation_id not in after_consent.text
+    grant_view = after_consent.json()["member_place_invitations"]["co_planning_grants"]
+    assert len(grant_view) == 1 and grant_view[0]["place"]["place_id"] == place_id
+    source_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(source_id)
+    )
+    assert source_view.status_code == 200, source_view.text
+    assert source_observation_id in source_view.text
+
+    withdrawn = client.post(
+        invitation_url + "/group-share/withdraw", headers=_auth(source_id)
+    )
+    assert withdrawn.status_code == 200, withdrawn.text
+    after_withdrawal = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id)
+    )
+    assert after_withdrawal.status_code == 200, after_withdrawal.text
+    assert place_name not in after_withdrawal.text
+    assert source_quest_id not in after_withdrawal.text
+    assert after_withdrawal.json()["member_place_invitations"]["co_planning_grants"] == []
+    rejected_after_withdrawal = client.post(
+        invitation_url + "/promotions",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-after-withdrawal-promotion"},
+        json={"dwell_minutes": 20},
+    )
+    assert rejected_after_withdrawal.status_code == 409
+    assert rejected_after_withdrawal.json()["error"]["message"] == "INVITER_CONSENT_WITHDRAWN"
+    with SessionLocal() as session:
+        receipt = session.scalar(select(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.journey_id == journey_id,
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        ))
+        assert receipt is not None and receipt.status == "WITHDRAWN" and receipt.withdrawn_at
+
+
+def test_r75_group_share_confirm_rejects_audience_plan_and_source_drift():
+    from app.db.models import MemberPlaceGroupShareConsent
+
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, _quest_id, _place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    first_preview = client.get(invitation_url + "/group-share/preview", headers=_auth(source_id))
+    assert first_preview.status_code == 200, first_preview.text
+    _add_r75_member(journey_id, sponsor_id, "R75 preview-time audience change")
+    stale_audience = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": first_preview.json()["audience_snapshot"],
+            "plan_snapshot": first_preview.json()["plan_snapshot"],
+            "source_snapshot": first_preview.json()["source_snapshot"],
+        },
+    )
+    assert stale_audience.status_code == 409
+    assert stale_audience.json()["error"]["message"] == "AUDIENCE_CHANGED"
+    with SessionLocal() as session:
+        assert session.scalar(select(func.count()).select_from(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        )) == 0
+
+    preview = client.get(invitation_url + "/group-share/preview", headers=_auth(source_id))
+    assert preview.status_code == 200, preview.text
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None and journey.active_plan_version_id
+        next_activity = session.scalar(
+            select(Activity)
+            .where(
+                Activity.plan_version_id == journey.active_plan_version_id,
+                Activity.id != journey.current_activity_id,
+            )
+            .order_by(Activity.sequence_no)
+        )
+        assert next_activity is not None
+        journey.current_activity_id = next_activity.id
+        session.commit()
+    stale_plan = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+            "plan_snapshot": preview.json()["plan_snapshot"],
+            "source_snapshot": preview.json()["source_snapshot"],
+        },
+    )
+    assert stale_plan.status_code == 409
+    assert stale_plan.json()["error"]["message"] == "PLAN_CHANGED"
+
+
+def test_r75_group_share_confirm_rejects_member_leave_after_preview():
+    from app.db.models import MemberPlaceGroupShareConsent
+
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, _quest_id, _place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    departing_id, _departing_member_id = _add_r75_member(
+        journey_id, sponsor_id, "R75 departing audience member"
+    )
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    preview = client.get(invitation_url + "/group-share/preview", headers=_auth(source_id))
+    assert preview.status_code == 200, preview.text
+    with SessionLocal() as session:
+        departing = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == departing_id,
+        ))
+        assert departing is not None
+        departing.removed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+    rejected = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+            "plan_snapshot": preview.json()["plan_snapshot"],
+            "source_snapshot": preview.json()["source_snapshot"],
+        },
+    )
+    assert rejected.status_code == 409
+    assert rejected.json()["error"]["message"] == "AUDIENCE_CHANGED"
+    with SessionLocal() as session:
+        assert session.scalar(select(func.count()).select_from(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        )) == 0
+
+
+def test_r75_source_split_change_invalidates_preview_confirmation():
+    from app.db.models import MemberPlaceGroupShareConsent
+
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, _quest_id, _place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    preview = client.get(invitation_url + "/group-share/preview", headers=_auth(source_id))
+    assert preview.status_code == 200, preview.text
+    with SessionLocal() as session:
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        assert invitation is not None
+        split = session.get(JourneyIntent, str(invitation.owner_split_intent_id))
+        assert split is not None and split.status == "ACTIVE"
+        split.status = "WITHDRAWN"
+        split.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+    stale_source = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+            "plan_snapshot": preview.json()["plan_snapshot"],
+            "source_snapshot": preview.json()["source_snapshot"],
+        },
+    )
+    assert stale_source.status_code == 409
+    assert stale_source.json()["error"]["message"] == "INVITER_SPLIT_STALE"
+    with SessionLocal() as session:
+        assert session.scalar(select(func.count()).select_from(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        )) == 0
+
+
+def test_r75_withdrawal_before_sponsor_offer_keeps_uninvited_member_blind():
+    from app.db.models import MemberPlaceGroupShareConsent
+
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, source_quest_id, place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    late_id, late_member_id = _add_r75_member(
+        journey_id, sponsor_id, "R75 not-yet-disclosed companion C"
+    )
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    preview = client.get(invitation_url + "/group-share/preview", headers=_auth(source_id))
+    assert preview.status_code == 200, preview.text
+    confirmed = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+            "plan_snapshot": preview.json()["plan_snapshot"],
+            "source_snapshot": preview.json()["source_snapshot"],
+        },
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    withdrawn = client.post(invitation_url + "/group-share/withdraw", headers=_auth(source_id))
+    assert withdrawn.status_code == 200, withdrawn.text
+
+    grant = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-withdrawn-before-offer-grant"},
+        json={"grantee_member_id": late_member_id},
+    )
+    assert grant.status_code == 409
+    assert grant.json()["error"]["message"] == "INVITER_CONSENT_WITHDRAWN"
+    promotion = client.post(
+        invitation_url + "/promotions",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-withdrawn-before-offer-promotion"},
+        json={"dwell_minutes": 20},
+    )
+    assert promotion.status_code == 409
+    assert promotion.json()["error"]["message"] == "INVITER_CONSENT_WITHDRAWN"
+    c_projection = client.get(f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id))
+    assert c_projection.status_code == 200, c_projection.text
+    assert c_projection.json()["member_place_invitations"]["co_planning_grants"] == []
+    assert c_projection.json()["member_place_invitations"]["promotions"] == []
+    assert c_projection.json()["member_side_quest"] is None
+    assert str(place_id) not in c_projection.text
+    assert source_quest_id not in c_projection.text
+    with SessionLocal() as session:
+        assert session.scalar(select(func.count()).select_from(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.invitation_id == invitation_id,
+        )) == 0
+        assert session.scalar(select(func.count()).select_from(MemberPlacePromotion).where(
+            MemberPlacePromotion.invitation_id == invitation_id,
+        )) == 0
+        receipt = session.scalar(select(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        ))
+        assert receipt is not None and receipt.status == "WITHDRAWN"
+
+
+def test_r75_uninvited_admin_cannot_sponsor_or_learn_source_place():
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, source_quest_id, place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    _late_id, late_member_id = _add_r75_member(
+        journey_id, sponsor_id, "R75 grant target C"
+    )
+    admin_id, _admin_member_id = _add_r75_member(
+        journey_id, sponsor_id, "R75 uninvolved manager D", role="ADMIN"
+    )
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    offer = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(admin_id), "Idempotency-Key": "r75-uninvited-admin-grant"},
+        json={"grantee_member_id": late_member_id},
+    )
+    assert offer.status_code == 403
+    assert "JOURNEY_UPDATE" in offer.text
+    admin_projection = client.get(f"/api/v1/journeys/{journey_id}/operator", headers=_auth(admin_id))
+    c_projection = client.get(f"/api/v1/journeys/{journey_id}/operator", headers=_auth(_late_id))
+    assert admin_projection.status_code == c_projection.status_code == 200
+    for projection in (admin_projection, c_projection):
+        assert str(place_id) not in projection.text
+        assert source_quest_id not in projection.text
+        assert projection.json()["member_place_invitations"]["co_planning_grants"] == []
+        assert projection.json()["member_place_invitations"]["promotions"] == []
+
+
+def test_r75_expired_group_share_receipt_cannot_offer_or_project_a_place():
+    from app.db.models import MemberPlaceGroupShareConsent
+
+    journey_id, sponsor_id, source_id = _active_shared_journey()
+    invitation_id, _quest_id, place_id = _create_r71_invitation(journey_id, source_id)
+    _accept_r75_source_invitation(journey_id, invitation_id, sponsor_id)
+    late_id, late_member_id = _add_r75_member(
+        journey_id, sponsor_id, "R75 expiry companion C"
+    )
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    preview = client.get(invitation_url + "/group-share/preview", headers=_auth(source_id))
+    assert preview.status_code == 200, preview.text
+    confirmed = client.post(
+        invitation_url + "/group-share/confirm",
+        headers=_auth(source_id),
+        json={
+            "confirm_full_journey_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+            "plan_snapshot": preview.json()["plan_snapshot"],
+            "source_snapshot": preview.json()["source_snapshot"],
+        },
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    with SessionLocal() as session:
+        receipt = session.scalar(select(MemberPlaceGroupShareConsent).where(
+            MemberPlaceGroupShareConsent.journey_id == journey_id,
+            MemberPlaceGroupShareConsent.invitation_id == invitation_id,
+        ))
+        place = session.get(Place, place_id)
+        assert receipt is not None and place is not None
+        receipt.expires_at = (execution_clock.now().astimezone(timezone.utc) - timedelta(seconds=1)).isoformat()
+        place_name = str(place.name)
+        session.commit()
+    offer = client.post(
+        invitation_url + "/co-planning-grants",
+        headers={**_auth(sponsor_id), "Idempotency-Key": "r75-expired-share-grant"},
+        json={"grantee_member_id": late_member_id},
+    )
+    assert offer.status_code == 409
+    assert offer.json()["error"]["message"] == "INVITER_CONSENT_EXPIRED"
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id)
+    )
+    assert projection.status_code == 200, projection.text
+    assert place_name not in projection.text
+    assert projection.json()["member_place_invitations"]["co_planning_grants"] == []

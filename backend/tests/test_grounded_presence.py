@@ -26,6 +26,8 @@ class _Session:
         parameters = set(_statement.compile().params.values())
         if str(self.location.journey_id) not in {str(item) for item in parameters}:
             return None
+        if str(self.location.journey_member_id) not in {str(item) for item in parameters}:
+            return None
         return self.location
 
 
@@ -59,6 +61,7 @@ def _location(now, *, source="FOREGROUND_WEB", latitude=35.0001, longitude=135.0
         accuracy_m=accuracy,
         captured_at=now.isoformat(),
         source=source,
+        journey_member_id="member-1",
     )
 
 
@@ -67,6 +70,7 @@ def test_foreground_location_near_target_is_advisory_only():
     result = presence_projection(
         _Session(activity=_activity(), place=_place(), location=_location(now)),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -85,6 +89,7 @@ def test_trusted_location_near_target_is_eligible_not_auto_transitioned():
             location=_location(now, source="DEVICE_ATTESTED"),
         ),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -99,6 +104,7 @@ def test_stale_location_fails_closed():
     result = presence_projection(
         _Session(activity=_activity(), place=_place(), location=stale),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -112,6 +118,7 @@ def test_inaccurate_location_fails_closed():
     result = presence_projection(
         _Session(activity=_activity(), place=_place(), location=imprecise),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -125,6 +132,7 @@ def test_foreground_location_far_from_target_is_not_an_incident():
     result = presence_projection(
         _Session(activity=_activity(), place=_place(), location=far),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -140,6 +148,7 @@ def test_location_from_another_journey_is_not_considered():
     result = presence_projection(
         _Session(activity=_activity(), place=_place(), location=foreign),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -155,6 +164,7 @@ def test_activity_without_exact_place_is_unbound():
     result = presence_projection(
         _Session(activity=unbound, place=_place(), location=_location(now)),
         _journey(),
+        viewer_member_id="member-1",
         now=now,
     )
 
@@ -167,9 +177,27 @@ def test_unknown_activity_id_is_not_rebound_to_another_place():
     result = presence_projection(
         _Session(activity=_activity(), place=_place(), location=_location(now)),
         _journey(),
+        viewer_member_id="member-1",
         target_activity_id="activity-from-another-plan",
         now=now,
     )
 
     assert result["state"] == "TARGET_UNBOUND"
     assert result["arrival_transition_allowed"] is False
+
+
+def test_location_projection_requires_the_matching_signed_member():
+    now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+    location = _location(now)
+    session = _Session(activity=_activity(), place=_place(), location=location)
+
+    unscoped = presence_projection(session, _journey(), now=now)
+    other_member = presence_projection(
+        session, _journey(), viewer_member_id="member-2", now=now
+    )
+
+    assert unscoped["state"] == "LOCATION_UNAVAILABLE"
+    assert unscoped["reason_code"] == "SIGNED_MEMBER_IDENTITY_REQUIRED"
+    assert other_member["state"] == "LOCATION_UNAVAILABLE"
+    assert unscoped["location_observation_id"] is None
+    assert other_member["location_observation_id"] is None

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.db.models import JourneyMember, JourneyRoleCapability, SharedStopCoPlanningGrant
@@ -45,11 +45,15 @@ def member_has_capability(session: Session, member: JourneyMember, capability: s
 def grant_status_for_projection(
     grant: SharedStopCoPlanningGrant, *, now: datetime | None = None
 ) -> str:
-    if grant.status != "ACCEPTED":
+    if grant.status not in {"OFFERED", "ACCEPTED"}:
         return str(grant.status)
     expires_at = _parse_aware(grant.expires_at)
     current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
-    return "EXPIRED" if expires_at is None or expires_at <= current else "ACCEPTED"
+    if expires_at is None or expires_at <= current:
+        return "EXPIRED"
+    if grant.promotion_id is None and not bool(getattr(grant, "active_slot", True)):
+        return "SUPERSEDED"
+    return str(grant.status)
 
 
 def find_accepted_grant(
@@ -65,7 +69,7 @@ def find_accepted_grant(
     now: datetime | None = None,
 ) -> SharedStopCoPlanningGrant | None:
     current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
-    rows = session.scalars(
+    statement = (
         select(SharedStopCoPlanningGrant)
         .where(
             SharedStopCoPlanningGrant.journey_id == str(journey_id),
@@ -75,7 +79,11 @@ def find_accepted_grant(
             SharedStopCoPlanningGrant.purpose == GRANT_PURPOSE,
             SharedStopCoPlanningGrant.status == "ACCEPTED",
         )
-        .order_by(
+    )
+    if require_unbound:
+        statement = statement.where(SharedStopCoPlanningGrant.active_slot.is_(True))
+    rows = session.scalars(
+        statement.order_by(
             SharedStopCoPlanningGrant.updated_at.desc(),
             SharedStopCoPlanningGrant.id.desc(),
         )
@@ -173,11 +181,49 @@ def decision_scope_facts(
                 "promotion_id": str(promotion_id) if bind_unbound else str(grant.promotion_id or ""),
             }
         )
-    # This remains one transaction owned by the caller; failed validation
-    # above leaves every accepted grant available for a fresh proposal.
-    for grant in grants_to_bind:
-        grant.promotion_id = str(promotion_id)
-        grant.updated_at = now.isoformat()
+    # Bind the complete cohort with one database conditional update. The
+    # savepoint makes a partial rowcount failure reversible without committing
+    # earlier route/mission work that the caller may intentionally preserve.
+    # This is the cross-process boundary; the in-process Journey lock alone is
+    # not sufficient when SQLite/PostgreSQL requests arrive in separate workers.
+    if grants_to_bind and hasattr(session, "begin_nested") and hasattr(session, "execute"):
+        grant_ids = [str(grant.id) for grant in grants_to_bind]
+        with session.begin_nested():
+            claimed = session.execute(
+                update(SharedStopCoPlanningGrant)
+                .where(
+                    SharedStopCoPlanningGrant.id.in_(grant_ids),
+                    SharedStopCoPlanningGrant.journey_id == str(journey_id),
+                    SharedStopCoPlanningGrant.invitation_id == str(invitation_id),
+                    SharedStopCoPlanningGrant.base_plan_version_id == str(base_plan_version_id),
+                    SharedStopCoPlanningGrant.purpose == GRANT_PURPOSE,
+                    SharedStopCoPlanningGrant.status == "ACCEPTED",
+                    SharedStopCoPlanningGrant.promotion_id.is_(None),
+                    SharedStopCoPlanningGrant.active_slot.is_(True),
+                    SharedStopCoPlanningGrant.decision_epoch.is_(None),
+                    SharedStopCoPlanningGrant.expires_at > now.isoformat(),
+                )
+                .values(
+                    promotion_id=str(promotion_id),
+                    active_slot=False,
+                    updated_at=now.isoformat(),
+                )
+                .execution_options(synchronize_session=False)
+            )
+            if int(claimed.rowcount or 0) != len(grant_ids):
+                raise HTTPException(409, "SCOPED_COPLANNING_GRANT_CHANGED_DURING_BIND")
+        for grant in grants_to_bind:
+            grant.promotion_id = str(promotion_id)
+            grant.active_slot = False
+            grant.updated_at = now.isoformat()
+    else:
+        # Minimal test doubles without transaction primitives exercise the
+        # validate-all-before-mutate contract above; real SQLAlchemy sessions
+        # always take the conditional database path.
+        for grant in grants_to_bind:
+            grant.promotion_id = str(promotion_id)
+            grant.active_slot = False
+            grant.updated_at = now.isoformat()
     return facts, grants_by_member
 
 

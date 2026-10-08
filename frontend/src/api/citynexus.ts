@@ -748,6 +748,10 @@ export interface MemberPlaceInvitationProjection {
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
     viewer_can_propose: boolean;
+    viewer_has_journey_update: boolean;
+    group_share_status: string;
+    group_share_receipt_id: string | null;
+    viewer_can_manage_group_share: boolean;
     co_planning_options: Array<{
       member_id: string;
       display_name: string;
@@ -777,6 +781,10 @@ export interface MemberPlaceInvitationProjection {
     participants: MemberPlaceInvitationProgressParticipant[];
     own_progress: MemberPlaceInvitationOwnProgress;
     viewer_can_propose: boolean;
+    viewer_has_journey_update: boolean;
+    group_share_status: string;
+    group_share_receipt_id: string | null;
+    viewer_can_manage_group_share: boolean;
     co_planning_options: Array<{
       member_id: string;
       display_name: string;
@@ -788,6 +796,17 @@ export interface MemberPlaceInvitationProjection {
   }>;
   promotions: MemberPlacePromotionProjection[];
   co_planning_grants: SharedStopCoPlanningGrantProjection[];
+}
+
+export interface MemberPlaceGroupSharePreviewResult {
+  invitation_id: string;
+  place: MemberPlaceInvitationPlace;
+  rendezvous: MemberPlaceInvitationRendezvous;
+  audience: Array<{ member_id: string; display_name: string }>;
+  audience_snapshot: string;
+  plan_snapshot: string;
+  source_snapshot: string;
+  disclosure: string;
 }
 
 export interface SharedStopCoPlanningGrantProjection {
@@ -2379,6 +2398,46 @@ export const cityNexusApi = {
   ): Promise<JourneyOperatorProjection> {
     return requestJson<JourneyOperatorProjection>(
       "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/withdraw",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  previewMemberPlaceGroupShare(
+    journeyId: string,
+    invitationId: string,
+  ): Promise<MemberPlaceGroupSharePreviewResult> {
+    return requestJson<MemberPlaceGroupSharePreviewResult>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/group-share/preview",
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  confirmMemberPlaceGroupShare(
+    journeyId: string,
+    invitationId: string,
+    preview: Pick<MemberPlaceGroupSharePreviewResult, "audience_snapshot" | "plan_snapshot" | "source_snapshot">,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/group-share/confirm",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          confirm_full_journey_place_sharing: true,
+          audience_snapshot: preview.audience_snapshot,
+          plan_snapshot: preview.plan_snapshot,
+          source_snapshot: preview.source_snapshot,
+        }),
+      },
+    );
+  },
+
+  withdrawMemberPlaceGroupShare(
+    journeyId: string,
+    invitationId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/group-share/withdraw",
       { method: "POST", headers: travelerAuthHeaders() },
     );
   },

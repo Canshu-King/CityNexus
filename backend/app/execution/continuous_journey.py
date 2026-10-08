@@ -157,6 +157,7 @@ def continuous_flow_projection(
     session: Any,
     journey: Journey,
     *,
+    viewer_member_id: str | None = None,
     operator_needs_attention: bool = False,
     now: datetime | None = None,
 ) -> dict[str, Any]:
@@ -191,6 +192,7 @@ def continuous_flow_projection(
     presence = presence_projection(
         session,
         journey,
+        viewer_member_id=viewer_member_id,
         target_activity_id=str(current.id) if current is not None else None,
         now=stamp,
     )

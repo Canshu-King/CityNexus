@@ -518,6 +518,17 @@ class MemberPlacePromotionCreateRequest(BaseModel):
     dwell_minutes: Literal[10, 20, 30]
 
 
+class MemberPlaceGroupShareConsentRequest(BaseModel):
+    """Explicit confirmation of a frozen whole-Journey Place audience preview."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    confirm_full_journey_place_sharing: Literal[True]
+    audience_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+    plan_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+    source_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+
+
 class MemberPlacePromotionDecisionRequest(BaseModel):
     """One current Journey member's independent decision on a shared-stop proposal."""
 

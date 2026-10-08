@@ -605,6 +605,60 @@ class MemberPlaceInvitationProgress(Base):
     )
 
 
+class MemberPlaceGroupShareConsent(Base):
+    """A source-owned, revocable receipt for widening one exact Place disclosure."""
+
+    __tablename__ = "member_place_group_share_consents"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    owner_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    owner_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    owner_split_intent_id: Mapped[str] = mapped_column(ForeignKey("journey_intents.id", ondelete="CASCADE"))
+    owner_side_quest_id: Mapped[str] = mapped_column(ForeignKey("member_side_quests.id", ondelete="CASCADE"))
+    base_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    base_cursor_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    place_snapshot_json: Mapped[str] = mapped_column(Text)
+    rendezvous_activity_id: Mapped[str] = mapped_column(ForeignKey("activities.id", ondelete="RESTRICT"))
+    rendezvous_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    audience_snapshot_json: Mapped[str] = mapped_column(Text)
+    audience_snapshot_hash: Mapped[str] = mapped_column(String)
+    plan_snapshot_hash: Mapped[str] = mapped_column(String)
+    source_snapshot_hash: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    consented_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    withdrawn_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('ACTIVE', 'WITHDRAWN', 'EXPIRED', 'STALE')",
+            name="ck_member_place_group_share_consents_status",
+        ),
+        Index(
+            "ux_member_place_group_share_consents_one_active",
+            "journey_id",
+            "invitation_id",
+            unique=True,
+            sqlite_where=text("status = 'ACTIVE'"),
+            postgresql_where=text("status = 'ACTIVE'"),
+        ),
+        Index(
+            "idx_member_place_group_share_consents_invitation_created",
+            "journey_id",
+            "invitation_id",
+            "created_at",
+        ),
+    )
+
+
 class MemberPlacePromotion(Base):
     """One explicitly proposed, collectively authorized shared stop."""
 
@@ -720,6 +774,7 @@ class SharedStopCoPlanningGrant(Base):
     promotion_id: Mapped[str | None] = mapped_column(
         ForeignKey("member_place_promotions.id", ondelete="CASCADE"), nullable=True
     )
+    active_slot: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("true"))
     purpose: Mapped[str] = mapped_column(String, default="R73_SHARED_STOP_ONLY")
     status: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
     request_key: Mapped[str] = mapped_column(String)
@@ -751,6 +806,16 @@ class SharedStopCoPlanningGrant(Base):
             "base_plan_version_id",
             "grantee_member_id",
             "status",
+        ),
+        Index(
+            "ux_shared_stop_coplanning_one_unbound_active_grant",
+            "journey_id",
+            "invitation_id",
+            "base_plan_version_id",
+            "grantee_member_id",
+            unique=True,
+            sqlite_where=text("active_slot = 1"),
+            postgresql_where=text("active_slot = true"),
         ),
         Index(
             "idx_shared_stop_coplanning_promotion",
