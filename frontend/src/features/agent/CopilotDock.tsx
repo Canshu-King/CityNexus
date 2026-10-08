@@ -408,17 +408,17 @@ export function NativeMissionTimeline({
       )}
 
       <details className="cn-native-plan" data-testid="native-hermes-observability">
-        <summary>{zh ? "高级详情" : "Advanced detail"}</summary>
+        <summary>{t("agent.obsAdvancedDetail")}</summary>
         <div className="cn-copilot-observability">
-          <span><b>{zh ? "任务编号" : "task id"}</b> <code>{run.run_id}</code></span>
-          {run.mission_id && <span><b>{zh ? "内部任务" : "mission"}</b> <code>{run.mission_id}</code></span>}
-          <span><b>{zh ? "已用步骤" : "steps"}</b> {toolEvents.length}</span>
-          <span><b>{zh ? "当前" : "current"}</b> {currentTool ? (toolLabels[currentTool]?.[zh ? "zh" : "en"] ?? t("agent.toolWorking")) : "—"}</span>
+          <span><b>{t("agent.obsTaskId")}</b> <code>{run.run_id}</code></span>
+          {run.mission_id && <span><b>{t("agent.obsMission")}</b> <code>{run.mission_id}</code></span>}
+          <span><b>{t("agent.obsSteps")}</b> {toolEvents.length}</span>
+          <span><b>{t("agent.obsCurrent")}</b> {currentTool ? (toolLabels[currentTool]?.[zh ? "zh" : "en"] ?? t("agent.toolWorking")) : "—"}</span>
           {currentTool && (
-            <span><b>{zh ? "工具" : "tool"}</b> <code>{currentTool}</code></span>
+            <span><b>{t("agent.obsTool")}</b> <code>{currentTool}</code></span>
           )}
-          <span><b>{zh ? "耗时" : "duration"}</b> {formatDuration(totalDuration)}</span>
-          <span><b>{zh ? "执行方式" : "execution"}</b> {lastRuntimeLabel(executed, zh)}</span>
+          <span><b>{t("agent.obsDuration")}</b> {formatDuration(totalDuration)}</span>
+          <span><b>{t("agent.obsExecution")}</b> {lastRuntimeLabel(executed, zh)}</span>
         </div>
       </details>
 

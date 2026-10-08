@@ -524,6 +524,14 @@ const en: Dict = {
   "agent.aiRunOtherPlan": "The plan in force is a different one than before.",
   "agent.aiRunPlanAppeared": "A plan is in force now (version {version}) that wasn't before.",
   "agent.aiRunNoCurrentPlan": "The read-back found no plan in force at all.",
+  "agent.obsAdvancedDetail": "Advanced detail",
+  "agent.obsTaskId": "task id",
+  "agent.obsMission": "mission",
+  "agent.obsSteps": "steps",
+  "agent.obsCurrent": "current",
+  "agent.obsTool": "tool",
+  "agent.obsDuration": "duration",
+  "agent.obsExecution": "execution",
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -1646,6 +1654,14 @@ const zhCN: Dict = {
   "agent.aiRunOtherPlan": "当前生效的方案已经换成另一个。",
   "agent.aiRunPlanAppeared": "回读时才有了生效方案（第 {version} 版）。",
   "agent.aiRunNoCurrentPlan": "回读时没有任何生效方案。",
+  "agent.obsAdvancedDetail": "高级详情",
+  "agent.obsTaskId": "任务编号",
+  "agent.obsMission": "内部任务",
+  "agent.obsSteps": "已用步骤",
+  "agent.obsCurrent": "当前",
+  "agent.obsTool": "工具",
+  "agent.obsDuration": "耗时",
+  "agent.obsExecution": "执行方式",
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
