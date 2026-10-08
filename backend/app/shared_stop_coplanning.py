@@ -126,6 +126,10 @@ def decision_scope_facts(
     """Resolve current signer authority and produce deterministic epoch material."""
     facts: list[dict[str, Any]] = []
     grants_by_member: dict[str, SharedStopCoPlanningGrant] = {}
+    # Validate the complete required cohort before mutating any grant. The
+    # caller may mark a promotion BLOCKED and commit after a late 409; an
+    # early grant bind would otherwise be accidentally committed with it.
+    grants_to_bind: list[SharedStopCoPlanningGrant] = []
     now = datetime.now(timezone.utc)
     for member_id in sorted({str(item) for item in required_member_ids}):
         member = session.get(JourneyMember, member_id)
@@ -148,8 +152,7 @@ def decision_scope_facts(
         if grant is None:
             raise HTTPException(409, "SCOPED_COPLANNING_GRANT_REQUIRED_OR_STALE")
         if bind_unbound:
-            grant.promotion_id = str(promotion_id)
-            grant.updated_at = now.isoformat()
+            grants_to_bind.append(grant)
         grants_by_member[member_id] = grant
         facts.append(
             {
@@ -167,9 +170,14 @@ def decision_scope_facts(
                 "status": str(grant.status),
                 "accepted_at": str(grant.accepted_at or ""),
                 "expires_at": str(grant.expires_at),
-                "promotion_id": str(grant.promotion_id or ""),
+                "promotion_id": str(promotion_id) if bind_unbound else str(grant.promotion_id or ""),
             }
         )
+    # This remains one transaction owned by the caller; failed validation
+    # above leaves every accepted grant available for a fresh proposal.
+    for grant in grants_to_bind:
+        grant.promotion_id = str(promotion_id)
+        grant.updated_at = now.isoformat()
     return facts, grants_by_member
 
 
