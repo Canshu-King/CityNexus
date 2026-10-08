@@ -15,7 +15,7 @@ const cp = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const ROOT = process.argv[2] || "D:/moodle/_qoder_laneE9_20261008/wt9";
+const ROOT = path.resolve(process.argv[2] || "D:/moodle/_qoder_laneE9_20261008/wt9");
 const BEFORE_REV = process.argv[3] || "cf5915ea948579b4dc80aa57a299639b5440150e";
 const TS = "D:/moodle/_qoder_cmdr_ref_20260921/frontend/node_modules/typescript";
 const REPO = "D:/moodle/CityNexus";
