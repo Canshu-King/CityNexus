@@ -10,6 +10,7 @@ from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -303,6 +304,26 @@ def journey_projection_window(
         return None, WINDOW_UNCOMPARABLE
 
 
+def _journey_zone_or_none(timezone_name: str | None) -> tuple[ZoneInfo | None, bool]:
+    """The journey's zone when it can be used, and whether it could be.
+
+    Split out of `_at_on_day` because the fallback is not a cosmetic one.  A bad zone falls back to
+    the anchor's own offset, which for a UTC-stored anchor moves the wall-clock reading by whole
+    hours -- measured on the tip's bytes: a 14:00 check-in against an anchor of
+    `2026-10-09T18:00:00+00:00` lands sixteen hours away from where the same request with a usable
+    zone puts it, crossing a calendar day.  That instant then decides whether a stay reads as a
+    conflict (`arrival_at < check_in_at`) and what the traveller is shown as the check-in line.  So
+    the verdict has to travel with the moment instead of the fallback being silent -- and an unusable
+    zone and no zone at all must not be the same bytes, which is exactly what they were.
+    """
+    if not timezone_name:
+        return None, False
+    try:
+        return ZoneInfo(timezone_name), True
+    except (KeyError, ValueError, TypeError):
+        return None, False
+
+
 def _at_on_day(
     anchor_at: datetime, day_offset: int, hhmm: str, timezone_name: str | None = None
 ) -> datetime:
@@ -312,17 +333,13 @@ def _at_on_day(
     own tzinfo was wrong when the anchor is stored in UTC: a 14:00 check-in
     became 22:00 local, and a 12:00 check-out landed exactly on the departure
     anchor, making every hotel look like a pinned conflict.
+
+    Callers that show or decide on the result take `_journey_zone_or_none` alongside, so the
+    fallback is stated rather than silent.
     """
 
     hour, minute = (int(part) for part in hhmm.split(":"))
-    zone = None
-    if timezone_name:
-        try:
-            from zoneinfo import ZoneInfo
-
-            zone = ZoneInfo(timezone_name)
-        except Exception:
-            zone = None
+    zone, _honoured = _journey_zone_or_none(timezone_name)
     reference = anchor_at.astimezone(zone) if zone is not None else anchor_at
     local_date = reference.date() + timedelta(days=day_offset)
     # Build the wall-clock time in the journey's zone, then express it in the
@@ -397,6 +414,11 @@ def capture_accommodation_offers(
         total = draft.nightly_amount_minor * nights
         check_in = _at_on_day(arrival, 0, "14:00", journey.timezone)
         check_out = _at_on_day(arrival, nights, "12:00", journey.timezone)
+        # The window above is only the journey's local time if the journey's zone could be used.
+        # Recorded at capture -- the read surface passes `evidence` through verbatim -- because the
+        # fallback shifts these two money-relevant instants by hours and `arrival_at < check_in_at`
+        # below decides whether a stay reads as a conflict.
+        _, _zone_honoured = _journey_zone_or_none(journey.timezone)
         if check_out > departure:
             check_out = departure - timedelta(hours=2)
         if existing is None:
@@ -440,6 +462,11 @@ def capture_accommodation_offers(
                         "price_basis": "per_night × nights",
                         "currency_explicit": True,
                         "city_fixture": journey.city_code,
+                        # Whether `check_in_at`/`check_out_at` are really in the journey's zone.  An
+                        # unusable zone falls back to the anchor's own offset, which shifts them by
+                        # hours; saying so here is what keeps that shift from reading as fact.
+                        "journey_timezone": journey.timezone,
+                        "check_window_timezone_honoured": _zone_honoured,
                     }
                 ),
                 captured_at=captured,
