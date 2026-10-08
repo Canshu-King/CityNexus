@@ -1,17 +1,27 @@
 {
  "tag": "after",
- "head": "c796547c1dc2e1e463f7e7c1e14f8945e6937b7a",
- "head_subject": "c796547c1 2026-10-08 20:50:43 +0800 the arm that reads the store back destructures what the helper returns",
+ "head": "8590c4a7e0b802fe353bf40784ef548b3914af73",
+ "head_subject": "8590c4a7e 2026-10-08 21:02:40 +0800 the readings carry the bytes each run served, and the report is generated from them",
  "watched_blobs": {
   "frontend/src/lib/mapLabelRules.ts": "6888dd3804938229c1a6db45f4732cbd905aec0e",
   "frontend/src/lib/mapStopLabels.ts": "d94f2ffb1c1576928148e07c20e772a686c44448",
-  "frontend/src/components/v8/MapPanel.tsx": "1d5ef0efbd275d12f3d0d82b1f3eff82728f0d66",
+  "frontend/src/components/v8/MapPanel.tsx": "748364ec9773baf27d5c6a23ce0ed4d30a837760",
   "frontend/src/components/JourneyMap.tsx": "fab224fd0e9c4f8be492c0f1d105c9dcd8c25fff",
   "frontend/e2e/_mapLabelRules.ts": "caea356e7f88a1c54e27aa298d2f2ea085d3fbf0",
   "frontend/e2e/qoder-map-ord0415-forbidden-off-the-glass.spec.ts": "37c97c11a4da2acf3b4936745ab3cd0fa934d8a1",
   "review/map-label-wiring-r1/stop_rename_fixture_r1.py": "6ae2e6f80e7704c3c2fb388706552ea42e7879dd"
  },
- "database": "D:\\moodle\\_qoder_maplabel_wiring_20261008\\wt\\backend\\_ord0415205242.db",
+ "watched_worktree_blobs": {
+  "frontend/src/lib/mapLabelRules.ts": "6888dd3804938229c1a6db45f4732cbd905aec0e",
+  "frontend/src/lib/mapStopLabels.ts": "d94f2ffb1c1576928148e07c20e772a686c44448",
+  "frontend/src/components/v8/MapPanel.tsx": "748364ec9773baf27d5c6a23ce0ed4d30a837760",
+  "frontend/src/components/JourneyMap.tsx": "fab224fd0e9c4f8be492c0f1d105c9dcd8c25fff",
+  "frontend/e2e/_mapLabelRules.ts": "caea356e7f88a1c54e27aa298d2f2ea085d3fbf0",
+  "frontend/e2e/qoder-map-ord0415-forbidden-off-the-glass.spec.ts": "37c97c11a4da2acf3b4936745ab3cd0fa934d8a1",
+  "review/map-label-wiring-r1/stop_rename_fixture_r1.py": "6ae2e6f80e7704c3c2fb388706552ea42e7879dd"
+ },
+ "dirty_files": [],
+ "database": "D:\\moodle\\_qoder_maplabel_wiring_20261008\\wt\\backend\\_ord0415210413.db",
  "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
  "python_version": "Python 3.12.14",
  "node_version": "v24.14.0",
