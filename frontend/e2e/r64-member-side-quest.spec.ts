@@ -261,7 +261,8 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     expect(googleUrl.searchParams.get("destination")).toBe(
       `${outboundTarget.target.latitude},${outboundTarget.target.longitude}`,
     );
-    expect(googleUrl.searchParams.get("destination_label")).toBe(outboundTarget.target.name);
+    expect(googleUrl.searchParams.get("dir_action")).toBe("navigate");
+    expect(googleUrl.searchParams.has("destination_label")).toBe(false);
     expect(googleUrl.searchParams.has("origin")).toBe(false);
     await googlePopup.close();
     await owner.page.context().unroute("https://www.google.com/maps/**");
@@ -530,9 +531,12 @@ test("R68 map URL builders encode exact WGS84 targets and reject unsupported coo
   const google = new URL(buildGoogleWalkingDirectionsUrl(target));
   expect(google.searchParams.get("travelmode")).toBe("walking");
   expect(google.searchParams.get("destination")).toBe("39.105,117.19");
-  expect(google.searchParams.get("destination_label")).toBe("Café & Tea 雨");
-  expect(google.search).toContain("%26");
-  expect(google.search).toContain("%E9%9B%A8");
+  expect(google.searchParams.get("dir_action")).toBe("navigate");
+  // Preserve exact coordinates rather than depending on unsupported label
+  // parameters or ambiguous name-based geocoding.
+  expect(google.searchParams.has("destination_label")).toBe(false);
+  expect(google.searchParams.has("origin")).toBe(false);
+  expect(google.href).not.toContain("Caf%C3%A9");
 
   const osm = new URL(buildOpenStreetMapPinUrl(target));
   expect(osm.searchParams.get("mlat")).toBe("39.105");
