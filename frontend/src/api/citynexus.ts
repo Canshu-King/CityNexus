@@ -575,6 +575,7 @@ export interface JourneyGroupPresenceProjection {
 export interface GroupRecoveryProjection {
   state: string;
   headline: string;
+  foreground?: boolean;
   incident_key?: string | null;
   failed_proposal_id?: string | null;
   cause_class?: string | null;
@@ -650,6 +651,8 @@ export interface GroupRecoveryFollowThroughProjection {
     is_viewer: boolean;
     state: "REJOINED" | "MOVING" | "WAITING" | "NO_LONGER_REQUIRED";
     confirmed_at?: string | null;
+    confirmation_kind?: string | null;
+    physical_presence_verified?: boolean;
   }>;
   required_count: number;
   confirmed_count: number;
@@ -658,6 +661,8 @@ export interface GroupRecoveryFollowThroughProjection {
   membership_reconfirmation_required: boolean;
   evidence_level: "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH";
   physical_presence_verified: boolean;
+  physical_presence_verified_member_count?: number;
+  arrival_progress_authority?: "DURABLE_MEMBER_EXECUTION_RECEIPTS" | "ACTIVITY_EXECUTION_HISTORY_FALLBACK" | string;
   plan_unchanged_by_closure: boolean;
   closed_at?: string | null;
 }
