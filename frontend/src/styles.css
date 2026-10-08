@@ -327,14 +327,20 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .cn-copilot-head b, .cn-copilot-head small { display: block; }
 .cn-copilot-head b { font-size: 13px; }
 .cn-copilot-head small { margin-top: 4px; color: #758196; font-size: 10px; }
+.cn-copilot-head-actions { display: flex; align-items: center; gap: 8px; }
 .cn-copilot-close { width: 40px; height: 40px; border: 0; color: #68758a; background: transparent; cursor: pointer; font-size: 23px; }
+.cn-copilot-clear-all { min-height: 30px; padding: 0 10px; border: 1px solid #dbe1eb; border-radius: 6px; color: #758196; background: #fff; cursor: pointer; font-size: 10px; font-weight: 700; }
+.cn-copilot-clear-all:hover { border-color: #c5cbd6; color: #5b6880; }
 .cn-copilot-runtime { flex-wrap: wrap; padding: 8px 10px; border: 1px solid #e2e7ef; border-radius: 8px; color: #667489; background: #fff; font-size: 9px; }
 .cn-copilot-history { display: grid; gap: 8px; min-height: 74px; max-height: 310px; overflow: auto; }
 .cn-copilot-empty { margin: 0; padding: 13px; color: #6b778a; font-size: 11px; line-height: 1.55; }
-.cn-copilot-bubble { max-width: 92%; padding: 10px 12px; border: 1px solid #dce2eb; border-radius: 11px; background: #fff; }
+.cn-copilot-bubble { max-width: 92%; padding: 10px 12px; border: 1px solid #dce2eb; border-radius: 11px; background: #fff; position: relative; }
 .cn-copilot-bubble.user { justify-self: end; border-color: #d7dcff; background: #f4f5ff; }
-.cn-copilot-bubble small { color: #8994a4; font-size: 9px; font-weight: 780; }
+.cn-copilot-bubble small { display: flex; align-items: center; gap: 6px; color: #8994a4; font-size: 9px; font-weight: 780; min-height: 14px; }
 .cn-copilot-bubble p { margin: 5px 0 0; color: #526078; font-size: 11px; line-height: 1.5; }
+.cn-copilot-delete { width: 22px; height: 22px; border: 0; border-radius: 4px; color: #b9c4d4; background: transparent; cursor: pointer; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 150ms ease; }
+.cn-copilot-bubble:hover .cn-copilot-delete { opacity: 1; }
+.cn-copilot-delete:hover { color: #9a3f37; background: #fef4f2; }
 .cn-copilot-chip { display: inline-block; margin: 8px 6px 0 0; padding: 4px 6px; border-radius: 4px; color: #5b55a8; background: #eeeaff; font-size: 8px; font-weight: 800; letter-spacing: .04em; }
 .cn-copilot-link { display: block; margin-top: 8px; padding: 0; border: 0; color: var(--v8-indigo); background: transparent; cursor: pointer; font-size: 9px; font-weight: 800; }
 .cn-copilot-form { align-items: end; }
@@ -408,6 +414,8 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   .cn-native-mission.compact { margin-top: 12px; }
   .cn-copilot-observability { gap: 4px 7px; }
   .cn-copilot-approval > div button { flex: 1 1 29%; }
+  .cn-copilot-bubble { max-width: 96%; }
+  .cn-copilot-delete:hover { background: #fef4f2; }
 }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root), ::view-transition-new(root), .cn-agent-step { animation: none !important; }

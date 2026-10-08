@@ -620,6 +620,14 @@ export function CopilotDock({
     }
   };
 
+  const deleteMessage = useCallback((index: number) => {
+    setMessages((current) => current.filter((_, i) => i !== index));
+  }, []);
+
+  const clearAllMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
+
   const continueAction = (action?: string) => {
     if (action === "REQUEST_PLACE_SEARCH") onNavigate("discover");
     if (action === "REQUEST_REPLAN") onNavigate("authoritative");
@@ -659,13 +667,39 @@ export function CopilotDock({
                   : "Answers use verified journey facts only and never change your plan."}
               </small>
             </div>
-            <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>
+            <div className="cn-copilot-head-actions">
+              {messages.length > 0 && (
+                <button
+                  type="button"
+                  className="cn-copilot-clear-all"
+                  onClick={() => void clearAllMessages()}
+                  aria-label={locale === "zh-CN" ? "清空所有消息" : "Clear all messages"}
+                  title={locale === "zh-CN" ? "清空历史对话" : "Clear conversation history"}
+                >
+                  {locale === "zh-CN" ? "清空" : "Clear"}
+                </button>
+              )}
+              <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>
+            </div>
           </header>
           <div className="cn-copilot-history" aria-live="polite">
             {messages.length === 0 && <p className="cn-copilot-empty">{locale === "zh-CN" ? "问我为什么这样安排、试算变化，或报告已经确认的中断。" : "Ask why, preview a change, or report a confirmed disruption."}</p>}
             {messages.map((item, index) => (
               <article key={`${item.role}-${index}`} className={`cn-copilot-bubble ${item.role}`}>
-                <small>{item.role === "user" ? (locale === "zh-CN" ? "你" : "You") : "CityNexus"}</small>
+                <small>
+                  <span>{item.role === "user" ? (locale === "zh-CN" ? "你" : "You") : "CityNexus"}</span>
+                  {messages.length > 0 && (
+                    <button
+                      type="button"
+                      className="cn-copilot-delete"
+                      onClick={() => void deleteMessage(index)}
+                      aria-label={locale === "zh-CN" ? `删除消息 ${index + 1}` : `Delete message ${index + 1}`}
+                      title={locale === "zh-CN" ? "删除这条消息" : "Delete this message"}
+                    >
+                      ×
+                    </button>
+                  )}
+                </small>
                 <p>{item.text}</p>
                 {item.response?.intent && (
                   <span className="cn-copilot-chip">{humanIntent(item.response.intent.name, zh)}</span>
