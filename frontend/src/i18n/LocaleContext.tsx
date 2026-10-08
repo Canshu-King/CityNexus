@@ -254,6 +254,7 @@ const en: Dict = {
   "hub.continuationNoServerReason": "The server sent no reason text -- this sentence is ours, not the server's.",
   "hub.continuationReading": "This device's reading: HTTP {status}",
   "hub.continuationNoRequestId": "This screen holds no repeatable code -- this read did not carry one.",
+  "hub.nothingToPreview": "Nothing to preview yet",
 
 
 
@@ -1395,6 +1396,7 @@ const zhCN: Dict = {
   "hub.continuationNoServerReason": "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。",
   "hub.continuationReading": "这台设备看到的回读：HTTP {status}",
   "hub.continuationNoRequestId": "这一屏没有拿到可复述的编号（这条读取没把它送过来）。",
+  "hub.nothingToPreview": "还没有可以预览的行程",
 
 
 
