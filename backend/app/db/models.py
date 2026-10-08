@@ -434,6 +434,48 @@ class MemberSideQuestReturnReport(Base):
     )
 
 
+class PlannedSplitMeetupHandshake(Base):
+    """A member-reported meetup arrival acknowledged by another current member."""
+
+    __tablename__ = "planned_split_meetup_handshakes"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    owner_member_id: Mapped[str] = mapped_column(String)
+    owner_traveler_id: Mapped[str] = mapped_column(String)
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    member_side_quest_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    rendezvous_activity_id: Mapped[str] = mapped_column(String)
+    rendezvous_place_id: Mapped[str] = mapped_column(String)
+    state: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    reported_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    responder_member_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    responder_traveler_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('PENDING', 'PEER_ACKNOWLEDGED', 'NOT_CONFIRMED', 'EXPIRED', 'INVALIDATED')",
+            name="ck_planned_split_meetup_handshakes_state",
+        ),
+        Index(
+            "ux_planned_split_meetup_handshakes_one_pending_per_owner",
+            "journey_id",
+            "owner_member_id",
+            unique=True,
+            sqlite_where=text("state = 'PENDING'"),
+        ),
+        Index(
+            "idx_planned_split_meetup_handshakes_journey_reported",
+            "journey_id",
+            "reported_at",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

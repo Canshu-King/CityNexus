@@ -683,6 +683,32 @@ CREATE TABLE IF NOT EXISTS member_side_quest_return_reports (
 CREATE INDEX IF NOT EXISTS idx_member_side_quest_return_reports_journey_member
     ON member_side_quest_return_reports(journey_id, member_id, reported_at);
 
+CREATE TABLE IF NOT EXISTS planned_split_meetup_handshakes (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    owner_member_id TEXT NOT NULL,
+    owner_traveler_id TEXT NOT NULL,
+    planned_separation_intent_id TEXT NOT NULL,
+    member_side_quest_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL,
+    rendezvous_place_id TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'PENDING'
+        CHECK (state IN ('PENDING', 'PEER_ACKNOWLEDGED', 'NOT_CONFIRMED', 'EXPIRED', 'INVALIDATED')),
+    reported_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    responder_member_id TEXT,
+    responder_traveler_id TEXT,
+    decided_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_planned_split_meetup_handshakes_one_pending_per_owner
+    ON planned_split_meetup_handshakes(journey_id, owner_member_id)
+    WHERE state = 'PENDING';
+CREATE INDEX IF NOT EXISTS idx_planned_split_meetup_handshakes_journey_reported
+    ON planned_split_meetup_handshakes(journey_id, reported_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

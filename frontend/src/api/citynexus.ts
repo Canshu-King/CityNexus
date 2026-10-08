@@ -610,6 +610,44 @@ export interface JourneyGroupPresenceProjection {
     shared_plan_changed: false;
   } | null;
   can_guide: boolean;
+  meetup_handshake?: {
+    owner: {
+      id: string | null;
+      owner_member_id: string;
+      state: "NOT_REPORTED" | "PENDING" | "PEER_ACKNOWLEDGED" | "NOT_CONFIRMED" | "EXPIRED" | "INVALIDATED";
+      result: "MEETUP_REPORTED" | "USER_REPORTED_REJOIN_ACKNOWLEDGED" | null;
+      planned_split_state: "PLANNED_SPLIT_ENDED" | null;
+      reported_at: string | null;
+      expires_at: string | null;
+      rendezvous: { title: string | null; place_name: string | null };
+      responder_display_name: string | null;
+      physical_presence_verified: false;
+      shared_plan_changed: false;
+      can_report: boolean;
+      blocked_reason: "R62_REJOIN_REQUIRED" | "NO_PEER_AVAILABLE" | null;
+    } | null;
+    incoming: Array<{
+      id: string;
+      owner_display_name: string;
+      reported_at: string;
+      expires_at: string;
+      rendezvous: { title: string; place_name: string };
+      physical_presence_verified: false;
+    }>;
+    resolved: Array<{
+      id: string;
+      owner_display_name: string;
+      responder_display_name: string;
+      rendezvous: { title: string; place_name: string };
+      reported_at: string;
+      decided_at: string | null;
+      state: "PEER_ACKNOWLEDGED";
+      result: "USER_REPORTED_REJOIN_ACKNOWLEDGED";
+      planned_split_state: "PLANNED_SPLIT_ENDED";
+      physical_presence_verified: false;
+      shared_plan_changed: false;
+    }>;
+  } | null;
 }
 
 export interface MemberSideQuestProjection {
@@ -2216,6 +2254,27 @@ export const cityNexusApi = {
   ): Promise<JourneyOperatorProjection> {
     return requestJson<JourneyOperatorProjection>(
       "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/head-back",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  reportMemberMeetupArrival(
+    journeyId: string,
+    sideQuestId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-side-quests/" + encodeURIComponent(sideQuestId) + "/meetup-report",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  decideMemberMeetupHandshake(
+    journeyId: string,
+    handshakeId: string,
+    decision: "acknowledge" | "not-yet",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/meetup-handshakes/" + encodeURIComponent(handshakeId) + "/" + decision,
       { method: "POST", headers: travelerAuthHeaders() },
     );
   },

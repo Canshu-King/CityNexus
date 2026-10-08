@@ -375,6 +375,113 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
   }
 });
 
+test("R69 completes an explicit two-member meetup acknowledgment without changing the shared plan", async ({ browser, request }) => {
+  const resetToken = process.env.CITYNEXUS_DEMO_RESET_TOKEN;
+  if (!resetToken) throw new Error("R69 E2E requires CITYNEXUS_DEMO_RESET_TOKEN for its isolated demo database");
+  const reset = await api<{ journey_id: string; traveler_id: string; city_code: string }>(request, "/api/v1/demo/reset", {
+    method: "POST",
+    headers: { "X-Demo-Reset-Token": resetToken },
+  });
+  const journeyId = reset.journey_id;
+  const ownerId = reset.traveler_id;
+  const ownerToken = travelerToken(ownerId);
+  const candidates = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans/generate`, {
+    method: "POST",
+    data: { candidate_count: 1 },
+  });
+  const planId = candidates[0]?.id;
+  if (!planId) throw new Error("R69 E2E could not generate a demo plan");
+  await api(request, `/api/v1/journeys/${journeyId}/plans/${planId}/select`, { method: "POST" });
+  await api(request, `/api/v1/journeys/${journeyId}/start`, { method: "POST" });
+
+  const collaborator = await api<Traveler>(request, "/api/v1/travelers", {
+    method: "POST",
+    data: { display_name: "R69 Meetup Peer", locale: "en-US", timezone: "Asia/Tokyo" },
+  });
+  const peerToken = travelerToken(collaborator.id);
+  await api(request, `/api/v1/journeys/${journeyId}/members`, {
+    method: "POST",
+    data: { traveler_id: collaborator.id, role: "COLLABORATOR", invited_by: ownerId },
+  });
+  await api(request, `/api/v1/journeys/${journeyId}/operator/start`, {
+    method: "POST",
+    token: ownerToken,
+    data: { interval_seconds: 3600 },
+  });
+  const experience = await api<{
+    journey: { city_code: string };
+    active_plan: { id: string; activities: Array<{ place_id: string | null }> };
+  }>(request, `/api/v1/journeys/${journeyId}/experience`);
+  const places = await api<Place[]>(request, `/api/v1/places?city_code=${encodeURIComponent(experience.journey.city_code)}`);
+  const used = new Set(experience.active_plan.activities.map((activity) => activity.place_id).filter(Boolean));
+  const privatePlace = places.find((place) => !used.has(place.id));
+  if (!privatePlace) throw new Error("the demo city needs a known Place outside the active shared plan");
+
+  await api(request, `/api/v1/journeys/${journeyId}/agent/commands`, {
+    method: "POST",
+    token: ownerToken,
+    data: {
+      command: "I want to go alone for a while and meet at the next shared stop.",
+      requested_autonomy: "PLAN_ONLY",
+    },
+  });
+  const created = await api<{ member_side_quest: { id: string } }>(request, `/api/v1/journeys/${journeyId}/member-side-quests`, {
+    method: "POST",
+    token: ownerToken,
+    data: { place_id: privatePlace.id },
+  });
+  const questId = created.member_side_quest.id;
+  const navigationTargetPath = `/api/v1/journeys/${journeyId}/member-side-quests/${questId}/navigation-targets`;
+  const ownerNavigation = await api<{
+    target: { kind: string; place_id: string; name: string; latitude: number | null; longitude: number | null };
+  }>(request, navigationTargetPath, { token: ownerToken });
+  expect(ownerNavigation.target.kind).toBe("PRIVATE_STOP");
+  expect(ownerNavigation.target.place_id).toBe(privatePlace.id);
+  expect(ownerNavigation.target.name).toBe(privatePlace.name);
+  const peerNavigation = await request.get(`${API}${navigationTargetPath}`, {
+    headers: { Authorization: `Bearer ${peerToken}` },
+  });
+  expect([403, 404]).toContain(peerNavigation.status());
+  expect(await peerNavigation.text()).not.toContain(privatePlace.name);
+  for (const action of ["start", "arrive", "complete"] as const) {
+    await api(request, `/api/v1/journeys/${journeyId}/member-side-quests/${questId}/${action}`, {
+      method: "POST",
+      token: ownerToken,
+    });
+  }
+
+  const owner = await openJourneyPage(browser, journeyId, ownerToken);
+  const peer = await openJourneyPage(browser, journeyId, peerToken);
+  try {
+    const ownerRequest = owner.page.getByTestId("member-meetup-report-arrival");
+    await expect(ownerRequest).toBeVisible();
+    await ownerRequest.click();
+    await expect(owner.page.getByTestId("member-meetup-report-confirmation")).toContainText("This is my report");
+    await owner.page.getByTestId("member-meetup-report-confirm").click();
+    await expect(owner.page.getByTestId("member-meetup-owner-status")).toHaveAttribute("data-state", "PENDING");
+
+    await peer.page.reload({ waitUntil: "domcontentloaded" });
+    const incoming = peer.page.getByTestId("member-meetup-incoming");
+    await expect(incoming).toBeVisible();
+    await expect(peer.page.getByTestId("journey-group-presence")).not.toContainText(privatePlace.name);
+    await incoming.getByTestId("member-meetup-acknowledge").click();
+    await expect(incoming).toHaveCount(0);
+    await expect(peer.page.getByTestId("member-meetup-resolved")).toContainText("reported meeting");
+    await expect(peer.page.getByTestId("journey-group-presence")).not.toContainText(privatePlace.name);
+
+    await owner.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(owner.page.getByTestId("member-meetup-owner-status")).toHaveAttribute("data-state", "PEER_ACKNOWLEDGED");
+    await expect(owner.page.getByTestId("member-meetup-no-physical-proof")).toBeVisible();
+    await expect(owner.page.getByTestId("member-meetup-owner-status")).toContainText("shared Journey can continue");
+    await expect(owner.page.getByTestId("journey-planned-separation")).toHaveCount(0);
+    const after = await api<{ active_plan: { id: string } }>(request, `/api/v1/journeys/${journeyId}/experience`);
+    expect(after.active_plan.id).toBe(experience.active_plan.id);
+  } finally {
+    await owner.close();
+    await peer.close();
+  }
+});
+
 
 test("R67 explicit nearby search and selection use a controlled local Overpass fixture simulation", async ({ browser, request }) => {
   test.skip(

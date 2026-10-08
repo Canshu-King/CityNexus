@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   cityNexusApi,
   type GroupRendezvousRouteResult,
+  type JourneyGroupPresenceProjection,
   type MemberSideQuestFitPreview,
   type MemberSideQuestNavigationResult,
   type MemberSideQuestNavigationTarget,
@@ -13,6 +14,7 @@ import {
   buildGoogleWalkingDirectionsUrl,
   buildOpenStreetMapPinUrl,
 } from "./memberSideQuestNavigationLinks";
+import { MemberMeetupHandshakePanel } from "./MemberMeetupHandshakePanel";
 
 type Rendezvous = {
   title: string;
@@ -50,6 +52,7 @@ export function MemberSideQuestCard({
   journeyId,
   sideQuest,
   rendezvous,
+  meetupHandshake,
   currentSplitActive = true,
   onRefreshLocation,
   onHeadBack,
@@ -58,6 +61,7 @@ export function MemberSideQuestCard({
   journeyId: string;
   sideQuest: MemberSideQuestProjection | null;
   rendezvous: Rendezvous | null;
+  meetupHandshake?: JourneyGroupPresenceProjection["meetup_handshake"];
   currentSplitActive?: boolean;
   onRefreshLocation?: () => Promise<string | null>;
   onHeadBack?: () => Promise<GroupRendezvousRouteResult | null>;
@@ -621,6 +625,13 @@ export function MemberSideQuestCard({
           </button>
         </div>
       )}
+      <MemberMeetupHandshakePanel
+        journeyId={journeyId}
+        projection={meetupHandshake ?? null}
+        sideQuest={sideQuest}
+        onUpdated={onUpdated}
+        showGroup={false}
+      />
       {navigationConsent?.key === routeContextKey && (
         <section
           role="dialog"

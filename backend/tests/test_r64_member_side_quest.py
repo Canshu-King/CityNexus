@@ -28,6 +28,7 @@ from app.db.models import (
     MemberLiveMomentScoutReceipt,
     MemberSideQuest,
     MemberSideQuestReturnReport,
+    PlannedSplitMeetupHandshake,
     MobilityFact,
     Place,
     PlanVersion,
@@ -1745,3 +1746,319 @@ def test_r67_live_osm_selection_materializes_only_after_owner_confirmation_and_i
     ) == 1
     assert _count(JourneyIntent, JourneyIntent.journey_id == journey_id) == intent_count_before + 1
     assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == quest_count_before + 1
+
+
+def test_r69_meetup_handshake_requires_peer_and_ends_only_the_owners_split():
+    journey_id, owner_id, peer_id = _active_shared_journey()
+    split = _start_split(journey_id, owner_id)
+    private_place = _private_place(journey_id, split.get("rendezvous_place_id"))
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": private_place.id},
+    )
+    assert created.status_code == 201, created.text
+    quest_id = created.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive", "complete"):
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert response.status_code == 200, response.text
+
+    plan_before = client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"]
+    report_path = f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/meetup-report"
+    reported = client.post(report_path, headers=_auth(owner_id))
+    assert reported.status_code == 200, reported.text
+    handshake = reported.json()["group_presence"]["meetup_handshake"]["owner"]
+    assert handshake["state"] == "PENDING"
+    handshake_id = handshake["id"]
+    assert handshake["physical_presence_verified"] is False
+    repeated = client.post(report_path, headers=_auth(owner_id))
+    assert repeated.status_code == 200, repeated.text
+    assert repeated.json()["group_presence"]["meetup_handshake"]["owner"]["id"] == handshake_id
+    assert _count(
+        PlannedSplitMeetupHandshake,
+        PlannedSplitMeetupHandshake.journey_id == journey_id,
+    ) == 1
+    first_handshake_id = handshake_id
+
+    peer_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(peer_id)
+    )
+    assert peer_view.status_code == 200, peer_view.text
+    assert private_place.name not in peer_view.text
+    incoming = peer_view.json()["group_presence"]["meetup_handshake"]["incoming"]
+    assert len(incoming) == 1
+    assert incoming[0]["id"] == first_handshake_id
+
+    replacement_place = _private_place(
+        journey_id, split.get("rendezvous_place_id"), private_place.id
+    )
+    replacement = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": replacement_place.id},
+    )
+    assert replacement.status_code == 201, replacement.text
+    replacement_quest_id = replacement.json()["member_side_quest"]["id"]
+    stale_ack = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{first_handshake_id}/acknowledge",
+        headers=_auth(peer_id),
+    )
+    assert stale_ack.status_code == 409
+    assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == plan_before
+    for action in ("start", "arrive", "complete"):
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{replacement_quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert response.status_code == 200, response.text
+    report_path = f"/api/v1/journeys/{journey_id}/member-side-quests/{replacement_quest_id}/meetup-report"
+    renewed = client.post(report_path, headers=_auth(owner_id))
+    assert renewed.status_code == 200, renewed.text
+    declined_handshake_id = renewed.json()["group_presence"]["meetup_handshake"]["owner"]["id"]
+    assert declined_handshake_id != first_handshake_id
+    peer_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(peer_id)
+    )
+    assert peer_view.status_code == 200, peer_view.text
+    incoming = peer_view.json()["group_presence"]["meetup_handshake"]["incoming"]
+    assert len(incoming) == 1 and incoming[0]["id"] == declined_handshake_id
+
+    not_yet = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{declined_handshake_id}/not-yet",
+        headers=_auth(peer_id),
+    )
+    assert not_yet.status_code == 200, not_yet.text
+    declined_owner_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert declined_owner_view.json()["group_presence"]["meetup_handshake"]["owner"]["state"] == "NOT_CONFIRMED"
+    assert declined_owner_view.json()["group_presence"]["planned_separation"] is not None
+    assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == plan_before
+
+    renewed = client.post(report_path, headers=_auth(owner_id))
+    assert renewed.status_code == 200, renewed.text
+    handshake_id = renewed.json()["group_presence"]["meetup_handshake"]["owner"]["id"]
+    assert handshake_id != declined_handshake_id
+
+    self_ack = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge",
+        headers=_auth(owner_id),
+    )
+    assert self_ack.status_code == 403
+    acknowledged = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge",
+        headers=_auth(peer_id),
+    )
+    assert acknowledged.status_code == 200, acknowledged.text
+    acked = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert acked.status_code == 200, acked.text
+    assert acked.json()["group_presence"]["meetup_handshake"]["owner"]["state"] == "PEER_ACKNOWLEDGED"
+    assert acked.json()["group_presence"]["meetup_handshake"]["owner"]["physical_presence_verified"] is False
+    assert acked.json()["group_presence"]["planned_separation"] is None
+    assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == plan_before
+    with SessionLocal() as session:
+        intent = session.get(JourneyIntent, split["intent_id"])
+        assert intent is not None and intent.status == "CANCELLED"
+        row = session.get(PlannedSplitMeetupHandshake, handshake_id)
+        assert row is not None
+        assert row.state == "PEER_ACKNOWLEDGED"
+        assert row.responder_traveler_id == peer_id
+        first_row = session.get(PlannedSplitMeetupHandshake, first_handshake_id)
+        assert first_row is not None and first_row.state == "INVALIDATED"
+        declined_row = session.get(PlannedSplitMeetupHandshake, declined_handshake_id)
+        assert declined_row is not None and declined_row.state == "NOT_CONFIRMED"
+
+    duplicate_ack = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge",
+        headers=_auth(peer_id),
+    )
+    assert duplicate_ack.status_code == 200, duplicate_ack.text
+    assert _count(
+        AuditLog,
+        AuditLog.journey_id == journey_id,
+        AuditLog.action == "journey.planned_split_meetup.peer_acknowledged",
+    ) == 1
+
+
+def test_r69_respects_r62_waiting_gate_and_does_not_fabricate_a_peer(monkeypatch):
+    from app.execution import planned_split_meetup_handshake as handshake_module
+
+    journey_id, owner_id, peer_id = _active_shared_journey()
+    split = _start_split(journey_id, owner_id)
+    private_place = _private_place(journey_id, split.get("rendezvous_place_id"))
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": private_place.id},
+    )
+    assert created.status_code == 201, created.text
+    quest_id = created.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive", "complete"):
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert response.status_code == 200, response.text
+
+    monkeypatch.setattr(
+        handshake_module,
+        "active_group_recovery_spend",
+        lambda *_args, **_kwargs: (object(), {}, {"state": "RECOVERY_APPLIED_REJOIN_PENDING"}),
+    )
+    monkeypatch.setattr(
+        handshake_module,
+        "followthrough_projection",
+        lambda *_args, **_kwargs: {"state": "REJOIN_IN_PROGRESS"},
+    )
+    report_path = f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/meetup-report"
+    blocked_by_r62 = client.post(report_path, headers=_auth(owner_id))
+    assert blocked_by_r62.status_code == 409
+    assert "R62_REJOIN_REQUIRED" in blocked_by_r62.text
+    assert _count(
+        PlannedSplitMeetupHandshake,
+        PlannedSplitMeetupHandshake.journey_id == journey_id,
+    ) == 0
+    monkeypatch.undo()
+    with SessionLocal() as session:
+        peer = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == peer_id,
+            )
+        )
+        assert peer is not None
+        peer.removed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+    no_peer = client.post(report_path, headers=_auth(owner_id))
+    assert no_peer.status_code == 409
+    assert "MEETUP_HANDSHAKE_REQUIRES_CURRENT_PEER" in no_peer.text
+    assert _count(
+        PlannedSplitMeetupHandshake,
+        PlannedSplitMeetupHandshake.journey_id == journey_id,
+    ) == 0
+
+
+def test_r69_one_peer_ack_in_three_person_journey_does_not_claim_group_together():
+    journey_id, owner_id, other_peer_id = _active_shared_journey()
+    third_id = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        session.add(Traveler(
+            id=third_id,
+            display_name="R69 Third Member",
+            email=None,
+            locale="en-US",
+            timezone="UTC",
+            created_at=now,
+            updated_at=now,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            traveler_id=third_id,
+            role="COLLABORATOR",
+            invited_by=owner_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        ))
+        session.commit()
+    split = _start_split(journey_id, owner_id)
+    private_place = _private_place(journey_id, split.get("rendezvous_place_id"))
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": private_place.id},
+    )
+    assert created.status_code == 201, created.text
+    quest_id = created.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive", "complete"):
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert response.status_code == 200, response.text
+    plan_before = client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"]
+    report = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/meetup-report",
+        headers=_auth(owner_id),
+    )
+    assert report.status_code == 200, report.text
+    handshake_id = report.json()["group_presence"]["meetup_handshake"]["owner"]["id"]
+    acknowledged = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge",
+        headers=_auth(third_id),
+    )
+    assert acknowledged.status_code == 200, acknowledged.text
+
+    group_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(other_peer_id)
+    )
+    assert group_view.status_code == 200, group_view.text
+    presence = group_view.json()["group_presence"]
+    assert presence["planned_separation"] is None
+    assert presence["state"] != "TOGETHER"
+    resolved = presence["meetup_handshake"]["resolved"]
+    assert len(resolved) == 1
+    assert resolved[0]["physical_presence_verified"] is False
+    assert resolved[0]["planned_split_state"] == "PLANNED_SPLIT_ENDED"
+    assert client.get(f"/api/v1/journeys/{journey_id}/experience").json()["active_plan"]["id"] == plan_before
+
+
+def test_r69_expired_request_cannot_be_acknowledged_and_can_be_resent():
+    journey_id, owner_id, peer_id = _active_shared_journey()
+    split = _start_split(journey_id, owner_id)
+    private_place = _private_place(journey_id, split.get("rendezvous_place_id"))
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": private_place.id},
+    )
+    assert created.status_code == 201, created.text
+    quest_id = created.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive", "complete"):
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/{action}",
+            headers=_auth(owner_id),
+        )
+        assert response.status_code == 200, response.text
+    report_path = f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/meetup-report"
+    first = client.post(report_path, headers=_auth(owner_id))
+    assert first.status_code == 200, first.text
+    first_id = first.json()["group_presence"]["meetup_handshake"]["owner"]["id"]
+    with SessionLocal() as session:
+        row = session.get(PlannedSplitMeetupHandshake, first_id)
+        assert row is not None
+        row.expires_at = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
+        session.commit()
+
+    owner_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert owner_view.json()["group_presence"]["meetup_handshake"]["owner"]["state"] == "EXPIRED"
+    stale_ack = client.post(
+        f"/api/v1/journeys/{journey_id}/meetup-handshakes/{first_id}/acknowledge",
+        headers=_auth(peer_id),
+    )
+    assert stale_ack.status_code == 409
+    resent = client.post(report_path, headers=_auth(owner_id))
+    assert resent.status_code == 200, resent.text
+    resent_id = resent.json()["group_presence"]["meetup_handshake"]["owner"]["id"]
+    assert resent_id != first_id
+    assert resent.json()["group_presence"]["meetup_handshake"]["owner"]["state"] == "PENDING"
+    with SessionLocal() as session:
+        expired = session.get(PlannedSplitMeetupHandshake, first_id)
+        assert expired is not None and expired.state == "EXPIRED"
+        pending = session.get(PlannedSplitMeetupHandshake, resent_id)
+        assert pending is not None and pending.state == "PENDING"

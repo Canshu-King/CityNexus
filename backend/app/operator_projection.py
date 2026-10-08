@@ -48,6 +48,7 @@ from app.execution.group_presence import (
 )
 from app.execution.group_recovery_followthrough import followthrough_projection
 from app.execution.member_side_quest import attach_member_side_quest_projection
+from app.execution.planned_split_meetup_handshake import meetup_handshake_projection
 from app.operator_attention import attention_from_operator_projection
 
 
@@ -565,6 +566,12 @@ def operator_projection(
         session, journey, viewer_member_id=viewer_member_id
     )
     member_side_quest = attach_member_side_quest_projection(
+        session,
+        journey,
+        viewer_member_id=viewer_member_id,
+        group_presence=group_presence,
+    )
+    group_presence["meetup_handshake"] = meetup_handshake_projection(
         session,
         journey,
         viewer_member_id=viewer_member_id,

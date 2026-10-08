@@ -285,6 +285,10 @@ from app.execution.member_side_quest import (
     start_member_side_quest_return_report,
     transition_member_side_quest,
 )
+from app.execution.planned_split_meetup_handshake import (
+    decide_meetup_handshake,
+    report_meetup_arrival,
+)
 from app.execution.moment_scout import build_moment_scout, select_moment_scout_candidate
 from app.execution.group_recovery_followthrough import (
     active_group_recovery_spend,
@@ -10242,6 +10246,80 @@ def start_member_side_quest_head_back(
         member=member,
         traveler_id=principal.traveler_id,
         quest_id=side_quest_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/meetup-report")
+def report_member_side_quest_meetup_arrival(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Let the split owner report arrival and request an explicit peer acknowledgment."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    report_meetup_arrival(
+        session,
+        journey=journey,
+        owner=member,
+        traveler_id=principal.traveler_id,
+        side_quest_id=side_quest_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge")
+def acknowledge_member_meetup_arrival(
+    journey_id: UUID,
+    handshake_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """A different current member explicitly acknowledges the owner's report."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    decide_meetup_handshake(
+        session,
+        journey=journey,
+        responder=member,
+        traveler_id=principal.traveler_id,
+        handshake_id=handshake_id,
+        acknowledge=True,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/not-yet")
+def decline_member_meetup_arrival(
+    journey_id: UUID,
+    handshake_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """A different current member can report that they cannot confirm the meetup yet."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    decide_meetup_handshake(
+        session,
+        journey=journey,
+        responder=member,
+        traveler_id=principal.traveler_id,
+        handshake_id=handshake_id,
+        acknowledge=False,
     )
     return operator_projection(session, journey, viewer_member_id=member.id)
 

@@ -34,6 +34,7 @@ import {
   useAuthoritativeTwin,
 } from "../../api/v12Authoritative";
 import { MemberSideQuestCard } from "./MemberSideQuestCard";
+import { MemberMeetupHandshakePanel } from "./MemberMeetupHandshakePanel";
 import { MomentScoutCard } from "./MomentScoutCard";
 
 type Proposal = {
@@ -1086,6 +1087,13 @@ export function LiveRecovery({
             aria-live="polite"
           >
             <span className="v8-kicker">{zh ? "同行者位置" : "Group presence"}</span>
+            <MemberMeetupHandshakePanel
+              journeyId={journeyId}
+              projection={groupPresence.meetup_handshake ?? null}
+              sideQuest={operator?.member_side_quest ?? null}
+              onUpdated={loadOperator}
+              showOwner={false}
+            />
             <strong>
               {groupPresence.state === "PLANNED_SPLIT_ON_TRACK"
                 ? (zh ? "有人按计划暂时分开行动；当前路线仍能赶上会合点。" : "A traveller is on a planned side trip and the current route still reaches the rendezvous in time.")
@@ -1147,6 +1155,7 @@ export function LiveRecovery({
                         journeyId={journeyId}
                         sideQuest={operator?.member_side_quest ?? null}
                         rendezvous={member.rendezvous}
+                        meetupHandshake={groupPresence.meetup_handshake ?? null}
                         currentSplitActive
                         onRefreshLocation={onRefreshLocation}
                         onHeadBack={routeAfterPrivateStop}
@@ -1438,6 +1447,7 @@ export function LiveRecovery({
             journeyId={journeyId}
             sideQuest={operator.member_side_quest}
             rendezvous={operator.member_side_quest.rendezvous}
+            meetupHandshake={groupPresence?.meetup_handshake ?? null}
             currentSplitActive={false}
             onUpdated={loadOperator}
           />
