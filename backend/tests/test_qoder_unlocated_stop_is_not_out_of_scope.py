@@ -12,6 +12,11 @@ reject - and the two halves of one question were giving opposite verdicts.
 rejection nor a reference, and it is reported on the candidate so the screen can say the check
 never happened.
 
+The polygon path answered the same question the same wrong way - `_geometry_scope_ref` returns
+None both for "outside the polygon" and for "no coordinate to test", and the caller reads None as
+`GEOSPATIAL_POLYGON_MISMATCH`.  A route crossing the polygon still settles it without the stop's
+own coordinate, so "cannot be told" is only when neither signal exists.
+
 These call the real functions with stand-in activity and event payloads, so what is asserted is
 what the code emits rather than what it was asked to emit.
 """
@@ -184,6 +189,84 @@ def test_r3b_a_located_stop_does_not_carry_the_unverified_note() -> None:
 
 
 # ------------------------------------------------------- R4: the shape cannot drift
+
+
+# ------------------------------------------------ R5: the polygon path, same question
+
+
+#: A closed square around Tianjin's centre.
+POLYGON = {
+    "disruption_polygon": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [117.20, 39.12],
+                [117.21, 39.12],
+                [117.21, 39.13],
+                [117.20, 39.13],
+                [117.20, 39.12],
+            ]
+        ],
+    },
+    "name": "river closure",
+}
+
+
+def _polygon_unverified_token() -> str:
+    from app.intelligence import impact_validation
+
+    return impact_validation.GEOSPATIAL_POLYGON_UNVERIFIABLE
+
+
+def test_r5_an_unlocated_stop_is_not_read_as_outside_the_polygon() -> None:
+    """The before-fix reading: the same `GEOSPATIAL_POLYGON_MISMATCH` a genuinely outside stop
+    gets, so "nobody knows where this is" and "the closure does not reach it" were one answer."""
+
+    from app.intelligence.impact_validation import _corroboration
+
+    refs, reasons, _strong, undecided = _corroboration(_activity(None, None), POLYGON)
+
+    assert "GEOSPATIAL_POLYGON_MISMATCH" not in reasons, reasons
+    assert reasons == (), reasons
+    assert refs == (), refs
+    assert undecided == (_polygon_unverified_token(),), undecided
+
+
+def test_r5b_a_stop_outside_the_polygon_is_still_rejected() -> None:
+    """The other direction, so the fix cannot pass by never rejecting anything."""
+
+    from app.intelligence.impact_validation import _corroboration
+
+    _refs, reasons, _strong, undecided = _corroboration(_activity(39.30, 117.50), POLYGON)
+
+    assert reasons == ("GEOSPATIAL_POLYGON_MISMATCH",), reasons
+    assert undecided == (), undecided
+
+
+def test_r5c_a_stop_inside_the_polygon_still_counts_as_evidence() -> None:
+    from app.intelligence.impact_validation import _corroboration
+
+    refs, reasons, _strong, undecided = _corroboration(_activity(39.125, 117.205), POLYGON)
+
+    assert "event.payload.disruption_polygon" in refs, refs
+    assert reasons == (), reasons
+    assert undecided == (), undecided
+
+
+def test_r5d_a_route_through_the_polygon_settles_it_without_the_stops_own_coordinate() -> None:
+    """The reason "cannot be told" is not simply "no coordinate": a route that crosses the
+    polygon answers the question on its own, and that must keep working."""
+
+    from app.intelligence.impact_validation import _corroboration
+
+    payload = dict(POLYGON)
+    payload["route_geometry"] = [[117.19, 39.115], [117.215, 39.135]]
+
+    refs, reasons, _strong, undecided = _corroboration(_activity(None, None), payload)
+
+    assert "event.payload.route_polygon_intersection" in refs, (refs, reasons, undecided)
+    assert reasons == (), reasons
+    assert undecided == (), undecided
 
 
 def test_r4_every_corroboration_return_carries_four_values() -> None:

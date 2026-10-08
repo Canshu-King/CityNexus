@@ -31,6 +31,7 @@ TERMINAL_ACTIVITY_STATUSES = frozenset({"COMPLETED", "SKIPPED", "CANCELLED"})
 # rather than inlined so a screen and a gate can refer to the same fact, and deliberately not
 # spelled like the `_MISMATCH` family: those mean "compared, and it fell outside".
 GEOSPATIAL_SCOPE_UNVERIFIABLE = "GEOSPATIAL_SCOPE_UNVERIFIABLE"
+GEOSPATIAL_POLYGON_UNVERIFIABLE = "GEOSPATIAL_POLYGON_UNVERIFIABLE"
 _STRUCTURED_TIME_KEYS = (
     "valid_from",
     "valid_until",
@@ -238,6 +239,22 @@ def _geometry_scope_ref(activity: ImpactActivityContext, payload: Mapping[str, A
     return None
 
 
+def _geometry_scope_undecidable(activity: ImpactActivityContext, payload: Mapping[str, Any]) -> bool:
+    """Whether the polygon question could be put to this stop at all.
+
+    `_geometry_scope_ref` answers with a reference string or None, and None means two different
+    things: the stop is outside the polygon, or the stop has no coordinate to test.  The caller
+    reads None as `GEOSPATIAL_POLYGON_MISMATCH` - a rejection - so the second case was dropping a
+    real disruption for every stop the planner had never located.  A route that crosses the
+    polygon still decides the question without the stop's own coordinate, which is why the
+    answer is "cannot be told" only when neither signal exists.
+    """
+
+    if activity.latitude is not None and activity.longitude is not None:
+        return False
+    return len(_route_geometry(payload)) < 2
+
+
 def _normalized_text(value: object) -> str:
     return " ".join(re.findall(r"[\w]+", str(value or "").casefold()))
 
@@ -385,8 +402,14 @@ def _corroboration(
     if _polygon_rings(payload):
         geometry_ref = _geometry_scope_ref(activity, payload)
         if geometry_ref is None:
-            return (), ("GEOSPATIAL_POLYGON_MISMATCH",), False, ()
-        refs.append(geometry_ref)
+            # Same three states as the radius check below, for the same reason: a stop nobody
+            # located is not a stop the polygon was measured not to cover.
+            if _geometry_scope_undecidable(activity, payload):
+                undecidable.append(GEOSPATIAL_POLYGON_UNVERIFIABLE)
+            else:
+                return (), ("GEOSPATIAL_POLYGON_MISMATCH",), False, ()
+        else:
+            refs.append(geometry_ref)
 
     if any(payload.get(key) not in (None, "") for key in ("latitude", "longitude")):
         in_scope = _within_scope(activity, payload)
