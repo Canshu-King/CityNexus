@@ -635,8 +635,8 @@ export function MemberSideQuestCard({
           </strong>
           <p>
             {zh
-              ? "你选择的地点名称和精确坐标会发送给你选中的地图服务。CityNexus 不会发送你的起点；地图服务可能按自己的权限使用设备位置。打开地图不代表到达、已返程或已与大家会合。"
-              : "The selected place name and exact coordinates will be sent to the maps provider you choose. CityNexus will not send your origin; that provider may use device location under its own permissions. Opening maps does not report arrival, return, or reunion."}
+              ? "所选地点的精确坐标会发送给地图服务；CityNexus 不会在导航链接中发送地点名称或你的起点。地图服务可能按自己的权限使用设备位置。打开地图不代表到达、已返程或已与大家会合。"
+              : "The selected destination's exact coordinates will be sent to your chosen maps provider. CityNexus does not include the place name or your origin in the link; that provider may use device location under its own permissions. Opening maps does not report arrival, return, or reunion."}
           </p>
           <div className="journey-side-quest-actions">
             <button
