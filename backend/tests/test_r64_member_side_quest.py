@@ -3608,3 +3608,139 @@ def test_r71_acceptance_cas_blocks_fresh_duplicate_and_recovers_after_lease():
     )
     assert recovered.status_code == 200, recovered.text
     assert recovered.json()["member_side_quest"]["destination"]["authority"] == "EXACT_KNOWN_PLACE"
+
+
+def test_r72_joined_member_can_share_after_inviter_finishes_own_split():
+    """An accepted B owns a separate trip even when A's original split has ended."""
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    accepted = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+    b_quest_id = accepted.json()["member_side_quest"]["id"]
+    for action in ("start", "arrive"):
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{b_quest_id}/{action}",
+            headers=_auth(recipient_id),
+        )
+        assert response.status_code == 200, response.text
+
+    # Arrange the same domain end state as A's own R63 end, without ending B's
+    # separate split. This is a narrow regression fixture, not physical reunion.
+    with SessionLocal() as session:
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        assert invitation is not None
+        owner_intent = session.get(JourneyIntent, invitation.owner_split_intent_id)
+        owner_quest = session.get(MemberSideQuest, owner_quest_id)
+        assert owner_intent is not None and owner_quest is not None
+        owner_intent.status = "CANCELLED"
+        owner_quest.state = "INVALIDATED"
+        session.commit()
+
+    b_shared = client.post(
+        f"{path}/progress",
+        headers=_auth(recipient_id),
+        json={"action": "SHARE_ARRIVAL"},
+    )
+    assert b_shared.status_code == 200, b_shared.text
+    b_view = b_shared.json()["member_place_invitations"]["joined"][0]
+    assert b_view["state"] == "STALE"  # No new invitations, accepted trips survive.
+    assert any(
+        participant["membership"] == "JOINED"
+        and participant["at_invited_place"] is not None
+        for participant in b_view["participants"]
+    )
+    a_cannot_report_old_trip = client.post(
+        f"{path}/progress",
+        headers=_auth(owner_id),
+        json={"action": "SHARE_ARRIVAL"},
+    )
+    assert a_cannot_report_old_trip.status_code == 409
+
+
+def test_r72_late_joiner_does_not_inherit_prior_opt_in_status():
+    """An opt-in report is not automatically disclosed to future joiners."""
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    third_id = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        session.add(Traveler(
+            id=third_id, display_name="R72后来加入的同行者",
+            email=None, locale="zh-CN", timezone="UTC",
+            created_at=now, updated_at=now,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()), journey_id=journey_id, traveler_id=third_id,
+            role="COLLABORATOR", invited_by=owner_id,
+            expires_at=None, joined_at=now, removed_at=None,
+            preferences_json="{}", created_at=now, updated_at=now,
+        ))
+        session.commit()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+
+    def accept(traveler_id: str) -> dict:
+        response = client.post(
+            f"{path}/respond",
+            headers=_auth(traveler_id),
+            json={
+                "decision": "ACCEPT",
+                "confirm_exact_public_place": True,
+                "acknowledge_feasibility_unknown": True,
+            },
+        )
+        assert response.status_code == 200, response.text
+        return response.json()
+
+    b_accepted = accept(recipient_id)
+    b_quest = b_accepted["member_side_quest"]["id"]
+    for action in ("start", "arrive"):
+        result = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{b_quest}/{action}",
+            headers=_auth(recipient_id),
+        )
+        assert result.status_code == 200, result.text
+    first_report = client.post(
+        f"{path}/progress",
+        headers=_auth(recipient_id),
+        json={"action": "SHARE_ARRIVAL"},
+    )
+    assert first_report.status_code == 200, first_report.text
+    b_member_id = next(
+        item["member_id"] for item in first_report.json()["member_place_invitations"]["joined"][0]["participants"]
+        if item["membership"] == "JOINED"
+    )
+    owner_before = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["member_place_invitations"]["sent"][0]["participants"]
+    assert next(item for item in owner_before if item["member_id"] == b_member_id)["at_invited_place"] is not None
+
+    c_accepted = accept(third_id)
+    c_board = c_accepted["member_place_invitations"]["joined"][0]["participants"]
+    b_for_late_c = next(item for item in c_board if item["member_id"] == b_member_id)
+    assert b_for_late_c["at_invited_place"] is None
+
+    # B consents again *after* C joined; only that newly made disclosure can
+    # appear in C's board. Previously observed facts are not revoked from A.
+    assert client.post(
+        f"{path}/progress", headers=_auth(recipient_id),
+        json={"action": "WITHDRAW_ARRIVAL"},
+    ).status_code == 200
+    reshared = client.post(
+        f"{path}/progress", headers=_auth(recipient_id),
+        json={"action": "SHARE_ARRIVAL"},
+    )
+    assert reshared.status_code == 200, reshared.text
+    c_after = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(third_id)
+    ).json()["member_place_invitations"]["joined"][0]["participants"]
+    assert next(item for item in c_after if item["member_id"] == b_member_id)["at_invited_place"] is not None
