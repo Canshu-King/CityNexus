@@ -552,6 +552,8 @@ const en: Dict = {
   "agent.obsTool": "tool",
   "agent.obsDuration": "duration",
   "agent.obsExecution": "execution",
+  "agent.runtimeDetails": "Runtime details",
+
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -1777,6 +1779,8 @@ const zhCN: Dict = {
   "agent.obsTool": "工具",
   "agent.obsDuration": "耗时",
   "agent.obsExecution": "执行方式",
+  "agent.runtimeDetails": "运行详情",
+
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
