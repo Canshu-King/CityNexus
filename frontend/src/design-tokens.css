@@ -128,6 +128,11 @@
   --cn-s-48: 48px;
   --cn-gutter: 20px;
 
+  /* Card padding takes two tiers, not one: a content card reads at 20, a dense list row reads at 16.
+     The values between them (13, 14, 18/15, 22, 27) were per-file choices rather than decisions. */
+  --cn-card-pad: var(--cn-s-20);
+  --cn-card-pad-compact: var(--cn-s-16);
+
   /* Radii: one numeric ladder, and the semantic names alias into it. ORD-0459 step 2 moved every
      component rule onto this table, so a radius that is not one of these values cannot be written
      without adding a tier first. Snap rule used for the migration: nearest tier, ties to the larger
@@ -289,16 +294,99 @@
 .v8-page h1, .v8-hero-title { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
 .v8-page h2, .v8-section-title { font-size: var(--cn-fs-title); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.015em; }
 
-/* Unify card material: solid content, restrained depth (no atmosphere floating). */
+/* Unify card material: solid content, restrained depth (no atmosphere floating), one corner.
+   The list is what the shell actually paints, walked screen by screen on the live app rather than
+   guessed from file names. A row whose selected state IS a ring is excluded -- `.v8-stay-card.selected`
+   and `.hotel-card.chosen` carry `box-shadow` as their only chosen-mark, and overpainting it here
+   would delete that signal. */
 .v8-page .v8-card,
 .v8-page .replan-card,
 .v8-page .evidence-card,
-.v8-page .map-card {
-  background: var(--cn-surface);
-  border: 1px solid var(--cn-hairline);
+.v8-page .map-card,
+.v8-page .timeline-card,
+.v8-page .agent-card,
+.v8-page .guardian-card,
+.v8-page .hotel-card:not(.chosen),
+.v8-page .plan-cmp-card,
+.v8-page .v8-day-card,
+.v8-page .v8-stay-card:not(.selected),
+.v8-page .v8-booking-card,
+.v8-page .v8-me-card,
+.v8-page .v8-twin-card,
+.v8-page .v8-boundary-card,
+.v8-page .v8-detail-panel,
+.v8-page .v8-day-detail,
+.v8-page .v8-next-card,
+.v8-page .v8-comparison,
+.v8-page .v8-studio-aside,
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-runtime-card,
+.v8-page .v8-map-panel,
+.v8-page .v8-agent-composer-card,
+.v8-page .v8-intel-facts > div,
+.v8-page .v10-execution-panel,
+.v8-page .v12-authoritative-panel,
+.v8-page .v12-state-card,
+.v8-page .v12-commitment-card,
+.v8-page .v12-impact-card,
+.v8-page .v12-risk-banner,
+.v8-page .v13-2-memory-panel {
   border-radius: var(--cn-r-card);
   box-shadow: var(--cn-shadow-card);
 }
+
+/* The chosen rows keep their ring, but a chosen card is still a card: its corner joins the ladder.
+   Declaring only the radius here leaves their `box-shadow` ring untouched in `styles.css`. */
+.v8-page .v8-stay-card.selected,
+.v8-page .hotel-card.chosen { border-radius: var(--cn-r-card); }
+
+.v8-page .v8-card,
+.v8-page .replan-card,
+.v8-page .evidence-card,
+.v8-page .map-card,
+.v8-page .v13-2-memory-panel {
+  background: var(--cn-surface);
+  border: 1px solid var(--cn-hairline);
+}
+
+/* Two padding tiers. A dense list row keeps the tighter one so a list of stays does not grow a
+   second line per card; everything that holds prose reads at the wider one. */
+.v8-page .v8-day-card,
+.v8-page .v8-stay-card,
+.v8-page .v8-me-card,
+.v8-page .v8-runtime-card,
+.v8-page .hotel-card,
+.v8-page .plan-cmp-card,
+.v8-page .v12-commitment-card,
+.v8-page .v12-impact-card,
+.v8-page .v12-risk-banner { padding: var(--cn-card-pad-compact); }
+
+.v8-page .v8-card,
+.v8-page .replan-card,
+.v8-page .evidence-card,
+.v8-page .map-card,
+.v8-page .timeline-card,
+.v8-page .guardian-card,
+.v8-page .v8-booking-card,
+.v8-page .v8-detail-panel,
+.v8-page .v8-day-detail,
+.v8-page .v8-next-card,
+.v8-page .v8-comparison,
+.v8-page .v8-studio-aside,
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-twin-card,
+.v8-page .v8-boundary-card,
+.v8-page .v8-intel-facts > div,
+.v8-page .v12-state-card,
+.v8-page .v12-authoritative-panel,
+.v8-page .v13-2-memory-panel { padding: var(--cn-card-pad); }
+
+/* The two dark cards: a light-shadow token painted on #172945 reads as nothing, so they carry the
+   raised tier instead of the shared one rather than losing their depth to the unification. */
+.v8-page .v8-agent-composer-card,
+.v8-page .agent-card { padding: var(--cn-s-24); box-shadow: var(--cn-shadow-raised); }
 
 /* --- Motion: transform/opacity only, GPU-friendly, capped, reduced-motion aware --- */
 
