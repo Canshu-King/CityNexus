@@ -2348,7 +2348,7 @@ function TripsWorkspace({
         className="trips-tabs"
         data-testid="trips-tabs"
         role="tablist"
-        aria-label={zh ? "行程分区" : "Trip sections"}
+        aria-label={t("trips.sections")}
       >
         {tabs.map((item) => (
           <button
