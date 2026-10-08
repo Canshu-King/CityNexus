@@ -1,15 +1,21 @@
 import { useState } from "react";
-import { cityNexusApi, type MemberPlaceInvitationProjection } from "../../api/citynexus";
+import {
+  cityNexusApi,
+  type MemberPlaceInvitationFeasibilityPreviewResult,
+  type MemberPlaceInvitationProjection,
+} from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
 import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
 
 export function MemberPlaceInvitationPanel({
   journeyId,
   projection,
+  onRefreshLocation,
   onUpdated,
 }: {
   journeyId: string;
   projection: MemberPlaceInvitationProjection | null | undefined;
+  onRefreshLocation?: () => Promise<string | null>;
   onUpdated: () => Promise<void>;
 }) {
   const { locale } = useLocale();
@@ -17,15 +23,21 @@ export function MemberPlaceInvitationPanel({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [pinConsentId, setPinConsentId] = useState<string | null>(null);
+  const [routeConsentId, setRouteConsentId] = useState<string | null>(null);
+  const [feasibilityById, setFeasibilityById] = useState<Record<string, MemberPlaceInvitationFeasibilityPreviewResult | null>>({});
   const invitations = projection?.incoming ?? [];
   if (!invitations.length) return null;
 
-  const respond = async (invitationId: string, decision: "ACCEPT" | "DECLINE") => {
+  const respond = async (
+    invitationId: string,
+    decision: "ACCEPT" | "DECLINE",
+    feasibility?: { token?: string; acknowledgeUnknown?: boolean; acknowledgeRisk?: boolean },
+  ) => {
     if (busyId) return;
     setBusyId(invitationId);
     setMessage(null);
     try {
-      await cityNexusApi.respondToMemberPlaceInvitation(journeyId, invitationId, decision);
+      await cityNexusApi.respondToMemberPlaceInvitation(journeyId, invitationId, decision, feasibility);
       await onUpdated();
       setMessage(decision === "ACCEPT"
         ? (zh ? "已为你创建独立支线；共享行程未改变，也没有自动打开地图。" : "Your own side trip is ready. The shared plan is unchanged and no map was opened.")
@@ -35,6 +47,29 @@ export function MemberPlaceInvitationPanel({
         ? "邀请已失效、你的行程状态有冲突，或暂时无法完成；没有覆盖你现有的支线。刷新后可查看状态。"
         : "The invitation may be stale or your current trip state conflicts. Your existing side trip was not replaced; refresh to review the status.");
       await onUpdated();
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const checkFeasibility = async (invitationId: string) => {
+    if (busyId) return;
+    setBusyId(invitationId);
+    setRouteConsentId(null);
+    setMessage(null);
+    try {
+      const observationId = onRefreshLocation ? await onRefreshLocation() : null;
+      const result = await cityNexusApi.previewMemberPlaceInvitationFeasibility(
+        journeyId,
+        invitationId,
+        observationId,
+      );
+      setFeasibilityById((current) => ({ ...current, [invitationId]: result }));
+    } catch {
+      setFeasibilityById((current) => ({ ...current, [invitationId]: null }));
+      setMessage(zh
+        ? "目前無法取得路線證據；你仍可謝絕，或明確選擇在時間未核實的情況下接受。"
+        : "Route evidence is unavailable. You can decline or explicitly accept while timing remains unverified.");
     } finally {
       setBusyId(null);
     }
@@ -62,7 +97,10 @@ export function MemberPlaceInvitationPanel({
     <div className="journey-member-place-invitations" data-testid="member-place-invitations-incoming">
       {invitations.map((invitation) => {
         const canRespond = invitation.can_respond;
-        const completing = invitation.state === "ACCEPTANCE_NEEDS_COMPLETION";
+        const completing = ["ACCEPTANCE_NEEDS_COMPLETION", "ACCEPTANCE_IN_PROGRESS"].includes(invitation.state);
+        const hasFeasibility = Object.prototype.hasOwnProperty.call(feasibilityById, invitation.invitation_id);
+        const feasibility = feasibilityById[invitation.invitation_id];
+        const canAccept = completing || (hasFeasibility && feasibility?.state !== "BLOCKED");
         return (
           <article key={invitation.invitation_id} data-testid="member-place-invitation" data-state={invitation.state}>
             <span className="v8-kicker">{zh ? "同行者分享的公开地点" : "A companion shared a public place"}</span>
@@ -79,14 +117,65 @@ export function MemberPlaceInvitationPanel({
             </small>
             <small>
               {zh
-                ? "这是同行者发出的社交邀请，不代表路线或停留时间一定赶得上共同会合。接受后会为你创建独立支线，共享行程保持不变。"
-                : "This is a social invitation, not a promise that the visit fits the route or shared meetup time. Accepting creates your own side trip; the shared Journey stays unchanged."}
+                ? "先检查能否赶上共同会合；没有可靠证据时不会显示绿色结论。接受后只创建你的独立支线，共享行程保持不变。"
+                : "Check whether the detour fits before accepting. Missing evidence never appears green. Acceptance creates only your own side trip; the shared Journey stays unchanged."}
             </small>
             <small>
               {zh
-                ? "接受不会自动打开地图，也不会向 CityNexus 发送你的位置或起点。之后如需导航，可在支线卡片中单独确认打开地图。"
-                : "Accepting does not open a map or send CityNexus your location or origin. You can separately confirm map navigation from your side-quest card later."}
+                ? "路线检查会单独征求同意：只采集一次前台位置，并将它与公开地点、会合点用于路线估算。它不会打开地图；导航仍需另行确认。"
+                : "A route check asks separately: it captures one foreground location and uses it with the public Place and rendezvous for a route estimate. It does not open a map; navigation still needs separate consent."}
             </small>
+            {canRespond && !completing && (
+              <button
+                type="button"
+                data-testid="member-place-invitation-check-feasibility"
+                disabled={busyId !== null}
+                onClick={() => setRouteConsentId(invitation.invitation_id)}
+              >
+                {hasFeasibility
+                  ? (zh ? "重新检查能否赶上" : "Check feasibility again")
+                  : (zh ? "检查能否赶上会合…" : "Check if I can make it…")}
+              </button>
+            )}
+            {hasFeasibility && (
+              <section
+                data-testid="member-place-invitation-feasibility"
+                data-state={feasibility?.state ?? "UNKNOWN"}
+              >
+                <strong>
+                  {feasibility?.state === "CAN_MAKE_IT"
+                    ? (zh ? "现有路线证据显示可以赶上" : "Current route evidence fits the rendezvous")
+                    : feasibility?.state === "AT_RISK"
+                      ? (zh ? "时间缓冲较紧" : "Timing is at risk")
+                      : feasibility?.state === "BLOCKED"
+                        ? (zh ? "当前安排不允许安全接受" : "Current commitments block a safe acceptance")
+                        : (zh ? "时间尚未核实" : "Timing is unverified")}
+                </strong>
+                {feasibility?.travel_duration_min !== null && feasibility?.travel_duration_min !== undefined && (
+                  <small>
+                    {zh
+                      ? `路线、${feasibility.dwell_minutes} 分钟停留与返程合计约 ${feasibility.travel_duration_min} 分钟；缓冲 ${feasibility.slack_min ?? "未知"} 分钟。`
+                      : `Outbound route, ${feasibility.dwell_minutes} minute visit, and return total ${feasibility.travel_duration_min} minutes; ${feasibility.slack_min ?? "unknown"} minutes of slack.`}
+                  </small>
+                )}
+                {feasibility?.evidence.captured_at && (
+                  <small>
+                    {zh ? "路线证据：" : "Route evidence: "}
+                    {feasibility.evidence.source_type ?? (zh ? "来源未知" : "source unknown")}
+                    {feasibility.evidence.provider ? ` · ${feasibility.evidence.provider}` : ""}
+                    {` · ${new Date(feasibility.evidence.captured_at).toLocaleString(locale)}`}
+                    {feasibility.evidence.age_seconds !== null ? ` · ${feasibility.evidence.age_seconds}s` : ""}
+                  </small>
+                )}
+                <small>
+                  {feasibility?.state === "UNKNOWN"
+                    ? (zh ? "没有新鲜本人位置或可靠路线证据；没有估算到达时间。你可以在明确知情后继续。" : "There is no fresh personal location or qualifying route evidence, so no arrival time is estimated. You may continue only after acknowledging that timing is unverified.")
+                    : feasibility?.state === "BLOCKED"
+                      ? (zh ? "受保护安排或你现有的支线与此选择冲突；共享计划未改变。" : "A protected commitment or your existing side trip conflicts with this choice; the shared plan is unchanged.")
+                      : (zh ? "这是路线建议，不是实际到达证明；预览不会改动共享计划。" : "This is route guidance, not proof of physical arrival. The preview does not change the shared plan.")}
+                </small>
+              </section>
+            )}
             <button
               type="button"
               data-testid="member-place-invitation-view-pin"
@@ -97,18 +186,37 @@ export function MemberPlaceInvitationPanel({
             </button>
             {canRespond ? (
               <div className="journey-side-quest-actions">
-                <button
-                  type="button"
-                  data-testid="member-place-invitation-accept"
-                  disabled={busyId !== null}
-                  onClick={() => void respond(invitation.invitation_id, "ACCEPT")}
-                >
-                  {busyId === invitation.invitation_id
-                    ? (zh ? "正在准备你的支线…" : "Preparing your side trip…")
-                    : completing
-                      ? (zh ? "继续完成我的支线" : "Finish setting up my side trip")
-                      : (zh ? "接受并添加到我的私人支线" : "Accept and add to my side trip")}
-                </button>
+                {canAccept && (
+                  <button
+                    type="button"
+                    data-testid="member-place-invitation-accept"
+                    disabled={busyId !== null}
+                    onClick={() => void respond(
+                      invitation.invitation_id,
+                      "ACCEPT",
+                      completing
+                        ? undefined
+                        : feasibility?.state === "CAN_MAKE_IT"
+                          ? { token: feasibility.feasibility_token }
+                          : feasibility?.state === "AT_RISK"
+                            ? { token: feasibility.feasibility_token, acknowledgeRisk: true }
+                            : { token: feasibility?.feasibility_token, acknowledgeUnknown: true },
+                    )}
+                  >
+                    {busyId === invitation.invitation_id
+                      ? (zh ? "正在准备你的支线…" : "Preparing your side trip…")
+                      : completing
+                        ? (zh ? "继续完成我的支线" : "Finish setting up my side trip")
+                        : feasibility?.state === "AT_RISK"
+                          ? (zh ? "我了解时间风险，仍要接受" : "Accept despite the timing risk")
+                          : feasibility?.state === "UNKNOWN"
+                            ? (zh ? "接受，且知晓时间未核实" : "Accept knowing timing is unverified")
+                            : (zh ? "接受并添加到我的私人支线" : "Accept and add to my side trip")}
+                  </button>
+                )}
+                {feasibility?.state === "BLOCKED" && (
+                  <small>{zh ? "无法安全接受；请保留现有安排或先解决冲突。" : "Acceptance is blocked. Keep your current plans or resolve the conflict first."}</small>
+                )}
                 {!completing && (
                   <button
                     type="button"
@@ -134,6 +242,46 @@ export function MemberPlaceInvitationPanel({
           </article>
         );
       })}
+      {routeConsentId && invitations.some((row) => row.invitation_id === routeConsentId) && (
+        <section
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="member-place-invitation-route-title"
+          data-testid="member-place-invitation-route-consent"
+        >
+          <strong id="member-place-invitation-route-title">
+            {zh ? "为这次路线检查分享一次当前位置？" : "Share one current location for this route check?"}
+          </strong>
+          <p>
+            {zh
+              ? "同意后，CityNexus 会请求一次前台位置，并仅为本次估算把起点、已分享的公开地点和共同会合点交给已配置的路线服务。位置与路线不会展示给邀请者或其他同行者，也不会写入共享行程。拒绝定位或缺少路线证据时结果会是“时间未核实”。"
+              : "If you agree, CityNexus requests one foreground location and uses your origin, the shared public Place, and rendezvous for this one estimate with the configured route service. Your location and route are not shown to the inviter or other companions and are not written to the shared plan. Denying location or missing route evidence will return unverified timing."}
+          </p>
+          <div className="journey-side-quest-actions">
+            <button
+              type="button"
+              data-testid="member-place-invitation-route-confirm"
+              disabled={busyId !== null}
+              onClick={() => void checkFeasibility(routeConsentId)}
+            >
+              {zh ? "同意并检查一次" : "Agree and check once"}
+            </button>
+            <button
+              type="button"
+              data-testid="member-place-invitation-route-skip"
+              onClick={() => {
+                setFeasibilityById((current) => ({ ...current, [routeConsentId]: null }));
+                setRouteConsentId(null);
+              }}
+            >
+              {zh ? "不分享位置，按未核实继续…" : "Skip location sharing; continue unverified…"}
+            </button>
+            <button type="button" onClick={() => setRouteConsentId(null)}>
+              {zh ? "取消" : "Cancel"}
+            </button>
+          </div>
+        </section>
+      )}
       {pinConsentId && invitations.some((row) => row.invitation_id === pinConsentId) && (
         <section
           role="dialog"

@@ -708,6 +708,33 @@ export interface MemberPlaceInvitationPreview {
   disclosure: string;
 }
 
+export interface MemberPlaceInvitationFeasibilityPreviewResult {
+  state: "CAN_MAKE_IT" | "AT_RISK" | "UNKNOWN" | "BLOCKED";
+  reason_code: string;
+  observed_at: string;
+  evidence: {
+    captured_at: string | null;
+    age_seconds: number | null;
+    freshness_seconds: number;
+    source_type: string | null;
+    provider: string | null;
+    location_source: string | null;
+    location_captured_at: string | null;
+    location_accuracy_m: number | null;
+  };
+  rendezvous_deadline: string | null;
+  travel_duration_min: number | null;
+  travel_duration_interval_min: [number, number] | null;
+  slack_min: number | null;
+  outbound_duration_min: number | null;
+  return_duration_min: number | null;
+  dwell_minutes: number;
+  plan_unchanged: true;
+  physical_arrival_proof: false;
+  feasibility_token: string;
+  expires_in_seconds: number;
+}
+
 export interface MemberPlaceInvitationProjection {
   sent: Array<{
     invitation_id: string;
@@ -2186,10 +2213,35 @@ export const cityNexusApi = {
     );
   },
 
+  previewMemberPlaceInvitationFeasibility(
+    journeyId: string,
+    invitationId: string,
+    locationObservationId: string | null,
+  ): Promise<MemberPlaceInvitationFeasibilityPreviewResult> {
+    return requestJson<MemberPlaceInvitationFeasibilityPreviewResult>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/feasibility-preview",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          consent_route_provider: true,
+          location_observation_id: locationObservationId,
+          dwell_minutes: 20,
+          requested_mode: "WALK",
+        }),
+      },
+    );
+  },
+
   respondToMemberPlaceInvitation(
     journeyId: string,
     invitationId: string,
     decision: "ACCEPT" | "DECLINE",
+    feasibility?: {
+      token?: string;
+      acknowledgeUnknown?: boolean;
+      acknowledgeRisk?: boolean;
+    },
   ): Promise<JourneyOperatorProjection> {
     return requestJson<JourneyOperatorProjection>(
       "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/respond",
@@ -2199,6 +2251,9 @@ export const cityNexusApi = {
         body: JSON.stringify({
           decision,
           confirm_exact_public_place: decision === "ACCEPT" ? true : undefined,
+          feasibility_token: feasibility?.token,
+          acknowledge_feasibility_unknown: feasibility?.acknowledgeUnknown ? true : undefined,
+          acknowledge_feasibility_risk: feasibility?.acknowledgeRisk ? true : undefined,
         }),
       },
     );

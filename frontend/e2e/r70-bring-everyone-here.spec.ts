@@ -72,7 +72,7 @@ async function openJourneyPage(
   return { page, close: () => context.close() };
 }
 
-test("R70 invites one companion into an independent, navigable visit", async ({ browser, request }) => {
+test("R71 checks invitation feasibility with honest UNKNOWN and keeps it recipient-scoped", async ({ browser, request }) => {
   const resetToken = process.env.CITYNEXUS_DEMO_RESET_TOKEN;
   if (!resetToken) throw new Error("R70 E2E requires CITYNEXUS_DEMO_RESET_TOKEN for its fresh SQLite database");
   const reset = await api<{ journey_id: string; traveler_id: string; city_code: string }>(request, "/api/v1/demo/reset", {
@@ -152,6 +152,7 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
   // context grants geolocation permission.
   const owner = await openJourneyPage(browser, journeyId, ownerToken);
   const invited = await openJourneyPage(browser, journeyId, companionToken);
+  let uninvolvedPage: { page: Page; close: () => Promise<void> } | undefined;
   try {
     const ownerCard = owner.page.getByTestId("member-side-quest-card");
     await expect(ownerCard).toHaveAttribute("data-state", "READY");
@@ -190,6 +191,25 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     const ttlMilliseconds = Date.parse(createdInvitation.expires_at) - Date.parse(createdInvitation.created_at);
     expect(ttlMilliseconds).toBeGreaterThanOrEqual(14 * 60_000);
     expect(ttlMilliseconds).toBeLessThanOrEqual(16 * 60_000);
+
+    // C joins after the frozen invitation audience and must remain uninvolved.
+    const uninvolved = await api<Traveler>(request, "/api/v1/travelers", {
+      method: "POST",
+      data: { display_name: "R71 Uninvited Companion", locale: "en-US", timezone: "Asia/Shanghai" },
+    });
+    const uninvolvedToken = travelerToken(uninvolved.id);
+    await api(request, `/api/v1/journeys/${journeyId}/members`, {
+      method: "POST",
+      data: { traveler_id: uninvolved.id, role: "COLLABORATOR", invited_by: ownerId },
+    });
+    const uninvolvedProjection = await api<{
+      member_place_invitations?: { incoming: unknown[] } | null;
+    }>(request, `/api/v1/journeys/${journeyId}/operator`, { token: uninvolvedToken });
+    expect(uninvolvedProjection.member_place_invitations?.incoming ?? []).toEqual([]);
+    const uninvolvedBrowserPage = await openJourneyPage(browser, journeyId, uninvolvedToken);
+    uninvolvedPage = uninvolvedBrowserPage;
+    await expect(uninvolvedBrowserPage.page.getByTestId("member-place-invitation")).toHaveCount(0);
+
     const sent = ownerCard.getByTestId("member-place-invitation-sent");
     await expect(sent).toHaveAttribute("data-state", "OPEN");
     await expect(sent).toContainText(companion.display_name);
@@ -204,7 +224,7 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     await expect(incoming).toContainText("WGS84");
     await expect(incoming).toContainText(preview.rendezvous.title);
     await expect(incoming).toContainText(preview.rendezvous.place_name);
-    await expect(incoming).toContainText("not a promise that the visit fits");
+    await expect(incoming).toContainText("Missing evidence never appears green");
     if (preview.rendezvous.scheduled_at) {
       await expect(incoming).toContainText(new Date(preview.rendezvous.scheduled_at).toLocaleString("en-US", {
         timeZone: "Asia/Shanghai",
@@ -214,6 +234,7 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
       member_place_invitations: { incoming: Array<Record<string, unknown>> };
     }>(request, `/api/v1/journeys/${journeyId}/operator`, { token: companionToken });
     expect(JSON.stringify(incomingProjection.member_place_invitations.incoming[0])).not.toContain(ownerQuestId);
+    await expect(uninvolvedBrowserPage.page.getByTestId("member-place-invitation")).toHaveCount(0);
 
     let popupCount = 0;
     const unexpectedPosts: string[] = [];
@@ -221,7 +242,9 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     invited.page.on("request", (browserRequest) => {
       if (browserRequest.method() === "POST"
         && browserRequest.url().startsWith(API)
-        && !browserRequest.url().endsWith(`/member-place-invitations/${createdInvitation.invitation_id}/respond`)) {
+        && !browserRequest.url().endsWith(`/member-place-invitations/${createdInvitation.invitation_id}/respond`)
+        && !browserRequest.url().endsWith(`/member-place-invitations/${createdInvitation.invitation_id}/feasibility-preview`)
+        && !browserRequest.url().endsWith("/location")) {
         unexpectedPosts.push(browserRequest.url());
       }
     });
@@ -237,6 +260,7 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     const pinPopupPromise = invited.page.waitForEvent("popup");
     await pinConsent.getByTestId("member-place-invitation-pin-confirm").click();
     const pinPopup = await pinPopupPromise;
+    await expect.poll(() => new URL(pinPopup.url()).hostname).toBe("www.openstreetmap.org");
     const pinUrl = new URL(pinPopup.url());
     expect(pinUrl.hostname).toBe("www.openstreetmap.org");
     expect(pinUrl.searchParams.get("mlat")).toBe(String(preview.place.latitude));
@@ -246,6 +270,33 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     await invited.page.context().unroute("https://www.openstreetmap.org/**");
     await expect(incoming).toBeVisible(); // Viewing the pin did not accept the invitation.
 
+    await incoming.getByTestId("member-place-invitation-check-feasibility").click();
+    const routeConsent = invited.page.getByTestId("member-place-invitation-route-consent");
+    await expect(routeConsent).toBeVisible();
+    await expect(routeConsent).toContainText("one foreground location");
+    const feasibilityResponsePromise = invited.page.waitForResponse((response) =>
+      response.request().method() === "POST"
+        && response.url().endsWith(`/member-place-invitations/${createdInvitation.invitation_id}/feasibility-preview`),
+    );
+    await routeConsent.getByTestId("member-place-invitation-route-confirm").click();
+    const feasibilityResponse = await feasibilityResponsePromise;
+    expect(feasibilityResponse.ok()).toBeTruthy();
+    const feasibilityBody = await feasibilityResponse.json() as {
+      state: string;
+      travel_duration_min: number | null;
+      plan_unchanged: boolean;
+      feasibility_token: string;
+    };
+    expect(feasibilityBody.state).toBe("UNKNOWN");
+    expect(feasibilityBody.travel_duration_min).toBeNull();
+    expect(feasibilityBody.plan_unchanged).toBe(true);
+    expect(feasibilityBody.feasibility_token).toBeTruthy();
+    expect(JSON.stringify(feasibilityBody)).not.toContain("latitude");
+    expect(JSON.stringify(feasibilityBody)).not.toContain("longitude");
+    const feasibilityCard = invited.page.getByTestId("member-place-invitation-feasibility");
+    await expect(feasibilityCard).toHaveAttribute("data-state", "UNKNOWN");
+    await expect(feasibilityCard).toContainText("no arrival time is estimated");
+
     popupCount = 0;
     await incoming.getByTestId("member-place-invitation-accept").click();
     const ownCard = invited.page.getByTestId("member-side-quest-card");
@@ -254,6 +305,8 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     expect(popupCount).toBe(0);
     expect(unexpectedPosts).toEqual([]);
     await expect(invited.page.getByTestId("member-place-invitation")).toHaveCount(0);
+    await uninvolvedBrowserPage.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(uninvolvedBrowserPage.page.getByTestId("member-place-invitation")).toHaveCount(0);
 
     await invited.page.reload({ waitUntil: "domcontentloaded" });
     const refreshedOwnCard = invited.page.getByTestId("member-side-quest-card");
@@ -308,6 +361,6 @@ test("R70 invites one companion into an independent, navigable visit", async ({ 
     const after = await api<{ active_plan: { id: string } }>(request, `/api/v1/journeys/${journeyId}/experience`);
     expect(after.active_plan.id).toBe(experience.active_plan.id);
   } finally {
-    await Promise.all([owner.close(), invited.close()]);
+    await Promise.all([owner.close(), invited.close(), uninvolvedPage?.close() ?? Promise.resolve()]);
   }
 });

@@ -23,7 +23,7 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import and_, delete, func, insert, or_, select, update
+from sqlalchemy import and_, delete, exists, func, insert, or_, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
@@ -473,6 +473,7 @@ from app.schemas import (
     MemberSideQuestCreateRequest,
     MemberPlaceInvitationCreateRequest,
     MemberPlaceInvitationDecisionRequest,
+    MemberPlaceInvitationFeasibilityPreviewRequest,
     MomentScoutRequest,
     MomentScoutSelectRequest,
     LiveMomentScoutRequest,
@@ -9885,6 +9886,52 @@ def withdraw_member_place_invitation(
         )
 
 
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview")
+def preview_member_place_invitation_feasibility(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationFeasibilityPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    # The only route acquisition for this feature starts from this explicit,
+    # recipient-confirmed request. Passive operator projections never call it.
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_invitation import (
+            get_recipient_invitation,
+            preview_recipient_invitation_feasibility,
+        )
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        invitation, response = get_recipient_invitation(
+            session,
+            journey=journey,
+            recipient=member,
+            traveler_id=principal.traveler_id,
+            invitation_id=str(invitation_id),
+        )
+        return preview_recipient_invitation_feasibility(
+            session,
+            journey=journey,
+            recipient=member,
+            traveler_id=principal.traveler_id,
+            invitation=invitation,
+            response=response,
+            location_observation_id=(
+                str(payload.location_observation_id)
+                if payload.location_observation_id is not None
+                else None
+            ),
+            dwell_minutes=payload.dwell_minutes,
+            requested_mode=payload.requested_mode,
+        )
+
+
 def _respond_to_member_place_invitation(
     journey_id: UUID,
     invitation_id: UUID,
@@ -9897,6 +9944,7 @@ def _respond_to_member_place_invitation(
     from app.execution.member_place_invitation import (
         get_recipient_invitation,
         recipient_conflict_reason,
+        recheck_recipient_invitation_feasibility,
         validate_invitation_for_acceptance,
     )
 
@@ -9925,9 +9973,27 @@ def _respond_to_member_place_invitation(
             response=response,
             now=now,
         )
-        response.state = "DECLINED"
-        response.responded_at = now.isoformat()
-        response.updated_at = now.isoformat()
+        declined = session.execute(
+            update(MemberPlaceInvitationRecipient)
+            .where(
+                MemberPlaceInvitationRecipient.id == response.id,
+                MemberPlaceInvitationRecipient.state == "INVITED",
+                exists(
+                    select(MemberPlaceInvitation.id).where(
+                        MemberPlaceInvitation.id == invitation.id,
+                        MemberPlaceInvitation.state == "OPEN",
+                    )
+                ),
+            )
+            .values(
+                state="DECLINED",
+                responded_at=now.isoformat(),
+                updated_at=now.isoformat(),
+            )
+        )
+        if declined.rowcount != 1:
+            session.rollback()
+            raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
         session.commit()
         return operator_projection(session, journey, viewer_member_id=member.id)
 
@@ -9973,12 +10039,96 @@ def _respond_to_member_place_invitation(
         raise HTTPException(409, conflict)
 
     if response.state == "INVITED":
-        # Persist the explicit response before creating the recipient-owned R63/R64
-        # objects. A retry can finish this exact invitation without accepting a new one.
-        response.state = "ACCEPTANCE_NEEDS_COMPLETION"
-        response.responded_at = now.isoformat()
-        response.updated_at = now.isoformat()
-        session.commit()
+        if payload.feasibility_token:
+            feasibility = recheck_recipient_invitation_feasibility(
+                session,
+                journey=journey,
+                recipient=member,
+                traveler_id=principal.traveler_id,
+                invitation=invitation,
+                response=response,
+                token=payload.feasibility_token,
+                now=now,
+            )
+            feasibility_state = str(feasibility.get("state") or "UNKNOWN")
+        elif payload.acknowledge_feasibility_unknown is True:
+            feasibility_state = "UNKNOWN"
+        else:
+            raise HTTPException(422, "PLACE_INVITATION_FEASIBILITY_DECISION_REQUIRED")
+        if feasibility_state == "BLOCKED":
+            raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_BLOCKED")
+        if feasibility_state == "UNKNOWN" and payload.acknowledge_feasibility_unknown is not True:
+            raise HTTPException(409, "PLACE_INVITATION_UNKNOWN_ACKNOWLEDGEMENT_REQUIRED")
+        if feasibility_state == "AT_RISK" and payload.acknowledge_feasibility_risk is not True:
+            raise HTTPException(409, "PLACE_INVITATION_RISK_ACKNOWLEDGEMENT_REQUIRED")
+        if feasibility_state not in {"CAN_MAKE_IT", "AT_RISK", "UNKNOWN", "BLOCKED"}:
+            raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_UNKNOWN")
+
+    # SQLite ignores SELECT ... FOR UPDATE. Claim the response conditionally so
+    # two server processes cannot create duplicate recipient-owned stops.
+    expected_state = str(response.state)
+    if expected_state == "ACCEPTANCE_NEEDS_COMPLETION":
+        try:
+            updated_at = datetime.fromisoformat(str(response.updated_at).replace("Z", "+00:00"))
+            if updated_at.tzinfo is None:
+                updated_at = updated_at.replace(tzinfo=timezone.utc)
+            if (now - updated_at.astimezone(timezone.utc)).total_seconds() < 30:
+                raise HTTPException(409, "PLACE_INVITATION_ACCEPTANCE_IN_PROGRESS")
+        except ValueError:
+            pass
+    elif expected_state != "INVITED":
+        raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
+    claim = update(MemberPlaceInvitationRecipient).where(
+        MemberPlaceInvitationRecipient.id == response.id,
+        MemberPlaceInvitationRecipient.state == expected_state,
+        exists(
+            select(MemberPlaceInvitation.id).where(
+                MemberPlaceInvitation.id == invitation.id,
+                MemberPlaceInvitation.state == "OPEN",
+            )
+        ),
+        exists(
+            select(Journey.id).where(
+                Journey.id == journey.id,
+                Journey.status == "ACTIVE",
+                Journey.active_plan_version_id == invitation.active_plan_version_id,
+            )
+        ),
+    )
+    if expected_state == "INVITED":
+        claim = claim.where(
+            ~exists(
+                select(MemberSideQuest.id).where(
+                    MemberSideQuest.journey_id == journey.id,
+                    MemberSideQuest.member_id == member.id,
+                    MemberSideQuest.state.in_(
+                        ("DESTINATION_UNRESOLVED", "READY", "EN_ROUTE", "ARRIVED")
+                    ),
+                )
+            ),
+            ~exists(
+                select(JourneyIntent.id).where(
+                    JourneyIntent.journey_id == journey.id,
+                    JourneyIntent.created_by_member_id == member.id,
+                    JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+                    JourneyIntent.status == "ACTIVE",
+                )
+            ),
+        )
+    if expected_state == "ACCEPTANCE_NEEDS_COMPLETION":
+        claim = claim.where(MemberPlaceInvitationRecipient.updated_at == response.updated_at)
+    claimed = session.execute(
+        claim.values(
+            state="ACCEPTANCE_NEEDS_COMPLETION",
+            responded_at=response.responded_at or now.isoformat(),
+            updated_at=now.isoformat(),
+        )
+    )
+    if claimed.rowcount != 1:
+        session.rollback()
+        raise HTTPException(409, "PLACE_INVITATION_ACCEPTANCE_IN_PROGRESS")
+    session.commit()
+    session.refresh(response)
 
     current_split = planned_separation_for_member(session, journey, member, now=now)
     if current_split is not None and str(current_split["intent"].id) == str(same_split_id or ""):

@@ -11,12 +11,14 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
+import app.execution.member_place_invitation as member_place_invitation_module
+import app.execution.member_side_quest as member_side_quest_module
 import app.main as main_module
 from app.core.config import settings
 from app.db.models import (
     ActionApproval,
-    AgentRun,
     Activity,
+    AgentRun,
     AuditLog,
     Commitment,
     Event,
@@ -25,14 +27,14 @@ from app.db.models import (
     JourneyIntent,
     JourneyMember,
     LocationObservation,
+    MemberLiveMomentScoutReceipt,
     MemberPlaceInvitation,
     MemberPlaceInvitationRecipient,
-    MemberLiveMomentScoutReceipt,
     MemberSideQuest,
     MemberSideQuestReturnReport,
-    PlannedSplitMeetupHandshake,
     MobilityFact,
     Place,
+    PlannedSplitMeetupHandshake,
     PlanVersion,
     ProviderCall,
     RealPlaceCandidate,
@@ -2166,6 +2168,38 @@ def _create_owner_invitation(journey_id: str, owner_id: str) -> tuple[str, str]:
     return str(quest["id"]), str(place.id)
 
 
+def _create_r71_invitation(
+    journey_id: str,
+    owner_id: str,
+    *,
+    rendezvous_lead_minutes: int = 90,
+) -> tuple[str, str, str]:
+    side_quest_id, place_id = _create_owner_invitation(journey_id, owner_id)
+    with SessionLocal() as session:
+        owner_quest = session.get(MemberSideQuest, side_quest_id)
+        assert owner_quest is not None
+        target = session.get(Activity, str(owner_quest.rendezvous_activity_id))
+        assert target is not None
+        target.start_at = (datetime.now(timezone.utc) + timedelta(minutes=rendezvous_lead_minutes)).isoformat()
+        session.commit()
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    invitation_id = sent.json()["member_place_invitations"]["sent"][0]["invitation_id"]
+    return str(invitation_id), side_quest_id, place_id
+
+
 def test_r70_place_invitation_is_member_scoped_and_accept_creates_own_stop():
     journey_id, owner_id, recipient_id = _active_shared_journey()
     now = datetime.now(timezone.utc).isoformat()
@@ -2369,7 +2403,11 @@ def test_r70_place_invitation_is_member_scoped_and_accept_creates_own_stop():
     accepted = client.post(
         f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
         headers=_auth(recipient_id),
-        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "acknowledge_feasibility_unknown": True,
+        },
     )
     assert accepted.status_code == 200, accepted.text
     own_quest = accepted.json()["member_side_quest"]
@@ -2862,3 +2900,435 @@ def test_r70_lifecycle_context_changes_reject_acceptance(invalidation, expected_
         reissued_invitation = reissued.json()["member_place_invitations"]["sent"][0]
         assert reissued_invitation["invitation_id"] != invitation_id
         assert len(reissued_invitation["recipients"]) == 1
+
+
+def test_r71_missing_origin_is_unknown_and_preview_is_recipient_scoped(monkeypatch):
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    c_id = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        session.add(Traveler(
+            id=c_id,
+            display_name="R71未受邀同行者C",
+            email=None,
+            locale="zh-CN",
+            timezone="UTC",
+            created_at=now,
+            updated_at=now,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            traveler_id=c_id,
+            role="COLLABORATOR",
+            invited_by=owner_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        ))
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        active_plan_id = str(journey.active_plan_version_id)
+        session.commit()
+
+    route_calls: list[tuple[str, str]] = []
+
+    def route_capture(_session=None, *, origin_key, target_key, **_kwargs):
+        route_calls.append((str(origin_key), str(target_key)))
+        raise AssertionError("missing-location preview must not request a route")
+
+    monkeypatch.setattr(member_side_quest_module, "_capture_private_route_leg", route_capture)
+    recipient_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(recipient_id)
+    ).json()
+    assert recipient_projection["member_place_invitations"]["incoming"][0]["invitation_id"] == invitation_id
+    assert route_calls == []  # Passive projection never acquires route evidence.
+
+    c_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(c_id)
+    ).json()
+    assert (c_projection.get("member_place_invitations") or {}).get("incoming", []) == []
+    c_preview = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview",
+        headers=_auth(c_id),
+        json={"consent_route_provider": True, "location_observation_id": None},
+    )
+    assert c_preview.status_code == 404
+
+    path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    missing_ack = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert missing_ack.status_code == 422
+    preview = client.post(
+        f"{path}/feasibility-preview",
+        headers=_auth(recipient_id),
+        json={"consent_route_provider": True, "location_observation_id": None},
+    )
+    assert preview.status_code == 200, preview.text
+    body = preview.json()
+    assert body["state"] == "UNKNOWN"
+    assert body["reason_code"] == "CURRENT_LOCATION_UNAVAILABLE"
+    assert body["travel_duration_min"] is None
+    assert body["travel_duration_interval_min"] is None
+    assert body["evidence"]["captured_at"] is None
+    assert body["plan_unchanged"] is True
+    assert body["physical_arrival_proof"] is False
+    assert owner_quest_id not in json.dumps(body)
+    assert "latitude" not in json.dumps(body) and "longitude" not in json.dumps(body)
+    assert route_calls == []
+
+    token = body["feasibility_token"]
+    tampered_token = token[:-1] + ("A" if token[-1] != "A" else "B")
+    tampered = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "feasibility_token": tampered_token,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert tampered.status_code == 409
+    assert tampered.json()["error"]["message"] == "PLACE_INVITATION_FEASIBILITY_TOKEN_INVALID"
+
+    no_ack = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "feasibility_token": token,
+        },
+    )
+    assert no_ack.status_code == 409
+    assert no_ack.json()["error"]["message"] == "PLACE_INVITATION_UNKNOWN_ACKNOWLEDGEMENT_REQUIRED"
+    accepted = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "feasibility_token": token,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+    assert accepted.json()["member_side_quest"]["destination"]["place_id"] == _place_id
+    assert client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(c_id)
+    ).json()["member_place_invitations"]["incoming"] == []
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None and str(journey.active_plan_version_id) == active_plan_id
+
+
+@pytest.mark.parametrize(
+    ("outbound_minutes", "return_minutes", "lead_minutes", "protected", "expected_state"),
+    [
+        (5, 5, 90, False, "CAN_MAKE_IT"),
+        (10, 55, 60, False, "AT_RISK"),
+        (10, 55, 60, True, "BLOCKED"),
+    ],
+)
+def test_r71_reuses_captured_route_and_protected_commitment_evaluators(
+    monkeypatch, outbound_minutes, return_minutes, lead_minutes, protected, expected_state
+):
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(
+        journey_id, owner_id, rendezvous_lead_minutes=lead_minutes
+    )
+    observation_response = client.post(
+        f"/api/v1/journeys/{journey_id}/location",
+        headers=_auth(recipient_id),
+        json={
+            "latitude": 39.1234,
+            "longitude": 117.2345,
+            "accuracy_m": 8,
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+        },
+    )
+    assert observation_response.status_code == 201, observation_response.text
+    observation_id = observation_response.json()["id"]
+    route_calls: list[tuple[str, str]] = []
+    test_capture_at = datetime.now(timezone.utc).isoformat()
+
+    def captured_test_route(_session, *, origin_key, target_key, requested_mode, **_kwargs):
+        route_calls.append((str(origin_key), str(target_key)))
+        duration = outbound_minutes if len(route_calls) == 1 else return_minutes
+        return {
+            "duration_min": duration,
+            "distance_m": 1200,
+            "provider": "test-captured-route-fixture",
+            "provenance": "LIVE_PROVIDER_CAPTURE",
+            "captured_at": test_capture_at,
+            "age_seconds": 0,
+            "mode": requested_mode,
+            "geometry": [[39.0, 117.0]],
+        }
+
+    monkeypatch.setattr(member_side_quest_module, "_capture_private_route_leg", captured_test_route)
+    if protected:
+        with SessionLocal() as session:
+            invitation = session.get(MemberPlaceInvitation, invitation_id)
+            assert invitation is not None
+            target = session.get(Activity, str(invitation.rendezvous_activity_id))
+            assert target is not None
+            session.add(Commitment(
+                id=str(uuid4()),
+                journey_id=journey_id,
+                activity_id=target.id,
+                kind="APPOINTMENT",
+                level="C3_Guaranteed",
+                status="ACTIVE",
+                monetary_value_minor=0,
+                currency="CNY",
+                external_ref="R71-protected-rendezvous-fixture",
+                policy_json=json.dumps({"scheduled_start_at": target.start_at, "safety_buffer_min": 5}),
+                created_at=test_capture_at,
+                updated_at=test_capture_at,
+            ))
+            session.commit()
+
+    preview = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview",
+        headers=_auth(recipient_id),
+        json={
+            "consent_route_provider": True,
+            "location_observation_id": observation_id,
+            "dwell_minutes": 20,
+            "requested_mode": "WALK",
+        },
+    )
+    assert preview.status_code == 200, preview.text
+    body = preview.json()
+    assert body["state"] == expected_state
+    assert body["travel_duration_min"] == outbound_minutes + 20 + return_minutes
+    assert body["evidence"]["source_type"] == "LIVE_PROVIDER_CAPTURE"
+    assert body["evidence"]["provider"] == "test-captured-route-fixture"
+    assert body["physical_arrival_proof"] is False
+    assert body["plan_unchanged"] is True
+    assert len(route_calls) == 2
+    # The signed, client-held token has no coordinates or route geometry.
+    assert "39.1234" not in body["feasibility_token"]
+    assert "117.2345" not in body["feasibility_token"]
+    assert "geometry" not in body["feasibility_token"]
+
+    response_path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond"
+    decision_payload = {
+        "decision": "ACCEPT",
+        "confirm_exact_public_place": True,
+        "feasibility_token": body["feasibility_token"],
+    }
+    if expected_state == "CAN_MAKE_IT":
+        accepted = client.post(response_path, headers=_auth(recipient_id), json=decision_payload)
+        assert accepted.status_code == 200, accepted.text
+    elif expected_state == "AT_RISK":
+        missing_risk_ack = client.post(response_path, headers=_auth(recipient_id), json=decision_payload)
+        assert missing_risk_ack.status_code == 409
+        assert missing_risk_ack.json()["error"]["message"] == "PLACE_INVITATION_RISK_ACKNOWLEDGEMENT_REQUIRED"
+        decision_payload["acknowledge_feasibility_risk"] = True
+        accepted = client.post(response_path, headers=_auth(recipient_id), json=decision_payload)
+        assert accepted.status_code == 200, accepted.text
+    else:
+        decision_payload["acknowledge_feasibility_risk"] = True
+        blocked = client.post(response_path, headers=_auth(recipient_id), json=decision_payload)
+        assert blocked.status_code == 409
+        assert blocked.json()["error"]["message"] == "PLACE_INVITATION_FEASIBILITY_BLOCKED"
+        with SessionLocal() as session:
+            member = session.scalar(select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == recipient_id,
+            ))
+            assert member is not None
+            assert session.scalar(select(MemberSideQuest).where(
+                MemberSideQuest.journey_id == journey_id,
+                MemberSideQuest.member_id == member.id,
+            )) is None
+
+
+def test_r71_feasibility_token_is_invalidated_by_rendezvous_change():
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    preview = client.post(
+        f"{path}/feasibility-preview",
+        headers=_auth(recipient_id),
+        json={"consent_route_provider": True, "location_observation_id": None},
+    )
+    assert preview.status_code == 200, preview.text
+    with SessionLocal() as session:
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        assert invitation is not None
+        target = session.get(Activity, str(invitation.rendezvous_activity_id))
+        assert target is not None
+        target.start_at = (datetime.now(timezone.utc) + timedelta(minutes=150)).isoformat()
+        session.commit()
+    rejected = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "feasibility_token": preview.json()["feasibility_token"],
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert rejected.status_code == 409
+    assert rejected.json()["error"]["message"] == "PLACE_INVITATION_STALE"
+    with SessionLocal() as session:
+        member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == recipient_id,
+        ))
+        assert member is not None
+        assert session.scalar(select(MemberSideQuest).where(
+            MemberSideQuest.journey_id == journey_id,
+            MemberSideQuest.member_id == member.id,
+        )) is None
+
+
+def test_r71_stale_captured_routes_remain_unknown(monkeypatch):
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    observation_response = client.post(
+        f"/api/v1/journeys/{journey_id}/location",
+        headers=_auth(recipient_id),
+        json={
+            "latitude": 39.1234,
+            "longitude": 117.2345,
+            "accuracy_m": 8,
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+        },
+    )
+    assert observation_response.status_code == 201, observation_response.text
+    stale_capture_at = (datetime.now(timezone.utc) - timedelta(minutes=10)).isoformat()
+    route_calls: list[tuple[str, str]] = []
+
+    def stale_captured_route(_session, *, origin_key, target_key, requested_mode, **_kwargs):
+        route_calls.append((str(origin_key), str(target_key)))
+        return {
+            "duration_min": 5,
+            "distance_m": 1200,
+            "provider": "test-captured-route-fixture",
+            "provenance": "LIVE_PROVIDER_CAPTURE",
+            "captured_at": stale_capture_at,
+            "age_seconds": 600,
+            "mode": requested_mode,
+            "geometry": [[39.0, 117.0]],
+        }
+
+    monkeypatch.setattr(member_side_quest_module, "_capture_private_route_leg", stale_captured_route)
+    preview = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview",
+        headers=_auth(recipient_id),
+        json={
+            "consent_route_provider": True,
+            "location_observation_id": observation_response.json()["id"],
+        },
+    )
+    assert preview.status_code == 200, preview.text
+    body = preview.json()
+    assert body["state"] == "UNKNOWN"
+    assert body["travel_duration_min"] is None
+    assert body["outbound_duration_min"] is None
+    assert body["return_duration_min"] is None
+    assert body["evidence"]["captured_at"] is None
+    assert route_calls and len(route_calls) == 2
+
+
+def test_r71_preview_token_expires_and_withdrawal_invalidates_acceptance(monkeypatch):
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    preview = client.post(
+        f"{path}/feasibility-preview",
+        headers=_auth(recipient_id),
+        json={"consent_route_provider": True, "location_observation_id": None},
+    )
+    assert preview.status_code == 200, preview.text
+    token = preview.json()["feasibility_token"]
+
+    real_now = datetime.now(timezone.utc)
+    with monkeypatch.context() as expired_clock:
+        expired_clock.setattr(
+            member_place_invitation_module,
+            "_now",
+            lambda value=None: real_now + timedelta(minutes=3) if value is None else value,
+        )
+        expired = client.post(
+            f"{path}/respond",
+            headers=_auth(recipient_id),
+            json={
+                "decision": "ACCEPT",
+                "confirm_exact_public_place": True,
+                "feasibility_token": token,
+                "acknowledge_feasibility_unknown": True,
+            },
+        )
+    assert expired.status_code == 409
+    assert expired.json()["error"]["message"] == "PLACE_INVITATION_FEASIBILITY_PREVIEW_EXPIRED"
+
+    withdrawn = client.post(f"{path}/withdraw", headers=_auth(owner_id))
+    assert withdrawn.status_code == 200, withdrawn.text
+    after_withdrawal = client.post(
+        f"{path}/respond",
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "feasibility_token": token,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert after_withdrawal.status_code == 409
+    assert after_withdrawal.json()["error"]["message"] == "PLACE_INVITATION_WITHDRAWN"
+
+
+def test_r71_acceptance_cas_blocks_fresh_duplicate_and_recovers_after_lease():
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    with SessionLocal() as session:
+        response = session.scalar(select(MemberPlaceInvitationRecipient).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation_id,
+            MemberPlaceInvitationRecipient.recipient_traveler_id == recipient_id,
+        ))
+        assert response is not None
+        response.state = "ACCEPTANCE_NEEDS_COMPLETION"
+        response.updated_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+    path = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond"
+    concurrent_retry = client.post(
+        path,
+        headers=_auth(recipient_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert concurrent_retry.status_code == 409
+    assert concurrent_retry.json()["error"]["message"] == "PLACE_INVITATION_ACCEPTANCE_IN_PROGRESS"
+    with SessionLocal() as session:
+        response = session.scalar(select(MemberPlaceInvitationRecipient).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation_id,
+            MemberPlaceInvitationRecipient.recipient_traveler_id == recipient_id,
+        ))
+        assert response is not None
+        response.updated_at = (datetime.now(timezone.utc) - timedelta(seconds=60)).isoformat()
+        session.commit()
+    recovered = client.post(
+        path,
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert recovered.status_code == 200, recovered.text
+    assert recovered.json()["member_side_quest"]["destination"]["authority"] == "EXACT_KNOWN_PLACE"

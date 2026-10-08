@@ -480,6 +480,20 @@ class MemberPlaceInvitationDecisionRequest(BaseModel):
 
     decision: Literal["ACCEPT", "DECLINE"]
     confirm_exact_public_place: Literal[True] | None = None
+    feasibility_token: str | None = Field(default=None, min_length=16, max_length=12000)
+    acknowledge_feasibility_unknown: Literal[True] | None = None
+    acknowledge_feasibility_risk: Literal[True] | None = None
+
+
+class MemberPlaceInvitationFeasibilityPreviewRequest(BaseModel):
+    """One explicitly consented, recipient-only route feasibility request."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    consent_route_provider: Literal[True]
+    location_observation_id: UUID | None = None
+    dwell_minutes: Literal[10, 20, 30] = 20
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
 class MomentScoutRequest(BaseModel):

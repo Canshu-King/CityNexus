@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import base64
+import binascii
 import hashlib
+import hmac
 import json
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import uuid4
 
@@ -10,11 +13,13 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.db.models import (
     Activity,
     Commitment,
     Journey,
     JourneyMember,
+    LocationObservation,
     MemberPlaceInvitation,
     MemberPlaceInvitationRecipient,
     MemberSideQuest,
@@ -22,12 +27,465 @@ from app.db.models import (
     Traveler,
 )
 from app.execution.clock import execution_clock
-from app.execution.group_presence import planned_separation_for_member
+from app.execution.group_presence import (
+    LOCATION_FRESHNESS_SECONDS,
+    planned_separation_for_member,
+    rendezvous_commitment_risk,
+)
 
 INVITATION_TTL_MINUTES = 15
+INVITATION_FEASIBILITY_TTL_SECONDS = 120
 OWNER_QUEST_STATES = {"READY", "EN_ROUTE", "ARRIVED"}
 OPEN_QUEST_STATES = {"DESTINATION_UNRESOLVED", "READY", "EN_ROUTE", "ARRIVED"}
 PROTECTED_COMMITMENT_LEVELS = {"C3_Guaranteed", "C4_Anchored"}
+
+
+def _b64url(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _feasibility_key() -> bytes:
+    secret = settings.traveler_auth_secret
+    if not secret or len(secret.encode("utf-8")) < 32:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    return hmac.new(
+        secret.encode("utf-8"),
+        b"citynexus:member-place-invitation-feasibility:v1",
+        hashlib.sha256,
+    ).digest()
+
+
+def _sign_feasibility(payload: dict[str, Any]) -> str:
+    body = _b64url(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+    signature = _b64url(hmac.new(_feasibility_key(), body.encode("ascii"), hashlib.sha256).digest())
+    return f"{body}.{signature}"
+
+
+def _verify_feasibility(token: str) -> dict[str, Any]:
+    try:
+        body, signature = str(token).split(".", 1)
+        expected = _b64url(hmac.new(_feasibility_key(), body.encode("ascii"), hashlib.sha256).digest())
+        if not hmac.compare_digest(signature, expected):
+            raise ValueError("signature")
+        padding = "=" * (-len(body) % 4)
+        payload = json.loads(base64.urlsafe_b64decode((body + padding).encode("ascii")).decode("utf-8"))
+    except HTTPException:
+        raise
+    except (ValueError, binascii.Error) as exc:
+        raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_TOKEN_INVALID") from exc
+    if not isinstance(payload, dict) or payload.get("v") != 1:
+        raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_TOKEN_INVALID")
+    try:
+        expires_at = int(payload.get("exp"))
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_TOKEN_INVALID") from exc
+    if expires_at <= int(_now().timestamp()):
+        raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_PREVIEW_EXPIRED")
+    return payload
+
+
+def _observation_fingerprint(observation: LocationObservation) -> str:
+    material = {
+        "id": str(observation.id),
+        "journey_id": str(observation.journey_id),
+        "traveler_id": str(observation.traveler_id or ""),
+        "member_id": str(observation.journey_member_id or ""),
+        "latitude": float(observation.latitude),
+        "longitude": float(observation.longitude),
+        "accuracy_m": float(observation.accuracy_m),
+        "captured_at": str(observation.captured_at),
+        "source": str(observation.source or ""),
+    }
+    return hashlib.sha256(json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def _route_token_projection(route: dict[str, Any] | None, *, now: datetime) -> dict[str, Any] | None:
+    if route is None:
+        return None
+    captured = _stamp(str(route.get("captured_at") or ""))
+    return {
+        "duration_min": int(route["duration_min"]),
+        "provider": str(route.get("provider") or "unknown"),
+        "provenance": str(route.get("provenance") or "unknown"),
+        "captured_at": captured.isoformat() if captured else None,
+        "age_seconds": max(0, int((now - captured).total_seconds())) if captured else None,
+        "mode": str(route.get("mode") or "WALK"),
+    }
+
+
+def _route_capture_is_fresh(route: dict[str, Any] | None, *, now: datetime) -> bool:
+    if route is None:
+        return False
+    captured = _stamp(str(route.get("captured_at") or ""))
+    if captured is None:
+        return False
+    age_seconds = (now - captured).total_seconds()
+    return -30 <= age_seconds <= LOCATION_FRESHNESS_SECONDS
+
+
+def _feasibility_binding(
+    *,
+    journey: Journey,
+    recipient: JourneyMember,
+    traveler_id: str,
+    invitation: MemberPlaceInvitation,
+    response: MemberPlaceInvitationRecipient,
+) -> dict[str, str]:
+    owner_context_hash = hashlib.sha256(
+        json.dumps(
+            {
+                "owner_split_intent_id": str(invitation.owner_split_intent_id),
+                "owner_side_quest_id": str(invitation.owner_side_quest_id),
+                "active_plan_version_id": str(invitation.active_plan_version_id),
+                "place_id": str(invitation.place_id),
+                "rendezvous_activity_id": str(invitation.rendezvous_activity_id),
+                "rendezvous_place_id": str(invitation.rendezvous_place_id),
+                "disclosure_snapshot_json": str(invitation.disclosure_snapshot_json or "{}"),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    return {
+        "journey_id": str(journey.id),
+        "invitation_id": str(invitation.id),
+        "response_id": str(response.id),
+        "recipient_member_id": str(recipient.id),
+        "recipient_traveler_id": str(traveler_id),
+        "owner_context_hash": owner_context_hash,
+        "active_plan_version_id": str(invitation.active_plan_version_id),
+        "place_id": str(invitation.place_id),
+        "place_provider_key": str(invitation.place_provider_key),
+        "place_external_id": str(invitation.place_external_id),
+        "rendezvous_activity_id": str(invitation.rendezvous_activity_id),
+        "rendezvous_place_id": str(invitation.rendezvous_place_id),
+    }
+
+
+def _feasibility_result(
+    *,
+    session: Session,
+    journey: Journey,
+    recipient: JourneyMember,
+    invitation: MemberPlaceInvitation,
+    target: Activity,
+    observation: LocationObservation | None,
+    outbound: dict[str, Any] | None,
+    returning: dict[str, Any] | None,
+    dwell_minutes: int,
+    now: datetime,
+    blocked_reason: str | None = None,
+) -> tuple[dict[str, Any], str | None]:
+    deadline = _stamp(target.start_at)
+    state = "UNKNOWN"
+    reason = "QUALIFYING_ROUTE_EVIDENCE_UNAVAILABLE"
+    duration = None
+    slack = None
+    commitment_risk: dict[str, Any] | None = None
+    if blocked_reason:
+        state = "BLOCKED"
+        reason = blocked_reason
+    elif observation is None:
+        reason = "CURRENT_LOCATION_UNAVAILABLE"
+    elif outbound is None or returning is None:
+        reason = "QUALIFYING_LIVE_ROUTE_EVIDENCE_UNAVAILABLE"
+    elif deadline is None:
+        reason = "RENDEZVOUS_TIME_UNKNOWN"
+    else:
+        duration = int(outbound["duration_min"]) + int(dwell_minutes) + int(returning["duration_min"])
+        side_departure = now + timedelta(minutes=int(outbound["duration_min"]) + int(dwell_minutes))
+        commitment_risk = rendezvous_commitment_risk(
+            session,
+            journey,
+            target,
+            route_duration_min=int(returning["duration_min"]),
+            authority="ADVISORY_RECIPIENT_PLACE_INVITATION_PREVIEW",
+            now=side_departure,
+        )
+        next_commitment = commitment_risk.get("next_commitment") or {}
+        if next_commitment.get("scheduled_at"):
+            deadline = _stamp(str(next_commitment["scheduled_at"])) or deadline
+        arrival = now + timedelta(minutes=duration)
+        slack = int((deadline - arrival).total_seconds() // 60)
+        risk_state = str(commitment_risk.get("state") or "")
+        if risk_state == "COMMITMENT_AT_RISK":
+            state = "BLOCKED"
+            reason = "PROTECTED_RENDEZVOUS_BUFFER_WOULD_BE_BREACHED"
+        elif risk_state in {"LOW_BUFFER", "COMMITMENT_TIME_UNKNOWN"}:
+            state = "AT_RISK" if risk_state == "LOW_BUFFER" else "UNKNOWN"
+            reason = "PROTECTED_RENDEZVOUS_BUFFER_IS_TIGHT" if state == "AT_RISK" else "RENDEZVOUS_TIME_UNKNOWN"
+        elif slack < 0:
+            state = "AT_RISK"
+            reason = "ROUTE_EXCEEDS_RENDEZVOUS_DEADLINE"
+        else:
+            state = "CAN_MAKE_IT"
+            reason = "GROUNDED_ROUTE_FITS_RENDEZVOUS"
+
+    evidence_rows = [route for route in (outbound, returning) if route]
+    evidence_times = [str(route.get("captured_at") or "") for route in evidence_rows]
+    evidence_dt = [_stamp(value) for value in evidence_times]
+    valid_evidence_dt = [value for value in evidence_dt if value is not None]
+    evidence_at = min(valid_evidence_dt).isoformat() if valid_evidence_dt else None
+    evidence_age = max(
+        (
+            max(0, int((now - captured).total_seconds()))
+            for route in evidence_rows
+            if (captured := _stamp(str(route.get("captured_at") or ""))) is not None
+        ),
+        default=None,
+    )
+    provider_names = sorted({str(route.get("provider") or "unknown") for route in evidence_rows})
+    provenance = sorted({str(route.get("provenance") or "unknown") for route in evidence_rows})
+    return {
+        "state": state,
+        "reason_code": reason,
+        "observed_at": _iso(now),
+        "evidence": {
+            "captured_at": evidence_at,
+            "age_seconds": evidence_age,
+            "freshness_seconds": LOCATION_FRESHNESS_SECONDS,
+            "source_type": provenance[0] if len(provenance) == 1 else ("MIXED" if provenance else None),
+            "provider": provider_names[0] if len(provider_names) == 1 else ("MIXED" if provider_names else None),
+            "location_source": str(observation.source) if observation is not None else None,
+            "location_captured_at": _stamp(str(observation.captured_at or "")).isoformat()
+            if observation is not None and _stamp(str(observation.captured_at or ""))
+            else None,
+            "location_accuracy_m": float(observation.accuracy_m) if observation is not None else None,
+        },
+        "rendezvous_deadline": deadline.isoformat() if deadline else None,
+        "travel_duration_min": duration,
+        "travel_duration_interval_min": None,
+        "slack_min": slack,
+        "outbound_duration_min": int(outbound["duration_min"]) if outbound else None,
+        "return_duration_min": int(returning["duration_min"]) if returning else None,
+        "dwell_minutes": int(dwell_minutes),
+        "plan_unchanged": True,
+        "physical_arrival_proof": False,
+    }, commitment_risk.get("state") if commitment_risk else None
+
+
+def preview_recipient_invitation_feasibility(
+    session: Session,
+    *,
+    journey: Journey,
+    recipient: JourneyMember,
+    traveler_id: str,
+    invitation: MemberPlaceInvitation,
+    response: MemberPlaceInvitationRecipient,
+    location_observation_id: str | None,
+    dwell_minutes: int,
+    requested_mode: str = "WALK",
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    if dwell_minutes not in {10, 20, 30}:
+        raise HTTPException(422, "PLACE_INVITATION_DWELL_MINUTES_UNSUPPORTED")
+    if requested_mode not in {"WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"}:
+        raise HTTPException(422, "PLACE_INVITATION_ROUTE_MODE_UNSUPPORTED")
+    current = _now(now)
+    if response.state != "INVITED":
+        raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
+    context = validate_invitation_for_acceptance(
+        session,
+        journey=journey,
+        recipient=recipient,
+        traveler_id=traveler_id,
+        invitation=invitation,
+        response=response,
+        now=current,
+    )
+    conflict = recipient_conflict_reason(
+        session,
+        journey=journey,
+        recipient=recipient,
+        invitation=invitation,
+        same_invitation_split_id=None,
+        now=current,
+    )
+    observation: LocationObservation | None = None
+    outbound = returning = None
+    observation_error: str | None = None
+    if location_observation_id:
+        from app.execution.member_side_quest import (
+            _capture_private_route_leg,
+            _fresh_member_observation,
+        )
+
+        try:
+            observation = _fresh_member_observation(
+                session,
+                journey=journey,
+                member=recipient,
+                traveler_id=traveler_id,
+                observation_id=str(location_observation_id),
+            )
+        except HTTPException as exc:
+            if exc.status_code == 404 or exc.status_code == 403:
+                raise
+            observation_error = str(exc.detail)
+        if observation is not None and conflict is None:
+            outbound = _capture_private_route_leg(
+                session,
+                journey=journey,
+                origin_key=f"location-observation:{observation.id}",
+                target_key=str(context["place"].id),
+                requested_mode=requested_mode,
+            )
+            returning = _capture_private_route_leg(
+                session,
+                journey=journey,
+                origin_key=str(context["place"].id),
+                target_key=str(context["rendezvous"].id),
+                requested_mode=requested_mode,
+            )
+            if not _route_capture_is_fresh(outbound, now=current):
+                outbound = None
+            if not _route_capture_is_fresh(returning, now=current):
+                returning = None
+    # Route acquisition can cross an external-provider call. Recheck the live
+    # invitation and recipient conflict state before issuing a usable preview.
+    context = validate_invitation_for_acceptance(
+        session,
+        journey=journey,
+        recipient=recipient,
+        traveler_id=traveler_id,
+        invitation=invitation,
+        response=response,
+        now=current,
+    )
+    conflict = recipient_conflict_reason(
+        session,
+        journey=journey,
+        recipient=recipient,
+        invitation=invitation,
+        same_invitation_split_id=None,
+        now=current,
+    )
+    result, _risk_state = _feasibility_result(
+        session=session,
+        journey=journey,
+        recipient=recipient,
+        invitation=invitation,
+        target=context["target"],
+        observation=observation,
+        outbound=outbound,
+        returning=returning,
+        dwell_minutes=dwell_minutes,
+        now=current,
+        blocked_reason=conflict,
+    )
+    if observation_error:
+        result["reason_code"] = observation_error
+    token_payload = {
+        "v": 1,
+        "iat": int(current.timestamp()),
+        "exp": int((current + timedelta(seconds=INVITATION_FEASIBILITY_TTL_SECONDS)).timestamp()),
+        "binding": _feasibility_binding(
+            journey=journey,
+            recipient=recipient,
+            traveler_id=traveler_id,
+            invitation=invitation,
+            response=response,
+        ),
+        "observation_id": str(observation.id) if observation is not None else None,
+        "observation_fingerprint": _observation_fingerprint(observation) if observation is not None else None,
+        "dwell_minutes": dwell_minutes,
+        "requested_mode": requested_mode,
+        "state": result["state"],
+        "outbound": _route_token_projection(outbound, now=current),
+        "returning": _route_token_projection(returning, now=current),
+    }
+    result["feasibility_token"] = _sign_feasibility(token_payload)
+    result["expires_in_seconds"] = INVITATION_FEASIBILITY_TTL_SECONDS
+    return result
+
+
+def recheck_recipient_invitation_feasibility(
+    session: Session,
+    *,
+    journey: Journey,
+    recipient: JourneyMember,
+    traveler_id: str,
+    invitation: MemberPlaceInvitation,
+    response: MemberPlaceInvitationRecipient,
+    token: str,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    current = _now(now)
+    payload = _verify_feasibility(token)
+    expected_binding = _feasibility_binding(
+        journey=journey,
+        recipient=recipient,
+        traveler_id=traveler_id,
+        invitation=invitation,
+        response=response,
+    )
+    if payload.get("binding") != expected_binding:
+        raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_BINDING_STALE")
+    observation = None
+    observation_id = payload.get("observation_id")
+    if observation_id:
+        observation = session.get(LocationObservation, str(observation_id))
+        if (
+            observation is None
+            or str(observation.journey_id) != str(journey.id)
+            or str(observation.traveler_id or "") != str(traveler_id)
+            or str(observation.journey_member_id or "") != str(recipient.id)
+            or _observation_fingerprint(observation) != str(payload.get("observation_fingerprint") or "")
+        ):
+            raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_EVIDENCE_CHANGED")
+        from app.execution.member_side_quest import _fresh_member_observation
+
+        try:
+            observation = _fresh_member_observation(
+                session,
+                journey=journey,
+                member=recipient,
+                traveler_id=traveler_id,
+                observation_id=str(observation.id),
+            )
+        except HTTPException:
+            observation = None
+    context = validate_invitation_for_acceptance(
+        session,
+        journey=journey,
+        recipient=recipient,
+        traveler_id=traveler_id,
+        invitation=invitation,
+        response=response,
+        now=current,
+    )
+    conflict = recipient_conflict_reason(
+        session,
+        journey=journey,
+        recipient=recipient,
+        invitation=invitation,
+        same_invitation_split_id=None,
+        now=current,
+    )
+    outbound = payload.get("outbound") if isinstance(payload.get("outbound"), dict) else None
+    returning = payload.get("returning") if isinstance(payload.get("returning"), dict) else None
+    # Provider evidence is separately time-bounded; a fresh observation cannot
+    # make an old route true again.
+    for route in (outbound, returning):
+        captured = _stamp(str(route.get("captured_at") or "")) if route else None
+        age = (current - captured).total_seconds() if captured else LOCATION_FRESHNESS_SECONDS + 1
+        if captured is None or age < -30 or age > LOCATION_FRESHNESS_SECONDS:
+            outbound = returning = None
+            break
+    result, _risk_state = _feasibility_result(
+        session=session,
+        journey=journey,
+        recipient=recipient,
+        invitation=invitation,
+        target=context["target"],
+        observation=observation,
+        outbound=outbound,
+        returning=returning,
+        dwell_minutes=int(payload.get("dwell_minutes") or 20),
+        now=current,
+        blocked_reason=conflict,
+    )
+    return result
 
 
 def _now(value: datetime | None = None) -> datetime:

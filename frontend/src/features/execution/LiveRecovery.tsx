@@ -1098,6 +1098,7 @@ export function LiveRecovery({
             <MemberPlaceInvitationPanel
               journeyId={journeyId}
               projection={operator?.member_place_invitations}
+              onRefreshLocation={onRefreshLocation}
               onUpdated={loadOperator}
             />
             <strong>
