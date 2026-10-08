@@ -8,7 +8,7 @@ import re
 from datetime import datetime, timezone
 
 from fastapi import HTTPException
-from sqlalchemy import and_, or_, select
+from sqlalchemy import and_, case, or_, select
 from sqlalchemy.orm import Session
 
 from app.db.models import Activity, Journey, JourneyMember, LocationObservation, MemberSideQuest, Place
@@ -162,6 +162,25 @@ def _bounded_place_query(session: Session, *, city_code: str, latitude: float, l
         longitude_filter = or_(Place.longitude >= low_lon, Place.longitude <= high_lon - 360.0)
     else:
         longitude_filter = and_(Place.longitude >= low_lon, Place.longitude <= high_lon)
+    # Cap the city catalogue only *after* locality ordering.  Cutting the
+    # latest 500 updated rows first hides older genuinely nearby places in
+    # dense cities and can produce a false NO_GROUNDED_OPTIONS.
+    # This planar approximation only preselects; the final ranking still uses
+    # exact Haversine distance and never treats either as a route ETA.
+    latitude_delta_m = (Place.latitude - latitude) * 110_574.0
+    raw_lon_delta = Place.longitude - longitude
+    wrapped_lon_delta = case(
+        (raw_lon_delta > 180.0, raw_lon_delta - 360.0),
+        (raw_lon_delta < -180.0, raw_lon_delta + 360.0),
+        else_=raw_lon_delta,
+    )
+    longitude_delta_m = wrapped_lon_delta * (
+        111_320.0 * max(0.01, math.cos(math.radians(latitude)))
+    )
+    distance_squared = (
+        latitude_delta_m * latitude_delta_m
+        + longitude_delta_m * longitude_delta_m
+    )
     return session.scalars(
         select(Place)
         .where(
@@ -171,7 +190,7 @@ def _bounded_place_query(session: Session, *, city_code: str, latitude: float, l
             Place.latitude <= high_lat,
             longitude_filter,
         )
-        .order_by(Place.updated_at.desc(), Place.id.asc())
+        .order_by(distance_squared.asc(), Place.id.asc())
         .limit(MAX_CITY_SHORTLIST_ROWS)
     ).all()
 
