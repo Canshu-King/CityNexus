@@ -205,8 +205,39 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
     # mission could not honour and then blocked from it.  Both numbers are stated now, read from
     # the same source that grants them, because "what may I use" and "what exists" are different
     # questions and the model has to be able to tell them apart.
-    granted_tools = tuple(mission_plan_for_model(mission).get("allowed_tools") or ())
+    plan = mission_plan_for_model(mission)
+    granted_tools = tuple(plan.get("allowed_tools") or ())
     supplied_tools = citynexus_tool_definitions()
+    # The plan already carries this mission's own limit as a step (`approval_boundary`), in the
+    # server's words rather than mine. The prompt used to assert a flat "you may autonomously act
+    # on ordinary reversible changes" beside it and then, two sentences later, tell a PLAN_ONLY
+    # mission not to execute anything - so the model was handed both halves of a contradiction and
+    # had to guess which one the Gateway would enforce.
+    boundary = next(
+        (
+            str(step.get("operation"))
+            for step in (plan.get("steps") or [])
+            if isinstance(step, dict) and step.get("id") == "approval_boundary"
+        ),
+        "",
+    )
+    # Whether this mission can carry a change out at all is what the grant says, not what this
+    # sentence used to assume: a PLAN_ONLY mission holds `request_replan` and no executing tool, so
+    # "you may autonomously act on ordinary reversible changes" was a claim about an authority the
+    # same prompt then withdrew.
+    held_executing = sorted((set(granted_tools) & set(_MUTATION_TOOLS)) - {"request_replan"})
+    if held_executing:
+        authority_line = (
+            f"You may act on ordinary reversible changes using the {len(held_executing)} "
+            f"executing tools this mission grants, inside both the global policy and this mission. "
+            f"Your boundary: {boundary}. "
+        )
+    else:
+        authority_line = (
+            "This mission grants you no tool that carries a change out: propose, and let the "
+            "traveller approve. "
+            + (f"Your boundary: {boundary}. " if boundary else "")
+        )
     if len(granted_tools) < len(supplied_tools):
         # Say what the refusal covers, and only when there is something to refuse: naming "the
         # rest" when the mission was granted everything would be a smaller version of the same
@@ -227,7 +258,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         "Inspect the Journey and JourneyTwin before any mutation. "
         "Never invent IDs, prices, opening hours, provider status, or commitments. "
         "The Gateway and deterministic feasibility layer are authoritative: follow their decisions. "
-        "You may autonomously act on ordinary reversible changes inside both the global policy and this mission. "
+        f"{authority_line}"
         "Protected activities and commitments must remain unchanged unless the Gateway explicitly permits a stronger action. "
         "Do not reveal private chain-of-thought; final text should summarize actionable rationale and observed results.\n\n"
         f"{zone_line}"
