@@ -139,6 +139,11 @@ def main() -> int:
             checks += 1
             if 't("%s")' % key not in window:
                 bad.append("the block at %s does not read %s: %r" % (anchor, key, window.strip()[:100]))
+        # The block itself must hold no hand-written pair left -- this is the change, stated on the
+        # block rather than on a whole-file count, so it stays true if a sibling cell edits the file.
+        checks += 1
+        if 'zh ? "' in window:
+            bad.append("the block at %s still carries a hand-written pair: %r" % (anchor, window.strip()[:100]))
 
     # ---- change assertions: both arms of all ten keys -------------------------
     for key in KEYS:
@@ -156,13 +161,18 @@ def main() -> int:
             bad.append("the en arm lost its own text: %s" % en_text[:56])
 
     # ---- denominator: the file's inline shape count ---------------------------
+    # The count is the absence's DENOMINATOR, not the change's proof: a sibling cell in the same
+    # file lowers it further, so asserting an exact number would go falsely red on the tree where
+    # both cells have landed.  The change itself is pinned by the two block assertions above, which
+    # name the blocks this cell owns and stay true whoever else edits the file.
     checks += 1
     shape = len([l for l in lines if 'zh ? "' in l])
-    if shape != 35:
+    if shape > 35:
         bad.append(
-            "CopilotDock.tsx holds %d `zh ? \"` lines, expected 35 (the parent held 44)" % shape
+            "CopilotDock.tsx holds %d `zh ? \"` lines, more than the parent's 44 minus this cell's 9"
+            % shape
         )
-    print("  denominator: CopilotDock.tsx `zh ? \"` lines now %d (parent 44)" % shape)
+    print("  denominator: CopilotDock.tsx `zh ? \"` lines now %d (parent 44, this cell removes 9)" % shape)
 
     # ---- survival assertions (green in BOTH states by design) -----------------
     # The near-twin sentence on the Me screen is a DIFFERENT sentence; this cell must not have
