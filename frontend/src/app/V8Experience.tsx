@@ -4562,7 +4562,7 @@ function Bookings({
           </p>
           <details className="v8-advanced" data-testid="bookings-advanced">
             <summary>
-              {zh ? "高级：结构化数据" : "Advanced: structured data"}
+              {t("bookings.advancedStructuredData")}
             </summary>
             <label htmlFor="reservation-json">
               {t("bookings.reservationJson")}
