@@ -4329,6 +4329,17 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
     )
     assert waiting["place"]["place_id"] == place_id
     assert waiting["state_detail"]["feasibility"] == "GROUNDED_FEASIBLE"
+    # Members must see bounded, proposal-derived consequences before voting,
+    # with truthful TEST_REPLAY provenance rather than a live routing claim.
+    tradeoff = waiting["tradeoff"]
+    assert tradeoff is not None
+    assert tradeoff["added_count"] == 1
+    assert tradeoff["removed_count"] == 0
+    assert tradeoff["protected_commitments_preserved"] is True
+    assert tradeoff["hard_constraints_passed"] is True
+    assert "R73-TEST-REPLAY" in tradeoff["route_provider"]
+    assert "EXPLICIT_FROZEN_FIXTURE" in tradeoff["route_fact_qualities"]
+    assert isinstance(tradeoff["end_time_delta_min"], int)
     assert len(waiting["responses"]) == 3
     assert {item["decision"] for item in waiting["responses"]} == {"WAITING"}
     c_projection = client.get(
@@ -4420,3 +4431,45 @@ def test_r73_shared_stop_reuses_collective_authority_and_applies_one_real_succes
         evidence = json.loads(plan.mobility_evidence_json or "{}")
         assert evidence.get("source_provider") == "R73-TEST-REPLAY-EXPLICIT-FIXTURE"
         assert {item.get("fact_quality") for item in evidence.get("facts", [])} == {EXPLICIT_FROZEN_FIXTURE}
+
+
+def test_r73_read_only_collaborator_sees_no_fake_promote_authority():
+    """R73 must never offer a UI write that existing JourneyRoleCapability forbids."""
+    journey_id, owner_id, collaborator_id = _active_shared_journey()
+    invitation_id, _owner_quest_id, _place_id = _create_r71_invitation(journey_id, owner_id)
+    invitation_url = f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}"
+    accepted = client.post(
+        f"{invitation_url}/respond",
+        headers=_auth(collaborator_id),
+        json={
+            "decision": "ACCEPT",
+            "confirm_exact_public_place": True,
+            "acknowledge_feasibility_unknown": True,
+        },
+    )
+    assert accepted.status_code == 200, accepted.text
+    owner_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["member_place_invitations"]["sent"][0]
+    joined_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(collaborator_id)
+    ).json()["member_place_invitations"]["joined"][0]
+    assert owner_view["viewer_can_propose"] is True
+    assert joined_view["viewer_can_propose"] is False
+
+    unauthorized = client.post(
+        f"{invitation_url}/promotions",
+        headers={
+            **_auth(collaborator_id),
+            "Idempotency-Key": "r73-collaborator-has-no-journey-update",
+        },
+        json={"dwell_minutes": 20},
+    )
+    assert unauthorized.status_code == 403
+    assert "JOURNEY_UPDATE" in unauthorized.text
+    with SessionLocal() as session:
+        assert session.scalar(
+            select(func.count()).select_from(MemberPlacePromotion).where(
+                MemberPlacePromotion.journey_id == journey_id
+            )
+        ) == 0
