@@ -272,8 +272,8 @@ export function LiveRecovery({
     <section className="v8-page" data-testid="live-recovery">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "正在进行" : "In progress"}</p>
-          <h1>{zh ? "现在的行程" : "Your trip right now"}</h1>
+          <p className="v8-kicker">{t("live.progressKicker")}</p>
+          <h1>{t("live.tripRightNowTitle")}</h1>
           <p
             className="v8-lede"
             data-testid="live-next"
@@ -295,7 +295,7 @@ export function LiveRecovery({
 
       {openDisruptions.length > 0 && (
         <div className="live-disruption" data-testid="live-disruption" role="status">
-          <b>{zh ? "发生了什么" : "What happened"}</b>
+          <b>{t("live.whatHappenedHeading")}</b>
           <p className="live-disruption-summary" data-testid="live-disruption-summary">
             {envelope
               ? zh

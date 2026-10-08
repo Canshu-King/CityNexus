@@ -309,6 +309,9 @@ const en: Dict = {
   "live.reportRain": "Report rain",
   "live.now": "NOW",
   "live.awaitingPlan": "Awaiting plan",
+  "live.progressKicker": "In progress",
+  "live.tripRightNowTitle": "Your trip right now",
+  "live.whatHappenedHeading": "What happened",
   // A cursor that names an activity the active plan does not contain is a
   // different fact from "no plan yet"; the UI must not claim the latter.
   "live.unresolvedStep": "Execution position unresolved",
@@ -1537,6 +1540,9 @@ const zhCN: Dict = {
   "live.reportRain": "报告降雨",
   "live.now": "现在",
   "live.awaitingPlan": "等待方案",
+  "live.progressKicker": "正在进行",
+  "live.tripRightNowTitle": "现在的行程",
+  "live.whatHappenedHeading": "发生了什么",
   "live.unresolvedStep": "执行位置无法确认",
   "live.unresolvedStepHint": "已保存的位置指向当前方案中不再存在的步骤，没能如实显示当前或下一步。",
   "live.acceptFailed": "没能接受这个调整。",
