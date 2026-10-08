@@ -34,6 +34,7 @@ import {
   useAuthoritativeTwin,
 } from "../../api/v12Authoritative";
 import { MemberSideQuestCard } from "./MemberSideQuestCard";
+import { MomentScoutCard } from "./MomentScoutCard";
 
 type Proposal = {
   id: string;
@@ -1104,6 +1105,14 @@ export function LiveRecovery({
                         ? (zh ? "正在等待同行者主动分享一次当前位置。" : "Waiting for travellers to share a fresh location.")
                         : (zh ? "目前还不能可靠判断队伍是否在一起。" : "There is not enough current evidence to classify the group yet.")}
             </strong>
+            {groupPresence.members.some((member) => member.is_viewer)
+              && !["EN_ROUTE", "ARRIVED", "COMPLETED"].includes(operator?.member_side_quest?.state ?? "") && (
+                <MomentScoutCard
+                  journeyId={journeyId}
+                  onRefreshLocation={onRefreshLocation}
+                  onUpdated={loadOperator}
+                />
+              )}
             {plannedSeparation && (
               <div className="journey-planned-separation" data-testid="journey-planned-separation" data-state={plannedSeparation.state}>
                 {plannedSeparation.members.map((member) => (

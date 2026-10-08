@@ -464,6 +464,23 @@ class MemberSideQuestCreateRequest(BaseModel):
     place_id: str | None = Field(default=None, min_length=1, max_length=128)
 
 
+class MomentScoutRequest(BaseModel):
+    """One-time owner-only discovery request; location is always server-bound."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    budget_minutes: Literal[15, 30, 45] = 30
+    interest: Literal["ANYTHING", "COFFEE_FOOD", "CULTURE", "NATURE"] = "ANYTHING"
+
+
+class MomentScoutSelectRequest(MomentScoutRequest):
+    """Explicitly confirm one candidate from a fresh private Moment Scout result."""
+
+    place_id: str = Field(min_length=1, max_length=128)
+    scout_context: str = Field(min_length=32, max_length=64)
+
+
 class MemberSideQuestFitPreviewRequest(BaseModel):
     """One-time owner-only detour fit check; current location is optional for UNKNOWN."""
 

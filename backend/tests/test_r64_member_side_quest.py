@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
@@ -18,6 +19,7 @@ from app.db.models import (
     Event,
     GuardianPulse,
     Journey,
+    JourneyIntent,
     JourneyMember,
     LocationObservation,
     MemberSideQuestReturnReport,
@@ -146,6 +148,188 @@ def _private_place(journey_id: str, *excluded_place_ids: str | None) -> Place:
 def _count(model, *criteria) -> int:
     with SessionLocal() as session:
         return int(session.scalar(select(func.count()).select_from(model).where(*criteria)) or 0)
+
+
+def test_r66_moment_scout_is_private_read_only_and_revalidates_explicit_selection():
+    journey_id, owner_id, other_id = _active_shared_journey()
+    place = _private_place(journey_id)
+    # Put one fixture-backed known Place at the consented sample so ranking has
+    # a deterministic nearest result without asking an external provider.
+    with SessionLocal() as session:
+        place = session.get(Place, place.id)
+        assert place is not None
+        place.latitude = 35.123456
+        place.longitude = 135.123456
+        place.category = "cafe"
+        place.provider_key = "r66-fixture"
+        session.commit()
+
+    sample = client.post(
+        f"/api/v1/journeys/{journey_id}/location",
+        headers=_auth(owner_id),
+        json={
+            "latitude": 35.123456,
+            "longitude": 135.123456,
+            "accuracy_m": 8,
+            "captured_at": execution_clock.now().astimezone(timezone.utc).isoformat(),
+        },
+    )
+    assert sample.status_code == 201, sample.text
+    observation_id = sample.json()["id"]
+    with SessionLocal() as session:
+        other_member = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == other_id,
+            )
+        )
+        assert other_member is not None
+        foreign_observation_id = str(uuid4())
+        session.add(LocationObservation(
+            id=foreign_observation_id,
+            journey_id=journey_id,
+            traveler_id=other_id,
+            journey_member_id=other_member.id,
+            latitude=35.123456,
+            longitude=135.123456,
+            accuracy_m=8,
+            captured_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
+            source="FOREGROUND_WEB",
+        ))
+        session.commit()
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        active_plan_id = str(journey.active_plan_version_id)
+        before = {
+            "journey": (journey.active_plan_version_id, journey.current_activity_id),
+            "plan_count": _count(PlanVersion, PlanVersion.journey_id == journey_id),
+            "activity_count": _count(Activity, Activity.plan_version_id == active_plan_id),
+            "intent_count": _count(JourneyIntent, JourneyIntent.journey_id == journey_id),
+            "quest_count": _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id),
+        }
+
+    scout = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout",
+        headers=_auth(owner_id),
+        json={
+            "location_observation_id": observation_id,
+            "budget_minutes": 30,
+            "interest": "COFFEE_FOOD",
+        },
+    )
+    assert scout.status_code == 200, scout.text
+    result = scout.json()
+    assert result["scout_state"] == "OPTIONS_AVAILABLE"
+    assert 1 <= len(result["candidates"]) <= 3
+    assert result["rendezvous"]["activity_id"]
+    assert result["candidates"][0]["place_id"] == place.id
+    assert result["candidates"][0]["straight_line_distance_m"] == 0
+    assert result["candidates"][0]["place_provenance"] == "DEMO_FIXTURE"
+    assert all(item["opening_state"] == "UNKNOWN" for item in result["candidates"])
+    assert all(item["fit_authority"] == "UNVERIFIED" for item in result["candidates"])
+    assert result["rendezvous"]["time_state"] == "AVAILABLE"
+    assert isinstance(result["rendezvous"]["minutes_until"], int)
+    assert "latitude" not in json.dumps(result) and "longitude" not in json.dumps(result)
+    assert "ROUTE" in result["evidence_boundary"] and "GUARANTEE" in result["evidence_boundary"]
+
+    with pytest.raises(HTTPException) as passed_rendezvous:
+        main_module.select_moment_scout_candidate(
+            current_scout={
+                "scout_context": "f" * 64,
+                "candidates": [{"place_id": place.id}],
+                "rendezvous": {"time_state": "PAST"},
+            },
+            scout_context="f" * 64,
+            place_id=place.id,
+        )
+    assert passed_rendezvous.value.status_code == 409
+    assert passed_rendezvous.value.detail == "MOMENT_SCOUT_RENDEZVOUS_TIME_PASSED"
+
+    foreign_observation = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout",
+        headers=_auth(owner_id),
+        json={"location_observation_id": foreign_observation_id},
+    )
+    assert foreign_observation.status_code == 403
+    assert place.name not in foreign_observation.text
+
+    unauthorized = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout",
+        headers=_auth(other_id),
+        json={"location_observation_id": observation_id},
+    )
+    assert unauthorized.status_code in {403, 409}
+    assert place.name not in unauthorized.text
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        assert (journey.active_plan_version_id, journey.current_activity_id) == before["journey"]
+        assert _count(PlanVersion, PlanVersion.journey_id == journey_id) == before["plan_count"]
+        assert _count(Activity, Activity.plan_version_id == active_plan_id) == before["activity_count"]
+        assert _count(JourneyIntent, JourneyIntent.journey_id == journey_id) == before["intent_count"]
+        assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == before["quest_count"]
+        assert _count(
+            AuditLog,
+            AuditLog.journey_id == journey_id,
+            AuditLog.action.like("journey.moment_scout.%"),
+        ) == 0
+
+    selection_path = f"/api/v1/journeys/{journey_id}/moment-scout/select"
+    selection_data = {
+        "location_observation_id": observation_id,
+        "budget_minutes": 30,
+        "interest": "COFFEE_FOOD",
+        "place_id": place.id,
+        "scout_context": "0" * 64,
+    }
+    stale = client.post(selection_path, headers=_auth(owner_id), json=selection_data)
+    assert stale.status_code == 409
+    assert "MOMENT_SCOUT_CONTEXT_STALE" in stale.text
+    assert _count(MemberSideQuest, MemberSideQuest.journey_id == journey_id) == 0
+
+    selection_data["scout_context"] = result["scout_context"]
+    selected = client.post(selection_path, headers=_auth(owner_id), json=selection_data)
+    assert selected.status_code == 201, selected.text
+    assert selected.json()["member_side_quest"]["state"] == "READY"
+    assert selected.json()["member_side_quest"]["destination"]["place_id"] == place.id
+    assert selected.json()["member_side_quest"]["rendezvous"]["activity_id"] == result["rendezvous"]["activity_id"]
+    assert selected.json()["group_presence"]["planned_separation"] is not None
+    collaborator_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(other_id)
+    )
+    assert collaborator_view.status_code == 200, collaborator_view.text
+    assert place.name not in collaborator_view.text
+    with SessionLocal() as session:
+        selected_quest = session.get(MemberSideQuest, selected.json()["member_side_quest"]["id"])
+        assert selected_quest is not None
+        selected_quest.state = "COMPLETED"
+        session.commit()
+    after_private_stop = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout",
+        headers=_auth(owner_id),
+        json={"location_observation_id": observation_id},
+    )
+    assert after_private_stop.status_code == 409
+    assert "MOMENT_SCOUT_RETURN_TO_SHARED_GROUP_FIRST" in after_private_stop.text
+    with SessionLocal() as session:
+        member = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == other_id,
+            )
+        )
+        assert member is not None
+        member.removed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+    removed_member = client.post(
+        f"/api/v1/journeys/{journey_id}/moment-scout",
+        headers=_auth(other_id),
+        json={"location_observation_id": observation_id},
+    )
+    assert removed_member.status_code in {403, 404}
+    assert place.name not in removed_member.text
 
 
 def test_private_lifecycle_is_member_bound_and_leaves_shared_execution_unchanged():

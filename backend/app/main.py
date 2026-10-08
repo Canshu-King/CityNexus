@@ -283,6 +283,7 @@ from app.execution.member_side_quest import (
     start_member_side_quest_return_report,
     transition_member_side_quest,
 )
+from app.execution.moment_scout import build_moment_scout, select_moment_scout_candidate
 from app.execution.group_recovery_followthrough import (
     active_group_recovery_spend,
     build_followthrough_snapshot,
@@ -461,6 +462,8 @@ from app.schemas import (
     LocationObservationRequest,
     GroupPresenceRouteRequest,
     MemberSideQuestCreateRequest,
+    MomentScoutRequest,
+    MomentScoutSelectRequest,
     MemberSideQuestFitPreviewRequest,
     MemberSideQuestNavigateRequest,
     GroupRecoveryRequest,
@@ -9748,6 +9751,160 @@ def create_member_side_quest(
         member=member,
         traveler_id=principal.traveler_id,
         destination_text=payload.destination_text,
+        place_id=payload.place_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+MOMENT_SCOUT_SPLIT_COMMAND = (
+    "Moment Scout selection confirmed by the signed member; rejoin at the next shared stop."
+)
+
+
+def _moment_scout_rendezvous_context(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMemberModel,
+    traveler_id: str,
+) -> dict[str, Any]:
+    now = execution_clock.now().astimezone(timezone.utc)
+    split = planned_separation_for_member(session, journey, member, now=now)
+    if split is not None:
+        return {
+            "split_intent_id": str(split["intent"].id),
+            "target": split["target"],
+            "place": split["place"],
+            "resolution_basis": "CURRENT_R63_SPLIT",
+            "safety_buffer_min": None,
+        }
+
+    stale_own_intent = session.scalar(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_member_id == member.id,
+            JourneyIntent.created_by_traveler_id == traveler_id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        )
+    )
+    if stale_own_intent is not None:
+        raise HTTPException(409, "MOMENT_SCOUT_EXISTING_SPLIT_STALE")
+
+    resolved = _resolve_planned_rendezvous(session, journey, MOMENT_SCOUT_SPLIT_COMMAND)
+    if resolved is None:
+        raise HTTPException(409, "MOMENT_SCOUT_RENDEZVOUS_UNAVAILABLE")
+    target, place, basis, buffer_min = resolved
+    return {
+        "split_intent_id": None,
+        "target": target,
+        "place": place,
+        "resolution_basis": basis,
+        "safety_buffer_min": buffer_min,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout")
+def scout_member_moment(
+    journey_id: UUID,
+    payload: MomentScoutRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Return a private shortlist grounded in the signed-in member's one-time location."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    return build_moment_scout(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        location_observation_id=str(payload.location_observation_id),
+        budget_minutes=payload.budget_minutes,
+        interest=payload.interest,
+        rendezvous_context=rendezvous_context,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout/select", status_code=201)
+def select_member_moment_scout_candidate(
+    journey_id: UUID,
+    payload: MomentScoutSelectRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Revalidate the private scout context before creating the existing R64 side quest."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    current_scout = build_moment_scout(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        location_observation_id=str(payload.location_observation_id),
+        budget_minutes=payload.budget_minutes,
+        interest=payload.interest,
+        rendezvous_context=rendezvous_context,
+    )
+    select_moment_scout_candidate(
+        current_scout=current_scout,
+        scout_context=payload.scout_context,
+        place_id=payload.place_id,
+    )
+    if rendezvous_context["split_intent_id"] is None:
+        _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=MOMENT_SCOUT_SPLIT_COMMAND,
+            action="START",
+            now=execution_clock.now().astimezone(timezone.utc),
+            resolved_rendezvous=(
+                rendezvous_context["target"],
+                rendezvous_context["place"],
+                rendezvous_context["resolution_basis"],
+                rendezvous_context["safety_buffer_min"],
+            ),
+        )
+        session.expire(journey)
+        current_rendezvous = _moment_scout_rendezvous_context(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+        if (
+            current_rendezvous["split_intent_id"] is None
+            or str(current_rendezvous["target"].id)
+            != str(rendezvous_context["target"].id)
+        ):
+            raise HTTPException(409, "MOMENT_SCOUT_RENDEZVOUS_CHANGED_AFTER_SELECTION")
+    create_or_replace_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        destination_text=None,
         place_id=payload.place_id,
     )
     return operator_projection(session, journey, viewer_member_id=member.id)
@@ -20494,6 +20651,7 @@ def _run_planned_separation_command(
     command: str,
     action: str,
     now: datetime,
+    resolved_rendezvous: tuple[Activity, Place, str, int | None] | None = None,
 ) -> dict[str, Any]:
     """Create/end only the authenticated member's temporary split intent."""
     from app.traveler_principal import resolve_journey_member_principal
@@ -20555,7 +20713,7 @@ def _run_planned_separation_command(
     )
     if enrollment is None or not enrollment.enabled or standing is None:
         raise HTTPException(409, "Start the Journey Operator before planning a side trip")
-    rendezvous = _resolve_planned_rendezvous(session, journey, command)
+    rendezvous = resolved_rendezvous or _resolve_planned_rendezvous(session, journey, command)
     if rendezvous is None:
         result = operator_projection(session, journey, viewer_member_id=member.id)
         result["planned_separation_result"] = {

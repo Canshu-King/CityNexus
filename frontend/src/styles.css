@@ -1472,6 +1472,10 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .journey-side-quest-form label { flex-basis: 100%; font-size: 13px; }
 .journey-side-quest-form input, .journey-side-quest-form select { min-width: min(100%, 220px); }
 .journey-side-quest button { justify-self: start; }
+.journey-moment-scout { flex: 1 1 100%; min-width: 0; display: grid; gap: 8px; padding: 11px; border: 1px solid rgba(46, 111, 94, .24); border-radius: 10px; background: rgba(244, 251, 247, .92); }
+.journey-moment-scout label { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; }
+.journey-moment-scout [data-testid="moment-scout-results"] { display: grid; gap: 8px; }
+.journey-moment-scout article { display: grid; gap: 5px; padding: 9px; border: 1px solid rgba(46, 111, 94, .18); border-radius: 8px; background: rgba(255, 255, 255, .8); }
 .journey-group-recovery { display: grid; gap: 7px; margin-top: 8px; padding: 11px; border: 1px solid rgba(51, 102, 132, .2); border-radius: 10px; background: rgba(255, 255, 255, .78); }
 .journey-group-recovery button { justify-self: start; }
 .journey-ahead { display: grid; gap: 5px; padding: 12px; border-radius: 12px; border: 1px solid rgba(116, 93, 57, .24); background: rgba(255, 252, 244, .86); color: #5d431d; }

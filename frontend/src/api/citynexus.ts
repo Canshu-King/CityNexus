@@ -641,6 +641,36 @@ export interface MemberSideQuestProjection {
   cancelled_at: string | null;
 }
 
+export type MomentScoutInterest = "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
+
+export interface MomentScoutCandidate {
+  place_id: string;
+  name: string;
+  category: string;
+  straight_line_distance_m: number;
+  place_provenance: string;
+  opening_state: "UNKNOWN";
+  fit_authority: "UNVERIFIED";
+}
+
+export interface MomentScoutResult {
+  scout_state: "OPTIONS_AVAILABLE" | "NO_GROUNDED_OPTIONS";
+  budget_minutes: 15 | 30 | 45;
+  interest: MomentScoutInterest;
+  observed_at: string;
+  scout_context: string;
+  evidence_boundary: string;
+  rendezvous: {
+    activity_id: string;
+    title: string;
+    place_name: string;
+    scheduled_at: string | null;
+    time_state: "AVAILABLE" | "UNKNOWN" | "PAST";
+    minutes_until: number | null;
+  };
+  candidates: MomentScoutCandidate[];
+}
+
 export interface MemberSideQuestRouteCapture {
   duration_min: number;
   distance_m: number | null;
@@ -1969,6 +1999,50 @@ export const cityNexusApi = {
         body: JSON.stringify({
           destination_text: destination.destinationText,
           place_id: destination.placeId,
+        }),
+      },
+    );
+  },
+
+  scoutMemberMoment(
+    journeyId: string,
+    locationObservationId: string,
+    budgetMinutes: 15 | 30 | 45,
+    interest: MomentScoutInterest,
+  ): Promise<MomentScoutResult> {
+    return requestJson<MomentScoutResult>(
+      "/journeys/" + journeyId + "/moment-scout",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          location_observation_id: locationObservationId,
+          budget_minutes: budgetMinutes,
+          interest,
+        }),
+      },
+    );
+  },
+
+  selectMomentScoutCandidate(
+    journeyId: string,
+    locationObservationId: string,
+    budgetMinutes: 15 | 30 | 45,
+    interest: MomentScoutInterest,
+    scoutContext: string,
+    placeId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/moment-scout/select",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          location_observation_id: locationObservationId,
+          budget_minutes: budgetMinutes,
+          interest,
+          scout_context: scoutContext,
+          place_id: placeId,
         }),
       },
     );

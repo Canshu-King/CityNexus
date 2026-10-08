@@ -4,7 +4,12 @@ import { expect, test, type APIRequestContext, type Browser, type Page } from "@
 const API = `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`;
 
 type Traveler = { id: string; display_name: string };
-type Place = { id: string; name: string; city_code: string };
+type Place = {
+  id: string;
+  name: string;
+  city_code: string;
+  location: { latitude: number; longitude: number };
+};
 
 function travelerToken(travelerId: string): string {
   const secret = process.env.CITYNEXUS_TRAVELER_AUTH_SECRET;
@@ -87,7 +92,7 @@ async function openJourneyPage(
   return { page, close: () => context.close() };
 }
 
-test("R65 previews a private detour and heads back through the shared rendezvous flow", async ({ browser, request }) => {
+test("R66 scouts, explicitly selects, then completes the existing private detour and return flow", async ({ browser, request }) => {
   const resetToken = process.env.CITYNEXUS_DEMO_RESET_TOKEN;
   if (!resetToken) throw new Error("R64 E2E requires CITYNEXUS_DEMO_RESET_TOKEN for its isolated demo database");
   const reset = await api<{ journey_id: string; traveler_id: string; city_code: string }>(request, "/api/v1/demo/reset", {
@@ -131,36 +136,59 @@ test("R65 previews a private detour and heads back through the shared rendezvous
   const privatePlace = places.find((place) => !usedPlaceIds.has(place.id));
   if (!privatePlace) throw new Error("the demo city needs a known Place outside the active shared plan");
 
-  const split = await api<{ planned_separation_result: { outcome: string } }>(request, `/api/v1/journeys/${journeyId}/agent/commands`, {
-    method: "POST",
-    token: ownerToken,
-    data: {
-      command: "I want to go alone for a while and meet at the next shared stop.",
-      requested_autonomy: "PLAN_ONLY",
-    },
-  });
-  expect(split.planned_separation_result.outcome).toBe("PLANNED_SPLIT_CREATED");
   const planRowsBefore = await api<Array<{ id: string }>>(request, `/api/v1/journeys/${journeyId}/plans`);
   const activePlanIdBefore = experience.active_plan.id;
 
   const owner = await openJourneyPage(browser, journeyId, ownerToken, {
-    latitude: 35.0,
-    longitude: 135.0,
+    latitude: privatePlace.location.latitude,
+    longitude: privatePlace.location.longitude,
     accuracy: 10,
   });
   const collaboratorSession = await openJourneyPage(browser, journeyId, collaboratorToken);
   try {
     const ownerCard = owner.page.getByTestId("member-side-quest-card");
-    await expect(ownerCard).toBeVisible();
-    await expect(ownerCard.getByTestId("member-side-quest-rendezvous")).toContainText("Shared rendezvous");
-    await ownerCard.getByTestId("member-side-quest-search").fill(privatePlace.name);
-    await ownerCard.getByTestId("member-side-quest-place").selectOption(privatePlace.id);
-    await expect(ownerCard.getByTestId("member-side-quest-confirmation")).toContainText(
-      `Go to ${privatePlace.name} before rejoining everyone at`,
+    const scoutCard = owner.page.getByTestId("moment-scout");
+    await expect(scoutCard).toBeVisible();
+    await expect(ownerCard).toHaveCount(0);
+    const scoutResponsePromise = owner.page.waitForResponse((response) =>
+      response.request().method() === "POST"
+        && response.url().includes(`/journeys/${journeyId}/moment-scout`)
+        && !response.url().endsWith("/select"),
     );
-    await ownerCard.getByTestId("member-side-quest-save").click();
+    await scoutCard.getByTestId("moment-scout-submit").click();
+    const scoutResponse = await scoutResponsePromise;
+    expect(scoutResponse.ok()).toBeTruthy();
+    const scoutResult = await scoutResponse.json() as {
+      scout_state: string;
+      candidates: Array<{ place_id: string; name: string; straight_line_distance_m: number; place_provenance: string }>;
+      rendezvous: {
+        place_name: string;
+        scheduled_at: string | null;
+        time_state: "AVAILABLE" | "UNKNOWN" | "PAST";
+        minutes_until: number | null;
+      };
+    };
+    expect(scoutResult.scout_state).toBe("OPTIONS_AVAILABLE");
+    expect(scoutResult.candidates.length).toBeGreaterThan(0);
+    expect(scoutResult.candidates.length).toBeLessThanOrEqual(3);
+    expect(JSON.stringify(scoutResult)).not.toContain("latitude");
+    expect(JSON.stringify(scoutResult)).not.toContain("longitude");
+    expect(scoutResult.rendezvous.time_state).not.toBe("PAST");
+    await expect(scoutCard.getByTestId("moment-scout-results")).toContainText(scoutResult.rendezvous.place_name);
+    if (scoutResult.rendezvous.time_state === "UNKNOWN") {
+      await expect(scoutCard.getByTestId("moment-scout-rendezvous-time-warning")).toContainText("time is unknown");
+    } else if ((scoutResult.rendezvous.minutes_until ?? 0) < 30) {
+      await expect(scoutCard.getByTestId("moment-scout-rendezvous-time-warning")).toContainText("less than your 30-minute preference");
+    }
+    const privateStopName = scoutResult.candidates[0].name;
+    await scoutCard.getByTestId("moment-scout-choose").first().click();
+    await expect(scoutCard.getByTestId("moment-scout-confirmation")).toContainText(
+      `Go to ${privateStopName}, then rejoin at`,
+    );
+    await scoutCard.getByTestId("moment-scout-confirm").click();
+    await expect(ownerCard).toBeVisible();
     await expect(ownerCard).toHaveAttribute("data-state", "READY");
-    await expect(ownerCard.getByTestId("member-side-quest-owner-state")).toContainText(privatePlace.name);
+    await expect(ownerCard.getByTestId("member-side-quest-owner-state")).toContainText(privateStopName);
     await expect(ownerCard).toContainText("shared Journey");
 
     await ownerCard.getByTestId("member-side-quest-fit-preview").click();
@@ -185,7 +213,7 @@ test("R65 previews a private detour and heads back through the shared rendezvous
     const safeAway = collaboratorSession.page.getByTestId("journey-member-personal-stop");
     await expect(safeAway).toHaveAttribute("data-state", "PLANNED");
     await expect(safeAway).toContainText("destination visible only to them");
-    await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
+    await expect(collaboratorSession.page.locator("body")).not.toContainText(privateStopName);
     await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
 
     await ownerCard.getByTestId("member-side-quest-start").click();
@@ -202,12 +230,13 @@ test("R65 previews a private detour and heads back through the shared rendezvous
     await expect(ownerCard.getByTestId("member-side-quest-return-emphasis")).toContainText("return to");
     await expect(ownerCard.getByTestId("member-side-quest-return-state")).toContainText("Return status unknown");
     await expect(ownerCard).toContainText("shared Journey is unchanged");
+    await expect(owner.page.getByTestId("moment-scout")).toHaveCount(0);
 
     await collaboratorSession.page.reload();
     const safeReturning = collaboratorSession.page.getByTestId("journey-member-personal-stop");
     await expect(safeReturning).toHaveAttribute("data-state", "FINISHED_RETURN_UNCONFIRMED");
     await expect(safeReturning).toContainText("return has not been confirmed");
-    await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
+    await expect(collaboratorSession.page.locator("body")).not.toContainText(privateStopName);
     await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
     await expect(collaboratorSession.page.locator("body")).not.toContainText("You are physically rejoined");
 
@@ -220,7 +249,7 @@ test("R65 previews a private detour and heads back through the shared rendezvous
     const safeHeadedBack = collaboratorSession.page.getByTestId("journey-member-personal-stop");
     await expect(safeHeadedBack).toHaveAttribute("data-state", "RETURN_STARTED_REPORTED");
     await expect(safeHeadedBack).toContainText("has reported heading back (location and reunion are unverified)");
-    await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
+    await expect(collaboratorSession.page.locator("body")).not.toContainText(privateStopName);
     await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
 
     const finalExperience = await api<{ active_plan: { id: string } }>(request, `/api/v1/journeys/${journeyId}/experience`);
