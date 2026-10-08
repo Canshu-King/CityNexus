@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
+import { CnxSelect } from "../../components/CnxSelect";
 import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failureAttribution";
 import type { RawFacts } from "../../lib/rawFacts";
 import { formatV8Date } from "../../lib/v8Formatting";
@@ -830,17 +831,15 @@ export function AccessPanel({
         <h3 className="cn-access-h">{say("access.inviteFormHeading")}</h3>
         <label className="cn-access-field">
           <span className="cn-access-picker-label">{say("access.inviteFormPick")}</span>
-          <select
+          <CnxSelect
             data-testid="access-invite-visibility"
             value={pickVisibility}
-            onChange={(event) => setPickVisibility(event.target.value)}
-          >
-            {VISIBILITY_LADDER.map((entry) => (
-              <option key={entry.level} value={entry.level}>
-                {say(entry.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(next) => setPickVisibility(next)}
+            options={VISIBILITY_LADDER.map((entry) => ({
+              value: entry.level,
+              label: say(entry.labelKey),
+            }))}
+          />
         </label>
         <label className="cn-access-field">
           <span className="cn-access-picker-label">{say("access.inviteFormExpiry")}</span>

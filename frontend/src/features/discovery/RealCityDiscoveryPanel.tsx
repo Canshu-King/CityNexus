@@ -5,6 +5,7 @@ import { namedCodeIn, type RawFacts } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { OriginResponseUnusableError } from "../../lib/failureAttribution";
 import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
+import { CnxSelect } from "../../components/CnxSelect";
 import { PlaceProvenance } from "../../components/PlaceProvenance";
 /* ORD-0435: the batch bar and the per-card tick live in a sheet this panel imports, not in
  * `src/styles.css`, which is a hot file under this order. See the header of that file for why the
@@ -375,7 +376,17 @@ export function RealCityDiscoveryPanel({
           <label htmlFor="v13-discovery-goal">{t("discovery.intent")}</label>
           <textarea id="v13-discovery-goal" data-testid="v13-discovery-goal" value={goal} onChange={(event) => setGoal(event.target.value)} />
           <div className="v8-agent-toolbar">
-            <label>{t("discovery.evidenceMode")} <select aria-label={t("discovery.evidenceMode")} value={mode} onChange={(event) => setMode(event.target.value as typeof mode)}>{supportsTianjinReplay && <option value="captured_replay">{t("discovery.sealedRealReplay")}</option>}<option value="live">{t("discovery.liveProviders")}</option>{supportsTianjinReplay && <option value="replay">{t("discovery.syntheticDemo")}</option>}</select></label>
+            <label>{t("discovery.evidenceMode")} <CnxSelect
+              ariaLabel={t("discovery.evidenceMode")}
+              data-testid="v13-discovery-mode"
+              value={mode}
+              onChange={(next) => setMode(next as typeof mode)}
+              options={[
+                ...(supportsTianjinReplay ? [{ value: "captured_replay", label: t("discovery.sealedRealReplay") }] : []),
+                { value: "live", label: t("discovery.liveProviders") },
+                ...(supportsTianjinReplay ? [{ value: "replay", label: t("discovery.syntheticDemo") }] : []),
+              ]}
+            /></label>
             <button className="v8-primary" data-testid="v13-discover-submit" disabled={busy || goal.trim().length < 3} onClick={() => void runDiscovery()}>{busy ? t("discovery.composing") : t("discovery.discoverCompose")}</button>
           </div>
           {!supportsTianjinReplay && <p className="v8-sheet-note">{t("discovery.genericCityLiveNote")}</p>}
