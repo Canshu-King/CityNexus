@@ -1160,7 +1160,9 @@ def confirm_reservation_draft(
             arrival_anchor_json=_json({"at": journey.start_at, "location": "Arrival"}),
             departure_anchor_json=_json({"at": journey.end_at, "location": "Departure"}),
             party_size=1,
-            occupancy_json=_json({"adults": 1}),
+            # An imported reservation says nothing about who travels, so this records no
+            # occupancy rather than asserting a one-adult trip.
+            occupancy_json=_json({}),
             stay_budget_amount_minor=0,
             stay_budget_currency=journey.budget_currency,
             # An imported reservation says nothing about a lodging budget, so this row records

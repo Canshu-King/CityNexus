@@ -171,7 +171,10 @@ def _context(session: Session, journey: Journey) -> JourneyTripContext:
             arrival_anchor_json=_json({"at": journey.start_at, "location": "Arrival"}),
             departure_anchor_json=_json({"at": journey.end_at, "location": "Departure"}),
             party_size=1,
-            occupancy_json=_json({"adults": 1}),
+            # Nobody was asked how many adults travel, so this says so rather than asserting a
+            # one-adult trip. An empty object is the honest "no occupancy was recorded" the
+            # `stay_budget` on the very next line already uses.
+            occupancy_json=_json({}),
             stay_budget_amount_minor=0,
             stay_budget_currency=journey.budget_currency,
             # This row was not created by a traveller answering a question, so it declares
