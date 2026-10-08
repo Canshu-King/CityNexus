@@ -25,6 +25,10 @@ const en: Dict = {
   "mobile.copilot": "Copilot",
   "mobile.wallet": "Wallet",
 
+  // ── Offline hint banner ──
+  "offline.banner": "Cannot connect to network · please check your connection",
+  "offline.dismiss": "Dismiss",
+
   // ── Shell: loading / error ──
   "shell.preparing": "Preparing a captured city weekend…",
   "shell.preparingSub": "Anchors · stays · mobility facts · feasibility",
@@ -711,6 +715,10 @@ const zhCN: Dict = {
   "mobile.today": "今天",
   "mobile.copilot": "Copilot",
   "mobile.wallet": "钱包",
+
+  // ── 离线提示横幅 ──
+  "offline.banner": "无法联网，请检查网络连接",
+  "offline.dismiss": "关闭",
 
   // ── 外壳：加载 / 错误 ──
   "shell.preparing": "正在准备城市周末行程…",

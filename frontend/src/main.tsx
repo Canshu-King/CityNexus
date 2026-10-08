@@ -39,6 +39,8 @@ import { LocaleProvider } from "./i18n/LocaleContext";
 import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
 import "./design-tokens.css";
+import { OfflineHint } from "./components/OfflineHint";
+import "./components/offline-hint.css";
 
 /* Resolve the theme root contract before the first paint.  The stylesheets key their dark
    tables off `:root[data-theme]`, so the attribute must exist by the time anything is
@@ -1665,7 +1667,10 @@ function App() {
   if (path.startsWith("/legacy")) return <LegacyApp />;
   return (
     <ProductErrorBoundary>
-      <V8Experience />
+      <LocaleProvider>
+        <OfflineHint />
+        <V8Experience />
+      </LocaleProvider>
     </ProductErrorBoundary>
   );
 }
