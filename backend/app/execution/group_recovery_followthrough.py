@@ -220,6 +220,7 @@ def _durable_member_arrival_receipts(
         if (
             member_id not in required_ids
             or member is None
+            or str(item.get("journey_id") or "") != str(journey.id)
             or str(item.get("incident_key") or "") != incident_key
             or str(item.get("applied_plan_version_id") or "") != plan_id
             or str(item.get("recovery_epoch_id") or "") != epoch_id
@@ -490,6 +491,7 @@ def register_execution_arrival(
         return False
     confirmed_at = str(truth_record.get("captured_at") or datetime.now(timezone.utc).isoformat())
     receipt = {
+        "journey_id": journey.id,
         "incident_key": snapshot.get("incident_key"),
         "applied_proposal_id": snapshot.get("applied_proposal_id"),
         "applied_plan_version_id": snapshot.get("applied_plan_version_id"),
