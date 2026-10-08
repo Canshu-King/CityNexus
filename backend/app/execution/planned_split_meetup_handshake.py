@@ -415,6 +415,11 @@ def meetup_handshake_projection(
     ).all()
     owner_payload = None
     viewer_context = _current_context(session, journey, viewer, now=current)
+    # A split can be active before its new side quest reaches a terminal state.
+    # Do not revive the last split's successful meetup in that window.
+    active_viewer_split = planned_separation_for_member(
+        session, journey, viewer, now=current
+    )
     # A completed handshake belongs to its old split/quest. If this member
     # starts a fresh planned split, the new meetup must have a fresh action
     # entry point rather than inheriting "PEER_ACKNOWLEDGED" from last time.
@@ -435,9 +440,9 @@ def meetup_handshake_projection(
             None,
         )
     else:
-        # After the split ends, retain the last result on refresh as truthful
-        # history, until a new current split supersedes the owner foreground.
-        own = owner_rows[0] if owner_rows else None
+        # After the split ends, retain the last result as history. An active
+        # new split (even one without a finished side quest) takes precedence.
+        own = owner_rows[0] if owner_rows and active_viewer_split is None else None
     if own is not None:
         display_state = str(own.state)
         owner = session.get(JourneyMember, str(own.owner_member_id))
