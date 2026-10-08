@@ -129,7 +129,7 @@ test("R64 executes a private stop through real writes and keeps the collaborator
 
     await collaboratorSession.page.reload();
     const safeAway = collaboratorSession.page.getByTestId("journey-member-personal-stop");
-    await expect(safeAway).toHaveAttribute("data-state", "AWAY");
+    await expect(safeAway).toHaveAttribute("data-state", "PLANNED");
     await expect(safeAway).toContainText("destination visible only to them");
     await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
     await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
@@ -147,8 +147,8 @@ test("R64 executes a private stop through real writes and keeps the collaborator
 
     await collaboratorSession.page.reload();
     const safeReturning = collaboratorSession.page.getByTestId("journey-member-personal-stop");
-    await expect(safeReturning).toHaveAttribute("data-state", "RETURNING");
-    await expect(safeReturning).toContainText("returning to the shared rendezvous");
+    await expect(safeReturning).toHaveAttribute("data-state", "FINISHED_RETURN_UNCONFIRMED");
+    await expect(safeReturning).toContainText("return has not been confirmed");
     await expect(collaboratorSession.page.locator("body")).not.toContainText(privatePlace.name);
     await expect(collaboratorSession.page.getByTestId("member-side-quest-card")).toHaveCount(0);
     await expect(collaboratorSession.page.locator("body")).not.toContainText("You are physically rejoined");
