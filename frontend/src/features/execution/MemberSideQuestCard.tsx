@@ -6,6 +6,8 @@ import {
   type MemberSideQuestFitPreview,
   type MemberSideQuestNavigationResult,
   type MemberSideQuestNavigationTarget,
+  type MemberPlaceInvitationPreview,
+  type MemberPlaceInvitationProjection,
   type MemberSideQuestProjection,
   type PlaceRecord,
 } from "../../api/citynexus";
@@ -53,6 +55,7 @@ export function MemberSideQuestCard({
   sideQuest,
   rendezvous,
   meetupHandshake,
+  placeInvitations,
   currentSplitActive = true,
   onRefreshLocation,
   onHeadBack,
@@ -62,6 +65,7 @@ export function MemberSideQuestCard({
   sideQuest: MemberSideQuestProjection | null;
   rendezvous: Rendezvous | null;
   meetupHandshake?: JourneyGroupPresenceProjection["meetup_handshake"];
+  placeInvitations?: MemberPlaceInvitationProjection | null;
   currentSplitActive?: boolean;
   onRefreshLocation?: () => Promise<string | null>;
   onHeadBack?: () => Promise<GroupRendezvousRouteResult | null>;
@@ -84,6 +88,9 @@ export function MemberSideQuestCard({
   const [privateRouteReceipt, setPrivateRouteReceipt] = useState<{ key: string; value: MemberSideQuestNavigationResult } | null>(null);
   const [navigationConsent, setNavigationConsent] = useState<NavigationConsent | null>(null);
   const [navigationBusy, setNavigationBusy] = useState(false);
+  const [invitationPreview, setInvitationPreview] = useState<MemberPlaceInvitationPreview | null>(null);
+  const [invitationBusy, setInvitationBusy] = useState(false);
+  const [invitationMessage, setInvitationMessage] = useState<string | null>(null);
 
   // One-time live routing guidance must not stay on screen indefinitely.
   // These timers only expire a displayed snapshot; they do not query the
@@ -153,6 +160,19 @@ export function MemberSideQuestCard({
     : state === "COMPLETED" || state === "CANCELLED"
       ? "SHARED_RENDEZVOUS"
       : null;
+  const canSharePlace = Boolean(
+    currentSplitActive
+    && sideQuest
+    && ["READY", "EN_ROUTE", "ARRIVED"].includes(sideQuest.state)
+    && sideQuest.destination.authority === "EXACT_KNOWN_PLACE"
+    && sideQuest.destination.place_id,
+  );
+  const validInvitationPreview = invitationPreview?.side_quest_id === sideQuest?.id
+    && invitationPreview.place.place_id === sideQuest?.destination.place_id
+    ? invitationPreview
+    : null;
+  const currentSentInvitations = (placeInvitations?.sent ?? [])
+    .filter((invitation) => invitation.side_quest_id === sideQuest?.id);
 
   useEffect(() => {
     setNavigationConsent((current) => current?.key === routeContextKey ? current : null);
@@ -231,6 +251,63 @@ export function MemberSideQuestCard({
       await onUpdated();
     } finally {
       setNavigationBusy(false);
+    }
+  };
+
+  const previewPlaceSharing = async () => {
+    if (!sideQuest || !canSharePlace || invitationBusy) return;
+    setInvitationBusy(true);
+    setInvitationMessage(null);
+    try {
+      const preview = await cityNexusApi.getMemberPlaceInvitationPreview(journeyId, sideQuest.id);
+      setInvitationPreview(preview);
+    } catch {
+      setInvitationMessage(zh
+        ? "地点或共同会合安排刚刚变化；刷新后再检查可分享内容。"
+        : "The Place or shared rendezvous changed. Refresh and review what can be shared.");
+      await onUpdated();
+    } finally {
+      setInvitationBusy(false);
+    }
+  };
+
+  const confirmPlaceSharing = async () => {
+    if (!sideQuest || !validInvitationPreview || invitationBusy) return;
+    setInvitationBusy(true);
+    setInvitationMessage(null);
+    try {
+      await cityNexusApi.createMemberPlaceInvitation(
+        journeyId,
+        sideQuest.id,
+        validInvitationPreview.audience_snapshot,
+      );
+      setInvitationPreview(null);
+      setInvitationMessage(zh
+        ? `已向当前 ${validInvitationPreview.recipient_count} 位同行者分享公开地点；邀请 15 分钟后失效。`
+        : `The public Place was shared with ${validInvitationPreview.recipient_count} current companions. The invitation expires in 15 minutes.`);
+      await onUpdated();
+    } catch {
+      setInvitationMessage(zh
+        ? "无法发送邀请；来源支线或同行者名单可能已变化。刷新后可重新确认。"
+        : "The invitation could not be sent; the source stop or companion list may have changed. Refresh and review again.");
+      await onUpdated();
+    } finally {
+      setInvitationBusy(false);
+    }
+  };
+
+  const withdrawPlaceInvitation = async (invitationId: string) => {
+    if (invitationBusy) return;
+    setInvitationBusy(true);
+    setInvitationMessage(null);
+    try {
+      await cityNexusApi.withdrawMemberPlaceInvitation(journeyId, invitationId);
+      await onUpdated();
+    } catch {
+      setInvitationMessage(zh ? "邀请状态刚刚变化；刷新后查看最新状态。" : "The invitation changed state. Refresh to see its current status.");
+      await onUpdated();
+    } finally {
+      setInvitationBusy(false);
     }
   };
 
@@ -624,6 +701,94 @@ export function MemberSideQuestCard({
             {zh ? "再安排一个私人停留" : "Plan another private stop"}
           </button>
         </div>
+      )}
+      {(canSharePlace || currentSentInvitations.length > 0) && (
+        <section className="journey-member-place-sharing" data-testid="member-place-sharing">
+          <span className="v8-kicker">{zh ? "与同行者分享公开地点" : "Share a public Place with companions"}</span>
+          {canSharePlace && !currentSentInvitations.some((invitation) => invitation.state === "OPEN") && (
+            <button
+              type="button"
+              data-testid="member-place-invitation-review"
+              disabled={invitationBusy}
+              onClick={() => void previewPlaceSharing()}
+            >
+              {invitationBusy
+                ? (zh ? "正在核对地点…" : "Checking the Place…")
+                : (zh ? "查看分享内容…" : "Review what will be shared…")}
+            </button>
+          )}
+          {validInvitationPreview && (
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="member-place-invitation-preview-title"
+              data-testid="member-place-invitation-preview"
+            >
+              <strong id="member-place-invitation-preview-title">
+                {zh ? `向 ${validInvitationPreview.recipient_count} 位当前同行者分享「${validInvitationPreview.place.name}」？` : `Share “${validInvitationPreview.place.name}” with ${validInvitationPreview.recipient_count} current companions?`}
+              </strong>
+              <small>
+                {zh
+                  ? `将分享地点名称和公开精确地图点（${validInvitationPreview.place.latitude.toFixed(5)}, ${validInvitationPreview.place.longitude.toFixed(5)}）。邀请有效 ${validInvitationPreview.expires_in_minutes} 分钟，只发给当前有效成员。`
+                  : `This shares the Place name and its exact public pin (${validInvitationPreview.place.latitude.toFixed(5)}, ${validInvitationPreview.place.longitude.toFixed(5)}). The invitation lasts ${validInvitationPreview.expires_in_minutes} minutes and goes only to current in-force members.`}
+              </small>
+              <small>
+                {zh
+                  ? `地点来源：${validInvitationPreview.place.source}。共同会合点：「${validInvitationPreview.rendezvous.title}」· ${validInvitationPreview.rendezvous.place_name}${validInvitationPreview.rendezvous.scheduled_at ? ` · ${new Date(validInvitationPreview.rendezvous.scheduled_at).toLocaleString(locale)}` : " · 时间未知"}。`
+                  : `Place source: ${validInvitationPreview.place.source}. Shared rendezvous: ${validInvitationPreview.rendezvous.title} at ${validInvitationPreview.rendezvous.place_name}${validInvitationPreview.rendezvous.scheduled_at ? ` · ${new Date(validInvitationPreview.rendezvous.scheduled_at).toLocaleString(locale)}` : " · time unknown"}.`}
+              </small>
+              <small>
+                {zh
+                  ? "不会分享你的设备位置、原始搜索坐标、私人备注、路线或浏览历史。接受邀请不会更改共享行程，也不会自动打开地图。"
+                  : "Your device location, original search coordinates, private note, route, and browsing history are not shared. Accepting will not change the shared Journey or open a map automatically."}
+              </small>
+              <div className="journey-side-quest-actions">
+                {validInvitationPreview.recipient_count > 0 ? (
+                  <button
+                    type="button"
+                    data-testid="member-place-invitation-confirm"
+                    disabled={invitationBusy}
+                    onClick={() => void confirmPlaceSharing()}
+                  >
+                    {invitationBusy
+                      ? (zh ? "正在发送…" : "Sharing…")
+                      : (zh ? "确认分享这个公开地点" : "Confirm sharing this public Place")}
+                  </button>
+                ) : (
+                  <small data-testid="member-place-invitation-no-companions">
+                    {zh ? "当前没有可邀请的同行者。行程只有你一位有效成员。" : "No companions are available to invite. You are the only current in-force member."}
+                  </small>
+                )}
+                <button type="button" disabled={invitationBusy} onClick={() => setInvitationPreview(null)}>
+                  {zh ? "取消" : "Cancel"}
+                </button>
+              </div>
+            </section>
+          )}
+          {currentSentInvitations.map((invitation) => (
+            <article key={invitation.invitation_id} data-testid="member-place-invitation-sent" data-state={invitation.state}>
+              <strong>
+                {zh ? `「${invitation.place.name}」邀请 · ${invitation.state === "OPEN" ? "有效" : invitation.state === "WITHDRAWN" ? "已撤回" : invitation.state === "EXPIRED" ? "已过期" : "已失效"}` : `Invitation for ${invitation.place.name} · ${invitation.state.toLowerCase()}`}
+              </strong>
+              {invitation.recipients.map((recipient) => (
+                <small key={recipient.member_id}>
+                  {recipient.display_name}: {recipient.state}
+                </small>
+              ))}
+              {invitation.state === "OPEN" && (
+                <button
+                  type="button"
+                  data-testid="member-place-invitation-withdraw"
+                  disabled={invitationBusy}
+                  onClick={() => void withdrawPlaceInvitation(invitation.invitation_id)}
+                >
+                  {zh ? "撤回尚未接受的邀请" : "Withdraw invitations not yet accepted"}
+                </button>
+              )}
+            </article>
+          ))}
+          {invitationMessage && <small role="status" data-testid="member-place-sharing-message">{invitationMessage}</small>}
+        </section>
       )}
       <MemberMeetupHandshakePanel
         journeyId={journeyId}

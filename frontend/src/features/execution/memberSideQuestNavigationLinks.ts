@@ -1,6 +1,8 @@
 import type { MemberSideQuestNavigationTarget } from "../../api/citynexus";
 
-function exactWgs84Coordinates(target: MemberSideQuestNavigationTarget): [number, number] {
+type ExactMapPin = Pick<MemberSideQuestNavigationTarget, "latitude" | "longitude" | "coordinate_system">;
+
+function exactWgs84Coordinates(target: ExactMapPin): [number, number] {
   const { latitude, longitude } = target;
   if (
     target.coordinate_system.trim().toUpperCase() !== "WGS84"
@@ -33,7 +35,7 @@ export function buildGoogleWalkingDirectionsUrl(target: MemberSideQuestNavigatio
   return url.toString();
 }
 
-export function buildOpenStreetMapPinUrl(target: MemberSideQuestNavigationTarget): string {
+export function buildOpenStreetMapPinUrl(target: ExactMapPin): string {
   const [latitude, longitude] = exactWgs84Coordinates(target);
   const zoom = 18;
   const url = new URL("https://www.openstreetmap.org/");

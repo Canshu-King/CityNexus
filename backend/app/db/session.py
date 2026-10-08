@@ -736,6 +736,18 @@ def ensure_schema(target_engine: Engine = engine) -> None:
         if target_engine.dialect.name == "sqlite":
             _reconcile_real_place_candidate_scope(connection)
             _backfill_legacy_hydration_rows(connection)
+            invitation_columns = {
+                row[1] for row in connection.exec_driver_sql(
+                    "PRAGMA table_info(member_place_invitations)"
+                )
+            }
+            if invitation_columns and "disclosure_snapshot_json" not in invitation_columns:
+                # Keep the exact public Place and rendezvous values the inviter
+                # reviewed. Legacy rows without a snapshot fail closed as stale.
+                connection.exec_driver_sql(
+                    "ALTER TABLE member_place_invitations "
+                    "ADD COLUMN disclosure_snapshot_json TEXT NOT NULL DEFAULT '{}'"
+                )
             journey_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journeys)")
             }

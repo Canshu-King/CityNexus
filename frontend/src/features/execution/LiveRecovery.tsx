@@ -35,6 +35,7 @@ import {
 } from "../../api/v12Authoritative";
 import { MemberSideQuestCard } from "./MemberSideQuestCard";
 import { MemberMeetupHandshakePanel } from "./MemberMeetupHandshakePanel";
+import { MemberPlaceInvitationPanel } from "./MemberPlaceInvitationPanel";
 import { MomentScoutCard } from "./MomentScoutCard";
 
 type Proposal = {
@@ -1094,6 +1095,11 @@ export function LiveRecovery({
               onUpdated={loadOperator}
               showOwner={false}
             />
+            <MemberPlaceInvitationPanel
+              journeyId={journeyId}
+              projection={operator?.member_place_invitations}
+              onUpdated={loadOperator}
+            />
             <strong>
               {groupPresence.state === "PLANNED_SPLIT_ON_TRACK"
                 ? (zh ? "有人按计划暂时分开行动；当前路线仍能赶上会合点。" : "A traveller is on a planned side trip and the current route still reaches the rendezvous in time.")
@@ -1156,6 +1162,7 @@ export function LiveRecovery({
                         sideQuest={operator?.member_side_quest ?? null}
                         rendezvous={member.rendezvous}
                         meetupHandshake={groupPresence.meetup_handshake ?? null}
+                        placeInvitations={operator?.member_place_invitations}
                         currentSplitActive
                         onRefreshLocation={onRefreshLocation}
                         onHeadBack={routeAfterPrivateStop}
@@ -1448,6 +1455,7 @@ export function LiveRecovery({
             sideQuest={operator.member_side_quest}
             rendezvous={operator.member_side_quest.rendezvous}
             meetupHandshake={groupPresence?.meetup_handshake ?? null}
+            placeInvitations={operator?.member_place_invitations}
             currentSplitActive={false}
             onUpdated={loadOperator}
           />

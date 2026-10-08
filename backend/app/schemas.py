@@ -464,6 +464,24 @@ class MemberSideQuestCreateRequest(BaseModel):
     place_id: str | None = Field(default=None, min_length=1, max_length=128)
 
 
+class MemberPlaceInvitationCreateRequest(BaseModel):
+    """The owner must explicitly confirm disclosure of one exact public Place."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    confirm_public_place_sharing: Literal[True]
+    audience_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+
+
+class MemberPlaceInvitationDecisionRequest(BaseModel):
+    """An addressed companion must make an explicit accept/decline decision."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+    confirm_exact_public_place: Literal[True] | None = None
+
+
 class MomentScoutRequest(BaseModel):
     """One-time owner-only discovery request; location is always server-bound."""
 

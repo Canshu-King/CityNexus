@@ -25,6 +25,8 @@ from app.db.models import (
     JourneyIntent,
     JourneyMember,
     LocationObservation,
+    MemberPlaceInvitation,
+    MemberPlaceInvitationRecipient,
     MemberLiveMomentScoutReceipt,
     MemberSideQuest,
     MemberSideQuestReturnReport,
@@ -2148,3 +2150,715 @@ def test_r69_expired_request_cannot_be_acknowledged_and_can_be_resent():
         assert expired is not None and expired.state == "EXPIRED"
         pending = session.get(PlannedSplitMeetupHandshake, resent_id)
         assert pending is not None and pending.state == "PENDING"
+
+
+def _create_owner_invitation(journey_id: str, owner_id: str) -> tuple[str, str]:
+    _start_split(journey_id, owner_id)
+    place = _private_place(journey_id)
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(owner_id),
+        json={"place_id": place.id},
+    )
+    assert created.status_code == 201, created.text
+    quest = created.json()["member_side_quest"]
+    assert quest["destination"]["authority"] == "EXACT_KNOWN_PLACE"
+    return str(quest["id"]), str(place.id)
+
+
+def test_r70_place_invitation_is_member_scoped_and_accept_creates_own_stop():
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    now = datetime.now(timezone.utc).isoformat()
+    third_id = str(uuid4())
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        session.add(Traveler(
+            id=third_id,
+            display_name="R70第三位同行者",
+            email=None,
+            locale="zh-CN",
+            timezone="UTC",
+            created_at=now,
+            updated_at=now,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            traveler_id=third_id,
+            role="COLLABORATOR",
+            invited_by=owner_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        ))
+        active_plan_before = str(journey.active_plan_version_id)
+        session.commit()
+
+    side_quest_id, place_id = _create_owner_invitation(journey_id, owner_id)
+    rendezvous_commitment_id = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        owner_quest = session.get(MemberSideQuest, side_quest_id)
+        assert owner_quest is not None
+        session.add(Commitment(
+            id=rendezvous_commitment_id,
+            journey_id=journey_id,
+            activity_id=owner_quest.rendezvous_activity_id,
+            kind="APPOINTMENT",
+            level="C3_Guaranteed",
+            status="ACTIVE",
+            monetary_value_minor=0,
+            currency="CNY",
+            external_ref="R70-PROTECTED-RENDEZVOUS",
+            policy_json='{"owner":"R70 acceptance regression"}',
+            created_at=now,
+            updated_at=now,
+        ))
+        session.commit()
+    before_invitation = client.get(
+        f"/api/v1/journeys/{journey_id}/operator",
+        headers=_auth(recipient_id),
+    ).json()
+    assert before_invitation["member_side_quest"] is None
+    assert before_invitation["member_place_invitations"]["incoming"] == []
+    with SessionLocal() as session:
+        private_place = session.get(Place, place_id)
+        assert private_place is not None
+        private_place_name = private_place.name
+    assert private_place_name not in json.dumps(before_invitation, ensure_ascii=False)
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    assert preview.json()["recipient_count"] == 2
+    assert preview.json()["place"]["place_id"] == place_id
+    assert "device location" in preview.json()["disclosure"]
+
+    late_id = str(uuid4())
+    late_now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        session.add(Traveler(
+            id=late_id,
+            display_name="R70稍后加入者",
+            email=None,
+            locale="zh-CN",
+            timezone="UTC",
+            created_at=late_now,
+            updated_at=late_now,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            traveler_id=late_id,
+            role="COLLABORATOR",
+            invited_by=owner_id,
+            expires_at=None,
+            joined_at=late_now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=late_now,
+            updated_at=late_now,
+        ))
+        session.commit()
+    stale_audience = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert stale_audience.status_code == 409
+    assert stale_audience.json()["error"]["message"] == "PLACE_INVITATION_AUDIENCE_CHANGED"
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    assert preview.json()["recipient_count"] == 3
+
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    owner_projection = sent.json()["member_place_invitations"]
+    invitation = owner_projection["sent"][0]
+    invitation_id = invitation["invitation_id"]
+    assert len(invitation["recipients"]) == 3
+
+    # A member who joins after the owner's explicit preview is never silently
+    # added to the invitation's fixed audience.
+    post_send_id = str(uuid4())
+    post_send_now = datetime.now(timezone.utc).isoformat()
+    with SessionLocal() as session:
+        session.add(Traveler(
+            id=post_send_id,
+            display_name="R70发送后加入者",
+            email=None,
+            locale="zh-CN",
+            timezone="UTC",
+            created_at=post_send_now,
+            updated_at=post_send_now,
+        ))
+        session.flush()
+        session.add(JourneyMember(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            traveler_id=post_send_id,
+            role="COLLABORATOR",
+            invited_by=owner_id,
+            expires_at=None,
+            joined_at=post_send_now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=post_send_now,
+            updated_at=post_send_now,
+        ))
+        session.commit()
+    post_send_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(post_send_id)
+    ).json()["member_place_invitations"]
+    assert post_send_projection["incoming"] == []
+    not_invited = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(post_send_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert not_invited.status_code == 404
+
+    for traveler_id in (recipient_id, third_id, late_id):
+        projection = client.get(
+            f"/api/v1/journeys/{journey_id}/operator",
+            headers=_auth(traveler_id),
+        ).json()["member_place_invitations"]
+        assert [row["invitation_id"] for row in projection["incoming"]] == [invitation_id]
+        assert "recipients" not in projection["incoming"][0]
+        assert projection["incoming"][0]["place"]["place_id"] == place_id
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        before_side_effects = {
+            "active_plan_version_id": str(journey.active_plan_version_id),
+            "current_activity_id": journey.current_activity_id,
+            "activities": session.scalar(select(func.count()).select_from(Activity)),
+            "location_observations": session.scalar(select(func.count()).select_from(LocationObservation)),
+            "agent_runs": session.scalar(select(func.count()).select_from(AgentRun)),
+            "guardian_pulses": session.scalar(select(func.count()).select_from(GuardianPulse)),
+        }
+        protected_before = session.get(Commitment, rendezvous_commitment_id)
+        assert protected_before is not None
+        protected_snapshot = (
+            protected_before.activity_id,
+            protected_before.level,
+            protected_before.status,
+            protected_before.policy_json,
+        )
+    accepted = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert accepted.status_code == 200, accepted.text
+    own_quest = accepted.json()["member_side_quest"]
+    assert own_quest["destination"]["place_id"] == place_id
+    assert own_quest["state"] == "READY"
+    assert accepted.json()["member_place_invitations"]["incoming"] == []
+    assert accepted.json()["member_place_invitations"]["sent"] == []
+    assert accepted.json()["group_presence"]["planned_separation"]["members"]
+    navigation = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{own_quest['id']}/navigation-targets",
+        headers=_auth(recipient_id),
+    )
+    assert navigation.status_code == 200, navigation.text
+    assert navigation.json()["target"]["kind"] == "PRIVATE_STOP"
+    assert navigation.json()["target"]["place_id"] == place_id
+    assert navigation.json()["target"]["coordinate_system"] == "WGS84"
+    fit = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{own_quest['id']}/fit-preview",
+        headers=_auth(recipient_id),
+        json={"location_observation_id": None, "dwell_minutes": 20, "requested_mode": "WALK"},
+    )
+    assert fit.status_code == 200, fit.text
+    assert fit.json()["state"] == "UNKNOWN"
+    assert fit.json()["reason_code"] == "CURRENT_LOCATION_UNAVAILABLE"
+    assert fit.json()["origin_basis"]["outbound"] is None
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        assert str(journey.active_plan_version_id) == active_plan_before
+        assert journey.current_activity_id == before_side_effects["current_activity_id"]
+        assert session.scalar(select(func.count()).select_from(Activity)) == before_side_effects["activities"]
+        assert session.scalar(select(func.count()).select_from(LocationObservation)) == before_side_effects["location_observations"]
+        assert session.scalar(select(func.count()).select_from(AgentRun)) == before_side_effects["agent_runs"]
+        assert session.scalar(select(func.count()).select_from(GuardianPulse)) == before_side_effects["guardian_pulses"]
+        protected_after = session.get(Commitment, rendezvous_commitment_id)
+        assert protected_after is not None
+        assert (
+            protected_after.activity_id,
+            protected_after.level,
+            protected_after.status,
+            protected_after.policy_json,
+        ) == protected_snapshot
+        recipient_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == recipient_id,
+        ))
+        assert recipient_member is not None
+        recipient_quests = session.scalars(select(MemberSideQuest).where(
+            MemberSideQuest.journey_id == journey_id,
+            MemberSideQuest.member_id == recipient_member.id,
+            MemberSideQuest.state.in_(("DESTINATION_UNRESOLVED", "READY", "EN_ROUTE", "ARRIVED")),
+        )).all()
+        assert len(recipient_quests) == 1
+        assert recipient_quests[0].side_place_id == place_id
+        owner_quest = session.get(MemberSideQuest, side_quest_id)
+        assert owner_quest is not None and owner_quest.side_place_id == place_id
+        response = session.scalar(select(MemberPlaceInvitationRecipient).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation_id,
+            MemberPlaceInvitationRecipient.recipient_traveler_id == recipient_id,
+        ))
+        assert response is not None and response.state == "ACCEPTED_OWN_STOP_READY"
+        assert session.get(MemberPlaceInvitation, invitation_id).state == "OPEN"
+
+    declined = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(third_id),
+        json={"decision": "DECLINE"},
+    )
+    assert declined.status_code == 200, declined.text
+    owner_after_response = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["member_place_invitations"]["sent"][0]
+    states = {recipient["member_id"]: recipient["state"] for recipient in owner_after_response["recipients"]}
+    with SessionLocal() as session:
+        recipient_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == recipient_id,
+        ))
+        third_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == third_id,
+        ))
+        late_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == late_id,
+        ))
+        assert recipient_member and third_member and late_member
+        assert states[str(recipient_member.id)] == "ACCEPTED_OWN_STOP_READY"
+        assert states[str(third_member.id)] == "DECLINED"
+        assert states[str(late_member.id)] == "INVITED"
+
+    repeated = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert repeated.status_code == 200, repeated.text
+    assert repeated.json()["member_side_quest"]["id"] == own_quest["id"]
+    withdrawn = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw",
+        headers=_auth(owner_id),
+    )
+    assert withdrawn.status_code == 200, withdrawn.text
+    after_withdraw = client.get(
+        f"/api/v1/journeys/{journey_id}/operator",
+        headers=_auth(recipient_id),
+    ).json()
+    assert after_withdraw["member_side_quest"]["id"] == own_quest["id"]
+    rejected_after_withdraw = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(late_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert rejected_after_withdraw.status_code == 409
+    assert rejected_after_withdraw.json()["error"]["message"] == "PLACE_INVITATION_WITHDRAWN"
+    late_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id)
+    ).json()
+    assert late_projection["member_side_quest"] is None
+
+
+def test_r70_stale_owner_stop_and_recipient_conflict_do_not_replace_existing_work():
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    owner_quest_id, _place_id = _create_owner_invitation(journey_id, owner_id)
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": client.get(
+                f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+                headers=_auth(owner_id),
+            ).json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    invitation_id = sent.json()["member_place_invitations"]["sent"][0]["invitation_id"]
+
+    _start_split(journey_id, recipient_id)
+    recipient_place = _private_place(journey_id)
+    recipient_created = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests",
+        headers=_auth(recipient_id),
+        json={"place_id": recipient_place.id},
+    )
+    assert recipient_created.status_code == 201, recipient_created.text
+    original_quest_id = recipient_created.json()["member_side_quest"]["id"]
+    blocked = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert blocked.status_code == 409
+    assert blocked.json()["error"]["message"] == "INVITATION_RECIPIENT_HAS_ACTIVE_SPLIT"
+    with SessionLocal() as session:
+        assert session.get(MemberSideQuest, original_quest_id).side_place_id == recipient_place.id
+        response = session.scalar(select(MemberPlaceInvitationRecipient).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation_id,
+            MemberPlaceInvitationRecipient.recipient_traveler_id == recipient_id,
+        ))
+        assert response is not None and response.state == "INVITED"
+
+    # Removing the owner's source quest invalidates any not-yet-accepted recipient.
+    cancelled = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/cancel",
+        headers=_auth(owner_id),
+    )
+    assert cancelled.status_code == 200, cancelled.text
+    stale = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert stale.status_code == 409
+    assert stale.json()["error"]["message"] in {"PLACE_INVITATION_STALE", "PLACE_INVITATION_OWNER_SPLIT_STALE"}
+
+
+def test_r70_in_place_disclosure_change_is_stale_and_keeps_confirmed_snapshot():
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    owner_quest_id, place_id = _create_owner_invitation(journey_id, owner_id)
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    invitation_id = sent.json()["member_place_invitations"]["sent"][0]["invitation_id"]
+    invitation_snapshot = sent.json()["member_place_invitations"]["sent"][0]
+    original_place = invitation_snapshot["place"]
+    original_rendezvous = invitation_snapshot["rendezvous"]
+
+    with SessionLocal() as session:
+        place = session.get(Place, place_id)
+        target = session.get(Activity, original_rendezvous["activity_id"])
+        assert place is not None and target is not None
+        place.latitude = float(place.latitude) + 0.001
+        target.title = f"{target.title} (updated)"
+        target.start_at = (datetime.fromisoformat(target.start_at) + timedelta(minutes=5)).isoformat()
+        session.commit()
+
+    incoming = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(recipient_id)
+    ).json()["member_place_invitations"]["incoming"]
+    assert len(incoming) == 1
+    assert incoming[0]["state"] == "STALE"
+    assert incoming[0]["place"] == original_place
+    assert incoming[0]["rendezvous"] == original_rendezvous
+
+    refreshed_preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert refreshed_preview.status_code == 200, refreshed_preview.text
+    reissued = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": refreshed_preview.json()["audience_snapshot"],
+        },
+    )
+    assert reissued.status_code == 201, reissued.text
+    sent_rows = reissued.json()["member_place_invitations"]["sent"]
+    fresh_invitation = next(row for row in sent_rows if row["invitation_id"] != invitation_id)
+    assert fresh_invitation["state"] == "OPEN"
+    assert fresh_invitation["place"]["latitude"] != original_place["latitude"]
+    assert fresh_invitation["rendezvous"]["title"] != original_rendezvous["title"]
+    assert fresh_invitation["rendezvous"]["scheduled_at"] != original_rendezvous["scheduled_at"]
+    refreshed_incoming = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(recipient_id)
+    ).json()["member_place_invitations"]["incoming"]
+    incoming_by_id = {row["invitation_id"]: row for row in refreshed_incoming}
+    assert incoming_by_id[invitation_id]["state"] == "STALE"
+    assert incoming_by_id[fresh_invitation["invitation_id"]]["state"] == "INVITED"
+    assert incoming_by_id[invitation_id]["place"] == original_place
+    assert incoming_by_id[fresh_invitation["invitation_id"]]["place"] == fresh_invitation["place"]
+
+    rejected = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert rejected.status_code == 409
+    assert rejected.json()["error"]["message"] == "PLACE_INVITATION_STALE"
+    with SessionLocal() as session:
+        recipient_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == recipient_id,
+        ))
+        assert recipient_member is not None
+        assert session.scalar(select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey_id,
+            JourneyIntent.created_by_member_id == recipient_member.id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        )) is None
+        assert session.scalar(select(MemberSideQuest).where(
+            MemberSideQuest.journey_id == journey_id,
+            MemberSideQuest.member_id == recipient_member.id,
+        )) is None
+
+
+@pytest.mark.parametrize(
+    ("invalidation", "expected_message", "expected_state"),
+    [
+        ("expired", "PLACE_INVITATION_EXPIRED", "EXPIRED"),
+        ("withdrawn", "PLACE_INVITATION_WITHDRAWN", "WITHDRAWN"),
+    ],
+)
+def test_r70_decline_rejects_expired_or_withdrawn_invitation(
+    invalidation, expected_message, expected_state
+):
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    owner_quest_id, _place_id = _create_owner_invitation(journey_id, owner_id)
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    invitation_id = sent.json()["member_place_invitations"]["sent"][0]["invitation_id"]
+
+    if invalidation == "expired":
+        with SessionLocal() as session:
+            invitation = session.get(MemberPlaceInvitation, invitation_id)
+            assert invitation is not None
+            invitation.expires_at = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
+            session.commit()
+    else:
+        withdrawn = client.post(
+            f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw",
+            headers=_auth(owner_id),
+        )
+        assert withdrawn.status_code == 200, withdrawn.text
+
+    declined = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "DECLINE"},
+    )
+    assert declined.status_code == 409
+    assert declined.json()["error"]["message"] == expected_message
+
+    with SessionLocal() as session:
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        recipient_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == recipient_id,
+        ))
+        assert invitation is not None and invitation.state == expected_state
+        assert recipient_member is not None
+        response = session.scalar(select(MemberPlaceInvitationRecipient).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation_id,
+            MemberPlaceInvitationRecipient.recipient_member_id == recipient_member.id,
+        ))
+        assert response is not None and response.state == "INVITED"
+
+    owner_projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    ).json()["member_place_invitations"]["sent"][0]
+    assert owner_projection["state"] == expected_state
+    assert owner_projection["recipients"][0]["state"] == expected_state
+
+
+@pytest.mark.parametrize(
+    ("invalidation", "expected_message"),
+    [
+        ("expired", "PLACE_INVITATION_EXPIRED"),
+        ("active_plan_drift", "PLACE_INVITATION_STALE"),
+        ("rendezvous_closed", "PLACE_INVITATION_STALE"),
+        ("addressed_member_removed", "PLACE_INVITATION_STALE"),
+        ("invalid_place_coordinates", "PLACE_INVITATION_STALE"),
+    ],
+)
+def test_r70_lifecycle_context_changes_reject_acceptance(invalidation, expected_message):
+    journey_id, owner_id, recipient_id = _active_shared_journey()
+    owner_quest_id, place_id = _create_owner_invitation(journey_id, owner_id)
+    removed_member_id = None
+    if invalidation == "addressed_member_removed":
+        third_id = str(uuid4())
+        now = datetime.now(timezone.utc).isoformat()
+        with SessionLocal() as session:
+            journey = session.get(Journey, journey_id)
+            assert journey is not None
+            session.add(Traveler(
+                id=third_id,
+                display_name="R70离队同行者",
+                email=None,
+                locale="zh-CN",
+                timezone="UTC",
+                created_at=now,
+                updated_at=now,
+            ))
+            session.flush()
+            member = JourneyMember(
+                id=str(uuid4()),
+                journey_id=journey_id,
+                traveler_id=third_id,
+                role="COLLABORATOR",
+                invited_by=owner_id,
+                expires_at=None,
+                joined_at=now,
+                removed_at=None,
+                preferences_json="{}",
+                created_at=now,
+                updated_at=now,
+            )
+            session.add(member)
+            session.commit()
+            removed_member_id = str(member.id)
+
+    preview = client.get(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+        headers=_auth(owner_id),
+    )
+    assert preview.status_code == 200, preview.text
+    sent = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+        headers=_auth(owner_id),
+        json={
+            "confirm_public_place_sharing": True,
+            "audience_snapshot": preview.json()["audience_snapshot"],
+        },
+    )
+    assert sent.status_code == 201, sent.text
+    invitation_id = sent.json()["member_place_invitations"]["sent"][0]["invitation_id"]
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        invitation = session.get(MemberPlaceInvitation, invitation_id)
+        assert journey is not None and invitation is not None
+        if invalidation == "expired":
+            invitation.expires_at = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
+        elif invalidation == "active_plan_drift":
+            old_plan = session.get(PlanVersion, str(journey.active_plan_version_id))
+            assert old_plan is not None
+            old_plan.status = "SUPERSEDED"
+            session.flush()
+            now = datetime.now(timezone.utc).isoformat()
+            drifted_plan = PlanVersion(
+                id=str(uuid4()),
+                journey_id=journey_id,
+                version_no=int(old_plan.version_no) + 1,
+                planning_mode=old_plan.planning_mode,
+                status="ACTIVE",
+                lifecycle="ACTIVE",
+                source="REPLAN",
+                parent_plan_version_id=old_plan.id,
+                total_cost_minor=0,
+                currency=old_plan.currency,
+                estimated_duration_min=0,
+                utility_score=0.0,
+                score_breakdown_json="{}",
+                explanation_json="{}",
+                mobility_evidence_json="{}",
+                created_at=now,
+            )
+            session.add(drifted_plan)
+            session.flush()
+            journey.active_plan_version_id = drifted_plan.id
+        elif invalidation == "rendezvous_closed":
+            target = session.get(Activity, str(invitation.rendezvous_activity_id))
+            assert target is not None
+            target.status = "CANCELLED"
+        elif invalidation == "addressed_member_removed":
+            member = session.get(JourneyMember, str(removed_member_id))
+            assert member is not None
+            member.removed_at = datetime.now(timezone.utc).isoformat()
+        elif invalidation == "invalid_place_coordinates":
+            place = session.get(Place, place_id)
+            assert place is not None
+            place.coordinate_system = "GCJ-02"
+        session.commit()
+
+    rejected = client.post(
+        f"/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond",
+        headers=_auth(recipient_id),
+        json={"decision": "ACCEPT", "confirm_exact_public_place": True},
+    )
+    assert rejected.status_code == 409, rejected.text
+    assert rejected.json()["error"]["message"] == expected_message
+    with SessionLocal() as session:
+        recipient_member = session.scalar(select(JourneyMember).where(
+            JourneyMember.journey_id == journey_id,
+            JourneyMember.traveler_id == recipient_id,
+        ))
+        assert recipient_member is not None
+        assert session.scalar(select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey_id,
+            JourneyIntent.created_by_member_id == recipient_member.id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        )) is None
+        assert session.scalar(select(MemberSideQuest).where(
+            MemberSideQuest.journey_id == journey_id,
+            MemberSideQuest.member_id == recipient_member.id,
+        )) is None
+    if invalidation == "addressed_member_removed":
+        refreshed_preview = client.get(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitation-preview",
+            headers=_auth(owner_id),
+        )
+        assert refreshed_preview.status_code == 200, refreshed_preview.text
+        assert refreshed_preview.json()["recipient_count"] == 1
+        reissued = client.post(
+            f"/api/v1/journeys/{journey_id}/member-side-quests/{owner_quest_id}/place-invitations",
+            headers=_auth(owner_id),
+            json={
+                "confirm_public_place_sharing": True,
+                "audience_snapshot": refreshed_preview.json()["audience_snapshot"],
+            },
+        )
+        assert reissued.status_code == 201, reissued.text
+        reissued_invitation = reissued.json()["member_place_invitations"]["sent"][0]
+        assert reissued_invitation["invitation_id"] != invitation_id
+        assert len(reissued_invitation["recipients"]) == 1

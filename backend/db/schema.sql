@@ -709,6 +709,50 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_planned_split_meetup_handshakes_one_pending
 CREATE INDEX IF NOT EXISTS idx_planned_split_meetup_handshakes_journey_reported
     ON planned_split_meetup_handshakes(journey_id, reported_at);
 
+CREATE TABLE IF NOT EXISTS member_place_invitations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    owner_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    owner_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    owner_split_intent_id TEXT NOT NULL REFERENCES journey_intents(id) ON DELETE CASCADE,
+    owner_side_quest_id TEXT NOT NULL REFERENCES member_side_quests(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    place_provider_key TEXT NOT NULL,
+    place_external_id TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE CASCADE,
+    rendezvous_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    disclosure_snapshot_json TEXT NOT NULL DEFAULT '{}',
+    state TEXT NOT NULL DEFAULT 'OPEN'
+        CHECK (state IN ('OPEN', 'WITHDRAWN', 'EXPIRED', 'STALE')),
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    withdrawn_at TEXT,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_place_invitations_one_open_per_quest
+    ON member_place_invitations(journey_id, owner_side_quest_id)
+    WHERE state = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_member_place_invitations_journey_owner_created
+    ON member_place_invitations(journey_id, owner_member_id, created_at);
+
+CREATE TABLE IF NOT EXISTS member_place_invitation_recipients (
+    id TEXT PRIMARY KEY,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    recipient_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    recipient_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    state TEXT NOT NULL DEFAULT 'INVITED'
+        CHECK (state IN ('INVITED', 'ACCEPTANCE_NEEDS_COMPLETION', 'ACCEPTED_OWN_STOP_READY', 'DECLINED')),
+    invited_at TEXT NOT NULL,
+    responded_at TEXT,
+    accepted_split_intent_id TEXT REFERENCES journey_intents(id) ON DELETE SET NULL,
+    accepted_side_quest_id TEXT REFERENCES member_side_quests(id) ON DELETE SET NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(invitation_id, recipient_member_id)
+);
+CREATE INDEX IF NOT EXISTS idx_member_place_invitation_recipients_member_state
+    ON member_place_invitation_recipients(recipient_member_id, state, invited_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,

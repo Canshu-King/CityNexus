@@ -476,6 +476,90 @@ class PlannedSplitMeetupHandshake(Base):
     )
 
 
+class MemberPlaceInvitation(Base):
+    """A member's explicit, time-bounded disclosure of one public Place to companions."""
+
+    __tablename__ = "member_place_invitations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    owner_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    owner_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    owner_split_intent_id: Mapped[str] = mapped_column(ForeignKey("journey_intents.id", ondelete="CASCADE"))
+    owner_side_quest_id: Mapped[str] = mapped_column(ForeignKey("member_side_quests.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="CASCADE"))
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    place_provider_key: Mapped[str] = mapped_column(String)
+    place_external_id: Mapped[str] = mapped_column(String)
+    rendezvous_activity_id: Mapped[str] = mapped_column(ForeignKey("activities.id", ondelete="CASCADE"))
+    rendezvous_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    disclosure_snapshot_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    state: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    created_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    withdrawn_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('OPEN', 'WITHDRAWN', 'EXPIRED', 'STALE')",
+            name="ck_member_place_invitations_state",
+        ),
+        Index(
+            "ux_member_place_invitations_one_open_per_quest",
+            "journey_id",
+            "owner_side_quest_id",
+            unique=True,
+            sqlite_where=text("state = 'OPEN'"),
+        ),
+        Index(
+            "idx_member_place_invitations_journey_owner_created",
+            "journey_id",
+            "owner_member_id",
+            "created_at",
+        ),
+    )
+
+
+class MemberPlaceInvitationRecipient(Base):
+    """One addressed companion's own response and resulting R63/R64 execution objects."""
+
+    __tablename__ = "member_place_invitation_recipients"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    recipient_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    recipient_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    state: Mapped[str] = mapped_column(String, default="INVITED", server_default="INVITED")
+    invited_at: Mapped[str] = mapped_column(String)
+    responded_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    accepted_split_intent_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_intents.id", ondelete="SET NULL"), nullable=True
+    )
+    accepted_side_quest_id: Mapped[str | None] = mapped_column(
+        ForeignKey("member_side_quests.id", ondelete="SET NULL"), nullable=True
+    )
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("invitation_id", "recipient_member_id"),
+        CheckConstraint(
+            "state IN ('INVITED', 'ACCEPTANCE_NEEDS_COMPLETION', 'ACCEPTED_OWN_STOP_READY', 'DECLINED')",
+            name="ck_member_place_invitation_recipients_state",
+        ),
+        Index(
+            "idx_member_place_invitation_recipients_member_state",
+            "recipient_member_id",
+            "state",
+            "invited_at",
+        ),
+    )
+
+
 class RecoveryEpoch(Base):
     """Server-owned recovery reality binding for one Journey."""
 

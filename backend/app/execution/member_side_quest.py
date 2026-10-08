@@ -19,6 +19,7 @@ from app.db.models import (
     MemberSideQuestReturnReport,
     Place,
 )
+from app.concurrency_guards import journey_write_lock
 from app.execution.clock import execution_clock
 from app.execution.group_presence import (
     LOCATION_FRESHNESS_SECONDS,
@@ -152,7 +153,7 @@ def _record_quest_audit(
     )
 
 
-def create_or_replace_member_side_quest(
+def _create_or_replace_member_side_quest(
     session: Session,
     *,
     journey: Journey,
@@ -240,6 +241,33 @@ def create_or_replace_member_side_quest(
     return open_quest
 
 
+def create_or_replace_member_side_quest(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    destination_text: str | None,
+    place_id: str | None,
+    now: datetime | None = None,
+) -> MemberSideQuest:
+    with journey_write_lock(str(journey.id)):
+        session.expire_all()
+        current_journey = session.get(Journey, str(journey.id))
+        current_member = session.get(JourneyMember, str(member.id))
+        if current_journey is None or current_member is None:
+            raise HTTPException(404, "SIDE_QUEST_MEMBER_NOT_FOUND")
+        return _create_or_replace_member_side_quest(
+            session,
+            journey=current_journey,
+            member=current_member,
+            traveler_id=traveler_id,
+            destination_text=destination_text,
+            place_id=place_id,
+            now=now,
+        )
+
+
 def invalidate_member_side_quests_for_intents(
     session: Session,
     *,
@@ -296,7 +324,7 @@ def _current_binding_matches(
     )
 
 
-def transition_member_side_quest(
+def _transition_member_side_quest(
     session: Session,
     *,
     journey: Journey,
@@ -379,6 +407,33 @@ def transition_member_side_quest(
     )
     session.commit()
     return quest
+
+
+def transition_member_side_quest(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMember,
+    traveler_id: str,
+    quest_id: str,
+    action: str,
+    now: datetime | None = None,
+) -> MemberSideQuest:
+    with journey_write_lock(str(journey.id)):
+        session.expire_all()
+        current_journey = session.get(Journey, str(journey.id))
+        current_member = session.get(JourneyMember, str(member.id))
+        if current_journey is None or current_member is None:
+            raise HTTPException(404, "SIDE_QUEST_MEMBER_NOT_FOUND")
+        return _transition_member_side_quest(
+            session,
+            journey=current_journey,
+            member=current_member,
+            traveler_id=traveler_id,
+            quest_id=quest_id,
+            action=action,
+            now=now,
+        )
 
 
 def _member_side_quest_for_action(

@@ -155,6 +155,9 @@ from app.db.models import (
     JourneyMission,
     JourneyIntent,
     JourneyMember as JourneyMemberModel,
+    MemberPlaceInvitation,
+    MemberPlaceInvitationRecipient,
+    MemberSideQuest,
     JourneyRoleCapability,
     JourneyShareGrant,
     JourneyOutcomeEvent,
@@ -468,6 +471,8 @@ from app.schemas import (
     LocationObservationRequest,
     GroupPresenceRouteRequest,
     MemberSideQuestCreateRequest,
+    MemberPlaceInvitationCreateRequest,
+    MemberPlaceInvitationDecisionRequest,
     MomentScoutRequest,
     MomentScoutSelectRequest,
     LiveMomentScoutRequest,
@@ -7241,8 +7246,7 @@ def _member_expiry(raw: str | None) -> str | None:
     return parsed.astimezone(timezone.utc).isoformat()
 
 
-@app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)
-def add_journey_member(
+def _add_journey_member(
     journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
 ):
     require(session, Journey, str(journey_id), "Journey")
@@ -7291,6 +7295,15 @@ def add_journey_member(
     return _member_payload(member)
 
 
+@app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)
+def add_journey_member(
+    journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _add_journey_member(journey_id, payload, session)
+
+
 @app.get("/api/v1/journeys/{journey_id}/members", response_model=list[JourneyMember])
 def list_journey_members(journey_id: UUID, session: Session = Depends(get_session)):
     require(session, Journey, str(journey_id), "Journey")
@@ -7325,11 +7338,7 @@ def replace_journey_member_preferences(
     return {"journey_id": str(journey_id), "member_id": member.id, "scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": payload.preferences}
 
 
-@app.post(
-    "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
-    response_model=JourneyMember,
-)
-def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session = Depends(get_session)):
+def _withdraw_journey_member(journey_id: UUID, member_id: str, session: Session):
     member = session.get(JourneyMemberModel, member_id)
     if member is None or member.journey_id != str(journey_id):
         raise _share_refusal(
@@ -7350,6 +7359,16 @@ def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session =
     member.updated_at = stamp
     session.commit()
     return _member_payload(member)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
+    response_model=JourneyMember,
+)
+def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session = Depends(get_session)):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _withdraw_journey_member(journey_id, member_id, session)
 
 
 @app.get("/api/v1/journeys/{journey_id}/acl/roles", response_model=list[JourneyRoleRule])
@@ -9762,6 +9781,281 @@ def create_member_side_quest(
         place_id=payload.place_id,
     )
     return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview")
+def preview_member_place_invitation(
+    journey_id: UUID,
+    side_quest_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_invitation import invitation_preview
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return invitation_preview(
+        session,
+        journey=journey,
+        owner=member,
+        traveler_id=principal.traveler_id,
+        side_quest_id=str(side_quest_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations", status_code=201)
+def create_member_place_invitation(
+    journey_id: UUID,
+    side_quest_id: UUID,
+    payload: MemberPlaceInvitationCreateRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_invitation import create_invitation
+
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        # The literal-true payload is the owner's second, deliberate disclosure step.
+        if payload.confirm_public_place_sharing is not True:
+            raise HTTPException(422, "PLACE_INVITATION_DISCLOSURE_CONFIRMATION_REQUIRED")
+        create_invitation(
+            session,
+            journey=journey,
+            owner=member,
+            traveler_id=principal.traveler_id,
+            side_quest_id=str(side_quest_id),
+            expected_audience_snapshot=payload.audience_snapshot,
+        )
+        return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+def _withdraw_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    invitation = session.scalar(
+        select(MemberPlaceInvitation).where(
+            MemberPlaceInvitation.id == str(invitation_id),
+            MemberPlaceInvitation.journey_id == journey.id,
+            MemberPlaceInvitation.owner_member_id == member.id,
+            MemberPlaceInvitation.owner_traveler_id == principal.traveler_id,
+        ).with_for_update()
+    )
+    if invitation is None:
+        raise HTTPException(404, "PLACE_INVITATION_NOT_FOUND")
+    if invitation.state == "OPEN":
+        now = execution_clock.now().astimezone(timezone.utc).isoformat()
+        invitation.state = "WITHDRAWN"
+        invitation.withdrawn_at = now
+        invitation.updated_at = now
+        session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw")
+def withdraw_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _withdraw_member_place_invitation(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            request=request,
+            session=session,
+        )
+
+
+def _respond_to_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_invitation import (
+        get_recipient_invitation,
+        recipient_conflict_reason,
+        validate_invitation_for_acceptance,
+    )
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    invitation, response = get_recipient_invitation(
+        session,
+        journey=journey,
+        recipient=member,
+        traveler_id=principal.traveler_id,
+        invitation_id=str(invitation_id),
+    )
+    now = execution_clock.now().astimezone(timezone.utc)
+    if payload.decision == "DECLINE":
+        if response.state == "DECLINED":
+            return operator_projection(session, journey, viewer_member_id=member.id)
+        if response.state != "INVITED":
+            raise HTTPException(409, "PLACE_INVITATION_ALREADY_ACCEPTED")
+        validate_invitation_for_acceptance(
+            session,
+            journey=journey,
+            recipient=member,
+            traveler_id=principal.traveler_id,
+            invitation=invitation,
+            response=response,
+            now=now,
+        )
+        response.state = "DECLINED"
+        response.responded_at = now.isoformat()
+        response.updated_at = now.isoformat()
+        session.commit()
+        return operator_projection(session, journey, viewer_member_id=member.id)
+
+    if payload.confirm_exact_public_place is not True:
+        raise HTTPException(422, "PLACE_INVITATION_PIN_CONFIRMATION_REQUIRED")
+    if response.state == "ACCEPTED_OWN_STOP_READY":
+        return operator_projection(session, journey, viewer_member_id=member.id)
+    if response.state not in {"INVITED", "ACCEPTANCE_NEEDS_COMPLETION"}:
+        raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
+
+    context = validate_invitation_for_acceptance(
+        session,
+        journey=journey,
+        recipient=member,
+        traveler_id=principal.traveler_id,
+        invitation=invitation,
+        response=response,
+        now=now,
+    )
+    command = (
+        f"Accept companion Place invitation {invitation.id} and rejoin at the shared Journey stop."
+    )
+    current_split = planned_separation_for_member(session, journey, member, now=now)
+    same_split_id = str(response.accepted_split_intent_id or "") or None
+    if same_split_id is None and response.state == "ACCEPTANCE_NEEDS_COMPLETION" and current_split is not None:
+        current_intent = current_split["intent"]
+        if (
+            str(current_intent.created_by_member_id) == str(member.id)
+            and str(current_intent.created_by_traveler_id) == str(principal.traveler_id)
+            and str(current_intent.source_text) == command
+        ):
+            same_split_id = str(current_intent.id)
+
+    conflict = recipient_conflict_reason(
+        session,
+        journey=journey,
+        recipient=member,
+        invitation=invitation,
+        same_invitation_split_id=same_split_id,
+        now=now,
+    )
+    if conflict:
+        raise HTTPException(409, conflict)
+
+    if response.state == "INVITED":
+        # Persist the explicit response before creating the recipient-owned R63/R64
+        # objects. A retry can finish this exact invitation without accepting a new one.
+        response.state = "ACCEPTANCE_NEEDS_COMPLETION"
+        response.responded_at = now.isoformat()
+        response.updated_at = now.isoformat()
+        session.commit()
+
+    current_split = planned_separation_for_member(session, journey, member, now=now)
+    if current_split is not None and str(current_split["intent"].id) == str(same_split_id or ""):
+        split_intent_id = str(current_split["intent"].id)
+    elif current_split is None:
+        split_result = _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=command,
+            action="START",
+            now=now,
+            resolved_rendezvous=(
+                context["target"],
+                context["rendezvous"],
+                "INVITATION_CURRENT_SHARED_RENDEZVOUS",
+                None,
+            ),
+        )
+        outcome = split_result.get("planned_separation_result") or {}
+        if outcome.get("outcome") not in {"PLANNED_SPLIT_CREATED", "PLANNED_SPLIT_ALREADY_ACTIVE"}:
+            raise HTTPException(409, "PLACE_INVITATION_SPLIT_COULD_NOT_START")
+        current_split = planned_separation_for_member(session, journey, member, now=now)
+        if current_split is None:
+            raise HTTPException(409, "PLACE_INVITATION_SPLIT_COULD_NOT_START")
+        split_intent_id = str(current_split["intent"].id)
+    else:
+        raise HTTPException(409, "INVITATION_RECIPIENT_HAS_ACTIVE_SPLIT")
+
+    response.accepted_split_intent_id = split_intent_id
+    session.commit()
+    quest = session.get(MemberSideQuest, str(response.accepted_side_quest_id or ""))
+    if quest is None:
+        quest = session.scalar(
+            select(MemberSideQuest).where(
+                MemberSideQuest.journey_id == journey.id,
+                MemberSideQuest.member_id == member.id,
+                MemberSideQuest.planned_separation_intent_id == split_intent_id,
+                MemberSideQuest.side_place_id == invitation.place_id,
+            ).order_by(MemberSideQuest.created_at.desc(), MemberSideQuest.id.desc())
+        )
+    if quest is None:
+        quest = create_or_replace_member_side_quest(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            destination_text=None,
+            place_id=str(invitation.place_id),
+            now=now,
+        )
+    response.accepted_side_quest_id = str(quest.id)
+    response.state = "ACCEPTED_OWN_STOP_READY"
+    response.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond")
+def respond_to_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    # Serialize accept/withdraw and other Journey writes from their first read
+    # through their durable R63/R64 state transition.
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _respond_to_member_place_invitation(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
 
 
 MOMENT_SCOUT_SPLIT_COMMAND = (
@@ -20887,7 +21181,7 @@ def _resolve_planned_rendezvous(
     return activity, place, basis, buffer_min
 
 
-def _run_planned_separation_command(
+def _run_planned_separation_command_impl(
     *,
     request: Request,
     session: Session,
@@ -20967,6 +21261,12 @@ def _run_planned_separation_command(
         }
         return result
     activity, place, basis, buffer_min = rendezvous
+    if (
+        str(activity.plan_version_id) != str(journey.active_plan_version_id or "")
+        or str(activity.place_id or "") != str(place.id)
+        or str(activity.status or "").upper() in {"COMPLETED", "SKIPPED", "CANCELLED"}
+    ):
+        raise HTTPException(409, "PLANNED_SPLIT_RENDEZVOUS_STALE")
     source = " ".join(command.casefold().split())
     fingerprint_material = json.dumps(
         {
@@ -20982,21 +21282,53 @@ def _run_planned_separation_command(
         separators=(",", ":"),
     )
     fingerprint = hashlib.sha256(fingerprint_material.encode("utf-8")).hexdigest()
-    existing = session.scalar(
-        select(JourneyIntent).where(
-            JourneyIntent.journey_id == journey.id,
-            JourneyIntent.semantic_fingerprint == fingerprint,
+
+    def same_split_request(intent: JourneyIntent) -> bool:
+        if " ".join(str(intent.source_text or "").casefold().split()) != source:
+            return False
+        try:
+            envelope = json.loads(intent.semantic_envelope_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            return False
+        metadata = envelope.get("r63_planned_separation") if isinstance(envelope, dict) else None
+        return (
+            isinstance(metadata, dict)
+            and str(metadata.get("active_plan_version_id") or "")
+            == str(journey.active_plan_version_id or "")
+            and str(metadata.get("rendezvous_activity_id") or "") == str(activity.id)
+            and str(metadata.get("rendezvous_place_id") or "") == str(place.id)
         )
-    )
-    if existing is not None and existing.status == "ACTIVE":
+
+    # The same request is idempotent while its split is active, but a later
+    # deliberate split must get its own durable intent and meetup history.
+    active_repeat = next((row for row in own_rows if same_split_request(row)), None)
+    if active_repeat is not None:
         result = operator_projection(session, journey, viewer_member_id=member.id)
         result["planned_separation_result"] = {
             "outcome": "PLANNED_SPLIT_ALREADY_ACTIVE",
             "message": f"Your planned side trip is already active. Rejoin at {place.name}.",
-            "intent_id": existing.id,
+            "intent_id": active_repeat.id,
             "physical_reunion_claimed": False,
         }
         return result
+
+    previous_same_requests = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_member_id == member.id,
+            JourneyIntent.created_by_traveler_id == principal.traveler_id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+        )
+    ).all()
+    generation = sum(1 for row in previous_same_requests if same_split_request(row))
+    if generation:
+        fingerprint = hashlib.sha256(
+            json.dumps(
+                {"base": fingerprint, "generation": generation},
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
 
     for old in own_rows:
         old.status = "SUPERSEDED"
@@ -21023,7 +21355,7 @@ def _run_planned_separation_command(
         "authority": "SIGNED_MEMBER_OWN_TEMPORARY_INTENT",
         "side_destination_authority": "DESCRIPTIVE_ONLY_UNLESS_SEPARATELY_VERIFIED",
     }
-    intent = existing or JourneyIntent(id=str(uuid4()), journey_id=journey.id)
+    intent = JourneyIntent(id=str(uuid4()), journey_id=journey.id)
     intent.created_by_traveler_id = principal.traveler_id
     intent.created_by_member_id = member.id
     intent.source_text = command
@@ -21045,7 +21377,7 @@ def _run_planned_separation_command(
     intent.status = "ACTIVE"
     intent.evaluation_state = "PLANNED_SPLIT_ACTIVE"
     intent.semantic_fingerprint = fingerprint
-    intent.created_at = intent.created_at or now_text
+    intent.created_at = now_text
     intent.updated_at = now_text
     session.add(intent)
     session.flush()
@@ -21077,6 +21409,32 @@ def _run_planned_separation_command(
         "physical_reunion_claimed": False,
     }
     return result
+
+
+def _run_planned_separation_command(
+    *,
+    request: Request,
+    session: Session,
+    journey: Journey,
+    command: str,
+    action: str,
+    now: datetime,
+    resolved_rendezvous: tuple[Activity, Place, str, int | None] | None = None,
+) -> dict[str, Any]:
+    with journey_write_lock(str(journey.id)):
+        session.expire_all()
+        current_journey = session.get(Journey, str(journey.id))
+        if current_journey is None:
+            raise HTTPException(404, "Journey not found")
+        return _run_planned_separation_command_impl(
+            request=request,
+            session=session,
+            journey=current_journey,
+            command=command,
+            action=action,
+            now=now,
+            resolved_rendezvous=resolved_rendezvous,
+        )
 
 
 def _is_live_journey_intent_request(message: str, interpretation: CopilotInterpretation) -> bool:

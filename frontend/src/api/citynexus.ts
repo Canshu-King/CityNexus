@@ -534,6 +534,7 @@ export interface JourneyOperatorProjection {
   transit?: JourneyTransitProjection | null;
   group_presence?: JourneyGroupPresenceProjection | null;
   member_side_quest?: MemberSideQuestProjection | null;
+  member_place_invitations?: MemberPlaceInvitationProjection | null;
   group_recovery?: GroupRecoveryProjection | null;
   progress?: JourneyProgressProjection;
   ahead?: JourneyAheadProjection | null;
@@ -678,6 +679,56 @@ export interface MemberSideQuestProjection {
   arrived_at: string | null;
   completed_at: string | null;
   cancelled_at: string | null;
+}
+
+export interface MemberPlaceInvitationPlace {
+  place_id: string;
+  name: string;
+  category: string;
+  source: string;
+  latitude: number;
+  longitude: number;
+  coordinate_system: string;
+}
+
+export interface MemberPlaceInvitationRendezvous {
+  activity_id: string;
+  title: string;
+  place_name: string;
+  scheduled_at: string | null;
+}
+
+export interface MemberPlaceInvitationPreview {
+  side_quest_id: string;
+  place: MemberPlaceInvitationPlace;
+  rendezvous: MemberPlaceInvitationRendezvous;
+  recipient_count: number;
+  audience_snapshot: string;
+  expires_in_minutes: number;
+  disclosure: string;
+}
+
+export interface MemberPlaceInvitationProjection {
+  sent: Array<{
+    invitation_id: string;
+    side_quest_id: string;
+    state: "OPEN" | "WITHDRAWN" | "EXPIRED" | "STALE";
+    created_at: string;
+    expires_at: string;
+    place: MemberPlaceInvitationPlace;
+    rendezvous: MemberPlaceInvitationRendezvous;
+    recipients: Array<{ member_id: string; display_name: string; state: string }>;
+  }>;
+  incoming: Array<{
+    invitation_id: string;
+    state: string;
+    inviter_display_name: string;
+    created_at: string;
+    expires_at: string;
+    place: MemberPlaceInvitationPlace;
+    rendezvous: MemberPlaceInvitationRendezvous;
+    can_respond: boolean;
+  }>;
 }
 
 export type MomentScoutInterest = "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
@@ -2104,6 +2155,62 @@ export const cityNexusApi = {
           place_id: destination.placeId,
         }),
       },
+    );
+  },
+
+  getMemberPlaceInvitationPreview(
+    journeyId: string,
+    sideQuestId: string,
+  ): Promise<MemberPlaceInvitationPreview> {
+    return requestJson<MemberPlaceInvitationPreview>(
+      "/journeys/" + journeyId + "/member-side-quests/" + sideQuestId + "/place-invitation-preview",
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  createMemberPlaceInvitation(
+    journeyId: string,
+    sideQuestId: string,
+    audienceSnapshot: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-side-quests/" + sideQuestId + "/place-invitations",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          confirm_public_place_sharing: true,
+          audience_snapshot: audienceSnapshot,
+        }),
+      },
+    );
+  },
+
+  respondToMemberPlaceInvitation(
+    journeyId: string,
+    invitationId: string,
+    decision: "ACCEPT" | "DECLINE",
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/respond",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({
+          decision,
+          confirm_exact_public_place: decision === "ACCEPT" ? true : undefined,
+        }),
+      },
+    );
+  },
+
+  withdrawMemberPlaceInvitation(
+    journeyId: string,
+    invitationId: string,
+  ): Promise<JourneyOperatorProjection> {
+    return requestJson<JourneyOperatorProjection>(
+      "/journeys/" + journeyId + "/member-place-invitations/" + invitationId + "/withdraw",
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 
