@@ -289,6 +289,11 @@ export function JourneyMap({
       data-route-provider={routeEvidence?.provider ?? "unavailable"}
       data-route-fallback={String(routeEvidence?.fallback ?? true)}
       data-basemap-provider="openfreemap"
-    />
+    >
+      {/* ORD-0082: map tile attribution must be visible on screen */}
+      <p className="maplibre-attribution" data-testid="maplibre-attribution">
+        {t("mapComp.attribution")}
+      </p>
+    </div>
   );
 }

@@ -224,6 +224,10 @@ export function MapPanel({
         {t("mapComp.routeContext")} <b>{t("mapComp.legs", { n: route.length })}</b>
         <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
       </div>
+      {/* ORD-0082: map tile attribution must be visible on screen, not just in config */}
+      <p className="v8-map-attribution" data-testid="v8-map-attribution">
+        {t("mapComp.attribution")}
+      </p>
     </div>
   );
 }
