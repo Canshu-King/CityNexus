@@ -49,12 +49,14 @@ from app.db.models import (
     PlanVersion,
     StayJourneyOption,
 )
+from app.execution.clock import execution_clock
 from app.execution.traveler_twin import (
     capability_payload,
     planning_preference_items,
     refresh_snapshot,
     snapshot_payload,
 )
+from app.services import journey_zone, parse_dt_in_journey_zone
 from app.planning.stay_mode_solver import solve_mode_choices
 
 MODES = ("WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL")
@@ -1839,6 +1841,8 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         budget_currency=journey.budget_currency,
         party_size=context.party_size,
     )
+    zone = journey_zone(journey)
+    used_timezone, timezone_honoured = execution_clock.zone_usage(journey.timezone)
     return {
         "journey": {
             "id": journey.id,
@@ -1846,8 +1850,14 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             "title": journey.title,
             "city_code": journey.city_code,
             "timezone": journey.timezone,
-            "start_at": journey.start_at,
-            "end_at": journey.end_at,
+            # The window columns are bare local wall-clock; a screen reading them as instants would
+            # have to place them itself, and a zone nothing can be placed in is a reading it cannot
+            # check.  So the window is placed here, where the zone is known, and the pair says which
+            # zone was used -- the same answer the trip payload and the two model contexts give.
+            "used_timezone": used_timezone,
+            "timezone_honoured": timezone_honoured,
+            "start_at": parse_dt_in_journey_zone(journey.start_at, zone),
+            "end_at": parse_dt_in_journey_zone(journey.end_at, zone),
             "status": journey.status,
             "active_plan_version_id": journey.active_plan_version_id,
             "budget": {
