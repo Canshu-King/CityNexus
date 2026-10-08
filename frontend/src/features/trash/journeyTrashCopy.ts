@@ -52,6 +52,9 @@ export const journeyTrashCopy = {
     "trash.doorAbsent":
       "This server did not answer the list of binned trips, so no row can be shown yet. Nothing about your trips changed.",
     "trash.refresh": "Read the bin again",
+    "trash.empty.why":
+      "This screen lists only the trips this server reported as still in the bin. When it has no rows to list, that sentence is all there is -- it does not invent a reason for you, because the server did not report one.",
+    "trash.empty.action": "Go to your trips",
     "trash.noViewer":
       "This screen does not know whose bin to ask for, so it is not showing anybody's. Nothing about your trips changed.",
     "trash.rowOwnershipMissing": "this server gave no owner for this row",
@@ -94,6 +97,8 @@ export const journeyTrashCopy = {
     "trash.transport": "回收站没有从这台服务器读到。这一屏没有改动你的任何行程。",
     "trash.doorAbsent": "这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
     "trash.refresh": "再读一次回收站",
+    "trash.empty.why": "这一屏只列这台服务器报出来还在站里的行程。站里没有行可列的时候，这里就只有这句话——它没替你想原因，因为原因服务器没有报。",
+    "trash.empty.action": "回到我的行程",
     "trash.noViewer": "这一屏还不知道要问谁的回收站，所以任何人的都不显示。你的行程没有因此变化。",
     "trash.rowOwnershipMissing": "服务器没有给出这一行的归属",
     "trash.rowOwnedByOther": "由这台服务器上的另一位旅客保管",
