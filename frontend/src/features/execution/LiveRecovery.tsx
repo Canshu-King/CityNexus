@@ -671,7 +671,7 @@ export function LiveRecovery({
   const individuallyActionablePending = pending.filter(
     (proposal) => !collectiveProposalIds.has(proposal.id),
   );
-  const showGroupRecovery = Boolean(groupRecovery && [
+  const showGroupRecovery = Boolean(groupRecovery && groupRecovery.foreground !== false && [
     "ADVISORY_MEMBER_LATE",
     "VERIFIED_MEMBER_RISK",
     "RECOVERY_OPTIONS_READY",
@@ -767,11 +767,17 @@ export function LiveRecovery({
       const rendezvousActivityId = recoveryFollowthrough.rendezvous?.activity_id;
       if (!rendezvousActivityId) return;
       await cityNexusApi.transitionActivity(journeyId, rendezvousActivityId, "arrive");
-      await loadOperator();
+      const refreshed = await cityNexusApi.getJourneyOperator(journeyId);
+      setOperator(refreshed);
       await twin.refetch();
-      setMessage(zh
-        ? "已通过行程到达状态记录你的本人确认；正在更新全组会合进度。"
-        : "Your arrival was recorded through the Journey execution flow. Group rejoin progress is refreshing.");
+      const closed = refreshed.group_recovery?.followthrough?.state === "RECOVERY_CLOSED";
+      setMessage(closed
+        ? (zh
+          ? "所有仍在旅程中的同行者都已确认会合；恢复流程已结束，CityNexus 继续照看当前行程。"
+          : "Everyone still on the Journey has confirmed rejoining. Recovery is closed and CityNexus is continuing the current trip.")
+        : (zh
+          ? "已通过行程到达状态记录你的本人确认；正在等待其他同行者。"
+          : "Your arrival was recorded through the Journey execution flow. Waiting for the remaining travellers."));
       onAccepted?.();
     } catch (error) {
       if (error instanceof CityNexusApiError && (error.status === 401 || error.status === 403)) {
