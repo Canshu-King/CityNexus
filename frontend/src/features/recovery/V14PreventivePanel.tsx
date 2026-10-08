@@ -28,7 +28,7 @@ type ResilienceSnapshot = {
   score?: number | null;
   risk_score?: number | null;
   components?: Record<string, number> | null;
-  dominant_failure_modes?: { label?: string; place_id?: string | null }[] | null;
+  dominant_failure_modes?: string[] | null;
   evidence_provenance?: string[] | null;
 };
 
@@ -191,7 +191,6 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
           <small data-testid="v14-preventive-evidence">
             solver {solver} · snapshot {prediction?.id ?? "—"} ·{" "}
             {(prediction?.dominant_failure_modes ?? [])
-              .map((mode) => mode.label ?? mode.place_id ?? "?")
               .slice(0, 2)
               .join(", ") || "no dominant mode"}
           </small>
