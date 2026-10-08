@@ -575,7 +575,7 @@ export interface JourneyGroupPresenceProjection {
     planned_separation?: boolean;
     personal_stop?: {
       planned_personal_stop: true;
-      state: "AWAY" | "RETURNING" | "FINISHED";
+      state: "PLANNED" | "ACTIVE_SELF_REPORTED" | "FINISHED_RETURN_UNCONFIRMED";
     };
     return_state?: string | null;
     planned_rendezvous?: { activity_id: string; title: string; place_name: string; scheduled_at?: string | null } | null;
