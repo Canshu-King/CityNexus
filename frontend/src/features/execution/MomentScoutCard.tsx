@@ -344,14 +344,16 @@ export function MomentScoutCard({
       >
         {busy ? (zh ? "正在查找…" : "Looking nearby…") : (zh ? "查找附近体验" : "Scout nearby")}
       </button>
-      {receipt?.value.scout_state === "NO_GROUNDED_OPTIONS" && !liveReceipt && (
+      {receipt && !liveReceipt && (
         <button
           type="button"
           data-testid="moment-scout-live-opt-in"
-          disabled={busy || !onRefreshLocation}
+          disabled={busy || !onRefreshLocation || rendezvousIsPast}
           onClick={() => setShowLiveConsent(true)}
         >
-          {zh ? "搜索真实的附近地点" : "Search live nearby places"}
+          {receipt.value.scout_state === "NO_GROUNDED_OPTIONS"
+            ? (zh ? "搜索真实的附近地点" : "Search live nearby places")
+            : (zh ? "想看看更多？明确同意后搜索真实地点" : "Want other options? Search live places with consent")}
         </button>
       )}
       {showLiveConsent && (
