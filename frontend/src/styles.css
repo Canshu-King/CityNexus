@@ -96,7 +96,6 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .agent-card select, .agent-card input[type="number"] { width: 100%; box-sizing: border-box; border: 1px solid #3c4e75; border-radius: var(--cn-r-8); padding: 9px var(--cn-s-10); background: #182643; color: #eef3ff; margin: var(--cn-s-6) 0 14px; }
 .field-label { display: block; color: #b8c5df; font-size: 12px; margin-top: 9px; }
 .toggle-row { display: flex; gap: 8px; align-items: center; color: #dbe5fa; font-size: 13px; }
-.toggle-row input { accent-color: #7e95ff; }
 .policy-note { color: #9eafd4; font-size: 12px; line-height: 1.45; }
 .agent-feed-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .agent-feed-list li { border-left: 2px solid #7e95ff; padding: var(--cn-s-6) 0 var(--cn-s-6) 12px; color: #dce6fb; font-size: 13px; }
