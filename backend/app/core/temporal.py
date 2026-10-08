@@ -147,15 +147,14 @@ def derive_budget_reference(
         )
     if amount is None or amount <= 0:
         return BudgetReference(
-            available=False, amount_minor=amount, currency=currency,
-            party_size=max(1, party_size or 1), day_count=day_count,
+            available=False, amount_minor=amount, currency=currency, party_size=party_size, day_count=day_count,
             per_day_minor=None, per_person_per_day_minor=None,
             floor_minor=BUDGET_DAILY_FLOOR_MINOR, floor_currency=BUDGET_DAILY_FLOOR_CURRENCY,
             floor_comparable=False, reason=UNAVAILABLE_NO_BUDGET,
         )
-    party = max(1, party_size or 1)
+    party = party_size  # 诚实记录 party_size 的真实值（可能为 None）
     per_day = _divide_round_half_up(amount, day_count)
-    per_person_per_day = _divide_round_half_up(per_day, party)
+    per_person_per_day = _divide_round_half_up(per_day, party) if party is not None else None
     return BudgetReference(
         available=True, amount_minor=amount, currency=currency, party_size=party,
         day_count=day_count, per_day_minor=per_day,
