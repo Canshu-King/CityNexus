@@ -723,6 +723,16 @@
     background: var(--cn-accent) !important;
     color: var(--cn-canvas) !important;
   }
+  :root[data-theme="dark"] .v8-page .v8-stay-impact em,
+  :root[data-theme="dark"] .v8-page .v8-day-detail-title > span {
+    /* The same defect the rule above was written for, on the two chips that were left out of
+       it: measured under dark they still carried accent text on the hardcoded #eff1ff fill at
+       3.25:1 and 3.22:1.  Only fill and label follow .mode-mark here; size, radius and padding
+       are untouched.  .v8-hotel-thumb has the same reading but it is a 49px and 142px thumbnail,
+       so filling it is a visual decision rather than a chip fix and is handed up unmade. */
+    background: var(--cn-accent) !important;
+    color: var(--cn-canvas) !important;
+  }
 
   /* 5. Hardcoded grey-blue body text that fell below AA on the dark canvas. */
   :root[data-theme="dark"] .v8-product-shell .v8-lede, :root[data-theme="dark"] .v8-product-shell .v8-muted, :root[data-theme="dark"] .v8-product-shell .v8-live-now p, :root[data-theme="dark"] .v8-product-shell .v8-live-now > strong, :root[data-theme="dark"] .v8-product-shell .v8-mode-chooser span, :root[data-theme="dark"] .v8-product-shell .v8-mode-chips button, :root[data-theme="dark"] .v8-product-shell .v8-next-card p, :root[data-theme="dark"] .v8-product-shell .v8-eta span, :root[data-theme="dark"] .v8-product-shell .v9-evidence-summary > small {
