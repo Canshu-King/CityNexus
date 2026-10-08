@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
 from app.agent.mission import mission_payload
+from app.agent.mission_plan import mission_plan_for_model
 from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identity
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
@@ -197,9 +198,32 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         f"Journey window: {journey.start_at} to {journey.end_at} in that zone.\n"
         "Name the zone whenever you name a moment. "
     )
+    # The prompt used to say "the eleven CityNexus tools supplied by the server" -- a fixed word for
+    # a number that is not fixed per mission.  The server does supply eleven definitions to every
+    # mission, but `build_mission_plan` grants five to a PLAN_ONLY one and the gateway refuses the
+    # other six at call time (see `_execute_step`), so a PLAN_ONLY model was told a premise the
+    # mission could not honour and then blocked from it.  Both numbers are stated now, read from
+    # the same source that grants them, because "what may I use" and "what exists" are different
+    # questions and the model has to be able to tell them apart.
+    granted_tools = tuple(mission_plan_for_model(mission).get("allowed_tools") or ())
+    supplied_tools = citynexus_tool_definitions()
+    if len(granted_tools) < len(supplied_tools):
+        # Say what the refusal covers, and only when there is something to refuse: naming "the
+        # rest" when the mission was granted everything would be a smaller version of the same
+        # invented number this replaced.
+        tool_line = (
+            f"Use only the {len(granted_tools)} CityNexus tools this mission grants; the server "
+            f"supplies {len(supplied_tools)} definitions and the Gateway refuses the "
+            f"{len(supplied_tools) - len(granted_tools)} outside that grant. "
+        )
+    else:
+        tool_line = (
+            f"Use only the {len(granted_tools)} CityNexus tools this mission grants, which is "
+            f"everything the server supplies; the Gateway refuses anything outside them. "
+        )
     return (
         "You are the CityNexus Delegated Autonomous Journey Agent. "
-        "Use only the eleven CityNexus tools supplied by the server. "
+        f"{tool_line}"
         "Inspect the Journey and JourneyTwin before any mutation. "
         "Never invent IDs, prices, opening hours, provider status, or commitments. "
         "The Gateway and deterministic feasibility layer are authoritative: follow their decisions. "
