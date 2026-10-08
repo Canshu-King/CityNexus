@@ -472,6 +472,51 @@ def test_r65_private_navigation_and_fit_preview_reject_synthetic_routes_without_
     assert _count(GuardianPulse, GuardianPulse.journey_id == journey_id) == before_guardian
     assert _count(Event, Event.journey_id == journey_id) == before_events
 
+    # A mathematical leave-by is not useful guidance once it cannot be met.
+    # Capture receipts here remain controlled test-only provider fixtures.
+    with SessionLocal() as session:
+        commitment = session.scalar(select(Commitment).where(
+            Commitment.journey_id == journey_id,
+            Commitment.external_ref == "R65-PRIVATE-DETOUR-FIT-FIXTURE",
+        ))
+        assert commitment is not None
+        policy = json.loads(commitment.policy_json or "{}")
+        policy["scheduled_start_at"] = (
+            execution_clock.now().astimezone(timezone.utc) + timedelta(minutes=48)
+        ).isoformat()
+        commitment.policy_json = json.dumps(policy)
+        session.commit()
+    tight = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/fit-preview",
+        headers=_auth(owner_id),
+        json={"location_observation_id": observation_id, "dwell_minutes": 20},
+    )
+    assert tight.status_code == 200, tight.text
+    assert tight.json()["state"] == "TIGHT_RETURN"
+    assert tight.json()["recommended_leave_by"] is None
+
+    with SessionLocal() as session:
+        commitment = session.scalar(select(Commitment).where(
+            Commitment.journey_id == journey_id,
+            Commitment.external_ref == "R65-PRIVATE-DETOUR-FIT-FIXTURE",
+        ))
+        assert commitment is not None
+        policy = json.loads(commitment.policy_json or "{}")
+        policy["scheduled_start_at"] = (
+            execution_clock.now().astimezone(timezone.utc) + timedelta(minutes=2)
+        ).isoformat()
+        commitment.policy_json = json.dumps(policy)
+        session.commit()
+    impossible = client.post(
+        f"/api/v1/journeys/{journey_id}/member-side-quests/{quest_id}/fit-preview",
+        headers=_auth(owner_id),
+        json={"location_observation_id": observation_id, "dwell_minutes": 20},
+    )
+    assert impossible.status_code == 200, impossible.text
+    assert impossible.json()["state"] == "DOES_NOT_FIT"
+    assert impossible.json()["recommended_leave_by"] is None
+    assert impossible.json()["reason_code"] == "INSUFFICIENT_TIME_FOR_PRIVATE_DETOUR"
+
     other_sample = client.post(
         f"/api/v1/journeys/{journey_id}/location",
         headers=_auth(other_id),
