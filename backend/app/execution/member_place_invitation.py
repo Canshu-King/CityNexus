@@ -1098,32 +1098,12 @@ def _validated_invitation_progress_binding(
     ):
         raise HTTPException(409, "PLACE_INVITATION_PROGRESS_BINDING_CHANGED")
 
-    if role == "JOINED":
-        owner = session.get(JourneyMember, str(invitation.owner_member_id))
-        if (
-            owner is None
-            or not _member_in_force(owner, now)
-            or str(owner.traveler_id) != str(invitation.owner_traveler_id)
-        ):
-            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_OWNER_NO_LONGER_ACTIVE")
-        owner_quest, owner_split, owner_place = _member_side_quest_for_action(
-            session,
-            journey=journey,
-            member=owner,
-            traveler_id=str(invitation.owner_traveler_id),
-            quest_id=str(invitation.owner_side_quest_id),
-            allowed_states=frozenset({"READY", "EN_ROUTE", "ARRIVED", "COMPLETED", "CANCELLED"}),
-        )
-        if (
-            str(owner_split["intent"].id) != str(invitation.owner_split_intent_id)
-            or str(owner_quest.planned_separation_intent_id) != str(invitation.owner_split_intent_id)
-            or str(owner_quest.active_plan_version_id) != str(invitation.active_plan_version_id)
-            or str(owner_quest.side_place_id or "") != str(invitation.place_id)
-            or str(owner_place.id) != str(invitation.place_id)
-            or str(owner_quest.rendezvous_activity_id) != str(invitation.rendezvous_activity_id)
-            or str(owner_quest.rendezvous_place_id) != str(invitation.rendezvous_place_id)
-        ):
-            raise HTTPException(409, "PLACE_INVITATION_PROGRESS_OWNER_BINDING_CHANGED")
+    # Once the recipient ACCEPTED, their R63/R64 trip is independently owned.
+    # The inviter may finish or end their own split first. Requiring the
+    # inviter's still-active quest here wrongly strands a joined traveller
+    # despite that traveller's own binding having just passed validation.
+    # Do not weaken the JOINED membership, exact invitation, recipient quest,
+    # PlanVersion, or own split checks above.
 
     if signal_type == HEADING_BACK_SIGNAL:
         receipt = session.scalar(
@@ -1328,6 +1308,23 @@ def _invitation_progress_board(
             MemberPlaceInvitationProgress.status == "ACTIVE",
         )
     ).all()
+    # An accepted member's visibility begins when their own stop became
+    # ready. Earlier opt-in reports were shared with the *then-joined* cohort;
+    # a later join cannot retroactively widen that audience.
+    viewer_joined_at: datetime | None = None
+    if str(viewer.id) != str(invitation.owner_member_id):
+        viewer_response = next(
+            (
+                row for row in recipients
+                if str(row.recipient_member_id) == str(viewer.id)
+                and str(row.recipient_traveler_id) == str(viewer.traveler_id)
+                and row.state == "ACCEPTED_OWN_STOP_READY"
+            ),
+            None,
+        )
+        if viewer_response is not None:
+            viewer_joined_at = _stamp(viewer_response.updated_at)
+
     signal_by_participant: dict[tuple[str, str], MemberPlaceInvitationProgress] = {}
     for signal in active_signals:
         signal_by_participant[(str(signal.member_id), str(signal.signal_type))] = signal
@@ -1349,6 +1346,15 @@ def _invitation_progress_board(
                 or str(signal.side_quest_id) != expected_quest_id
                 or str(signal.place_id) != str(invitation.place_id)
                 or str(signal.active_plan_version_id) != str(invitation.active_plan_version_id)
+                or (
+                    str(viewer.id) != str(invitation.owner_member_id)
+                    and str(participant.id) != str(viewer.id)
+                    and (
+                        viewer_joined_at is None
+                        or _stamp(signal.reported_at) is None
+                        or _stamp(signal.reported_at) < viewer_joined_at
+                    )
+                )
             ):
                 progress[field] = None
             else:
