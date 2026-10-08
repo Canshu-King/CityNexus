@@ -76,8 +76,6 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .mission-result { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid #5269a0; }
 .mission-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
 .mission-heading h3 { margin: 5px 0 0; font-size: 18px; }
-.run-badge { flex: none; border-radius: var(--cn-r-pill); padding: 7px 11px; background: #5e4b2b; color: #ffd98a; font-size: 11px; font-weight: 800; letter-spacing: .04em; }
-.run-badge.run-complete { background: #1d684e; color: #baf4d6; }
 .mission-text { color: #dce6fb; margin: 14px 0 var(--cn-s-10); }
 .mission-metrics { display: flex; flex-wrap: wrap; gap: 8px; }
 .mission-metrics span { border: 1px solid #50659a; border-radius: var(--cn-r-pill); padding: var(--cn-s-6) 9px; color: #c9d6f3; font-size: 12px; }
@@ -202,7 +200,7 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v12-authoritative-panel { display: grid; gap: 1.1rem; padding: 1.25rem; border: 1px solid rgba(104, 118, 139, .24); border-radius: var(--cn-r-24); background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250,.9)); box-shadow: 0 18px 50px rgba(27,43,61,.08); }
 .v12-panel-header, .v12-panel-footer, .v12-now-next { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .v12-panel-header h2 { margin: .2rem 0 0; font-size: 1.25rem; }
-.v12-evidence-badge, .v12-state-kicker { display: inline-flex; align-items: center; gap: .35rem; color: #55716e; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+.v12-state-kicker { display: inline-flex; align-items: center; gap: .35rem; color: #55716e; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
 .v12-now-next { align-items: stretch; }
 .v12-state-card { flex: 1; display: grid; gap: .45rem; padding: 1rem; border-radius: var(--cn-r-16); background: #f6faf8; border: 1px solid rgba(85,113,110,.16); }
 .v12-state-card.next { background: #f8f8fc; border-color: rgba(91,86,126,.14); }
@@ -424,7 +422,6 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .cn-native-proposal b { color: #596781; font-size: 9px; }
 .cn-native-proposal > span { color: #7a8799; font-size: 9px; line-height: 1.45; }
 .cn-protected-badges { display: flex; flex-wrap: wrap; gap: 5px; }
-.cn-protected-badges span { padding: var(--cn-s-4) var(--cn-s-6); border: 1px solid #e3c98c; border-radius: var(--cn-r-4); color: #916d32; background: #fff8e8; font-size: 8px; font-weight: 800; }
 .cn-copilot-approval { display: grid; gap: 7px; padding: 9px; border: 1px solid #edcf9c; border-radius: var(--cn-r-8); background: #fffaf0; }
 .cn-copilot-approval b { color: #8d632b; font-size: 10px; }
 .cn-copilot-approval span { color: #816f54; font-size: 9px; line-height: 1.45; }
@@ -462,7 +459,6 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 /* Journey-signal notifications popup (topbar bell) */
 .v8-alerts { position: relative; }
 .v8-alerts .v8-icon-button { position: relative; }
-.v8-alert-badge { position: absolute; top: -3px; right: -7px; display: grid; place-items: center; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--cn-r-pill); color: #fff; background: var(--v8-coral); font-size: 9px; font-style: normal; font-weight: 800; }
 .v8-pop-backdrop { position: fixed; inset: 0; z-index: 15; padding: 0; border: 0; background: transparent; cursor: default; }
 .v8-alert-pop { position: absolute; top: calc(100% + 12px); right: 0; z-index: 16; display: grid; gap: var(--cn-s-4); box-sizing: border-box; width: min(320px, calc(100vw - 34px)); padding: 16px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-12); background: #fff; box-shadow: 0 24px 60px #14233b33; }
 .v8-alert-pop .v8-kicker { margin: 0 0 8px; }
@@ -1409,10 +1405,6 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .hotel-card.chosen { border-color: #1c7a4a; box-shadow: 0 0 0 2px #1c7a4a22; }
 .hotel-card header { display: flex; align-items: center; justify-content: space-between; gap: var(--cn-s-10); }
 .hotel-card header b { font-size: 15px; }
-.hotel-badge {
-  font-size: 11px; font-weight: 700; padding: 3px 8px;
-  border-radius: var(--cn-r-pill); background: #e8f6ee; color: #1c7a4a;
-}
 .hotel-card dl { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; font-size: 12px; }
 .hotel-card dt { opacity: 0.6; font-size: 10px; }
 .hotel-card dd { margin: var(--cn-s-2) 0 0; font-weight: 700; }

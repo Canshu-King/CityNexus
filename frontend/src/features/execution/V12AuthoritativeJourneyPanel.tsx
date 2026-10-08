@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronRight, Circle, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
 import { transitionActivity, type PlanVersion } from "../../api/v12Authoritative";
+import { Badge } from "../../components/Badge";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { executionStateLabel } from "../../lib/displayVocabulary";
 
@@ -99,9 +100,9 @@ export function V12AuthoritativeJourneyPanel({
           <span className="v8-kicker">{t("exec.authoritativeJourney")}</span>
           <h2>{t("exec.oneTruth")}</h2>
         </div>
-        <span className="v12-evidence-badge">
-          <ShieldCheck size={14} /> {plan?.mobility_snapshot_id ? t("exec.frozenEvidence") : t("exec.evidencePending")}
-        </span>
+        <Badge tone="info" variant="tinted" leadingIcon={<ShieldCheck size={14} />}>
+          {plan?.mobility_snapshot_id ? t("exec.frozenEvidence") : t("exec.evidencePending")}
+        </Badge>
       </header>
       <div className="v12-now-next">
         <article className="v12-state-card now">

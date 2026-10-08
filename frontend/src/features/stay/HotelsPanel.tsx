@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { namedCodeIn, readResponseFacts, type RawFacts } from "../../lib/rawFacts";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
+import { Badge } from "../../components/Badge";
 
 type StayOption = {
   id: string;
@@ -190,9 +191,9 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
               <header>
                 <b data-testid="hotel-name">{stay.property_name}</b>
                 {isChosen && (
-                  <span className="hotel-badge" data-testid="hotel-chosen">
+                  <Badge tone="success" variant="tinted" testId="hotel-chosen">
                     {zh ? "已选择" : "Selected"}
-                  </span>
+                  </Badge>
                 )}
               </header>
               <dl>
