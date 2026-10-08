@@ -151,6 +151,14 @@ def _member_arrival_records(
     members: dict[str, JourneyMember],
     required_ids: set[str],
 ) -> tuple[dict[str, dict[str, Any]], set[str]]:
+    """Read movement hints from Activity history.
+
+    ARRIVED history is retained as a compatibility fallback, but R62 durable
+    member-bound receipts are the authoritative reunion progress source. A
+    shared Activity metadata JSON document can be concurrently rewritten by
+    multiple travellers and must not be the sole record that two people
+    arrived.
+    """
     arrivals: dict[str, dict[str, Any]] = {}
     moving: set[str] = set()
     for item in _activity_execution_history(activity):
@@ -174,6 +182,63 @@ def _member_arrival_records(
             arrivals[member_id] = item
             moving.discard(member_id)
     return arrivals, moving
+
+
+def _durable_member_arrival_receipts(
+    session: Session,
+    *,
+    journey: Journey,
+    snapshot: dict[str, Any],
+    members: dict[str, JourneyMember],
+    required_ids: set[str],
+) -> dict[str, dict[str, Any]]:
+    """Return verified per-member R62 receipts for this exact applied recovery.
+
+    These rows are written in the same transaction as the authenticated
+    execution truth. They are member-scoped and do not share one mutable JSON
+    document, so they survive concurrent member progress without last-writer
+    metadata loss.
+    """
+    incident_key = str(snapshot.get("incident_key") or "")
+    plan_id = str(snapshot.get("applied_plan_version_id") or "")
+    epoch_id = str(snapshot.get("recovery_epoch_id") or "")
+    rendezvous_activity_id = str(snapshot.get("rendezvous_activity_id") or "")
+    receipts: dict[str, dict[str, Any]] = {}
+    for row in session.scalars(
+        select(IdempotencyKey).where(
+            IdempotencyKey.operation == "group_recovery.execution_arrival"
+        )
+    ).all():
+        try:
+            item = json.loads(row.response_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if not isinstance(item, dict):
+            continue
+        member_id = str(item.get("journey_member_id") or "")
+        member = members.get(member_id)
+        if (
+            member_id not in required_ids
+            or member is None
+            or str(item.get("incident_key") or "") != incident_key
+            or str(item.get("applied_plan_version_id") or "") != plan_id
+            or str(item.get("recovery_epoch_id") or "") != epoch_id
+            or str(item.get("rendezvous_activity_id") or "") != rendezvous_activity_id
+            or str(item.get("traveler_id") or "") != str(member.traveler_id)
+            or str(item.get("role_at_confirmation") or "") != str(
+                (snapshot.get("member_roles_at_apply") or {}).get(member_id) or ""
+            )
+            or str(item.get("execution_truth_kind") or "")
+            not in AUTHENTICATED_ARRIVAL_KINDS
+        ):
+            continue
+        receipts[member_id] = {
+            **item,
+            "kind": item.get("execution_truth_kind"),
+            "captured_at": item.get("confirmed_at"),
+            "source": "DURABLE_GROUP_RECOVERY_EXECUTION_ARRIVAL",
+        }
+    return receipts
 
 
 def followthrough_projection(
@@ -216,7 +281,19 @@ def followthrough_projection(
 
     activity = session.get(Activity, str(snapshot.get("rendezvous_activity_id") or ""))
     place = session.get(Place, str(snapshot.get("rendezvous_place_id") or ""))
-    arrivals, moving = _member_arrival_records(activity, member_by_id, original_ids)
+    history_arrivals, moving = _member_arrival_records(
+        activity, member_by_id, original_ids
+    )
+    durable_arrivals = _durable_member_arrival_receipts(
+        session,
+        journey=journey,
+        snapshot=snapshot,
+        members=member_by_id,
+        required_ids=original_ids,
+    )
+    # Durable member receipts win. Activity history remains a compatibility
+    # fallback for an in-flight/pre-R62 row but is never the only modern truth.
+    arrivals = {**history_arrivals, **durable_arrivals}
     closure = None
     for row in session.scalars(
         select(AuditLog).where(
@@ -340,6 +417,11 @@ def followthrough_projection(
         "new_member_ids": added_ids,
         "changed_role_member_ids": changed_role_ids,
         "evidence_level": "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH",
+        "arrival_progress_authority": (
+            "DURABLE_MEMBER_EXECUTION_RECEIPTS"
+            if durable_arrivals
+            else "ACTIVITY_EXECUTION_HISTORY_FALLBACK"
+        ),
         "physical_presence_verified": any(
             item.get("kind") == "DEVICE_LOCATION_VERIFIED_EXECUTION"
             for item in arrivals.values()
