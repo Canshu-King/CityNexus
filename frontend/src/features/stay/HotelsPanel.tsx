@@ -136,6 +136,24 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             </p>
           </div>
         </div>
+        <div className="hotels-empty-actions" data-testid="hotels-empty-actions">
+          <button 
+            type="button" 
+            className="v8-outline-button" 
+            onClick={() => window.location.href = '/v8/hub'}
+            data-testid="hotels-empty-explore-btn"
+          >
+            {zh ? "探索其他城市" : "Explore other cities"}
+          </button>
+          <button 
+            type="button" 
+            className="v8-primary-button" 
+            onClick={onSelected}
+            data-testid="hotels-empty-retry-btn"
+          >
+            {zh ? "稍后再试" : "Try again later"}
+          </button>
+        </div>
       </section>
     );
   }

@@ -1241,3 +1241,35 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .inbox-advanced-raw dt { color: #8b95a3; font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; }
 .inbox-advanced-raw dd { margin: 0; color: #4c5872; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .inbox-advanced-raw { grid-template-columns: 1fr; } }
+
+/* Empty state action buttons */
+.itinerary-empty-actions,
+.hotels-empty-actions,
+.map-empty-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.itinerary-empty-actions button,
+.hotels-empty-actions button,
+.map-empty-actions button {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .itinerary-empty-actions,
+  .hotels-empty-actions,
+  .map-empty-actions {
+    flex-direction: column;
+  }
+  
+  .itinerary-empty-actions button,
+  .hotels-empty-actions button,
+  .map-empty-actions button {
+    width: 100%;
+  }
+}

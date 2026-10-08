@@ -118,9 +118,24 @@ export function TripItinerary({
             </p>
           </div>
         </div>
-        <button type="button" className="v8-primary-button" onClick={onOpenCopilot}>
-          {zh ? "AI 帮我规划" : "Plan my trip with AI"}
-        </button>
+        <div className="itinerary-empty-actions" data-testid="itinerary-empty-actions">
+          <button 
+            type="button" 
+            className="v8-primary-button" 
+            onClick={onOpenCopilot}
+            data-testid="itinerary-empty-plan-btn"
+          >
+            {zh ? "AI 帮我规划" : "Plan my trip with AI"}
+          </button>
+          <button 
+            type="button" 
+            className="v8-outline-button" 
+            onClick={() => window.location.href = '/v8/hub'}
+            data-testid="itinerary-empty-hub-btn"
+          >
+            {zh ? "去今天首页" : "Go to Today"}
+          </button>
+        </div>
       </section>
     );
   }

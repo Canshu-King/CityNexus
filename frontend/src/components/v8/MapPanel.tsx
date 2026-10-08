@@ -208,6 +208,24 @@ export function MapPanel({
               : "This trip has no trustworthy coordinates yet. Add located activities or enable location, and the map will show the right city."}
           </p>
         </div>
+        <div className="map-empty-actions" data-testid="map-empty-actions">
+          <button 
+            type="button" 
+            className="v8-primary-button" 
+            onClick={() => window.location.href = '/v8/studio'}
+            data-testid="map-empty-add-activity-btn"
+          >
+            {locale.startsWith("zh") ? "添加活动地点" : "Add activity"}
+          </button>
+          <button 
+            type="button" 
+            className="v8-outline-button" 
+            onClick={() => window.location.reload()}
+            data-testid="map-empty-refresh-btn"
+          >
+            {locale.startsWith("zh") ? "刷新页面" : "Refresh page"}
+          </button>
+        </div>
       </div>
     );
   }
