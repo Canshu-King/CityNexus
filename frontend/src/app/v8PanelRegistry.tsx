@@ -367,7 +367,10 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     testId: "journey-trash-panel",
     when: (s) => s.route === "trash",
     render: (s) => (
-      <JourneyTrashPanel travelerId={s.data?.journey?.traveler_id ?? null} />
+      <JourneyTrashPanel
+        travelerId={s.data?.journey?.traveler_id ?? null}
+        onNavigate={(route: string) => s.navigate(route)}
+      />
     ),
   },
   {
@@ -395,7 +398,11 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
        instant read in THIS trip's zone, and the zone is a row the shell already has -- passing it in
        is what keeps the screen from falling back to the device's clock. */
     render: (s) => (
-      <FootprintPanel journeyId={s.data.journey?.id ?? null} timezone={s.data.journey?.timezone ?? null} />
+      <FootprintPanel
+        journeyId={s.data.journey?.id ?? null}
+        timezone={s.data.journey?.timezone ?? null}
+        onNavigate={(route: string) => s.navigate(route)}
+      />
     ),
   },
 ];

@@ -52,6 +52,9 @@ export const journeyTrashCopy = {
     "trash.doorAbsent":
       "This server did not answer the list of binned trips, so no row can be shown yet. Nothing about your trips changed.",
     "trash.refresh": "Read the bin again",
+    "trash.empty.why":
+      "Nothing is in the bin because you have not put a trip there -- a trip reaches the bin by being discarded, and this screen cannot discard one.",
+    "trash.empty.action": "Go to your trips",
     "trash.noViewer":
       "This screen does not know whose bin to ask for, so it is not showing anybody's. Nothing about your trips changed.",
     "trash.rowOwnershipMissing": "this server gave no owner for this row",
@@ -94,6 +97,8 @@ export const journeyTrashCopy = {
     "trash.transport": "回收站没有从这台服务器读到。这一屏没有改动你的任何行程。",
     "trash.doorAbsent": "这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
     "trash.refresh": "再读一次回收站",
+    "trash.empty.why": "站里没有东西，是因为你还没有把任何一条行程丢进去——行程要靠「丢弃」才会进站，而这一屏不能替你丢弃。",
+    "trash.empty.action": "回到我的行程",
     "trash.noViewer": "这一屏还不知道要问谁的回收站，所以任何人的都不显示。你的行程没有因此变化。",
     "trash.rowOwnershipMissing": "服务器没有给出这一行的归属",
     "trash.rowOwnedByOther": "由这台服务器上的另一位旅客保管",

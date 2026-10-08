@@ -33,7 +33,11 @@ import {
 } from "./footprintCopy";
 import "./footprint.css";
 
-type Props = { journeyId: string | null; timezone?: string | null };
+type Props = {
+  journeyId: string | null;
+  timezone?: string | null;
+  onNavigate?: (route: string) => void;
+};
 
 /** `refused` and `unreachable` are separate arms on purpose: they are different answers, and the
  *  screen owes the traveller the difference. The reason code travels beside the arm as a value. */
@@ -46,7 +50,7 @@ type State =
 
 type DayGroup = { key: string; when: Date; stamps: CheckinStamp[] };
 
-export function FootprintPanel({ journeyId, timezone = null }: Props) {
+export function FootprintPanel({ journeyId, timezone = null, onNavigate }: Props) {
   const { locale, t } = useLocale();
   const [state, setState] = useState<State>({ kind: "idle" });
   const [attempt, setAttempt] = useState(0);
@@ -120,9 +124,21 @@ export function FootprintPanel({ journeyId, timezone = null }: Props) {
           {footprintCopy(locale, "unreachable")}
         </p>
       ) : stamps.length === 0 ? (
-        <p className="cn-footprints__state" data-testid="footprint-empty">
-          {footprintCopy(locale, "empty")}
-        </p>
+        <div className="cn-footprints__empty" data-testid="footprint-empty">
+          <p className="cn-footprints__state">{footprintCopy(locale, "empty")}</p>
+          <p className="cn-footprints__empty-why">{footprintCopy(locale, "emptyWhy")}</p>
+          {onNavigate ? (
+            <button
+              type="button"
+              className="v8-primary-button"
+              data-testid="footprint-empty-action"
+              data-contrast-role="control"
+              onClick={() => onNavigate("trips")}
+            >
+              {footprintCopy(locale, "emptyAction")}
+            </button>
+          ) : null}
+        </div>
       ) : (
         <>
           <p className="cn-footprints__zone" data-testid="footprint-day-zone">

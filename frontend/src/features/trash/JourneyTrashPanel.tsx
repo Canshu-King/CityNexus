@@ -105,7 +105,13 @@ function recoveryReasonKey(row: ScopedBinRow): JourneyTrashCopyKey | null {
   return code === null ? null : RECOVERY_REASON_KEYS[code] ?? null;
 }
 
-export function JourneyTrashPanel({ travelerId = null }: { travelerId?: string | null }) {
+export function JourneyTrashPanel({
+  travelerId = null,
+  onNavigate,
+}: {
+  travelerId?: string | null;
+  onNavigate?: (route: string) => void;
+}) {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const say = (key: JourneyTrashCopyKey, params: Record<string, string | number> = {}) =>
@@ -257,9 +263,20 @@ export function JourneyTrashPanel({ travelerId = null }: { travelerId?: string |
       )}
 
       {read.phase === "ready" && rows.length === 0 && (
-        <p className="v8-muted" data-testid="trash-empty">
-          {say("trash.empty")}
-        </p>
+        <div className="cn-trash-empty" data-testid="trash-empty">
+          <p className="cn-trash-empty-why">{say("trash.empty.why")}</p>
+          {onNavigate ? (
+            <button
+              type="button"
+              className="v8-primary-button"
+              data-testid="trash-empty-action"
+              data-contrast-role="control"
+              onClick={() => onNavigate("trips")}
+            >
+              {say("trash.empty.action")}
+            </button>
+          ) : null}
+        </div>
       )}
 
       {read.phase === "ready" && rows.length > 0 && (
