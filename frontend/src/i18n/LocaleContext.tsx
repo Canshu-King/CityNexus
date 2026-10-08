@@ -524,6 +524,7 @@ const en: Dict = {
   "agent.aiRunOtherPlan": "The plan in force is a different one than before.",
   "agent.aiRunPlanAppeared": "A plan is in force now (version {version}) that wasn't before.",
   "agent.aiRunNoCurrentPlan": "The read-back found no plan in force at all.",
+  "agent.runtimeDetails": "Runtime details",
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -1646,6 +1647,7 @@ const zhCN: Dict = {
   "agent.aiRunOtherPlan": "当前生效的方案已经换成另一个。",
   "agent.aiRunPlanAppeared": "回读时才有了生效方案（第 {version} 版）。",
   "agent.aiRunNoCurrentPlan": "回读时没有任何生效方案。",
+  "agent.runtimeDetails": "运行详情",
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
