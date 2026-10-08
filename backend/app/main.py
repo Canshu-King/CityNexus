@@ -1325,7 +1325,11 @@ def _capture_reported_disruption(
             {
                 "description": description,
                 "source": source,
-                "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
+                # A report says a delay is happening; it does not say how long.  This key used to
+                # be written as 15 for every traffic report -- a magnitude this build chose, which
+                # the replan then shifted the itinerary by and recorded as `delay_minutes: 15` on
+                # the plan (see the reader in the recovery path).  An unstated magnitude travels
+                # as unstated; `payload_extra` still lets a caller that really knows it say so.
                 "semantic": {**semantic_payload, "target_resolution": target.resolution},
                 **(payload_extra or {}),
             },
@@ -11284,12 +11288,16 @@ def generate_replan(
                 if not replacement_choices:
                     remove_affected = True
             else:
-                raw_delay = (
-                    payload.get("extra_minutes", payload.get("delay_minutes", 15))
-                    if trigger_event.event_type == "TRAFFIC_DELAY"
-                    else payload.get("delay_minutes", payload.get("extra_minutes", 15))
+                # `or None` folds the absent key and the explicit null into the one state they
+                # both mean: nobody stated a magnitude.  This defaulted to 15 as well, so a
+                # traveller's "there is traffic" became a fifteen-minute shift of their plan --
+                # and on the events the capture writes with an explicit null it raised
+                # `int(None)` instead.  An unstated delay yields no suffix-delay candidate, which
+                # is what the branch below already does for a non-physical event.
+                stated_delay = payload.get("extra_minutes") or payload.get("delay_minutes")
+                delay_minutes = (
+                    max(1, min(int(stated_delay), 120)) if stated_delay is not None else 0
                 )
-                delay_minutes = max(1, min(int(raw_delay), 120))
     latest_version = (
         session.scalar(
             select(PlanVersion.version_no)
