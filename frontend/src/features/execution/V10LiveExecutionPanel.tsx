@@ -14,6 +14,26 @@ import { clockZoneLabel } from "../../lib/displayVocabulary";
 import { liveActivityWindow } from "../../lib/executionWindow";
 import type { V8Data } from "../../app/v8Types";
 
+/**
+ * A zone name this runtime can actually format in.
+ *
+ * `Intl` throws on anything it does not recognise, and the server's timezone field is a string, not
+ * a proven IANA name. An unusable value therefore falls back to `undefined`, which leaves the call
+ * on the device zone -- the honest reading of "we were not told a zone", and strictly better than a
+ * panel that crashes over a typo in one field.
+ */
+function renderableZone(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const name = value.trim();
+  if (!name) return undefined;
+  try {
+    new Intl.DateTimeFormat("en-GB", { timeZone: name });
+    return name;
+  } catch {
+    return undefined;
+  }
+}
+
 type Props = {
   journeyId: string;
   /**
@@ -30,6 +50,7 @@ export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
   const clock = useExecutionClock(journeyId);
   const web = useWebObservations(journeyId);
   const now = clock.data ? new Date(clock.data.now) : null;
+  const clockZone = renderableZone(clock.data?.timezone);
   const window = liveActivityWindow(plan);
   // Four facts, four answers.  The old pair of branches keyed off "does a cursor exist",
   // which made a stale cursor read as "in progress" and a finished journey read as
@@ -64,6 +85,12 @@ export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
               ? now.toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
+                  /* ORD-0553: the label under this number names the journey's zone (line below),
+                     while the number itself was computed in the device's zone. On a traveller whose
+                     device is not on the journey's zone the two disagree -- the screen reads
+                     "07:30 / Asia/Shanghai" for an instant that is 15:30 there. Rendered in the zone
+                     the label claims, so number and label are one fact. */
+                  timeZone: clockZone,
                 })
               : "—"}
           </strong>
