@@ -352,7 +352,11 @@ def _payload(
         "offered_at": str(row.offered_at),
         "expires_at": str(row.expires_at),
         "responded_at": str(row.responded_at) if row.responded_at else None,
-        "evidence_level": "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE",
+        "evidence_level": (
+            "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE"
+            if row.status == "ACCEPTED"
+            else "ONE_SIDED_PUBLIC_HANDOFF_OFFER_NOT_ACCEPTED"
+        ),
         "shared_plan_changed": False,
         "route_eta_state": "UNKNOWN",
         "accessibility_state": "UNKNOWN",
