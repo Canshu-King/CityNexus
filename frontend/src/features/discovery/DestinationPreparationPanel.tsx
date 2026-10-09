@@ -560,7 +560,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={busy}
                 onClick={() => void prepare()}
               >
-                {zh ? "重试" : "Try again"}
+                {t("offline.retry")}
               </button>
             )}
             {job.terminal && String(job.outcome ?? "") === "CATALOG_PREPARED" && onOpenPlan && (
