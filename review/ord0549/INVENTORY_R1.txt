@@ -1,0 +1,74 @@
+ORD-0549 re-inventory on the live authoritative tip.
+tip=b461897465b07a4d5e8d99e618f59034652f81f2 (the commander verified at 68b5b3cbf4, published at da846e54e7)
+rows=25 files=13
+
+STILL_INLINE                           frontend/src/features/checklist/PretripChecklistPanel.tsx:42 key=detail.pretripAria
+                                       inline_now=[42] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[42, 46]
+STILL_INLINE                           frontend/src/features/checklist/PretripChecklistPanel.tsx:46 key=detail.pretripKicker
+                                       inline_now=[46] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[42, 46]
+STILL_INLINE                           frontend/src/features/checklist/PretripChecklistPanel.tsx:47 key=detail.pretripHeading
+                                       inline_now=[47] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[47]
+STILL_INLINE                           frontend/src/features/checklist/PretripChecklistPanel.tsx:80 key=detail.basisPrefix
+                                       inline_now=[80] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[80]
+STILL_INLINE                           frontend/src/features/checklist/PretripChecklistPanel.tsx:86 key=detail.anchorPrefix
+                                       inline_now=[86] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[86]
+STILL_INLINE                           frontend/src/features/planning/PlanWithAiSheet.tsx:200 key=bookings.realtimeCancelled
+                                       inline_now=[200] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[200, 219]
+STILL_INLINE                           frontend/src/features/planning/PlanWithAiSheet.tsx:722 key=itinerary.planWithAi
+                                       inline_now=[722] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[2, 722]
+STILL_INLINE                           frontend/src/features/planning/PlanWithAiSheet.tsx:729 key=shell.close
+                                       inline_now=[729] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[729, 815, 1166]
+STILL_INLINE                           frontend/src/features/planning/PlanWithAiSheet.tsx:1018 key=hub.continuationTechnicalDetail
+                                       inline_now=[1019] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[107, 183, 242, 251]
+STILL_INLINE                           frontend/src/features/planning/PlanWithAiSheet.tsx:1061 key=detail.rawFactsHeading
+                                       inline_now=[1062] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[1062]
+STILL_INLINE                           frontend/src/features/setup/JourneyTrialSetup.tsx:1391 key=ARRIVAL
+                                       inline_now=[1391] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[528, 851, 879, 894]
+STILL_INLINE                           frontend/src/features/setup/JourneyTrialSetup.tsx:1480 key=hub.continuationTechnicalDetail
+                                       inline_now=[1480] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[1480]
+STILL_INLINE                           frontend/src/features/setup/JourneyTrialSetup.tsx:1594 key=agent.aiRunStop
+                                       inline_now=[1594] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[1506, 1594, 1599]
+STILL_INLINE                           frontend/src/features/trip/ActivityDetail.tsx:216 key=detail.hoursProvided
+                                       inline_now=[216] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[216]
+STILL_INLINE                           frontend/src/features/trip/ActivityDetail.tsx:216 key=detail.hoursProviderText
+                                       inline_now=[216] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[216]
+STILL_INLINE                           frontend/src/lib/errorReceipt.ts:71 key=detail.receiptLabel
+                                       inline_now=[71] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[71]
+STILL_INLINE                           frontend/src/lib/errorReceipt.ts:72 key=detail.receiptLabelAbsent
+                                       inline_now=[72] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[72]
+STILL_INLINE                           frontend/src/app/V8Experience.tsx:4864 key=agent.obsAdvancedDetail
+                                       inline_now=[4864] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[4864]
+STILL_INLINE                           frontend/src/components/RawFactsPanel.tsx:39 key=detail.rawFactsHeading
+                                       inline_now=[39] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[39]
+ABSORBED_by_a_lane_reading_the_named_key frontend/src/features/agent/AgentComposer.tsx:34 key=hub.feasible
+                                       inline_now=none reads_key_here=True arms_both_present=True arm_count=2 zh_still_in_file_at=[37]
+STILL_INLINE                           frontend/src/features/discovery/DestinationPreparationPanel.tsx:563 key=offline.retry
+                                       inline_now=[563] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[224, 237, 299, 490]
+ABSORBED_by_a_lane_reading_the_named_key frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:192 key=hub.continuationTechnicalDetail
+                                       inline_now=none reads_key_here=True arms_both_present=True arm_count=2 zh_still_in_file_at=none
+STILL_INLINE                           frontend/src/features/simulation/SimulationPanel.tsx:824 key=shared.refresh
+                                       inline_now=[824] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[824]
+ABSORBED_by_a_lane_reading_the_named_key frontend/src/features/stay/HotelsPanel.tsx:226 key=stay.selected
+                                       inline_now=none reads_key_here=True arms_both_present=True arm_count=2 zh_still_in_file_at=[272]
+STILL_INLINE                           frontend/src/features/stay/StayExplorer.tsx:303 key=inbox.typeHotel
+                                       inline_now=[303] reads_key_here=False arms_both_present=True arm_count=2 zh_still_in_file_at=[303]
+
+counts_by_verdict:
+  ABSORBED_by_a_lane_reading_the_named_key = 3
+  STILL_INLINE = 22
+lines_carrying_two_or_more_inline_pairs_in_these_files=7
+
+per_file (what is left for a lane to take):
+  inline_left= 5 of  5  frontend/src/features/checklist/PretripChecklistPanel.tsx
+  inline_left= 5 of  5  frontend/src/features/planning/PlanWithAiSheet.tsx
+  inline_left= 3 of  3  frontend/src/features/setup/JourneyTrialSetup.tsx
+  inline_left= 2 of  2  frontend/src/features/trip/ActivityDetail.tsx
+  inline_left= 2 of  2  frontend/src/lib/errorReceipt.ts
+  inline_left= 1 of  1  frontend/src/app/V8Experience.tsx
+  inline_left= 1 of  1  frontend/src/components/RawFactsPanel.tsx
+  inline_left= 1 of  1  frontend/src/features/discovery/DestinationPreparationPanel.tsx
+  inline_left= 1 of  1  frontend/src/features/simulation/SimulationPanel.tsx
+  inline_left= 1 of  1  frontend/src/features/stay/StayExplorer.tsx
+  inline_left= 0 of  1  frontend/src/features/agent/AgentComposer.tsx
+  inline_left= 0 of  1  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+  inline_left= 0 of  1  frontend/src/features/stay/HotelsPanel.tsx
