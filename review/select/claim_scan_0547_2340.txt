@@ -1,0 +1,50 @@
+tip=5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+review_branches_scanned=1563  merge_base_uncomputable=23
+
+frontend/src/api/citynexus.ts
+  claimed_by=6  clean=1534  unknown_base=23
+    origin/review/1ba48dbf-ord0513-evidence-r1
+    origin/review/1ba48dbf-ord0513-evidence-r2
+    origin/review/1ba48dbf-ord0513-evidence-r3
+    origin/review/1ba48dbf-ord0513-evidence-r4
+    origin/review/1ba48dbf-ord0538-evidence-r1
+    origin/review/cmdr-batch-ord-0513-002504
+
+frontend/src/features/simulation/simulationAdapter.ts
+  claimed_by=17  clean=1523  unknown_base=23
+    origin/review/1ba48dbf-ord0513-evidence-r1
+    origin/review/1ba48dbf-ord0513-evidence-r2
+    origin/review/1ba48dbf-ord0513-evidence-r3
+    origin/review/1ba48dbf-ord0513-evidence-r4
+    origin/review/1ba48dbf-ord0538-evidence-r1
+    origin/review/Q-ord0369-replan-walkthrough
+    origin/review/Q-ord0369-replan-walkthrough-r2
+    origin/review/a68b0631-comment-anchor-drift-r1
+    origin/review/a68b0631-comment-anchor-drift-r2
+    origin/review/a68b0631-comment-anchor-drift-r3
+    ... and 7 more
+
+frontend/src/demo/goldenScenario.ts
+  claimed_by=6  clean=1534  unknown_base=23
+    origin/review/1ba48dbf-ord0513-evidence-r1
+    origin/review/1ba48dbf-ord0513-evidence-r2
+    origin/review/1ba48dbf-ord0513-evidence-r3
+    origin/review/1ba48dbf-ord0513-evidence-r4
+    origin/review/1ba48dbf-ord0538-evidence-r1
+    origin/review/cmdr-batch-ord-0513-002504
+
+frontend/src/features/simulation/SimulationPanel.tsx
+  claimed_by=22  clean=1518  unknown_base=23
+    origin/review/1ba48dbf-ord0513-evidence-r1
+    origin/review/1ba48dbf-ord0513-evidence-r2
+    origin/review/1ba48dbf-ord0513-evidence-r3
+    origin/review/1ba48dbf-ord0513-evidence-r4
+    origin/review/1ba48dbf-ord0538-evidence-r1
+    origin/review/a68b0631-comment-anchor-drift-r2
+    origin/review/a68b0631-comment-anchor-drift-r3
+    origin/review/a68b0631-comment-anchor-drift-r4
+    origin/review/a68b0631-comment-anchor-drift-r5
+    origin/review/a68b0631-comment-anchor-drift-r6
+    ... and 12 more
+
+faces_with_no_claimant=0
