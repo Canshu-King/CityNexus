@@ -33,16 +33,6 @@ export function MomentScoutCard({
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // If Journey Live switches trips without remounting, one member's private
-    // search results must never carry into the next Journey UI.
-    setReceipt(null);
-    setSelectedPlaceId("");
-    setLiveReceipt(null);
-    setLiveSelectedCandidateId("");
-    setShowLiveConsent(false);
-  }, [journeyId]);
-
-  useEffect(() => {
     if (!receipt) return;
     const timeout = window.setTimeout(() => {
       setReceipt(null);

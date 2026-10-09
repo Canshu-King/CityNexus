@@ -667,6 +667,18 @@ export function LiveRecovery({
   const flow = operator?.flow ?? null;
   const transit = operator?.transit ?? null;
   const groupPresence = operator?.group_presence ?? null;
+  const viewerMember = groupPresence?.members.find((member) => member.is_viewer) ?? null;
+  const momentScoutResetKey = [
+    journeyId,
+    viewerMember?.member_id ?? "",
+    groupPresence?.active_plan_version_id ?? "",
+    groupPresence?.current_activity_id ?? "",
+    operator?.flow?.current?.id ?? "",
+    operator?.flow?.next?.id ?? "",
+    operator?.ahead?.current_activity_id ?? "",
+    operator?.member_side_quest?.id ?? "",
+    operator?.member_side_quest?.state ?? "",
+  ].join("|");
   const plannedSeparation = groupPresence?.planned_separation ?? null;
   const groupRecovery = operator?.group_recovery ?? null;
   const recoveryFollowthrough = groupRecovery?.followthrough ?? null;
@@ -1123,6 +1135,7 @@ export function LiveRecovery({
             {groupPresence.members.some((member) => member.is_viewer)
               && !["EN_ROUTE", "ARRIVED", "COMPLETED"].includes(operator?.member_side_quest?.state ?? "") && (
                 <MomentScoutCard
+                  key={momentScoutResetKey}
                   journeyId={journeyId}
                   onRefreshLocation={onRefreshLocation}
                   onUpdated={loadOperator}

@@ -509,18 +509,31 @@ test("R67 direct one-consent live-city search and selection use a controlled Ove
   });
   const planId = candidates[0]?.id;
   if (!planId) throw new Error("the demo Journey needs one selectable plan");
-  await api(request, `/api/v1/journeys/${journeyId}/plans/${planId}/select`, { method: "POST" });
-  await api(request, `/api/v1/journeys/${journeyId}/start`, { method: "POST" });
+  await api(request, `/api/v1/journeys/${journeyId}/plans/${planId}/select`, {
+    method: "POST",
+    token: ownerToken,
+  });
+  await api(request, `/api/v1/journeys/${journeyId}/start`, {
+    method: "POST",
+    token: ownerToken,
+  });
 
   const collaborator = await api<Traveler>(request, "/api/v1/travelers", {
     method: "POST",
     data: { display_name: "R67 Collaborator", locale: "en-US", timezone: "Asia/Tokyo" },
   });
-  await api(request, `/api/v1/journeys/${journeyId}/members`, {
-    method: "POST",
-    data: { traveler_id: collaborator.id, role: "COLLABORATOR", invited_by: ownerId },
-  });
   const collaboratorToken = travelerToken(collaborator.id);
+  const invitation = await api<{ invitation_id: string }>(request, `/api/v1/journeys/${journeyId}/membership-invitations`, {
+    method: "POST",
+    token: ownerToken,
+    headers: { "Idempotency-Key": `r83-r67-${journeyId}` },
+    data: { target_traveler_id: collaborator.id },
+  });
+  await api(request, `/api/v1/journey-membership-invitations/${invitation.invitation_id}/respond`, {
+    method: "POST",
+    token: collaboratorToken,
+    data: { decision: "ACCEPT" },
+  });
   await api(request, `/api/v1/journeys/${journeyId}/operator/start`, {
     method: "POST",
     token: ownerToken,
@@ -577,6 +590,11 @@ test("R67 direct one-consent live-city search and selection use a controlled Ove
     await collaboratorSession.page.reload();
     await expect(collaboratorSession.page.locator("body")).not.toContainText("R67 Fixture OSM Museum");
     await expect(collaboratorSession.page.locator("body")).not.toContainText(liveResult.receipt_id);
+    const placesBeforeSelection = await api<Place[]>(
+      request,
+      `/api/v1/places?city_code=${encodeURIComponent(experienceBefore.journey.city_code)}`,
+    );
+    expect(placesBeforeSelection.filter((place) => place.name === "R67 Fixture OSM Museum")).toHaveLength(0);
 
     await liveResults.getByTestId("moment-scout-live-choose").click();
     await expect(scoutCard.getByTestId("moment-scout-live-confirmation")).toContainText(
@@ -589,12 +607,103 @@ test("R67 direct one-consent live-city search and selection use a controlled Ove
     await scoutCard.getByTestId("moment-scout-live-confirm").click();
     const selection = await selectionPromise;
     expect(selection.status()).toBe(201);
-    await expect(owner.page.getByTestId("member-side-quest-card")).toBeVisible();
-    await expect(owner.page.getByTestId("member-side-quest-card")).toContainText("R67 Fixture OSM Museum");
+    const ownerCard = owner.page.getByTestId("member-side-quest-card");
+    await expect(ownerCard).toBeVisible();
+    await expect(ownerCard).toHaveAttribute("data-state", "READY");
+    await expect(ownerCard).toContainText("R67 Fixture OSM Museum");
+
+    // The live result becomes an actionable private stop, with two separate
+    // destination-only map consents: first the selected OSM place, then the
+    // current shared rendezvous after the self-reported stop is complete.
+    await owner.page.context().route("https://www.google.com/maps/**", (route) => route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><title>Maps fixture</title>",
+    }));
+    await ownerCard.getByTestId("member-side-quest-open-walking-maps").click();
+    const outboundConsent = ownerCard.getByTestId("member-side-quest-navigation-consent");
+    await expect(outboundConsent).toContainText("R67 Fixture OSM Museum");
+    const cancelledPopup = owner.page.waitForEvent("popup", { timeout: 1000 })
+      .then(() => true)
+      .catch(() => false);
+    await outboundConsent.getByTestId("member-side-quest-consent-cancel").click();
+    expect(await cancelledPopup).toBe(false);
+
+    const outboundTargetResponse = owner.page.waitForResponse((response) =>
+      response.request().method() === "GET"
+        && response.url().endsWith("/navigation-targets"),
+    );
+    await ownerCard.getByTestId("member-side-quest-open-walking-maps").click();
+    const outboundTarget = await (await outboundTargetResponse).json() as {
+      target: { kind: string; place_id: string; name: string; latitude: number; longitude: number; coordinate_system: string };
+    };
+    expect(outboundTarget.target.kind).toBe("PRIVATE_STOP");
+    expect(outboundTarget.target.coordinate_system).toBe("WGS84");
+    await expect(outboundConsent).toBeVisible();
+    const googlePopupPromise = owner.page.waitForEvent("popup");
+    await outboundConsent.getByTestId("member-side-quest-consent-google").click();
+    const googlePopup = await googlePopupPromise;
+    await expect.poll(() => new URL(googlePopup.url()).hostname).toBe("www.google.com");
+    const googleUrl = new URL(googlePopup.url());
+    expect(googleUrl.pathname).toBe("/maps/dir/");
+    expect(googleUrl.searchParams.get("api")).toBe("1");
+    expect(googleUrl.searchParams.get("travelmode")).toBe("walking");
+    expect(googleUrl.searchParams.get("destination")).toBe(
+      `${outboundTarget.target.latitude},${outboundTarget.target.longitude}`,
+    );
+    expect(googleUrl.searchParams.get("dir_action")).toBe("navigate");
+    expect(googleUrl.searchParams.has("origin")).toBe(false);
+    await googlePopup.close();
+    await owner.page.context().unroute("https://www.google.com/maps/**");
 
     await collaboratorSession.page.reload();
     const coarseStatus = collaboratorSession.page.getByTestId("journey-member-personal-stop");
     await expect(coarseStatus).toHaveAttribute("data-state", "PLANNED");
+    await expect(collaboratorSession.page.locator("body")).not.toContainText("R67 Fixture OSM Museum");
+
+    await ownerCard.getByTestId("member-side-quest-start").click();
+    await expect(ownerCard).toHaveAttribute("data-state", "EN_ROUTE");
+    await ownerCard.getByTestId("member-side-quest-arrive").click();
+    await expect(ownerCard).toHaveAttribute("data-state", "ARRIVED");
+    await ownerCard.getByTestId("member-side-quest-complete").click();
+    await expect(ownerCard).toHaveAttribute("data-state", "COMPLETED");
+    const returnTargetResponse = owner.page.waitForResponse((response) =>
+      response.request().method() === "GET" && response.url().endsWith("/navigation-targets"),
+    );
+    await ownerCard.getByTestId("member-side-quest-map-back").click();
+    const returnTarget = await (await returnTargetResponse).json() as {
+      target: { kind: string; name: string; latitude: number; longitude: number; coordinate_system: string };
+    };
+    expect(returnTarget.target.kind).toBe("SHARED_RENDEZVOUS");
+    expect(returnTarget.target.coordinate_system).toBe("WGS84");
+    const returnConsent = ownerCard.getByTestId("member-side-quest-navigation-consent");
+    await expect(returnConsent).toContainText(returnTarget.target.name);
+    await owner.page.context().route("https://www.google.com/maps/**", (route) => route.fulfill({
+      status: 200,
+      contentType: "text/html",
+      body: "<!doctype html><title>Maps fixture</title>",
+    }));
+    const returnPopupPromise = owner.page.waitForEvent("popup");
+    await returnConsent.getByTestId("member-side-quest-consent-google").click();
+    const returnPopup = await returnPopupPromise;
+    await expect.poll(() => new URL(returnPopup.url()).hostname).toBe("www.google.com");
+    const returnUrl = new URL(returnPopup.url());
+    expect(returnUrl.searchParams.get("destination")).toBe(
+      `${returnTarget.target.latitude},${returnTarget.target.longitude}`,
+    );
+    expect(returnUrl.searchParams.has("origin")).toBe(false);
+    await returnPopup.close();
+    await owner.page.context().unroute("https://www.google.com/maps/**");
+    await ownerCard.getByTestId("member-side-quest-head-back").click();
+    await expect(ownerCard.getByTestId("member-side-quest-return-state")).toContainText(
+      "You reported heading back; this does not verify your location or reunion.",
+    );
+    await expect(ownerCard.getByTestId("member-side-quest-message")).toContainText("Your return report is saved");
+    await collaboratorSession.page.reload();
+    await expect(collaboratorSession.page.getByTestId("journey-member-personal-stop")).toHaveAttribute(
+      "data-state",
+      "RETURN_STARTED_REPORTED",
+    );
     await expect(collaboratorSession.page.locator("body")).not.toContainText("R67 Fixture OSM Museum");
 
     const places = await api<Place[]>(
