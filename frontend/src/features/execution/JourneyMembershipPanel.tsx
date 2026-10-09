@@ -53,6 +53,14 @@ function rendezvousAudienceKey(members: GroupPresence["members"]): string {
   return JSON.stringify(members.map((member) => member.member_id).sort());
 }
 
+function secureJourneyRequestKey(): string {
+  // getRandomValues is supported on local-network HTTP pages where
+  // randomUUID/subtle may be unavailable. Never fall back to Math.random
+  // for an idempotency key that can authorize a signed member write.
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return "journey-" + Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 function routeEvidenceClass(result: GroupRendezvousRouteResult): "LIVE" | "REPLAY" | "UNKNOWN" {
   const provenance = String(result.route.provenance ?? "").toUpperCase();
   const provider = String(result.route.provider ?? "").trim();
@@ -286,7 +294,7 @@ export function JourneyMembershipPanel({
           // this action works even when crypto.subtle is unavailable on HTTP LAN.
           expected_audience_sha256: String(current.coordination_audience_sha256),
         },
-        crypto.randomUUID(),
+        secureJourneyRequestKey(),
       );
       setCoordinationConsentKind(null);
       setCoordinationConsentKey(null);
@@ -356,7 +364,7 @@ export function JourneyMembershipPanel({
       const created = await cityNexusApi.createJourneyMembershipInvitation(
         journeyId,
         target,
-        crypto.randomUUID(),
+        secureJourneyRequestKey(),
       );
       setTargetTravelerId("");
       setMessage(zh
