@@ -15,6 +15,7 @@ from app.integrations.discovery.real_city import DiscoveryCandidate
 
 client = TestClient(main_module.app)
 TEST_SECRET = "r89-member-shared-osm-identity-secret-0123456789"
+CONTROLLED_PROVIDER = "TEST_PROVIDER"
 
 
 def _new_traveler(name: str) -> dict:
@@ -39,7 +40,7 @@ def test_r89_same_public_osm_identity_gets_private_member_scopes(monkeypatch):
         return (
             [
                 DiscoveryCandidate(
-                    provider_key="overpass",
+                    provider_key=CONTROLLED_PROVIDER,
                     external_id="overpass:node/89001",
                     name="R89 Shared OSM Gallery",
                     category="gallery",
