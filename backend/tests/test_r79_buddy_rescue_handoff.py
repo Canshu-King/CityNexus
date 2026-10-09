@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
@@ -29,6 +30,7 @@ from app.db.models import (
     RouteAcquisitionOperation,
 )
 from app.db.session import SessionLocal
+from app.execution.rendezvous_buddy_handoff import _is_public_place
 from app.traveler_principal import issue_traveler_token
 from demo_stage import demo_reset_headers
 
@@ -486,3 +488,25 @@ def test_r79_requester_can_decline_and_helper_can_cancel_without_plan_change():
     with SessionLocal() as session:
         assert session.get(JourneyRendezvousBuddyHandoff, declined_id).status == "DECLINED"
         assert session.get(JourneyRendezvousBuddyHandoff, cancelled_id).status == "CANCELLED"
+
+
+@pytest.mark.parametrize(
+    "tags, metadata, allowed",
+    [
+        ({"access": "private"}, {"access": "yes"}, False),
+        ({"tags": {"access": "no"}}, {"visibility": "public"}, False),
+        ({"osm_tags": {"access": "staff"}}, {}, False),
+        ({"visibility": "restricted"}, {"access": "yes"}, False),
+        ({"access": "yes"}, {"is_public": False}, False),
+        ({"access": "yes"}, {"visibility": "public"}, True),
+    ],
+)
+def test_r79_public_handoff_filters_all_sources_without_overriding_private_tags(
+    tags: dict, metadata: dict, allowed: bool,
+):
+    """A later catalog flag must never erase an explicit OSM entry restriction."""
+    place = SimpleNamespace(
+        tags_json=json.dumps(tags),
+        metadata_json=json.dumps(metadata),
+    )
+    assert _is_public_place(place) is allowed
