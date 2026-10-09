@@ -16,6 +16,6 @@ NOTE ORD-0533 B2/B3 are red in BOTH generations (their judgement reads poi-impor
 
 re-cut onto base d980242a1b18e6cb7ed34527ad3987e92861095f (read by ls-remote at push time):
 own three arms alone on that base (run_id=dg0470v14e):   4 passed (18.4s)
-tsc -p tsconfig.typecheck.json --noEmit on that base: exit 0,  errors
+tsc -p tsconfig.typecheck.json --noEmit on the pushed head 47bddb402b300d323fc5bc0666d47ac34cf8ac46: exit 0, 0 error lines (log kept at D:/moodle/_qoder_lane_diangong_0470_20261009/tsc_0549_final_kept.log, outside the repo)
 files that landed between da846e54 and d980242a1 touching this lane's paths: 0 (read by git diff --name-only | grep -c)
 the A4 arm was dropped when lane progress's byte landed; see YIELD_AGENTCOMPOSER.txt
