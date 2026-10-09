@@ -53,14 +53,6 @@ function rendezvousAudienceKey(members: GroupPresence["members"]): string {
   return JSON.stringify(members.map((member) => member.member_id).sort());
 }
 
-async function rendezvousAudienceSha256(members: GroupPresence["members"]): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(rendezvousAudienceKey(members)),
-  );
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
 function routeEvidenceClass(result: GroupRendezvousRouteResult): "LIVE" | "REPLAY" | "UNKNOWN" {
   const provenance = String(result.route.provenance ?? "").toUpperCase();
   const provider = String(result.route.provider ?? "").trim();
@@ -268,6 +260,7 @@ export function JourneyMembershipPanel({
       !current || !target || !activePlanId
       || coordinationConsentKey !== currentTargetKey
       || coordinationConsentAudienceKey !== currentAudienceKey
+      || !/^[a-f0-9]{64}$/.test(String(current.coordination_audience_sha256 ?? ""))
     ) {
       setCoordinationConsentKind(null);
       setCoordinationConsentKey(null);
@@ -289,7 +282,9 @@ export function JourneyMembershipPanel({
           expected_current_activity_id: current.current_activity_id ?? null,
           expected_rendezvous_activity_id: target.activity_id,
           expected_public_place_id: target.place_id,
-          expected_audience_sha256: await rendezvousAudienceSha256(current.members),
+          // Digest is derived from the signed in-force cohort on the server;
+          // this action works even when crypto.subtle is unavailable on HTTP LAN.
+          expected_audience_sha256: String(current.coordination_audience_sha256),
         },
         crypto.randomUUID(),
       );
