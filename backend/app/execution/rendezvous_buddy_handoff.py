@@ -162,19 +162,32 @@ def _candidate(place: Place, *, original: Place, distance_m: int) -> dict[str, o
 
 
 def _is_public_place(place: Place) -> bool:
-    """Fail closed on catalog metadata that explicitly marks a Place private."""
-    facts: dict[str, object] = {}
+    """Reject a public handoff if *any* catalog source explicitly denies access.
+
+    Never let a later metadata dictionary overwrite an OSM private access tag.
+    OSM adapters can store their access facts at the root or under "tags".
+    Absence of a restriction remains UNKNOWN, not proof of legal entry;
+    handoff feasibility is still displayed as UNKNOWN.
+    """
+    restricted = {"private", "no", "restricted", "staff", "customers"}
     for raw in (place.tags_json, place.metadata_json):
         try:
             decoded = json.loads(raw or "{}")
         except (TypeError, json.JSONDecodeError):
             continue
-        if isinstance(decoded, dict):
-            facts.update(decoded)
-    if facts.get("is_public") is False or facts.get("public") is False:
-        return False
-    restricted = {"private", "no", "restricted", "staff", "customers"}
-    return str(facts.get("access") or facts.get("visibility") or "").strip().casefold() not in restricted
+        if not isinstance(decoded, dict):
+            continue
+        for facts in (decoded, decoded.get("tags"), decoded.get("osm_tags")):
+            if not isinstance(facts, dict):
+                continue
+            if facts.get("is_public") is False or facts.get("public") is False:
+                return False
+            if any(
+                str(facts.get(key) or "").strip().casefold() in restricted
+                for key in ("access", "visibility")
+            ):
+                return False
+    return True
 
 
 def _candidate_places(
