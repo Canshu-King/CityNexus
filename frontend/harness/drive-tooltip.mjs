@@ -252,4 +252,33 @@ await tctx.close();
 await browser.close();
 
 writeFileSync(OUT + "tip_readings_r1.json", JSON.stringify({ R }, null, 1), "utf8");
+
+/* The readings a delivery block cites must be citable in a form the coordinate ruler accepts, and
+   its vouching pattern (claim_coordinate_check_r7.py:293) lists py|ts|tsx|js|json|yaml|yml|css|
+   html|txt|md — `.mjs` is not among them, so citing this driver vouches for nothing while looking
+   like it does.  Every value below is taken out of R, so a re-run rewrites the sheet instead of
+   trusting prose. */
+const sheet = [
+  "# Tooltip 测量读数",
+  "",
+  "由 `frontend/harness/drive-tooltip.mjs` 生成；重跑即覆盖。面是 `frontend/harness/tooltip-harness.html`。",
+  "",
+  `- arm_a_clipped scrollWidth=${R.geometry.a.scrollWidth} clientWidth=${R.geometry.a.clientWidth} text_len=${R.geometry.a.text_len}`,
+  `- arm_a_bubbles_at_once ${R.arm_a_bubbles_at_once}`,
+  `- arm_a_bubbles_after_220ms ${R.arm_a_bubbles_after_220ms}`,
+  `- arm_a_bubble_text_len ${R.arm_a_bubble?.bubble_text_len} equals_full_value=${R.arm_a_bubble?.equals_full_value}`,
+  `- arm_a_contrast_ratio ${R.arm_a_contrast}`,
+  `- arm_a_overlap_px ${R.arm_a_escapes_card_clip?.overlap_px} hits_bubble=${R.arm_a_escapes_card_clip?.overlap_point_hits_bubble}`,
+  `- arm_a_bubbles_after_leave ${R.arm_a_bubbles_after_leave}`,
+  `- arm_b_clipped scrollWidth=${R.geometry.b.scrollWidth} clientWidth=${R.geometry.b.clientWidth} text_len=${R.geometry.b.text_len}`,
+  `- arm_b_bubble_text_len ${R.arm_b_bubble?.bubble_text_len} equals_full_value=${R.arm_b_bubble?.equals_full_value}`,
+  `- arm_b_line_count ${R.arm_b_bubble?.line_count} white_space=${R.arm_b_bubble?.whiteSpace} overflow_wrap=${R.arm_b_bubble?.overflowWrap}`,
+  `- arm_c_negative_control clipped=${R.geometry.c.clipped} bubbles=${R.arm_c_bubbles}`,
+  `- escape_precondition_bubbles ${R.escape_precondition_bubbles} bubbles_after_escape ${R.bubbles_after_escape}`,
+  `- dark_precondition_bubbles ${R.dark_precondition_bubbles} dark_contrast_ratio ${R.dark_contrast}`,
+  `- touch hover_none=${R.touch_media?.hover_none} after_tap_bubbles ${R.touch_after_tap?.bubbles} pinned=${R.touch_after_tap?.pinned} after_tap_outside_bubbles ${R.touch_after_tap_outside}`,
+  `- page_and_console_errors ${R.errors.length}`,
+  "",
+];
+writeFileSync(new URL("../harness/READINGS.md", import.meta.url), sheet.join("\n"), "utf8");
 console.log(JSON.stringify({ R }, null, 1));
