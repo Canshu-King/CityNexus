@@ -494,3 +494,69 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
     assert mock.status_code == 200, mock.text
     assert mock.json()["route_state"] == "UNKNOWN"
     assert mock.json()["duration_min"] is None
+
+    # An operation result can *claim* a legitimate provider/provenance. An
+    # unrelated or failed ProviderCall, even one naming the operation ID,
+    # must never convert it into a LIVE route for a traveller.
+    with SessionLocal() as session:
+        operation = session.scalar(select(RouteAcquisitionOperation).where(
+            RouteAcquisitionOperation.journey_id == journey_id,
+            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
+        ))
+        assert operation is not None
+        stamp = datetime.now(timezone.utc).isoformat()
+        claimed_result = {
+            "operation_id": str(operation.id),
+            "provider": "valhalla-http",
+            "provenance": "LIVE_PROVIDER_CAPTURE",
+            "duration_min": 8,
+            "captured_at": stamp,
+        }
+        operation.result_json = json.dumps(claimed_result)
+        for provider_key, status, request_json in [
+            ("mock-mobility", "SUCCESS", operation.request_json),
+            ("valhalla", "FAILURE", operation.request_json),
+            ("valhalla", "SUCCESS", "{}"),
+        ]:
+            session.add(ProviderCall(
+                id=str(uuid4()),
+                provider_key=provider_key,
+                operation="ROUTE_ACQUISITION",
+                request_json=request_json,
+                response_json=json.dumps(claimed_result),
+                status=status,
+                latency_ms=1,
+                created_at=stamp,
+            ))
+        session.commit()
+
+    mismatched_receipts = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert mismatched_receipts.status_code == 200, mismatched_receipts.text
+    assert mismatched_receipts.json()["route_state"] == "UNKNOWN"
+    assert mismatched_receipts.json()["duration_min"] is None
+
+    # This is a synthetic *database-contract* test, NOT a real Valhalla run.
+    # An internally consistent persisted successful Valhalla receipt is the
+    # minimum LIVE receipt contract; only a real configured provider may
+    # create such a receipt in normal product operation.
+    with SessionLocal() as session:
+        operation = session.scalar(select(RouteAcquisitionOperation).where(
+            RouteAcquisitionOperation.journey_id == journey_id,
+            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
+        ))
+        assert operation is not None
+        session.add(ProviderCall(
+            id=str(uuid4()),
+            provider_key="valhalla",
+            operation="ROUTE_ACQUISITION",
+            request_json=operation.request_json,
+            response_json=operation.result_json,
+            status="SUCCESS",
+            latency_ms=1,
+            created_at=datetime.now(timezone.utc).isoformat(),
+        ))
+        session.commit()
+    internally_matched_receipt = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert internally_matched_receipt.status_code == 200, internally_matched_receipt.text
+    assert internally_matched_receipt.json()["route_state"] == "LIVE"
+    assert internally_matched_receipt.json()["duration_min"] == 8
