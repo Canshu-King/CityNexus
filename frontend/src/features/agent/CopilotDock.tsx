@@ -916,12 +916,28 @@ export function CopilotDock({
             />
           )}
           {error && (
-            <p className="cn-copilot-error" role="alert" data-testid="copilot-send-error"
+            <p id="copilot-error" className="cn-copilot-error" role="alert" aria-live="assertive" data-testid="copilot-send-error"
                data-attribution={sendFacts ?? ""}>{error}</p>
           )}
           <form className="cn-copilot-form" onSubmit={(event) => { event.preventDefault(); void send(); }}>
-            <textarea value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={t("agent.inputPlaceholder")} aria-label={t("agent.message")} rows={2} />
-            <button className="v8-primary" type="submit" disabled={sending || draft.trim().length < 2}>{sending ? t("agent.working") : t("agent.send")}</button>
+            <textarea
+              id="copilot-input"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder={t("agent.inputPlaceholder")}
+              aria-label={t("agent.message")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+                  event.preventDefault();
+                  void send();
+                }
+              }}
+              aria-describedby={error ? "copilot-error" : undefined}
+              aria-invalid={error ? "true" : undefined}
+              aria-errormessage={error ? "copilot-error" : undefined}
+              rows={2}
+            />
+            <button className="v8-primary" type="submit" aria-keyshortcuts="Control+Enter Meta+Enter" disabled={sending || draft.trim().length < 2}>{sending ? t("agent.working") : t("agent.send")}</button>
           </form>
         </div>
       )}

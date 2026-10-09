@@ -960,7 +960,8 @@ export function PlanWithAiSheet({
               result?.planCount !== undefined && result.planCount >= 0 ? result.planCount : "unknown"
             }
             data-new-plan-ids={(result?.newPlanIds ?? []).join(",")}
-            role="status"
+            role={copy.tone === "warn" ? "alert" : "status"}
+            aria-live={copy.tone === "warn" ? "assertive" : "polite"}
           >
             <b>{copy.title}</b>
             {/* ORD-0342 (Q70): this line names a 原因编号, so the element carrying it says which envelope
