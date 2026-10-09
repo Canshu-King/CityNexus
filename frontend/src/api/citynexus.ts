@@ -630,7 +630,16 @@ export interface JourneyGroupPresenceProjection {
       route_duration_min?: number;
     } | null;
   }>;
-  rendezvous: { activity_id: string; title: string; place_name: string; basis: string } | null;
+  rendezvous: {
+    activity_id: string;
+    title: string;
+    place_id: string;
+    place_name: string;
+    latitude: number | null;
+    longitude: number | null;
+    coordinate_system: "WGS84" | null;
+    basis: string;
+  } | null;
   rendezvous_state:
     | "RENDEZVOUS_TARGET_UNAVAILABLE"
     | "RENDEZVOUS_TARGET_READY"
