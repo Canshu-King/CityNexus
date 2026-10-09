@@ -1,0 +1,4 @@
+A1 line 824: {t("shared.refresh")} | ternaries left: 7
+A2 en cell line 1181 = Read it again | zh cell line 2379 = 再读一次
+A3 t() keys used by this file: 1, each defined in both books
+A4 untouched bucket ternaries at lines 782,830,834,838,844,921,937
