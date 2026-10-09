@@ -2,7 +2,7 @@
 label=build
 cwd=D:/moodle/_qoder_shuangshugong_0558/frontend
 command=npm run build
-started=01:43:53 finished=01:44:03
+started=02:05:48 finished=02:05:57
 exit_code=0
 output_line_count=25
 --- output verbatim ---
@@ -21,7 +21,7 @@ computing gzip size...
 [2mdist/[22m[36massets/JourneyMap-CBwoNVfw.js   [39m[1m[2m    4.59 kB[22m[1m[22m[2m │ gzip:   1.88 kB[22m
 [2mdist/[22m[36massets/maplibre-gl-BIlhleEb.js  [39m[1m[33m1,053.38 kB[39m[22m[2m │ gzip: 284.76 kB[22m
 [2mdist/[22m[36massets/index-vnoDKWjy.js        [39m[1m[33m1,666.18 kB[39m[22m[2m │ gzip: 513.02 kB[22m
-[32m✓ built in 7.24s[39m
+[32m✓ built in 6.82s[39m
 
 PWA v1.3.0
 mode      generateSW
