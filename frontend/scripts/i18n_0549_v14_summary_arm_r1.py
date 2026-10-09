@@ -110,6 +110,20 @@ check("the locale flag is still wired to the measured-facts child",
       "zh={zh}" in "\n".join(cur))
 check("t is in scope on this screen", "const t = useT();" in "\n".join(cur))
 
+# --- ORD-0533's own judgment, applied to this screen: a key that resolves in neither side reaches
+# the traveller as the key text. Run here instead of booting the e2e stack, whose `real-seed` project
+# dependency writes the shared local SQLite while other lanes are mid-flight.
+called = set(re.findall(r'\bt\("([^"]+)"\)', "\n".join(cur)))
+en_all = set(re.findall(r'^\s*"([^"]+)":',
+                        cur_dict[cur_dict.index("const en: Dict"):cur_dict.index("const zhCN: Dict")], re.M))
+zh_all = set(re.findall(r'^\s*"([^"]+)":',
+                        cur_dict[cur_dict.index("const zhCN: Dict"):cur_dict.index("const dictionaries")], re.M))
+check("every key this screen calls exists on both sides",
+      all(k in en_all and k in zh_all for k in called),
+      sorted(k for k in called if k not in en_all or k not in zh_all))
+check("the named key is among the keys this screen calls", KEY in called, sorted(called))
+print("  screen calls %d distinct keys, all resolving on both sides" % len(called))
+
 print("total=%d assertions, failed=%d" % (total, len(fails)))
 for f in fails:
     print("  FAIL", f)
