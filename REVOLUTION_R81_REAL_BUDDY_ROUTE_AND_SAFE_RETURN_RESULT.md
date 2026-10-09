@@ -1,7 +1,7 @@
 # Revolution R81 — Real Buddy Route and Safe Return Result
 
 Implementation commit: `6ce1273296b3201ad42f6ee78b047359dd736716`  
-Result checkpoint SHA: pending report-record commit  
+Result checkpoint SHA: `8810681703daa3f5a82a47f302d8a66e380f87ea`
 Branch: `codex/revolution-r63-planned-parallel-journey`  
 Prior and pushed base: `1d86111108f04c622b38098d1fc58292408e57a2`  
 Remote destination: `origin/gpt/revolution-r33-open-world-journey-adaptation`
@@ -53,4 +53,4 @@ The selected destination remains `DEMO_FIXTURE_NOT_LIVE_VERIFIED`; opening hours
 
 ## Result checkpoint
 
-The R81 implementation is committed as `6ce1273296b3201ad42f6ee78b047359dd736716`. The exact result checkpoint SHA will be filled in by the follow-up commit that records this report commit.
+The R81 implementation is committed as `6ce1273296b3201ad42f6ee78b047359dd736716`. This report commit is `8810681703daa3f5a82a47f302d8a66e380f87ea`; this follow-up checkpoint commit records that hash in the report.
