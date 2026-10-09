@@ -1,0 +1,152 @@
+{
+ "generatedBy": "wenangong-0501",
+ "head": "e1b750d233f92a3513022a9cf02211c67c659a9e",
+ "readings": 18,
+ "unmatched": 0,
+ "rows": [
+  {
+   "locale": "zh-CN",
+   "server_state": "CURSOR",
+   "key": "clock.basis.cursor",
+   "shown": "执行游标",
+   "expected": "执行游标",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "JOURNEY_START",
+   "key": "clock.basis.journeyStart",
+   "shown": "行程起点",
+   "expected": "行程起点",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "NOT_STATED_BY_SERVER",
+   "key": "clock.basis.notStated",
+   "shown": "服务器没有说明依据",
+   "expected": "服务器没有说明依据",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "REFERENCED",
+   "key": "clock.evidence.referenced",
+   "shown": "这批证据带冻结期 · 没有到期时间",
+   "expected": "这批证据带冻结期 · 没有到期时间",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "FROZEN_WITHOUT_TTL",
+   "key": "clock.evidence.frozenWithoutTtl",
+   "shown": "这趟的出行数据是封存的，没有到期时间 · 没有到期时间",
+   "expected": "这趟的出行数据是封存的，没有到期时间 · 没有到期时间",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "EVIDENCE_REFERENCE_INCONSISTENT",
+   "key": "clock.evidence.referenceInconsistent",
+   "shown": "证据的引用对不上（服务器说有封存记录，但引用不一致） · 没有到期时间",
+   "expected": "证据的引用对不上（服务器说有封存记录，但引用不一致） · 没有到期时间",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "NO_FROZEN_EVIDENCE",
+   "key": "clock.evidence.none",
+   "shown": "这趟没有冻结证据 · 没有到期时间",
+   "expected": "这趟没有冻结证据 · 没有到期时间",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "NO_SCENARIO",
+   "key": "clock.evidence.noScenario",
+   "shown": "台上没有场景 · 没有到期时间",
+   "expected": "台上没有场景 · 没有到期时间",
+   "matched": true
+  },
+  {
+   "locale": "zh-CN",
+   "server_state": "SOMETHING_THE_SERVER_MADE_UP",
+   "key": "clock.evidence.unknown",
+   "shown": "服务器报的是 SOMETHING_THE_SERVER_MADE_UP，我们不替它解释 · 没有到期时间",
+   "expected": "服务器报的是 SOMETHING_THE_SERVER_MADE_UP，我们不替它解释 · 没有到期时间",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "CURSOR",
+   "key": "clock.basis.cursor",
+   "shown": "the execution cursor",
+   "expected": "the execution cursor",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "JOURNEY_START",
+   "key": "clock.basis.journeyStart",
+   "shown": "the journey's start",
+   "expected": "the journey's start",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "NOT_STATED_BY_SERVER",
+   "key": "clock.basis.notStated",
+   "shown": "the server gave no basis",
+   "expected": "the server gave no basis",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "REFERENCED",
+   "key": "clock.evidence.referenced",
+   "shown": "the frozen evidence carries an expiry · no expiry",
+   "expected": "the frozen evidence carries an expiry · no expiry",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "FROZEN_WITHOUT_TTL",
+   "key": "clock.evidence.frozenWithoutTtl",
+   "shown": "this trip's travel data is sealed, with no expiry · no expiry",
+   "expected": "this trip's travel data is sealed, with no expiry · no expiry",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "EVIDENCE_REFERENCE_INCONSISTENT",
+   "key": "clock.evidence.referenceInconsistent",
+   "shown": "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent) · no expiry",
+   "expected": "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent) · no expiry",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "NO_FROZEN_EVIDENCE",
+   "key": "clock.evidence.none",
+   "shown": "no frozen evidence on this trip · no expiry",
+   "expected": "no frozen evidence on this trip · no expiry",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "NO_SCENARIO",
+   "key": "clock.evidence.noScenario",
+   "shown": "no scenario on stage · no expiry",
+   "expected": "no scenario on stage · no expiry",
+   "matched": true
+  },
+  {
+   "locale": "en",
+   "server_state": "SOMETHING_THE_SERVER_MADE_UP",
+   "key": "clock.evidence.unknown",
+   "shown": "the server reported SOMETHING_THE_SERVER_MADE_UP; we do not interpret it · no expiry",
+   "expected": "the server reported SOMETHING_THE_SERVER_MADE_UP; we do not interpret it · no expiry",
+   "matched": true
+  }
+ ]
+}
