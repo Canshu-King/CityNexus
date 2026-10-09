@@ -214,6 +214,14 @@ test("R78 closes a signed, audience-bound rendezvous help loop without location 
     expect(renewedResponse.status()).toBe(201);
     const renewedSignal = await renewedResponse.json() as { signal_id: string };
     expect(renewedSignal.signal_id).not.toBe(firstSignal.signal_id);
+    // A stale tab still holding the old signal cannot claim that its
+    // withdrawal also stopped C's newly consented, expanded-audience status.
+    const staleWithdraw = await request.post(
+      `${API}${journeyPath}/rendezvous-member-signals/${firstSignal.signal_id}/withdraw`,
+      { headers: { Authorization: `Bearer ${newcomerToken}` } },
+    );
+    expect(staleWithdraw.status()).toBe(409);
+    expect(await staleWithdraw.text()).toContain("RENDEZVOUS_SIGNAL_WITHDRAW_TARGET_STALE");
     await lateCompanion.page.getByTestId("journey-rendezvous-refresh").click();
     const lateStatus = lateCompanion.page.getByTestId("journey-rendezvous-status");
     await expect(lateStatus).toHaveAttribute("data-signal-id", renewedSignal.signal_id);
