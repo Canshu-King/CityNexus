@@ -172,31 +172,29 @@ export function invalidateScene(client: QueryClient): void {
   void client.invalidateQueries({ queryKey: SCENE_QUERY_KEY });
 }
 
+/** The component's own lookup: this module has no hook, so the caller hands `t` in. */
+type Say = (key: string, params?: Record<string, string | number>) => string;
+
 /** The server's words, mapped to what a traveller can act on.  Unknown stays unknown. */
-export function basisWord(basis: string | null, zh: boolean): string {
-  if (basis === "CURSOR") return zh ? "执行游标" : "the execution cursor";
-  if (basis === "JOURNEY_START") return zh ? "行程起点" : "the journey's start";
-  return zh ? "服务器没有说明依据" : "the server gave no basis";
+export function basisWord(basis: string | null, t: Say): string {
+  if (basis === "CURSOR") return t("clock.basis.cursor");
+  if (basis === "JOURNEY_START") return t("clock.basis.journeyStart");
+  return t("clock.basis.notStated");
 }
 
-export function evidenceWord(state: string | null, zh: boolean): string {
-  if (state === "REFERENCED")
-    return zh ? "这批证据带冻结期" : "the frozen evidence carries an expiry";
+export function evidenceWord(state: string | null, t: Say): string {
+  if (state === "REFERENCED") return t("clock.evidence.referenced");
   /* The state `924461e` added, and the one a naive reading gets wrong: sealed pairs exist and are
      used by a replan -- only the expiry is missing.  Showing this as "没有数据" tells a traveller
      the trip has no travel data when the server said it has 56 pairs. */
   if (state === "FROZEN_WITHOUT_TTL")
-    return zh
-      ? "这趟的出行数据是封存的，没有到期时间"
-      : "this trip's travel data is sealed, with no expiry";
+    return t("clock.evidence.frozenWithoutTtl");
   if (state === "EVIDENCE_REFERENCE_INCONSISTENT")
-    return zh
-      ? "证据的引用对不上（服务器说有封存记录，但引用不一致）"
-      : "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)";
+    return t("clock.evidence.referenceInconsistent");
   if (state === "NO_FROZEN_EVIDENCE")
-    return zh ? "这趟没有冻结证据" : "no frozen evidence on this trip";
-  if (state === "NO_SCENARIO") return zh ? "台上没有场景" : "no scenario on stage";
-  return zh ? `服务器报的是 ${state}，我们不替它解释` : `the server reported ${state}; we do not interpret it`;
+    return t("clock.evidence.none");
+  if (state === "NO_SCENARIO") return t("clock.evidence.noScenario");
+  return t("clock.evidence.unknown", { state: String(state) });
 }
 
 /**

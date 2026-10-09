@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocale } from "../../i18n/LocaleContext";
+import { useLocale, useT } from "../../i18n/LocaleContext";
 import { cityNexusApi } from "../../api/citynexus";
 import { formatMinorMoney } from "../../lib/money";
 import { useAuthoritativeTwin } from "../../api/v12Authoritative";
@@ -102,6 +102,7 @@ export function SimulationPanel({
   onClose?: (() => void) | null;
 }) {
   const { locale } = useLocale();
+  const t = useT();
   const zh = locale.startsWith("zh");
   const client = useQueryClient();
   const scene = useDemoScene();
@@ -837,12 +838,12 @@ export function SimulationPanel({
         <div>
           <dt>{zh ? "依据" : "Basis"}</dt>
           <dd data-testid="sim-basis">
-            {basisWord(scene.scene?.basis ?? null, zh)}
+            {basisWord(scene.scene?.basis ?? null, t)}
           </dd>
         </div>
         <div>
           <dt>{zh ? "证据" : "Evidence"}</dt>
-          <dd data-testid="sim-evidence">{`${evidenceWord(scene.scene?.evidenceState ?? null, zh)} · ${
+          <dd data-testid="sim-evidence">{`${evidenceWord(scene.scene?.evidenceState ?? null, t)} · ${
             scene.scene?.evidenceExpiresAt
               ? sceneInstant(scene.scene.evidenceExpiresAt)
               : zh

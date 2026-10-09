@@ -640,6 +640,18 @@ const en: Dict = {
   "discovery.batchMissingCommitment": "The batch could not travel with the commitment the planner requires.",
   "discovery.batchNoPlan": "The planner returned no complete plan for this batch.",
 
+  /* sceneClock.ts (ORD-0059's single clock): the two words the Simulation stage shows for the
+     server's `basis` and `evidence_state`. Byte-for-byte the words already on screen. */
+  "clock.basis.cursor": "the execution cursor",
+  "clock.basis.journeyStart": "the journey's start",
+  "clock.basis.notStated": "the server gave no basis",
+  "clock.evidence.referenced": "the frozen evidence carries an expiry",
+  "clock.evidence.frozenWithoutTtl": "this trip's travel data is sealed, with no expiry",
+  "clock.evidence.referenceInconsistent": "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)",
+  "clock.evidence.none": "no frozen evidence on this trip",
+  "clock.evidence.noScenario": "no scenario on stage",
+  "clock.evidence.unknown": "the server reported {state}; we do not interpret it",
+
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
   "exec.whatHappening": "What is happening now",
@@ -1851,6 +1863,18 @@ const zhCN: Dict = {
   "discovery.batchOutsideDay": "这一批装不进行程已保护的那一天：少勾几处，或换一天。",
   "discovery.batchMissingCommitment": "这一批没能带上规划器要求的受保护承诺。",
   "discovery.batchNoPlan": "规划器为这一批给不出完整方案。",
+
+  /* sceneClock.ts（ORD-0059 那唯一一枚钟）：模拟舞台替服务器说「依据」与「证据状态」的那两句。
+     取值逐字等于原本已上屏的那些字。 */
+  "clock.basis.cursor": "执行游标",
+  "clock.basis.journeyStart": "行程起点",
+  "clock.basis.notStated": "服务器没有说明依据",
+  "clock.evidence.referenced": "这批证据带冻结期",
+  "clock.evidence.frozenWithoutTtl": "这趟的出行数据是封存的，没有到期时间",
+  "clock.evidence.referenceInconsistent": "证据的引用对不上（服务器说有封存记录，但引用不一致）",
+  "clock.evidence.none": "这趟没有冻结证据",
+  "clock.evidence.noScenario": "台上没有场景",
+  "clock.evidence.unknown": "服务器报的是 {state}，我们不替它解释",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",

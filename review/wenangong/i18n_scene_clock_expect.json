@@ -1,0 +1,78 @@
+{
+ "clock.basis.cursor": {
+  "start": 177,
+  "end": 177,
+  "zh": "执行游标",
+  "en": "the execution cursor",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.basis.journeyStart": {
+  "start": 178,
+  "end": 178,
+  "zh": "行程起点",
+  "en": "the journey's start",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.basis.notStated": {
+  "start": 179,
+  "end": 179,
+  "zh": "服务器没有说明依据",
+  "en": "the server gave no basis",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.evidence.referenced": {
+  "start": 184,
+  "end": 184,
+  "zh": "这批证据带冻结期",
+  "en": "the frozen evidence carries an expiry",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.evidence.frozenWithoutTtl": {
+  "start": 190,
+  "end": 191,
+  "zh": "这趟的出行数据是封存的，没有到期时间",
+  "en": "this trip's travel data is sealed, with no expiry",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.evidence.referenceInconsistent": {
+  "start": 194,
+  "end": 195,
+  "zh": "证据的引用对不上（服务器说有封存记录，但引用不一致）",
+  "en": "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.evidence.none": {
+  "start": 197,
+  "end": 197,
+  "zh": "这趟没有冻结证据",
+  "en": "no frozen evidence on this trip",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.evidence.noScenario": {
+  "start": 198,
+  "end": 198,
+  "zh": "台上没有场景",
+  "en": "no scenario on stage",
+  "zh_exprs": [],
+  "en_exprs": []
+ },
+ "clock.evidence.unknown": {
+  "start": 199,
+  "end": 199,
+  "zh": "服务器报的是 {state}，我们不替它解释",
+  "en": "the server reported {state}; we do not interpret it",
+  "zh_exprs": [
+   "state"
+  ],
+  "en_exprs": [
+   "state"
+  ]
+ }
+}
