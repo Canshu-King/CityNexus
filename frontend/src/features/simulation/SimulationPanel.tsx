@@ -101,7 +101,7 @@ export function SimulationPanel({
       own trap. */
   onClose?: (() => void) | null;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const client = useQueryClient();
   const scene = useDemoScene();
@@ -821,7 +821,7 @@ export function SimulationPanel({
           data-testid="sim-retry"
           onClick={scene.refresh}
         >
-          {zh ? "再读一次" : "Read it again"}
+          {t("shared.refresh")}
         </button>
       )}
 
