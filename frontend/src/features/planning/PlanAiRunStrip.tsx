@@ -57,7 +57,7 @@ export function PlanAiRunStrip({
   if (!shown) return null;
 
   const phaseRow = run.phase ? PHASES.find((item) => item.key === run.phase) : null;
-  const outcome = run.result ? statusCopy(run.result.status, zh, run.result.planCount ?? 0) : null;
+  const outcome = run.result ? statusCopy(run.result.status, zh, run.result.planCount ?? 0, t) : null;
 
   return (
     <div

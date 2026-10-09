@@ -160,7 +160,8 @@ const BLOCKED_BY_CODE: Record<
 export function statusCopy(
   status: string,
   zh: boolean,
-  planCount = 0,
+  planCount: number,
+  t: (key: string, params?: Record<string, string | number>) => string,
 ): {
   title: string;
   body: string;
@@ -197,7 +198,7 @@ export function statusCopy(
   }
   if (s === "CANCELLED") {
     return {
-      title: zh ? "已取消" : "Cancelled",
+      title: t("bookings.realtimeCancelled"),
       body: zh
         ? "请求已中止，你的行程没有被改动。可以改个说法再来一次。"
         : "The request was aborted. Your trip is untouched — rephrase and try again.",
@@ -676,7 +677,7 @@ export function PlanWithAiSheet({
        is what left that last line under the fold in both earlier attempts. */
   }, [result, aftermath, run.runId]);
 
-  const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
+  const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0, t) : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
      line it sits on.  Derived from `result.status` -- the very string `statusCopy` was handed -- so the
      attribute and the sentence it labels cannot disagree, and a state that shows no code shows no anchor. */
@@ -719,14 +720,14 @@ export function PlanWithAiSheet({
       >
         <header className="plan-ai-head">
           <div>
-            <b id="plan-ai-title">{zh ? "AI 帮我规划" : "Plan my trip with AI"}</b>
+            <b id="plan-ai-title">{t("itinerary.planWithAi")}</b>
             <small>
               {zh
                 ? "用你自己的话描述这趟旅行，越具体越好。"
                 : "Describe the trip in your own words — the more specific the better."}
             </small>
           </div>
-          <button type="button" className="plan-ai-close" aria-label={zh ? "关闭" : "Close"} onClick={leave}>
+          <button type="button" className="plan-ai-close" aria-label={t("shell.close")} onClick={leave}>
             ×
           </button>
         </header>
@@ -1016,7 +1017,7 @@ export function PlanWithAiSheet({
             {(result?.failureReason || result?.summary || result?.rawReading) && (
               <details className="plan-ai-detail">
                 <summary data-testid="plan-ai-detail-toggle">
-                  {zh ? "技术详情" : "Technical detail"}
+                  {t("hub.continuationTechnicalDetail")}
                 </summary>
                 {result?.failureReason && (
                   <>
@@ -1059,7 +1060,7 @@ export function PlanWithAiSheet({
                         count.  No fragment of the upstream body is forwarded into the DOM, so a
                         screenshot or an evidence file cannot carry a credential that arrived here. */}
                     <span className="plan-ai-detail-label" data-testid="plan-ai-raw-label">
-                      {zh ? "这台设备自己量到的回读字段" : "Fields this device measured"}
+                      {t("detail.rawFactsHeading")}
                     </span>
                     <pre
                       className="plan-ai-raw-reading"
