@@ -1,10 +1,13 @@
-# ORD-0553 xiaochuigong -- what this branch changes, taken 2026-10-10T01:16:14
+# ORD-0553 xiaochuigong -- what this branch changes, taken 2026-10-10T01:16:33
 ## sha this list was taken against
-3a3411f26d3a91a31ca4d13b2aaab46cc0ac1871
+29725eea301aa70d98f78fd707a98640a390558f
 ## git diff --name-only  <现尖>..HEAD
 frontend/e2e/qoder-xiaochuigong-0553-batch-row-clock-r1.spec.ts
 frontend/src/features/discovery/RealCityDiscoveryPanel.tsx
 review/xiaochuigong/ord0553_discovery_batch_row_arm_r1.py
+review/xiaochuigong/readouts/arm_four_ways_r1.txt
+review/xiaochuigong/readouts/diff_face_r1.txt
+review/xiaochuigong/readouts/gates_frontend_r1.txt
 review/xiaochuigong/readouts/ord0435_red/run564826__Q4en.json
 review/xiaochuigong/readouts/ord0435_red/run564826__Q4zh.json
 review/xiaochuigong/readouts/ord0435_red/run564826__Q5en.json
