@@ -10,6 +10,7 @@ READ = TREE / "review/shuangshugong/ord0558_readouts"
 TARGET = "frontend/src/features/execution/LiveRecovery.tsx"
 BRANCH = "refs/heads/review/双数工-0558-r1"
 LINE = "refs/heads/mirror/integration-frontend-apple-pass1"
+BASE_SHA = "8bc584613cc5fb047453f497b2152f8ab5102ca9"
 
 
 def run(command, cwd=TREE):
@@ -18,14 +19,26 @@ def run(command, cwd=TREE):
     return proc.returncode, (proc.stdout or "") + (proc.stderr or "")
 
 
-rc, out = run("git ls-remote origin " + LINE)
+def must(command, cwd=TREE):
+    """A reading that failed is not a zero: stop rather than report a false count.
+    (`^{commit}` cannot be used here either -- cmd.exe eats the caret and git then
+    answers with an error text that looks like output.)"""
+    rc, out = run(command, cwd)
+    if rc != 0:
+        raise SystemExit("command failed rc={0}: {1}\n{2}".format(rc, command, out))
+    return out
+
+
+out = must("git ls-remote origin " + LINE)
 tip = out.split()[0]
-head = run("git rev-parse HEAD")[1].strip()
-base = run("git rev-parse 8bc584613cc5fb047453f497b2152f8ab5102ca9^{commit}")[1].strip()
+head = must("git rev-parse HEAD").strip()
+base = must("git rev-parse " + BASE_SHA).strip()
 mb_rc, mb = run("git merge-base HEAD " + tip)
+if mb_rc != 0:
+    raise SystemExit("merge-base failed rc=" + str(mb_rc))
 mb = mb.strip()
 
-changed = [l.strip() for l in run("git diff --name-only " + base + " HEAD")[1].splitlines() if l.strip()]
+changed = [l.strip() for l in must("git diff --name-only " + base + " " + head).splitlines() if l.strip()]
 areas = {
     "frontend_src": [f for f in changed if f.startswith("frontend/src/")],
     "frontend_e2e": [f for f in changed if f.startswith("frontend/e2e/")],
@@ -35,8 +48,8 @@ areas = {
     "backend": [f for f in changed if f.startswith("backend/")],
 }
 
-blob_head = run("git rev-parse HEAD:" + TARGET)[1].strip()
-blob_tip = run("git rev-parse {0}:{1}".format(tip, TARGET))[1].strip()
+blob_head = must("git rev-parse HEAD:" + TARGET).strip()
+blob_tip = must("git rev-parse {0}:{1}".format(tip, TARGET)).strip()
 status_rc, status = run("git status --porcelain")
 gate_summary = (READ / "gate_summary_r1.txt").read_text(encoding="utf-8")
 
@@ -64,7 +77,8 @@ lines.append("--- shallow repair performed in D:/moodle/CityNexus/.git/shallow -
 lines.append("removed_boundary=2fdb7892c982748ba49bd074de5ed6df190c83c5  (this lane's own first commit)")
 lines.append("remaining_boundary_untouched=03aa82b728e7a84b99ec7633babf554aae3b453e")
 lines.append("backup_file=D:/moodle/CityNexus/.git/shallow.bak_shuangshugong_0558")
-lines.append("revlist_count_head_after_repair=" + run("git rev-list --count HEAD")[1].strip() + " 条")
+lines.append("revlist_count_head_after_repair=" + must("git rev-list --count HEAD").strip() + " 条")
+lines.append("note=this readout and the script that wrote it land in the commit right after the ones they list")
 
 text = "\n".join(lines) + "\n"
 (READ / "delivery_face_r1.txt").write_text(text, encoding="utf-8", newline="\n")

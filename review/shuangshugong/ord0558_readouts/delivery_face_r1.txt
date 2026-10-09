@@ -1,0 +1,87 @@
+# ORD-0558 shuangshugong delivery face
+authoritative_tip_ls_remote=4e86f85a2ff168955c42786c58dc048568cc5754
+command=git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+my_branch_head=341596373733762879d5e1faa2648710361d060f
+branch=refs/heads/review/双数工-0558-r1
+my_base=8bc584613cc5fb047453f497b2152f8ab5102ca9
+merge_base_head_vs_tip=dadac57db5e6297d67130df5493827a2c5cb5ce3 rc=0
+blob_target_at_my_head=82d1a3c427e0590accd010c9cb3d64ec36e709c2
+blob_target_at_tip=82d1a3c427e0590accd010c9cb3d64ec36e709c2
+product_bytes_identical_to_line=True
+changed_files_total=59 条
+area=frontend_src files=0 条
+area=frontend_e2e files=1 条
+area=frontend_other files=1 条
+area=review_tools files=57 条
+area=backend files=0 条
+worktree_porcelain_lines=2 条
+--- changed file names ---
+frontend/e2e/qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts
+frontend/playwright.shuangshugong-0558.config.ts
+review/shuangshugong/ord0558_counter_arm_r1.py
+review/shuangshugong/ord0558_delivery_face_r1.py
+review/shuangshugong/ord0558_e2e_gap_scan_r1.py
+review/shuangshugong/ord0558_readouts/blame_r1.txt
+review/shuangshugong/ord0558_readouts/counter_arm_r1.txt
+review/shuangshugong/ord0558_readouts/e2e_gap_r1.txt
+review/shuangshugong/ord0558_readouts/gate_build_r1.txt
+review/shuangshugong/ord0558_readouts/gate_summary_r1.txt
+review/shuangshugong/ord0558_readouts/gate_typecheck_r1.txt
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/ord0558/E2en_two.json
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/ord0558/E2en_two.png
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/ord0558/Z1zh_one.json
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/ord0558/Z1zh_one.png
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/ord0558/Z2zh_two.json
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/ord0558/Z2zh_two.png
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/playwright_A_always_plural.txt
+review/shuangshugong/ord0558_readouts/mutant_A_always_plural/playwright_r1.json
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/ord0558/E1en_one.json
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/ord0558/E1en_one.png
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/ord0558/Z1zh_one.json
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/ord0558/Z1zh_one.png
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/ord0558/Z2zh_two.json
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/ord0558/Z2zh_two.png
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/playwright_B_always_singular.txt
+review/shuangshugong/ord0558_readouts/mutant_B_always_singular/playwright_r1.json
+review/shuangshugong/ord0558_readouts/ord0558/E1en_one.json
+review/shuangshugong/ord0558_readouts/ord0558/E1en_one.png
+review/shuangshugong/ord0558_readouts/ord0558/E2en_two.json
+review/shuangshugong/ord0558_readouts/ord0558/E2en_two.png
+review/shuangshugong/ord0558_readouts/ord0558/S0probe.json
+review/shuangshugong/ord0558_readouts/ord0558/Z1zh_one.json
+review/shuangshugong/ord0558_readouts/ord0558/Z1zh_one.png
+review/shuangshugong/ord0558_readouts/ord0558/Z2zh_two.json
+review/shuangshugong/ord0558_readouts/ord0558/Z2zh_two.png
+review/shuangshugong/ord0558_readouts/playwright_clean_r1.txt
+review/shuangshugong/ord0558_readouts/playwright_r1.json
+review/shuangshugong/ord0558_readouts/run_ack_rendered/playwright_ack_rendered.txt
+review/shuangshugong/ord0558_readouts/run_ack_rendered/playwright_r1.json
+review/shuangshugong/ord0558_readouts/run_live_structure/playwright_live_structure.txt
+review/shuangshugong/ord0558_readouts/run_live_structure/playwright_r1.json
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/E1en_one.json
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/E1en_one.png
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/E2en_two.json
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/E2en_two.png
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/S0probe.json
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/Z1zh_one.json
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/Z1zh_one.png
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/Z2zh_two.json
+review/shuangshugong/ord0558_readouts/run_this_lane/ord0558/Z2zh_two.png
+review/shuangshugong/ord0558_readouts/run_this_lane/playwright_r1.json
+review/shuangshugong/ord0558_readouts/run_this_lane/playwright_this_lane.txt
+review/shuangshugong/ord0558_readouts/sibling_specs_r1.txt
+review/shuangshugong/ord0558_readouts/surface_r1.txt
+review/shuangshugong/ord0558_readouts/tip_r1.txt
+review/shuangshugong/ord0558_run_gates_r1.py
+review/shuangshugong/ord0558_sibling_specs_r1.py
+review/shuangshugong/ord0558_surface_scan_r1.py
+--- gate summary read back from gate_summary_r1.txt ---
+# ORD-0558 frontend gates, one line per gate
+gate=typecheck:all exit_code=0 output_lines=2 readout=gate_typecheck_r1.txt
+gate=build exit_code=0 output_lines=25 readout=gate_build_r1.txt
+--- shallow repair performed in D:/moodle/CityNexus/.git/shallow ---
+removed_boundary=2fdb7892c982748ba49bd074de5ed6df190c83c5  (this lane's own first commit)
+remaining_boundary_untouched=03aa82b728e7a84b99ec7633babf554aae3b453e
+backup_file=D:/moodle/CityNexus/.git/shallow.bak_shuangshugong_0558
+revlist_count_head_after_repair=1616 条
+note=this readout and the script that wrote it land in the commit right after the ones they list
