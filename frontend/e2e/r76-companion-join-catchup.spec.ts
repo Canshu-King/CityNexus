@@ -312,6 +312,13 @@ test("R77 lets a joined companion request a fresh private route with grounded ev
         duration_min: 999,
         provider: "r77-untrusted-route-fixture",
       },
+      {
+        // Adversarial provenance: a test provider must not masquerade as a
+        // LIVE_PROVIDER_CAPTURE, even when the timestamp and ETA look valid.
+        provenance: "LIVE_PROVIDER_CAPTURE",
+        duration_min: 8,
+        provider: "mock-routing-adapter",
+      },
     ];
     let routeReplyCount = 0;
     await newcomer.page.route("**/api/v1/journeys/**/group-presence/route", async (route) => {
@@ -386,6 +393,8 @@ test("R77 lets a joined companion request a fresh private route with grounded ev
     await expect(replayResult).toContainText("Walking estimate: about 19 minutes");
     await expect(replayResult).toContainText("Location authority: ADVISORY_FOREGROUND_LOCATION");
     await expect(replayResult).toContainText("not where the group is physically located");
+    await expect(newcomer.page.getByTestId("journey-membership-location-truth"))
+      .toContainText("explicit location consent");
 
     for (const viewerToken of [ownerToken, peerToken]) {
       const viewer = await api<{ group_presence: Record<string, unknown> }>(
@@ -421,6 +430,8 @@ test("R77 lets a joined companion request a fresh private route with grounded ev
     await expect(unknownResult).toContainText("UNKNOWN / ROUTE_UNAVAILABLE");
     await expect(unknownResult).not.toContainText("999");
     await expect(unknownResult).not.toContainText("minutes");
+    await expect(newcomer.page.getByTestId("journey-membership-location-truth"))
+      .toContainText("observation may already be stored");
     expect(locationRequests).toHaveLength(2);
     for (const viewerToken of [ownerToken, peerToken]) {
       const viewer = await api<{ group_presence: Record<string, unknown> }>(
@@ -433,6 +444,30 @@ test("R77 lets a joined companion request a fresh private route with grounded ev
       expect(projected).not.toContain("12.345678");
       expect(projected).not.toContain("23.456789");
     }
+
+    // Even a forged LIVE provenance is UNKNOWN when the named provider is a
+    // mock adapter. Never present a fresh-looking 8-minute fake as live routing.
+    await newcomer.page.getByTestId("journey-membership-route-check").click();
+    const thirdLocationResponsePromise = newcomer.page.waitForResponse((response) =>
+      response.request().method() === "POST" && response.url().endsWith(journeyPath + "/location"),
+    );
+    const thirdRouteResponsePromise = newcomer.page.waitForResponse((response) =>
+      response.request().method() === "POST" && response.url().endsWith(journeyPath + "/group-presence/route"),
+    );
+    await newcomer.page.getByTestId("journey-membership-route-confirm").click();
+    const thirdLocationResponse = await thirdLocationResponsePromise;
+    const thirdRouteResponse = await thirdRouteResponsePromise;
+    expect(thirdLocationResponse.status()).toBe(201);
+    expect(thirdRouteResponse.status()).toBe(200);
+    const thirdObservation = await thirdLocationResponse.json() as { id: string };
+    expect(routeRequests).toHaveLength(3);
+    expect(routeRequests[2].location_observation_id).toBe(thirdObservation.id);
+    const forgedLive = newcomer.page.getByTestId("journey-membership-route-result");
+    await expect(forgedLive).toHaveAttribute("data-provenance", "LIVE_PROVIDER_CAPTURE");
+    await expect(forgedLive).toHaveAttribute("data-evidence", "UNKNOWN");
+    await expect(forgedLive).toContainText("UNKNOWN / ROUTE_UNAVAILABLE");
+    await expect(forgedLive).not.toContainText("8 minutes");
+    expect(locationRequests).toHaveLength(3);
 
     // Simulate another authorized actor advancing the server projection while
     // the consent sheet is open. Active shared-plan changes go through
@@ -460,8 +495,8 @@ test("R77 lets a joined companion request a fresh private route with grounded ev
       /plan or meeting stop changed; no location was read/i,
     );
     expect(changedProjectionCount).toBeGreaterThan(0);
-    expect(locationRequests).toHaveLength(2);
-    expect(routeRequests).toHaveLength(2);
+    expect(locationRequests).toHaveLength(3);
+    expect(routeRequests).toHaveLength(3);
     await expect(newcomer.page.getByTestId("journey-membership-route-result")).toHaveCount(0);
 
     await newcomer.page.getByRole("button", { name: /Open exact meeting-place pin/ }).click();
@@ -473,8 +508,8 @@ test("R77 lets a joined companion request a fresh private route with grounded ev
     await expect(newcomer.page.getByTestId("journey-membership-message")).toContainText(
       "The plan or meeting stop changed",
     );
-    expect(locationRequests).toHaveLength(2);
-    expect(routeRequests).toHaveLength(2);
+    expect(locationRequests).toHaveLength(3);
+    expect(routeRequests).toHaveLength(3);
   } finally {
     await owner.close();
     await existingPeer.close();
