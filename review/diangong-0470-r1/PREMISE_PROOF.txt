@@ -1,0 +1,34 @@
+ORD-0470 premise check · read at 2026-10-09 15:59 on branch review/diangong-0470-r1
+tip of my branch = 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+authoritative tip given in the order = 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+origin/mirror/integration-frontend-apple-pass1 = 5692ec5504e9ba1fa8a1b542e1e67e62d679e395
+--- is the prior lane's commit an ancestor of the authoritative tip? ---
+merge-base --is-ancestor exit_code=0  (yes, it is on the line)
+--- merge-base(prior branch, authoritative tip) ---
+78ab7f7bb7f1b2d2c1361ee8dd8666aaf98198e2
+--- tip of review/poi-entry-r1 ---
+78ab7f7bb7f1b2d2c1361ee8dd8666aaf98198e2
+--- that commit's own diffstat vs its parent ---
+78ab7f7bb7f1b2d2c1361ee8dd8666aaf98198e2 ORD-0470: the cell that says "nothing to plan" gets the door, and the empty import cell gets moves
+
+ .../e2e/qoder-poi-entry-r1-walkthrough.spec.ts     |  232 +++++
+ frontend/src/app/v8PanelRegistry.tsx               |    3 +
+ frontend/src/features/pending/PendingSetPanel.tsx  |   14 +
+ frontend/src/features/pending/pendingSetCopy.ts    |   12 +-
+ frontend/src/features/poiimport/PoiImportPanel.tsx |   51 +-
+ frontend/src/features/poiimport/poi-import.css     |   18 +
+ frontend/src/features/poiimport/poiImportCopy.ts   |   15 +
+ reports/e2e-provenance/authoritative.json          |   12 +-
+ review/ord0470/BACKEND_COLLECT_ONLY.txt            |    4 +
+ review/ord0470/GATE_BASELINE_UNMODIFIED_TIP.txt    |  978 ++++++++++++++++++
+ review/ord0470/GATE_MINE_AND_THREE_POIENTRY_R4.txt | 1061 ++++++++++++++++++++
+ review/ord0470/REGRESSION_COMPARE_ARM_BY_ARM.txt   |    7 +
+ review/ord0470/USER_WALK_READINGS.json             |  258 +++++
+ 13 files changed, 2653 insertions(+), 12 deletions(-)
+--- the receipts it shipped, present on the authoritative tip ---
+frontend/e2e/qoder-poi-entry-r1-walkthrough.spec.ts
+review/ord0470/BACKEND_COLLECT_ONLY.txt
+review/ord0470/GATE_BASELINE_UNMODIFIED_TIP.txt
+review/ord0470/GATE_MINE_AND_THREE_POIENTRY_R4.txt
+review/ord0470/REGRESSION_COMPARE_ARM_BY_ARM.txt
+review/ord0470/USER_WALK_READINGS.json

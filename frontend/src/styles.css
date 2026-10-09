@@ -335,7 +335,11 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; }
 #v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; }
 .v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--cn-s-10); padding: 0 12px; }
-#v8-nav-drawer button:not(.v8-quiet-button) { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: var(--cn-r-8); color: var(--cn-ink-secondary); background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
+/* ORD-0470: the drawer only exists below the 680px breakpoint (styles.css:185 hides the hamburger
+   above it), so every row here is a touch target and takes the >=44px layer of the F-2 contract.
+   Measured before this line: 41px at 390x844 and at 360x640, in both locales. It was never caught
+   because PRIMARY_CONTROL_SELECTOR (e2e/_qoderMobileScan.ts:134) does not list drawer rows. */
+#v8-nav-drawer button:not(.v8-quiet-button) { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; box-sizing: border-box; padding: 12px; border: 0; border-radius: var(--cn-r-8); color: var(--cn-ink-secondary); background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
 /* Descendant, not child: the drawer wraps each button in a <div> that also carries the group heading
    (`V8Experience.tsx`), so `> button svg` matched none of the 14 rows and each icon grew to the
    full 243px width available in the flex row -- 292px per row, 4,512px of scroll, 3,668px of overflow.
