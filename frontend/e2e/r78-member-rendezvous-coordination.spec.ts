@@ -208,6 +208,8 @@ test("R78 closes a signed, audience-bound rendezvous help loop without location 
     await owner.page.getByTestId("journey-rendezvous-refresh").click();
     await companion.page.getByTestId("journey-rendezvous-refresh").click();
     await expect(companion.page.getByTestId("journey-rendezvous-consent")).toHaveCount(0);
+    await expect(companion.page.getByTestId("journey-rendezvous-message"))
+      .toContainText("companion list changed");
     await expect(owner.page.getByTestId("journey-rendezvous-no-status")).toBeVisible();
     await expect(companion.page.getByTestId("journey-rendezvous-no-status")).toBeVisible();
 
