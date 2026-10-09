@@ -102,6 +102,11 @@ function inviteFailureCopy(code: string, zh: boolean): string {
 }
 
 function coordinationFailureCopy(code: string, zh: boolean): string {
+  if (code.includes("WITHDRAW_TARGET_STALE")) {
+    return zh
+      ? "你先前看到的状态已被替换、过期或撤回。它不代表当前状态已停止分享；请查看刚刷新后的团队状态。"
+      : "The previously displayed status was replaced, expired, or revoked. This does not stop a newer status; check the refreshed team view.";
+  }
   if (code.includes("CONTEXT_CHANGED") || code.includes("TARGET_CHANGED")) {
     return zh
       ? "共享计划或会合点刚刚变化。状态没有分享，请刷新后重新确认对象。"
@@ -287,12 +292,15 @@ export function JourneyMembershipPanel({
     setCoordinationBusy(true);
     setCoordinationMessage(null);
     try {
-      await cityNexusApi.withdrawRendezvousMemberSignal(journeyId, ownCoordinationSignal.signal_id);
-      setCoordinationMessage(zh
-        ? "已停止向后续查看者分享此状态。"
-        : "This status is withdrawn from future projections.");
+      const receipt = await cityNexusApi.withdrawRendezvousMemberSignal(journeyId, ownCoordinationSignal.signal_id);
       await refreshGroupPresence();
+      setCoordinationMessage(receipt.status === "REVOKED"
+        ? (zh ? "已停止向后续查看者分享这条状态。" : "This exact status has been withdrawn from future projections.")
+        : (zh
+          ? "这条状态已经变化，不保证其他较新的状态已停止分享；请核对刚刷新后的团队状态。"
+          : "This status changed; a newer one may still be shared. Check the refreshed team view."));
     } catch (error) {
+      await refreshGroupPresence();
       setCoordinationMessage(coordinationFailureCopy(error instanceof Error ? error.message : "", zh));
     } finally {
       setCoordinationBusy(false);
