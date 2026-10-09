@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "r79-handoff-20261009g",
+  "runId": "r80relay20261009_1750",
   "python": "D:\\moodle\\CityNexus-Revolution-R63-Relay-20261008\\backend\\.venv\\Scripts\\python.exe",
   "pythonResolved": "D:\\moodle\\CityNexus-Revolution-R63-Relay-20261008\\backend\\.venv\\Scripts\\python.exe",
-  "frontendPort": 18893,
-  "backendPort": 18894,
-  "databaseUrl": "sqlite:///./_r79-handoff-20261009g.db",
+  "frontendPort": 49153,
+  "backendPort": 49154,
+  "databaseUrl": "sqlite:///D:/moodle/CityNexus-Revolution-R63-Relay-20261008/backend/_r80relay20261009_1750.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-10-09T02:03:50.729Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus-Revolution-R63-Relay-20261008\\backend\\.venv\\Scripts\\python.exe frontend=:18893 backend=:18894 db=sqlite:///./_r79-handoff-20261009g.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-10-09T02:47:20.805Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus-Revolution-R63-Relay-20261008\\backend\\.venv\\Scripts\\python.exe frontend=:49153 backend=:49154 db=sqlite:///D:/moodle/CityNexus-Revolution-R63-Relay-20261008/backend/_r80relay20261009_1750.db ai=disabled reuseExistingServer=false"
 }
