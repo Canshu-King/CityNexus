@@ -1419,6 +1419,38 @@ def _r67_candidate(
     )
 
 
+
+
+@pytest.mark.parametrize(
+    "access_metadata, expected_public",
+    [
+        ({"tags": {"name": "Public museum", "tourism": "museum", "access": "private"}}, False),
+        ({"access": "yes", "tags": {"name": "Public museum", "tourism": "museum", "access": "no"}}, False),
+        ({"osm_tags": {"access": "staff"}, "tags": {"tourism": "museum"}}, False),
+        ({"tags": {"access": "customers", "tourism": "museum"}}, False),
+        ({"tags": {"visibility": "restricted", "tourism": "museum"}}, False),
+        ({"public": False, "tags": {"tourism": "museum"}}, False),
+        ({"tags": {"access": "yes", "tourism": "museum"}}, True),
+    ],
+)
+def test_r83_live_osm_scout_does_not_offer_known_restricted_access_places(
+    access_metadata: dict, expected_public: bool,
+):
+    """OSM venue access restrictions cannot disappear before public catalog creation."""
+    from dataclasses import replace
+    from app.execution.live_moment_scout import _valid_live_candidate
+
+    candidate = replace(_r67_candidate(), metadata=access_metadata)
+    projected = _valid_live_candidate(
+        candidate,
+        interest="CULTURE",
+        latitude=5.123456,
+        longitude=10.654321,
+        radius_m=1200,
+    )
+    assert (projected is not None) is expected_public
+
+
 def _install_r67_provider(monkeypatch, *, candidates=None, attempts=None, error=None):
     import app.execution.live_moment_scout as live_module
 
