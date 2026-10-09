@@ -1,0 +1,7 @@
+M2 mutant = PendingSetPanel.tsx door label replaced by a string typed in the component (dictionary lookup removed), run_id=dg0470m2
+  10 failed
+  1 passed (49.1s)
+    Error: the hub door says something other than the dictionary
+    > 212 |       expect(norm(await door.innerText()), "the hub door says something other than the dictionary").toBe(
+    Received: "Import places typed inside the component"
+    Received: "Import places typed inside the component"
