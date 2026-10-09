@@ -33,6 +33,8 @@ import { V12AuthoritativeJourneyPanel } from "../features/execution/V12Authorita
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
 import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPanel";
+/* ORD-0555: a mount site's own words come from the dictionaries, not from a literal in this table. */
+import { useT } from "../i18n/LocaleContext";
 
 /**
  * ORD-0392: which feature panel appears on which screen, in one table.
@@ -82,6 +84,16 @@ export type RouteScope = any;
 export type TripsTabScope = any;
 export type AuthoritativeScope = any;
 export type HubAnchorScope = any;
+
+/**
+ * ORD-0555: `render` below is a plain function, so it cannot call `useT()` itself. This is the arm a
+ * mount site uses for its own sentence: the text is read off the dictionary at paint time, and the
+ * sibling order of the DOM is untouched because the caller keeps its own `<summary>`.
+ */
+function TripsAdvancedFoldLabel() {
+  const t = useT();
+  return <>{t("v8panelregistry.advancedDeveloper")}</>;
+}
 
 /** The shell's route chain: one entry per `{route === "…" && …}` block it used to hold. */
 export const routePanels: V8PanelEntry<RouteScope>[] = [
@@ -478,7 +490,7 @@ export const tripsTabPanels: V8PanelEntry<TripsTabScope>[] = [
           {s.slots.walletCommitments()}
         </div>
         <details className="trips-advanced">
-          <summary>{s.zh ? "高级 / 开发者" : "Advanced / developer"}</summary>
+          <summary><TripsAdvancedFoldLabel /></summary>
           {s.slots.bookingsAdvanced()}
         </details>
       </>

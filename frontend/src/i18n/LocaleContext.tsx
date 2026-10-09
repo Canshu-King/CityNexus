@@ -400,6 +400,11 @@ const en: Dict = {
   "bookings.authorityExplicit": "Authority remains explicit",
   "bookings.authoritySub": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
 
+  /* ORD-0555: words that belong to the panel table. A `render` in `app/v8PanelRegistry.tsx` is a
+     plain function rather than a component, so a mount site that needs a label reads it through a
+     small component that takes the dictionary itself -- the literal pair never lives in the table. */
+  "v8panelregistry.advancedDeveloper": "Advanced / developer",
+
   // ── Offline Journey View ──
   "offline.readOnly": "OFFLINE · READ ONLY",
   "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
@@ -1639,6 +1644,10 @@ const zhCN: Dict = {
   "bookings.neverInvented": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
   "bookings.authorityExplicit": "权限始终明确",
   "bookings.authoritySub": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+
+  /* ORD-0555：面板登记表自己的文案。`app/v8PanelRegistry.tsx` 里的 `render` 是普通函数而非组件，
+     所以挂载位要一个标签时，由一个自己取词的小组件去读字典，而不是把中英二选一的写死串留在表里。 */
+  "v8panelregistry.advancedDeveloper": "高级 / 开发者",
 
   // ── Offline Journey View ──
   "offline.readOnly": "离线 · 只读",
