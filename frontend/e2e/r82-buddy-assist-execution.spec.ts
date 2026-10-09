@@ -268,6 +268,8 @@ test("R82 lets a signed buddy pair finish and rejoin after the offer expires", a
       await page.getByTestId("journey-rendezvous-refresh").click();
       await expect(page.getByTestId("journey-buddy-execution-active")).toBeVisible();
       await expect(page.getByTestId("journey-buddy-execution-active")).toContainText("60 minutes");
+      await expect(page.getByTestId("journey-buddy-active-lease-truth"))
+        .toContainText("NOT the expiry of the mutually agreed execution");
     }
     await bystanderPage.page.getByTestId("journey-rendezvous-refresh").click();
     await laterMemberPage.page.getByTestId("journey-rendezvous-refresh").click();
