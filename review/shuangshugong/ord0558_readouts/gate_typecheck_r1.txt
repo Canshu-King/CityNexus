@@ -2,7 +2,7 @@
 label=typecheck:all
 cwd=D:/moodle/_qoder_shuangshugong_0558/frontend
 command=npm run typecheck:all
-started=01:43:45 finished=01:43:53
+started=02:05:41 finished=02:05:48
 exit_code=0
 output_line_count=2
 --- output verbatim ---
