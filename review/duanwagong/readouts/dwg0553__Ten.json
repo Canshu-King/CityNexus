@@ -1,5 +1,37 @@
 {
- "run_id": "dwg0553a",
+ "run_id": "dwg0553c",
  "spec": "frontend/e2e/qoder-duanwagong-0553-batch-row-instant-r1.spec.ts",
- "arm": "Ten"
+ "arm": "Ten",
+ "branch": "REFUSE",
+ "locale": "en",
+ "journey_id": "1254a985-0e07-418e-bf3f-5f98d75bff07",
+ "scene_status": 200,
+ "compose": [
+  {
+   "status": 422,
+   "body": {
+    "error": {
+     "code": "VALIDATION_ERROR",
+     "message": "Request validation failed",
+     "message_key": "request.invalid",
+     "trace_id": "6fc19544-2016-4e21-b46b-69a36e1338e6",
+     "details": {
+      "errors": [
+       {
+        "loc": [
+         "body",
+         "place_ids"
+        ],
+        "msg": "List should have at least 2 items after validation, not 1",
+        "type": "too_short",
+        "message_key": "validation.too_short"
+       }
+      ]
+     },
+     "error_receipt_id": "CNX-CYZETGB6"
+    }
+   }
+  }
+ ],
+ "error_sentence_on_screen": "Discovery could not be composed"
 }
