@@ -6,6 +6,7 @@ import {
   type JourneyMembershipInvitationManagerItem,
   type JourneyOperatorProjection,
   type JourneyRendezvousCoordinationSignal,
+  type RendezvousBuddyExecutionProjection,
   type RendezvousBuddyHandoff,
   type RendezvousBuddyHandoffCandidates,
   type RendezvousBuddyPrivateRouteResult,
@@ -33,6 +34,12 @@ type BuddyDirectionsConsent = {
   handoffSnapshotKey: string;
   targetKey: string;
   audienceKey: string;
+};
+type BuddyReturnDirectionsConsent = {
+  handoffId: string;
+  executionId: string;
+  targetKey: string;
+  sharedStopName: string;
 };
 
 function groupPresenceTargetKey(presence: GroupPresence | null | undefined): string | null {
@@ -198,10 +205,12 @@ export function JourneyMembershipPanel({
   const [buddyHandoffs, setBuddyHandoffs] = useState<RendezvousBuddyHandoff[]>([]);
   const [buddyCandidates, setBuddyCandidates] = useState<RendezvousBuddyHandoffCandidates | null>(null);
   const [buddySelectedPlaceId, setBuddySelectedPlaceId] = useState("");
+  const [buddyExecutionWindowMinutes, setBuddyExecutionWindowMinutes] = useState<30 | 60 | 90>(60);
   const [buddyActionBusy, setBuddyActionBusy] = useState(false);
   const [buddyMessage, setBuddyMessage] = useState<string | null>(null);
   const [buddyMapConsentId, setBuddyMapConsentId] = useState<string | null>(null);
   const [buddyDirectionsConsent, setBuddyDirectionsConsent] = useState<BuddyDirectionsConsent | null>(null);
+  const [buddyReturnDirectionsConsent, setBuddyReturnDirectionsConsent] = useState<BuddyReturnDirectionsConsent | null>(null);
   const [buddyPrivateRoutes, setBuddyPrivateRoutes] = useState<Record<string, RendezvousBuddyPrivateRouteResult>>({});
   const [buddyRouteConsent, setBuddyRouteConsent] = useState<BuddyRouteConsent | null>(null);
   const [buddyRouteBusy, setBuddyRouteBusy] = useState(false);
@@ -465,12 +474,13 @@ export function JourneyMembershipPanel({
         expected_original_public_place_id: candidates.original_public_place_id,
         expected_audience_sha256: candidates.audience_sha256,
         handoff_place_id: buddySelectedPlaceId,
+        execution_window_minutes: buddyExecutionWindowMinutes,
       }, secureJourneyRequestKey());
       setBuddyCandidates(null);
       setBuddySelectedPlaceId("");
       setBuddyMessage(zh
-        ? "已将这处公开地点作为仅对你和求助者可见的提议；共享行程没有改变。"
-        : "This public place was offered privately to you and the help requester. The shared Journey is unchanged.");
+        ? `已将公开地点和 ${buddyExecutionWindowMinutes} 分钟接应窗口一起提议给求助者；只有对方本人接受后窗口才开始，共享行程未改变。`
+        : `The public handoff place and a ${buddyExecutionWindowMinutes}-minute window were offered privately. The window starts only if the requester accepts; the shared Journey is unchanged.`);
       await refreshGroupPresence();
     } catch {
       setBuddyMessage(zh
@@ -489,13 +499,92 @@ export function JourneyMembershipPanel({
     try {
       await cityNexusApi.respondToRendezvousBuddyHandoff(journeyId, handoff.handoff_id, decision);
       setBuddyMessage(decision === "ACCEPT"
-        ? (zh ? "已接受这处仅供双方协调的公共会合意向；原共同计划未改变。" : "You accepted this private public-place handoff intention. The original shared plan is unchanged.")
+        ? (handoff.execution?.status === "WINDOW_OFFERED"
+          ? (zh
+            ? `你已签名接受公开接应地点和 ${handoff.execution.execution_window_minutes} 分钟执行窗口；窗口从现在开始。`
+            : `You signed to accept the public handoff and its ${handoff.execution.execution_window_minutes}-minute execution window. The window starts now.`)
+          : (zh ? "已接受这处仅供双方协调的公共会合意向；原共同计划未改变。" : "You accepted this private public-place handoff intention. The original shared plan is unchanged."))
         : (zh ? "已拒绝这次提议；原共同计划未改变。" : "You declined this offer. The original shared plan is unchanged."));
       await refreshGroupPresence();
     } catch {
       setBuddyMessage(zh
         ? "提议已过期或上下文变化；没有接受旧地点。请刷新。"
         : "The offer expired or its context changed. The stale place was not accepted; refresh.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const offerBuddyExecutionWindow = async (
+    handoff: RendezvousBuddyHandoff,
+    windowMinutes: 30 | 60 | 90,
+  ) => {
+    if (!journeyId || buddyActionBusy || handoff.viewer_role !== "HELPER" || handoff.status !== "ACCEPTED") return;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      await cityNexusApi.offerRendezvousBuddyExecutionWindow(
+        journeyId, handoff.handoff_id, windowMinutes, secureJourneyRequestKey(),
+      );
+      setBuddyMessage(zh
+        ? `已单独提出 ${windowMinutes} 分钟接应执行窗口；对方签名接受前不会开始。`
+        : `You offered a separate ${windowMinutes}-minute execution window. It does not start until the requester signs to accept.`);
+      await refreshGroupPresence();
+    } catch {
+      setBuddyMessage(zh
+        ? "执行窗口没有创建；原提议或共享计划可能已经过期，请刷新后重新确认。"
+        : "The execution window was not created. The handoff or shared context may have expired; refresh and review it.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const acceptBuddyExecutionWindow = async (handoff: RendezvousBuddyHandoff) => {
+    if (!journeyId || buddyActionBusy || handoff.viewer_role !== "REQUESTER") return;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      await cityNexusApi.acceptRendezvousBuddyExecutionWindow(journeyId, handoff.handoff_id);
+      setBuddyMessage(zh ? "你已签名接受有限接应窗口；现在才开始计时。" : "You signed to accept the bounded assist window. Its clock starts now.");
+      await refreshGroupPresence();
+    } catch {
+      setBuddyMessage(zh
+        ? "窗口提议已经过期或上下文变化；没有延长旧接应。请刷新并重新协商。"
+        : "The window offer expired or its context changed. The old handoff was not extended; refresh and agree again.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const reportBuddyExecution = async (
+    handoff: RendezvousBuddyHandoff,
+    execution: RendezvousBuddyExecutionProjection,
+    receiptKind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION",
+  ) => {
+    if (!journeyId || buddyActionBusy || !execution.can_report) return;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      const receipt = await cityNexusApi.reportRendezvousBuddyExecution(
+        journeyId, handoff.handoff_id, execution.execution_id, receiptKind, secureJourneyRequestKey(),
+      );
+      setBuddyMessage(receipt.status === "MUTUALLY_ACKNOWLEDGED"
+        ? (zh
+          ? "双方已分别签名确认接应协作完成。应用记录的是双方自报，不是设备验证的物理到场。"
+          : "Both members independently confirmed the assist. This records their self-reports, not device-verified physical presence.")
+        : receipt.status === "REPLAN_REQUIRED"
+          ? (zh ? "已记录你无法在此接应；不会把旧意向当作完成，可重新协调或返回当前共同会合点。" : "Your inability to meet was recorded. The old intention is not marked complete; you can replan or return to the current shared stop.")
+          : receipt.status === "CANCELLED"
+            ? (zh ? "已记录你退出这次接应；对方的状态不会替你确认，仍可单独导航回当前共同会合点。" : "Your participation was cancelled. The other member cannot confirm for you; you may navigate back to the current shared stop.")
+            : (zh ? "已记录你的本人自报；仍需对方独立确认。" : "Your personal self-report was recorded; the other member must confirm independently."));
+      await refreshGroupPresence();
+    } catch {
+      setBuddyMessage(zh
+        ? "自报没有写入；接应窗口可能已过期或计划已变化。刷新核对当前状态后再决定。"
+        : "The self-report was not recorded. The window may have expired or the plan changed; refresh before deciding again.");
       await refreshGroupPresence();
     } finally {
       setBuddyActionBusy(false);
@@ -584,6 +673,105 @@ export function JourneyMembershipPanel({
       targetKey: currentTargetKey,
       audienceKey: currentAudienceKey,
     });
+  };
+
+  const beginBuddyReturnDirectionsConsent = (handoff: RendezvousBuddyHandoff) => {
+    const stop = groupPresence?.rendezvous;
+    const execution = handoff.execution;
+    if (
+      handoff.status !== "ACCEPTED"
+      || !execution?.can_return_to_shared_stop
+      || !execution.context_current
+      || !currentTargetKey
+      || !stop
+      || !hasExactPublicPin(stop)
+      || !handoffStillTargetsCurrentSharedStop(handoff, groupPresence)
+    ) {
+      setBuddyMessage(zh
+        ? "接应结果或当前共同会合点尚未重新核对；没有打开地图，请刷新后重新确认。"
+        : "The pair outcome or current shared stop is not verified. No map was opened; refresh and confirm again.");
+      return;
+    }
+    setBuddyMessage(null);
+    setBuddyReturnDirectionsConsent({
+      handoffId: handoff.handoff_id,
+      executionId: execution.execution_id,
+      targetKey: currentTargetKey,
+      sharedStopName: stop.place_name,
+    });
+  };
+
+  const openBuddyReturnDirections = async () => {
+    const consent = buddyReturnDirectionsConsent;
+    if (!journeyId || !consent || buddyActionBusy) return;
+    const popup = window.open("about:blank", "_blank");
+    if (!popup) {
+      setBuddyMessage(zh
+        ? "浏览器阻止了新窗口；没有向地图发送地点。请允许弹窗后重新确认。"
+        : "The browser blocked the new tab; no destination was sent. Allow popups and confirm again.");
+      return;
+    }
+    popup.opener = null;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      // This is a fresh, destination-only consent. Recheck both the signed pair
+      // outcome and current shared plan/cursor immediately before opening Maps.
+      const [projection, current] = await Promise.all([
+        cityNexusApi.getJourneyOperator(journeyId),
+        cityNexusApi.getCurrentRendezvousBuddyHandoffs(journeyId),
+      ]);
+      const presence = projection.group_presence ?? null;
+      const freshHandoff = current.items.find((item) => item.handoff_id === consent.handoffId);
+      const execution = freshHandoff?.execution;
+      const stop = presence?.rendezvous;
+      const freshTargetKey = groupPresenceTargetKey(presence);
+      const stillCurrent = freshHandoff?.status === "ACCEPTED"
+        && execution?.execution_id === consent.executionId
+        && execution.can_return_to_shared_stop
+        && execution.context_current
+        && freshTargetKey === consent.targetKey
+        && Boolean(stop && presence?.active_plan_version_id && hasExactPublicPin(stop));
+
+      setGroupPresence(presence);
+      setBuddyHandoffs(current.items);
+      if (!stillCurrent || !stop) {
+        popup.close();
+        setBuddyReturnDirectionsConsent(null);
+        setBuddyMessage(zh
+          ? "接应结果、当前共同会合点或计划游标已变化；没有向外部地图发送地点。请刷新后重新同意。"
+          : "The pair outcome, current shared stop, or plan cursor changed. No destination was sent; refresh and consent again.");
+        return;
+      }
+
+      popup.location.href = buildGoogleWalkingDirectionsUrl({
+        kind: "SHARED_RENDEZVOUS",
+        place_id: stop.place_id,
+        name: stop.place_name,
+        latitude: stop.latitude,
+        longitude: stop.longitude,
+        coordinate_system: stop.coordinate_system,
+        provenance: {
+          provider_key: "citynexus-current-shared-plan-stop",
+          external_id: stop.activity_id,
+          source_coordinate_system: stop.coordinate_system,
+        },
+        navigation_available: true,
+        unavailable_reason: null,
+      });
+      setBuddyReturnDirectionsConsent(null);
+      setBuddyMessage(zh
+        ? "已将当前共同会合点作为唯一目的地交给 Google Maps；链接不含 CityNexus 起点或路线，也不代表已重新加入或实际到场。"
+        : "The current shared stop was sent as the only destination to Google Maps. The link contains no CityNexus origin or route and does not prove rejoining or physical arrival.");
+    } catch {
+      popup.close();
+      setBuddyReturnDirectionsConsent(null);
+      setBuddyMessage(zh
+        ? "无法重新核对接应结果和当前共同会合点；没有向外部地图发送地点。"
+        : "The pair outcome and current shared stop could not be revalidated. No destination was sent to an external map.");
+    } finally {
+      setBuddyActionBusy(false);
+    }
   };
 
   const openAcceptedBuddyDirections = async () => {
@@ -1188,6 +1376,24 @@ export function JourneyMembershipPanel({
                                   {zh ? "；路线、开放时间和无障碍状态均未知。" : "; route, opening hours, and accessibility are UNKNOWN."}
                                 </small>
                               )}
+                              <label htmlFor="journey-buddy-execution-window">
+                                {zh ? "双方同意后的接应执行时长" : "Bounded assist window after both accept"}
+                              </label>
+                              <select
+                                id="journey-buddy-execution-window"
+                                data-testid="journey-buddy-execution-window"
+                                value={buddyExecutionWindowMinutes}
+                                onChange={(event) => setBuddyExecutionWindowMinutes(Number(event.target.value) as 30 | 60 | 90)}
+                              >
+                                {[30, 60, 90].map((minutes) => (
+                                  <option key={minutes} value={minutes}>{minutes} minutes</option>
+                                ))}
+                              </select>
+                              <small>
+                                {zh
+                                  ? "此时长与地点一起提交；20 分钟是提议接受期限。只有求助者本人接受后，执行窗口才开始，不会自动续期。"
+                                  : "This duration is offered with the place. The 20-minute limit applies to accepting the offer; the execution window starts only after the requester accepts and never auto-renews."}
+                              </small>
                               <div className="journey-membership-actions">
                                 <button
                                   type="button"
@@ -1279,6 +1485,15 @@ export function JourneyMembershipPanel({
                         const displayedCommitmentRisk = hasBothUsableBuddyLegs
                           ? risk?.state ?? "UNKNOWN"
                           : oneVerifiedLegAloneAtRisk ? "COMMITMENT_AT_RISK" : "UNKNOWN";
+                        const execution = handoff.execution ?? null;
+                        const returnDirectionsButton = execution?.can_return_to_shared_stop ? (
+                          <button
+                            type="button"
+                            data-testid="journey-buddy-return-open"
+                            disabled={buddyActionBusy || !currentTargetKey}
+                            onClick={() => beginBuddyReturnDirectionsConsent(handoff)}
+                          >{zh ? "单独同意后导航回当前共同会合点…" : "Navigate back to the current shared stop with separate consent…"}</button>
+                        ) : null;
                         return (
                         <article key={handoff.handoff_id} data-testid="journey-buddy-handoff" data-handoff-id={handoff.handoff_id}>
                           <strong>{handoff.status === "ACCEPTED"
@@ -1291,11 +1506,22 @@ export function JourneyMembershipPanel({
                           <small>{zh
                             ? `提议有效至 ${new Date(handoff.expires_at).toLocaleString(locale)}。路线、开放时间、无障碍状态均为 UNKNOWN，实际可行性未验证；这不是实时位置或到场证明。原共同会合点“${handoff.original_shared_stop.place_name}”和整个计划保持不变，请勿因此放弃受保护承诺。`
                             : `Offer expires ${new Date(handoff.expires_at).toLocaleString(locale)}. Route, opening hours, and accessibility are UNKNOWN; feasibility is unverified. This is not live location or proof of arrival. The original shared stop “${handoff.original_shared_stop.place_name}” and Journey remain unchanged; do not abandon protected commitments.`}</small>
+                          {handoff.status === "OFFERED" && execution?.status === "WINDOW_OFFERED" && (
+                            <small data-testid="journey-buddy-window-offer-truth">
+                              {zh
+                                ? `接受地点也表示你同意 ${execution.execution_window_minutes} 分钟的接应执行窗口；只有你本人接受后才开始，不会自动续期。`
+                                : `Accepting this place also accepts a ${execution.execution_window_minutes}-minute assist window. It starts only after your own acceptance and never renews automatically.`}
+                            </small>
+                          )}
                           {handoff.status === "OFFERED" && handoff.viewer_role === "REQUESTER" && (
                             <div className="journey-membership-actions">
                               <button type="button" data-testid="journey-buddy-accept" disabled={buddyActionBusy}
                                 onClick={() => void respondToBuddyHandoff(handoff, "ACCEPT")}>
-                                {zh ? "接受此接应地点" : "Accept this handoff place"}
+                                {execution?.status === "WINDOW_OFFERED"
+                                  ? (zh
+                                    ? `接受地点与 ${execution.execution_window_minutes} 分钟执行窗口`
+                                    : `Accept place and ${execution.execution_window_minutes}-minute window`)
+                                  : (zh ? "接受此接应地点" : "Accept this handoff place")}
                               </button>
                               <button type="button" data-testid="journey-buddy-decline" disabled={buddyActionBusy}
                                 onClick={() => void respondToBuddyHandoff(handoff, "DECLINE")}>
@@ -1308,6 +1534,140 @@ export function JourneyMembershipPanel({
                               <small data-testid="journey-buddy-accepted-truth">
                                 {zh ? "这是双方同意的公共会合意向，不是 GPS 证明；双方各自决定是否导航。" : "This is a mutually agreed public-place intention, not GPS proof. Each person chooses whether to navigate."}
                               </small>
+                              {execution?.status === "WINDOW_OFFERED" && handoff.viewer_role === "REQUESTER" && execution.can_accept_window && (
+                                <section data-testid="journey-buddy-window-acceptance">
+                                  <p>{zh
+                                    ? `对方单独同意了 ${execution.execution_window_minutes} 分钟执行窗口。提议仍受原 20 分钟接受期限约束；由你签名接受后才开始计时。`
+                                    : `The helper separately offered a ${execution.execution_window_minutes}-minute execution window. The proposal remains subject to the original 20-minute deadline; its clock starts only when you sign to accept.`}</p>
+                                  <button
+                                    type="button"
+                                    data-testid="journey-buddy-execution-window-accept"
+                                    disabled={buddyActionBusy}
+                                    onClick={() => void acceptBuddyExecutionWindow(handoff)}
+                                  >{zh ? `接受 ${execution.execution_window_minutes} 分钟执行窗口` : `Accept ${execution.execution_window_minutes}-minute window`}</button>
+                                </section>
+                              )}
+                              {handoff.execution_window_offer_available && handoff.viewer_role === "HELPER" && (
+                                <section data-testid="journey-buddy-window-upgrade">
+                                  <p>{zh
+                                    ? "这是先前版本接受的接应。提议执行窗口会单独征求对方同意；不会追溯延长旧协议。"
+                                    : "This handoff was accepted by an earlier version. Offer a separate execution window; it will not retroactively extend the old agreement."}</p>
+                                  <label htmlFor={`journey-buddy-upgrade-window-${handoff.handoff_id}`}>
+                                    {zh ? "提议执行时长" : "Proposed execution window"}
+                                  </label>
+                                  <select
+                                    id={`journey-buddy-upgrade-window-${handoff.handoff_id}`}
+                                    data-testid="journey-buddy-upgrade-window-select"
+                                    value={buddyExecutionWindowMinutes}
+                                    onChange={(event) => setBuddyExecutionWindowMinutes(Number(event.target.value) as 30 | 60 | 90)}
+                                  >
+                                    {[30, 60, 90].map((minutes) => (
+                                      <option key={minutes} value={minutes}>{minutes} minutes</option>
+                                    ))}
+                                  </select>
+                                  <button
+                                    type="button"
+                                    data-testid="journey-buddy-execution-window-offer"
+                                    disabled={buddyActionBusy}
+                                    onClick={() => void offerBuddyExecutionWindow(handoff, buddyExecutionWindowMinutes)}
+                                  >{zh ? "单独提议此执行时长" : "Offer this bounded window separately"}</button>
+                                </section>
+                              )}
+                              {execution?.status === "WINDOW_OFFERED" && handoff.viewer_role === "HELPER" && handoff.status === "ACCEPTED" && (
+                                <small data-testid="journey-buddy-window-waiting">
+                                  {zh ? `已提出 ${execution.execution_window_minutes} 分钟窗口；等待求助者本人签名接受，计时尚未开始。` : `The ${execution.execution_window_minutes}-minute window is offered. Waiting for the requester’s own signed acceptance; its clock has not started.`}
+                                </small>
+                              )}
+                              {execution?.status === "ACTIVE" && (
+                                <section data-testid="journey-buddy-execution-active">
+                                  <strong>{zh ? "双方同意的接应正在执行" : "Mutually agreed buddy assist in progress"}</strong>
+                                  <small>{zh
+                                    ? `有限窗口：${execution.execution_window_minutes} 分钟；开始 ${execution.started_at ? new Date(execution.started_at).toLocaleString(locale) : "—"}；截止 ${execution.expires_at ? new Date(execution.expires_at).toLocaleString(locale) : "—"}。不会后台追踪或自动续期。`
+                                    : `Bounded window: ${execution.execution_window_minutes} minutes; started ${execution.started_at ? new Date(execution.started_at).toLocaleString(locale) : "—"}; expires ${execution.expires_at ? new Date(execution.expires_at).toLocaleString(locale) : "—"}. No background tracking or auto-renewal.`}</small>
+                                  <small data-testid="journey-buddy-execution-confirmations">
+                                    {execution.helper_confirmed
+                                      ? (zh ? `${handoff.helper_display_name} 已本人确认。` : `${handoff.helper_display_name} confirmed personally.`)
+                                      : (zh ? `${handoff.helper_display_name} 尚未确认。` : `${handoff.helper_display_name} has not confirmed.`)}
+                                    {" "}
+                                    {execution.requester_confirmed
+                                      ? (zh ? `${handoff.requester_display_name} 已本人确认。` : `${handoff.requester_display_name} confirmed personally.`)
+                                      : (zh ? `${handoff.requester_display_name} 尚未确认。` : `${handoff.requester_display_name} has not confirmed.`)}
+                                    {execution.viewer_receipt_kind === "BUDDY_MET_ACK" && !execution.partner_receipt_kind
+                                      ? (zh ? "等待对方独立确认。" : "Waiting for the other member’s independent confirmation.")
+                                      : ""}
+                                  </small>
+                                  <small>{zh
+                                    ? "下列按钮只记录你本人签名自报；不会因 GPS、路线、距离或地图操作自动完成，也不是设备验证的到场证明。"
+                                    : "These buttons record only your signed self-report. GPS, routes, proximity, and map actions never complete the assist, and the report is not device-verified arrival."}</small>
+                                  {execution.can_report && (
+                                    <div className="journey-membership-actions">
+                                      <button
+                                        type="button"
+                                        data-testid="journey-buddy-met-ack"
+                                        disabled={buddyActionBusy}
+                                        onClick={() => void reportBuddyExecution(handoff, execution, "BUDDY_MET_ACK")}
+                                      >{zh ? "我在约定地点看到伙伴，确认接应协作完成" : "I am at the agreed place and can see my buddy"}</button>
+                                      <button
+                                        type="button"
+                                        data-testid="journey-buddy-cannot-meet"
+                                        disabled={buddyActionBusy}
+                                        onClick={() => void reportBuddyExecution(handoff, execution, "CANNOT_MEET")}
+                                      >{zh ? "我无法在这里接应，需要重新协调" : "I cannot meet here; I need to replan"}</button>
+                                      <button
+                                        type="button"
+                                        data-testid="journey-buddy-cancel-participation"
+                                        disabled={buddyActionBusy}
+                                        onClick={() => void reportBuddyExecution(handoff, execution, "CANCEL_PARTICIPATION")}
+                                      >{zh ? "退出我自己的接应参与" : "Cancel my participation"}</button>
+                                    </div>
+                                  )}
+                                </section>
+                              )}
+                              {execution?.status === "MUTUALLY_ACKNOWLEDGED" && (
+                                <section data-testid="journey-buddy-mutual-outcome">
+                                  <strong>{zh ? "双方已独立确认接应协作完成" : "Both members independently confirmed the assist"}</strong>
+                                  <small>{zh
+                                    ? "这是双方签名自报的共同结果，不是 GPS、距离或设备验证的物理会合；不关闭 R62/R69，不修改共享计划。"
+                                    : "This is a mutually signed self-reported outcome, not GPS, distance, or device-verified physical reunion. It does not close R62/R69 or change the shared plan."}</small>
+                                  {returnDirectionsButton}
+                                </section>
+                              )}
+                              {execution?.status === "REPLAN_REQUIRED" && (
+                                <section data-testid="journey-buddy-replan-required">
+                                  <strong>{zh ? "此接应无法按原约定完成" : "This handoff cannot finish as agreed"}</strong>
+                                  <small>{zh ? "没有记录为双方完成。你可以发起新的、单独授权的帮助请求，或导航回当前共同会合点。" : "It was not recorded as mutually completed. You can make a fresh, separately consented help request or navigate to the current shared stop."}</small>
+                                  <button type="button" data-testid="journey-buddy-replan-help" disabled={coordinationBusy}
+                                    onClick={() => openCoordinationConsent("NEEDS_COORDINATION")}>
+                                    {zh ? "请求重新协调帮助…" : "Request fresh help…"}
+                                  </button>
+                                  {returnDirectionsButton}
+                                </section>
+                              )}
+                              {execution?.status === "CANCELLED" && (
+                                <section data-testid="journey-buddy-execution-cancelled">
+                                  <small>{zh ? "一位成员退出了自己的参与；没有推断另一人的确认。" : "A member cancelled their own participation; no confirmation was inferred for the other person."}</small>
+                                  {returnDirectionsButton}
+                                </section>
+                              )}
+                              {execution?.status === "EXPIRED" && (
+                                <section data-testid="journey-buddy-execution-expired">
+                                  <small>{zh ? "双方接应执行窗口已到期，系统没有自动续期。需要重新同意才能继续接应。" : "The pair execution window expired and was not renewed. A new mutual agreement is required to continue the assist."}</small>
+                                  <button type="button" data-testid="journey-buddy-replan-help" disabled={coordinationBusy}
+                                    onClick={() => openCoordinationConsent("NEEDS_COORDINATION")}>
+                                    {zh ? "重新协调帮助…" : "Replan help…"}
+                                  </button>
+                                  {returnDirectionsButton}
+                                </section>
+                              )}
+                              {execution?.status === "STALE" && (
+                                <section data-testid="journey-buddy-execution-stale">
+                                  <small>{zh ? `原接应上下文已暂停（${execution.stale_reason ?? "需要重新核对"}）；刷新当前计划并重新取得双方同意。` : `The original handoff context is paused (${execution.stale_reason ?? "revalidation required"}); refresh the current plan and obtain consent again.`}</small>
+                                  <button type="button" data-testid="journey-buddy-replan-help" disabled={coordinationBusy}
+                                    onClick={() => openCoordinationConsent("NEEDS_COORDINATION")}>
+                                    {zh ? "按当前计划重新协调帮助…" : "Request fresh help for the current plan…"}
+                                  </button>
+                                </section>
+                              )}
                               <button type="button" data-testid="journey-buddy-map-open" disabled={buddyActionBusy}
                                 onClick={() => setBuddyMapConsentId(handoff.handoff_id)}>
                                 {zh ? "打开接应地点精确地图…" : "Open exact handoff map pin…"}
@@ -1423,12 +1783,14 @@ export function JourneyMembershipPanel({
                               )}
                             </>
                           )}
-                          <button type="button" data-testid="journey-buddy-close" disabled={buddyActionBusy}
-                            onClick={() => void closeBuddyHandoff(handoff)}>
-                            {handoff.viewer_role === "HELPER"
-                              ? (zh ? "取消接应提议" : "Cancel handoff")
-                              : (zh ? "撤回我的接应同意" : "Revoke my handoff agreement")}
-                          </button>
+                          {(!execution || execution.status === "WINDOW_OFFERED") && (
+                            <button type="button" data-testid="journey-buddy-close" disabled={buddyActionBusy}
+                              onClick={() => void closeBuddyHandoff(handoff)}>
+                              {handoff.viewer_role === "HELPER"
+                                ? (zh ? "取消接应提议" : "Cancel handoff")
+                                : (zh ? "撤回我的接应同意" : "Revoke my handoff agreement")}
+                            </button>
+                          )}
                         </article>
                         );
                       })}
@@ -1561,6 +1923,34 @@ export function JourneyMembershipPanel({
               {zh ? "同意并打开步行导航" : "Agree and open walking directions"}
             </button>
             <button type="button" data-testid="journey-buddy-directions-cancel" onClick={() => setBuddyDirectionsConsent(null)} disabled={buddyActionBusy}>
+              {zh ? "取消，不发送目的地" : "Cancel without sending the destination"}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {buddyReturnDirectionsConsent && (
+        <section
+          className="journey-membership-map-consent"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="journey-buddy-return-directions-title"
+          data-testid="journey-buddy-return-directions-consent"
+        >
+          <strong id="journey-buddy-return-directions-title">
+            {zh ? "导航回当前共同会合点？" : "Navigate back to the current shared stop?"}
+          </strong>
+          <p>{zh
+            ? `确认后只把当前共同会合点“${buddyReturnDirectionsConsent.sharedStopName}”的 WGS84 坐标作为目的地交给 Google Maps。CityNexus 不会提供或发送起点、成员位置、路线或 ETA；Google Maps 可能按自己的权限流程读取设备位置。`
+            : `If you confirm, only the WGS84 destination of the current shared stop “${buddyReturnDirectionsConsent.sharedStopName}” goes to Google Maps. CityNexus does not provide or send an origin, member locations, route, or ETA; Google Maps may request device location under its own permission flow.`}</p>
+          <p>{zh
+            ? "打开外部导航不代表已重新加入 Journey、抵达或经过设备验证。若计划、游标或会合点变化，系统会阻止本次发送并要求重新确认。"
+            : "Opening external directions does not prove that you rejoined the Journey, arrived, or were device-verified. If the plan, cursor, or rendezvous changes, this consent is blocked and must be renewed."}</p>
+          <div className="journey-membership-actions">
+            <button type="button" data-testid="journey-buddy-return-directions-confirm" onClick={() => void openBuddyReturnDirections()} disabled={buddyActionBusy}>
+              {zh ? "单独同意并导航回共同会合点" : "Separately consent and navigate to the shared stop"}
+            </button>
+            <button type="button" data-testid="journey-buddy-return-directions-cancel" onClick={() => setBuddyReturnDirectionsConsent(null)} disabled={buddyActionBusy}>
               {zh ? "取消，不发送目的地" : "Cancel without sending the destination"}
             </button>
           </div>

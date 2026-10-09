@@ -780,6 +780,37 @@ export interface RendezvousBuddyHandoff {
   route_eta_state: "UNKNOWN";
   accessibility_state: "UNKNOWN";
   opening_hours_state: "UNKNOWN";
+  execution_window_offer_available?: boolean;
+  execution?: RendezvousBuddyExecutionProjection | null;
+}
+
+export interface RendezvousBuddyExecutionProjection {
+  execution_id: string;
+  status: "WINDOW_OFFERED" | "ACTIVE" | "MUTUALLY_ACKNOWLEDGED" | "REPLAN_REQUIRED" | "CANCELLED" | "EXPIRED" | "STALE";
+  execution_window_minutes: 30 | 60 | 90;
+  proposed_at: string;
+  proposal_expires_at: string;
+  started_at: string | null;
+  expires_at: string | null;
+  closed_at: string | null;
+  outcome_code: string | null;
+  helper_consented_at: string;
+  requester_consented_at: string | null;
+  helper_receipt_kind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION" | null;
+  requester_receipt_kind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION" | null;
+  viewer_receipt_kind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION" | null;
+  partner_receipt_kind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION" | null;
+  helper_confirmed: boolean;
+  requester_confirmed: boolean;
+  viewer_has_reported: boolean;
+  context_current: boolean;
+  stale_reason: string | null;
+  can_accept_window: boolean;
+  can_report: boolean;
+  can_return_to_shared_stop: boolean;
+  proposal_expired: boolean;
+  physical_arrival_verified: false;
+  shared_plan_changed: false;
 }
 
 export interface RendezvousBuddyPrivateRouteResult {
@@ -817,7 +848,7 @@ export interface RendezvousBuddyPrivateRouteResult {
 }
 
 export interface RendezvousBuddyPrivateRouteLegResult {
-  route_state: "LIVE" | "REPLAY" | "TEST_PROVIDER_EMULATOR" | "UNKNOWN" | "STALE";
+  route_state: "LIVE" | "REPLAY" | "TEST_PROVIDER_EMULATOR" | "SAME_PUBLIC_DESTINATION" | "UNKNOWN" | "STALE";
   status: string;
   reason: string;
   duration_min: number | null;
@@ -2632,6 +2663,7 @@ export const cityNexusApi = {
       expected_original_public_place_id: string;
       expected_audience_sha256: string;
       handoff_place_id: string;
+      execution_window_minutes?: 30 | 60 | 90 | null;
     },
     idempotencyKey: string,
   ): Promise<RendezvousBuddyHandoff> {
@@ -2653,6 +2685,50 @@ export const cityNexusApi = {
     return requestJson<RendezvousBuddyHandoff>(
       "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/respond",
       { method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify({ decision }) },
+    );
+  },
+
+  offerRendezvousBuddyExecutionWindow(
+    journeyId: string,
+    handoffId: string,
+    execution_window_minutes: 30 | 60 | 90,
+    idempotencyKey: string,
+  ): Promise<RendezvousBuddyExecutionProjection> {
+    return requestJson<RendezvousBuddyExecutionProjection>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/execution-window",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ execution_window_minutes }),
+      },
+    );
+  },
+
+  acceptRendezvousBuddyExecutionWindow(
+    journeyId: string,
+    handoffId: string,
+  ): Promise<RendezvousBuddyExecutionProjection> {
+    return requestJson<RendezvousBuddyExecutionProjection>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/execution-window/accept",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  reportRendezvousBuddyExecution(
+    journeyId: string,
+    handoffId: string,
+    executionId: string,
+    receipt_kind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION",
+    idempotencyKey: string,
+  ): Promise<RendezvousBuddyExecutionProjection> {
+    return requestJson<RendezvousBuddyExecutionProjection>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId
+        + "/execution/" + executionId + "/report",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ receipt_kind }),
+      },
     );
   },
 

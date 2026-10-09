@@ -2422,6 +2422,112 @@ class JourneyRendezvousBuddyHandoff(Base):
     )
 
 
+class JourneyRendezvousBuddyExecution(Base):
+    """Pair-private, mutually consented finite execution window for one handoff."""
+
+    __tablename__ = "journey_rendezvous_buddy_executions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    handoff_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_buddy_handoffs.id", ondelete="CASCADE"), unique=True
+    )
+    signal_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_member_signals.id", ondelete="CASCADE")
+    )
+    acknowledgement_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_signal_acknowledgements.id", ondelete="CASCADE")
+    )
+    requester_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    requester_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    helper_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    helper_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    current_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    original_rendezvous_activity_id: Mapped[str] = mapped_column(
+        ForeignKey("activities.id", ondelete="RESTRICT")
+    )
+    original_public_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    original_place_snapshot_json: Mapped[str] = mapped_column(Text)
+    handoff_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    handoff_place_snapshot_json: Mapped[str] = mapped_column(Text)
+    audience_member_ids_json: Mapped[str] = mapped_column(Text)
+    audience_sha256: Mapped[str] = mapped_column(String)
+    execution_window_minutes: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String, default="WINDOW_OFFERED", server_default="WINDOW_OFFERED")
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    helper_consent_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    requester_consent_traveler_id: Mapped[str | None] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE"), nullable=True
+    )
+    helper_consented_at: Mapped[str] = mapped_column(String)
+    requester_consented_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    proposed_at: Mapped[str] = mapped_column(String)
+    proposal_expires_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    outcome_code: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('WINDOW_OFFERED','ACTIVE','MUTUALLY_ACKNOWLEDGED','REPLAN_REQUIRED','CANCELLED','EXPIRED','STALE')",
+            name="ck_journey_rendezvous_buddy_executions_status",
+        ),
+        CheckConstraint(
+            "execution_window_minutes IN (30,60,90)",
+            name="ck_journey_rendezvous_buddy_executions_window",
+        ),
+        UniqueConstraint(
+            "journey_id", "helper_member_id", "idempotency_key",
+            name="uq_journey_rendezvous_buddy_executions_request",
+        ),
+        Index(
+            "idx_journey_rendezvous_buddy_executions_pair_status_expiry",
+            "journey_id", "requester_member_id", "helper_member_id", "status", "expires_at",
+        ),
+    )
+
+
+class JourneyRendezvousBuddyExecutionReceipt(Base):
+    """One signed self-report per member for one exact private execution window."""
+
+    __tablename__ = "journey_rendezvous_buddy_execution_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    execution_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_buddy_executions.id", ondelete="CASCADE")
+    )
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    receipt_kind: Mapped[str] = mapped_column(String)
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    self_reported_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "receipt_kind IN ('BUDDY_MET_ACK','CANNOT_MEET','CANCEL_PARTICIPATION')",
+            name="ck_journey_rendezvous_buddy_execution_receipts_kind",
+        ),
+        UniqueConstraint(
+            "execution_id", "member_id",
+            name="uq_journey_rendezvous_buddy_execution_receipts_member",
+        ),
+        UniqueConstraint(
+            "execution_id", "idempotency_key",
+            name="uq_journey_rendezvous_buddy_execution_receipts_idempotency",
+        ),
+        Index(
+            "idx_journey_rendezvous_buddy_execution_receipts_journey",
+            "journey_id", "execution_id", "self_reported_at",
+        ),
+    )
+
+
 class PrivateBuddyRouteLocationBinding(Base):
     """Write-once context receipt for one R80 private location observation.
 

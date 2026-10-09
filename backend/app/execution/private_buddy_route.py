@@ -103,7 +103,11 @@ def _accepted_handoff_context(
         raise HTTPException(403, "R80_HANDOFF_PAIR_MEMBER_REQUIRED")
     if row.status != "ACCEPTED":
         raise HTTPException(409, "R80_HANDOFF_MUST_BE_MUTUALLY_ACCEPTED")
-    if _current_projection(session, journey, row=row, viewer=viewer) is None:
+    accepted = _current_projection(session, journey, row=row, viewer=viewer)
+    active_execution = _active_execution_projection(
+        session, journey=journey, handoff=row, viewer=viewer
+    )
+    if accepted is None and active_execution is None:
         raise HTTPException(409, "R80_HANDOFF_CONTEXT_STALE")
     try:
         snapshot = json.loads(row.handoff_place_snapshot_json or "{}")
@@ -121,6 +125,31 @@ def _accepted_handoff_context(
     ):
         raise HTTPException(409, "R80_HANDOFF_SHARED_STOP_STALE")
     return row, snapshot, activity, original_place
+
+
+def _active_execution_projection(
+    session: Session,
+    *,
+    journey: Journey,
+    handoff: JourneyRendezvousBuddyHandoff,
+    viewer: JourneyMember,
+) -> dict[str, Any] | None:
+    """Return a current pair lease even after its R79 offer or signal expires."""
+    from app.execution.rendezvous_buddy_execution import execution_for_current_viewer
+
+    projection = execution_for_current_viewer(
+        session, journey=journey, handoff=handoff, viewer=viewer
+    )
+    if (
+        projection is None
+        or projection.get("status") != "ACTIVE"
+        or not bool(projection.get("context_current"))
+    ):
+        return None
+    expiry = _stamp(projection.get("expires_at"))
+    if expiry is None or expiry <= _now():
+        return None
+    return projection
 
 
 def _validate_observation(
@@ -162,13 +191,18 @@ def _destination_snapshot_sha256(snapshot: dict[str, Any]) -> str:
     return hashlib.sha256(_json(snapshot).encode("utf-8")).hexdigest()
 
 
-def _binding_expiry(*, captured_at: datetime, handoff: JourneyRendezvousBuddyHandoff) -> datetime:
-    handoff_expires = _stamp(handoff.expires_at)
-    if handoff_expires is None:
+def _binding_expiry(
+    *,
+    captured_at: datetime,
+    handoff: JourneyRendezvousBuddyHandoff,
+    execution_expires_at: datetime | None = None,
+) -> datetime:
+    consent_expires = execution_expires_at or _stamp(handoff.expires_at)
+    if consent_expires is None:
         raise HTTPException(409, "R81_PRIVATE_LOCATION_HANDOFF_EXPIRY_UNKNOWN")
     return min(
         captured_at.astimezone(timezone.utc) + timedelta(seconds=LOCATION_FRESHNESS_SECONDS),
-        handoff_expires,
+        consent_expires,
     )
 
 
@@ -196,7 +230,17 @@ def _private_location_binding_for_context(
     accepted_at = _stamp(handoff.responded_at)
     expiry = _stamp(binding.expires_at) if binding is not None else None
     reference = _now() if now is None else now.astimezone(timezone.utc)
-    expected_expiry = _binding_expiry(captured_at=captured, handoff=handoff) if captured else None
+    active_execution = _active_execution_projection(
+        session, journey=journey, handoff=handoff, viewer=viewer
+    )
+    execution_expiry = (
+        _stamp(active_execution.get("expires_at")) if active_execution is not None else None
+    )
+    expected_expiry = _binding_expiry(
+        captured_at=captured,
+        handoff=handoff,
+        execution_expires_at=execution_expiry,
+    ) if captured else None
     active_member = viewer.removed_at is None
     if viewer.expires_at:
         member_expiry = _stamp(viewer.expires_at)
@@ -303,7 +347,17 @@ def capture_private_buddy_route_location(
     if accuracy_m > MAX_USEFUL_ACCURACY_M:
         raise HTTPException(409, "R80_LOCATION_OBSERVATION_IMPRECISE")
     captured = captured_at.astimezone(timezone.utc)
-    binding_expires = _binding_expiry(captured_at=captured, handoff=handoff)
+    active_execution = _active_execution_projection(
+        session, journey=journey, handoff=handoff, viewer=viewer
+    )
+    execution_expiry = (
+        _stamp(active_execution.get("expires_at")) if active_execution is not None else None
+    )
+    binding_expires = _binding_expiry(
+        captured_at=captured,
+        handoff=handoff,
+        execution_expires_at=execution_expiry,
+    )
     bound_at = _now()
     if binding_expires <= bound_at:
         raise HTTPException(409, "R81_PRIVATE_LOCATION_BINDING_ALREADY_EXPIRED")

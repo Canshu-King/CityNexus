@@ -16,6 +16,7 @@ from app.core.audit import record_audit
 from app.db.models import (
     Journey,
     JourneyMember,
+    JourneyRendezvousBuddyExecution,
     JourneyRendezvousBuddyHandoff,
     JourneyRendezvousMemberSignal,
     JourneyRendezvousSignalAcknowledgement,
@@ -439,7 +440,28 @@ def list_current_handoffs(
     items = []
     for row in rows:
         projected = _current_projection(session, journey, row=row, viewer=viewer)
+        from app.execution.rendezvous_buddy_execution import (
+            execution_for_current_viewer,
+            execution_window_available_for_helper,
+        )
+
+        execution = execution_for_current_viewer(
+            session, journey=journey, handoff=row, viewer=viewer
+        )
         if projected is not None:
+            projected["execution"] = execution
+            projected["execution_window_offer_available"] = (
+                execution is None
+                and execution_window_available_for_helper(session, handoff=row, viewer=viewer)
+            )
+            items.append(projected)
+        elif execution is not None:
+            # A mutually consented finite execution lease survives the original
+            # 20-minute R79 offer and R78 self-report expiry. Its projection is
+            # still restricted to the two signed participants and current plan.
+            projected = _payload(row, session, viewer_member_id=str(viewer.id))
+            projected["execution"] = execution
+            projected["execution_window_offer_available"] = False
             items.append(projected)
     return {"items": items}
 
@@ -498,11 +520,14 @@ def offer_handoff(
     expected_original_public_place_id: str,
     expected_audience_sha256: str,
     handoff_place_id: str,
+    execution_window_minutes: int | None,
     idempotency_key: str,
 ) -> dict[str, object]:
     key = str(idempotency_key or "").strip()
     if len(key) < 8 or len(key) > 128:
         raise HTTPException(400, "RENDEZVOUS_HANDOFF_IDEMPOTENCY_KEY_REQUIRED")
+    if execution_window_minutes is not None and int(execution_window_minutes) not in {30, 60, 90}:
+        raise HTTPException(422, "BUDDY_EXECUTION_WINDOW_UNSUPPORTED")
     signal, acknowledgement, members, activity, original, now = _offer_context(
         session,
         journey=journey,
@@ -528,6 +553,7 @@ def offer_handoff(
         "rendezvous_activity_id": str(activity.id),
         "original_public_place_id": str(original.id),
         "handoff_place_id": str(handoff_place_id),
+        "execution_window_minutes": int(execution_window_minutes) if execution_window_minutes is not None else None,
         "audience_sha256": expected_audience_sha256,
     }
     request_hash = _sha256(json.dumps(request_facts, sort_keys=True, separators=(",", ":")))
@@ -589,6 +615,16 @@ def offer_handoff(
         updated_at=_iso(now),
     )
     session.add(row)
+    if execution_window_minutes is not None:
+        from app.execution.rendezvous_buddy_execution import create_execution_window_offer_record
+
+        create_execution_window_offer_record(
+            session,
+            handoff=row,
+            window_minutes=int(execution_window_minutes),
+            idempotency_key="initial-window-" + str(row.id),
+            proposed_at=now,
+        )
     record_audit(
         session,
         action="journey.rendezvous_buddy_handoff.offered",
@@ -722,11 +758,31 @@ def respond_to_handoff(
             session.rollback()
             raise HTTPException(409, "RENDEZVOUS_HANDOFF_CONCURRENT_UPDATE_RETRY") from exc
         raise HTTPException(409, f"RENDEZVOUS_HANDOFF_{status}")
-    now = _iso(_now())
+    now_dt = _now()
+    now = _iso(now_dt)
     row.status = target_status
     row.responded_at = now
     row.closed_at = now if target_status == "DECLINED" else None
     row.updated_at = now
+    if decision == "ACCEPT":
+        from app.execution.rendezvous_buddy_execution import activate_execution_on_handoff_accept
+
+        activate_execution_on_handoff_accept(
+            session,
+            handoff=row,
+            requester=viewer,
+            principal=principal,
+            accepted_at=now_dt,
+        )
+    else:
+        execution = session.scalar(select(JourneyRendezvousBuddyExecution).where(
+            JourneyRendezvousBuddyExecution.handoff_id == row.id,
+        ))
+        if execution is not None and execution.status == "WINDOW_OFFERED":
+            execution.status = "CANCELLED"
+            execution.closed_at = now
+            execution.outcome_code = "HANDOFF_DECLINED_BEFORE_EXECUTION"
+            execution.updated_at = now
     record_audit(
         session,
         action="journey.rendezvous_buddy_handoff." + decision.casefold(),
@@ -801,6 +857,16 @@ def close_handoff(
     row.status = target_status
     row.closed_at = now
     row.updated_at = now
+    execution = session.scalar(select(JourneyRendezvousBuddyExecution).where(
+        JourneyRendezvousBuddyExecution.handoff_id == row.id,
+    ))
+    if execution is not None and execution.status not in {
+        "MUTUALLY_ACKNOWLEDGED", "REPLAN_REQUIRED", "CANCELLED", "EXPIRED", "STALE",
+    }:
+        execution.status = "CANCELLED"
+        execution.closed_at = now
+        execution.outcome_code = "HANDOFF_CLOSED_BY_PARTICIPANT"
+        execution.updated_at = now
     record_audit(
         session,
         action="journey.rendezvous_buddy_handoff." + action.casefold(),

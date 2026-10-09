@@ -494,12 +494,25 @@ class RendezvousBuddyHandoffOfferRequest(BaseModel):
         min_length=64, max_length=64, pattern="^[0-9a-f]{64}$"
     )
     handoff_place_id: str = Field(min_length=1, max_length=128)
+    execution_window_minutes: Literal[30, 60, 90] | None = None
 
 
 class RendezvousBuddyHandoffDecisionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     decision: Literal["ACCEPT", "DECLINE"]
+
+
+class RendezvousBuddyExecutionWindowRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    execution_window_minutes: Literal[30, 60, 90]
+
+
+class RendezvousBuddyExecutionReceiptRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    receipt_kind: Literal["BUDDY_MET_ACK", "CANNOT_MEET", "CANCEL_PARTICIPATION"]
 
 
 class MemberSideQuestCreateRequest(BaseModel):

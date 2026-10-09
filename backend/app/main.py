@@ -481,6 +481,8 @@ from app.schemas import (
     JourneyRendezvousSignalCreateRequest,
     RendezvousBuddyHandoffOfferRequest,
     RendezvousBuddyHandoffDecisionRequest,
+    RendezvousBuddyExecutionWindowRequest,
+    RendezvousBuddyExecutionReceiptRequest,
     MemberSideQuestCreateRequest,
     MemberPlaceInvitationCreateRequest,
     MemberPlaceInvitationDecisionRequest,
@@ -10826,6 +10828,7 @@ def offer_rendezvous_buddy_handoff(
             expected_original_public_place_id=str(payload.expected_original_public_place_id),
             expected_audience_sha256=payload.expected_audience_sha256,
             handoff_place_id=payload.handoff_place_id,
+            execution_window_minutes=payload.execution_window_minutes,
             idempotency_key=idempotency_key or "",
         )
 
@@ -10933,6 +10936,91 @@ def revoke_rendezvous_buddy_handoff(
             principal=principal,
             handoff_id=str(handoff_id),
             action="REVOKE",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window")
+def offer_rendezvous_buddy_execution_window(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: RendezvousBuddyExecutionWindowRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """The signed helper may separately offer a bounded window for a legacy accepted handoff."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_execution import offer_execution_window
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return offer_execution_window(
+            session,
+            journey=journey,
+            handoff_id=str(handoff_id),
+            viewer=member,
+            principal=principal,
+            window_minutes=payload.execution_window_minutes,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window/accept")
+def accept_rendezvous_buddy_execution_window(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """The requester separately accepts a helper's finite execution window."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_execution import accept_execution_window
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return accept_execution_window(
+            session,
+            journey=journey,
+            handoff_id=str(handoff_id),
+            viewer=member,
+            principal=principal,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution/{execution_id}/report")
+def report_rendezvous_buddy_execution(
+    journey_id: UUID,
+    handoff_id: UUID,
+    execution_id: UUID,
+    payload: RendezvousBuddyExecutionReceiptRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Record one authenticated member's explicit self-report for this exact execution."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_execution import record_execution_report
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return record_execution_report(
+            session,
+            journey=journey,
+            handoff_id=str(handoff_id),
+            execution_id=str(execution_id),
+            viewer=member,
+            principal=principal,
+            receipt_kind=payload.receipt_kind,
+            idempotency_key=idempotency_key or "",
         )
 
 

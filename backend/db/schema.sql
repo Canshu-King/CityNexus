@@ -1712,6 +1712,71 @@ CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_handoffs_pair_status_exp
         journey_id, requester_member_id, helper_member_id, status, expires_at
     );
 
+-- R82: finite pair-consented execution window; this does not extend the R79 offer.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_buddy_executions (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    handoff_id TEXT NOT NULL UNIQUE REFERENCES journey_rendezvous_buddy_handoffs(id) ON DELETE CASCADE,
+    signal_id TEXT NOT NULL REFERENCES journey_rendezvous_member_signals(id) ON DELETE CASCADE,
+    acknowledgement_id TEXT NOT NULL REFERENCES journey_rendezvous_signal_acknowledgements(id) ON DELETE CASCADE,
+    requester_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    requester_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    helper_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    helper_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    current_activity_id TEXT,
+    original_rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    original_public_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    original_place_snapshot_json TEXT NOT NULL,
+    handoff_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    handoff_place_snapshot_json TEXT NOT NULL,
+    audience_member_ids_json TEXT NOT NULL,
+    audience_sha256 TEXT NOT NULL CHECK (length(audience_sha256) = 64),
+    execution_window_minutes INTEGER NOT NULL CHECK (execution_window_minutes IN (30,60,90)),
+    status TEXT NOT NULL DEFAULT 'WINDOW_OFFERED'
+        CHECK (status IN ('WINDOW_OFFERED','ACTIVE','MUTUALLY_ACKNOWLEDGED','REPLAN_REQUIRED','CANCELLED','EXPIRED','STALE')),
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    helper_consent_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    requester_consent_traveler_id TEXT REFERENCES travelers(id) ON DELETE CASCADE,
+    helper_consented_at TEXT NOT NULL,
+    requester_consented_at TEXT,
+    proposed_at TEXT NOT NULL,
+    proposal_expires_at TEXT NOT NULL,
+    started_at TEXT,
+    expires_at TEXT,
+    closed_at TEXT,
+    outcome_code TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, helper_member_id, idempotency_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_executions_pair_status_expiry
+    ON journey_rendezvous_buddy_executions(
+        journey_id, requester_member_id, helper_member_id, status, expires_at
+    );
+
+-- A member can make one durable signed self-report for one execution generation.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_buddy_execution_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    execution_id TEXT NOT NULL REFERENCES journey_rendezvous_buddy_executions(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    receipt_kind TEXT NOT NULL
+        CHECK (receipt_kind IN ('BUDDY_MET_ACK','CANNOT_MEET','CANCEL_PARTICIPATION')),
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    self_reported_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(execution_id, member_id),
+    UNIQUE(execution_id, idempotency_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_execution_receipts_journey
+    ON journey_rendezvous_buddy_execution_receipts(journey_id, execution_id, self_reported_at);
+
 -- R81: an exact, write-once authorization receipt for an R80 private location
 -- sample. Legacy location observations are intentionally not backfilled; without
 -- this receipt they cannot enter a private handoff route.
