@@ -21,6 +21,9 @@ export interface Activity {
   end_at: string;
   travel_from_prev_min: number;
   estimated_cost: Money;
+  /** KNOWN_FREE / KNOWN_PAID / UNKNOWN; compatibility amount 0 is not proof of free. */
+  cost_status?: string;
+  metadata?: Record<string, unknown>;
   status: string;
   locked: boolean;
 }
@@ -1678,6 +1681,8 @@ export interface BootstrapDiscoveryCandidate {
   coordinate_system: "WGS84";
   distance_m: number | null;
   opening_state: string;
+  selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
+  selection_action: string | null;
   availability_confidence: "UNVERIFIED";
   price_state: "UNKNOWN";
   eta_state: "UNKNOWN";

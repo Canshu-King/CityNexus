@@ -206,6 +206,12 @@ export function BootstrapDiscoveryPanel({
                 <p>
                   {candidate.category} · opening {candidate.opening_state} · price UNKNOWN · ETA UNKNOWN
                 </p>
+                {candidate.selection_state !== "READY_FOR_NATIVE_PLAN" ? (
+                  <p role="status" data-testid={`bootstrap-opening-blocker-${candidate.candidate_id}`}>
+                    OpenStreetMap did not provide grounded opening hours for this place. Verify the
+                    source below, then search again, or choose another candidate before starting a Journey.
+                  </p>
+                ) : null}
                 <p>
                   {candidate.source_url ? (
                     <a href={candidate.source_url} target="_blank" rel="noreferrer">
@@ -216,10 +222,14 @@ export function BootstrapDiscoveryPanel({
                 <button
                   type="button"
                   data-testid={`bootstrap-select-${candidate.candidate_id}`}
-                  disabled={selecting !== null}
+                  disabled={selecting !== null || candidate.selection_state !== "READY_FOR_NATIVE_PLAN"}
                   onClick={() => void selectCandidate(candidate)}
                 >
-                  {selecting === candidate.candidate_id ? "Adding…" : "Choose this place"}
+                  {selecting === candidate.candidate_id
+                    ? "Adding…"
+                    : candidate.selection_state === "READY_FOR_NATIVE_PLAN"
+                      ? "Choose this place"
+                      : "Verify opening hours first"}
                 </button>
               </article>
             ))}

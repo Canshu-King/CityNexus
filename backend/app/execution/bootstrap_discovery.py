@@ -15,7 +15,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
-from sqlalchemy import delete, select, update
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -35,6 +35,9 @@ _PRIVATE_ACCESS = {
     "residents",
     "members",
 }
+_BOOTSTRAP_GROUNDED_OPENING = frozenset(
+    {"NORMALIZED_VALID", "VERIFIED_PROVIDER", "OFFICIAL_WEB_VERIFIED"}
+)
 _MAX_QUERY = 120
 _BOOTSTRAP_RATE_LIMIT_SECONDS = 5
 
@@ -146,6 +149,16 @@ def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
         "coordinate_system": "WGS84",
         "distance_m": row.distance_m,
         "opening_state": opening_status,
+        "selection_state": (
+            "READY_FOR_NATIVE_PLAN"
+            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
+            else "OPENING_UNVERIFIED"
+        ),
+        "selection_action": (
+            None
+            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
+            else "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+        ),
         "availability_confidence": "UNVERIFIED",
         "price_state": "UNKNOWN",
         "eta_state": "UNKNOWN",
@@ -173,6 +186,16 @@ def _provider_call(
             latency_ms=None,
             created_at=created_at,
         )
+    )
+
+
+def _candidate_scope_matches(row: RealPlaceCandidate, *, member_id: str, traveler_id: str) -> bool:
+    """Keep bootstrap receipts private to the signed member that created them."""
+
+    evidence = json.loads(row.evidence_json or "{}")
+    return (
+        str(evidence.get("member_id") or "") == str(member_id)
+        and str(evidence.get("traveler_id") or "") == str(traveler_id)
     )
 
 
@@ -400,18 +423,33 @@ def discover_bootstrap_candidates(
     persisted_distance = source_kind == "MANUAL_PUBLIC_CENTER"
     # A new request supersedes only still-private rows from an earlier cancelled/abandoned
     # screen.  Selected rows remain immutable and therefore cannot disappear from the catalogue.
-    session.execute(
-        delete(RealPlaceCandidate).where(
+    private_rows = session.scalars(
+        select(RealPlaceCandidate).where(
             RealPlaceCandidate.journey_id == journey.id,
             RealPlaceCandidate.materialized_place_id.is_(None),
             RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
         )
-    )
+    ).all()
+    for private_row in private_rows:
+        if _candidate_scope_matches(private_row, member_id=member_id, traveler_id=traveler_id):
+            session.delete(private_row)
     for candidate in usable:
         osm = _osm_identity(candidate)
         if osm is None:
             continue
         osm_type, osm_id = osm
+        existing_candidate = session.scalar(
+            select(RealPlaceCandidate).where(
+                RealPlaceCandidate.journey_id == journey.id,
+                RealPlaceCandidate.provider_key == "overpass",
+                RealPlaceCandidate.external_id == candidate.external_id,
+            )
+        )
+        # The same OSM identity may be returned to two members.  Do not overwrite
+        # the first member's private receipt or let a duplicate violate the
+        # Journey/provider/external identity constraint.
+        if existing_candidate is not None:
+            continue
         tags = _candidate_tags(candidate)
         cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
         cost.setdefault("status", "UNKNOWN")
@@ -495,6 +533,7 @@ def discover_bootstrap_candidates(
                     RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
                 ).order_by(RealPlaceCandidate.captured_at, RealPlaceCandidate.id)
             ).all()
+            if _candidate_scope_matches(row, member_id=member_id, traveler_id=traveler_id)
         ],
     }
 
@@ -535,6 +574,26 @@ def select_bootstrap_candidate(
                 raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate expired", status_code=410)
         except ValueError:
             raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate expiry is invalid", status_code=410)
+    opening = json.loads(row.opening_hours_json or "{}")
+    opening_state = str(opening.get("status") or "UNKNOWN").upper() if isinstance(opening, dict) else "UNKNOWN"
+    source_url = str(evidence.get("source_url") or "") or None
+    if opening_state not in _BOOTSTRAP_GROUNDED_OPENING:
+        code = "BOOTSTRAP_PLACE_CLOSED" if opening_state == "CLOSED" else "BOOTSTRAP_OPENING_UNVERIFIED"
+        message = (
+            "OpenStreetMap reports this place as closed; choose another candidate"
+            if code == "BOOTSTRAP_PLACE_CLOSED"
+            else "OpenStreetMap did not provide grounded opening hours; verify the source or choose another candidate"
+        )
+        raise BootstrapDiscoveryError(
+            code,
+            message,
+            status_code=422,
+            details={
+                "opening_state": opening_state,
+                "source_url": source_url,
+                "next_actions": ["VERIFY_OPENING_SOURCE", "CHOOSE_ANOTHER_CANDIDATE"],
+            },
+        )
     if row.materialized_place_id and row.status == "BOOTSTRAP_SELECTED":
         return {
             "journey_id": journey.id,

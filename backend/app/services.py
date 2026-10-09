@@ -929,13 +929,40 @@ def plan_schema(
     explanation = json.loads(item.explanation_json or "{}")
     if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and authority_blocker is None:
         explanation = {**explanation, "authority_state": "LIVE_PROVIDER_FACTS"}
+    projected_activities = [
+        activity_schema(a, places_by_id.get(str(a.place_id)))
+        for a in activities
+    ]
     cost_summary = explanation.get("cost_summary")
+    unknown_activity_ids = [
+        str(activity.id)
+        for activity in projected_activities
+        if str(activity.cost_status or "UNKNOWN").upper() == "UNKNOWN"
+    ]
     total_cost_status = (
         "PARTIAL_UNKNOWN"
-        if isinstance(cost_summary, Mapping)
-        and int(cost_summary.get("unknown_item_count") or 0) > 0
+        if unknown_activity_ids
+        or (
+            isinstance(cost_summary, Mapping)
+            and int(cost_summary.get("unknown_item_count") or 0) > 0
+        )
         else "KNOWN"
     )
+    # A few older/replan writers persisted the compatibility integer without the
+    # R86 explanation block.  Repair that public projection from the activity
+    # evidence so every consumer sees PARTIAL_UNKNOWN instead of interpreting a
+    # legacy zero as a free total.  This does not mutate the historical row.
+    if unknown_activity_ids and not isinstance(cost_summary, Mapping):
+        explanation = {
+            **explanation,
+            "cost_summary": {
+                "known_subtotal_minor": int(item.total_cost_minor or 0),
+                "unknown_item_count": len(unknown_activity_ids),
+                "unknown_activity_ids": unknown_activity_ids,
+                "unknown_cost_included": False,
+                "total_is_not_free": True,
+            },
+        }
     return PlanSchema(
         id=item.id,
         journey_id=item.journey_id,
@@ -951,10 +978,7 @@ def plan_schema(
         total_cost_status=total_cost_status,
         utility_score=item.utility_score,
         score_breakdown=breakdown,
-        activities=[
-            activity_schema(a, places_by_id.get(str(a.place_id)))
-            for a in activities
-        ],
+        activities=projected_activities,
         mobility_snapshot_id=item.mobility_snapshot_id,
         mobility_evidence=json.loads(item.mobility_evidence_json or "{}"),
         explanation=explanation,

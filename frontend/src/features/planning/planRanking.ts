@@ -35,12 +35,18 @@ export type RankedPlan = {
 };
 
 type Fact = { walking_min?: number | null; fact_quality?: string | null };
-type Activity = { protected?: boolean | null };
+type Activity = {
+  protected?: boolean | null;
+  cost_status?: string | null;
+  estimated_cost?: { amount_minor?: number | null } | null;
+  metadata?: { price_known?: boolean | null } | null;
+};
 
 export type ComparablePlan = {
   id: string;
   version_no: number;
   total_cost?: { amount_minor?: number | null; currency?: string } | null;
+  total_cost_status?: "KNOWN" | "PARTIAL_UNKNOWN" | string | null;
   mobility_evidence?: { facts?: Fact[] } | null;
   activities?: Activity[] | null;
 };
@@ -50,6 +56,25 @@ function factsOf(plan: ComparablePlan): Fact[] {
 }
 
 function costCell(plan: ComparablePlan): Cell {
+  // The persisted compatibility total is 0 for an UNKNOWN admission price.
+  // It must never win the ranking as the cheapest plan.  Prefer the explicit
+  // plan status, then verify every activity when reading older payloads.
+  if (String(plan.total_cost_status ?? "").toUpperCase() === "PARTIAL_UNKNOWN") {
+    return { kind: "absent", reason: "priceUnknown" };
+  }
+  const activities = plan.activities ?? [];
+  if (
+    activities.length > 0 &&
+    activities.some((activity) => {
+      const status = String(activity.cost_status ?? "").toUpperCase();
+      if (status === "UNKNOWN") return true;
+      if (status === "KNOWN_FREE" || status === "KNOWN_PAID" || status === "KNOWN") return false;
+      if (activity.metadata?.price_known === false) return true;
+      return activity.metadata?.price_known !== true && (activity.estimated_cost?.amount_minor ?? 0) <= 0;
+    })
+  ) {
+    return { kind: "absent", reason: "priceUnknown" };
+  }
   const minor = plan.total_cost?.amount_minor;
   return typeof minor === "number" ? { kind: "value", number: minor } : { kind: "absent", reason: "priceUnknown" };
 }
