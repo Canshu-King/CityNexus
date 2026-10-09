@@ -10451,6 +10451,22 @@ def _route_feature(
     # either.  `None` lets JourneyMap take its "nothing honest to draw" branch.
     if len(coordinates) < 2:
         return None
+    # A provider geometry with one out-of-range vertex is not trustworthy as a whole: a single bogus
+    # coordinate silently drags the entire line, and the map paints the bent result as fact. This is
+    # the same bound the schema puts on a lone place (`backend/app/schemas.py`, `GeoPoint`), applied to
+    # every vertex here, so "this is a real coordinate" means one thing whether it is asked of a stop
+    # or of a route. Vertices are [longitude, latitude] in GeoJSON.
+    def _vertex_in_range(vertex: Any) -> bool:
+        try:
+            lng, lat = vertex[0], vertex[1]
+            lng = float(lng)
+            lat = float(lat)
+        except (TypeError, ValueError, IndexError):
+            return False
+        return -180.0 <= lng <= 180.0 and -90.0 <= lat <= 90.0
+
+    if not all(_vertex_in_range(v) for v in coordinates):
+        return None
     safe_coordinates = coordinates
     return {
         "type": "Feature",
