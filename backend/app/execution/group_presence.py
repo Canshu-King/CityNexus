@@ -640,6 +640,7 @@ def group_presence_projection(
             "current_activity_id": None,
             "members": [],
             "coordination_signals": [],
+            "coordination_audience_sha256": None,
             "rendezvous": None,
             "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
             "viewer_route": None,
@@ -660,6 +661,7 @@ def group_presence_projection(
             "current_activity_id": None,
             "members": [],
             "coordination_signals": [],
+            "coordination_audience_sha256": None,
             "rendezvous": None,
             "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
             "viewer_route": None,
@@ -832,6 +834,15 @@ def group_presence_projection(
         "active_plan_version_id": str(journey.active_plan_version_id or "") or None,
         "current_activity_id": str(journey.current_activity_id or "") or None,
         "members": projected,
+        # The in-force, signed-member audience is server-owned. A browser on
+        # local-network HTTP may not expose crypto.subtle; status sharing must
+        # not require a client-side hash implementation or location consent.
+        "coordination_audience_sha256": hashlib.sha256(
+            json.dumps(
+                sorted(str(member.id) for member in members),
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest(),
         "coordination_signals": _rendezvous_coordination_signals(
             session,
             journey,
