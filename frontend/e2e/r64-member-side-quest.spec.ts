@@ -483,7 +483,7 @@ test("R69 completes an explicit two-member meetup acknowledgment without changin
 });
 
 
-test("R67 explicit nearby search and selection use a controlled local Overpass fixture simulation", async ({ browser, request }) => {
+test("R67 direct one-consent live-city search and selection use a controlled Overpass fixture simulation", async ({ browser, request }) => {
   test.skip(
     process.env.CITYNEXUS_R67_TEST_PROVIDER !== "fixture",
     "R67 live E2E uses a local controlled Overpass fixture; it never calls a public provider.",
@@ -538,20 +538,16 @@ test("R67 explicit nearby search and selection use a controlled local Overpass f
     const scoutCard = owner.page.getByTestId("moment-scout");
     await expect(scoutCard).toBeVisible();
     await scoutCard.getByTestId("moment-scout-interest").selectOption("CULTURE");
-    const localPromise = owner.page.waitForResponse((response) =>
-      response.request().method() === "POST"
-        && response.url().endsWith(`/journeys/${journeyId}/moment-scout`),
-    );
-    await scoutCard.getByTestId("moment-scout-submit").click();
-    const local = await localPromise;
-    expect(local.ok()).toBeTruthy();
-    expect((await local.json()).scout_state).toBe("NO_GROUNDED_OPTIONS");
+    // Real-world lookup is directly accessible to a signed traveler. It must
+    // not require a first fixture/catalog scout and a second GPS capture.
     await expect(scoutCard.getByTestId("moment-scout-live-opt-in")).toBeVisible();
+    await expect(scoutCard.getByTestId("moment-scout-live-opt-in")).toContainText("Explore real nearby places");
     expect((await fixtureStats()).request_count).toBe(startingFixtureRequestCount);
 
     await scoutCard.getByTestId("moment-scout-live-opt-in").click();
     const consent = scoutCard.getByTestId("moment-scout-live-consent");
     await expect(consent).toContainText("external OpenStreetMap");
+    await expect(consent).toContainText("coarse group-presence view");
     await consent.getByTestId("moment-scout-live-consent-cancel").click();
     expect((await fixtureStats()).request_count).toBe(startingFixtureRequestCount);
 
