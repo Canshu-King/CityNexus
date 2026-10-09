@@ -775,7 +775,7 @@ export interface RendezvousBuddyHandoff {
   offered_at: string;
   expires_at: string;
   responded_at: string | null;
-  evidence_level: "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE";
+  evidence_level: "ONE_SIDED_PUBLIC_HANDOFF_OFFER_NOT_ACCEPTED" | "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE";
   shared_plan_changed: false;
   route_eta_state: "UNKNOWN";
   accessibility_state: "UNKNOWN";
