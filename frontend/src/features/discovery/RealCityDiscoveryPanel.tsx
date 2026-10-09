@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { formatWhen } from "../../lib/formatWhen";
 import { namedCodeIn, type RawFacts } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { OriginResponseUnusableError } from "../../lib/failureAttribution";
@@ -534,7 +535,11 @@ export function RealCityDiscoveryPanel({
               <ul className="v8-batch-receipt-rows" data-testid="v13-discovery-batch-rows">
                 {batchReceipt.landed.map((row) => (
                   <li key={row.activity_id} data-testid="v13-discovery-batch-row">
-                    <span>{row.start_at.slice(0, 16).replace("T", " ")}</span>
+                    {/* ORD-0553: this row put the server's ISO fragment on the screen -- a value like
+                        `2026-10-10T09:00:00+08:00` sliced to `2026-10-10 09:00`, which is the itinerary
+                        city's wall clock stated with no zone. `formatWhen` renders the same instant in
+                        the traveller's device zone, the shape ORD-0423 landed for the bookings screen. */}
+                    <span>{formatWhen(row.start_at, { zh: locale.startsWith("zh"), pending: t("inbox.timePending") })}</span>
                     <b>{row.title}</b>
                     <small>{row.activity_id}</small>
                   </li>
