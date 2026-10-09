@@ -2227,6 +2227,28 @@ def demo_mode_enabled() -> bool:
 DEMO_RESET_ENV = "CITYNEXUS_DEMO_RESET_TOKEN"
 DEMO_RESET_HEADER = "X-Demo-Reset-Token"
 
+# ORD-0395: this door answers one status with three named codes, and the served document has to name
+# all three.  `contracts/openapi.yaml` enumerated three while the decorator's description named two,
+# so a consumer of `/openapi.json` could not see that "this deployment is not a stage" is an answer
+# too.  One table, and the description is rendered from it, so a code cannot appear at a raise site
+# and be dropped from the document.  The flag is described rather than spelled out because the
+# document's code names are read back out of it as machine-visible refusals.
+DEMO_RESET_REFUSALS = {
+    "DEMO_MODE_REQUIRED": "the deployment does not run the demo stage switch",
+    "RESET_TOKEN_REQUIRED": "no token was presented",
+    "RESET_TOKEN_INVALID": (
+        "the presented token is not the operator's, including a deployment that never configured one"
+    ),
+}
+
+
+def demo_reset_refusal_description() -> str:
+    named = ", ".join(f"{code} when {why}" for code, why in DEMO_RESET_REFUSALS.items())
+    return (
+        f"Reset refused before anything was deleted, with one named code in the body: {named}. "
+        "Every refusal carries details.tables_protected, and stops ahead of the guardian worker."
+    )
+
 
 def demo_reset_token_denied(presented: str | None) -> tuple[str, str] | None:
     """None means allowed.  Otherwise the (code, message) that refuses this request.
@@ -2347,17 +2369,9 @@ def demo_scene_ensure(
 
 @app.post(
     "/api/v1/demo/reset",
-    # ORD-0395: the refusal is the behaviour this route exists to have, so the application's own
-    # spec has to say it. The hand contract declared the 403 and the generated one did not, which
-    # left every consumer of `/openapi.json` unable to see that a missing token is an answer.
-    responses={
-        403: {
-            "description": (
-                "Reset refused, with a named code in the body: RESET_TOKEN_REQUIRED when no token was"
-                " presented, RESET_TOKEN_INVALID when the presented token is not the operator's."
-            )
-        }
-    },
+    # ORD-0395: rendered from DEMO_RESET_REFUSALS above, and pinned three ways by
+    # `backend/tests/test_qoder_ord0395_reset_403_three_way_r1.py`.
+    responses={403: {"description": demo_reset_refusal_description()}},
 )
 def demo_reset(
     session: Session = Depends(get_session),
