@@ -1,0 +1,340 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.shuangshugong-0558.config.ts",
+      "e2e/qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+      "-g",
+      "both count states"
+    ],
+    "configFile": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\playwright.shuangshugong-0558.config.ts",
+    "rootDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/.qoder-shuangshugong-0558-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-shuangshugong-0558-live-dedup-plural-r1\\.spec\\.ts/"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\moodle\\_qoder_shuangshugong_0558\\review\\shuangshugong\\ord0558_readouts\\mutant_A_always_plural\\playwright_r1.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 5188",
+      "cwd": ".",
+      "url": "http://127.0.0.1:5188",
+      "reuseExistingServer": false,
+      "timeout": 180000,
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "env": {
+        "CITYNEXUS_BACKEND_PORT": "4199"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+      "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "ORD-0558 LiveRecovery merged-suggestions line, both count states",
+          "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+          "line": 310,
+          "column": 6,
+          "specs": [
+            {
+              "title": "S0probe: the counted noun on the English arm reaches the ruler, and the arms are adjacent",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:315:37",
+                        "location": {
+                          "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+                          "column": 37,
+                          "line": 315
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 313 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mzhArmLine)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 314 |\u001b[39m     expect(probe\u001b[33m.\u001b[39menArmLine)\u001b[33m.\u001b[39mtoBe(probe\u001b[33m.\u001b[39mzhArmLine \u001b[33m+\u001b[39m \u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 315 |\u001b[39m     expect(probe\u001b[33m.\u001b[39menArmCarriesRuler)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 316 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mrulerImportLine)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 317 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mduplicateCountLine)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 318 |\u001b[39m     writeFileSync(\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+                            "column": 37,
+                            "line": 315
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  313 |     expect(probe.zhArmLine).toBeGreaterThan(0);\n  314 |     expect(probe.enArmLine).toBe(probe.zhArmLine + 1);\n> 315 |     expect(probe.enArmCarriesRuler).toBe(true);\n      |                                     ^\n  316 |     expect(probe.rulerImportLine).toBeGreaterThan(0);\n  317 |     expect(probe.duplicateCountLine).toBeGreaterThan(0);\n  318 |     writeFileSync(\n    at D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:315:37"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:48:53.198Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\.qoder-shuangshugong-0558-artifacts\\qoder-shuangshugong-0558-l-09341-r-and-the-arms-are-adjacent\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+                        "column": 37,
+                        "line": 315
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-bc873d7892fb3edc0344",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 311,
+              "column": 3
+            },
+            {
+              "title": "E1en_one",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 20757,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('live-deduped')\nExpected: \u001b[32m\"Merged 1 identical suggestion.\"\u001b[39m\nReceived: \u001b[31m\"Merged 1 identical suggestion\u001b[7ms\u001b[27m.\"\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByTestId('live-deduped') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('live-deduped')\u001b[22m\n\u001b[2m    33 × locator resolved to <p class=\"v8-muted\" data-testid=\"live-deduped\">Merged 1 identical suggestions.</p>\u001b[22m\n\u001b[2m       - unexpected value \"Merged 1 identical suggestions.\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('live-deduped')\nExpected: \u001b[32m\"Merged 1 identical suggestion.\"\u001b[39m\nReceived: \u001b[31m\"Merged 1 identical suggestion\u001b[7ms\u001b[27m.\"\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByTestId('live-deduped') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('live-deduped')\u001b[22m\n\u001b[2m    33 × locator resolved to <p class=\"v8-muted\" data-testid=\"live-deduped\">Merged 1 identical suggestions.</p>\u001b[22m\n\u001b[2m       - unexpected value \"Merged 1 identical suggestions.\"\u001b[22m\n\n    at readArm (D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:275:25)\n    at D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:327:22",
+                        "location": {
+                          "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+                          "column": 25,
+                          "line": 275
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 273 |\u001b[39m   \u001b[36mawait\u001b[39m expect(deduped)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 274 |\u001b[39m   \u001b[90m// Exact whole-element text: a missing or an extra \"s\" fails here, which is the point.\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 275 |\u001b[39m   \u001b[36mawait\u001b[39m expect(deduped)\u001b[33m.\u001b[39mtoHaveText(arm\u001b[33m.\u001b[39mexpected)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 276 |\u001b[39m   \u001b[36mif\u001b[39m (arm\u001b[33m.\u001b[39mforbidden) {\n \u001b[90m 277 |\u001b[39m     \u001b[36mawait\u001b[39m expect(deduped)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveText(arm\u001b[33m.\u001b[39mforbidden)\u001b[33m;\u001b[39m\n \u001b[90m 278 |\u001b[39m   }\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+                            "column": 25,
+                            "line": 275
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('live-deduped')\nExpected: \u001b[32m\"Merged 1 identical suggestion.\"\u001b[39m\nReceived: \u001b[31m\"Merged 1 identical suggestion\u001b[7ms\u001b[27m.\"\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByTestId('live-deduped') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('live-deduped')\u001b[22m\n\u001b[2m    33 × locator resolved to <p class=\"v8-muted\" data-testid=\"live-deduped\">Merged 1 identical suggestions.</p>\u001b[22m\n\u001b[2m       - unexpected value \"Merged 1 identical suggestions.\"\u001b[22m\n\n\n  273 |   await expect(deduped).toBeVisible();\n  274 |   // Exact whole-element text: a missing or an extra \"s\" fails here, which is the point.\n> 275 |   await expect(deduped).toHaveText(arm.expected);\n      |                         ^\n  276 |   if (arm.forbidden) {\n  277 |     await expect(deduped).not.toHaveText(arm.forbidden);\n  278 |   }\n    at readArm (D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:275:25)\n    at D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:327:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:48:53.566Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\.qoder-shuangshugong-0558-artifacts\\qoder-shuangshugong-0558-l-c2fcd--both-count-states-E1en-one\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+                        "column": 25,
+                        "line": 275
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-66c524477323f64e7a6d",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            },
+            {
+              "title": "E2en_two",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1151,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:49:15.987Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-869cb5a9d7e984650190",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            },
+            {
+              "title": "Z1zh_one",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1158,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:49:17.251Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-2db6ed189b344c3a13be",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            },
+            {
+              "title": "Z2zh_two",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 961,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:49:18.415Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-c75a82d2cf677e681ade",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-09T17:48:51.739Z",
+    "duration": 29420.861,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}
