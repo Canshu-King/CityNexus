@@ -1,0 +1,25 @@
+ORD-0395: the same three arms read off the tree BEFORE the decorator change, so before and after are both retrievable.
+Real uvicorn (backend/.venv, Python 3.12.14) against throwaway sqlite files on E:, plain HTTP, no mock.
+Driver was E:/heyuegong_0395/repro_r1.py and E:/heyuegong_0395/repro_flagoff_r1.py, run against the tree at 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2.
+
+### A: CITYNEXUS_DEMO_MODE=true, CITYNEXUS_DEMO_RESET_TOKEN unset
+A[no header] http_status=403 body={"error":{"code":"RESET_TOKEN_REQUIRED","message":"No demo reset token was presented; nothing was deleted.","message_key":"error.reset_token_required","trace_id":"0b63c711-2527-4df2-8a81-e6d4e461d254","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-AWXGQEEA"}}
+A[any header] http_status=403 body={"error":{"code":"RESET_TOKEN_INVALID","message":"The demo reset token presented does not match; nothing was deleted.","message_key":"error.reset_token_invalid","trace_id":"329f21ff-f00d-44fe-ad9f-f33b880cb842","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-HA3BDGQQ"}}
+A[health] http_status=200
+A[openapi] http_status=200
+A[served /openapi.json /demo/reset post] keys=["operationId", "parameters", "responses", "summary"]
+A[served 403] {"description": "Reset refused, with a named code in the body: RESET_TOKEN_REQUIRED when no token was presented, RESET_TOKEN_INVALID when the presented token is not the operator's."}
+A[served responses] ["200", "403", "422"]
+A[served parameters] [{"name": "X-Demo-Reset-Token", "in": "header", "required": false, "schema": {"anyOf": [{"type": "string"}, {"type": "null"}], "title": "X-Demo-Reset-Token"}}]
+A[served 200] {"description": "Successful Response", "content": {"application/json": {"schema": {"type": "object", "additionalProperties": {"type": "string"}, "title": "Response Demo Reset Api V1 Demo Reset Post"}}}}
+### B: CITYNEXUS_DEMO_MODE=true, CITYNEXUS_DEMO_RESET_TOKEN configured
+B[no header] http_status=403 body={"error":{"code":"RESET_TOKEN_REQUIRED","message":"No demo reset token was presented; nothing was deleted.","message_key":"error.reset_token_required","trace_id":"51a61862-5861-4209-8c2c-37706bf0ec2e","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-AWXGQEEA"}}
+B[wrong header] http_status=403 body={"error":{"code":"RESET_TOKEN_INVALID","message":"The demo reset token presented does not match; nothing was deleted.","message_key":"error.reset_token_invalid","trace_id":"b30f5645-3738-4b50-bf21-ce915287b423","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-HA3BDGQQ"}}
+B[correct header] http_status=200 body={"status":"reset","traveler_id":"11111111-1111-4111-8111-111111111111","journey_id":"22222222-2222-4222-8222-222222222222","city_code":"CNX-DEMO"}
+
+### C: CITYNEXUS_DEMO_MODE absent from the process environment
+C[health] http_status=200
+C[no header] http_status=403 body={"error":{"code":"DEMO_MODE_REQUIRED","message":"Resetting the demo scenario needs CITYNEXUS_DEMO_MODE=true; nothing was deleted.","message_key":"demo.reset_disabled","trace_id":"daaf9154-e8c7-4f60-953f-2479cd588437","details":{"flag":"CITYNEXUS_DEMO_MODE","tables_protected":true},"error_receipt_id":"CNX-VQE44GGN"}}
+C[with a header] http_status=403 body={"error":{"code":"DEMO_MODE_REQUIRED","message":"Resetting the demo scenario needs CITYNEXUS_DEMO_MODE=true; nothing was deleted.","message_key":"demo.reset_disabled","trace_id":"715b0862-051c-4c80-a05a-8ad226cb88c0","details":{"flag":"CITYNEXUS_DEMO_MODE","tables_protected":true},"error_receipt_id":"CNX-VQE44GGN"}}
+C[served 403 keys] ["description"]
+C[served 403 description] Reset refused, with a named code in the body: RESET_TOKEN_REQUIRED when no token was presented, RESET_TOKEN_INVALID when the presented token is not the operator's.
