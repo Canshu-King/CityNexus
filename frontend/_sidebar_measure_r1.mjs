@@ -52,14 +52,18 @@ async function newPage(contextOpts) {
     };
   });
 
-  // Sample the collapse over consecutive frames to prove it animates.
+  // Sample the collapse over a fixed *time* window, not a fixed frame count:
+  // 14 frames at whatever rate the machine happens to hit can straddle the whole
+  // 220ms transition and read a single value, which is an instrument fault, not a
+  // product one. 700ms covers the transition plus slack.
   const track = await page.evaluate(async () => {
     const sb = document.querySelector(".v8-sidebar");
     const toggle = document.querySelector(".v8-sidebar-toggle");
     if (!toggle) return { frames: [], no_toggle: true };
     toggle.click();
     const frames = [];
-    for (let i = 0; i < 14; i++) {
+    const t0 = performance.now();
+    while (performance.now() - t0 < 700) {
       await new Promise((r) => requestAnimationFrame(r));
       frames.push(+sb.getBoundingClientRect().width.toFixed(1));
     }
@@ -226,7 +230,8 @@ async function newPage(contextOpts) {
   const openTrack = await page.evaluate(async () => {
     document.querySelector(".v8-mobile-menu").click();
     const frames = [];
-    for (let i = 0; i < 14; i++) {
+    const t0 = performance.now();
+    while (performance.now() - t0 < 700) {
       await new Promise((r) => requestAnimationFrame(r));
       const d = document.querySelector("#v8-nav-drawer");
       if (d) frames.push(+d.getBoundingClientRect().left.toFixed(1));
@@ -306,7 +311,8 @@ async function newPage(contextOpts) {
       .querySelector(".v8-drawer-backdrop")
       .click();
     const frames = [];
-    for (let i = 0; i < 14; i++) {
+    const t0 = performance.now();
+    while (performance.now() - t0 < 500) {
       await new Promise((r) => requestAnimationFrame(r));
       const cur = document.querySelector("#v8-nav-drawer");
       if (cur) frames.push(+cur.getBoundingClientRect().left.toFixed(1));

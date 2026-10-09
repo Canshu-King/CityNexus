@@ -1,4 +1,4 @@
-PASS collapse_animates
+FAIL collapse_animates
 PASS collapse_toggle_exists
 PASS icons_stay_square_when_collapsed
 PASS collapsed_rail_has_no_overflow
