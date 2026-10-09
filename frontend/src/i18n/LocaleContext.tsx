@@ -156,6 +156,8 @@ const en: Dict = {
   "shell.allRoutes": "All routes",
   "shell.close": "Close",
   "shell.menu": "Menu",
+  "shell.collapseNav": "Collapse sidebar",
+  "shell.expandNav": "Expand sidebar",
 
   // ── Shell: alerts popup ──
   "shell.signals": "Journey signals",
@@ -1414,6 +1416,8 @@ const zhCN: Dict = {
   "shell.allRoutes": "全部路由",
   "shell.close": "关闭",
   "shell.menu": "菜单",
+  "shell.collapseNav": "收起侧边栏",
+  "shell.expandNav": "展开侧边栏",
 
   // ── 外壳：通知弹窗 ──
   "shell.signals": "行程信号",
