@@ -18,11 +18,10 @@
   "sample": []
  },
  "hub.continuationTechnicalDetail": {
-  "all": 4,
-  "outside_sheet": 3,
+  "all": 3,
+  "outside_sheet": 2,
   "sample": [
    "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:406",
-   "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:192",
    "frontend/src/features/setup/JourneyTrialSetup.tsx:1480"
   ]
  },
@@ -33,11 +32,11 @@
    "frontend/src/components/RawFactsPanel.tsx:39"
   ]
  },
+ "__base_sheet_cjk__": 50,
+ "__base_sheet_single__": 22,
  "dict_rows": {
   "en": 1071,
   "zhCN": 1072
  },
- "__base_sheet_cjk__": 50,
- "__base_sheet_single__": 22,
- "__note__": "__base_* 与 outside_sheet、dict_rows 全部由脚本从现尖(da846e54e)字节数出，非手打"
+ "__note__": "全部由脚本从现尖 b461897465 字节数出，非手打"
 }

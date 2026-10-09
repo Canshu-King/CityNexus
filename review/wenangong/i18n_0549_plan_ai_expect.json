@@ -27,7 +27,7 @@
   "dict_en_line": 157
  },
  "hub.continuationTechnicalDetail": {
-  "tip_line": 1018,
+  "tip_line": 1019,
   "inline_zh": "技术详情",
   "inline_en": "Technical detail",
   "dict_zh": "技术详情",
@@ -36,7 +36,7 @@
   "dict_en_line": 257
  },
  "detail.rawFactsHeading": {
-  "tip_line": 1061,
+  "tip_line": 1062,
   "inline_zh": "这台设备自己量到的回读字段",
   "inline_en": "Fields this device measured",
   "dict_zh": "这台设备自己量到的回读字段",
