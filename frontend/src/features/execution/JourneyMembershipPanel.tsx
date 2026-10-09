@@ -1381,8 +1381,16 @@ export function JourneyMembershipPanel({
                                   </small>
                                   <small>{zh ? "受保护承诺风险：" : "Protected-commitment risk: "}{displayedCommitmentRisk}
                                     {displayedCommitmentRisk === "UNKNOWN" && handoff.handoff_place.place_id !== handoff.original_shared_stop.place_id
-                                      ? (zh ? "；从接应点到原共同会合点的路线未知，因此不会显示安全余量。" : "; the onward route to the original shared stop is unknown, so no safe buffer is claimed.")
+                                      && returnLeg?.route_state !== "LIVE"
+                                      ? (zh ? "；从接应点到原共同会合点的可靠路线未知，因此不会显示安全余量。" : "; the onward route to the original shared stop is not live-verified, so no safe buffer is claimed.")
                                       : ""}</small>
+                                  {risk?.basis === "TWO_LEG_TRAVEL_ONLY_HANDOFF_DWELL_UNKNOWN" && (
+                                    <small data-testid="journey-buddy-dwell-unknown">
+                                      {zh
+                                        ? "两段路线只计算移动时间；实际接应、等待、沟通需要的时间未知，不能因此证明能准时返回原共同承诺。"
+                                        : "Both route legs count travel time only. Time spent meeting, waiting, or helping is unknown; these estimates do not prove a safe return to the original commitment."}
+                                    </small>
+                                  )}
                                   {displayedCommitmentRisk === "COMMITMENT_AT_RISK" && (
                                     <strong role="alert" data-testid="journey-buddy-route-commitment-warning">
                                       {oneVerifiedLegAloneAtRisk
