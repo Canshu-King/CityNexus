@@ -315,7 +315,10 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
   .v8-sheet-backdrop,
   .v8-sheet-backdrop[data-state="closing"],
   .v8-mobility-sheet,
-  .plan-ai-sheet { animation: none !important; }
+  .plan-ai-sheet,
+  .v8-drawer-backdrop,
+  #v8-nav-drawer,
+  .v8-alert-pop { animation: none !important; }
 }
 /* The 44px tap floor reached the nav, the compare button and the plan sheet's own ×, but never this
    one: `.v8-close-button` carries no height of its own, so the only visible way out of the mobility
@@ -361,8 +364,9 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v9-evidence-summary > small { color: #5d6878; }
 
 /* Mobile navigation drawer (hamburger in the topbar) */
-.v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; }
-#v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; }
+.v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; animation: cn-modal-veil var(--cn-modal-enter) var(--cn-ease-standard) both; }
+#v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; animation: cn-drawer-in var(--cn-modal-enter) var(--cn-ease-enter) both; }
+@keyframes cn-drawer-in { from { opacity: 0; transform: translate3d(-24px, 0, 0); } to { opacity: 1; transform: none; } }
 .v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--cn-s-10); padding: 0 12px; }
 #v8-nav-drawer button:not(.v8-quiet-button) { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: var(--cn-r-8); color: var(--cn-ink-secondary); background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
 /* Descendant, not child: the drawer wraps each button in a <div> that also carries the group heading
@@ -497,7 +501,8 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v8-alerts .v8-icon-button { position: relative; }
 .v8-alert-badge { position: absolute; top: -3px; right: -7px; display: grid; place-items: center; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--cn-r-pill); color: #fff; background: var(--v8-coral); font-size: 9px; font-style: normal; font-weight: 800; }
 .v8-pop-backdrop { position: fixed; inset: 0; z-index: 15; padding: 0; border: 0; background: transparent; cursor: default; }
-.v8-alert-pop { position: absolute; top: calc(100% + 12px); right: 0; z-index: 16; display: grid; gap: var(--cn-s-4); box-sizing: border-box; width: min(320px, calc(100vw - 34px)); padding: 16px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-12); background: #fff; box-shadow: 0 24px 60px #14233b33; }
+.v8-alert-pop { position: absolute; top: calc(100% + 12px); right: 0; z-index: 16; display: grid; gap: var(--cn-s-4); box-sizing: border-box; width: min(320px, calc(100vw - 34px)); padding: 16px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-12); background: #fff; box-shadow: 0 24px 60px #14233b33; animation: cn-pop-in var(--cn-motion-fast) var(--cn-ease-enter) both; }
+@keyframes cn-pop-in { from { opacity: 0; transform: translate3d(0, -6px, 0); } to { opacity: 1; transform: none; } }
 .v8-alert-pop .v8-kicker { margin: 0 0 8px; }
 .v8-alert-pop article { display: grid; gap: 3px; padding: var(--cn-s-10) 0; border-top: 1px solid #edf0f4; }
 .v8-alert-pop article b { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
