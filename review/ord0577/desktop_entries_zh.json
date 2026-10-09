@@ -1,0 +1,210 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-desktop-entries-census-r1.spec.ts",
+ "arm": "zh",
+ "shape": "1280x900",
+ "denominator": {
+  "desktop": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access"
+  ],
+  "mobile": [
+   "hub",
+   "trips",
+   "map",
+   "agent",
+   "me"
+  ],
+  "union": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ]
+ },
+ "negative_control_phone_width": {
+  "sidebar_shown": false,
+  "bar_shown": true,
+  "menu_shown": true
+ },
+ "rows": [
+  {
+   "requested": "hub",
+   "breadcrumb": "今天",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "live",
+   "breadcrumb": "实时行程",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "map",
+   "breadcrumb": "地图",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "studio",
+   "breadcrumb": "行程工作台",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "stay",
+   "breadcrumb": "住宿选择",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "discover",
+   "breadcrumb": "城市探索",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "import",
+   "breadcrumb": "导入地点",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "bookings",
+   "breadcrumb": "旅行票夹",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "footprints",
+   "breadcrumb": "足迹",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "agent",
+   "breadcrumb": "Copilot",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "authoritative",
+   "breadcrumb": "恢复与执行",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "intelligence",
+   "breadcrumb": "智能守护",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "twin",
+   "breadcrumb": "旅行者画像",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "trash",
+   "breadcrumb": "回收站",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "access",
+   "breadcrumb": "成员与权限",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "trips",
+   "breadcrumb": "行程",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": false
+  },
+  {
+   "requested": "me",
+   "breadcrumb": "我的",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": false
+  }
+ ]
+}
