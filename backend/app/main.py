@@ -594,7 +594,9 @@ from app.services import (
     _place_has_unresolved_visit_facts,
     _journey_constraints_with_capabilities,
     constraint_schema,
+    dump,
     generate_plans,
+    iso_now,
     journey_schema,
     place_schema,
     plan_schema,
@@ -3382,14 +3384,11 @@ def get_journey_provider_mesh(
 
 
 def _bootstrap_http_error(exc: BootstrapDiscoveryError) -> HTTPException:
-    return HTTPException(
-        status_code=exc.status_code,
-        detail={
-            "error": exc.code,
-            "message": str(exc),
-            "details": exc.details,
-        },
-    )
+    refused = HTTPException(status_code=exc.status_code, detail=str(exc))
+    refused.reason_code = exc.code
+    refused.error_details = exc.details
+    refused.message_key = "bootstrap." + exc.code.lower()
+    return refused
 
 
 @app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery")
@@ -15614,6 +15613,7 @@ def search_services(
 @app.post("/api/v1/journeys/{journey_id}/plans/generate", status_code=201)
 def generate_journey_plans(
     journey_id: UUID,
+    http_request: Request,
     payload: GeneratePlansRequest | None = None,
     session: Session = Depends(get_session),
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
@@ -15639,6 +15639,23 @@ def generate_journey_plans(
     journey = require(session, Journey, str(journey_id), "Journey")
     start_request_budget(SCENARIO_PLANS_GENERATE)
     request = payload or GeneratePlansRequest()
+    cost_unknown_ack_actor: str | None = None
+    if request.allow_unknown_cost:
+        # This flag records a traveller-owned decision, so a deployment with
+        # signed Journey membership enabled must bind it to the current member.
+        if settings.traveler_auth_secret:
+            from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+            _principal, actor = resolve_journey_member_principal(
+                http_request,
+                session,
+                journey_id=str(journey.id),
+            )
+            if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+                raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+            cost_unknown_ack_actor = str(actor.id)
+        else:
+            cost_unknown_ack_actor = "local-development-session"
     transport_key: str | None = None
     if idempotency_key is not None:
         try:
@@ -15647,7 +15664,12 @@ def generate_journey_plans(
             raise HTTPException(422, str(exc)) from exc
     if request.mission_id is None and transport_key is None:
         try:
-            plans = _generate_plans_answer(session, journey, request)
+            plans = _generate_plans_answer(
+                session,
+                journey,
+                request,
+                cost_unknown_ack_actor=cost_unknown_ack_actor,
+            )
         except ValueError as exc:
             return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))
         return [plan_schema(session, plan) for plan in plans]
@@ -15666,7 +15688,8 @@ def generate_journey_plans(
         if raced is not None:
             return _plan_generation_http_answer(raced)
         answer = _execute_plan_generation_claimed(journey, request, keys, continuation_id,
-                                                  now, claim_token)
+                                                  now, claim_token,
+                                                  cost_unknown_ack_actor=cost_unknown_ack_actor)
     return _plan_generation_http_answer(answer)
 
 
@@ -15688,16 +15711,20 @@ def _plan_continuation_identity(journey_id: UUID, journey: Journey,
     """两条身份、两把键，签名材料只有业务语义（键本身不进签名，否则换设备必然对不上）。"""
 
     continuation_id = f"cont:{request.mission_id}" if request.mission_id is not None else None
-    signature = canonical_request_signature(
-        {
-            "journey_id": str(journey_id),
-            "mission_id": request.mission_id,
-            "planning_mode": request.planning_mode or journey.planning_mode,
-            "candidate_count": request.candidate_count,
-            "place_ids": request.place_ids,
-            "allow_single_place": request.allow_single_place,
-        }
-    )
+    signature_payload = {
+        "journey_id": str(journey_id),
+        "mission_id": request.mission_id,
+        "planning_mode": request.planning_mode or journey.planning_mode,
+        "candidate_count": request.candidate_count,
+        "place_ids": request.place_ids,
+    }
+    # Preserve the pre-R86 continuation signature for ordinary generation;
+    # only explicit opt-in switches need distinct replay identities.
+    if request.allow_single_place:
+        signature_payload["allow_single_place"] = True
+    if request.allow_unknown_cost:
+        signature_payload["allow_unknown_cost"] = True
+    signature = canonical_request_signature(signature_payload)
     keys = [f"plans.generate:{transport_key}"] if transport_key is not None else []
     if continuation_id is not None and f"plans.generate:{continuation_id}" not in keys:
         keys.append(f"plans.generate:{continuation_id}")
@@ -15863,7 +15890,8 @@ def _plan_claim_superseded(token: str | None, expected: int, filled: int) -> HTT
 
 def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansRequest,
                                      keys: list[str], continuation_id: str | None,
-                                     now: datetime, token: str | None = None) -> dict:
+                                     now: datetime, token: str | None = None,
+                                     *, cost_unknown_ack_actor: str | None = None) -> dict:
     """Phase B EXECUTE：候选、审计链接与"占位 → 完成回执"在同一次可回滚提交里。
 
     回执存的是**渲染失败要用到的那几样输入**（状态/原话/具名理由），不是另抄一份错误正文：
@@ -15874,7 +15902,12 @@ def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansReq
         work_session = Session(bind=work_conn, expire_on_commit=False)
         try:
             try:
-                plans = _generate_plans_answer(work_session, journey, request)
+                plans = _generate_plans_answer(
+                    work_session,
+                    journey,
+                    request,
+                    cost_unknown_ack_actor=cost_unknown_ack_actor,
+                )
             except ValueError as exc:
                 answer = _plan_generation_refusal(work_session, journey, exc)
             else:
@@ -15951,7 +15984,8 @@ def _plan_generation_http_answer(answer: dict):
 
 
 def _generate_plans_answer(session: Session, journey: Journey,
-                           request: GeneratePlansRequest) -> list[PlanVersion]:
+                           request: GeneratePlansRequest,
+                           *, cost_unknown_ack_actor: str | None = None) -> list[PlanVersion]:
     """今天这一段的本体：一次生成 + 那次结果的耐久事实。被 Phase B 用同一条事务包住。"""
 
     planning_mode = request.planning_mode or journey.planning_mode
@@ -15962,7 +15996,47 @@ def _generate_plans_answer(session: Session, journey: Journey,
         request.candidate_count,
         place_ids=request.place_ids,
         allow_single_place=request.allow_single_place,
+        allow_unknown_cost=request.allow_unknown_cost,
     )
+    if request.allow_unknown_cost and cost_unknown_ack_actor:
+        for plan in plans:
+            explanation = json.loads(plan.explanation_json or "{}")
+            if explanation.get("authority_state") != "COST_UNKNOWN_ACCEPTED":
+                continue
+            acknowledgement = {
+                "actor_type": "SIGNED_JOURNEY_MEMBER"
+                if cost_unknown_ack_actor != "local-development-session"
+                else "LOCAL_DEVELOPMENT_SESSION",
+                "member_id": (
+                    cost_unknown_ack_actor
+                    if cost_unknown_ack_actor != "local-development-session"
+                    else None
+                ),
+                "policy": "USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED",
+                "recorded_at": iso_now(),
+            }
+            explanation["cost_unknown_acknowledgement"] = acknowledgement
+            plan.explanation_json = dump(explanation)
+            record_audit(
+                session,
+                action="plans.cost_unknown.acknowledged",
+                entity_type="PlanVersion",
+                entity_id=plan.id,
+                journey_id=journey.id,
+                actor_type="USER",
+                actor_id=(
+                    None
+                    if cost_unknown_ack_actor == "local-development-session"
+                    else cost_unknown_ack_actor
+                ),
+                after={
+                    "policy": acknowledgement["policy"],
+                    "unknown_place_ids": explanation.get("cost_summary", {}).get(
+                        "unknown_place_ids", []
+                    ),
+                    "unknown_cost_included": False,
+                },
+            )
     record_replan_outcome(
         session,
         journey,
@@ -17898,6 +17972,39 @@ def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
     plan = session.get(PlanVersion, journey.active_plan_version_id)
     if plan is None or plan.status != "SELECTED":
         raise HTTPException(409, "selected plan is missing or inconsistent")
+    # Start is a second authority boundary after selection.  A caller can race
+    # materialization or reach this route directly, so the same provider-fact
+    # rule must be enforced here instead of trusting the selected pointer alone.
+    start_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+    ).all()
+    start_place_ids = [
+        str(activity.place_id or activity.city_service_id or "")
+        for activity in start_activities
+    ]
+    start_places = {
+        place.id: place
+        for place in session.scalars(
+            select(Place).where(Place.city_code == journey.city_code)
+        ).all()
+    }
+    start_authority_blocker = plan_authority_blocker(
+        plan,
+        start_places,
+        used_place_ids=start_place_ids,
+    )
+    if start_authority_blocker is not None:
+        refused = HTTPException(
+            409,
+            f"PlanVersion {plan.id} is not authoritative: {start_authority_blocker}",
+        )
+        refused.reason_code = start_authority_blocker
+        refused.error_details = {
+            "plan_id": plan.id,
+            "unresolved_facts": plan_unresolved_activity_facts(plan),
+            "used_place_ids": start_place_ids,
+        }
+        raise refused
     # /start must apply the same evidence/staleness truth policy as select and
     # booking.  Starting a journey on expired frozen provider evidence is a
     # silent safety regression, so refuse it and surface the re-sync condition.
@@ -17911,9 +18018,7 @@ def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
             409,
             "START_BLOCKED_INFEASIBLE: " + ", ".join(gate.failures),
         )
-    activities = session.scalars(
-        select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
-    ).all()
+    activities = start_activities
     journey.status = "ACTIVE"
     plan.status = "ACTIVE"
     if activities:

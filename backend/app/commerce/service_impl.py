@@ -129,6 +129,16 @@ def selected_activity(
         activity_service_id=activity.city_service_id,
     )
     validate_booking_target(context, allow_active_recovery=allow_active_recovery)
+    activity_metadata = json.loads(activity.metadata_json or "{}")
+    cost_status = str(
+        activity_metadata.get("cost_status")
+        or activity_metadata.get("price_status")
+        or ""
+    ).upper()
+    if cost_status == "UNKNOWN" or activity_metadata.get("price_known") is False:
+        raise CommerceValidationError(
+            "booking requires a verified admission price; unknown cost is not bookable"
+        )
     return journey, plan, activity, context
 
 

@@ -920,6 +920,10 @@ class PlanVersion(BaseModel):
     source: Literal["INITIAL", "REPLAN", "MANUAL"]
     parent_plan_version_id: UUID | None = None
     total_cost: Money
+    # A persisted integer total is retained for compatibility, but a live plan
+    # may deliberately exclude one or more unresolved prices.  This status is
+    # the public distinction between a known subtotal and a claimed total.
+    total_cost_status: Literal["KNOWN", "PARTIAL_UNKNOWN"] = "KNOWN"
     utility_score: float | None = Field(default=None, ge=0, le=1)
     score_breakdown: ScoreBreakdown | None = None
     activities: list[Activity]
@@ -953,6 +957,10 @@ class GeneratePlansRequest(BaseModel):
     # public Place.  It is opt-in so existing explicit-POI callers retain the
     # two-stop contract and its refusal code.
     allow_single_place: bool = False
+    # Explicit traveller-owned acknowledgement for a provider Place whose
+    # admission price is UNKNOWN.  Unknown admission is never treated as free,
+    # included in the subtotal, or eligible for booking/payment.
+    allow_unknown_cost: bool = False
     #: ORD-0272: *whose* batch this is - business semantics, so it lives in the body.
     #: `Idempotency-Key` stays the transport-level "is this the same send" control; merging the
     #: two into one key would make "same mission, different request" and "same request, resent"

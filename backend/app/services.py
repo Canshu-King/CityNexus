@@ -25,6 +25,7 @@ from app.db.models import (
     Place,
     PlanVersion,
     Preference,
+    RealPlaceCandidate,
     Traveler,
     TravelerTwinSnapshot,
 )
@@ -601,6 +602,8 @@ KNOWN_OPENING_EVIDENCE_STATUSES = frozenset(
 
 SYNTHETIC_LIVE_SELECTION_BLOCKED = "SYNTHETIC_MOBILITY_NOT_AUTHORITATIVE_FOR_LIVE_CONTENT"
 UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
+COST_UNKNOWN_ACCEPTED = "COST_UNKNOWN_ACCEPTED"
+COST_UNKNOWN_USER_POLICY = "USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED"
 SEALED_DEMO_AUTHORITY_ENVELOPE = "SEALED_DEMO_FIXTURE"
 SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE = "SEALED_REAL_REPLAY"
 COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE = "COURSEWORK_ESTIMATE"
@@ -680,10 +683,16 @@ def _place_has_unresolved_visit_facts(place: Place) -> bool:
     but those facts cannot cross the selection authority boundary.
     """
 
+    return _place_has_unresolved_opening(place) or _place_has_unresolved_cost(place)
+
+
+def _place_has_unresolved_opening(place: Place) -> bool:
     opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
-    if opening_status not in KNOWN_OPENING_EVIDENCE_STATUSES:
-        return True
+    return opening_status not in KNOWN_OPENING_EVIDENCE_STATUSES
+
+
+def _place_has_unresolved_cost(place: Place) -> bool:
     metadata = _place_metadata(place)
     evidence = metadata.get("cost_evidence")
     if not isinstance(evidence, Mapping):
@@ -753,6 +762,19 @@ def plan_authority_blocker(
         if place_id in places_by_id
         and places_by_id[place_id].provider_key != ANCHOR_PROVIDER_KEY
     ]
+    cost_unknown_mode = (
+        explanation.get("authority_state") == COST_UNKNOWN_ACCEPTED
+        and explanation.get("cost_unknown_policy") == COST_UNKNOWN_USER_POLICY
+        and isinstance(explanation.get("cost_summary"), Mapping)
+        and int(explanation["cost_summary"].get("unknown_item_count") or 0) > 0
+    )
+    if cost_unknown_mode and used_content_places and any(
+        _place_has_unresolved_opening(place) for place in used_content_places
+    ):
+        # The explicit R86 acknowledgement covers admission price only.  An
+        # OSM identity is not evidence that a venue is open, so opening facts
+        # still have to be independently grounded before selection/start.
+        return UNRESOLVED_ACTIVITY_FACTS
     if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and not coursework_estimate:
         if not used_content_places or any(
             _place_has_unresolved_visit_facts(place) for place in used_content_places
@@ -766,7 +788,7 @@ def plan_authority_blocker(
         in SEALED_AUTHORITY_ENVELOPES
         for place in used_content_places
     )
-    if used_content_places and not sealed and not coursework_estimate and any(
+    if used_content_places and not sealed and not coursework_estimate and not cost_unknown_mode and any(
         _place_has_unresolved_visit_facts(place) for place in used_content_places
     ):
         return UNRESOLVED_ACTIVITY_FACTS
@@ -907,6 +929,13 @@ def plan_schema(
     explanation = json.loads(item.explanation_json or "{}")
     if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and authority_blocker is None:
         explanation = {**explanation, "authority_state": "LIVE_PROVIDER_FACTS"}
+    cost_summary = explanation.get("cost_summary")
+    total_cost_status = (
+        "PARTIAL_UNKNOWN"
+        if isinstance(cost_summary, Mapping)
+        and int(cost_summary.get("unknown_item_count") or 0) > 0
+        else "KNOWN"
+    )
     return PlanSchema(
         id=item.id,
         journey_id=item.journey_id,
@@ -919,6 +948,7 @@ def plan_schema(
         source=item.source,
         parent_plan_version_id=item.parent_plan_version_id,
         total_cost=Money(amount_minor=item.total_cost_minor, currency=item.currency),
+        total_cost_status=total_cost_status,
         utility_score=item.utility_score,
         score_breakdown=breakdown,
         activities=[
@@ -1911,6 +1941,7 @@ def _generic_compose_plans(
     place_ids: Sequence[str],
     *,
     allow_single_place: bool = False,
+    allow_unknown_cost: bool = False,
 ) -> list[PlanVersion]:
     """Compose a bounded plan from explicit POIs rather than city templates.
 
@@ -2045,12 +2076,14 @@ def _generic_compose_plans(
     facts: list[FeasibilityActivity] = []
     rows: list[tuple[Place, datetime, datetime, int, int]] = []
     total_cost = 0
+    unknown_cost_place_ids: list[str] = []
 
     for place_id in ordered_ids:
         place = places[place_id]
         metadata = json.loads(place.metadata_json or "{}")
         verified_cost = _place_verified_cost(place)
-        if verified_cost is None:
+        unknown_cost = verified_cost is None
+        if unknown_cost and not allow_unknown_cost:
             # "Unknown cost" is not "your budget is too tight": it means this place has no
             # price we can vouch for, which is a catalog fact the caller can act on.
             raise CompositionRefusal(
@@ -2062,7 +2095,36 @@ def _generic_compose_plans(
                     "journey_budget_minor": journey.budget_amount_minor,
                 },
             )
-        cost_minor = int(verified_cost)
+        if unknown_cost and allow_unknown_cost:
+            selected_bootstrap = session.scalar(
+                select(RealPlaceCandidate.id).where(
+                    RealPlaceCandidate.journey_id == journey.id,
+                    RealPlaceCandidate.materialized_place_id == place_id,
+                    RealPlaceCandidate.status == "BOOTSTRAP_SELECTED",
+                ).limit(1)
+            )
+            if (
+                str(place.provider_key or "").casefold() != "overpass"
+                or not str(place.external_id or "").startswith("overpass:")
+                or not selected_bootstrap
+            ):
+                raise CompositionRefusal(
+                    f"GENERIC_COMPOSE_UNKNOWN_COST_NOT_SELECTED_BOOTSTRAP_PLACE:{place_id}",
+                    reason_code=PLACE_COST_UNVERIFIED,
+                    details={"city_code": journey.city_code, "place_ids": [place_id]},
+                )
+            if _place_has_unresolved_opening(place):
+                raise CompositionRefusal(
+                    f"GENERIC_COMPOSE_OPENING_UNVERIFIED:{place_id}",
+                    reason_code=UNRESOLVED_ACTIVITY_FACTS,
+                    details={"city_code": journey.city_code, "place_ids": [place_id]},
+                )
+        if unknown_cost:
+            unknown_cost_place_ids.append(place_id)
+        # The Activity schema retains an integer compatibility slot.  An
+        # UNKNOWN price is accompanied by explicit metadata and is never a
+        # claim that the attraction is free or included in the subtotal.
+        cost_minor = int(verified_cost) if verified_cost is not None else 0
         duration_min = max(15, int(metadata.get("duration_min", 60)))
         travel_min = (
             mobility_provider.estimate_minutes(previous, place_id) if previous else 0
@@ -2210,6 +2272,30 @@ def _generic_compose_plans(
                 "input_place_ids": selected_ids,
                 "compose_order": list(ordered_ids),
                 "deterministic_gate": "PASSED",
+                "authority_state": (
+                    COST_UNKNOWN_ACCEPTED
+                    if unknown_cost_place_ids
+                    else "LIVE_PROVIDER_FACTS"
+                ),
+                "cost_unknown_policy": (
+                    COST_UNKNOWN_USER_POLICY if unknown_cost_place_ids else None
+                ),
+                "unresolved_facts": [
+                    {
+                        "kind": "ADMISSION_PRICE",
+                        "place_id": place_id,
+                        "status": "UNKNOWN",
+                        "resolution": "USER_ACCEPTED_PRICE_NOT_INCLUDED",
+                    }
+                    for place_id in unknown_cost_place_ids
+                ],
+                "cost_summary": {
+                    "known_subtotal_minor": total_cost,
+                    "unknown_item_count": len(unknown_cost_place_ids),
+                    "unknown_place_ids": list(unknown_cost_place_ids),
+                    "unknown_cost_included": False,
+                    "total_is_not_free": bool(unknown_cost_place_ids),
+                },
                 "strategy_profile": strategy_profile,
                 "strategy_intent": strategy_intent,
                 "score_provenance": score_provenance,
@@ -2259,6 +2345,13 @@ def _generic_compose_plans(
                         ),
                         "category": place.category,
                         "opening_hours": json.loads(place.opening_hours_json or "{}"),
+                        "cost_status": (
+                            "UNKNOWN" if _place_verified_cost(place) is None else "KNOWN"
+                        ),
+                        "price_known": _place_verified_cost(place) is not None,
+                        "cost_included_in_total": _place_verified_cost(place) is not None,
+                        "cost_evidence": _place_metadata(place).get("cost_evidence")
+                        or {"status": "UNKNOWN", "amount_minor": None},
                         # The map resolves pins from activity metadata; without
                         # them a real Xiamen plan renders no Xiamen coordinates.
                         "latitude": place.latitude,
@@ -2292,6 +2385,7 @@ def _generic_compose_variants(
     candidate_count: int,
     *,
     allow_single_place: bool = False,
+    allow_unknown_cost: bool = False,
 ) -> list[PlanVersion]:
     """Compose genuinely different candidates from the same discovered POIs.
 
@@ -2391,13 +2485,18 @@ def _generic_compose_variants(
     shared: dict[str, Any] = {}
     for scope in scopes:
         try:
+            compose_options: dict[str, bool] = {}
+            if allow_single_place:
+                compose_options["allow_single_place"] = True
+            if allow_unknown_cost:
+                compose_options["allow_unknown_cost"] = True
             created.extend(
                 _generic_compose_plans(
                     session,
                     journey,
                     planning_mode,
                     scope,
-                    allow_single_place=allow_single_place,
+                    **compose_options,
                 )
             )
         except ValueError as exc:
@@ -2427,7 +2526,7 @@ def _generic_compose_variants(
             and str(place.external_id or "").casefold().startswith("overpass:")
             for place in provider_places
         )
-        if all_cost_failures and provider_backed:
+        if all_cost_failures and provider_backed and not allow_unknown_cost:
             provisional = _provisional_catalogue_plan(
                 session,
                 journey,
@@ -2666,6 +2765,7 @@ def generate_plans(
     *,
     place_ids: Sequence[str] | None = None,
     allow_single_place: bool = False,
+    allow_unknown_cost: bool = False,
 ) -> list[PlanVersion]:
     if place_ids:
         return _generic_compose_variants(
@@ -2675,6 +2775,7 @@ def generate_plans(
             place_ids,
             candidate_count,
             allow_single_place=allow_single_place,
+            allow_unknown_cost=allow_unknown_cost,
         )
     existing_max = (
         session.scalar(

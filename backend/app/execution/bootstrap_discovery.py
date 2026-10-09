@@ -8,6 +8,7 @@ results private until one candidate is selected, and materializes at most one Pl
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import re
 from datetime import datetime, timedelta, timezone
@@ -19,7 +20,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.models import Journey, Place, PlanVersion, ProviderCall, RealPlaceCandidate
+from app.db.models import IdempotencyKey, Journey, Place, PlanVersion, ProviderCall, RealPlaceCandidate
 from app.integrations.discovery.real_city import DiscoveryCandidate, OverpassPOIProvider
 
 
@@ -125,6 +126,10 @@ def _attempts(value: Any) -> list[dict[str, Any]]:
 
 def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
     evidence = json.loads(row.evidence_json or "{}")
+    opening = json.loads(row.opening_hours_json or "{}")
+    if not isinstance(opening, dict):
+        opening = {"status": "UNKNOWN"}
+    opening_status = str(opening.get("status") or "UNKNOWN").upper()
     kind = str(evidence.get("osm_type") or "node")
     osm_id = str(evidence.get("osm_id") or "")
     source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
@@ -140,7 +145,7 @@ def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
         "longitude": row.longitude,
         "coordinate_system": "WGS84",
         "distance_m": row.distance_m,
-        "opening_state": "UNKNOWN",
+        "opening_state": opening_status,
         "availability_confidence": "UNVERIFIED",
         "price_state": "UNKNOWN",
         "eta_state": "UNKNOWN",
@@ -171,24 +176,83 @@ def _provider_call(
     )
 
 
-def _bootstrap_rate_limited(session: Session, journey: Journey, now: datetime) -> bool:
-    recent = session.scalars(
-        select(ProviderCall)
-        .where(ProviderCall.provider_key == "overpass")
-        .where(ProviderCall.operation == "bootstrap_city_discovery")
-        .order_by(ProviderCall.created_at.desc())
-        .limit(12)
-    ).all()
-    for row in recent:
+def _bootstrap_rate_limited(
+    session: Session,
+    journey: Journey,
+    now: datetime,
+    *,
+    member_id: str,
+    traveler_id: str,
+) -> bool:
+    """Claim one provider attempt for this signed Journey/member/traveller scope.
+
+    ProviderCall is an audit trail, not a lock: querying it by city was both
+    cross-user noisy and racy under two simultaneous confirmations.  The
+    durable idempotency row is claimed before the network call, so a retry or
+    concurrent tab cannot create a second external attempt inside the window.
+    """
+
+    scope_key = f"bootstrap-discovery:{journey.id}:{member_id}:{traveler_id}"
+    request_hash = hashlib.sha256(
+        _json(
+            {
+                "journey_id": str(journey.id),
+                "member_id": str(member_id),
+                "traveler_id": str(traveler_id),
+            }
+        ).encode("utf-8")
+    ).hexdigest()
+    expires_at = _iso(now + timedelta(days=30))
+    row = session.get(IdempotencyKey, scope_key)
+    if row is None:
         try:
-            request = json.loads(row.request_json or "{}")
-            if request.get("city_code") != journey.city_code:
-                continue
-            created = datetime.fromisoformat(row.created_at).astimezone(timezone.utc)
-        except (TypeError, ValueError, json.JSONDecodeError):
-            continue
-        if (now - created).total_seconds() < _BOOTSTRAP_RATE_LIMIT_SECONDS:
-            return True
+            with session.begin_nested():
+                session.add(
+                    IdempotencyKey(
+                        key=scope_key,
+                        operation="bootstrap-discovery",
+                        request_hash=request_hash,
+                        response_status=None,
+                        response_json=None,
+                        created_at=_iso(now),
+                        expires_at=expires_at,
+                        claim_token=None,
+                        claim_deadline=None,
+                    )
+                )
+                session.flush()
+        except IntegrityError:
+            row = session.get(IdempotencyKey, scope_key)
+        else:
+            # The claim must survive a provider timeout and the endpoint's
+            # later rollback; this is the durable at-most-one-attempt boundary.
+            session.commit()
+            return False
+    if row is None:
+        return True
+    try:
+        created = datetime.fromisoformat(str(row.created_at)).astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        created = now
+    if (now - created).total_seconds() < _BOOTSTRAP_RATE_LIMIT_SECONDS:
+        return True
+    claimed = session.execute(
+        update(IdempotencyKey)
+        .where(
+            IdempotencyKey.key == scope_key,
+            IdempotencyKey.created_at == row.created_at,
+        )
+        .values(
+            operation="bootstrap-discovery",
+            request_hash=request_hash,
+            created_at=_iso(now),
+            expires_at=expires_at,
+        )
+    )
+    if claimed.rowcount != 1:
+        session.rollback()
+        return True
+    session.commit()
     return False
 
 
@@ -226,15 +290,31 @@ def discover_bootstrap_candidates(
     if not query:
         raise BootstrapDiscoveryError("INVALID_QUERY", "query is required", status_code=422)
     captured_at = _now()
-    if _bootstrap_rate_limited(session, journey, captured_at):
+    member_id = str(member.id)
+    traveler_id = str(traveler_id)
+    if _bootstrap_rate_limited(
+        session,
+        journey,
+        captured_at,
+        member_id=member_id,
+        traveler_id=traveler_id,
+    ):
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_RATE_LIMITED",
             "please wait before starting another public discovery request",
             status_code=429,
-            details={"retry_after_seconds": _BOOTSTRAP_RATE_LIMIT_SECONDS},
+            details={
+                "retry_after_seconds": _BOOTSTRAP_RATE_LIMIT_SECONDS,
+                "scope": "journey_member_traveler",
+                "journey_id": str(journey.id),
+                "member_id": member_id,
+                "traveler_id": traveler_id,
+                "provider_consent": True,
+            },
         )
     expires_at = captured_at + timedelta(seconds=settings.real_city_cache_ttl_seconds)
     request = {
+        "journey_id": str(journey.id),
         "city_code": journey.city_code,
         "query": query,
         "radius_m": radius_m,
@@ -243,6 +323,9 @@ def discover_bootstrap_candidates(
         "source_kind": source_kind,
         "center": _rounded_center(float(latitude), float(longitude)),
         "accuracy_m": round(float(accuracy_m), 1) if accuracy_m is not None else None,
+        "member_id": member_id,
+        "traveler_id": traveler_id,
+        "provider_consent": True,
     }
     if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live":
         _provider_call(
@@ -345,7 +428,9 @@ def discover_bootstrap_candidates(
                 latitude=float(candidate.latitude),
                 longitude=float(candidate.longitude),
                 tags_json=_json(list(candidate.tags)),
-                opening_hours_json=_json({"status": "UNKNOWN"}),
+                opening_hours_json=_json(
+                    dict(candidate.opening_hours or {"status": "UNKNOWN"})
+                ),
                 metadata_json=_json(
                     {
                         "source": "LIVE_OPENSTREETMAP_OVERPASS",
@@ -367,8 +452,8 @@ def discover_bootstrap_candidates(
                     {
                         "bootstrap": True,
                         "receipt_id": receipt_id,
-                        "member_id": str(member.id),
-                        "traveler_id": str(traveler_id),
+                        "member_id": member_id,
+                        "traveler_id": traveler_id,
                         "source_kind": source_kind,
                         "provider_attempts": attempts,
                         "candidate_id": row_id,
@@ -494,6 +579,10 @@ def select_bootstrap_candidate(
     if place is None:
         metadata = json.loads(row.metadata_json or "{}")
         cost = metadata.get("cost_evidence") or {"status": "UNKNOWN", "amount_minor": None}
+        opening_hours = json.loads(row.opening_hours_json or "{}")
+        if not isinstance(opening_hours, dict):
+            opening_hours = {"status": "UNKNOWN"}
+        opening_hours.setdefault("status", "UNKNOWN")
         place = Place(
             id=str(uuid5(NAMESPACE_URL, f"citynexus:bootstrap:{row.provider_key}:{row.external_id}")),
             provider_key="overpass",
@@ -503,7 +592,7 @@ def select_bootstrap_candidate(
             category=row.category,
             latitude=row.latitude,
             longitude=row.longitude,
-            opening_hours_json=_json({"status": "UNKNOWN"}),
+            opening_hours_json=_json(opening_hours),
             tags_json=row.tags_json,
             metadata_json=_json(
                 {

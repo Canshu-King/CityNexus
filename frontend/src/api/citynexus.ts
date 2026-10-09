@@ -34,6 +34,7 @@ export interface PlanVersion {
   source: string;
   parent_plan_version_id: string | null;
   total_cost: Money;
+  total_cost_status?: "KNOWN" | "PARTIAL_UNKNOWN";
   utility_score: number | null;
   score_breakdown: Record<string, number> | null;
   activities: Activity[];
@@ -1676,7 +1677,7 @@ export interface BootstrapDiscoveryCandidate {
   longitude: number;
   coordinate_system: "WGS84";
   distance_m: number | null;
-  opening_state: "UNKNOWN";
+  opening_state: string;
   availability_confidence: "UNVERIFIED";
   price_state: "UNKNOWN";
   eta_state: "UNKNOWN";
@@ -2294,16 +2295,36 @@ export const cityNexusApi = {
     });
   },
 
-  generatePlans(journeyId: string, candidateCount = 1): Promise<PlanVersion[]> {
+  generatePlans(
+    journeyId: string,
+    candidateCount = 1,
+    options: {
+      placeIds?: string[];
+      allowSinglePlace?: boolean;
+      allowUnknownCost?: boolean;
+      idempotencyKey?: string;
+    } = {},
+  ): Promise<PlanVersion[]> {
+    const headers: Record<string, string> = {
+      ...travelerAuthHeaders(),
+    };
+    if (options.idempotencyKey) headers["Idempotency-Key"] = options.idempotencyKey;
     return requestJson<PlanVersion[]>("/journeys/" + journeyId + "/plans/generate", {
       method: "POST",
-      body: JSON.stringify({ candidate_count: candidateCount }),
+      headers,
+      body: JSON.stringify({
+        candidate_count: candidateCount,
+        ...(options.placeIds ? { place_ids: options.placeIds } : {}),
+        ...(options.allowSinglePlace ? { allow_single_place: true } : {}),
+        ...(options.allowUnknownCost ? { allow_unknown_cost: true } : {}),
+      }),
     });
   },
 
   selectPlan(journeyId: string, planId: string): Promise<unknown> {
     return requestJson("/journeys/" + journeyId + "/plans/" + planId + "/select", {
       method: "POST",
+      headers: travelerAuthHeaders(),
     });
   },
 
@@ -2331,7 +2352,10 @@ export const cityNexusApi = {
   },
 
   startJourney(journeyId: string): Promise<JourneyTwin> {
-    return requestJson<JourneyTwin>("/journeys/" + journeyId + "/start", { method: "POST" });
+    return requestJson<JourneyTwin>("/journeys/" + journeyId + "/start", {
+      method: "POST",
+      headers: travelerAuthHeaders(),
+    });
   },
 
   completeActivity(journeyId: string, activityId: string, payload?: ExecutionTransitionPayload): Promise<JourneyTwin> {

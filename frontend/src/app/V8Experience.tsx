@@ -73,6 +73,7 @@ import {
 } from "./v8PanelRegistry";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
+import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import {
   JourneyTrialSetup,
@@ -618,6 +619,10 @@ export function V8Experience() {
   const [bootstrapJourney, setBootstrapJourney] = useState<{
     id: string;
     cityCode: string;
+  } | null>(null);
+  const [bootstrapPlan, setBootstrapPlan] = useState<{
+    journeyId: string;
+    placeId: string;
   } | null>(null);
   const [planAiOpen, setPlanAiOpen] = useState(false);
   // Reference screen 08: the dedicated activity detail surface.
@@ -1263,17 +1268,18 @@ export function V8Experience() {
     const pending = bootstrapJourney;
     if (!pending) return;
     setBootstrapJourney(null);
+    setBootstrapPlan({ journeyId: pending.id, placeId });
     setBusy(true);
     try {
       await load(pending.id);
       navigate("hub");
-      setPlanAiOpen(true);
       setMessage(
         locale.startsWith("zh")
-          ? `已添加一个有来源的公共地点（${placeId}）。营业时间和价格仍未知，计划会保留事实阻塞。`
-          : `One source-linked public place was added (${placeId}). Opening hours and price remain unknown, so native planning will keep the exact fact blocker.`,
+          ? `已添加有来源的公共地点（${placeId}）。确认价格未知后即可生成原生行程。`
+          : `A source-linked public place was added (${placeId}). Confirm the unknown price to generate the native Journey.`,
       );
     } catch (error) {
+      setBootstrapPlan(null);
       setMessage(
         refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
         refusalFacts(error),
@@ -1653,6 +1659,42 @@ export function V8Experience() {
           );
           if (data) navigate("hub");
           else setSetupOpen(true);
+        }}
+      />
+    );
+  if (bootstrapPlan)
+    return (
+      <BootstrapJourneyStartPanel
+        journeyId={bootstrapPlan.journeyId}
+        placeId={bootstrapPlan.placeId}
+        onStarted={async () => {
+          setBootstrapPlan(null);
+          setBusy(true);
+          try {
+            await load(bootstrapPlan.journeyId);
+            navigate("hub");
+            setMessage(
+              locale.startsWith("zh")
+                ? "原生行程已选择并启动；未知门票价格仍未计入，也未发生预订或扣款。"
+                : "The native Journey is selected and active; the unknown admission price remains excluded and no booking or charge was made.",
+            );
+          } catch (error) {
+            setMessage(
+              refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
+              refusalFacts(error),
+            );
+          } finally {
+            setBusy(false);
+          }
+        }}
+        onCancel={() => {
+          setBootstrapPlan(null);
+          setMessage(
+            locale.startsWith("zh")
+              ? "已取消原生行程启动；已选地点仍保留，未生成计划或产生预订。"
+              : "Native Journey start was cancelled; the selected place remains and no plan or booking was created.",
+          );
+          navigate("hub");
         }}
       />
     );

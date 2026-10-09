@@ -204,7 +204,7 @@ export function BootstrapDiscoveryPanel({
               <article key={candidate.candidate_id} data-testid={`bootstrap-candidate-${candidate.candidate_id}`}>
                 <h3>{candidate.name}</h3>
                 <p>
-                  {candidate.category} · opening UNKNOWN · price UNKNOWN · ETA UNKNOWN
+                  {candidate.category} · opening {candidate.opening_state} · price UNKNOWN · ETA UNKNOWN
                 </p>
                 <p>
                   {candidate.source_url ? (
