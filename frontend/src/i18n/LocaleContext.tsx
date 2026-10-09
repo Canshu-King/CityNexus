@@ -1263,6 +1263,9 @@ const en: Dict = {
   "itinerary.planWithAiNeedsPlaces": "Plan my trip with AI (needs places first)",
   "itinerary.planWithAi": "Plan my trip with AI",
   "itinerary.emptyTitle": "No itinerary yet",
+  // The stop's own "this is where you are" marker. Not reusing `today.now`: that key
+  // reads 现在 on the Chinese side, and this label says 当前 on screen today.
+  "itinerary.stopNow": "Now",
   "itinerary.emptyPlanNoDays": "No stop in this plan sits on a day yet. Add stops and this screen lists them day by day.",
   "itinerary.emptyNoPlan": "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here.",
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
@@ -2440,6 +2443,7 @@ const zhCN: Dict = {
   "itinerary.planWithAiNeedsPlaces": "AI 帮我规划（要先有地点）",
   "itinerary.planWithAi": "AI 帮我规划",
   "itinerary.emptyTitle": "还没有可看的行程",
+  "itinerary.stopNow": "当前",
   "itinerary.emptyPlanNoDays": "这一版方案里还没有站点被排在某一天上。补上站点，这一屏就按天把它们列出来。",
   "itinerary.emptyNoPlan": "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
