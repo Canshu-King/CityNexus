@@ -1,0 +1,118 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-entry-gap-width-r1.spec.ts",
+ "arm": "en",
+ "css_breakpoint_px": 680,
+ "widths_probed": [
+  390,
+  680,
+  681,
+  900,
+  1280
+ ],
+ "denominator": {
+  "desktop": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access"
+  ],
+  "mobile": [
+   "hub",
+   "trips",
+   "map",
+   "agent",
+   "me"
+  ],
+  "union": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ]
+ },
+ "widths_where_those_two_screens_have_no_entry": [
+  681,
+  900,
+  1280
+ ],
+ "rows": [
+  {
+   "width": 390,
+   "at_or_below_breakpoint": true,
+   "sidebar_shown": false,
+   "sidebar_rows": 15,
+   "bar_shown": true,
+   "menu_shown": true,
+   "screens_with_no_clickable_entry": []
+  },
+  {
+   "width": 680,
+   "at_or_below_breakpoint": true,
+   "sidebar_shown": false,
+   "sidebar_rows": 15,
+   "bar_shown": true,
+   "menu_shown": true,
+   "screens_with_no_clickable_entry": []
+  },
+  {
+   "width": 681,
+   "at_or_below_breakpoint": false,
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "screens_with_no_clickable_entry": [
+    "trips",
+    "me"
+   ]
+  },
+  {
+   "width": 900,
+   "at_or_below_breakpoint": false,
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "screens_with_no_clickable_entry": [
+    "trips",
+    "me"
+   ]
+  },
+  {
+   "width": 1280,
+   "at_or_below_breakpoint": false,
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "screens_with_no_clickable_entry": [
+    "trips",
+    "me"
+   ]
+  }
+ ]
+}
