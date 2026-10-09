@@ -347,6 +347,16 @@ def withdraw_member_signal(
     # the client that the currently visible status had been withdrawn.
     if signal.status not in {"ACTIVE", "REVOKED"}:
         raise HTTPException(409, "RENDEZVOUS_SIGNAL_WITHDRAW_TARGET_STALE")
+    if signal.status == "REVOKED":
+        # A retry after a prior withdrawal is idempotent only while a newer
+        # active share has NOT superseded the user's "stop sharing" intent.
+        successor = session.scalar(select(JourneyRendezvousMemberSignal).where(
+            JourneyRendezvousMemberSignal.journey_id == journey.id,
+            JourneyRendezvousMemberSignal.journey_member_id == member.id,
+            JourneyRendezvousMemberSignal.status == "ACTIVE",
+        ))
+        if successor is not None:
+            raise HTTPException(409, "RENDEZVOUS_SIGNAL_WITHDRAW_TARGET_STALE")
     if signal.status == "ACTIVE":
         now = _iso(execution_clock.now().astimezone(timezone.utc))
         signal.status = "REVOKED"
