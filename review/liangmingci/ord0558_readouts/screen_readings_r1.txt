@@ -1,0 +1,36 @@
+ORD-0558 量名词 · 改前改后同一屏的英文读数（屏读原文，非断言字符串）
+
+屏：/v8/discover 的目的地准备面板（data-testid="prep-panel"），那句结论正文 data-testid="prep-verdict-body"，
+视口 390x844（与本面已有的 qoder-destination-preparation.spec.ts 同形制），查询词「天津」。
+
+仪表是什么、不是什么：结论、reason_code、coverage 与 missing_categories 里每个 token 都由本次自己起的
+后端答出（现读 server_named = ["attractions","food","nightlife","lodging","mobility","booking"]，
+即 backend/app/anywhere_capability.py:76 的 COVERAGE_KEYS）；规格只把「服务器自己点名的这几项里给屏上看几项」
+这个数改掉（page.route 切 list.slice(0, take)），这就是数量本身，没有任何造的 token。
+
+一、改前（产品文件 = 08577f1986b8bbc095f1c319a952909fcf343717 那一代）
+
+  数量一  The server reports 1 categories missing (attractions), so planning now would lack evidence. You can prepare it first.
+  数量二  The server reports 2 categories missing (attractions, food), so planning now would lack evidence. You can prepare it first.
+  中文面  服务器说还缺 1 类事实（attractions），所以现在直接规划会缺依据。可以先准备。
+
+  数量一这一行就是本单要修的缺陷：数是一，名词带了复数。数量二那一行本来就是对的，所以改前那臂只该红在数量一，
+  实际也确实只红在那一枚（见 gates_r1.txt 里那臂的失败原文）。
+
+二、改后（产品文件 = 我这代，englishCountNoun 挂在数上）
+
+  数量一  The server reports 1 category missing (attractions), so planning now would lack evidence. You can prepare it first.
+  数量二  The server reports 2 categories missing (attractions, food), so planning now would lack evidence. You can prepare it first.
+  中文面  服务器说还缺 1 类事实（attractions），所以现在直接规划会缺依据。可以先准备。
+  中文面  服务器说还缺 2 类事实（attractions、food），所以现在直接规划会缺依据。可以先准备。
+
+  中文面改前改后逐字节相同（reason 同为 COVERAGE_INCOMPLETE），本单只改英文侧这条在这里落地为可读的东西，
+  不是口头声明。
+
+三、PNG（同屏两态，各一枚）
+
+  before_en_count1.png  改前·数量一（屏上是 "1 categories missing"）
+  before_en_count2.png  改前·数量二
+  after_en_count1.png   改后·数量一（屏上是 "1 category missing"）
+  after_en_count2.png   改后·数量二
+  after_zh_count1.png   改后·中文面同屏（未被本单改动）

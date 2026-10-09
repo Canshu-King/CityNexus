@@ -1,0 +1,63 @@
+ORD-0558 量名词 · 门禁读数（命令原样、退出码、关键行；都在 rebase 到 08577f1986 那一代之后重跑）
+
+工作目录：D:\moodle\_qoder_liangmingci_0558\frontend
+本枝相对线：08577f1986b8bbc095f1c319a952909fcf343717 之上我一笔，改动集合 =
+  frontend/src/features/discovery/DestinationPreparationPanel.tsx（产品字节）
+  frontend/e2e/qoder-liangmingci-0558-count-noun-r1.spec.ts（我的仪表）
+  review/liangmingci/ord0558_readouts/*（读数件）
+
+一、类型检查
+
+  命令原样：npm run typecheck        （= tsc -p tsconfig.check.json --noEmit）
+  退出码：0
+  关键行：日志无 error TS 行（全文 D:\moodle\_liangmingci_0558\typecheck_r2.txt）
+
+二、前端构建
+
+  命令原样：npm run build            （= vite build）
+  退出码：0
+  关键行：built in 7.67s（全文 D:\moodle\_liangmingci_0558\build_r2.txt）
+
+三、本单那一枝（我自己写的仪表，两态各一枚 + 中文面反控）
+
+  权威模式环境（逐枚现读，两枚 key 缺席、AI 关、端口不借、库不预存）：
+    CITYNEXUS_E2E_AUTHORITATIVE=1
+    CITYNEXUS_E2E_PORT=4193  CITYNEXUS_BACKEND_PORT=8193
+    CITYNEXUS_PYTHON=D:/moodle/_qoder_liangmingci_0558/.venv/Scripts/python.exe
+    CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_liangmingci_0558/backend/_e2e_liangmingci0558r2.db
+    CITYNEXUS_E2E_RUN_ID=liangmingci0558r2  CITYNEXUS_AI_ENABLED=false
+    DEEPSEEK_API_KEY 与 CITYNEXUS_AI_API_KEY unset（运行前打印 keys_present=none/none）
+  配置回读的那一行 provenance：
+    [citynexus e2e] suite=current-product authoritative=true python=D:/moodle/_qoder_liangmingci_0558/.venv/Scripts/python.exe frontend=:4193 backend=:8193 db=sqlite:///D:/moodle/_qoder_liangmingci_0558/backend/_e2e_liangmingci0558r2.db ai=disabled reuseExistingServer=false
+
+  改后一臂
+    命令原样：npx playwright test e2e/qoder-liangmingci-0558-count-noun-r1.spec.ts --reporter=line
+    退出码：0
+    关键行：5 passed (24.4s)
+    日志：D:\moodle\_liangmingci_0558\e2e_after_r2.txt
+    产物：D:\moodle\_liangmingci_0558\evidence_after_r2\ord0558\（en-count-1/2、zh-count-1/2 各一枚 json 与 png）
+
+  改前一臂（产品文件退回 08577f1986 那一代，规格不动 —— 红就红在该红的那一枚）
+    命令原样：同上，环境只差 run id 与库名换成 _e2e_liangmingci0558b1.db / liangmingci0558b1
+    退出码：1
+    关键行：1 failed，4 passed (24.4s)
+    失败原文：e2e/qoder-liangmingci-0558-count-noun-r1.spec.ts :: en-count-1 - the English verdict does not
+      read "1 category missing": "The server reports 1 categories missing (attractions), so planning now
+      would lack evidence. You can prepare it first."
+    日志：D:\moodle\_liangmingci_0558\e2e_before_r1.txt
+    产物：D:\moodle\_liangmingci_0558\evidence_before_r1\ord0558\
+    跑完即 git checkout HEAD -- 该文件复位，git status --short 回空（没有把退回态留在树里）
+
+四、本面已有的那一枝（防回归，不是我写的）
+
+  命令原样：npx playwright test e2e/qoder-destination-preparation.spec.ts --reporter=line
+  环境：同上一组，只把 run id 与库名换成 liangmingci0558r3 / _e2e_liangmingci0558r3.db
+  退出码：0
+  关键行：6 passed (33.6s)
+  日志：D:\moodle\_liangmingci_0558\e2e_sibling_r1.txt
+  说明：这六条走的是真后端真路由，没有用我那条 mock；其中「需要准备就说得清缺什么」那条覆盖的正是本单改的那句正文。
+
+五、没有跑的与为什么
+
+  全量 e2e 套件没跑：本单只交一枚文件的一行英文，上面两条枝（本单仪表 + 本面已有规格）已经覆盖这句的两种数量与
+  该面板的全部状态；全量套件是落地那一步的闸，归号令者点。
