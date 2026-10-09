@@ -293,8 +293,40 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 /* Progressive disclosure, mobile comparison, and accessible focus states. */
 .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }
 .v8-compare-button { width: auto; margin: 14px 0 0; padding: 9px 11px; border: 1px solid #dfe3ec; border-radius: var(--cn-r-8); color: var(--v8-indigo); background: #f8f9ff; cursor: pointer; font-size: 10px; font-weight: 750; }
-.v8-sheet-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: end center; background: #14233b55; }
-.v8-mobility-sheet { width: min(680px, calc(100vw - 30px)); margin-bottom: 18px; padding: 22px 24px 20px; border: 1px solid #dfe4ed; border-radius: var(--cn-r-20); background: #fff; box-shadow: 0 24px 70px #14233b44; }
+.v8-sheet-backdrop { position: fixed; inset: 0; z-index: 40; display: grid; place-items: end center; background: #14233b55; animation: cn-modal-veil var(--cn-modal-enter) var(--cn-ease-standard) both; }
+.v8-sheet-backdrop[data-state="closing"] { animation: cn-modal-veil-out var(--cn-modal-exit) var(--cn-ease-standard) both; pointer-events: none; }
+/* `box-sizing` is load-bearing here, not decoration: this sheet is `width: 100%` on a phone, and as
+   content-box its own 34px of padding and 2px of border landed *outside* that 100%.  Measured at
+   390px wide the sheet painted 426px -- 36px of the comparison column was off-screen, which is the
+   same off-by-its-own-padding defect `.plan-ai-sheet` already guards against. */
+.v8-mobility-sheet { box-sizing: border-box; width: min(680px, calc(100vw - 30px)); margin-bottom: 18px; padding: 22px 24px 20px; border: 1px solid #dfe4ed; border-radius: var(--cn-r-20); background: #fff; box-shadow: 0 24px 70px #14233b44; }
+/* Both sheets ride the same pair of keyframes so an overlay always leaves the same way it arrived. */
+.v8-mobility-sheet, .plan-ai-sheet { animation: cn-modal-rise var(--cn-modal-enter) var(--cn-ease-enter) both; }
+.v8-sheet-backdrop[data-state="closing"] .v8-mobility-sheet,
+.v8-sheet-backdrop[data-state="closing"] .plan-ai-sheet { animation: cn-modal-drop var(--cn-modal-exit) var(--cn-ease-standard) both; }
+@keyframes cn-modal-veil { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cn-modal-veil-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes cn-modal-rise { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: none; } }
+@keyframes cn-modal-drop { from { opacity: 1; transform: none; } to { opacity: 0; transform: translate3d(0, 16px, 0); } }
+/* The traveller who asks for no motion still gets the sheet at its resting place, instantly -- the
+   exit timer in `useModalLayer.ts` collapses to 1ms for the same reason, so nobody waits on an
+   animation they cannot see. */
+@media (prefers-reduced-motion: reduce) {
+  .v8-sheet-backdrop,
+  .v8-sheet-backdrop[data-state="closing"],
+  .v8-mobility-sheet,
+  .plan-ai-sheet,
+  .v8-drawer-backdrop,
+  #v8-nav-drawer,
+  .v8-alert-pop { animation: none !important; }
+}
+/* The 44px tap floor reached the nav, the compare button and the plan sheet's own ×, but never this
+   one: `.v8-close-button` carries no height of its own, so the only visible way out of the mobility
+   sheet was a text-sized hit box on a phone.  Scoped through the heading so it cannot retint any
+   other `.v8-close-button` that ships with a different shape. */
+@media (max-width: 680px) {
+  .v8-sheet-heading .v8-close-button { min-height: var(--cn-touch-min); min-width: var(--cn-touch-min); }
+}
 .v8-sheet-handle { display: none; width: 42px; height: 4px; margin: 0 auto 18px; border-radius: var(--cn-r-pill); background: #d8dce5; }
 .v8-sheet-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; }.v8-sheet-heading h2 { margin: 0; font-size: 22px; letter-spacing: -.03em; }.v8-close-button { width: auto; margin: 0; padding: 0 var(--cn-s-4); color: #7d8899; background: transparent; font-size: 24px; font-weight: 400; }
 .v8-mode-comparison { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; }.v8-mode-option { min-height: 128px; margin: 0; padding: 12px var(--cn-s-10); border: 1px solid #e5e8ef; border-radius: var(--cn-r-12); color: var(--v8-ink); background: #fff; text-align: left; cursor: pointer; }.v8-mode-option.active { border-color: #8792e9; background: #f2f3ff; box-shadow: inset 0 0 0 1px #8792e9; }.v8-mode-option:disabled { color: #a7afba; background: #f5f6f8; cursor: not-allowed; }.v8-mode-option strong, .v8-mode-option span, .v8-mode-option b, .v8-mode-option small { display: block; }.v8-mode-option strong { color: var(--v8-indigo); font-size: 10px; letter-spacing: .05em; }.v8-mode-option span { margin-top: 13px; color: #718095; font-size: 10px; }.v8-mode-option b { margin-top: 7px; font-size: 12px; }.v8-mode-option small { margin-top: 8px; color: #9aa4b3; font-size: 9px; line-height: 1.35; }.v8-sheet-primary { margin-top: 18px; }.v8-sheet-note { margin: 12px 0 0; color: #8793a3; font-size: 10px; text-align: center; }
@@ -332,8 +364,9 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v9-evidence-summary > small { color: #5d6878; }
 
 /* Mobile navigation drawer (hamburger in the topbar) */
-.v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; }
-#v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; }
+.v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; animation: cn-modal-veil var(--cn-modal-enter) var(--cn-ease-standard) both; }
+#v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: var(--cn-s-4); width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: var(--cn-nav-bg); box-shadow: 24px 0 60px #14233b2e; animation: cn-drawer-in var(--cn-modal-enter) var(--cn-ease-enter) both; }
+@keyframes cn-drawer-in { from { opacity: 0; transform: translate3d(-24px, 0, 0); } to { opacity: 1; transform: none; } }
 .v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--cn-s-10); padding: 0 12px; }
 /* ORD-0470: the drawer only exists below the 680px breakpoint (styles.css:185 hides the hamburger
    above it), so every row here is a touch target and takes the >=44px layer of the F-2 contract.
@@ -362,6 +395,10 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
   --cn-motion-map: 650ms;
   --cn-ease-standard: cubic-bezier(.2,.8,.2,1);
   --cn-ease-enter: cubic-bezier(.16,1,.3,1);
+  /* Sheet enter/exit.  The exit figure is mirrored in `useModalLayer.ts` (the sheet has to stay
+     mounted for exactly this long or it vanishes instead of leaving), so change both or neither. */
+  --cn-modal-enter: 220ms;
+  --cn-modal-exit: 280ms;
 }
 ::view-transition-old(root) { animation: cn-route-out var(--cn-motion-fast) ease both; }
 ::view-transition-new(root) { animation: cn-route-in var(--cn-motion-base) var(--cn-ease-enter) both; }
@@ -468,7 +505,8 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v8-alerts .v8-icon-button { position: relative; }
 .v8-alert-badge { position: absolute; top: -3px; right: -7px; display: grid; place-items: center; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--cn-r-pill); color: #fff; background: var(--v8-coral); font-size: 9px; font-style: normal; font-weight: 800; }
 .v8-pop-backdrop { position: fixed; inset: 0; z-index: 15; padding: 0; border: 0; background: transparent; cursor: default; }
-.v8-alert-pop { position: absolute; top: calc(100% + 12px); right: 0; z-index: 16; display: grid; gap: var(--cn-s-4); box-sizing: border-box; width: min(320px, calc(100vw - 34px)); padding: 16px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-12); background: #fff; box-shadow: 0 24px 60px #14233b33; }
+.v8-alert-pop { position: absolute; top: calc(100% + 12px); right: 0; z-index: 16; display: grid; gap: var(--cn-s-4); box-sizing: border-box; width: min(320px, calc(100vw - 34px)); padding: 16px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-12); background: #fff; box-shadow: 0 24px 60px #14233b33; animation: cn-pop-in var(--cn-motion-fast) var(--cn-ease-enter) both; }
+@keyframes cn-pop-in { from { opacity: 0; transform: translate3d(0, -6px, 0); } to { opacity: 1; transform: none; } }
 .v8-alert-pop .v8-kicker { margin: 0 0 8px; }
 .v8-alert-pop article { display: grid; gap: 3px; padding: var(--cn-s-10) 0; border-top: 1px solid #edf0f4; }
 .v8-alert-pop article b { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
