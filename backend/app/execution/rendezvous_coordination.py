@@ -342,6 +342,11 @@ def withdraw_member_signal(
     ))
     if signal is None:
         raise HTTPException(404, "RENDEZVOUS_SIGNAL_NOT_FOUND")
+    # An old tab may still hold a replaced/expired signal ID after a newer
+    # status was shared. Returning 200 for that old ID would misleadingly tell
+    # the client that the currently visible status had been withdrawn.
+    if signal.status not in {"ACTIVE", "REVOKED"}:
+        raise HTTPException(409, "RENDEZVOUS_SIGNAL_WITHDRAW_TARGET_STALE")
     if signal.status == "ACTIVE":
         now = _iso(execution_clock.now().astimezone(timezone.utc))
         signal.status = "REVOKED"
