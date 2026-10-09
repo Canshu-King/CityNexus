@@ -156,6 +156,12 @@ test("R76 lets a signed nonmember accept an active-Journey invite and see honest
     await expect(companion.page.getByTestId("journey-membership-catchup")).toBeVisible();
     await expect(companion.page.getByTestId("journey-membership-catchup")).toContainText("UNKNOWN / ROUTE_UNAVAILABLE");
 
+    // Catch-up is a persistent current-Journey action, not a one-render
+    // success toast. A newcomer can come back after a browser reload.
+    await companion.page.reload({ waitUntil: "domcontentloaded" });
+    await expect(companion.page.getByTestId("journey-membership-catchup")).toBeVisible();
+    await expect(companion.page.getByTestId("journey-membership-catchup")).toContainText("UNKNOWN / ROUTE_UNAVAILABLE");
+
     const afterMembers = await api<Array<{ traveler_id: string; role: string; joined_at?: string | null }>>(
       request,
       `${journeyPath}/members`,
