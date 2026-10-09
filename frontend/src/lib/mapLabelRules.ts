@@ -114,6 +114,27 @@ export function mapLabelSpanViolations(painted: string): string[] {
   }).map((rule) => rule.name);
 }
 
+/** A name is only paintable if something letter-shaped or numeric survives the cut. */
+const WORD_SHAPED = /[\p{L}\p{N}]/u;
+
+/**
+ * ORD-0415 r2 — drop the punctuation a cut strands.
+ *
+ * Measured on the running screen (屏读工-0415, `08:30 — 10:15` on both fields of one stop): the two
+ * clocks were taken out and the dash between them was left behind, so the glass painted a chip
+ * reading 「—」 and the pin announced itself as 「—」. That is neither a name nor the absent name the
+ * rule was written to honour, and it costs a neighbour's ground in `placeLabels()` on top of it.
+ *
+ * Only the edges are touched, and only where nothing word-shaped sits: 「天津之眼（19:30）」 loses its
+ * brackets along with the clock, while 「五大道 45分钟 ¥60 19:30 骑行」 keeps 「五大道 骑行」 byte-for-byte.
+ * A word with nothing left but separators yields no text, which is the case `stopLabel()` already
+ * answers by painting nothing and letting the pin's ordinal name the stop.
+ */
+function settle(text: string): string {
+  const trimmed = text.replace(/^[^\p{L}\p{N}]+/u, "").replace(/[^\p{L}\p{N}]+$/u, "");
+  return WORD_SHAPED.test(trimmed) ? trimmed : "";
+}
+
 /**
  * ORD-0415 — take the forbidden classes off the glass, keep the rest of the word.
  *
@@ -153,5 +174,5 @@ export function takeOffGlass(painted: string): { text: string; removed: string[]
     const every = new RegExp(source.source, `${source.flags.replace("g", "")}g`);
     text = text.replace(every, " ");
   }
-  return { text: text.replace(/\s+/g, " ").trim(), removed };
+  return { text: settle(text.replace(/\s+/g, " ").trim()), removed };
 }
