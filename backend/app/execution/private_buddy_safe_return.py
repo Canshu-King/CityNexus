@@ -431,9 +431,23 @@ def _shared_risk(
         "evidence_scope": "TEST_ONLY" if test_pair else "CURRENT_PROVIDER_CAPTURE",
     })
     if risk.get("state") == "COMMITMENT_AT_RISK":
+        # Travel alone already exhausts the protected window. Any time spent
+        # helping at the public handoff can only make that worse.
         risk["recommended_action"] = "RETURN_TO_SHARED_STOP_OR_REQUEST_AUTHORIZED_GROUP_RECOVERY"
     elif risk.get("state") in {"LOW_BUFFER", "WITHIN_BUFFER"}:
-        risk["recommended_action"] = "REASSESS_AFTER_HANDOFF_BEFORE_RETURNING_TO_SHARED_STOP"
+        # Both legs give a lower bound on travel time, NOT a guaranteed
+        # homecoming: the human help/handoff duration is unknown. Never show
+        # a green C3/C4 slack merely by assuming the meeting takes 0 minutes.
+        travel_only_slack = risk.get("slack_after_buffer_min")
+        risk.update({
+            "state": "UNKNOWN",
+            "basis": "TWO_LEG_TRAVEL_ONLY_HANDOFF_DWELL_UNKNOWN",
+            "slack_after_buffer_min": None,
+            "travel_only_slack_after_buffer_min": travel_only_slack,
+            "predicted_arrival_at": None,
+            "handoff_dwell_time_known": False,
+            "recommended_action": "CHECK_HANDOFF_DURATION_BEFORE_DEPARTURE",
+        })
     elif risk.get("state") == "NO_PROTECTED_RENDEZVOUS_COMMITMENT":
         risk["recommended_action"] = "CONTINUE_WITH_THE_INDEPENDENTLY_AGREED_HANDOFF"
     return risk
