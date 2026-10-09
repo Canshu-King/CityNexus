@@ -782,6 +782,34 @@ export interface RendezvousBuddyHandoff {
   opening_hours_state: "UNKNOWN";
 }
 
+export interface RendezvousBuddyPrivateRouteResult {
+  handoff_id: string;
+  route_state: "LIVE" | "REPLAY" | "UNKNOWN";
+  status: string;
+  reason: string;
+  duration_min: number | null;
+  provider: string | null;
+  provenance: string;
+  captured_at: string | null;
+  route_age_seconds: number | null;
+  origin_age_seconds: number | null;
+  authority: string;
+  target_place_name: string;
+  target_source_label: string;
+  target_evidence_grade: string;
+  original_shared_stop_name: string;
+  shared_commitment_risk: {
+    state: string;
+    authority?: string;
+    next_commitment?: { title?: string; scheduled_at?: string; safety_buffer_min?: number } | null;
+    slack_after_buffer_min?: number | null;
+    basis?: string;
+  };
+  shared_plan_changed: false;
+  physical_arrival_verified: false;
+  guardian_triggered: false;
+}
+
 export interface RendezvousBuddyHandoffCandidates {
   help_signal_id: string;
   acknowledgement_id: string;
@@ -2630,6 +2658,57 @@ export const cityNexusApi = {
     return requestJson<{ handoff_id: string; status: "REVOKED" }>(
       "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/revoke",
       { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  getCurrentRendezvousBuddyPrivateRoute(
+    journeyId: string,
+    handoffId: string,
+  ): Promise<RendezvousBuddyPrivateRouteResult> {
+    return requestJson<RendezvousBuddyPrivateRouteResult>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/route/current",
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  captureRendezvousBuddyPrivateRouteLocation(
+    journeyId: string,
+    handoffId: string,
+    payload: { latitude: number; longitude: number; accuracy_m: number; captured_at: string },
+  ): Promise<{
+    location_observation_id: string;
+    journey_id: string;
+    source: string;
+    principal_bound: true;
+    visibility: "CALLER_PRIVATE";
+    external_provider_contacted: false;
+  }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/route/location",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(payload),
+      },
+    );
+  },
+
+  acquireRendezvousBuddyPrivateRoute(
+    journeyId: string,
+    handoffId: string,
+    payload: {
+      location_observation_id: string;
+      requested_mode: "WALK";
+      external_provider_disclosure_confirmed: boolean;
+    },
+  ): Promise<RendezvousBuddyPrivateRouteResult> {
+    return requestJson<RendezvousBuddyPrivateRouteResult>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/route",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(payload),
+      },
     );
   },
 

@@ -1375,14 +1375,25 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         activity_status=activation_status,
         now=reference.astimezone(timezone.utc),
     )
-    route_operation = session.scalar(
+    route_operations = session.scalars(
         select(RouteAcquisitionOperation)
         .where(
             RouteAcquisitionOperation.journey_id == journey.id,
             RouteAcquisitionOperation.status.in_(("COMPLETED", "UNAVAILABLE", "FAILED")),
         )
         .order_by(RouteAcquisitionOperation.finished_at.desc(), RouteAcquisitionOperation.updated_at.desc())
-    )
+    ).all()
+    route_operation = None
+    for candidate in route_operations:
+        try:
+            request_payload = json.loads(candidate.request_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            request_payload = {}
+        evidence = request_payload.get("origin_evidence") if isinstance(request_payload, dict) else None
+        if isinstance(evidence, dict) and evidence.get("private_scope") == "R80_PRIVATE_BUDDY_HANDOFF":
+            continue
+        route_operation = candidate
+        break
     route_session = None
     if route_operation is not None:
         route_session = {

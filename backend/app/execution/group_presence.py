@@ -24,6 +24,7 @@ from app.db.models import (
     Traveler,
 )
 from app.execution.clock import execution_clock
+from app.execution.location_scope import PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE
 
 LOCATION_FRESHNESS_SECONDS = 300
 MAX_USEFUL_ACCURACY_M = 100.0
@@ -321,6 +322,7 @@ def _member_observation(
             LocationObservation.journey_id == journey.id,
             LocationObservation.traveler_id == member.traveler_id,
             LocationObservation.journey_member_id == member.id,
+            LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
         )
     ).all()
     return max(
@@ -380,7 +382,7 @@ def _route_eta(
 ) -> tuple[int | None, str | None, str]:
     if row is None or target_activity is None:
         return None, None, "ROUTE_NOT_CAPTURED"
-    route = session.scalar(
+    routes = session.scalars(
         select(RouteAcquisitionOperation)
         .where(
             RouteAcquisitionOperation.journey_id == journey.id,
@@ -390,7 +392,18 @@ def _route_eta(
             RouteAcquisitionOperation.status == "COMPLETED",
         )
         .order_by(RouteAcquisitionOperation.finished_at.desc(), RouteAcquisitionOperation.id.desc())
-    )
+    ).all()
+    route = None
+    for candidate in routes:
+        try:
+            request = json.loads(candidate.request_json or "{}")
+            evidence = request.get("origin_evidence") if isinstance(request, dict) else None
+        except (TypeError, json.JSONDecodeError):
+            evidence = None
+        if isinstance(evidence, dict) and evidence.get("private_scope") == "R80_PRIVATE_BUDDY_HANDOFF":
+            continue
+        route = candidate
+        break
     if route is None:
         return None, None, "ROUTE_NOT_CAPTURED"
     try:

@@ -79,7 +79,7 @@ import {
   type JourneyTrialDraft,
   type TrialPhase,
 } from "../features/setup/JourneyTrialSetup";
-import type { AgentRuntimeStatus } from "../api/citynexus";
+import { cityNexusApi, type AgentRuntimeStatus } from "../api/citynexus";
 import {
   useAuthoritativePlans,
   useAuthoritativeTwin,
@@ -1340,32 +1340,45 @@ export function V8Experience() {
       setBusy(false);
     }
   };
-  const captureForegroundLocation = async (maximumAgeMs = 30_000): Promise<string | null> => {
+  const captureForegroundLocation = async (
+    maximumAgeMs = 30_000,
+    privateHandoffId?: string,
+  ): Promise<string | null> => {
     if (!data || !navigator.geolocation) return null;
     return await new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           try {
-            const observation = await v8Request<{ id: string }>(
-              `/api/v1/journeys/${data.journey.id}/location`,
-              {
-                method: "POST",
-                headers: travelerAuthHeaders(),
-                body: JSON.stringify({
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  accuracy_m: position.coords.accuracy,
-                  captured_at: new Date(position.timestamp).toISOString(),
+            const locationPayload = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              accuracy_m: position.coords.accuracy,
+              captured_at: new Date(position.timestamp).toISOString(),
+            };
+            if (privateHandoffId) {
+              const observation = await cityNexusApi.captureRendezvousBuddyPrivateRouteLocation(
+                data.journey.id,
+                privateHandoffId,
+                locationPayload,
+              );
+              resolve(observation.location_observation_id);
+            } else {
+              const observation = await v8Request<{ id: string }>(
+                `/api/v1/journeys/${data.journey.id}/location`,
+                {
+                  method: "POST",
+                  headers: travelerAuthHeaders(),
+                  body: JSON.stringify(locationPayload),
+                },
+              );
+              await load(data.journey.id);
+              setMessage(
+                t("shell.locationUpdated", {
+                  n: Math.round(position.coords.accuracy),
                 }),
-              },
-            );
-            await load(data.journey.id);
-            setMessage(
-              t("shell.locationUpdated", {
-                n: Math.round(position.coords.accuracy),
-              }),
-            );
-            resolve(observation.id);
+              );
+              resolve(observation.id);
+            }
           } catch {
             setMessage(t("shell.locationDenied"));
             resolve(null);
@@ -1963,7 +1976,7 @@ export function V8Experience() {
               journeyId={data.journey.id}
               journeyStatus={data.journey.status}
               recentlyJoinedJourneyId={recentlyJoinedJourneyId}
-              onRefreshLocation={() => captureForegroundLocation(0)}
+              onRefreshLocation={(privateHandoffId) => captureForegroundLocation(0, privateHandoffId)}
               onJourneyJoined={openJoinedJourney}
             />
           )}

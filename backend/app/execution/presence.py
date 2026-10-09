@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.db.models import Activity, Journey, LocationObservation, Place
 from app.execution.clock import execution_clock
+from app.execution.location_scope import PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE
 
 _TRUSTED_LOCATION_SOURCES = {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
 _MAX_LOCATION_AGE_SECONDS = 300.0
@@ -110,6 +111,7 @@ def presence_projection(
         .where(
             LocationObservation.journey_id == journey.id,
             LocationObservation.journey_member_id == str(viewer_member_id),
+            LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
         )
         .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
     )

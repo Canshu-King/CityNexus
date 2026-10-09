@@ -455,6 +455,16 @@ class GroupPresenceRouteRequest(BaseModel):
     requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
+class RendezvousBuddyPrivateRouteRequest(BaseModel):
+    """One private route to an accepted R79 place after a separate disclosure action."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    requested_mode: Literal["WALK"] = "WALK"
+    external_provider_disclosure_confirmed: bool = False
+
+
 class JourneyRendezvousSignalCreateRequest(BaseModel):
     """The client may confirm the displayed target, but never choose a destination."""
 

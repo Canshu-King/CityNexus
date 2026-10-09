@@ -14,6 +14,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.execution.clock import execution_clock
+from app.execution.location_scope import PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE
 
 from app.db.models import (
     Activity,
@@ -561,7 +562,10 @@ def in_transit_projection(
     reference = (now or execution_clock.now()).astimezone(timezone.utc)
     observations = session.scalars(
         select(LocationObservation)
-        .where(LocationObservation.journey_id == journey.id)
+        .where(
+            LocationObservation.journey_id == journey.id,
+            LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+        )
     ).all()
     eligible_observations = [
         row

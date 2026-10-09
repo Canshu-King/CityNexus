@@ -477,6 +477,7 @@ from app.schemas import (
     JourneyPatch,
     LocationObservationRequest,
     GroupPresenceRouteRequest,
+    RendezvousBuddyPrivateRouteRequest,
     JourneyRendezvousSignalCreateRequest,
     RendezvousBuddyHandoffOfferRequest,
     RendezvousBuddyHandoffDecisionRequest,
@@ -3093,6 +3094,7 @@ def acquire_in_transit_reroute(
 def read_route_session(
     journey_id: UUID,
     operation_id: str,
+    request: Request,
     session: Session = Depends(get_session),
 ):
     """Read one route operation without contacting a provider."""
@@ -3101,6 +3103,24 @@ def read_route_session(
     row = session.get(RouteAcquisitionOperation, operation_id)
     if row is None or str(row.journey_id) != str(journey_id):
         raise HTTPException(404, f"Route acquisition operation {operation_id} was not found")
+    from app.execution.private_buddy_route import (
+        private_route_scope,
+        read_private_route_operation,
+    )
+
+    if private_route_scope(row.request_json) is not None:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        return read_private_route_operation(
+            session,
+            journey=require(session, Journey, str(journey_id), "Journey"),
+            viewer=member,
+            principal=principal,
+            operation=row,
+        )
     return route_operation_payload(row)
 
 
@@ -10798,6 +10818,36 @@ def respond_rendezvous_buddy_handoff(
         )
 
 
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/location", status_code=201)
+def capture_private_buddy_handoff_route_location(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: LocationObservationRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Save one explicit foreground sample for this caller's accepted handoff route only."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.private_buddy_route import capture_private_buddy_route_location
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return capture_private_buddy_route_location(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            latitude=payload.latitude,
+            longitude=payload.longitude,
+            accuracy_m=payload.accuracy_m,
+            captured_at=payload.captured_at,
+        )
+
+
 @app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/cancel")
 def cancel_rendezvous_buddy_handoff(
     journey_id: UUID,
@@ -10846,6 +10896,57 @@ def revoke_rendezvous_buddy_handoff(
             handoff_id=str(handoff_id),
             action="REVOKE",
         )
+
+
+@app.get("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/current")
+def current_private_buddy_handoff_route(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Read only the signed viewer's current route to their accepted R79 handoff."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.private_buddy_route import current_private_route
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return current_private_route(
+        session,
+        journey=journey,
+        viewer=member,
+        principal=principal,
+        handoff_id=str(handoff_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route")
+def acquire_private_buddy_handoff_route(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: RendezvousBuddyPrivateRouteRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Acquire one caller-private route after separate location and provider consent."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.private_buddy_route import acquire_private_buddy_route
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return acquire_private_buddy_route(
+        session,
+        journey=journey,
+        viewer=member,
+        principal=principal,
+        handoff_id=str(handoff_id),
+        observation_id=str(payload.location_observation_id),
+        external_provider_disclosure_confirmed=payload.external_provider_disclosure_confirmed,
+    )
 
 
 @app.post("/api/v1/journeys/{journey_id}/member-side-quests", status_code=201)

@@ -8,6 +8,7 @@ import {
   type JourneyRendezvousCoordinationSignal,
   type RendezvousBuddyHandoff,
   type RendezvousBuddyHandoffCandidates,
+  type RendezvousBuddyPrivateRouteResult,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
 import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
@@ -16,7 +17,7 @@ type Props = {
   journeyId: string | null;
   journeyStatus?: string | null;
   recentlyJoinedJourneyId?: string | null;
-  onRefreshLocation?: () => Promise<string | null>;
+  onRefreshLocation?: (privateHandoffId?: string) => Promise<string | null>;
   onJourneyJoined: (journeyId: string) => Promise<void> | void;
 };
 
@@ -24,6 +25,9 @@ type GroupPresence = NonNullable<JourneyOperatorProjection["group_presence"]>;
 type Rendezvous = NonNullable<
   GroupPresence["rendezvous"]
 >;
+type BuddyRouteConsent =
+  | { handoffId: string; step: "LOCATION" }
+  | { handoffId: string; step: "PROVIDER"; locationObservationId: string };
 
 function groupPresenceTargetKey(presence: GroupPresence | null | undefined): string | null {
   const target = presence?.rendezvous;
@@ -171,6 +175,10 @@ export function JourneyMembershipPanel({
   const [buddyActionBusy, setBuddyActionBusy] = useState(false);
   const [buddyMessage, setBuddyMessage] = useState<string | null>(null);
   const [buddyMapConsentId, setBuddyMapConsentId] = useState<string | null>(null);
+  const [buddyPrivateRoutes, setBuddyPrivateRoutes] = useState<Record<string, RendezvousBuddyPrivateRouteResult>>({});
+  const [buddyRouteConsent, setBuddyRouteConsent] = useState<BuddyRouteConsent | null>(null);
+  const [buddyRouteBusy, setBuddyRouteBusy] = useState(false);
+  const [buddyRouteMessage, setBuddyRouteMessage] = useState<string | null>(null);
   const [routeResult, setRouteResult] = useState<{
     key: string;
     result: GroupRendezvousRouteResult;
@@ -204,6 +212,7 @@ export function JourneyMembershipPanel({
     if (!journeyId || !active) {
       setGroupPresence(null);
       setBuddyHandoffs([]);
+      setBuddyPrivateRoutes({});
       return null;
     }
     try {
@@ -214,10 +223,25 @@ export function JourneyMembershipPanel({
       const next = projection.group_presence ?? null;
       setGroupPresence(next);
       setBuddyHandoffs(handoffs.items);
+      const privateRouteEntries = await Promise.all(
+        handoffs.items
+          .filter((handoff) => handoff.status === "ACCEPTED")
+          .map(async (handoff): Promise<[string, RendezvousBuddyPrivateRouteResult] | null> => {
+            try {
+              return [handoff.handoff_id, await cityNexusApi.getCurrentRendezvousBuddyPrivateRoute(journeyId, handoff.handoff_id)];
+            } catch {
+              return null;
+            }
+          }),
+      );
+      setBuddyPrivateRoutes(Object.fromEntries(privateRouteEntries.filter(
+        (entry): entry is [string, RendezvousBuddyPrivateRouteResult] => entry !== null,
+      )));
       return next;
     } catch {
       setGroupPresence(null);
       setBuddyHandoffs([]);
+      setBuddyPrivateRoutes({});
       return null;
     }
   }, [active, journeyId]);
@@ -228,6 +252,8 @@ export function JourneyMembershipPanel({
     if (!journeyId || !active) {
       setGroupPresence(null);
       setBuddyHandoffs([]);
+      setBuddyPrivateRoutes({});
+      setBuddyRouteConsent(null);
       setRouteResult(null);
       return;
     }
@@ -514,6 +540,79 @@ export function JourneyMembershipPanel({
     }
   };
 
+  const beginBuddyRouteCheck = (handoff: RendezvousBuddyHandoff) => {
+    if (!onRefreshLocation || buddyRouteBusy || buddyActionBusy) return;
+    setBuddyRouteMessage(null);
+    setBuddyRouteConsent({ handoffId: handoff.handoff_id, step: "LOCATION" });
+  };
+
+  const confirmBuddyRouteLocation = async () => {
+    if (!journeyId || !onRefreshLocation || !buddyRouteConsent || buddyRouteConsent.step !== "LOCATION" || buddyRouteBusy) return;
+    setBuddyRouteBusy(true);
+    setBuddyRouteMessage(null);
+    try {
+      const observationId = await onRefreshLocation(buddyRouteConsent.handoffId);
+      if (!observationId) {
+        setBuddyRouteMessage(zh
+          ? "没有保存位置观察；没有发出接应路线请求。"
+          : "No location observation was saved; no handoff route was requested.");
+        setBuddyRouteConsent(null);
+        return;
+      }
+      setBuddyRouteConsent({
+        handoffId: buddyRouteConsent.handoffId,
+        step: "PROVIDER",
+        locationObservationId: observationId,
+      });
+    } catch {
+      setBuddyRouteMessage(zh
+        ? "前台位置读取失败；没有发出路线请求。"
+        : "Foreground location capture failed; no route was requested.");
+      setBuddyRouteConsent(null);
+    } finally {
+      setBuddyRouteBusy(false);
+    }
+  };
+
+  const confirmBuddyRouteProviderDisclosure = async () => {
+    if (!journeyId || !buddyRouteConsent || buddyRouteConsent.step !== "PROVIDER" || buddyRouteBusy) return;
+    const { handoffId, locationObservationId } = buddyRouteConsent;
+    setBuddyRouteBusy(true);
+    setBuddyRouteMessage(null);
+    try {
+      const result = await cityNexusApi.acquireRendezvousBuddyPrivateRoute(journeyId, handoffId, {
+        location_observation_id: locationObservationId,
+        requested_mode: "WALK",
+        external_provider_disclosure_confirmed: true,
+      });
+      setBuddyPrivateRoutes((current) => ({ ...current, [handoffId]: result }));
+      setBuddyRouteConsent(null);
+      setBuddyRouteMessage(result.route_state === "UNKNOWN"
+        ? (zh ? "路线保持 UNKNOWN；没有用模拟分钟数填补。" : "Route remains UNKNOWN; no mock duration was substituted.")
+        : (zh ? "已取得仅你可见的路线结果；共同计划未改变。" : "Your private route result is ready; the shared Journey is unchanged."));
+      await refreshGroupPresence();
+    } catch {
+      setBuddyRouteConsent(null);
+      setBuddyRouteMessage(zh
+        ? "接应、成员或计划上下文已变化；路线没有显示，请刷新后重新同意。"
+        : "The handoff, member, or plan context changed. No route was shown; refresh and consent again.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyRouteBusy(false);
+    }
+  };
+
+  const cancelBuddyRouteConsent = () => {
+    if (buddyRouteBusy) return;
+    const observationWasSaved = buddyRouteConsent?.step === "PROVIDER";
+    setBuddyRouteConsent(null);
+    if (observationWasSaved) {
+      setBuddyRouteMessage(zh
+        ? "位置观察已留在 Journey 中；你取消了外部路线请求。"
+        : "The location observation remains in the Journey; you cancelled the external route request.");
+    }
+  };
+
   const createInvitation = async () => {
     const target = targetTravelerId.trim();
     if (!target || busyId) return;
@@ -737,6 +836,9 @@ export function JourneyMembershipPanel({
 
   const buddyMapConsentHandoff = buddyMapConsentId
     ? buddyHandoffs.find((handoff) => handoff.handoff_id === buddyMapConsentId && handoff.status === "ACCEPTED") ?? null
+    : null;
+  const buddyRouteConsentHandoff = buddyRouteConsent
+    ? buddyHandoffs.find((handoff) => handoff.handoff_id === buddyRouteConsent.handoffId && handoff.status === "ACCEPTED") ?? null
     : null;
   const visibleRoute = routeResult?.key === currentTargetKey ? routeResult.result : null;
   const visibleRouteClass = visibleRoute ? routeEvidenceClass(visibleRoute) : null;
@@ -992,7 +1094,9 @@ export function JourneyMembershipPanel({
                   )}
                   {buddyHandoffs.length > 0 && (
                     <div data-testid="journey-buddy-handoffs">
-                      {buddyHandoffs.map((handoff) => (
+                      {buddyHandoffs.map((handoff) => {
+                        const privateRoute = buddyPrivateRoutes[handoff.handoff_id];
+                        return (
                         <article key={handoff.handoff_id} data-testid="journey-buddy-handoff" data-handoff-id={handoff.handoff_id}>
                           <strong>{handoff.status === "ACCEPTED"
                             ? (zh ? "双方已接受公开接应意向" : "Mutually accepted public handoff intention")
@@ -1025,6 +1129,59 @@ export function JourneyMembershipPanel({
                                 onClick={() => setBuddyMapConsentId(handoff.handoff_id)}>
                                 {zh ? "打开接应地点精确地图…" : "Open exact handoff map pin…"}
                               </button>
+                              {onRefreshLocation && (
+                                <button
+                                  type="button"
+                                  data-testid="journey-buddy-route-start"
+                                  disabled={buddyActionBusy || buddyRouteBusy}
+                                  onClick={() => beginBuddyRouteCheck(handoff)}
+                                >{zh ? "检查我到这处接应点的步行路线…" : "Check MY walking route to this handoff…"}</button>
+                              )}
+                              {privateRoute && (
+                                <article
+                                  data-testid="journey-buddy-route-result"
+                                  data-route-state={privateRoute.route_state}
+                                  data-handoff-id={handoff.handoff_id}
+                                >
+                                  <strong>{privateRoute.route_state === "LIVE"
+                                    ? (zh ? "当前路线服务结果（仅你可见）" : "Current route-provider result (only you can see it)")
+                                    : privateRoute.route_state === "REPLAY"
+                                      ? (zh ? "历史路线回放，不是当前路况" : "Historical route replay, not current traffic")
+                                      : (zh ? "路线状态：UNKNOWN / ROUTE_UNAVAILABLE" : "Route status: UNKNOWN / ROUTE_UNAVAILABLE")}</strong>
+                                  <p>{zh
+                                    ? `目的地：${privateRoute.target_place_name}（${privateRoute.target_source_label}）。原共同会合点“${privateRoute.original_shared_stop_name}”仍是全体计划地点；到接应点不代表到达原会合点。`
+                                    : `Destination: ${privateRoute.target_place_name} (${privateRoute.target_source_label}). The original shared stop “${privateRoute.original_shared_stop_name}” remains the whole group's planned meeting point; reaching this handoff does not mean reaching that stop.`}</p>
+                                  {privateRoute.duration_min !== null && privateRoute.route_state !== "UNKNOWN" ? (
+                                    <small>{zh ? `步行约 ${privateRoute.duration_min} 分钟。` : `Walking estimate: about ${privateRoute.duration_min} minutes.`}</small>
+                                  ) : (
+                                    <small>{zh ? "没有显示预计分钟数；可继续使用已单独同意的公共地点标点。" : "No duration is shown. The separately consented public-place pin remains available."}</small>
+                                  )}
+                                  <small>
+                                    {zh ? "来源：" : "Source: "}{privateRoute.provider ?? (zh ? "未配置" : "not configured")}
+                                    {" · "}{zh ? "证据：" : "Evidence: "}{privateRoute.provenance}
+                                    {privateRoute.captured_at && (
+                                      <>{" · "}{zh ? "回执时间：" : "Receipt time: "}{new Date(privateRoute.captured_at).toLocaleString(locale)}</>
+                                    )}
+                                    {privateRoute.origin_age_seconds !== null && (
+                                      <>{" · "}{zh ? "本人的位置观察年龄：" : "your observation age: "}{privateRoute.origin_age_seconds}s</>
+                                    )}
+                                  </small>
+                                  <small>{zh ? "受保护承诺风险：" : "Protected-commitment risk: "}{privateRoute.shared_commitment_risk.state}
+                                    {privateRoute.shared_commitment_risk.state === "UNKNOWN" && handoff.handoff_place.place_id !== handoff.original_shared_stop.place_id
+                                      ? (zh ? "；从接应点到原共同会合点的路线未知，因此不会显示安全余量。" : "; the onward route to the original shared stop is unknown, so no safe buffer is claimed.")
+                                      : ""}</small>
+                                  {privateRoute.shared_commitment_risk.state === "COMMITMENT_AT_RISK" && (
+                                    <strong role="alert" data-testid="journey-buddy-route-commitment-warning">
+                                      {zh
+                                        ? "这条路线可能使你错过受保护的共同承诺；出发前先核对原会合点安排。"
+                                        : "This route may cause you to miss a protected shared commitment. Check the original meeting plan before leaving."}
+                                    </strong>
+                                  )}
+                                  <small>{zh
+                                    ? "路线、位置观察 ID 和精确起点只返回给当前本人；不会共享给另一位成员或 B。路线结果不证明已出发、到场或见面；本请求不会修改计划或触发 Guardian。"
+                                    : "The route, observation ID, and precise origin are returned only to you, never to the other member or B. A route is not proof of departure, arrival, or reunion; this request does not change the plan or trigger Guardian."}</small>
+                                </article>
+                              )}
                             </>
                           )}
                           <button type="button" data-testid="journey-buddy-close" disabled={buddyActionBusy}
@@ -1034,13 +1191,15 @@ export function JourneyMembershipPanel({
                               : (zh ? "撤回我的接应同意" : "Revoke my handoff agreement")}
                           </button>
                         </article>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                   {coordinationMessage && (
                     <small role="status" data-testid="journey-rendezvous-message">{coordinationMessage}</small>
                   )}
                   {buddyMessage && <small role="status" data-testid="journey-buddy-message">{buddyMessage}</small>}
+                  {buddyRouteMessage && <small role="status" data-testid="journey-buddy-route-message">{buddyRouteMessage}</small>}
                   {coordinationConsentKind && (
                     <section
                       role="dialog"
@@ -1138,6 +1297,55 @@ export function JourneyMembershipPanel({
               {zh ? "取消" : "Cancel"}
             </button>
           </div>
+        </section>
+      )}
+
+      {buddyRouteConsent && buddyRouteConsentHandoff && (
+        <section
+          className="journey-membership-map-consent"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="journey-buddy-route-title"
+          data-testid="journey-buddy-route-consent"
+          data-consent-step={buddyRouteConsent.step}
+        >
+          <strong id="journey-buddy-route-title">
+            {buddyRouteConsent.step === "LOCATION"
+              ? (zh ? "只为我自己记录一次前台位置？" : "Record one foreground location for my route?")
+              : (zh ? "单独同意把我的起点发送给路线服务？" : "Separately allow sending my origin to a routing provider?")}
+          </strong>
+          {buddyRouteConsent.step === "LOCATION" ? (
+            <>
+              <p>{zh
+                ? "继续会由设备前台读取一次位置，并将观察保留在这趟 Journey、标记为仅本人接应路线输入。它不会进入团队位置状态、启动位置或共享路线；另一位成员和旁观者 B 看不到精确起点或观察 ID。此步骤还不会调用路线服务。"
+                : "Continuing reads one foreground device location and retains it in this Journey as caller-private handoff-route input. It is excluded from group presence, launch-origin, and shared-route projections; the other member and bystander B cannot see the precise origin or observation ID. This step does not call a routing provider."}</p>
+              <div className="journey-membership-actions">
+                <button type="button" data-testid="journey-buddy-route-location-confirm" onClick={() => void confirmBuddyRouteLocation()} disabled={buddyRouteBusy}>
+                  {zh ? "同意并读取一次位置" : "Agree and read location once"}
+                </button>
+                <button type="button" data-testid="journey-buddy-route-cancel" onClick={cancelBuddyRouteConsent} disabled={buddyRouteBusy}>
+                  {zh ? "取消" : "Cancel"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p>{zh
+                ? `仅本人可见的位置观察已保存在 Journey 中。若已配置路线服务，继续会把你的精确起点发送一次，并只计算你到已接受接应点“${buddyRouteConsentHandoff.handoff_place.name}”的步行路线；另一位成员和旁观者 B 看不到你的路线。服务未配置、失败或证据不足时结果为 UNKNOWN，不会用模拟分钟数补齐。`
+                : `Your caller-private location observation is retained in the Journey. If a routing provider is configured, continuing sends your precise origin once and calculates only your walking route to the accepted handoff “${buddyRouteConsentHandoff.handoff_place.name}”; the other member and bystander B cannot see your route. An unconfigured provider, failure, or insufficient evidence returns UNKNOWN, never mock minutes.`}</p>
+              <p>{zh
+                ? `目的地证据：${buddyRouteConsentHandoff.handoff_place.source_label}（${buddyRouteConsentHandoff.handoff_place.evidence_grade}）。原共同会合点“${buddyRouteConsentHandoff.original_shared_stop.place_name}”仍是全体行程地点；若接应点不同，接应点到原会合点的后续路线未知。只显示承诺风险，不修改计划、不自动触发 Guardian、不推断到场。公共地点地图仍需单独同意。`
+                : `Destination evidence: ${buddyRouteConsentHandoff.handoff_place.source_label} (${buddyRouteConsentHandoff.handoff_place.evidence_grade}). The original shared stop “${buddyRouteConsentHandoff.original_shared_stop.place_name}” remains the whole Journey's stop; if the handoff differs, the onward route to that stop is unknown. This shows commitment risk only; it does not change the plan, trigger Guardian, or infer arrival. The public-place map has separate consent.`}</p>
+              <div className="journey-membership-actions">
+                <button type="button" data-testid="journey-buddy-route-provider-confirm" onClick={() => void confirmBuddyRouteProviderDisclosure()} disabled={buddyRouteBusy}>
+                  {zh ? "单独同意并检查我的步行路线" : "Separately agree and check MY walking route"}
+                </button>
+                <button type="button" data-testid="journey-buddy-route-cancel" onClick={cancelBuddyRouteConsent} disabled={buddyRouteBusy}>
+                  {zh ? "取消，不发送路线请求" : "Cancel without sending the route request"}
+                </button>
+              </div>
+            </>
+          )}
         </section>
       )}
 

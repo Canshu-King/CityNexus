@@ -54,6 +54,12 @@ def _loads(value: str | None) -> dict[str, Any] | None:
     return parsed if isinstance(parsed, dict) and parsed else None
 
 
+def _is_private_buddy_request(value: str | None) -> bool:
+    request = _loads(value)
+    evidence = request.get("origin_evidence") if request else None
+    return isinstance(evidence, dict) and evidence.get("private_scope") == "R80_PRIVATE_BUDDY_HANDOFF"
+
+
 def status_url(journey_id: str, operation_id: str) -> str:
     return f"/api/v1/journeys/{journey_id}/routes/operations/{operation_id}"
 
@@ -91,7 +97,9 @@ def find_reusable_completed_operation(
     result = _loads(row.result_json)
     fact_id = result.get("mobility_fact_id") if result else None
     if not fact_id:
-        return None
+        # R80 deliberately keeps member-private route evidence out of the shared
+        # MobilityFact/audit projection. Its exact request is still idempotent.
+        return row if _is_private_buddy_request(row.request_json) else None
     fact = session.get(MobilityFact, fact_id)
     if fact is None or fact.expires_at:
         if fact is None:
@@ -370,9 +378,12 @@ def _execute(operation_id: str) -> None:
             provider_failed=False,
             provider_degraded=degraded,
         )
-        frozen = _persist_fact(session, row, fact, degraded=degraded)
+        private_buddy_route = _is_private_buddy_request(row.request_json)
+        frozen = None if private_buddy_route else _persist_fact(session, row, fact, degraded=degraded)
         result = _fact_payload(fact, degraded=degraded, operation_id=row.id)
-        result.update({"mobility_fact_id": frozen.id, "provider": fact.provider_key})
+        result.update({"provider": fact.provider_key})
+        if frozen is not None:
+            result["mobility_fact_id"] = frozen.id
         _write_provider_call(session, row, status="COMPLETED", response=result)
         session.commit()
         _finish(session, row, status=status, outcome=outcome, result=result)

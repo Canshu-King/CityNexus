@@ -18,6 +18,7 @@ from app.db.models import (
 )
 from app.execution.clock import execution_clock
 from app.execution.launch_origin import grounded_launch_origin
+from app.execution.location_scope import PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE
 
 
 def _aware(value: str | None) -> datetime | None:
@@ -72,7 +73,10 @@ def launch_setup_projection(
 
     location = session.scalar(
         select(LocationObservation)
-        .where(LocationObservation.journey_id == journey.id)
+        .where(
+            LocationObservation.journey_id == journey.id,
+            LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+        )
         .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
     )
     if location is not None:
