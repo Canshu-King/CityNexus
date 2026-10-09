@@ -1,9 +1,26 @@
-recut onto the tip the line moved to while this lane was working
-first cut base = 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2 (the sha named in the order, read back then)
-delivered head base = 7500987a25a793e4ade018bb829b7c54cb982cca
-files landed on the line between those two, and whether any is a file this lane touches:
-31
-0
-gate at the recut head:   38 passed (1.2m)
-backend --collect-only at the recut head: 1796 tests collected in 8.69s
-backend --collect-only at the first cut base: 1788 tests collected in 9.62s
+landing state of this lane's delivery · each line below produced by running the named check at 2026-10-09 19:52
+the byte landed as merge commit 08dc9b45ef0d8c7933220417085fd6255724322a
+  parents: 7500987a25a7 (the line as it stood) and 9a1ac2792d0e (this lane's pushed head)
+is-ancestor(pushed head 9a1ac2792d0e, current tip): exit_code=0 -> on the line
+is-ancestor(the merge, current tip): exit_code=0 -> on the line
+is-ancestor(this lane's later receipts head d4cc1a14d360, current tip): exit_code=1 -> NOT on the line
+  that later head refreshed only this lane's own text receipts; the product byte never depended on it,
+  and it is what this lane still holds on refs/heads/review/diangong-0470-r1 besides the landed work.
+rule as it reads on the line: frontend/src/styles.css:375; on this lane's pushed head it read :342
+  (the number moved because other lanes' css landed above it, not because the rule changed).
+paths brought in by that merge: 12; of the paths differing on the line between 7500987a25a7 and 0b3c98c1b2aa (1977 total), 12
+  match this lane's paths and every one of those is a path this lane wrote itself:
+    frontend/e2e/qoder-diangong-0470-shapes-r1.spec.ts
+    frontend/src/styles.css
+    review/diangong-0470-r1/BACKEND_COLLECT_ONLY.txt
+    review/diangong-0470-r1/BASELINE_RED_27.txt
+    review/diangong-0470-r1/GATE_MUTANT_LABEL_M2.txt
+    review/diangong-0470-r1/GATE_MUTANT_ROUTE_M3.txt
+    review/diangong-0470-r1/GATE_SHAPES_FINAL.txt
+    review/diangong-0470-r1/GATE_SHAPES_MUTANT_M1.txt
+    review/diangong-0470-r1/PREMISE_PROOF.txt
+    review/diangong-0470-r1/PROVENANCE_dg0470final.json
+    review/diangong-0470-r1/REGRESSION_ARM_BY_ARM.txt
+    review/diangong-0470-r1/SHAPE_SWEEP.jsonl
+gate re-run at the line's own generation (detached checkout of 0b3c98c1b2aab15613485093d93212a319d7f846): see GATE_SHAPES_FINAL.txt
+the tip named in the order was 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2; this lane passed through it on the way to the landed state.
