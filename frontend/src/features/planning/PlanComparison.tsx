@@ -10,7 +10,7 @@
  */
 
 import { useState } from "react";
-import { useLocale } from "../../i18n/LocaleContext";
+import { useLocale, useT } from "../../i18n/LocaleContext";
 import type { PlanVersion } from "../../api/v12Authoritative";
 import { readResponseFacts, type RawFacts } from "../../lib/rawFacts";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
@@ -75,6 +75,7 @@ export function PlanComparison({
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  const t = useT();
   const [busyId, setBusyId] = useState<string | null>(null);
   const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
     text: null,
@@ -105,14 +106,14 @@ export function PlanComparison({
            can still tell "the server said no" from "the server never answered". */
         const { facts } = await readResponseFacts(response);
         setError(
-          zh ? "这个方案暂时不能采用。" : "This plan could not be chosen.",
+          t("cmp.cannotChoose"),
           facts,
         );
         return;
       }
       onSelected();
     } catch {
-      setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+      setError(t("cmp.unreachable"));
     } finally {
       setBusyId(null);
     }
@@ -121,7 +122,7 @@ export function PlanComparison({
   return (
     <section className="plan-cmp" data-testid="plan-comparison">
       <div className="plan-cmp-head">
-        <h2>{zh ? "选择你的方案" : "Choose your plan"}</h2>
+        <h2>{t("cmp.heading")}</h2>
         <p>
           {zh
             ? `我们按这座城可核验的地点和你的预算，生成了 ${candidates.length} 个可选方案。`
@@ -199,7 +200,7 @@ export function PlanComparison({
 
               <dl>
                 <div>
-                  <dt>{zh ? "总花费" : "Total cost"}</dt>
+                  <dt>{t("cmp.totalCost")}</dt>
                   <dd>
                     {allPricesKnown
                       ? money(costMinor, plan.total_cost?.currency ?? currency, zh)
@@ -213,12 +214,12 @@ export function PlanComparison({
                   </dd>
                 </div>
                 <div>
-                  <dt>{zh ? "活动数" : "Stops"}</dt>
+                  <dt>{t("cmp.stopCount")}</dt>
                   <dd>{(plan.activities ?? []).length}</dd>
                 </div>
                 {walk != null && (
                   <div>
-                    <dt>{zh ? "步行" : "Walking"}</dt>
+                    <dt>{t("cmp.walking")}</dt>
                     <dd>
                       {walk >= 60
                         ? zh
@@ -234,7 +235,7 @@ export function PlanComparison({
 
               {highlights.length > 0 && (
                 <p className="plan-cmp-highlights">
-                  {zh ? "亮点：" : "Highlights: "}
+                  {t("cmp.highlights")}
                   {highlights.join(" · ")}
                 </p>
               )}
