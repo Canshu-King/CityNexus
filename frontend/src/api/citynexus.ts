@@ -606,6 +606,7 @@ export interface JourneyGroupPresenceProjection {
   authority: string;
   active_plan_version_id?: string | null;
   current_activity_id?: string | null;
+  coordination_signals?: JourneyRendezvousCoordinationSignal[];
   members: Array<{
     member_id: string;
     display_name: string;
@@ -703,6 +704,39 @@ export interface JourneyGroupPresenceProjection {
       shared_plan_changed: false;
     }>;
   } | null;
+}
+
+export interface JourneyRendezvousCoordinationSignal {
+  signal_id: string;
+  signal_kind: "HEADING_TO_RENDEZVOUS" | "NEEDS_COORDINATION";
+  member_id: string;
+  display_name: string;
+  rendezvous_activity_id: string;
+  rendezvous_title: string;
+  public_place_id: string;
+  public_place_name: string;
+  reported_at: string;
+  expires_at: string;
+  freshness: "CURRENT";
+  evidence_level: "SELF_REPORTED_NOT_VERIFIED";
+  viewer_can_withdraw: boolean;
+  viewer_can_acknowledge: boolean;
+  acknowledgement: {
+    display_name: string;
+    acknowledged_at: string;
+    evidence_level: "SIGNED_ACKNOWLEDGEMENT_NOT_PHYSICAL_PRESENCE";
+  } | null;
+}
+
+export interface JourneyRendezvousSignalReceipt {
+  signal_id: string;
+  signal_kind: "HEADING_TO_RENDEZVOUS" | "NEEDS_COORDINATION";
+  status: "ACTIVE" | "REVOKED" | "REPLACED" | "STALE" | "EXPIRED";
+  reported_at: string;
+  expires_at: string;
+  rendezvous_activity_id: string;
+  public_place_id: string;
+  evidence_level: "SELF_REPORTED_NOT_VERIFIED";
 }
 
 export interface MemberSideQuestProjection {
@@ -2421,6 +2455,54 @@ export const cityNexusApi = {
     return requestJson<JourneyOperatorProjection>("/journeys/" + journeyId + "/operator", {
       headers: travelerAuthHeaders(),
     });
+  },
+
+  shareRendezvousMemberSignal(
+    journeyId: string,
+    input: {
+      signal_kind: JourneyRendezvousSignalReceipt["signal_kind"];
+      expected_active_plan_version_id: string;
+      expected_current_activity_id: string | null;
+      expected_rendezvous_activity_id: string;
+      expected_public_place_id: string;
+      expected_audience_sha256: string;
+    },
+    idempotencyKey: string,
+  ): Promise<JourneyRendezvousSignalReceipt> {
+    return requestJson<JourneyRendezvousSignalReceipt>(
+      "/journeys/" + journeyId + "/rendezvous-member-signals",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  withdrawRendezvousMemberSignal(
+    journeyId: string,
+    signalId: string,
+  ): Promise<JourneyRendezvousSignalReceipt> {
+    return requestJson<JourneyRendezvousSignalReceipt>(
+      "/journeys/" + journeyId + "/rendezvous-member-signals/" + signalId + "/withdraw",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  acknowledgeRendezvousHelpRequest(
+    journeyId: string,
+    signalId: string,
+  ): Promise<{
+    signal_id: string;
+    acknowledged_at: string;
+    responder_member_id: string;
+    responder_display_name: string;
+    evidence_level: "SIGNED_ACKNOWLEDGEMENT_NOT_PHYSICAL_PRESENCE";
+  }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/rendezvous-member-signals/" + signalId + "/acknowledge",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
   },
 
   createMemberSideQuest(

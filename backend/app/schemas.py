@@ -455,6 +455,21 @@ class GroupPresenceRouteRequest(BaseModel):
     requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
 
 
+class JourneyRendezvousSignalCreateRequest(BaseModel):
+    """The client may confirm the displayed target, but never choose a destination."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    signal_kind: Literal["HEADING_TO_RENDEZVOUS", "NEEDS_COORDINATION"]
+    expected_active_plan_version_id: UUID
+    expected_current_activity_id: UUID | None = None
+    expected_rendezvous_activity_id: UUID
+    expected_public_place_id: str = Field(min_length=1, max_length=128)
+    expected_audience_sha256: str = Field(
+        min_length=64, max_length=64, pattern="^[0-9a-f]{64}$"
+    )
+
+
 class MemberSideQuestCreateRequest(BaseModel):
     """Create or replace the authenticated member's private side-quest destination."""
 

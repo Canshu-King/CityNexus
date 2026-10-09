@@ -1623,6 +1623,54 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_membership_invitations_one_offered
 CREATE INDEX IF NOT EXISTS idx_journey_membership_invitations_recipient
     ON journey_membership_invitations(target_traveler_id, state, expires_at);
 
+-- R78: an explicit, short-lived, audience-bound self-report for the current shared rendezvous.
+-- It never stores a location observation, coordinates, route, or physical-arrival claim.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_member_signals (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    journey_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    public_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    signal_kind TEXT NOT NULL CHECK (signal_kind IN ('HEADING_TO_RENDEZVOUS','NEEDS_COORDINATION')),
+    status TEXT NOT NULL DEFAULT 'ACTIVE'
+        CHECK (status IN ('ACTIVE','REVOKED','REPLACED','STALE','EXPIRED')),
+    audience_member_ids_json TEXT NOT NULL,
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    reported_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    revoked_at TEXT,
+    stale_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, journey_member_id, idempotency_key)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_rendezvous_member_signals_one_active
+    ON journey_rendezvous_member_signals(journey_id, journey_member_id)
+    WHERE status = 'ACTIVE';
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_member_signals_expiry
+    ON journey_rendezvous_member_signals(journey_id, status, expires_at);
+
+CREATE TABLE IF NOT EXISTS journey_rendezvous_signal_acknowledgements (
+    id TEXT PRIMARY KEY,
+    signal_id TEXT NOT NULL UNIQUE
+        REFERENCES journey_rendezvous_member_signals(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    requester_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    responder_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    responder_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    acknowledged_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_signal_ack_journey
+    ON journey_rendezvous_signal_acknowledgements(journey_id, acknowledged_at);
+
 -- The ACL table.  A row says which capability a role has and which message key states its scope in
 -- one sentence - the words themselves stay in the client's dictionary, because a server sentence
 -- reaching a screen is the defect this project keeps having to fix (RELATION:94's shape is a table,

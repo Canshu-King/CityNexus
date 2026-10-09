@@ -477,6 +477,7 @@ from app.schemas import (
     JourneyPatch,
     LocationObservationRequest,
     GroupPresenceRouteRequest,
+    JourneyRendezvousSignalCreateRequest,
     MemberSideQuestCreateRequest,
     MemberPlaceInvitationCreateRequest,
     MemberPlaceInvitationDecisionRequest,
@@ -10603,6 +10604,91 @@ def guide_authenticated_member_to_rendezvous(
         "plan_unchanged": plan_unchanged,
         "target_unchanged": target_unchanged,
     }
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-member-signals", status_code=201)
+def share_rendezvous_member_signal(
+    journey_id: UUID,
+    payload: JourneyRendezvousSignalCreateRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Share an explicit, short-lived self-report for the server-derived shared stop."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_coordination import share_member_signal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return share_member_signal(
+            session,
+            journey=journey,
+            member=member,
+            principal=principal,
+            signal_kind=payload.signal_kind,
+            expected_plan_version_id=str(payload.expected_active_plan_version_id),
+            expected_current_activity_id=(
+                str(payload.expected_current_activity_id)
+                if payload.expected_current_activity_id is not None else None
+            ),
+            expected_rendezvous_activity_id=str(payload.expected_rendezvous_activity_id),
+            expected_public_place_id=str(payload.expected_public_place_id),
+            expected_audience_sha256=payload.expected_audience_sha256,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-member-signals/{signal_id}/withdraw")
+def withdraw_rendezvous_member_signal(
+    journey_id: UUID,
+    signal_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Withdraw only the signed member's own signal; old viewers retain prior knowledge."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_coordination import withdraw_member_signal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return withdraw_member_signal(
+            session,
+            journey=journey,
+            member=member,
+            principal=principal,
+            signal_id=str(signal_id),
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-member-signals/{signal_id}/acknowledge")
+def acknowledge_rendezvous_help_request(
+    journey_id: UUID,
+    signal_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Record one signed companion acknowledgement for the exact active help request."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_coordination import acknowledge_help_request
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return acknowledge_help_request(
+            session,
+            journey=journey,
+            responder=member,
+            principal=principal,
+            signal_id=str(signal_id),
+        )
 
 
 @app.post("/api/v1/journeys/{journey_id}/member-side-quests", status_code=201)

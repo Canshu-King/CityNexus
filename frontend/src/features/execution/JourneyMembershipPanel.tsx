@@ -5,6 +5,7 @@ import {
   type JourneyMembershipInvitationInboxItem,
   type JourneyMembershipInvitationManagerItem,
   type JourneyOperatorProjection,
+  type JourneyRendezvousCoordinationSignal,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
 import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
@@ -46,6 +47,15 @@ function hasExactPublicPin(destination: Rendezvous | null | undefined): boolean 
     && Number.isFinite(destination.longitude)
     && destination.latitude >= -90 && destination.latitude <= 90
     && destination.longitude >= -180 && destination.longitude <= 180;
+}
+
+async function rendezvousAudienceSha256(members: GroupPresence["members"]): Promise<string> {
+  const memberIds = members.map((member) => member.member_id).sort();
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(JSON.stringify(memberIds)),
+  );
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 function routeEvidenceClass(result: GroupRendezvousRouteResult): "LIVE" | "REPLAY" | "UNKNOWN" {
@@ -91,6 +101,33 @@ function inviteFailureCopy(code: string, zh: boolean): string {
   return zh ? "邀请没有完成；成员名单没有改变，请刷新后重试。" : "The invitation did not complete. The member set is unchanged; refresh and retry.";
 }
 
+function coordinationFailureCopy(code: string, zh: boolean): string {
+  if (code.includes("CONTEXT_CHANGED") || code.includes("TARGET_CHANGED")) {
+    return zh
+      ? "共享计划或会合点刚刚变化。状态没有分享，请刷新后重新确认对象。"
+      : "The shared plan or rendezvous changed. Nothing was shared; refresh and confirm the current stop.";
+  }
+  if (code.includes("GROUP_RECOVERY_FOLLOWTHROUGH_ACTIVE")) {
+    return zh
+      ? "团队正在完成已批准的恢复会合；此状态暂不可替代恢复确认。"
+      : "The group is completing an approved recovery rendezvous. This self-report cannot replace its confirmation.";
+  }
+  if (code.includes("PLANNED_SPLIT_TARGET_UNSUPPORTED")) {
+    return zh
+      ? "你当前有独立的计划支线；请使用该支线的会合安排。"
+      : "You are on a planned individual side trip. Use that trip's rendezvous flow.";
+  }
+  return zh
+    ? "状态没有更新。请刷新团队状态后重试；当前共享计划没有改变。"
+    : "The status was not updated. Refresh the team status and retry; the shared plan is unchanged.";
+}
+
+function coordinationStatusLabel(signal: JourneyRendezvousCoordinationSignal, zh: boolean): string {
+  return signal.signal_kind === "HEADING_TO_RENDEZVOUS"
+    ? (zh ? `${signal.display_name} 自报正在前往会合点` : `${signal.display_name} self-reports heading to the rendezvous`)
+    : (zh ? `${signal.display_name} 自报需要协调帮助` : `${signal.display_name} self-reports needing coordination help`);
+}
+
 export function JourneyMembershipPanel({
   journeyId,
   journeyStatus,
@@ -113,6 +150,10 @@ export function JourneyMembershipPanel({
   const [routeConsentKey, setRouteConsentKey] = useState<string | null>(null);
   const [navigationBusy, setNavigationBusy] = useState(false);
   const [groupPresence, setGroupPresence] = useState<GroupPresence | null>(null);
+  const [coordinationConsentKind, setCoordinationConsentKind] = useState<JourneyRendezvousCoordinationSignal["signal_kind"] | null>(null);
+  const [coordinationConsentKey, setCoordinationConsentKey] = useState<string | null>(null);
+  const [coordinationBusy, setCoordinationBusy] = useState(false);
+  const [coordinationMessage, setCoordinationMessage] = useState<string | null>(null);
   const [routeResult, setRouteResult] = useState<{
     key: string;
     result: GroupRendezvousRouteResult;
@@ -177,6 +218,104 @@ export function JourneyMembershipPanel({
   useEffect(() => {
     setRouteResult((current) => current?.key === currentTargetKey ? current : null);
   }, [currentTargetKey]);
+
+  useEffect(() => {
+    setCoordinationConsentKind(null);
+    setCoordinationConsentKey(null);
+  }, [currentTargetKey]);
+
+  const coordinationSignals = groupPresence?.coordination_signals ?? [];
+  const ownCoordinationSignal = coordinationSignals.find((signal) => signal.viewer_can_withdraw) ?? null;
+
+  const openCoordinationConsent = (kind: JourneyRendezvousCoordinationSignal["signal_kind"]) => {
+    if (!currentTargetKey || !groupPresence?.can_guide) return;
+    setCoordinationMessage(null);
+    setCoordinationConsentKey(currentTargetKey);
+    setCoordinationConsentKind(kind);
+  };
+
+  const shareCoordinationSignal = async () => {
+    if (coordinationBusy || !journeyId || !coordinationConsentKind) return;
+    const current = groupPresence;
+    const target = current?.rendezvous;
+    const activePlanId = current?.active_plan_version_id;
+    if (!current || !target || !activePlanId || coordinationConsentKey !== currentTargetKey) {
+      setCoordinationConsentKind(null);
+      setCoordinationConsentKey(null);
+      setCoordinationMessage(zh
+        ? "会合点视图已经变化，请刷新后重新选择。"
+        : "The rendezvous view changed. Refresh before sharing a status.");
+      await refreshGroupPresence();
+      return;
+    }
+    setCoordinationBusy(true);
+    setCoordinationMessage(null);
+    try {
+      const receipt = await cityNexusApi.shareRendezvousMemberSignal(
+        journeyId,
+        {
+          signal_kind: coordinationConsentKind,
+          expected_active_plan_version_id: activePlanId,
+          expected_current_activity_id: current.current_activity_id ?? null,
+          expected_rendezvous_activity_id: target.activity_id,
+          expected_public_place_id: target.place_id,
+          expected_audience_sha256: await rendezvousAudienceSha256(current.members),
+        },
+        crypto.randomUUID(),
+      );
+      setCoordinationConsentKind(null);
+      setCoordinationConsentKey(null);
+      setCoordinationMessage(receipt.status === "ACTIVE"
+        ? (zh
+          ? "你的自愿状态已分享给当前同行者；它会在 45 分钟后过期，不证明已到场。"
+          : "Your voluntary status is shared with current companions for up to 45 minutes; it does not prove arrival.")
+        : (zh ? "状态已处理。" : "The status was processed."));
+      await refreshGroupPresence();
+    } catch (error) {
+      const text = error instanceof Error ? error.message : "";
+      setCoordinationMessage(coordinationFailureCopy(text, zh));
+      setCoordinationConsentKind(null);
+      setCoordinationConsentKey(null);
+      await refreshGroupPresence();
+    } finally {
+      setCoordinationBusy(false);
+    }
+  };
+
+  const withdrawCoordinationSignal = async () => {
+    if (coordinationBusy || !journeyId || !ownCoordinationSignal) return;
+    setCoordinationBusy(true);
+    setCoordinationMessage(null);
+    try {
+      await cityNexusApi.withdrawRendezvousMemberSignal(journeyId, ownCoordinationSignal.signal_id);
+      setCoordinationMessage(zh
+        ? "已停止向后续查看者分享此状态。"
+        : "This status is withdrawn from future projections.");
+      await refreshGroupPresence();
+    } catch (error) {
+      setCoordinationMessage(coordinationFailureCopy(error instanceof Error ? error.message : "", zh));
+    } finally {
+      setCoordinationBusy(false);
+    }
+  };
+
+  const acknowledgeCoordinationHelp = async (signal: JourneyRendezvousCoordinationSignal) => {
+    if (coordinationBusy || !journeyId || !signal.viewer_can_acknowledge) return;
+    setCoordinationBusy(true);
+    setCoordinationMessage(null);
+    try {
+      await cityNexusApi.acknowledgeRendezvousHelpRequest(journeyId, signal.signal_id);
+      setCoordinationMessage(zh
+        ? "已用你的签名身份回应这次求助；这不表示你在现场等待。"
+        : "You acknowledged this help request with your signed identity; this does not mean you are physically waiting there.");
+      await refreshGroupPresence();
+    } catch (error) {
+      setCoordinationMessage(coordinationFailureCopy(error instanceof Error ? error.message : "", zh));
+      await refreshGroupPresence();
+    } finally {
+      setCoordinationBusy(false);
+    }
+  };
 
   const createInvitation = async () => {
     const target = targetTravelerId.trim();
@@ -524,6 +663,123 @@ export function JourneyMembershipPanel({
                   disabled={navigationBusy}
                   onClick={requestRouteConsent}
                 >{zh ? "检查我到下一处会合点的路线…" : "Check my route to our next stop…"}</button>
+              )}
+              {groupPresence?.can_guide && (
+                <section data-testid="journey-rendezvous-coordination">
+                  <strong>{zh ? "为这个共同会合点协调" : "Coordinate around this shared stop"}</strong>
+                  <small>
+                    {zh
+                      ? "路线检查与状态分享是分开的。只有你明确确认后，当前同行者才会看到这条自报状态；它不代表真实到场。"
+                      : "Route checks and status sharing are separate. Current companions see a status only after your explicit confirmation; it is not proof of arrival."}
+                  </small>
+                  <div className="journey-membership-actions">
+                    <button
+                      type="button"
+                      data-testid="journey-rendezvous-heading-share"
+                      disabled={coordinationBusy}
+                      onClick={() => openCoordinationConsent("HEADING_TO_RENDEZVOUS")}
+                    >{zh ? "告诉同行者我正在赶往会合点" : "Tell companions I'm on my way"}</button>
+                    <button
+                      type="button"
+                      data-testid="journey-rendezvous-help-share"
+                      disabled={coordinationBusy}
+                      onClick={() => openCoordinationConsent("NEEDS_COORDINATION")}
+                    >{zh ? "我需要帮助协调" : "I need help coordinating"}</button>
+                    <button
+                      type="button"
+                      data-testid="journey-rendezvous-refresh"
+                      disabled={coordinationBusy}
+                      onClick={() => void refreshGroupPresence()}
+                    >{zh ? "刷新团队状态" : "Refresh team status"}</button>
+                  </div>
+                  {coordinationSignals.length > 0 ? (
+                    <div data-testid="journey-rendezvous-status-list">
+                      {coordinationSignals.map((signal) => (
+                        <article key={signal.signal_id} data-testid="journey-rendezvous-status" data-signal-id={signal.signal_id}>
+                          <strong>{coordinationStatusLabel(signal, zh)}</strong>
+                          <small>
+                            {zh
+                              ? `会合点：${signal.public_place_name}。自报时间：${new Date(signal.reported_at).toLocaleString(locale)}。有效至：${new Date(signal.expires_at).toLocaleString(locale)}。`
+                              : `Stop: ${signal.public_place_name}. Self-reported ${new Date(signal.reported_at).toLocaleString(locale)}; expires ${new Date(signal.expires_at).toLocaleString(locale)}.`}
+                          </small>
+                          <small>{zh ? "自报意向 · 未验证，不含 GPS 起点或个人路线，也不表示已到场。" : "Self-reported and unverified; no GPS origin or private route is shared, and this does not mean arrival."}</small>
+                          {signal.acknowledgement && (
+                            <small data-testid="journey-rendezvous-help-acknowledgement">
+                              {zh
+                                ? `${signal.acknowledgement.display_name} 已用本人身份回应这次求助；这不是现场等待或会合确认。`
+                                : `${signal.acknowledgement.display_name} acknowledged this request with their own identity; this is not a promise to wait there or an arrival confirmation.`}
+                            </small>
+                          )}
+                          {signal.viewer_can_acknowledge && (
+                            <button
+                              type="button"
+                              data-testid="journey-rendezvous-help-acknowledge"
+                              disabled={coordinationBusy}
+                              onClick={() => void acknowledgeCoordinationHelp(signal)}
+                            >{zh ? "我可以帮忙协调" : "I can help coordinate"}</button>
+                          )}
+                          {signal.viewer_can_withdraw && (
+                            <button
+                              type="button"
+                              data-testid="journey-rendezvous-withdraw"
+                              disabled={coordinationBusy}
+                              onClick={() => void withdrawCoordinationSignal()}
+                            >{zh ? "停止分享此状态" : "Stop sharing this status"}</button>
+                          )}
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <small data-testid="journey-rendezvous-no-status">
+                      {zh ? "目前没有同行者主动分享此会合点状态。" : "No companion has voluntarily shared a status for this stop."}
+                    </small>
+                  )}
+                  {coordinationMessage && (
+                    <small role="status" data-testid="journey-rendezvous-message">{coordinationMessage}</small>
+                  )}
+                  {coordinationConsentKind && (
+                    <section
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="journey-rendezvous-consent-title"
+                      data-testid="journey-rendezvous-consent"
+                    >
+                      <strong id="journey-rendezvous-consent-title">
+                        {coordinationConsentKind === "HEADING_TO_RENDEZVOUS"
+                          ? (zh ? "确认分享正在前往的自报状态？" : "Confirm sharing your self-reported intention?")
+                          : (zh ? "确认向同行者请求协调帮助？" : "Confirm asking companions for coordination help?")}
+                      </strong>
+                      <p>
+                        {zh
+                          ? `当前会看到的同行者：${groupPresence.members.filter((item) => !item.is_viewer).map((item) => item.display_name).join("、")}。对象仅是当前共享计划的公共会合点“${rendezvous.place_name}”，状态最多保留 45 分钟。`
+                          : `Current companions who can see this: ${groupPresence.members.filter((item) => !item.is_viewer).map((item) => item.display_name).join(", ")}. It is only about the shared-plan public stop “${rendezvous.place_name}” and expires within 45 minutes.`}
+                      </p>
+                      <p>
+                        {zh
+                          ? "不会读取或分享 GPS 起点、位置观察 ID 或个人路线；路线请求不会自动分享状态。此内容是未经验证的本人自报，不是路线危险、物理到场或 R69 会合确认。"
+                          : "This does not read or share GPS origin, observation IDs, or private routes; a route request never shares status automatically. It is your unverified self-report, not evidence of route danger, physical arrival, or R69 reunion."}
+                      </p>
+                      <div className="journey-membership-actions">
+                        <button
+                          type="button"
+                          data-testid="journey-rendezvous-consent-confirm"
+                          disabled={coordinationBusy || coordinationConsentKey !== currentTargetKey}
+                          onClick={() => void shareCoordinationSignal()}
+                        >{coordinationConsentKind === "HEADING_TO_RENDEZVOUS"
+                          ? (zh ? "确认分享我正在前往" : "Share that I'm on my way")
+                          : (zh ? "确认请求帮助" : "Share my help request")}</button>
+                        <button
+                          type="button"
+                          disabled={coordinationBusy}
+                          onClick={() => {
+                            setCoordinationConsentKind(null);
+                            setCoordinationConsentKey(null);
+                          }}
+                        >{zh ? "取消" : "Cancel"}</button>
+                      </div>
+                    </section>
+                  )}
+                </section>
               )}
             </>
           ) : (

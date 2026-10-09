@@ -16,6 +16,8 @@ from app.db.models import (
     Journey,
     JourneyIntent,
     JourneyMember,
+    JourneyRendezvousMemberSignal,
+    JourneyRendezvousSignalAcknowledgement,
     LocationObservation,
     Place,
     RouteAcquisitionOperation,
@@ -110,6 +112,90 @@ def public_destination_coordinates(place: Place | None) -> tuple[float, float] |
     ):
         return None
     return latitude, longitude
+
+
+def _rendezvous_coordination_signals(
+    session: Session,
+    journey: Journey,
+    *,
+    viewer_member_id: str,
+    members: list[JourneyMember],
+    target_activity: Activity | None,
+    target_place: Place | None,
+    now: datetime,
+) -> list[dict[str, Any]]:
+    """Project only current, audience-bound self-reports; never route or GPS data."""
+    if target_activity is None or target_place is None:
+        return []
+    current_member_ids = sorted(str(member.id) for member in members)
+    if viewer_member_id not in current_member_ids:
+        return []
+    member_by_id = {str(member.id): member for member in members}
+    rows = session.scalars(
+        select(JourneyRendezvousMemberSignal).where(
+            JourneyRendezvousMemberSignal.journey_id == journey.id,
+            JourneyRendezvousMemberSignal.status == "ACTIVE",
+        ).order_by(JourneyRendezvousMemberSignal.reported_at, JourneyRendezvousMemberSignal.id)
+    ).all()
+    result: list[dict[str, Any]] = []
+    for row in rows:
+        expiry = _stamp(row.expires_at)
+        try:
+            audience = json.loads(row.audience_member_ids_json or "[]")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if not (
+            expiry is not None
+            and expiry > now
+            and str(row.active_plan_version_id) == str(journey.active_plan_version_id or "")
+            and str(row.current_activity_id or "") == str(journey.current_activity_id or "")
+            and str(row.rendezvous_activity_id) == str(target_activity.id)
+            and str(row.public_place_id) == str(target_place.id)
+            and isinstance(audience, list)
+            and all(isinstance(item, str) for item in audience)
+            and sorted(set(audience)) == current_member_ids
+            and viewer_member_id in audience
+            and str(row.journey_member_id) in member_by_id
+            and row.signal_kind in {"HEADING_TO_RENDEZVOUS", "NEEDS_COORDINATION"}
+        ):
+            continue
+        owner = member_by_id[str(row.journey_member_id)]
+        traveler = session.get(Traveler, str(owner.traveler_id))
+        acknowledgement = session.scalar(
+            select(JourneyRendezvousSignalAcknowledgement).where(
+                JourneyRendezvousSignalAcknowledgement.signal_id == row.id,
+            )
+        )
+        acknowledgement_projection = None
+        if acknowledgement is not None:
+            responder = session.get(Traveler, str(acknowledgement.responder_traveler_id))
+            acknowledgement_projection = {
+                "display_name": responder.display_name if responder else "Traveller",
+                "acknowledged_at": str(acknowledgement.acknowledged_at),
+                "evidence_level": "SIGNED_ACKNOWLEDGEMENT_NOT_PHYSICAL_PRESENCE",
+            }
+        result.append({
+            "signal_id": str(row.id),
+            "signal_kind": str(row.signal_kind),
+            "member_id": str(owner.id),
+            "display_name": traveler.display_name if traveler else "Traveller",
+            "rendezvous_activity_id": str(target_activity.id),
+            "rendezvous_title": str(target_activity.title),
+            "public_place_id": str(target_place.id),
+            "public_place_name": str(target_place.name),
+            "reported_at": str(row.reported_at),
+            "expires_at": str(row.expires_at),
+            "freshness": "CURRENT",
+            "evidence_level": "SELF_REPORTED_NOT_VERIFIED",
+            "viewer_can_withdraw": str(owner.id) == viewer_member_id,
+            "viewer_can_acknowledge": bool(
+                row.signal_kind == "NEEDS_COORDINATION"
+                and str(owner.id) != viewer_member_id
+                and acknowledgement is None
+            ),
+            "acknowledgement": acknowledgement_projection,
+        })
+    return result
 
 
 def _active_planned_separations(
@@ -553,6 +639,7 @@ def group_presence_projection(
             "active_plan_version_id": None,
             "current_activity_id": None,
             "members": [],
+            "coordination_signals": [],
             "rendezvous": None,
             "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
             "viewer_route": None,
@@ -572,6 +659,7 @@ def group_presence_projection(
             "active_plan_version_id": None,
             "current_activity_id": None,
             "members": [],
+            "coordination_signals": [],
             "rendezvous": None,
             "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
             "viewer_route": None,
@@ -744,6 +832,15 @@ def group_presence_projection(
         "active_plan_version_id": str(journey.active_plan_version_id or "") or None,
         "current_activity_id": str(journey.current_activity_id or "") or None,
         "members": projected,
+        "coordination_signals": _rendezvous_coordination_signals(
+            session,
+            journey,
+            viewer_member_id=str(viewer.id),
+            members=members,
+            target_activity=target_activity,
+            target_place=target_place,
+            now=now,
+        ),
         "rendezvous": (
             {"activity_id": target_activity.id, "title": target_activity.title,
              "place_id": str(target_place.id), "place_name": target_place.name,
