@@ -1,0 +1,29 @@
+tip 79daa3c4ff8f37304d352177b456133d4b9c2a45
+5a53846b-arm-teeth-aac1142e-r1	b61e77b42da4ff2123f6926e480bdde365f196d7	readout	paths=6	shipped=0	diff=0
+5a53846b-arm-teeth-aac1142e-r2	a54be8aee2e0d7d8ba52d59c0ccdbba20fe55ee6	readout	paths=1	shipped=0	diff=0
+5a53846b-cmdr0204-ruler-fixes-r1	3cbd8be62024b69917505aa62e9302bcc13808ff	readout	paths=1	shipped=0	diff=0
+5a53846b-cmdr0204-ruler-fixes-r2	541831b83b8f3727b631b63dbb6a09319680fb1b	pending	paths=7	shipped=2	diff=1
+5a53846b-cmdr0204-ruler-fixes-r3	d58e02d4a60e5d4b868fad808eeb756d11659012	pending	paths=8	shipped=2	diff=1
+5a53846b-cmdr0204-verify-tip-r1	f1fdad6230f0271cad60105f64c4d3b14f4535cf	readout	paths=7	shipped=0	diff=0
+5a53846b-cmdr0204-verify-tip-r2	d39d8986319d35ef25ac941e136be84cff2bb674	readout	paths=7	shipped=0	diff=0
+5a53846b-cmdr0204-verify-tip-r3	bb4665a6c1108ebce64505506441ff1e0117d187	readout	paths=7	shipped=0	diff=0
+5a53846b-collect-census-liveness-r1	4f49d25d0ba19495d41b56f25aa28b20ff4b26d7	readout	paths=5	shipped=0	diff=0
+5a53846b-collect-census-liveness-r2	ceb8b859577bab2ee711efdf92cbf904d4ca4b22	readout	paths=5	shipped=0	diff=0
+5a53846b-collect-census-liveness-r3	a5599506bd657b362072b9e671859295c7b0d7e9	readout	paths=5	shipped=0	diff=0
+5a53846b-h07-ancestor-broken-r1	9bf1af5e8693183d6e42c9d3c7783173f9a9189a	readout	paths=1	shipped=0	diff=0
+5a53846b-h07-heal-window-r1	31fe3d4f27b35c692b9ac9606a4a72b0355f60d1	readout	paths=2	shipped=0	diff=0
+5a53846b-lane-instrument-facts-r1	be30dd5f832b590557e65a0744008f5091f752b3	readout	paths=1	shipped=0	diff=0
+5a53846b-lane-instrument-facts-r2	77520a72e9f810d54c8173ec2ace9f592eb8a8b4	readout	paths=12	shipped=0	diff=0
+5a53846b-lane-instrument-facts-r3	a65d29eeb5d06be49d5ea0e620393c8839de3d09	readout	paths=12	shipped=0	diff=0
+5a53846b-not-reached-arm-r1	0e1084873609566dd8463bb01b32c8cab79b5e03	readout	paths=1	shipped=0	diff=0
+5a53846b-not-reached-arm-r2	61cf94c7e1c4690a84ab44bd624dce5d76faa81c	readout	paths=1	shipped=0	diff=0
+5a53846b-not-reached-arm-r3	d9768226a2b8d9b6e83bce0e58e8509419fa564a	landed	paths=2	shipped=1	diff=0
+5a53846b-not-reached-arm-r4	bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1	landed	paths=2	shipped=1	diff=0
+5a53846b-ord0500-r19-landcheck-merge-r1	d360d5cf70e9e9069fd4c2e781e6004346c0ecd4	readout	paths=0	shipped=0	diff=0
+5a53846b-ord0500-r19-tiprecut-probe-r1	dace4a44c72478958a9a1f2737c5f9b724aef1a1	readout	paths=0	shipped=0	diff=0
+5a53846b-ord0571-trips-inline-readings-r1	c54ce9c64f9303f38ae041d33b08e057dc6b9be0	readout	paths=4	shipped=0	diff=0
+5a53846b-suite-redset-b2fccfdf-r1	26a1ee58de69fadd21fd35991d186a993f47f544	readout	paths=5	shipped=0	diff=0
+5a53846b-tip-32372c7e-rerun-r1	0a1a04ee4c6839cc7a29bb63b4d6e200a277648a	readout	paths=3	shipped=0	diff=0
+5a53846b-tip-cfda610a-rerun-r1	8665c6c9ba091a850cf867c302cd880111af3ff0	readout	paths=4	shipped=0	diff=0
+5a53846b-verify-b2fccfdf-r1	1a83c03d8e66ce113b788833533ed2a5ba74bbd5	readout	paths=4	shipped=0	diff=0
+SUMMARY landed=2 pending=2 readout=23 unjudged=0
