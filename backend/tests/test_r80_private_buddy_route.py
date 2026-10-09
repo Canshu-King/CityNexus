@@ -560,3 +560,62 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
     assert internally_matched_receipt.status_code == 200, internally_matched_receipt.text
     assert internally_matched_receipt.json()["route_state"] == "LIVE"
     assert internally_matched_receipt.json()["duration_min"] == 8
+
+
+def test_r80_generic_route_operation_requires_signed_member_and_private_origin_owner():
+    """Legacy route reads cannot expose another signed member's geometry by UUID."""
+    journey_id, helper_id, bystander_id, requester_id, handoff_id = _accepted_pair()
+    observation_id = _observation(journey_id, helper_id, handoff_id, 39.9042)
+    operation_id = str(uuid4())
+    with SessionLocal() as session:
+        observed = session.get(LocationObservation, observation_id)
+        assert observed is not None and observed.journey_member_id
+        captured = datetime.now(timezone.utc).isoformat()
+        session.add(RouteAcquisitionOperation(
+            id=operation_id,
+            journey_id=journey_id,
+            fingerprint="r80-generic-own-route-" + str(uuid4()),
+            origin_key=f"location-observation:{observation_id}",
+            target_key="synthetic-public-target",
+            target_activity_id=None,
+            requested_mode="WALK",
+            provider_policy_version="narrow-route-read-regression",
+            route_truth_policy_version="narrow-route-read-regression",
+            status="UNAVAILABLE",
+            phase="COMPLETE",
+            outcome="ROUTE_UNAVAILABLE",
+            request_json=json.dumps({
+                "origin_evidence": {
+                    "journey_member_id": observed.journey_member_id,
+                    "traveler_id": helper_id,
+                    "source": "BUDDY_HANDOFF_ROUTE_PRIVATE",
+                },
+            }),
+            result_json=json.dumps({
+                "geometry": [[39.9042, 116.4074]],
+                "classification": "SYNTHETIC_TEST_ONLY",
+            }),
+            error_json="{}",
+            queued_at=captured,
+            started_at=None,
+            finished_at=captured,
+            updated_at=captured,
+        ))
+        session.commit()
+
+    endpoint = f"/api/v1/journeys/{journey_id}/routes/operations/{operation_id}"
+    assert client.get(endpoint).status_code in {401, 403}
+    for other_traveler in (bystander_id, requester_id):
+        response = client.get(endpoint, headers=_auth(other_traveler))
+        assert response.status_code == 404, response.text
+        assert "39.9042" not in response.text
+    own_response = client.get(endpoint, headers=_auth(helper_id))
+    assert own_response.status_code == 200, own_response.text
+    assert own_response.json()["result"]["classification"] == "SYNTHETIC_TEST_ONLY"
+
+    # General grounded route acquisition is a write/provider entrypoint and
+    # must not be callable anonymously in deployed signed mode either.
+    unauthenticated_acquire = client.post(
+        f"/api/v1/journeys/{journey_id}/routes/acquire", json={}
+    )
+    assert unauthenticated_acquire.status_code in {401, 403}
