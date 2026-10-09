@@ -666,7 +666,13 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
     assert both_legs_live.json()["duration_min"] == 14
 
 
-def test_r81_controlled_two_leg_route_keeps_c4_risk_test_only_and_private(monkeypatch):
+@pytest.mark.parametrize(
+    "minutes_until_commitment, expected_state",
+    [(15, "COMMITMENT_AT_RISK"), (75, "UNKNOWN")],
+)
+def test_r81_controlled_two_leg_route_keeps_c4_risk_test_only_and_private(
+    monkeypatch, minutes_until_commitment: int, expected_state: str,
+):
     journey_id, helper_id, bystander_id, _requester_id, handoff_id = _accepted_pair()
     handoff_path = f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}"
     observation_id = _observation(journey_id, helper_id, handoff_id, 39.9042)
@@ -690,7 +696,7 @@ def test_r81_controlled_two_leg_route_keeps_c4_risk_test_only_and_private(monkey
             currency="JPY",
             external_ref="R81_TWO_LEG_TEST_COMMITMENT",
             policy_json=json.dumps({
-                "scheduled_start_at": (now + timedelta(minutes=15)).isoformat(),
+                "scheduled_start_at": (now + timedelta(minutes=minutes_until_commitment)).isoformat(),
                 "safety_buffer_min": 5,
                 "source": "R81_CONTROLLED_TEST_ADAPTER",
             }),
@@ -779,8 +785,15 @@ def test_r81_controlled_two_leg_route_keeps_c4_risk_test_only_and_private(monkey
     assert body["outbound_leg"]["duration_min"] == 8
     assert body["return_leg"]["route_state"] == "TEST_PROVIDER_EMULATOR"
     assert body["return_leg"]["duration_min"] == 10
-    assert body["shared_commitment_risk"]["state"] == "COMMITMENT_AT_RISK"
+    assert body["shared_commitment_risk"]["state"] == expected_state
     assert body["shared_commitment_risk"]["evidence_scope"] == "TEST_ONLY"
+    if expected_state == "UNKNOWN":
+        assert body["shared_commitment_risk"]["basis"] == "TWO_LEG_TRAVEL_ONLY_HANDOFF_DWELL_UNKNOWN"
+        assert body["shared_commitment_risk"]["slack_after_buffer_min"] is None
+        assert body["shared_commitment_risk"]["handoff_dwell_time_known"] is False
+        assert body["shared_commitment_risk"]["travel_only_slack_after_buffer_min"] > 0
+    else:
+        assert body["shared_commitment_risk"]["basis"] == "TWO_LEG_ROUTE_TO_HANDOFF_AND_CURRENT_SHARED_STOP"
     assert body["shared_commitment_risk"]["legs_used"] == ["TO_HANDOFF", "RETURN_TO_SHARED_STOP"]
     assert body["shared_plan_changed"] is False
     assert body["physical_arrival_verified"] is False
