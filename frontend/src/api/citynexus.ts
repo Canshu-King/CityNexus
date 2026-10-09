@@ -607,6 +607,7 @@ export interface JourneyGroupPresenceProjection {
   active_plan_version_id?: string | null;
   current_activity_id?: string | null;
   coordination_signals?: JourneyRendezvousCoordinationSignal[];
+  coordination_audience_sha256?: string | null;
   members: Array<{
     member_id: string;
     display_name: string;
