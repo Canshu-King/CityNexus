@@ -1400,3 +1400,43 @@ dd.trial-city-warning {
   font-size: var(--cn-fs-caption);
   line-height: 1.4;
 }
+
+/* ── Tooltip ────────────────────────────────────────────────────────────────────────
+   The one face `components/Tooltip.tsx` paints, so no screen styles a hint by hand again.
+   Two of these are load-bearing, not taste:
+   - `position: fixed` on a node portalled to `<body>`.  An in-flow or absolutely placed hint is
+     cut by its nearest `overflow` ancestor, and ORD-0510 measured that exact failure on the
+     收藏 shelf name — a bubble that arrives clipped is worse than no bubble, because it claims
+     to give the hidden half back and does not.
+   - the fill is the inverted ink/canvas pair rather than a surface, so the text-to-background
+     ratio is the *same number* in both themes instead of a value that happens to clear AA in
+     one of them.
+   Long text wraps inside a bounded box and scrolls; it is never ellipsised a second time. */
+.cn-tip {
+  position: fixed;
+  z-index: 60;
+  max-width: min(320px, calc(100vw - 24px));
+  max-height: min(45vh, 260px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--cn-s-8) var(--cn-s-10);
+  border-radius: var(--cn-r-8);
+  background: var(--cn-ink);
+  color: var(--cn-canvas);
+  box-shadow: var(--cn-shadow-raised);
+  font-size: var(--cn-fs-caption);
+  line-height: var(--cn-lh-body);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+  opacity: 0;
+  transition: opacity var(--cn-t-hover) var(--cn-ease-standard);
+}
+/* The first paint has no coordinates yet; keeping it invisible until `measure()` lands is what
+   stops the bubble from flashing at its static position. */
+.cn-tip[data-measured="true"] { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cn-tip { transition: none; }
+}
+

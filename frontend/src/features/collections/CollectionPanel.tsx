@@ -21,6 +21,7 @@ What the face is allowed to show, and why:
 
 import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { CnTipText } from "../../components/Tooltip";
 import { COLLECTION_NO_TRAVELER } from "./collectionCopy";
 import {
   copyFor,
@@ -107,9 +108,10 @@ export function CollectionPanel({ travelerId }: Props) {
                   {shelf.items.map((item) => (
                     <li key={item.id} data-testid="collection-item">
                       <span className="cn-collections__item-name">{item.name}</span>
-                      <span className="cn-collections__item-note">
-                        {item.note === null ? copyFor("noteAbsent", zh) : item.note}
-                      </span>
+                      <CnTipText
+                        className="cn-collections__item-note"
+                        text={item.note === null ? copyFor("noteAbsent", zh) : item.note}
+                      />
                     </li>
                   ))}
                 </ul>

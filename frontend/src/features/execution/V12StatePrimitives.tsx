@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { AlertTriangle, Check, CloudOff, LockKeyhole, Radio, ShieldCheck } from "lucide-react";
 import type { ExecutionState } from "./V12AuthoritativeJourneyPanel";
 import { useT } from "../../i18n/LocaleContext";
+import { CnTipText } from "../../components/Tooltip";
 
 const stateKeyMap: Record<string, string> = {
   NOT_STARTED: "exec.state.notStarted",
@@ -21,7 +22,10 @@ function stateLabel(state: string | undefined, t: (key: string) => string): stri
 
 export function ActivityCard({ title, state, locked = false }: { title: string; state: ExecutionState; locked?: boolean }) {
   const t = useT();
-  return <article className="v12-activity-row"><span className="v12-activity-index">{state === "COMPLETED" ? <Check size={14} /> : "•"}</span><span className="v12-activity-title">{title}</span><span className="v12-activity-status">{stateLabel(state, t)}{locked && <LockKeyhole size={12} />}</span></article>;
+  /* The title is the row's subject and `styles.css` ellipsises it, so on a narrow screen the
+     station name the traveller is looking for simply stops.  The bubble hands back the whole
+     value, and hands it back only when something was actually cut. */
+  return <article className="v12-activity-row"><span className="v12-activity-index">{state === "COMPLETED" ? <Check size={14} /> : "•"}</span><CnTipText className="v12-activity-title" text={title} /><span className="v12-activity-status">{stateLabel(state, t)}{locked && <LockKeyhole size={12} />}</span></article>;
 }
 
 export function JourneyLeg({ mode, durationMin }: { mode: string; durationMin: number }) {
