@@ -604,6 +604,8 @@ export interface JourneyGroupPresenceProjection {
     | "PLANNED_SPLIT_RETURN_UNKNOWN"
     | "GROUP_LOCATION_UNKNOWN";
   authority: string;
+  active_plan_version_id?: string | null;
+  current_activity_id?: string | null;
   members: Array<{
     member_id: string;
     display_name: string;
@@ -1201,14 +1203,25 @@ export interface GroupRecoveryApplyResult {
 }
 
 export interface GroupRendezvousRouteResult {
+  plan_version_id: string;
+  current_activity_id: string | null;
   status: string;
   outcome?: string | null;
-  target: { activity_id: string; title: string; place_name: string };
+  target: {
+    activity_id: string;
+    title: string;
+    place_id: string;
+    place_name: string;
+    latitude: number;
+    longitude: number;
+    coordinate_system: "WGS84";
+  };
   route: {
     duration_min?: number | null;
     distance_m?: number | null;
     provider?: string | null;
     provenance?: string | null;
+    captured_at?: string | null;
   };
   authority: "ADVISORY_FOREGROUND_LOCATION" | "TRUSTED_MEMBER_LOCATION_ROUTE";
   shared_commitment_risk?: {
@@ -1231,6 +1244,7 @@ export interface GroupRendezvousRouteResult {
   guardian_deduplicated?: boolean;
   guardian?: Record<string, unknown> | null;
   plan_unchanged: boolean;
+  target_unchanged: boolean;
 }
 
 export interface JourneyTransitProjection {

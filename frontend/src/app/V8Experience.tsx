@@ -1340,7 +1340,7 @@ export function V8Experience() {
       setBusy(false);
     }
   };
-  const captureForegroundLocation = async (): Promise<string | null> => {
+  const captureForegroundLocation = async (maximumAgeMs = 30_000): Promise<string | null> => {
     if (!data || !navigator.geolocation) return null;
     return await new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
@@ -1375,7 +1375,7 @@ export function V8Experience() {
           setMessage(t("shell.locationDenied"));
           resolve(null);
         },
-        { enableHighAccuracy: true, maximumAge: 30000 },
+        { enableHighAccuracy: true, maximumAge: maximumAgeMs },
       );
     });
   };
@@ -1963,6 +1963,7 @@ export function V8Experience() {
               journeyId={data.journey.id}
               journeyStatus={data.journey.status}
               recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+              onRefreshLocation={() => captureForegroundLocation(0)}
               onJourneyJoined={openJoinedJourney}
             />
           )}

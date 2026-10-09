@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
 from threading import Barrier
 from uuid import uuid4
 
@@ -25,6 +26,8 @@ from app.db.models import (
     SharedStopCoPlanningGrant,
 )
 from app.db.session import SessionLocal
+from app.execution.group_presence import rendezvous_target
+from app.execution.group_recovery_followthrough import followthrough_projection
 from app.traveler_principal import issue_traveler_token
 from demo_stage import demo_reset_headers
 
@@ -643,3 +646,205 @@ def test_new_member_invalidates_existing_group_place_share_until_source_reconsen
         person["display_name"] == "R76 newly accepted companion"
         for person in refreshed_preview.json()["audience"]
     )
+
+
+def test_r77_route_result_is_bound_to_fresh_member_location_and_current_public_stop(monkeypatch):
+    journey_id, owner_id = _active_journey()
+    peer_id = _traveler("R77 route companion")
+    _accept_membership_invitation(journey_id, owner_id, peer_id, "r77-route-peer")
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(peer_id)
+    )
+    assert projection.status_code == 200, projection.text
+    presence = projection.json()["group_presence"]
+    target = presence["rendezvous"]
+    assert presence["can_guide"] is True
+    assert presence["active_plan_version_id"]
+    assert target["coordinate_system"] == "WGS84"
+
+    origin = {"latitude": 12.345678, "longitude": 23.456789}
+    observed = client.post(
+        f"/api/v1/journeys/{journey_id}/location",
+        headers=_auth(peer_id),
+        json={**origin, "accuracy_m": 6, "captured_at": datetime.now(timezone.utc).isoformat()},
+    )
+    assert observed.status_code == 201, observed.text
+    observation_id = observed.json()["id"]
+    captured = {}
+
+    def fake_submit(_session, _journey, route_request):
+        captured["request"] = route_request
+        return SimpleNamespace(id="r77-captured-route-operation"), False
+
+    now = datetime.now(timezone.utc).isoformat()
+    monkeypatch.setattr(main_module, "submit_route_operation", fake_submit)
+    monkeypatch.setattr(main_module, "route_operation_payload", lambda *_args, **_kwargs: {
+        "status": "COMPLETED",
+        "outcome": "ROUTE_READY",
+        "finished_at": now,
+        "result": {
+            "duration_min": 17,
+            "distance_m": 1400,
+            "provider": "r77-frozen-route-capture",
+            "provenance": "CAPTURED_REPLAY",
+        },
+    })
+    monkeypatch.setattr(
+        main_module, "_persist_trusted_member_rendezvous_risk_event", lambda *_args, **_kwargs: None
+    )
+
+    routed = client.post(
+        f"/api/v1/journeys/{journey_id}/group-presence/route",
+        headers=_auth(peer_id),
+        json={"location_observation_id": observation_id, "requested_mode": "WALK"},
+    )
+    assert routed.status_code == 200, routed.text
+    body = routed.json()
+    route_request = captured["request"]
+    assert route_request.origin_key == f"location-observation:{observation_id}"
+    assert route_request.origin_evidence["traveler_id"] == peer_id
+    assert route_request.origin_evidence["journey_member_id"]
+    assert route_request.target_activity_id == target["activity_id"]
+    assert route_request.target_key == target["place_id"]
+    assert body["plan_version_id"] == presence["active_plan_version_id"]
+    assert body["current_activity_id"] == presence["current_activity_id"]
+    assert body["target"]["place_id"] == target["place_id"]
+    assert body["target"]["latitude"] == target["latitude"]
+    assert body["target"]["longitude"] == target["longitude"]
+    assert body["route"]["provenance"] == "CAPTURED_REPLAY"
+    assert body["route"]["captured_at"] == now
+    assert body["plan_unchanged"] is True
+    assert body["target_unchanged"] is True
+    assert body["guardian_triggered"] is False
+    assert body["plan_unchanged"] is True
+    assert observation_id not in routed.text
+    assert str(origin["latitude"]) not in routed.text
+    assert str(origin["longitude"]) not in routed.text
+
+    owner_view = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(owner_id)
+    )
+    assert owner_view.status_code == 200, owner_view.text
+    projected = json.dumps(owner_view.json()["group_presence"], sort_keys=True)
+    assert observation_id not in projected
+    assert str(origin["latitude"]) not in projected
+    assert str(origin["longitude"]) not in projected
+
+
+def test_r77_route_fails_closed_when_public_destination_crs_is_unknown(monkeypatch):
+    journey_id, owner_id = _active_journey()
+    peer_id = _traveler("R77 unknown CRS companion")
+    _accept_membership_invitation(journey_id, owner_id, peer_id, "r77-unknown-crs-peer")
+    projection = client.get(
+        f"/api/v1/journeys/{journey_id}/operator", headers=_auth(peer_id)
+    )
+    assert projection.status_code == 200, projection.text
+    target_id = projection.json()["group_presence"]["rendezvous"]["place_id"]
+    with SessionLocal() as session:
+        place = session.get(Place, target_id)
+        assert place is not None
+        place.coordinate_system = "EPSG:3857"
+        session.commit()
+
+    called = False
+
+    def should_not_route(*_args, **_kwargs):
+        nonlocal called
+        called = True
+        raise AssertionError("unknown-CRS destination must not reach route acquisition")
+
+    monkeypatch.setattr(main_module, "submit_route_operation", should_not_route)
+    response = client.post(
+        f"/api/v1/journeys/{journey_id}/group-presence/route",
+        headers=_auth(peer_id),
+        json={"location_observation_id": str(uuid4()), "requested_mode": "WALK"},
+    )
+    assert response.status_code == 409, response.text
+    assert "GROUP_RENDEZVOUS_TARGET_COORDINATES_UNAVAILABLE" in response.text
+    assert called is False
+
+
+def test_r77_join_during_active_recovery_keeps_original_required_members_and_requests_reconfirmation():
+    journey_id, owner_id = _active_journey()
+    original_peer_id = _traveler("R77 recovery original peer")
+    _accept_membership_invitation(journey_id, owner_id, original_peer_id, "r77-recovery-peer")
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None and journey.active_plan_version_id
+        original_members = session.scalars(
+            select(JourneyMember).where(JourneyMember.journey_id == journey_id)
+        ).all()
+        target_pair = rendezvous_target(session, journey)
+        assert target_pair is not None
+        activity, place = target_pair
+        plan_id = str(journey.active_plan_version_id)
+        stamp = datetime.now(timezone.utc).isoformat()
+        snapshot = {
+            "state": "RECOVERY_APPLIED_REJOIN_PENDING",
+            "incident_key": "r77-recovery-in-flight",
+            "applied_proposal_id": "r77-recovery-proposal",
+            "applied_plan_version_id": plan_id,
+            "recovery_epoch_id": "r77-recovery-epoch",
+            "authority_receipt_id": "r77-recovery-authority",
+            "trigger_event_id": None,
+            "required_member_ids": sorted(str(member.id) for member in original_members),
+            "member_roles_at_apply": {str(member.id): str(member.role) for member in original_members},
+            "rendezvous_activity_id": str(activity.id),
+            "rendezvous_place_id": str(place.id),
+            "rendezvous_title": str(activity.title),
+            "applied_at": stamp,
+            "evidence_level": "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH",
+            "physical_presence_verified": False,
+        }
+        session.add(AuditLog(
+            id=str(uuid4()),
+            actor_type="SYSTEM",
+            actor_id="r77-followthrough-fixture",
+            journey_id=journey_id,
+            action="replan.accepted",
+            entity_type="ReplanProposal",
+            entity_id="r77-recovery-proposal",
+            before_json=None,
+            after_json=json.dumps({"group_recovery_spend": {
+                "kind": "COLLECTIVE_GROUP_RECOVERY_APPLY",
+                "result": "APPLIED",
+                "after_plan_version_id": plan_id,
+                "followthrough": snapshot,
+            }}, sort_keys=True),
+            trace_id=str(uuid4()),
+            created_at=stamp,
+        ))
+        session.commit()
+        before_projection = followthrough_projection(
+            session, journey, viewer_member_id=str(original_members[0].id)
+        )
+        assert before_projection is not None
+        assert before_projection["state"] == "RECOVERY_APPLIED_REJOIN_PENDING"
+
+    newcomer_id = _traveler("R77 newcomer during recovery")
+    _accept_membership_invitation(journey_id, owner_id, newcomer_id, "r77-join-during-recovery")
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        newcomer = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey_id,
+                JourneyMember.traveler_id == newcomer_id,
+            )
+        )
+        assert newcomer is not None
+        after = followthrough_projection(
+            session, journey, viewer_member_id=str(newcomer.id)
+        )
+        assert after is not None
+        assert after["state"] == "REJOIN_CONFIRMATION_REQUIRED"
+        assert after["membership_reconfirmation_required"] is True
+        assert after["required_count"] == len(original_members)
+        assert after["viewer"]["status"] == "NOT_IN_REQUIRED_SET"
+        assert after["viewer_can_confirm"] is False
+        assert str(newcomer.id) not in {item["member_id"] for item in after["members"]}
+        assert after["new_member_ids"] == [str(newcomer.id)]
+        assert str(journey.active_plan_version_id) == plan_id
+        assert after["state"] != "RECOVERY_CLOSED"

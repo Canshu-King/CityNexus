@@ -93,6 +93,25 @@ def rendezvous_target(session: Session, journey: Journey) -> tuple[Activity, Pla
     return (target, place) if place is not None else None
 
 
+def public_destination_coordinates(place: Place | None) -> tuple[float, float] | None:
+    """Return only validated canonical WGS84 coordinates for a public plan Place."""
+    if place is None or str(place.coordinate_system or "").upper() != "WGS84":
+        return None
+    try:
+        latitude = float(place.latitude)
+        longitude = float(place.longitude)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if (
+        not math.isfinite(latitude)
+        or not math.isfinite(longitude)
+        or not -90 <= latitude <= 90
+        or not -180 <= longitude <= 180
+    ):
+        return None
+    return latitude, longitude
+
+
 def _active_planned_separations(
     session: Session,
     journey: Journey,
@@ -531,6 +550,8 @@ def group_presence_projection(
         return {
             "state": "MEMBER_IDENTITY_UNAVAILABLE",
             "authority": "SIGNED_TRAVELER_PRINCIPAL_REQUIRED",
+            "active_plan_version_id": None,
+            "current_activity_id": None,
             "members": [],
             "rendezvous": None,
             "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
@@ -548,6 +569,8 @@ def group_presence_projection(
         return {
             "state": "MEMBER_IDENTITY_UNAVAILABLE",
             "authority": "SIGNED_TRAVELER_PRINCIPAL_REQUIRED",
+            "active_plan_version_id": None,
+            "current_activity_id": None,
             "members": [],
             "rendezvous": None,
             "rendezvous_state": "RENDEZVOUS_TARGET_UNAVAILABLE",
@@ -690,16 +713,7 @@ def group_presence_projection(
     # Public shared-plan geometry is not another member's device location.
     # Only disclose a valid canonical WGS84 destination point; never guess
     # missing geometry or misinterpret a source coordinate system.
-    public_destination_coords: tuple[float, float] | None = None
-    if rendezvous_ready and str(target_place.coordinate_system or "").upper() == "WGS84":
-        try:
-            lat = float(target_place.latitude)
-            lon = float(target_place.longitude)
-        except (TypeError, ValueError, OverflowError):
-            pass
-        else:
-            if math.isfinite(lat) and math.isfinite(lon) and -90 <= lat <= 90 and -180 <= lon <= 180:
-                public_destination_coords = (lat, lon)
+    public_destination_coords = public_destination_coordinates(target_place)
     viewer_row = rows.get(viewer.id)
     viewer_planned = planned_separations.get(str(viewer.id))
     viewer_eta, viewer_eta_provenance, viewer_eta_state = _route_eta(
@@ -727,6 +741,8 @@ def group_presence_projection(
     return {
         "state": state,
         "authority": _group_authority(rows),
+        "active_plan_version_id": str(journey.active_plan_version_id or "") or None,
+        "current_activity_id": str(journey.current_activity_id or "") or None,
         "members": projected,
         "rendezvous": (
             {"activity_id": target_activity.id, "title": target_activity.title,

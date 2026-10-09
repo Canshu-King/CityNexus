@@ -1,22 +1,71 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   cityNexusApi,
+  type GroupRendezvousRouteResult,
   type JourneyMembershipInvitationInboxItem,
   type JourneyMembershipInvitationManagerItem,
   type JourneyOperatorProjection,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
+import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
 
 type Props = {
   journeyId: string | null;
   journeyStatus?: string | null;
   recentlyJoinedJourneyId?: string | null;
+  onRefreshLocation?: () => Promise<string | null>;
   onJourneyJoined: (journeyId: string) => Promise<void> | void;
 };
 
+type GroupPresence = NonNullable<JourneyOperatorProjection["group_presence"]>;
 type Rendezvous = NonNullable<
-  NonNullable<JourneyOperatorProjection["group_presence"]>["rendezvous"]
+  GroupPresence["rendezvous"]
 >;
+
+function groupPresenceTargetKey(presence: GroupPresence | null | undefined): string | null {
+  const target = presence?.rendezvous;
+  if (!target) return null;
+  return JSON.stringify([
+    presence?.active_plan_version_id ?? null,
+    presence?.current_activity_id ?? null,
+    target.activity_id,
+    target.title,
+    target.place_id,
+    target.place_name,
+    target.latitude,
+    target.longitude,
+    target.coordinate_system,
+  ]);
+}
+
+function hasExactPublicPin(destination: Rendezvous | null | undefined): boolean {
+  return destination?.coordinate_system === "WGS84"
+    && typeof destination.latitude === "number"
+    && typeof destination.longitude === "number"
+    && Number.isFinite(destination.latitude)
+    && Number.isFinite(destination.longitude)
+    && destination.latitude >= -90 && destination.latitude <= 90
+    && destination.longitude >= -180 && destination.longitude <= 180;
+}
+
+function routeEvidenceClass(result: GroupRendezvousRouteResult): "LIVE" | "REPLAY" | "UNKNOWN" {
+  const provenance = String(result.route.provenance ?? "").toUpperCase();
+  const duration = result.route.duration_min;
+  const capturedAt = Date.parse(String(result.route.captured_at ?? ""));
+  const ageMs = Date.now() - capturedAt;
+  if (
+    result.status.toUpperCase() !== "COMPLETED"
+    || typeof duration !== "number"
+    || !Number.isFinite(duration)
+    || duration < 0
+    || !Number.isFinite(capturedAt)
+    || ageMs < -30_000
+    || ageMs > 5 * 60_000
+  ) return "UNKNOWN";
+  if (["LIVE_PROVIDER_CAPTURE", "LIVE_CAPTURE"].includes(provenance)) return "LIVE";
+  if (["CAPTURED_REPLAY", "SEALED_REAL_REPLAY"].includes(provenance)) return "REPLAY";
+  return "UNKNOWN";
+}
 
 function inviteFailureCopy(code: string, zh: boolean): string {
   if (code.includes("RECIPIENT_ACCEPTANCE_REQUIRED")) {
@@ -38,10 +87,12 @@ export function JourneyMembershipPanel({
   journeyId,
   journeyStatus,
   recentlyJoinedJourneyId = null,
+  onRefreshLocation,
   onJourneyJoined,
 }: Props) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  const active = String(journeyStatus ?? "").toUpperCase() === "ACTIVE";
   const [inbox, setInbox] = useState<JourneyMembershipInvitationInboxItem[]>([]);
   const [sent, setSent] = useState<JourneyMembershipInvitationManagerItem[]>([]);
   const [canManage, setCanManage] = useState(false);
@@ -49,7 +100,17 @@ export function JourneyMembershipPanel({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [mapConsent, setMapConsent] = useState(false);
-  const [rendezvous, setRendezvous] = useState<Rendezvous | null>(null);
+  const [mapConsentKey, setMapConsentKey] = useState<string | null>(null);
+  const [routeConsent, setRouteConsent] = useState(false);
+  const [routeConsentKey, setRouteConsentKey] = useState<string | null>(null);
+  const [navigationBusy, setNavigationBusy] = useState(false);
+  const [groupPresence, setGroupPresence] = useState<GroupPresence | null>(null);
+  const [routeResult, setRouteResult] = useState<{
+    key: string;
+    result: GroupRendezvousRouteResult;
+  } | null>(null);
+  const rendezvous = groupPresence?.rendezvous ?? null;
+  const currentTargetKey = groupPresenceTargetKey(groupPresence);
 
   const refresh = useCallback(async () => {
     const mine = await cityNexusApi.getMyJourneyMembershipInvitations().catch(() => []);
@@ -72,19 +133,42 @@ export function JourneyMembershipPanel({
     void refresh();
   }, [refresh]);
 
+  const refreshGroupPresence = useCallback(async (): Promise<GroupPresence | null> => {
+    if (!journeyId || !active) {
+      setGroupPresence(null);
+      return null;
+    }
+    try {
+      const projection = await cityNexusApi.getJourneyOperator(journeyId);
+      const next = projection.group_presence ?? null;
+      setGroupPresence(next);
+      return next;
+    } catch {
+      setGroupPresence(null);
+      return null;
+    }
+  }, [active, journeyId]);
+
   useEffect(() => {
     // A companion still needs the shared meeting point after a reload, not
     // only during the React session in which they pressed Accept.
-    if (!journeyId || String(journeyStatus ?? "").toUpperCase() !== "ACTIVE") return;
+    if (!journeyId || !active) {
+      setGroupPresence(null);
+      setRouteResult(null);
+      return;
+    }
     let cancelled = false;
-    setRendezvous(null);
     void cityNexusApi.getJourneyOperator(journeyId).then((projection) => {
-      if (!cancelled) setRendezvous(projection.group_presence?.rendezvous ?? null);
+      if (!cancelled) setGroupPresence(projection.group_presence ?? null);
     }).catch(() => {
-      if (!cancelled) setRendezvous(null);
+      if (!cancelled) setGroupPresence(null);
     });
     return () => { cancelled = true; };
-  }, [journeyId, journeyStatus]);
+  }, [journeyId, active]);
+
+  useEffect(() => {
+    setRouteResult((current) => current?.key === currentTargetKey ? current : null);
+  }, [currentTargetKey]);
 
   const createInvitation = async () => {
     const target = targetTravelerId.trim();
@@ -162,28 +246,153 @@ export function JourneyMembershipPanel({
     }
   };
 
-  const hasExactPublicPin = (destination: Rendezvous | null): boolean =>
-    destination?.coordinate_system === "WGS84"
-    && typeof destination.latitude === "number"
-    && typeof destination.longitude === "number"
-    && Number.isFinite(destination.latitude)
-    && Number.isFinite(destination.longitude)
-    && destination.latitude >= -90 && destination.latitude <= 90
-    && destination.longitude >= -180 && destination.longitude <= 180;
-
-  const openPublicMap = () => {
-    if (!rendezvous) return;
-    // Exact pin is from the shared active-plan Place, never a companion's
-    // foreground observation. If unknown, only offer an explicitly labelled
-    // ambiguous name search, never pass it off as a verified destination.
-    const url = hasExactPublicPin(rendezvous)
-      ? `https://www.openstreetmap.org/?mlat=${rendezvous.latitude}&mlon=${rendezvous.longitude}#map=16/${rendezvous.latitude}/${rendezvous.longitude}`
-      : `https://www.openstreetmap.org/search?query=${encodeURIComponent(rendezvous.place_name)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-    setMapConsent(false);
+  const openPublicMap = async () => {
+    const expectedKey = mapConsentKey;
+    if (!journeyId || !rendezvous || !expectedKey || navigationBusy) return;
+    const popup = window.open("about:blank", "_blank");
+    if (!popup) {
+      setMessage(zh ? "浏览器阻止了新窗口；允许此站点打开新窗口后再试。" : "The browser blocked the new tab. Allow popups for this site and try again.");
+      return;
+    }
+    popup.opener = null;
+    setNavigationBusy(true);
+    setMessage(null);
+    try {
+      // Bind the external release to the same plan, cursor, Place and public
+      // coordinates the traveller saw before confirming consent.
+      const fresh = await cityNexusApi.getJourneyOperator(journeyId);
+      const freshPresence = fresh.group_presence ?? null;
+      const freshTarget = freshPresence?.rendezvous ?? null;
+      setGroupPresence(freshPresence);
+      if (!freshTarget || groupPresenceTargetKey(freshPresence) !== expectedKey) {
+        popup.close();
+        setMapConsent(false);
+        setMapConsentKey(null);
+        setMessage(zh
+          ? "计划进度或会合点刚刚变化；没有打开旧地点。请查看更新后的会合点，再重新确认。"
+          : "The plan or meeting stop changed. No stale place was opened; review the updated stop and confirm again.");
+        return;
+      }
+      const url = hasExactPublicPin(freshTarget)
+        ? buildOpenStreetMapPinUrl({
+            latitude: Number(freshTarget.latitude),
+            longitude: Number(freshTarget.longitude),
+            coordinate_system: "WGS84",
+          })
+        : `https://www.openstreetmap.org/search?query=${encodeURIComponent(freshTarget.place_name)}`;
+      popup.location.href = url;
+      setMapConsent(false);
+      setMapConsentKey(null);
+    } catch {
+      popup.close();
+      setMapConsent(false);
+      setMapConsentKey(null);
+      setMessage(zh
+        ? "无法重新确认当前会合点；没有向地图服务发送地点。请刷新后再试。"
+        : "The current meeting stop could not be revalidated; no place was sent to the map service. Refresh and try again.");
+    } finally {
+      setNavigationBusy(false);
+    }
   };
 
-  const active = String(journeyStatus ?? "").toUpperCase() === "ACTIVE";
+  const requestRouteConsent = () => {
+    if (!journeyId || !groupPresence?.can_guide || !onRefreshLocation) {
+      setMessage(zh ? "当前没有可用于计算路线的共享会合点；公开地点回退仍可使用。" : "A shared route target is not currently available. The public-place fallback remains available.");
+      return;
+    }
+    if (!hasExactPublicPin(rendezvous)) {
+      setMessage(zh ? "会合地点缺少可靠的 WGS84 坐标，无法安全计算路线；可按名称核对公开地点。" : "The shared stop has no reliable WGS84 coordinates, so routing is unavailable. You can still verify the public place by name.");
+      return;
+    }
+    if (!currentTargetKey) return;
+    setRouteResult(null);
+    setRouteConsentKey(currentTargetKey);
+    setRouteConsent(true);
+    setMessage(null);
+  };
+
+  const requestPersonalRoute = async () => {
+    const expectedKey = routeConsentKey;
+    if (!journeyId || !expectedKey || !onRefreshLocation || navigationBusy) return;
+    setRouteConsent(false);
+    setRouteConsentKey(null);
+    setNavigationBusy(true);
+    setRouteResult(null);
+    setMessage(null);
+    try {
+      // Revalidate before asking for location, then again after the sample and
+      // after routing. A changed plan/cursor/Place never receives a stale ETA.
+      const before = await refreshGroupPresence();
+      if (
+        !before?.can_guide
+        || groupPresenceTargetKey(before) !== expectedKey
+        || !hasExactPublicPin(before.rendezvous)
+      ) {
+        setMessage(zh
+          ? "计划或会合点已变化；没有读取位置。请查看新的共同会合点并重新确认。"
+          : "The plan or meeting stop changed; no location was read. Review the new stop and confirm again.");
+        return;
+      }
+
+      const observationId = await onRefreshLocation();
+      if (!observationId) {
+        setMessage(zh
+          ? "没有取得这次前台位置；没有请求路线。你仍可打开公开会合点地图。"
+          : "No foreground location was recorded, so no route was requested. The public meeting-place map is still available.");
+        return;
+      }
+      const afterLocation = await refreshGroupPresence();
+      if (
+        !afterLocation?.can_guide
+        || groupPresenceTargetKey(afterLocation) !== expectedKey
+        || !hasExactPublicPin(afterLocation.rendezvous)
+      ) {
+        setMessage(zh
+          ? "获取位置期间计划或会合点发生变化；没有计算路线。请查看更新后的目的地并重新确认。"
+          : "The plan or meeting stop changed while location was being recorded. No route was calculated; review and confirm the updated destination.");
+        return;
+      }
+
+      const result = await cityNexusApi.routeToGroupRendezvous(journeyId, observationId);
+      const afterRoute = await refreshGroupPresence();
+      const latestTarget = afterRoute?.rendezvous;
+      const targetMatches = Boolean(
+        afterRoute
+        && latestTarget
+        && result.plan_unchanged
+        && result.target_unchanged
+        && result.plan_version_id === afterRoute.active_plan_version_id
+        && result.current_activity_id === (afterRoute.current_activity_id ?? null)
+        && result.target.activity_id === latestTarget.activity_id
+        && result.target.place_id === latestTarget.place_id
+        && result.target.place_name === latestTarget.place_name
+        && result.target.latitude === latestTarget.latitude
+        && result.target.longitude === latestTarget.longitude
+        && result.target.coordinate_system === latestTarget.coordinate_system
+        && groupPresenceTargetKey(afterRoute) === expectedKey,
+      );
+      if (!targetMatches) {
+        setMessage(zh
+          ? "路线计算期间计划、进度或目的地已变化；旧路线已丢弃，请查看当前会合点后重新确认。"
+          : "The plan, progress, or destination changed during routing. The old route was discarded; review the current stop and confirm again.");
+        return;
+      }
+      setRouteResult({ key: expectedKey, result });
+      setMessage(routeEvidenceClass(result) === "UNKNOWN"
+        ? (zh ? "路线服务没有提供可验证且新鲜的路线；显示 UNKNOWN，不显示预计分钟数。" : "No fresh, verifiable route was returned. Guidance remains UNKNOWN; no duration is shown.")
+        : (zh ? "路线结果已绑定到当前共享目的地；它不会改变行程或证明同行者已到达。" : "The route is bound to the current shared stop. It does not change the plan or prove that anyone has arrived."));
+    } catch {
+      await refreshGroupPresence();
+      setMessage(zh
+        ? "当前路线不可用或已过期；没有显示预计时间。公开会合点地图仍可使用。"
+        : "The route is unavailable or expired; no duration is shown. The public meeting-place map remains available.");
+    } finally {
+      setNavigationBusy(false);
+    }
+  };
+
+  const visibleRoute = routeResult?.key === currentTargetKey ? routeResult.result : null;
+  const visibleRouteClass = visibleRoute ? routeEvidenceClass(visibleRoute) : null;
   return (
     <section className="journey-membership-panel" data-testid="journey-membership-panel">
       <div className="journey-membership-heading">
@@ -282,11 +491,22 @@ export function JourneyMembershipPanel({
                 ? (zh ? "地图使用当前共享计划中的 WGS84 公共地点坐标，不使用任何成员的实时位置。" : "Map pin comes from the shared active-plan public Place (WGS84), not a member's live location.")
                 : (zh ? "没有可靠的公共地点坐标。地图只能按名称搜索，可能出现多个同名地点，出发前请核对。" : "No reliable public destination coordinates are available. Map search by name may be ambiguous; verify the place before traveling.")}</small>
               <small>{zh ? "当前没有经过验证的个人路线或 ETA（UNKNOWN / ROUTE_UNAVAILABLE）；CityNexus 没有读取或分享你的起点。" : "No verified personal route or ETA is available (UNKNOWN / ROUTE_UNAVAILABLE). CityNexus has not read or shared your origin."}</small>
-              <button type="button" onClick={() => setMapConsent(true)}>
+              <button type="button" onClick={() => {
+                setMapConsentKey(currentTargetKey);
+                setMapConsent(true);
+              }}>
                 {hasExactPublicPin(rendezvous)
                   ? (zh ? "打开会合点精确地图…" : "Open exact meeting-place pin…")
                   : (zh ? "按名称查找会合点（需核对）…" : "Search for meeting place (verify result)…")}
               </button>
+              {groupPresence?.can_guide && onRefreshLocation && (
+                <button
+                  type="button"
+                  data-testid="journey-membership-route-check"
+                  disabled={navigationBusy}
+                  onClick={requestRouteConsent}
+                >{zh ? "检查我到下一处会合点的路线…" : "Check my route to our next stop…"}</button>
+              )}
             </>
           ) : (
             <small>{zh ? "暂时没有可确认的共同会合点（UNKNOWN / ROUTE_UNAVAILABLE）；没有读取位置或报告到达。" : "No shared rendezvous is currently available (UNKNOWN / ROUTE_UNAVAILABLE). No location was read and no arrival was reported."}</small>
@@ -305,12 +525,104 @@ export function JourneyMembershipPanel({
               ? `同意后，只会向 OpenStreetMap 发送公开地点名称“${rendezvous.place_name}”进行搜索；结果可能不唯一。不会发送你的起点或位置，不会生成路线、ETA 或到达记录。`
               : `If you agree, only the public Place name “${rendezvous.place_name}” is sent to OpenStreetMap search; results may be ambiguous. Your origin is not sent; no route, ETA or arrival record is created.`)}</p>
           <div className="journey-membership-actions">
-            <button type="button" data-testid="journey-membership-map-confirm" onClick={openPublicMap}>
+            <button type="button" data-testid="journey-membership-map-confirm" onClick={() => void openPublicMap()} disabled={navigationBusy}>
               {zh ? "同意并打开地图" : "Agree and open map"}
             </button>
-            <button type="button" onClick={() => setMapConsent(false)}>{zh ? "取消" : "Cancel"}</button>
+            <button type="button" onClick={() => {
+              setMapConsent(false);
+              setMapConsentKey(null);
+            }}>{zh ? "取消" : "Cancel"}</button>
           </div>
         </section>
+      )}
+
+      {routeConsent && rendezvous && (
+        <section
+          className="journey-membership-map-consent"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="journey-membership-route-title"
+          data-testid="journey-membership-route-consent"
+        >
+          <strong id="journey-membership-route-title">
+            {zh ? "允许这次前台位置路线检查？" : "Allow this foreground route check?"}
+          </strong>
+          <p>{zh
+            ? `继续会为这趟 Journey 记录一次由你主动发起的前台位置观察；该观察会保留，并可能以粗略同行状态供旅伴查看。你的精确起点可能发送给明确配置的路线服务。若现有路线风险规则判定需要，可能记录承诺风险并触发 Guardian。拒绝后仍可查看公开会合点地图。不会后台采样、持续追踪、静默修改共享计划，也不会把路线结果当作已到达或已与大家会合。`
+            : `Continuing records a Journey-bound foreground location observation that you explicitly request; it is retained and may affect the coarse group-presence state companions can see. Your precise origin may be sent to the configured routing provider. Existing route-risk rules may record a protected-commitment risk and trigger Guardian. Declining keeps the public meeting-place map available. There is no background sampling or tracking, the shared plan is not silently changed, and a route result is not an arrival or proof that the group is together.`}</p>
+          <p>{zh
+            ? `目的地是当前共享计划中的公共地点：${rendezvous.place_name}。`
+            : `Destination: ${rendezvous.place_name}, a public Place in the current shared plan.`}</p>
+          <div className="journey-membership-actions">
+            <button
+              type="button"
+              data-testid="journey-membership-route-confirm"
+              onClick={() => void requestPersonalRoute()}
+              disabled={navigationBusy}
+            >{zh ? "同意并检查路线" : "Agree and check route"}</button>
+            <button
+              type="button"
+              data-testid="journey-membership-route-cancel"
+              onClick={() => {
+                setRouteConsent(false);
+                setRouteConsentKey(null);
+              }}
+              disabled={navigationBusy}
+            >{zh ? "取消，保留公开地图" : "Cancel and keep public map"}</button>
+          </div>
+        </section>
+      )}
+
+      {visibleRoute && (
+        <article
+          className="journey-membership-catchup"
+          data-testid="journey-membership-route-result"
+          data-evidence={visibleRouteClass ?? "UNKNOWN"}
+          data-provenance={visibleRoute.route.provenance ?? "UNKNOWN"}
+        >
+          <strong>{visibleRouteClass === "LIVE"
+            ? (zh ? "当前路线服务结果" : "Current route-provider result")
+            : visibleRouteClass === "REPLAY"
+              ? (zh ? "历史路线回放（不是当前路况）" : "Captured historical route (not current traffic)")
+              : (zh ? "路线状态：UNKNOWN / ROUTE_UNAVAILABLE" : "Route status: UNKNOWN / ROUTE_UNAVAILABLE")}</strong>
+          <p>{zh
+            ? `共享计划目的地：${visibleRoute.target.place_name}。这表示路线目的地，不表示队伍当前就在此处。`
+            : `Shared-plan destination: ${visibleRoute.target.place_name}. This identifies the planned stop, not where the group is physically located.`}</p>
+          {visibleRouteClass === "UNKNOWN" ? (
+            <small>{zh ? "没有显示预计分钟数；请使用公开地点地图或手动联系旅伴。" : "No duration is shown. Use the public-place map or coordinate with companions manually."}</small>
+          ) : (
+            <small>{zh
+              ? `步行约 ${visibleRoute.route.duration_min} 分钟。`
+              : `Walking estimate: about ${visibleRoute.route.duration_min} minutes.`}</small>
+          )}
+          <small>
+            {zh ? "来源：" : "Source: "}{visibleRoute.route.provider ?? (zh ? "未知" : "unknown")}
+            {" · "}{zh ? "证据：" : "Evidence: "}{visibleRoute.route.provenance ?? "UNKNOWN"}
+            {visibleRoute.route.captured_at && (
+              <>{" · "}{zh ? "路线回执时间：" : "Route receipt time: "}{new Date(visibleRoute.route.captured_at).toLocaleString(locale)}</>
+            )}
+          </small>
+          <small>
+            {zh ? "定位依据：" : "Location authority: "}{visibleRoute.authority}
+          </small>
+          {visibleRouteClass !== "UNKNOWN" && visibleRoute.shared_commitment_risk && (
+            <small>
+              {zh ? "下一项受保护承诺风险：" : "Next protected-commitment risk: "}
+              {visibleRoute.shared_commitment_risk.state}
+              {typeof visibleRoute.shared_commitment_risk.slack_after_buffer_min === "number"
+                ? ` · ${zh ? "扣除缓冲后的余量" : "slack after buffer"}: ${visibleRoute.shared_commitment_risk.slack_after_buffer_min} min`
+                : ""}
+            </small>
+          )}
+          <small>
+            {zh ? "Guardian 服务器回执：" : "Guardian server receipt: "}
+            {visibleRoute.guardian_triggered ? "triggered" : "not triggered"}
+            {" · "}{zh ? "风险事件已记录：" : "risk event recorded: "}
+            {visibleRoute.member_risk_event_id ? (zh ? "是" : "yes") : (zh ? "否" : "no")}
+            {" · "}{zh ? "处理状态：" : "status: "}
+            {String(visibleRoute.guardian?.status ?? "NO_HANDOFF_STATUS_RETURNED")}
+          </small>
+        </article>
       )}
 
       {message && <small role="status" data-testid="journey-membership-message">{message}</small>}

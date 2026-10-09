@@ -282,6 +282,7 @@ from app.execution.group_presence import (
     group_recovery_projection,
     group_presence_projection,
     planned_separation_for_member,
+    public_destination_coordinates,
     rendezvous_commitment_risk,
     rendezvous_target,
 )
@@ -10373,6 +10374,24 @@ def guide_authenticated_member_to_rendezvous(
     )
     if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "GROUP_RENDEZVOUS_REQUIRES_ACTIVE_JOURNEY")
+    planned = planned_separation_for_member(
+        session,
+        journey,
+        member,
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
+    if planned is not None:
+        target_activity = planned["target"]
+        target_place = planned["place"]
+    else:
+        target_pair = rendezvous_target(session, journey)
+        if target_pair is None:
+            raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE")
+        target_activity, target_place = target_pair
+    target_coordinates = public_destination_coordinates(target_place)
+    if target_coordinates is None:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_COORDINATES_UNAVAILABLE")
+
     observation = session.get(LocationObservation, str(payload.location_observation_id))
     if observation is None or str(observation.journey_id) != journey.id:
         raise HTTPException(404, "LOCATION_OBSERVATION_NOT_FOUND")
@@ -10398,20 +10417,6 @@ def guide_authenticated_member_to_rendezvous(
         raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_STALE")
     if float(observation.accuracy_m) > GROUP_MAX_LOCATION_ACCURACY_M:
         raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_IMPRECISE")
-    planned = planned_separation_for_member(
-        session,
-        journey,
-        member,
-        now=execution_clock.now().astimezone(timezone.utc),
-    )
-    if planned is not None:
-        target_activity = planned["target"]
-        target_place = planned["place"]
-    else:
-        target_pair = rendezvous_target(session, journey)
-        if target_pair is None:
-            raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE")
-        target_activity, target_place = target_pair
     route_request = RouteRequest(
         journey_id=journey.id,
         origin_key=f"location-observation:{observation.id}",
@@ -10431,6 +10436,10 @@ def guide_authenticated_member_to_rendezvous(
         },
     )
     plan_before = str(journey.active_plan_version_id)
+    cursor_before = str(journey.current_activity_id or "")
+    activity_before = str(target_activity.id)
+    place_before = str(target_place.id)
+    place_name_before = str(target_place.name)
     route, reused = submit_route_operation(session, journey, route_request)
     body = route_operation_payload(route, reused=reused)
     result = body.get("result") if isinstance(body.get("result"), dict) else {}
@@ -10533,15 +10542,54 @@ def guide_authenticated_member_to_rendezvous(
     plan_unchanged = bool(
         current is not None and str(current.active_plan_version_id or "") == plan_before
     )
+    target_unchanged = False
+    if current is not None and str(current.status).upper() == "ACTIVE":
+        current_member = session.get(JourneyMemberModel, str(member.id))
+        current_planned = (
+            planned_separation_for_member(
+                session,
+                current,
+                current_member,
+                now=execution_clock.now().astimezone(timezone.utc),
+            )
+            if current_member is not None
+            else None
+        )
+        current_pair = (
+            (current_planned["target"], current_planned["place"])
+            if current_planned is not None
+            else rendezvous_target(session, current)
+        )
+        if current_pair is not None:
+            current_activity, current_place = current_pair
+            target_unchanged = bool(
+                plan_unchanged
+                and str(current.current_activity_id or "") == cursor_before
+                and str(current_activity.id) == activity_before
+                and str(current_place.id) == place_before
+                and str(current_place.name) == place_name_before
+                and public_destination_coordinates(current_place) == target_coordinates
+            )
     return {
+        "plan_version_id": plan_before,
+        "current_activity_id": cursor_before or None,
         "status": body.get("status"),
         "outcome": body.get("outcome"),
-        "target": {"activity_id": target_activity.id, "title": target_activity.title, "place_name": target_place.name},
+        "target": {
+            "activity_id": activity_before,
+            "title": target_activity.title,
+            "place_id": place_before,
+            "place_name": place_name_before,
+            "latitude": target_coordinates[0],
+            "longitude": target_coordinates[1],
+            "coordinate_system": "WGS84",
+        },
         "route": {
             "duration_min": result.get("duration_min"),
             "distance_m": result.get("distance_m"),
             "provider": route_provider or None,
             "provenance": route_provenance or None,
+            "captured_at": body.get("finished_at") or body.get("updated_at"),
         },
         "authority": route_authority,
         "shared_commitment_risk": commitment_risk,
@@ -10553,6 +10601,7 @@ def guide_authenticated_member_to_rendezvous(
         ),
         "guardian": guardian_handoff,
         "plan_unchanged": plan_unchanged,
+        "target_unchanged": target_unchanged,
     }
 
 
