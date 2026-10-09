@@ -223,7 +223,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 <b data-testid="hotel-name">{stay.property_name}</b>
                 {isChosen && (
                   <span className="hotel-badge" data-testid="hotel-chosen">
-                    {zh ? "已选择" : "Selected"}
+                    {t("stay.selected")}
                   </span>
                 )}
               </header>
