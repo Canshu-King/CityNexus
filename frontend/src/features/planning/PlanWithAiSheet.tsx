@@ -29,6 +29,7 @@ import {
   type CatalogueReadback,
 } from "./catalogueReadback";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { useModalLayer } from "../../lib/useModalLayer";
 import { type AgentRuntimeStatus } from "../../api/citynexus";
 import {
   beginAiRun,
@@ -477,6 +478,15 @@ export function PlanWithAiSheet({
      and the two answers are the pair the reference product names: 去看会话 / 继续生成. */
   const [leaveChoice, setLeaveChoice] = useState(false);
 
+  /* The layer behaviour is shared with the other bottom-anchored sheet (MobilitySheet) so the two
+     cannot drift apart: one Esc rule, one focus rule, one way to leave. */
+  const sheetRef = useRef<HTMLElement | null>(null);
+  const { closing, requestClose, onBackdropMouseDown } = useModalLayer({
+    open: true,
+    onClose,
+    sheetRef,
+  });
+
   /* ORD-0504: the count under a catalogue-shaped refusal is read from this server on every mount of
      that refusal, never carried over from the run that wrote the status.  Places imported while
      this sheet was closed therefore change the sentence on the next open, and a door that did not
@@ -639,7 +649,7 @@ export function PlanWithAiSheet({
       setLeaveChoice(true);
       return;
     }
-    onClose();
+    requestClose();
   };
 
   /* The prompt is the answer to a press, so it has to be where the eyes already are.  Measured on the
@@ -692,11 +702,24 @@ export function PlanWithAiSheet({
     : null;
 
   return (
-    <div className="v8-sheet-backdrop" role="dialog" aria-modal="true" data-testid="plan-ai-sheet">
-      <section className="plan-ai-sheet">
+    <div
+      className="v8-sheet-backdrop"
+      role="presentation"
+      data-state={closing ? "closing" : "open"}
+      data-testid="plan-ai-sheet"
+      onMouseDown={onBackdropMouseDown}
+    >
+      <section
+        ref={sheetRef}
+        className="plan-ai-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="plan-ai-title"
+        data-state={closing ? "closing" : "open"}
+      >
         <header className="plan-ai-head">
           <div>
-            <b>{zh ? "AI 帮我规划" : "Plan my trip with AI"}</b>
+            <b id="plan-ai-title">{zh ? "AI 帮我规划" : "Plan my trip with AI"}</b>
             <small>
               {zh
                 ? "用你自己的话描述这趟旅行，越具体越好。"
