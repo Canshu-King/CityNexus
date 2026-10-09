@@ -1286,6 +1286,27 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+  /* ORD-0557: the legacy surface (/legacy, main.tsx) reads no locale today, so each arm below carries
+     the string that screen already paints — a move into the dictionary, not a rewording. */
+  "legacy.persistedOperationUpdate": "Persisted operation update",
+  "legacy.generalRecovery": "general recovery",
+  "legacy.standingMissionHint": "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.",
+  "legacy.noDominantFailureMode": "No dominant failure mode",
+  "legacy.notEvaluated": "not evaluated",
+  "legacy.validatedActivity": "validated Activity",
+  "legacy.noActionableTarget": "no actionable target",
+  "legacy.outcomeEvidence": "outcome evidence",
+  "legacy.explicitWins": "explicit wins",
+  "legacy.notReported": "not reported",
+  "legacy.noUpcomingActivity": "no upcoming activity",
+  "legacy.noActiveC4": "No active C4",
+  "legacy.notAvailable": "not available",
+  "legacy.unnamedCommitment": "未命名承诺 · 服务器没给名字",
+  "legacy.verifiedFeasible": "verified feasible",
+  "legacy.notFeasible": "not feasible",
+  "legacy.notPreserved": "not preserved",
+  "legacy.verifiedEvidenceAttached": "verified evidence attached",
+  "legacy.evidenceUnavailable": "evidence unavailable",
 };
 
 const zhCN: Dict = {
@@ -2478,6 +2499,27 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+  /* ORD-0557：legacy 那面（/legacy，main.tsx）今天不分语言取值，所以中英两臂都写这块屏此刻就在显示的原文——
+     本单只解决「服务端没给时前端造的那句话走不走字典」，换措辞不在这一单里。 */
+  "legacy.persistedOperationUpdate": "Persisted operation update",
+  "legacy.generalRecovery": "general recovery",
+  "legacy.standingMissionHint": "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.",
+  "legacy.noDominantFailureMode": "No dominant failure mode",
+  "legacy.notEvaluated": "not evaluated",
+  "legacy.validatedActivity": "validated Activity",
+  "legacy.noActionableTarget": "no actionable target",
+  "legacy.outcomeEvidence": "outcome evidence",
+  "legacy.explicitWins": "explicit wins",
+  "legacy.notReported": "not reported",
+  "legacy.noUpcomingActivity": "no upcoming activity",
+  "legacy.noActiveC4": "No active C4",
+  "legacy.notAvailable": "not available",
+  "legacy.unnamedCommitment": "未命名承诺 · 服务器没给名字",
+  "legacy.verifiedFeasible": "verified feasible",
+  "legacy.notFeasible": "not feasible",
+  "legacy.notPreserved": "not preserved",
+  "legacy.verifiedEvidenceAttached": "verified evidence attached",
+  "legacy.evidenceUnavailable": "evidence unavailable",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

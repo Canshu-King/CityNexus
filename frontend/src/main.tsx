@@ -37,7 +37,7 @@ import {
 import { journeyModeMachine } from "./state/journeyModeMachine";
 import { V8Experience } from "./app/V8Experience";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
-import { LocaleProvider } from "./i18n/LocaleContext";
+import { LocaleProvider, useT } from "./i18n/LocaleContext";
 import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
 import "./design-tokens.css";
@@ -174,6 +174,7 @@ function errorNote(error: unknown): ErrorNote {
 }
 
 function LegacyApp() {
+  const t = useT();
   const actor = useMemo(() => createActor(journeyModeMachine), []);
   const [workflowState, setWorkflowState] = useState(() =>
     String(actor.getSnapshot().value),
@@ -563,7 +564,7 @@ function LegacyApp() {
           ...current.slice(-19),
           {
             event_type: payload.event_type ?? "operation",
-            summary: payload.summary ?? "Persisted operation update",
+            summary: payload.summary ?? t("legacy.persistedOperationUpdate"),
             timestamp: payload.timestamp ?? new Date().toISOString(),
           },
         ]);
@@ -1108,7 +1109,7 @@ function LegacyApp() {
             </div>
             <p className="mission-text">“{mission.user_text}”</p>
             <div className="mission-metrics">
-              <span>Objectives · {mission.objective_codes.join(" · ") || "general recovery"}</span>
+              <span>Objectives · {mission.objective_codes.join(" · ") || t("legacy.generalRecovery")}</span>
               <span>Budget Δ · {formatMoney(mission.max_cost_delta_minor, planCurrency)}</span>
               <span>Loss ceiling · {formatMoney(mission.max_loss_minor, planCurrency)}</span>
               <span>Schedule drift · {mission.max_schedule_drift_min} min</span>
@@ -1150,8 +1151,7 @@ function LegacyApp() {
           </span>
         </div>
         <p className="guardian-summary">
-          {guardianStatus?.latest?.reasoning_summary ??
-            "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message."}
+          {guardianStatus?.latest?.reasoning_summary ?? t("legacy.standingMissionHint")}
         </p>
           <div className="guardian-actions">
           <button
@@ -1215,7 +1215,7 @@ function LegacyApp() {
           </div>
           <span>{resilience?.status ?? "WAITING_FOR_PROVIDER_EVIDENCE"}</span>
           <span>
-            {resilience?.dominant_failure_modes.join(" · ") || "No dominant failure mode"}
+            {resilience?.dominant_failure_modes.join(" · ") || t("legacy.noDominantFailureMode")}
           </span>
           <span>
             Mesh · {providerMesh?.providers.length ?? 0} observations · {providerMesh?.real_place_candidates.length ?? 0} real-city POIs
@@ -1412,7 +1412,7 @@ function LegacyApp() {
               ))}
             </ol>
             <p data-testid="agent-policy-decision" className="impact-summary">
-              Server decision · {serverDecision ?? "not evaluated"}
+              Server decision · {serverDecision ?? t("legacy.notEvaluated")}
               {confirmationRequired ? " · confirmation required" : ""}
             </p>
             {impactResolution && (
@@ -1420,8 +1420,8 @@ function LegacyApp() {
                 Impact evidence · {impactResolution.status ?? "unknown"} ·{" "}
                 {impactResolution.provider_key ?? "deterministic"} ·{" "}
                 {impactResolution.selected_activity_id
-                  ? (impactResolution.maturity_stage ?? "validated Activity")
-                  : "no actionable target"}
+                  ? (impactResolution.maturity_stage ?? t("legacy.validatedActivity"))
+                  : t("legacy.noActionableTarget")}
               </p>
             )}
           </div>
@@ -1472,7 +1472,7 @@ function LegacyApp() {
               travelerTwin.learned_soft_preferences.map((item, index) => (
                 <span key={(item.dimension ?? "learned") + (item.direction ?? "") + index}>
                   {item.direction ?? item.dimension ?? "preference"} · strength {Math.round((item.strength ?? 0) * 100)}% ·
-                  evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? "unknown"} · {item.explanation ?? "outcome evidence"}
+                  evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? "unknown"} · {item.explanation ?? t("legacy.outcomeEvidence")}
                 </span>
               ))
             )}
@@ -1484,7 +1484,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.conflicts.map((item, index) => (
                 <span key={String(item.dimension ?? "conflict") + index}>
-                  {String(item.dimension ?? "preference")} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? "explicit wins")}
+                  {String(item.dimension ?? "preference")} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? t("legacy.explicitWins"))}
                 </span>
               ))
             )}
@@ -1542,13 +1542,13 @@ function LegacyApp() {
             )}
           </div>
           <p data-testid={testIds.currentActivity}>
-            Current: {current?.title ?? "not reported"}
+            Current: {current?.title ?? t("legacy.notReported")}
           </p>
-          <p>Next: {next?.title ?? "no upcoming activity"}</p>
+          <p>Next: {next?.title ?? t("legacy.noUpcomingActivity")}</p>
         </div>
         <aside className="evidence-card">
           <h2 data-testid={testIds.protectedCommitment}>
-            🔒 {c4Activity?.title ?? "No active C4"} ·{" "}
+            🔒 {c4Activity?.title ?? t("legacy.noActiveC4")} ·{" "}
             {c4Commitment ? formatTime(c4Commitment.policy.scheduled_start_at) : "—"} C4
           </h2>
           <p data-testid={testIds.nextCommitment}>
@@ -1557,7 +1557,7 @@ function LegacyApp() {
           <p data-testid={testIds.nextCommitmentBuffer}>
             Next commitment buffer ·{" "}
             {envelope?.next_commitment_buffer_min == null
-              ? "not available"
+              ? t("legacy.notAvailable")
               : envelope.next_commitment_buffer_min + " min"}
           </p>
           <p data-testid={testIds.budgetRemaining}>
@@ -1592,7 +1592,7 @@ function LegacyApp() {
               const title = commitmentRowTitle(plan, commitment);
               return (
                 <span key={commitment.id} data-testid="upcoming-commitment-row">
-                  {title || "未命名承诺 · 服务器没给名字"} ·{" "}
+                  {title || t("legacy.unnamedCommitment")} ·{" "}
                   {formatTime(commitment.policy.scheduled_start_at)} · {commitment.level}
                 </span>
               );
@@ -1643,7 +1643,7 @@ function LegacyApp() {
           <h2>Replan comparison · persisted proposals</h2>
           <div data-testid={testIds.replanCandidate} className="candidate">
             {selectedProposal.diff.candidate_family} ·{" "}
-            {selectedProposal.hard_constraints_passed ? "verified feasible" : "not feasible"}
+            {selectedProposal.hard_constraints_passed ? t("legacy.verifiedFeasible") : t("legacy.notFeasible")}
           </div>
           <div data-testid={testIds.replanCandidateFamilies} className="candidate-families">
             {families.map((family) => (
@@ -1677,10 +1677,10 @@ function LegacyApp() {
           <p data-testid={testIds.replanEvidence}>
             Evidence · hard constraints{" "}
             {selectedProposal.hard_constraints_passed ? "pass" : "fail"} · C4{" "}
-            {selectedProposal.locked_commitments_preserved ? "preserved" : "not preserved"} ·{" "}
+            {selectedProposal.locked_commitments_preserved ? "preserved" : t("legacy.notPreserved")} ·{" "}
             {selectedProposal.diff.verified_evidence
-              ? "verified evidence attached"
-              : "evidence unavailable"}
+              ? t("legacy.verifiedEvidenceAttached")
+              : t("legacy.evidenceUnavailable")}
           </p>
           <p data-testid={testIds.replanDiff}>{proposalDiffText(selectedProposal, plan)}</p>
           <p data-testid={testIds.replanDeltas}>
