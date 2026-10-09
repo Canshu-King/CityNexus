@@ -1,0 +1,21 @@
+missing-ref dossier r1: make "cited ref names that no longer exist" assignable (0 product paths)
+
+The fleet citation audit reported 10 complete ref names the ledger cites that the remote does not have,
+one of them mine. A bare list of ten names is not actionable -- nobody can tell whose they are or whether
+they still matter. This dossier walks the ledger once and, per name, records the citing line, the block
+heading it sat under, any 40-hex on the same line (and whether it resolves), and the nearest ref name the
+remote does have (difflib, cutoff 0.6).
+
+The finding it hands back is softer than the raw count, and that is the point: several names have a
+resolvable 40-hex on the same line, so the coordinate is still recoverable by blob; most of the rest are
+one letter off a live name, or cite an older generation of a branch that has since been re-cut. Saying
+"nine dangling coordinates" would have been the loud, wrong version of this.
+
+Contents under review/missing-ref-dossier-r1/:
+- tools/missing_ref_dossier_r1.py -- the dossier; also renders and vouches its own BB copy.
+- evidence/missing_ref_dossier_r1/missing_ref_dossier_r1.json -- the per-name rows.
+- run/missing_ref_dossier_r1.txt -- the printed output.
+- run/missing_ref_dossier_r1_manifest.json, run/commit_missing_ref_dossier_r1_msg.txt -- this publish.
+
+Read-only: ledger + one ls-remote + one cat-file --batch-check; no fetch, no write, no ref moved, no
+ledger direct write, no product byte. New file names throughout (CMDR-0925-2128).
