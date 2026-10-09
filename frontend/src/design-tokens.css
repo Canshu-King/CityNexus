@@ -400,6 +400,23 @@
 .v8-product-shell .plan-ranking,
 .v8-product-shell .cn-hero-strip { box-shadow: var(--cn-shadow-card); }
 
+/* Two more content panels the name-based sweep missed, found by the shape sweep: the map screen's
+   facts block and a trip-stop row. Both are the same kind of object as panels already on the
+   contract -- `v8-map-facts` carries `padding: 22px`, `--v8-line` and `--cn-surface` exactly like
+   `.v8-detail-panel`, and `.trip-stop` is a clickable list row like `.v8-stay-card` -- yet both
+   still held their corner at the twelve tier. They join the card corner and the shared depth; their
+   padding stays what each screen chose, since that is content fitting, not material. */
+.v8-page .v8-map-facts,
+.v8-page .trip-stop:not(.current) {
+  border-radius: var(--cn-r-card);
+  box-shadow: var(--cn-shadow-card);
+}
+
+/* `.trip-stop.current` paints its own inset ring at styles.css:1198 -- that ring is how the live
+   stop is marked, and this contract loads after it, so taking the shadow there would erase the
+   state. It joins the corner only. */
+.v8-page .trip-stop.current { border-radius: var(--cn-r-card); }
+
 /* --- Motion: transform/opacity only, GPU-friendly, capped, reduced-motion aware --- */
 
 @keyframes cn-rise {
