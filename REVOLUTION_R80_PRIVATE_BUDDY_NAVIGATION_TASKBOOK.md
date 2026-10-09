@@ -1,0 +1,66 @@
+# Revolution R80 — Private Buddy Navigation: From Agreed Pin to Usable Route
+
+## Exact baton, verified reality, and first step
+Stay on **`gpt/revolution-r33-open-world-journey-adaptation`** from remote HEAD `bcb0fa91ce34f9d0660309070ac58b70df7aa8d6`. No merge to `commander/control` or default branch, no historic strike loop.
+
+R79 Codex shipped `e5aeaef941b363896adfe982495f46f1b9732076` and result `0457494e1217a88c97aa1e9f5d62d1c2621eddcc` (`REVOLUTION_R79_BUDDY_RESCUE_HANDOFF_RESULT.md`):
+- 7 focused R78/R79 backend passed; fresh isolated R79 Chromium 2/2; typecheck:all, build, compileall, diff check passed.
+- Signed helper A acknowledges C's R78 help. A offers a **server-selected public Place**; C independently accepts/declines. A/C can open the exact destination pin with separate explicit consent. Pair-private persistence, a 20-min expiry, stable plan/cursor, no unauthorized bystander read; test DB 1 R79 handoff, eventually REVOKED, with offer/accept/revoke audit.
+- The chosen alternate Place is labelled **DEMO_FIXTURE_NOT_LIVE_VERIFIED**. All private routes, opening hours and accessibility are UNKNOWN. Map navigation to OSM was intercepted/aborted by the browser test, not externally delivered. No LocationObservation, RouteAcquisitionOperation, ProviderCall, AgentRun, GuardianRun/Pulse, payment/booking, or R79 activity change. One JourneyOutcomeEvent ACTIVITY_STARTED belonged to the demo `/start` setup, not the handoff.
+- The earlier GPT R78 privacy/HTTP-local fixes were reported locally validated. Don't extrapolate isolated test HMAC signers to production identity-provider proof.
+
+GPT post-R79 review pushed **but NOT locally run**, in strict history order:
+- `2c766e6`, `60b4e1b`: old-tab replay of a DECLINED/REVOKED/CANCELLED buddy handoff can no longer return 200 after a newer OFFERED/ACCEPTED pair handoff exists for the same help signal; database Journey write lock and focused regression. True no-newer retries remain idempotent.
+- `47dbb1a`, `4fd5394`: candidate public-place filter now considers explicit `access=private/no/staff/restricted/customers` and `is_public=false` from **each** source, including nested `tags`/`osm_tags`, rather than letting later metadata overwrite restricted OSM tags. Six focused pure test cases. Missing restriction does NOT prove real-world openness.
+- `592f88a`, `bcb0fa9`: R79 API `evidence_level` is now `ONE_SIDED_PUBLIC_HANDOFF_OFFER_NOT_ACCEPTED` for OFFERED and only `MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE` after C explicitly ACCEPTs; regression assertions updated.
+
+FIRST run only the directly affected R79 backend file `pytest tests/test_r79_buddy_rescue_handoff.py -q`, `npm run typecheck:all`, and one new owned isolated `e2e/r79-buddy-rescue-handoff.spec.ts` if needed for code impacts. If failures, fix the actual defect. No R58–R78 replay, no fabricated proof. Then immediately implement R80.
+
+## Revolution product problem
+R79 is a huge interaction improvement, but “We agreed to meet at this public Place” stops at a pin. C still cannot answer **“Can I actually get to our agreed rescue point from MY current location, without exposing it to A/B?”** A cannot independently verify whether THEY can reach it either. The existing R77 `/group-presence/route` is bound to the *original shared Journey stop*, NOT this alternate pair-private handoff; silently using it for R79 would calculate the wrong destination.
+
+**R80 user story (one high-value vertical slice):**
+> After A and C independently agree on a public handoff, each opens the same private handoff card. Each may separately opt into one foreground location observation and an exact-target routing request *to that accepted handoff Place*. If a grounded route exists, the person sees a source-labelled walking estimate and whether it threatens a protected shared commitment; otherwise CityNexus honestly says `UNKNOWN / ROUTE_UNAVAILABLE` and still provides the approved public Place pin. Neither person's origin, precise route or personal ETA is disclosed to the other or to B. A and C know where to go; the shared Journey remains protected.
+
+NO generic status dashboard, no second chat, no autonomous booking, no silent arrival/physical reunion claim.
+
+## Product implementation contract
+
+### 1. Durable, person-bound, target-exact operation
+- Add an R80 `POST /api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route` (or equivalent narrow endpoint). Authenticate signed in-force member; **only the exact helper or requester** on a currently ACCEPTED R79 handoff may invoke. Load current handoff through R79's `_current_projection` / server authoritative context; never trust client-supplied handoff Place coords, requester member ID or the other person's LocationObservation.
+- Payload identifies **only the caller's own fresh, server-retained signed `LocationObservation`**, requested mode (start with WALK), and explicit confirmation to potentially transfer this origin to the configured external routing provider. Match Journey, member-bound traveler identity, observation freshness/accuracy/CRS, active PlanVersion/cursor, R78 help signal+ack, R79 immutable public Place snapshot, audience and handoff expiration. No accepted handoff = 403/409, no prior member route inheritance, no reusing a stale plan's operation.
+- Reuse the existing `backend/app/integrations/mobility/runtime.py`, `RouteAcquisitionOperation`, R77 authenticated foreground-observation pattern, existing risk/commitment policy. Do **not** rewrite the mobility stack and do NOT silently call R77's route-to-shared-rendezvous endpoint for an alternate handoff target. Preserve one evidence lineage per actual provider/capture/replay. A browser-provided `provenance=LIVE` is never authority.
+- Before release to an external provider, obtain an explicit **separate disclosure action** (the location observation may already have been saved locally/Journey-bound). If provider absent or target unsupported, return explicit `ROUTE_UNAVAILABLE` with provider count 0 and a separately consented exact public pin fallback; do not invent minutes. If CAPTURED_REPLAY, mark historical route as REPLAY, never current traffic. MOCK/SYNTHETIC_FIXTURE cannot produce a green LIVE ETA. LIVE_PROVIDER only with actual persisted provider receipt and freshness.
+- Route output is **caller-private**: at most caller's estimate/authority/provenance/age, protected-commitment state and fallback; never add own origin/coords/observation ID/detailed route geometry to R79 pair projection, other member's Operator, group-presence, audit after_json or generic activity timeline. A and C share only the already mutually accepted public Place snapshot.
+
+### 2. Guard the living Journey
+- Check **both** the alternative buddy destination and the original shared C3/C4 rendezvous. A private side rescue that would cause a protected commitment to be missed must produce a clearly visible risk/warning/blocked next action; it must not silently overwrite the shared plan, re-time commitments, auto-trigger a Guardian from passive reads, or claim that a public straight-line distance is a route.
+- Recheck current plan, cursor, R78 help, R79 agreement, cohort and exact public Place **before and after** one-time provider work. A cancellation/revocation, member removal, replaced help signal, expiry or PlanVersion change invalidates any late-arriving route result and its UI. If provider completes after invalidation, keep an auditable stale operation but do not show an actionable ETA or create a new collective decision. Use existing database CAS/write-lock conventions; don’t rely only on React state.
+- Does not change Journey Activity, active PlanVersion, execution cursor, member membership, R62/R69 reunion truth or R78 self-report. The two members can decide **separately** whether to travel; never automatically infer that A is physically waiting for C. Route success is not a GPS arrival proof.
+- Pay attention to provider quota/timeouts; one explicit attempt per user action, no passive reruns or polling. One optional live-provider field trial **only if credentials and a suitable configured service actually exist**; publish honest success/UNKNOWN/BLOCKED without retrying just to manufacture a green result.
+
+### 3. UX — show the next useful action, not another receipt ledger
+- Extend the **existing** `JourneyMembershipPanel` accepted buddy-handoff card. Offer `Check MY walking route to this handoff` to A/C independently, with a clear, bilingual consent preview including local retention, externally transferred precise origin if provider used, target place/source/UNKNOWN feasibility, and possible C3/C4 risk. Reuse `V8Experience.captureForegroundLocation(0)` and R77 response/provenance UI patterns where possible.
+- Never require the other member's location. Show one member-specific route panel + explicit source/evidence timestamp, or truthful `UNKNOWN`; map pin remains available with its distinct consent. Highlight that the original shared Journey stop is still where the *whole group* expects to meet, and separate `Return to shared stop` as public-plan navigation (not an implicit change to A/C private handoff).
+- Distinguish route-acquisition consent from sharing “I'm coming” (R78) and from mutually accepting a handoff (R79). Neither C ACCEPT nor A ACK automatically samples location or launches a provider call. If a route is no longer current after page refresh, remove/mark stale; no last-known ETA survives changes.
+
+## Exact code seams to reuse
+- R79 domain: `backend/app/execution/rendezvous_buddy_handoff.py` exposes `_current_projection`, `_load_help_context`, signed helper/requester identity, pair-private Place snapshot, expiry and audience checks. Keep the pair agreement independent of routing operation.
+- R77: `backend/app/main.py` signed `POST /journeys/{id}/group-presence/route` and `backend/app/execution/group_presence.py` rendezvous/risk helpers. Reuse **only** the member-location ownership checks, provider operation and commitment risk pieces; the target for R80 MUST be the accepted handoff public Place, not the original R77 target.
+- Mobility: `backend/app/integrations/mobility/runtime.py`, `routingpy_adapter.py`, `valhalla_http.py`, `snapshot_capture.py`, replay support. Inspect the actual provider contracts first; never patch a frozen fixture into “LIVE”.
+- UI: `frontend/src/features/execution/JourneyMembershipPanel.tsx`, `frontend/src/app/V8Experience.tsx` callback for explicitly recorded foreground observation; `frontend/src/api/citynexus.ts`. Existing R79 map consent stays independent.
+- Tests: `backend/tests/test_r79_buddy_rescue_handoff.py`, R77 route authorization test in `test_r76_journey_membership_invitation.py`, `frontend/e2e/r79-buddy-rescue-handoff.spec.ts`. Use a NEW R80 narrowly focused test, not the archive.
+
+## One bounded closure, including privacy negatives
+Fresh isolated SQLite, A signed OWNER, B signed COLLABORATOR (bystander), C signed COLLABORATOR; C R78 help -> A ACK -> server Place R79 offer -> C ACCEPT.
+1. Before either individual route consent, DB has 0 new LocationObservation, RouteAcquisitionOperation and ProviderCall; C and A each see exact accepted Place. B sees neither the handoff nor existence of a private route.
+2. A consents once and C consents independently once; each location must be bound to their own signed member. Try replaying C's observation as A, stolen handoff UUID from B, another Journey, expired/cancelled R79 and stale plan/cursor/audience; fail closed and without exposing coords. Do not infer arrival.
+3. Actual one-time route request to R79 exact destination. Controlled capture/replay test may provide a truthful *REPLAY* route; unconfigured provider returns honest UNKNOWN. If a real live provider is configured, one bounded live request with exact persisted observation/call ID and provenance; no silent external requests on GET. Test that MOCK cannot label itself LIVE.
+4. If an actual route threatens protected C4, show real server-derived consequence; no silent plan mutation, Guardian trigger only via pre-existing deliberately invoked policy where permitted and recorded. Without grounded route risk is UNKNOWN, not a fabricated clearance.
+5. Revoke handoff while one route is pending, and change PlanVersion/cursor before result: old result is invalid. Member withdrawal, audience drift, and R78 help replacement also suppress old R80 route. A's result never appears in C's read, and C's result never appears in B's. Exact public pin remains under its own valid handoff agreement.
+6. One fresh signed 3-context Playwright with actual client calls; focused backend cases, TS typecheck:all/build, compileall, diff check. Capture real DB counters and evidence grade; **no R58–R79 historical campaigns**.
+
+## Delivery
+Push implementation and `REVOLUTION_R80_PRIVATE_BUDDY_NAVIGATION_RESULT.md` with exact SHA, commands/results, signed-member privacy negatives, actual ProviderCall/RouteOperation/Agent/Guardian counts, REPLAY/LIVE/UNKNOWN grades, and honest limits. Preserve `commander/control` and default.
+
+**Revolution: from “we chose a place” to “I know whether I can get there, on my own terms”, without requiring my friends to track me or sacrificing the original shared Journey.**
