@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "dg0470jsonl",
+  "runId": "dg0470rebase1",
   "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
   "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
   "frontendPort": 4670,
   "backendPort": 4671,
-  "databaseUrl": "sqlite:///./_dg0470jsonl.db",
+  "databaseUrl": "sqlite:///./_dg0470rebase1.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-10-09T08:23:17.930Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4670 backend=:4671 db=sqlite:///./_dg0470jsonl.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-10-09T08:27:41.496Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4670 backend=:4671 db=sqlite:///./_dg0470rebase1.db ai=disabled reuseExistingServer=false"
 }

@@ -1,3 +1,6 @@
-collect-only, one invocation, python 3.12.14 (D:/moodle/CityNexus/.venv), cwd backend/
-tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[0]
+backend collection, --collect-only only, python 3.12.14 (D:/moodle/CityNexus/.venv), cwd backend/
+at the recut head 7500987a25a793e4ade018bb829b7c54cb982cca:
+1796 tests collected in 8.69s
+at the first cut base 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2:
 1788 tests collected in 9.62s
+at the line as it reads now (0b3c98c1b2aab15613485093d93212a319d7f846): 1796 tests collected in 3.44s
