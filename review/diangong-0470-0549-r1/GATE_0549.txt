@@ -1,0 +1,15 @@
+gate for ORD-0549 (lane 电工-0470), authoritative mode, own ports, base tip da846e54e73b839c9882dc45a18ed73c93c26bc5
+run with this lane's byte (run_id=dg0470v14b):
+Running 9 tests using 1 worker
+  2 failed
+  7 passed (1.1m)
+run with this lane's byte removed (run_id=dg0470v14base, same six arms):
+Running 9 tests using 1 worker
+  3 failed
+  6 passed (1.3m)
+red names, byte removed: 3; red names, with byte: 2
+new red introduced by this lane: 0
+turned green by this lane: 1
+own four arms alone (run_id=dg0470v14c):   5 passed (18.3s)
+typecheck:all exit 0 with 0 errors; typecheck (check.json) exit 0 with 0 errors
+NOTE ORD-0533 B2/B3 are red in BOTH generations (their judgement reads poi-import, not this file) - pre-existing at this tip, not relaxed and not claimed green.
