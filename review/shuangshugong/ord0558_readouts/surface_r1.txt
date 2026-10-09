@@ -1,0 +1,5 @@
+# ORD-0558 LiveRecovery.tsx english count+noun surface inventory
+# target=D:/moodle/_qoder_shuangshugong_0558/frontend/src/features/execution/LiveRecovery.tsx total_lines=468
+# rule: a line carrying ${...} immediately followed by an english word
+# surfaces_found=1 on_ruler=1 off_ruler=0
+L348 on_ruler=True | : `Merged ${duplicateCount} identical ${englishCountNoun(duplicateCount, "suggestion")}.`}

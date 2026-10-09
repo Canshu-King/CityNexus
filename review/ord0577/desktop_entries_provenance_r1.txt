@@ -1,0 +1,35 @@
+ORD-0577 desktop entries census -- provenance (lane 8ac89982, 绿化工·小许, 2026-10-06)
+
+WHAT WAS MEASURED
+  At desktop width (1280x900), for each of the 17 screens the two route tables declare: is the sidebar
+  shown, is the bottom bar shown, is the drawer's door (the hamburger) shown, and how many rows the
+  sidebar has. The question behind it is the "incomplete list" noted in the two-layer census -- the
+  sidebar iterates desktopRoutes only -- made concrete: at desktop width there may be no clickable way
+  into those screens at all.
+
+BYTES
+  tip when this branch was built   read live by the commit tool (ls-remote), pinned in its receipt
+  lane tree shell file             32b3326020a8207dc8b2a9ca45200459ac38b73f
+                                   (= tip + this cell's two hands; both hands add attributes only and
+                                   add no navigation entry, which is the diff the earlier receipts show,
+                                   so the entry gap measured here is not something they could have caused)
+
+RUN
+  ports 5218/5219, own run id and own database file
+  gate stdout: review/ord0577/gate_stdout_desktop_r1.txt
+  readings:    review/ord0577/desktop_entries_zh.json, review/ord0577/desktop_entries_en.json
+
+FOUND (identical in zh and en, on all 17 screens)
+  desktop width: sidebar shown on every screen; the bottom bar and the drawer's door are hidden on every
+      screen (styles.css keeps .v8-mobile-nav and .v8-mobile-menu at display:none above 680px).
+  sidebar rows: 15 on every screen -- the desktop table's size, read from source at run time.
+  screens with no sidebar row, hence no chrome entry at desktop width: trips and me (2 of 17). Their
+      breadcrumbs still paint their names (Trips / Me, 行程 / 我的), so the screens exist; only the way
+      in is missing.
+  phone-width control behaves the other way round (sidebar hidden, bar and door shown), so the "shown"
+      column is measuring something.
+
+WHAT IS NOT CLAIMED
+  no fix ships here: putting rows for trips and me into the desktop table would change what the desktop
+  nav is made of (and the drawer is built from the same table), which is a design decision, not this
+  lane's to make. Two shapes are named in the block for the commander to pick from.

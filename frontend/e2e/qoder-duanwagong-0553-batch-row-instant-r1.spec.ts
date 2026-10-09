@@ -7,8 +7,8 @@
  * Two arms, one per locale, and each takes whichever branch the stage allows:
  *   LAND   -- the compose wrote a plan, so the row is measured against the store's own copy.
  *   REFUSE -- the planner answers a domain refusal (this is what a fresh authoritative run does on
- *              this generation: the same leg is red for the pre-existing ORD-0435 Q4 arms too, at
- *              qoder-ord0435-poi-batch-multiselect.spec.ts:381).  The arm then records the status and
+ *              this generation: the leg named `Q4` in the pre-existing ORD-0435 batch spec waits on
+ *              the same read-back block and never sees it).  The arm then records the status and
  *              the sentence on screen, and the paint proof moves to the sibling stub arm.
  *
  * The expected string is computed in the page, from the server's raw `start_at` the second read
@@ -125,9 +125,9 @@ for (const [locale, tag] of LOCALES) {
       compose.push({ status: res.status(), body });
     });
 
-    /* The compose contract wants at least two place_ids (`min_length=2` at
-       backend/app/schemas.py:721), so a single tick is a validation error, not a plan.  Tick as many
-       as the screen offers, up to two. */
+    /* The compose contract wants at least two place_ids -- `AuthoritativeComposeRequest.place_ids`
+       carries `min_length=2` in backend/app/schemas.py -- so a single tick is a validation error,
+       not a plan.  Tick as many as the screen offers, up to two. */
     const tickable = Math.min(await page.locator(TICK).count(), 2);
     for (let index = 0; index < tickable; index += 1) {
       await page.locator(TICK).nth(index).click();

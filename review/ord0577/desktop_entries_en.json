@@ -1,0 +1,210 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-desktop-entries-census-r1.spec.ts",
+ "arm": "en",
+ "shape": "1280x900",
+ "denominator": {
+  "desktop": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access"
+  ],
+  "mobile": [
+   "hub",
+   "trips",
+   "map",
+   "agent",
+   "me"
+  ],
+  "union": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ]
+ },
+ "negative_control_phone_width": {
+  "sidebar_shown": false,
+  "bar_shown": true,
+  "menu_shown": true
+ },
+ "rows": [
+  {
+   "requested": "hub",
+   "breadcrumb": "Today",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "live",
+   "breadcrumb": "Live Journey",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "map",
+   "breadcrumb": "Map",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "studio",
+   "breadcrumb": "Trip Studio",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "stay",
+   "breadcrumb": "Stay Explorer",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "discover",
+   "breadcrumb": "City Discovery",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "import",
+   "breadcrumb": "Import places",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "bookings",
+   "breadcrumb": "Travel Wallet",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "footprints",
+   "breadcrumb": "Footprints",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "agent",
+   "breadcrumb": "Copilot",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "authoritative",
+   "breadcrumb": "Recovery",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "intelligence",
+   "breadcrumb": "Intelligence",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "twin",
+   "breadcrumb": "Traveler Twin",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "trash",
+   "breadcrumb": "Recycle bin",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "access",
+   "breadcrumb": "Members and access",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": true
+  },
+  {
+   "requested": "trips",
+   "breadcrumb": "Trips",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": false
+  },
+  {
+   "requested": "me",
+   "breadcrumb": "Me",
+   "sidebar_shown": true,
+   "sidebar_rows": 15,
+   "bar_shown": false,
+   "menu_shown": false,
+   "in_desktop_table": false
+  }
+ ]
+}

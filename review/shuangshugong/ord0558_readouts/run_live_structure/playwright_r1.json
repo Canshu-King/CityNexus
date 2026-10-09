@@ -1,0 +1,489 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.shuangshugong-0558.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\playwright.shuangshugong-0558.config.ts",
+    "rootDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/test-results/qoder-shuangshugong-0558",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-live-structure\\.spec\\.ts$/"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\moodle\\_qoder_shuangshugong_0558\\review\\shuangshugong\\ord0558_readouts\\run_live_structure\\playwright_r1.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 5188",
+      "cwd": ".",
+      "url": "http://127.0.0.1:5188",
+      "reuseExistingServer": false,
+      "timeout": 180000,
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "env": {
+        "CITYNEXUS_BACKEND_PORT": "4199"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "qoder-live-structure.spec.ts",
+      "file": "qoder-live-structure.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Qoder Live structure order (Phase 2)",
+          "file": "qoder-live-structure.spec.ts",
+          "line": 217,
+          "column": 6,
+          "specs": [
+            {
+              "title": "sections stack Current -> Map -> Disruption -> Replan (bounding rect)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1652,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[live-map] branch=honest-empty-state height=97px\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:15.408Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-67d124f170edc2cb53ae",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 224,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Qoder Live accepted transition (Phase 3)",
+          "file": "qoder-live-structure.spec.ts",
+          "line": 301,
+          "column": 6,
+          "specs": [
+            {
+              "title": "accepting a proposal surfaces the confirmation before the open warning collapses",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 991,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:17.181Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-44b7f975d49ab627702e",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 302,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Qoder Live state-coverage matrix (Phase 1)",
+          "file": "qoder-live-structure.spec.ts",
+          "line": 365,
+          "column": 6,
+          "specs": [
+            {
+              "title": "L0 NORMAL: current/next real, no disruption, no Accept CTA",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 628,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:18.183Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-082f35dcda327bbb41c5",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 367,
+              "column": 3
+            },
+            {
+              "title": "L1 UNRESOLVED: disruption shown, no proposal, no Accept CTA, safe notice",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 639,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:18.819Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-b5d30cd8965ed2403a05",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 374,
+              "column": 3
+            },
+            {
+              "title": "L2 PROPOSAL_READY: one real differing proposal, exactly one Accept CTA",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 531,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:19.469Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-bc4e817171377b0d7cbc",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 382,
+              "column": 3
+            },
+            {
+              "title": "L3 ACCEPTED: Accept CTA gone, handled confirmation shown",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 547,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:20.008Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-97ea9637abb59a93df61",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 396,
+              "column": 3
+            },
+            {
+              "title": "L4 MOBILITY_UNAVAILABLE-safe: rejected proposal offers no fake Accept CTA",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 527,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:20.562Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-e1bd1053621571bc92d9",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 412,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Qoder Live dark replan-state audit (Phase 4)",
+          "file": "qoder-live-structure.spec.ts",
+          "line": 434,
+          "column": 6,
+          "specs": [
+            {
+              "title": "L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 551,
+                      "error": {
+                        "message": "Error: L1 dark\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"v8-mobile-menu\\\"] \\\"菜单\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"topbar-avatar\\\"] \\\"XI\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"live-update-location\\\"] \\\"更新位置\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"live-report-rain\\\"] \\\"报告降雨\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-hub\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-trips\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-agent\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-me\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: L1 dark\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"v8-mobile-menu\\\"] \\\"菜单\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"topbar-avatar\\\"] \\\"XI\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"live-update-location\\\"] \\\"更新位置\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"live-report-rain\\\"] \\\"报告降雨\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-hub\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-trips\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-agent\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-me\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-live-structure.spec.ts:442:84",
+                        "location": {
+                          "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-live-structure.spec.ts",
+                          "column": 84,
+                          "line": 442
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 440 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"live-disruption\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 441 |\u001b[39m     \u001b[36mlet\u001b[39m scan \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m scanContrast(page)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 442 |\u001b[39m     expect(scan\u001b[33m.\u001b[39mrows\u001b[33m.\u001b[39mmap((v) \u001b[33m=>\u001b[39m \u001b[32m`${v.kind} ${v.selector} \"${v.text}\"`\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m\"L1 dark\"\u001b[39m)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 443 |\u001b[39m\n \u001b[90m 444 |\u001b[39m     \u001b[36mconst\u001b[39m proposal\u001b[33m:\u001b[39m \u001b[33mProposal\u001b[39m \u001b[33m=\u001b[39m {\n \u001b[90m 445 |\u001b[39m       id\u001b[33m:\u001b[39m \u001b[32m\"r-p1\"\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-live-structure.spec.ts",
+                            "column": 84,
+                            "line": 442
+                          },
+                          "message": "Error: L1 dark\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"v8-mobile-menu\\\"] \\\"菜单\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"topbar-avatar\\\"] \\\"XI\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"live-update-location\\\"] \\\"更新位置\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"live-report-rain\\\"] \\\"报告降雨\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-hub\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-trips\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-agent\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+   \"unclassified-control [data-testid=\\\"nav-me\\\"] \\\"\\\"\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  440 |     await expect(page.getByTestId(\"live-disruption\")).toBeVisible();\n  441 |     let scan = await scanContrast(page);\n> 442 |     expect(scan.rows.map((v) => `${v.kind} ${v.selector} \"${v.text}\"`), \"L1 dark\").toEqual([]);\n      |                                                                                    ^\n  443 |\n  444 |     const proposal: Proposal = {\n  445 |       id: \"r-p1\",\n    at D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-live-structure.spec.ts:442:84"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:21.099Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\test-results\\qoder-shuangshugong-0558\\qoder-live-structure-Qoder-1420b-no-dark-contrast-violations\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\e2e\\qoder-live-structure.spec.ts",
+                        "column": 84,
+                        "line": 442
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-1b0f4b1981a84f43e4ba",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 435,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Qoder Live map height + first screen (Phase 4)",
+          "file": "qoder-live-structure.spec.ts",
+          "line": 500,
+          "column": 6,
+          "specs": [
+            {
+              "title": "map is 240 normal and 200-216 when a decision is active; disruption reaches the fold",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3899,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[live-map] L0 branch=honest-empty-state height=97px\n"
+                        },
+                        {
+                          "text": "[live-map] L1 branch=honest-empty-state height=97px\n"
+                        },
+                        {
+                          "text": "[live-map] L2 branch=honest-empty-state height=97px\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:22.219Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ee838d5998f356af24a4-a2cda647cdcabcaff5ac",
+              "file": "qoder-live-structure.spec.ts",
+              "line": 503,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-09T17:51:13.989Z",
+    "duration": 13014.938,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

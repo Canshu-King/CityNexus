@@ -1,0 +1,12 @@
+# ORD-0558 shuangshugong frontend gate readout
+label=typecheck:all
+cwd=D:/moodle/_qoder_shuangshugong_0558/frontend
+command=npm run typecheck:all
+started=01:43:45 finished=01:43:53
+exit_code=0
+output_line_count=2
+--- output verbatim ---
+
+> typecheck:all
+> tsc -p tsconfig.typecheck.json --noEmit
+

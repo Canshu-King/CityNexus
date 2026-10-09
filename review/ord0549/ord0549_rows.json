@@ -1,0 +1,252 @@
+[
+ {
+  "ledger_line": 344,
+  "file": "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+  "signpost_line": 42,
+  "zh_text": "行前清单",
+  "en_text": "Pre-trip checklist",
+  "key": "detail.pretripAria",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2439",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1249"
+ },
+ {
+  "ledger_line": 345,
+  "file": "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+  "signpost_line": 46,
+  "zh_text": "行前清单",
+  "en_text": "Before you go",
+  "key": "detail.pretripKicker",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2440",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1250"
+ },
+ {
+  "ledger_line": 346,
+  "file": "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+  "signpost_line": 47,
+  "zh_text": "服务端报出的两类待办",
+  "en_text": "The two things the server reports as outstanding",
+  "key": "detail.pretripHeading",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2441",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1251"
+ },
+ {
+  "ledger_line": 347,
+  "file": "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+  "signpost_line": 80,
+  "zh_text": "依据：",
+  "en_text": "Basis: ",
+  "key": "detail.basisPrefix",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2442",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1252"
+ },
+ {
+  "ledger_line": 348,
+  "file": "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+  "signpost_line": 86,
+  "zh_text": "锚点：",
+  "en_text": "Anchor: ",
+  "key": "detail.anchorPrefix",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2443",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1253"
+ },
+ {
+  "ledger_line": 351,
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "signpost_line": 200,
+  "zh_text": "已取消",
+  "en_text": "Cancelled",
+  "key": "bookings.realtimeCancelled",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1609",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:365"
+ },
+ {
+  "ledger_line": 352,
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "signpost_line": 722,
+  "zh_text": "AI 帮我规划",
+  "en_text": "Plan my trip with AI",
+  "key": "itinerary.planWithAi",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2460",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1272"
+ },
+ {
+  "ledger_line": 353,
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "signpost_line": 729,
+  "zh_text": "关闭",
+  "en_text": "Close",
+  "key": "shell.close",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1415",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:157"
+ },
+ {
+  "ledger_line": 354,
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "signpost_line": 1018,
+  "zh_text": "技术详情",
+  "en_text": "Technical detail",
+  "key": "hub.continuationTechnicalDetail",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1509",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:257"
+ },
+ {
+  "ledger_line": 355,
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "signpost_line": 1061,
+  "zh_text": "这台设备自己量到的回读字段",
+  "en_text": "Fields this device measured",
+  "key": "detail.rawFactsHeading",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2452",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1262"
+ },
+ {
+  "ledger_line": 358,
+  "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "signpost_line": 1391,
+  "zh_text": "抵达",
+  "en_text": "Arrival",
+  "key": "ARRIVAL",
+  "zh_ref": "frontend/src/i18n/travelerLabels.ts:21",
+  "en_ref": "frontend/src/i18n/travelerLabels.ts:21"
+ },
+ {
+  "ledger_line": 359,
+  "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "signpost_line": 1480,
+  "zh_text": "技术详情",
+  "en_text": "Technical detail",
+  "key": "hub.continuationTechnicalDetail",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1509",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:257"
+ },
+ {
+  "ledger_line": 360,
+  "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "signpost_line": 1594,
+  "zh_text": "停止等待",
+  "en_text": "Stop waiting",
+  "key": "agent.aiRunStop",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1760",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:528"
+ },
+ {
+  "ledger_line": 363,
+  "file": "frontend/src/features/trip/ActivityDetail.tsx",
+  "signpost_line": 216,
+  "zh_text": "已提供",
+  "en_text": "Provided",
+  "key": "detail.hoursProvided",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2418",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1228"
+ },
+ {
+  "ledger_line": 364,
+  "file": "frontend/src/features/trip/ActivityDetail.tsx",
+  "signpost_line": 216,
+  "zh_text": " · 供应商原文",
+  "en_text": " · provider's own text",
+  "key": "detail.hoursProviderText",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2419",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1229"
+ },
+ {
+  "ledger_line": 367,
+  "file": "frontend/src/lib/errorReceipt.ts",
+  "signpost_line": 71,
+  "zh_text": "服务器回执号",
+  "en_text": "server receipt",
+  "key": "detail.receiptLabel",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2450",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1260"
+ },
+ {
+  "ledger_line": 368,
+  "file": "frontend/src/lib/errorReceipt.ts",
+  "signpost_line": 72,
+  "zh_text": "服务器未给回执号",
+  "en_text": "no server receipt",
+  "key": "detail.receiptLabelAbsent",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2451",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1261"
+ },
+ {
+  "ledger_line": 371,
+  "file": "frontend/src/app/V8Experience.tsx",
+  "signpost_line": 4864,
+  "zh_text": "高级详情",
+  "en_text": "Advanced detail",
+  "key": "agent.obsAdvancedDetail",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1779",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:547"
+ },
+ {
+  "ledger_line": 374,
+  "file": "frontend/src/components/RawFactsPanel.tsx",
+  "signpost_line": 39,
+  "zh_text": "这台设备自己量到的回读字段",
+  "en_text": "Fields this device measured",
+  "key": "detail.rawFactsHeading",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2452",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1262"
+ },
+ {
+  "ledger_line": 377,
+  "file": "frontend/src/features/agent/AgentComposer.tsx",
+  "signpost_line": 34,
+  "zh_text": "可行",
+  "en_text": "Feasible",
+  "key": "hub.feasible",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1472",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:214"
+ },
+ {
+  "ledger_line": 380,
+  "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+  "signpost_line": 563,
+  "zh_text": "重试",
+  "en_text": "Try again",
+  "key": "offline.retry",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1643",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:405"
+ },
+ {
+  "ledger_line": 383,
+  "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+  "signpost_line": 192,
+  "zh_text": "技术详情",
+  "en_text": "Technical detail",
+  "key": "hub.continuationTechnicalDetail",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1509",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:257"
+ },
+ {
+  "ledger_line": 386,
+  "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+  "signpost_line": 824,
+  "zh_text": "再读一次",
+  "en_text": "Read it again",
+  "key": "shared.refresh",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2379",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:1181"
+ },
+ {
+  "ledger_line": 389,
+  "file": "frontend/src/features/stay/HotelsPanel.tsx",
+  "signpost_line": 226,
+  "zh_text": "已选择",
+  "en_text": "Selected",
+  "key": "stay.selected",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:2099",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:879"
+ },
+ {
+  "ledger_line": 392,
+  "file": "frontend/src/features/stay/StayExplorer.tsx",
+  "signpost_line": 303,
+  "zh_text": "酒店",
+  "en_text": "Hotel",
+  "key": "inbox.typeHotel",
+  "zh_ref": "frontend/src/i18n/LocaleContext.tsx:1984",
+  "en_ref": "frontend/src/i18n/LocaleContext.tsx:757"
+ }
+]
