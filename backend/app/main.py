@@ -260,6 +260,7 @@ from app.execution.departure_activation import departure_activation_projection
 from app.execution.bootstrap_discovery import (
     BootstrapDiscoveryError,
     discover_bootstrap_candidates,
+    preview_bootstrap_candidate,
     select_bootstrap_candidate,
 )
 from app.execution.progress_drift import (
@@ -475,6 +476,7 @@ from app.schemas import (
     GeneratePlansRequest,
     BootstrapDiscoveryRequest,
     BootstrapSelectRequest,
+    BootstrapMapPreviewRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3453,6 +3455,41 @@ def select_bootstrap_journey_candidate(
             traveler_id=principal.traveler_id,
             receipt_id=payload.receipt_id,
             candidate_id=payload.candidate_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/preview")
+@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap/preview")
+def preview_bootstrap_journey_candidate(
+    journey_id: UUID,
+    payload: BootstrapMapPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Open one public OSM destination without materializing a Place or plan."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_candidate(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            candidate_id=payload.candidate_id,
+            public_map_consent=payload.public_map_consent,
+            latitude=payload.latitude,
+            longitude=payload.longitude,
         )
         session.commit()
         return result

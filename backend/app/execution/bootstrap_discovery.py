@@ -132,6 +132,24 @@ def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
     opening = json.loads(row.opening_hours_json or "{}")
     if not isinstance(opening, dict):
         opening = {"status": "UNKNOWN"}
+    metadata = json.loads(row.metadata_json or "{}")
+    if not isinstance(metadata, dict):
+        metadata = {}
+    osm_tags = metadata.get("osm_tags") or metadata.get("tags") or {}
+    if not isinstance(osm_tags, dict):
+        osm_tags = {}
+    source_tags = {
+        key: str(osm_tags[key])
+        for key in (
+            "opening_hours",
+            "website",
+            "contact:website",
+            "phone",
+            "contact:phone",
+            "email",
+        )
+        if osm_tags.get(key) not in (None, "")
+    }
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
     kind = str(evidence.get("osm_type") or "node")
     osm_id = str(evidence.get("osm_id") or "")
@@ -163,6 +181,21 @@ def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
         "price_state": "UNKNOWN",
         "eta_state": "UNKNOWN",
         "tags": json.loads(row.tags_json or "[]"),
+        "opening_hours": opening,
+        "opening_observed_at": row.captured_at,
+        "opening_source": "OpenStreetMap/Overpass",
+        "opening_claim": (
+            "OSM_TAG_CLAIM"
+            if source_tags.get("opening_hours")
+            else "NO_OPENING_TAG"
+        ),
+        "opening_verification_state": (
+            "PROVIDER_GROUNDED"
+            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
+            else "EXTERNAL_NOT_ATTESTED"
+        ),
+        "opening_verification_action": "OPEN_SOURCE_PAGE",
+        "source_tags": source_tags,
     }
 
 
@@ -535,6 +568,196 @@ def discover_bootstrap_candidates(
             ).all()
             if _candidate_scope_matches(row, member_id=member_id, traveler_id=traveler_id)
         ],
+    }
+
+
+def preview_bootstrap_candidate(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    receipt_id: UUID,
+    candidate_id: UUID,
+    public_map_consent: bool,
+    latitude: float,
+    longitude: float,
+) -> dict[str, Any]:
+    """Release one public destination to a map without changing Journey truth.
+
+    The returned URL contains only the selected public OSM destination.  The signed
+    receipt, member scope, expiry and exact WGS84 coordinates are checked again at the
+    release boundary so a stale screen cannot disclose a different candidate or a
+    foreground location as an origin.
+    """
+
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "map preview requires a DRAFT Journey",
+        )
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "map preview requires no PlanVersion",
+        )
+    if not public_map_consent:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PUBLIC_MAP_CONSENT_REQUIRED",
+            "explicit per-release public map consent is required",
+            status_code=422,
+            details={
+                "shared": ["public_destination"],
+                "withheld": ["origin", "foreground_gps", "query_center"],
+                "next_actions": ["CONFIRM_PUBLIC_MAP_CONSENT", "CANCEL_MAP_PREVIEW"],
+            },
+        )
+    _finite_coordinate(float(latitude), float(longitude))
+    row = session.scalar(
+        select(RealPlaceCandidate).where(
+            RealPlaceCandidate.id == str(candidate_id),
+            RealPlaceCandidate.journey_id == journey.id,
+            RealPlaceCandidate.provider_key == "overpass",
+        )
+    )
+    if row is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_CANDIDATE_NOT_FOUND",
+            "bootstrap candidate was not found",
+            status_code=404,
+        )
+    evidence = json.loads(row.evidence_json or "{}")
+    if not evidence.get("bootstrap") or str(evidence.get("receipt_id")) != str(receipt_id):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_RECEIPT_MISMATCH",
+            "candidate does not belong to this discovery receipt",
+            status_code=403,
+        )
+    if str(evidence.get("member_id")) != str(member.id) or str(evidence.get("traveler_id")) != str(traveler_id):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_MEMBER_MISMATCH",
+            "candidate belongs to another signed member",
+            status_code=403,
+        )
+    if row.status != "BOOTSTRAP_PRIVATE" or row.materialized_place_id is not None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_CANDIDATE_UNAVAILABLE",
+            "bootstrap candidate is no longer available for map preview",
+            status_code=409,
+        )
+    if row.expires_at:
+        try:
+            expires_at = datetime.fromisoformat(row.expires_at).astimezone(timezone.utc)
+        except ValueError:
+            expires_at = _now() - timedelta(seconds=1)
+        if expires_at <= _now():
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_RECEIPT_EXPIRED",
+                "the discovery receipt expired; search again before opening a public map",
+                status_code=410,
+                details={"next_actions": ["SEARCH_AGAIN", "CANCEL_MAP_PREVIEW"]},
+            )
+    if not math.isclose(float(latitude), float(row.latitude), abs_tol=1e-6) or not math.isclose(
+        float(longitude), float(row.longitude), abs_tol=1e-6
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_MAP_PREVIEW_COORDINATE_MISMATCH",
+            "the pending map destination changed; cancel this preview and choose the candidate again",
+            status_code=409,
+            details={
+                "next_actions": ["CANCEL_MAP_PREVIEW", "CHOOSE_CANDIDATE_AGAIN"],
+                "coordinate_system": "WGS84",
+            },
+        )
+    osm = _osm_identity(
+        DiscoveryCandidate(
+            provider_key=row.provider_key,
+            external_id=row.external_id,
+            name=row.name,
+            category=row.category,
+            latitude=row.latitude,
+            longitude=row.longitude,
+            tags=(),
+            opening_hours={},
+            metadata={},
+        )
+    )
+    if osm is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_IDENTITY_INVALID",
+            "candidate OSM identity is invalid",
+            status_code=422,
+        )
+    osm_type, osm_id = osm
+    source_url = f"https://www.openstreetmap.org/{osm_type}/{osm_id}"
+    map_url = (
+        "https://www.openstreetmap.org/?mlat="
+        f"{float(row.latitude):.7f}&mlon={float(row.longitude):.7f}"
+        f"#map=18/{float(row.latitude):.7f}/{float(row.longitude):.7f}"
+    )
+    metadata = json.loads(row.metadata_json or "{}")
+    if not isinstance(metadata, dict):
+        metadata = {}
+    osm_tags = metadata.get("osm_tags") or metadata.get("tags") or {}
+    if not isinstance(osm_tags, dict):
+        osm_tags = {}
+    source_tags = {
+        key: str(osm_tags[key])
+        for key in (
+            "opening_hours",
+            "website",
+            "contact:website",
+            "phone",
+            "contact:phone",
+            "email",
+        )
+        if osm_tags.get(key) not in (None, "")
+    }
+    opening = json.loads(row.opening_hours_json or "{}")
+    if not isinstance(opening, dict):
+        opening = {"status": "UNKNOWN"}
+    opening_status = str(opening.get("status") or "UNKNOWN").upper()
+    return {
+        "preview_id": str(uuid4()),
+        "status": "PUBLIC_DESTINATION_READY",
+        "journey_id": journey.id,
+        "receipt_id": str(receipt_id),
+        "candidate_id": row.id,
+        "expires_at": row.expires_at,
+        "provider": "overpass",
+        "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+        "destination": {
+            "name": row.name,
+            "external_id": row.external_id,
+            "osm_type": osm_type,
+            "osm_id": osm_id,
+            "latitude": row.latitude,
+            "longitude": row.longitude,
+            "coordinate_system": "WGS84",
+            "source_url": source_url,
+            "map_url": map_url,
+        },
+        "opening": {
+            "state": opening_status,
+            "raw": opening.get("raw") or source_tags.get("opening_hours"),
+            "source_tags": source_tags,
+            "source": "OpenStreetMap/Overpass",
+            "observed_at": row.captured_at,
+            "claim": "OSM_TAG_CLAIM" if source_tags.get("opening_hours") else "NO_OPENING_TAG",
+            "verification_state": (
+                "PROVIDER_GROUNDED"
+                if opening_status in _BOOTSTRAP_GROUNDED_OPENING
+                else "EXTERNAL_NOT_ATTESTED"
+            ),
+            "verification_action": "OPEN_SOURCE_PAGE",
+        },
+        "explore_state": "DRAFT_EXPLORE_ONLY",
+        "shared_fields": ["public_destination", "osm_id", "source_url"],
+        "withheld_fields": ["origin", "foreground_gps", "query_center", "member_id", "traveler_id"],
+        "plan_version_id": None,
+        "selected_place_id": None,
     }
 
 

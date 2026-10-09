@@ -1687,6 +1687,13 @@ export interface BootstrapDiscoveryCandidate {
   price_state: "UNKNOWN";
   eta_state: "UNKNOWN";
   tags: string[];
+  opening_hours: Record<string, unknown>;
+  opening_observed_at: string;
+  opening_source: string;
+  opening_claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
+  opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
+  opening_verification_action: "OPEN_SOURCE_PAGE";
+  source_tags: Record<string, string>;
 }
 
 export interface BootstrapDiscoveryResponse {
@@ -1708,6 +1715,43 @@ export interface BootstrapSelectionResponse {
   plan_version_id: string | null;
   journey_status: string;
   provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+}
+
+export interface BootstrapMapPreviewResponse {
+  preview_id: string;
+  status: "PUBLIC_DESTINATION_READY";
+  journey_id: string;
+  receipt_id: string;
+  candidate_id: string;
+  expires_at: string | null;
+  provider: "overpass";
+  provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+  destination: {
+    name: string;
+    external_id: string;
+    osm_type: string;
+    osm_id: string;
+    latitude: number;
+    longitude: number;
+    coordinate_system: "WGS84";
+    source_url: string;
+    map_url: string;
+  };
+  opening: {
+    state: string;
+    raw: string | null;
+    source_tags: Record<string, string>;
+    source: string;
+    observed_at: string;
+    claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
+    verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
+    verification_action: "OPEN_SOURCE_PAGE";
+  };
+  explore_state: "DRAFT_EXPLORE_ONLY";
+  shared_fields: string[];
+  withheld_fields: string[];
+  plan_version_id: string | null;
+  selected_place_id: string | null;
 }
 
 export interface AgentRunStep {
@@ -2612,6 +2656,27 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify({ receipt_id: receiptId, candidate_id: candidateId }),
+      },
+    );
+  },
+
+  previewBootstrapCandidate(
+    journeyId: string,
+    input: {
+      receipt_id: string;
+      candidate_id: string;
+      public_map_consent: boolean;
+      latitude: number;
+      longitude: number;
+      coordinate_system: "WGS84";
+    },
+  ): Promise<BootstrapMapPreviewResponse> {
+    return requestJson<BootstrapMapPreviewResponse>(
+      "/journeys/" + journeyId + "/bootstrap-discovery/preview",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
       },
     );
   },

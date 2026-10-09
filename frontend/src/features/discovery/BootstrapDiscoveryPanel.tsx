@@ -6,6 +6,12 @@ import {
 } from "../../api/citynexus";
 
 type SourceKind = "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
+type PendingMapPreview = {
+  candidateId: string;
+  receiptId: string;
+  latitude: number;
+  longitude: number;
+};
 
 export function BootstrapDiscoveryPanel({
   journeyId,
@@ -28,6 +34,10 @@ export function BootstrapDiscoveryPanel({
   const [busy, setBusy] = useState(false);
   const [selecting, setSelecting] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [pendingMapPreview, setPendingMapPreview] = useState<PendingMapPreview | null>(null);
+  const [mapConsent, setMapConsent] = useState(false);
+  const [mapBusy, setMapBusy] = useState(false);
+  const [exploreNotice, setExploreNotice] = useState<string | null>(null);
 
   const useForegroundGps = () => {
     setMessage(null);
@@ -73,6 +83,9 @@ export function BootstrapDiscoveryPanel({
         mode: "live",
       });
       setResult(next);
+      setPendingMapPreview(null);
+      setMapConsent(false);
+      setExploreNotice(null);
       if (next.status === "PROVIDER_UNAVAILABLE") {
         setMessage("The public provider is unavailable. Use a public map center and try again later.");
       } else if (next.status === "PROVIDER_DISABLED") {
@@ -102,6 +115,69 @@ export function BootstrapDiscoveryPanel({
       setMessage(error instanceof Error ? error.message : "That place is no longer selectable.");
     } finally {
       setSelecting(null);
+    }
+  };
+
+  const beginMapPreview = (candidate: BootstrapDiscoveryCandidate) => {
+    if (!result?.receipt_id) {
+      setMessage("Search again before opening a public map preview.");
+      return;
+    }
+    setMessage(null);
+    setExploreNotice(null);
+    setMapConsent(false);
+    setPendingMapPreview({
+      candidateId: candidate.candidate_id,
+      receiptId: result.receipt_id,
+      latitude: candidate.latitude,
+      longitude: candidate.longitude,
+    });
+  };
+
+  const cancelMapPreview = () => {
+    setPendingMapPreview(null);
+    setMapConsent(false);
+  };
+
+  const confirmMapPreview = async () => {
+    if (!pendingMapPreview || !result?.receipt_id) return;
+    if (!mapConsent) {
+      setMessage("Confirm this one-time public map release before opening it.");
+      return;
+    }
+    const current = result.candidates.find((item) => item.candidate_id === pendingMapPreview.candidateId);
+    if (
+      !current ||
+      result.receipt_id !== pendingMapPreview.receiptId ||
+      current.latitude !== pendingMapPreview.latitude ||
+      current.longitude !== pendingMapPreview.longitude
+    ) {
+      cancelMapPreview();
+      setMessage("This map preview is stale. Search again and choose the candidate again.");
+      return;
+    }
+    setMapBusy(true);
+    setMessage(null);
+    try {
+      const released = await cityNexusApi.previewBootstrapCandidate(journeyId, {
+        receipt_id: pendingMapPreview.receiptId,
+        candidate_id: pendingMapPreview.candidateId,
+        public_map_consent: true,
+        latitude: pendingMapPreview.latitude,
+        longitude: pendingMapPreview.longitude,
+        coordinate_system: "WGS84",
+      });
+      window.open(released.destination.map_url, "_blank", "noopener,noreferrer");
+      setExploreNotice(
+        "Public destination opened. Explore first: no Place, PlanVersion, route, or Journey start was created. Opening is still " +
+          (released.opening.verification_state === "EXTERNAL_NOT_ATTESTED" ? "EXTERNAL_NOT_ATTESTED." : "provider-grounded, not freshly rechecked."),
+      );
+      cancelMapPreview();
+    } catch (error) {
+      cancelMapPreview();
+      setMessage(error instanceof Error ? error.message : "The public map release was cancelled.");
+    } finally {
+      setMapBusy(false);
     }
   };
 
@@ -190,6 +266,11 @@ export function BootstrapDiscoveryPanel({
           ) : null}
         </div>
         {message ? <p role="status">{message}</p> : null}
+        {exploreNotice ? (
+          <p role="status" data-testid="bootstrap-explore-state">
+            {exploreNotice}
+          </p>
+        ) : null}
         {result?.status === "PROVIDER_UNAVAILABLE" || result?.status === "PROVIDER_DISABLED" ? (
           <p>
             <a href={mapFallback} target="_blank" rel="noreferrer" data-testid="bootstrap-map-fallback">
@@ -214,11 +295,70 @@ export function BootstrapDiscoveryPanel({
                 ) : null}
                 <p>
                   {candidate.source_url ? (
-                    <a href={candidate.source_url} target="_blank" rel="noreferrer">
-                      OpenStreetMap source
+                    <a
+                      href={candidate.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-testid={`bootstrap-source-${candidate.candidate_id}`}
+                    >
+                      Open public source to verify
                     </a>
                   ) : null}
                 </p>
+                <div data-testid={`bootstrap-source-facts-${candidate.candidate_id}`}>
+                  <p>
+                    Opening evidence: {candidate.opening_claim ?? "NO_OPENING_TAG"} · observed {candidate.opening_observed_at ?? "unknown"} · {candidate.opening_verification_state === "PROVIDER_GROUNDED" ? "provider-grounded, not freshly rechecked" : "EXTERNAL_NOT_ATTESTED"}
+                  </p>
+                  {candidate.opening_hours?.raw ? <p>OSM opening_hours: {String(candidate.opening_hours.raw)}</p> : null}
+                  {Object.entries(candidate.source_tags ?? {}).map(([key, value]) => (
+                    <p key={key}>
+                      {key}: {value}
+                    </p>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  data-testid={`bootstrap-map-preview-${candidate.candidate_id}`}
+                  disabled={selecting !== null || mapBusy}
+                  onClick={() => beginMapPreview(candidate)}
+                >
+                  Preview on public map
+                </button>
+                {pendingMapPreview?.candidateId === candidate.candidate_id ? (
+                  <div className="journey-membership-map-consent" data-testid={`bootstrap-map-consent-${candidate.candidate_id}`}>
+                    <p>
+                      One-time consent: share only this public destination with OpenStreetMap. No saved origin,
+                      query center, or precise foreground GPS will be sent to the map.
+                    </p>
+                    <label>
+                      <input
+                        type="checkbox"
+                        data-testid="bootstrap-map-consent-checkbox"
+                        checked={mapConsent}
+                        onChange={(event) => setMapConsent(event.target.checked)}
+                      />
+                      I agree to open this public destination now.
+                    </label>
+                    <div className="v8-actions">
+                      <button
+                        type="button"
+                        data-testid="bootstrap-map-preview-confirm"
+                        disabled={!mapConsent || mapBusy}
+                        onClick={() => void confirmMapPreview()}
+                      >
+                        {mapBusy ? "Opening…" : "Open public map"}
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="bootstrap-map-preview-cancel"
+                        disabled={mapBusy}
+                        onClick={cancelMapPreview}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
                 <button
                   type="button"
                   data-testid={`bootstrap-select-${candidate.candidate_id}`}
