@@ -38,7 +38,7 @@ import {
   READ_DEADLINE_MS,
 } from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
-import { travelerAuthHeaders } from "../lib/travelerSession";
+import { storeTravelerBearer, travelerAuthHeaders } from "../lib/travelerSession";
 import {
   clearPendingContinuation,
   continuePendingPlan,
@@ -72,6 +72,7 @@ import {
   tripsTabPanels,
 } from "./v8PanelRegistry";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
+import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import {
   JourneyTrialSetup,
@@ -614,6 +615,10 @@ export function V8Experience() {
     string | undefined
   >();
   const [setupOpen, setSetupOpen] = useState(false);
+  const [bootstrapJourney, setBootstrapJourney] = useState<{
+    id: string;
+    cityCode: string;
+  } | null>(null);
   const [planAiOpen, setPlanAiOpen] = useState(false);
   // Reference screen 08: the dedicated activity detail surface.
   const [detailActivityId, setDetailActivityId] = useState<string | null>(null);
@@ -760,6 +765,32 @@ export function V8Experience() {
     setCachedCopySaved(await saveOfflineJourneyVerified(nextOffline));
   };
 
+  const detectBootstrapJourney = async (journeyId: string): Promise<boolean> => {
+    try {
+      const journey = await v8Request<{
+        id: string;
+        city_code: string;
+        status: string;
+        active_plan_version_id?: string | null;
+      }>(`/api/v1/journeys/${journeyId}`);
+      if (
+        String(journey.status).toUpperCase() !== "DRAFT" ||
+        journey.active_plan_version_id
+      ) {
+        return false;
+      }
+      const places = await v8Request<Array<{ id: string }>>(
+        `/api/v1/places?city_code=${encodeURIComponent(journey.city_code)}`,
+      );
+      if (places.length !== 0) return false;
+      setBootstrapJourney({ id: journey.id, cityCode: journey.city_code });
+      setSetupOpen(false);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   // Authoritative V12 mutations refetch PlanVersion/JourneyTwin through
   // TanStack Query.  Keep the browser's read-only Dexie cache on the same
   // server snapshot immediately after those mutations as well; it must never
@@ -783,6 +814,10 @@ export function V8Experience() {
       try {
         let journeyId = localStorage.getItem("citynexus.v8.journey_id");
         if (journeyId) {
+          if (await detectBootstrapJourney(journeyId)) {
+            if (!cancelled) setBusy(false);
+            return;
+          }
           try {
             await load(journeyId);
           } catch (error) {
@@ -1106,7 +1141,7 @@ export function V8Experience() {
         draft.timezone.trim(),
       );
       setCreatePhase("traveler");
-      const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
+      const traveler = await v8Request<{ id: string; access_token?: string }>("/api/v1/travelers", {
         method: "POST",
         signal: controller.signal,
         body: JSON.stringify({
@@ -1115,6 +1150,7 @@ export function V8Experience() {
           timezone: draft.timezone.trim(),
         }),
       });
+      if (traveler.access_token) storeTravelerBearer(traveler.access_token);
       setCreatePhase("journey");
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
@@ -1157,6 +1193,23 @@ export function V8Experience() {
         await syncStatedInterests(traveler.id, draft.interests ?? []);
       } catch {
         /* left un-stated on purpose; see the gate `ord0238-2-…` */
+      }
+      const initialPlaces = await v8Request<Array<{ id: string }>>(
+        `/api/v1/places?city_code=${encodeURIComponent(cityCode)}`,
+        { signal: controller.signal },
+      );
+      if (initialPlaces.length === 0) {
+        // A new Journey with no catalogue must stop at source-linked discovery;
+        // stay search and plan generation would otherwise manufacture a dead end.
+        setCreatePhase("experience");
+        setSetupOpen(false);
+        setBootstrapJourney({ id: journey.id, cityCode });
+        try {
+          await load(journey.id);
+        } catch {
+          setData(null);
+        }
+        return;
       }
       const stayCount = await searchStayOptions(
         journey.id,
@@ -1205,6 +1258,31 @@ export function V8Experience() {
       createAbortRef.current = null;
     }
   };
+
+  const completeBootstrap = async (placeId: string) => {
+    const pending = bootstrapJourney;
+    if (!pending) return;
+    setBootstrapJourney(null);
+    setBusy(true);
+    try {
+      await load(pending.id);
+      navigate("hub");
+      setPlanAiOpen(true);
+      setMessage(
+        locale.startsWith("zh")
+          ? `已添加一个有来源的公共地点（${placeId}）。营业时间和价格仍未知，计划会保留事实阻塞。`
+          : `One source-linked public place was added (${placeId}). Opening hours and price remain unknown, so native planning will keep the exact fact blocker.`,
+      );
+    } catch (error) {
+      setMessage(
+        refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
+        refusalFacts(error),
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const selectOption = async (id: string) => {
     if (!data) return;
     setBusy(true);
@@ -1560,6 +1638,24 @@ export function V8Experience() {
   // the product decision, not a scoping miss.  Do not "fix" it by moving the return inside
   // the shell: the visual ground for these screens is the onboarding wrapper's job, and a
   // shell migration for one screen is a much larger change than the wording it would buy.
+  if (bootstrapJourney)
+    return (
+      <BootstrapDiscoveryPanel
+        journeyId={bootstrapJourney.id}
+        cityCode={bootstrapJourney.cityCode}
+        onCompleted={completeBootstrap}
+        onCancel={() => {
+          setBootstrapJourney(null);
+          setMessage(
+            locale.startsWith("zh")
+              ? "已取消首地点发现；尚未向公共提供方发起请求。"
+              : "First-place discovery was cancelled; no public-provider request was made.",
+          );
+          if (data) navigate("hub");
+          else setSetupOpen(true);
+        }}
+      />
+    );
   if (setupOpen)
     return (
       <>

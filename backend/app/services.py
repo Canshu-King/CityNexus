@@ -1909,6 +1909,8 @@ def _generic_compose_plans(
     journey: Journey,
     planning_mode: str,
     place_ids: Sequence[str],
+    *,
+    allow_single_place: bool = False,
 ) -> list[PlanVersion]:
     """Compose a bounded plan from explicit POIs rather than city templates.
 
@@ -1940,7 +1942,7 @@ def _generic_compose_plans(
                 "requested_place_ids": list(selected_ids),
             },
         )
-    if len(places) < 2:
+    if len(places) < 2 and not (allow_single_place and len(places) == 1):
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
 
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
@@ -2288,6 +2290,8 @@ def _generic_compose_variants(
     planning_mode: str,
     place_ids: Sequence[str],
     candidate_count: int,
+    *,
+    allow_single_place: bool = False,
 ) -> list[PlanVersion]:
     """Compose genuinely different candidates from the same discovered POIs.
 
@@ -2300,7 +2304,7 @@ def _generic_compose_variants(
     """
 
     ordered = list(dict.fromkeys(str(item) for item in place_ids))
-    if len(ordered) < 2:
+    if len(ordered) < 2 and not (allow_single_place and len(ordered) == 1):
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
 
     places_for_scope = {
@@ -2366,8 +2370,11 @@ def _generic_compose_variants(
             details={"city_code": journey.city_code, "place_ids": lodging_ids},
         )
 
-    # Distinct scopes, longest first, never below two stops.
+    # Distinct scopes, longest first. The one-place scope exists only for the
+    # explicit zero-catalogue bootstrap opt-in.
     scopes: list[list[str]] = []
+    if allow_single_place and len(ordered) == 1:
+        scopes = [ordered]
     for drop in range(min(3, len(ordered) - 1)):
         scope = ordered[: len(ordered) - drop]
         if len(scope) >= 2 and scope not in scopes:
@@ -2385,7 +2392,13 @@ def _generic_compose_variants(
     for scope in scopes:
         try:
             created.extend(
-                _generic_compose_plans(session, journey, planning_mode, scope)
+                _generic_compose_plans(
+                    session,
+                    journey,
+                    planning_mode,
+                    scope,
+                    allow_single_place=allow_single_place,
+                )
             )
         except ValueError as exc:
             failures.append(str(exc))
@@ -2409,7 +2422,7 @@ def _generic_compose_variants(
         all_cost_failures = bool(failures) and len(names) == len(failures) and all(
             name == PLACE_COST_UNVERIFIED for name in names
         )
-        provider_backed = len(provider_places) >= 2 and all(
+        provider_backed = len(provider_places) >= (1 if allow_single_place else 2) and all(
             str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
             and str(place.external_id or "").casefold().startswith("overpass:")
             for place in provider_places
@@ -2652,10 +2665,16 @@ def generate_plans(
     candidate_count: int,
     *,
     place_ids: Sequence[str] | None = None,
+    allow_single_place: bool = False,
 ) -> list[PlanVersion]:
     if place_ids:
         return _generic_compose_variants(
-            session, journey, planning_mode, place_ids, candidate_count
+            session,
+            journey,
+            planning_mode,
+            place_ids,
+            candidate_count,
+            allow_single_place=allow_single_place,
         )
     existing_max = (
         session.scalar(

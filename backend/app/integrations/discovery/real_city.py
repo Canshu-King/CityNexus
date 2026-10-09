@@ -921,9 +921,15 @@ class OverpassPOIProvider:
         longitude: float,
         radius_m: int,
         limit: int,
+        max_attempts: int | None = None,
     ) -> list[DiscoveryCandidate]:
         candidates, _attempts = self.search_with_evidence(
-            query, latitude=latitude, longitude=longitude, radius_m=radius_m, limit=limit
+            query,
+            latitude=latitude,
+            longitude=longitude,
+            radius_m=radius_m,
+            limit=limit,
+            max_attempts=max_attempts,
         )
         return candidates
 
@@ -935,6 +941,7 @@ class OverpassPOIProvider:
         longitude: float,
         radius_m: int,
         limit: int,
+        max_attempts: int | None = None,
     ) -> tuple[list[DiscoveryCandidate], list[dict[str, Any]]]:
         """Ask one bounded category question, and report which endpoints actually answered.
 
@@ -1008,6 +1015,10 @@ class OverpassPOIProvider:
         urls = [f"{self.base_url}/interpreter"] + [
             url for url in OVERPASS_MIRRORS if url != f"{self.base_url}/interpreter"
         ]
+        if max_attempts is not None:
+            if max_attempts < 1:
+                raise ValueError("max_attempts must be positive")
+            urls = urls[:max_attempts]
         for url in urls:
             started = time.monotonic()
             try:

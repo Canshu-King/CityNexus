@@ -290,6 +290,26 @@ class RealCityDiscoveryRequest(BaseModel):
     mode: Literal["replay", "captured_replay", "live"] = "captured_replay"
 
 
+class BootstrapDiscoveryRequest(BaseModel):
+    """Pre-plan discovery for a new Journey with no materialized catalogue."""
+
+    query: str = Field(default="cafe", min_length=1, max_length=120)
+    radius_m: int = Field(default=2500, ge=100, le=5000)
+    limit: int = Field(default=3, ge=1, le=3)
+    source_kind: Literal["FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"]
+    provider_consent: bool = False
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"] = "WGS84"
+    accuracy_m: float | None = Field(default=None, gt=0, le=1000)
+    mode: Literal["live"] = "live"
+
+
+class BootstrapSelectRequest(BaseModel):
+    receipt_id: UUID
+    candidate_id: UUID
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)
@@ -928,7 +948,11 @@ class PlanVersion(BaseModel):
 class GeneratePlansRequest(BaseModel):
     planning_mode: PlanningMode | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
-    place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
+    # The zero-catalogue bootstrap may hand native planning exactly one selected
+    # public Place.  It is opt-in so existing explicit-POI callers retain the
+    # two-stop contract and its refusal code.
+    allow_single_place: bool = False
     #: ORD-0272: *whose* batch this is - business semantics, so it lives in the body.
     #: `Idempotency-Key` stays the transport-level "is this the same send" control; merging the
     #: two into one key would make "same mission, different request" and "same request, resent"

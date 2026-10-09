@@ -1664,6 +1664,46 @@ export interface ProviderMeshResponse {
   }>;
 }
 
+export interface BootstrapDiscoveryCandidate {
+  candidate_id: string;
+  name: string;
+  category: string;
+  external_id: string;
+  osm_type: string;
+  osm_id: string;
+  source_url: string | null;
+  latitude: number;
+  longitude: number;
+  coordinate_system: "WGS84";
+  distance_m: number | null;
+  opening_state: "UNKNOWN";
+  availability_confidence: "UNVERIFIED";
+  price_state: "UNKNOWN";
+  eta_state: "UNKNOWN";
+  tags: string[];
+}
+
+export interface BootstrapDiscoveryResponse {
+  journey_id: string;
+  status: "LIVE_RESULTS" | "LIVE_ZERO_RESULTS" | "PROVIDER_DISABLED" | "PROVIDER_UNAVAILABLE" | "RATE_LIMITED";
+  receipt_id: string | null;
+  expires_at: string | null;
+  source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
+  provider: "overpass";
+  provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+  attempts: Array<Record<string, unknown>>;
+  candidates: BootstrapDiscoveryCandidate[];
+  failure_code?: string;
+}
+
+export interface BootstrapSelectionResponse {
+  journey_id: string;
+  selected_place_id: string;
+  plan_version_id: string | null;
+  journey_status: string;
+  provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+}
+
 export interface AgentRunStep {
   id?: string;
   sequence_no: number;
@@ -2505,6 +2545,46 @@ export const cityNexusApi = {
       method: "POST",
       body: JSON.stringify({ query, mode, limit: 8, radius_m: 2500 }),
     });
+  },
+
+  bootstrapDiscovery(
+    journeyId: string,
+    input: {
+      query: string;
+      radius_m: number;
+      limit: number;
+      source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
+      provider_consent: boolean;
+      latitude: number;
+      longitude: number;
+      coordinate_system: "WGS84";
+      accuracy_m?: number;
+      mode: "live";
+    },
+  ): Promise<BootstrapDiscoveryResponse> {
+    return requestJson<BootstrapDiscoveryResponse>(
+      "/journeys/" + journeyId + "/bootstrap-discovery",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  selectBootstrapCandidate(
+    journeyId: string,
+    receiptId: string,
+    candidateId: string,
+  ): Promise<BootstrapSelectionResponse> {
+    return requestJson<BootstrapSelectionResponse>(
+      "/journeys/" + journeyId + "/bootstrap-discovery/select",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ receipt_id: receiptId, candidate_id: candidateId }),
+      },
+    );
   },
 
   startGuardianAutopilot(journeyId: string, intervalSeconds = 0.5): Promise<Record<string, unknown>> {

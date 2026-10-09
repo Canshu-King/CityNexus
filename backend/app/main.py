@@ -257,6 +257,11 @@ from app.execution.readiness import (
     refresh_departure_readiness,
 )
 from app.execution.departure_activation import departure_activation_projection
+from app.execution.bootstrap_discovery import (
+    BootstrapDiscoveryError,
+    discover_bootstrap_candidates,
+    select_bootstrap_candidate,
+)
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
     progress_drift_projection,
@@ -468,6 +473,8 @@ from app.schemas import (
     EdgeObservationRequest,
     EventCreate,
     GeneratePlansRequest,
+    BootstrapDiscoveryRequest,
+    BootstrapSelectRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3341,6 +3348,7 @@ def get_journey_provider_mesh(
     candidates = session.scalars(
         select(RealPlaceCandidate)
         .where(RealPlaceCandidate.journey_id == journey.id)
+        .where(RealPlaceCandidate.materialized_place_id.is_not(None))
         .order_by(RealPlaceCandidate.captured_at.desc(), RealPlaceCandidate.name)
         .limit(20)
     ).all()
@@ -3371,6 +3379,87 @@ def get_journey_provider_mesh(
             for row in candidates
         ],
     }
+
+
+def _bootstrap_http_error(exc: BootstrapDiscoveryError) -> HTTPException:
+    return HTTPException(
+        status_code=exc.status_code,
+        detail={
+            "error": exc.code,
+            "message": str(exc),
+            "details": exc.details,
+        },
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery")
+@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap")
+def bootstrap_journey_discovery(
+    journey_id: UUID,
+    payload: BootstrapDiscoveryRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Find public candidates for a signed, empty DRAFT Journey without creating a plan."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = discover_bootstrap_candidates(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            query=payload.query,
+            radius_m=payload.radius_m,
+            limit=payload.limit,
+            source_kind=payload.source_kind,
+            provider_consent=payload.provider_consent,
+            latitude=payload.latitude,
+            longitude=payload.longitude,
+            accuracy_m=payload.accuracy_m,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/select")
+@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap/select")
+def select_bootstrap_journey_candidate(
+    journey_id: UUID,
+    payload: BootstrapSelectRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Materialize exactly the selected bootstrap candidate into one public Place."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = select_bootstrap_candidate(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            candidate_id=payload.candidate_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
 
 
 @app.post("/api/v1/journeys/{journey_id}/real-city/discover", response_model=RealCityDiscoveryResponse)
@@ -4917,7 +5006,15 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     session.commit()
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
-    return traveler_schema(traveler)
+    body = traveler_schema(traveler).model_dump(mode="json")
+    # The browser's first Journey write must be able to enter the signed-member
+    # bootstrap route without a second, unsourced identity hand-off.  The token
+    # is still server-issued and absent when the auth boundary is not configured.
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import issue_traveler_token
+
+        body["access_token"] = issue_traveler_token(traveler.id)
+    return body
 
 
 @app.get("/api/v1/travelers/{traveler_id}")
@@ -15598,6 +15695,7 @@ def _plan_continuation_identity(journey_id: UUID, journey: Journey,
             "planning_mode": request.planning_mode or journey.planning_mode,
             "candidate_count": request.candidate_count,
             "place_ids": request.place_ids,
+            "allow_single_place": request.allow_single_place,
         }
     )
     keys = [f"plans.generate:{transport_key}"] if transport_key is not None else []
@@ -15863,6 +15961,7 @@ def _generate_plans_answer(session: Session, journey: Journey,
         planning_mode,
         request.candidate_count,
         place_ids=request.place_ids,
+        allow_single_place=request.allow_single_place,
     )
     record_replan_outcome(
         session,
