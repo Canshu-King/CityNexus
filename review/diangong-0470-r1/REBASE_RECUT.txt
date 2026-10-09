@@ -1,0 +1,9 @@
+recut onto the tip the line moved to while this lane was working
+first cut base = 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2 (the sha named in the order, read back then)
+delivered head base = 7500987a25a793e4ade018bb829b7c54cb982cca
+files landed on the line between those two, and whether any is a file this lane touches:
+31
+0
+gate at the recut head:   38 passed (1.2m)
+backend --collect-only at the recut head: 1796 tests collected in 8.69s
+backend --collect-only at the first cut base: 1788 tests collected in 9.62s
