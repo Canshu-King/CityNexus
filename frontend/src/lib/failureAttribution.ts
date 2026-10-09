@@ -22,6 +22,9 @@
  */
 
 import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from "./readDeadline";
+/* ORD-0557: the media-type fallbacks below read the traveller word this table already owns, so 未知
+   lives in one place instead of being re-typed per screen.  The word itself is not rewritten. */
+import { categoryLabel } from "../i18n/travelerLabels";
 
 export type AttributionReason =
   | "JOURNEY_NOT_FOUND"
@@ -494,7 +497,7 @@ export function copyFor(
               ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
               : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
               : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
@@ -503,7 +506,7 @@ export function copyFor(
               ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
               : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
+              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
               : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
     /* ORD-0457: a refusal to be asked again so soon is not a failed read, and the wait is only ever
