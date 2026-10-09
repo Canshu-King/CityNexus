@@ -1,0 +1,23 @@
+ORD-0395 ruling three -- isolated runs of the contested cells, one tree per block.
+### my_branch (HEAD ffb4165f9)
+   test_H07_the_two_forbidden_shortcuts_were_not_taken
+      1 failed in 0.42s
+      D:\moodle\_qoder_lane_heyuegong_20261009\wt\backend\tests\test_qoder_ord0479_dictionary_key_shape.py:315: AssertionError: the order's base 127ce7b05329 is not an ancestor
+   test_G07_the_converted_cell_skips_in_an_export_and_asserts
+      1 failed in 3.21s
+      D:\moodle\_qoder_lane_heyuegong_20261009\wt\backend\tests\test_qoder_ord0495_gitshow_portable.py:194: AssertionError: er never
+   test_the_served_only_statuses_are_registered_by_name_and_s
+      1 passed in 6.19s
+### baseline_parent (HEAD 3ca65c3c4)
+   test_H07_the_two_forbidden_shortcuts_were_not_taken
+      1 failed in 0.27s
+      E:\hg_0395\wt_base\backend\tests\test_qoder_ord0479_dictionary_key_shape.py:315: AssertionError: the order's base 127ce7b05329 is not an ancestor of HEAD
+   test_G07_the_converted_cell_skips_in_an_export_and_asserts
+      1 failed in 1.86s
+      E:\hg_0395\wt_base\backend\tests\test_qoder_ord0495_gitshow_portable.py:194: AssertionError: ith a generation this order never
+   test_the_served_only_statuses_are_registered_by_name_and_s
+      NOT_PRESENT in this tree (the file or the cell does not exist, so nothing ran)
+
+suite_base_r3.txt: 18 failed, 1758 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 409.19s (0:06:49) red_arms=18
+suite_mine_r3.txt: 19 failed, 1758 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 374.22s (0:06:14) red_arms=19
+suite_mine_r3b.txt: 19 failed, 1758 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 359.31s (0:05:59) red_arms=19
