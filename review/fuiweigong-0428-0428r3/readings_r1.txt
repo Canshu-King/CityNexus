@@ -1,0 +1,66 @@
+ORD-0428 r3 - readings, taken live on 2026-10-09
+===============================================
+
+[A] the old branch and why it could not enter the landing gate
+  authoritative tip                        : 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+  review/trips-card-title-r1               : 317b19e03dac37336bb01aebd36098faec587c25
+  merge-base(tip, r1)                      : bdee2fc3344168ce9b1e0228e53cdffb8c5ecd8c
+  files changed on the tip side            : 72
+  files changed on the branch side         : 4
+  files on both sides (the collision)      : 2
+    - frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+    - frontend/src/i18n/LocaleContext.tsx
+  gate criterion                           : merge-base file sets must be disjoint
+
+[B] this branch, built on the authoritative tip instead of rebased
+  commit                                 : 3d298cb9cb544fe4d9989236a5d84c2f6d938bee
+  parent                                 : 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+  merge-base(tip, r3)                    : 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+  files changed on the tip side          : 0
+  files changed on the branch side       : 4
+    - backend/app/integrations/inbox/semantic_intake.py
+    - frontend/e2e/qoder-trips-card-title-ord0428-r1.spec.ts
+    - frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+    - frontend/src/i18n/LocaleContext.tsx
+  files on both sides                    : 0
+  merge-tree --write-tree prediction     : 60091493b85309c25bbc79aad8b3322c8734589e
+
+[C] gates run on this tree
+  (cwd for the two tsc lines = <tree>/frontend; interpreter = D:/moodle/CityNexus/.venv
+   /Scripts/python.exe, cwd = <tree>/backend; evidence base = <tree>/review/evidence)
+  npx tsc -p tsconfig.check.json --noEmit     : exit 0
+  npx tsc -p tsconfig.typecheck.json --noEmit : exit 0, error lines 0
+  python -m pytest tests --collect-only -q    : exit 0, 1788 tests collected (one run)
+
+[D] the Playwright arm on this commit
+  command : CNX_LANE_ROOT=<tree> python review/run_spec.py \
+              e2e/qoder-trips-card-title-ord0428-r1.spec.ts 4510
+            (authoritative mode: this run owns both servers, fresh db, AI off)
+  ports   : frontend 4510 -> backend 8510; db _run531620.db
+  run id  : run531620
+  result  : 4 passed, 0 failed, 4 ok lines
+
+  painted row text, read off the screen (innerText of each row's <strong>):
+    zh   : "北京南站 · 未确定"
+    zh   : "服务器只给了这条行程事实的确认号，没有给地点名字 · 未确定"
+    en   : "北京南站 · Not set"
+    en   : "The server gave a reference number for this trip fact, not a place name · Not set"
+    stub : "天津西站 · 抵达"
+    stub : "服务器只给了这条行程事实的预订类型，没有给地点名字 · 出发"
+    stub : "海河悦榕庄 湖景房 · 中途"
+    stub : "服务器没有给这条行程事实的地点名字 · 未确定"
+
+[E] the same ruler against the tip WITHOUT this lane's product change (counterfactual)
+  only the spec was kept; the 3 product files were checked out at the tip, run, then restored
+  command : same as [D] with port 4512 (frontend 4512 -> backend 8512)
+  result  : 3 failed, 1 passed (the passed one is the real-seed setup)
+    - e2e/qoder-trips-card-title-ord0428-r1.spec.ts :: ord0428-1-zh — the payload carried [null,null], not both branches
+    - e2e/qoder-trips-card-title-ord0428-r1.spec.ts :: ord0428-1-en — the payload carried [null,null], not both branches
+    - e2e/qoder-trips-card-title-ord0428-r1.spec.ts :: ord0428-2 — a place name stopped being painted as its own name: "Arrive · 抵达"
+
+  that last node is the defect this order is about, measured on the current tip: the row's
+  name slot painted the server's own marker word where the traveller should see a place name.
+
+[F] tree state after both runs
+  git status --porcelain lines : 1
+  evidence dirs are gitignored (review/evidence/, *.log), so the runs left the tree clean.

@@ -1,0 +1,30 @@
+ORD-0428 r3 - the hardcoded-prose census, restricted to this lane's two shared files
+==============================================================================
+tool   : _qoder_cmdr_ref_20260921/live_checks/_hardcoded_copy_scan_r1.py (read-only)
+scanned: <tree>/frontend/src of review/trips-card-title-r3
+note   : the tool's own verdict on the whole tree is a pre-existing census, not a lane gate;
+         what this lane is answerable for is only the hits that land on lines it ADDED.
+
+hits in the two shared files, whole file (the tip's own inheritance dominates this):
+  features/inbox/JourneyInboxWorkbench.tsx : 23
+  i18n/LocaleContext.tsx                   : 506
+
+hits landing on lines this lane added  (4):
+  frontend/src/features/inbox/JourneyInboxWorkbench.tsx:57  ''
+      source line: not state it, which is read as "not a place name". */
+  frontend/src/i18n/LocaleContext.tsx:802  ''
+      source line: "inbox.memoryUnnamedPlace": "The server gave no place name for this trip fact",
+  frontend/src/i18n/LocaleContext.tsx:803  ''
+      source line: "inbox.memoryRefInsteadOfName": "The server gave a reference number for this trip fact, not a place name",
+  frontend/src/i18n/LocaleContext.tsx:804  ''
+      source line: "inbox.memoryTypeInsteadOfName": "The server gave a booking type for this trip fact, not a place name",
+
+reading of those:
+  * the three LocaleContext hits are entries IN the dictionaries themselves -- that is where
+    English prose belongs in this codebase, and the zh twins sit beside them.
+  * the JourneyInboxWorkbench hit is the tail line of a block comment, not a rendered string.
+  * zero hits on a rendered position: every gap sentence the row paints comes from t(...),
+    reached at i18n keys (en:802-804, zh:2011-2013 in this commit's LocaleContext.tsx).
+
+The raw server values that stepped out of the title slot are still printed, inside the row's
+own <details> fold as <code> data (id / title / label / label_kind), never as a title.
