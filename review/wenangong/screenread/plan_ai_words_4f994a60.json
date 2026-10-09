@@ -1,0 +1,69 @@
+{
+  "generatedBy": "wenangong-0549",
+  "head": "4f994a6075825184daddda2ff3fac76ed9671f84",
+  "readings": 10,
+  "rows": [
+    {
+      "locale": "zh-CN",
+      "key": "itinerary.planWithAi",
+      "shown": "AI 帮我规划",
+      "expected": "AI 帮我规划"
+    },
+    {
+      "locale": "zh-CN",
+      "key": "shell.close",
+      "shown": "关闭",
+      "expected": "关闭",
+      "slot": "aria"
+    },
+    {
+      "locale": "zh-CN",
+      "key": "hub.continuationTechnicalDetail",
+      "shown": "技术详情",
+      "expected": "技术详情"
+    },
+    {
+      "locale": "zh-CN",
+      "key": "detail.rawFactsHeading",
+      "shown": "这台设备自己量到的回读字段",
+      "expected": "这台设备自己量到的回读字段"
+    },
+    {
+      "locale": "zh-CN",
+      "key": "bookings.realtimeCancelled",
+      "shown": "NOT_REACHED",
+      "expected": "needs a cancelled run"
+    },
+    {
+      "locale": "en",
+      "key": "itinerary.planWithAi",
+      "shown": "Plan my trip with AI",
+      "expected": "Plan my trip with AI"
+    },
+    {
+      "locale": "en",
+      "key": "shell.close",
+      "shown": "Close",
+      "expected": "Close",
+      "slot": "aria"
+    },
+    {
+      "locale": "en",
+      "key": "hub.continuationTechnicalDetail",
+      "shown": "Technical detail",
+      "expected": "Technical detail"
+    },
+    {
+      "locale": "en",
+      "key": "detail.rawFactsHeading",
+      "shown": "Fields this device measured",
+      "expected": "Fields this device measured"
+    },
+    {
+      "locale": "en",
+      "key": "bookings.realtimeCancelled",
+      "shown": "NOT_REACHED",
+      "expected": "needs a cancelled run"
+    }
+  ]
+}
