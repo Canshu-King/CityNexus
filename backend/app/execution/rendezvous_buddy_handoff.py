@@ -26,6 +26,7 @@ from app.execution.clock import execution_clock
 from app.execution.group_presence import public_destination_coordinates
 from app.execution.rendezvous_coordination import (
     _claim_journey_revision,
+    _lock_journey_for_withdraw,
     _current_context,
     _parse_audience,
     _row_is_current,
@@ -611,6 +612,46 @@ def offer_handoff(
     return _payload(row, session, viewer_member_id=str(helper.id))
 
 
+def _replay_retired_handoff(
+    session: Session,
+    *,
+    journey: Journey,
+    row: JourneyRendezvousBuddyHandoff,
+    expected_status: str,
+    member: JourneyMember,
+    principal: TravelerPrincipal,
+) -> dict[str, object]:
+    """An old-tab retry cannot claim to close a newer pair appointment.
+
+    Lock the same Journey row as offer/respond/close before reading any
+    successor. A real retry stays idempotent while no newer agreement exists.
+    """
+    _lock_journey_for_withdraw(session, str(journey.id))
+    current_member = session.get(JourneyMember, str(member.id))
+    if (
+        current_member is None
+        or str(current_member.journey_id) != str(journey.id)
+        or str(current_member.traveler_id) != str(principal.traveler_id)
+        or not _member_in_force(current_member, _now())
+    ):
+        session.rollback()
+        raise HTTPException(403, "RENDEZVOUS_HANDOFF_MEMBER_NOT_IN_FORCE")
+    current = session.get(JourneyRendezvousBuddyHandoff, str(row.id))
+    if current is None or current.status != expected_status:
+        session.rollback()
+        raise HTTPException(409, "RENDEZVOUS_HANDOFF_RETIRED_REPLAY_STALE")
+    newer = session.scalar(select(JourneyRendezvousBuddyHandoff.id).where(
+        JourneyRendezvousBuddyHandoff.signal_id == current.signal_id,
+        JourneyRendezvousBuddyHandoff.id != current.id,
+        JourneyRendezvousBuddyHandoff.status.in_(tuple(HANDOFF_ACTIVE)),
+    ))
+    if newer is not None:
+        session.rollback()
+        raise HTTPException(409, "RENDEZVOUS_HANDOFF_RETIRED_REPLAY_STALE")
+    session.commit()
+    return {"handoff_id": str(current.id), "status": expected_status, "shared_plan_changed": False}
+
+
 def respond_to_handoff(
     session: Session,
     *,
@@ -636,7 +677,10 @@ def respond_to_handoff(
         if projected is not None:
             return projected
         if row.status == "DECLINED":
-            return {"handoff_id": str(row.id), "status": "DECLINED", "shared_plan_changed": False}
+            return _replay_retired_handoff(
+                session, journey=journey, row=row, expected_status="DECLINED",
+                member=viewer, principal=principal,
+            )
     if row.status != "OFFERED":
         raise HTTPException(409, "RENDEZVOUS_HANDOFF_OFFER_NOT_CURRENT")
     journey = _claim_journey_revision(
@@ -707,7 +751,10 @@ def close_handoff(
         raise HTTPException(403, "RENDEZVOUS_HANDOFF_REQUESTER_REQUIRED")
     target_status = "CANCELLED" if action == "CANCEL" else "REVOKED"
     if row.status == target_status:
-        return {"handoff_id": str(row.id), "status": target_status, "shared_plan_changed": False}
+        return _replay_retired_handoff(
+            session, journey=journey, row=row, expected_status=target_status,
+            member=viewer, principal=principal,
+        )
     if row.status not in HANDOFF_ACTIVE:
         raise HTTPException(409, "RENDEZVOUS_HANDOFF_NOT_CURRENT")
     journey = _claim_journey_revision(
