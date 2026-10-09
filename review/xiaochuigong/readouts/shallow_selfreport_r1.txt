@@ -1,0 +1,31 @@
+# ORD-0553 xiaochuigong self-report -- a shared object store I damaged and repaired
+# taken 2026-10-10T01:03:55 in D:/moodle/_qoder_integration_20260919
+
+== what I ran that cut it
+git fetch --depth=2 origin refs/heads/review/45d25bfb-ord0553-authoritative-caps-r2:refs/remotes/origin/probe-0553-r2
+git fetch --depth=2147483647 origin <the same refspec>
+both from this lane; the first left one shallow boundary, the second inherited four from the local clone
+
+== the damage, as measured
+a shallow cut is a lie about history: it silently shortens every merge-base the landing gate computes
+rev-list --count 259ed27d14b62224eb1a23b244c281288a012fc5 while the cut was in force = 1308
+
+== repair
+.git/shallow renamed to .git/shallow.disabled_xiaochuigong, the original kept at .git/shallow.bak_xiaochuigong_0041
+shallow file still present? False
+rev-list --count 259ed27d14b62224eb1a23b244c281288a012fc5 = 1883
+rev-list --count origin/probe-0553-r2 = 1450
+fsck --connectivity-only: lines that are not 'dangling' = []
+fsck dangling lines = 93
+
+== the four former boundaries, each parent object read individually (a quoted pair of parents is two
+   objects; my first pass quoted them as one name and printed a false MISSING -- corrected here)
+4af2c0255 parents 1 [('75916eb43', 'PRESENT')]
+b241b8140 parents 2 [('4fcfe6e59', 'PRESENT'), ('bfd020be6', 'PRESENT')]
+db6a04cb1 parents 2 [('cf0ed0b53', 'PRESENT'), ('a3bc282fa', 'PRESENT')]
+f331fb2e9 parents 1 [('497f84981', 'PRESENT')]
+
+== not mine to touch, reported for the record
+D:/moodle/CityNexus/.git/shallow lines = 26
+mtime = 2026-10-10T01:03:44
+this lane has written nothing to that repository's .git

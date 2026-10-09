@@ -1,0 +1,8 @@
+{
+ "run_id": "run565280",
+ "arm": "Q5zh",
+ "spec": "e2e/qoder-ord0435-poi-batch-multiselect.spec.ts",
+ "nodeid": "D:\\moodle\\_qoder_xiaochuigong_0553\\frontend\\e2e\\qoder-ord0435-poi-batch-multiselect.spec.ts:486 > Q5zh_zh-CN — 规划器拒掉的批次不许看起来像已加入",
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0435-poi-batch-multiselect.spec.ts :: Q5zh — a refused batch rendered no refusal \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed Locator: locator('[data-testid=\"v13-discovery-batch-error\"]') Expected: visible Timeout: 60000ms Error: element(s) not found Call log: \u001b[2m - e2e/qoder-ord0435-poi-batch-multiselect.spec.ts :: Q5zh — a refused batch rendered no refusal locator('[data-testid=\"v13-discovery-batch-error\"]') with timeout 60000ms\u001b[22m \u001b[2m - waiting for locator('[data-testid=\"v13-discovery-batch-error\"]')\u001b[22m "
+}

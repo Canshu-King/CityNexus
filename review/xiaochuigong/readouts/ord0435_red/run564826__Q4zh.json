@@ -1,0 +1,8 @@
+{
+ "run_id": "run564826",
+ "arm": "Q4zh",
+ "spec": "e2e/qoder-ord0435-poi-batch-multiselect.spec.ts",
+ "nodeid": "D:\\moodle\\_qoder_xiaochuigong_0553\\frontend\\e2e\\qoder-ord0435-poi-batch-multiselect.spec.ts:437 > Q4zh_zh-CN — 完成走真实写路由，屏上显示的是第二次读",
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0435-poi-batch-multiselect.spec.ts :: Q4zh — 完成 produced no read-back block \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed Locator: locator('[data-testid=\"v13-discovery-batch-receipt\"]') Expected: visible Timeout: 60000ms Error: element(s) not found Call log: \u001b[2m - e2e/qoder-ord0435-poi-batch-multiselect.spec.ts :: Q4zh — 完成 produced no read-back block locator('[data-testid=\"v13-discovery-batch-receipt\"]') with timeout 60000ms\u001b[22m \u001b[2m - waiting for locator('[data-testid=\"v13-discovery-batch-receipt\"]')\u001b[22m "
+}

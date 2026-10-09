@@ -1,0 +1,38 @@
+{
+ "run_id": "run564779",
+ "git_head": "d6306ae8906a96c5ef51048281f4e9e45e77307c",
+ "arm": "R0553zh",
+ "nodeid": "e2e/qoder-xiaochuigong-0553-batch-row-clock-r1.spec.ts > R0553zh_zh-CN",
+ "locale": "zh-CN",
+ "viewport": "390x844",
+ "device_zone": "Asia/Shanghai",
+ "product_render_line": "<span>{formatWhen(row.start_at, { zh: locale.startsWith(\"zh\"), pending: t(\"inbox.timePending\") })}</span>",
+ "product_uses_formatter": true,
+ "journey_id": "ffb3be8c-5e8d-4ca6-8b31-ae11ee43fb8c",
+ "plan_door_read_of_record": {
+  "plan_id": "7a11c19a-89bc-484f-bfb6-1bffe2ed710c",
+  "activity_id": "a102fab6-8fa9-458a-8466-b59732223c5d",
+  "start_at": "2026-10-09T18:00:00+08:00",
+  "end_at": "2026-10-09T18:20:00+08:00"
+ },
+ "discovery_candidate": {
+  "name": "Tianjin Italian Style Town Indoor Gallery",
+  "materialized_place_id": "real-place-7836d8cd2e948d6d1a0773e7"
+ },
+ "real_compose_probe": {
+  "status": 422,
+  "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Request validation failed\",\"message_key\":\"request.invalid\",\"trace_id\":\"5c284eb5-0e09-4e85-a79b-61851ab6ea65\",\"details\":{\"errors\":[{\"loc\":[\"body\",\"place_ids\"],\"msg\":\"List should have at least 2 items after validation, not 1\",\"type\":\"too_short\",\"message_key\":\"validation.too_short\"}]},\"error_receipt_id\":\"CNX-P9T99DZ2\"}}",
+  "composed_id": null,
+  "readback_status": null,
+  "readback_holds_picked": false
+ },
+ "replay_origin": "plan_door_row_repointed_at_the_pick",
+ "instant_used": "2026-10-09T18:00:00+08:00",
+ "receipt_rows": [
+  "10月9日 18:00 Tianjin Italian Style Town Indoor Gallery a102fab6-8fa9-458a-8466-b59732223c5d"
+ ],
+ "row_head": "10月9日 18:00 Tianjin Italian Style Town Indoor Gallery a102fab6-8fa9-458a-8466-b59732223c5d",
+ "hour_minute_required": "18:00",
+ "screenshot": "D:/moodle/_qoder_xiaochuigong_0553/review/xiaochuigong/readouts/ord0553/run564779__R0553zh_row.png",
+ "test_status": "reached_end_of_arm"
+}
