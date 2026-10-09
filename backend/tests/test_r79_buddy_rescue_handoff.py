@@ -230,7 +230,7 @@ def test_r79_signed_pair_accepts_private_public_handoff_without_changing_journey
     assert offered["handoff_place"] == selected
     assert offered["shared_plan_changed"] is False
     assert offered["route_eta_state"] == "UNKNOWN"
-    assert offered["evidence_level"] == "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE"
+    assert offered["evidence_level"] == "ONE_SIDED_PUBLIC_HANDOFF_OFFER_NOT_ACCEPTED"
 
     requester_current = client.get(f"{handoff_path}/current", headers=_auth(requester_id))
     assert requester_current.status_code == 200, requester_current.text
@@ -254,6 +254,7 @@ def test_r79_signed_pair_accepts_private_public_handoff_without_changing_journey
     )
     assert accepted.status_code == 200, accepted.text
     assert accepted.json()["status"] == "ACCEPTED"
+    assert accepted.json()["evidence_level"] == "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE"
     assert accepted.json()["handoff_place"] == selected
     for viewer_id in (helper_id, requester_id):
         current = client.get(f"{handoff_path}/current", headers=_auth(viewer_id))
