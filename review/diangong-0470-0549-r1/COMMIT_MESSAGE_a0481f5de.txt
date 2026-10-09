@@ -1,0 +1,23 @@
+intended commit message for a0481f5de, which shipped mangled
+
+What happened, in plain terms: the message was written inside double quotes and contained a
+backtick pair around a single-letter identifier. The shell ran that pair as a command
+substitution before git ever saw it, so the message lost the identifier and picked up a block of
+environment lines instead. The tree is unaffected -- this is a message defect only, and the
+evidence below is what the commit should have said.
+
+The byte: frontend/src/features/simulation/SimulationPanel.tsx line 824 at base
+b461897465b07a4d5e8d99e618f59034652f81f2 read the inline form and now reads the dictionary cell
+shared.refresh (en LocaleContext.tsx:1181, zh :2379), and the component takes the translate
+function from the same useLocale call it already used for locale.
+
+The two collisions, read before writing rather than after: the AgentComposer feasibility badge
+belongs to lane progress (block progress_2307.md) and landed as d980242a1 at 23:06:28; the
+recovery-fold title was already on the line as c0f3a04bd at 22:56:12, proven by a zero delta
+between this lane head and the line for that file (V14_ZERO_DELTA_BEFORE.txt, _AFTER.txt).
+
+Measured on that base, authoritative mode, own ports, AI off: with the byte 2 red / 7 green and
+both red arms are ORD-0533 B2/B3 which are red in the baseline too; with the byte removed the
+same arm set reads 5 red, i.e. this slice turns its own A1/A3/A4 green and introduces no new
+red. Both tsc gates exit 0 with 0 error lines. No live render is claimed: the button mounts only
+while the stage holds a re-readable scene and the deterministic suite runs with AI off.

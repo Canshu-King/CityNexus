@@ -1,0 +1,21 @@
+gate for ORD-0549 (lane 电工-0470), authoritative mode, own ports, base tip da846e54e73b839c9882dc45a18ed73c93c26bc5
+run with this lane's byte (run_id=dg0470v14b):
+Running 9 tests using 1 worker
+  2 failed
+  7 passed (1.1m)
+run with this lane's byte removed (run_id=dg0470v14base, same six arms):
+Running 9 tests using 1 worker
+  3 failed
+  6 passed (1.3m)
+red names, byte removed: 3; red names, with byte: 2
+new red introduced by this lane: 0
+turned green by this lane: 1
+own four arms alone (run_id=dg0470v14c):   5 passed (18.3s)
+typecheck:all exit 0 with 0 errors; typecheck (check.json) exit 0 with 0 errors
+NOTE ORD-0533 B2/B3 are red in BOTH generations (their judgement reads poi-import, not this file) - pre-existing at this tip, not relaxed and not claimed green.
+
+re-cut onto base d980242a1b18e6cb7ed34527ad3987e92861095f (read by ls-remote at push time):
+own three arms alone on that base (run_id=dg0470v14e):   4 passed (18.4s)
+tsc -p tsconfig.typecheck.json --noEmit on the pushed head 47bddb402b300d323fc5bc0666d47ac34cf8ac46: exit 0, 0 error lines (log kept at D:/moodle/_qoder_lane_diangong_0470_20261009/tsc_0549_final_kept.log, outside the repo)
+files that landed between da846e54 and d980242a1 touching this lane's paths: 0 (read by git diff --name-only | grep -c)
+the A4 arm was dropped when lane progress's byte landed; see YIELD_AGENTCOMPOSER.txt

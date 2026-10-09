@@ -1,0 +1,15 @@
+gate for ORD-0549 slice 2 (lane 电工-0470), base b461897465b07a4d5e8d99e618f59034652f81f2, authoritative mode, own ports, AI off
+with this lane's byte (run_id=dg0470sim1, four arms of this spec + ORD-0533):
+Running 9 tests using 1 worker
+  2 failed
+  7 passed (1.4m)
+with the byte removed (run_id=dg0470simbase2, identical arm set):
+Running 9 tests using 1 worker
+  5 failed
+  4 passed (1.4m)
+red names with byte: 2; red names without byte: 5
+new red introduced by this slice: 0
+arms this slice turns green (its own A1/A3/A4): 3
+tsc -p tsconfig.typecheck.json --noEmit: exit 0, 0 error lines; tsc -p tsconfig.check.json --noEmit: exit 0, 0 error lines
+ORD-0533 B2/B3 are red in BOTH generations (their judgement reads poi-import, not this file) - pre-existing on this base, stated, not relaxed.
+zero-delta note: the recovery-fold格 this lane wrote first is already on the line as c0f3a04bd; see V14_ZERO_DELTA_BEFORE.txt / _AFTER.txt and YIELD_AGENTCOMPOSER.txt.
