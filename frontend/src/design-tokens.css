@@ -388,6 +388,18 @@
 .v8-page .v8-agent-composer-card,
 .v8-page .agent-card { padding: var(--cn-s-24); box-shadow: var(--cn-shadow-raised); }
 
+/* Feature panels mounted straight on the shell (abort / pretrip / pending / ranking / hero strip)
+   never passed the contract above, because that one is anchored on `.v8-page` and these screens do
+   not sit inside it. Their corners already take `--cn-r-card` and their borders already take
+   `--cn-hairline` -- only the depth was missing, so that is the single property added here. Padding
+   is left exactly as each panel chose it. Found by detecting boxes from their painted shape rather
+   than their class name: none of these names contain "card", so a name-based sweep missed them. */
+.v8-product-shell .cn-pretrip,
+.v8-product-shell .cn-pending,
+.v8-product-shell .cn-abort,
+.v8-product-shell .plan-ranking,
+.v8-product-shell .cn-hero-strip { box-shadow: var(--cn-shadow-card); }
+
 /* --- Motion: transform/opacity only, GPU-friendly, capped, reduced-motion aware --- */
 
 @keyframes cn-rise {
