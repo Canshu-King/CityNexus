@@ -1,0 +1,25 @@
+{
+ "screen_reads": [
+  {
+   "cause": "no_canonical_identity",
+   "query": "贡山独龙族怒族自治县",
+   "route": "/v8/discover",
+   "step": "destination field",
+   "screen_text": "没认出「贡山独龙族怒族自治县」：已退回中立口径 CN / 人民币（CNY）/ Asia/Shanghai 规划，不沿用上一次识别到的城市。换个写法，或在\"看支持的目的地\"里挑一个。",
+   "honest": true,
+   "next_step_given": true
+  },
+  {
+   "cause": "resolved_but_catalog_empty",
+   "query": "北京",
+   "route": "/v8/discover",
+   "step": "destination field",
+   "screen_text": "已自动设置：中国 · 人民币 · 中国标准时间",
+   "honest": false,
+   "next_step_given": false,
+   "gap": "API returned COVERAGE_INCOMPLETE with six missing categories; the screen said only \"已自动设置\" and never said why here is nothing"
+  }
+ ],
+ "backend_instance": "127.0.0.1:4911 (own, private)",
+ "frontend_instance": "localhost:4912 (own, private, vite dev, node_modules reused)"
+}

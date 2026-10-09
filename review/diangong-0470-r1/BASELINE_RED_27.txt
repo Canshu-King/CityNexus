@@ -1,0 +1,27 @@
+[chromium] › e2e\qoder-ord0392-panel-registry.spec.ts:158:1 › R4 外壳里那条逐面板的 if 链已经没有了，加面板只改表 ───
+[chromium] › e2e\qoder-ord0392-panel-registry.spec.ts:81:1 › R1 注册表本身是完整的：条数、id 不重、面不串、每条都有谓词和渲染
+[chromium] › e2e\qoder-ord0426-drawer-last-row-hit.spec.ts:57:1 › ORD-0426 zh 390x844 the drawer's last row is hit-testable once the list is at its end
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:131:3 › ORD-0445 待规划 set, filter sheet and empty state › A1 the set is countable and the count line counts the rows it renders
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:154:3 › ORD-0445 待规划 set, filter sheet and empty state › A2 the sheet lists 全部 plus one row per category the rows themselves name
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:195:3 › ORD-0445 待规划 set, filter sheet and empty state › A3 filtering to one facet makes the list smaller, not empty
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:232:3 › ORD-0445 待规划 set, filter sheet and empty state › A4 重置 returns exactly the original list
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:260:3 › ORD-0445 待规划 set, filter sheet and empty state › A5 both arms read the same screen, in their own words, off the rendered text
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:309:3 › ORD-0445 待规划 set, filter sheet and empty state › A6 中文臂不得比修前多字: this screen without the panel is byte-identical
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:362:3 › ORD-0445 待规划 set, filter sheet and empty state › A7 an empty set is a state with a door, and no 「暂无数据」
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:436:3 › ORD-0445 待规划 set, filter sheet and empty state › A8 the panel stays inside its card, and its touch targets stay 44 px
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:472:3 › ORD-0445 待规划 set, filter sheet and empty state › A9 the screen states where a place goes when a day stops holding it
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:497:3 › ORD-0445 待规划 set, filter sheet and empty state › A10 a door that never answers gives no number, and no empty state
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:557:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A11 the tick is local state, the batch says what it carries, and a disabled action says why
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:605:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A12 one real press: the answer is a named condition, and nothing was written
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:669:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A13 the English arm names the same condition in its own words
+[chromium] › e2e\qoder-ord0445-pending-set.spec.ts:692:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A14 the write path is the landed door: the screen posts compose and nothing else
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 collections under dark
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 collections under light
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 mobile-drawer under dark
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 mobile-drawer under light
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 poster-days under dark
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 poster-days under light
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 recycle-bin under dark
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 recycle-bin under light
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 share-receiving under dark
+[chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 share-receiving under light

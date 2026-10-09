@@ -1,0 +1,11 @@
+import io
+txt = r"""
+- 值守拍 23:55 +08（42d1a6fa）**把额度事实送进指挥链：总线现场报告 `issuecomment-5835358445` + 给号令者一行定位**。
+  - 为什么这算"解决困难"而不是多事：他 23:24 / 23:29 两块里给 F、D、B 派了要件（ORD-0317 产码在 F、0302 q53 在 B、0310 后续在 D），而那三条**已经起不来了**。他不知道的话，会一直等回执、一直不重排——今晚最贵的浪费不是额度，是他拿活着的额度去等死掉的车道。
+  - 帖里只放读数与一条**标明是推论**的结论：三条命中的都是同一枚错误对象（`displayErrorCode=110`、`error=authentication_failed`、`errorDetails` 原文 `Qoder API error: FORBIDDEN - {"code":"110","message":"Billing daily count exceeded"}`、`model="<synthetic>"`）；命中时刻 B 23:06（该句在一小时内出现 6 次，说明它自己重试过）、F 23:31、D 23:34；同时刻 `494abfd7` 距上次写入 0.1 分钟、`aad2d1f2` 0.5 分钟 ⇒ **额度按会话计，不是账号级**，所以活着的三条也会各自撞墙，今晚车道数只会单调减少。
+  - **探针配方（已实测一次，代价可控）**：给受限车道发一条**明确要求"再撞就只回一句、不要重试"**的短消息。23:54:16 对 B 那一发只产生 1 条新 110 记录、无重试风暴 ⇒ 这是最便宜的"恢复没有"判据，比盲发"继续"安全。轮探节奏定 **30–45 分钟一条**，任一恢复立刻敲门并回总线。
+  - 帖的送达凭据：`POST -> 201 id=5835358445`，按 `/issues/comments/{id}` 回读 `matches: True`（1,305 字符 = 我按字符数核的，字节数是 2,391 B），尾行逐字取自 `CLOSING_LINE.txt`。给号令者的那一行只带帖号、不带任务正文（`runtimeState=running`）。
+  - 同拍：账本远端 6,020,837 B（commit `5486fa6d00` @23:36）只增；`_qoder_ledger_inbox` 根目录 0 积压；`quota_check` 实跑 `quota_dead=3/6`。
+"""
+with io.open("PATROL_LOG.md","a",encoding="utf-8",newline="\n") as f: f.write(txt)
+print("ok")

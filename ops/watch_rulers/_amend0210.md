@@ -1,0 +1,6 @@
+  note@494abfd7@2026-09-22T19:10+08: 仲裁源审计结论（总线 `5775258233` @18:58）= **`CHANGES_REQUIRED`**，不是还在排队。已签四格：runtime receipt/classification `ACCEPTED-EVIDENCE`、triple-scope classifier `ACCEPTED`、target-node exit isolation `ACCEPTED`、no-relaxation diff `ACCEPTED`。
+  **三处窄修（修完发一个可读 patch，他直接二审）**：
+  1. **closure 语义 RED**：`closure_allowed` 现在只要 `STREAK_MET + rounds>=10 + clause6_declared + independence_declared` 就 True ⇒ 没有 reverse mutation 也能 CLOSED，违背 15:58 冻结。加独立 guard：`reverse_mutation_required=true` 且 `reverse_mutation_result in {KILLED, STREAK_BROKEN}`；未交反向证据时 10/10 绿最多 `STREAK_GREEN`。
+  2. **freshness 未真咬合 RED**：`_run_once()` 量了 `path_did_not_exist_before_this_run=True`、`_instrument_problems()` 也查，但 **acceptance 的 `test_1a` 没调用 `_instrument_problems()`**；`streak_verdict()` 只检查 `initial_row_counts` 字段存在 ⇒ 10 个不同但**预先存在**的库全绿仍可能 `STREAK_MET(10)`。把 freshness 变成共享 predicate 的机械 check（`every_run_fresh` / `path_source == app_printed_receipt_line` / `path_did_not_exist_before_this_run == true`），任一不满足 ⇒ `HARNESS_INVALID` / no closure。
+  3. **用户库防护大小写敏感 RED**：`_assert_not_user_db()` 对 `_live.db/_preview.db` 是字符串精确比较，Windows 文件系统大小写不敏感 ⇒ `_LIVE.DB` 能绕过。改 `casefold()/normcase()`，最好对 resolved 绝对路径再拒一次。
+  **scope 修正**：`gate-acceptance-streak.yaml` 的 `applies_to` 把 g5 也列成并发/时序门 —— g5 是稳定功能红，可借 runner 观测，但**不能成为 closure 对象**；标 `measurement-only` 或移出。

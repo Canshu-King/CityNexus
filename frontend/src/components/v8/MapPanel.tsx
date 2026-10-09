@@ -478,18 +478,27 @@ export function MapPanel({
       maxPitch: 0,
       } as maplibregl.MapOptions & { failIfMajorPerformanceCaveat?: boolean });
       /* The flat canvas behind the raster tiles is the right degradation, but it
-         must not be a *silent* one: with every tile blocked the panel looked like a
-         picture of a map rather than a map that failed to load its basemap. */
+         must not be a *silent* one: with every tile blocked the panel looked like a picture of a map
+         rather than a map that failed to load its basemap.
+         r2 (屏读工-0415) — the sentence was raised by a predicate that cannot answer the question. It
+         read `raster.tiles` as a tile cache, but for a raster source that array holds the tile URL
+         templates (`typeof tiles[0] === "string"`, measured), so `some(bucket => typeof bucket.has ===
+         "function" …)` is false whether the basemap draws or not, and 「底图未加载」 was painted on every
+         load — measured over a drawn basemap with 6 of 22 tile requests answered 200. `tileload` is not
+         a way out: it fires zero times on both arms of the control (6/6 tiles drawn, and 6/6 aborted),
+         while `error` fires exactly on the aborted arm. So the claim is now carried by the one signal
+         that separates the arms — did any basemap tile come back — and it can go both ways. */
+      const basemapTileDrawn = () =>
+        performance.getEntriesByType("resource").some((entry) => {
+          const e = entry as PerformanceResourceTiming;
+          return /tile\.openstreetmap\.org/.test(e.name) && e.responseStatus >= 200 && e.responseStatus < 400;
+        });
       mapInstance.on("error", (event) => {
         const source = (event as { sourceId?: string }).sourceId;
-        if (source === "open-street-map") setTilesUnavailable(true);
+        if (source === "open-street-map" && !basemapTileDrawn()) setTilesUnavailable(true);
       });
-      mapInstance.on("load", () => {
-        const raster = mapInstance.getSource("open-street-map") as
-          | { tiles?: { has: (v: unknown) => boolean; size?: number }[]; cache?: { has: (v: unknown) => boolean } }
-          | undefined;
-        const loaded = raster?.tiles?.some((bucket) => typeof bucket?.has === "function" && bucket.size !== 0);
-        if (loaded === false) setTilesUnavailable(true);
+      mapInstance.on("idle", () => {
+        if (basemapTileDrawn()) setTilesUnavailable(false);
       });
       map = mapInstance;
       mapRef.current = mapInstance;

@@ -1,0 +1,26 @@
+phone building, cell 3: the post-booking surfaces, and two of my own findings retracted
+
+What this cell walks: after a trip exists, the screens a person actually lands on -- the trip view and
+every bottom-nav tab (今天 / 行程 / 地图 / Copilot / 我的), each read as rendered words at 390px on the
+fixed bundle, each screenshotted.
+
+Verdict: clean, with two of MY OWN readings retracted rather than shipped as defects.
+
+Retraction 1 -- "点不动" was my instrument, not the product.  The walk's hit-test reported every bottom
+nav tap as HIT_TEST_MISSED.  A coordinate tap on each label's centre (what a finger does) changes the
+screen on all four real tabs; 今天 showed no change only because the walk starts on the 今天 screen.  So
+all five tabs are reachable and the hit-test was wrong (it measured the inner <span> label's centre
+against its parent).  This is the "一格会造假红的尺" pattern again, and it is why the nav leg was
+measured separately before anything was reported.
+
+Retraction 2 -- a "HTTP 500 leak" on 我的 was a price.  The token was `¥500.00`, the trip budget.  Read
+in context before reporting.
+
+What remains, named but NOT fixed: the trip view shows English place names (Tech Art Center, Nexus River
+Cruise Pier, Old Town Gate).  Those are the backend's own demo seed literals
+(`backend/app/services.py:843`), i.e. the fixture's data, not a frontend that bypassed a word table the
+way the plan day-list did.  The real Beijing trip's English names come from the POI provider layer.
+Localizing them is a backend vocabulary decision, so I name the source and stop there rather than
+rewrite the provider uninvited.
+
+Read-only cell: no product byte, no ref moved, no ledger direct write, my own ports only.

@@ -1,0 +1,9 @@
+ORD-0395: what the tip's real uvicorn served for this door, read before the decorator change (behaviour unchanged; only the declared code names differ).
+Server: uvicorn from the tree at 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2, driver was E:/heyuegong_0395/repro_r1.py.
+
+A[openapi] http_status=200
+A[served /openapi.json /demo/reset post] keys=["operationId", "parameters", "responses", "summary"]
+A[served 403] {"description": "Reset refused, with a named code in the body: RESET_TOKEN_REQUIRED when no token was presented, RESET_TOKEN_INVALID when the presented token is not the operator's."}
+A[served responses] ["200", "403", "422"]
+A[served parameters] [{"name": "X-Demo-Reset-Token", "in": "header", "required": false, "schema": {"anyOf": [{"type": "string"}, {"type": "null"}], "title": "X-Demo-Reset-Token"}}]
+A[served 200] {"description": "Successful Response", "content": {"application/json": {"schema": {"type": "object", "additionalProperties": {"type": "string"}, "title": "Response Demo Reset Api V1 Demo Reset Post"}}}}

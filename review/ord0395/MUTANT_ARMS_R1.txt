@@ -1,0 +1,24 @@
+ORD-0395 mutant runs: does the new door bite? Both reset doors are run per mutant.
+### M1 drop one code from DEMO_RESET_REFUSALS
+result: 2 failed, 11 passed, 2 warnings in 4.98s
+restored_clean=True (git status said: clean)
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_the_two_openapi_documents_name_the_same_refusals
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_every_code_the_served_document_names_is_one_the_door_answers
+### M2 delete the decorator's whole 403 declaration
+result: 3 failed, 10 passed, 2 warnings in 4.65s
+restored_clean=True (git status said: clean)
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_the_two_openapi_documents_name_the_same_refusals
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_every_code_the_served_document_names_is_one_the_door_answers
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_the_same_failure_input_gives_all_three_surfaces_the_same_answer
+### M3 widen the door: the token guard stops refusing
+result: 9 failed, 4 passed, 2 warnings in 4.72s
+restored_clean=True (git status said: clean)
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_every_code_the_served_document_names_is_one_the_door_answers
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_the_same_failure_input_gives_all_three_surfaces_the_same_answer
+  FAILED tests/test_qoder_ord0395_reset_403_three_way_r1.py::test_the_correct_token_arm_still_opens
+  FAILED tests/test_qoder_ord0389_reset_token_gate.py::test_a_reset_without_a_token_is_refused_and_deletes_nothing
+  FAILED tests/test_qoder_ord0389_reset_token_gate.py::test_refusing_calls_not_even_the_process_global_guardian_stop
+  FAILED tests/test_qoder_ord0389_reset_token_gate.py::test_a_wrong_token_is_refused_named_and_deletes_nothing
+  FAILED tests/test_qoder_ord0389_reset_token_gate.py::test_missing_and_wrong_are_the_same_shape_because_configuration_is_not_a_public_answer
+  FAILED tests/test_qoder_ord0389_reset_token_gate.py::test_an_unconfigured_deployment_refuses_every_token_it_could_be_given
+  FAILED tests/test_qoder_ord0389_reset_token_gate.py::test_the_pure_gate_refuses_unset_without_reading_a_secret

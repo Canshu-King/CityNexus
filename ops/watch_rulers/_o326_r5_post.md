@@ -1,0 +1,15 @@
+**S1-q64sweep → 用 r5 重测后的自我更正：我那 4 枚汇点是真消失（全树 28→25，只剩指定位 1 枚旗），我先前那条"4→3、换了规则"的读数是尺 scope 造成的假象；另附 r5 的正确用法与合流依据**
+
+**① 更正我自己**：`evidence/ord0326-server-reason-S1/channel_r1.json` = blob baa3f4f902997f3f1a54873628e12fe558969ac1 与本车道 04:50 块说"触碰文件 4→3、三枚汇点只是换规则"。用 r5 模块图重量：`agent/S1-q64sweep-candidates`（commit b32c0d6516fe60539d6485e95b8fa4534e1ad56d，`ls-remote` 同值）上 `AgentComposer.tsx:185`、`CopilotDock.tsx:450`、`CopilotDock.tsx:770`、`HotelsPanel.tsx:229` **四枚全部不再被旗**，全树 28→25，唯一新增旗是 `ServerReasonDetail.tsx:29` —— Q67=① 允许带归属渲染那句的指定槽。旧件不覆盖，修正版：`commander/control:evidence/ord0326-server-reason-S1/channel_r2.json` = blob 86fc78a7540535ee2898d7129449428fbe6bb7ad（commit ecf69df4b6ad19a1b4c8721a733d7c5465befc89，`rev-parse` 与本地 `hash-object` 全等）。
+
+**② 给 S4 的量具用法发现**：r5 只在 `--tree <dir>` 模式建模块图；`--ref/--path` 逐文件跑**精确复现 r4 的答案**（我两种跑法各得 26，直到在 `evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs` = blob ff98091cf3accb0d836ae25ba49820170b92d932 里看到 `--tree` 分支）。任何从逐文件跑法引用的 r5 数字应当成 r4 数字看。且 `:1230` 那行按磁盘 root 读依赖 —— 对某代次量必须先 `git archive <tip> frontend/src | tar -x` 再 `--tree`，否则目标与依赖跨代混读。尺体我按 blob 取字节、`git hash-object` 回验同值，`--selftest` = SELFTEST_PASS、n_fixtures 20。
+
+**③ r5 分母（该拿它替掉 25）**：tip 0f8b925facabc9df57bab600b86d999dd515bf94 上 hits=28、files=17，`per_rule` = UPSTREAM_EXCEPTION_TO_DOM 16 / UPSTREAM_TEXT_VIA_HELPER_TO_DOM 7 / RAW_BODY_TO_DOM 4 / UPSTREAM_READ_DIRECT 1，cap 150、truncated_total 56。`V8Experience.tsx:1282` 在 r5 下不再是旗，与我独立核到的"那是本机 `copy.body` 文案"同向。
+
+**④ r5 也揭出我自己表格的缺陷，我按原因分开算**：16 格里 14 格落到一枚 r5 汇点；28 枚里有 19 枚我没引用 —— 但**7 枚是我自己引错行**（`AgentComposer.tsx:185`、`CopilotDock.tsx:450`、`CopilotDock.tsx:770`、`PlanWithAiSheet.tsx:1019`、`V8Experience.tsx:1314`、`V8Experience.tsx:1385`、`V8Experience.tsx:2536`：我把渲染点记在成功内容那行 `:196`/`:743`，不是错误槽），**12 枚是我表里根本没有的文件**（`AgentRunRail.tsx:18`、`DestinationPreparationPanel.tsx:346/469/522`、`RealCityDiscoveryPanel.tsx:150`、`V14RecoveryTruthPanel.tsx:162`、`V12TripStudioPanel.tsx:106`、`SimulationPanel.tsx:934`、`ActivityDetail.tsx:206`、`RecoveryRequiredPanel.tsx:166`、`main.tsx:968/992`）。后三枚正是本车道当反例报过的 K1/K2/K3，r5 现在在我当时引的那行认到了。
+
+**⑤ 合流的量化依据**（同尺同模式）：B 候选 `review/0323-two-exposure-cells-b`（e302e4c433712284a23c1c0ab11147fe105e1e22）全树 28→26，移除 `ProductErrorBoundary.tsx:104`、`ProductErrorBoundary.tsx:105`、`JourneyInboxWorkbench.tsx:687/691/731` 五枚，但新增 3 枚仍被旗：`JourneyInboxWorkbench.tsx:703`、`:707`、`:747` —— :88 那个 thrower 闭了，三个出屏口仍吃 `error.message`。两车道文件交集 = 空、移除集合交集 = 空 ⇒ **严格互补**。具体一步：那三枚口改走 `describeServerReason` + `<ServerReasonDetail>`，3 枚旗收成指定槽那 1 枚。谁做仍等你派，我不动 B 的文件。
+
+**⑥ 代次提醒**：我量的是 0f8b925f（件里 `generation`），发布时 `ls-remote` 已到 c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400（今天第三次移动）。件里的 `authoritative_tip_now` 只代表建件那一刻，后续请现读 `ls-remote`，别抄"now"。
+
+**待你一句话**：保哪条通道（我的读数倾向保 `lib/serverReason.ts`，r5 证它能把 4 枚旗清零且只留指定槽）；`V8Experience.tsx` 那 4 枚无人认领的旗归谁；以及 inbox/:88 归属与你 04:05 令的对账。**边界** 0 改产品字节（共享检出 `git status --porcelain frontend` 读回 0 行）、0 推权威线、未碰 B/F 文件、未 demo/reset、未 vite build、工作树的 `node_modules` junction 已摘除并回验共享树完好、未读未打印任何凭据。账本块 `D:\moodle\_qoder_ledger_inbox\S1-q64sweep_0511.md`（首行 `### `，自跑 `_hex_preflight.py` offenders=0 与 Q43 r4c GREEN）。

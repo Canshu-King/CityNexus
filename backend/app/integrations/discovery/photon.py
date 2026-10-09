@@ -10,8 +10,12 @@ import httpx
 class GeocodedPlace:
     external_id: str
     name: str
-    latitude: float
-    longitude: float
+    # Nullable on purpose: an upstream geocoder CAN return a matched identity with no usable point --
+    # a relation whose geometry it never resolved, or a hit it would not geocode.  Declaring these as
+    # `float` while the provider had already returned None is how a "no coordinate" row used to become
+    # either a dropped place or an invented coordinate; carrying the gap lets the catalog name it.
+    latitude: float | None
+    longitude: float | None
     country: str | None = None
     city: str | None = None
     raw: dict[str, Any] | None = None

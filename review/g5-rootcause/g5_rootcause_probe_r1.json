@@ -1,0 +1,10 @@
+{
+ "outcome_statuses": [
+  "PLAN_CREATED",
+  "NO_ACTION",
+  "BLOCKED"
+ ],
+ "app_side_enum_sites": 0,
+ "outcome_written_in_unavailable_run": false,
+ "failure_reason_expr": true
+}

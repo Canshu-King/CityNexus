@@ -1,0 +1,9 @@
+M1 negative control: the same tree with frontend/src/styles.css reverted to the tip version (drawer rows carry no min-height), run_id=dg0470baseB
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4670 backend=:4671 db=sqlite:///./_dg0470baseB.db ai=disabled reuseExistingServer=false
+whole run of that generation: 82 arms, of them 31 red and 51 green
+  31 failed
+  51 passed (5.9m)
+red arms belonging to THIS lane's shape sweep: 4 (the four drawer rows on the two phone shapes, both locales)
+    Error: v8-drawer-entry-import is below the 44px floor of its layer
+    Received:    41
+red arms belonging to other lanes' pre-existing specs in the same run: 27

@@ -329,7 +329,7 @@ export function NativeMissionTimeline({
         <>
           {runMeta}
           <details className="cn-agent-raw">
-            <summary>{zh ? "运行详情" : "Runtime details"}</summary>
+            <summary>{t("agent.runtimeDetails")}</summary>
             <code>{safeJson({
               event_type: event.raw_event_type ?? event.event_type,
               source: event.source,

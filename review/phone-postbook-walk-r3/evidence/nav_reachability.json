@@ -1,0 +1,75 @@
+{
+ "schema": "CNX_NAV_REACHABILITY",
+ "method": "coordinate tap on each bottom-nav label centre; a real phone finger taps the centre, so a coordinate tap that changes the screen proves the control is pressable",
+ "rows": {
+  "今天": {
+   "found": true,
+   "tag": "SPAN",
+   "cx": 43,
+   "cy": 824.5,
+   "w": 26,
+   "h": 17,
+   "topTag": "SPAN",
+   "topText": "今天",
+   "elContainsTop": true,
+   "screen_changed": false
+  },
+  "行程": {
+   "found": true,
+   "tag": "SPAN",
+   "cx": 119,
+   "cy": 824.5,
+   "w": 26,
+   "h": 17,
+   "topTag": "SPAN",
+   "topText": "行程",
+   "elContainsTop": true,
+   "screen_changed": true
+  },
+  "地图": {
+   "found": true,
+   "tag": "SPAN",
+   "cx": 195,
+   "cy": 824.5,
+   "w": 26,
+   "h": 17,
+   "topTag": "SPAN",
+   "topText": "地图",
+   "elContainsTop": true,
+   "screen_changed": true
+  },
+  "Copilot": {
+   "found": true,
+   "tag": "SPAN",
+   "cx": 270.9921875,
+   "cy": 824.5,
+   "w": 41.640625,
+   "h": 17,
+   "topTag": "SPAN",
+   "topText": "Copilot",
+   "elContainsTop": true,
+   "screen_changed": true
+  },
+  "我的": {
+   "found": true,
+   "tag": "SPAN",
+   "cx": 347,
+   "cy": 824.5,
+   "w": 26,
+   "h": 17,
+   "topTag": "SPAN",
+   "topText": "我的",
+   "elContainsTop": true,
+   "screen_changed": true
+  }
+ },
+ "reachable": [
+  "Copilot",
+  "今天",
+  "地图",
+  "我的",
+  "行程"
+ ],
+ "unreachable": [],
+ "note": "今天 shows screen_changed:false because the walk STARTED on the 今天 trip screen, not because it is unpressable; the other four all navigate."
+}

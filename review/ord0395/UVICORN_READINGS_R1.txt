@@ -1,0 +1,10 @@
+ORD-0395, read off this tree: real uvicorn, no mock, no proxy.
+Started with backend/.venv (Python 3.12.14) against a throwaway sqlite file on E:;
+driver review/ord0395/uvicorn_after_r1.py; bodies are verbatim from the responses.
+### uvicorn on :47914, CITYNEXUS_DEMO_MODE=true, token configured
+no token presented: http_status=403 body={"error":{"code":"RESET_TOKEN_REQUIRED","message":"No demo reset token was presented; nothing was deleted.","message_key":"error.reset_token_required","trace_id":"8d98ef4c-009a-4aec-82f2-33a9fa54e721","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-AWXGQEEA"}}
+wrong token presented: http_status=403 body={"error":{"code":"RESET_TOKEN_INVALID","message":"The demo reset token presented does not match; nothing was deleted.","message_key":"error.reset_token_invalid","trace_id":"8f9c03c9-d84b-4496-8624-190ce597de18","details":{"header":"X-Demo-Reset-Token","tables_protected":true},"error_receipt_id":"CNX-HA3BDGQQ"}}
+correct token presented: http_status=200 body={"status":"reset","traveler_id":"11111111-1111-4111-8111-111111111111","journey_id":"22222222-2222-4222-8222-222222222222","city_code":"CNX-DEMO"}
+served statuses: ['200', '403', '422']
+served 403 keys: ['description']
+served 403 description: Reset refused before anything was deleted, with one named code in the body: DEMO_MODE_REQUIRED when the deployment does not run the demo stage switch, RESET_TOKEN_REQUIRED when no token was presented, RESET_TOKEN_INVALID when the presented token is not the operator's, including a deployment that never configured one. Every refusal carries details.tables_protected, and stops ahead of the guardian worker.

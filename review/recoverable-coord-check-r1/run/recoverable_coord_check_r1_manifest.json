@@ -1,0 +1,7 @@
+[
+ ["tools/recoverable_coord_check_r1.py", "tools"],
+ ["evidence/recoverable_coord_check_r1/recoverable_coord_check_r1.json", "evidence"],
+ ["run/recoverable_coord_check_r1.txt", "run"],
+ ["run/recoverable_coord_check_r1_manifest.json", "run"],
+ ["run/commit_recoverable_coord_check_r1_msg.txt", "run"]
+]

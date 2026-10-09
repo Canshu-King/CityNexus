@@ -1,0 +1,73 @@
+{
+ "run_id": "C2-004545",
+ "api": 5191,
+ "steps": [
+  {
+   "label": "collect_once",
+   "status": 201
+  },
+  {
+   "label": "list_after_collect",
+   "api": [
+    {
+     "name": "ComboShelf",
+     "item_count": 1,
+     "ids": [
+      "5ee46857-9e64-41cc-9bbc-ca7930efcb52"
+     ]
+    }
+   ]
+  },
+  {
+   "label": "collect_again",
+   "status": 409,
+   "reason_code": "PLACE_ALREADY_IN_COLLECTION"
+  },
+  {
+   "label": "direct_db_delete",
+   "rows_deleted": 1,
+   "api_after": [
+    {
+     "name": "ComboShelf",
+     "item_count": 0,
+     "ids": []
+    }
+   ]
+  }
+ ],
+ "combos": [
+  {
+   "combo": "收一次→再收一次",
+   "api_after": [
+    {
+     "name": "ComboShelf",
+     "item_count": 1,
+     "ids": [
+      "5ee46857-9e64-41cc-9bbc-ca7930efcb52"
+     ]
+    }
+   ],
+   "verdict": "接口不重复加（重复被诚实拒）"
+  },
+  {
+   "combo": "接口侧直接删掉那一行（模拟'撤了'）",
+   "api_after": [
+    {
+     "name": "ComboShelf",
+     "item_count": 0,
+     "ids": []
+    }
+   ],
+   "verdict": "接口立刻反映删除（列表少一行）——状态可撤，但**没有接口门可撤**"
+  }
+ ],
+ "discriminator": {
+  "clean_arm": "接口删一行 + 屏上同步删 ⇒ 尺判绿（这是负对照）",
+  "red_arm": "接口删一行 + 屏上不刷新（屏上仍写'已收在'）⇒ 尺必须判红",
+  "why": "屏上结果句与层上的 held 标都是点收藏那一刻写下的，没有撤了之后重读的腿；所以只要有人撤了（将来补了接口门），屏上会停在'已收在'——这枚组合就是'已撤但屏上还说有'，也就是图纸点名的'列表里有但接口说没有'的镜像形。",
+  "combos_built": "接口与屏上不同步的两种组合都能造出来：①撤了但屏上不刷新（屏说有、接口没有）；②屏上标了 held 但接口里没有那行（屏说有、接口没有）。②这一条要屏上先写后删才能造，本树没有撤的接口，所以只能等补门之后验——这一格如实标 NOT_MEASURED。"
+ },
+ "BAD": [],
+ "shelf_id": "60558b1a-d965-4415-8c84-c6764199a0e9",
+ "place_id": "place-old-town"
+}

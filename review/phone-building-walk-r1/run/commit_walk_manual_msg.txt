@@ -1,0 +1,27 @@
+phone building walk, cell 1: first-screen-to-booking at 390px on the live tip, plus one located defect
+
+This is the walk the building asks for, run against the LIVE tip (2e2ddbaf) in a detached worktree, on
+this lane's own ports (backend 8145, static 4881; the commander's 4783/4787 untouched), with a fresh
+private store copied read-only from the shared preview DB.
+
+Two paths, both BOOKED, 0 page errors and 0 console errors:
+  demo   -- press 使用封存的演示行程, land on the sealed Demo之旅 workspace (6 stops, plan present).
+  manual -- type a city and two places, advance all three steps, create 北京之旅 (2 travellers, 3 days,
+           7 route legs, a plan generated).
+A press counts only when elementFromPoint at the control's centre lands on it after scrollIntoViewIfNeeded,
+so a click on a collapsed or off-screen node is never counted as done.
+
+The walk located one real "看不懂" defect, on the plan-preview screen: the candidate day-list mixes English
+into a Chinese sentence -- "Check in", "Check out", "Overnight", "Temple of Heaven", "Beijing South
+Courtyard", "National Museum of China" -- next to already-Chinese names (北京站, 天安门). The word tables
+already own the zh forms (OVERNIGHT.zh = 过夜); the day-card path renders raw activity strings.
+
+Contents under review/phone-building-walk-r1/:
+- tools/building_stack_up_r1.py -- the stack: fresh private store (shared DB opened read-only), backend on 8145, port preflight so another lane's port is never reused.
+- tools/walk_step0.cjs, tools/walk_book.cjs, tools/walk_manual.cjs -- the two walks, each screenshotting every step and reading rendered text.
+- evidence/walk_book.json, walk_manual.json, walk_step0.json -- the readings.
+- evidence/walk_defect_preview.json -- the located defect with its source lines.
+- run/walk_manual_manifest.json, run/commit_walk_manual_msg.txt -- this publish.
+
+Read-only this cell (the product fix is the next one): no product byte changed here, no ref moved by this
+commit, no ledger direct write. New file names throughout (CMDR-0925-2128).

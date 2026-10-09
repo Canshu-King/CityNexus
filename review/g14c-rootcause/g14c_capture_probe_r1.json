@@ -1,0 +1,81 @@
+{
+ "arm_keys": [
+  "status",
+  "error_type",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ],
+ "with_locations_keys": [
+  "captured_at",
+  "cost_provenance",
+  "facts",
+  "nodes",
+  "operation_key",
+  "provider",
+  "provider_capabilities",
+  "route_provenance",
+  "status",
+  "supported_modes",
+  "time_basis"
+ ],
+ "with_locations_is_dict": true,
+ "with_locations_arm_keys_present": [
+  "status",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ],
+ "with_locations_arm_keys_absent": [
+  "error_type"
+ ],
+ "with_locations_values": {
+  "status": "CAPTURED",
+  "supported_modes": [
+   "AUTO",
+   "WALK"
+  ],
+  "route_provenance": "LIVE_CAPTURE",
+  "time_basis": "VALHALLA_SOURCES_TO_TARGETS"
+ },
+ "reworded_keys": [
+  "captured_at",
+  "cost_provenance",
+  "facts",
+  "nodes",
+  "operation_key",
+  "provider",
+  "provider_capabilities",
+  "route_provenance",
+  "status",
+  "supported_modes",
+  "time_basis"
+ ],
+ "reworded_is_dict": true,
+ "reworded_arm_keys_present": [
+  "status",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ],
+ "reworded_arm_keys_absent": [
+  "error_type"
+ ],
+ "reworded_values": {
+  "status": "CAPTURED",
+  "supported_modes": [
+   "AUTO",
+   "WALK"
+  ],
+  "route_provenance": "LIVE_CAPTURE",
+  "time_basis": "VALHALLA_SOURCES_TO_TARGETS"
+ },
+ "comparable_keys": [
+  "status",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ],
+ "comparable_values_differ": [],
+ "reading": "the arm stops on a key its own response never carries, so the comparison it wants never runs; the keys that ARE present in both compare equal"
+}

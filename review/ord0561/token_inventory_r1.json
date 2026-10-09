@@ -1,0 +1,7332 @@
+{
+ "tip": "2e2ddbaf72eed9565fd8b18ea9b8216061269f57",
+ "css_files_read": 23,
+ "declarations": 141,
+ "inline_colour_fallbacks": [
+  {
+   "token": "--cn-hairline",
+   "fallback": "rgba(0, 0, 0, 0.16)",
+   "file": "frontend/src/features/simulation/SimulationPanel.css",
+   "line": 38
+  },
+  {
+   "token": "--cn-hairline",
+   "fallback": "rgba(0, 0, 0, 0.16)",
+   "file": "frontend/src/features/simulation/SimulationPanel.css",
+   "line": 85
+  },
+  {
+   "token": "--cn-hairline",
+   "fallback": "rgba(0, 0, 0, 0.16)",
+   "file": "frontend/src/features/simulation/SimulationPanel.css",
+   "line": 142
+  },
+  {
+   "token": "--v8-ink",
+   "fallback": "#1d2531",
+   "file": "frontend/src/features/planning/planRanking.css",
+   "line": 5
+  },
+  {
+   "token": "--v8-ink",
+   "fallback": "#1d2531",
+   "file": "frontend/src/features/planning/planRanking.css",
+   "line": 6
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 517
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 518
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 523
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 524
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 587
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 588
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 642
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 698
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 700
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1179
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1180
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1204
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1248
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1366
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1497
+  },
+  {
+   "token": "--v8-accent",
+   "fallback": "#0f766e",
+   "file": "frontend/src/styles.css",
+   "line": 1498
+  },
+  {
+   "token": "--v8-muted",
+   "fallback": "#5b6675",
+   "file": "frontend/src/features/planning/planRanking.css",
+   "line": 9
+  },
+  {
+   "token": "--v8-muted",
+   "fallback": "#8994a3",
+   "file": "frontend/src/styles.css",
+   "line": 675
+  },
+  {
+   "token": "--v8-muted",
+   "fallback": "#607174",
+   "file": "frontend/src/v10.css",
+   "line": 55
+  },
+  {
+   "token": "--v8-line",
+   "fallback": "#e3e7ef",
+   "file": "frontend/src/features/planning/planRanking.css",
+   "line": 3
+  },
+  {
+   "token": "--v8-line",
+   "fallback": "#e3e7ef",
+   "file": "frontend/src/features/planning/planRanking.css",
+   "line": 7
+  },
+  {
+   "token": "--v8-surface",
+   "fallback": "#fff",
+   "file": "frontend/src/styles.css",
+   "line": 1281
+  },
+  {
+   "token": "--v8-surface",
+   "fallback": "#fff",
+   "file": "frontend/src/styles.css",
+   "line": 1378
+  },
+  {
+   "token": "--v8-bg",
+   "fallback": "#f4f6f2",
+   "file": "frontend/src/v10.css",
+   "line": 50
+  }
+ ],
+ "n_inline_colour_fallbacks": 29,
+ "tokens_seen": 112,
+ "colour_valued_tokens": 49,
+ "tokens": [
+  {
+   "name": "--cn-accent",
+   "light": "#0a66ff",
+   "dark": "#0a84ff",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    21
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    173
+   ],
+   "n_reference_sites": 22,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     213
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     312
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     598
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     645
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     687
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     261
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     346
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     362
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     112
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     35
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     35
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     38
+    ]
+   ]
+  },
+  {
+   "name": "--cn-accent-solid",
+   "light": "var(--cn-always-accent-solid)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    27
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     230
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     615
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     680
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     734
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     994
+    ]
+   ]
+  },
+  {
+   "name": "--cn-accent-text",
+   "light": "#0a5cd6",
+   "dark": "#0a84ff",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    33
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    181
+   ],
+   "n_reference_sites": 15,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     746
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     798
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     836
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1241
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     21
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     113
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     194
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     38
+    ],
+    [
+     "frontend/src/features/poiimport/poi-import.css",
+     37
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     33
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     153
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     182
+    ]
+   ]
+  },
+  {
+   "name": "--cn-always-accent-solid",
+   "light": null,
+   "dark": null,
+   "always": "#0a66ff",
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     27
+    ]
+   ]
+  },
+  {
+   "name": "--cn-canvas",
+   "light": "#f5f5f7",
+   "dark": "#000000",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    10
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    167
+   ],
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/poster/trip-poster.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     208
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     269
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     646
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     206
+    ]
+   ]
+  },
+  {
+   "name": "--cn-control-border",
+   "light": "#7d8797",
+   "dark": "#7c7c82",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    84
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    188
+   ],
+   "n_reference_sites": 22,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     610
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     628
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     731
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     752
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     782
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     813
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1187
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     23
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     48
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     86
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     154
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     22
+    ]
+   ]
+  },
+  {
+   "name": "--cn-danger",
+   "light": "#d70015",
+   "dark": "#ff453a",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    39
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    185
+   ],
+   "n_reference_sites": 10,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     216
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     447
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     653
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     654
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1213
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1263
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     55
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     250
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     267
+    ],
+    [
+     "frontend/src/styles.css",
+     1079
+    ]
+   ]
+  },
+  {
+   "name": "--cn-divider-w",
+   "light": "1px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    146
+   ],
+   "dark_site": null,
+   "n_reference_sites": 23,
+   "reference_files": [
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     9
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     32
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     16
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     35
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     65
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     119
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     155
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     184
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     207
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     237
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     238
+    ],
+    [
+     "frontend/src/styles.css",
+     658
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ease-enter",
+   "light": "cubic-bezier(.16,1,.3,1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    360
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     363
+    ],
+    [
+     "frontend/src/styles.css",
+     391
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ease-out",
+   "light": "cubic-bezier(0.16, 1, 0.3, 1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    154
+   ],
+   "dark_site": null,
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     292
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     293
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     504
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     527
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ease-spring",
+   "light": "cubic-bezier(0.22, 1, 0.36, 1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    155
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-ease-standard",
+   "light": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    153
+   ],
+   "dark_site": null,
+   "n_reference_sites": 8,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     303
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     306
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     306
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     514
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     515
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ]
+   ]
+  },
+  {
+   "name": "--cn-font",
+   "light": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    88
+   ],
+   "dark_site": null,
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     85
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     263
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1108
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1136
+    ]
+   ]
+  },
+  {
+   "name": "--cn-font-mono",
+   "light": null,
+   "dark": null,
+   "always": null,
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/features/checklist/pretripChecklist.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     30
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     34
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-body",
+   "light": "16px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    94
+   ],
+   "dark_site": null,
+   "n_reference_sites": 65,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1217
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1224
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1245
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1267
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     22
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     34
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     227
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     22
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     28
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     36
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     62
+    ],
+    [
+     "frontend/src/features/discovery/prepAbandonSurvey.css",
+     20
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-caption",
+   "light": "13px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    97
+   ],
+   "dark_site": null,
+   "n_reference_sites": 104,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     345
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     385
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     412
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     473
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     492
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     861
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     897
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     923
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1253
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1274
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1279
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1316
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-card",
+   "light": "16px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    93
+   ],
+   "dark_site": null,
+   "n_reference_sites": 6,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     443
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     88
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     78
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     88
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     106
+    ],
+    [
+     "frontend/src/v10.css",
+     8
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-display",
+   "light": "34px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    90
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     270
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-meta",
+   "light": "14px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    96
+   ],
+   "dark_site": null,
+   "n_reference_sites": 24,
+   "reference_files": [
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     51
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     66
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     91
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     141
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     98
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     22
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     105
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     136
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     152
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     204
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     233
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     244
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-secondary",
+   "light": "15px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    95
+   ],
+   "dark_site": null,
+   "n_reference_sites": 11,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     420
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     452
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     468
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1309
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     16
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     96
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     156
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     115
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     31
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     180
+    ],
+    [
+     "frontend/src/styles.css",
+     830
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-section",
+   "light": "22px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    92
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checkin/footprint.css",
+     38
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     37
+    ]
+   ]
+  },
+  {
+   "name": "--cn-fs-title",
+   "light": "28px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    91
+   ],
+   "dark_site": null,
+   "n_reference_sites": 7,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     271
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     365
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     11
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     34
+    ],
+    [
+     "frontend/src/styles.css",
+     659
+    ],
+    [
+     "frontend/src/v10.css",
+     7
+    ],
+    [
+     "frontend/src/v10.css",
+     13
+    ]
+   ]
+  },
+  {
+   "name": "--cn-gutter",
+   "light": "20px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    117
+   ],
+   "dark_site": null,
+   "n_reference_sites": 3,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1133
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     22
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     21
+    ]
+   ]
+  },
+  {
+   "name": "--cn-hairline",
+   "light": "var(--cn-tint-black-08)",
+   "dark": "var(--cn-tint-white-10)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    76
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    186
+   ],
+   "n_reference_sites": 83,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     212
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     279
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     335
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     360
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     405
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     432
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     541
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     595
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     602
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     623
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     659
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     672
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ink",
+   "light": "#1d1d1f",
+   "dark": "#f5f5f7",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    13
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    170
+   ],
+   "n_reference_sites": 32,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     210
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     352
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     364
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     384
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     419
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     592
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     601
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     609
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     622
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     632
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     636
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     658
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ink-secondary",
+   "light": "#6e6e73",
+   "dark": "#aeaeb2",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    14
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    171
+   ],
+   "n_reference_sites": 48,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/trip/spend.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     211
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     374
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     411
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     451
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     589
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     597
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     651
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     676
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     692
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     694
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     719
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     730
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ink-tertiary",
+   "light": "#86868b",
+   "dark": "#8e8e93",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    15
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    172
+   ],
+   "n_reference_sites": 33,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/features/trip/spend.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     344
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     591
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     906
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1199
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     324
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     58
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     70
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     90
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     163
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     29
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     33
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     56
+    ]
+   ]
+  },
+  {
+   "name": "--cn-lh-body",
+   "light": "1.45",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    99
+   ],
+   "dark_site": null,
+   "n_reference_sites": 13,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     377
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     387
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     453
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1311
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     26
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     25
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     33
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     23
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     112
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     121
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     137
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     234
+    ]
+   ]
+  },
+  {
+   "name": "--cn-lh-tight",
+   "light": "1.14",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    98
+   ],
+   "dark_site": null,
+   "n_reference_sites": 8,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     270
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     271
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     367
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     17
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     40
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     39
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     79
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     36
+    ]
+   ]
+  },
+  {
+   "name": "--cn-motion-base",
+   "light": "220ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    356
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     363
+    ]
+   ]
+  },
+  {
+   "name": "--cn-motion-fast",
+   "light": "160ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    355
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     362
+    ]
+   ]
+  },
+  {
+   "name": "--cn-motion-instant",
+   "light": "90ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    354
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-motion-map",
+   "light": "650ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    358
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-motion-slow",
+   "light": "420ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    357
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-nav-bg",
+   "light": "var(--cn-tint-white-95)",
+   "dark": "var(--cn-tint-surface-95)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    20
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    187
+   ],
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ],
+    [
+     "frontend/src/styles.css",
+     336
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-clearance",
+   "light": "calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px))",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    258
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ],
+    [
+     "frontend/src/styles.css",
+     1724
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-h",
+   "light": "80px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    257
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     258
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-icon-size",
+   "light": "17px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    246
+   ],
+   "dark_site": null,
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     144
+    ],
+    [
+     "frontend/src/styles.css",
+     144
+    ],
+    [
+     "frontend/src/styles.css",
+     348
+    ],
+    [
+     "frontend/src/styles.css",
+     348
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-item-h",
+   "light": "max(48px, var(--cn-touch-min))",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    239
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ],
+    [
+     "frontend/src/styles.css",
+     282
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-pad-bottom",
+   "light": "7px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    248
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-pad-top",
+   "light": "8px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    247
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ]
+   ]
+  },
+  {
+   "name": "--cn-onboarding-inset",
+   "light": "var(--cn-gutter)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    1133
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1155
+    ],
+    [
+     "frontend/src/styles.css",
+     687
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-0",
+   "light": "0px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    129
+   ],
+   "dark_site": null,
+   "n_reference_sites": 6,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     147
+    ],
+    [
+     "frontend/src/styles.css",
+     147
+    ],
+    [
+     "frontend/src/styles.css",
+     313
+    ],
+    [
+     "frontend/src/styles.css",
+     313
+    ],
+    [
+     "frontend/src/styles.css",
+     803
+    ],
+    [
+     "frontend/src/styles.css",
+     803
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-12",
+   "light": "12px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    132
+   ],
+   "dark_site": null,
+   "n_reference_sites": 51,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     138
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     57
+    ],
+    [
+     "frontend/src/styles.css",
+     33
+    ],
+    [
+     "frontend/src/styles.css",
+     45
+    ],
+    [
+     "frontend/src/styles.css",
+     47
+    ],
+    [
+     "frontend/src/styles.css",
+     54
+    ],
+    [
+     "frontend/src/styles.css",
+     71
+    ],
+    [
+     "frontend/src/styles.css",
+     86
+    ],
+    [
+     "frontend/src/styles.css",
+     112
+    ],
+    [
+     "frontend/src/styles.css",
+     114
+    ],
+    [
+     "frontend/src/styles.css",
+     136
+    ],
+    [
+     "frontend/src/styles.css",
+     177
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-16",
+   "light": "16px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    133
+   ],
+   "dark_site": null,
+   "n_reference_sites": 20,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     139
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     140
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     24
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     23
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     3
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     86
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     143
+    ],
+    [
+     "frontend/src/styles.css",
+     12
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     176
+    ],
+    [
+     "frontend/src/styles.css",
+     207
+    ],
+    [
+     "frontend/src/styles.css",
+     272
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-20",
+   "light": "20px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    134
+   ],
+   "dark_site": null,
+   "n_reference_sites": 9,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     141
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     336
+    ],
+    [
+     "frontend/src/styles.css",
+     9
+    ],
+    [
+     "frontend/src/styles.css",
+     48
+    ],
+    [
+     "frontend/src/styles.css",
+     93
+    ],
+    [
+     "frontend/src/styles.css",
+     104
+    ],
+    [
+     "frontend/src/styles.css",
+     297
+    ],
+    [
+     "frontend/src/styles.css",
+     313
+    ],
+    [
+     "frontend/src/styles.css",
+     313
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-24",
+   "light": "24px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    135
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     142
+    ],
+    [
+     "frontend/src/styles.css",
+     67
+    ],
+    [
+     "frontend/src/styles.css",
+     202
+    ],
+    [
+     "frontend/src/styles.css",
+     232
+    ],
+    [
+     "frontend/src/v10.css",
+     52
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-4",
+   "light": "4px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    130
+   ],
+   "dark_site": null,
+   "n_reference_sites": 12,
+   "reference_files": [
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     37
+    ],
+    [
+     "frontend/src/styles.css",
+     147
+    ],
+    [
+     "frontend/src/styles.css",
+     147
+    ],
+    [
+     "frontend/src/styles.css",
+     177
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ],
+    [
+     "frontend/src/styles.css",
+     180
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     384
+    ],
+    [
+     "frontend/src/styles.css",
+     406
+    ],
+    [
+     "frontend/src/styles.css",
+     427
+    ],
+    [
+     "frontend/src/styles.css",
+     474
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-8",
+   "light": "8px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    131
+   ],
+   "dark_site": null,
+   "n_reference_sites": 36,
+   "reference_files": [
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/access/access.css",
+     363
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     131
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     134
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     137
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     145
+    ],
+    [
+     "frontend/src/styles.css",
+     20
+    ],
+    [
+     "frontend/src/styles.css",
+     96
+    ],
+    [
+     "frontend/src/styles.css",
+     103
+    ],
+    [
+     "frontend/src/styles.css",
+     143
+    ],
+    [
+     "frontend/src/styles.css",
+     150
+    ],
+    [
+     "frontend/src/styles.css",
+     174
+    ],
+    [
+     "frontend/src/styles.css",
+     174
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-button",
+   "light": "var(--cn-r-16)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    139
+   ],
+   "dark_site": null,
+   "n_reference_sites": 8,
+   "reference_files": [
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checkin/footprint.css",
+     49
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     48
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     36
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     185
+    ],
+    [
+     "frontend/src/v10.css",
+     11
+    ],
+    [
+     "frontend/src/v10.css",
+     14
+    ],
+    [
+     "frontend/src/v10.css",
+     27
+    ],
+    [
+     "frontend/src/v10.css",
+     29
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-card",
+   "light": "var(--cn-r-16)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    140
+   ],
+   "dark_site": null,
+   "n_reference_sites": 17,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     280
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     406
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     430
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     10
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     7
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     10
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     17
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     66
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     239
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     46
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     82
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     86
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-circle",
+   "light": "50%",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    136
+   ],
+   "dark_site": null,
+   "n_reference_sites": 14,
+   "reference_files": [
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     39
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     51
+    ],
+    [
+     "frontend/src/map-controls.css",
+     52
+    ],
+    [
+     "frontend/src/map-controls.css",
+     60
+    ],
+    [
+     "frontend/src/styles.css",
+     148
+    ],
+    [
+     "frontend/src/styles.css",
+     152
+    ],
+    [
+     "frontend/src/styles.css",
+     154
+    ],
+    [
+     "frontend/src/styles.css",
+     217
+    ],
+    [
+     "frontend/src/styles.css",
+     255
+    ],
+    [
+     "frontend/src/styles.css",
+     369
+    ],
+    [
+     "frontend/src/styles.css",
+     392
+    ],
+    [
+     "frontend/src/styles.css",
+     510
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-control",
+   "light": "var(--cn-r-12)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    138
+   ],
+   "dark_site": null,
+   "n_reference_sites": 57,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     312
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1188
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1214
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1242
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1264
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1359
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1375
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1396
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     33
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     251
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     335
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     19
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-hero",
+   "light": "var(--cn-r-20)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    141
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-r-pill",
+   "light": "999px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    137
+   ],
+   "dark_site": null,
+   "n_reference_sites": 22,
+   "reference_files": [
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     31
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ],
+    [
+     "frontend/src/styles.css",
+     6
+    ],
+    [
+     "frontend/src/styles.css",
+     16
+    ],
+    [
+     "frontend/src/styles.css",
+     50
+    ],
+    [
+     "frontend/src/styles.css",
+     56
+    ],
+    [
+     "frontend/src/styles.css",
+     79
+    ],
+    [
+     "frontend/src/styles.css",
+     83
+    ],
+    [
+     "frontend/src/styles.css",
+     107
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-sheet",
+   "light": "var(--cn-r-24)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    142
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     803
+    ],
+    [
+     "frontend/src/styles.css",
+     803
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-10",
+   "light": "10px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    109
+   ],
+   "dark_site": null,
+   "n_reference_sites": 79,
+   "reference_files": [
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     6
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     25
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     29
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     38
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     85
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     134
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     100
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     202
+    ],
+    [
+     "frontend/src/styles.css",
+     49
+    ],
+    [
+     "frontend/src/styles.css",
+     57
+    ],
+    [
+     "frontend/src/styles.css",
+     64
+    ],
+    [
+     "frontend/src/styles.css",
+     73
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-12",
+   "light": "12px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    110
+   ],
+   "dark_site": null,
+   "n_reference_sites": 84,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     439
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     455
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     538
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     540
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1186
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1197
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1212
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1240
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1262
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1273
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1277
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1293
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-16",
+   "light": "16px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    111
+   ],
+   "dark_site": null,
+   "n_reference_sites": 32,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     402
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     429
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1212
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1262
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     7
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     8
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     22
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     21
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     12
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     29
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     57
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     129
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-2",
+   "light": "2px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    105
+   ],
+   "dark_site": null,
+   "n_reference_sites": 12,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     135
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     399
+    ],
+    [
+     "frontend/src/styles.css",
+     418
+    ],
+    [
+     "frontend/src/styles.css",
+     421
+    ],
+    [
+     "frontend/src/styles.css",
+     1166
+    ],
+    [
+     "frontend/src/styles.css",
+     1322
+    ],
+    [
+     "frontend/src/styles.css",
+     1389
+    ],
+    [
+     "frontend/src/styles.css",
+     1599
+    ],
+    [
+     "frontend/src/styles.css",
+     1692
+    ],
+    [
+     "frontend/src/styles.css",
+     1769
+    ],
+    [
+     "frontend/src/styles.css",
+     1779
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-20",
+   "light": "20px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    112
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     429
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1295
+    ],
+    [
+     "frontend/src/v10.css",
+     6
+    ],
+    [
+     "frontend/src/v10.css",
+     8
+    ],
+    [
+     "frontend/src/v10.css",
+     12
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-24",
+   "light": "24px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    113
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-s-32",
+   "light": "32px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    114
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1130
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-4",
+   "light": "4px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    106
+   ],
+   "dark_site": null,
+   "n_reference_sites": 53,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1251
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1272
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1293
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     84
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     148
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     153
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     104
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     12
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     177
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     187
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     231
+    ],
+    [
+     "frontend/src/styles.css",
+     139
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-40",
+   "light": "40px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    115
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1367
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-48",
+   "light": "48px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    116
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-s-6",
+   "light": "6px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    107
+   ],
+   "dark_site": null,
+   "n_reference_sites": 55,
+   "reference_files": [
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checkin/footprint.css",
+     47
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     46
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     81
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     130
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     130
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     134
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     136
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     137
+    ],
+    [
+     "frontend/src/features/poiimport/poi-import.css",
+     68
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     91
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     202
+    ],
+    [
+     "frontend/src/styles.css",
+     16
+    ]
+   ]
+  },
+  {
+   "name": "--cn-s-8",
+   "light": "8px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    108
+   ],
+   "dark_site": null,
+   "n_reference_sites": 87,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     333
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     359
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     383
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     392
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     402
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     539
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     544
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1165
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1210
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1211
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1226
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1239
+    ]
+   ]
+  },
+  {
+   "name": "--cn-safe-top",
+   "light": "env(safe-area-inset-top, 0px)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    259
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1130
+    ],
+    [
+     "frontend/src/styles.css",
+     185
+    ]
+   ]
+  },
+  {
+   "name": "--cn-secondary",
+   "light": "#f2f2f7",
+   "dark": "#2c2c2e",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    12
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    169
+   ],
+   "n_reference_sites": 28,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     407
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     608
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     631
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     684
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1215
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1243
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1265
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1360
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     28
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     34
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     154
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     183
+    ]
+   ]
+  },
+  {
+   "name": "--cn-shadow-card",
+   "light": "0 1px 2px var(--cn-tint-black-04), 0 8px 28px var(--cn-tint-black-06)",
+   "dark": "0 1px 2px var(--cn-tint-black-40), 0 8px 28px var(--cn-tint-black-50)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    149
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    190
+   ],
+   "n_reference_sites": 8,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     281
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     338
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     433
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1377
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1398
+    ],
+    [
+     "frontend/src/map-controls.css",
+     37
+    ],
+    [
+     "frontend/src/v10.css",
+     6
+    ],
+    [
+     "frontend/src/v10.css",
+     12
+    ]
+   ]
+  },
+  {
+   "name": "--cn-shadow-raised",
+   "light": "0 2px 8px var(--cn-tint-black-06), 0 18px 40px var(--cn-tint-black-10)",
+   "dark": "0 2px 8px var(--cn-tint-black-50), 0 18px 40px var(--cn-tint-black-60)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    150
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    191
+   ],
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     308
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     603
+    ],
+    [
+     "frontend/src/styles.css",
+     807
+    ],
+    [
+     "frontend/src/styles.css",
+     1687
+    ]
+   ]
+  },
+  {
+   "name": "--cn-sim-float-clearance",
+   "light": "calc(22px + 56px + 12px)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/features/simulation/SimulationPanel.css",
+    20
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/features/simulation/SimulationPanel.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     25
+    ]
+   ]
+  },
+  {
+   "name": "--cn-success",
+   "light": "#248a3d",
+   "dark": "#30d158",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    37
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    183
+   ],
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     214
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     448
+    ],
+    [
+     "frontend/src/styles.css",
+     936
+    ],
+    [
+     "frontend/src/styles.css",
+     1117
+    ]
+   ]
+  },
+  {
+   "name": "--cn-success-text",
+   "light": "#17672f",
+   "dark": "#30d158",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    36
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    182
+   ],
+   "n_reference_sites": 3,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     820
+    ],
+    [
+     "frontend/src/v10.css",
+     7
+    ],
+    [
+     "frontend/src/v10.css",
+     15
+    ]
+   ]
+  },
+  {
+   "name": "--cn-surface",
+   "light": "#ffffff",
+   "dark": "#1c1c1e",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    11
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    168
+   ],
+   "n_reference_sites": 42,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     209
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     231
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     278
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     337
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     431
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     586
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     600
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     621
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     657
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     671
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     714
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     729
+    ]
+   ]
+  },
+  {
+   "name": "--cn-t-accept",
+   "light": "440ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    162
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     527
+    ]
+   ]
+  },
+  {
+   "name": "--cn-t-hover",
+   "light": "160ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    157
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     306
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     306
+    ]
+   ]
+  },
+  {
+   "name": "--cn-t-press",
+   "light": "110ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    156
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     303
+    ]
+   ]
+  },
+  {
+   "name": "--cn-t-reorder",
+   "light": "360ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    161
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-t-reveal",
+   "light": "320ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    159
+   ],
+   "dark_site": null,
+   "n_reference_sites": 3,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     292
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     293
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     504
+    ]
+   ]
+  },
+  {
+   "name": "--cn-t-sheet",
+   "light": "400ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    160
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-t-state",
+   "light": "200ms",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    158
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     514
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     515
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     36
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-04",
+   "light": "rgba(0, 0, 0, 0.04)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    48
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     149
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-06",
+   "light": "rgba(0, 0, 0, 0.06)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    49
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     149
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     150
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-08",
+   "light": "rgba(0, 0, 0, 0.08)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    50
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     76
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-10",
+   "light": "rgba(0, 0, 0, 0.1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    51
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     150
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-40",
+   "light": "rgba(0, 0, 0, 0.4)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    52
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     190
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-50",
+   "light": "rgba(0, 0, 0, 0.5)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    53
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     190
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     191
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-60",
+   "light": "rgba(0, 0, 0, 0.6)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    54
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     191
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-surface-95",
+   "light": "rgba(28, 28, 30, 0.95)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    57
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     187
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-white-10",
+   "light": "rgba(255, 255, 255, 0.1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    55
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     186
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-white-95",
+   "light": "rgba(255, 255, 255, 0.95)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    56
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     20
+    ]
+   ]
+  },
+  {
+   "name": "--cn-touch-min",
+   "light": "44px",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    236
+   ],
+   "dark_site": null,
+   "n_reference_sites": 26,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     239
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     865
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     901
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1195
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     43
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     49
+    ],
+    [
+     "frontend/src/features/discovery/prepAbandonSurvey.css",
+     48
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     202
+    ],
+    [
+     "frontend/src/features/poiimport/poi-import.css",
+     58
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     46
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     167
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     213
+    ]
+   ]
+  },
+  {
+   "name": "--cn-warning",
+   "light": "#b06000",
+   "dark": "#ff9f0a",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    38
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    184
+   ],
+   "n_reference_sites": 10,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     215
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     698
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     703
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     47
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     213
+    ],
+    [
+     "frontend/src/styles.css",
+     872
+    ],
+    [
+     "frontend/src/styles.css",
+     937
+    ],
+    [
+     "frontend/src/styles.css",
+     1118
+    ],
+    [
+     "frontend/src/styles.css",
+     1747
+    ],
+    [
+     "frontend/src/v10.css",
+     15
+    ]
+   ]
+  },
+  {
+   "name": "--cn-yield-left",
+   "light": null,
+   "dark": null,
+   "always": null,
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1039
+    ]
+   ]
+  },
+  {
+   "name": "--cn-yield-top",
+   "light": null,
+   "dark": null,
+   "always": null,
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1040
+    ]
+   ]
+  },
+  {
+   "name": "--v8-accent",
+   "light": "var(--cn-accent-solid)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    230
+   ],
+   "dark_site": null,
+   "n_reference_sites": 21,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1286
+    ],
+    [
+     "frontend/src/styles.css",
+     517
+    ],
+    [
+     "frontend/src/styles.css",
+     518
+    ],
+    [
+     "frontend/src/styles.css",
+     523
+    ],
+    [
+     "frontend/src/styles.css",
+     524
+    ],
+    [
+     "frontend/src/styles.css",
+     587
+    ],
+    [
+     "frontend/src/styles.css",
+     588
+    ],
+    [
+     "frontend/src/styles.css",
+     642
+    ],
+    [
+     "frontend/src/styles.css",
+     698
+    ],
+    [
+     "frontend/src/styles.css",
+     700
+    ],
+    [
+     "frontend/src/styles.css",
+     1179
+    ],
+    [
+     "frontend/src/styles.css",
+     1180
+    ]
+   ]
+  },
+  {
+   "name": "--v8-amber",
+   "light": "var(--cn-warning)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    215
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     174
+    ]
+   ]
+  },
+  {
+   "name": "--v8-bg",
+   "light": null,
+   "dark": null,
+   "always": null,
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/v10.css",
+     50
+    ]
+   ]
+  },
+  {
+   "name": "--v8-canvas",
+   "light": "var(--cn-canvas)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    208
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1107
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1134
+    ],
+    [
+     "frontend/src/styles.css",
+     130
+    ],
+    [
+     "frontend/src/styles.css",
+     183
+    ],
+    [
+     "frontend/src/styles.css",
+     688
+    ]
+   ]
+  },
+  {
+   "name": "--v8-coral",
+   "light": "var(--cn-danger)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    216
+   ],
+   "dark_site": null,
+   "n_reference_sites": 3,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     180
+    ],
+    [
+     "frontend/src/styles.css",
+     180
+    ],
+    [
+     "frontend/src/styles.css",
+     465
+    ]
+   ]
+  },
+  {
+   "name": "--v8-green",
+   "light": "var(--cn-success)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    214
+   ],
+   "dark_site": null,
+   "n_reference_sites": 17,
+   "reference_files": [
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/collections/collections.css",
+     144
+    ],
+    [
+     "frontend/src/styles.css",
+     150
+    ],
+    [
+     "frontend/src/styles.css",
+     152
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ],
+    [
+     "frontend/src/styles.css",
+     180
+    ]
+   ]
+  },
+  {
+   "name": "--v8-indigo",
+   "light": "var(--cn-accent)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    213
+   ],
+   "dark_site": null,
+   "n_reference_sites": 45,
+   "reference_files": [
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/collections/collections.css",
+     131
+    ],
+    [
+     "frontend/src/map-controls.css",
+     41
+    ],
+    [
+     "frontend/src/map-selection.css",
+     18
+    ],
+    [
+     "frontend/src/map-selection.css",
+     46
+    ],
+    [
+     "frontend/src/map-selection.css",
+     75
+    ],
+    [
+     "frontend/src/map-selection.css",
+     104
+    ],
+    [
+     "frontend/src/map-selection.css",
+     105
+    ],
+    [
+     "frontend/src/map-selection.css",
+     110
+    ],
+    [
+     "frontend/src/map-selection.css",
+     145
+    ],
+    [
+     "frontend/src/map-selection.css",
+     192
+    ],
+    [
+     "frontend/src/map-selection.css",
+     200
+    ],
+    [
+     "frontend/src/map-selection.css",
+     252
+    ]
+   ]
+  },
+  {
+   "name": "--v8-ink",
+   "light": "var(--cn-ink)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    210
+   ],
+   "dark_site": null,
+   "n_reference_sites": 142,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/features/trip/spend.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1106
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1135
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1190
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1216
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1236
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1244
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1252
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1266
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1278
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1308
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1315
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1322
+    ]
+   ]
+  },
+  {
+   "name": "--v8-line",
+   "light": "var(--cn-hairline)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    212
+   ],
+   "dark_site": null,
+   "n_reference_sites": 26,
+   "reference_files": [
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/collections/collections.css",
+     131
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     134
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     137
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     145
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     3
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     7
+    ],
+    [
+     "frontend/src/styles.css",
+     132
+    ],
+    [
+     "frontend/src/styles.css",
+     167
+    ],
+    [
+     "frontend/src/styles.css",
+     177
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ]
+   ]
+  },
+  {
+   "name": "--v8-muted",
+   "light": "var(--cn-ink-secondary)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    211
+   ],
+   "dark_site": null,
+   "n_reference_sites": 23,
+   "reference_files": [
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     12
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     28
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     36
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     9
+    ],
+    [
+     "frontend/src/styles.css",
+     173
+    ],
+    [
+     "frontend/src/styles.css",
+     183
+    ],
+    [
+     "frontend/src/styles.css",
+     661
+    ],
+    [
+     "frontend/src/styles.css",
+     663
+    ],
+    [
+     "frontend/src/styles.css",
+     675
+    ],
+    [
+     "frontend/src/styles.css",
+     838
+    ],
+    [
+     "frontend/src/styles.css",
+     848
+    ],
+    [
+     "frontend/src/styles.css",
+     1128
+    ]
+   ]
+  },
+  {
+   "name": "--v8-panel",
+   "light": "var(--cn-surface)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    209
+   ],
+   "dark_site": null,
+   "n_reference_sites": 28,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1189
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     11
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     31
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     8
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     20
+    ],
+    [
+     "frontend/src/features/discovery/prepAbandonSurvey.css",
+     11
+    ],
+    [
+     "frontend/src/features/discovery/prepAbandonSurvey.css",
+     64
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     11
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     54
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     71
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     89
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     179
+    ]
+   ]
+  },
+  {
+   "name": "--v8-surface",
+   "light": "var(--cn-surface)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    231
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     1281
+    ],
+    [
+     "frontend/src/styles.css",
+     1378
+    ]
+   ]
+  },
+  {
+   "name": "--v8-violet",
+   "light": "#8063d7",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    129
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ]
+   ]
+  },
+  {
+   "name": "--vv-height",
+   "light": null,
+   "dark": null,
+   "always": null,
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1127
+    ],
+    [
+     "frontend/src/styles.css",
+     796
+    ]
+   ]
+  },
+  {
+   "name": "--vv-offset",
+   "light": null,
+   "dark": null,
+   "always": null,
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     796
+    ]
+   ]
+  }
+ ],
+ "colour_tokens": [
+  {
+   "name": "--cn-accent",
+   "light": "#0a66ff",
+   "dark": "#0a84ff",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    21
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    173
+   ],
+   "n_reference_sites": 22,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     213
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     312
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     598
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     645
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     687
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     261
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     346
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     362
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     112
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     35
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     35
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     38
+    ]
+   ]
+  },
+  {
+   "name": "--cn-accent-solid",
+   "light": "var(--cn-always-accent-solid)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    27
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     230
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     615
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     680
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     734
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     994
+    ]
+   ]
+  },
+  {
+   "name": "--cn-accent-text",
+   "light": "#0a5cd6",
+   "dark": "#0a84ff",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    33
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    181
+   ],
+   "n_reference_sites": 15,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     746
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     798
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     836
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1241
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     21
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     113
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     194
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     38
+    ],
+    [
+     "frontend/src/features/poiimport/poi-import.css",
+     37
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     33
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     153
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     182
+    ]
+   ]
+  },
+  {
+   "name": "--cn-always-accent-solid",
+   "light": null,
+   "dark": null,
+   "always": "#0a66ff",
+   "light_site": null,
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     27
+    ]
+   ]
+  },
+  {
+   "name": "--cn-canvas",
+   "light": "#f5f5f7",
+   "dark": "#000000",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    10
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    167
+   ],
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/poster/trip-poster.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     208
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     269
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     646
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     206
+    ]
+   ]
+  },
+  {
+   "name": "--cn-control-border",
+   "light": "#7d8797",
+   "dark": "#7c7c82",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    84
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    188
+   ],
+   "n_reference_sites": 22,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     610
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     628
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     731
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     752
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     782
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     813
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1187
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     23
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     48
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     86
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     154
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     22
+    ]
+   ]
+  },
+  {
+   "name": "--cn-danger",
+   "light": "#d70015",
+   "dark": "#ff453a",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    39
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    185
+   ],
+   "n_reference_sites": 10,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     216
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     447
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     653
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     654
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1213
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1263
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     55
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     250
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     267
+    ],
+    [
+     "frontend/src/styles.css",
+     1079
+    ]
+   ]
+  },
+  {
+   "name": "--cn-hairline",
+   "light": "var(--cn-tint-black-08)",
+   "dark": "var(--cn-tint-white-10)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    76
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    186
+   ],
+   "n_reference_sites": 83,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     212
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     279
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     335
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     360
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     405
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     432
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     541
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     595
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     602
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     623
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     659
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     672
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ink",
+   "light": "#1d1d1f",
+   "dark": "#f5f5f7",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    13
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    170
+   ],
+   "n_reference_sites": 32,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     210
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     352
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     364
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     384
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     419
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     592
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     601
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     609
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     622
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     632
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     636
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     658
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ink-secondary",
+   "light": "#6e6e73",
+   "dark": "#aeaeb2",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    14
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    171
+   ],
+   "n_reference_sites": 48,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/trip/spend.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     211
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     374
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     411
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     451
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     589
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     597
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     651
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     676
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     692
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     694
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     719
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     730
+    ]
+   ]
+  },
+  {
+   "name": "--cn-ink-tertiary",
+   "light": "#86868b",
+   "dark": "#8e8e93",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    15
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    172
+   ],
+   "n_reference_sites": 33,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/features/trip/spend.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     344
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     591
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     906
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1199
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     324
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     58
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     70
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     90
+    ],
+    [
+     "frontend/src/features/checkin/footprint.css",
+     163
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     29
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     33
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     56
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-bg",
+   "light": "var(--cn-tint-white-95)",
+   "dark": "var(--cn-tint-surface-95)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    20
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    187
+   ],
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ],
+    [
+     "frontend/src/styles.css",
+     336
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-clearance",
+   "light": "calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px))",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    258
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ],
+    [
+     "frontend/src/styles.css",
+     1724
+    ]
+   ]
+  },
+  {
+   "name": "--cn-nav-item-h",
+   "light": "max(48px, var(--cn-touch-min))",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    239
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     185
+    ],
+    [
+     "frontend/src/styles.css",
+     282
+    ]
+   ]
+  },
+  {
+   "name": "--cn-onboarding-inset",
+   "light": "var(--cn-gutter)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    1133
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1155
+    ],
+    [
+     "frontend/src/styles.css",
+     687
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-button",
+   "light": "var(--cn-r-16)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    139
+   ],
+   "dark_site": null,
+   "n_reference_sites": 8,
+   "reference_files": [
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checkin/footprint.css",
+     49
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     48
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     36
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     185
+    ],
+    [
+     "frontend/src/v10.css",
+     11
+    ],
+    [
+     "frontend/src/v10.css",
+     14
+    ],
+    [
+     "frontend/src/v10.css",
+     27
+    ],
+    [
+     "frontend/src/v10.css",
+     29
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-card",
+   "light": "var(--cn-r-16)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    140
+   ],
+   "dark_site": null,
+   "n_reference_sites": 17,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     280
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     406
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     430
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     10
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     7
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     10
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     17
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     66
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     239
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     46
+    ],
+    [
+     "frontend/src/features/shared/sharedJourney.css",
+     82
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     86
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-control",
+   "light": "var(--cn-r-12)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    138
+   ],
+   "dark_site": null,
+   "n_reference_sites": 57,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     312
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1188
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1214
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1242
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1264
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1359
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1375
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1396
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     33
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     251
+    ],
+    [
+     "frontend/src/features/access/access.css",
+     335
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     19
+    ]
+   ]
+  },
+  {
+   "name": "--cn-r-hero",
+   "light": "var(--cn-r-20)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    141
+   ],
+   "dark_site": null,
+   "n_reference_sites": 0,
+   "reference_files": [],
+   "reference_sites": []
+  },
+  {
+   "name": "--cn-r-sheet",
+   "light": "var(--cn-r-24)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    142
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     803
+    ],
+    [
+     "frontend/src/styles.css",
+     803
+    ]
+   ]
+  },
+  {
+   "name": "--cn-secondary",
+   "light": "#f2f2f7",
+   "dark": "#2c2c2e",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    12
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    169
+   ],
+   "n_reference_sites": 28,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     407
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     608
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     631
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     684
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1215
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1243
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1265
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1360
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     28
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     34
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     154
+    ],
+    [
+     "frontend/src/features/poster/trip-poster.css",
+     183
+    ]
+   ]
+  },
+  {
+   "name": "--cn-shadow-card",
+   "light": "0 1px 2px var(--cn-tint-black-04), 0 8px 28px var(--cn-tint-black-06)",
+   "dark": "0 1px 2px var(--cn-tint-black-40), 0 8px 28px var(--cn-tint-black-50)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    149
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    190
+   ],
+   "n_reference_sites": 8,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     281
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     338
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     433
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1377
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1398
+    ],
+    [
+     "frontend/src/map-controls.css",
+     37
+    ],
+    [
+     "frontend/src/v10.css",
+     6
+    ],
+    [
+     "frontend/src/v10.css",
+     12
+    ]
+   ]
+  },
+  {
+   "name": "--cn-shadow-raised",
+   "light": "0 2px 8px var(--cn-tint-black-06), 0 18px 40px var(--cn-tint-black-10)",
+   "dark": "0 2px 8px var(--cn-tint-black-50), 0 18px 40px var(--cn-tint-black-60)",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    150
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    191
+   ],
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     308
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     603
+    ],
+    [
+     "frontend/src/styles.css",
+     807
+    ],
+    [
+     "frontend/src/styles.css",
+     1687
+    ]
+   ]
+  },
+  {
+   "name": "--cn-success",
+   "light": "#248a3d",
+   "dark": "#30d158",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    37
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    183
+   ],
+   "n_reference_sites": 4,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     214
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     448
+    ],
+    [
+     "frontend/src/styles.css",
+     936
+    ],
+    [
+     "frontend/src/styles.css",
+     1117
+    ]
+   ]
+  },
+  {
+   "name": "--cn-success-text",
+   "light": "#17672f",
+   "dark": "#30d158",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    36
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    182
+   ],
+   "n_reference_sites": 3,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     820
+    ],
+    [
+     "frontend/src/v10.css",
+     7
+    ],
+    [
+     "frontend/src/v10.css",
+     15
+    ]
+   ]
+  },
+  {
+   "name": "--cn-surface",
+   "light": "#ffffff",
+   "dark": "#1c1c1e",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    11
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    168
+   ],
+   "n_reference_sites": 42,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/poiimport/poi-import.css",
+    "frontend/src/features/poster/trip-poster.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     209
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     231
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     278
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     337
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     431
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     586
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     600
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     621
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     657
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     671
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     714
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     729
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-04",
+   "light": "rgba(0, 0, 0, 0.04)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    48
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     149
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-06",
+   "light": "rgba(0, 0, 0, 0.06)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    49
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     149
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     150
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-08",
+   "light": "rgba(0, 0, 0, 0.08)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    50
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     76
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-10",
+   "light": "rgba(0, 0, 0, 0.1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    51
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     150
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-40",
+   "light": "rgba(0, 0, 0, 0.4)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    52
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     190
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-50",
+   "light": "rgba(0, 0, 0, 0.5)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    53
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     190
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     191
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-black-60",
+   "light": "rgba(0, 0, 0, 0.6)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    54
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     191
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-surface-95",
+   "light": "rgba(28, 28, 30, 0.95)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    57
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     187
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-white-10",
+   "light": "rgba(255, 255, 255, 0.1)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    55
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     186
+    ]
+   ]
+  },
+  {
+   "name": "--cn-tint-white-95",
+   "light": "rgba(255, 255, 255, 0.95)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    56
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/design-tokens.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     20
+    ]
+   ]
+  },
+  {
+   "name": "--cn-warning",
+   "light": "#b06000",
+   "dark": "#ff9f0a",
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    38
+   ],
+   "dark_site": [
+    "frontend/src/design-tokens.css",
+    184
+   ],
+   "n_reference_sites": 10,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/discovery/discovery-batch.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     215
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     698
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     703
+    ],
+    [
+     "frontend/src/features/discovery/discovery-batch.css",
+     47
+    ],
+    [
+     "frontend/src/features/simulation/SimulationPanel.css",
+     213
+    ],
+    [
+     "frontend/src/styles.css",
+     872
+    ],
+    [
+     "frontend/src/styles.css",
+     937
+    ],
+    [
+     "frontend/src/styles.css",
+     1118
+    ],
+    [
+     "frontend/src/styles.css",
+     1747
+    ],
+    [
+     "frontend/src/v10.css",
+     15
+    ]
+   ]
+  },
+  {
+   "name": "--v8-accent",
+   "light": "var(--cn-accent-solid)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    230
+   ],
+   "dark_site": null,
+   "n_reference_sites": 21,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1286
+    ],
+    [
+     "frontend/src/styles.css",
+     517
+    ],
+    [
+     "frontend/src/styles.css",
+     518
+    ],
+    [
+     "frontend/src/styles.css",
+     523
+    ],
+    [
+     "frontend/src/styles.css",
+     524
+    ],
+    [
+     "frontend/src/styles.css",
+     587
+    ],
+    [
+     "frontend/src/styles.css",
+     588
+    ],
+    [
+     "frontend/src/styles.css",
+     642
+    ],
+    [
+     "frontend/src/styles.css",
+     698
+    ],
+    [
+     "frontend/src/styles.css",
+     700
+    ],
+    [
+     "frontend/src/styles.css",
+     1179
+    ],
+    [
+     "frontend/src/styles.css",
+     1180
+    ]
+   ]
+  },
+  {
+   "name": "--v8-amber",
+   "light": "var(--cn-warning)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    215
+   ],
+   "dark_site": null,
+   "n_reference_sites": 1,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     174
+    ]
+   ]
+  },
+  {
+   "name": "--v8-canvas",
+   "light": "var(--cn-canvas)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    208
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1107
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1134
+    ],
+    [
+     "frontend/src/styles.css",
+     130
+    ],
+    [
+     "frontend/src/styles.css",
+     183
+    ],
+    [
+     "frontend/src/styles.css",
+     688
+    ]
+   ]
+  },
+  {
+   "name": "--v8-coral",
+   "light": "var(--cn-danger)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    216
+   ],
+   "dark_site": null,
+   "n_reference_sites": 3,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     180
+    ],
+    [
+     "frontend/src/styles.css",
+     180
+    ],
+    [
+     "frontend/src/styles.css",
+     465
+    ]
+   ]
+  },
+  {
+   "name": "--v8-green",
+   "light": "var(--cn-success)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    214
+   ],
+   "dark_site": null,
+   "n_reference_sites": 17,
+   "reference_files": [
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/collections/collections.css",
+     144
+    ],
+    [
+     "frontend/src/styles.css",
+     150
+    ],
+    [
+     "frontend/src/styles.css",
+     152
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ],
+    [
+     "frontend/src/styles.css",
+     180
+    ]
+   ]
+  },
+  {
+   "name": "--v8-indigo",
+   "light": "var(--cn-accent)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    213
+   ],
+   "dark_site": null,
+   "n_reference_sites": 45,
+   "reference_files": [
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/collections/collections.css",
+     131
+    ],
+    [
+     "frontend/src/map-controls.css",
+     41
+    ],
+    [
+     "frontend/src/map-selection.css",
+     18
+    ],
+    [
+     "frontend/src/map-selection.css",
+     46
+    ],
+    [
+     "frontend/src/map-selection.css",
+     75
+    ],
+    [
+     "frontend/src/map-selection.css",
+     104
+    ],
+    [
+     "frontend/src/map-selection.css",
+     105
+    ],
+    [
+     "frontend/src/map-selection.css",
+     110
+    ],
+    [
+     "frontend/src/map-selection.css",
+     145
+    ],
+    [
+     "frontend/src/map-selection.css",
+     192
+    ],
+    [
+     "frontend/src/map-selection.css",
+     200
+    ],
+    [
+     "frontend/src/map-selection.css",
+     252
+    ]
+   ]
+  },
+  {
+   "name": "--v8-ink",
+   "light": "var(--cn-ink)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    210
+   ],
+   "dark_site": null,
+   "n_reference_sites": 142,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/access/access.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/simulation/SimulationPanel.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/features/trip/spend.css",
+    "frontend/src/map-attribution.css",
+    "frontend/src/map-controls.css",
+    "frontend/src/map-selection.css",
+    "frontend/src/map-stop-labels.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1106
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1135
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1190
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1216
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1236
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1244
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1252
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1266
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1278
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1308
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1315
+    ],
+    [
+     "frontend/src/design-tokens.css",
+     1322
+    ]
+   ]
+  },
+  {
+   "name": "--v8-line",
+   "light": "var(--cn-hairline)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    212
+   ],
+   "dark_site": null,
+   "n_reference_sites": 26,
+   "reference_files": [
+    "frontend/src/features/collections/collections.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/collections/collections.css",
+     131
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     134
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     137
+    ],
+    [
+     "frontend/src/features/collections/collections.css",
+     145
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     3
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     7
+    ],
+    [
+     "frontend/src/styles.css",
+     132
+    ],
+    [
+     "frontend/src/styles.css",
+     167
+    ],
+    [
+     "frontend/src/styles.css",
+     177
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     178
+    ],
+    [
+     "frontend/src/styles.css",
+     179
+    ]
+   ]
+  },
+  {
+   "name": "--v8-muted",
+   "light": "var(--cn-ink-secondary)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    211
+   ],
+   "dark_site": null,
+   "n_reference_sites": 23,
+   "reference_files": [
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/planning/planRanking.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     12
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     28
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     36
+    ],
+    [
+     "frontend/src/features/planning/planRanking.css",
+     9
+    ],
+    [
+     "frontend/src/styles.css",
+     173
+    ],
+    [
+     "frontend/src/styles.css",
+     183
+    ],
+    [
+     "frontend/src/styles.css",
+     661
+    ],
+    [
+     "frontend/src/styles.css",
+     663
+    ],
+    [
+     "frontend/src/styles.css",
+     675
+    ],
+    [
+     "frontend/src/styles.css",
+     838
+    ],
+    [
+     "frontend/src/styles.css",
+     848
+    ],
+    [
+     "frontend/src/styles.css",
+     1128
+    ]
+   ]
+  },
+  {
+   "name": "--v8-panel",
+   "light": "var(--cn-surface)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    209
+   ],
+   "dark_site": null,
+   "n_reference_sites": 28,
+   "reference_files": [
+    "frontend/src/design-tokens.css",
+    "frontend/src/features/abort/journeyAbort.css",
+    "frontend/src/features/checklist/pretripChecklist.css",
+    "frontend/src/features/discovery/prepAbandonSurvey.css",
+    "frontend/src/features/pending/pendingSet.css",
+    "frontend/src/features/shared/sharedJourney.css",
+    "frontend/src/features/trash/journeyTrash.css",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/design-tokens.css",
+     1189
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     11
+    ],
+    [
+     "frontend/src/features/abort/journeyAbort.css",
+     31
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     8
+    ],
+    [
+     "frontend/src/features/checklist/pretripChecklist.css",
+     20
+    ],
+    [
+     "frontend/src/features/discovery/prepAbandonSurvey.css",
+     11
+    ],
+    [
+     "frontend/src/features/discovery/prepAbandonSurvey.css",
+     64
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     11
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     54
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     71
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     89
+    ],
+    [
+     "frontend/src/features/pending/pendingSet.css",
+     179
+    ]
+   ]
+  },
+  {
+   "name": "--v8-surface",
+   "light": "var(--cn-surface)",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/design-tokens.css",
+    231
+   ],
+   "dark_site": null,
+   "n_reference_sites": 2,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     1281
+    ],
+    [
+     "frontend/src/styles.css",
+     1378
+    ]
+   ]
+  },
+  {
+   "name": "--v8-violet",
+   "light": "#8063d7",
+   "dark": null,
+   "always": null,
+   "light_site": [
+    "frontend/src/styles.css",
+    129
+   ],
+   "dark_site": null,
+   "n_reference_sites": 5,
+   "reference_files": [
+    "frontend/src/styles.css"
+   ],
+   "reference_sites": [
+    [
+     "frontend/src/styles.css",
+     175
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ],
+    [
+     "frontend/src/styles.css",
+     181
+    ]
+   ]
+  }
+ ],
+ "holes": {
+  "defined_never_referenced": [
+   "--cn-ease-spring",
+   "--cn-motion-instant",
+   "--cn-motion-map",
+   "--cn-motion-slow",
+   "--cn-r-hero",
+   "--cn-s-24",
+   "--cn-s-48",
+   "--cn-t-reorder",
+   "--cn-t-sheet"
+  ],
+  "referenced_never_defined_but_locally_defaulted": [
+   "--cn-font-mono",
+   "--cn-yield-left",
+   "--cn-yield-top",
+   "--v8-bg",
+   "--vv-height",
+   "--vv-offset"
+  ],
+  "referenced_never_defined_no_fallback": [],
+  "defined_but_shadowed_by_inline_fallback": [
+   "--cn-fs-caption",
+   "--cn-hairline",
+   "--cn-nav-clearance",
+   "--cn-r-card",
+   "--cn-s-4",
+   "--cn-s-8",
+   "--v8-accent",
+   "--v8-ink",
+   "--v8-line",
+   "--v8-muted",
+   "--v8-surface"
+  ],
+  "equal_in_both_themes_not_always": [],
+  "always_redeclared_in_dark": [],
+  "defined_in_dark_only": []
+ },
+ "hole_counts": {
+  "defined_never_referenced": 9,
+  "referenced_never_defined_but_locally_defaulted": 6,
+  "referenced_never_defined_no_fallback": 0,
+  "defined_but_shadowed_by_inline_fallback": 11,
+  "equal_in_both_themes_not_always": 0,
+  "always_redeclared_in_dark": 0,
+  "defined_in_dark_only": 0
+ },
+ "note": "values are as written in the source; var() chains are not resolved and no contrast is measured here -- those are the next cells of the building, deliberately not faked"
+}

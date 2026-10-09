@@ -391,6 +391,7 @@ const en: Dict = {
   "bookings.protectedC4": "Protected C4",
   "bookings.importKicker": "IMPORT CONFIRMATION",
   "bookings.importBooking": "Import a booking",
+  "bookings.advancedStructuredData": "Advanced: structured data",
   "bookings.reservationJson": "Reservation JSON",
   "bookings.reviewProtect": "Review and protect",
   "bookings.neverInvented": "Critical origin, destination, time, provider and reference facts are never invented.",
@@ -551,6 +552,8 @@ const en: Dict = {
   "agent.obsTool": "tool",
   "agent.obsDuration": "duration",
   "agent.obsExecution": "execution",
+  "agent.runtimeDetails": "Runtime details",
+
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -808,6 +811,12 @@ const en: Dict = {
      ORD-0517 names the gap the same way on every card: what is missing is a name from the server,
      and saying so beats showing the row's identifier as if it were a title. */
   "inbox.unnamedArtifact": "The server gave no name for this confirmation",
+  /* ORD-0428: the saved-trip-fact rows are named by `label`, which the server fills from a place name,
+     a reference number or a booking type (`semantic_intake.py`).  The latter two are not names, so the
+     row states which of them it got instead of passing one off as the trip fact's name. */
+  "inbox.memoryUnnamedPlace": "The server gave no place name for this trip fact",
+  "inbox.memoryRefInsteadOfName": "The server gave a reference number for this trip fact, not a place name",
+  "inbox.memoryTypeInsteadOfName": "The server gave a booking type for this trip fact, not a place name",
   "inbox.readyToConfirm": "The server says this one is ready to accept",
   "inbox.openReview": "Open to review",
   "inbox.pendingUnreadable": "The review list could not be read:",
@@ -890,6 +899,11 @@ const en: Dict = {
   "stay.cancellation": "Cancellation",
   "stay.provider": "Provider",
   "stay.priceUnavailable": "Price not available",
+  "stay.loading": "Loading stays…",
+  "stay.noneToCompare": "No stays to compare yet",
+  "stay.reacquire": "Re-acquire stays for this city",
+  "stay.chooseTitle": "Choose where to stay",
+  "stay.arrivalFit": "Arrival / departure fit",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -1269,6 +1283,9 @@ const en: Dict = {
   "itinerary.planWithAiNeedsPlaces": "Plan my trip with AI (needs places first)",
   "itinerary.planWithAi": "Plan my trip with AI",
   "itinerary.emptyTitle": "No itinerary yet",
+  // The stop's own "this is where you are" marker. Not reusing `today.now`: that key
+  // reads 现在 on the Chinese side, and this label says 当前 on screen today.
+  "itinerary.stopNow": "Now",
   "itinerary.emptyPlanNoDays": "No stop in this plan sits on a day yet. Add stops and this screen lists them day by day.",
   "itinerary.emptyNoPlan": "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here.",
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
@@ -1624,6 +1641,7 @@ const zhCN: Dict = {
   "bookings.protectedC4": "受保护 C4",
   "bookings.importKicker": "导入确认",
   "bookings.importBooking": "导入预订",
+  "bookings.advancedStructuredData": "高级：结构化数据",
   "bookings.reservationJson": "预订 JSON",
   "bookings.reviewProtect": "审核并保护",
   "bookings.neverInvented": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
@@ -1778,6 +1796,8 @@ const zhCN: Dict = {
   "agent.obsTool": "工具",
   "agent.obsDuration": "耗时",
   "agent.obsExecution": "执行方式",
+  "agent.runtimeDetails": "运行详情",
+
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
@@ -2026,6 +2046,9 @@ const zhCN: Dict = {
   "inbox.pendingQueue": "等你审核的确认单",
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
   "inbox.unnamedArtifact": "服务器没有给这张确认单的名字",
+  "inbox.memoryUnnamedPlace": "服务器没有给这条行程事实的地点名字",
+  "inbox.memoryRefInsteadOfName": "服务器只给了这条行程事实的确认号，没有给地点名字",
+  "inbox.memoryTypeInsteadOfName": "服务器只给了这条行程事实的预订类型，没有给地点名字",
   "inbox.readyToConfirm": "服务器说这条可以收下了",
   "inbox.openReview": "打开核对",
   "inbox.pendingUnreadable": "待审清单读不出来：",
@@ -2108,6 +2131,11 @@ const zhCN: Dict = {
   "stay.cancellation": "取消政策",
   "stay.provider": "供应商",
   "stay.priceUnavailable": "暂无价格",
+  "stay.loading": "正在获取住宿…",
+  "stay.noneToCompare": "暂时没有可比较的住宿",
+  "stay.reacquire": "重新采集这家城市的住宿",
+  "stay.chooseTitle": "选一家住的地方",
+  "stay.arrivalFit": "到达/离开衔接",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
@@ -2455,6 +2483,7 @@ const zhCN: Dict = {
   "itinerary.planWithAiNeedsPlaces": "AI 帮我规划（要先有地点）",
   "itinerary.planWithAi": "AI 帮我规划",
   "itinerary.emptyTitle": "还没有可看的行程",
+  "itinerary.stopNow": "当前",
   "itinerary.emptyPlanNoDays": "这一版方案里还没有站点被排在某一天上。补上站点，这一屏就按天把它们列出来。",
   "itinerary.emptyNoPlan": "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",

@@ -1,0 +1,6 @@
+Arm-by-arm regression, same machine, same seed generation, same nine existing specs:
+nine specs run at the tip WITHOUT this lane's css line (baseline): 27 named red arms
+the same nine run WITH it (delivery):                              27 named red arms
+new red arms introduced by this change: 0
+red in baseline only (i.e. fixed by this change, from this lane's own sweep): 4
+the 27 pre-existing red names are listed in BASELINE_RED_27.txt, produced by the same two logs

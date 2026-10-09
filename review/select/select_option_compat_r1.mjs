@@ -54,18 +54,19 @@ try {
 // The state consequence: submit the form and the server must file a RAIL artifact.
 // This is the leg that proves the control still drives the component, not just its own
 // DOM value. It writes to this lane's own database file only.
+// The ref is unique per run: the first revision asserted on a fixed ref and went red on
+// its own second run, because the draft it filed the minute before was still in the store.
+const REF = `SEL-COMPAT-${Date.now()}`;
 await page.getByTestId("manual-title").fill("Select lane compatibility probe");
-await page.getByTestId("manual-ref").fill("SEL-COMPAT-1");
+await page.getByTestId("manual-ref").fill(REF);
 await page.getByTestId("manual-submit").click();
 await page.waitForTimeout(2500);
 const submitted = await page.evaluate(
-  ([journey]) =>
+  ([journey, ref]) =>
     fetch(`/api/v1/journeys/${journey}/inbox`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
-        const rows = (d.drafts ?? []).filter((x) =>
-          JSON.stringify(x).includes("SEL-COMPAT-1"),
-        );
+        const rows = (d.drafts ?? []).filter((x) => JSON.stringify(x).includes(ref));
         return {
           filed: rows.length,
           types: rows.map(
@@ -73,12 +74,12 @@ const submitted = await page.evaluate(
           ),
         };
       }),
-  [JOURNEY],
+  [JOURNEY, REF],
 );
 record(
   "manual-type reaches app state",
   submitted.filed === 1 && submitted.types.includes("RAIL"),
-  `drafts_before=${draftsBefore} filed=${submitted.filed} types=${JSON.stringify(submitted.types)}`,
+  `ref=${REF} drafts_before=${draftsBefore} filed=${submitted.filed} types=${JSON.stringify(submitted.types)}`,
 );
 
 // 2. access-invite-visibility -- the data-driven ladder.

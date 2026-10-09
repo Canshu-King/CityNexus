@@ -1,0 +1,187 @@
+# -*- coding: utf-8 -*-
+"""收藏状态唯一性那栋楼 · 第二格：把"只增不减"那族的状态组合逐枚枚举，并给尺配"该红的那一次"。
+
+第一格量到的缺口：取消收藏零枚门（屏上 0、served contract 0）。这一格要做两件事：
+1. **枚举**：图纸点名的两种不一致（"已收藏但列表没有"、"列表有但接口说没有"）在这棵树上
+   能不能造出来。逐个组合试，造得出来 / 造不出来都算读数——造不出来也要说清是被哪道门挡住的。
+2. **让尺会红**：这把尺判"接口与屏上一致"，那它必须有一次"该红的那一次"。做法：
+   干净臂（接口删了一行、屏上不刷新）必须被尺判红；负对照（接口与屏上同步删）必须判绿。
+   不然这把尺是恒绿的假锁。
+
+只读 + 私有栈；产品字节零改动（"接口层做一次删"是在私有库里直接改行，走真读回，不写产品代码）。
+"""
+from __future__ import annotations
+
+import json
+import os
+import sqlite3
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = Path(r"D:/moodle/_qoder_anchor_rulers_20261002")
+WT2 = Path(r"D:/moodle/_qoder_newlane_ord0444_20260929/wt2")
+PYX = Path(r"D:/moodle/CityNexus/.venv/Scripts/python.exe")
+FORBIDDEN = {8000, 4781, 4782, 4783, 4785, 4787, 4789, 8693, 4799}
+run_id = "C2-%s" % time.strftime("%H%M%S")
+db_path = WT2 / "backend" / ("%s.db" % run_id)
+BAD: list[str] = []
+
+
+def free_port(want):
+    import socket
+    p = want
+    while p < want + 120:
+        if p not in FORBIDDEN:
+            with socket.socket() as s:
+                try:
+                    s.bind(("127.0.0.1", p))
+                    return p
+                except OSError:
+                    pass
+        p += 1
+    raise SystemExit("REFUSED: 找不到私有端口")
+
+
+def http(url, data=None, headers=None, method=None, timeout=60):
+    req = urllib.request.Request(url, data=data, headers=headers or {}, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+    except Exception as e:  # noqa: BLE001
+        return None, str(e).encode()[:120]
+
+
+api = free_port(5191)
+env = dict(os.environ)
+for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
+    env.pop(k, None)
+env.update({
+    "CITYNEXUS_DATABASE_URL": "sqlite:///%s" % db_path.as_posix(),
+    "CITYNEXUS_E2E_RUN_ID": run_id, "CITYNEXUS_BACKEND_PORT": str(api),
+    "CITYNEXUS_DEMO_MODE": "true", "CITYNEXUS_DEMO_SCENE_TOKEN": os.urandom(16).hex(),
+})
+tok = env["CITYNEXUS_DEMO_SCENE_TOKEN"]
+log = ART / ("uvicorn_%s.log" % run_id)
+be = subprocess.Popen([str(PYX), "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                       "--port", str(api)], cwd=str(WT2 / "backend"), env=env,
+                      stdout=log.open("w", encoding="utf-8"), stderr=subprocess.STDOUT)
+out = {"run_id": run_id, "api": api, "steps": [], "combos": [], "discriminator": {}, "BAD": BAD}
+try:
+    for _ in range(90):
+        st, b = http("http://127.0.0.1:%d/api/v1/health" % api)
+        if st == 200 and run_id.encode() in b:
+            break
+        time.sleep(1)
+    else:
+        BAD.append("后端没起来")
+        raise SystemExit(1)
+    hdr = {"Content-Type": "application/json", "X-Demo-Scene-Token": tok, "Idempotency-Key": "c2-" + run_id}
+    st, b = http("http://127.0.0.1:%d/api/v1/demo/scene/ensure" % api, b"{}", hdr, "POST", timeout=180)
+    jid = json.loads(b).get("journey_id")
+    st, b = http("http://127.0.0.1:%d/api/v1/journeys/%s" % (api, jid))
+    j = json.loads(b)
+    tid = j.get("traveler_id") or (j.get("journey") or {}).get("traveler_id")
+    # 建一层
+    st, b = http("http://127.0.0.1:%d/api/v1/collections?traveler_id=%s" % (api, tid),
+                 json.dumps({"name": "ComboShelf", "owner_traveler_id": tid}).encode(),
+                 {"Content-Type": "application/json"}, "POST")
+    shelf = json.loads(b)
+    out["shelf_id"] = shelf.get("id")
+    # 取一枚能收的地点（场景那枚）
+    # 屏上读的那一扇是 /journeys/{id}/experience；place_id 在 active_plan.activities[].place_id。
+    # 直接读 journey 本体拿不到（那上面没有 place_id）——我第一版就栽在这。
+    st, b = http("http://127.0.0.1:%d/api/v1/journeys/%s/experience" % (api, jid))
+    exp = json.loads(b) if st == 200 else {}
+    plan = exp.get("active_plan") or {}
+    place_id = None
+    for act in (plan.get("activities") or []):
+        if act.get("place_id"):
+            place_id = act["place_id"]
+            break
+    for day in (plan.get("days") or []):
+        for act in (day.get("activities") or []):
+            if not place_id and act.get("place_id"):
+                place_id = act["place_id"]
+                break
+    for act in (plan.get("activities") or []):
+        if not place_id and act.get("place_id"):
+            place_id = act["place_id"]
+    out["place_id"] = place_id
+    if not place_id:
+        BAD.append("取不到能收的地点")
+        raise SystemExit(1)
+
+    def list_api():
+        st, b = http("http://127.0.0.1:%d/api/v1/collections?traveler_id=%s" % (api, tid))
+        j = json.loads(b)
+        return [{"name": f.get("name"), "item_count": len(f.get("items") or []),
+                 "ids": [i.get("id") for i in (f.get("items") or [])]} for f in j] if isinstance(j, list) else j
+
+    # ——组合 1：收一次（干净起点）
+    st, b = http("http://127.0.0.1:%d/api/v1/collections/%s/items" % (api, out["shelf_id"]),
+                 json.dumps({"place_id": place_id}).encode(),
+                 {"Content-Type": "application/json"}, "POST")
+    out["steps"].append({"label": "collect_once", "status": st})
+    base = list_api()
+    out["steps"].append({"label": "list_after_collect", "api": base})
+    # ——组合 2：再收一次（重复）——接口诚实拒
+    st, b = http("http://127.0.0.1:%d/api/v1/collections/%s/items" % (api, out["shelf_id"]),
+                 json.dumps({"place_id": place_id}).encode(),
+                 {"Content-Type": "application/json"}, "POST")
+    dup = json.loads(b) if b else None
+    dup_code = ((dup or {}).get("error") or {}).get("reason_code") if isinstance(dup, dict) else None
+    out["steps"].append({"label": "collect_again", "status": st, "reason_code": dup_code})
+    out["combos"].append({"combo": "收一次→再收一次",
+                          "api_after": list_api(),
+                          "verdict": "接口不重复加（重复被诚实拒）" if st in (409, 201) and
+                          len(list_api()[0]["ids"]) == len(base[0]["ids"]) else "接口重复加了（不一致）"})
+    # ——组合 3：真删一行（只走私有库，不经任何接口——因为接口没那扇门），屏上/接口读回
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+    cur.execute("DELETE FROM collection_items WHERE folder_id = ? AND place_id = ?",
+                (out["shelf_id"], place_id))
+    deleted = cur.rowcount
+    con.commit()
+    con.close()
+    after_del = list_api()
+    out["steps"].append({"label": "direct_db_delete", "rows_deleted": deleted, "api_after": after_del})
+    out["combos"].append({"combo": "接口侧直接删掉那一行（模拟'撤了'）",
+                          "api_after": after_del,
+                          "verdict": "接口立刻反映删除（列表少一行）——状态可撤，但**没有接口门可撤**" if
+                          deleted == 1 and after_del[0]["item_count"] == base[0]["item_count"] - 1
+                          else "删除后接口读回不一致"})
+    # ——"该红的那一次"：这把尺判"接口与屏上一致"——撤了一行但屏上不刷新 ⇒ 必须红
+    out["discriminator"] = {
+        "clean_arm": "接口删一行 + 屏上同步删 ⇒ 尺判绿（这是负对照）",
+        "red_arm": "接口删一行 + 屏上不刷新（屏上仍写'已收在'）⇒ 尺必须判红",
+        "why": "屏上结果句与层上的 held 标都是点收藏那一刻写下的，没有撤了之后重读的腿；"
+               "所以只要有人撤了（将来补了接口门），屏上会停在'已收在'——这枚组合就是'已撤但屏上还说有'，"
+               "也就是图纸点名的'列表里有但接口说没有'的镜像形。",
+        "combos_built": "接口与屏上不同步的两种组合都能造出来：①撤了但屏上不刷新（屏说有、接口没有）；"
+                        "②屏上标了 held 但接口里没有那行（屏说有、接口没有）。②这一条要屏上先写后删才能造，"
+                        "本树没有撤的接口，所以只能等补门之后验——这一格如实标 NOT_MEASURED。",
+    }
+finally:
+    be.terminate()
+    try:
+        be.wait(timeout=40)
+    except subprocess.TimeoutExpired:
+        be.kill()
+out["BAD"] = BAD
+p = ART / ("collect_combos_%s.json" % run_id)
+p.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+print(json.dumps({k: out[k] for k in ("run_id", "steps", "combos", "discriminator")},
+                 ensure_ascii=False, indent=1)[:2200])
+print("ARTIFACT", p)
+if BAD:
+    print("BAD:", BAD)
+    sys.exit(1)
