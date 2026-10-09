@@ -110,13 +110,17 @@ def _signal_payload(presence: dict, signal_kind: str) -> dict:
         sorted(member["member_id"] for member in presence["members"]),
         separators=(",", ":"),
     )
+    expected_digest = hashlib.sha256(audience_json.encode("utf-8")).hexdigest()
+    # Browser clients now use this server-signed-member audience digest instead
+    # of requiring crypto.subtle on local-network HTTP devices.
+    assert presence["coordination_audience_sha256"] == expected_digest
     return {
         "signal_kind": signal_kind,
         "expected_active_plan_version_id": presence["active_plan_version_id"],
         "expected_current_activity_id": presence["current_activity_id"],
         "expected_rendezvous_activity_id": target["activity_id"],
         "expected_public_place_id": target["place_id"],
-        "expected_audience_sha256": hashlib.sha256(audience_json.encode("utf-8")).hexdigest(),
+        "expected_audience_sha256": presence["coordination_audience_sha256"],
     }
 
 
