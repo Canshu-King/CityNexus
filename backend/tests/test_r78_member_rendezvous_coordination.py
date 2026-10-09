@@ -421,3 +421,51 @@ def test_signal_target_cas_rejects_stale_page_and_expiry_releases_current_slot()
         with pytest.raises(IntegrityError):
             session.commit()
         session.rollback()
+
+
+def test_r78_old_tab_cannot_claim_new_active_status_was_withdrawn():
+    """A stale signal id must not tell the traveler their NEW status was stopped."""
+    journey_id, owner_id = _active_journey()
+    companion_id = _traveler("R78 stale-tab companion")
+    _join(journey_id, owner_id, companion_id)
+    view = _presence(journey_id, companion_id)
+
+    first = _share(
+        journey_id, companion_id, view, "HEADING_TO_RENDEZVOUS",
+        "r78-stale-tab-first-" + journey_id,
+    )
+    assert first.status_code == 201, first.text
+    first_id = str(first.json()["signal_id"])
+    next_share = _share(
+        journey_id, companion_id, view, "NEEDS_COORDINATION",
+        "r78-stale-tab-second-" + journey_id,
+    )
+    assert next_share.status_code == 201, next_share.text
+    second_id = str(next_share.json()["signal_id"])
+    assert second_id != first_id
+
+    url = f"/api/v1/journeys/{journey_id}/rendezvous-member-signals"
+    old_tab_withdraw = client.post(f"{url}/{first_id}/withdraw", headers=_auth(companion_id))
+    assert old_tab_withdraw.status_code == 409, old_tab_withdraw.text
+    assert "RENDEZVOUS_SIGNAL_WITHDRAW_TARGET_STALE" in old_tab_withdraw.text
+    assert [item["signal_id"] for item in _presence(journey_id, owner_id)["coordination_signals"]] == [second_id]
+
+    other_member_withdraw = client.post(f"{url}/{second_id}/withdraw", headers=_auth(owner_id))
+    assert other_member_withdraw.status_code == 404
+
+    stopped = client.post(f"{url}/{second_id}/withdraw", headers=_auth(companion_id))
+    assert stopped.status_code == 200, stopped.text
+    assert stopped.json()["status"] == "REVOKED"
+    assert client.post(f"{url}/{second_id}/withdraw", headers=_auth(companion_id)).status_code == 200
+    assert _presence(journey_id, owner_id)["coordination_signals"] == []
+
+    newer = _share(
+        journey_id, companion_id, view, "HEADING_TO_RENDEZVOUS",
+        "r78-stale-tab-third-" + journey_id,
+    )
+    assert newer.status_code == 201, newer.text
+    newer_id = str(newer.json()["signal_id"])
+    after_new_share = client.post(f"{url}/{second_id}/withdraw", headers=_auth(companion_id))
+    assert after_new_share.status_code == 409, after_new_share.text
+    assert "RENDEZVOUS_SIGNAL_WITHDRAW_TARGET_STALE" in after_new_share.text
+    assert [item["signal_id"] for item in _presence(journey_id, owner_id)["coordination_signals"]] == [newer_id]
