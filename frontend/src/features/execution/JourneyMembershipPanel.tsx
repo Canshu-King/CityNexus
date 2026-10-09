@@ -49,11 +49,14 @@ function hasExactPublicPin(destination: Rendezvous | null | undefined): boolean 
     && destination.longitude >= -180 && destination.longitude <= 180;
 }
 
+function rendezvousAudienceKey(members: GroupPresence["members"]): string {
+  return JSON.stringify(members.map((member) => member.member_id).sort());
+}
+
 async function rendezvousAudienceSha256(members: GroupPresence["members"]): Promise<string> {
-  const memberIds = members.map((member) => member.member_id).sort();
   const digest = await crypto.subtle.digest(
     "SHA-256",
-    new TextEncoder().encode(JSON.stringify(memberIds)),
+    new TextEncoder().encode(rendezvousAudienceKey(members)),
   );
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
@@ -157,6 +160,7 @@ export function JourneyMembershipPanel({
   const [groupPresence, setGroupPresence] = useState<GroupPresence | null>(null);
   const [coordinationConsentKind, setCoordinationConsentKind] = useState<JourneyRendezvousCoordinationSignal["signal_kind"] | null>(null);
   const [coordinationConsentKey, setCoordinationConsentKey] = useState<string | null>(null);
+  const [coordinationConsentAudienceKey, setCoordinationConsentAudienceKey] = useState<string | null>(null);
   const [coordinationBusy, setCoordinationBusy] = useState(false);
   const [coordinationMessage, setCoordinationMessage] = useState<string | null>(null);
   const [routeResult, setRouteResult] = useState<{
@@ -165,6 +169,7 @@ export function JourneyMembershipPanel({
   } | null>(null);
   const rendezvous = groupPresence?.rendezvous ?? null;
   const currentTargetKey = groupPresenceTargetKey(groupPresence);
+  const currentAudienceKey = groupPresence ? rendezvousAudienceKey(groupPresence.members) : null;
 
   const refresh = useCallback(async () => {
     const mine = await cityNexusApi.getMyJourneyMembershipInvitations().catch(() => []);
@@ -225,17 +230,21 @@ export function JourneyMembershipPanel({
   }, [currentTargetKey]);
 
   useEffect(() => {
+    // A refreshed member list changes who would see this disclosure. A user
+    // who confirmed A/B/C may not silently end up sharing with a new D.
     setCoordinationConsentKind(null);
     setCoordinationConsentKey(null);
-  }, [currentTargetKey]);
+    setCoordinationConsentAudienceKey(null);
+  }, [currentTargetKey, currentAudienceKey]);
 
   const coordinationSignals = groupPresence?.coordination_signals ?? [];
   const ownCoordinationSignal = coordinationSignals.find((signal) => signal.viewer_can_withdraw) ?? null;
 
   const openCoordinationConsent = (kind: JourneyRendezvousCoordinationSignal["signal_kind"]) => {
-    if (!currentTargetKey || !groupPresence?.can_guide) return;
+    if (!currentTargetKey || !currentAudienceKey || !groupPresence?.can_guide) return;
     setCoordinationMessage(null);
     setCoordinationConsentKey(currentTargetKey);
+    setCoordinationConsentAudienceKey(currentAudienceKey);
     setCoordinationConsentKind(kind);
   };
 
@@ -244,12 +253,17 @@ export function JourneyMembershipPanel({
     const current = groupPresence;
     const target = current?.rendezvous;
     const activePlanId = current?.active_plan_version_id;
-    if (!current || !target || !activePlanId || coordinationConsentKey !== currentTargetKey) {
+    if (
+      !current || !target || !activePlanId
+      || coordinationConsentKey !== currentTargetKey
+      || coordinationConsentAudienceKey !== currentAudienceKey
+    ) {
       setCoordinationConsentKind(null);
       setCoordinationConsentKey(null);
+      setCoordinationConsentAudienceKey(null);
       setCoordinationMessage(zh
-        ? "会合点视图已经变化，请刷新后重新选择。"
-        : "The rendezvous view changed. Refresh before sharing a status.");
+        ? "会合点或接收状态的成员名单已变化；没有扩大分享范围。请刷新并重新确认受众。"
+        : "The stop or audience changed. Nothing was shared with new members; refresh and confirm the updated audience.");
       await refreshGroupPresence();
       return;
     }
@@ -270,6 +284,7 @@ export function JourneyMembershipPanel({
       );
       setCoordinationConsentKind(null);
       setCoordinationConsentKey(null);
+      setCoordinationConsentAudienceKey(null);
       setCoordinationMessage(receipt.status === "ACTIVE"
         ? (zh
           ? "你的自愿状态已分享给当前同行者；它会在 45 分钟后过期，不证明已到场。"
@@ -281,6 +296,7 @@ export function JourneyMembershipPanel({
       setCoordinationMessage(coordinationFailureCopy(text, zh));
       setCoordinationConsentKind(null);
       setCoordinationConsentKey(null);
+      setCoordinationConsentAudienceKey(null);
       await refreshGroupPresence();
     } finally {
       setCoordinationBusy(false);
@@ -771,7 +787,7 @@ export function JourneyMembershipPanel({
                         <button
                           type="button"
                           data-testid="journey-rendezvous-consent-confirm"
-                          disabled={coordinationBusy || coordinationConsentKey !== currentTargetKey}
+                          disabled={coordinationBusy || coordinationConsentKey !== currentTargetKey || coordinationConsentAudienceKey !== currentAudienceKey}
                           onClick={() => void shareCoordinationSignal()}
                         >{coordinationConsentKind === "HEADING_TO_RENDEZVOUS"
                           ? (zh ? "确认分享我正在前往" : "Share that I'm on my way")
@@ -782,6 +798,7 @@ export function JourneyMembershipPanel({
                           onClick={() => {
                             setCoordinationConsentKind(null);
                             setCoordinationConsentKey(null);
+                            setCoordinationConsentAudienceKey(null);
                           }}
                         >{zh ? "取消" : "Cancel"}</button>
                       </div>
