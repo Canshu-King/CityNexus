@@ -6,16 +6,27 @@ import {
   type MomentScoutInterest,
   type MomentScoutResult,
 } from "../../api/citynexus";
+import {
+  buildGoogleWalkingDirectionsUrl,
+  buildOpenStreetMapPinUrl,
+} from "./memberSideQuestNavigationLinks";
 import { useLocale } from "../../i18n/LocaleContext";
 
 export function MomentScoutCard({
   journeyId,
   onRefreshLocation,
   onUpdated,
+  sharedRendezvous,
 }: {
   journeyId: string;
   onRefreshLocation?: () => Promise<string | null>;
   onUpdated: () => Promise<void>;
+  sharedRendezvous?: {
+    placeName: string;
+    latitude: number | null;
+    longitude: number | null;
+    coordinateSystem: "WGS84" | null;
+  } | null;
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
@@ -29,8 +40,48 @@ export function MomentScoutCard({
   const [liveReceipt, setLiveReceipt] = useState<LiveMomentScoutResult | null>(null);
   const [liveSelectedCandidateId, setLiveSelectedCandidateId] = useState("");
   const [showLiveConsent, setShowLiveConsent] = useState(false);
+  const [showSharedStopFallback, setShowSharedStopFallback] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const sharedStopTarget = sharedRendezvous
+    && sharedRendezvous.latitude != null
+    && sharedRendezvous.longitude != null
+    && sharedRendezvous.coordinateSystem === "WGS84"
+    ? {
+        kind: "SHARED_RENDEZVOUS" as const,
+        place_id: "shared-rendezvous",
+        name: sharedRendezvous.placeName,
+        latitude: sharedRendezvous.latitude,
+        longitude: sharedRendezvous.longitude,
+        coordinate_system: "WGS84" as const,
+        provenance: {
+          provider_key: "journey-active-plan",
+          external_id: "shared-rendezvous",
+          source_coordinate_system: "WGS84",
+        },
+        navigation_available: true,
+        unavailable_reason: null,
+      }
+    : null;
+
+  const openSharedStopMap = (provider: "google" | "osm") => {
+    if (!sharedStopTarget) {
+      setMessage(zh
+        ? "当前共同集合点没有可公开使用的 WGS84 坐标；没有打开地图。"
+        : "The current shared stop has no public WGS84 coordinates, so no map was opened.");
+      return;
+    }
+    try {
+      const url = provider === "google"
+        ? buildGoogleWalkingDirectionsUrl(sharedStopTarget)
+        : buildOpenStreetMapPinUrl(sharedStopTarget);
+      window.open(url, "_blank", "noopener,noreferrer");
+      setShowSharedStopFallback(false);
+    } catch {
+      setMessage(zh ? "当前共同集合点暂时没有可用地图坐标。" : "The current shared stop has no usable map coordinates.");
+    }
+  };
 
   useEffect(() => {
     if (!receipt) return;
@@ -62,13 +113,15 @@ export function MomentScoutCard({
     setLiveReceipt(null);
     setLiveSelectedCandidateId("");
     setShowLiveConsent(false);
+    setShowSharedStopFallback(false);
     setSelectedPlaceId("");
     try {
       const locationObservationId = await onRefreshLocation();
       if (!locationObservationId) {
+        setShowSharedStopFallback(Boolean(sharedStopTarget));
         setMessage(zh
-          ? "没有取得这一次的位置；没有生成附近推荐。你可以继续共同计划。"
-          : "No one-time location was available, so no nearby options were generated. You can continue the shared plan.");
+          ? "没有取得这一次的位置；没有生成附近推荐。你可以打开当前共同集合点的公共地图，或继续共同计划。"
+          : "No one-time location was available, so no nearby options were generated. Open the current shared stop on a public map or continue the shared plan.");
         return;
       }
       const value = await cityNexusApi.scoutMemberMoment(
@@ -99,9 +152,11 @@ export function MomentScoutCard({
     setMessage(null);
     setLiveReceipt(null);
     setLiveSelectedCandidateId("");
+    setShowSharedStopFallback(false);
     try {
       const locationObservationId = await onRefreshLocation();
       if (!locationObservationId) {
+        setShowSharedStopFallback(Boolean(sharedStopTarget));
         setLiveReceipt({
           scout_state: "LOCATION_UNAVAILABLE",
           budget_minutes: budgetMinutes,
@@ -382,6 +437,30 @@ export function MomentScoutCard({
             onClick={() => setShowLiveConsent(false)}
           >
             {zh ? "取消" : "Cancel"}
+          </button>
+        </div>
+      )}
+      {showSharedStopFallback && sharedStopTarget && (
+        <div role="group" data-testid="moment-scout-shared-stop-fallback">
+          <strong>{zh ? "先回到当前共同集合点" : "Return to the current shared stop"}</strong>
+          <small>
+            {zh
+              ? `当前位置没有取得；你可以打开「${sharedStopTarget.name}」的公共地图。这里只发送公开集合点坐标，不发送当前位置，也不会请求附近地点服务。`
+              : `Your current location was unavailable. Open the public map for “${sharedStopTarget.name}”. Only the public shared-stop coordinates are sent; your current location is not shared and no nearby provider request is made.`}
+          </small>
+          <button
+            type="button"
+            data-testid="moment-scout-shared-stop-google"
+            onClick={() => openSharedStopMap("google")}
+          >
+            {zh ? "打开步行地图" : "Open walking map"}
+          </button>
+          <button
+            type="button"
+            data-testid="moment-scout-shared-stop-osm"
+            onClick={() => openSharedStopMap("osm")}
+          >
+            {zh ? "打开 OpenStreetMap" : "Open OpenStreetMap"}
           </button>
         </div>
       )}

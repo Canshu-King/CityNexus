@@ -1139,6 +1139,14 @@ export function LiveRecovery({
                   journeyId={journeyId}
                   onRefreshLocation={onRefreshLocation}
                   onUpdated={loadOperator}
+                  sharedRendezvous={groupPresence?.rendezvous
+                    ? {
+                        placeName: groupPresence.rendezvous.place_name,
+                        latitude: groupPresence.rendezvous.latitude,
+                        longitude: groupPresence.rendezvous.longitude,
+                        coordinateSystem: groupPresence.rendezvous.coordinate_system,
+                      }
+                    : null}
                 />
               )}
             {plannedSeparation && (
