@@ -1,0 +1,11 @@
+# ORD-0552 长瓦工 -- empty-branch reachability, read off tip=3ca65c3c42f7cd8f070fe3f43ab1487abad2fd75
+PANEL_UNMOUNTS_WHEN_EMPTY | frontend/src/features/planning/PlanComparison.tsx:138 | render: {candidates.map((plan, index) => {
+    guard frontend/src/features/planning/PlanComparison.tsx:92 | names=candidates | if (candidates.length === 0) return null;
+GUARD_SAYS_NONEMPTY | frontend/src/features/studio/V12TripStudioPanel.tsx:159 | render: {gateReasons.map((reason) => (
+    guard frontend/src/features/studio/V12TripStudioPanel.tsx:153 | names=gateReasons | {!preview.can_accept && gateReasons.length > 0 && (
+NO_GUARD_FOUND | frontend/src/features/agent/AgentRunRail.tsx:16 | render: {steps.map((step) => (
+GUARD_SAYS_NONEMPTY | frontend/src/features/trip/ActivityDetail.tsx:283 | render: {nearbyOrdered.slice(0, 5).map((item) => {
+    guard frontend/src/features/trip/ActivityDetail.tsx:268 | names=nearby | {nearby.length > 0 && (
+GUARD_SAYS_NONEMPTY | frontend/src/features/recovery/RecoveryRequiredPanel.tsx:238 | render: {failures.slice(0, 4).map((item) => (
+    guard frontend/src/features/recovery/RecoveryRequiredPanel.tsx:225 | names=failures | {failures.length > 0 && (
+verdicts: GUARD_SAYS_NONEMPTY=3, NO_GUARD_FOUND=1, PANEL_UNMOUNTS_WHEN_EMPTY=1

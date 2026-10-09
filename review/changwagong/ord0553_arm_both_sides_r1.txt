@@ -1,0 +1,8 @@
+# ORD-0553 长瓦工 -- the static arm on both sides (arm: review/changwagong/ord0553_discovery_batch_row_arm_r1.py)
+after: DISCOVERY_BATCH_ROW_ARM GREEN | PASS=8 FAIL=0 | review/changwagong/ord0553_arm_after.txt
+control: DISCOVERY_BATCH_ROW_ARM RED | PASS=3 FAIL=5 | review/changwagong/ord0553_arm_before_control.txt
+  control> FAIL A2 the row time is produced by formatWhen | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:None
+  control> FAIL A3 the helper is imported, not re-implemented here | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:None
+  control> FAIL A4 the raw ISO slice is gone from this file | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:537
+  control> FAIL A6 the fallback names a dictionary key, not a written literal | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:None
+  control> FAIL A7 that key exists on BOTH books | frontend/src/i18n/LocaleContext.tsx:0,0

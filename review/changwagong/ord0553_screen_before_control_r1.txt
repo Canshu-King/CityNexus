@@ -1,0 +1,11 @@
+# ORD-0553 长瓦工 -- the SAME spec against the parent bytes (BEFORE the cut)
+# control shape: in this same tree the one product file was restored with
+#   git checkout HEAD^ -- frontend/src/features/discovery/RealCityDiscoveryPanel.tsx
+# so HEAD is this lane's commit while the bytes are the authoritative tip's.
+# locale | painted | what the device reading demanded | artefact
+en | painted=2026-10-10 09:00 | device=10 Oct, 09:00 | review/evidence/ord0553/run564204__R1en.json
+  log> Error: e2e/qoder-ord0553-changwagong-batch-row-r1.spec.ts :: R1zh — the row still paints an ISO fragment: "2026-10-10 09:00"
+  log> > 174 |   expect(shown, node(`R1${tag}`, `the row still paints an ISO fragment: "${shown}"`)).not.toMatch(/\d{4}-\d{2}-\d{2}/);
+zh-CN | painted=2026-10-10 09:00 | device=10月10日 09:00 | review/evidence/ord0553/run564204__R1zh.json
+  log> Error: e2e/qoder-ord0553-changwagong-batch-row-r1.spec.ts :: R1zh — the row still paints an ISO fragment: "2026-10-10 09:00"
+  log> > 174 |   expect(shown, node(`R1${tag}`, `the row still paints an ISO fragment: "${shown}"`)).not.toMatch(/\d{4}-\d{2}-\d{2}/);

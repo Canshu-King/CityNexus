@@ -1,0 +1,8 @@
+# ORD-0435 Q4 (the real compose WRITE route) on this lane's stack -- both sides red
+# after = candidate bytes, control = parent bytes; same line, same sentence, so the red is a
+# precondition of this store, not a regression from this cut. The refusal this screen can hit is
+# named in the product file's own ORD-0435 comment (V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR).
+run_id=run563664 passed=1 failed=2 | review/run-run563664.log
+  log> Error: e2e/qoder-ord0435-poi-batch-multiselect.spec.ts :: Q4zh — 完成 produced no read-back block
+run_id=run563950 passed=1 failed=2 | review/run-run563950.log
+  log> Error: e2e/qoder-ord0435-poi-batch-multiselect.spec.ts :: Q4zh — 完成 produced no read-back block

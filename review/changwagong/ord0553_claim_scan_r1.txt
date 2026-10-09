@@ -1,0 +1,27 @@
+# ORD-0553 长瓦工 -- anti-collision reading, frozen when this lane took the file
+# ruler: _qoder_cmdr_ref_20260921/live_checks/patrol/_live_orders_reader_r1.py
+# plus the local ref scan, because ls-remote cannot see a lane branch that never left this box.
+ruler=D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_live_orders_reader_r1.py rc=0
+claim_rows_total=10
+claim_rows_naming_this_file=0
+  claim> 账本第 428 行｜（这句没写花名）｜PretripChecklistPanel.tsx
+  claim> 账本第 543 行｜（这句没写花名）｜frontend/src/features/checklist/PretripChecklistPanel.tsx
+  claim> 账本第 632 行｜（这句没写花名）｜features/checklist/PretripChecklistPanel.tsx
+  claim> 账本第 943 行｜逐字认领，故选它里那枚内联三元式｜DestinationPreparationPanel.tsx
+  claim> 账本第 1447 行｜（这句没写花名）｜frontend/src/features/stay/StayExplorer.tsx
+  claim> 账本第 1675 行｜（这句没写花名）｜frontend/src/features/agent/AgentComposer.tsx
+  claim> 账本第 4290 行｜（这句没写花名）｜V8Experience.tsx
+  claim> 账本第 6479 行｜（这句没写花名）｜frontend/src/features/planning/PlanWithAiSheet.tsx
+  claim> 账本第 6552 行｜（这句没写花名）｜frontend/src/features/execution/LiveRecovery.tsx
+  claim> 账本第 7184 行｜（这句没写花名）｜frontend/src/features/setup/JourneyTrialSetup.tsx
+ledger_verbatim_claim_lines_naming_this_file=0
+remote_refs_with_0553=8
+  ref> refs/heads/review/45d25bfb-ord0553-authoritative-caps-r1
+  ref> refs/heads/review/45d25bfb-ord0553-authoritative-caps-r1-mC
+  ref> refs/heads/review/45d25bfb-ord0553-authoritative-caps-r1-mD
+  ref> refs/heads/review/45d25bfb-ord0553-authoritative-caps-r2
+  ref> refs/heads/review/82f55d8a-ord0517-ticket-titles-r1
+  ref> refs/heads/review/cmdr-batch-ord-0553-063131
+  ref> refs/heads/review/link-0553-r1
+  ref> refs/heads/review/safebottom-0553-r1
+authoritative_tip_at_capture=3ca65c3c42f7cd8f070fe3f43ab1487abad2fd75

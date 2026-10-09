@@ -1,0 +1,12 @@
+DISCOVERY_BATCH_ROW_ARM GREEN
+tree=D:/moodle/_qoder_changwagong_1010
+PASS A1 batch row li still carries its testid | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:537
+PASS A2 the row time is produced by formatWhen | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:542
+PASS A3 the helper is imported, not re-implemented here | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:4
+PASS A4 the raw ISO slice is gone from this file | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:0 hits
+PASS A5 the day list beside it was left alone | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:332
+PASS A6 the fallback names a dictionary key, not a written literal | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:542
+PASS A7 that key exists on BOTH books | frontend/src/i18n/LocaleContext.tsx:780,2009
+PASS A8 the helper really exports formatWhen | frontend/src/lib/formatWhen.ts:11
+book=en frontend/src/i18n/LocaleContext.tsx:780 "inbox.timePending": "time pending",
+book=zhCN frontend/src/i18n/LocaleContext.tsx:2009 "inbox.timePending": "时间待定",

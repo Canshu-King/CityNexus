@@ -1,0 +1,12 @@
+# ORD-0553 长瓦工 -- gate readings on the rebased candidate (tip=676b4c5a950c60c65a013ee3990254b07ef73484, parent=3ca65c3c42f7cd8f070fe3f43ab1487abad2fd75)
+typecheck_all_rc=0
+build_rc=0
+typecheck_all_output_bytes=0
+typecheck_all_output_lines=0
+build_ok_marker=built in 18.86s
+typecheck_targeted_include=['src/app/V8Experience.tsx', 'src/features/execution/LiveRecovery.tsx', 'src/i18n/LocaleContext.tsx', 'src/lib/budgetEvidence.ts', 'src/lib/disruptionState.ts']
+typecheck_full_include=['src/**/*.ts', 'src/**/*.tsx']
+numstat HEAD^..HEAD:
+  6	1	frontend/src/features/discovery/RealCityDiscoveryPanel.tsx
+arm_after=DISCOVERY_BATCH_ROW_ARM GREEN
+arm_control=DISCOVERY_BATCH_ROW_ARM RED

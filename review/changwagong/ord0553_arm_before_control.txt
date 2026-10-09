@@ -1,0 +1,10 @@
+DISCOVERY_BATCH_ROW_ARM RED
+tree=D:/moodle/_cwg_ctl1
+PASS A1 batch row li still carries its testid | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:536
+FAIL A2 the row time is produced by formatWhen | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:None
+FAIL A3 the helper is imported, not re-implemented here | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:None
+FAIL A4 the raw ISO slice is gone from this file | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:537
+PASS A5 the day list beside it was left alone | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:331
+FAIL A6 the fallback names a dictionary key, not a written literal | frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:None
+FAIL A7 that key exists on BOTH books | frontend/src/i18n/LocaleContext.tsx:0,0
+PASS A8 the helper really exports formatWhen | frontend/src/lib/formatWhen.ts:11

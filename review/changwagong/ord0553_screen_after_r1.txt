@@ -1,0 +1,7 @@
+# ORD-0553 长瓦工 -- discovery batch read-back row: painted screen text AFTER the cut
+# locale | painted | this device's own reading of the same instant | old shape | artefact
+en | painted=10 Oct, 09:00 | device=10 Oct, 09:00 | old_shape_would_be=2026-10-10 09:00 | zone=Asia/Shanghai | review/evidence/ord0553/run564885__R1en.json
+run_id=run564885 passed=3 failed=0 | review/run-run564885.log | base_tip=676b4c5a950c60c65a013ee3990254b07ef73484
+zh-CN | painted=10月10日 09:00 | device=10月10日 09:00 | old_shape_would_be=2026-10-10 09:00 | zone=Asia/Shanghai | review/evidence/ord0553/run564885__R1zh.json
+run_id=run564885 passed=3 failed=0 | review/run-run564885.log | base_tip=676b4c5a950c60c65a013ee3990254b07ef73484
+spec=frontend/e2e/qoder-ord0553-changwagong-batch-row-r1.spec.ts
