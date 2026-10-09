@@ -1,0 +1,12 @@
+# ORD-0558 shuangshugong authoritative tip readout
+# cmd1: git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+8bc584613cc5fb047453f497b2152f8ab5102ca9	refs/heads/mirror/integration-frontend-apple-pass1
+# cmd2: git cat-file -t 8bc584613cc5fb047453f497b2152f8ab5102ca9
+commit
+# cmd3: git rev-parse <tip>:frontend/src/features/execution/LiveRecovery.tsx -- blob pair, first read at the earlier tip 7f08160743b3b46e600c2c05e6863eaabd722f54, second at the tip above
+blob_earlier=82d1a3c427e0590accd010c9cb3d64ec36e709c2
+blob_now=82d1a3c427e0590accd010c9cb3d64ec36e709c2
+# cmd4: git merge-base --is-ancestor 147e0c54ddca501d9e96a983cfc61a1e36dd8616 8bc584613cc5fb047453f497b2152f8ab5102ca9
+ancestor=yes rc=0
+# cmd5: git log -1 --format=%H %ad %s on the landing commit
+147e0c54ddca501d9e96a983cfc61a1e36dd8616 2026-10-08T01:55:07+08:00 ORD-0562 widen: the hub was only the first screen. The ruler now walks every .ts/.tsx under frontend/src and found two more softened counted nouns -- LiveRecovery's 'suggestion(s)' and pretripChecklist's 'failure(s)' -- which my earlier grep missed; with simulationAdapter's 'leg(s)' that is three sites, all now going through englishCountNoun. New arm 6 is the counter-arm: reverting these three turns it red (rc=1), with them it is green. Six arms pass, both typecheck projects rc=0.
