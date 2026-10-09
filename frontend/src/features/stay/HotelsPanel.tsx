@@ -142,7 +142,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
   if (options === null) {
     return (
       <section className="v8-page" data-testid="hotels-panel">
-        <p className="v8-muted">{zh ? "正在获取住宿…" : "Loading stays…"}</p>
+        <p className="v8-muted">{t("stay.loading")}</p>
       </section>
     );
   }
@@ -153,7 +153,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
         <div className="v8-page-intro compact">
           <div>
             <p className="v8-kicker">{t("hub.stayLabel")}</p>
-            <h1>{zh ? "暂时没有可比较的住宿" : "No stays to compare yet"}</h1>
+            <h1>{t("stay.noneToCompare")}</h1>
             <p className="v8-lede">
               {zh
                 ? "这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。"
@@ -175,7 +175,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             }}
             data-testid="hotels-empty-retry-btn"
           >
-            {zh ? "重新采集这家城市的住宿" : "Re-acquire stays for this city"}
+            {t("stay.reacquire")}
           </button>
           <button
             type="button"
@@ -198,7 +198,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("hub.stayLabel")}</p>
-          <h1>{zh ? "选一家住的地方" : "Choose where to stay"}</h1>
+          <h1>{t("stay.chooseTitle")}</h1>
           <p className="v8-lede">
             {zh
               ? `按与行程的关系排序的 ${options.length} 家住宿。价格未知时我们如实说明。`
@@ -243,7 +243,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                   <dd>{option.walking_min}{zh ? " 分钟" : " min"}</dd>
                 </div>
                 <div>
-                  <dt>{zh ? "到达/离开衔接" : "Arrival / departure fit"}</dt>
+                  <dt>{t("stay.arrivalFit")}</dt>
                   <dd>{option.arrival_fit}% / {option.departure_fit}%</dd>
                 </div>
                 <div>

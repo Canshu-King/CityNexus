@@ -887,6 +887,11 @@ const en: Dict = {
   "stay.cancellation": "Cancellation",
   "stay.provider": "Provider",
   "stay.priceUnavailable": "Price not available",
+  "stay.loading": "Loading stays…",
+  "stay.noneToCompare": "No stays to compare yet",
+  "stay.reacquire": "Re-acquire stays for this city",
+  "stay.chooseTitle": "Choose where to stay",
+  "stay.arrivalFit": "Arrival / departure fit",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2102,6 +2107,11 @@ const zhCN: Dict = {
   "stay.cancellation": "取消政策",
   "stay.provider": "供应商",
   "stay.priceUnavailable": "暂无价格",
+  "stay.loading": "正在获取住宿…",
+  "stay.noneToCompare": "暂时没有可比较的住宿",
+  "stay.reacquire": "重新采集这家城市的住宿",
+  "stay.chooseTitle": "选一家住的地方",
+  "stay.arrivalFit": "到达/离开衔接",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
