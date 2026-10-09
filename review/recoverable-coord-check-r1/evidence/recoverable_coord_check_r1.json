@@ -1,0 +1,71 @@
+{
+ "rows_checked": 4,
+ "commits_checked": 5,
+ "verdict_tally": {
+  "ANCESTOR_OF_NEAREST": 4,
+  "UNRELATED": 1
+ },
+ "confirmed_same_work": 4,
+ "unrelated": [
+  "5e32c84ca6730ac454ae7c472c67e1539aca2a5c"
+ ],
+ "results": [
+  {
+   "ref": "refs/heads/review/0296-write-deadline-f",
+   "hex": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "verdict": "ANCESTOR_OF_NEAREST",
+   "ancestor_of_nearest": true,
+   "nearest": "refs/heads/review/ord0296-write-deadline-f",
+   "nearest_head": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "own_paths": 5,
+   "topic": "ord0296-write-deadline",
+   "topic_hits": []
+  },
+  {
+   "ref": "refs/heads/review/0296-write-deadline-f",
+   "hex": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+   "verdict": "ANCESTOR_OF_NEAREST",
+   "ancestor_of_nearest": true,
+   "nearest": "refs/heads/review/ord0296-write-deadline-f",
+   "nearest_head": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "own_paths": 1,
+   "topic": "ord0296-write-deadline",
+   "topic_hits": []
+  },
+  {
+   "ref": "refs/heads/review/R-od0471-evidence-r1",
+   "hex": "2a5e05ec2b6a60abd07797a683b5e716ef3b93ac",
+   "verdict": "ANCESTOR_OF_NEAREST",
+   "ancestor_of_nearest": true,
+   "nearest": "refs/heads/review/R-ord0471-evidence-r1",
+   "nearest_head": "2a5e05ec2b6a60abd07797a683b5e716ef3b93ac",
+   "own_paths": 25,
+   "topic": "R-ord0471-evidence",
+   "topic_hits": []
+  },
+  {
+   "ref": "refs/heads/review/cff87c64-english-arm-enum-echo-r2",
+   "hex": "5e32c84ca6730ac454ae7c472c67e1539aca2a5c",
+   "verdict": "UNRELATED",
+   "ancestor_of_nearest": false,
+   "nearest": "refs/heads/review/cff87c64-english-arm-enum-echo-r1",
+   "nearest_head": "60f00673507e045a770fa843fe9183a5a490ded2",
+   "own_paths": 8,
+   "topic": "cff87c64-english-arm-enum-echo",
+   "topic_hits": []
+  },
+  {
+   "ref": "refs/heads/review/newlane-ord0444-collections-r5",
+   "hex": "f5aa54beaefda25b4dea68f54d2f02467139f85e",
+   "verdict": "ANCESTOR_OF_NEAREST",
+   "ancestor_of_nearest": true,
+   "nearest": "refs/heads/review/newlane-ord0444-collections-r6",
+   "nearest_head": "7c75bb0e3a183e8973860cd1be09ae99a3647363",
+   "own_paths": 3,
+   "topic": "newlane-ord0444-collections",
+   "topic_hits": []
+  }
+ ],
+ "method": "per same-line 40-hex: is it an ancestor of the nearest live ref's head (ancestry used as evidence of which object a coordinate names), and does its own change set touch that branch's topic path. UNRELATED otherwise.",
+ "note": "ancestry here identifies WHICH object a coordinate points at; it is not used as a landed/lost criterion, which on this line is blob equality only"
+}

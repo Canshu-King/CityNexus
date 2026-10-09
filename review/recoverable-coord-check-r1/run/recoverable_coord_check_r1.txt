@@ -1,0 +1,6 @@
+ancestor_confirmed=4 commits_checked=5 confirmed_same_work=4 rows_checked=4 topic_confirmed=0 unrelated=1
+HEX 6d041dcce11d ref=0296-write-deadline-f verdict=ANCESTOR_OF_NEAREST nearest=ord0296-write-deadline-f own_paths=5
+HEX 5c4608cede6c ref=0296-write-deadline-f verdict=ANCESTOR_OF_NEAREST nearest=ord0296-write-deadline-f own_paths=1
+HEX 2a5e05ec2b6a ref=R-od0471-evidence-r1 verdict=ANCESTOR_OF_NEAREST nearest=R-ord0471-evidence-r1 own_paths=25
+HEX 5e32c84ca673 ref=cff87c64-english-arm-enum-echo-r2 verdict=UNRELATED nearest=cff87c64-english-arm-enum-echo-r1 own_paths=8
+HEX f5aa54beaefd ref=newlane-ord0444-collections-r5 verdict=ANCESTOR_OF_NEAREST nearest=newlane-ord0444-collections-r6 own_paths=3

@@ -1,0 +1,25 @@
+recoverable-coordinate check r1: are the "still recoverable" coords actually the same work? (0 product paths)
+
+The missing-ref dossier reported that 4 of 9 stale ref names had a resolvable 40-hex on the same line
+and called that "the coordinate is still recoverable".  That was only half a proof: a resolvable commit is
+not the same as "this commit is the branch the stale name referred to".  Same name, different object is the
+failure mode that matters, so this closes it with two independent readings per same-line commit -- is it an
+ancestor of the nearest live ref's head (ancestry used as evidence of which object a coordinate denotes),
+and does its own change set touch that branch's topic path.
+
+Result: 4 of 5 same-line commits are an earlier generation of the very branch they name (coordinate valid,
+name stale); 1 is UNRELATED -- its change set is `review/ord0563/...`, a different topic entirely, verified
+by sha that it is not the branch's ancestor.  That last one is a correction to my own previous block: for
+that row, "still recoverable" was wrong and the block says so.
+
+Ancestry here identifies WHICH object a coordinate points at.  It is not used as a landed/lost criterion,
+which on this line is blob equality only.
+
+Contents under review/recoverable-coord-check-r1/:
+- tools/recoverable_coord_check_r1.py -- the check; also renders and vouches its own BB copy.
+- evidence/recoverable_coord_check_r1/recoverable_coord_check_r1.json -- the per-commit verdicts.
+- run/recoverable_coord_check_r1.txt -- the printed output.
+- run/recoverable_coord_check_r1_manifest.json, run/commit_recoverable_coord_check_r1_msg.txt -- this publish.
+
+Read-only: one ls-remote, several merge-base --is-ancestor, one diff-tree; no fetch, no write, no ref
+moved, no ledger direct write, no product byte. New file names throughout (CMDR-0925-2128).
