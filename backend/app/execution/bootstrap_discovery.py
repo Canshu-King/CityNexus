@@ -127,7 +127,12 @@ def _attempts(value: Any) -> list[dict[str, Any]]:
     return result
 
 
-def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
+def _candidate_payload(
+    row: RealPlaceCandidate,
+    *,
+    member_id: str | None = None,
+    traveler_id: str | None = None,
+) -> dict[str, Any]:
     evidence = json.loads(row.evidence_json or "{}")
     opening = json.loads(row.opening_hours_json or "{}")
     if not isinstance(opening, dict):
@@ -154,6 +159,14 @@ def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
     kind = str(evidence.get("osm_type") or "node")
     osm_id = str(evidence.get("osm_id") or "")
     source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
+    scope_distance = None
+    if member_id is not None and traveler_id is not None:
+        for scope in _bootstrap_scope_entries(evidence):
+            if scope["member_id"] == str(member_id) and scope["traveler_id"] == str(traveler_id):
+                scope_distance = scope.get("distance_m")
+                break
+    if scope_distance is None and len(_bootstrap_scope_entries(evidence)) <= 1:
+        scope_distance = row.distance_m
     return {
         "candidate_id": row.id,
         "name": row.name,
@@ -165,7 +178,7 @@ def _candidate_payload(row: RealPlaceCandidate) -> dict[str, Any]:
         "latitude": row.latitude,
         "longitude": row.longitude,
         "coordinate_system": "WGS84",
-        "distance_m": row.distance_m,
+        "distance_m": scope_distance,
         "opening_state": opening_status,
         "selection_state": (
             "READY_FOR_NATIVE_PLAN"
@@ -222,14 +235,101 @@ def _provider_call(
     )
 
 
+def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
+    """Read member-private scopes while retaining compatibility with R87 receipts."""
+
+    raw_scopes = evidence.get("bootstrap_scopes")
+    scopes: list[dict[str, Any]] = []
+    if isinstance(raw_scopes, list):
+        for raw in raw_scopes:
+            if not isinstance(raw, dict):
+                continue
+            member_id = str(raw.get("member_id") or "")
+            traveler_id = str(raw.get("traveler_id") or "")
+            receipt_id = str(raw.get("receipt_id") or "")
+            if member_id and traveler_id and receipt_id:
+                scopes.append(
+                    {
+                        "member_id": member_id,
+                        "traveler_id": traveler_id,
+                        "receipt_id": receipt_id,
+                        "source_kind": str(raw.get("source_kind") or ""),
+                        "distance_m": raw.get("distance_m"),
+                    }
+                )
+    if scopes:
+        return scopes
+    member_id = str(evidence.get("member_id") or "")
+    traveler_id = str(evidence.get("traveler_id") or "")
+    receipt_id = str(evidence.get("receipt_id") or "")
+    if member_id and traveler_id and receipt_id:
+        return [
+            {
+                "member_id": member_id,
+                "traveler_id": traveler_id,
+                "receipt_id": receipt_id,
+                "source_kind": str(evidence.get("source_kind") or ""),
+                "distance_m": None,
+            }
+        ]
+    return []
+
+
 def _candidate_scope_matches(row: RealPlaceCandidate, *, member_id: str, traveler_id: str) -> bool:
-    """Keep bootstrap receipts private to the signed member that created them."""
+    """Keep bootstrap receipts private while allowing the same public OSM identity to be reused."""
 
     evidence = json.loads(row.evidence_json or "{}")
-    return (
-        str(evidence.get("member_id") or "") == str(member_id)
-        and str(evidence.get("traveler_id") or "") == str(traveler_id)
+    return any(
+        scope["member_id"] == str(member_id) and scope["traveler_id"] == str(traveler_id)
+        for scope in _bootstrap_scope_entries(evidence)
     )
+
+
+def _matching_candidate_scope(
+    evidence: dict[str, Any],
+    *,
+    member_id: str,
+    traveler_id: str,
+    receipt_id: str,
+) -> dict[str, Any] | None:
+    for scope in _bootstrap_scope_entries(evidence):
+        if (
+            scope["member_id"] == str(member_id)
+            and scope["traveler_id"] == str(traveler_id)
+            and scope["receipt_id"] == str(receipt_id)
+        ):
+            return scope
+    return None
+
+
+def _drop_candidate_scope(row: RealPlaceCandidate, *, member_id: str, traveler_id: str) -> bool:
+    """Remove one private receipt without deleting another member's identical OSM result."""
+
+    evidence = json.loads(row.evidence_json or "{}")
+    scopes = [
+        scope
+        for scope in _bootstrap_scope_entries(evidence)
+        if not (
+            scope["member_id"] == str(member_id)
+            and scope["traveler_id"] == str(traveler_id)
+        )
+    ]
+    if not scopes:
+        return False
+    evidence["bootstrap_scopes"] = scopes
+    # Keep the legacy top-level fields pointed at a remaining scope for any old
+    # operator tooling that reads the stored evidence directly.
+    first = scopes[0]
+    evidence.update(
+        {
+            "member_id": first["member_id"],
+            "traveler_id": first["traveler_id"],
+            "receipt_id": first["receipt_id"],
+            "source_kind": first.get("source_kind") or evidence.get("source_kind"),
+        }
+    )
+    row.evidence_json = _json(evidence)
+    return True
 
 
 def _bootstrap_rate_limited(
@@ -465,7 +565,9 @@ def discover_bootstrap_candidates(
     ).all()
     for private_row in private_rows:
         if _candidate_scope_matches(private_row, member_id=member_id, traveler_id=traveler_id):
-            session.delete(private_row)
+            if not _drop_candidate_scope(private_row, member_id=member_id, traveler_id=traveler_id):
+                session.delete(private_row)
+    session.flush()
     for candidate in usable:
         osm = _osm_identity(candidate)
         if osm is None:
@@ -478,10 +580,33 @@ def discover_bootstrap_candidates(
                 RealPlaceCandidate.external_id == candidate.external_id,
             )
         )
-        # The same OSM identity may be returned to two members.  Do not overwrite
-        # the first member's private receipt or let a duplicate violate the
-        # Journey/provider/external identity constraint.
+        # The same OSM identity may be returned to two members.  Keep one
+        # deterministic row, but append a separate private scope instead of
+        # dropping the second member's named result or overwriting the first
+        # member's receipt.
         if existing_candidate is not None:
+            if existing_candidate.status == "BOOTSTRAP_PRIVATE":
+                existing_evidence = json.loads(existing_candidate.evidence_json or "{}")
+                scopes = _bootstrap_scope_entries(existing_evidence)
+                if not any(
+                    scope["member_id"] == member_id and scope["traveler_id"] == traveler_id
+                    for scope in scopes
+                ):
+                    scopes.append(
+                        {
+                            "member_id": member_id,
+                            "traveler_id": traveler_id,
+                            "receipt_id": receipt_id,
+                            "source_kind": source_kind,
+                            "distance_m": (
+                                float(candidate.distance_m)
+                                if persisted_distance and candidate.distance_m is not None
+                                else None
+                            ),
+                        }
+                    )
+                    existing_evidence["bootstrap_scopes"] = scopes
+                    existing_candidate.evidence_json = _json(existing_evidence)
             continue
         tags = _candidate_tags(candidate)
         cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
@@ -526,6 +651,19 @@ def discover_bootstrap_candidates(
                         "member_id": member_id,
                         "traveler_id": traveler_id,
                         "source_kind": source_kind,
+                        "bootstrap_scopes": [
+                            {
+                                "member_id": member_id,
+                                "traveler_id": traveler_id,
+                                "receipt_id": receipt_id,
+                                "source_kind": source_kind,
+                                "distance_m": (
+                                    float(candidate.distance_m)
+                                    if persisted_distance and candidate.distance_m is not None
+                                    else None
+                                ),
+                            }
+                        ],
                         "provider_attempts": attempts,
                         "candidate_id": row_id,
                         "osm_type": osm_type,
@@ -559,7 +697,7 @@ def discover_bootstrap_candidates(
         "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
         "attempts": attempts,
         "candidates": [
-            _candidate_payload(row)
+            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
             for row in session.scalars(
                 select(RealPlaceCandidate).where(
                     RealPlaceCandidate.journey_id == journey.id,
@@ -629,13 +767,18 @@ def preview_bootstrap_candidate(
             status_code=404,
         )
     evidence = json.loads(row.evidence_json or "{}")
-    if not evidence.get("bootstrap") or str(evidence.get("receipt_id")) != str(receipt_id):
+    if not evidence.get("bootstrap"):
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_RECEIPT_MISMATCH",
             "candidate does not belong to this discovery receipt",
             status_code=403,
         )
-    if str(evidence.get("member_id")) != str(member.id) or str(evidence.get("traveler_id")) != str(traveler_id):
+    if _matching_candidate_scope(
+        evidence,
+        member_id=str(member.id),
+        traveler_id=str(traveler_id),
+        receipt_id=str(receipt_id),
+    ) is None:
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_MEMBER_MISMATCH",
             "candidate belongs to another signed member",
@@ -786,9 +929,15 @@ def select_bootstrap_candidate(
     if row is None:
         raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_NOT_FOUND", "bootstrap candidate was not found", status_code=404)
     evidence = json.loads(row.evidence_json or "{}")
-    if not evidence.get("bootstrap") or str(evidence.get("receipt_id")) != str(receipt_id):
+    if not evidence.get("bootstrap"):
         raise BootstrapDiscoveryError("BOOTSTRAP_RECEIPT_MISMATCH", "candidate does not belong to this discovery receipt", status_code=403)
-    if str(evidence.get("member_id")) != str(member.id) or str(evidence.get("traveler_id")) != str(traveler_id):
+    matching_scope = _matching_candidate_scope(
+        evidence,
+        member_id=str(member.id),
+        traveler_id=str(traveler_id),
+        receipt_id=str(receipt_id),
+    )
+    if matching_scope is None:
         raise BootstrapDiscoveryError("BOOTSTRAP_MEMBER_MISMATCH", "candidate belongs to another signed member", status_code=403)
     expires_at = row.expires_at
     if expires_at:

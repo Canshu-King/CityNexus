@@ -13,6 +13,38 @@ type PendingMapPreview = {
   longitude: number;
 };
 
+function safeHttpsSourceUrl(value: string | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || !url.hostname || url.username || url.password) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+function validatedPublicMapUrl(value: string | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== "www.openstreetmap.org" ||
+      !url.searchParams.has("mlat") ||
+      !url.searchParams.has("mlon") ||
+      url.searchParams.has("origin") ||
+      url.searchParams.has("query") ||
+      !url.hash.startsWith("#map=")
+    ) {
+      return null;
+    }
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function BootstrapDiscoveryPanel({
   journeyId,
   cityCode,
@@ -38,6 +70,7 @@ export function BootstrapDiscoveryPanel({
   const [mapConsent, setMapConsent] = useState(false);
   const [mapBusy, setMapBusy] = useState(false);
   const [exploreNotice, setExploreNotice] = useState<string | null>(null);
+  const [mapFallbackUrl, setMapFallbackUrl] = useState<string | null>(null);
 
   const useForegroundGps = () => {
     setMessage(null);
@@ -86,6 +119,7 @@ export function BootstrapDiscoveryPanel({
       setPendingMapPreview(null);
       setMapConsent(false);
       setExploreNotice(null);
+      setMapFallbackUrl(null);
       if (next.status === "PROVIDER_UNAVAILABLE") {
         setMessage("The public provider is unavailable. Use a public map center and try again later.");
       } else if (next.status === "PROVIDER_DISABLED") {
@@ -125,6 +159,7 @@ export function BootstrapDiscoveryPanel({
     }
     setMessage(null);
     setExploreNotice(null);
+    setMapFallbackUrl(null);
     setMapConsent(false);
     setPendingMapPreview({
       candidateId: candidate.candidate_id,
@@ -158,6 +193,16 @@ export function BootstrapDiscoveryPanel({
     }
     setMapBusy(true);
     setMessage(null);
+    setMapFallbackUrl(null);
+    // Reserve a tab while this click still has user activation.  Mobile browsers
+    // may reject a later async window.open after the receipt request completes.
+    const pendingWindow = window.open("about:blank", "_blank");
+    try {
+      if (pendingWindow) pendingWindow.opener = null;
+    } catch {
+      // The opener relationship is advisory; the destination is still validated below.
+    }
+    let openedAutomatically = false;
     try {
       const released = await cityNexusApi.previewBootstrapCandidate(journeyId, {
         receipt_id: pendingMapPreview.receiptId,
@@ -167,13 +212,45 @@ export function BootstrapDiscoveryPanel({
         longitude: pendingMapPreview.longitude,
         coordinate_system: "WGS84",
       });
-      window.open(released.destination.map_url, "_blank", "noopener,noreferrer");
+      const publicMapUrl = validatedPublicMapUrl(released.destination.map_url);
+      if (
+        released.receipt_id !== pendingMapPreview.receiptId ||
+        released.candidate_id !== pendingMapPreview.candidateId ||
+        Math.abs(released.destination.latitude - pendingMapPreview.latitude) > 1e-6 ||
+        Math.abs(released.destination.longitude - pendingMapPreview.longitude) > 1e-6 ||
+        !publicMapUrl
+      ) {
+        try {
+          pendingWindow?.close();
+        } catch {
+          // A browser may have already reclaimed the pre-opened tab.
+        }
+        throw new Error("The authorized public map destination did not match this candidate; release cancelled.");
+      }
+      if (pendingWindow && !pendingWindow.closed) {
+        try {
+          pendingWindow.location.replace(publicMapUrl);
+          openedAutomatically = true;
+        } catch {
+          setMapFallbackUrl(publicMapUrl);
+        }
+      } else {
+        setMapFallbackUrl(publicMapUrl);
+      }
       setExploreNotice(
-        "Public destination opened. Explore first: no Place, PlanVersion, route, or Journey start was created. Opening is still " +
+        (openedAutomatically
+          ? "Public destination opened. "
+          : "Your browser blocked the automatic tab. Use the authorized public map link below. ") +
+          "Explore first: no Place, PlanVersion, route, or Journey start was created. Opening is still " +
           (released.opening.verification_state === "EXTERNAL_NOT_ATTESTED" ? "EXTERNAL_NOT_ATTESTED." : "provider-grounded, not freshly rechecked."),
       );
       cancelMapPreview();
     } catch (error) {
+      try {
+        pendingWindow?.close();
+      } catch {
+        // A browser may have already reclaimed the pre-opened tab.
+      }
       cancelMapPreview();
       setMessage(error instanceof Error ? error.message : "The public map release was cancelled.");
     } finally {
@@ -181,10 +258,16 @@ export function BootstrapDiscoveryPanel({
     }
   };
 
+  const continueExploring = () => {
+    cancelMapPreview();
+    setMessage(null);
+    setExploreNotice("Continue exploring without committing: this draft has no Place or PlanVersion. Search another candidate when ready.");
+  };
+
   const mapFallback =
-    Number.isFinite(latitude) && Number.isFinite(longitude)
+    sourceKind === "MANUAL_PUBLIC_CENTER" && Number.isFinite(latitude) && Number.isFinite(longitude)
       ? `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`
-      : "https://www.openstreetmap.org/";
+      : null;
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -271,10 +354,22 @@ export function BootstrapDiscoveryPanel({
             {exploreNotice}
           </p>
         ) : null}
-        {result?.status === "PROVIDER_UNAVAILABLE" || result?.status === "PROVIDER_DISABLED" ? (
+        {mapFallbackUrl ? (
           <p>
-            <a href={mapFallback} target="_blank" rel="noreferrer" data-testid="bootstrap-map-fallback">
-              Open a public map fallback
+            <a
+              href={mapFallbackUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="bootstrap-authorized-map-fallback"
+            >
+              Open authorized public map
+            </a>
+          </p>
+        ) : null}
+        {mapFallback && (result?.status === "PROVIDER_UNAVAILABLE" || result?.status === "PROVIDER_DISABLED") ? (
+          <p>
+            <a href={mapFallback} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-map-fallback">
+              Open the public search center on a map
             </a>
           </p>
         ) : null}
@@ -289,8 +384,8 @@ export function BootstrapDiscoveryPanel({
                 </p>
                 {candidate.selection_state !== "READY_FOR_NATIVE_PLAN" ? (
                   <p role="status" data-testid={`bootstrap-opening-blocker-${candidate.candidate_id}`}>
-                    OpenStreetMap did not provide grounded opening hours for this place. Verify the
-                    source below, then search again, or choose another candidate before starting a Journey.
+                    Opening is not independently verified. Verify the source, preview the public map, inspect the source,
+                    or continue exploring; this candidate cannot start a Journey yet.
                   </p>
                 ) : null}
                 <p>
@@ -307,14 +402,27 @@ export function BootstrapDiscoveryPanel({
                 </p>
                 <div data-testid={`bootstrap-source-facts-${candidate.candidate_id}`}>
                   <p>
-                    Opening evidence: {candidate.opening_claim ?? "NO_OPENING_TAG"} · observed {candidate.opening_observed_at ?? "unknown"} · {candidate.opening_verification_state === "PROVIDER_GROUNDED" ? "provider-grounded, not freshly rechecked" : "EXTERNAL_NOT_ATTESTED"}
+                    Source identity: {candidate.opening_source ?? "OpenStreetMap/Overpass"} · {candidate.external_id} · observed {candidate.opening_observed_at ?? "unknown"}
+                  </p>
+                  <p>
+                    Opening evidence: {candidate.opening_claim ?? "NO_OPENING_TAG"} · {candidate.opening_verification_state === "PROVIDER_GROUNDED" ? "provider-grounded, not freshly rechecked" : "EXTERNAL_NOT_ATTESTED"}
                   </p>
                   {candidate.opening_hours?.raw ? <p>OSM opening_hours: {String(candidate.opening_hours.raw)}</p> : null}
-                  {Object.entries(candidate.source_tags ?? {}).map(([key, value]) => (
-                    <p key={key}>
-                      {key}: {value}
-                    </p>
-                  ))}
+                  {Object.entries(candidate.source_tags ?? {}).map(([key, value]) => {
+                    const safeUrl = ["website", "contact:website"].includes(key)
+                      ? safeHttpsSourceUrl(value)
+                      : null;
+                    return (
+                      <p key={key}>
+                        {key}: {value}{" "}
+                        {safeUrl ? (
+                          <a href={safeUrl} target="_blank" rel="noopener noreferrer">
+                            Open unverified OSM-provided site
+                          </a>
+                        ) : null}
+                      </p>
+                    );
+                  })}
                 </div>
                 <button
                   type="button"
@@ -359,6 +467,14 @@ export function BootstrapDiscoveryPanel({
                     </div>
                   </div>
                 ) : null}
+                <button
+                  type="button"
+                  data-testid={`bootstrap-continue-exploring-${candidate.candidate_id}`}
+                  disabled={mapBusy}
+                  onClick={continueExploring}
+                >
+                  Continue exploring without committing
+                </button>
                 <button
                   type="button"
                   data-testid={`bootstrap-select-${candidate.candidate_id}`}

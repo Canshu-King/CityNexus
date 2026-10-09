@@ -152,6 +152,7 @@ test("R88 lets a signed traveller explore an unknown-opening real POI without st
   const popupPromise = page.waitForEvent("popup");
   await panel.getByTestId("bootstrap-map-preview-confirm").click();
   const popup = await popupPromise;
+  await popup.waitForURL(/openstreetmap\.org\/\?mlat=39\.1205000/);
   expect(popup.url()).toContain("openstreetmap.org/?mlat=39.1205000&mlon=117.2005000");
   expect(popup.url()).not.toContain("origin");
   expect(popup.url()).not.toContain("center");
