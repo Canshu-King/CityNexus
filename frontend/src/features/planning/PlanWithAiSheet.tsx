@@ -734,7 +734,7 @@ export function PlanWithAiSheet({
         {/* Everything that may grow lives in one scroll region between two pinned ends. */}
         <div className="plan-ai-scroll" data-testid="plan-ai-scroll">
         <label className="plan-ai-field">
-          <span className="v8-sr-only">{zh ? "旅行需求" : "Trip request"}</span>
+          <span className="v8-sr-only">{t("planai.tripRequest")}</span>
           <textarea
             data-testid="plan-ai-input"
             rows={5}
@@ -1120,7 +1120,7 @@ export function PlanWithAiSheet({
                   onImportPlaces();
                 }}
               >
-                {zh ? "粘贴你自己的地点，导入这趟行程" : "Paste your own places and import them into this trip"}
+                {t("planai.importPlacesCta")}
               </button>
             )}
             {copy?.action === "another-city" && onChooseAnotherCity && (

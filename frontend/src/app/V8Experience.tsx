@@ -2348,25 +2348,54 @@ function TripsWorkspace({
         className="trips-tabs"
         data-testid="trips-tabs"
         role="tablist"
-        aria-label={zh ? "行程分区" : "Trip sections"}
+        aria-label={t("hub.tripsSectionsAria")}
       >
-        {tabs.map((item) => (
-          <button
-            key={item.key}
-            type="button"
-            role="tab"
-            id={`trips-tab-${item.key}`}
-            aria-selected={tab === item.key}
-            className={tab === item.key ? "active" : ""}
-            data-testid={`trips-tab-${item.key}`}
-            onClick={() => setTab(item.key)}
-          >
-            {zh ? item.zh : item.en}
-          </button>
-        ))}
+        {tabs.map((item) => {
+          const selected = tab === item.key;
+          return (
+            <button
+              key={item.key}
+              type="button"
+              role="tab"
+              id={`trips-tab-${item.key}`}
+              aria-selected={selected}
+              aria-controls="trips-tabpanel"
+              tabIndex={selected ? 0 : -1}
+              className={selected ? "active" : ""}
+              data-testid={`trips-tab-${item.key}`}
+              onClick={() => setTab(item.key)}
+              onKeyDown={(e) => {
+                const order = tabs.map((x) => x.key);
+                const i = order.indexOf(item.key);
+                let n = -1;
+                if (e.key === "ArrowRight") n = (i + 1) % order.length;
+                else if (e.key === "ArrowLeft") n = (i - 1 + order.length) % order.length;
+                else if (e.key === "Home") n = 0;
+                else if (e.key === "End") n = order.length - 1;
+                else return;
+                e.preventDefault();
+                const nk = order[n];
+                setTab(nk);
+                const el = document.getElementById(`trips-tab-${nk}`);
+                if (el) el.focus();
+              }}
+            >
+              {zh ? item.zh : item.en}
+            </button>
+          );
+        })}
       </nav>
 
-      {renderPanels(tripsTabPanels, tripsTabScope)}
+      <div
+        role="tabpanel"
+        id="trips-tabpanel"
+        aria-labelledby={`trips-tab-${tab}`}
+        tabIndex={0}
+        className="trips-tabpanel"
+        key={tab}
+      >
+        {renderPanels(tripsTabPanels, tripsTabScope)}
+      </div>
     </>
   );
 }
@@ -2890,9 +2919,7 @@ function Hub({
                          other side -- no number reached us, so the screen names that instead of
                          borrowing one. */
                       <span data-testid="continuation-resume-no-server-reason">
-                        {zh
-                          ? "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。"
-                          : "The server sent no reason text -- this sentence is ours, not the server's."}
+                        {t("hub.continuationNoServerReason")}
                       </span>
                     )}
                   </>
@@ -2912,7 +2939,7 @@ function Hub({
                     {t("hub.continuationTechnicalDetail")}
                   </summary>
                   <span data-testid="continuation-resume-server-reason">
-                    {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
+                    {t("hub.continuationServerReason")}
                     {resumeOutcome.serverReason}
                   </span>
                   {/* Q70: the field this device measured, under its contract name, on the element
@@ -2923,9 +2950,7 @@ function Hub({
                     data-cnx-field="http_status"
                     data-cnx-value={String(resumeOutcome.httpStatus)}
                   >
-                    {zh
-                      ? `这台设备看到的回读：HTTP ${resumeOutcome.httpStatus}`
-                      : `This device's reading: HTTP ${resumeOutcome.httpStatus}`}
+                    {t("hub.continuationReading", { status: resumeOutcome.httpStatus })}
                   </span>
                   {/* Q68: the number a traveller could repeat is the one thing this refusal did not
                       send -- `continuePendingPlan` hands back a status and a sentence, no code.  The
@@ -2935,9 +2960,7 @@ function Hub({
                     className="today-continuation-technical-nocode"
                     data-testid="continuation-resume-no-request-id"
                   >
-                    {zh
-                      ? "这一屏没有拿到可复述的编号（这条读取没把它送过来）。"
-                      : "This screen holds no repeatable code -- this read did not carry one."}
+                    {t("hub.continuationNoRequestId")}
                   </span>
                 </details>
               )}
@@ -3249,7 +3272,7 @@ function Hub({
           one action, lodging is secondary context (GPT Hero rules). */}
       <div className="cn-hero-strip" data-testid="today-strip">
         <div className="cn-strip-item">
-          <span>{zh ? "住宿" : "Stay"}</span>
+          <span>{t("hub.stayLabel")}</span>
           <strong data-testid="today-stay">
             {chosenStay
               ? chosenStay.stay.property_name
@@ -3293,7 +3316,7 @@ function Hub({
       )}
       {!selected && (
         <div className="v8-empty-state" data-testid="hub-glance-empty">
-          <b>{zh ? "还没有可以预览的行程" : "Nothing to preview yet"}</b>
+          <b>{t("hub.nothingToPreview")}</b>
           <p>
             {zh
               ? "选定方案后，这里会显示每天的安排。"
@@ -4310,7 +4333,7 @@ function WalletCommitments({
                 {simulated && (
                   <b data-testid="wallet-commitment-simulated">
                     {" · "}
-                    {zh ? "模拟承诺" : "simulated commitment"}
+                    {t("bookings.commitmentSimulated")}
                   </b>
                 )}
               </span>
@@ -4784,20 +4807,12 @@ function Me({
         <article className="v8-me-card">
           <span className="v8-kicker">{t("my.stay")}</span>
           <strong>
-            {stay
-              ? stay.stay.property_name
-              : zh
-                ? "还没有选定"
-                : "Not chosen yet"}
+            {stay ? stay.stay.property_name : t("me.stayNotChosen")}
           </strong>
           <p>
             {stay
-              ? zh
-                ? "已确认的住宿"
-                : "Confirmed stay"
-              : zh
-                ? "在「行程 · 住宿」里挑选"
-                : "Choose it in Trips · Stay"}
+              ? t("me.stayConfirmed")
+              : t("me.stayChooseInTrips")}
           </p>
         </article>
 
@@ -4816,12 +4831,8 @@ function Me({
           </strong>
           <p>
             {bookings.length
-              ? zh
-                ? "受保护的预订，不会被自动改动。"
-                : "Protected bookings; they are never changed automatically."
-              : zh
-                ? "在「行程 · 预订」里导入你的票或确认单。"
-                : "Import a ticket or confirmation in Trips · Bookings."}
+              ? t("me.bookingsProtected")
+              : t("me.bookingsImport")}
           </p>
         </article>
 
@@ -4831,9 +4842,7 @@ function Me({
           </span>
           <strong>{freedomLabel(policy?.mode)}</strong>
           <p>
-            {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。"
-              : "Anything affecting a confirmed booking or protected plan asks you first."}
+            {t("me.asksBeforeProtectedChange")}
           </p>
           <label className="me-mode-row">
             <span>{t("me.allowAutomaticChanges")}</span>

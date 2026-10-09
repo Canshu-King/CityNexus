@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { namedCodeIn } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
@@ -177,6 +177,7 @@ export function PoiImportPanel({
   travelerId = null,
   firstDay = null,
   onOpenPlan,
+  onOpenDiscover,
 }: {
   journeyId: string;
   /** Whose shelves the 收藏 exit may ask the list door about. Absent is not "all of them": the read
@@ -186,9 +187,13 @@ export function PoiImportPanel({
   /** The day the plan itself starts on: what the automatic landing would pick. */
   firstDay?: string | null;
   onOpenPlan: () => void;
+  /* ORD-0470: optional, and the cell below only mounts the door when it is really there -- the same
+     rule `travelerId` keeps for the shelf exit. A button that navigates nowhere is the defect. */
+  onOpenDiscover?: () => void;
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  const textInput = useRef<HTMLTextAreaElement | null>(null);
   const [mode, setMode] = useState<"text" | "screenshot">("text");
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
@@ -345,6 +350,17 @@ export function PoiImportPanel({
 
   const unsupportedForms = parsed?.unsupported_forms ?? [];
 
+  /* ORD-0470: a cell that only *says* something went wrong leaves the traveller on the screen with no
+     move.  Clearing is the door this screen owns -- nothing was written to the server by a parse, so
+     rewriting costs no data, and the caret goes back to the box the next line is typed in. */
+  const clearAndRewrite = () => {
+    setText("");
+    setParsed(null);
+    setPhase("idle");
+    setSelected([]);
+    textInput.current?.focus();
+  };
+
   return (
     <section className="v8-page" data-testid="poi-import">
       <div className="v8-page-intro compact">
@@ -401,6 +417,7 @@ export function PoiImportPanel({
               <label htmlFor="poi-import-text">{poiImportCopy(locale, "intent")}</label>
               <textarea
                 id="poi-import-text"
+                ref={textInput}
                 data-testid="poi-import-text"
                 value={text}
                 placeholder={poiImportCopy(locale, "placeholder")}
@@ -523,9 +540,35 @@ export function PoiImportPanel({
       ) : null}
 
       {phase === "success" && parsed && parsed.items.length === 0 ? (
-        <p className="v8-message" role="status" data-testid="poi-import-empty">
-          {poiImportCopy(locale, "emptyExtracted")}
-        </p>
+        <>
+          <p className="v8-message" role="status" data-testid="poi-import-empty">
+            {poiImportCopy(locale, "emptyExtracted")}
+          </p>
+          {/* Siblings, not children: the sentence above is what the walkthrough gate reads, and a
+              control nested inside it would make that cell report its own buttons as copy. */}
+          <div className="poi-import-empty-actions" data-testid="poi-import-empty-actions">
+            <button
+              type="button"
+              className="v8-quiet-button"
+              data-testid="poi-import-empty-clear"
+              data-contrast-role="control"
+              onClick={clearAndRewrite}
+            >
+              {poiImportCopy(locale, "emptyClearAction")}
+            </button>
+            {onOpenDiscover ? (
+              <button
+                type="button"
+                className="v8-quiet-button"
+                data-testid="poi-import-empty-discover"
+                data-contrast-role="control"
+                onClick={onOpenDiscover}
+              >
+                {poiImportCopy(locale, "emptyDiscoverAction")}
+              </button>
+            ) : null}
+          </div>
+        </>
       ) : null}
 
       {phase === "success" && parsed && parsed.items.length > 0 ? (

@@ -1,0 +1,3 @@
+collect-only, one invocation, python 3.12.14 (D:/moodle/CityNexus/.venv), cwd backend/
+tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[0]
+1788 tests collected in 9.62s

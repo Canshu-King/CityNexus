@@ -30,6 +30,11 @@
 }
 .cn-trash-action { width: fit-content; margin-top: 2px; }
 .cn-trash-notice { display: grid; gap: 8px; }
+/* The empty bin is a state, not a row list: the reason and the way out sit under each other in the
+   same gap rhythm the notice above uses, so the two read as one kind of thing. */
+.cn-trash-empty { display: grid; gap: 8px; justify-items: start; }
+.cn-trash-empty-why { margin: 0; color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }
+.cn-trash-empty .v8-primary-button { width: fit-content; }
 .cn-trash-outcome { margin: 0; color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }
 .cn-trash-details { margin-top: 6px; }
 .cn-trash-details summary { color: var(--cn-ink-tertiary); font-size: var(--cn-fs-caption); }
@@ -38,5 +43,6 @@
   /* Amendment F-2: the >=44px contract belongs to the touch layer, and 找回 is the row's primary
      action on a phone screen. */
   .cn-trash-action,
+  .cn-trash-empty .v8-primary-button,
   .cn-trash-notice .v8-quiet-button { min-height: var(--cn-touch-min); }
 }

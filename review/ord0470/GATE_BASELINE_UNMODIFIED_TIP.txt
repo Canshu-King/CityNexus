@@ -1,0 +1,978 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+
+
+
+[citynexus e2e] provenance ok: run=poientry_base1 frontend=:4611 -> backend=:4612 ai=disabled db=_e2e_poientry_base1.db
+
+Running 24 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[1/24] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+
+
+
+
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=0357a699-f8c5-495d-ab02-0eb53b8e6fc4 options=4 chosen=cd26b4be-bf9a-400b-9b31-93df7d341d50 (Haihe Riverside Hotel)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[2/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:271:1 › day-before — the automatic landing is said before anything is pressed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:271:1 › day-before — the automatic landing is said before anything is pressed
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: day-before — {"disclosure":"Day it would land on 2026-10-09 — Leaving the day empty puts these places on the plan's first day. It is said now, not after.","scopeHint":"This reads the text you paste. Links to Xiaohongshu notes, WeChat Official Account posts or Feishu docs are named back as unread -- this build opens nobody else's page.","cardPhaseBeforeAnyPress":null,"planState":"already","steps":{"after_viewport":349,"after_enter_import":3182,"after_ensure_active_plan":3220,"after_reading_disclosure":3225,"after_reading_phase":5237}}
+
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":5241,"steps":{"after_viewport":349,"after_enter_import":3182,"after_ensure_active_plan":3220,"after_reading_disclosure":3225,"after_reading_phase":5237}}
+
+[3/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:292:1 › screenshot-mode — the second input form is refused in words
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:292:1 › screenshot-mode — the second input form is refused in words
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: screenshot-mode — {"words":"Screenshot recognition is not in this build. Paste the text instead; the picture form is named, not silently unavailable.","rects":{"poi-import-mode-unsupported":{"top":737,"left":54,"w":282,"h":69},"poi-import-mode-screenshot":{"top":680,"left":37,"w":316,"h":44}}}
+
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":3370,"steps":{}}
+
+[4/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:305:1 › link-named and states — a link is named while the text next to it is still read
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:305:1 › link-named and states — a link is named while the text next to it is still read
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":6520,"steps":{}}
+
+  1) [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:305:1 › link-named and states — a link is named while the text next to it is still read 
+
+    Error: the city catalogue gave nothing addable back: {"id":"0fc15aba-03d7-43eb-9f46-7a2719bac72c","city":"CNX-DEMO","rows":0,"providers":[],"categories":[],"dropped_as_schedule":[],"dropped_as_already_on_plan":[],"names":[],"titles":[]}
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      255 |   const names = seen.names as string[];
+      256 |   expect(names.length, `the city catalogue gave nothing addable back: ${JSON.stringify(seen)}`)
+    > 257 |     .toBeGreaterThanOrEqual(2);
+          |      ^
+      258 |   return {
+      259 |     text: [names[0], names[1], "https://mp.weixin.qq.com/s/ORD0437NOTE 这条链接没有抓", "咕咕镇不存在这个地方"].join("\n"),
+      260 |     names,
+        at pasteText (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:257:6)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:321:17
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-1f33d-xt-next-to-it-is-still-read-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-1f33d-xt-next-to-it-is-still-read-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[5/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:430:1 › error-state — the same region carries the failure and keeps 重试
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:430:1 › error-state — the same region carries the failure and keeps 重试
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: error-state — {"phase":"error","error":"The text could not be read. Your words are still here; try again.The server did not answer this one. Nothing was changed.no status","transportDetail":"no status","refusalDetail":"HTTP 409","refusalWhy":"Nothing is chosen as the plan yet, so there is no day to add places to.","retryWords":"Try again","cardText":"COULD NOT READ IT The text could not be read. Your words are still here; try again.The server did not answer this one. Nothing was changed.no status Try again Channel Text parsed on this device Local parser; no third-party reading service. Technical details Day it would land on 2026-10-09 Leaving the day empty puts these places on the plan's first day. It is said now, not after.","refusalCardText":"COULD NOT READ IT The text could not be read. Your words are still here; try again.Nothing is chosen as the plan yet, so there is no day to add places to.HTTP 409 Try again Channel Text parsed on this device Local parser; no third-party reading service. Technical details Day it would land on 2026-10-09 Leaving the day empty puts these places on the plan's first day. It is said now, not after.","rects":{"poi-import-error":{"top":707,"left":45,"w":300,"h":64},"poi-import-error-why":{"top":730,"left":45,"w":297,"h":38},"poi-import-error-detail":{"top":753,"left":195,"w":46,"h":15},"poi-import-retry":{"top":784,"left":45,"w":93,"h":44}},"fault":"arm (a) route.abort on /poi-import/parse; arm (b) route.fulfill 409 reason_code=NO_ACTIVE_PLAN"}
+
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":5736,"steps":{}}
+
+[6/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:502:1 › added and replay — 已加入 means the server gave the record back
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:502:1 › added and replay — 已加入 means the server gave the record back
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":6492,"steps":{}}
+
+  2) [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:502:1 › added and replay — 已加入 means the server gave the record back 
+
+    Error: the city catalogue gave nothing addable back: {"id":"c334aaf7-10cd-44cb-8110-a3ed4124c3c7","city":"CNX-DEMO","rows":0,"providers":[],"categories":[],"dropped_as_schedule":[],"dropped_as_already_on_plan":[],"names":[],"titles":[]}
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      255 |   const names = seen.names as string[];
+      256 |   expect(names.length, `the city catalogue gave nothing addable back: ${JSON.stringify(seen)}`)
+    > 257 |     .toBeGreaterThanOrEqual(2);
+          |      ^
+      258 |   return {
+      259 |     text: [names[0], names[1], "https://mp.weixin.qq.com/s/ORD0437NOTE 这条链接没有抓", "咕咕镇不存在这个地方"].join("\n"),
+      260 |     names,
+        at pasteText (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:257:6)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:511:17
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-ddbbb-server-gave-the-record-back-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-ddbbb-server-gave-the-record-back-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[7/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:574:1 › chinese-arm — the sentences this order adds are Chinese on the Chinese arm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:574:1 › chinese-arm — the sentences this order adds are Chinese on the Chinese arm
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":8318,"steps":{}}
+
+  3) [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:574:1 › chinese-arm — the sentences this order adds are Chinese on the Chinese arm 
+
+    Error: the city catalogue gave nothing addable back: {"id":"c2ccd674-9187-4134-8ca9-0b968c682e3f","city":"CNX-DEMO","rows":0,"providers":[],"categories":[],"dropped_as_schedule":[],"dropped_as_already_on_plan":[],"names":[],"titles":[]}
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      255 |   const names = seen.names as string[];
+      256 |   expect(names.length, `the city catalogue gave nothing addable back: ${JSON.stringify(seen)}`)
+    > 257 |     .toBeGreaterThanOrEqual(2);
+          |      ^
+      258 |   return {
+      259 |     text: [names[0], names[1], "https://mp.weixin.qq.com/s/ORD0437NOTE 这条链接没有抓", "咕咕镇不存在这个地方"].join("\n"),
+      260 |     names,
+        at pasteText (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:257:6)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:583:17
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-4ebc1--Chinese-on-the-Chinese-arm-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-4ebc1--Chinese-on-the-Chinese-arm-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[8/24] [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:602:1 › exits — the three destinations, and what each one is allowed to promise
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:602:1 › exits — the three destinations, and what each one is allowed to promise
+e2e/qoder-ord0437-poi-import-chain.spec.ts :: timing — {"body_done_ms":6901,"steps":{}}
+
+  4) [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:602:1 › exits — the three destinations, and what each one is allowed to promise 
+
+    Error: the city catalogue gave nothing addable back: {"id":"ded2b6ad-dc5a-4761-80e5-012b12c3bb52","city":"CNX-DEMO","rows":0,"providers":[],"categories":[],"dropped_as_schedule":[],"dropped_as_already_on_plan":[],"names":[],"titles":[]}
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      255 |   const names = seen.names as string[];
+      256 |   expect(names.length, `the city catalogue gave nothing addable back: ${JSON.stringify(seen)}`)
+    > 257 |     .toBeGreaterThanOrEqual(2);
+          |      ^
+      258 |   return {
+      259 |     text: [names[0], names[1], "https://mp.weixin.qq.com/s/ORD0437NOTE 这条链接没有抓", "咕咕镇不存在这个地方"].join("\n"),
+      260 |     names,
+        at pasteText (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:257:6)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0437-poi-import-chain.spec.ts:608:17
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-55bd4-h-one-is-allowed-to-promise-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0437-poi-import-c-55bd4-h-one-is-allowed-to-promise-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[9/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:131:3 › ORD-0445 待规划 set, filter sheet and empty state › A1 the set is countable and the count line counts the rows it renders
+
+  5) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:131:3 › ORD-0445 待规划 set, filter sheet and empty state › A1 the set is countable and the count line counts the rows it renders 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:133:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--167ee--counts-the-rows-it-renders-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[10/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:154:3 › ORD-0445 待规划 set, filter sheet and empty state › A2 the sheet lists 全部 plus one row per category the rows themselves name
+
+  6) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:154:3 › ORD-0445 待规划 set, filter sheet and empty state › A2 the sheet lists 全部 plus one row per category the rows themselves name 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:155:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--af4a1-ry-the-rows-themselves-name-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[11/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:195:3 › ORD-0445 待规划 set, filter sheet and empty state › A3 filtering to one facet makes the list smaller, not empty
+
+  7) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:195:3 › ORD-0445 待规划 set, filter sheet and empty state › A3 filtering to one facet makes the list smaller, not empty 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:196:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--30ebf--the-list-smaller-not-empty-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[12/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:232:3 › ORD-0445 待规划 set, filter sheet and empty state › A4 重置 returns exactly the original list
+
+  8) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:232:3 › ORD-0445 待规划 set, filter sheet and empty state › A4 重置 returns exactly the original list 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:233:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--22c62-s-exactly-the-original-list-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[13/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:260:3 › ORD-0445 待规划 set, filter sheet and empty state › A5 both arms read the same screen, in their own words, off the rendered text
+
+  9) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:260:3 › ORD-0445 待规划 set, filter sheet and empty state › A5 both arms read the same screen, in their own words, off the rendered text 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:265:21
+
+    Error Context: test-results\qoder-ord0445-pending-set--7f774-words-off-the-rendered-text-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[14/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:309:3 › ORD-0445 待规划 set, filter sheet and empty state › A6 中文臂不得比修前多字: this screen without the panel is byte-identical
+
+  10) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:309:3 › ORD-0445 待规划 set, filter sheet and empty state › A6 中文臂不得比修前多字: this screen without the panel is byte-identical 
+
+    TimeoutError: page.waitForSelector: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for locator('[data-testid^="v8-"]') to be visible
+
+
+      314 |     await boot(page, SET_JOURNEY, zh);
+      315 |     await page.goto(BEFORE_URL + "/v8/hub", { waitUntil: "load" });
+    > 316 |     await page.waitForSelector('[data-testid^="v8-"]', { timeout: 20_000 });
+          |                ^
+      317 |     await page.waitForTimeout(2_500);
+      318 |     const before = await page.evaluate(() => document.body.innerText.replace(/\s+/g, " ").trim());
+      319 |
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:316:16
+
+    Error Context: test-results\qoder-ord0445-pending-set--9788f-the-panel-is-byte-identical-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[15/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:362:3 › ORD-0445 待规划 set, filter sheet and empty state › A7 an empty set is a state with a door, and no 「暂无数据」
+
+  11) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:362:3 › ORD-0445 待规划 set, filter sheet and empty state › A7 an empty set is a state with a door, and no 「暂无数据」 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:364:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--9bc68-e-with-a-door-and-no-「暂无数据」-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[16/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:436:3 › ORD-0445 待规划 set, filter sheet and empty state › A8 the panel stays inside its card, and its touch targets stay 44 px
+
+  12) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:436:3 › ORD-0445 待规划 set, filter sheet and empty state › A8 the panel stays inside its card, and its touch targets stay 44 px 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:439:21
+
+    Error Context: test-results\qoder-ord0445-pending-set--d9ddf-ts-touch-targets-stay-44-px-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[17/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:472:3 › ORD-0445 待规划 set, filter sheet and empty state › A9 the screen states where a place goes when a day stops holding it
+
+  13) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:472:3 › ORD-0445 待规划 set, filter sheet and empty state › A9 the screen states where a place goes when a day stops holding it 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:475:21
+
+    Error Context: test-results\qoder-ord0445-pending-set--19a65-when-a-day-stops-holding-it-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[18/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:497:3 › ORD-0445 待规划 set, filter sheet and empty state › A10 a door that never answers gives no number, and no empty state
+
+  14) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:497:3 › ORD-0445 待规划 set, filter sheet and empty state › A10 a door that never answers gives no number, and no empty state 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: A10 — the panel disappeared with one door missing
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: A10 — the panel disappeared with one door missing getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      505 |     await page.goto("/v8/hub", { waitUntil: "load" });
+      506 |     const panel = page.getByTestId("pending-set");
+    > 507 |     await expect(panel, node("A10", "the panel disappeared with one door missing")).toHaveCount(1);
+          |                                                                                     ^
+      508 |     const unknown = panel.getByTestId("pending-set-unknown");
+      509 |     await expect(unknown, node("A10", "the screen did not name the door it could not read")).toHaveCount(1);
+      510 |     const line = (await unknown.innerText()).replace(/\s+/g, " ");
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:507:85
+
+    Error Context: test-results\qoder-ord0445-pending-set--e933e-o-number-and-no-empty-state-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[19/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:557:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A11 the tick is local state, the batch says what it carries, and a disabled action says why
+
+  15) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:557:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A11 the tick is local state, the batch says what it carries, and a disabled action says why 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:560:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--cd6a5--a-disabled-action-says-why-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[20/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:605:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A12 one real press: the answer is a named condition, and nothing was written
+
+  16) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:605:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A12 one real press: the answer is a named condition, and nothing was written 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / zh-CN getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:608:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--ff0b3-ion-and-nothing-was-written-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[21/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:669:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A13 the English arm names the same condition in its own words
+
+  17) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:669:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A13 the English arm names the same condition in its own words 
+
+    Error: e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / en
+
+    expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - e2e/qoder-ord0445-pending-set.spec.ts :: boot — the 待规划 panel is not on 今天 for … / en getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      93 |     panel,
+      94 |     node("boot", `the 待规划 panel is not on 今天 for ${journeyId.slice(0, 8)}… / ${locale}`),
+    > 95 |   ).toHaveCount(1);
+         |     ^
+      96 |   await expect(
+      97 |     panel.getByTestId("pending-loading"),
+      98 |     node("boot", "the panel never stopped saying it was reading"),
+        at openHub (D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:95:5)
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:670:19
+
+    Error Context: test-results\qoder-ord0445-pending-set--f7f71--condition-in-its-own-words-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[22/24] [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:692:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A14 the write path is the landed door: the screen posts compose and nothing else
+
+  18) [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:692:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A14 the write path is the landed door: the screen posts compose and nothing else 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('pending-set')
+    Expected: 1
+    Received: 0
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('pending-set') with timeout 10000ms
+      - waiting for getByTestId('pending-set')
+        23 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      700 |     await page.goto("/v8/hub", { waitUntil: "load" });
+      701 |     const panel = page.getByTestId("pending-set");
+    > 702 |     await expect(panel).toHaveCount(1);
+          |                         ^
+      703 |     await panel.getByTestId("pending-tick").first().click();
+      704 |     await panel.getByTestId("pending-place-action").click();
+      705 |     await expect(panel.getByTestId("pending-write-refused")).toHaveCount(1);
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0445-pending-set.spec.ts:702:25
+
+    Error Context: test-results\qoder-ord0445-pending-set--06a01-ts-compose-and-nothing-else-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[23/24] [chromium] › e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:143:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半
+
+  19) [chromium] › e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:143:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('poi-import')
+    Expected: visible
+    Timeout: 40000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('poi-import') with timeout 40000ms
+      - waiting for getByTestId('poi-import')
+
+
+      196 |       );
+      197 |       await page.goto("/v8/import");
+    > 198 |       await expect(page.getByTestId("poi-import")).toBeVisible({ timeout: 40_000 });
+          |                                                    ^
+      199 |
+      200 |       // ---------- A  head and composer, before anything is pasted
+      201 |       const head: [string, any, string, string][] = [
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:198:52
+
+    Error Context: test-results\qoder-ord0545s4-poi-screen-6f31f-l-Wzh-zh-CN-从头屏到重放，逐格-表里那一半-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_base1.db ai=disabled reuseExistingServer=false
+
+[24/24] [chromium] › e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:143:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wen en-GB 从头屏到重放，逐格 == 表里那一半
+
+  20) [chromium] › e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:143:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wen en-GB 从头屏到重放，逐格 == 表里那一半 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('poi-import')
+    Expected: visible
+    Timeout: 40000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('poi-import') with timeout 40000ms
+      - waiting for getByTestId('poi-import')
+
+
+      196 |       );
+      197 |       await page.goto("/v8/import");
+    > 198 |       await expect(page.getByTestId("poi-import")).toBeVisible({ timeout: 40_000 });
+          |                                                    ^
+      199 |
+      200 |       // ---------- A  head and composer, before anything is pasted
+      201 |       const head: [string, any, string, string][] = [
+        at D:\moodle\_qoder_lane_poi_entry_20261008\base\frontend\e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:198:52
+
+    Error Context: test-results\qoder-ord0545s4-poi-screen-2eed3-l-Wen-en-GB-从头屏到重放，逐格-表里那一半-chromium\error-context.md
+
+
+  20 failed
+    [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:305:1 › link-named and states — a link is named while the text next to it is still read 
+    [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:502:1 › added and replay — 已加入 means the server gave the record back 
+    [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:574:1 › chinese-arm — the sentences this order adds are Chinese on the Chinese arm 
+    [chromium] › e2e\qoder-ord0437-poi-import-chain.spec.ts:602:1 › exits — the three destinations, and what each one is allowed to promise 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:131:3 › ORD-0445 待规划 set, filter sheet and empty state › A1 the set is countable and the count line counts the rows it renders 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:154:3 › ORD-0445 待规划 set, filter sheet and empty state › A2 the sheet lists 全部 plus one row per category the rows themselves name 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:195:3 › ORD-0445 待规划 set, filter sheet and empty state › A3 filtering to one facet makes the list smaller, not empty 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:232:3 › ORD-0445 待规划 set, filter sheet and empty state › A4 重置 returns exactly the original list 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:260:3 › ORD-0445 待规划 set, filter sheet and empty state › A5 both arms read the same screen, in their own words, off the rendered text 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:309:3 › ORD-0445 待规划 set, filter sheet and empty state › A6 中文臂不得比修前多字: this screen without the panel is byte-identical 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:362:3 › ORD-0445 待规划 set, filter sheet and empty state › A7 an empty set is a state with a door, and no 「暂无数据」 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:436:3 › ORD-0445 待规划 set, filter sheet and empty state › A8 the panel stays inside its card, and its touch targets stay 44 px 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:472:3 › ORD-0445 待规划 set, filter sheet and empty state › A9 the screen states where a place goes when a day stops holding it 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:497:3 › ORD-0445 待规划 set, filter sheet and empty state › A10 a door that never answers gives no number, and no empty state 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:557:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A11 the tick is local state, the batch says what it carries, and a disabled action says why 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:605:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A12 one real press: the answer is a named condition, and nothing was written 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:669:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A13 the English arm names the same condition in its own words 
+    [chromium] › e2e\qoder-ord0445-pending-set.spec.ts:692:3 › ORD-0450 putting the pending set onto a day, through the doors that already exist › A14 the write path is the landed door: the screen posts compose and nothing else 
+    [chromium] › e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:143:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wzh zh-CN 从头屏到重放，逐格 == 表里那一半 
+    [chromium] › e2e\qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:143:5 › ORD-0545 slice 4 the POI import screen, cell by cell › Wen en-GB 从头屏到重放，逐格 == 表里那一半 
+  4 passed (6.0m)

@@ -31,6 +31,18 @@
      call. This deeper blue clears 4.5:1 on both canvas (#f5f5f7 → 5.49:1) and
      surface (#ffffff → 5.97:1) without changing hue. */
   --cn-accent-text: #0a5cd6;
+  /* Links.  Before this, the running screen proved three different inks for what is one
+     kind of control (--cn-accent #0a66ff at 4.32:1, `inherit` at 0.75 opacity, and the
+     evidence row's body ink), and hovering one of eight controls changed zero computed
+     properties.  Links bind to --cn-accent-text, the only accent that clears AA as text
+     in both schemes; hover and active deepen within the same hue rather than re-tinting,
+     and each step is measured to stay above 4.5:1. */
+  --cn-link: var(--cn-accent-text);
+  --cn-link-hover: #084cae;
+  --cn-link-active: #063d8c;
+  --cn-link-rule: 1px;
+  --cn-link-rule-hover: 2px;
+  --cn-link-rule-offset: 2px;
   /* Success as *text*: #248a3d is a good fill/badge colour but only reaches
      4.04:1 as 13px text on the light attention panel. */
   --cn-success-text: #17672f;
@@ -116,6 +128,11 @@
   --cn-s-48: 48px;
   --cn-gutter: 20px;
 
+  /* Card padding takes two tiers, not one: a content card reads at 20, a dense list row reads at 16.
+     The values between them (13, 14, 18/15, 22, 27) were per-file choices rather than decisions. */
+  --cn-card-pad: var(--cn-s-20);
+  --cn-card-pad-compact: var(--cn-s-16);
+
   /* Radii: one numeric ladder, and the semantic names alias into it. ORD-0459 step 2 moved every
      component rule onto this table, so a radius that is not one of these values cannot be written
      without adding a tier first. Snap rule used for the migration: nearest tier, ties to the larger
@@ -179,6 +196,13 @@
     /* #0a84ff on the #000000 dark canvas is 5.76:1 — already AA, so the dark
        theme keeps the brighter accent for text. */
     --cn-accent-text: #0a84ff;
+    /* Links stop being an alias of the text accent under dark.  Measured on the running
+       wizard: #0a84ff only reaches 3.82:1 inside the nested panel whose canvas is
+       rgb(44,44,46), which is under AA, so the link ladder lifts a step and keeps two
+       visible steps above it.  Worst measured background wins, not the page black. */
+    --cn-link: #4da3ff;
+    --cn-link-hover: #7dbcff;
+    --cn-link-active: #9ccdff;
     --cn-success-text: #30d158;
     --cn-success: #30d158;
     --cn-warning: #ff9f0a;
@@ -270,16 +294,111 @@
 .v8-page h1, .v8-hero-title { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
 .v8-page h2, .v8-section-title { font-size: var(--cn-fs-title); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.015em; }
 
-/* Unify card material: solid content, restrained depth (no atmosphere floating). */
+/* Unify card material: solid content, restrained depth (no atmosphere floating), one corner.
+   The list is what the shell actually paints, walked screen by screen on the live app rather than
+   guessed from file names. A row whose selected state IS a ring is excluded -- `.v8-stay-card.selected`
+   and `.hotel-card.chosen` carry `box-shadow` as their only chosen-mark, and overpainting it here
+   would delete that signal. */
 .v8-page .v8-card,
 .v8-page .replan-card,
 .v8-page .evidence-card,
-.v8-page .map-card {
-  background: var(--cn-surface);
-  border: 1px solid var(--cn-hairline);
+.v8-page .map-card,
+.v8-page .timeline-card,
+.v8-page .agent-card,
+.v8-page .guardian-card,
+.v8-page .hotel-card:not(.chosen),
+.v8-page .plan-cmp-card,
+.v8-page .v8-day-card,
+.v8-page .v8-stay-card:not(.selected),
+.v8-page .v8-booking-card,
+.v8-page .v8-me-card,
+.v8-page .v8-twin-card,
+.v8-page .v8-boundary-card,
+.v8-page .v8-detail-panel,
+.v8-page .v8-day-detail,
+.v8-page .v8-next-card,
+.v8-page .v8-comparison,
+.v8-page .v8-studio-aside,
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-runtime-card,
+.v8-page .v8-map-panel,
+.v8-page .v8-agent-composer-card,
+.v8-page .v8-intel-facts > div,
+.v8-page .v10-execution-panel,
+.v8-page .v12-authoritative-panel,
+.v8-page .v12-state-card,
+.v8-page .v12-commitment-card,
+.v8-page .v12-impact-card,
+.v8-page .v12-risk-banner,
+.v8-page .v13-2-memory-panel {
   border-radius: var(--cn-r-card);
   box-shadow: var(--cn-shadow-card);
 }
+
+/* The chosen rows keep their ring, but a chosen card is still a card: its corner joins the ladder.
+   Declaring only the radius here leaves their `box-shadow` ring untouched in `styles.css`. */
+.v8-page .v8-stay-card.selected,
+.v8-page .hotel-card.chosen { border-radius: var(--cn-r-card); }
+
+.v8-page .v8-card,
+.v8-page .replan-card,
+.v8-page .evidence-card,
+.v8-page .map-card,
+.v8-page .v13-2-memory-panel {
+  background: var(--cn-surface);
+  border: 1px solid var(--cn-hairline);
+}
+
+/* Two padding tiers. A dense list row keeps the tighter one so a list of stays does not grow a
+   second line per card; everything that holds prose reads at the wider one. */
+.v8-page .v8-day-card,
+.v8-page .v8-stay-card,
+.v8-page .v8-me-card,
+.v8-page .v8-runtime-card,
+.v8-page .hotel-card,
+.v8-page .plan-cmp-card,
+.v8-page .v12-commitment-card,
+.v8-page .v12-impact-card,
+.v8-page .v12-risk-banner { padding: var(--cn-card-pad-compact); }
+
+.v8-page .v8-card,
+.v8-page .replan-card,
+.v8-page .evidence-card,
+.v8-page .map-card,
+.v8-page .timeline-card,
+.v8-page .guardian-card,
+.v8-page .v8-booking-card,
+.v8-page .v8-detail-panel,
+.v8-page .v8-day-detail,
+.v8-page .v8-next-card,
+.v8-page .v8-comparison,
+.v8-page .v8-studio-aside,
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-twin-card,
+.v8-page .v8-boundary-card,
+.v8-page .v8-intel-facts > div,
+.v8-page .v12-state-card,
+.v8-page .v12-authoritative-panel,
+.v8-page .v13-2-memory-panel { padding: var(--cn-card-pad); }
+
+/* The two dark cards: a light-shadow token painted on #172945 reads as nothing, so they carry the
+   raised tier instead of the shared one rather than losing their depth to the unification. */
+.v8-page .v8-agent-composer-card,
+.v8-page .agent-card { padding: var(--cn-s-24); box-shadow: var(--cn-shadow-raised); }
+
+/* Feature panels mounted straight on the shell (abort / pretrip / pending / ranking / hero strip)
+   never passed the contract above, because that one is anchored on `.v8-page` and these screens do
+   not sit inside it. Their corners already take `--cn-r-card` and their borders already take
+   `--cn-hairline` -- only the depth was missing, so that is the single property added here. Padding
+   is left exactly as each panel chose it. Found by detecting boxes from their painted shape rather
+   than their class name: none of these names contain "card", so a name-based sweep missed them. */
+.v8-product-shell .cn-pretrip,
+.v8-product-shell .cn-pending,
+.v8-product-shell .cn-abort,
+.v8-product-shell .plan-ranking,
+.v8-product-shell .cn-hero-strip { box-shadow: var(--cn-shadow-card); }
 
 /* --- Motion: transform/opacity only, GPU-friendly, capped, reduced-motion aware --- */
 
@@ -310,6 +429,65 @@
 
 /* Focus-visible ring (keyboard), Apple-ish soft accent. */
 .v8-page :focus-visible { outline: 2px solid var(--cn-accent); outline-offset: 2px; border-radius: var(--cn-r-control); }
+
+/* Link baseline -- one ink, one rule under it, one transition.  The list is explicit because
+   these controls are buttons styled as links (the whole tree carries two real <a>), and the
+   generic shell transition above only names transform/box-shadow: color and rule steps have to
+   be declared or they snap instead of easing.  That generic rule is `.v8-page button:not(...)`,
+   which out-specifies a plain class pair, so each wizard selector repeats its :not() guard --
+   measured, without it the computed transition stayed `transform, box-shadow` and the colour
+   change had no easing at all.  .cn-copilot-link needs no guard: the dock is a sibling of
+   .v8-page rather than inside it, so nothing competes with it.
+   :active comes after :hover on purpose -- they are the same weight, and a pointer that is
+   pressing is always also hovering, so the last declaration is the one that has to win. */
+.v8-page .trial-back-link:not(.cn-no-motion),
+.v8-page .trial-missing-jump:not(.cn-no-motion),
+.v8-page .trial-review-edit:not(.cn-no-motion),
+.cn-copilot-link {
+  color: var(--cn-link);
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: var(--cn-link-rule);
+  text-underline-offset: var(--cn-link-rule-offset);
+  transition: color var(--cn-t-hover) var(--cn-ease-standard),
+    opacity var(--cn-t-hover) var(--cn-ease-standard),
+    text-decoration-thickness var(--cn-t-hover) var(--cn-ease-standard),
+    text-underline-offset var(--cn-t-hover) var(--cn-ease-standard),
+    transform var(--cn-t-hover) var(--cn-ease-standard),
+    box-shadow var(--cn-t-hover) var(--cn-ease-standard);
+}
+@media (hover: hover) {
+  .v8-page .trial-back-link:not(.cn-no-motion):hover,
+  .v8-page .trial-missing-jump:not(.cn-no-motion):hover,
+  .v8-page .trial-review-edit:not(.cn-no-motion):hover,
+  .cn-copilot-link:hover {
+    color: var(--cn-link-hover);
+    text-decoration-thickness: var(--cn-link-rule-hover);
+    text-underline-offset: calc(var(--cn-link-rule-offset) + 1px);
+  }
+}
+.v8-page .trial-back-link:not(.cn-no-motion):active,
+.v8-page .trial-missing-jump:not(.cn-no-motion):active,
+.v8-page .trial-review-edit:not(.cn-no-motion):active,
+.cn-copilot-link:active { color: var(--cn-link-active); }
+/* The evidence row is a real link, but it is a two-line card row: the title carries the link
+   ink and the rule, the domain line stays metadata. */
+.v10-evidence-row b {
+  color: var(--cn-link);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--cn-link-rule);
+  text-underline-offset: var(--cn-link-rule-offset);
+  transition: color var(--cn-t-hover) var(--cn-ease-standard),
+    text-decoration-thickness var(--cn-t-hover) var(--cn-ease-standard);
+}
+@media (hover: hover) {
+  .v10-evidence-row:hover b {
+    color: var(--cn-link-hover);
+    text-decoration-thickness: var(--cn-link-rule-hover);
+  }
+}
+/* After :hover for the same reason as the block above: pressing is also hovering. */
+.v10-evidence-row:active b { color: var(--cn-link-active); }
 
 /* Touch targets >=44px on primary controls. */
 .v8-page button, .v8-page a.v8-cta, .v8-nav button { min-height: 44px; }
@@ -645,6 +823,16 @@
     background: var(--cn-accent) !important;
     color: var(--cn-canvas) !important;
   }
+  :root[data-theme="dark"] .v8-page .v8-stay-impact em,
+  :root[data-theme="dark"] .v8-page .v8-day-detail-title > span {
+    /* The same defect the rule above was written for, on the two chips that were left out of
+       it: measured under dark they still carried accent text on the hardcoded #eff1ff fill at
+       3.25:1 and 3.22:1.  Only fill and label follow .mode-mark here; size, radius and padding
+       are untouched.  .v8-hotel-thumb has the same reading but it is a 49px and 142px thumbnail,
+       so filling it is a visual decision rather than a chip fix and is handed up unmade. */
+    background: var(--cn-accent) !important;
+    color: var(--cn-canvas) !important;
+  }
 
   /* 5. Hardcoded grey-blue body text that fell below AA on the dark canvas. */
   :root[data-theme="dark"] .v8-product-shell .v8-lede, :root[data-theme="dark"] .v8-product-shell .v8-muted, :root[data-theme="dark"] .v8-product-shell .v8-live-now p, :root[data-theme="dark"] .v8-product-shell .v8-live-now > strong, :root[data-theme="dark"] .v8-product-shell .v8-mode-chooser span, :root[data-theme="dark"] .v8-product-shell .v8-mode-chips button, :root[data-theme="dark"] .v8-product-shell .v8-next-card p, :root[data-theme="dark"] .v8-product-shell .v8-eta span, :root[data-theme="dark"] .v8-product-shell .v9-evidence-summary > small {
@@ -791,10 +979,15 @@
    mode chips were legacy hardcoded greys/blues that the light theme had never
    been checked against.
    --------------------------------------------------------------------------- */
+/* .v8-aside-heading button is added to this list because it is the same family of text consumer
+   and was left out: measured on the live screen it still took --v8-indigo (#0a66ff) while every
+   button beside it on the same screen read --cn-accent-text (#0a5cd6), so the screen carried two
+   blues at once. */
 .v8-kicker,
 .v8-text-button,
 .v8-quiet-button,
-.v8-compare-button {
+.v8-compare-button,
+.v8-aside-heading button {
   color: var(--cn-accent-text);
 }
 .v8-brand span,

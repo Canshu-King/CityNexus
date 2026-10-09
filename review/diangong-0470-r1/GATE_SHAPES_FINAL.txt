@@ -1,0 +1,6 @@
+run_id=dg0470jsonl  shape sweep with the drawer fix in place
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4670 backend=:4671 db=sqlite:///./_dg0470jsonl.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=dg0470jsonl frontend=:4670 -> backend=:4671 ai=disabled db=_dg0470jsonl.db
+Running 31 tests using 1 worker
+  31 passed (1.0m)
+arms_by_layer: phone-390x844,phone-360x640 floor 44 | landscape-844x390,tablet-768x1024,desktop-1280x800 floor 30

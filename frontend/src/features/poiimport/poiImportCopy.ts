@@ -54,6 +54,9 @@ export type PoiImportCopyKey =
   | "charCount"
   | "counts"
   | "dayLabel"
+  /* ORD-0470: the nothing-extracted cell used to be a sentence with no door under it. */
+  | "emptyClearAction"
+  | "emptyDiscoverAction"
   | "emptyExtracted"
   | "errDayRequired"
   | "errJourneyNotFound"
@@ -234,6 +237,18 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   dayLabel: {
     zh: "落点日子",
     en: "Landing day",
+  },
+  /* ORD-0470: two doors under the nothing-extracted sentence.  清空重写 is a control that acts on this
+     screen's own input, and 去城市探索 is the nav's own word for the route that fills the catalogue
+     this screen reads -- a line that matched nothing in *this* city is a city problem, not a typing
+     problem, and the second door says so without the traveller having to work it out. */
+  emptyClearAction: {
+    zh: "清空重写",
+    en: "Clear and write again",
+  },
+  emptyDiscoverAction: {
+    zh: "去城市探索",
+    en: "Open City Discovery",
   },
   emptyExtracted: {
     zh: "这段文字里没有可拆的条目。请一行写一个地点，或者把笔记正文贴进来而不是链接。",

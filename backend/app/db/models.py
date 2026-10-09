@@ -472,8 +472,16 @@ class Place(Base):
     city_code: Mapped[str] = mapped_column(String)
     name: Mapped[str] = mapped_column(String)
     category: Mapped[str] = mapped_column(String)
-    latitude: Mapped[float] = mapped_column()
-    longitude: Mapped[float] = mapped_column()
+    # The building's third cause, made representable: a provider CAN hand back an identity for a
+    # place and no usable point for it -- a relation whose geometry upstream never resolved, or a bare
+    # node the address service refused to geocode.  With these columns NOT NULL such a row could not be
+    # stored at all, so the only options were to drop the place or to invent a coordinate, and either way
+    # the screen had nothing truthful to say about why a searched place "was not found".  Nullable lets
+    # the row carry the identity AND declare the gap, so "resolved but has no coordinate" becomes a
+    # nameable state instead of an absence.  Additive: a row that never had a point was never plottable,
+    # so no reader of these two columns can be relying on them being non-null.
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
     opening_hours_json: Mapped[str] = mapped_column(Text)
     tags_json: Mapped[str] = mapped_column(Text)
     metadata_json: Mapped[str] = mapped_column(Text)

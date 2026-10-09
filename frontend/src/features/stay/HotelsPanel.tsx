@@ -46,9 +46,13 @@ type StayOption = {
 const EXPLAINABLE_REFUSALS = ["STAY_ITINERARY_CONFLICT", "STAY_PINNED_CONFLICT"];
 
 export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSelected?: () => void }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const [options, setOptions] = useState<StayOption[] | null>(null);
+  /* The empty state has to offer a real re-acquisition, not the promise of one.
+     This counter is in the effect's dependencies, so bumping it re-runs the whole
+     capture / generate / read leg. */
+  const [attempt, setAttempt] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
   const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
     text: null,
@@ -94,7 +98,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
     return () => {
       cancelled = true;
     };
-  }, [journeyId]);
+  }, [journeyId, attempt]);
 
   const select = async (optionId: string) => {
     setBusy(optionId);
@@ -148,14 +152,42 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       <section className="v8-page" data-testid="hotels-empty">
         <div className="v8-page-intro compact">
           <div>
-            <p className="v8-kicker">{zh ? "住宿" : "Stay"}</p>
+            <p className="v8-kicker">{t("hub.stayLabel")}</p>
             <h1>{zh ? "暂时没有可比较的住宿" : "No stays to compare yet"}</h1>
             <p className="v8-lede">
               {zh
-                ? "这个城市还没有拿到可用的住宿数据。换个城市或稍后再试——我们不会编造酒店。"
-                : "No provider-backed accommodation is available for this city yet. Try again later — we will not invent hotels."}
+                ? "这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。"
+                : "No provider-backed accommodation is available for this city yet. Re-run the acquisition, or look at another city — we will not invent hotels."}
             </p>
           </div>
+        </div>
+        {/* The copy used to promise 「稍后再试」 with nothing behind it.  This is the leg that
+            actually re-runs the acquisition: the counter is in the effect's dependencies, so the
+            click re-issues capture, generate and the read-back.  Reuses the hub's existing action
+            row class so an empty stay tab cannot introduce a fifth button layout into the sheet. */}
+        <div className="hub-stay-empty-actions" data-testid="hotels-empty-actions">
+          <button
+            type="button"
+            className="v8-primary-button"
+            onClick={() => {
+              setError(null);
+              setAttempt((current) => current + 1);
+            }}
+            data-testid="hotels-empty-retry-btn"
+          >
+            {zh ? "重新采集这家城市的住宿" : "Re-acquire stays for this city"}
+          </button>
+          <button
+            type="button"
+            className="v8-outline-button"
+            onClick={() => {
+              window.history.pushState({}, "", "/v8/hub");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
+            data-testid="hotels-empty-explore-btn"
+          >
+            {zh ? "换个城市看看" : "Look at another city"}
+          </button>
         </div>
       </section>
     );
@@ -165,7 +197,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
     <section className="v8-page" data-testid="hotels-panel">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "住宿" : "Stay"}</p>
+          <p className="v8-kicker">{t("hub.stayLabel")}</p>
           <h1>{zh ? "选一家住的地方" : "Choose where to stay"}</h1>
           <p className="v8-lede">
             {zh

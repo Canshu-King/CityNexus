@@ -70,6 +70,27 @@ which is what the hit test in the delivery receipt measures.
   color: var(--cn-ink-tertiary);
 }
 
+/* The empty set is a state with a way out, so it gets its own block rather than a bare line: the
+   reason under the sentence, the control under the reason.  `width: auto` on the button is the same
+   load-bearing override as `.cn-footprints__retry` above (the bare element rule in `styles.css`). */
+.cn-footprints__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--cn-s-8, 8px);
+}
+
+.cn-footprints__empty-why {
+  margin: 0;
+  color: var(--cn-ink-secondary);
+  font-size: var(--cn-fs-body);
+}
+
+.cn-footprints__empty .v8-primary-button {
+  width: auto;
+  margin-top: 0;
+}
+
 .cn-footprints__list {
   margin: 0;
   padding: 0;

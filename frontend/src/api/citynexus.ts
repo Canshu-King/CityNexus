@@ -246,11 +246,18 @@ export interface CounterfactualSimulation {
   scenario_key: string;
   scenario_type: string;
   parameters: Record<string, unknown>;
-  feasible: boolean;
-  c4_preserved: boolean;
-  cost_delta_minor: number;
-  schedule_drift_min: number;
-  plan_changes: Array<Record<string, unknown>>;
+  /**
+   * False when the journey had no frozen mobility evidence covering the routes this scenario
+   * would move, so nothing was answered.  The five outcome fields below are then null rather
+   * than a value: they describe a trip nobody routed.  Read `answered` before rendering any
+   * of them, and say so instead of showing 0 / not feasible.
+   */
+  answered: boolean;
+  feasible: boolean | null;
+  c4_preserved: boolean | null;
+  cost_delta_minor: number | null;
+  schedule_drift_min: number | null;
+  plan_changes: Array<Record<string, unknown>> | null;
   evidence: Record<string, unknown>;
   created_at: string;
 }

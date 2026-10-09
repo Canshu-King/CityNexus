@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import Activity, Commitment, Journey, JourneyTripContext, Place, WebObservation
+from app.execution.clock import execution_clock
 from app.execution.traveler_twin import planning_preference_items, refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
 from app.integrations.ai.web_research import WebResearchProvider
@@ -150,12 +151,19 @@ def build_discovery_context(
             Commitment.status == "ACTIVE",
         ).order_by(Commitment.level.desc(), Commitment.id)
     ).all()
+    used_timezone, timezone_honoured = execution_clock.zone_usage(journey.timezone)
     return {
         "goal": goal,
         "journey": {
             "id": journey.id,
             "city_code": journey.city_code,
             "timezone": journey.timezone,
+            # Which zone the window below was placed in, and whether that is the zone named above.
+            # The window columns are bare local wall-clock, and this dict goes to a model that
+            # reasons in words like "before arrival" -- so a zone nothing can be placed in has to be
+            # stated as unusable here, not left to be read as honoured.
+            "used_timezone": used_timezone,
+            "timezone_honoured": timezone_honoured,
             "start_at": journey.start_at,
             "end_at": journey.end_at,
             "budget": {

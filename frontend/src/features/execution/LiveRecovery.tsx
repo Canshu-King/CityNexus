@@ -318,7 +318,7 @@ export function LiveRecovery({
                   {zh ? copy.zh : copy.en}
                   {affected ? (
                     <span className="live-affected" data-testid="live-affected">
-                      {zh ? " · 受影响：" : " · Affected: "}
+                      {t("recovery.affectedPrefix")}
                       {String(affected.title ?? "")}
                     </span>
                   ) : null}
@@ -361,7 +361,7 @@ export function LiveRecovery({
           return (
             <article className="live-proposal" key={proposal.id} data-testid="live-proposal" data-state={busy === proposal.id ? "accepting" : "idle"}>
               <b>
-                {optionLabel} · {zh ? "推荐怎么改" : "Suggested change"}
+                {optionLabel} · {t("recovery.suggestedChange")}
               </b>
               {summary && (
                 <p className="live-summary" data-testid="live-summary">
@@ -381,19 +381,19 @@ export function LiveRecovery({
                 <dl className="live-diff" data-testid="live-diff">
                   {removed.length > 0 && (
                     <div>
-                      <dt>{zh ? "移出" : "Removed"}</dt>
+                      <dt>{t("recovery.diffRemoved")}</dt>
                       <dd data-testid="live-diff-removed">{removed.join("、")}</dd>
                     </div>
                   )}
                   {added.length > 0 && (
                     <div>
-                      <dt>{zh ? "换成" : "Replaced with"}</dt>
+                      <dt>{t("recovery.diffAdded")}</dt>
                       <dd data-testid="live-diff-added">{added.join("、")}</dd>
                     </div>
                   )}
                   {moved.length > 0 && (
                     <div>
-                      <dt>{zh ? "调整时间" : "Moved"}</dt>
+                      <dt>{t("recovery.diffMoved")}</dt>
                       <dd data-testid="live-diff-moved">{moved.join("、")}</dd>
                     </div>
                   )}

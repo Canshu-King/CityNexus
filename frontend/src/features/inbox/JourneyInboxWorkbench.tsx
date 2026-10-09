@@ -7,6 +7,7 @@ import {
   OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
 import { formatWhen } from "../../lib/formatWhen";
+import { CnxSelect } from "../../components/CnxSelect";
 import { extractionStatusLabel, summaryHeldLabel } from "../../lib/displayVocabulary";
 import {
   artifactTypeLabel as artifactTypeLabelShared,
@@ -52,6 +53,9 @@ type MemoryItem = {
   role: string;
   title: string;
   label: string;
+  /* ORD-0428: which branch `semantic_intake.py` took to fill `label`. Absent on a payload that does
+     not state it, which is read as "not a place name". */
+  label_kind?: string | null;
   at?: string | null;
   status: string;
   protected: boolean;
@@ -284,6 +288,28 @@ function renderFact(value: unknown, zh: boolean): string {
   if (/^\d{4}-\d{2}-\d{2}T/.test(text)) return timeLabel(text, zh);
   if (text.includes("-") && text === text.toLowerCase()) return providerKeyLabel(text, zh);
   return text;
+}
+
+/**
+ * ORD-0428: a saved trip fact is drawn under `label`, and `semantic_intake.py` fills that field from
+ * one of three branches -- a place name, a confirmation reference, or the reservation's type code.
+ * Only the first is a name, and the screen cannot tell them apart by looking at the string, so it
+ * reads the branch the server states.  Where the branch is not a place name -- and where an older
+ * payload states no branch at all -- the row names that gap instead of wearing the reference number
+ * as a title, which is how ORD-0517 treats every other card on this surface.
+ */
+function memoryRowName(
+  item: MemoryItem,
+  t: (key: string) => string,
+): string {
+  const kind = String(item.label_kind ?? "").trim();
+  if (kind === "PLACE_NAME" || kind === "ACTIVITY_TITLE") {
+    const name = String(item.label ?? "").trim();
+    if (name) return name;
+  }
+  if (kind === "CONFIRMATION_REF") return t("inbox.memoryRefInsteadOfName");
+  if (kind === "RESERVATION_TYPE") return t("inbox.memoryTypeInsteadOfName");
+  return t("inbox.memoryUnnamedPlace");
 }
 
 export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, importedAt }: Props) {
@@ -663,17 +689,18 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         >
           <label>
             {t("inbox.manualType")}
-            <select
+            <CnxSelect
               data-testid="manual-type"
               value={manualType}
-              onChange={(event) => setManualType(event.target.value)}
-            >
-              <option value="FLIGHT">{t("inbox.typeFlight")}</option>
-              <option value="RAIL">{t("inbox.typeRail")}</option>
-              <option value="HOTEL">{t("inbox.typeHotel")}</option>
-              <option value="TICKET">{t("inbox.typeTicket")}</option>
-              <option value="RESERVATION">{t("inbox.typeReservation")}</option>
-            </select>
+              onChange={(next) => setManualType(next)}
+              options={[
+                { value: "FLIGHT", label: t("inbox.typeFlight") },
+                { value: "RAIL", label: t("inbox.typeRail") },
+                { value: "HOTEL", label: t("inbox.typeHotel") },
+                { value: "TICKET", label: t("inbox.typeTicket") },
+                { value: "RESERVATION", label: t("inbox.typeReservation") },
+              ]}
+            />
           </label>
           <label>
             {t("inbox.manualTitle")}
@@ -796,13 +823,47 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         {memory?.items.length ? (
           <ol>
             {memory.items.map((item) => (
-              <li key={item.id}>
-                <strong>{item.title} · {roleLabel(item.role, zh)}</strong>
-                <span>{item.label} · {formatWhen(item.at, { zh, pending: t("inbox.timePending") })}</span>
+              <li key={item.id} data-testid="v13-2-memory-row">
+                <strong data-testid="v13-2-memory-name">
+                  {memoryRowName(item, t)} · {roleLabel(item.role, zh)}
+                </strong>
+                <span>{formatWhen(item.at, { zh, pending: t("inbox.timePending") })}</span>
                 <small>{item.protected ? t("inbox.protected") : t("inbox.candidate")} · {confidence(item.confidence)}</small>
                 {/* ORD-0323 forms F3/F4 (CMDR 04:53): the summary is the upstream's sentence, and printed
                     here it read as this panel's own claim.  The row keeps stating what it measured. */}
                 {item.reasoning_summary ? <small data-testid="v13-2-memory-summary-held">{summaryHeldLabel(zh)}</small> : null}
+                {/* ORD-0428: the server's own word for this row, its raw label and the branch that
+                    filled it stay readable here -- under the name, never as it.  Same fold the wallet
+                    card uses for `semantic_key` (`wallet-commitment-technical`). */}
+                <details className="v8-advanced" data-testid="v13-2-memory-technical">
+                  <summary>{t("inbox.technicalDetail")}</summary>
+                  <dl>
+                    <div>
+                      <dt>id</dt>
+                      <dd>
+                        <code>{item.id}</code>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>title</dt>
+                      <dd>
+                        <code>{item.title}</code>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>label</dt>
+                      <dd>
+                        <code>{item.label}</code>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>label_kind</dt>
+                      <dd>
+                        <code>{String(item.label_kind ?? "")}</code>
+                      </dd>
+                    </div>
+                  </dl>
+                </details>
               </li>
             ))}
           </ol>
@@ -897,12 +958,18 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           <section className="v13-2-review" data-testid="v13-2-review" aria-label={t("inbox.reviewSemantic")}>
             <label>
               {t("inbox.anchorRole")}
-              <select data-testid="v13-2-anchor-role" value={role} onChange={(event) => setRole(event.target.value)} disabled={draft.status === "CONFIRMED"}>
-                <option value="UNKNOWN">{t("inbox.roleUnknown")}</option>
-                <option value="ARRIVAL">{t("inbox.roleArrival")}</option>
-                <option value="MID_TRIP">{t("inbox.roleMidTrip")}</option>
-                <option value="DEPARTURE">{t("inbox.roleDeparture")}</option>
-              </select>
+              <CnxSelect
+                data-testid="v13-2-anchor-role"
+                value={role}
+                onChange={(next) => setRole(next)}
+                disabled={draft.status === "CONFIRMED"}
+                options={[
+                  { value: "UNKNOWN", label: t("inbox.roleUnknown") },
+                  { value: "ARRIVAL", label: t("inbox.roleArrival") },
+                  { value: "MID_TRIP", label: t("inbox.roleMidTrip") },
+                  { value: "DEPARTURE", label: t("inbox.roleDeparture") },
+                ]}
+              />
             </label>
             <label>
               {t("inbox.scheduledDeparture")}

@@ -29,6 +29,8 @@ export type FootprintCopyKey =
   | "sourceWeb"
   | "sourceUnknown"
   | "empty"
+  | "emptyWhy"
+  | "emptyAction"
   | "refused"
   | "unreachable"
   | "noJourney"
@@ -62,6 +64,11 @@ const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   sourceUnknown: { zh: "来源这一格服务器没给名字", en: "the server gave no name for the source" },
   empty: { zh: "还没有足迹。打开行程，在一站上按「打卡」。",
            en: "No footprints yet. Open the itinerary and tap Check in on a stop." },
+  emptyWhy: {
+    zh: "这一屏只列你自己按出来的那几枚印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。",
+    en: "This screen only lists stamps you made yourself -- the server does not record any for you. Go to a stop on your itinerary and tap Check in once, and a stamp will appear here.",
+  },
+  emptyAction: { zh: "打开行程去打卡", en: "Go check in on a stop" },
   /* Two different failures, two sentences: the order asks the screen to say WHICH step did not
      answer. The reason code stays a value the component switches on, never a printed word. */
   refused: { zh: "服务器答了，但这次没有把足迹交出来。",

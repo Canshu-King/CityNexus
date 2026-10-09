@@ -1,0 +1,12 @@
+ORD-0428 r3 - backend collection, one run only
+===============================================
+tree            : D:/moodle/_qoder_trips_title_20261008
+branch          : review/trips-card-title-r3
+commit          : 3d298cb9cb544fe4d9989236a5d84c2f6d938bee
+parent          : 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2
+interpreter     : D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)
+command         : python -m pytest tests --collect-only -q   (cwd = <tree>/backend)
+exit code       : 0
+summary line    : 1788 tests collected in 3.87s
+provenance      : the summary text above is that single run's own stdout tail; the test ids it
+                    lists belong to the suite as it stands on this commit.

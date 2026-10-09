@@ -105,7 +105,13 @@ function recoveryReasonKey(row: ScopedBinRow): JourneyTrashCopyKey | null {
   return code === null ? null : RECOVERY_REASON_KEYS[code] ?? null;
 }
 
-export function JourneyTrashPanel({ travelerId = null }: { travelerId?: string | null }) {
+export function JourneyTrashPanel({
+  travelerId = null,
+  onNavigate,
+}: {
+  travelerId?: string | null;
+  onNavigate?: (route: string) => void;
+}) {
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const say = (key: JourneyTrashCopyKey, params: Record<string, string | number> = {}) =>
@@ -257,9 +263,28 @@ export function JourneyTrashPanel({ travelerId = null }: { travelerId?: string |
       )}
 
       {read.phase === "ready" && rows.length === 0 && (
-        <p className="v8-muted" data-testid="trash-empty">
-          {say("trash.empty")}
-        </p>
+        <>
+          {/* The testid names the state and nothing else -- ORD-0535 reads this block's text to prove
+              the empty station and the unanswered one are NOT the same sentence, so the reason and the
+              control sit beside it rather than inside it. */}
+          <p className="v8-muted" data-testid="trash-empty">
+            {say("trash.empty")}
+          </p>
+          <div className="cn-trash-empty">
+            <p className="cn-trash-empty-why">{say("trash.empty.why")}</p>
+            {onNavigate ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="trash-empty-action"
+                data-contrast-role="control"
+                onClick={() => onNavigate("trips")}
+              >
+                {say("trash.empty.action")}
+              </button>
+            ) : null}
+          </div>
+        </>
       )}
 
       {read.phase === "ready" && rows.length > 0 && (

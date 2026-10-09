@@ -10,6 +10,7 @@ from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -49,12 +50,14 @@ from app.db.models import (
     PlanVersion,
     StayJourneyOption,
 )
+from app.execution.clock import execution_clock
 from app.execution.traveler_twin import (
     capability_payload,
     planning_preference_items,
     refresh_snapshot,
     snapshot_payload,
 )
+from app.services import journey_zone, parse_dt_in_journey_zone
 from app.planning.stay_mode_solver import solve_mode_choices
 
 MODES = ("WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL")
@@ -301,6 +304,26 @@ def journey_projection_window(
         return None, WINDOW_UNCOMPARABLE
 
 
+def _journey_zone_or_none(timezone_name: str | None) -> tuple[ZoneInfo | None, bool]:
+    """The journey's zone when it can be used, and whether it could be.
+
+    Split out of `_at_on_day` because the fallback is not a cosmetic one.  A bad zone falls back to
+    the anchor's own offset, which for a UTC-stored anchor moves the wall-clock reading by whole
+    hours -- measured on the tip's bytes: a 14:00 check-in against an anchor of
+    `2026-10-09T18:00:00+00:00` lands sixteen hours away from where the same request with a usable
+    zone puts it, crossing a calendar day.  That instant then decides whether a stay reads as a
+    conflict (`arrival_at < check_in_at`) and what the traveller is shown as the check-in line.  So
+    the verdict has to travel with the moment instead of the fallback being silent -- and an unusable
+    zone and no zone at all must not be the same bytes, which is exactly what they were.
+    """
+    if not timezone_name:
+        return None, False
+    try:
+        return ZoneInfo(timezone_name), True
+    except (KeyError, ValueError, TypeError):
+        return None, False
+
+
 def _at_on_day(
     anchor_at: datetime, day_offset: int, hhmm: str, timezone_name: str | None = None
 ) -> datetime:
@@ -310,17 +333,13 @@ def _at_on_day(
     own tzinfo was wrong when the anchor is stored in UTC: a 14:00 check-in
     became 22:00 local, and a 12:00 check-out landed exactly on the departure
     anchor, making every hotel look like a pinned conflict.
+
+    Callers that show or decide on the result take `_journey_zone_or_none` alongside, so the
+    fallback is stated rather than silent.
     """
 
     hour, minute = (int(part) for part in hhmm.split(":"))
-    zone = None
-    if timezone_name:
-        try:
-            from zoneinfo import ZoneInfo
-
-            zone = ZoneInfo(timezone_name)
-        except Exception:
-            zone = None
+    zone, _honoured = _journey_zone_or_none(timezone_name)
     reference = anchor_at.astimezone(zone) if zone is not None else anchor_at
     local_date = reference.date() + timedelta(days=day_offset)
     # Build the wall-clock time in the journey's zone, then express it in the
@@ -395,6 +414,11 @@ def capture_accommodation_offers(
         total = draft.nightly_amount_minor * nights
         check_in = _at_on_day(arrival, 0, "14:00", journey.timezone)
         check_out = _at_on_day(arrival, nights, "12:00", journey.timezone)
+        # The window above is only the journey's local time if the journey's zone could be used.
+        # Recorded at capture -- the read surface passes `evidence` through verbatim -- because the
+        # fallback shifts these two money-relevant instants by hours and `arrival_at < check_in_at`
+        # below decides whether a stay reads as a conflict.
+        _, _zone_honoured = _journey_zone_or_none(journey.timezone)
         if check_out > departure:
             check_out = departure - timedelta(hours=2)
         if existing is None:
@@ -438,6 +462,11 @@ def capture_accommodation_offers(
                         "price_basis": "per_night × nights",
                         "currency_explicit": True,
                         "city_fixture": journey.city_code,
+                        # Whether `check_in_at`/`check_out_at` are really in the journey's zone.  An
+                        # unusable zone falls back to the anchor's own offset, which shifts them by
+                        # hours; saying so here is what keeps that shift from reading as fact.
+                        "journey_timezone": journey.timezone,
+                        "check_window_timezone_honoured": _zone_honoured,
                     }
                 ),
                 captured_at=captured,
@@ -1839,6 +1868,8 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         budget_currency=journey.budget_currency,
         party_size=context.party_size,
     )
+    zone = journey_zone(journey)
+    used_timezone, timezone_honoured = execution_clock.zone_usage(journey.timezone)
     return {
         "journey": {
             "id": journey.id,
@@ -1846,8 +1877,14 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             "title": journey.title,
             "city_code": journey.city_code,
             "timezone": journey.timezone,
-            "start_at": journey.start_at,
-            "end_at": journey.end_at,
+            # The window columns are bare local wall-clock; a screen reading them as instants would
+            # have to place them itself, and a zone nothing can be placed in is a reading it cannot
+            # check.  So the window is placed here, where the zone is known, and the pair says which
+            # zone was used -- the same answer the trip payload and the two model contexts give.
+            "used_timezone": used_timezone,
+            "timezone_honoured": timezone_honoured,
+            "start_at": parse_dt_in_journey_zone(journey.start_at, zone),
+            "end_at": parse_dt_in_journey_zone(journey.end_at, zone),
             "status": journey.status,
             "active_plan_version_id": journey.active_plan_version_id,
             "budget": {

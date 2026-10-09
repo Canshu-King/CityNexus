@@ -19,6 +19,8 @@ const en: Dict = {
   "nav.authoritative": "Recovery",
   "nav.map": "Map",
   "nav.import": "Import places",
+  "planai.tripRequest": "Trip request",
+  "planai.importPlacesCta": "Paste your own places and import them into this trip",
   "poiImport.favoriteNotWired": "Favourites have no door in this build yet, so this cannot promise a save.",
   "poiImport.newJourney": "Create as a new plan",
   "poiImport.newJourneyNotWired": "Creating a plan from imported places belongs to the batch entry step; it is not wired here.",
@@ -213,6 +215,8 @@ const en: Dict = {
   "hub.review": "Review",
   "hub.weatherAware": "weather-aware",
   "hub.arrival": "Arrival",
+  "hub.stayLabel": "Stay",
+  "hub.nothingToPreview": "Nothing to preview yet",
   "hub.departure": "Departure",
   "hub.zoneAttribution": "{zone} · journey time zone",
   "hub.deviceTime": "this device's time",
@@ -223,6 +227,7 @@ const en: Dict = {
   "hub.planGlance": "Plan at a glance",
   "hub.everyDay": "Every day, connected.",
   "hub.compareStays": "Compare stays →",
+  "hub.tripsSectionsAria": "Trip sections",
   "hub.day": "DAY {n}",
   "hub.anchor": "{type} anchor",
   // ORD-0232: why the plan has fewer stops than the traveller asked for.  The count sits in
@@ -250,6 +255,10 @@ const en: Dict = {
   "hub.continuationResumeTransport": "This device could not send the request at all (connection failure). The record is still here.",
   "hub.continuationUnconfirmable": "There is a record of the last plan, but its progress cannot be read now, so how far it got is unconfirmed.",
   "hub.continuationTechnicalDetail": "Technical detail",
+  "hub.continuationServerReason": "Server's own reason: ",
+  "hub.continuationNoServerReason": "The server sent no reason text -- this sentence is ours, not the server's.",
+  "hub.continuationReading": "This device's reading: HTTP {status}",
+  "hub.continuationNoRequestId": "This screen holds no repeatable code -- this read did not carry one.",
 
 
 
@@ -377,6 +386,7 @@ const en: Dict = {
      that lands on one side only is a type error -- that is what keeps every tier paired. */
   "bookings.reservationUnnamed": "The server gave no name for this booking",
   "bookings.commitmentUnnamed": "The server gave no name for this commitment",
+  "bookings.commitmentSimulated": "simulated commitment",
   "bookings.orderRef": "Reference",
   "bookings.protectedC4": "Protected C4",
   "bookings.importKicker": "IMPORT CONFIRMATION",
@@ -421,6 +431,13 @@ const en: Dict = {
   "me.allowAutomaticChanges": "Allow automatic changes",
   "me.delegationScope": "Delegation scope",
   "me.technicalIdentifiers": "Technical identifiers",
+  "me.stayNotChosen": "Not chosen yet",
+  "me.stayConfirmed": "Confirmed stay",
+  "me.stayChooseInTrips": "Choose it in Trips · Stay",
+  "me.bookingsProtected": "Protected bookings; they are never changed automatically.",
+  "me.bookingsImport": "Import a ticket or confirmation in Trips · Bookings.",
+  "me.asksBeforeProtectedChange":
+    "Anything affecting a confirmed booking or protected plan asks you first.",
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",
@@ -461,6 +478,12 @@ const en: Dict = {
   "agent.intentVerifyFact": "Verify evidence",
   "agent.intentPersonalAssistance": "Personal assistance",
   "agent.intentUnknown": "I need one more detail",
+  "agent.statusWorking": "Working",
+  "agent.executedAgainstFacts": "Executed against journey facts",
+  "agent.plannedLocally": "Planned locally only",
+  "agent.intentQuestion": "Question",
+  "agent.verificationUnknown": "Verification unknown",
+  "agent.actionContinue": "Continue",
   "agent.aiBadge": "AI",
   "agent.fallbackBadge": "Answered offline",
   "agent.whatIfPreview": "What-if preview",
@@ -520,6 +543,14 @@ const en: Dict = {
   "agent.aiRunOtherPlan": "The plan in force is a different one than before.",
   "agent.aiRunPlanAppeared": "A plan is in force now (version {version}) that wasn't before.",
   "agent.aiRunNoCurrentPlan": "The read-back found no plan in force at all.",
+  "agent.obsAdvancedDetail": "Advanced detail",
+  "agent.obsTaskId": "task id",
+  "agent.obsMission": "mission",
+  "agent.obsSteps": "steps",
+  "agent.obsCurrent": "current",
+  "agent.obsTool": "tool",
+  "agent.obsDuration": "duration",
+  "agent.obsExecution": "execution",
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -765,6 +796,12 @@ const en: Dict = {
      ORD-0517 names the gap the same way on every card: what is missing is a name from the server,
      and saying so beats showing the row's identifier as if it were a title. */
   "inbox.unnamedArtifact": "The server gave no name for this confirmation",
+  /* ORD-0428: the saved-trip-fact rows are named by `label`, which the server fills from a place name,
+     a reference number or a booking type (`semantic_intake.py`).  The latter two are not names, so the
+     row states which of them it got instead of passing one off as the trip fact's name. */
+  "inbox.memoryUnnamedPlace": "The server gave no place name for this trip fact",
+  "inbox.memoryRefInsteadOfName": "The server gave a reference number for this trip fact, not a place name",
+  "inbox.memoryTypeInsteadOfName": "The server gave a booking type for this trip fact, not a place name",
   "inbox.readyToConfirm": "The server says this one is ready to accept",
   "inbox.openReview": "Open to review",
   "inbox.pendingUnreadable": "The review list could not be read:",
@@ -1013,6 +1050,11 @@ const en: Dict = {
   "recovery.technicalDetail": "Technical detail",
   "recovery.serverReason": "Reason the server gave",
   "recovery.deviceReason": "This device's own reading (the server sent no sentence)",
+  "recovery.diffRemoved": "Removed",
+  "recovery.diffAdded": "Replaced with",
+  "recovery.diffMoved": "Moved",
+  "recovery.affectedPrefix": " · Affected: ",
+  "recovery.suggestedChange": "Suggested change",
 
   /* ORD-0422 -- the traveler-facing sentences these three panels used to hardcode in English:
      features/traveler-twin/TwinPanel.tsx, features/recovery/V14RecoveryTruthPanel.tsx,
@@ -1164,6 +1206,71 @@ const en: Dict = {
   "sharedPoster.download": "Save this picture",
   "sharedPoster.made": "Saved as a PNG.",
   "sharedPoster.failed": "The picture was not made: this device's drawing surface refused to draw.",
+
+  // ── Detail pages & status surfaces ──
+  /* I18N_细节补齐: the detail pages and the status lines each kept their own inline
+     `zh ? "..." : "..."` arm, so one fact could grow two wordings and neither half was reachable by a
+     key lookup. Both halves move here so each fact carries one wording per locale. The values are the
+     sentences these screens were already showing, not new copy. The call sites still read their local
+     arm; rewiring them is a separate change, so nothing on screen moves in this one. */
+  "detail.backToItinerary": "Back to itinerary",
+  "detail.duration": "Duration",
+  "detail.travelFromPrev": "Travel from previous stop",
+  "detail.openingHours": "Opening hours",
+  "detail.hoursProvided": "Provided",
+  "detail.hoursProviderText": " · provider's own text",
+  "detail.hoursNoData": "Not available",
+  "detail.category": "Category",
+  "detail.activityType": "Activity type",
+  "detail.location": "Location",
+  "detail.noCoordinates": "No coordinates",
+  "detail.showOnMap": "Show on map",
+  "detail.askCopilot": "Ask Copilot",
+  "detail.nearbyStops": "Other stops nearby",
+  "detail.otherTripStops": "Other stops on this trip",
+  "detail.nearbyNoteClose": "All within about {n} m, ordered by straight-line distance.",
+  "detail.nearbyNoteFar": "These are other stops on the same trip; they are not necessarily within walking distance.",
+  "detail.metres": "{n} m",
+  "detail.kilometres": "{n} km",
+  "detail.confirmedProtected": "Confirmed · protected",
+  "detail.viewDetails": "View details",
+  "detail.detailsChevron": "Details ›",
+  "detail.weekIndex": "Week {n}",
+  "detail.dayStops": "{n} stops",
+  "detail.progressDayTotal": "{n} days.",
+  "detail.pretripAria": "Pre-trip checklist",
+  "detail.pretripKicker": "Before you go",
+  "detail.pretripHeading": "The two things the server reports as outstanding",
+  "detail.basisPrefix": "Basis: ",
+  "detail.anchorPrefix": "Anchor: ",
+  "detail.measuredHttpLabel": "This device's reading: HTTP",
+  "detail.measuredContentType": "Media type read back",
+  "detail.measuredBytes": "Octets this device counted",
+  "detail.measuredNoneSuffix": "{label}: this device measured none",
+  "detail.receiptFoldSummary": "What this device read back, and the server's receipt",
+  "detail.receiptHttpNone": "This device's reading: HTTP measured none",
+  "detail.receiptLabel": "server receipt",
+  "detail.receiptLabelAbsent": "no server receipt",
+  "detail.rawFactsHeading": "Fields this device measured",
+
+  // ── Itinerary list: empty state & status headers ──
+  /* I18N_细节补齐 (slice 2): the itinerary screen's empty state and its day-strip status headers each
+     carried their own inline `zh ? "..." : "..."` arm, so neither half was reachable by a key lookup.
+     Both halves move here. The interpolated arms (week index, per-day stop count) already live under
+     `detail.weekIndex` / `detail.dayStops`; this section is only the sentence arms. Values are the
+     strings the screen was already showing, not new copy. */
+  "itinerary.importPrompt": "Import places for this trip",
+  "itinerary.planWithAiNeedsPlaces": "Plan my trip with AI (needs places first)",
+  "itinerary.planWithAi": "Plan my trip with AI",
+  "itinerary.emptyTitle": "No itinerary yet",
+  // The stop's own "this is where you are" marker. Not reusing `today.now`: that key
+  // reads 现在 on the Chinese side, and this label says 当前 on screen today.
+  "itinerary.stopNow": "Now",
+  "itinerary.emptyPlanNoDays": "No stop in this plan sits on a day yet. Add stops and this screen lists them day by day.",
+  "itinerary.emptyNoPlan": "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here.",
+  "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
+  "itinerary.lengthUnknown": "length unknown",
+  "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
 };
 
 const zhCN: Dict = {
@@ -1180,6 +1287,8 @@ const zhCN: Dict = {
   "nav.authoritative": "恢复与执行",
   "nav.map": "地图",
   "nav.import": "导入地点",
+  "planai.tripRequest": "旅行需求",
+  "planai.importPlacesCta": "粘贴你自己的地点，导入这趟行程",
   "poiImport.favoriteNotWired": "这一版还没有收藏的门，所以这里不能承诺保存。",
   "poiImport.newJourney": "新建为一个计划",
   "poiImport.newJourneyNotWired": "从导入地点新建计划属于批量录入那一步，本屏没有接。",
@@ -1356,6 +1465,8 @@ const zhCN: Dict = {
   "hub.review": "待审核",
   "hub.weatherAware": "天气感知",
   "hub.arrival": "到达",
+  "hub.stayLabel": "住宿",
+  "hub.nothingToPreview": "还没有可以预览的行程",
   "hub.departure": "出发",
   "hub.zoneAttribution": "{zone} · 行程时区",
   "hub.deviceTime": "本设备时间",
@@ -1366,6 +1477,7 @@ const zhCN: Dict = {
   "hub.planGlance": "方案概览",
   "hub.everyDay": "每一天，紧密相连。",
   "hub.compareStays": "对比住宿 →",
+  "hub.tripsSectionsAria": "行程分区",
   "hub.day": "第 {n} 天",
   "hub.anchor": "{type}锚点",
   // ORD-0232：为什么行程里的地点比旅客要的少。数量放在括号里，这里就不发明复数规则。
@@ -1387,6 +1499,10 @@ const zhCN: Dict = {
   "hub.continuationResumeTransport": "这一发在本机就没送出去（连接失败）。上次的记录还在。",
   "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
   "hub.continuationTechnicalDetail": "技术详情",
+  "hub.continuationServerReason": "服务器给出的原因：",
+  "hub.continuationNoServerReason": "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。",
+  "hub.continuationReading": "这台设备看到的回读：HTTP {status}",
+  "hub.continuationNoRequestId": "这一屏没有拿到可复述的编号（这条读取没把它送过来）。",
 
 
 
@@ -1500,6 +1616,7 @@ const zhCN: Dict = {
   "bookings.priceUnknown": "价格未知",
   "bookings.reservationUnnamed": "服务器没有给这单预订的名字",
   "bookings.commitmentUnnamed": "服务器没有给这项承诺的名字",
+  "bookings.commitmentSimulated": "模拟承诺",
   "bookings.orderRef": "订单号",
   "bookings.protectedC4": "受保护 C4",
   "bookings.importKicker": "导入确认",
@@ -1544,6 +1661,12 @@ const zhCN: Dict = {
   "me.allowAutomaticChanges": "开启自动执行",
   "me.delegationScope": "委派范围",
   "me.technicalIdentifiers": "技术标识",
+  "me.stayNotChosen": "还没有选定",
+  "me.stayConfirmed": "已确认的住宿",
+  "me.stayChooseInTrips": "在「行程 · 住宿」里挑选",
+  "me.bookingsProtected": "受保护的预订，不会被自动改动。",
+  "me.bookingsImport": "在「行程 · 预订」里导入你的票或确认单。",
+  "me.asksBeforeProtectedChange": "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。",
 
   // ── Agent Composer ──
   "agent.kicker": "随时问关于这趟行程的任何事",
@@ -1584,6 +1707,12 @@ const zhCN: Dict = {
   "agent.intentVerifyFact": "核验证据",
   "agent.intentPersonalAssistance": "个人求助",
   "agent.intentUnknown": "还需要一个细节",
+  "agent.statusWorking": "处理中",
+  "agent.executedAgainstFacts": "已按行程事实执行",
+  "agent.plannedLocally": "仅在本机规划",
+  "agent.intentQuestion": "问题",
+  "agent.verificationUnknown": "核验状态未知",
+  "agent.actionContinue": "继续",
   "agent.aiBadge": "AI",
   "agent.fallbackBadge": "离线回答",
   "agent.whatIfPreview": "What-if 预览",
@@ -1638,6 +1767,14 @@ const zhCN: Dict = {
   "agent.aiRunOtherPlan": "当前生效的方案已经换成另一个。",
   "agent.aiRunPlanAppeared": "回读时才有了生效方案（第 {version} 版）。",
   "agent.aiRunNoCurrentPlan": "回读时没有任何生效方案。",
+  "agent.obsAdvancedDetail": "高级详情",
+  "agent.obsTaskId": "任务编号",
+  "agent.obsMission": "内部任务",
+  "agent.obsSteps": "已用步骤",
+  "agent.obsCurrent": "当前",
+  "agent.obsTool": "工具",
+  "agent.obsDuration": "耗时",
+  "agent.obsExecution": "执行方式",
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
@@ -1874,6 +2011,9 @@ const zhCN: Dict = {
   "inbox.pendingQueue": "等你审核的确认单",
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
   "inbox.unnamedArtifact": "服务器没有给这张确认单的名字",
+  "inbox.memoryUnnamedPlace": "服务器没有给这条行程事实的地点名字",
+  "inbox.memoryRefInsteadOfName": "服务器只给了这条行程事实的确认号，没有给地点名字",
+  "inbox.memoryTypeInsteadOfName": "服务器只给了这条行程事实的预订类型，没有给地点名字",
   "inbox.readyToConfirm": "服务器说这条可以收下了",
   "inbox.openReview": "打开核对",
   "inbox.pendingUnreadable": "待审清单读不出来：",
@@ -2102,6 +2242,11 @@ const zhCN: Dict = {
   "recovery.technicalDetail": "技术详情",
   "recovery.serverReason": "服务器给出的原因",
   "recovery.deviceReason": "这台设备自己的读数（服务器没给句子）",
+  "recovery.diffRemoved": "移出",
+  "recovery.diffAdded": "换成",
+  "recovery.diffMoved": "调整时间",
+  "recovery.affectedPrefix": " · 受影响：",
+  "recovery.suggestedChange": "推荐怎么改",
 
   /* ORD-0422 -- the traveler-facing sentences these three panels used to hardcode in English:
      features/traveler-twin/TwinPanel.tsx, features/recovery/V14RecoveryTruthPanel.tsx,
@@ -2245,6 +2390,65 @@ const zhCN: Dict = {
   "sharedPoster.download": "存下这张图",
   "sharedPoster.made": "已存为 PNG。",
   "sharedPoster.failed": "图没有生成：这台设备的画布没有交出可用的绘制上下文。",
+
+  // ── 细节页与状态面 ──
+  /* I18N_细节补齐: 这几块屏各自把中文写在 `zh ? "..." : "..."` 的分支里，一条事实会长出两种说法，
+     而且两边都查不到键。两端都搬进字典，每条事实在每种语言下各留一种说法。值仍是这些屏本来就在
+     显示的那句，不是新写的文案。调用点继续读它自己那半个分支，改调用点是另一件事，所以屏上文字不动。 */
+  "detail.backToItinerary": "返回行程",
+  "detail.duration": "停留时长",
+  "detail.travelFromPrev": "从上一站出发",
+  "detail.openingHours": "营业时间",
+  "detail.hoursProvided": "已提供",
+  "detail.hoursProviderText": " · 供应商原文",
+  "detail.hoursNoData": "暂无数据",
+  "detail.category": "类型",
+  "detail.activityType": "活动类型",
+  "detail.location": "位置",
+  "detail.noCoordinates": "暂无坐标",
+  "detail.showOnMap": "在地图上查看",
+  "detail.askCopilot": "问问 Copilot",
+  "detail.nearbyStops": "附近的其他停靠点",
+  "detail.otherTripStops": "这趟行程的其他停靠点",
+  "detail.nearbyNoteClose": "都在约 {n} 米范围内，按直线距离排列。",
+  "detail.nearbyNoteFar": "这些是同一行程的其他停靠点，不一定是步行可达的邻近地点。",
+  "detail.metres": "{n} 米",
+  "detail.kilometres": "{n} 公里",
+  "detail.confirmedProtected": "已确认 · 受保护",
+  "detail.viewDetails": "查看详情",
+  "detail.detailsChevron": "详情 ›",
+  "detail.weekIndex": "第 {n} 周",
+  "detail.dayStops": "{n} 项",
+  "detail.progressDayTotal": "共 {n} 天。",
+  "detail.pretripAria": "行前清单",
+  "detail.pretripKicker": "行前清单",
+  "detail.pretripHeading": "服务端报出的两类待办",
+  "detail.basisPrefix": "依据：",
+  "detail.anchorPrefix": "锚点：",
+  "detail.measuredHttpLabel": "这台设备看到的回读：HTTP",
+  "detail.measuredContentType": "回读的媒体类型",
+  "detail.measuredBytes": "这台设备数到的字节",
+  "detail.measuredNoneSuffix": "{label}：这台设备没量到",
+  "detail.receiptFoldSummary": "这台设备量到的回读与服务器回执号",
+  "detail.receiptHttpNone": "这台设备看到的回读：HTTP 没量到",
+  "detail.receiptLabel": "服务器回执号",
+  "detail.receiptLabelAbsent": "服务器未给回执号",
+  "detail.rawFactsHeading": "这台设备自己量到的回读字段",
+
+  // ── 行程列表：空态与状态头 ──
+  /* I18N_细节补齐（第二片）：行程屏的空态和它那些逐日状态头，各自把中文写在 `zh ? "..." : "..."` 的分支
+     里，两边都查不到键。两端都搬进字典。插值的分支（周序号、每天站点数）已经在 `detail.weekIndex` /
+     `detail.dayStops`，这一段只收句子分支。值仍是这些屏本来就在显示的那句，不是新写的文案。 */
+  "itinerary.importPrompt": "去导入这趟的地点",
+  "itinerary.planWithAiNeedsPlaces": "AI 帮我规划（要先有地点）",
+  "itinerary.planWithAi": "AI 帮我规划",
+  "itinerary.emptyTitle": "还没有可看的行程",
+  "itinerary.stopNow": "当前",
+  "itinerary.emptyPlanNoDays": "这一版方案里还没有站点被排在某一天上。补上站点，这一屏就按天把它们列出来。",
+  "itinerary.emptyNoPlan": "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
+  "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
+  "itinerary.lengthUnknown": "天数未知",
+  "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
