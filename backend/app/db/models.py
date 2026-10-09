@@ -2235,6 +2235,63 @@ class JourneyMember(Base):
     updated_at: Mapped[str] = mapped_column(String)
 
 
+class JourneyMembershipInvitation(Base):
+    """A recipient-owned invitation; membership begins only after that traveller accepts."""
+
+    __tablename__ = "journey_membership_invitations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    target_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    inviter_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    inviter_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    base_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    base_cursor_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    proposed_role: Mapped[str] = mapped_column(String, default="COLLABORATOR", server_default="COLLABORATOR")
+    title_snapshot: Mapped[str] = mapped_column(String)
+    city_code_snapshot: Mapped[str] = mapped_column(String)
+    approximate_start_date: Mapped[str] = mapped_column(String)
+    state: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
+    request_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    accepted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    declined_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    joined_member_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="SET NULL"), nullable=True
+    )
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','EXPIRED')",
+            name="ck_journey_membership_invitations_state",
+        ),
+        CheckConstraint(
+            "proposed_role = 'COLLABORATOR'",
+            name="ck_journey_membership_invitations_role",
+        ),
+        UniqueConstraint(
+            "journey_id", "inviter_member_id", "request_key",
+            name="uq_journey_membership_invitations_request",
+        ),
+        Index(
+            "ux_journey_membership_invitations_one_offered",
+            "journey_id", "target_traveler_id",
+            unique=True,
+            sqlite_where=text("state = 'OFFERED'"),
+            postgresql_where=text("state = 'OFFERED'"),
+        ),
+        Index(
+            "idx_journey_membership_invitations_recipient",
+            "target_traveler_id", "state", "expires_at",
+        ),
+    )
+
+
 class JourneyRoleCapability(Base):
     """Role -> one capability, with the message key that states the role's scope in a sentence.
 

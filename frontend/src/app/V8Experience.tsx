@@ -17,6 +17,7 @@ import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
+import { JourneyMembershipPanel } from "../features/execution/JourneyMembershipPanel";
 import { liveActivityWindow } from "../lib/executionWindow";
 import { installVisualViewportVars } from "../lib/visualViewport";
 import {
@@ -574,6 +575,7 @@ export function V8Experience() {
      held somewhere a later navigate cannot overwrite. */
   const [deepLink] = useState(deepLinkFromPath);
   const [data, setData] = useState<V8Data | null>(null);
+  const [recentlyJoinedJourneyId, setRecentlyJoinedJourneyId] = useState<string | null>(null);
   const [mode, setMode] = useState<V8Mode>("TRANSIT");
   const [comparison, setComparison] = useState<V8Data["mobility_facts"]>([]);
   const [policy, setPolicy] = useState<Policy | null>(null);
@@ -915,6 +917,15 @@ export function V8Experience() {
       setNavOpen(false);
       setAlertsOpen(false);
     });
+  };
+  const openJoinedJourney = async (journeyId: string) => {
+    localStorage.setItem("citynexus.v8.journey_id", journeyId);
+    setRecentlyJoinedJourneyId(journeyId);
+    setFailure(null);
+    setShowCachedCopy(false);
+    await load(journeyId);
+    setSetupOpen(false);
+    navigate("live");
   };
   /* ORD-0209 (arbitration `5772122180`): the demo entry addresses the sealed demo journey; it does
      not create one.  The previous body POSTed a traveller and a journey on every press -- HARNESS
@@ -1526,6 +1537,11 @@ export function V8Experience() {
           stoppedWaiting={stoppedWaiting}
           onStopWaiting={stopWaiting}
         />
+        <JourneyMembershipPanel
+          journeyId={null}
+          recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+          onJourneyJoined={openJoinedJourney}
+        />
         {/* ORD-0081 ①: a teacher who has never created a journey is standing on this screen, and
             `demo/reset` is the only action that puts a scenario on the stage.  The stage control
             used to exist only inside Hub, which renders when a journey already does -- so the one
@@ -1560,9 +1576,16 @@ export function V8Experience() {
     );
   if (!data)
     return (
-      <div className="v8-loading">
-        <div className="v8-brand-mark">CN</div>
-        <p>{message ?? t("shell.noJourney")}</p>
+      <div className="v8-join-entry">
+        <div className="v8-loading">
+          <div className="v8-brand-mark">CN</div>
+          <p>{message ?? t("shell.noJourney")}</p>
+        </div>
+        <JourneyMembershipPanel
+          journeyId={null}
+          recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+          onJourneyJoined={openJoinedJourney}
+        />
       </div>
     );
 
@@ -1935,6 +1958,14 @@ export function V8Experience() {
           </div>
         )}
         <div className="v8-content">
+          {(route === "hub" || route === "live") && (
+            <JourneyMembershipPanel
+              journeyId={data.journey.id}
+              journeyStatus={data.journey.status}
+              recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+              onJourneyJoined={openJoinedJourney}
+            />
+          )}
           {renderPanels(routePanels, routeScope)}
         </div>
       </main>

@@ -54,6 +54,48 @@ export interface JourneyRecord {
   status: string;
 }
 
+export interface JourneyMembershipInvitationInboxItem {
+  invitation_id: string;
+  inviter_display_name: string;
+  journey_title: string;
+  city_code: string;
+  approximate_start_date: string;
+  proposed_role: "COLLABORATOR";
+  expires_at: string;
+  state: "OFFERED";
+}
+
+export interface JourneyMembershipInvitationCreated {
+  invitation_id: string;
+  target_traveler_id: string;
+  proposed_role: "COLLABORATOR";
+  state: "OFFERED" | "ACCEPTED" | "DECLINED" | "REVOKED" | "EXPIRED";
+  expires_at: string;
+}
+
+export interface JourneyMembershipInvitationManagerItem {
+  invitation_id: string;
+  target_traveler_id: string;
+  target_display_name: string;
+  proposed_role: "COLLABORATOR";
+  state: "OFFERED" | "ACCEPTED" | "DECLINED" | "REVOKED" | "EXPIRED";
+  expires_at: string;
+}
+
+export interface JourneyMembershipInvitationDecisionResult {
+  invitation_id: string;
+  journey_id?: string;
+  state: "ACCEPTED" | "DECLINED";
+  membership?: {
+    id: string;
+    journey_id: string;
+    traveler_id: string;
+    role: "COLLABORATOR";
+    invited_by: string;
+    joined_at: string | null;
+  };
+}
+
 export interface PlaceRecord {
   id: string;
   name: string;
@@ -2291,6 +2333,64 @@ export const cityNexusApi = {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/guardian/autopilot/stop",
       { method: "POST" },
+    );
+  },
+
+  getMyJourneyMembershipInvitations(): Promise<JourneyMembershipInvitationInboxItem[]> {
+    return requestJson<JourneyMembershipInvitationInboxItem[]>(
+      "/travelers/me/journey-membership-invitations",
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  createJourneyMembershipInvitation(
+    journeyId: string,
+    targetTravelerId: string,
+    idempotencyKey: string,
+  ): Promise<JourneyMembershipInvitationCreated> {
+    return requestJson<JourneyMembershipInvitationCreated>(
+      "/journeys/" + journeyId + "/membership-invitations",
+      {
+        method: "POST",
+        headers: {
+          ...travelerAuthHeaders(),
+          "Idempotency-Key": idempotencyKey,
+        },
+        body: JSON.stringify({ target_traveler_id: targetTravelerId }),
+      },
+    );
+  },
+
+  getJourneyMembershipInvitations(
+    journeyId: string,
+  ): Promise<JourneyMembershipInvitationManagerItem[]> {
+    return requestJson<JourneyMembershipInvitationManagerItem[]>(
+      "/journeys/" + journeyId + "/membership-invitations",
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  respondToJourneyMembershipInvitation(
+    invitationId: string,
+    decision: "ACCEPT" | "DECLINE",
+  ): Promise<JourneyMembershipInvitationDecisionResult> {
+    return requestJson<JourneyMembershipInvitationDecisionResult>(
+      "/journey-membership-invitations/" + invitationId + "/respond",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ decision }),
+      },
+    );
+  },
+
+  revokeJourneyMembershipInvitation(
+    journeyId: string,
+    invitationId: string,
+  ): Promise<{ invitation_id: string; state: "REVOKED" }> {
+    return requestJson<{ invitation_id: string; state: "REVOKED" }>(
+      "/journeys/" + journeyId + "/membership-invitations/" + invitationId + "/revoke",
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 

@@ -4786,14 +4786,14 @@ def test_r75_source_consent_gates_grants_projection_and_withdrawal():
         json={"grantee_member_id": late_member_id},
     )
     assert preconsent_grant.status_code == 409
-    assert preconsent_grant.json()["error"]["message"] == "NOT_SHARED_TO_GROUP"
+    assert preconsent_grant.json()["error"]["message"] == "AUDIENCE_CHANGED"
     preconsent_promotion = client.post(
         invitation_url + "/promotions",
         headers={**_auth(sponsor_id), "Idempotency-Key": "r75-before-consent-promotion"},
         json={"dwell_minutes": 20},
     )
     assert preconsent_promotion.status_code == 409
-    assert preconsent_promotion.json()["error"]["message"] == "NOT_SHARED_TO_GROUP"
+    assert preconsent_promotion.json()["error"]["message"] == "AUDIENCE_CHANGED"
 
     before = client.get(
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(late_id)

@@ -1220,6 +1220,29 @@ class JourneyMemberCreate(BaseModel):
     expires_at: str | None = None
 
 
+class JourneyMembershipInvitationCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    target_traveler_id: UUID
+
+
+class JourneyMembershipInvitationDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+
+
+class JourneyMembershipInvitationInboxItem(BaseModel):
+    invitation_id: str
+    inviter_display_name: str
+    journey_title: str
+    city_code: str
+    approximate_start_date: str
+    proposed_role: Literal["COLLABORATOR"]
+    expires_at: str
+    state: Literal["OFFERED"]
+
+
 class JourneyMember(BaseModel):
     id: str
     journey_id: str

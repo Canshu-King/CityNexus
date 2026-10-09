@@ -200,6 +200,18 @@ def legacy_full_audience_consent(
     *,
     facts: dict[str, Any],
 ) -> bool:
+    addressed = _addressed_member_ids(session, invitation)
+    audience_ids = {
+        str(item["member_id"])
+        for item in facts["audience"]
+        if str(item["member_id"]) != str(invitation.owner_member_id)
+    }
+    return bool(audience_ids) and addressed == audience_ids
+
+
+def _addressed_member_ids(
+    session: Session, invitation: MemberPlaceInvitation
+) -> set[str]:
     addressed = {
         str(row.recipient_member_id)
         for row in session.scalars(
@@ -208,12 +220,7 @@ def legacy_full_audience_consent(
             )
         ).all()
     }
-    audience_ids = {
-        str(item["member_id"])
-        for item in facts["audience"]
-        if str(item["member_id"]) != str(invitation.owner_member_id)
-    }
-    return bool(audience_ids) and addressed == audience_ids
+    return addressed
 
 
 def current_group_share(
@@ -279,7 +286,18 @@ def current_group_share(
         None,
     )
     if terminal is None:
-        return {"shared": False, "status": "NOT_SHARED_TO_GROUP", "receipt": None}
+        current_audience_ids = {
+            str(item["member_id"])
+            for item in facts["audience"]
+            if str(item["member_id"]) != str(invitation.owner_member_id)
+        }
+        addressed = _addressed_member_ids(session, invitation)
+        status = (
+            "AUDIENCE_CHANGED"
+            if addressed and addressed != current_audience_ids
+            else "NOT_SHARED_TO_GROUP"
+        )
+        return {"shared": False, "status": status, "receipt": None}
     status = {
         "WITHDRAWN": "INVITER_CONSENT_WITHDRAWN",
         "EXPIRED": "INVITER_CONSENT_EXPIRED",

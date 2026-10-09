@@ -1588,6 +1588,41 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_journey_members_journey_traveler
 CREATE INDEX IF NOT EXISTS idx_journey_members_journey
     ON journey_members(journey_id, created_at);
 
+-- A pending invitation is not a membership. The recipient's signed acceptance is
+-- the only path that inserts an in-force JourneyMember.
+CREATE TABLE IF NOT EXISTS journey_membership_invitations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    target_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    inviter_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    inviter_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    base_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    base_cursor_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    proposed_role TEXT NOT NULL DEFAULT 'COLLABORATOR' CHECK (proposed_role = 'COLLABORATOR'),
+    title_snapshot TEXT NOT NULL,
+    city_code_snapshot TEXT NOT NULL,
+    approximate_start_date TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'OFFERED'
+        CHECK (state IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','EXPIRED')),
+    request_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    accepted_at TEXT,
+    declined_at TEXT,
+    revoked_at TEXT,
+    joined_member_id TEXT REFERENCES journey_members(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, inviter_member_id, request_key)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_membership_invitations_one_offered
+    ON journey_membership_invitations(journey_id, target_traveler_id)
+    WHERE state = 'OFFERED';
+
+CREATE INDEX IF NOT EXISTS idx_journey_membership_invitations_recipient
+    ON journey_membership_invitations(target_traveler_id, state, expires_at);
+
 -- The ACL table.  A row says which capability a role has and which message key states its scope in
 -- one sentence - the words themselves stay in the client's dictionary, because a server sentence
 -- reaching a screen is the defect this project keeps having to fix (RELATION:94's shape is a table,

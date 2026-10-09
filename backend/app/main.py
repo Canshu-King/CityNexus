@@ -155,6 +155,7 @@ from app.db.models import (
     JourneyMission,
     JourneyIntent,
     JourneyMember as JourneyMemberModel,
+    JourneyMembershipInvitation as JourneyMembershipInvitationModel,
     MemberPlaceInvitation,
     MemberPlaceInvitationRecipient,
     MemberPlaceGroupShareConsent,
@@ -518,6 +519,9 @@ from app.schemas import (
     JourneyMember,
     JourneyMemberCreate,
     JourneyMemberPreferenceUpdate,
+    JourneyMembershipInvitationCreate,
+    JourneyMembershipInvitationDecision,
+    JourneyMembershipInvitationInboxItem,
     JourneyRoleRule,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
@@ -7424,11 +7428,13 @@ def _add_journey_member(
 ):
     require(session, Journey, str(journey_id), "Journey")
     principal, manager = _require_membership_manager(request, str(journey_id), session)
-    # `invited_by` is display/audit metadata only. In strict mode it must name
-    # the authenticated manager; the persisted value is always server-derived.
+    # This legacy compatibility path is available only without strict signed
+    # traveler mode; its display metadata still comes from the authenticated manager.
     supplied_inviter = payload.invited_by.strip()
     if supplied_inviter not in {str(principal.traveler_id), str(manager.id)}:
         raise HTTPException(403, "INVITED_BY_MUST_MATCH_AUTHENTICATED_MANAGER")
+    if settings.traveler_auth_secret:
+        raise HTTPException(409, "RECIPIENT_ACCEPTANCE_REQUIRED")
     if payload.role in {"OWNER", "ADMIN"} and str(manager.role) != "OWNER":
         raise HTTPException(403, "ONLY_OWNER_CAN_ASSIGN_OWNER_OR_ADMIN")
     traveler_id = str(payload.traveler_id)
@@ -7506,6 +7512,561 @@ def list_journey_members(journey_id: UUID, request: Request, session: Session = 
     # Withdrawn rows stay listed with their own state: a screen has to be able to say "this person
     # was here and is out" without guessing from an absence.
     return [_member_payload(row) for row in rows]
+
+
+def _membership_invitation_inbox_item(
+    session: Session, invitation: JourneyMembershipInvitationModel
+) -> JourneyMembershipInvitationInboxItem:
+    inviter = session.get(Traveler, str(invitation.inviter_traveler_id))
+    return JourneyMembershipInvitationInboxItem(
+        invitation_id=str(invitation.id),
+        inviter_display_name=str(inviter.display_name if inviter else "Traveller"),
+        journey_title=str(invitation.title_snapshot),
+        city_code=str(invitation.city_code_snapshot),
+        approximate_start_date=str(invitation.approximate_start_date),
+        proposed_role="COLLABORATOR",
+        expires_at=str(invitation.expires_at),
+        state="OFFERED",
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/membership-invitations", status_code=201)
+def create_journey_membership_invitation(
+    journey_id: UUID,
+    payload: JourneyMembershipInvitationCreate,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+            raise HTTPException(409, "MEMBERSHIP_INVITE_REQUIRES_ACTIVE_JOURNEY")
+        principal, manager = _require_membership_manager(request, str(journey.id), session)
+        request_key = str(idempotency_key or "").strip()
+        if not request_key or len(request_key) > 120:
+            raise HTTPException(422, "IDEMPOTENCY_KEY_REQUIRED_OR_TOO_LONG")
+        target_id = str(payload.target_traveler_id)
+        if target_id == str(principal.traveler_id):
+            raise HTTPException(409, "CANNOT_INVITE_SELF")
+        if session.get(Traveler, target_id) is None:
+            raise HTTPException(404, "MEMBERSHIP_INVITE_TARGET_UNKNOWN")
+        if session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == str(journey.id),
+                JourneyMemberModel.traveler_id == target_id,
+            )
+        ) is not None:
+            raise HTTPException(409, "MEMBER_ALREADY_PRESENT")
+
+        stamp = datetime.now(timezone.utc)
+        stamp_text = stamp.isoformat()
+        request_hash = hashlib.sha256(
+            f"{journey.id}:{target_id}:COLLABORATOR:{journey.active_plan_version_id}:"
+            f"{journey.current_activity_id or ''}".encode("utf-8")
+        ).hexdigest()
+        existing_key = session.scalar(
+            select(JourneyMembershipInvitationModel).where(
+                JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                JourneyMembershipInvitationModel.inviter_member_id == str(manager.id),
+                JourneyMembershipInvitationModel.request_key == request_key,
+            )
+        )
+        if existing_key is not None:
+            if str(existing_key.request_hash) != request_hash:
+                raise HTTPException(409, "MEMBERSHIP_INVITE_IDEMPOTENCY_CONFLICT")
+            return {
+                "invitation_id": str(existing_key.id),
+                "target_traveler_id": str(existing_key.target_traveler_id),
+                "proposed_role": "COLLABORATOR",
+                "state": str(existing_key.state),
+                "expires_at": str(existing_key.expires_at),
+            }
+
+        pending = session.scalars(
+            select(JourneyMembershipInvitationModel).where(
+                JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                JourneyMembershipInvitationModel.target_traveler_id == target_id,
+                JourneyMembershipInvitationModel.state == "OFFERED",
+            )
+        ).all()
+        from app.traveler_principal import member_has_capability
+
+        for old in pending:
+            try:
+                old_expiry = datetime.fromisoformat(str(old.expires_at))
+            except ValueError:
+                old_expiry = stamp
+            old_inviter = session.get(JourneyMemberModel, str(old.inviter_member_id))
+            if (
+                old_expiry.tzinfo is None
+                or old_expiry <= stamp
+                or str(old.base_plan_version_id) != str(journey.active_plan_version_id)
+                or str(old.base_cursor_activity_id or "") != str(journey.current_activity_id or "")
+                or old_inviter is None
+                or _member_state(old_inviter, stamp) != "MEMBER_IN_FORCE"
+                or not member_has_capability(session, old_inviter, "MEMBER_MANAGE")
+            ):
+                old.state = "EXPIRED"
+                old.updated_at = stamp_text
+            else:
+                raise HTTPException(409, "MEMBERSHIP_INVITATION_ALREADY_PENDING")
+        session.flush()
+
+        start_at = str(journey.start_at or "")
+        approximate_start_date = start_at[:7] if len(start_at) >= 7 else "Date not set"
+        invitation = JourneyMembershipInvitationModel(
+            id=str(uuid4()),
+            journey_id=str(journey.id),
+            target_traveler_id=target_id,
+            inviter_member_id=str(manager.id),
+            inviter_traveler_id=str(principal.traveler_id),
+            base_plan_version_id=str(journey.active_plan_version_id),
+            base_cursor_activity_id=(
+                str(journey.current_activity_id) if journey.current_activity_id else None
+            ),
+            proposed_role="COLLABORATOR",
+            title_snapshot=str(journey.title),
+            city_code_snapshot=str(journey.city_code),
+            approximate_start_date=approximate_start_date,
+            state="OFFERED",
+            request_key=request_key,
+            request_hash=request_hash,
+            expires_at=(stamp + timedelta(hours=24)).isoformat(),
+            accepted_at=None,
+            declined_at=None,
+            revoked_at=None,
+            joined_member_id=None,
+            created_at=stamp_text,
+            updated_at=stamp_text,
+        )
+        session.add(invitation)
+        record_audit(
+            session,
+            action="journey.membership_invitation.offered",
+            entity_type="JourneyMembershipInvitation",
+            entity_id=invitation.id,
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={
+                "target_traveler_id": target_id,
+                "proposed_role": "COLLABORATOR",
+                "base_plan_version_id": str(journey.active_plan_version_id),
+                "expires_at": invitation.expires_at,
+            },
+        )
+        try:
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            same_key = session.scalar(
+                select(JourneyMembershipInvitationModel).where(
+                    JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                    JourneyMembershipInvitationModel.inviter_member_id == str(manager.id),
+                    JourneyMembershipInvitationModel.request_key == request_key,
+                )
+            )
+            if same_key is not None and str(same_key.request_hash) == request_hash:
+                return {
+                    "invitation_id": str(same_key.id),
+                    "target_traveler_id": str(same_key.target_traveler_id),
+                    "proposed_role": "COLLABORATOR",
+                    "state": str(same_key.state),
+                    "expires_at": str(same_key.expires_at),
+                }
+            raise HTTPException(409, "MEMBERSHIP_INVITATION_ALREADY_PENDING") from exc
+        return {
+            "invitation_id": str(invitation.id),
+            "target_traveler_id": target_id,
+            "proposed_role": "COLLABORATOR",
+            "state": "OFFERED",
+            "expires_at": invitation.expires_at,
+        }
+
+
+@app.get(
+    "/api/v1/travelers/me/journey-membership-invitations",
+    response_model=list[JourneyMembershipInvitationInboxItem],
+)
+def list_my_journey_membership_invitations(
+    request: Request, session: Session = Depends(get_session)
+):
+    from app.traveler_principal import member_has_capability, resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    now = datetime.now(timezone.utc)
+    rows = session.scalars(
+        select(JourneyMembershipInvitationModel)
+        .where(
+            JourneyMembershipInvitationModel.target_traveler_id == str(principal.traveler_id),
+            JourneyMembershipInvitationModel.state == "OFFERED",
+        )
+        .order_by(JourneyMembershipInvitationModel.created_at, JourneyMembershipInvitationModel.id)
+    ).all()
+    visible: list[JourneyMembershipInvitationInboxItem] = []
+    changed = False
+    for invitation in rows:
+        try:
+            expiry = datetime.fromisoformat(str(invitation.expires_at))
+        except ValueError:
+            expiry = now
+        journey = session.get(Journey, str(invitation.journey_id))
+        inviter = session.get(JourneyMemberModel, str(invitation.inviter_member_id))
+        valid = bool(
+            expiry.tzinfo is not None
+            and expiry > now
+            and journey is not None
+            and str(journey.status).upper() == "ACTIVE"
+            and str(journey.active_plan_version_id or "") == str(invitation.base_plan_version_id)
+            and str(journey.current_activity_id or "") == str(invitation.base_cursor_activity_id or "")
+            and inviter is not None
+            and str(inviter.journey_id) == str(journey.id)
+            and str(inviter.traveler_id) == str(invitation.inviter_traveler_id)
+            and _member_state(inviter, now) == "MEMBER_IN_FORCE"
+            and member_has_capability(session, inviter, "MEMBER_MANAGE")
+        )
+        if not valid:
+            invitation.state = "EXPIRED"
+            invitation.updated_at = now.isoformat()
+            changed = True
+            continue
+        visible.append(_membership_invitation_inbox_item(session, invitation))
+    if changed:
+        session.commit()
+    return visible
+
+
+@app.get("/api/v1/journeys/{journey_id}/membership-invitations")
+def list_journey_membership_invitations(
+    journey_id: UUID, request: Request, session: Session = Depends(get_session)
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _principal, manager = _require_membership_manager(request, str(journey_id), session)
+    now = datetime.now(timezone.utc)
+    rows = session.scalars(
+        select(JourneyMembershipInvitationModel)
+        .where(
+            JourneyMembershipInvitationModel.journey_id == str(journey.id),
+            JourneyMembershipInvitationModel.inviter_member_id == str(manager.id),
+        )
+        .order_by(JourneyMembershipInvitationModel.created_at, JourneyMembershipInvitationModel.id)
+    ).all()
+    changed = False
+    result: list[dict[str, str]] = []
+    for invitation in rows:
+        if invitation.state == "OFFERED":
+            try:
+                expiry = datetime.fromisoformat(str(invitation.expires_at))
+            except ValueError:
+                expiry = now
+            if (
+                expiry.tzinfo is None
+                or expiry <= now
+                or str(invitation.base_plan_version_id) != str(journey.active_plan_version_id or "")
+                or str(invitation.base_cursor_activity_id or "") != str(journey.current_activity_id or "")
+            ):
+                invitation.state = "EXPIRED"
+                invitation.updated_at = now.isoformat()
+                changed = True
+        target = session.get(Traveler, str(invitation.target_traveler_id))
+        result.append(
+            {
+                "invitation_id": str(invitation.id),
+                "target_traveler_id": str(invitation.target_traveler_id),
+                "target_display_name": str(target.display_name if target else "Traveller"),
+                "proposed_role": "COLLABORATOR",
+                "state": str(invitation.state),
+                "expires_at": str(invitation.expires_at),
+            }
+        )
+    if changed:
+        session.commit()
+    return result
+
+
+def _invalidate_shared_stop_authority_after_membership_change(
+    session: Session,
+    *,
+    journey_id: str,
+    invitation_id: str,
+    actor_id: str,
+    stamp: str,
+) -> None:
+    """Close R73/R74 rounds and grants whose member set predates an accepted join."""
+    from app.db.models import CollectiveAuthorityReceipt, SharedStopCoPlanningGrant
+
+    promotions = session.scalars(
+        select(MemberPlacePromotion).where(
+            MemberPlacePromotion.journey_id == str(journey_id),
+            MemberPlacePromotion.state.in_(
+                ("PENDING_ROUTE", "WAITING_FOR_MEMBERS", "AUTHORIZED")
+            ),
+        )
+    ).all()
+    invalidated_promotion_count = 0
+    for promotion in promotions:
+        mission = (
+            session.get(JourneyMission, str(promotion.mission_id))
+            if promotion.mission_id
+            else None
+        )
+        if mission is not None:
+            clarification = _json_object(mission.clarification_json or "{}")
+            if clarification.get("status") in {"WAITING_FOR_MEMBERS", "RESOLVED"}:
+                clarification["status"] = "STALE"
+                clarification["stale_code"] = "STALE_COLLECTIVE_MEMBERSHIP"
+                clarification["stale_at"] = stamp
+                mission.clarification_json = json.dumps(
+                    clarification, ensure_ascii=False, sort_keys=True
+                )
+        promotion_detail = _json_object(promotion.state_detail_json or "{}")
+        promotion.state = "STALE"
+        promotion.state_detail_json = json.dumps(
+            {
+                **promotion_detail,
+                "code": "STALE_COLLECTIVE_MEMBERSHIP",
+                "stale_at": stamp,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        promotion.updated_at = stamp
+        if promotion.authority_receipt_id:
+            receipt = session.get(
+                CollectiveAuthorityReceipt, str(promotion.authority_receipt_id)
+            )
+            if receipt is not None and receipt.invalidated_at is None:
+                receipt.invalidated_at = stamp
+                receipt.invalidation_code = "STALE_COLLECTIVE_MEMBERSHIP"
+        invalidated_promotion_count += 1
+
+    grants = session.scalars(
+        select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == str(journey_id),
+            SharedStopCoPlanningGrant.status.in_(("OFFERED", "ACCEPTED")),
+        )
+    ).all()
+    for grant in grants:
+        grant.status = "REVOKED"
+        grant.active_slot = False
+        grant.revoked_at = stamp
+        grant.updated_at = stamp
+
+    if invalidated_promotion_count or grants:
+        record_audit(
+            session,
+            action="journey.collective_authority.invalidated_by_membership_change",
+            entity_type="JourneyMembershipInvitation",
+            entity_id=str(invitation_id),
+            journey_id=str(journey_id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(actor_id),
+            after={
+                "reason": "STALE_COLLECTIVE_MEMBERSHIP",
+                "invalidated_promotion_count": invalidated_promotion_count,
+                "revoked_scoped_grant_count": len(grants),
+            },
+        )
+
+
+@app.post("/api/v1/journey-membership-invitations/{invitation_id}/respond")
+def respond_to_journey_membership_invitation(
+    invitation_id: str,
+    payload: JourneyMembershipInvitationDecision,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    from app.traveler_principal import member_has_capability, resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    invitation = session.get(JourneyMembershipInvitationModel, str(invitation_id))
+    if invitation is None or str(invitation.target_traveler_id) != str(principal.traveler_id):
+        raise HTTPException(404, "JOURNEY_MEMBERSHIP_INVITATION_NOT_FOUND")
+    journey_id = str(invitation.journey_id)
+    with journey_write_lock(journey_id):
+        session.expire_all()
+        invitation = session.get(JourneyMembershipInvitationModel, str(invitation_id))
+        if invitation is None or str(invitation.target_traveler_id) != str(principal.traveler_id):
+            raise HTTPException(404, "JOURNEY_MEMBERSHIP_INVITATION_NOT_FOUND")
+        if str(invitation.state) != "OFFERED":
+            raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+        now = datetime.now(timezone.utc)
+        stamp = now.isoformat()
+        try:
+            expiry = datetime.fromisoformat(str(invitation.expires_at))
+        except ValueError:
+            expiry = now
+        if expiry.tzinfo is None or expiry <= now:
+            invitation.state = "EXPIRED"
+            invitation.updated_at = stamp
+            session.commit()
+            raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_EXPIRED")
+
+        if payload.decision == "DECLINE":
+            changed = session.execute(
+                update(JourneyMembershipInvitationModel)
+                .where(
+                    JourneyMembershipInvitationModel.id == str(invitation.id),
+                    JourneyMembershipInvitationModel.target_traveler_id == str(principal.traveler_id),
+                    JourneyMembershipInvitationModel.state == "OFFERED",
+                )
+                .values(state="DECLINED", declined_at=stamp, updated_at=stamp)
+            )
+            if int(changed.rowcount or 0) != 1:
+                session.rollback()
+                raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+            record_audit(
+                session,
+                action="journey.membership_invitation.declined",
+                entity_type="JourneyMembershipInvitation",
+                entity_id=str(invitation.id),
+                journey_id=journey_id,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=str(principal.traveler_id),
+                after={"state": "DECLINED"},
+            )
+            session.commit()
+            return {"invitation_id": str(invitation.id), "state": "DECLINED"}
+
+        journey = require(session, Journey, journey_id, "Journey")
+        if (
+            str(journey.status).upper() != "ACTIVE"
+            or str(journey.active_plan_version_id or "") != str(invitation.base_plan_version_id)
+            or str(journey.current_activity_id or "") != str(invitation.base_cursor_activity_id or "")
+        ):
+            invitation.state = "EXPIRED"
+            invitation.updated_at = stamp
+            session.commit()
+            raise HTTPException(409, "JOURNEY_BASE_CHANGED")
+        inviter = session.get(JourneyMemberModel, str(invitation.inviter_member_id))
+        if (
+            inviter is None
+            or str(inviter.journey_id) != journey_id
+            or str(inviter.traveler_id) != str(invitation.inviter_traveler_id)
+            or _member_state(inviter, now) != "MEMBER_IN_FORCE"
+            or not member_has_capability(session, inviter, "MEMBER_MANAGE")
+        ):
+            invitation.state = "EXPIRED"
+            invitation.updated_at = stamp
+            session.commit()
+            raise HTTPException(409, "INVITER_NO_LONGER_AUTHORIZED")
+
+        if session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == journey_id,
+                JourneyMemberModel.traveler_id == str(principal.traveler_id),
+            )
+        ) is not None:
+            raise HTTPException(409, "MEMBER_ALREADY_PRESENT")
+        member_id = str(uuid4())
+        member = JourneyMemberModel(
+            id=member_id,
+            journey_id=journey_id,
+            traveler_id=str(principal.traveler_id),
+            role="COLLABORATOR",
+            invited_by=str(invitation.inviter_traveler_id),
+            expires_at=None,
+            joined_at=stamp,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=stamp,
+            updated_at=stamp,
+        )
+        session.add(member)
+        try:
+            # The invitation's joined_member_id is an FK, so insert the member
+            # first inside this same transaction; a later claim failure rolls
+            # the row back and cannot leave a partial membership.
+            session.flush()
+            claimed = session.execute(
+                update(JourneyMembershipInvitationModel)
+                .where(
+                    JourneyMembershipInvitationModel.id == str(invitation.id),
+                    JourneyMembershipInvitationModel.target_traveler_id == str(principal.traveler_id),
+                    JourneyMembershipInvitationModel.state == "OFFERED",
+                )
+                .values(
+                    state="ACCEPTED",
+                    accepted_at=stamp,
+                    joined_member_id=member_id,
+                    updated_at=stamp,
+                )
+            )
+            if int(claimed.rowcount or 0) != 1:
+                session.rollback()
+                raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+            record_audit(
+                session,
+                action="journey.membership_invitation.accepted",
+                entity_type="JourneyMembershipInvitation",
+                entity_id=str(invitation.id),
+                journey_id=journey_id,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=str(principal.traveler_id),
+                after={"state": "ACCEPTED", "member_id": member_id, "role": "COLLABORATOR"},
+            )
+            _invalidate_shared_stop_authority_after_membership_change(
+                session,
+                journey_id=journey_id,
+                invitation_id=str(invitation.id),
+                actor_id=str(principal.traveler_id),
+                stamp=stamp,
+            )
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            raise HTTPException(409, "MEMBER_ALREADY_PRESENT") from exc
+        return {
+            "invitation_id": str(invitation.id),
+            "journey_id": journey_id,
+            "state": "ACCEPTED",
+            "membership": _member_payload(member).model_dump(),
+        }
+
+
+@app.post("/api/v1/journeys/{journey_id}/membership-invitations/{invitation_id}/revoke")
+def revoke_journey_membership_invitation(
+    journey_id: UUID,
+    invitation_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        principal, manager = _require_membership_manager(request, str(journey_id), session)
+        invitation = session.get(JourneyMembershipInvitationModel, str(invitation_id))
+        if invitation is None or str(invitation.journey_id) != str(journey.id):
+            raise HTTPException(404, "JOURNEY_MEMBERSHIP_INVITATION_NOT_FOUND")
+        stamp = datetime.now(timezone.utc).isoformat()
+        changed = session.execute(
+            update(JourneyMembershipInvitationModel)
+            .where(
+                JourneyMembershipInvitationModel.id == str(invitation.id),
+                JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                JourneyMembershipInvitationModel.state == "OFFERED",
+            )
+            .values(state="REVOKED", revoked_at=stamp, updated_at=stamp)
+        )
+        if int(changed.rowcount or 0) != 1:
+            session.rollback()
+            raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+        record_audit(
+            session,
+            action="journey.membership_invitation.revoked",
+            entity_type="JourneyMembershipInvitation",
+            entity_id=str(invitation.id),
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={"state": "REVOKED", "manager_member_id": str(manager.id)},
+        )
+        session.commit()
+        return {"invitation_id": str(invitation.id), "state": "REVOKED"}
 
 
 @app.put("/api/v1/journeys/{journey_id}/members/{member_id}/preferences")
@@ -11675,6 +12236,8 @@ def _respond_to_member_place_promotion(
         raise HTTPException(403, "member is not required for this shared Journey decision")
     if clarification.get("clarification_id") != payload.clarification_id:
         raise HTTPException(409, "collective clarification id does not match")
+    if promotion.state != "WAITING_FOR_MEMBERS" or clarification.get("status") != "WAITING_FOR_MEMBERS":
+        raise HTTPException(409, "shared-stop promotion is not waiting for members")
     responses = clarification.get("responses") if isinstance(clarification.get("responses"), dict) else {}
     previous = responses.get(str(member.id))
     if isinstance(previous, dict):
@@ -11685,8 +12248,6 @@ def _respond_to_member_place_promotion(
             pass
         else:
             return operator_projection(session, journey, viewer_member_id=member.id)
-    if promotion.state != "WAITING_FOR_MEMBERS" or clarification.get("status") != "WAITING_FOR_MEMBERS":
-        raise HTTPException(409, "shared-stop promotion is not waiting for members")
     invitation = require(session, MemberPlaceInvitation, str(promotion.invitation_id), "Place invitation")
     context_problem = _r73_invitation_context_reason(session, journey, invitation, promotion)
     if context_problem:

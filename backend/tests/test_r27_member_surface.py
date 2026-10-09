@@ -30,13 +30,30 @@ def test_r27_member_projection_keeps_owner_and_collaborator_context_separate(_si
         "/api/v1/travelers",
         json={"display_name": "R27 collaborator", "email": None, "locale": "en-US", "timezone": "UTC"},
     ).json()
-    member = client.post(
-        f"/api/v1/journeys/{ids['journey_id']}/members",
-        json={"traveler_id": second["id"], "role": "COLLABORATOR", "invited_by": ids["traveler_id"]},
-        headers={"Authorization": f"Bearer {issue_traveler_token(ids['traveler_id'])}"},
-    ).json()
+    journey_id = ids["journey_id"]
+    owner_headers = {"Authorization": f"Bearer {issue_traveler_token(ids['traveler_id'])}"}
+    plans = client.post(f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1})
+    assert plans.status_code == 201, plans.text
+    plan_id = plans.json()[0]["id"]
+    assert client.post(
+        f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select", headers=owner_headers
+    ).status_code == 200
+    assert client.post(f"/api/v1/journeys/{journey_id}/start", headers=owner_headers).status_code == 200
+    offered = client.post(
+        f"/api/v1/journeys/{journey_id}/membership-invitations",
+        json={"target_traveler_id": second["id"]},
+        headers={**owner_headers, "Idempotency-Key": "r27-membership-invite"},
+    )
+    assert offered.status_code == 201, offered.text
+    accepted = client.post(
+        f"/api/v1/journey-membership-invitations/{offered.json()['invitation_id']}/respond",
+        json={"decision": "ACCEPT"},
+        headers={"Authorization": f"Bearer {issue_traveler_token(second['id'])}"},
+    )
+    assert accepted.status_code == 200, accepted.text
+    member = accepted.json()["membership"]
     preferences = client.put(
-        f"/api/v1/journeys/{ids['journey_id']}/members/{member['id']}/preferences",
+        f"/api/v1/journeys/{journey_id}/members/{member['id']}/preferences",
         json={"preferences": [{"category": "interest", "key": "craft", "value": True, "weight": 1.0}]},
         headers={"Authorization": f"Bearer {issue_traveler_token(second['id'])}"},
     )
@@ -59,7 +76,7 @@ def test_r27_member_projection_keeps_owner_and_collaborator_context_separate(_si
     assert by_traveler[ids["traveler_id"]]["capabilities"] != by_traveler[second["id"]]["capabilities"]
 
     withdrawn = client.post(
-        f"/api/v1/journeys/{ids['journey_id']}/members/{member['id']}/withdraw",
+        f"/api/v1/journeys/{journey_id}/members/{member['id']}/withdraw",
         headers={"Authorization": f"Bearer {issue_traveler_token(ids['traveler_id'])}"},
     )
     assert withdrawn.status_code == 200, withdrawn.text
@@ -102,6 +119,13 @@ def test_r74_membership_mutations_require_signed_manager_and_server_bound_invite
         headers={"Authorization": f"Bearer {issue_traveler_token(owner_id)}"},
     )
     assert fake_inviter.status_code == 403, fake_inviter.text
+    authenticated_manager_bypass = client.post(
+        add_url,
+        json=payload,
+        headers={"Authorization": f"Bearer {issue_traveler_token(owner_id)}"},
+    )
+    assert authenticated_manager_bypass.status_code == 409
+    assert "RECIPIENT_ACCEPTANCE_REQUIRED" in authenticated_manager_bypass.text
     self_owner = client.post(
         add_url,
         json={"traveler_id": stranger["id"], "role": "OWNER", "invited_by": stranger["id"]},
