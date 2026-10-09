@@ -305,12 +305,12 @@ export function PlanWithAiSheet({
             onChange={(event) => setText(event.target.value)}
             placeholder={zh ? `${EXAMPLES[0].zh}\n\n${EXAMPLES[1].zh}` : `${EXAMPLES[0].en}\n\n${EXAMPLES[1].en}`}
           />
-          <div id="plan-ai-hint" className="plan-ai-hint" aria-hidden="true">
+          <div id="plan-ai-hint" className="plan-ai-hint">
             {zh ? "支持自然语言描述，例如人数、地点、偏好等细节。点击下方示例快速开始。" : "Supports natural language descriptions with details like party size, locations, preferences. Click example buttons below for quick start."}
           </div>
         </div>
 
-        <div className="plan-ai-examples">
+        <div id="plan-ai-examples" className="plan-ai-examples">
           {EXAMPLES.map((item) => (
             <button
               key={item.en}
