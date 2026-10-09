@@ -327,6 +327,28 @@ def share_member_signal(
     return _receipt(signal)
 
 
+def _lock_journey_for_withdraw(session: Session, journey_id: str) -> None:
+    """Serialize withdrawal with share/ack writes even across SQLite workers.
+
+    Unlike sharing, a historic status may be revoked after the Journey stops
+    being ACTIVE. Lock the same Journey row without imposing an ACTIVE plan
+    requirement; reload the signal *after* taking that write lock.
+    """
+    try:
+        result = session.execute(
+            update(Journey).where(Journey.id == journey_id).values(
+                updated_at=Journey.updated_at
+            ).execution_options(synchronize_session=False)
+        )
+    except OperationalError as exc:
+        session.rollback()
+        raise HTTPException(409, "RENDEZVOUS_SIGNAL_WRITE_BUSY_RETRY") from exc
+    if result.rowcount != 1:
+        session.rollback()
+        raise HTTPException(404, "JOURNEY_NOT_FOUND")
+    session.expire_all()
+
+
 def withdraw_member_signal(
     session: Session,
     *,
@@ -335,10 +357,24 @@ def withdraw_member_signal(
     principal: TravelerPrincipal,
     signal_id: str,
 ) -> dict[str, object]:
+    journey_id = str(journey.id)
+    member_id = str(member.id)
+    _lock_journey_for_withdraw(session, journey_id)
+    # The signed principal was resolved at the route boundary. Its membership
+    # must still be current after cross-worker serialization and refresh.
+    current_member = session.get(JourneyMember, member_id)
+    if (
+        current_member is None
+        or str(current_member.journey_id) != journey_id
+        or str(current_member.traveler_id) != str(principal.traveler_id)
+        or not _in_force(current_member, execution_clock.now().astimezone(timezone.utc))
+    ):
+        session.rollback()
+        raise HTTPException(403, "RENDEZVOUS_SIGNAL_MEMBER_NOT_IN_FORCE")
     signal = session.scalar(select(JourneyRendezvousMemberSignal).where(
         JourneyRendezvousMemberSignal.id == signal_id,
-        JourneyRendezvousMemberSignal.journey_id == journey.id,
-        JourneyRendezvousMemberSignal.journey_member_id == member.id,
+        JourneyRendezvousMemberSignal.journey_id == journey_id,
+        JourneyRendezvousMemberSignal.journey_member_id == member_id,
     ))
     if signal is None:
         raise HTTPException(404, "RENDEZVOUS_SIGNAL_NOT_FOUND")
