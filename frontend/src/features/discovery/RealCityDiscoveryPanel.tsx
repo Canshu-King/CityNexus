@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { formatWhen } from "../../lib/formatWhen";
 import { namedCodeIn, type RawFacts } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { OriginResponseUnusableError } from "../../lib/failureAttribution";
@@ -534,7 +535,12 @@ export function RealCityDiscoveryPanel({
               <ul className="v8-batch-receipt-rows" data-testid="v13-discovery-batch-rows">
                 {batchReceipt.landed.map((row) => (
                   <li key={row.activity_id} data-testid="v13-discovery-batch-row">
-                    <span>{row.start_at.slice(0, 16).replace("T", " ")}</span>
+                    {/* ORD-0553: this used to render `row.start_at.slice(0, 16)` -- the server's ISO
+                        instant with its offset cut off, so a `+00:00` row read as local wall clock.
+                        `formatWhen` renders the instant in the device zone, the one reading this call
+                        site can name honestly: the panel's props carry journeyId and cityCode, never
+                        the journey's timezone. */}
+                    <span>{formatWhen(row.start_at, { zh: locale.startsWith("zh"), pending: t("inbox.timePending") })}</span>
                     <b>{row.title}</b>
                     <small>{row.activity_id}</small>
                   </li>
