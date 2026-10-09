@@ -47,6 +47,9 @@ Deliver one **real Join -> consented one-time route -> grounded or UNKNOWN guida
 - `frontend/src/features/execution/JourneyMembershipPanel.tsx`: after GPT follow-up the exact pin and user-facing catch-up card persist after reload. The map button still needs a *fresh plan target revalidation* (it currently uses a cached projection until component reload).
 - `backend/app/execution/member_place_group_share.py`: R75 full-group consent remains audience- and plan-bound. R77 must not retroactively widen an unrelated private Place share when C joins. R76 invalidates prior R73/R74 collective authority on join.
 
+## R76 join-during-recovery edge to close narrowly
+R76's inspected `respond_to_journey_membership_invitation` path atomically stales R73/R74 proposals/grants, but the newly introduced join implementation does **not visibly check an in-force R62 group-recovery incident or required-member recovery followthrough**. In one focused signed integration case, attempt C's R76 acceptance while a recovery epoch/followthrough is in force. Either (a) refuse until incident closure with an actionable typed `JOIN_WAIT_FOR_RECOVERY` outcome and no member row, or (b) prove through existing durable recovery member-set semantics that C's join cannot affect/close/bypass that in-force incident and is correctly accounted for in the next epoch. Never count C as having reported R62 arrival, never silently widen an in-progress recovery collective decision, never mutate the shared PlanVersion just to accept the member. Fix only if the observed behavior violates that boundary; no historical strike rerun.
+
 ## Bounded fresh closure / no old treadmill
 Fresh isolated signed A=OWNER, B=COLLABORATOR, C=initial nonmember; A invites C, C accepts through normal UI. Then C uses the existing Journey catch-up card:
 - Before consent: no location recorded, no provider/Agent action, public planned pin available.
