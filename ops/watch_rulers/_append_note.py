@@ -1,0 +1,12 @@
+import io, pathlib
+src = pathlib.Path(r"D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_desktop_note_0131.txt")
+dst = pathlib.Path(r"C:\Users\仓鼠王\Desktop\CityNexus_包工头留言.txt")
+before = dst.read_bytes()
+add = io.open(src, encoding="utf-8", newline="\n").read()
+io.open(dst, "a", encoding="utf-8", newline="\n").write(add)
+after = dst.read_bytes()
+print("before:", before.count(b"\r\n"), "CRLF |", len(before), "bytes")
+print("after :", after.count(b"\r\n"), "CRLF |", len(after), "bytes")
+print("added :", len(after) - len(before), "bytes (note file is", len(add.encode('utf-8')), "bytes)")
+print("newest marker present:", "494abfd7 · 01:31".encode("utf-8") in after)
+print("tail:", after[-120:].decode("utf-8", "replace").replace("\n", " | ")[-160:])
