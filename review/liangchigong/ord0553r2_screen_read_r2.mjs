@@ -1,6 +1,6 @@
 import { createRequire } from "module";
 import { execFileSync } from "child_process";
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, appendFileSync, mkdirSync } from "fs";
 const require = createRequire("D:/moodle/CityNexus/frontend/package.json");
 const { chromium } = require("@playwright/test");
 
@@ -20,7 +20,13 @@ const afterSha = sha(`${REPO}/${REL}`);
 
 const b = await chromium.launch();
 const rows = [];
-const emit = (o) => process.stdout.write(JSON.stringify(o) + "\n");
+const JSONOUT = "D:/moodle/_liangchigong_0553r2_screen_read_r1.json";
+writeFileSync(JSONOUT, "");
+const emit = (o) => {
+  const s = JSON.stringify(o);
+  process.stdout.write(s + "\n");
+  appendFileSync(JSONOUT, s + "\n");
+};
 try {
   for (const [variant, src] of [["before", before], ["after", after]]) {
     writeFileSync(`${REPO}/${REL}`, src);
