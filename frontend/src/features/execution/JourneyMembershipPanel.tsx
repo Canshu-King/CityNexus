@@ -1523,6 +1523,13 @@ export function JourneyMembershipPanel({
                           <small>{zh
                             ? `提议有效至 ${new Date(handoff.expires_at).toLocaleString(locale)}。路线、开放时间、无障碍状态均为 UNKNOWN，实际可行性未验证；这不是实时位置或到场证明。原共同会合点“${handoff.original_shared_stop.place_name}”和整个计划保持不变，请勿因此放弃受保护承诺。`
                             : `Offer expires ${new Date(handoff.expires_at).toLocaleString(locale)}. Route, opening hours, and accessibility are UNKNOWN; feasibility is unverified. This is not live location or proof of arrival. The original shared stop “${handoff.original_shared_stop.place_name}” and Journey remain unchanged; do not abandon protected commitments.`}</small>
+                          {execution?.status === "ACTIVE" && execution.context_current && (
+                            <small data-testid="journey-buddy-active-lease-truth">
+                              {zh
+                                ? `旧接应提议的接受期限是 ${new Date(handoff.expires_at).toLocaleString(locale)}；它不是现在双方已同意的执行截止时间。有效执行窗口截止 ${execution.expires_at ? new Date(execution.expires_at).toLocaleString(locale) : "未知"}。接应不会自动续期。`
+                                : `The old handoff offer's acceptance deadline was ${new Date(handoff.expires_at).toLocaleString(locale)}. That is NOT the expiry of the mutually agreed execution, which runs until ${execution.expires_at ? new Date(execution.expires_at).toLocaleString(locale) : "unknown"}. There is no automatic renewal.`}
+                            </small>
+                          )}
                           {handoff.status === "OFFERED" && execution?.status === "WINDOW_OFFERED" && (
                             <small data-testid="journey-buddy-window-offer-truth">
                               {zh
