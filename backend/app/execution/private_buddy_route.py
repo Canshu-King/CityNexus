@@ -321,16 +321,42 @@ def _load_result(row: RouteAcquisitionOperation) -> tuple[dict[str, Any], dict[s
     )
 
 
-def _provider_receipt_persisted(session: Session, operation_id: str) -> bool:
+def _provider_receipt_persisted(
+    session: Session,
+    *,
+    operation: RouteAcquisitionOperation,
+    provider: str,
+    provenance: str,
+    duration_min: int,
+) -> bool:
+    """A LIVE badge needs the matching successful provider capture, not any call.
+
+    ProviderCall is an internal persisted receipt, not a user-supplied claim;
+    still bind it to this *exact private request*, operation, measured duration,
+    provider and provenance. A mock or a failed/cross-request receipt cannot
+    upgrade a fabricated operation result into LIVE.
+    """
+    if provider.casefold() != "valhalla-http" or provenance not in LIVE_ROUTE_PROVENANCE:
+        return False
     receipts = session.scalars(select(ProviderCall).where(
         ProviderCall.operation == "ROUTE_ACQUISITION",
+        ProviderCall.provider_key == "valhalla",
+        ProviderCall.status == "SUCCESS",
+        ProviderCall.request_json == operation.request_json,
     )).all()
     for receipt in receipts:
         try:
             response = json.loads(receipt.response_json or "{}")
         except (TypeError, json.JSONDecodeError):
             continue
-        if isinstance(response, dict) and str(response.get("operation_id") or "") == str(operation_id):
+        if not isinstance(response, dict):
+            continue
+        if (
+            str(response.get("operation_id") or "") == str(operation.id)
+            and str(response.get("provider") or "").casefold() == provider.casefold()
+            and str(response.get("provenance") or "").upper() == provenance
+            and response.get("duration_min") == duration_min
+        ):
             return True
     return False
 
@@ -405,7 +431,13 @@ def _project_operation(
         and not is_non_product_provider
         and route_is_fresh
     ):
-        if provenance in LIVE_ROUTE_PROVENANCE and _provider_receipt_persisted(session, str(row.id)):
+        if provenance in LIVE_ROUTE_PROVENANCE and _provider_receipt_persisted(
+            session,
+            operation=row,
+            provider=provider,
+            provenance=provenance,
+            duration_min=duration_value,
+        ):
             route_state = "LIVE"
             reason = ""
         elif provenance in REPLAY_ROUTE_PROVENANCE:
