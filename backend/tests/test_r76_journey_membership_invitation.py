@@ -194,6 +194,27 @@ def test_recipient_owned_invitation_accepts_once_and_keeps_preaccept_view_bounde
         f"/api/v1/journeys/{journey_id}/operator", headers=_auth(target_id)
     )
     assert target_operator_after.status_code == 200, target_operator_after.text
+    # A newcomer can use the current shared public Place as a map pin;
+    # no member's private device observation is exposed as that destination.
+    rendezvous = target_operator_after.json()["group_presence"]["rendezvous"]
+    if rendezvous is not None:
+        assert rendezvous["basis"] == "ACTIVE_PLAN_EXACT_PLACE"
+        with SessionLocal() as pin_session:
+            pinned_place = pin_session.get(Place, rendezvous["place_id"])
+            assert pinned_place is not None
+            assert rendezvous["place_name"] == pinned_place.name
+            if (
+                str(pinned_place.coordinate_system).upper() == "WGS84"
+                and -90 <= float(pinned_place.latitude) <= 90
+                and -180 <= float(pinned_place.longitude) <= 180
+            ):
+                assert rendezvous["coordinate_system"] == "WGS84"
+                assert rendezvous["latitude"] == float(pinned_place.latitude)
+                assert rendezvous["longitude"] == float(pinned_place.longitude)
+            else:
+                assert rendezvous["latitude"] is None
+                assert rendezvous["longitude"] is None
+                assert rendezvous["coordinate_system"] is None
     with SessionLocal() as session:
         invitation = session.get(JourneyMembershipInvitation, invitation_id)
         members = session.scalars(
