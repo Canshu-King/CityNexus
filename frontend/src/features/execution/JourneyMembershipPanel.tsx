@@ -6,6 +6,8 @@ import {
   type JourneyMembershipInvitationManagerItem,
   type JourneyOperatorProjection,
   type JourneyRendezvousCoordinationSignal,
+  type RendezvousBuddyHandoff,
+  type RendezvousBuddyHandoffCandidates,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
 import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
@@ -163,6 +165,12 @@ export function JourneyMembershipPanel({
   const [coordinationConsentAudienceKey, setCoordinationConsentAudienceKey] = useState<string | null>(null);
   const [coordinationBusy, setCoordinationBusy] = useState(false);
   const [coordinationMessage, setCoordinationMessage] = useState<string | null>(null);
+  const [buddyHandoffs, setBuddyHandoffs] = useState<RendezvousBuddyHandoff[]>([]);
+  const [buddyCandidates, setBuddyCandidates] = useState<RendezvousBuddyHandoffCandidates | null>(null);
+  const [buddySelectedPlaceId, setBuddySelectedPlaceId] = useState("");
+  const [buddyActionBusy, setBuddyActionBusy] = useState(false);
+  const [buddyMessage, setBuddyMessage] = useState<string | null>(null);
+  const [buddyMapConsentId, setBuddyMapConsentId] = useState<string | null>(null);
   const [routeResult, setRouteResult] = useState<{
     key: string;
     result: GroupRendezvousRouteResult;
@@ -195,15 +203,21 @@ export function JourneyMembershipPanel({
   const refreshGroupPresence = useCallback(async (): Promise<GroupPresence | null> => {
     if (!journeyId || !active) {
       setGroupPresence(null);
+      setBuddyHandoffs([]);
       return null;
     }
     try {
-      const projection = await cityNexusApi.getJourneyOperator(journeyId);
+      const [projection, handoffs] = await Promise.all([
+        cityNexusApi.getJourneyOperator(journeyId),
+        cityNexusApi.getCurrentRendezvousBuddyHandoffs(journeyId).catch(() => ({ items: [] })),
+      ]);
       const next = projection.group_presence ?? null;
       setGroupPresence(next);
+      setBuddyHandoffs(handoffs.items);
       return next;
     } catch {
       setGroupPresence(null);
+      setBuddyHandoffs([]);
       return null;
     }
   }, [active, journeyId]);
@@ -213,17 +227,12 @@ export function JourneyMembershipPanel({
     // only during the React session in which they pressed Accept.
     if (!journeyId || !active) {
       setGroupPresence(null);
+      setBuddyHandoffs([]);
       setRouteResult(null);
       return;
     }
-    let cancelled = false;
-    void cityNexusApi.getJourneyOperator(journeyId).then((projection) => {
-      if (!cancelled) setGroupPresence(projection.group_presence ?? null);
-    }).catch(() => {
-      if (!cancelled) setGroupPresence(null);
-    });
-    return () => { cancelled = true; };
-  }, [journeyId, active]);
+    void refreshGroupPresence();
+  }, [journeyId, active, refreshGroupPresence]);
 
   useEffect(() => {
     setRouteResult((current) => current?.key === currentTargetKey ? current : null);
@@ -352,6 +361,156 @@ export function JourneyMembershipPanel({
       await refreshGroupPresence();
     } finally {
       setCoordinationBusy(false);
+    }
+  };
+
+  const loadBuddyHandoffCandidates = async (signal: JourneyRendezvousCoordinationSignal) => {
+    if (!journeyId || buddyActionBusy || signal.signal_kind !== "NEEDS_COORDINATION"
+      || !signal.viewer_is_acknowledger || !signal.acknowledgement) return;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      const candidates = await cityNexusApi.getRendezvousBuddyHandoffCandidates(journeyId, signal.signal_id);
+      setBuddyCandidates(candidates);
+      setBuddySelectedPlaceId(candidates.items[0]?.place_id ?? "");
+    } catch {
+      setBuddyMessage(zh
+        ? "当前求助或同行者名单已变化；没有创建接应提议。请刷新团队状态。"
+        : "The help request or companion set changed. No handoff was offered; refresh the team status.");
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const offerBuddyHandoff = async () => {
+    const candidates = buddyCandidates;
+    const current = groupPresence;
+    const original = current?.rendezvous;
+    if (!journeyId || !candidates || !current || !original || !buddySelectedPlaceId || buddyActionBusy) return;
+    if (
+      current.active_plan_version_id !== candidates.active_plan_version_id
+      || (current.current_activity_id ?? null) !== candidates.current_activity_id
+      || original.activity_id !== candidates.rendezvous_activity_id
+      || original.place_id !== candidates.original_public_place_id
+      || current.coordination_audience_sha256 !== candidates.audience_sha256
+    ) {
+      setBuddyCandidates(null);
+      setBuddyMessage(zh
+        ? "共享计划、会合点或同行者名单已变化；旧地点没有发送。请重新加载建议。"
+        : "The plan, stop, or companion set changed. The old place was not offered; reload suggestions.");
+      return;
+    }
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      await cityNexusApi.offerRendezvousBuddyHandoff(journeyId, {
+        help_signal_id: candidates.help_signal_id,
+        expected_active_plan_version_id: candidates.active_plan_version_id,
+        expected_current_activity_id: candidates.current_activity_id,
+        expected_rendezvous_activity_id: candidates.rendezvous_activity_id,
+        expected_original_public_place_id: candidates.original_public_place_id,
+        expected_audience_sha256: candidates.audience_sha256,
+        handoff_place_id: buddySelectedPlaceId,
+      }, secureJourneyRequestKey());
+      setBuddyCandidates(null);
+      setBuddySelectedPlaceId("");
+      setBuddyMessage(zh
+        ? "已将这处公开地点作为仅对你和求助者可见的提议；共享行程没有改变。"
+        : "This public place was offered privately to you and the help requester. The shared Journey is unchanged.");
+      await refreshGroupPresence();
+    } catch {
+      setBuddyMessage(zh
+        ? "接应提议没有创建；请刷新核对求助、地点和共享计划后重试。"
+        : "The handoff was not created. Refresh and recheck the request, place, and shared plan.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const respondToBuddyHandoff = async (handoff: RendezvousBuddyHandoff, decision: "ACCEPT" | "DECLINE") => {
+    if (!journeyId || buddyActionBusy || handoff.viewer_role !== "REQUESTER") return;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      await cityNexusApi.respondToRendezvousBuddyHandoff(journeyId, handoff.handoff_id, decision);
+      setBuddyMessage(decision === "ACCEPT"
+        ? (zh ? "已接受这处仅供双方协调的公共会合意向；原共同计划未改变。" : "You accepted this private public-place handoff intention. The original shared plan is unchanged.")
+        : (zh ? "已拒绝这次提议；原共同计划未改变。" : "You declined this offer. The original shared plan is unchanged."));
+      await refreshGroupPresence();
+    } catch {
+      setBuddyMessage(zh
+        ? "提议已过期或上下文变化；没有接受旧地点。请刷新。"
+        : "The offer expired or its context changed. The stale place was not accepted; refresh.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const closeBuddyHandoff = async (handoff: RendezvousBuddyHandoff) => {
+    if (!journeyId || buddyActionBusy) return;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      if (handoff.viewer_role === "HELPER") {
+        await cityNexusApi.cancelRendezvousBuddyHandoff(journeyId, handoff.handoff_id);
+      } else {
+        await cityNexusApi.revokeRendezvousBuddyHandoff(journeyId, handoff.handoff_id);
+      }
+      setBuddyMessage(zh ? "双方接应提议已关闭；共同计划没有改变。" : "The pair handoff is closed. The shared plan is unchanged.");
+      if (buddyMapConsentId === handoff.handoff_id) setBuddyMapConsentId(null);
+      await refreshGroupPresence();
+    } catch {
+      setBuddyMessage(zh ? "提议已过期或已关闭；请刷新查看当前状态。" : "The handoff expired or was already closed. Refresh to see the current state.");
+      await refreshGroupPresence();
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
+  const openAcceptedBuddyMap = async () => {
+    const handoffId = buddyMapConsentId;
+    if (!journeyId || !handoffId || buddyActionBusy) return;
+    const popup = window.open("about:blank", "_blank");
+    if (!popup) {
+      setBuddyMessage(zh ? "浏览器阻止了新窗口；允许弹窗后重新确认。" : "The browser blocked the new tab. Allow popups and confirm again.");
+      return;
+    }
+    popup.opener = null;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      const fresh = await cityNexusApi.getCurrentRendezvousBuddyHandoffs(journeyId);
+      const handoff = fresh.items.find((item) => item.handoff_id === handoffId && item.status === "ACCEPTED");
+      const place = handoff?.handoff_place;
+      const stillValid = handoff && Date.parse(handoff.expires_at) > Date.now()
+        && place?.coordinate_system === "WGS84"
+        && Number.isFinite(place.latitude) && place.latitude >= -90 && place.latitude <= 90
+        && Number.isFinite(place.longitude) && place.longitude >= -180 && place.longitude <= 180;
+      if (!stillValid || !place) {
+        popup.close();
+        setBuddyMessage(zh
+          ? "提议已撤回、过期或变更；没有向 OpenStreetMap 发送地点。"
+          : "The handoff is no longer accepted, current, or valid. No place was sent to OpenStreetMap.");
+        setBuddyMapConsentId(null);
+        await refreshGroupPresence();
+        return;
+      }
+      popup.location.href = buildOpenStreetMapPinUrl({
+        latitude: place.latitude,
+        longitude: place.longitude,
+        coordinate_system: "WGS84",
+      });
+      setBuddyMapConsentId(null);
+    } catch {
+      popup.close();
+      setBuddyMessage(zh
+        ? "无法重新验证当前双方同意；没有向地图发送地点。"
+        : "The mutual handoff could not be revalidated. No place was sent to the map.");
+      setBuddyMapConsentId(null);
+    } finally {
+      setBuddyActionBusy(false);
     }
   };
 
@@ -576,6 +735,9 @@ export function JourneyMembershipPanel({
     }
   };
 
+  const buddyMapConsentHandoff = buddyMapConsentId
+    ? buddyHandoffs.find((handoff) => handoff.handoff_id === buddyMapConsentId && handoff.status === "ACCEPTED") ?? null
+    : null;
   const visibleRoute = routeResult?.key === currentTargetKey ? routeResult.result : null;
   const visibleRouteClass = visibleRoute ? routeEvidenceClass(visibleRoute) : null;
   return (
@@ -748,6 +910,62 @@ export function JourneyMembershipPanel({
                                 : `${signal.acknowledgement.display_name} acknowledged this request with their own identity; this is not a promise to wait there or an arrival confirmation.`}
                             </small>
                           )}
+                          {signal.signal_kind === "NEEDS_COORDINATION"
+                            && signal.viewer_is_acknowledger
+                            && signal.acknowledgement
+                            && !buddyHandoffs.some((handoff) => handoff.help_signal_id === signal.signal_id)
+                            && (
+                              <button
+                                type="button"
+                                data-testid="journey-buddy-load-candidates"
+                                disabled={buddyActionBusy}
+                                onClick={() => void loadBuddyHandoffCandidates(signal)}
+                              >{zh ? "提议一个公开接应地点" : "Offer a public meeting point"}</button>
+                            )}
+                          {buddyCandidates?.help_signal_id === signal.signal_id && (
+                            <section data-testid="journey-buddy-candidate-chooser">
+                              <strong>{zh ? "选择一个双方可见的公共地点" : "Choose a public place for this private offer"}</strong>
+                              <p>{zh
+                                ? "这些地点来自当前会合点或服务器目录。直线距离不是路线或 ETA；开放时间、无障碍与可达性均为 UNKNOWN，实际可行性未验证。接应意向不会改变行程，也不要因此放弃受保护承诺。"
+                                : "Choices come from the current stop or server catalog. Straight-line distance is not a route or ETA; opening hours, accessibility, and reachability are UNKNOWN, and feasibility is unverified. This intention does not change the Journey; do not abandon protected commitments."}</p>
+                              <label htmlFor="journey-buddy-candidate-select">{zh ? "接应地点" : "Public handoff place"}</label>
+                              <select
+                                id="journey-buddy-candidate-select"
+                                data-testid="journey-buddy-candidate-select"
+                                value={buddySelectedPlaceId}
+                                onChange={(event) => setBuddySelectedPlaceId(event.target.value)}
+                              >
+                                {buddyCandidates.items.map((place) => (
+                                  <option key={place.place_id} value={place.place_id}>
+                                    {place.name} · {place.distance_from_original_m} m straight-line · {place.source_label}
+                                  </option>
+                                ))}
+                              </select>
+                              {buddyCandidates.items.find((place) => place.place_id === buddySelectedPlaceId) && (
+                                <small data-testid="journey-buddy-candidate-provenance">
+                                  {buddyCandidates.items.find((place) => place.place_id === buddySelectedPlaceId)?.source_label}
+                                  {zh ? "；路线、开放时间和无障碍状态均未知。" : "; route, opening hours, and accessibility are UNKNOWN."}
+                                </small>
+                              )}
+                              <div className="journey-membership-actions">
+                                <button
+                                  type="button"
+                                  data-testid="journey-buddy-offer"
+                                  disabled={buddyActionBusy || !buddySelectedPlaceId}
+                                  onClick={() => void offerBuddyHandoff()}
+                                >{zh ? "向求助者发送此地点" : "Offer this place to the requester"}</button>
+                                <button
+                                  type="button"
+                                  data-testid="journey-buddy-candidate-cancel"
+                                  disabled={buddyActionBusy}
+                                  onClick={() => {
+                                    setBuddyCandidates(null);
+                                    setBuddySelectedPlaceId("");
+                                  }}
+                                >{zh ? "取消" : "Cancel"}</button>
+                              </div>
+                            </section>
+                          )}
                           {signal.viewer_can_acknowledge && (
                             <button
                               type="button"
@@ -772,9 +990,57 @@ export function JourneyMembershipPanel({
                       {zh ? "目前没有同行者主动分享此会合点状态。" : "No companion has voluntarily shared a status for this stop."}
                     </small>
                   )}
+                  {buddyHandoffs.length > 0 && (
+                    <div data-testid="journey-buddy-handoffs">
+                      {buddyHandoffs.map((handoff) => (
+                        <article key={handoff.handoff_id} data-testid="journey-buddy-handoff" data-handoff-id={handoff.handoff_id}>
+                          <strong>{handoff.status === "ACCEPTED"
+                            ? (zh ? "双方已接受公开接应意向" : "Mutually accepted public handoff intention")
+                            : (zh ? "收到一处公开接应地点提议" : "Public handoff place offered")}</strong>
+                          <p>{handoff.helper_display_name} → {handoff.requester_display_name}: {handoff.handoff_place.name}</p>
+                          <small>{zh
+                            ? `${handoff.handoff_place.source_label} · 距原会合点直线 ${handoff.handoff_place.distance_from_original_m} 米（不是路线或 ETA）。`
+                            : `${handoff.handoff_place.source_label} · ${handoff.handoff_place.distance_from_original_m} m straight-line from the original stop, not a route or ETA.`}</small>
+                          <small>{zh
+                            ? `提议有效至 ${new Date(handoff.expires_at).toLocaleString(locale)}。路线、开放时间、无障碍状态均为 UNKNOWN，实际可行性未验证；这不是实时位置或到场证明。原共同会合点“${handoff.original_shared_stop.place_name}”和整个计划保持不变，请勿因此放弃受保护承诺。`
+                            : `Offer expires ${new Date(handoff.expires_at).toLocaleString(locale)}. Route, opening hours, and accessibility are UNKNOWN; feasibility is unverified. This is not live location or proof of arrival. The original shared stop “${handoff.original_shared_stop.place_name}” and Journey remain unchanged; do not abandon protected commitments.`}</small>
+                          {handoff.status === "OFFERED" && handoff.viewer_role === "REQUESTER" && (
+                            <div className="journey-membership-actions">
+                              <button type="button" data-testid="journey-buddy-accept" disabled={buddyActionBusy}
+                                onClick={() => void respondToBuddyHandoff(handoff, "ACCEPT")}>
+                                {zh ? "接受此接应地点" : "Accept this handoff place"}
+                              </button>
+                              <button type="button" data-testid="journey-buddy-decline" disabled={buddyActionBusy}
+                                onClick={() => void respondToBuddyHandoff(handoff, "DECLINE")}>
+                                {zh ? "拒绝" : "Decline"}
+                              </button>
+                            </div>
+                          )}
+                          {handoff.status === "ACCEPTED" && (
+                            <>
+                              <small data-testid="journey-buddy-accepted-truth">
+                                {zh ? "这是双方同意的公共会合意向，不是 GPS 证明；双方各自决定是否导航。" : "This is a mutually agreed public-place intention, not GPS proof. Each person chooses whether to navigate."}
+                              </small>
+                              <button type="button" data-testid="journey-buddy-map-open" disabled={buddyActionBusy}
+                                onClick={() => setBuddyMapConsentId(handoff.handoff_id)}>
+                                {zh ? "打开接应地点精确地图…" : "Open exact handoff map pin…"}
+                              </button>
+                            </>
+                          )}
+                          <button type="button" data-testid="journey-buddy-close" disabled={buddyActionBusy}
+                            onClick={() => void closeBuddyHandoff(handoff)}>
+                            {handoff.viewer_role === "HELPER"
+                              ? (zh ? "取消接应提议" : "Cancel handoff")
+                              : (zh ? "撤回我的接应同意" : "Revoke my handoff agreement")}
+                          </button>
+                        </article>
+                      ))}
+                    </div>
+                  )}
                   {coordinationMessage && (
                     <small role="status" data-testid="journey-rendezvous-message">{coordinationMessage}</small>
                   )}
+                  {buddyMessage && <small role="status" data-testid="journey-buddy-message">{buddyMessage}</small>}
                   {coordinationConsentKind && (
                     <section
                       role="dialog"
@@ -845,6 +1111,32 @@ export function JourneyMembershipPanel({
               setMapConsent(false);
               setMapConsentKey(null);
             }}>{zh ? "取消" : "Cancel"}</button>
+          </div>
+        </section>
+      )}
+
+      {buddyMapConsentHandoff && (
+        <section
+          className="journey-membership-map-consent"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="journey-buddy-map-title"
+          data-testid="journey-buddy-map-consent"
+        >
+          <strong id="journey-buddy-map-title">{zh ? "打开双方同意的接应地点？" : "Open the mutually accepted handoff place?"}</strong>
+          <p>{zh
+            ? `继续前会重新向服务器验证双方同意和有效期。只有公开地点“${buddyMapConsentHandoff.handoff_place.name}”的 WGS84 坐标会发送给 OpenStreetMap；不会发送你的起点、成员位置或路线。`
+            : `The server will revalidate mutual acceptance and expiry first. Only the public Place “${buddyMapConsentHandoff.handoff_place.name}” WGS84 coordinates go to OpenStreetMap; your origin, member locations, and routes are not sent.`}</p>
+          <p>{zh
+            ? "此地图只是公共地点标点，不是队伍位置、实时路线、可达性或物理到场证明。"
+            : "This is only a public-place pin, not a group location, live route, reachability, or physical-arrival proof."}</p>
+          <div className="journey-membership-actions">
+            <button type="button" data-testid="journey-buddy-map-confirm" onClick={() => void openAcceptedBuddyMap()} disabled={buddyActionBusy}>
+              {zh ? "同意并打开地图" : "Agree and open map"}
+            </button>
+            <button type="button" data-testid="journey-buddy-map-cancel" onClick={() => setBuddyMapConsentId(null)} disabled={buddyActionBusy}>
+              {zh ? "取消" : "Cancel"}
+            </button>
           </div>
         </section>
       )}

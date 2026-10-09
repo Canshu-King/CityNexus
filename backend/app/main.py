@@ -478,6 +478,8 @@ from app.schemas import (
     LocationObservationRequest,
     GroupPresenceRouteRequest,
     JourneyRendezvousSignalCreateRequest,
+    RendezvousBuddyHandoffOfferRequest,
+    RendezvousBuddyHandoffDecisionRequest,
     MemberSideQuestCreateRequest,
     MemberPlaceInvitationCreateRequest,
     MemberPlaceInvitationDecisionRequest,
@@ -10688,6 +10690,161 @@ def acknowledge_rendezvous_help_request(
             responder=member,
             principal=principal,
             signal_id=str(signal_id),
+        )
+
+
+@app.get("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/candidates")
+def rendezvous_buddy_handoff_candidates(
+    journey_id: UUID,
+    request: Request,
+    signal_id: UUID = Query(...),
+    session: Session = Depends(get_session),
+):
+    """Return a bounded public-place shortlist only to the signed helper."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import list_handoff_candidates
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return list_handoff_candidates(
+        session,
+        journey=journey,
+        helper=member,
+        principal=principal,
+        signal_id=str(signal_id),
+    )
+
+
+@app.get("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/current")
+def current_rendezvous_buddy_handoffs(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """List only valid handoffs involving the signed current viewer; never the whole group."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import list_current_handoffs
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return list_current_handoffs(
+        session, journey=journey, viewer=member, principal=principal
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs", status_code=201)
+def offer_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    payload: RendezvousBuddyHandoffOfferRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Offer one server-suggested public Place to the exact signed help requester."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import offer_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return offer_handoff(
+            session,
+            journey=journey,
+            helper=member,
+            principal=principal,
+            help_signal_id=str(payload.help_signal_id),
+            expected_plan_version_id=str(payload.expected_active_plan_version_id),
+            expected_current_activity_id=(
+                str(payload.expected_current_activity_id)
+                if payload.expected_current_activity_id is not None else None
+            ),
+            expected_rendezvous_activity_id=str(payload.expected_rendezvous_activity_id),
+            expected_original_public_place_id=str(payload.expected_original_public_place_id),
+            expected_audience_sha256=payload.expected_audience_sha256,
+            handoff_place_id=payload.handoff_place_id,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/respond")
+def respond_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: RendezvousBuddyHandoffDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import respond_to_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return respond_to_handoff(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            decision=payload.decision,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/cancel")
+def cancel_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import close_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return close_handoff(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            action="CANCEL",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/revoke")
+def revoke_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import close_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return close_handoff(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            action="REVOKE",
         )
 
 

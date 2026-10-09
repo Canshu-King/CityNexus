@@ -722,6 +722,7 @@ export interface JourneyRendezvousCoordinationSignal {
   evidence_level: "SELF_REPORTED_NOT_VERIFIED";
   viewer_can_withdraw: boolean;
   viewer_can_acknowledge: boolean;
+  viewer_is_acknowledger?: boolean;
   acknowledgement: {
     display_name: string;
     acknowledged_at: string;
@@ -738,6 +739,61 @@ export interface JourneyRendezvousSignalReceipt {
   rendezvous_activity_id: string;
   public_place_id: string;
   evidence_level: "SELF_REPORTED_NOT_VERIFIED";
+}
+
+export interface RendezvousBuddyHandoffPlace {
+  place_id: string;
+  name: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  coordinate_system: "WGS84";
+  source_kind: "CURRENT_SHARED_PLAN_STOP" | "PUBLIC_PLACE_CATALOG_RECORD";
+  source_provider_key: string;
+  source_external_id: string;
+  source_label: string;
+  evidence_grade: "DEMO_FIXTURE_NOT_LIVE_VERIFIED" | "CATALOG_RECORD_NOT_ROUTE_VERIFIED";
+  is_original_shared_stop: boolean;
+  distance_from_original_m: number;
+  distance_basis: "STRAIGHT_LINE_NOT_ETA";
+  opening_hours_state: "UNKNOWN";
+  accessibility_state: "UNKNOWN";
+  route_feasibility_state: "UNKNOWN";
+  mutates_shared_plan: false;
+  protected_commitment_warning: true;
+}
+
+export interface RendezvousBuddyHandoff {
+  handoff_id: string;
+  help_signal_id: string;
+  status: "OFFERED" | "ACCEPTED";
+  viewer_role: "HELPER" | "REQUESTER";
+  helper_display_name: string;
+  requester_display_name: string;
+  handoff_place: RendezvousBuddyHandoffPlace;
+  original_shared_stop: { activity_id: string; place_id: string; place_name: string };
+  offered_at: string;
+  expires_at: string;
+  responded_at: string | null;
+  evidence_level: "MUTUAL_PUBLIC_INTENTION_NOT_PHYSICAL_PRESENCE";
+  shared_plan_changed: false;
+  route_eta_state: "UNKNOWN";
+  accessibility_state: "UNKNOWN";
+  opening_hours_state: "UNKNOWN";
+}
+
+export interface RendezvousBuddyHandoffCandidates {
+  help_signal_id: string;
+  acknowledgement_id: string;
+  active_plan_version_id: string;
+  current_activity_id: string | null;
+  rendezvous_activity_id: string;
+  original_public_place_id: string;
+  audience_sha256: string;
+  items: RendezvousBuddyHandoffPlace[];
+  maximum_straight_line_distance_m: 1500;
+  route_eta_state: "UNKNOWN";
+  shared_plan_changed: false;
 }
 
 export interface MemberSideQuestProjection {
@@ -2502,6 +2558,77 @@ export const cityNexusApi = {
   }> {
     return requestJson(
       "/journeys/" + journeyId + "/rendezvous-member-signals/" + signalId + "/acknowledge",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  getRendezvousBuddyHandoffCandidates(
+    journeyId: string,
+    helpSignalId: string,
+  ): Promise<RendezvousBuddyHandoffCandidates> {
+    return requestJson<RendezvousBuddyHandoffCandidates>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/candidates?signal_id=" + encodeURIComponent(helpSignalId),
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  getCurrentRendezvousBuddyHandoffs(journeyId: string): Promise<{ items: RendezvousBuddyHandoff[] }> {
+    return requestJson<{ items: RendezvousBuddyHandoff[] }>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/current",
+      { headers: travelerAuthHeaders() },
+    );
+  },
+
+  offerRendezvousBuddyHandoff(
+    journeyId: string,
+    input: {
+      help_signal_id: string;
+      expected_active_plan_version_id: string;
+      expected_current_activity_id: string | null;
+      expected_rendezvous_activity_id: string;
+      expected_original_public_place_id: string;
+      expected_audience_sha256: string;
+      handoff_place_id: string;
+    },
+    idempotencyKey: string,
+  ): Promise<RendezvousBuddyHandoff> {
+    return requestJson<RendezvousBuddyHandoff>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs",
+      {
+        method: "POST",
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  respondToRendezvousBuddyHandoff(
+    journeyId: string,
+    handoffId: string,
+    decision: "ACCEPT" | "DECLINE",
+  ): Promise<RendezvousBuddyHandoff> {
+    return requestJson<RendezvousBuddyHandoff>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/respond",
+      { method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify({ decision }) },
+    );
+  },
+
+  cancelRendezvousBuddyHandoff(
+    journeyId: string,
+    handoffId: string,
+  ): Promise<{ handoff_id: string; status: "CANCELLED" }> {
+    return requestJson<{ handoff_id: string; status: "CANCELLED" }>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/cancel",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
+  revokeRendezvousBuddyHandoff(
+    journeyId: string,
+    handoffId: string,
+  ): Promise<{ handoff_id: string; status: "REVOKED" }> {
+    return requestJson<{ handoff_id: string; status: "REVOKED" }>(
+      "/journeys/" + journeyId + "/rendezvous-buddy-handoffs/" + handoffId + "/revoke",
       { method: "POST", headers: travelerAuthHeaders() },
     );
   },

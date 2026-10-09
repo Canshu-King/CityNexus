@@ -470,6 +470,28 @@ class JourneyRendezvousSignalCreateRequest(BaseModel):
     )
 
 
+class RendezvousBuddyHandoffOfferRequest(BaseModel):
+    """An authorized helper selects only a server-suggested public Place."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    help_signal_id: UUID
+    expected_active_plan_version_id: UUID
+    expected_current_activity_id: UUID | None = None
+    expected_rendezvous_activity_id: UUID
+    expected_original_public_place_id: str = Field(min_length=1, max_length=128)
+    expected_audience_sha256: str = Field(
+        min_length=64, max_length=64, pattern="^[0-9a-f]{64}$"
+    )
+    handoff_place_id: str = Field(min_length=1, max_length=128)
+
+
+class RendezvousBuddyHandoffDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+
+
 class MemberSideQuestCreateRequest(BaseModel):
     """Create or replace the authenticated member's private side-quest destination."""
 

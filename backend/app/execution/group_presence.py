@@ -193,6 +193,10 @@ def _rendezvous_coordination_signals(
                 and str(owner.id) != viewer_member_id
                 and acknowledgement is None
             ),
+            "viewer_is_acknowledger": bool(
+                acknowledgement is not None
+                and str(acknowledgement.responder_member_id) == viewer_member_id
+            ),
             "acknowledgement": acknowledgement_projection,
         })
     return result

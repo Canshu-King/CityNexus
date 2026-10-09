@@ -1671,6 +1671,47 @@ CREATE TABLE IF NOT EXISTS journey_rendezvous_signal_acknowledgements (
 CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_signal_ack_journey
     ON journey_rendezvous_signal_acknowledgements(journey_id, acknowledged_at);
 
+-- R79: a pair-private, mutually accepted intention to meet at one exact public Place.
+-- It is not an Activity, route, location observation, booking, commitment, or arrival.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_buddy_handoffs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    signal_id TEXT NOT NULL REFERENCES journey_rendezvous_member_signals(id) ON DELETE CASCADE,
+    acknowledgement_id TEXT NOT NULL REFERENCES journey_rendezvous_signal_acknowledgements(id) ON DELETE CASCADE,
+    requester_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    requester_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    helper_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    helper_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    original_rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    original_public_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    handoff_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    handoff_place_snapshot_json TEXT NOT NULL,
+    audience_member_ids_json TEXT NOT NULL,
+    audience_sha256 TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'OFFERED'
+        CHECK (status IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','CANCELLED','EXPIRED','STALE')),
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    offered_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    responded_at TEXT,
+    closed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, helper_member_id, idempotency_key)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_rendezvous_buddy_handoffs_one_current
+    ON journey_rendezvous_buddy_handoffs(signal_id)
+    WHERE status IN ('OFFERED','ACCEPTED');
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_handoffs_pair_status_expiry
+    ON journey_rendezvous_buddy_handoffs(
+        journey_id, requester_member_id, helper_member_id, status, expires_at
+    );
+
 -- The ACL table.  A row says which capability a role has and which message key states its scope in
 -- one sentence - the words themselves stay in the client's dictionary, because a server sentence
 -- reaching a screen is the defect this project keeps having to fix (RELATION:94's shape is a table,

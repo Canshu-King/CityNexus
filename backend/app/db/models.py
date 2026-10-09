@@ -2361,6 +2361,67 @@ class JourneyRendezvousSignalAcknowledgement(Base):
     created_at: Mapped[str] = mapped_column(String)
 
 
+class JourneyRendezvousBuddyHandoff(Base):
+    """Pair-private offer to meet at one public Place after a signed help request."""
+
+    __tablename__ = "journey_rendezvous_buddy_handoffs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    signal_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_member_signals.id", ondelete="CASCADE")
+    )
+    acknowledgement_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_signal_acknowledgements.id", ondelete="CASCADE")
+    )
+    requester_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    requester_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    helper_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    helper_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    current_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    original_rendezvous_activity_id: Mapped[str] = mapped_column(
+        ForeignKey("activities.id", ondelete="RESTRICT")
+    )
+    original_public_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    handoff_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    handoff_place_snapshot_json: Mapped[str] = mapped_column(Text)
+    audience_member_ids_json: Mapped[str] = mapped_column(Text)
+    audience_sha256: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    offered_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    responded_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','CANCELLED','EXPIRED','STALE')",
+            name="ck_journey_rendezvous_buddy_handoffs_status",
+        ),
+        UniqueConstraint(
+            "journey_id", "helper_member_id", "idempotency_key",
+            name="uq_journey_rendezvous_buddy_handoffs_request",
+        ),
+        Index(
+            "ux_journey_rendezvous_buddy_handoffs_one_current",
+            "signal_id",
+            unique=True,
+            sqlite_where=text("status IN ('OFFERED','ACCEPTED')"),
+            postgresql_where=text("status IN ('OFFERED','ACCEPTED')"),
+        ),
+        Index(
+            "idx_journey_rendezvous_buddy_handoffs_pair_status_expiry",
+            "journey_id", "requester_member_id", "helper_member_id", "status", "expires_at",
+        ),
+    )
+
+
 class JourneyRoleCapability(Base):
     """Role -> one capability, with the message key that states the role's scope in a sentence.
 
