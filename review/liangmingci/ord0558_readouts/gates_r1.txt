@@ -1,7 +1,7 @@
 ORD-0558 量名词 · 门禁读数（命令原样、退出码、关键行；都在 rebase 到 08577f1986 那一代之后重跑）
 
 工作目录：D:\moodle\_qoder_liangmingci_0558\frontend
-本枝相对线：08577f1986b8bbc095f1c319a952909fcf343717 之上我一笔，改动集合 =
+本枝相对线：08577f1986b8bbc095f1c319a952909fcf343717 之上我这几笔（产品与仪表一笔、读数件一笔、把笔数与这段说清的勘误一笔），改动集合 =
   frontend/src/features/discovery/DestinationPreparationPanel.tsx（产品字节）
   frontend/e2e/qoder-liangmingci-0558-count-noun-r1.spec.ts（我的仪表）
   review/liangmingci/ord0558_readouts/*（读数件）
