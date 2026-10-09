@@ -1,0 +1,35 @@
+# ORD-0553 xiaochuigong -- what this branch changes, taken 2026-10-10T01:16:14
+## sha this list was taken against
+3a3411f26d3a91a31ca4d13b2aaab46cc0ac1871
+## git diff --name-only  <现尖>..HEAD
+frontend/e2e/qoder-xiaochuigong-0553-batch-row-clock-r1.spec.ts
+frontend/src/features/discovery/RealCityDiscoveryPanel.tsx
+review/xiaochuigong/ord0553_discovery_batch_row_arm_r1.py
+review/xiaochuigong/readouts/ord0435_red/run564826__Q4en.json
+review/xiaochuigong/readouts/ord0435_red/run564826__Q4zh.json
+review/xiaochuigong/readouts/ord0435_red/run564826__Q5en.json
+review/xiaochuigong/readouts/ord0435_red/run564826__Q5zh.json
+review/xiaochuigong/readouts/ord0435_red/run565280__Q4en.json
+review/xiaochuigong/readouts/ord0435_red/run565280__Q4zh.json
+review/xiaochuigong/readouts/ord0435_red/run565280__Q5en.json
+review/xiaochuigong/readouts/ord0435_red/run565280__Q5zh.json
+review/xiaochuigong/readouts/ord0553/run564711__R0553en.json
+review/xiaochuigong/readouts/ord0553/run564711__R0553en_row.png
+review/xiaochuigong/readouts/ord0553/run564711__R0553zh.json
+review/xiaochuigong/readouts/ord0553/run564711__R0553zh_row.png
+review/xiaochuigong/readouts/ord0553/run564779__R0553en.json
+review/xiaochuigong/readouts/ord0553/run564779__R0553en_row.png
+review/xiaochuigong/readouts/ord0553/run564779__R0553zh.json
+review/xiaochuigong/readouts/ord0553/run564779__R0553zh_row.png
+review/xiaochuigong/readouts/pytest_candidate_r1.txt
+review/xiaochuigong/readouts/shallow_selfreport_r1.txt
+## counts: backend-side lines
+0
+## counts: contract-side lines
+0
+## counts: dictionary-side lines
+0
+## counts: product src lines
+1
+## the one product file
+frontend/src/features/discovery/RealCityDiscoveryPanel.tsx

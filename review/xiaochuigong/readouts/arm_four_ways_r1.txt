@@ -1,0 +1,25 @@
+# ORD-0553 xiaochuigong -- the arm run four ways, taken 2026-10-10T01:12:43
+# (each run's own exit code is read straight from the arm, not from a pipe)
+
+## sha=3ca65c3c42f7cd8f070fe3f43ab1487abad2fd75 expect=parent run=run564711 arm_rc=0
+MODE=parent sha=3ca65c3c4 run=run564711 checks=19 red=0
+ORD0553_ARM_GREEN mode=parent checks=19
+
+## sha=3a3411f26d3a91a31ca4d13b2aaab46cc0ac1871 expect=candidate run=run564779 arm_rc=0
+MODE=candidate sha=3a3411f26 run=run564779 checks=21 red=0
+ORD0553_ARM_GREEN mode=candidate checks=21
+
+## sha=3a3411f26d3a91a31ca4d13b2aaab46cc0ac1871 expect=parent run=run564779 arm_rc=1
+FAIL  parent: the row still does string surgery
+FAIL  parent: the shared formatter is neither imported nor called
+FAIL  parent: both locales show a raw ISO wall-clock fragment
+MODE=parent sha=3a3411f26 run=run564779 checks=19 red=3
+ORD0553_ARM_RED mode=parent red=3
+
+## sha=3ca65c3c42f7cd8f070fe3f43ab1487abad2fd75 expect=candidate run=run564711 arm_rc=1
+FAIL  candidate: the row calls the shared formatter
+FAIL  candidate: no slice/replace surgery is left on that line
+FAIL  candidate: the formatter is imported
+FAIL  candidate: no ISO fragment and no T survives on the row in either locale
+MODE=candidate sha=3ca65c3c4 run=run564711 checks=21 red=4
+ORD0553_ARM_RED mode=candidate red=4

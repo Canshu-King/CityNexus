@@ -1,0 +1,15 @@
+# ORD-0553 xiaochuigong -- frontend gates on the candidate bytes, taken 2026-10-10T01:11:28
+## npm run typecheck:all
+
+> typecheck:all
+> tsc -p tsconfig.typecheck.json --noEmit
+
+TYPECHECK_RC=0
+## npm run build
+PWA v1.3.0
+mode      generateSW
+precache  8 entries (2910.08 KiB)
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+BUILD_RC=0
