@@ -1,0 +1,7 @@
+# ORD-0558 shuangshugong disk and junction face
+my_junction_present=False
+main_node_modules_present=True
+main_pkglock_bytes=382812
+main_top_level_entries=400
+D_free_GB=12.78
+my_worktree_KB=263787
