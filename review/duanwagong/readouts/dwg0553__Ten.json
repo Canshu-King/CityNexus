@@ -1,13 +1,13 @@
 {
- "run_id": "dwg0553d",
+ "run_id": "dwg0553e",
  "spec": "frontend/e2e/qoder-duanwagong-0553-batch-row-instant-r1.spec.ts",
  "arm": "Ten",
  "branch": "LAND",
  "locale": "en",
- "journey_id": "7c4ac64d-9abc-4e87-8a2c-ac60a080933e",
+ "journey_id": "2bd6686f-f8e0-45ea-92bc-8391b4698399",
  "scene_status": 200,
- "plan_id": "a7b5400a-b8ce-4204-b594-a6fc42812fdd",
- "activity_id": "57a7c572-16f7-419c-ad20-ecec89e9bedd",
+ "plan_id": "b3879eae-cb9c-4d5a-8019-3c15308c95c5",
+ "activity_id": "a6c37582-05de-4489-a334-bd27fee27f03",
  "server_start_at": "2026-10-09T19:05:00+08:00",
  "cell_on_screen": "9 Oct, 19:05",
  "cells_on_screen": [
@@ -17,5 +17,5 @@
  "expected_from_server_instant": "9 Oct, 19:05",
  "old_slice_would_have_printed": "2026-10-09 19:05",
  "device_zone": "Asia/Shanghai",
- "row_text": "9 Oct, 19:05 Tianjin Italian Style Town Indoor Gallery 57a7c572-16f7-419c-ad20-ecec89e9bedd"
+ "row_text": "9 Oct, 19:05 Tianjin Italian Style Town Indoor Gallery a6c37582-05de-4489-a334-bd27fee27f03"
 }
