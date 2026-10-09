@@ -522,7 +522,11 @@ def _group_state(
 def group_presence_projection(
     session: Session, journey: Journey, *, viewer_member_id: str | None
 ) -> dict[str, Any]:
-    """Return coarse states only; no coordinates or observation identifiers leave the server."""
+    """Return coarse member states plus the shared public Place destination.
+
+    The canonical active-plan Place may have WGS84 coordinates. Member
+    observation origins, routes, and identifiers are never included.
+    """
     if not viewer_member_id:
         return {
             "state": "MEMBER_IDENTITY_UNAVAILABLE",
@@ -683,6 +687,19 @@ def group_presence_projection(
             coarse_group=coarse_group,
         )
     rendezvous_ready = target_activity is not None and target_place is not None
+    # Public shared-plan geometry is not another member's device location.
+    # Only disclose a valid canonical WGS84 destination point; never guess
+    # missing geometry or misinterpret a source coordinate system.
+    public_destination_coords: tuple[float, float] | None = None
+    if rendezvous_ready and str(target_place.coordinate_system or "").upper() == "WGS84":
+        try:
+            lat = float(target_place.latitude)
+            lon = float(target_place.longitude)
+        except (TypeError, ValueError, OverflowError):
+            pass
+        else:
+            if math.isfinite(lat) and math.isfinite(lon) and -90 <= lat <= 90 and -180 <= lon <= 180:
+                public_destination_coords = (lat, lon)
     viewer_row = rows.get(viewer.id)
     viewer_planned = planned_separations.get(str(viewer.id))
     viewer_eta, viewer_eta_provenance, viewer_eta_state = _route_eta(
@@ -713,7 +730,11 @@ def group_presence_projection(
         "members": projected,
         "rendezvous": (
             {"activity_id": target_activity.id, "title": target_activity.title,
-             "place_name": target_place.name, "basis": "ACTIVE_PLAN_EXACT_PLACE"}
+             "place_id": str(target_place.id), "place_name": target_place.name,
+             "latitude": public_destination_coords[0] if public_destination_coords else None,
+             "longitude": public_destination_coords[1] if public_destination_coords else None,
+             "coordinate_system": "WGS84" if public_destination_coords else None,
+             "basis": "ACTIVE_PLAN_EXACT_PLACE"}
             if rendezvous_ready else None
         ),
         "rendezvous_state": (
