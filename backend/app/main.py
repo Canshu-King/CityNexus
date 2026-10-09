@@ -2680,12 +2680,17 @@ def set_launch_origin(
 @app.post("/api/v1/journeys/{journey_id}/routes/acquire")
 def acquire_route_session(
     journey_id: UUID,
+    request: Request,
     payload: RouteAcquireRequest | None = None,
     session: Session = Depends(get_session),
 ):
     """Acquire exactly one server-resolved grounded-origin -> target edge."""
 
     journey = require(session, Journey, str(journey_id), "Journey")
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        resolve_journey_member_principal(request, session, journey_id=journey.id)
     target = _launch_target_activity(session, journey)
     requested = payload or RouteAcquireRequest()
     if target is None or not target.place_id:
@@ -3121,6 +3126,39 @@ def read_route_session(
             principal=principal,
             operation=row,
         )
+    if settings.traveler_auth_secret:
+        # Legacy non-R80 route operation payloads may expose observation IDs,
+        # exact route geometry, and the caller's route origin. An operation UUID
+        # is not a substitute for member identity or location ownership.
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if str(row.origin_key or "").startswith("location-observation:"):
+            observation_id = str(row.origin_key).split(":", 1)[1]
+            observation = session.get(LocationObservation, observation_id)
+            if (
+                observation is None
+                or str(observation.journey_id) != str(journey_id)
+                or str(observation.journey_member_id or "") != str(member.id)
+                or str(observation.traveler_id or "") != str(principal.traveler_id)
+            ):
+                raise HTTPException(404, "ROUTE_OPERATION_NOT_FOUND")
+        try:
+            request_facts = json.loads(row.request_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            request_facts = {}
+        origin_evidence = request_facts.get("origin_evidence") if isinstance(request_facts, dict) else None
+        if isinstance(origin_evidence, dict):
+            claimed_member = origin_evidence.get("journey_member_id")
+            claimed_traveler = origin_evidence.get("traveler_id")
+            if (
+                claimed_member is not None and str(claimed_member) != str(member.id)
+            ) or (
+                claimed_traveler is not None and str(claimed_traveler) != str(principal.traveler_id)
+            ):
+                raise HTTPException(404, "ROUTE_OPERATION_NOT_FOUND")
     return route_operation_payload(row)
 
 
