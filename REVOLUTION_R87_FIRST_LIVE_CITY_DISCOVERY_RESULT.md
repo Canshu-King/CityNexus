@@ -53,6 +53,7 @@ All three returned `opening_state=UNKNOWN` and `price_state=UNKNOWN`. They remai
 ## Commits and remote
 
 - GPT R87 taskbook base: `2dc932e15` (remote taskbook commit)
-- R87 implementation commit: recorded in the follow-up commit after this report is sealed
-- The completed result will be pushed to both `codex/revolution-r63-planned-parallel-journey` and `gpt/revolution-r33-open-world-journey-adaptation` so the review window reads the same history.
+- R87 implementation commit: `568f92d5cb35ba6310e5d74d0f8ab7c2cf7c2dcd`
+- Taskbook merge commit carrying the implementation and GPT taskbook: `4e8455a4825e883cb8f557007bb2d175389a825d`
+- The completed result is pushed to both `codex/revolution-r63-planned-parallel-journey` and `gpt/revolution-r33-open-world-journey-adaptation` so the review window reads the same history.
 
