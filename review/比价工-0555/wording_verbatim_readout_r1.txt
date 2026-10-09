@@ -1,0 +1,29 @@
+old tip 8bc584613cc5fb047453f497b2152f8ab5102ca9
+sites checked: 6
+planning.thisPlanCouldNotBeChosen
+  old line 108 pair: zh='这个方案暂时不能采用。' en='This plan could not be chosen.'
+  en dict line 24 identical=True
+  zh dict line 1313 identical=True
+planning.couldNotReachTheServerTryAgain
+  old line 115 pair: zh='连不上服务器，请重试。' en='Could not reach the server. Try again.'
+  en dict line 25 identical=True
+  zh dict line 1314 identical=True
+planning.chooseYourPlan
+  old line 124 pair: zh='选择你的方案' en='Choose your plan'
+  en dict line 26 identical=True
+  zh dict line 1315 identical=True
+planning.totalCost
+  old line 202 pair: zh='总花费' en='Total cost'
+  en dict line 27 identical=True
+  zh dict line 1316 identical=True
+planning.stops
+  old line 216 pair: zh='活动数' en='Stops'
+  en dict line 28 identical=True
+  zh dict line 1317 identical=True
+planning.walking
+  old line 221 pair: zh='步行' en='Walking'
+  en dict line 29 identical=True
+  zh dict line 1318 identical=True
+keys referenced from the component: 6 of 6
+remaining `zh ? "` hits in the component: 1
+RESULT: WORDING_VERBATIM_PASS

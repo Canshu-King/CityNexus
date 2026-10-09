@@ -1,0 +1,18 @@
+subject: untouched authoritative tip 8bc584613c
+en keys parsed: 1075
+zh keys parsed: 1075
+sets equal: True
+keys written more than once on any side: 0
+cross-line key names (name line has no value on it): 
+  line 447: me.asksBeforeProtectedChange
+cross-line count: 1
+RESULT: DICT_PARITY_RECOUNT_OK
+subject: lane branch with my six keys on both sides
+en keys parsed: 1081
+zh keys parsed: 1081
+sets equal: True
+keys written more than once on any side: 0
+cross-line key names (name line has no value on it): 
+  line 453: me.asksBeforeProtectedChange
+cross-line count: 1
+RESULT: DICT_PARITY_RECOUNT_OK
