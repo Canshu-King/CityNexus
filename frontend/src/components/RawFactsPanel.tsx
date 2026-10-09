@@ -1,5 +1,6 @@
 import { RawFacts, rawFactEntries } from "../lib/rawFacts";
 import { receiptLabel } from "../lib/errorReceipt";
+import { useT } from "../i18n/LocaleContext";
 
 /**
  * The Q64=1 whitelist block.
@@ -33,10 +34,11 @@ export function RawFactsPanel({
    *  number the server really sent is always shown -- hiding one is not honesty. */
   nameMissingReceipt?: boolean;
 }) {
+  const t = useT();
   return (
     <div className="cnx-raw-facts">
       <span className="cnx-raw-facts-label" data-testid={`${testId}-label`}>
-        {zh ? "这台设备自己量到的回读字段" : "Fields this device measured"}
+        {t("detail.rawFactsHeading")}
       </span>
       <pre
         className="cnx-raw-facts-reading"
