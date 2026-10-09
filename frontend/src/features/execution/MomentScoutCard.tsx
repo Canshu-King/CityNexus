@@ -358,24 +358,24 @@ export function MomentScoutCard({
       >
         {busy ? (zh ? "正在查找…" : "Looking nearby…") : (zh ? "查找附近体验" : "Scout nearby")}
       </button>
-      {receipt && !liveReceipt && (
+      {!liveReceipt && (
         <button
           type="button"
           data-testid="moment-scout-live-opt-in"
           disabled={busy || !onRefreshLocation || rendezvousIsPast}
           onClick={() => setShowLiveConsent(true)}
         >
-          {receipt.value.scout_state === "NO_GROUNDED_OPTIONS"
+          {receipt?.value.scout_state === "NO_GROUNDED_OPTIONS"
             ? (zh ? "搜索真实的附近地点" : "Search live nearby places")
-            : (zh ? "想看看更多？明确同意后搜索真实地点" : "Want other options? Search live places with consent")}
+            : (zh ? "直接搜索真实附近地点（需同意）" : "Explore real nearby places (consent required)")}
         </button>
       )}
       {showLiveConsent && (
         <div role="group" data-testid="moment-scout-live-consent">
           <small>
             {zh
-              ? "这会把你这一次的大致搜索位置发送给外部 OpenStreetMap 地点服务。结果可能不可用、过时、无名称、已关闭或没有可用路线。此项同意与浏览器的位置权限分开；取消不会触发外部查询。"
-              : "This sends your one-time approximate search location to an external OpenStreetMap place-data provider. Results may be unavailable, outdated, unnamed, closed, or unroutable. This consent is separate from browser location permission; canceling sends no external query."}
+              ? "同意后会主动读取一次前台位置：位置观察保存于 Journey，可能改变同行者可见的粗粒度队伍位置状态；外部 OpenStreetMap 地点服务收到你附近的搜索中心。同行者不会自动收到你的精确起点、搜索兴趣和未选择地点。地点可能过时、关闭或不可达；取消不会发送外部查询。"
+              : "With consent, one foreground observation is stored on this Journey and may change companions' coarse group-presence view. The external OpenStreetMap place provider receives the nearby search center. Companions do not automatically receive your precise origin, search interest, or unselected places. Leads may be outdated, closed or unreachable; cancelling sends no external query."}
           </small>
           <button
             type="button"
