@@ -50,11 +50,19 @@ function hasExactPublicPin(destination: Rendezvous | null | undefined): boolean 
 
 function routeEvidenceClass(result: GroupRendezvousRouteResult): "LIVE" | "REPLAY" | "UNKNOWN" {
   const provenance = String(result.route.provenance ?? "").toUpperCase();
+  const provider = String(result.route.provider ?? "").trim();
+  // A route with a mock/fixture provider is never live, even if its response
+  // incorrectly advertises a live provenance token and fresh timestamp.
+  const syntheticProvider = /(?:^|[^a-z])(mock|fixture|synthetic|test)(?:$|[^a-z])/i.test(provider);
   const duration = result.route.duration_min;
   const capturedAt = Date.parse(String(result.route.captured_at ?? ""));
   const ageMs = Date.now() - capturedAt;
   if (
     result.status.toUpperCase() !== "COMPLETED"
+    || result.plan_unchanged !== true
+    || result.target_unchanged !== true
+    || !provider
+    || syntheticProvider
     || typeof duration !== "number"
     || !Number.isFinite(duration)
     || duration < 0
@@ -490,7 +498,17 @@ export function JourneyMembershipPanel({
               <small>{hasExactPublicPin(rendezvous)
                 ? (zh ? "地图使用当前共享计划中的 WGS84 公共地点坐标，不使用任何成员的实时位置。" : "Map pin comes from the shared active-plan public Place (WGS84), not a member's live location.")
                 : (zh ? "没有可靠的公共地点坐标。地图只能按名称搜索，可能出现多个同名地点，出发前请核对。" : "No reliable public destination coordinates are available. Map search by name may be ambiguous; verify the place before traveling.")}</small>
-              <small>{zh ? "当前没有经过验证的个人路线或 ETA（UNKNOWN / ROUTE_UNAVAILABLE）；CityNexus 没有读取或分享你的起点。" : "No verified personal route or ETA is available (UNKNOWN / ROUTE_UNAVAILABLE). CityNexus has not read or shared your origin."}</small>
+              <small data-testid="journey-membership-location-truth">{visibleRoute
+                ? visibleRouteClass === "UNKNOWN"
+                  ? (zh
+                    ? "本次路线请求没有得到可靠 ETA；你自愿提交的前台位置观察可能已保存在 Journey 中。"
+                    : "This route request did not establish a trustworthy ETA. Your consented foreground location observation may already be stored on this Journey.")
+                  : (zh
+                    ? "下方路线来自你主动授权的检查；前台位置观察可能保留在 Journey，旅伴可能看到变化后的粗粒度队伍状态。"
+                    : "The route below follows your explicit location consent. The foreground observation may remain on this Journey and can change companions' coarse group-presence view.")
+                : (zh
+                  ? "如需个人 ETA，请主动授权新的前台位置检查；此前提交的 Journey 位置观察可能仍被保存，不会因为本页未请求路线就自动删除。"
+                  : "To check a personal ETA, explicitly authorize a new foreground location sample. Earlier Journey observations may still be retained even when this panel has no route result.")}</small>
               <button type="button" onClick={() => {
                 setMapConsentKey(currentTargetKey);
                 setMapConsent(true);
