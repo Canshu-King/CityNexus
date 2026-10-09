@@ -433,7 +433,7 @@ export function TripItinerary({
                 setActiveDay(0);
               }}
             >
-              {zh ? `第 ${index + 1} 周` : `Week ${index + 1}`}
+              {t("detail.weekIndex", { n: index + 1 })}
             </button>
           ))}
         </div>
@@ -452,7 +452,7 @@ export function TripItinerary({
             >
               <span>{day.label}</span>
               <small>
-                {zh ? `${day.activities.length} 项` : `${day.activities.length} stops`}
+                {t("detail.dayStops", { n: day.activities.length })}
               </small>
             </button>
           );
