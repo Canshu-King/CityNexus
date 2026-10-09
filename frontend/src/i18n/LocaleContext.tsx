@@ -163,6 +163,13 @@ const en: Dict = {
   "trial.back": "Back",
   "trial.next": "Next",
   "trial.createTrip": "Create trip",
+  /* The three step headings. step3 reads "Review & create" here while the button under it says
+     "Create trip" -- the same two words the Chinese column shares for 确认创建, so these stay
+     separate keys: one names a stage, the other names an action, and merging them would reword
+     whichever screen lost. */
+  "trial.step1Title": "Destination & dates",
+  "trial.step2Title": "Travellers & preferences",
+  "trial.step3Title": "Review & create",
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
@@ -1426,6 +1433,11 @@ const zhCN: Dict = {
   "trial.back": "返回",
   "trial.next": "下一步",
   "trial.createTrip": "确认创建",
+  /* 三枚步骤标题。第三步与那枚按钮中文同字（都是「确认创建」），但一枚指阶段、一枚指动作，
+     所以各留一键，不并成一枚——并了就会把其中一屏的话改掉。英文侧同理（Review & create / Create trip）。 */
+  "trial.step1Title": "目的地与时间",
+  "trial.step2Title": "人数与偏好",
+  "trial.step3Title": "确认创建",
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",
   "shell.factsSynced": "行程事实已同步",

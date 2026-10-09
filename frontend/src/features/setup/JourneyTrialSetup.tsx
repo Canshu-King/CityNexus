@@ -841,9 +841,7 @@ export function JourneyTrialSetup({
   const waited = useElapsedSeconds(busy ? startedAt : null);
   const phaseLabel = phase ? PHASE_LABEL[phase] : null;
 
-  const stepTitle = zh
-    ? ["目的地与时间", "人数与偏好", "确认创建"]
-    : ["Destination & dates", "Travellers & preferences", "Review & create"];
+  const stepTitle = [t("trial.step1Title"), t("trial.step2Title"), t("trial.step3Title")];
 
   const submit = async () => {
     setCreateAttemptFailed(false);
