@@ -231,11 +231,22 @@ export function JourneyMembershipPanel({
 
   useEffect(() => {
     // A refreshed member list changes who would see this disclosure. A user
-    // who confirmed A/B/C may not silently end up sharing with a new D.
+    // who reviewed A/B/C must never silently end up sharing with a new D.
+    if (!coordinationConsentKind) return;
+    if (
+      coordinationConsentKey === currentTargetKey
+      && coordinationConsentAudienceKey === currentAudienceKey
+    ) return;
     setCoordinationConsentKind(null);
     setCoordinationConsentKey(null);
     setCoordinationConsentAudienceKey(null);
-  }, [currentTargetKey, currentAudienceKey]);
+    setCoordinationMessage(zh
+      ? "会合点或同行者名单刚刚变化。旧分享确认已关闭；请重新查看受众并主动确认。"
+      : "The stop or companion list changed. The previous consent was closed; review the new audience before sharing.");
+  }, [
+    currentTargetKey, currentAudienceKey, coordinationConsentKind,
+    coordinationConsentKey, coordinationConsentAudienceKey, zh,
+  ]);
 
   const coordinationSignals = groupPresence?.coordination_signals ?? [];
   const ownCoordinationSignal = coordinationSignals.find((signal) => signal.viewer_can_withdraw) ?? null;
