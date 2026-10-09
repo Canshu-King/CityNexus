@@ -28,7 +28,7 @@ type Props = {
  * server still says otherwise. That is the one failure mode this panel may not have.
  */
 export function PretripChecklistPanel({ sources, onNavigate }: Props) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const items = derivePretripChecklist(sources);
 
@@ -39,12 +39,12 @@ export function PretripChecklistPanel({ sources, onNavigate }: Props) {
       data-cnx-field="checklist_items"
       data-cnx-allowed-keys={ANCHORED_CHECKLIST_KEYS.join(" ")}
       data-count={items.length}
-      aria-label={zh ? "行前清单" : "Pre-trip checklist"}
+      aria-label={t("detail.pretripAria")}
     >
       <div className="cn-pretrip-head">
         <div>
-          <span className="v8-kicker">{zh ? "行前清单" : "Before you go"}</span>
-          <h2>{zh ? "服务端报出的两类待办" : "The two things the server reports as outstanding"}</h2>
+          <span className="v8-kicker">{t("detail.pretripKicker")}</span>
+          <h2>{t("detail.pretripHeading")}</h2>
         </div>
         {/* ORD-0401 ①: the note explains a list that is not on screen. With nothing outstanding it is
             dropped, and the empty state becomes one row -- the heading above, one sentence, the
@@ -77,13 +77,13 @@ export function PretripChecklistPanel({ sources, onNavigate }: Props) {
               <strong className="cn-pretrip-title">{zh ? item.title.zh : item.title.en}</strong>
               <p className="cn-pretrip-why">{zh ? item.why.zh : item.why.en}</p>
               <p className="cn-pretrip-basis">
-                <span>{zh ? "依据：" : "Basis: "}</span>
+                <span>{t("detail.basisPrefix")}</span>
                 <code data-cnx-field="basis_endpoint">{item.basis.endpoint}</code>
                 <span> {"→ "} </span>
                 <code data-cnx-field="basis_field">{item.basis.field}</code>
               </p>
               <p className="cn-pretrip-anchor">
-                <span>{zh ? "锚点：" : "Anchor: "}</span>
+                <span>{t("detail.anchorPrefix")}</span>
                 <code data-cnx-anchor={`${item.basis.anchor.file}:${item.basis.anchor.line}`}>
                   {`${item.basis.anchor.file}:${item.basis.anchor.line}`}
                 </code>
