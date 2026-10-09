@@ -1247,8 +1247,16 @@ export function JourneyMembershipPanel({
                           && leg.provenance,
                         );
                         const topLevelRouteUsable = privateRoute?.route_state === "LIVE" || privateRoute?.route_state === "REPLAY";
+                        const handoffIsOriginalSharedStop =
+                          handoff.handoff_place.place_id === handoff.original_shared_stop.place_id;
+                        // The exact original shared stop needs NO separate second leg.
+                        // R81 marks that leg SAME_PUBLIC_DESTINATION with 0 minutes;
+                        // don't hide a valid caller-private outbound ETA in this case.
+                        const returnSatisfied = handoffIsOriginalSharedStop
+                          ? returnLeg?.route_state === "SAME_PUBLIC_DESTINATION" && returnLeg.duration_min === 0
+                          : legHasUsableEvidence(returnLeg);
                         const hasBothUsableBuddyLegs = legHasUsableEvidence(outboundLeg)
-                          && legHasUsableEvidence(returnLeg)
+                          && returnSatisfied
                           && topLevelRouteUsable;
                         const routeIsStale = privateRoute?.status === "STALE" || privateRoute?.route_state === "STALE";
                         const displayedRouteState = hasBothUsableBuddyLegs
@@ -1365,7 +1373,13 @@ export function JourneyMembershipPanel({
                                     ))}
                                   </div>
                                   {privateRoute.duration_min !== null && hasBothUsableBuddyLegs && displayedRouteState !== "UNKNOWN" ? (
-                                    <small>{zh ? `两段合计约 ${privateRoute.duration_min} 分钟。` : `Both legs total about ${privateRoute.duration_min} minutes.`}</small>
+                                    <small>{handoffIsOriginalSharedStop
+                                      ? (zh
+                                        ? `接应点就是原共同会合点，本人步行约 ${privateRoute.duration_min} 分钟，无需第二段路线。`
+                                        : `The handoff is already the original shared stop. Your walking estimate is about ${privateRoute.duration_min} minutes; no second leg is required.`)
+                                      : (zh
+                                        ? `两段移动时间合计约 ${privateRoute.duration_min} 分钟（不含接应停留时间）。`
+                                        : `Both travel legs total about ${privateRoute.duration_min} minutes (excluding time spent at the handoff).`)}</small>
                                   ) : (
                                     <small>{zh ? "两段路线未全部得到可用证据；总时间与承诺安全余量保持 UNKNOWN。可单独同意打开外部目的地导航。" : "Both legs lack usable evidence; total time and commitment slack remain UNKNOWN. You may separately consent to external destination-only directions."}</small>
                                   )}
