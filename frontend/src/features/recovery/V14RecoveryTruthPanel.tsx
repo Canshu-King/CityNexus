@@ -189,7 +189,7 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
               {failureFacts && (
                 <details className="v14-recovery-technical" data-testid="v14-recovery-technical">
                   <summary data-testid="v14-recovery-technical-toggle">
-                    {zh ? "技术详情" : "Technical detail"}
+                    {t("hub.continuationTechnicalDetail")}
                   </summary>
                   <CnxMeasuredFacts
                     facts={failureFacts}
