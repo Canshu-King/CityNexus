@@ -287,7 +287,7 @@ export function TripItinerary({
 
   if (!scheduled) {
     const emptyCatalogue = catalogue !== null && catalogue.source === "server" && catalogue.placeCount === 0;
-    const importCopy = zh ? "去导入这趟的地点" : "Import places for this trip";
+    const importCopy = t("itinerary.importPrompt");
     const planCopy = emptyCatalogue
       ? zh
         ? "AI 帮我规划（要先有地点）"
@@ -299,8 +299,8 @@ export function TripItinerary({
       <section className="v8-page" data-testid="trip-itinerary-empty">
         <div className="v8-page-intro compact">
           <div>
-            <p className="v8-kicker">{zh ? "行程" : "Trips"}</p>
-            <h1>{zh ? "还没有可看的行程" : "No itinerary yet"}</h1>
+            <p className="v8-kicker">{t("nav.trips")}</p>
+            <h1>{t("itinerary.emptyTitle")}</h1>
             <p className="v8-lede" data-testid="trip-itinerary-empty-why">
               {plan
                 ? zh
@@ -378,7 +378,7 @@ export function TripItinerary({
     <section className="v8-page" data-testid="trip-itinerary">
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "行程" : "Trips"}</p>
+          <p className="v8-kicker">{t("nav.trips")}</p>
           <h1 data-testid="trip-day-total">
             {progress.day_total === null
               ? zh
@@ -503,7 +503,7 @@ export function TripItinerary({
                       )}
                       {activity.protected && (
                         <span className="trip-stop-protected" data-testid="trip-stop-protected">
-                          {zh ? "已确认 · 受保护" : "Confirmed · protected"}
+                          {t("detail.confirmedProtected")}
                         </span>
                       )}
                       {disrupted && (
@@ -516,7 +516,7 @@ export function TripItinerary({
                         </span>
                       )}
                       {isCurrent && (
-                        <span className="trip-stop-current">{zh ? "当前" : "Now"}</span>
+                        <span className="trip-stop-current">{t("itinerary.stopNow")}</span>
                       )}
                       {/* ORD-0500: this was decoration (`aria-hidden`) inside a row that claimed
                           `role="button"` while itself containing a real button -- nested interactive
@@ -526,13 +526,13 @@ export function TripItinerary({
                         type="button"
                         className="trip-stop-more"
                         data-testid="trip-stop-details"
-                        aria-label={`${zh ? "查看详情" : "View details"}: ${activity.title}`}
+                        aria-label={`${t("detail.viewDetails")}: ${activity.title}`}
                         onClick={(event) => {
                           event.stopPropagation();
                           onOpenActivity(activity.id);
                         }}
                       >
-                        {zh ? "详情 ›" : "Details ›"}
+                        {t("detail.detailsChevron")}
                       </button>
                       {/* ORD-0476 slice 2: the tap that makes a footprint. It stops propagation
                           because the row around it is itself a button (「查看详情」), and a control
