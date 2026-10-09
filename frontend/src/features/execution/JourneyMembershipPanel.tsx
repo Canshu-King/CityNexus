@@ -73,7 +73,9 @@ export function JourneyMembershipPanel({
   }, [refresh]);
 
   useEffect(() => {
-    if (!journeyId || recentlyJoinedJourneyId !== journeyId) return;
+    // A companion still needs the shared meeting point after a reload, not
+    // only during the React session in which they pressed Accept.
+    if (!journeyId || String(journeyStatus ?? "").toUpperCase() !== "ACTIVE") return;
     let cancelled = false;
     setRendezvous(null);
     void cityNexusApi.getJourneyOperator(journeyId).then((projection) => {
@@ -82,7 +84,7 @@ export function JourneyMembershipPanel({
       if (!cancelled) setRendezvous(null);
     });
     return () => { cancelled = true; };
-  }, [journeyId, recentlyJoinedJourneyId]);
+  }, [journeyId, journeyStatus]);
 
   const createInvitation = async () => {
     const target = targetTravelerId.trim();
@@ -160,9 +162,23 @@ export function JourneyMembershipPanel({
     }
   };
 
+  const hasExactPublicPin = (destination: Rendezvous | null): boolean =>
+    destination?.coordinate_system === "WGS84"
+    && typeof destination.latitude === "number"
+    && typeof destination.longitude === "number"
+    && Number.isFinite(destination.latitude)
+    && Number.isFinite(destination.longitude)
+    && destination.latitude >= -90 && destination.latitude <= 90
+    && destination.longitude >= -180 && destination.longitude <= 180;
+
   const openPublicMap = () => {
     if (!rendezvous) return;
-    const url = `https://www.openstreetmap.org/search?query=${encodeURIComponent(rendezvous.place_name)}`;
+    // Exact pin is from the shared active-plan Place, never a companion's
+    // foreground observation. If unknown, only offer an explicitly labelled
+    // ambiguous name search, never pass it off as a verified destination.
+    const url = hasExactPublicPin(rendezvous)
+      ? `https://www.openstreetmap.org/?mlat=${rendezvous.latitude}&mlon=${rendezvous.longitude}#map=16/${rendezvous.latitude}/${rendezvous.longitude}`
+      : `https://www.openstreetmap.org/search?query=${encodeURIComponent(rendezvous.place_name)}`;
     window.open(url, "_blank", "noopener,noreferrer");
     setMapConsent(false);
   };
@@ -254,15 +270,22 @@ export function JourneyMembershipPanel({
         </div>
       )}
 
-      {journeyId && recentlyJoinedJourneyId === journeyId && (
+      {journeyId && active && (
         <div className="journey-membership-catchup" data-testid="journey-membership-catchup">
-          <strong>{zh ? "如何追上同行者？" : "How do I catch up?"}</strong>
+          <strong>{recentlyJoinedJourneyId === journeyId
+            ? (zh ? "如何追上同行者？" : "How do I catch up?")
+            : (zh ? "下一处共同会合点" : "Next shared meeting stop")}</strong>
           {rendezvous ? (
             <>
-              <p>{zh ? `当前共同会合点：${rendezvous.place_name}。` : `Current shared rendezvous: ${rendezvous.place_name}.`}</p>
+              <p>{zh ? `当前计划指定的会合地点：${rendezvous.place_name}。` : `Plan-selected meeting stop: ${rendezvous.place_name}.`}</p>
+              <small>{hasExactPublicPin(rendezvous)
+                ? (zh ? "地图使用当前共享计划中的 WGS84 公共地点坐标，不使用任何成员的实时位置。" : "Map pin comes from the shared active-plan public Place (WGS84), not a member's live location.")
+                : (zh ? "没有可靠的公共地点坐标。地图只能按名称搜索，可能出现多个同名地点，出发前请核对。" : "No reliable public destination coordinates are available. Map search by name may be ambiguous; verify the place before traveling.")}</small>
               <small>{zh ? "当前没有经过验证的个人路线或 ETA（UNKNOWN / ROUTE_UNAVAILABLE）；CityNexus 没有读取或分享你的起点。" : "No verified personal route or ETA is available (UNKNOWN / ROUTE_UNAVAILABLE). CityNexus has not read or shared your origin."}</small>
               <button type="button" onClick={() => setMapConsent(true)}>
-                {zh ? "查看公开会合点地图…" : "View public rendezvous map…"}
+                {hasExactPublicPin(rendezvous)
+                  ? (zh ? "打开会合点精确地图…" : "Open exact meeting-place pin…")
+                  : (zh ? "按名称查找会合点（需核对）…" : "Search for meeting place (verify result)…")}
               </button>
             </>
           ) : (
@@ -274,9 +297,13 @@ export function JourneyMembershipPanel({
       {mapConsent && rendezvous && (
         <section className="journey-membership-map-consent" role="dialog" aria-modal="true" aria-labelledby="journey-membership-map-title" data-testid="journey-membership-map-consent">
           <strong id="journey-membership-map-title">{zh ? "打开公开会合点地图？" : "Open a public map of the rendezvous?"}</strong>
-          <p>{zh
-            ? `同意后会把公开地点名称“${rendezvous.place_name}”发送给 OpenStreetMap 搜索。不会发送你的起点或位置，也不会生成路线、ETA 或到达记录。`
-            : `If you agree, the public place name “${rendezvous.place_name}” is sent to OpenStreetMap search. Your origin and location are not sent; this creates no route, ETA, or arrival record.`}</p>
+          <p>{hasExactPublicPin(rendezvous)
+            ? (zh
+              ? `同意后，会把共享计划中公共地点“${rendezvous.place_name}”的精确 WGS84 目的地坐标发送给 OpenStreetMap 标点。不会发送你的起点或位置，不会生成路线、ETA 或到达记录；这也不是队伍当前所在位置的证明。`
+              : `If you agree, the shared public Place's exact WGS84 destination coordinates are sent to OpenStreetMap for a map pin. Your origin is not sent; no route, ETA or arrival record is created, and this does not prove where the group currently is.`)
+            : (zh
+              ? `同意后，只会向 OpenStreetMap 发送公开地点名称“${rendezvous.place_name}”进行搜索；结果可能不唯一。不会发送你的起点或位置，不会生成路线、ETA 或到达记录。`
+              : `If you agree, only the public Place name “${rendezvous.place_name}” is sent to OpenStreetMap search; results may be ambiguous. Your origin is not sent; no route, ETA or arrival record is created.`)}</p>
           <div className="journey-membership-actions">
             <button type="button" data-testid="journey-membership-map-confirm" onClick={openPublicMap}>
               {zh ? "同意并打开地图" : "Agree and open map"}
