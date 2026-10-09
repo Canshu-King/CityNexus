@@ -437,6 +437,16 @@ def test_r79_requester_can_decline_and_helper_can_cancel_without_plan_change():
     )
     assert offered_again.status_code == 201, offered_again.text
     cancelled_id = str(offered_again.json()["handoff_id"])
+    # C declined offer #1, but A has since proposed #2. An old tab
+    # must not answer "declined" for #1 as if that closed #2.
+    stale_decline = client.post(
+        f"{handoff_path}/{declined_id}/respond",
+        headers=_auth(requester_id),
+        json={"decision": "DECLINE"},
+    )
+    assert stale_decline.status_code == 409
+    assert "RENDEZVOUS_HANDOFF_RETIRED_REPLAY_STALE" in stale_decline.text
+    assert client.get(f"{handoff_path}/current", headers=_auth(requester_id)).json()["items"][0]["handoff_id"] == cancelled_id
     cancelled = client.post(
         f"{handoff_path}/{cancelled_id}/cancel", headers=_auth(helper_id)
     )
@@ -446,6 +456,29 @@ def test_r79_requester_can_decline_and_helper_can_cancel_without_plan_change():
         "status": "CANCELLED",
         "shared_plan_changed": False,
     }
+    # Same-target retry is idempotent while there is no newer handoff.
+    assert client.post(
+        f"{handoff_path}/{cancelled_id}/cancel", headers=_auth(helper_id)
+    ).status_code == 200
+    third = client.post(
+        handoff_path,
+        headers={**_auth(helper_id), "Idempotency-Key": "r79-stale-third-" + str(uuid4())},
+        json=payload,
+    )
+    assert third.status_code == 201, third.text
+    third_id = str(third.json()["handoff_id"])
+    assert third_id != cancelled_id
+    stale_cancel = client.post(
+        f"{handoff_path}/{cancelled_id}/cancel", headers=_auth(helper_id)
+    )
+    assert stale_cancel.status_code == 409
+    assert "RENDEZVOUS_HANDOFF_RETIRED_REPLAY_STALE" in stale_cancel.text
+    assert [item["handoff_id"] for item in client.get(
+        f"{handoff_path}/current", headers=_auth(requester_id)
+    ).json()["items"]] == [third_id]
+    assert client.post(
+        f"{handoff_path}/{third_id}/cancel", headers=_auth(helper_id)
+    ).status_code == 200
     assert client.get(f"{handoff_path}/current", headers=_auth(requester_id)).json() == {"items": []}
     presence_after = _presence(journey_id, requester_id)
     assert presence_after["active_plan_version_id"] == before["active_plan_version_id"]
