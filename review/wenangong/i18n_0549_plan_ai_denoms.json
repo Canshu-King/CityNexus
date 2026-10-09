@@ -1,0 +1,43 @@
+{
+ "bookings.realtimeCancelled": {
+  "all": 1,
+  "outside_sheet": 0,
+  "sample": []
+ },
+ "itinerary.planWithAi": {
+  "all": 3,
+  "outside_sheet": 2,
+  "sample": [
+   "frontend/src/app/V8Experience.tsx:3035",
+   "frontend/src/features/trip/TripItinerary.tsx:296"
+  ]
+ },
+ "shell.close": {
+  "all": 1,
+  "outside_sheet": 0,
+  "sample": []
+ },
+ "hub.continuationTechnicalDetail": {
+  "all": 4,
+  "outside_sheet": 3,
+  "sample": [
+   "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:406",
+   "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:192",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx:1480"
+  ]
+ },
+ "detail.rawFactsHeading": {
+  "all": 2,
+  "outside_sheet": 1,
+  "sample": [
+   "frontend/src/components/RawFactsPanel.tsx:39"
+  ]
+ },
+ "dict_rows": {
+  "en": 1071,
+  "zhCN": 1072
+ },
+ "__base_sheet_cjk__": 50,
+ "__base_sheet_single__": 22,
+ "__note__": "__base_* 与 outside_sheet、dict_rows 全部由脚本从现尖(da846e54e)字节数出，非手打"
+}

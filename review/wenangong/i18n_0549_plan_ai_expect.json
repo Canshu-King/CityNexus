@@ -1,0 +1,47 @@
+{
+ "bookings.realtimeCancelled": {
+  "tip_line": 200,
+  "inline_zh": "已取消",
+  "inline_en": "Cancelled",
+  "dict_zh": "已取消",
+  "dict_en": "Cancelled",
+  "dict_zh_line": 1609,
+  "dict_en_line": 365
+ },
+ "itinerary.planWithAi": {
+  "tip_line": 722,
+  "inline_zh": "AI 帮我规划",
+  "inline_en": "Plan my trip with AI",
+  "dict_zh": "AI 帮我规划",
+  "dict_en": "Plan my trip with AI",
+  "dict_zh_line": 2460,
+  "dict_en_line": 1272
+ },
+ "shell.close": {
+  "tip_line": 729,
+  "inline_zh": "关闭",
+  "inline_en": "Close",
+  "dict_zh": "关闭",
+  "dict_en": "Close",
+  "dict_zh_line": 1415,
+  "dict_en_line": 157
+ },
+ "hub.continuationTechnicalDetail": {
+  "tip_line": 1018,
+  "inline_zh": "技术详情",
+  "inline_en": "Technical detail",
+  "dict_zh": "技术详情",
+  "dict_en": "Technical detail",
+  "dict_zh_line": 1509,
+  "dict_en_line": 257
+ },
+ "detail.rawFactsHeading": {
+  "tip_line": 1061,
+  "inline_zh": "这台设备自己量到的回读字段",
+  "inline_en": "Fields this device measured",
+  "dict_zh": "这台设备自己量到的回读字段",
+  "dict_en": "Fields this device measured",
+  "dict_zh_line": 2452,
+  "dict_en_line": 1262
+ }
+}
