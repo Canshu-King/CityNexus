@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { roleLabel } from "../../i18n/travelerLabels";
 import { cityNexusApi, type DestinationCapability } from "../../api/citynexus";
 import { classifyReadFailure } from "../../lib/failureAttribution";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
@@ -1388,7 +1389,7 @@ export function JourneyTrialSetup({
               )}
             </div>
             <div>
-              <dt>{zh ? "抵达" : "Arrival"}{reviewEdit("arrival")}</dt>
+              <dt>{roleLabel("ARRIVAL", zh)}{reviewEdit("arrival")}</dt>
               {/* A bare "—" read as an acceptable blank, and the API rejects it. Say so here. */}
               <dd
                 data-testid="review-arrival"
@@ -1477,7 +1478,7 @@ export function JourneyTrialSetup({
               this device measured plus the server's own number. */}
           <details className="trial-technical" data-testid="create-technical-details">
             <summary data-testid="create-technical-toggle">
-              {zh ? "技术详情" : "Technical detail"}
+              {t("hub.continuationTechnicalDetail")}
             </summary>
             {createFacts ? (
               <RawFactsPanel
@@ -1591,7 +1592,7 @@ export function JourneyTrialSetup({
               data-testid="trial-stop-waiting"
               onClick={onStopWaiting}
             >
-              {zh ? "停止等待" : "Stop waiting"}
+              {t("agent.aiRunStop")}
             </button>
           )}
           <p className="trial-wait-hint">
