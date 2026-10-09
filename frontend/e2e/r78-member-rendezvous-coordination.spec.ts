@@ -194,12 +194,20 @@ test("R78 closes a signed, audience-bound rendezvous help loop without location 
       expect(serialized).not.toContain("route_geometry");
     }
 
+    // The consent dialog originally named A/B/C. After D joins, refreshing
+    // the audience MUST close that consent instead of silently adding D to it.
+    await companion.page.getByTestId("journey-rendezvous-help-share").click();
+    const preJoinConsent = companion.page.getByTestId("journey-rendezvous-consent");
+    await expect(preJoinConsent).toBeVisible();
+    await expect(preJoinConsent).not.toContainText("R78 Later Companion");
+
     // A new member cannot inherit the earlier audience-bound disclosure.
     await acceptInvitation(request, journeyPath, ownerToken, laterToken, later.id);
     lateCompanion = await openPage(browser, laterToken, journeyId);
     await expect(lateCompanion.page.getByTestId("journey-rendezvous-no-status")).toBeVisible();
     await owner.page.getByTestId("journey-rendezvous-refresh").click();
     await companion.page.getByTestId("journey-rendezvous-refresh").click();
+    await expect(companion.page.getByTestId("journey-rendezvous-consent")).toHaveCount(0);
     await expect(owner.page.getByTestId("journey-rendezvous-no-status")).toBeVisible();
     await expect(companion.page.getByTestId("journey-rendezvous-no-status")).toBeVisible();
 
