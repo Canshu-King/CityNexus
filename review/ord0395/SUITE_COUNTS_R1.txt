@@ -1,0 +1,26 @@
+ORD-0395 gate numbers. Computed by review/ord0395/suite_counts_r1.py from four run logs:
+fullsuite_base.txt and fullsuite_base2.txt ran the tree at the tip I based on;
+fullsuite_mine.txt and fullsuite_mine2.txt ran this branch. Same interpreter, same venv, same ignore list.
+Both runs passed --ignore=tests/test_v18_hermes_r20_transport_reliability_probe.py, whose import of
+the `mcp` package fails in this venv (scripts/hermes_r4_contract_probe.py) on both sides alike.
+
+fullsuite_base.txt: 13 failed, 1755 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 242.38s (0:04:02)
+fullsuite_base.txt: red_arms=13
+fullsuite_base2.txt: 13 failed, 1755 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 285.27s (0:04:45)
+fullsuite_base2.txt: red_arms=13
+fullsuite_mine.txt: 14 failed, 1759 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 242.51s (0:04:02)
+fullsuite_mine.txt: red_arms=14
+fullsuite_mine2.txt: 13 failed, 1760 passed, 16 skipped, 1 xfailed, 4 warnings, 2 errors in 246.36s (0:04:06)
+fullsuite_mine2.txt: red_arms=13
+
+baseline_run1_and_run2_red_sets_identical=True
+this_branch_run1_extra_red_arms=['FAILED tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one']
+this_branch_run2_extra_red_arms=[]
+this_branch_run2_red_set_equals_baseline=True
+
+custom_responses_in_main_py_that_declare_a_body_schema=0
+e2e_sites_without_the_token_recounted_from_the_census=13
+
+collect_only (the order's gate: collect first, report the count):
+collect_only_this_branch: 1792 tests collected, 1 error in 6.05s
+collect_only_baseline_tree: 1787 tests collected, 1 error in 4.96s
