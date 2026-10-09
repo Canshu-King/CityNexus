@@ -18,6 +18,17 @@ const wait = async (fn, ms, step = 120) => {
   return false;
 };
 
+/* A transition is proven by an *interpolated* frame, not by a frame count: a
+   headless browser can throttle requestAnimationFrame so hard that a real 220ms
+   transition yields only one in-between value. Requiring several distinct
+   samples therefore reads red on working code, which is an instrument fault. */
+const animatesFrom = (frames, minSpan) => {
+  if (!frames || frames.length < 2) return false;
+  const lo = Math.min(...frames);
+  const hi = Math.max(...frames);
+  return hi - lo > minSpan && frames.some((v) => v > lo + 0.5 && v < hi - 0.5);
+};
+
 const browser = await chromium.launch();
 const results = {};
 
@@ -366,7 +377,7 @@ async function newPage(contextOpts) {
 await browser.close();
 
 results.verdicts = {
-  collapse_animates: results.desktop_collapse.distinct_width_frames > 3,
+  collapse_animates: animatesFrom(results.desktop_collapse.width_frames, 20),
   collapse_toggle_exists: results.desktop_collapse.collapse_toggle_present === true,
   icons_stay_square_when_collapsed:
     results.desktop_collapse.non_square_icons_when_collapsed === 0,
@@ -379,8 +390,8 @@ results.verdicts = {
     results.mobile_drawer.any_button_still_global_blue === 0 &&
     results.mobile_drawer.max_btn_height <= 60 &&
     results.mobile_drawer.btn_bg === "rgba(0, 0, 0, 0)",
-  drawer_open_animates: results.mobile_drawer.distinct_open_frames > 3,
-  drawer_close_animates: results.mobile_drawer.distinct_close_frames > 3,
+  drawer_open_animates: animatesFrom(results.mobile_drawer.open_frames, 20),
+  drawer_close_animates: animatesFrom(results.mobile_drawer.close_frames, 20),
   drawer_unmounts_after_close: results.mobile_drawer.unmounted_after_close,
   background_locked_while_open:
     results.mobile_drawer.body_overflow === "hidden",

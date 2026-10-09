@@ -971,6 +971,28 @@ export function V8Experience() {
     };
   }, []);
 
+  /* Measured before this effect existed: with the drawer open, twelve consecutive
+     Tab presses all landed outside it (the first one reached the topbar language
+     button under the scrim), because nothing took focus into the panel and the
+     page behind it stayed fully focusable. `inert` on the main column makes the
+     keyboard and screen-reader order match what the scrim already says visually.
+     The cleanup is load-bearing: a leaked inert would lock the whole page behind
+     a drawer that is no longer there. */
+  useEffect(() => {
+    if (!navOpen) return;
+    const main = document.querySelector<HTMLElement>(".v8-main");
+    if (!main) return;
+    main.inert = true;
+    if (!navClosing) {
+      document
+        .querySelector<HTMLElement>("#v8-nav-drawer [data-testid='v8-drawer-close']")
+        ?.focus();
+    }
+    return () => {
+      main.inert = false;
+    };
+  }, [navOpen, navClosing]);
+
   const toggleCollapsed = () => {
     const next = !collapsed;
     setCollapsed(next);
