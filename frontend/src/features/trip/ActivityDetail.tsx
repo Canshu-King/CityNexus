@@ -95,7 +95,7 @@ export function ActivityDetail({
   nearby: ActivityLike[];
   onOpenNearby: (id: string) => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const say = (key: ActivityDetailCopyKey) => activityDetailCopyLookup(locale, key);
   const meta = activity.metadata ?? {};
@@ -213,7 +213,7 @@ export function ActivityDetail({
             {...(openingKnown && opening?.raw ? { "data-cnx-field": "opening_hours.raw" } : {})}
           >
             {openingKnown
-              ? `${opening?.raw || (zh ? "已提供" : "Provided")}${opening?.raw ? (zh ? " · 供应商原文" : " · provider's own text") : ""}`
+              ? `${opening?.raw || t("detail.hoursProvided")}${opening?.raw ? t("detail.hoursProviderText") : ""}`
               : zh
                 ? "暂无数据"
                 : "Not available"}
