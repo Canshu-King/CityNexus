@@ -152,8 +152,24 @@ def _valid_live_candidate(
     if not math.isfinite(distance) or distance > radius_m:
         return None
 
-    raw_tags = candidate.metadata.get("tags") if isinstance(candidate.metadata, dict) else {}
-    raw_tags = raw_tags if isinstance(raw_tags, dict) else {}
+    metadata = candidate.metadata if isinstance(candidate.metadata, dict) else {}
+    raw_tags = metadata.get("tags") if isinstance(metadata.get("tags"), dict) else {}
+    # Explicit OSM restrictions must survive any metadata normalization. A
+    # downstream public Place must never be born from access=private/no etc.
+    # Absent access tags remain UNKNOWN, never proof that a venue is open.
+    forbidden_access = {"private", "no", "restricted", "staff", "customers", "permit", "residents"}
+    for facts in (metadata, raw_tags, metadata.get("osm_tags")):
+        if not isinstance(facts, dict):
+            continue
+        if facts.get("is_public") is False or facts.get("public") is False:
+            return None
+        if str(facts.get("public") or "").strip().casefold() in {"no", "false", "0"}:
+            return None
+        if any(
+            str(facts.get(key) or "").strip().casefold() in forbidden_access
+            for key in ("access", "visibility")
+        ):
+            return None
     public_tags = {
         str(key): str(value)[:300]
         for key, value in raw_tags.items()
