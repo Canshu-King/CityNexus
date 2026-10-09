@@ -78,6 +78,23 @@ function buddyHandoffSnapshotKey(handoff: RendezvousBuddyHandoff): string {
   return JSON.stringify(handoff);
 }
 
+function buddyHandoffCanNavigate(handoff: RendezvousBuddyHandoff): boolean {
+  if (handoff.status !== "ACCEPTED") return false;
+  const execution = handoff.execution;
+  if (execution) {
+    if (execution.status === "ACTIVE") {
+      return execution.context_current === true
+        && Boolean(execution.expires_at && Date.parse(execution.expires_at) > Date.now());
+    }
+    // A completed, cancelled, expired or stale pair execution cannot keep
+    // licensing navigation to an obsolete private handoff destination.
+    if (execution.status !== "WINDOW_OFFERED") return false;
+  }
+  // Legacy R79 acceptance and not-yet-accepted execution offers retain
+  // the original 20-minute handoff expiry. An ACTIVE R82 lease overrides it.
+  return Date.parse(handoff.expires_at) > Date.now();
+}
+
 function handoffStillTargetsCurrentSharedStop(
   handoff: RendezvousBuddyHandoff,
   presence: GroupPresence | null,
@@ -628,7 +645,7 @@ export function JourneyMembershipPanel({
       const fresh = await cityNexusApi.getCurrentRendezvousBuddyHandoffs(journeyId);
       const handoff = fresh.items.find((item) => item.handoff_id === handoffId && item.status === "ACCEPTED");
       const place = handoff?.handoff_place;
-      const stillValid = handoff && Date.parse(handoff.expires_at) > Date.now()
+      const stillValid = handoff && buddyHandoffCanNavigate(handoff)
         && place?.coordinate_system === "WGS84"
         && Number.isFinite(place.latitude) && place.latitude >= -90 && place.latitude <= 90
         && Number.isFinite(place.longitude) && place.longitude >= -180 && place.longitude <= 180;
@@ -659,7 +676,7 @@ export function JourneyMembershipPanel({
   };
 
   const beginBuddyDirectionsConsent = (handoff: RendezvousBuddyHandoff) => {
-    if (handoff.status !== "ACCEPTED" || !currentTargetKey || !currentAudienceKey
+    if (!buddyHandoffCanNavigate(handoff) || !currentTargetKey || !currentAudienceKey
       || !handoffStillTargetsCurrentSharedStop(handoff, groupPresence)) {
       setBuddyMessage(zh
         ? "当前共享计划或接应目标尚未核对；请先刷新双方接应状态。"
@@ -804,8 +821,8 @@ export function JourneyMembershipPanel({
         && place.coordinate_system === "WGS84"
         && Number.isFinite(place.latitude) && place.latitude >= -90 && place.latitude <= 90
         && Number.isFinite(place.longitude) && place.longitude >= -180 && place.longitude <= 180;
-      const stillCurrent = freshHandoff?.status === "ACCEPTED"
-        && Date.parse(freshHandoff.expires_at) > Date.now()
+      const stillCurrent = Boolean(freshHandoff && buddyHandoffCanNavigate(freshHandoff))
+        && freshHandoff !== undefined
         && buddyHandoffSnapshotKey(freshHandoff) === consent.handoffSnapshotKey
         && freshTargetKey === consent.targetKey
         && freshAudienceKey === consent.audienceKey
@@ -1668,21 +1685,22 @@ export function JourneyMembershipPanel({
                                   </button>
                                 </section>
                               )}
-                              <button type="button" data-testid="journey-buddy-map-open" disabled={buddyActionBusy}
+                              <button type="button" data-testid="journey-buddy-map-open"
+                                disabled={buddyActionBusy || !buddyHandoffCanNavigate(handoff)}
                                 onClick={() => setBuddyMapConsentId(handoff.handoff_id)}>
                                 {zh ? "打开接应地点精确地图…" : "Open exact handoff map pin…"}
                               </button>
                               <button
                                 type="button"
                                 data-testid="journey-buddy-directions-open"
-                                disabled={buddyActionBusy || !currentTargetKey || !currentAudienceKey}
+                                disabled={buddyActionBusy || !buddyHandoffCanNavigate(handoff) || !currentTargetKey || !currentAudienceKey}
                                 onClick={() => beginBuddyDirectionsConsent(handoff)}
                               >{zh ? "单独同意后打开外部步行导航…" : "Open external walking directions with separate consent…"}</button>
                               {onRefreshLocation && (
                                 <button
                                   type="button"
                                   data-testid="journey-buddy-route-start"
-                                  disabled={buddyActionBusy || buddyRouteBusy}
+                                  disabled={buddyActionBusy || buddyRouteBusy || !buddyHandoffCanNavigate(handoff)}
                                   onClick={() => beginBuddyRouteCheck(handoff)}
                                 >{zh ? "检查我到这处接应点的步行路线…" : "Check MY walking route to this handoff…"}</button>
                               )}
