@@ -29,3 +29,9 @@ ORD-0558 量名词 · 现取尖记录（每一枚都是那一刻现读，不是�
   逐枚值在交块里给 —— 这行不钉自己的尖，因为它一提交尖就变了。
   产品改动与规格：见 gates_r1.txt；屏读与坐标：见 screen_readings_r1.txt。
   本件自证块：_qoder_ledger_inbox/量名词_0135.md（落账回执 _processed/量名词_0135.md.inserted_013729）。
+
+四、推完之后权威线又动了一次
+
+  命令原样 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 再读，尖变成
+  7cb796734bdd0b0985b3b7c80f9fbd9744faa0f6；我这枝相对它现读十一格落后、其中一笔 f8be36abb 动过同一枚文件。
+  枝已发布，不 rebase，按规矩把现尖 merge 进来（一次干净），再重跑全部门禁，数在 gates_r1.txt 第六节。

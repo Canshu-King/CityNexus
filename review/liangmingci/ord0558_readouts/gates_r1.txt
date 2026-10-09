@@ -61,3 +61,27 @@ ORD-0558 量名词 · 门禁读数（命令原样、退出码、关键行；都�
 
   全量 e2e 套件没跑：本单只交一枚文件的一行英文，上面两条枝（本单仪表 + 本面已有规格）已经覆盖这句的两种数量与
   该面板的全部状态；全量套件是落地那一步的闸，归号令者点。
+
+六、把现尖 merge 进来之后重跑（合并那一代；上面一～五节是 rebase 到 08577f1986 那一代的数）
+
+  权威线又前移到 7cb796734bdd0b0985b3b7c80f9fbd9744faa0f6，相对我的基涨十一格，其中 f8be36abb 一笔
+  动过本件这枚文件（ORD-0555：把判定与结局的标题改读字典键）——它动的是 title 行，我动的是 body 行，
+  正文那句「categories」在新尖上仍然原样存在，所以本件没有白做。我这枝已经推出去过（已发布枝禁 rebase），
+  按规矩把现尖 merge 进来：git merge --no-edit 7cb796734bdd0b0985b3b7c80f9fbd9744faa0f6，一次干净，
+  merge 后 git status --short 回空，相对新尖现读为零格落后。
+
+  类型检查：命令原样 `npm run typecheck`，退出码 0，`grep -c "error TS"` 对全文回 0
+    日志 D:\moodle\_liangmingci_0558	ypecheck_r3_merged.txt
+  前端构建：命令原样 `npm run build`，退出码 0，关键行「built in 6.11s」
+    日志 D:\moodle\_liangmingci_0558uild_r3_merged.txt
+  本件那一枝：命令原样 `npx playwright test e2e/qoder-liangmingci-0558-count-noun-r1.spec.ts --reporter=line`
+    环境 CITYNEXUS_E2E_PORT=4197 CITYNEXUS_BACKEND_PORT=8197 run id liangmingci0558m1 库 _e2e_liangmingci0558m1.db
+    退出码 0，关键行「5 passed (24.8s)」，日志 D:\moodle\_liangmingci_0558\e2e_after_r3_merged.txt
+    产物 D:\moodle\_liangmingci_0558\evidence_merged_r1\ord0558  本面已有的那一枝：命令原样 `npx playwright test e2e/qoder-destination-preparation.spec.ts --reporter=line`
+    环境换 4198/8198 与 run id liangmingci0558m2，退出码 0，关键行「6 passed (19.7s)」，
+    日志 D:\moodle\_liangmingci_0558\e2e_sibling_r2_merged.txt
+
+  自报一次自己的错：第一次跑这两条时我把 CITYNEXUS_DATABASE_URL 与 run id 漏在环境里（端口设了、库没设），
+  权威闸当场拒启动，两臂各回退出码 1，原文是
+    Error: [citynexus e2e] authoritative mode refuses to start: CITYNEXUS_DATABASE_URL must be set explicitly (an authoritative run gets its own database)
+  那两条数不作证据用，补齐环境后的上面四条才是。漏配的过程里没有往树里落任何文件（git status 回空）。
