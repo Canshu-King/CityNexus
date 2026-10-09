@@ -80,3 +80,41 @@ def test_openapi_runtime_method_parity_includes_v7_surface():
         if method in {"get", "post", "put", "patch", "delete", "options", "head"}
     }
     assert runtime == contract
+
+
+# ORD-0395 第三条裁语（号令者「请裁四件」那块）：FastAPI 给每扇带参数的门挂一枚 `422`，手写契约故意不声明它。
+# 本树实测：契约声明的 175 扇里有 132 扇带着同一枚未声明 `422`，所以把对照尺改成双向会把整面产品拖进同一个
+# 争论。裁的是逐名登记、只审计登记过的那几扇 —— 这仍然是一句主张而不是一张免检条，因为登记一旦不再对上就判红。
+SERVED_ONLY_STATUSES: dict[tuple[str, str], set[str]] = {
+    ("/api/v1/demo/reset", "post"): {"422"},
+}
+
+
+def test_the_served_only_statuses_are_registered_by_name_and_still_exact() -> None:
+    """A registration names one concrete door, and still describes the difference it was written for."""
+
+    verbs = {"get", "post", "put", "patch", "delete"}
+    assert ("/api/v1/demo/reset", "post") in SERVED_ONLY_STATUSES, (
+        "the door the ruling named has to stay registered; an empty register would otherwise let the "
+        "loop below pass by auditing nothing"
+    )
+    for (path, method), registered in SERVED_ONLY_STATUSES.items():
+        assert path.startswith("/api/v1/") and "*" not in path, f"an exception must name one path: {path}"
+        assert method in verbs, method
+        assert registered, f"{path} {method} registers nothing"
+
+    served = app.openapi()["paths"]
+    contract = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))["paths"]
+    for (path, method), registered in SERVED_ONLY_STATUSES.items():
+        contract_door = contract[path.removeprefix("/api/v1") or "/"][method]
+        served_door = served[path][method]
+        declared = {code for code in contract_door["responses"] if code.isdigit()}
+        answered = {code for code in served_door["responses"] if code.isdigit()}
+        assert answered - declared == registered, (
+            f"{path} {method}: the served document adds {sorted(answered - declared)} but the register "
+            f"says {sorted(registered)} -- a stale registration is a claim that stopped being true"
+        )
+        assert not declared - answered, (
+            f"{path} {method}: the contract declares {sorted(declared - answered)} that this door "
+            "does not answer, which is the other direction and stays this tree's defect"
+        )

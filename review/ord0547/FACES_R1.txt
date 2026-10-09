@@ -1,0 +1,23 @@
+ORD-0547 pre-survey, measured off the tree.
+tip=3ca65c3c42f7cd8f070fe3f43ab1487abad2fd75
+The ruling's four faces, and what each one can do today.
+
+sites_in_the_four_faces_that_name_the_route=2
+   api/citynexus.ts:777
+   features/simulation/simulationAdapter.ts:270
+
+who is above each face (the chain that can actually reach a refusal):
+   api/citynexus.ts resetDemo -> ['demo/goldenScenario.ts:33']
+   demo/goldenScenario.ts bootstrapGoldenScenario -> ['main.tsx:238', 'main.tsx:241']
+   features/simulation/simulationAdapter.ts resetStage -> ['SimulationPanel.tsx:406']
+
+the simulation panel's own row never reaches the server:
+   a permanently set blocker starts at SimulationPanel.tsx:401
+   and the click path returns at SimulationPanel.tsx:725 when row.blocked is set,
+   so there is no HTTP response to read a code from on that face.
+
+the shell's error channel is written under two standing rulings, in the same file:
+   main.tsx:155 carries the Q64=1 note and main.tsx:156 the Q71 side-door,
+   and main.tsx:171 is the only sentence it builds -- it names the status this device saw and no server word.
+So ORD-0547 as written (render the server's named code) is not free to implement in this file
+without a ruling that says which part of Q64=1 it lifts: the code as a selector, or the code on screen.
