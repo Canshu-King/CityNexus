@@ -16,6 +16,10 @@ Unknown price is never presented as FREE.  Selection and start still require gro
 
 ## Evidence
 
+- Implementation commit: `e30f08db8e32a0cc98d3dd25c7892d2fab5f8abf`
+- Review-taskbook merge and current remote HEAD: `63a5b6322` (contains GPT taskbook `f02784b7367fb860fc4fa056912b2168c63a8ee1`)
+- Published to both `codex/revolution-r63-planned-parallel-journey` and `gpt/revolution-r33-open-world-journey-adaptation`.
+
 - Backend: `backend/tests/test_r86_first_startable_real_city_journey.py`
   - zero Places before discovery and one materialized Place after selection;
   - invalid, expired, and member-mismatch candidate selection;
