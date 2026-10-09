@@ -31,3 +31,10 @@ desktop | keyboard_rows_marked_active=1
 NOT REACHED IN THIS ENVIRONMENT
 v13-2-anchor-role | the draft detail never rendered it; selects_on_page stayed at one
 agent-autonomy and agent-mode | /legacy answers Journey connection unavailable, body_chars=142
+
+ANCHOR ROLE, re-measured after the reach step in the ruler was fixed
+The first pass reported this control as not reached; that was the ruler swallowing a
+strict-mode click error on a multi-match door, not the product hiding the control.
+
+mobile anchor role | before=19 (min_height 0px) | after=44 (min_height 44px) | options=4
+desktop anchor role | before=19 (min_height 0px) | after=37 (min_height 30px) | options=4
