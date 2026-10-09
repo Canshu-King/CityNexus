@@ -28,10 +28,10 @@ const intentLabel: Record<string, string> = {
 
 // The what-if feasibility value is an internal enum; the traveller reads a
 // plain sentence.
-function feasibilityLabel(value: string | null | undefined, zh: boolean): string {
+function feasibilityLabel(value: string | null | undefined, zh: boolean, feasibleText: string): string {
   const key = String(value ?? "").toUpperCase();
   if (key === "FEASIBLE" || key === "PASS" || key === "PASSED") {
-    return zh ? "可行" : "Feasible";
+    return feasibleText;
   }
   if (key === "INFEASIBLE" || key === "FAIL" || key === "FAILED") {
     return zh ? "不可行" : "Not feasible";
@@ -232,7 +232,7 @@ export function AgentComposer({
                       </div>
                       <div>
                         <span>{t("agent.feasibility")}</span>
-                        <b>{feasibilityLabel(item.response.what_if.feasibility, locale === "zh-CN")}</b>
+                        <b>{feasibilityLabel(item.response.what_if.feasibility, locale === "zh-CN", t("hub.feasible"))}</b>
                       </div>
                     </div>
                     <small>

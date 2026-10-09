@@ -1,0 +1,11 @@
+const fs = require("fs");
+const lines = fs.readFileSync("src/i18n/LocaleContext.tsx", "utf8").split("\n");
+const KEY = /^\s*"hub\.feasible":\s*"((?:[^"\\]|\\.)*)"/;
+const grab = (s) => { const m = KEY.exec(s); return m ? m[1] : null; };
+const en = grab(lines[213]);
+const zh = grab(lines[1471]);
+const orig = { en: "Feasible", zh: "可行" };
+console.log("dict en at LocaleContext.tsx:214  =", JSON.stringify(en));
+console.log("dict zh at LocaleContext.tsx:1472 =", JSON.stringify(zh));
+console.log("en identical to removed literal:", en === orig.en, "| zh identical:", zh === orig.zh);
+console.log(en === orig.en && zh === orig.zh ? "PROVEN rendered text cannot change" : "MISMATCH - do not ship");
