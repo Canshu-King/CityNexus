@@ -1,14 +1,14 @@
-before generation, read from the tip object da846e54e73b839c9882dc45a18ed73c93c26bc5 (not from this lane's working tree)
-target: frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
-line 192, verbatim:
-                    {zh ? "技术详情" : "Technical detail"}
+before generation, read from the line's own object b461897465b07a4d5e8d99e618f59034652f81f2 (this格 was still standing there)
+target: frontend/src/features/simulation/SimulationPanel.tsx
+line 824, verbatim:
+          {zh ? "再读一次" : "Read it again"}
 the two strings that ternary paints, taken out of that line:
-zh=技术详情
-en=Technical detail
+zh=再读一次
+en=Read it again
 the dictionary cell named by the order, one per book:
-line 257:   "hub.continuationTechnicalDetail": "Technical detail",
-line 1509:   "hub.continuationTechnicalDetail": "技术详情",
-zh book starts at line 1284, so the cell above it is the en book's and the one below is the zh book's
-ternaries standing in this file at the tip: 1 at lines 192
-the格 this lane yields to lane progress (its claim is in the ledger, block progress_2307.md):
-frontend/src/features/agent/AgentComposer.tsx lines 34 still carry 'zh ? "可行" : "Feasible"' at the tip
+line 1181:   "shared.refresh": "Read it again",
+line 2379:   "shared.refresh": "再读一次",
+the zh book starts at line 1284; en cell is above it, zh cell below
+inline ternaries standing in this file at the line: 8 at lines 782,824,830,834,838,844,921,937
+of those, the order names exactly one as already having a key: line 824
+the other 7 are the needs_new_key bucket; this lane invented no key name for them
