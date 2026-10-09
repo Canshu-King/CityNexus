@@ -83,7 +83,7 @@ def _join(journey_id: str, owner_id: str, traveler_id: str) -> None:
     assert accepted.status_code == 200, accepted.text
 
 
-def _accepted_pair() -> tuple[str, str, str, str, str]:
+def _accepted_pair(*, use_original_stop: bool = False) -> tuple[str, str, str, str, str]:
     reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, reset.text
     journey_id = str(reset.json()["journey_id"])
@@ -138,7 +138,9 @@ def _accepted_pair() -> tuple[str, str, str, str, str]:
     )
     assert candidates_response.status_code == 200, candidates_response.text
     candidates = candidates_response.json()
-    selected = candidates["items"][-1]
+    selected = candidates["items"][0] if use_original_stop else candidates["items"][-1]
+    if use_original_stop:
+        assert selected["place_id"] == candidates["original_public_place_id"]
     handoff = client.post(
         f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs",
         headers={**_auth(helper_id), "Idempotency-Key": "r80-offer-" + str(uuid4())},
@@ -1004,3 +1006,37 @@ def test_r80_generic_route_operation_requires_signed_member_and_private_origin_o
         f"/api/v1/journeys/{journey_id}/routes/acquire", json={}
     )
     assert unauthenticated_acquire.status_code in {401, 403}
+
+
+def test_r81_original_shared_stop_fallback_needs_no_second_route_operation():
+    """An agreed handoff at the original stop is a one-leg navigation, not a broken two-leg read."""
+    journey_id, helper_id, _bystander_id, _requester_id, handoff_id = _accepted_pair(
+        use_original_stop=True
+    )
+    obs_id = _observation(journey_id, helper_id, handoff_id, 39.9042)
+    endpoint = f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route"
+    route = client.post(
+        endpoint, headers=_auth(helper_id),
+        json={
+            "location_observation_id": obs_id,
+            "requested_mode": "WALK",
+            "external_provider_disclosure_confirmed": True,
+        },
+    )
+    assert route.status_code == 200, route.text
+    body = route.json()
+    assert body["outbound_leg"]["route_state"] == "UNKNOWN"
+    assert body["return_leg"]["route_state"] == "SAME_PUBLIC_DESTINATION"
+    assert body["return_leg"]["duration_min"] == 0
+    assert body["status"] == "UNAVAILABLE"
+    assert body["duration_min"] is None
+    operations = _private_route_operations(journey_id)
+    assert len(operations) == 1
+    assert set(
+        json.loads(operation.request_json)["origin_evidence"]["route_leg"]
+        for operation in operations.values()
+    ) == {"TO_HANDOFF"}
+    current = client.get(endpoint + "/current", headers=_auth(helper_id))
+    assert current.status_code == 200, current.text
+    assert current.json()["return_leg"]["route_state"] == "SAME_PUBLIC_DESTINATION"
+    assert current.json()["shared_commitment_risk"]["state"] == "UNKNOWN"
