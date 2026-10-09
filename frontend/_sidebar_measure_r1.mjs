@@ -255,6 +255,9 @@ async function newPage(contextOpts) {
       any_button_still_global_blue: all
         .map((b) => getComputedStyle(b).backgroundColor)
         .filter((c) => c === "rgb(66, 89, 216)").length,
+      min_btn_height: Math.min(
+        ...all.map((b) => +b.getBoundingClientRect().height.toFixed(1)),
+      ),
       max_btn_height: Math.max(
         ...all.map((b) => +b.getBoundingClientRect().height.toFixed(1)),
       ),
@@ -365,6 +368,7 @@ results.verdicts = {
     results.desktop_collapse.collapsed_real_overflow_count === 0,
   drawer_styled_now:
     results.mobile_drawer.icon_w === 17 &&
+    results.mobile_drawer.min_btn_height >= 44 &&
     results.mobile_drawer.max_icon_edge <= 18 &&
     results.mobile_drawer.any_button_still_global_blue === 0 &&
     results.mobile_drawer.max_btn_height <= 60 &&
