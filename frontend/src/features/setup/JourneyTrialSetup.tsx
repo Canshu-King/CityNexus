@@ -1097,6 +1097,7 @@ export function JourneyTrialSetup({
                   data-testid="trial-country"
                   value={draft.countryCode}
                   onChange={(event) => update("countryCode", event.target.value.toUpperCase().slice(0, 3))}
+                  placeholder={t("trial.countryHint")}
                 />
               </label>
               <label className="trial-field">
@@ -1105,6 +1106,7 @@ export function JourneyTrialSetup({
                   data-testid="trial-timezone"
                   value={draft.timezone}
                   onChange={(event) => update("timezone", event.target.value)}
+                  placeholder={t("trial.timezoneHint")}
                 />
               </label>
               <label className="trial-field">
@@ -1113,6 +1115,7 @@ export function JourneyTrialSetup({
                   data-testid="trial-currency"
                   value={draft.currency}
                   onChange={(event) => update("currency", event.target.value.toUpperCase().slice(0, 3))}
+                  placeholder={t("trial.currencyHint")}
                 />
               </label>
             </div>

@@ -28,6 +28,8 @@ export const journeyAbortCopy = {
     "abort.reasonLabel": "Why you are calling it off (stored with the trip)",
     "abort.reasonPlaceholder": "e.g. something came up at home and we are not going this time",
     "abort.action": "Abort this trip",
+    "abort.countLimit": "This line holds at most {n} characters",
+    "abort.atLimit": "This is as long as the server accepts - typing more adds nothing",
     "abort.busy": "Aborting…",
     "abort.done":
       "Aborted: {title}. The reason is stored with the trip, it is no longer on “Live trips”, and it " +
@@ -74,6 +76,8 @@ export const journeyAbortCopy = {
     "abort.reasonLabel": "中止的原因（会随行程一起存下）",
     "abort.reasonPlaceholder": "例如：家里临时有事，这趟先不去了",
     "abort.action": "中止这趟行程",
+    "abort.countLimit": "这一句最多 {n} 个字",
+    "abort.atLimit": "已经写到服务器允许的最长，再多打不会加上",
     "abort.busy": "正在中止…",
     "abort.done": "已中止：{title}。原因已随这趟行程存下，它不再出现在「实时行程」里，但仍留在你的行程列表中。",
     "abort.stateOnScreen": "已中止",

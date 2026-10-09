@@ -57,6 +57,12 @@ type EmptyOutcome = { kind: "empty" };
 type TransportOutcome = { kind: "transport" };
 type Outcome = AbortedOutcome | RefusalOutcome | EmptyOutcome | TransportOutcome;
 
+/* JourneyAbort.reason is `Field(min_length=1, max_length=240)` on the server
+   (backend/app/schemas.py).  The box truncates at that number, so the same constant has to
+   feed both the `maxLength` and the line that tells the traveller the box is full --
+   otherwise the ceiling the traveller reads and the ceiling the field enforces drift apart. */
+const REASON_MAX_CHARS = 240;
+
 function sayFor(locale: string, key: JourneyAbortCopyKey, params: Record<string, string | number> = {}) {
   return fillAbort(abortCopy(locale, key), params);
 }
@@ -175,11 +181,19 @@ export function JourneyAbortPanel({
             className="cn-abort__input"
             data-testid="journey-abort-reason"
             value={reason}
-            maxLength={240}
+            maxLength={REASON_MAX_CHARS}
             rows={2}
             placeholder={say("abort.reasonPlaceholder")}
             onChange={(event) => setReason(event.target.value)}
           />
+          <p className="cn-abort__count" data-testid="journey-abort-count">
+            {`${reason.length} / ${REASON_MAX_CHARS} · ${say("abort.countLimit", { n: REASON_MAX_CHARS })}`}
+          </p>
+          {reason.length >= REASON_MAX_CHARS && (
+            <p className="cn-abort__count cn-abort__count--full" role="status" data-testid="journey-abort-at-limit">
+              {say("abort.atLimit")}
+            </p>
+          )}
           <button
             type="button"
             className="v8-quiet-button"

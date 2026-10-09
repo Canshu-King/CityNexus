@@ -17,6 +17,12 @@ import {
   roleLabel,
 } from "../../i18n/travelerLabels";
 
+/* The paste budget is the server's, not a design taste: ReservationTextExtractionRequest
+   declares ``text: Field(min_length=1, max_length=20000)`` (backend/app/schemas.py), and a
+   longer body is refused whole.  Showing the count while typing moves that refusal to before
+   it happens; a bare maxLength would have silently eaten the tail of a pasted itinerary. */
+const PASTE_MAX_CHARS = 20000;
+
 type Draft = {
   id: string;
   artifact_type: string;
@@ -691,6 +697,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               data-testid="manual-ref"
               value={manualRef}
               onChange={(event) => setManualRef(event.target.value)}
+              placeholder={t("inbox.manualRefHint")}
             />
           </label>
           <div className="inbox-manual-row">
@@ -700,6 +707,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
                 data-testid="manual-from"
                 value={manualFrom}
                 onChange={(event) => setManualFrom(event.target.value)}
+                placeholder={t("inbox.manualFromHint")}
               />
             </label>
             <label>
@@ -708,6 +716,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
                 data-testid="manual-to"
                 value={manualTo}
                 onChange={(event) => setManualTo(event.target.value)}
+                placeholder={t("inbox.manualToHint")}
               />
             </label>
           </div>
@@ -738,6 +747,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               inputMode="decimal"
               value={manualAmount}
               onChange={(event) => setManualAmount(event.target.value)}
+              placeholder={t("inbox.manualAmountHint")}
             />
           </label>
           <button
@@ -760,6 +770,14 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
             onChange={(event) => setText(event.target.value)}
             placeholder={t("inbox.pasteHint")}
           />
+          <small data-testid="inbox-paste-count">
+            {`${text.length} / ${PASTE_MAX_CHARS} · ${t("shared.countLimit", { n: PASTE_MAX_CHARS })}`}
+          </small>
+          {text.length > PASTE_MAX_CHARS && (
+            <small role="status" data-testid="inbox-paste-over">
+              {t("shared.countOver")}
+            </small>
+          )}
           <button type="button" onClick={() => void extractText()} disabled={busy || text.trim().length < 3}>
             {t("inbox.extractText")}
           </button>

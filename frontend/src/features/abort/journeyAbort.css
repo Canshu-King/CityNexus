@@ -54,3 +54,7 @@
 }
 .cn-abort__missing { color: var(--cn-danger); }
 .cn-abort__details { margin-top: 4px; }
+/* The character budget under the reason box.  Tertiary ink on purpose: it is a reading of the
+   traveller's own typing, not a verdict, so it must not out-shout the field it sits under. */
+.cn-abort__count { color: var(--cn-ink-tertiary); font-size: var(--cn-fs-caption); margin: 0; }
+.cn-abort__count--full { color: var(--cn-ink); }

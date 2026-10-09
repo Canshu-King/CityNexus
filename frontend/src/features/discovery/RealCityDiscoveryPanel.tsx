@@ -11,6 +11,11 @@ import { PlaceProvenance } from "../../components/PlaceProvenance";
  * two `[data-picked]` rules do not depend on injection order. */
 import "./discovery-batch.css";
 
+/* RealCityDiscoveryRequest declares ``goal: Field(min_length=3, max_length=1000)``
+   (backend/app/schemas.py), and the composer already gates submit on the same three
+   characters, so the ceiling belongs next to the box that enforces the floor. */
+const GOAL_MAX_CHARS = 1000;
+
 type Candidate = {
   id: string;
   name: string;
@@ -373,7 +378,15 @@ export function RealCityDiscoveryPanel({
         </div>
         <div className="v8-agent-input">
           <label htmlFor="v13-discovery-goal">{t("discovery.intent")}</label>
-          <textarea id="v13-discovery-goal" data-testid="v13-discovery-goal" value={goal} onChange={(event) => setGoal(event.target.value)} />
+          <textarea id="v13-discovery-goal" data-testid="v13-discovery-goal" value={goal} onChange={(event) => setGoal(event.target.value)} placeholder={t("discovery.intentHint")} />
+          <p className="v8-input-count" data-testid="discovery-goal-count">
+            {`${goal.length} / ${GOAL_MAX_CHARS} · ${t("shared.countLimit", { n: GOAL_MAX_CHARS })}`}
+          </p>
+          {goal.length > GOAL_MAX_CHARS && (
+            <p className="v8-input-count v8-input-count--over" role="status" data-testid="discovery-goal-over">
+              {t("shared.countOver")}
+            </p>
+          )}
           <div className="v8-agent-toolbar">
             <label>{t("discovery.evidenceMode")} <select aria-label={t("discovery.evidenceMode")} value={mode} onChange={(event) => setMode(event.target.value as typeof mode)}>{supportsTianjinReplay && <option value="captured_replay">{t("discovery.sealedRealReplay")}</option>}<option value="live">{t("discovery.liveProviders")}</option>{supportsTianjinReplay && <option value="replay">{t("discovery.syntheticDemo")}</option>}</select></label>
             <button className="v8-primary" data-testid="v13-discover-submit" disabled={busy || goal.trim().length < 3} onClick={() => void runDiscovery()}>{busy ? t("discovery.composing") : t("discovery.discoverCompose")}</button>

@@ -1861,3 +1861,8 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
     min-height: var(--cn-touch-min);
   }
 }
+/* The character budget under a dark-card composer (`.v8-agent-input`).  It carries the same
+   colours the toolbar beside it already uses, because that card paints its own palette instead
+   of inheriting the page tokens. */
+.v8-input-count { margin: 10px 0 0; color: #aebed8; font-size: 10px; }
+.v8-input-count--over { color: #ffe3e3; }

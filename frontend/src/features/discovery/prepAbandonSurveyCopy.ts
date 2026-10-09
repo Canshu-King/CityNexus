@@ -16,6 +16,7 @@ export type SurveyKey =
   | "prepSurvey.r4"
   | "prepSurvey.r5"
   | "prepSurvey.note"
+  | "prepSurvey.noteHint"
   | "prepSurvey.max"
   | "prepSurvey.over"
   | "prepSurvey.stored"
@@ -33,6 +34,7 @@ export const SURVEY_COPY: Record<"zh" | "en", Record<SurveyKey, string>> = {
     "prepSurvey.r4": "我们没把正在做什么讲清楚",
     "prepSurvey.r5": "其他，我想自己补一句",
     "prepSurvey.note": "可以补充一句，也可以不写",
+    "prepSurvey.noteHint": "例如：临时有事，这趟先不去了",
     "prepSurvey.max": "这一句最多 200 个字",
     "prepSurvey.over": "超了，先删掉几个字再说",
     "prepSurvey.stored": "这几个答案只写在这台设备上。",
@@ -49,6 +51,7 @@ export const SURVEY_COPY: Record<"zh" | "en", Record<SurveyKey, string>> = {
     "prepSurvey.r4": "We didn't make clear what it was doing",
     "prepSurvey.r5": "Something else - I'll add a line",
     "prepSurvey.note": "Add a line if you want, or leave it empty",
+    "prepSurvey.noteHint": "e.g. plans changed at home",
     "prepSurvey.max": "This line holds at most 200 characters",
     "prepSurvey.over": "Over the line - trim a few words first",
     "prepSurvey.stored": "These answers stay on this device.",

@@ -80,6 +80,7 @@ export function PrepAbandonSurvey({ zh, operationId, busy, onExit, onBack }: Pro
         data-testid="prep-survey-note"
         rows={1}
         value={note}
+        placeholder={copy(zh, "prepSurvey.noteHint")}
         onChange={(event) => setNote(event.target.value)}
       />
       <p className="cn-prep-survey-count" data-testid="prep-survey-count">
