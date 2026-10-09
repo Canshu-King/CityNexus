@@ -56,9 +56,10 @@ def main() -> int:
     ck("全树该内联形状归零", tree_hits == 0)
 
     # 2-3: 目标行改为读词典（行号现读于现尖 e7fb2450）
-    line4565 = v8[4564]
-    ck("4565 那一行不再含中文串", "高级：结构化数据" not in line4565)
-    ck("4565 那一行改为读词典", NEW_KEY in line4565)
+    # 行号现读于 rebase 后的尖 b9f1dd533（rebase 前是 4565，他笔落地后漂到 4594）
+    line4594 = v8[4593]
+    ck("4594 那一行不再含中文串", "高级：结构化数据" not in line4594)
+    ck("4594 那一行改为读词典", NEW_KEY in line4594)
 
     # 4-5: 词典两臂都定义了新键
     vals = re.findall(r'^\s*"%s":\s*"(.+)",?$' % re.escape(NEW_KEY), d, re.M)
@@ -77,7 +78,7 @@ def main() -> int:
 
     # 10: 分母自检 —— 本文件该形状从 8 降到 7
     cnt = sum(1 for ln in v8 if 'zh ? "' in ln)
-    ck("本文件 zh ? \" 形状计数=7（现尖 8 减本格一处）", cnt == 7)
+    ck("本文件 zh ? \" 形状计数=3（现尖 4 减本格一处）", cnt == 3)
 
     # 11: 上一格已落地的那枚必须仍在（证明本格没回退别人的交付）
     ck("上一格的 bookings.importBooking 调用仍在", 't("bookings.importBooking")' in "\n".join(v8))
