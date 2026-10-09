@@ -1,0 +1,121 @@
+{
+ "tip": "ff7f62011821240835572bf4effe2e139ee2bada",
+ "blobs": {
+  "backend/app/anywhere_capability.py": "f699c2b3597526c681a87126766a89f6fe4ed6ed",
+  "backend/app/services.py": "dfccf0653d097e3c9787af69be86107dd6beff9d",
+  "frontend/src/features/discovery/DestinationPreparationPanel.tsx": "fd3a8d268d951c3a1f2cb6dc5b27b3328dc49571"
+ },
+ "codes_in_product": {
+  "CATALOG_CURRENT": [
+   "backend/app/anywhere_capability.py"
+  ],
+  "COVERAGE_INCOMPLETE": [
+   "backend/app/anywhere_capability.py"
+  ],
+  "CATALOG_STALE": [
+   "backend/app/anywhere_capability.py"
+  ],
+  "NO_CANONICAL_IDENTITY": [
+   "backend/app/anywhere_capability.py"
+  ],
+  "DESTINATION_AMBIGUOUS": [
+   "backend/app/anywhere_capability.py"
+  ],
+  "DESTINATION_RESOLVER_UNAVAILABLE": [
+   "backend/app/anywhere_capability.py"
+  ],
+  "CATALOG_EMPTY": [
+   "backend/app/services.py"
+  ],
+  "CATALOG_INSUFFICIENT": [
+   "backend/app/services.py"
+  ]
+ },
+ "screen_files_searched": 172,
+ "codes_on_screen": {
+  "CATALOG_CURRENT": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+  ],
+  "COVERAGE_INCOMPLETE": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+  ],
+  "CATALOG_STALE": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+  ],
+  "NO_CANONICAL_IDENTITY": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx"
+  ],
+  "DESTINATION_AMBIGUOUS": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/discovery/prepFailureCopy.ts",
+   "frontend/src/generated/api.ts"
+  ],
+  "DESTINATION_RESOLVER_UNAVAILABLE": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/discovery/prepFailureCopy.ts"
+  ],
+  "CATALOG_EMPTY": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/planning/aiGenerationRun.ts"
+  ],
+  "CATALOG_INSUFFICIENT": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/planning/aiGenerationRun.ts"
+  ]
+ },
+ "panel_cases": [
+  "CATALOG_CURRENT",
+  "COVERAGE_INCOMPLETE",
+  "CATALOG_STALE",
+  "DESTINATION_AMBIGUOUS",
+  "NO_CANONICAL_IDENTITY",
+  "PROVIDER_RATE_LIMITED",
+  "PROVIDER_TIMEOUT",
+  "PROVIDER_NETWORK_FAILURE",
+  "PROVIDER_SERVER_ERROR",
+  "CATALOG_PREPARING",
+  "DESTINATION_RESOLVER_UNAVAILABLE",
+  "CATALOG_PREPARED",
+  "ALREADY_CURRENT",
+  "NO_REGISTERED_SOURCE",
+  "ABANDONED_BY_TRAVELLER",
+  "RESOLVER_RUNTIME_FAILURE",
+  "WORKER_LOST"
+ ],
+ "panel_case_count": 17,
+ "causes": {
+  "never_registered": {
+   "what": "解析到了城市、但这类地点一条都没登记",
+   "code": "CATALOG_EMPTY",
+   "in_product": true,
+   "on_screen": true,
+   "named": true,
+   "screen_files": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/features/planning/aiGenerationRun.ts"
+   ]
+  },
+  "no_canonical_identity": {
+   "what": "这个名字解析不出规范身份",
+   "code": "NO_CANONICAL_IDENTITY",
+   "in_product": true,
+   "on_screen": true,
+   "named": true,
+   "screen_files": [
+    "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ]
+  },
+  "resolved_but_no_coordinate": {
+   "what": "解析到了身份、但它没有可用坐标",
+   "code": null,
+   "in_product": false,
+   "on_screen": false,
+   "named": false,
+   "note": "no code exists for this cause -- this is the gap the building closes"
+  }
+ },
+ "named_count": 2,
+ "gap_count": 1
+}
