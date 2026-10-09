@@ -4,9 +4,12 @@
  * Before this order the row read `row.start_at.slice(0, 16).replace("T", " ")`, so whatever wall
  * clock the offset carried went straight to the traveller.  The row now goes through `formatWhen`.
  *
- * Two arms, one per locale, and both are read-only at the dictionary level: the only write is the
- * batch the traveller asked for, into this run's own throwaway database (authoritative mode refuses
- * to reopen a file that already exists, and the run id is in the file name).
+ * Two arms, one per locale, and each takes whichever branch the stage allows:
+ *   LAND   -- the compose wrote a plan, so the row is measured against the store's own copy.
+ *   REFUSE -- the planner answers a domain refusal (this is what a fresh authoritative run does on
+ *              this generation: the same leg is red for the pre-existing ORD-0435 Q4 arms too, at
+ *              qoder-ord0435-poi-batch-multiselect.spec.ts:381).  The arm then records the status and
+ *              the sentence on screen, and the paint proof moves to the sibling stub arm.
  *
  * The expected string is computed in the page, from the server's raw `start_at` the second read
  * returns, using the browser's own Intl -- same ICU the product renders with, so this is not a
@@ -27,6 +30,7 @@ const FINISH = '[data-testid="v13-discovery-finish-batch"]';
 const RECEIPT = '[data-testid="v13-discovery-batch-receipt"]';
 const ROW = '[data-testid="v13-discovery-batch-row"]';
 const PLAN_LINE = ".v8-batch-receipt-plan";
+const BATCH_ERROR = '[data-testid="v13-discovery-batch-error"]';
 const FILE = "frontend/e2e/qoder-duanwagong-0553-batch-row-instant-r1.spec.ts";
 const RUN = process.env.CITYNEXUS_E2E_RUN_ID ?? "dev";
 const EVIDENCE_DIR = path.join(process.cwd(), "..", "review", "duanwagong", "readouts");
@@ -108,12 +112,60 @@ for (const [locale, tag] of LOCALES) {
     test.setTimeout(360_000);
     const boot = await openConsole(page, locale, arm);
 
-    await page.locator(TICK).first().click();
-    await page.waitForTimeout(200);
-    await page.locator(FINISH).click();
-    await expect(page.locator(RECEIPT), node(arm, "the batch produced no read-back block")).toBeVisible({
-      timeout: 60_000,
+    /* Keep what the compose route answered before the panel decides what to show. */
+    const compose: Array<{ status: number; body: unknown }> = [];
+    page.on("response", async (res) => {
+      if (!res.url().includes("authoritative-compose")) return;
+      let body: unknown = null;
+      try {
+        body = await res.json();
+      } catch {
+        body = { unreadable: true };
+      }
+      compose.push({ status: res.status(), body });
     });
+
+    await page.locator(TICK).first().click();
+    await page.waitForTimeout(300);
+    await page.locator(FINISH).click();
+
+    const landed = await page
+      .locator(RECEIPT)
+      .waitFor({ timeout: 25_000 })
+      .then(() => true)
+      .catch(() => false);
+
+    fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
+
+    if (!landed) {
+      /* REFUSE branch: the stage's refusal has to reach the traveller, and this arm records which
+         refusal it was.  The paint proof for that case is the sibling stub arm. */
+      await expect(
+        page.locator(BATCH_ERROR),
+        node(arm, "no receipt and no error either -- the batch failed silently"),
+      ).toBeVisible({ timeout: 20_000 });
+      const sentence = (await page.locator(BATCH_ERROR).innerText()).replace(/\s+/g, " ").trim();
+      await page.screenshot({ path: path.join(EVIDENCE_DIR, `dwg0553_${arm}_${RUN}.png`), fullPage: true });
+      readings[arm] = {
+        branch: "REFUSE",
+        spec: FILE,
+        run_id: RUN,
+        locale,
+        journey_id: boot.journeyId,
+        scene_status: boot.sceneStatus,
+        compose,
+        error_sentence_on_screen: sentence,
+      };
+      const last = compose[compose.length - 1];
+      expect(sentence.length, node(arm, "the error block is on screen but says nothing")).toBeGreaterThan(0);
+      expect(compose.length, node(arm, "the finish button never reached the compose route")).toBeGreaterThan(0);
+      expect(last?.status, node(arm, `compose answered ${last?.status}, not the domain refusal this arm documents`)).toBe(422);
+      expect(/[A-Z][A-Z0-9_]{6,}/.test(JSON.stringify(compose)),
+        node(arm, `the refusal carries no machine-readable code: ${JSON.stringify(compose).slice(0, 300)}`)).toBe(true);
+      return;
+    }
+
+    /* LAND branch: the row is on screen, so the order's own claim is what gets measured. */
     await page.waitForTimeout(800);
 
     const cell = page.locator(`${ROW} span`).first();
@@ -151,6 +203,7 @@ for (const [locale, tag] of LOCALES) {
     });
 
     readings[arm] = {
+      branch: "LAND",
       spec: FILE,
       run_id: RUN,
       locale,
