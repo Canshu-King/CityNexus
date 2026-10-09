@@ -340,7 +340,8 @@ export function PlanWithAiSheet({
             data-testid="plan-ai-result"
             data-plan-count={result?.planCount ?? 0}
             data-new-plan-ids={(result?.newPlanIds ?? []).join(",")}
-            role="status"
+            role={copy.tone === "warn" ? "alert" : "status"}
+            aria-live={copy.tone === "warn" ? "assertive" : "polite"}
           >
             <b>{copy.title}</b>
             <p>{copy.body}</p>

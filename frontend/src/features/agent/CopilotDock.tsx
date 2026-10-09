@@ -693,7 +693,7 @@ export function CopilotDock({
               onExecutionChange={setExecuted}
             />
           )}
-          {error && <p className="cn-copilot-error" role="alert">{error}</p>}
+          {error && <p id="copilot-error" className="cn-copilot-error" role="alert" aria-live="assertive">{error}</p>}
           <form className="cn-copilot-form" onSubmit={(event) => { event.preventDefault(); void send(); }} role="search" aria-label={zh ? "AI 助手对话" : "AI assistant chat"}>
             <label htmlFor="copilot-input" className="sr-only">{zh ? "输入你的问题或请求" : "Type your question or request"}</label>
             <textarea 
@@ -702,7 +702,19 @@ export function CopilotDock({
               onChange={(event) => setDraft(event.target.value)} 
               placeholder={zh ? "可以问为什么这样安排、试算一个假设、搜索地点，或报告正在发生的中断…\n例如：为什么我的行程要这么安排？有没有更快的路线？找附近的海鲜餐厅。" : "Ask why this is arranged, try a what-if scenario, search for places, or report a disruption...\nExamples: Why is my itinerary arranged this way? Are there faster routes? Find seafood restaurants nearby."} 
               aria-label={t("agent.message")}
-              aria-describedby="copilot-hint copilot-history-count"
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+                  event.preventDefault();
+                  void send();
+                }
+              }}
+              aria-describedby={
+                error
+                  ? "copilot-hint copilot-history-count copilot-error"
+                  : "copilot-hint copilot-history-count"
+              }
+              aria-invalid={error ? "true" : undefined}
+              aria-errormessage={error ? "copilot-error" : undefined}
               aria-live="polite"
               rows={2}
               data-testid="copilot-textarea"
@@ -715,7 +727,7 @@ export function CopilotDock({
                 {zh}: {messages.length} {zh ? '条' : 'messages'}
               </span>
             )}
-            <button className="v8-primary" type="submit" disabled={sending || draft.trim().length < 2} aria-label={sending ? (zh ? "发送中" : "Sending...") : (zh ? "发送消息" : "Send message")}>{sending ? t("agent.working") : t("agent.send")}</button>
+            <button className="v8-primary" type="submit" aria-keyshortcuts="Control+Enter Meta+Enter" disabled={sending || draft.trim().length < 2} aria-label={sending ? (zh ? "发送中" : "Sending...") : (zh ? "发送消息" : "Send message")}>{sending ? t("agent.working") : t("agent.send")}</button>
           </form>
         </div>
       )}
