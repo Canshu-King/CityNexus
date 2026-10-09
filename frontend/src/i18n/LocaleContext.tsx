@@ -134,6 +134,12 @@ const en: Dict = {
   "trial.currency": "Currency",
   "trial.party": "Travelers",
   "trial.rooms": "Rooms (suggested)",
+  /* ORD-0557: the tail the entry form invents when it has to say, on its own, whether a field blocks
+     the review step and what an open-ended lower bound means. `lib/entryLimits.ts` carried this pair
+     inline; the copy here is the words that were already on the glass, unchanged. */
+  "trial.fieldRequired": "required",
+  "trial.fieldOptional": "optional",
+  "trial.rangeFrom": "from {min} {unit}",
   "trial.create": "Create journey",
   "trial.creating": "Creating…",
   "trial.cancel": "Back to current journey",
@@ -1399,6 +1405,11 @@ const zhCN: Dict = {
   "trial.currency": "货币",
   "trial.party": "出行人数",
   "trial.rooms": "房间数（建议值，可调整）",
+  /* ORD-0557：入口表自己补的那截尾巴——这一格挡不挡审核、只有下限的区间怎么说。
+     原先写死在 `lib/entryLimits.ts`，这里的中文就是屏上原本那几个字。 */
+  "trial.fieldRequired": "必填",
+  "trial.fieldOptional": "选填",
+  "trial.rangeFrom": "{min} {unit}起",
   "trial.create": "创建行程",
   "trial.creating": "正在创建…",
   "trial.cancel": "返回当前行程",
@@ -2481,6 +2492,35 @@ const zhCN: Dict = {
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/**
+ * ORD-0557: the lookup for a caller that is not a component.
+ *
+ * `t` below is built inside `LocaleProvider`, so it only reaches components. `lib/entryLimits.ts` is a
+ * plain function: its caller hands it the language and it returns a plain string, so it cannot call a
+ * hook. This arm reads the same two dictionaries with the same fallback and the same `{name}`
+ * substitution.
+ *
+ * It is a second copy of six lines, and that is the cheaper defect: the body of the callback inside
+ * `LocaleProvider` is pinned by a shipped gate
+ * (`e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts`, arm A5), which greps the two
+ * dictionary arms out of that callback itself. Folding the two into one helper reddens that lane's
+ * gate, so the provider was left untouched and the two bodies must be moved together by whoever can
+ * move that gate with them.
+ */
+export function dictionaryText(
+  locale: TripLocale,
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  let value = dictionaries[locale][key];
+  if (!value) {
+    value = dictionaries.en[key] ?? key;
+  }
+  const counted = expandPluralMarkers(value, params);
+  if (!params) return counted;
+  return counted.replace(/\{(\w+)\}/g, (_, k: string) => String(params[k] ?? `{${k}}`));
+}
 
 type LocaleState = {
   locale: TripLocale;
