@@ -2,18 +2,21 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
+import app.execution.private_buddy_safe_return as safe_return_module
 import app.main as main_module
 from app.core.config import settings
 from app.db.models import (
     AgentRun,
+    Activity,
     AuditLog,
+    Commitment,
     Event,
     GuardianPulse,
     GuardianRun,
@@ -23,10 +26,13 @@ from app.db.models import (
     LocationObservation,
     MobilityFact,
     PlanVersion,
+    PrivateBuddyRouteLocationBinding,
     ProviderCall,
     RouteAcquisitionOperation,
 )
 from app.db.session import SessionLocal
+from app.execution.clock import execution_clock
+from app.execution.route_session_contract import route_request_fingerprint
 from app.traveler_principal import issue_traveler_token
 from demo_stage import demo_reset_headers
 
@@ -181,6 +187,24 @@ def _count(model) -> int:
         return int(session.scalar(select(func.count()).select_from(model)) or 0)
 
 
+def _private_route_operations(journey_id: str) -> dict[str, RouteAcquisitionOperation]:
+    with SessionLocal() as session:
+        rows = session.scalars(select(RouteAcquisitionOperation).where(
+            RouteAcquisitionOperation.journey_id == journey_id,
+            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
+        )).all()
+        result: dict[str, RouteAcquisitionOperation] = {}
+        for row in rows:
+            try:
+                request_json = json.loads(row.request_json or "{}")
+                evidence = request_json.get("origin_evidence") if isinstance(request_json, dict) else None
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if isinstance(evidence, dict) and evidence.get("route_leg"):
+                result[str(evidence["route_leg"])] = row
+        return result
+
+
 def _matching_paths(value, needle: str, path: str = "$") -> list[str]:
     if isinstance(value, dict):
         return [match for key, item in value.items() for match in _matching_paths(item, needle, f"{path}.{key}")]
@@ -268,7 +292,10 @@ def test_r80_private_routes_are_separate_consented_member_bound_and_hidden_from_
     assert helper_result["physical_arrival_verified"] is False
     assert helper_result["guardian_triggered"] is False
     assert helper_observation not in json.dumps(helper_result)
-    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 1
+    assert helper_result["outbound_leg"]["route_state"] == "UNKNOWN"
+    assert helper_result["return_leg"]["route_state"] == "UNKNOWN"
+    assert helper_result["shared_commitment_risk"]["state"] == "UNKNOWN"
+    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 2
     assert _count(ProviderCall) == baseline["provider_calls"]
     assert _count(MobilityFact) == baseline["mobility_facts"]
     generic_route = client.post(
@@ -277,18 +304,24 @@ def test_r80_private_routes_are_separate_consented_member_bound_and_hidden_from_
         json={"location_observation_id": helper_observation, "requested_mode": "WALK"},
     )
     assert generic_route.status_code == 409
-    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 1
+    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 2
     assert _count(ProviderCall) == baseline["provider_calls"]
 
     helper_operation = None
+    return_operation = None
     with SessionLocal() as session:
         operations = session.scalars(select(RouteAcquisitionOperation).where(
             RouteAcquisitionOperation.journey_id == journey_id,
             RouteAcquisitionOperation.target_key != "",
         )).all()
         private = [row for row in operations if "R80_PRIVATE_BUDDY_HANDOFF" in row.request_json]
-        assert len(private) == 1
-        helper_operation = private[0]
+        assert len(private) == 2
+        private_by_leg = {
+            json.loads(row.request_json)["origin_evidence"]["route_leg"]: row
+            for row in private
+        }
+        helper_operation = private_by_leg["TO_HANDOFF"]
+        return_operation = private_by_leg["RETURN_TO_SHARED_STOP"]
         request_json = json.loads(helper_operation.request_json)
         evidence = request_json["origin_evidence"]
         assert evidence["journey_member_id"] == session.scalar(select(LocationObservation.journey_member_id).where(
@@ -299,6 +332,18 @@ def test_r80_private_routes_are_separate_consented_member_bound_and_hidden_from_
         assert helper_observation in helper_operation.request_json
         assert "39.9042" not in helper_operation.request_json
         assert "116.4074" not in helper_operation.request_json
+        return_request = json.loads(return_operation.request_json)
+        return_evidence = return_request["origin_evidence"]
+        handoff = session.get(JourneyRendezvousBuddyHandoff, handoff_id)
+        assert handoff is not None
+        assert return_evidence["route_leg"] == "RETURN_TO_SHARED_STOP"
+        assert return_evidence["private_location_binding_id"] == helper_observation
+        assert return_evidence["bound_outbound_operation_id"] == helper_operation.id
+        assert return_operation.origin_key == handoff.handoff_place_id
+        assert return_operation.target_key == handoff.original_public_place_id
+        assert return_operation.target_activity_id == handoff.original_rendezvous_activity_id
+        assert "39.9042" not in return_operation.request_json
+        assert "116.4074" not in return_operation.request_json
         audit_after_json = json.dumps([
             row.after_json for row in session.scalars(select(AuditLog)).all()
         ])
@@ -317,6 +362,13 @@ def test_r80_private_routes_are_separate_consented_member_bound_and_hidden_from_
     assert helper_operation_read.status_code == 200, helper_operation_read.text
     assert "geometry" not in json.dumps(helper_operation_read.json()).lower()
     assert helper_observation not in json.dumps(helper_operation_read.json())
+    return_operation_read = client.get(
+        f"/api/v1/journeys/{journey_id}/routes/operations/{return_operation.id}",
+        headers=_auth(bystander_id),
+    )
+    assert return_operation_read.status_code == 403
+    assert "geometry" not in return_operation_read.text.lower()
+    assert helper_observation not in return_operation_read.text
 
     requester_before = client.get(handoff_path + "/route/current", headers=_auth(requester_id)).json()
     assert requester_before["status"] == "NOT_REQUESTED"
@@ -331,7 +383,7 @@ def test_r80_private_routes_are_separate_consented_member_bound_and_hidden_from_
         },
     )
     assert replayed_observation.status_code == 403
-    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 1
+    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 2
     requester_route = client.post(
         handoff_path + "/route",
         headers=_auth(requester_id),
@@ -345,7 +397,7 @@ def test_r80_private_routes_are_separate_consented_member_bound_and_hidden_from_
     assert requester_route.json()["route_state"] == "UNKNOWN"
     assert helper_observation not in json.dumps(requester_route.json())
     assert requester_observation not in json.dumps(requester_route.json())
-    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 2
+    assert _count(RouteAcquisitionOperation) == baseline["operations"] + 4
     assert _count(ProviderCall) == baseline["provider_calls"]
     assert _count(PlanVersion) == baseline["plans"]
     assert _count(AgentRun) == baseline["agents"]
@@ -405,17 +457,17 @@ def test_r80_route_and_legacy_operation_read_fail_closed_after_handoff_revocatio
         },
     )
     assert route.status_code == 200, route.text
-    with SessionLocal() as session:
-        operation = session.scalar(select(RouteAcquisitionOperation).where(
-            RouteAcquisitionOperation.journey_id == journey_id,
-            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
-        ))
-        assert operation is not None
-        operation_id = str(operation.id)
+    operations = _private_route_operations(journey_id)
+    operation_id = str(operations["TO_HANDOFF"].id)
 
     revoke = client.post(handoff_path + "/revoke", headers=_auth(requester_id))
     assert revoke.status_code == 200, revoke.text
-    assert client.get(handoff_path + "/route/current", headers=_auth(helper_id)).status_code == 409
+    stale = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert stale.status_code == 200, stale.text
+    assert stale.json()["status"] == "STALE"
+    assert stale.json()["route_state"] == "UNKNOWN"
+    assert stale.json()["duration_min"] is None
+    assert stale.json()["shared_commitment_risk"]["state"] == "UNKNOWN"
     assert client.get(
         f"/api/v1/journeys/{journey_id}/routes/operations/{operation_id}",
         headers=_auth(helper_id),
@@ -440,37 +492,57 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
         },
     )
     assert route.status_code == 200, route.text
+    operations = _private_route_operations(journey_id)
+    assert set(operations) == {"TO_HANDOFF", "RETURN_TO_SHARED_STOP"}
+    outbound_id = str(operations["TO_HANDOFF"].id)
+    return_id = str(operations["RETURN_TO_SHARED_STOP"].id)
     with SessionLocal() as session:
-        operation = session.scalar(select(RouteAcquisitionOperation).where(
-            RouteAcquisitionOperation.journey_id == journey_id,
-            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
-        ))
-        assert operation is not None
         stamp = datetime.now(timezone.utc).isoformat()
-        operation.status = "COMPLETED"
-        operation.outcome = "ROUTE_READY"
-        operation.error_json = "{}"
-        operation.result_json = json.dumps({
-            "provider": "sealed-route-cache",
-            "provenance": "CAPTURED_REPLAY",
-            "duration_min": 17,
-            "captured_at": stamp,
-        })
+        for operation_id, duration in ((outbound_id, 17), (return_id, 23)):
+            operation = session.get(RouteAcquisitionOperation, operation_id)
+            assert operation is not None
+            operation.status = "COMPLETED"
+            operation.outcome = "ROUTE_READY"
+            operation.error_json = "{}"
+            operation.result_json = json.dumps({
+                "provider": "sealed-route-cache",
+                "provenance": "CAPTURED_REPLAY",
+                "duration_min": duration,
+                "captured_at": stamp,
+            })
         session.commit()
 
     replay = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
     assert replay.status_code == 200, replay.text
     assert replay.json()["route_state"] == "REPLAY"
-    assert replay.json()["reason"] == "CAPTURED_HISTORICAL_ROUTE_NOT_CURRENT_TRAFFIC"
-    assert replay.json()["duration_min"] == 17
+    assert replay.json()["provider"] == "sealed-route-cache"
+    assert replay.json()["duration_min"] == 40
+    assert replay.json()["outbound_leg"]["route_state"] == "REPLAY"
+    assert replay.json()["outbound_leg"]["reason"] == "CAPTURED_HISTORICAL_ROUTE_NOT_CURRENT_TRAFFIC"
+    assert replay.json()["return_leg"]["route_state"] == "REPLAY"
+    assert replay.json()["shared_commitment_risk"]["state"] == "UNKNOWN"
     assert observation_id not in replay.text
     assert "39.9042" not in replay.text
 
+    # A replay on only one leg is not enough to claim a current end-to-end route.
     with SessionLocal() as session:
-        operation = session.scalar(select(RouteAcquisitionOperation).where(
-            RouteAcquisitionOperation.journey_id == journey_id,
-            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
-        ))
+        operation = session.get(RouteAcquisitionOperation, return_id)
+        assert operation is not None
+        operation.status = "UNAVAILABLE"
+        operation.outcome = "ROUTE_UNAVAILABLE"
+        operation.error_json = json.dumps({"reason": "ROUTE_PROVIDER_NOT_CONFIGURED"})
+        operation.result_json = json.dumps({"provider": None, "provenance": "NONE"})
+        session.commit()
+    partial = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert partial.status_code == 200, partial.text
+    assert partial.json()["route_state"] == "UNKNOWN"
+    assert partial.json()["duration_min"] is None
+    assert partial.json()["outbound_leg"]["route_state"] == "REPLAY"
+    assert partial.json()["return_leg"]["route_state"] == "UNKNOWN"
+    assert partial.json()["shared_commitment_risk"]["state"] == "UNKNOWN"
+
+    with SessionLocal() as session:
+        operation = session.get(RouteAcquisitionOperation, outbound_id)
         assert operation is not None
         operation.result_json = json.dumps({
             "provider": "mock-mobility",
@@ -493,16 +565,15 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
     mock = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
     assert mock.status_code == 200, mock.text
     assert mock.json()["route_state"] == "UNKNOWN"
+    assert mock.json()["outbound_leg"]["route_state"] == "UNKNOWN"
+    assert mock.json()["return_leg"]["route_state"] == "UNKNOWN"
     assert mock.json()["duration_min"] is None
 
     # An operation result can *claim* a legitimate provider/provenance. An
     # unrelated or failed ProviderCall, even one naming the operation ID,
     # must never convert it into a LIVE route for a traveller.
     with SessionLocal() as session:
-        operation = session.scalar(select(RouteAcquisitionOperation).where(
-            RouteAcquisitionOperation.journey_id == journey_id,
-            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
-        ))
+        operation = session.get(RouteAcquisitionOperation, outbound_id)
         assert operation is not None
         stamp = datetime.now(timezone.utc).isoformat()
         claimed_result = {
@@ -533,6 +604,7 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
     mismatched_receipts = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
     assert mismatched_receipts.status_code == 200, mismatched_receipts.text
     assert mismatched_receipts.json()["route_state"] == "UNKNOWN"
+    assert mismatched_receipts.json()["outbound_leg"]["route_state"] == "UNKNOWN"
     assert mismatched_receipts.json()["duration_min"] is None
 
     # This is a synthetic *database-contract* test, NOT a real Valhalla run.
@@ -540,10 +612,7 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
     # minimum LIVE receipt contract; only a real configured provider may
     # create such a receipt in normal product operation.
     with SessionLocal() as session:
-        operation = session.scalar(select(RouteAcquisitionOperation).where(
-            RouteAcquisitionOperation.journey_id == journey_id,
-            RouteAcquisitionOperation.request_json.like("%R80_PRIVATE_BUDDY_HANDOFF%"),
-        ))
+        operation = session.get(RouteAcquisitionOperation, outbound_id)
         assert operation is not None
         session.add(ProviderCall(
             id=str(uuid4()),
@@ -556,10 +625,313 @@ def test_r80_replay_is_historical_and_mock_cannot_be_projected_as_live():
             created_at=datetime.now(timezone.utc).isoformat(),
         ))
         session.commit()
-    internally_matched_receipt = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
-    assert internally_matched_receipt.status_code == 200, internally_matched_receipt.text
-    assert internally_matched_receipt.json()["route_state"] == "LIVE"
-    assert internally_matched_receipt.json()["duration_min"] == 8
+    one_leg_receipt = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert one_leg_receipt.status_code == 200, one_leg_receipt.text
+    assert one_leg_receipt.json()["outbound_leg"]["route_state"] == "LIVE"
+    assert one_leg_receipt.json()["return_leg"]["route_state"] == "UNKNOWN"
+    assert one_leg_receipt.json()["route_state"] == "UNKNOWN"
+    assert one_leg_receipt.json()["duration_min"] is None
+
+    with SessionLocal() as session:
+        operation = session.get(RouteAcquisitionOperation, return_id)
+        assert operation is not None
+        stamp = datetime.now(timezone.utc).isoformat()
+        live_return = {
+            "operation_id": str(operation.id),
+            "provider": "valhalla-http",
+            "provenance": "LIVE_PROVIDER_CAPTURE",
+            "duration_min": 6,
+            "captured_at": stamp,
+        }
+        operation.status = "COMPLETED"
+        operation.outcome = "ROUTE_READY"
+        operation.error_json = "{}"
+        operation.result_json = json.dumps(live_return)
+        session.add(ProviderCall(
+            id=str(uuid4()),
+            provider_key="valhalla",
+            operation="ROUTE_ACQUISITION",
+            request_json=operation.request_json,
+            response_json=json.dumps(live_return),
+            status="SUCCESS",
+            latency_ms=1,
+            created_at=stamp,
+        ))
+        session.commit()
+    both_legs_live = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert both_legs_live.status_code == 200, both_legs_live.text
+    assert both_legs_live.json()["route_state"] == "LIVE"
+    assert both_legs_live.json()["outbound_leg"]["route_state"] == "LIVE"
+    assert both_legs_live.json()["return_leg"]["route_state"] == "LIVE"
+    assert both_legs_live.json()["duration_min"] == 14
+
+
+def test_r81_controlled_two_leg_route_keeps_c4_risk_test_only_and_private(monkeypatch):
+    journey_id, helper_id, bystander_id, _requester_id, handoff_id = _accepted_pair()
+    handoff_path = f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}"
+    observation_id = _observation(journey_id, helper_id, handoff_id, 39.9042)
+    now = datetime.now(timezone.utc)
+    with SessionLocal() as session:
+        handoff = session.get(JourneyRendezvousBuddyHandoff, handoff_id)
+        assert handoff is not None
+        activity = session.get(Activity, handoff.original_rendezvous_activity_id)
+        journey = session.get(Journey, journey_id)
+        assert activity is not None and journey is not None
+        plan_before = str(journey.active_plan_version_id)
+        session.add(Commitment(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            activity_id=str(activity.id),
+            kind="APPOINTMENT",
+            level="C4_Anchored",
+            status="ACTIVE",
+            monetary_value_minor=0,
+            monetary_value_status="KNOWN",
+            currency="JPY",
+            external_ref="R81_TWO_LEG_TEST_COMMITMENT",
+            policy_json=json.dumps({
+                "scheduled_start_at": (now + timedelta(minutes=15)).isoformat(),
+                "safety_buffer_min": 5,
+                "source": "R81_CONTROLLED_TEST_ADAPTER",
+            }),
+            created_at=now.isoformat(),
+            updated_at=now.isoformat(),
+        ))
+        session.commit()
+
+    captured_requests: list[dict] = []
+
+    def _controlled_submit(session, journey, route_request):
+        payload = route_request.semantic_payload()
+        captured_requests.append(payload)
+        evidence = payload["origin_evidence"]
+        duration = 8 if evidence["route_leg"] == "TO_HANDOFF" else 10
+        operation_id = str(uuid4())
+        stamp = datetime.now(timezone.utc).isoformat()
+        result = {
+            "operation_id": operation_id,
+            "provider": "valhalla-http",
+            "provenance": "TEST_PROVIDER_EMULATOR",
+            "duration_min": duration,
+            "captured_at": stamp,
+        }
+        row = RouteAcquisitionOperation(
+            id=operation_id,
+            journey_id=str(journey.id),
+            fingerprint=route_request_fingerprint(route_request),
+            origin_key=route_request.origin_key,
+            target_key=route_request.target_key,
+            target_activity_id=route_request.target_activity_id,
+            requested_mode=route_request.requested_mode,
+            provider_policy_version=route_request.provider_policy_version,
+            route_truth_policy_version=route_request.route_truth_policy_version,
+            status="COMPLETED",
+            phase="COMPLETE",
+            outcome="ROUTE_READY",
+            request_json=json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
+            result_json=json.dumps(result),
+            error_json="{}",
+            queued_at=stamp,
+            started_at=stamp,
+            finished_at=stamp,
+            updated_at=stamp,
+        )
+        session.add(row)
+        session.add(ProviderCall(
+            id=str(uuid4()),
+            provider_key="valhalla",
+            operation="ROUTE_ACQUISITION",
+            request_json=row.request_json,
+            response_json=json.dumps(result),
+            status="SUCCESS",
+            latency_ms=1,
+            created_at=stamp,
+        ))
+        session.commit()
+        return row, False
+
+    object.__setattr__(settings, "live_valhalla_url", "http://r81-test-provider.invalid")
+    monkeypatch.setattr(safe_return_module, "submit_operation", _controlled_submit)
+    before = {
+        "operations": _count(RouteAcquisitionOperation),
+        "provider_calls": _count(ProviderCall),
+        "mobility_facts": _count(MobilityFact),
+        "agents": _count(AgentRun),
+        "guardians": _count(GuardianRun),
+        "pulses": _count(GuardianPulse),
+        "plans": _count(PlanVersion),
+    }
+    response = client.post(
+        handoff_path + "/route",
+        headers=_auth(helper_id),
+        json={
+            "location_observation_id": observation_id,
+            "requested_mode": "WALK",
+            "external_provider_disclosure_confirmed": True,
+        },
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["route_state"] == "TEST_PROVIDER_EMULATOR"
+    assert body["status"] == "COMPLETED"
+    assert body["duration_min"] == 18
+    assert body["outbound_leg"]["route_state"] == "TEST_PROVIDER_EMULATOR"
+    assert body["outbound_leg"]["duration_min"] == 8
+    assert body["return_leg"]["route_state"] == "TEST_PROVIDER_EMULATOR"
+    assert body["return_leg"]["duration_min"] == 10
+    assert body["shared_commitment_risk"]["state"] == "COMMITMENT_AT_RISK"
+    assert body["shared_commitment_risk"]["evidence_scope"] == "TEST_ONLY"
+    assert body["shared_commitment_risk"]["legs_used"] == ["TO_HANDOFF", "RETURN_TO_SHARED_STOP"]
+    assert body["shared_plan_changed"] is False
+    assert body["physical_arrival_verified"] is False
+    assert body["guardian_triggered"] is False
+    assert observation_id not in json.dumps(body)
+    assert len(captured_requests) == 2
+    payloads_by_leg = {
+        item["origin_evidence"]["route_leg"]: item
+        for item in captured_requests
+    }
+    outbound = payloads_by_leg["TO_HANDOFF"]
+    returned = payloads_by_leg["RETURN_TO_SHARED_STOP"]
+    with SessionLocal() as session:
+        handoff = session.get(JourneyRendezvousBuddyHandoff, handoff_id)
+        assert handoff is not None
+        assert outbound["origin_evidence"]["route_leg"] == "TO_HANDOFF"
+        assert outbound["origin_key"] == f"location-observation:{observation_id}"
+        assert outbound["target_key"] == handoff.handoff_place_id
+        assert returned["origin_evidence"]["route_leg"] == "RETURN_TO_SHARED_STOP"
+        assert returned["origin_evidence"]["private_location_binding_id"] == observation_id
+        assert returned["origin_key"] == handoff.handoff_place_id
+        assert returned["target_key"] == handoff.original_public_place_id
+        assert returned["target_activity_id"] == handoff.original_rendezvous_activity_id
+        assert "39.9042" not in json.dumps(captured_requests)
+        assert "116.4074" not in json.dumps(captured_requests)
+        assert str(session.get(Journey, journey_id).active_plan_version_id) == plan_before
+    assert _count(RouteAcquisitionOperation) == before["operations"] + 2
+    assert _count(ProviderCall) == before["provider_calls"] + 2
+    assert _count(MobilityFact) == before["mobility_facts"]
+    assert _count(AgentRun) == before["agents"]
+    assert _count(GuardianRun) == before["guardians"]
+    assert _count(GuardianPulse) == before["pulses"]
+    assert _count(PlanVersion) == before["plans"]
+
+    operations = _private_route_operations(journey_id)
+    for operation in operations.values():
+        bystander_read = client.get(
+            f"/api/v1/journeys/{journey_id}/routes/operations/{operation.id}",
+            headers=_auth(bystander_id),
+        )
+        assert bystander_read.status_code == 403
+        assert "geometry" not in bystander_read.text.lower()
+        assert observation_id not in bystander_read.text
+
+
+def test_r81_expired_private_binding_reads_as_stale_not_not_requested():
+    journey_id, helper_id, _bystander_id, _requester_id, handoff_id = _accepted_pair()
+    handoff_path = f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}"
+    observation_id = _observation(journey_id, helper_id, handoff_id, 39.9042)
+    route = client.post(
+        handoff_path + "/route",
+        headers=_auth(helper_id),
+        json={
+            "location_observation_id": observation_id,
+            "requested_mode": "WALK",
+            "external_provider_disclosure_confirmed": True,
+        },
+    )
+    assert route.status_code == 200, route.text
+    assert route.json()["status"] == "UNAVAILABLE"
+
+    with SessionLocal() as session:
+        binding = session.get(PrivateBuddyRouteLocationBinding, observation_id)
+        assert binding is not None
+        expires_at = datetime.fromisoformat(binding.expires_at)
+
+    with execution_clock.freeze(expires_at + timedelta(seconds=1)):
+        current = client.get(handoff_path + "/route/current", headers=_auth(helper_id))
+    assert current.status_code == 200, current.text
+    assert current.json()["status"] == "STALE"
+    assert current.json()["reason"] == "R81_PRIVATE_LOCATION_BINDING_STALE"
+    assert current.json()["route_state"] == "UNKNOWN"
+    assert current.json()["duration_min"] is None
+    assert current.json()["shared_commitment_risk"]["state"] == "UNKNOWN"
+    assert observation_id not in current.text
+
+
+def test_r81_rechecks_handoff_in_second_session_before_releasing_return_leg(monkeypatch):
+    journey_id, helper_id, _bystander_id, _requester_id, handoff_id = _accepted_pair()
+    handoff_path = f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}"
+    observation_id = _observation(journey_id, helper_id, handoff_id, 39.9042)
+    object.__setattr__(settings, "live_valhalla_url", "http://r81-test-provider.invalid")
+    submitted_legs: list[str] = []
+
+    def _submit_then_revoke(session, journey, route_request):
+        payload = route_request.semantic_payload()
+        evidence = payload["origin_evidence"]
+        leg = str(evidence["route_leg"])
+        submitted_legs.append(leg)
+        operation_id = str(uuid4())
+        stamp = datetime.now(timezone.utc).isoformat()
+        result = {
+            "operation_id": operation_id,
+            "provider": "valhalla-http",
+            "provenance": "TEST_PROVIDER_EMULATOR",
+            "duration_min": 8,
+            "captured_at": stamp,
+        }
+        row = RouteAcquisitionOperation(
+            id=operation_id,
+            journey_id=str(journey.id),
+            fingerprint=route_request_fingerprint(route_request),
+            origin_key=route_request.origin_key,
+            target_key=route_request.target_key,
+            target_activity_id=route_request.target_activity_id,
+            requested_mode=route_request.requested_mode,
+            provider_policy_version=route_request.provider_policy_version,
+            route_truth_policy_version=route_request.route_truth_policy_version,
+            status="COMPLETED",
+            phase="COMPLETE",
+            outcome="ROUTE_READY",
+            request_json=json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
+            result_json=json.dumps(result),
+            error_json="{}",
+            queued_at=stamp,
+            started_at=stamp,
+            finished_at=stamp,
+            updated_at=stamp,
+        )
+        session.add(row)
+        session.commit()
+        if leg == "TO_HANDOFF":
+            # Model another process revoking the pair agreement after the slow
+            # outbound operation commits but before a second route is released.
+            with SessionLocal() as other_session:
+                fresh_handoff = other_session.get(JourneyRendezvousBuddyHandoff, handoff_id)
+                assert fresh_handoff is not None
+                fresh_handoff.status = "REVOKED"
+                fresh_handoff.closed_at = stamp
+                fresh_handoff.updated_at = stamp
+                other_session.commit()
+        return row, False
+
+    monkeypatch.setattr(safe_return_module, "submit_operation", _submit_then_revoke)
+    before = _count(RouteAcquisitionOperation)
+    response = client.post(
+        handoff_path + "/route",
+        headers=_auth(helper_id),
+        json={
+            "location_observation_id": observation_id,
+            "requested_mode": "WALK",
+            "external_provider_disclosure_confirmed": True,
+        },
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["status"] == "STALE"
+    assert response.json()["route_state"] == "UNKNOWN"
+    assert response.json()["duration_min"] is None
+    assert response.json()["shared_commitment_risk"]["state"] == "UNKNOWN"
+    assert submitted_legs == ["TO_HANDOFF"]
+    assert _count(RouteAcquisitionOperation) == before + 1
 
 
 def test_r80_generic_route_operation_requires_signed_member_and_private_origin_owner():

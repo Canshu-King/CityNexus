@@ -313,6 +313,31 @@ def _table_exists(connection, name: str) -> bool:
     return row is not None
 
 
+def _migrate_private_buddy_route_location_bindings(connection) -> None:
+    """Install the R81 additive binding index and write-once guard.
+
+    The canonical table is introduced by ``db/schema.sql``. Existing R80
+    observations are intentionally left unbound: they have no durable record of
+    which accepted handoff authorized their capture and therefore fail closed.
+    Reasserting the index and trigger here makes this an idempotent ensure_schema
+    migration as well as a fresh-database schema change.
+    """
+
+    table = "private_buddy_route_location_bindings"
+    if not _table_exists(connection, table):
+        return
+    connection.exec_driver_sql(
+        "CREATE INDEX IF NOT EXISTS idx_private_buddy_route_bindings_context_expiry "
+        "ON private_buddy_route_location_bindings "
+        "(journey_id, handoff_id, journey_member_id, traveler_id, expires_at)"
+    )
+    connection.exec_driver_sql(
+        "CREATE TRIGGER IF NOT EXISTS trg_private_buddy_route_binding_no_update "
+        "BEFORE UPDATE ON private_buddy_route_location_bindings "
+        "BEGIN SELECT RAISE(ABORT, 'private buddy route location binding is immutable'); END"
+    )
+
+
 def _quarantine_existing_duplicates(connection) -> None:
     """Best-effort duplicate cleanup that runs *before* the schema script.
 
@@ -736,6 +761,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 if statement.strip():
                     connection.exec_driver_sql(statement)
         if target_engine.dialect.name == "sqlite":
+            _migrate_private_buddy_route_location_bindings(connection)
             _reconcile_real_place_candidate_scope(connection)
             _backfill_legacy_hydration_rows(connection)
             invitation_columns = {

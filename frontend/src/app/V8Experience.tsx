@@ -1343,11 +1343,39 @@ export function V8Experience() {
   const captureForegroundLocation = async (
     maximumAgeMs = 30_000,
     privateHandoffId?: string,
+    signal?: AbortSignal,
   ): Promise<string | null> => {
     if (!data || !navigator.geolocation) return null;
     return await new Promise((resolve) => {
-      navigator.geolocation.getCurrentPosition(
+      let settled = false;
+      let geolocationWatchdog: number | null = null;
+      const finish = (observationId: string | null) => {
+        if (settled) return;
+        settled = true;
+        if (geolocationWatchdog !== null) window.clearTimeout(geolocationWatchdog);
+        signal?.removeEventListener("abort", onAbort);
+        resolve(observationId);
+      };
+      const onAbort = () => finish(null);
+      if (signal?.aborted) {
+        finish(null);
+        return;
+      }
+      signal?.addEventListener("abort", onAbort, { once: true });
+      // The browser geolocation timeout below is authoritative; this watchdog
+      // also releases the consent UI if a browser never calls either callback.
+      geolocationWatchdog = window.setTimeout(() => finish(null), 20_000);
+      try {
+        navigator.geolocation.getCurrentPosition(
         async (position) => {
+          if (settled || signal?.aborted) {
+            finish(null);
+            return;
+          }
+          if (geolocationWatchdog !== null) {
+            window.clearTimeout(geolocationWatchdog);
+            geolocationWatchdog = null;
+          }
           try {
             const locationPayload = {
               latitude: position.coords.latitude,
@@ -1356,12 +1384,17 @@ export function V8Experience() {
               captured_at: new Date(position.timestamp).toISOString(),
             };
             if (privateHandoffId) {
+              if (signal?.aborted) {
+                finish(null);
+                return;
+              }
               const observation = await cityNexusApi.captureRendezvousBuddyPrivateRouteLocation(
                 data.journey.id,
                 privateHandoffId,
                 locationPayload,
+                signal,
               );
-              resolve(observation.location_observation_id);
+              finish(signal?.aborted ? null : observation.location_observation_id);
             } else {
               const observation = await v8Request<{ id: string }>(
                 `/api/v1/journeys/${data.journey.id}/location`,
@@ -1377,19 +1410,23 @@ export function V8Experience() {
                   n: Math.round(position.coords.accuracy),
                 }),
               );
-              resolve(observation.id);
+              finish(observation.id);
             }
           } catch {
-            setMessage(t("shell.locationDenied"));
-            resolve(null);
+            if (!signal?.aborted && !privateHandoffId) setMessage(t("shell.locationDenied"));
+            finish(null);
           }
         },
         () => {
-          setMessage(t("shell.locationDenied"));
-          resolve(null);
+          if (!signal?.aborted && !privateHandoffId) setMessage(t("shell.locationDenied"));
+          finish(null);
         },
-        { enableHighAccuracy: true, maximumAge: maximumAgeMs },
-      );
+        { enableHighAccuracy: true, maximumAge: maximumAgeMs, timeout: 15_000 },
+        );
+      } catch {
+        if (!signal?.aborted && !privateHandoffId) setMessage(t("shell.locationDenied"));
+        finish(null);
+      }
     });
   };
   const shareForegroundLocation = async () => {
@@ -1976,7 +2013,7 @@ export function V8Experience() {
               journeyId={data.journey.id}
               journeyStatus={data.journey.status}
               recentlyJoinedJourneyId={recentlyJoinedJourneyId}
-              onRefreshLocation={(privateHandoffId) => captureForegroundLocation(0, privateHandoffId)}
+              onRefreshLocation={(privateHandoffId, signal) => captureForegroundLocation(0, privateHandoffId, signal)}
               onJourneyJoined={openJoinedJourney}
             />
           )}

@@ -1712,6 +1712,41 @@ CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_handoffs_pair_status_exp
         journey_id, requester_member_id, helper_member_id, status, expires_at
     );
 
+-- R81: an exact, write-once authorization receipt for an R80 private location
+-- sample. Legacy location observations are intentionally not backfilled; without
+-- this receipt they cannot enter a private handoff route.
+CREATE TABLE IF NOT EXISTS private_buddy_route_location_bindings (
+    observation_id TEXT PRIMARY KEY
+        REFERENCES location_observations(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    handoff_id TEXT NOT NULL REFERENCES journey_rendezvous_buddy_handoffs(id) ON DELETE CASCADE,
+    journey_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    current_activity_id TEXT,
+    destination_place_id TEXT NOT NULL,
+    destination_place_snapshot_sha256 TEXT NOT NULL
+        CHECK (length(destination_place_snapshot_sha256) = 64),
+    audience_sha256 TEXT NOT NULL CHECK (length(audience_sha256) = 64),
+    handoff_accepted_at TEXT NOT NULL,
+    captured_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    bound_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_private_buddy_route_bindings_context_expiry
+    ON private_buddy_route_location_bindings(
+        journey_id, handoff_id, journey_member_id, traveler_id, expires_at
+    );
+
+-- Appends are the only supported write. Parent retention cascades can still purge
+-- the entire parent scope, while an existing binding cannot be rewritten in place.
+CREATE TRIGGER IF NOT EXISTS trg_private_buddy_route_binding_no_update
+    BEFORE UPDATE ON private_buddy_route_location_bindings
+    BEGIN
+        SELECT RAISE(ABORT, 'private buddy route location binding is immutable');
+    END;
+
 -- The ACL table.  A row says which capability a role has and which message key states its scope in
 -- one sentence - the words themselves stay in the client's dictionary, because a server sentence
 -- reaching a screen is the defect this project keeps having to fix (RELATION:94's shape is a table,

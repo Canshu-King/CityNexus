@@ -10943,15 +10943,15 @@ def current_private_buddy_handoff_route(
     request: Request,
     session: Session = Depends(get_session),
 ):
-    """Read only the signed viewer's current route to their accepted R79 handoff."""
+    """Read only the signed viewer's current outbound and safe-return route evidence."""
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
-    from app.execution.private_buddy_route import current_private_route
+    from app.execution.private_buddy_safe_return import current_private_buddy_safe_return
 
     principal, member = resolve_journey_member_principal(
         request, session, journey_id=journey.id
     )
-    return current_private_route(
+    return current_private_buddy_safe_return(
         session,
         journey=journey,
         viewer=member,
@@ -10968,15 +10968,15 @@ def acquire_private_buddy_handoff_route(
     request: Request,
     session: Session = Depends(get_session),
 ):
-    """Acquire one caller-private route after separate location and provider consent."""
+    """Acquire the caller's private route to handoff and return to shared stop."""
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
-    from app.execution.private_buddy_route import acquire_private_buddy_route
+    from app.execution.private_buddy_safe_return import acquire_private_buddy_safe_return
 
     principal, member = resolve_journey_member_principal(
         request, session, journey_id=journey.id
     )
-    return acquire_private_buddy_route(
+    return acquire_private_buddy_safe_return(
         session,
         journey=journey,
         viewer=member,

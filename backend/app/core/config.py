@@ -51,6 +51,11 @@ class Settings:
         os.getenv("CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS", "3600")
     )
     live_valhalla_url: str | None = os.getenv("CITYNEXUS_LIVE_VALHALLA_URL") or None
+    # Remote Valhalla emulators must opt into test provenance explicitly. The
+    # adapter independently marks loopback and reserved test hosts as test.
+    live_valhalla_test_provider: bool = (
+        os.getenv("CITYNEXUS_LIVE_VALHALLA_TEST_PROVIDER", "false").lower() == "true"
+    )
     open_meteo_url: str = os.getenv("CITYNEXUS_OPEN_METEO_URL", "https://api.open-meteo.com")
     open_meteo_timeout_seconds: float = float(
         os.getenv("CITYNEXUS_OPEN_METEO_TIMEOUT_SECONDS", "10")

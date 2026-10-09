@@ -146,12 +146,14 @@ def capture_runtime_mobility_snapshot(
             base_url=settings.live_valhalla_url,
             place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
             costing=costing,
+            test_provider=settings.live_valhalla_test_provider,
         )
         live_auto_fallback: Any = ValhallaHTTPMobilityProvider(
             client=client,
             base_url=settings.live_valhalla_url,
             place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
             costing=(costing if requested_mode is not None else "auto"),
+            test_provider=settings.live_valhalla_test_provider,
         )
         try:
             capabilities = primary.status_capabilities()
@@ -279,6 +281,7 @@ def capture_journey_mobility_matrix(
                     base_url=settings.live_valhalla_url,
                     place_lookup=lambda key: lookup[key],
                     costing=costing,
+                    test_provider=settings.live_valhalla_test_provider,
                 )
                 if mode == "WALK":
                     try:

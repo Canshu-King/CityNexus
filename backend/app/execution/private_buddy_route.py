@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import uuid4
 
@@ -21,6 +21,7 @@ from app.db.models import (
     JourneyRendezvousBuddyHandoff,
     LocationObservation,
     Place,
+    PrivateBuddyRouteLocationBinding,
     ProviderCall,
     RouteAcquisitionOperation,
 )
@@ -140,13 +141,11 @@ def _validate_observation(
     ):
         raise HTTPException(403, "R80_LOCATION_OBSERVATION_MEMBER_MISMATCH")
     source = str(observation.source or "").upper()
-    if source not in {
-        "FOREGROUND_WEB",
-        "DEVICE_ATTESTED",
-        "LOCATION_ATTESTED",
-        PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
-    }:
-        raise HTTPException(409, "R80_LOCATION_SOURCE_UNSUPPORTED")
+    # A private handoff route never borrows a general foreground/device sample.
+    # R81 requires the exact capture-time authorization receipt below; legacy
+    # sources have no receipt and cannot be upgraded by a later request.
+    if source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE:
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_BINDING_REQUIRED")
     captured = _stamp(observation.captured_at)
     if captured is None:
         raise HTTPException(409, "R80_LOCATION_CAPTURE_TIME_UNKNOWN")
@@ -157,6 +156,128 @@ def _validate_observation(
     if float(observation.accuracy_m) > MAX_USEFUL_ACCURACY_M:
         raise HTTPException(409, "R80_LOCATION_OBSERVATION_IMPRECISE")
     return observation, source, max(0, int(age_seconds))
+
+
+def _destination_snapshot_sha256(snapshot: dict[str, Any]) -> str:
+    return hashlib.sha256(_json(snapshot).encode("utf-8")).hexdigest()
+
+
+def _binding_expiry(*, captured_at: datetime, handoff: JourneyRendezvousBuddyHandoff) -> datetime:
+    handoff_expires = _stamp(handoff.expires_at)
+    if handoff_expires is None:
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_HANDOFF_EXPIRY_UNKNOWN")
+    return min(
+        captured_at.astimezone(timezone.utc) + timedelta(seconds=LOCATION_FRESHNESS_SECONDS),
+        handoff_expires,
+    )
+
+
+def _private_location_binding_for_context(
+    session: Session,
+    *,
+    journey: Journey,
+    handoff: JourneyRendezvousBuddyHandoff,
+    viewer: JourneyMember,
+    principal: TravelerPrincipal,
+    place_snapshot: dict[str, Any],
+    observation_id: str,
+    now: datetime | None = None,
+) -> tuple[LocationObservation, str, int]:
+    observation, source, age = _validate_observation(
+        session,
+        journey=journey,
+        member=viewer,
+        principal=principal,
+        observation_id=observation_id,
+        now=now,
+    )
+    binding = session.get(PrivateBuddyRouteLocationBinding, str(observation.id))
+    captured = _stamp(observation.captured_at)
+    accepted_at = _stamp(handoff.responded_at)
+    expiry = _stamp(binding.expires_at) if binding is not None else None
+    reference = _now() if now is None else now.astimezone(timezone.utc)
+    expected_expiry = _binding_expiry(captured_at=captured, handoff=handoff) if captured else None
+    active_member = viewer.removed_at is None
+    if viewer.expires_at:
+        member_expiry = _stamp(viewer.expires_at)
+        active_member = active_member and member_expiry is not None and member_expiry > reference
+    if not active_member:
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_MEMBER_INACTIVE")
+    if (
+        binding is None
+        or handoff.status != "ACCEPTED"
+        or accepted_at is None
+        or str(binding.observation_id) != str(observation.id)
+        or str(binding.journey_id) != str(journey.id)
+        or str(binding.handoff_id) != str(handoff.id)
+        or str(binding.journey_member_id) != str(viewer.id)
+        or str(binding.traveler_id) != str(principal.traveler_id)
+        or str(binding.active_plan_version_id) != str(handoff.active_plan_version_id)
+        or str(binding.current_activity_id or "") != str(handoff.current_activity_id or "")
+        or str(binding.destination_place_id) != str(handoff.handoff_place_id)
+        or str(binding.destination_place_snapshot_sha256)
+            != _destination_snapshot_sha256(place_snapshot)
+        or str(binding.audience_sha256) != str(handoff.audience_sha256)
+        or _stamp(binding.handoff_accepted_at) != accepted_at
+        or _stamp(binding.captured_at) != captured
+        or expiry is None
+        or expected_expiry is None
+        or expiry != expected_expiry
+        or expiry <= reference
+    ):
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_BINDING_CONTEXT_MISMATCH")
+    return observation, source, age
+
+
+def validate_private_location_binding(
+    session: Session,
+    *,
+    journey: Journey,
+    principal: TravelerPrincipal,
+    observation_id: str,
+    handoff: JourneyRendezvousBuddyHandoff | None = None,
+    member: JourneyMember | None = None,
+    place_snapshot: dict[str, Any] | None = None,
+    handoff_id: str | None = None,
+    viewer: JourneyMember | None = None,
+    now: datetime | None = None,
+) -> tuple[LocationObservation, str, int]:
+    """Revalidate an observation against one exact, currently accepted handoff.
+
+    Callers that add another private route surface should use this instead of
+    passing an observation UUID through the older generic location validator.
+    The explicit handoff_id re-checks signed principal, pair, active plan/cursor,
+    destination snapshot, acceptance and expiry on every use.
+    """
+
+    signed_member = member or viewer
+    exact_handoff_id = str(handoff_id or (handoff.id if handoff is not None else ""))
+    if signed_member is None or not exact_handoff_id:
+        raise HTTPException(422, "R81_PRIVATE_LOCATION_EXACT_HANDOFF_REQUIRED")
+    current_handoff, snapshot, _activity, _original = _accepted_handoff_context(
+        session,
+        journey=journey,
+        viewer=signed_member,
+        principal=principal,
+        handoff_id=exact_handoff_id,
+    )
+    if handoff is not None and str(handoff.id) != str(current_handoff.id):
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_HANDOFF_CONTEXT_MISMATCH")
+    if (
+        place_snapshot is not None
+        and _destination_snapshot_sha256(place_snapshot) != _destination_snapshot_sha256(snapshot)
+    ):
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_DESTINATION_CONTEXT_MISMATCH")
+    return _private_location_binding_for_context(
+        session,
+        journey=journey,
+        handoff=current_handoff,
+        viewer=signed_member,
+        principal=principal,
+        place_snapshot=snapshot,
+        observation_id=observation_id,
+        now=now,
+    )
 
 
 def capture_private_buddy_route_location(
@@ -171,7 +292,7 @@ def capture_private_buddy_route_location(
     accuracy_m: float,
     captured_at: datetime,
 ) -> dict[str, Any]:
-    handoff, _snapshot, _activity, _original = _accepted_handoff_context(
+    handoff, snapshot, _activity, _original = _accepted_handoff_context(
         session, journey=journey, viewer=viewer, principal=principal, handoff_id=handoff_id
     )
     if captured_at.tzinfo is None:
@@ -181,6 +302,14 @@ def capture_private_buddy_route_location(
         raise HTTPException(409, "R80_LOCATION_OBSERVATION_STALE")
     if accuracy_m > MAX_USEFUL_ACCURACY_M:
         raise HTTPException(409, "R80_LOCATION_OBSERVATION_IMPRECISE")
+    captured = captured_at.astimezone(timezone.utc)
+    binding_expires = _binding_expiry(captured_at=captured, handoff=handoff)
+    bound_at = _now()
+    if binding_expires <= bound_at:
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_BINDING_ALREADY_EXPIRED")
+    accepted_at = _stamp(handoff.responded_at)
+    if accepted_at is None:
+        raise HTTPException(409, "R81_PRIVATE_LOCATION_ACCEPTANCE_TIME_UNKNOWN")
     row = LocationObservation(
         id=str(uuid4()),
         journey_id=str(journey.id),
@@ -189,20 +318,35 @@ def capture_private_buddy_route_location(
         latitude=float(latitude),
         longitude=float(longitude),
         accuracy_m=float(accuracy_m),
-        captured_at=captured_at.astimezone(timezone.utc).isoformat(),
+        captured_at=captured.isoformat(),
         source=PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
     )
     session.add(row)
+    session.add(PrivateBuddyRouteLocationBinding(
+        observation_id=str(row.id),
+        journey_id=str(journey.id),
+        handoff_id=str(handoff.id),
+        journey_member_id=str(viewer.id),
+        traveler_id=str(principal.traveler_id),
+        active_plan_version_id=str(handoff.active_plan_version_id),
+        current_activity_id=str(handoff.current_activity_id) if handoff.current_activity_id else None,
+        destination_place_id=str(handoff.handoff_place_id),
+        destination_place_snapshot_sha256=_destination_snapshot_sha256(snapshot),
+        audience_sha256=str(handoff.audience_sha256),
+        handoff_accepted_at=accepted_at.isoformat(),
+        captured_at=captured.isoformat(),
+        expires_at=binding_expires.isoformat(),
+        bound_at=bound_at.isoformat(),
+    ))
     record_audit(
         session,
-        action="journey.rendezvous_buddy_handoff.private_route_location_recorded",
-        entity_type="JourneyRendezvousBuddyHandoff",
-        entity_id=str(handoff.id),
+        action="journey.private_location.capture_recorded",
+        entity_type="PrivateLocationCapture",
+        entity_id=None,
         journey_id=str(journey.id),
         actor_type="AUTHENTICATED_TRAVELER",
         actor_id=str(principal.traveler_id),
         after={
-            "member_id": str(viewer.id),
             "source": PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
             "visibility": "CALLER_PRIVATE",
             "external_provider_contacted": False,
@@ -240,6 +384,9 @@ def _route_request(
         route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
         origin_evidence={
             "location_observation_id": str(observation.id),
+            # The binding uses observation_id as its immutable primary key.
+            "private_location_binding_id": str(observation.id),
+            "route_leg": "TO_HANDOFF",
             "journey_member_id": str(member.id),
             "traveler_id": str(principal.traveler_id),
             "source": source,
@@ -485,6 +632,8 @@ def _project_operation(
 def _operation_matches_context(
     row: RouteAcquisitionOperation,
     *,
+    session: Session,
+    journey: Journey,
     handoff: JourneyRendezvousBuddyHandoff,
     member: JourneyMember,
     principal: TravelerPrincipal,
@@ -493,7 +642,7 @@ def _operation_matches_context(
     evidence = private_route_scope(row.request_json)
     if evidence is None:
         return None
-    expected_place_hash = hashlib.sha256(_json(place_snapshot).encode("utf-8")).hexdigest()
+    expected_place_hash = _destination_snapshot_sha256(place_snapshot)
     if not (
         str(evidence.get("handoff_id") or "") == str(handoff.id)
         and str(evidence.get("journey_member_id") or "") == str(member.id)
@@ -502,8 +651,31 @@ def _operation_matches_context(
         and str(evidence.get("current_activity_id") or "") == str(handoff.current_activity_id or "")
         and str(evidence.get("audience_sha256") or "") == str(handoff.audience_sha256)
         and str(evidence.get("target_place_snapshot_sha256") or "") == expected_place_hash
+        and str(evidence.get("route_leg") or "") == "TO_HANDOFF"
+        and str(evidence.get("private_location_binding_id") or "")
+            == str(evidence.get("location_observation_id") or "")
         and str(row.target_key) == str(handoff.handoff_place_id)
         and str(row.target_activity_id or "") == str(handoff.original_rendezvous_activity_id)
+    ):
+        return None
+    observation_id = str(evidence.get("location_observation_id") or "")
+    try:
+        observation, source, _age = _private_location_binding_for_context(
+            session,
+            journey=journey,
+            handoff=handoff,
+            viewer=member,
+            principal=principal,
+            place_snapshot=place_snapshot,
+            observation_id=observation_id,
+        )
+    except HTTPException:
+        return None
+    if (
+        source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE
+        or str(observation.captured_at) != str(evidence.get("captured_at") or "")
+        or abs(float(observation.accuracy_m) - float(evidence.get("accuracy_m") or -1)) > 0.001
+        or not bool(evidence.get("external_provider_disclosure_confirmed"))
     ):
         return None
     return evidence
@@ -526,6 +698,8 @@ def _latest_private_operation(
     for row in rows:
         evidence = _operation_matches_context(
             row,
+            session=session,
+            journey=journey,
             handoff=handoff,
             member=member,
             principal=principal,
@@ -578,11 +752,13 @@ def current_private_route(
             "guardian_triggered": False,
         }
     try:
-        observation, _source, age = _validate_observation(
+        observation, _source, age = _private_location_binding_for_context(
             session,
             journey=journey,
-            member=viewer,
+            handoff=handoff,
+            viewer=viewer,
             principal=principal,
+            place_snapshot=snapshot,
             observation_id=str(evidence.get("location_observation_id") or ""),
         )
     except HTTPException:
@@ -641,11 +817,13 @@ def acquire_private_buddy_route(
     handoff, snapshot, activity, _original = _accepted_handoff_context(
         session, journey=journey, viewer=viewer, principal=principal, handoff_id=handoff_id
     )
-    observation, source, _age = _validate_observation(
+    observation, source, _age = _private_location_binding_for_context(
         session,
         journey=journey,
-        member=viewer,
+        handoff=handoff,
+        viewer=viewer,
         principal=principal,
+        place_snapshot=snapshot,
         observation_id=observation_id,
     )
     place = session.get(Place, str(handoff.handoff_place_id))
@@ -696,6 +874,8 @@ def acquire_private_buddy_route(
         )
         evidence = _operation_matches_context(
             route,
+            session=session,
+            journey=fresh_journey,
             handoff=fresh_handoff,
             member=fresh_viewer,
             principal=principal,
@@ -703,11 +883,13 @@ def acquire_private_buddy_route(
         )
         if evidence is None or str(evidence.get("location_observation_id") or "") != str(observation_id):
             raise HTTPException(409, "R80_ROUTE_RESULT_CONTEXT_CHANGED")
-        fresh_observation, _fresh_source, age = _validate_observation(
+        fresh_observation, _fresh_source, age = _private_location_binding_for_context(
             session,
             journey=fresh_journey,
-            member=fresh_viewer,
+            handoff=fresh_handoff,
+            viewer=fresh_viewer,
             principal=principal,
+            place_snapshot=fresh_snapshot,
             observation_id=observation_id,
         )
         if str(fresh_observation.captured_at) != str(evidence.get("captured_at") or ""):
@@ -744,6 +926,8 @@ def read_private_route_operation(
     )
     matched = _operation_matches_context(
         operation,
+        session=session,
+        journey=journey,
         handoff=handoff,
         member=viewer,
         principal=principal,
@@ -751,11 +935,13 @@ def read_private_route_operation(
     )
     if matched is None:
         raise HTTPException(404, "R80_PRIVATE_ROUTE_NOT_FOUND")
-    observation, _source, age = _validate_observation(
+    observation, _source, age = _private_location_binding_for_context(
         session,
         journey=journey,
-        member=viewer,
+        handoff=handoff,
+        viewer=viewer,
         principal=principal,
+        place_snapshot=snapshot,
         observation_id=str(matched.get("location_observation_id") or ""),
     )
     if str(observation.captured_at) != str(matched.get("captured_at") or ""):

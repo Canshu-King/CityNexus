@@ -784,7 +784,7 @@ export interface RendezvousBuddyHandoff {
 
 export interface RendezvousBuddyPrivateRouteResult {
   handoff_id: string;
-  route_state: "LIVE" | "REPLAY" | "UNKNOWN";
+  route_state: "LIVE" | "REPLAY" | "TEST_PROVIDER_EMULATOR" | "UNKNOWN" | "STALE";
   status: string;
   reason: string;
   duration_min: number | null;
@@ -793,6 +793,10 @@ export interface RendezvousBuddyPrivateRouteResult {
   captured_at: string | null;
   route_age_seconds: number | null;
   origin_age_seconds: number | null;
+  /** R81 caller-private outbound leg: this member's fresh origin to the accepted public handoff. */
+  outbound_leg?: RendezvousBuddyPrivateRouteLegResult | null;
+  /** R81 caller-private return leg: the agreed handoff place to the current shared-plan stop. */
+  return_leg?: RendezvousBuddyPrivateRouteLegResult | null;
   authority: string;
   target_place_name: string;
   target_source_label: string;
@@ -804,10 +808,21 @@ export interface RendezvousBuddyPrivateRouteResult {
     next_commitment?: { title?: string; scheduled_at?: string; safety_buffer_min?: number } | null;
     slack_after_buffer_min?: number | null;
     basis?: string;
+    legs_used?: string[];
+    evidence_scope?: string;
   };
   shared_plan_changed: false;
   physical_arrival_verified: false;
   guardian_triggered: false;
+}
+
+export interface RendezvousBuddyPrivateRouteLegResult {
+  route_state: "LIVE" | "REPLAY" | "TEST_PROVIDER_EMULATOR" | "UNKNOWN" | "STALE";
+  status: string;
+  reason: string;
+  duration_min: number | null;
+  provider: string | null;
+  provenance: string;
 }
 
 export interface RendezvousBuddyHandoffCandidates {
@@ -2675,6 +2690,7 @@ export const cityNexusApi = {
     journeyId: string,
     handoffId: string,
     payload: { latitude: number; longitude: number; accuracy_m: number; captured_at: string },
+    signal?: AbortSignal,
   ): Promise<{
     location_observation_id: string;
     journey_id: string;
@@ -2689,6 +2705,7 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify(payload),
+        signal,
       },
     );
   },

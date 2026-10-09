@@ -16,12 +16,30 @@ from app.integrations.mobility.snapshot_capture import (
 from app.integrations.mobility.valhalla_http import ValhallaHTTPMobilityProvider
 from app.integrations.mock.providers import MockMobilityProvider
 from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
+from app.execution.route_session_contract import fact_is_eligible_for_live_readiness
+from app.integrations.mobility.valhalla_http import TEST_PROVIDER_EMULATOR
 from app.replanning.feasibility import FeasibilityActivity, build_context, evaluate_feasibility
 from app.db.models import PlanVersion
 from app.db.session import SessionLocal
 from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
+
+
+@pytest.mark.parametrize("base_url", ["http://127.0.0.1:9999", "http://valhalla.test"])
+def test_loopback_and_reserved_valhalla_emulators_are_not_live(base_url: str):
+    with httpx.Client(transport=httpx.MockTransport(lambda _request: httpx.Response(200))) as http_client:
+        provider = ValhallaHTTPMobilityProvider(
+            client=http_client,
+            base_url=base_url,
+            place_lookup=lambda key: {"latitude": 39.0, "longitude": 116.0},
+        )
+    assert provider.fact_quality("origin", "destination") == TEST_PROVIDER_EMULATOR
+    assert not fact_is_eligible_for_live_readiness({
+        "provider": provider.provider_key,
+        "provenance": provider.fact_quality("origin", "destination"),
+        "duration_min": 5,
+    })
 
 
 class _Provider:
@@ -432,6 +450,7 @@ def test_prt08_mocktransport_valhalla_to_snapshot_to_gate_chain():
     evidence = snapshot.to_evidence()
     assert evidence["source_provider"] == "valhalla-http"
     assert evidence["facts"][0]["minutes"] == 10
-    assert evidence["facts"][0]["route_provenance"] == "LIVE_PROVIDER_CAPTURE"
+    assert evidence["facts"][0]["route_provenance"] == "TEST_PROVIDER_EMULATOR"
+    assert not fact_is_eligible_for_live_readiness(evidence["facts"][0])
     assert evidence["facts"][0]["cost_provenance"] == "CITYNEXUS_COST_ESTIMATE"
     assert evidence["facts"][0]["time_basis"] == "VALHALLA_ROUTE_CAPTURED_AT"

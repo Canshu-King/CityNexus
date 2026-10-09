@@ -2422,6 +2422,54 @@ class JourneyRendezvousBuddyHandoff(Base):
     )
 
 
+class PrivateBuddyRouteLocationBinding(Base):
+    """Write-once context receipt for one R80 private location observation.
+
+    The observation itself contains coordinates. This table stores only the exact
+    authorization scope needed to decide whether that sample may still be used by
+    a private handoff route. Old observations are deliberately not backfilled.
+    """
+
+    __tablename__ = "private_buddy_route_location_bindings"
+    observation_id: Mapped[str] = mapped_column(
+        ForeignKey("location_observations.id", ondelete="CASCADE"), primary_key=True
+    )
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    handoff_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_buddy_handoffs.id", ondelete="CASCADE")
+    )
+    journey_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="CASCADE")
+    )
+    current_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    destination_place_id: Mapped[str] = mapped_column(String)
+    destination_place_snapshot_sha256: Mapped[str] = mapped_column(String)
+    audience_sha256: Mapped[str] = mapped_column(String)
+    handoff_accepted_at: Mapped[str] = mapped_column(String)
+    captured_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    bound_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "length(destination_place_snapshot_sha256) = 64",
+            name="ck_private_buddy_route_binding_destination_hash",
+        ),
+        CheckConstraint(
+            "length(audience_sha256) = 64",
+            name="ck_private_buddy_route_binding_audience_hash",
+        ),
+        Index(
+            "idx_private_buddy_route_bindings_context_expiry",
+            "journey_id", "handoff_id", "journey_member_id", "traveler_id", "expires_at",
+        ),
+    )
+
+
 class JourneyRoleCapability(Base):
     """Role -> one capability, with the message key that states the role's scope in a sentence.
 

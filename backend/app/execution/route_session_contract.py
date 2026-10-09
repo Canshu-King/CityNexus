@@ -114,6 +114,7 @@ def fact_is_eligible_for_live_readiness(fact: dict[str, Any] | None) -> bool:
         "SYNTHETIC_DEFAULT",
         "CITYNEXUS_ESTIMATE",
         "ESTIMATE",
+        "TEST_PROVIDER_EMULATOR",
     }:
         return False
     return True

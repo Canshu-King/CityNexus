@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   cityNexusApi,
   type GroupRendezvousRouteResult,
@@ -11,13 +11,13 @@ import {
   type RendezvousBuddyPrivateRouteResult,
 } from "../../api/citynexus";
 import { useLocale } from "../../i18n/LocaleContext";
-import { buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
+import { buildGoogleWalkingDirectionsUrl, buildOpenStreetMapPinUrl } from "./memberSideQuestNavigationLinks";
 
 type Props = {
   journeyId: string | null;
   journeyStatus?: string | null;
   recentlyJoinedJourneyId?: string | null;
-  onRefreshLocation?: (privateHandoffId?: string) => Promise<string | null>;
+  onRefreshLocation?: (privateHandoffId?: string, signal?: AbortSignal) => Promise<string | null>;
   onJourneyJoined: (journeyId: string) => Promise<void> | void;
 };
 
@@ -28,6 +28,12 @@ type Rendezvous = NonNullable<
 type BuddyRouteConsent =
   | { handoffId: string; step: "LOCATION" }
   | { handoffId: string; step: "PROVIDER"; locationObservationId: string };
+type BuddyDirectionsConsent = {
+  handoff: RendezvousBuddyHandoff;
+  handoffSnapshotKey: string;
+  targetKey: string;
+  audienceKey: string;
+};
 
 function groupPresenceTargetKey(presence: GroupPresence | null | undefined): string | null {
   const target = presence?.rendezvous;
@@ -57,6 +63,26 @@ function hasExactPublicPin(destination: Rendezvous | null | undefined): boolean 
 
 function rendezvousAudienceKey(members: GroupPresence["members"]): string {
   return JSON.stringify(members.map((member) => member.member_id).sort());
+}
+
+function buddyHandoffSnapshotKey(handoff: RendezvousBuddyHandoff): string {
+  // Keep the user's consent attached to the exact accepted record, destination, expiry,
+  // and original shared-stop reference that was shown in the dialog.
+  return JSON.stringify(handoff);
+}
+
+function handoffStillTargetsCurrentSharedStop(
+  handoff: RendezvousBuddyHandoff,
+  presence: GroupPresence | null,
+): boolean {
+  const target = presence?.rendezvous;
+  return Boolean(
+    presence?.active_plan_version_id
+    && target
+    && target.activity_id === handoff.original_shared_stop.activity_id
+    && target.place_id === handoff.original_shared_stop.place_id
+    && target.place_name === handoff.original_shared_stop.place_name,
+  );
 }
 
 function secureJourneyRequestKey(): string {
@@ -175,10 +201,12 @@ export function JourneyMembershipPanel({
   const [buddyActionBusy, setBuddyActionBusy] = useState(false);
   const [buddyMessage, setBuddyMessage] = useState<string | null>(null);
   const [buddyMapConsentId, setBuddyMapConsentId] = useState<string | null>(null);
+  const [buddyDirectionsConsent, setBuddyDirectionsConsent] = useState<BuddyDirectionsConsent | null>(null);
   const [buddyPrivateRoutes, setBuddyPrivateRoutes] = useState<Record<string, RendezvousBuddyPrivateRouteResult>>({});
   const [buddyRouteConsent, setBuddyRouteConsent] = useState<BuddyRouteConsent | null>(null);
   const [buddyRouteBusy, setBuddyRouteBusy] = useState(false);
   const [buddyRouteMessage, setBuddyRouteMessage] = useState<string | null>(null);
+  const buddyRouteLocationAbort = useRef<AbortController | null>(null);
   const [routeResult, setRouteResult] = useState<{
     key: string;
     result: GroupRendezvousRouteResult;
@@ -486,6 +514,7 @@ export function JourneyMembershipPanel({
       }
       setBuddyMessage(zh ? "双方接应提议已关闭；共同计划没有改变。" : "The pair handoff is closed. The shared plan is unchanged.");
       if (buddyMapConsentId === handoff.handoff_id) setBuddyMapConsentId(null);
+      if (buddyDirectionsConsent?.handoff.handoff_id === handoff.handoff_id) setBuddyDirectionsConsent(null);
       await refreshGroupPresence();
     } catch {
       setBuddyMessage(zh ? "提议已过期或已关闭；请刷新查看当前状态。" : "The handoff expired or was already closed. Refresh to see the current state.");
@@ -540,6 +569,103 @@ export function JourneyMembershipPanel({
     }
   };
 
+  const beginBuddyDirectionsConsent = (handoff: RendezvousBuddyHandoff) => {
+    if (handoff.status !== "ACCEPTED" || !currentTargetKey || !currentAudienceKey
+      || !handoffStillTargetsCurrentSharedStop(handoff, groupPresence)) {
+      setBuddyMessage(zh
+        ? "当前共享计划或接应目标尚未核对；请先刷新双方接应状态。"
+        : "The current shared plan and handoff target are not verified yet. Refresh the pair handoff first.");
+      return;
+    }
+    setBuddyMessage(null);
+    setBuddyDirectionsConsent({
+      handoff,
+      handoffSnapshotKey: buddyHandoffSnapshotKey(handoff),
+      targetKey: currentTargetKey,
+      audienceKey: currentAudienceKey,
+    });
+  };
+
+  const openAcceptedBuddyDirections = async () => {
+    const consent = buddyDirectionsConsent;
+    if (!journeyId || !consent || buddyActionBusy) return;
+    const popup = window.open("about:blank", "_blank");
+    if (!popup) {
+      setBuddyMessage(zh
+        ? "浏览器阻止了新窗口；没有向地图发送地点。请允许弹窗后重新确认。"
+        : "The browser blocked the new tab; no destination was sent. Allow popups and confirm again.");
+      return;
+    }
+    popup.opener = null;
+    setBuddyActionBusy(true);
+    setBuddyMessage(null);
+    try {
+      // Re-read both caller-private handoff state and the live shared plan/cursor
+      // immediately before any external destination is released.
+      const [projection, current] = await Promise.all([
+        cityNexusApi.getJourneyOperator(journeyId),
+        cityNexusApi.getCurrentRendezvousBuddyHandoffs(journeyId),
+      ]);
+      const presence = projection.group_presence ?? null;
+      const freshHandoff = current.items.find((item) => item.handoff_id === consent.handoff.handoff_id);
+      const freshTargetKey = groupPresenceTargetKey(presence);
+      const freshAudienceKey = presence ? rendezvousAudienceKey(presence.members) : null;
+      const place = freshHandoff?.handoff_place;
+      const exactPublicDestination = place
+        && (place.source_kind === "CURRENT_SHARED_PLAN_STOP" || place.source_kind === "PUBLIC_PLACE_CATALOG_RECORD")
+        && place.coordinate_system === "WGS84"
+        && Number.isFinite(place.latitude) && place.latitude >= -90 && place.latitude <= 90
+        && Number.isFinite(place.longitude) && place.longitude >= -180 && place.longitude <= 180;
+      const stillCurrent = freshHandoff?.status === "ACCEPTED"
+        && Date.parse(freshHandoff.expires_at) > Date.now()
+        && buddyHandoffSnapshotKey(freshHandoff) === consent.handoffSnapshotKey
+        && freshTargetKey === consent.targetKey
+        && freshAudienceKey === consent.audienceKey
+        && handoffStillTargetsCurrentSharedStop(freshHandoff, presence)
+        && exactPublicDestination;
+
+      setGroupPresence(presence);
+      setBuddyHandoffs(current.items);
+      if (!stillCurrent || !freshHandoff || !place) {
+        popup.close();
+        setBuddyDirectionsConsent(null);
+        setBuddyMessage(zh
+          ? "接应同意、成员、地点或共同计划游标已变化或过期；没有向外部地图发送地点。请刷新后重新同意。"
+          : "The handoff, members, destination, or shared-plan cursor changed or expired. No destination was sent to an external map; refresh and consent again.");
+        return;
+      }
+
+      const url = buildGoogleWalkingDirectionsUrl({
+        kind: "SHARED_RENDEZVOUS",
+        place_id: place.place_id,
+        name: place.name,
+        latitude: place.latitude,
+        longitude: place.longitude,
+        coordinate_system: place.coordinate_system,
+        provenance: {
+          provider_key: place.source_provider_key,
+          external_id: place.source_external_id,
+          source_coordinate_system: place.coordinate_system,
+        },
+        navigation_available: true,
+        unavailable_reason: null,
+      });
+      popup.location.href = url;
+      setBuddyDirectionsConsent(null);
+      setBuddyMessage(zh
+        ? "已把双方当前同意的目的地交给 Google Maps；路线和 ETA 由外部应用自行处理，不代表服务器验证路线或实际到场。"
+        : "The currently agreed destination was handed to Google Maps. The external app handles directions and any ETA; this is not a server-verified route or proof of arrival.");
+    } catch {
+      popup.close();
+      setBuddyDirectionsConsent(null);
+      setBuddyMessage(zh
+        ? "无法重新验证双方接应和当前共同计划；没有向外部地图发送地点。"
+        : "The pair handoff and current shared plan could not be revalidated. No destination was sent to an external map.");
+    } finally {
+      setBuddyActionBusy(false);
+    }
+  };
+
   const beginBuddyRouteCheck = (handoff: RendezvousBuddyHandoff) => {
     if (!onRefreshLocation || buddyRouteBusy || buddyActionBusy) return;
     setBuddyRouteMessage(null);
@@ -548,10 +674,13 @@ export function JourneyMembershipPanel({
 
   const confirmBuddyRouteLocation = async () => {
     if (!journeyId || !onRefreshLocation || !buddyRouteConsent || buddyRouteConsent.step !== "LOCATION" || buddyRouteBusy) return;
+    const controller = new AbortController();
+    buddyRouteLocationAbort.current = controller;
     setBuddyRouteBusy(true);
     setBuddyRouteMessage(null);
     try {
-      const observationId = await onRefreshLocation(buddyRouteConsent.handoffId);
+      const observationId = await onRefreshLocation(buddyRouteConsent.handoffId, controller.signal);
+      if (controller.signal.aborted) return;
       if (!observationId) {
         setBuddyRouteMessage(zh
           ? "没有保存位置观察；没有发出接应路线请求。"
@@ -570,6 +699,7 @@ export function JourneyMembershipPanel({
         : "Foreground location capture failed; no route was requested.");
       setBuddyRouteConsent(null);
     } finally {
+      if (buddyRouteLocationAbort.current === controller) buddyRouteLocationAbort.current = null;
       setBuddyRouteBusy(false);
     }
   };
@@ -603,7 +733,16 @@ export function JourneyMembershipPanel({
   };
 
   const cancelBuddyRouteConsent = () => {
-    if (buddyRouteBusy) return;
+    if (buddyRouteBusy && buddyRouteConsent?.step !== "LOCATION") return;
+    if (buddyRouteConsent?.step === "LOCATION" && buddyRouteBusy) {
+      buddyRouteLocationAbort.current?.abort();
+      setBuddyRouteBusy(false);
+      setBuddyRouteConsent(null);
+      setBuddyRouteMessage(zh
+        ? "已取消前台位置读取；不会继续发出路线请求。若位置保存请求已经提交，其结果可能仍在服务端处理中。"
+        : "Foreground location capture was cancelled; no route request will follow. If a location-save request was already submitted, the server may still be processing it.");
+      return;
+    }
     const observationWasSaved = buddyRouteConsent?.step === "PROVIDER";
     setBuddyRouteConsent(null);
     if (observationWasSaved) {
@@ -1096,6 +1235,42 @@ export function JourneyMembershipPanel({
                     <div data-testid="journey-buddy-handoffs">
                       {buddyHandoffs.map((handoff) => {
                         const privateRoute = buddyPrivateRoutes[handoff.handoff_id];
+                        const outboundLeg = privateRoute?.outbound_leg ?? null;
+                        const returnLeg = privateRoute?.return_leg ?? null;
+                        const legHasUsableEvidence = (leg: typeof outboundLeg) => Boolean(
+                          leg
+                          && (leg.route_state === "LIVE" || leg.route_state === "REPLAY")
+                          && typeof leg.duration_min === "number"
+                          && Number.isFinite(leg.duration_min)
+                          && leg.duration_min >= 0
+                          && leg.provider
+                          && leg.provenance,
+                        );
+                        const topLevelRouteUsable = privateRoute?.route_state === "LIVE" || privateRoute?.route_state === "REPLAY";
+                        const hasBothUsableBuddyLegs = legHasUsableEvidence(outboundLeg)
+                          && legHasUsableEvidence(returnLeg)
+                          && topLevelRouteUsable;
+                        const routeIsStale = privateRoute?.status === "STALE" || privateRoute?.route_state === "STALE";
+                        const displayedRouteState = hasBothUsableBuddyLegs
+                          ? privateRoute?.route_state ?? "UNKNOWN"
+                          : routeIsStale
+                            ? "STALE"
+                            : privateRoute?.route_state === "TEST_PROVIDER_EMULATOR"
+                              ? "TEST_PROVIDER_EMULATOR"
+                              : "UNKNOWN";
+                        const risk = privateRoute?.shared_commitment_risk;
+                        const oneRiskLeg = risk?.legs_used?.length === 1 ? risk.legs_used[0] : null;
+                        const oneRiskLegIsLive = oneRiskLeg === "TO_HANDOFF"
+                          ? outboundLeg?.route_state === "LIVE" && legHasUsableEvidence(outboundLeg)
+                          : oneRiskLeg === "RETURN_TO_SHARED_STOP"
+                            ? returnLeg?.route_state === "LIVE" && legHasUsableEvidence(returnLeg)
+                            : false;
+                        const oneVerifiedLegAloneAtRisk = risk?.state === "COMMITMENT_AT_RISK"
+                          && risk.basis === "ONE_VERIFIED_ROUTE_LEG_ALONE_EXCEEDS_PROTECTED_COMMITMENT"
+                          && oneRiskLegIsLive;
+                        const displayedCommitmentRisk = hasBothUsableBuddyLegs
+                          ? risk?.state ?? "UNKNOWN"
+                          : oneVerifiedLegAloneAtRisk ? "COMMITMENT_AT_RISK" : "UNKNOWN";
                         return (
                         <article key={handoff.handoff_id} data-testid="journey-buddy-handoff" data-handoff-id={handoff.handoff_id}>
                           <strong>{handoff.status === "ACCEPTED"
@@ -1129,6 +1304,12 @@ export function JourneyMembershipPanel({
                                 onClick={() => setBuddyMapConsentId(handoff.handoff_id)}>
                                 {zh ? "打开接应地点精确地图…" : "Open exact handoff map pin…"}
                               </button>
+                              <button
+                                type="button"
+                                data-testid="journey-buddy-directions-open"
+                                disabled={buddyActionBusy || !currentTargetKey || !currentAudienceKey}
+                                onClick={() => beginBuddyDirectionsConsent(handoff)}
+                              >{zh ? "单独同意后打开外部步行导航…" : "Open external walking directions with separate consent…"}</button>
                               {onRefreshLocation && (
                                 <button
                                   type="button"
@@ -1140,21 +1321,53 @@ export function JourneyMembershipPanel({
                               {privateRoute && (
                                 <article
                                   data-testid="journey-buddy-route-result"
-                                  data-route-state={privateRoute.route_state}
+                                  data-route-state={displayedRouteState}
                                   data-handoff-id={handoff.handoff_id}
                                 >
-                                  <strong>{privateRoute.route_state === "LIVE"
+                                  <strong>{displayedRouteState === "LIVE"
                                     ? (zh ? "当前路线服务结果（仅你可见）" : "Current route-provider result (only you can see it)")
-                                    : privateRoute.route_state === "REPLAY"
+                                    : displayedRouteState === "REPLAY"
                                       ? (zh ? "历史路线回放，不是当前路况" : "Historical route replay, not current traffic")
+                                      : displayedRouteState === "STALE"
+                                        ? (zh ? "路线上下文已过期；没有可用预计时间" : "Route context is stale; no actionable estimate")
+                                      : displayedRouteState === "TEST_PROVIDER_EMULATOR"
+                                        ? (zh ? "仅测试路线服务结果，不是实时路线证据" : "Test-provider output only; not live route evidence")
                                       : (zh ? "路线状态：UNKNOWN / ROUTE_UNAVAILABLE" : "Route status: UNKNOWN / ROUTE_UNAVAILABLE")}</strong>
                                   <p>{zh
                                     ? `目的地：${privateRoute.target_place_name}（${privateRoute.target_source_label}）。原共同会合点“${privateRoute.original_shared_stop_name}”仍是全体计划地点；到接应点不代表到达原会合点。`
                                     : `Destination: ${privateRoute.target_place_name} (${privateRoute.target_source_label}). The original shared stop “${privateRoute.original_shared_stop_name}” remains the whole group's planned meeting point; reaching this handoff does not mean reaching that stop.`}</p>
-                                  {privateRoute.duration_min !== null && privateRoute.route_state !== "UNKNOWN" ? (
-                                    <small>{zh ? `步行约 ${privateRoute.duration_min} 分钟。` : `Walking estimate: about ${privateRoute.duration_min} minutes.`}</small>
+                                  <div data-testid="journey-buddy-route-legs">
+                                    {([
+                                      ["outbound", outboundLeg, zh ? "本人到接应点" : "Your origin to the handoff"],
+                                      ["return", returnLeg, zh ? "接应点回原共同会合点" : "Handoff to the original shared stop"],
+                                    ] as const).map(([legKey, leg, label]) => (
+                                      <section
+                                        key={legKey}
+                                        data-testid="journey-buddy-route-leg"
+                                        data-leg={legKey}
+                                        data-route-state={leg?.route_state ?? "UNKNOWN"}
+                                      >
+                                        <strong>{label}: {leg?.route_state ?? "UNKNOWN"}</strong>
+                                        <small>
+                                          {leg?.provider ?? (zh ? "路线服务未配置或未提供" : "provider unavailable")}
+                                          {" · "}{leg?.provenance ?? (zh ? "没有独立路线证据" : "no separate leg evidence")}
+                                          {leg?.reason ? ` · ${leg.reason}` : ""}
+                                        </small>
+                                        {leg?.route_state === "TEST_PROVIDER_EMULATOR" ? (
+                                          <small>{zh ? "仅受控测试时长，不是实际路线或 ETA。" : "Controlled test duration only; not a real route or ETA."}</small>
+                                        ) : leg?.duration_min !== null && leg?.duration_min !== undefined
+                                          && (leg.route_state === "LIVE" || leg.route_state === "REPLAY") ? (
+                                            <small>{zh ? `本段约 ${leg.duration_min} 分钟。` : `Leg estimate: about ${leg.duration_min} minutes.`}</small>
+                                          ) : (
+                                            <small>{zh ? "本段时间未知；不会用另一段补齐。" : "This leg's duration is unknown; the other leg does not fill it in."}</small>
+                                          )}
+                                      </section>
+                                    ))}
+                                  </div>
+                                  {privateRoute.duration_min !== null && hasBothUsableBuddyLegs && displayedRouteState !== "UNKNOWN" ? (
+                                    <small>{zh ? `两段合计约 ${privateRoute.duration_min} 分钟。` : `Both legs total about ${privateRoute.duration_min} minutes.`}</small>
                                   ) : (
-                                    <small>{zh ? "没有显示预计分钟数；可继续使用已单独同意的公共地点标点。" : "No duration is shown. The separately consented public-place pin remains available."}</small>
+                                    <small>{zh ? "两段路线未全部得到可用证据；总时间与承诺安全余量保持 UNKNOWN。可单独同意打开外部目的地导航。" : "Both legs lack usable evidence; total time and commitment slack remain UNKNOWN. You may separately consent to external destination-only directions."}</small>
                                   )}
                                   <small>
                                     {zh ? "来源：" : "Source: "}{privateRoute.provider ?? (zh ? "未配置" : "not configured")}
@@ -1166,15 +1379,19 @@ export function JourneyMembershipPanel({
                                       <>{" · "}{zh ? "本人的位置观察年龄：" : "your observation age: "}{privateRoute.origin_age_seconds}s</>
                                     )}
                                   </small>
-                                  <small>{zh ? "受保护承诺风险：" : "Protected-commitment risk: "}{privateRoute.shared_commitment_risk.state}
-                                    {privateRoute.shared_commitment_risk.state === "UNKNOWN" && handoff.handoff_place.place_id !== handoff.original_shared_stop.place_id
+                                  <small>{zh ? "受保护承诺风险：" : "Protected-commitment risk: "}{displayedCommitmentRisk}
+                                    {displayedCommitmentRisk === "UNKNOWN" && handoff.handoff_place.place_id !== handoff.original_shared_stop.place_id
                                       ? (zh ? "；从接应点到原共同会合点的路线未知，因此不会显示安全余量。" : "; the onward route to the original shared stop is unknown, so no safe buffer is claimed.")
                                       : ""}</small>
-                                  {privateRoute.shared_commitment_risk.state === "COMMITMENT_AT_RISK" && (
+                                  {displayedCommitmentRisk === "COMMITMENT_AT_RISK" && (
                                     <strong role="alert" data-testid="journey-buddy-route-commitment-warning">
-                                      {zh
-                                        ? "这条路线可能使你错过受保护的共同承诺；出发前先核对原会合点安排。"
-                                        : "This route may cause you to miss a protected shared commitment. Check the original meeting plan before leaving."}
+                                      {oneVerifiedLegAloneAtRisk
+                                        ? (zh
+                                          ? "一段已验证路线单独就足以表明可能错过受保护承诺。下一步：返回原共同会合点，或请求获授权的团队恢复；此接应点不代表已重新加入行程。"
+                                          : "One verified route leg alone exceeds the protected commitment. Next: return to the original shared stop or request authorized group recovery; this handoff does not mean you rejoined the Journey.")
+                                        : (zh
+                                          ? "两段路线显示可能错过受保护承诺。下一步：返回原共同会合点，或请求获授权的团队恢复；此接应点不代表已重新加入行程。"
+                                          : "The two legs indicate that you may miss the protected commitment. Next: return to the original shared stop or request authorized group recovery; this handoff does not mean you rejoined the Journey.")}
                                     </strong>
                                   )}
                                   <small>{zh
@@ -1300,6 +1517,34 @@ export function JourneyMembershipPanel({
         </section>
       )}
 
+      {buddyDirectionsConsent && (
+        <section
+          className="journey-membership-map-consent"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="journey-buddy-directions-title"
+          data-testid="journey-buddy-directions-consent"
+        >
+          <strong id="journey-buddy-directions-title">
+            {zh ? "把双方同意的接应目的地交给外部步行导航？" : "Send the mutually agreed handoff destination to an external walking map?"}
+          </strong>
+          <p>{zh
+            ? `只有公开地点“${buddyDirectionsConsent.handoff.handoff_place.name}”的 WGS84 目的地坐标会交给 Google Maps。链接不含你的保存起点、成员位置或路线；Google Maps 可能会按自己的权限流程读取设备位置。CityNexus 不会提供服务器计算的路线或 ETA。`
+            : `Only the WGS84 destination of the public Place “${buddyDirectionsConsent.handoff.handoff_place.name}” goes to Google Maps. The link contains no stored origin, member location, or route; Google Maps may request device location under its own permission flow. CityNexus does not provide a server-calculated route or ETA.`}</p>
+          <p>{zh
+            ? "打开导航不代表你已开始导航、到达接应点或重新加入共同计划。若外部导航不可用，可改用卡片上另一个单独同意的静态地点标点。"
+            : "Opening directions does not prove that navigation started, that you arrived, or that you rejoined the shared Journey. If external directions are unsupported, use the separate static-place-pin action on this card."}</p>
+          <div className="journey-membership-actions">
+            <button type="button" data-testid="journey-buddy-directions-confirm" onClick={() => void openAcceptedBuddyDirections()} disabled={buddyActionBusy}>
+              {zh ? "同意并打开步行导航" : "Agree and open walking directions"}
+            </button>
+            <button type="button" data-testid="journey-buddy-directions-cancel" onClick={() => setBuddyDirectionsConsent(null)} disabled={buddyActionBusy}>
+              {zh ? "取消，不发送目的地" : "Cancel without sending the destination"}
+            </button>
+          </div>
+        </section>
+      )}
+
       {buddyRouteConsent && buddyRouteConsentHandoff && (
         <section
           className="journey-membership-map-consent"
@@ -1323,7 +1568,7 @@ export function JourneyMembershipPanel({
                 <button type="button" data-testid="journey-buddy-route-location-confirm" onClick={() => void confirmBuddyRouteLocation()} disabled={buddyRouteBusy}>
                   {zh ? "同意并读取一次位置" : "Agree and read location once"}
                 </button>
-                <button type="button" data-testid="journey-buddy-route-cancel" onClick={cancelBuddyRouteConsent} disabled={buddyRouteBusy}>
+                <button type="button" data-testid="journey-buddy-route-cancel" onClick={cancelBuddyRouteConsent} disabled={buddyRouteBusy && buddyRouteConsent.step !== "LOCATION"}>
                   {zh ? "取消" : "Cancel"}
                 </button>
               </div>
