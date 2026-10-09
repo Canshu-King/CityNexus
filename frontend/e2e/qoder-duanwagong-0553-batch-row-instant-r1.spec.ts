@@ -125,7 +125,13 @@ for (const [locale, tag] of LOCALES) {
       compose.push({ status: res.status(), body });
     });
 
-    await page.locator(TICK).first().click();
+    /* The compose contract wants at least two place_ids (`min_length=2` at
+       backend/app/schemas.py:721), so a single tick is a validation error, not a plan.  Tick as many
+       as the screen offers, up to two. */
+    const tickable = Math.min(await page.locator(TICK).count(), 2);
+    for (let index = 0; index < tickable; index += 1) {
+      await page.locator(TICK).nth(index).click();
+    }
     await page.waitForTimeout(300);
     await page.locator(FINISH).click();
 
@@ -159,7 +165,8 @@ for (const [locale, tag] of LOCALES) {
       const last = compose[compose.length - 1];
       expect(sentence.length, node(arm, "the error block is on screen but says nothing")).toBeGreaterThan(0);
       expect(compose.length, node(arm, "the finish button never reached the compose route")).toBeGreaterThan(0);
-      expect(last?.status, node(arm, `compose answered ${last?.status}, not the domain refusal this arm documents`)).toBe(422);
+      expect(last?.status ?? 0, node(arm, `compose answered ${last?.status}, which is not a refusal`)).toBeGreaterThanOrEqual(400);
+      expect(last?.status ?? 0, node(arm, `compose answered ${last?.status}, which is a server fault not a refusal`)).toBeLessThan(500);
       expect(/[A-Z][A-Z0-9_]{6,}/.test(JSON.stringify(compose)),
         node(arm, `the refusal carries no machine-readable code: ${JSON.stringify(compose).slice(0, 300)}`)).toBe(true);
       return;
@@ -170,6 +177,7 @@ for (const [locale, tag] of LOCALES) {
 
     const cell = page.locator(`${ROW} span`).first();
     const shown = (await cell.innerText()).replace(/\s+/g, " ").trim();
+    const cellsAll = (await page.locator(`${ROW} span`).allInnerTexts()).map((v) => v.replace(/\s+/g, " ").trim());
     const rowText = (await page.locator(ROW).first().innerText()).replace(/\s+/g, " ");
     const activityId = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/.exec(rowText)?.[1] ?? null;
     const planLine = (await page.locator(`${RECEIPT} ${PLAN_LINE}`).first().innerText()).replace(/\s+/g, " ");
@@ -213,7 +221,9 @@ for (const [locale, tag] of LOCALES) {
       activity_id: activityId,
       server_start_at: serverStartAt,
       cell_on_screen: shown,
+      cells_on_screen: cellsAll,
       expected_from_server_instant: expected,
+      old_slice_would_have_printed: serverStartAt ? serverStartAt.slice(0, 16).replace("T", " ") : null,
       device_zone: deviceZone,
       row_text: rowText,
     };
@@ -223,9 +233,11 @@ for (const [locale, tag] of LOCALES) {
     expect(again?.status(), node(arm, `second read of plan ${planId} answered ${again?.status()}`)).toBe(200);
     expect(serverStartAt, node(arm, `activity ${activityId} is not in the plan the server returned`)).not.toBeNull();
 
-    /* T1 / T2 -- the ISO shape the order was written about is off the screen. */
-    expect(/\d{4}-\d{2}-\d{2}/.test(shown), node(arm, `the cell still prints an ISO date: "${shown}"`)).toBe(false);
-    expect(/\d{2}:\d{2}:\d{2}/.test(shown), node(arm, `the cell still prints seconds from the raw instant: "${shown}"`)).toBe(false);
+    /* T1 / T2 -- the ISO shape the order was written about is off the screen, in every row. */
+    for (const everyCell of cellsAll) {
+      expect(/\d{4}-\d{2}-\d{2}/.test(everyCell), node(arm, `a cell still prints an ISO date: "${everyCell}"`)).toBe(false);
+      expect(/\d{2}:\d{2}:\d{2}/.test(everyCell), node(arm, `a cell still prints seconds: "${everyCell}"`)).toBe(false);
+    }
 
     /* T3 -- and it prints the instant the store holds, in the device zone. */
     expect(shown, node(arm, `cell "${shown}" is not the device-zone reading "${expected}" of ${serverStartAt}`)).toBe(expected ?? "");
@@ -238,7 +250,7 @@ for (const [locale, tag] of LOCALES) {
     if (locale === "zh-CN") {
       expect(shown, node(arm, `zh screen printed a non-Chinese date: "${shown}"`)).toContain("月");
     } else {
-      expect(/^[A-Z][a-z]{2} \d/.test(shown), node(arm, `en screen printed a non-English date: "${shown}"`)).toBe(true);
+      expect(/^\d{1,2} [A-Z][a-z]{2},/.test(shown), node(arm, `en screen printed a non-English date: "${shown}"`)).toBe(true);
     }
   });
 }

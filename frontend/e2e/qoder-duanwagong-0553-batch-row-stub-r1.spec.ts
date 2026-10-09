@@ -203,11 +203,13 @@ for (const [locale, tag] of LOCALES) {
        which is the thing the sliced string could not say. */
     expect(cells[0] !== cells[1], node(arm, `both cells read the same: "${cells[0]}"`)).toBe(true);
 
-    /* S4 -- the language the screen opened in is the language the date comes back in. */
+    /* S4 -- the language the screen opened in is the language the date comes back in.
+       Measured shape of the en-GB arm the wrapper asks for: "10 Oct, 15:30" (day first). */
     if (locale === "zh-CN") {
       expect(cells[0], node(arm, `zh cell is not Chinese-shaped: "${cells[0]}"`)).toContain("月");
     } else {
-      expect(/^[A-Z][a-z]{2} \d/.test(cells[0]), node(arm, `en cell is not English-shaped: "${cells[0]}"`)).toBe(true);
+      expect(/^\d{1,2} [A-Z][a-z]{2},/.test(cells[0]), node(arm, `en cell is not English-shaped: "${cells[0]}"`)).toBe(true);
+      expect(cells[0], node(arm, `en cell carries Chinese glyphs: "${cells[0]}"`)).not.toContain("月");
     }
   });
 }
