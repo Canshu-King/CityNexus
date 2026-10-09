@@ -649,6 +649,16 @@ const en: Dict = {
   "discovery.batchOutsideDay": "That batch does not fit inside the day the journey already protects. Fewer picks, or another day.",
   "discovery.batchMissingCommitment": "The batch could not travel with the commitment the planner requires.",
   "discovery.batchNoPlan": "The planner returned no complete plan for this batch.",
+  "discovery.thisDestinationIsReady": "This destination is ready",
+  "discovery.thisDestinationHasNotBeenPrepared": "This destination has not been prepared",
+  "discovery.thisDestinationSFactsHaveAged": "This destination's facts have aged",
+  "discovery.thatNameDoesNotNameOnePlace": "That name does not name one place",
+  "discovery.thisDestinationCannotBeNamedFromATraceableSource": "This destination cannot be named from a traceable source",
+  "discovery.aProviderCouldNotAnswerThisTime": "A provider could not answer this time",
+  "discovery.nobodyAnsweredUs": "Nobody answered us",
+  "discovery.preparedYouCanGoAndPlan": "Prepared -- you can go and plan",
+  "discovery.alreadyCurrentNothingWasChanged": "Already current -- nothing was changed",
+  "discovery.noTraceableSourceForThisDestination": "No traceable source for this destination",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -1884,6 +1894,16 @@ const zhCN: Dict = {
   "discovery.batchOutsideDay": "这一批装不进行程已保护的那一天：少勾几处，或换一天。",
   "discovery.batchMissingCommitment": "这一批没能带上规划器要求的受保护承诺。",
   "discovery.batchNoPlan": "规划器为这一批给不出完整方案。",
+  "discovery.thisDestinationIsReady": "这个目的地已经准备好了",
+  "discovery.thisDestinationHasNotBeenPrepared": "这个目的地还没准备过",
+  "discovery.thisDestinationSFactsHaveAged": "这个目的地的事实过期了",
+  "discovery.thatNameDoesNotNameOnePlace": "这个名字对不上一个地方",
+  "discovery.thisDestinationCannotBeNamedFromATraceableSource": "这个目的地这个名字认不出来",
+  "discovery.aProviderCouldNotAnswerThisTime": "提供方这次没能回答",
+  "discovery.nobodyAnsweredUs": "没人回答我们",
+  "discovery.preparedYouCanGoAndPlan": "准备好了，可以去规划",
+  "discovery.alreadyCurrentNothingWasChanged": "本来就是新的，没有改动",
+  "discovery.noTraceableSourceForThisDestination": "这个目的地没有可追溯的来源",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
