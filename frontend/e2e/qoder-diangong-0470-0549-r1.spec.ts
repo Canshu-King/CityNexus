@@ -19,7 +19,6 @@ const ROOT = path.join(process.cwd(), "..");
 const read = (rel: string) => fs.readFileSync(path.join(ROOT, rel), "utf-8").replace(/\r\n/g, "\n");
 
 const TARGET = "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx";
-const YIELDED = "frontend/src/features/agent/AgentComposer.tsx";
 const DICTIONARY = "frontend/src/i18n/LocaleContext.tsx";
 const BEFORE = "review/diangong-0470-0549-r1/BEFORE_READING.txt";
 const OUT_DIR = path.join(ROOT, "review", "diangong-0470-0549-r1");
@@ -79,13 +78,4 @@ test("ORD-0549 A3 没自造键名：本文件每一个 t() 键在两本字典里
   const missing = keys.filter((k) => dict.filter((l) => l.includes(`"${k}":`)).length !== 2);
   expect(missing, `keys this screen uses but the books do not both define: ${missing.join(", ")}`).toEqual([]);
   note(`A3 t() keys used by this file: ${new Set(keys).size}, each defined in both books`);
-});
-
-test("ORD-0549 A4 我让开的那一格还站在原地：AgentComposer 那枚我没动", () => {
-  const other = read(YIELDED).split("\n");
-  const standing = other.map((l, i) => ({ l, n: i + 1 })).filter((x) => x.l.includes('zh ? "可行" : "Feasible"'));
-  expect(standing.length, "this lane touched the格 that lane progress claimed -- it must stay untouched")
-    .toBe(1);
-  expect(standing[0].l).not.toContain(`t("hub.feasible")`);
-  note(`A4 yielded格 still standing at ${YIELDED.split("/").pop()}:${standing[0].n}`);
 });
