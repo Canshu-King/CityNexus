@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-09T16:07:26+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "0f41c58825e4d4f6c0963dcaf80aec754c65e916",
+ "candidate_ref": "local/ord0408-poison",
+ "candidate_tip": "3d587268ece3c3a488175fdc57db9fa27bc772ae",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "0f41c58825e4d4f6c0963dcaf80aec754c65e916",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/components/ProductErrorBoundary.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/components/ProductErrorBoundary.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "516afbb566a1ef7d4f1c2710cf911d6951dc36a5",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": null,
+  "blob_equality": [],
+  "whole_suite": null,
+  "exposure": {
+   "ruler_blob": "48e3248bd634e48f2b57aa9d9933255bf1036575",
+   "ruler_blob_computed": "48e3248bd634e48f2b57aa9d9933255bf1036575",
+   "ruler_file": "ui_exposure_taint_ast_r8.cjs",
+   "candidate_files_in_view": 1,
+   "error": "RuntimeError: EXEMPTION_LEDGER_REJECTED_BLANKET_GRANT: ruler declined to certify the census (ledger entry E1-storybook-face matches any path and any rule: that is not an exemption, it is the arm switched off)"
+  },
+  "frontend_build": {
+   "skipped": "arm off -- 1 frontend/src file(s) shipped WITHOUT a compile check"
+  }
+ },
+ "problems": [
+  "exposure arm never measured (instrument failed) - refusing blind",
+  "compile arm requested off while 1 frontend/src file(s) changed; the door will not certify an uncompiled frontend -- pass nothing to keep it on, or land with --frontend-build off only if you also accept the receipt saying NOT COMPILED"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: exposure arm never measured (instrument failed) - refusing blind | compile arm requested off while 1 frontend/src file(s) changed; the door will not certify an uncompiled frontend -- pass nothing to keep it on, or land with --frontend-build off only if you also accept the receipt saying NOT COMPILED",
+ "derived_result": null
+}
