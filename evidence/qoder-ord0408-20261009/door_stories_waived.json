@@ -1,0 +1,107 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-09T16:07:09+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "0f41c58825e4d4f6c0963dcaf80aec754c65e916",
+ "candidate_ref": "local/ord0408-poison",
+ "candidate_tip": "de9bc1ba1abc1509ecbc9c9f7276b89b3c054808",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "0f41c58825e4d4f6c0963dcaf80aec754c65e916",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/features/trip/Ord0408Probe.stories.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/trip/Ord0408Probe.stories.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "2c26a70b362518259a5e5c34de8bce1610e31109",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": null,
+  "blob_equality": [],
+  "whole_suite": null,
+  "exposure": {
+   "ruler_blob": "48e3248bd634e48f2b57aa9d9933255bf1036575",
+   "ruler_blob_computed": "48e3248bd634e48f2b57aa9d9933255bf1036575",
+   "ruler_file": "ui_exposure_taint_ast_r8.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "tip_cells_seen_by_ruler": 6,
+   "cand_cells_seen_by_ruler": 7,
+   "exempted_tip": 0,
+   "exempted_cand": 1,
+   "exempted_cand_cells": [
+    {
+     "cell": "Ord0408Probe.stories.tsx:215|RAW_BODY_TO_DOM",
+     "path": "features/trip/Ord0408Probe.stories.tsx",
+     "exemption_id": "E1-storybook-face"
+    }
+   ],
+   "exemption_ledger": {
+    "path": "E:/puguang0408/ledgers\\active_e1.json",
+    "sha1": "7d449f5d5592190faedd5aa244aaa3b9dd97266e",
+    "bytes": 4364,
+    "status": "OK_ACTIVE",
+    "reason": null,
+    "entries_active": 1,
+    "entries_held": 3,
+    "applied_by_entry": {
+     "E1-storybook-face": 1
+    },
+    "held_would_match": {
+     "E2-msw-handlers": 0,
+     "E3-ruler-error-notice": 0,
+     "E4-generated-api-client": 0
+    },
+    "cells_total": 7,
+    "cells_product": 6,
+    "cells_exempt": 1
+   },
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "skipped": "arm off -- 1 frontend/src file(s) shipped WITHOUT a compile check"
+  }
+ },
+ "problems": [
+  "compile arm requested off while 1 frontend/src file(s) changed; the door will not certify an uncompiled frontend -- pass nothing to keep it on, or land with --frontend-build off only if you also accept the receipt saying NOT COMPILED"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: compile arm requested off while 1 frontend/src file(s) changed; the door will not certify an uncompiled frontend -- pass nothing to keep it on, or land with --frontend-build off only if you also accept the receipt saying NOT COMPILED",
+ "derived_result": null
+}

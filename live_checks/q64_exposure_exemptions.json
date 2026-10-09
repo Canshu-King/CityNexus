@@ -1,0 +1,64 @@
+{
+  "schema": "CNX_Q64_EXPOSURE_EXEMPTIONS_V1",
+  "owner": "commander - the ledger is the ruling surface, the ruler only obeys it",
+  "why_this_file_exists": "The Q64 no-growth arm used to be released by a hand at the gate: --exposure-arm off, a re-pinned ruler blob, or a hand-landed candidate. An exemption is now DATA that the ruler reads and applies, so a cell is either covered by a named entry or it is not, and the answer travels inside the measurement document instead of in a chat message. Deciding WHICH entries are active stays the commander's call; this file is where that call is written down.",
+  "policy": {
+    "match_root": "paths are relative to the --tree root the door hands the ruler (frontend/src), e.g. stories/V10Primitives.stories.tsx",
+    "globs": "in a path_glob, ** spans any number of segments, * stays inside one segment, and a dot matches itself",
+    "blanket_grant": "an entry with a wildcard path_glob AND rule '*' is REFUSED: the ruler marks the whole run NOT_PERFORMED so the door cannot read a zeroed census as a clean tree",
+    "active_requires": "status active requires a non-empty decided_by naming the ruling; a violation rejects the WHOLE ledger (fail-closed, never a partial apply)",
+    "held_is_inert": "a held entry never exempts anything; it is reported with held_would_match so the commander can see the size of a waiver before signing it",
+    "faces_vocabulary": ["instrument-self", "dev-only-surface", "unclassified"],
+    "not_a_face": "There is no entry shape in this ledger that can waive a cell the traveler can actually see. Product-surface waivers are a ruling question (Q64/Q67/Q70/Q71), not a data edit."
+  },
+  "entries": [
+    {
+      "id": "E1-storybook-face",
+      "status": "held",
+      "face": "dev-only-surface",
+      "match": { "path_glob": "**/*.stories.tsx", "rule": "*" },
+      "decided_by": "",
+      "evidence": [
+        "frontend/.storybook/main.ts:4 globs ../src/**/*.stories.@(ts|tsx) - the only loader for these files",
+        "git grep 'stories/' over frontend/src at tip 5a3d31efdd20a15ae5daaa26cdde13d73970a2a2 returns no product importer",
+        "frontend/vite.config.ts:8 reads process.env.STORYBOOK and the npm scripts set it only for storybook / storybook:build, never for build"
+      ],
+      "question_for_commander": "A cell inside a story file is not shipped software, but a story is also a screenshot surface for component review. Flip status to active and fill decided_by to take stories out of the no-growth census; leave it held to keep them in."
+    },
+    {
+      "id": "E2-msw-handlers",
+      "status": "held",
+      "face": "dev-only-surface",
+      "match": { "path_glob": "mocks/**", "rule": "*" },
+      "decided_by": "",
+      "evidence": [
+        "frontend/src/mocks/handlers.ts is the only file in that directory at tip",
+        "git grep mocks/handlers over frontend at tip returns no importer, so nothing in the shipped graph reaches it"
+      ],
+      "question_for_commander": "Same shape as E1: a dev-only fixture face. Held until you sign it."
+    },
+    {
+      "id": "E3-ruler-error-notice",
+      "status": "held",
+      "face": "instrument-self",
+      "match": { "path_glob": "**", "rule": "RULER_ERROR" },
+      "decided_by": "",
+      "evidence": [
+        "ui_exposure_taint_ast_r7b.cjs:1542 - the analyzer's own catch pushes a hit {rule: 'RULER_ERROR', line: 0}",
+        "preflight_and_land_r7.py:172 - the door turns EVERY element of doc.hits into a cell, so a ruler failure is counted as product exposure today"
+      ],
+      "honest_limit": "I could not make the analyzer throw on a real source file, so this class has no observed occurrence on the line. It is held for exactly that reason: an unproven exemption is not an exemption. The two coordinates above prove the code path exists, not that it has fired."
+    },
+    {
+      "id": "E4-generated-api-client",
+      "status": "held",
+      "face": "unclassified",
+      "match": { "path_glob": "generated/**", "rule": "*" },
+      "decided_by": "",
+      "evidence": [
+        "frontend/src/generated/api.ts is generated from the OpenAPI contract, but it IS in the shipped graph"
+      ],
+      "question_for_commander": "Do not activate this one without thinking: the file is machine-written, yet a cell in it reaches the traveler. Recorded so the question is not re-litigated from scratch next shift."
+    }
+  ]
+}

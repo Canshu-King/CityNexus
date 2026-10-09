@@ -1,0 +1,112 @@
+{
+ "at_local": "2026-10-09T16:07:40+0800",
+ "tip": "0f41c58825e4d4f6c0963dcaf80aec754c65e916",
+ "ruler_r8_file": "ui_exposure_taint_ast_r8.cjs",
+ "ruler_r8_blob": "48e3248bd634e48f2b57aa9d9933255bf1036575",
+ "ruler_r8_declared_by_door": "48e3248bd634e48f2b57aa9d9933255bf1036575",
+ "r7b_blob_measured": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+ "shipped_ledger": "E:/puguang0408/stage/live_checks\\q64_exposure_exemptions.json",
+ "shipped_ledger_sha1": "4706f03cb8675df08a941be095d4c2b2860e0cfd",
+ "fixtures": {
+  "product_poison_commit": "3d587268ece3c3a488175fdc57db9fa27bc772ae",
+  "product_blob": "9ebcd97969102e95bfecc1c78995570409dd0964",
+  "stories_poison_commit": "de9bc1ba1abc1509ecbc9c9f7276b89b3c054808",
+  "stories_blob": "d87583b7d22a41df47afb7d6b6d996b600871fe9"
+ },
+ "tip_product_cells": 6,
+ "arms": [
+  {
+   "arm": "the ruler the LIVE gate runs is still byte-for-byte the blob its door declares (this lane forked to r8 rather than editing under the fleet's feet)",
+   "holds": true,
+   "reading": "r7b computes e2ea5ce64ca67bb476006766db27b0612789dd36 / r7 declares e2ea5ce64ca67bb476006766db27b0612789dd36"
+  },
+  {
+   "arm": "the r8 ruler this lane's door pins == the bytes the door actually runs",
+   "holds": true,
+   "reading": "r8 computes 48e3248bd634e48f2b57aa9d9933255bf1036575 / door declares 48e3248bd634e48f2b57aa9d9933255bf1036575"
+  },
+  {
+   "arm": "shipped ledger is inert on the live line: every cell the ruler sees stays in the census",
+   "holds": true,
+   "reading": "status=OK_HELD product_cells=6 waived=0 entries_held=4 held_would_match={'E1-storybook-face': 0, 'E2-msw-handlers': 0, 'E3-ruler-error-notice': 0, 'E4-generated-api-client': 0}"
+  },
+  {
+   "arm": "adopting r8 with the shipped ledger changes NO number a landing reads: r7b and r8 count the same tip",
+   "holds": true,
+   "reading": "r7b hits=6 / r8 product cells=6"
+  },
+  {
+   "arm": "the ledger's own identity travels in the measurement (an audit can name the bytes it obeyed)",
+   "holds": true,
+   "reading": "ledger sha1=4706f03cb8675df08a941be095d4c2b2860e0cfd bytes=4405"
+  },
+  {
+   "arm": "fixtures are not vacuous: the product poison differs from the line's bytes, the stories path does not exist on the line yet, and both poisons descend from the current tip",
+   "holds": true,
+   "reading": "product blob 9ebcd9796910 vs line e8073263167f | tip:frontend/src/features/trip/Ord0408Probe.stories.tsx exists=False | descendants=True,True"
+  },
+  {
+   "arm": "a stories-face cell GROWS the census while the entry is held (a held entry never exempts)",
+   "holds": true,
+   "reading": "growth={'Ord0408Probe.stories.tsx|RAW_BODY_TO_DOM': 1} waived=0"
+  },
+  {
+   "arm": "the waived cell was really MEASURED and not missed: the ruler saw more cells than the census counts (this is what keeps an exemption from becoming a blind spot)",
+   "holds": true,
+   "reading": "census=6 waived=1 cells_total=7 product=6 exempt=1"
+  },
+  {
+   "arm": "an ACTIVE entry waives the dev-only face: the same candidate stops growing the census",
+   "holds": true,
+   "reading": "growth={} waived=[{'cell': 'Ord0408Probe.stories.tsx:215|RAW_BODY_TO_DOM', 'path': 'features/trip/Ord0408Probe.stories.tsx', 'exemption_id': 'E1-storybook-face'}]"
+  },
+  {
+   "arm": "the waiver is attributed to a NAMED ledger entry, not to a hand at the gate",
+   "holds": true,
+   "reading": "applied_by_entry={'E1-storybook-face': 1} ledger sha1=7d449f5d5592 cells=['Ord0408Probe.stories.tsx:215|RAW_BODY_TO_DOM']"
+  },
+  {
+   "arm": "NEGATIVE CONTROL: real product exposure growth still reports RED with the permissive ledger in force",
+   "holds": true,
+   "reading": "growth={'ProductErrorBoundary.tsx|UPSTREAM_EXCEPTION_TO_DOM': 2} waived=0 (E1 cannot reach components/)"
+  },
+  {
+   "arm": "the gate's own exposure leg names the product growth as a problem",
+   "holds": true,
+   "reading": "problem=['candidate grows Q64 exposure by {\"ProductErrorBoundary.tsx|UPSTREAM_EXCEPTION_TO_DOM\": 2} over the tip - that '] growth={'ProductErrorBoundary.tsx|UPSTREAM_EXCEPTION_TO_DOM': 2} exempted_cand=0"
+  },
+  {
+   "arm": "the gate's exposure leg goes silent on the waived face AND prints what it waived and on whose authority",
+   "holds": true,
+   "reading": "exempted_cand=1 seen_by_ruler=7 census=6 ledger=OK_ACTIVE applied={'E1-storybook-face': 1}"
+  },
+  {
+   "arm": "a BLANKET grant is refused and the census is withheld (a ledger cannot silence the arm by being wide)",
+   "holds": true,
+   "reading": "RuntimeError: EXEMPTION_LEDGER_REJECTED_BLANKET_GRANT: ruler declined to certify the census (ledger entry E1-storybook-face matches any path and any rule: that is not an exemption, it is the arm switched off)"
+  },
+  {
+   "arm": "a withheld census is NOT booked as the compiler-skip face: the door refuses blind rather than certifying a zero",
+   "holds": true,
+   "reading": "exposure keys=['candidate_files_in_view', 'error', 'ruler_blob', 'ruler_blob_computed', 'ruler_file'] problems=['exposure arm never measured (instrument failed) - refusing blind']"
+  },
+  {
+   "arm": "a malformed ledger is refused, not silently read as 'no exemptions'",
+   "holds": true,
+   "reading": "EXEMPTION_LEDGER_REJECTED_MALFORMED_JSON: ruler declined to certify the census (ledger the ledger is not valid JSON, so no exemption can be trusted: SyntaxError: Expected double-quoted property name i"
+  },
+  {
+   "arm": "an active entry that names no ruling is refused",
+   "holds": true,
+   "reading": "EXEMPTION_LEDGER_REJECTED_ACTIVE_WITHOUT_RULING: ruler declined to certify the census (ledger entry E1-storybook-face is active but names no decided_by)"
+  },
+  {
+   "arm": "every cell the ruler saw is still in `hits`; the exemption is a field on the cell, never a deletion",
+   "holds": true,
+   "reading": "hits=7 product=6 exempt=1 verdict=EXPOSURE_SHAPE_FOUND/EXPOSURE_SHAPE_FOUND exempted_cells=[{'file': 'features/trip/Ord0408Probe.stories.tsx', 'line': 215, 'rule': 'RAW_BODY_TO_DOM', 'exemption_id': 'E1-storybook-face'}]"
+  }
+ ],
+ "n_checks": 18,
+ "n_holds": 18,
+ "all_holds": true
+}
