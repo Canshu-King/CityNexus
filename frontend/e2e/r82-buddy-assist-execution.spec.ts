@@ -273,6 +273,30 @@ test("R82 lets a signed buddy pair finish and rejoin after the offer expires", a
     await laterMemberPage.page.getByTestId("journey-rendezvous-refresh").click();
     await expect(bystanderPage.page.getByTestId("journey-buddy-handoff")).toHaveCount(0);
     await expect(laterMemberPage.page.getByTestId("journey-buddy-handoff")).toHaveCount(0);
+    // The R79 20-minute OFFER and R78 help have expired, but the pair's
+    // independently accepted 60-minute execution is still live. They MUST
+    // still be able to open navigation to that exact handoff destination.
+    const activeHelperCard = helper.page.getByTestId("journey-buddy-handoff");
+    await expect(activeHelperCard.getByTestId("journey-buddy-map-open")).toBeEnabled();
+    await expect(activeHelperCard.getByTestId("journey-buddy-directions-open")).toBeEnabled();
+    const handoffDirectionsRequests: URL[] = [];
+    await helper.page.context().route("https://www.google.com/maps/**", async (route) => {
+      handoffDirectionsRequests.push(new URL(route.request().url()));
+      await route.fulfill({ status: 200, contentType: "text/html", body: "<!doctype html><title>Mock Handoff Directions</title>" });
+    });
+    await activeHelperCard.getByTestId("journey-buddy-directions-open").click();
+    await expect(helper.page.getByTestId("journey-buddy-directions-consent")).toBeVisible();
+    const handoffPopupPromise = helper.page.waitForEvent("popup");
+    await helper.page.getByTestId("journey-buddy-directions-confirm").click();
+    const handoffPopup = await handoffPopupPromise;
+    await handoffPopup.waitForURL((url) => url.origin === "https://www.google.com" && url.pathname === "/maps/dir/");
+    const handoffMapUrl = new URL(handoffPopup.url());
+    expect(handoffMapUrl.searchParams.get("destination")).toBe(`${selected.latitude},${selected.longitude}`);
+    expect(handoffMapUrl.searchParams.get("travelmode")).toBe("walking");
+    expect(handoffMapUrl.searchParams.get("origin")).toBeNull();
+    expect(handoffDirectionsRequests).toHaveLength(1);
+    await handoffPopup.close();
+
     expect((await api<{ items: unknown[] }>(request, journeyPath + "/rendezvous-buddy-handoffs/current", { token: bystanderToken })).items).toEqual([]);
     expect((await api<{ items: unknown[] }>(request, journeyPath + "/rendezvous-buddy-handoffs/current", { token: laterMemberToken })).items).toEqual([]);
 
@@ -294,6 +318,11 @@ test("R82 lets a signed buddy pair finish and rejoin after the offer expires", a
     const requesterAck = await requesterAckPromise;
     expect(requesterAck.status()).toBe(200);
     await expect(requesterPage.page.getByTestId("journey-buddy-mutual-outcome")).toContainText("device-verified physical reunion");
+    await helper.page.getByTestId("journey-rendezvous-refresh").click();
+    // A completed pair rescue must NOT keep routing people toward the old
+    // handoff point. They can explicitly route BACK to the shared Journey.
+    await expect(helper.page.getByTestId("journey-buddy-directions-open")).toBeDisabled();
+    await expect(helper.page.getByTestId("journey-buddy-map-open")).toBeDisabled();
     await expect(bystanderPage.page.getByTestId("journey-buddy-handoff")).toHaveCount(0);
     await expect(laterMemberPage.page.getByTestId("journey-buddy-handoff")).toHaveCount(0);
 
