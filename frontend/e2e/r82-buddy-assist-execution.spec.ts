@@ -229,7 +229,7 @@ test("R82 lets a signed buddy pair finish and rejoin after the offer expires", a
       rendezvous_activity_id: string;
       original_public_place_id: string;
       audience_sha256: string;
-      items: Array<{ place_id: string; name: string }>;
+      items: Array<{ place_id: string; name: string; latitude: number; longitude: number }>;
     }>(request, journeyPath + "/rendezvous-buddy-handoffs/candidates?signal_id=" + signalId, { token: helperToken });
     const selected = candidates.items.find((item) => item.place_id !== target.place_id) ?? candidates.items[0];
     if (!selected) throw new Error("R82 E2E found no server-suggested public handoff place");
