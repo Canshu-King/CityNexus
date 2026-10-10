@@ -37,7 +37,7 @@ import {
 import { journeyModeMachine } from "./state/journeyModeMachine";
 import { V8Experience } from "./app/V8Experience";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
-import { LocaleProvider } from "./i18n/LocaleContext";
+import { LocaleProvider, useT } from "./i18n/LocaleContext";
 import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
 import "./design-tokens.css";
@@ -157,7 +157,10 @@ function proposalDeltaText(proposal: ReplanProposal, currency: string): string {
  *  used to make them look safe: moving them into a `data-*` puts them in the DOM anyway. */
 type ErrorNote = { note: string; http_status: number | null };
 
-function errorNote(error: unknown): ErrorNote {
+function errorNote(
+  error: unknown,
+  t: (key: string, params?: Record<string, string | number>) => string,
+): ErrorNote {
   const raw = (error as { status?: unknown } | null)?.status;
   const status =
     error instanceof CityNexusApiError
@@ -167,13 +170,14 @@ function errorNote(error: unknown): ErrorNote {
         : null;
   return {
     note: status === null
-      ? "CityNexus request failed"
-      : `CityNexus request refused (HTTP ${status})`,
+      ? t("main.cityNexusRequestFailed")
+      : t("main.cityNexusRequestRefusedHttp", { status }),
     http_status: status,
   };
 }
 
 function LegacyApp() {
+  const t = useT();
   const actor = useMemo(() => createActor(journeyModeMachine), []);
   const [workflowState, setWorkflowState] = useState(() =>
     String(actor.getSnapshot().value),
@@ -321,8 +325,8 @@ function LegacyApp() {
         actor.send({ type: "BOOTSTRAP_OK" });
       } catch (loadError) {
         if (cancelled) return;
-        setError(errorNote(loadError));
-        actor.send({ type: "FAIL", message: errorNote(loadError).note });
+        setError(errorNote(loadError, t));
+        actor.send({ type: "FAIL", message: errorNote(loadError, t).note });
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -397,7 +401,7 @@ function LegacyApp() {
       setTravelerTwin(await cityNexusApi.clearTravelerTwinLearned(session.travelerId));
       setLastAction("TravelerTwin learned soft evidence cleared · explicit preferences retained");
     } catch (twinError) {
-      setError(errorNote(twinError));
+      setError(errorNote(twinError, t));
     } finally {
       setBusy(false);
     }
@@ -563,7 +567,7 @@ function LegacyApp() {
           ...current.slice(-19),
           {
             event_type: payload.event_type ?? "operation",
-            summary: payload.summary ?? "Persisted operation update",
+            summary: payload.summary ?? t("main.persistedOperationUpdate"),
             timestamp: payload.timestamp ?? new Date().toISOString(),
           },
         ]);
@@ -623,7 +627,7 @@ function LegacyApp() {
         "Agent run " + response.run.status + " · " + response.run.tool_steps.length + " tool calls persisted",
       );
     } catch (commandError) {
-      setError(errorNote(commandError));
+      setError(errorNote(commandError, t));
     } finally {
       setBusy(false);
     }
@@ -643,7 +647,7 @@ function LegacyApp() {
       setGuardianStatus(await cityNexusApi.getGuardianStatus(session.journeyId));
       setLastAction("Standing mission activated · Guardian is watching persisted city signals");
     } catch (guardianError) {
-      setError(errorNote(guardianError));
+      setError(errorNote(guardianError, t));
     } finally {
       setBusy(false);
     }
@@ -667,7 +671,7 @@ function LegacyApp() {
       await refreshAutopilotTruth(session.journeyId);
       setLastAction("Live Journey Autopilot started · provider fixture is NORMAL");
     } catch (autopilotError) {
-      setError(errorNote(autopilotError));
+      setError(errorNote(autopilotError, t));
     } finally {
       setBusy(false);
     }
@@ -683,7 +687,7 @@ function LegacyApp() {
       });
       setLastAction("Provider fixture transitioned to " + state + " · waiting for server pulse");
     } catch (fixtureError) {
-      setError(errorNote(fixtureError));
+      setError(errorNote(fixtureError, t));
     } finally {
       setBusy(false);
     }
@@ -723,7 +727,7 @@ function LegacyApp() {
       await refreshAutopilotTruth(session.journeyId);
       setLastAction("Predictive Real-City Twin · weakness detected and preventive recovery evaluated");
     } catch (predictiveError) {
-      setError(errorNote(predictiveError));
+      setError(errorNote(predictiveError, t));
     } finally {
       setBusy(false);
     }
@@ -775,7 +779,7 @@ function LegacyApp() {
           " · persisted proactive run " + guardianRun.id.slice(0, 8),
       );
     } catch (guardianError) {
-      setError(errorNote(guardianError));
+      setError(errorNote(guardianError, t));
     } finally {
       setBusy(false);
     }
@@ -857,7 +861,7 @@ function LegacyApp() {
     try {
       await request;
     } catch (policyError) {
-      setError(errorNote(policyError));
+      setError(errorNote(policyError, t));
     }
   }
 
@@ -904,8 +908,8 @@ function LegacyApp() {
       setLastAction("Closure event and backend replan proposals loaded");
       actor.send({ type: "REPLANS_READY" });
     } catch (runError) {
-      setError(errorNote(runError));
-      actor.send({ type: "FAIL", message: errorNote(runError).note });
+      setError(errorNote(runError, t));
+      actor.send({ type: "FAIL", message: errorNote(runError, t).note });
     } finally {
       setBusy(false);
     }
@@ -956,8 +960,8 @@ function LegacyApp() {
         }
       }
     } catch (acceptError) {
-      setError(errorNote(acceptError));
-      actor.send({ type: "FAIL", message: errorNote(acceptError).note });
+      setError(errorNote(acceptError, t));
+      actor.send({ type: "FAIL", message: errorNote(acceptError, t).note });
     } finally {
       setBusy(false);
     }
@@ -978,8 +982,8 @@ function LegacyApp() {
       setLastAction("Rejected backend proposal " + rejected.id);
       actor.send({ type: "REJECTED" });
     } catch (rejectError) {
-      setError(errorNote(rejectError));
-      actor.send({ type: "FAIL", message: errorNote(rejectError).note });
+      setError(errorNote(rejectError, t));
+      actor.send({ type: "FAIL", message: errorNote(rejectError, t).note });
     } finally {
       setBusy(false);
     }
@@ -1108,7 +1112,7 @@ function LegacyApp() {
             </div>
             <p className="mission-text">“{mission.user_text}”</p>
             <div className="mission-metrics">
-              <span>Objectives · {mission.objective_codes.join(" · ") || "general recovery"}</span>
+              <span>Objectives · {mission.objective_codes.join(" · ") || t("main.generalRecovery")}</span>
               <span>Budget Δ · {formatMoney(mission.max_cost_delta_minor, planCurrency)}</span>
               <span>Loss ceiling · {formatMoney(mission.max_loss_minor, planCurrency)}</span>
               <span>Schedule drift · {mission.max_schedule_drift_min} min</span>
@@ -1151,7 +1155,7 @@ function LegacyApp() {
         </div>
         <p className="guardian-summary">
           {guardianStatus?.latest?.reasoning_summary ??
-            "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message."}
+            t("main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage")}
         </p>
           <div className="guardian-actions">
           <button
@@ -1215,7 +1219,7 @@ function LegacyApp() {
           </div>
           <span>{resilience?.status ?? "WAITING_FOR_PROVIDER_EVIDENCE"}</span>
           <span>
-            {resilience?.dominant_failure_modes.join(" · ") || "No dominant failure mode"}
+            {resilience?.dominant_failure_modes.join(" · ") || t("main.noDominantFailureMode")}
           </span>
           <span>
             Mesh · {providerMesh?.providers.length ?? 0} observations · {providerMesh?.real_place_candidates.length ?? 0} real-city POIs
@@ -1412,7 +1416,7 @@ function LegacyApp() {
               ))}
             </ol>
             <p data-testid="agent-policy-decision" className="impact-summary">
-              Server decision · {serverDecision ?? "not evaluated"}
+              Server decision · {serverDecision ?? t("main.notEvaluated")}
               {confirmationRequired ? " · confirmation required" : ""}
             </p>
             {impactResolution && (
@@ -1420,7 +1424,7 @@ function LegacyApp() {
                 Impact evidence · {impactResolution.status ?? "unknown"} ·{" "}
                 {impactResolution.provider_key ?? "deterministic"} ·{" "}
                 {impactResolution.selected_activity_id
-                  ? (impactResolution.maturity_stage ?? "validated Activity")
+                  ? (impactResolution.maturity_stage ?? t("main.validatedActivity"))
                   : "no actionable target"}
               </p>
             )}
