@@ -1122,7 +1122,7 @@ export function JourneyTrialSetup({
               onChange={(event) => update("arrivalLocation", event.target.value)}
               placeholder={
                 zh
-                  ? `例如：${identifiedCity || "某地"}站 / 机场`
+                  ? `例如：${identifiedCity || t("setup.somePlace")}站 / 机场`
                   : "e.g. station or airport"
               }
               aria-required="true"
@@ -1151,7 +1151,7 @@ export function JourneyTrialSetup({
               onChange={(event) => update("departureLocation", event.target.value)}
               placeholder={
                 zh
-                  ? `例如：${identifiedCity || "某地"}站 / 机场`
+                  ? `例如：${identifiedCity || t("setup.somePlace")}站 / 机场`
                   : "e.g. station or airport"
               }
               aria-required="true"

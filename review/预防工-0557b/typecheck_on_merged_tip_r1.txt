@@ -1,0 +1,5 @@
+npm run typecheck on the merged branch (base 24a50a8a), both branches' bytes in the tree
+> typecheck
+> tsc -p tsconfig.check.json --noEmit
+
+TYPECHECK_RC=0

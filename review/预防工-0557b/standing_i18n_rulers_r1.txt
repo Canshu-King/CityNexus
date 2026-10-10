@@ -1,0 +1,14 @@
+# standing i18n rulers for the trial-placeholder piece, base generation d435cff26
+audit TARGETS mentions JourneyTrialSetup.tsx:
+0
+
+## i18n_detail2_parity_r1.py with my zh-only key in the tree
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange', 'setup.somePlace'])
+PARITY_RC=1
+
+## i18n_detail2_audit_r1.py
+MISS features/progress/journeyProgress.ts:86 zh='共 ${p.day_total} 天。' en='${p.day_total} days.'
+AUDIT_RC=0
+## same ruler on the BASE dictionary of this generation (control, my key absent)
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+PARITY_BASE_RC=1

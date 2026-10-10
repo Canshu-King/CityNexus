@@ -1,0 +1,5 @@
+# 键名不撞名：现尖字典里 setup.somePlace 的出现次数
+命令原样 git -C D:/moodle/CityNexus show 24a50a8aecf0a1fe4704400c687540d3e05d74fb:frontend/src/i18n/LocaleContext.tsx | grep -c -a "setup.somePlace"
+0
+命令原样 git -C D:/moodle/CityNexus show 24a50a8a...:该文件 | grep -c -a '"trial.departure"' （锚仍在，两枚）
+2
