@@ -245,7 +245,7 @@ export function LiveRecovery({
         setMessage(humanReplanReason(raw, zh));
         return;
       }
-      setMessage(zh ? "已按新安排更新你的行程。" : "Your trip has been updated.");
+      setMessage(t("live.tripUpdated"));
       await loadProposals();
       await plans.refetch();
       await twin.refetch();
@@ -258,7 +258,7 @@ export function LiveRecovery({
         const copy = writeDeadlineCopy(zh);
         setMessage(`${copy.title}｜${copy.body}`);
       } else {
-        setMessage(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+        setMessage(t("live.serverUnreachable"));
       }
     } finally {
       setBusy(null);
@@ -266,7 +266,7 @@ export function LiveRecovery({
   };
 
   const defer = () =>
-    setMessage(zh ? "好的，稍后再提醒你。" : "Okay, we will remind you later.");
+    setMessage(t("live.remindLaterOk"));
 
   return (
     <section className="v8-page" data-testid="live-recovery">

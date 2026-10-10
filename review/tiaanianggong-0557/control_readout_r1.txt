@@ -1,0 +1,28 @@
+A/B control: the same three legs with this lane's two files reverted to base 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+exit codes are read from the process itself, not from a pipe
+
+checkout base rc=0
+=== base leg typecheck_full
+$ node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+exit_code=2
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+
+=== base leg typecheck_narrow
+$ node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+exit_code=2
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+
+=== base leg build
+$ node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiaanianggong_0555\..\_qoder_tiaanianggong_0557_ctl_dist --emptyOutDir
+exit_code=1
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_tiaanianggong_0555/frontend/src/features/studio/SortableActivityList.tsx".
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_tiaanianggong_0555/frontend/src/features/studio/SortableActivityList.tsx".
+
+=== restore proof (working tree blob vs committed blob)
+frontend/src/i18n/LocaleContext.tsx working=37c00bac8ee465008d2e6997460df810b36f5961 committed=37c00bac8ee465008d2e6997460df810b36f5961 equal=True
+frontend/src/features/planning/PlanWithAiSheet.tsx working=7688d085c391d86b59297b2f711ca98f33f6c7df committed=7688d085c391d86b59297b2f711ca98f33f6c7df equal=True
+git_status_after_restore='?? review/tiaanianggong-0557/'
