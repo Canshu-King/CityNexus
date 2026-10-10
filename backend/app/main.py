@@ -506,6 +506,7 @@ from app.schemas import (
     BootstrapShortlistPreviewRequest,
     BootstrapShortlistNavigationRequest,
     BootstrapTwoStopWalkRequest,
+    BootstrapTwoStopWalkResponse,
     BootstrapTwoStopWalkabilityRequest,
     BootstrapTwoStopWalkabilityResponse,
     AuthoritativeComposeRequest,
@@ -3869,7 +3870,10 @@ def navigate_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walk")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walk",
+    response_model=BootstrapTwoStopWalkResponse,
+)
 def navigate_bootstrap_two_stop_walk(
     journey_id: UUID,
     payload: BootstrapTwoStopWalkRequest,
@@ -4056,7 +4060,8 @@ def run_real_city_intelligence(
         for candidate_plan in result.plans:
             candidate_id = str(candidate_plan.id)
             try:
-                select_plan(UUID(str(journey.id)), UUID(candidate_id), session)
+                stage_request = Request({"type": "http", "headers": []})
+                select_plan(UUID(str(journey.id)), UUID(candidate_id), stage_request, session)
             except HTTPException as exc:
                 session.rollback()
                 if exc.status_code not in {409, 422}:

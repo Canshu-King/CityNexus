@@ -3731,7 +3731,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapTwoStopWalkResponse'
         '422':
           description: Validation Error
           content:
@@ -7531,13 +7532,166 @@ components:
         public_map_consent:
           type: boolean
           title: Public Map Consent
-          default: false
       type: object
       required:
       - first_shortlist_id
       - second_shortlist_id
+      - public_map_consent
       title: BootstrapTwoStopWalkRequest
       description: Release a walking leg between two explicitly ordered saved public stops.
+    BootstrapTwoStopWalkResponseStop:
+      properties:
+        position:
+          type: integer
+          enum:
+          - 1
+          - 2
+          title: Position
+        shortlist_id:
+          type: string
+          format: uuid
+          title: Shortlist Id
+        name:
+          type: string
+          title: Name
+        category:
+          type: string
+          title: Category
+        external_id:
+          type: string
+          title: External Id
+        source_url:
+          type: string
+          title: Source Url
+        source_provenance:
+          type: string
+          title: Source Provenance
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          enum:
+          - WGS84
+          title: Coordinate System
+        opening_state:
+          type: string
+          title: Opening State
+        price_state:
+          type: string
+          enum:
+          - UNKNOWN
+          title: Price State
+        route_eta_state:
+          type: string
+          enum:
+          - UNKNOWN
+          title: Route Eta State
+        captured_at:
+          type: string
+          format: date-time
+          title: Captured At
+      type: object
+      required:
+      - position
+      - shortlist_id
+      - name
+      - category
+      - external_id
+      - source_url
+      - source_provenance
+      - latitude
+      - longitude
+      - coordinate_system
+      - opening_state
+      - price_state
+      - route_eta_state
+      - captured_at
+      title: BootstrapTwoStopWalkResponseStop
+    BootstrapTwoStopWalkResponse:
+      properties:
+        preview_id:
+          type: string
+          format: uuid
+          title: Preview Id
+        status:
+          type: string
+          enum:
+          - PUBLIC_TWO_STOP_WALK_READY
+          title: Status
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        authorization_basis:
+          type: string
+          enum:
+          - TWO_SAVED_PUBLIC_IDENTITIES
+          title: Authorization Basis
+        release_purpose:
+          type: string
+          enum:
+          - PUBLIC_POI_TO_PUBLIC_POI_WALKING
+          title: Release Purpose
+        navigation_mode:
+          type: string
+          enum:
+          - PUBLIC_POI_TO_PUBLIC_POI_WALKING
+          title: Navigation Mode
+        navigation_url:
+          type: string
+          title: Navigation Url
+        first_stop:
+          $ref: '#/components/schemas/BootstrapTwoStopWalkResponseStop'
+        second_stop:
+          $ref: '#/components/schemas/BootstrapTwoStopWalkResponseStop'
+        route_time_state:
+          type: string
+          enum:
+          - UNKNOWN
+          title: Route Time State
+        explore_state:
+          type: string
+          enum:
+          - DRAFT_EXPLORE_ONLY
+          title: Explore State
+        shared_fields:
+          items:
+            type: string
+          type: array
+          title: Shared Fields
+        withheld_fields:
+          items:
+            type: string
+          type: array
+          title: Withheld Fields
+        plan_version_id:
+          type: 'null'
+          title: Plan Version Id
+        selected_place_id:
+          type: 'null'
+          title: Selected Place Id
+      type: object
+      required:
+      - preview_id
+      - status
+      - journey_id
+      - authorization_basis
+      - release_purpose
+      - navigation_mode
+      - navigation_url
+      - first_stop
+      - second_stop
+      - route_time_state
+      - explore_state
+      - shared_fields
+      - withheld_fields
+      - plan_version_id
+      - selected_place_id
+      title: BootstrapTwoStopWalkResponse
     BootstrapTwoStopWalkabilityRequest:
       properties:
         first_shortlist_id:

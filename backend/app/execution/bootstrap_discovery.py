@@ -2078,10 +2078,26 @@ def preview_bootstrap_two_stop_walk(
             "both saved public places must belong to the signed member",
             status_code=403,
         )
+    if any(
+        row.provider_key != "overpass"
+        or _OSM_EXTERNAL_ID.fullmatch(str(row.external_id or "")) is None
+        for row in (first, second)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_IDENTITY_INVALID",
+            "both saved public places must retain an Overpass OSM identity",
+            status_code=422,
+        )
     if first.external_id == second.external_id:
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_TWO_STOP_DISTINCT_REQUIRED",
             "choose two different public OSM identities",
+            status_code=422,
+        )
+    if str(first.coordinate_system).upper() != "WGS84" or str(second.coordinate_system).upper() != "WGS84":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_COORDINATE_SYSTEM_UNSUPPORTED",
+            "both saved public places must use WGS84 coordinates",
             status_code=422,
         )
     _finite_coordinate(float(first.latitude), float(first.longitude))
@@ -2223,6 +2239,16 @@ def preview_bootstrap_two_stop_walkability(
             "BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH",
             "both saved public places must belong to the signed member",
             status_code=403,
+        )
+    if any(
+        row.provider_key != "overpass"
+        or _OSM_EXTERNAL_ID.fullmatch(str(row.external_id or "")) is None
+        for row in (first, second)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_IDENTITY_INVALID",
+            "both saved public places must retain an Overpass OSM identity",
+            status_code=422,
         )
     if first.external_id == second.external_id:
         raise BootstrapDiscoveryError(

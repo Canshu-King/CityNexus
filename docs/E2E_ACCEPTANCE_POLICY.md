@@ -69,6 +69,14 @@ CITYNEXUS_DATABASE_URL='sqlite:///./_<same-unique-id>.db' \
 
 Run it from `frontend/`.  The database path is resolved relative to `backend/`.
 
+The R97/R98 loopback provider specs start their city, Overpass, and Valhalla
+fixtures inside the test process.  Pass
+`CITYNEXUS_E2E_PROVIDER_FIXTURES=r97-r98-loopback` for that focused run.  The
+Playwright backend environment then pins the three loopback URLs and enables the
+live discovery boundary before uvicorn imports its settings; the provenance line
+records the profile so a run without those bindings cannot be presented as a
+real-provider receipt.
+
 ## Suite layout
 
 | what | where | gating? |

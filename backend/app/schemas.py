@@ -351,7 +351,7 @@ class BootstrapTwoStopWalkRequest(BaseModel):
 
     first_shortlist_id: UUID
     second_shortlist_id: UUID
-    public_map_consent: bool = False
+    public_map_consent: bool
 
 
 class BootstrapTwoStopWalkabilityRequest(BaseModel):
@@ -360,6 +360,45 @@ class BootstrapTwoStopWalkabilityRequest(BaseModel):
     first_shortlist_id: UUID
     second_shortlist_id: UUID
     public_route_consent: bool
+
+
+class BootstrapTwoStopWalkResponseStop(BaseModel):
+    """One saved public identity released by the destination-only walk preview."""
+
+    position: Literal[1, 2]
+    shortlist_id: UUID
+    name: str
+    category: str
+    external_id: str
+    source_url: str
+    source_provenance: str
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    opening_state: str
+    price_state: Literal["UNKNOWN"]
+    route_eta_state: Literal["UNKNOWN"]
+    captured_at: datetime
+
+
+class BootstrapTwoStopWalkResponse(BaseModel):
+    """Signed, destination-only walking release for two saved public stops."""
+
+    preview_id: UUID
+    status: Literal["PUBLIC_TWO_STOP_WALK_READY"]
+    journey_id: UUID
+    authorization_basis: Literal["TWO_SAVED_PUBLIC_IDENTITIES"]
+    release_purpose: Literal["PUBLIC_POI_TO_PUBLIC_POI_WALKING"]
+    navigation_mode: Literal["PUBLIC_POI_TO_PUBLIC_POI_WALKING"]
+    navigation_url: str
+    first_stop: BootstrapTwoStopWalkResponseStop
+    second_stop: BootstrapTwoStopWalkResponseStop
+    route_time_state: Literal["UNKNOWN"]
+    explore_state: Literal["DRAFT_EXPLORE_ONLY"]
+    shared_fields: list[str]
+    withheld_fields: list[str]
+    plan_version_id: None
+    selected_place_id: None
 
 
 class BootstrapTwoStopWalkStop(BaseModel):

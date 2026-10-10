@@ -22,6 +22,7 @@ export type E2eEnvironment = {
   backendPython: string;
   databaseUrl: string | undefined;
   runId: string | undefined;
+  providerFixtures: string | undefined;
   reuseExistingServer: boolean;
   ai: string;
 };
@@ -120,6 +121,7 @@ export function resolveE2eEnvironment(
       backendPython: python,
       databaseUrl,
       runId,
+      providerFixtures: process.env.CITYNEXUS_E2E_PROVIDER_FIXTURES,
       reuseExistingServer: false,
       ai: "disabled",
     };
@@ -136,6 +138,7 @@ export function resolveE2eEnvironment(
         : "python"),
     databaseUrl: process.env.CITYNEXUS_DATABASE_URL,
     runId: process.env.CITYNEXUS_E2E_RUN_ID,
+    providerFixtures: process.env.CITYNEXUS_E2E_PROVIDER_FIXTURES,
     reuseExistingServer: true,
     ai: "inherited from the environment",
   };
@@ -147,6 +150,7 @@ export function announce(env: E2eEnvironment, label: string): void {
     `[citynexus e2e] suite=${label} authoritative=${env.authoritative} ` +
     `python=${env.backendPython} frontend=:${env.frontendPort} backend=:${env.backendPort} ` +
     `db=${env.databaseUrl ?? "(inherited default)"} ai=${env.ai} ` +
+    `providerFixtures=${env.providerFixtures ?? "(none)"} ` +
     `reuseExistingServer=${env.reuseExistingServer}`;
   console.error(line);
   if (env.authoritative) {
@@ -165,6 +169,7 @@ export function announce(env: E2eEnvironment, label: string): void {
           backendPort: env.backendPort,
           databaseUrl: env.databaseUrl ?? "(inherited default)",
           ai: env.ai,
+          providerFixtures: env.providerFixtures ?? "(none)",
           reuseExistingServer: env.reuseExistingServer,
           workers: 1,
           retries: 0,
@@ -185,6 +190,24 @@ export function backendCommand(env: E2eEnvironment): string {
 }
 
 export function backendEnv(env: E2eEnvironment): Record<string, string> {
+  const providerFixtureEnv =
+    env.providerFixtures === "r97-r98-loopback"
+      ? {
+          // R97/R98 specs start these loopback servers inside the browser test;
+          // the backend must receive their URLs before uvicorn imports settings.
+          CITYNEXUS_REAL_CITY_ENABLED: "true",
+          CITYNEXUS_REAL_CITY_MODE: "live",
+          CITYNEXUS_TRAVELER_AUTH_SECRET: "r97-r98-loopback-traveler-secret-012345678901",
+          CITYNEXUS_CITY_SEARCH_ENABLED: "true",
+          CITYNEXUS_CITY_SEARCH_PROVIDER: "nominatim",
+          CITYNEXUS_CITY_SEARCH_BASE_URL: "http://127.0.0.1:8237",
+          CITYNEXUS_CITY_SEARCH_TEST_PROVIDER: "true",
+          CITYNEXUS_CITY_SEARCH_USER_AGENT: "CityNexus-R97-R98-Loopback/1.0",
+          CITYNEXUS_OVERPASS_URL: "http://127.0.0.1:8238/api/interpreter",
+          CITYNEXUS_LIVE_VALHALLA_URL: "http://127.0.0.1:8239",
+          CITYNEXUS_LIVE_VALHALLA_TEST_PROVIDER: "true",
+        }
+      : {};
   return {
     ...(process.env as Record<string, string>),
     // ORD-0058: the authoritative backend now refuses `POST /api/v1/demo/reset` unless the
@@ -195,5 +218,6 @@ export function backendEnv(env: E2eEnvironment): Record<string, string> {
     CITYNEXUS_DEMO_MODE: "true",
     ...(env.databaseUrl ? { CITYNEXUS_DATABASE_URL: env.databaseUrl } : {}),
     ...(env.runId ? { CITYNEXUS_E2E_RUN_ID: env.runId } : {}),
+    ...providerFixtureEnv,
   };
 }

@@ -179,6 +179,69 @@ def test_r98_two_stop_walkability_is_provider_grounded_or_honestly_unknown(monke
             assert forbidden in body["withheld_fields"]
             assert forbidden not in body["navigation_url"]
 
+        with SessionLocal() as session:
+            first_row = session.get(MemberDraftShortlistItem, first_id)
+            assert first_row is not None
+            first_row.external_id = "fixture:node/98001"
+            session.commit()
+        invalid_identity = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability",
+            headers=owner_headers,
+            json={
+                "first_shortlist_id": first_id,
+                "second_shortlist_id": second_id,
+                "public_route_consent": True,
+            },
+        )
+        assert invalid_identity.status_code == 422, invalid_identity.text
+        assert "BOOTSTRAP_IDENTITY_INVALID" in invalid_identity.text
+        with SessionLocal() as session:
+            first_row = session.get(MemberDraftShortlistItem, first_id)
+            assert first_row is not None
+            first_row.external_id = "overpass:node/98001"
+            session.commit()
+
+        with SessionLocal() as session:
+            first_row = session.get(MemberDraftShortlistItem, first_id)
+            assert first_row is not None
+            first_row.provider_key = "fixture"
+            session.commit()
+        invalid_provider = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability",
+            headers=owner_headers,
+            json={
+                "first_shortlist_id": first_id,
+                "second_shortlist_id": second_id,
+                "public_route_consent": True,
+            },
+        )
+        assert invalid_provider.status_code == 422, invalid_provider.text
+        assert "BOOTSTRAP_IDENTITY_INVALID" in invalid_provider.text
+
+        with SessionLocal() as session:
+            first_row = session.get(MemberDraftShortlistItem, first_id)
+            assert first_row is not None
+            first_row.provider_key = "overpass"
+            first_row.coordinate_system = "GCJ02"
+            session.commit()
+        invalid_coordinate_system = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability",
+            headers=owner_headers,
+            json={
+                "first_shortlist_id": first_id,
+                "second_shortlist_id": second_id,
+                "public_route_consent": True,
+            },
+        )
+        assert invalid_coordinate_system.status_code == 422, invalid_coordinate_system.text
+        assert "BOOTSTRAP_COORDINATE_SYSTEM_UNSUPPORTED" in invalid_coordinate_system.text
+
+        with SessionLocal() as session:
+            first_row = session.get(MemberDraftShortlistItem, first_id)
+            assert first_row is not None
+            first_row.coordinate_system = "WGS84"
+            session.commit()
+
         cross_member = client.post(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability",
             headers=bystander_headers,
