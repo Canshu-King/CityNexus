@@ -153,11 +153,28 @@ const en: Dict = {
   "trial.currency": "Currency",
   "trial.party": "Travelers",
   "trial.rooms": "Rooms (suggested)",
+  /* ORD-0557: the tail the entry form invents when it has to say, on its own, whether a field blocks
+     the review step and what an open-ended lower bound means. `lib/entryLimits.ts` carried this pair
+     inline; the copy here is the words that were already on the glass, unchanged. */
+  "trial.fieldRequired": "required",
+  "trial.fieldOptional": "optional",
+  "trial.rangeFrom": "from {min} {unit}",
   "trial.create": "Create journey",
   "trial.creating": "Creating…",
   "trial.cancel": "Back to current journey",
   "trial.newJourney": "Try another city",
   "trial.createdLiveHint": "Journey created. Open City Discovery to use live providers for this city.",
+  "trial.autoSetPrefix": "Auto-set: ",
+  "trial.changeThisAria": "Change ",
+  "trial.departureField": "Departure",
+  "trial.destination": "Destination",
+  "trial.navArrival": "where you arrive",
+  "trial.navDeparture": "where you leave",
+  "trial.navDestination": "the destination",
+  "trial.next": "Next",
+  "trial.notFilledRequired": " not filled in · required",
+  "trial.retry": "Retry",
+  "trial.toConfirm": "to confirm",
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
@@ -683,6 +700,28 @@ const en: Dict = {
   "discovery.preparedYouCanGoAndPlan": "Prepared -- you can go and plan",
   "discovery.alreadyCurrentNothingWasChanged": "Already current -- nothing was changed",
   "discovery.noTraceableSourceForThisDestination": "No traceable source for this destination",
+  "discovery.youStoppedThisPreparation": "You stopped this preparation",
+  "discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult": "The server recorded the stop and will not use this run's result.",
+  "discovery.theResolverFailedAtRuntime": "The resolver failed at runtime",
+  "discovery.thisPreparationWasLostMidRun": "This preparation was lost mid-run",
+  "discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute": "The server says the worker running it disappeared, so this attempt does not count. Starting again is the route.",
+  "discovery.preparation": "Preparation",
+  "discovery.prepareADestination": "Prepare a destination",
+  "discovery.firstWhetherThisCityCanBePlanned": "First, whether this city can be planned",
+  "discovery.eGTianjin": "e.g. Tianjin",
+  "discovery.askingTheServer": "Asking the server…",
+  "discovery.serverVerdict": "Server verdict",
+  "discovery.theServerSaysTheseAllMatchPickOne": "The server says these all match -- pick one",
+  "discovery.goAndPlan": "Go and plan",
+  "discovery.tryingAgain": "Trying again…",
+  "discovery.starting": "Starting…",
+  "discovery.chooseAnotherDestination": "Choose another destination",
+  "discovery.preparation2": "Preparation",
+  "discovery.goAndPlan2": "Go and plan",
+  "discovery.checkAgain": "Check again",
+  "discovery.destination": "Destination",
+  "discovery.preparePlaces": "Prepare places",
+  "discovery.pickAnotherDestination": "Pick another destination",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -965,6 +1004,9 @@ const en: Dict = {
   "stay.cancellationTermsUnknown": "Cancellation terms unknown",
   "stay.freeCancellationBeforeArrival": "Free cancellation before arrival",
   "stay.noProviderEvidence": "No provider evidence",
+  "stay.noProviderRate": " (no provider rate)",
+  "stay.totalInfix": " total · ",
+  "stay.perNightSuffix": " / night",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -1322,6 +1364,9 @@ const en: Dict = {
   "detail.pretripAria": "Pre-trip checklist",
   "detail.pretripKicker": "Before you go",
   "detail.pretripHeading": "The two things the server reports as outstanding",
+  /* ORD-0557 兜底行: the sentence this panel paints when the derivation returns nothing. It used to be
+     typed inside `lib/pretripChecklist.ts`; the Chinese side is the words already on the glass. */
+  "detail.pretripNeitherOpen": "Neither one is open on this generation.",
   "detail.basisPrefix": "Basis: ",
   "detail.anchorPrefix": "Anchor: ",
   "detail.measuredHttpLabel": "This device's reading: HTTP",
@@ -1353,6 +1398,44 @@ const en: Dict = {
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
 
+  // ── Trip-creation wizard: spoken labels, buttons and status lines ──
+  /* ORD-0555 (lane 起手工): the wizard held these strings in `zh ? "..." : "..."` arms, so
+     neither half was reachable by a key lookup. Both halves move here, in the file's line order.
+     Values are byte-for-byte the strings the screen already showed -- this is a move, not a rewrite.
+     Readings: _qoder_shouqigong_0555/readings/. */
+  "setup.change2": "Change",
+  "setup.weFilledThisInForYou": "we filled this in for you",
+  "setup.createATrip": "Create a trip",
+  "setup.eGTianjinTokyoSingapore": "e.g. Tianjin, Tokyo, Singapore",
+  "setup.seeSupportedDestinations": "See supported destinations",
+  "setup.noNameLandedInThisGroupThisRound": "No name landed in this group this round.",
+  "setup.arrivalTime": "Arrival time",
+  "setup.departureTime": "Departure time",
+  "setup.advancedSettings": "Advanced settings",
+  "setup.pace": "Pace",
+  "setup.interests": "Interests",
+  "setup.specialRequirements": "Special requirements",
+  "setup.notFilledInRequired": "not filled in · required",
+  "setup.travellersRooms": "Travellers / rooms",
+  "setup.totalStayBudget": "Total / stay budget",
+  "setup.pace2": "Pace",
+  "setup.autoSet2": "Auto-set",
+  "setup.stoppedWaiting": "Stopped waiting",
+  "setup.back": "Back",
+  "setup.createTrip": "Create trip",
+  "setup.identityNotReadYet": "identity not read yet",
+  "setup.theServerNamedIt": "the server named it",
+  "setup.noIdentityYet": "no identity yet",
+  "setup.thisName": "this name",
+  "setup.theServerCannotNameThisPlace": "The server cannot name this place",
+  "setup.thePlacesAreHereButNoneHasACoordinate": "The places are here, but none has a coordinate",
+  "setup.thisDestinationHasNotBeenPrepared": "This destination has not been prepared",
+  "setup.noPlacesAreRegisteredForThisDestination": "No places are registered for this destination",
+  "setup.theServerSaysThisDestinationCanBePlannedNow": "the server says this destination can be planned now",
+  "setup.itWasAskedAndNothingAnsweredThisRound": "it was asked, and nothing answered this round",
+  "setup.theServerGaveSomeOtherVerdict": "the server gave some other verdict",
+
+
   // ── ORD-0562 bare-key clearance, SimulationPanel stage (nine keys) ──
   "simulation.closeStage": "Close the stage",
   "simulation.now": " (now {state})",
@@ -1363,6 +1446,23 @@ const en: Dict = {
   "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "The server answered with {listed} proposals, {open} still open; \"Accept the proposal\" below now points at {id}. Accepting is what changes the plan.",
   "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "The server produced proposals, but none of the {listed} it now lists is open, so \"Accept the proposal\" will refuse and say why on its own line.",
   "simulation.thisActionIsUnavailableRightNow": "This action is unavailable right now: {reason}",
+
+  // ── ORD-0557 stage header, two remaining rows ──
+  "simulation.basis": "Basis",
+  "simulation.evidence": "Evidence",
+  /* ORD-0557: the attribution titles `lib/failureAttribution.ts` writes inline. Key names and English
+     arms are copied from the CN draft table verbatim; both arms are the bytes those screens already
+     showed, so the move cannot change what a traveller reads. */
+  "lib.failureAttribution.tripNotOnServer": "This trip is not on this server",
+  "lib.failureAttribution.networkUnavailable": "Network unavailable",
+  "lib.failureAttribution.serviceUnavailable": "The service is temporarily unavailable",
+  "lib.failureAttribution.serverCouldNotRead": "The server could not read your trip",
+  "lib.failureAttribution.slowDownRate": "The server asked us to slow down",
+  "lib.failureAttribution.slowDownRetry": "The server asked us to slow down",
+  "lib.failureAttribution.stateAlreadyMoved": "The state already moved - this was not a failed read",
+  "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
+  "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
+  "lib.failureAttribution.readFailed": "This read failed",
 };
 
 const zhCN: Dict = {
@@ -1495,11 +1595,27 @@ const zhCN: Dict = {
   "trial.currency": "货币",
   "trial.party": "出行人数",
   "trial.rooms": "房间数（建议值，可调整）",
+  /* ORD-0557：入口表自己补的那截尾巴——这一格挡不挡审核、只有下限的区间怎么说。
+     原先写死在 `lib/entryLimits.ts`，这里的中文就是屏上原本那几个字。 */
+  "trial.fieldRequired": "必填",
+  "trial.fieldOptional": "选填",
+  "trial.rangeFrom": "{min} {unit}起",
   "trial.create": "创建行程",
   "trial.creating": "正在创建…",
   "trial.cancel": "返回当前行程",
   "trial.newJourney": "试用其他城市",
   "trial.createdLiveHint": "行程已创建。进入“城市探索”后可使用该城市的实时数据源。",
+  "trial.autoSetPrefix": "已自动设置：",
+  "trial.changeThisAria": "改这一项：",
+  "trial.departureField": "离开",
+  "trial.destination": "目的地",
+  "trial.navArrival": "抵达地点",
+  "trial.navDeparture": "离开地点",
+  "trial.navDestination": "目的地",
+  "trial.next": "下一步",
+  "trial.notFilledRequired": " 未填写 · 必填",
+  "trial.retry": "重试",
+  "trial.toConfirm": "待确认",
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",
   "shell.factsSynced": "行程事实已同步",
@@ -1998,6 +2114,28 @@ const zhCN: Dict = {
   "discovery.preparedYouCanGoAndPlan": "准备好了，可以去规划",
   "discovery.alreadyCurrentNothingWasChanged": "本来就是新的，没有改动",
   "discovery.noTraceableSourceForThisDestination": "这个目的地没有可追溯的来源",
+  "discovery.youStoppedThisPreparation": "你已经停止这次准备",
+  "discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult": "服务器记下了你的停止，它不再用这次的结果。",
+  "discovery.theResolverFailedAtRuntime": "解析这次运行失败了",
+  "discovery.thisPreparationWasLostMidRun": "这次准备中途丢了",
+  "discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute": "服务器说执行它的工作进程没了，这次不算数。可以再来一次。",
+  "discovery.preparation": "准备进度",
+  "discovery.prepareADestination": "准备目的地",
+  "discovery.firstWhetherThisCityCanBePlanned": "先看这座城能不能规划",
+  "discovery.eGTianjin": "例如：天津、贡山独龙族怒族自治县",
+  "discovery.askingTheServer": "正在问服务器…",
+  "discovery.serverVerdict": "服务器判定",
+  "discovery.theServerSaysTheseAllMatchPickOne": "服务器说这些都对得上，请挑一个",
+  "discovery.goAndPlan": "去规划",
+  "discovery.tryingAgain": "正在重试…",
+  "discovery.starting": "正在开始…",
+  "discovery.chooseAnotherDestination": "换一个目的地",
+  "discovery.preparation2": "准备进度",
+  "discovery.goAndPlan2": "去规划",
+  "discovery.checkAgain": "重新判定",
+  "discovery.destination": "目的地",
+  "discovery.preparePlaces": "准备地点",
+  "discovery.pickAnotherDestination": "另选一个目的地",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
@@ -2271,6 +2409,9 @@ const zhCN: Dict = {
   "stay.cancellationTermsUnknown": "退改政策未知",
   "stay.freeCancellationBeforeArrival": "入住前可免费取消",
   "stay.noProviderEvidence": "暂无供应商证据",
+  "stay.noProviderRate": "（供应商未提供房价）",
+  "stay.totalInfix": " 合计 · ",
+  "stay.perNightSuffix": " / 晚",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
@@ -2598,6 +2739,9 @@ const zhCN: Dict = {
   "detail.pretripAria": "行前清单",
   "detail.pretripKicker": "行前清单",
   "detail.pretripHeading": "服务端报出的两类待办",
+  /* ORD-0557 兜底行：这一面在两类检查都没有可列时念的那一句，原先写死在 `lib/pretripChecklist.ts`，
+     这里就是屏上原本那几个字。 */
+  "detail.pretripNeitherOpen": "这一代都没有报出。",
   "detail.basisPrefix": "依据：",
   "detail.anchorPrefix": "锚点：",
   "detail.measuredHttpLabel": "这台设备看到的回读：HTTP",
@@ -2625,6 +2769,43 @@ const zhCN: Dict = {
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
 
+  // ── 行程创建向导：口语标签、按钮与状态行 ──
+  /* ORD-0555（车道 起手工）：向导里这些串写在 `zh ? "..." : "..."` 的分支上，两边都查不到键。
+     两端都搬进字典，按该文件的行序排。值是这些屏本来就在显示的那串，逐字节相同——这是搬运，不是改写。
+     读数：_qoder_shouqigong_0555/readings/。 */
+  "setup.change2": "改这一项",
+  "setup.weFilledThisInForYou": "我们替你填的",
+  "setup.createATrip": "新建行程",
+  "setup.eGTianjinTokyoSingapore": "例如：天津、东京、新加坡",
+  "setup.seeSupportedDestinations": "看支持的目的地",
+  "setup.noNameLandedInThisGroupThisRound": "这一轮没有名字落在这一组。",
+  "setup.arrivalTime": "抵达时间",
+  "setup.departureTime": "离开时间",
+  "setup.advancedSettings": "高级设置",
+  "setup.pace": "旅行节奏",
+  "setup.interests": "兴趣",
+  "setup.specialRequirements": "特殊要求",
+  "setup.notFilledInRequired": "未填写 · 必填",
+  "setup.travellersRooms": "人数 / 房间",
+  "setup.totalStayBudget": "总预算 / 住宿",
+  "setup.pace2": "节奏",
+  "setup.autoSet2": "自动设置",
+  "setup.stoppedWaiting": "已停止等待",
+  "setup.back": "返回",
+  "setup.createTrip": "确认创建",
+  "setup.identityNotReadYet": "身份还没读到",
+  "setup.theServerNamedIt": "服务器给了身份",
+  "setup.noIdentityYet": "还没有身份",
+  "setup.thisName": "这个名字",
+  "setup.theServerCannotNameThisPlace": "服务器认不出这个名字",
+  "setup.thePlacesAreHereButNoneHasACoordinate": "这里有地点，但它们没有坐标",
+  "setup.thisDestinationHasNotBeenPrepared": "这座城还没准备过",
+  "setup.noPlacesAreRegisteredForThisDestination": "这座城还没登记任何地点",
+  "setup.theServerSaysThisDestinationCanBePlannedNow": "服务器说这座城现在就能规划",
+  "setup.itWasAskedAndNothingAnsweredThisRound": "问了，这一轮没人回答",
+  "setup.theServerGaveSomeOtherVerdict": "服务器给了别的判定",
+
+
   // ── ORD-0562 bare-key clearance, SimulationPanel stage (nine keys) ──
   "simulation.closeStage": "收起舞台",
   "simulation.now": "（现值 {state}）",
@@ -2635,9 +2816,59 @@ const zhCN: Dict = {
   "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "服务器回了 {listed} 份方案，其中 {open} 份还开着；下面「接受方案」那一行现在拿的是 {id}。接受才会换计划。",
   "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "服务器回了方案，但它现在列出的 {listed} 份里没有还开着的那一份，所以「接受方案」这一行会说不给按——理由在它自己那行。",
   "simulation.thisActionIsUnavailableRightNow": "这个动作现在做不了：{reason}",
+
+  // ── ORD-0557 stage header, two remaining rows ──
+  "simulation.basis": "依据",
+  "simulation.evidence": "证据",
+  /* ORD-0557：`lib/failureAttribution.ts` 里那些直接写在源码上的归因小标题。键名与英文臂逐字照 CN
+     草稿表抄；中文臂就是屏上此刻在显示的那串字，这是搬运不是改写。 */
+  "lib.failureAttribution.tripNotOnServer": "这台服务器上没有这一趟行程了",
+  "lib.failureAttribution.networkUnavailable": "网络不可用",
+  "lib.failureAttribution.serviceUnavailable": "服务暂时不可用",
+  "lib.failureAttribution.serverCouldNotRead": "服务器这次没能把行程读出来",
+  "lib.failureAttribution.slowDownRate": "服务器请我们慢一点",
+  "lib.failureAttribution.slowDownRetry": "服务器请我们慢一点",
+  "lib.failureAttribution.stateAlreadyMoved": "这件事的状态已经变了，不是没读到",
+  "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
+  "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
+  "lib.failureAttribution.readFailed": "这一次没读到",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/* ORD-0557: the lookup for copy that lives in a module function rather than a component.
+   `lib/failureAttribution.ts` builds its titles inside `copyFor(attribution, zh)`, whose call sites sit
+   on ten other screens (first one `app/V8Experience.tsx:1595`), so that function cannot call the
+   `useT()` hook without a signature change reaching into other lanes' files. Same fallback order as
+   `t()`: this locale, then English, then the key itself. No `{param}` substitution and no `{plural:}`
+   expansion -- a line needing either still goes through `t()`. */
+export function dictionaryCopy(locale: TripLocale, key: string): string {
+  return dictionaries[locale][key] ?? dictionaries.en[key] ?? key;
+}
+
+/**
+ * ORD-0557: the same lookup for a caller that also has values to drop into the sentence.
+ *
+ * `lib/entryLimits.ts`, `lib/errorReceipt.ts` and `lib/pretripChecklist.ts` are plain functions handed
+ * their language by the caller, so they cannot call a hook; and `trial.rangeFrom` carries `{min}` and
+ * `{unit}` holes, which `dictionaryCopy` deliberately does not fill. The fallback order is not written
+ * twice -- this sits on top of `dictionaryCopy` and adds only the plural marker and the substitution
+ * that `t()` itself applies.
+ *
+ * `t()` is left alone on purpose: its body is pinned by a shipped gate
+ * (`e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts`, arm A5), which greps the two
+ * dictionary arms out of that callback itself, so folding the three together reddens another lane's
+ * gate. Whoever can move that gate should move all three bodies in one step.
+ */
+export function dictionaryText(
+  locale: TripLocale,
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  const counted = expandPluralMarkers(dictionaryCopy(locale, key), params);
+  if (!params) return counted;
+  return counted.replace(/\{(\w+)\}/g, (_, k: string) => String(params[k] ?? `{${k}}`));
+}
 
 type LocaleState = {
   locale: TripLocale;

@@ -1,0 +1,39 @@
+CWD: D:\moodle\_qoder_lupaigongyi_0553\frontend  TIP: ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a
+CMD: grep -rn formatV8Date\( src  (real call sites, imports and the definition excluded)
+src/features/abort/JourneyAbortPanel.tsx:89:          {sayFor(locale, "abort.storedAt", { when: formatV8Date(at, locale) })}
+src/features/access/AccessPanel.tsx:479:      return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at, locale) });
+src/features/access/AccessPanel.tsx:487:      return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at ?? "", locale) });
+src/features/access/AccessPanel.tsx:708:                    <span className="cn-access-when">{formatV8Date(event.timestamp, locale)}</span>
+src/features/access/AccessPanel.tsx:818:            ? say("access.inviteExpires", { expires: formatV8Date(expiry, locale) })
+src/features/access/AccessPanel.tsx:895:                          revoked: formatV8Date(grant.revoked_at, locale),
+src/features/access/AccessPanel.tsx:900:                            expires: formatV8Date(grant.expires_at, locale),
+src/features/studio/PlanVersionHistoryPanel.tsx:100:                    {item.created_at ? formatV8Date(item.created_at, locale) : say("history.createdMissing")}
+src/features/trash/JourneyTrashPanel.tsx:87:    ? { when: formatV8Date(previous.deleted_at, locale) || previous.deleted_at }
+src/features/trash/JourneyTrashPanel.tsx:88:    : { when: previous.timestamp ? formatV8Date(previous.timestamp, locale) || previous.timestamp : "" };
+src/features/trash/JourneyTrashPanel.tsx:309:                        when: formatV8Date(row.deleted_at, locale) || row.deleted_at,
+COUNT_CALLS: 11
+FILES_WITH_CALLS: 4
+CMD: grep -c timeZone per consumer file
+src/features/abort/JourneyAbortPanel.tsx timeZone_hits=0  formatV8Date_calls=1
+src/features/access/AccessPanel.tsx timeZone_hits=0  formatV8Date_calls=6
+src/features/studio/PlanVersionHistoryPanel.tsx timeZone_hits=0  formatV8Date_calls=1
+src/features/trash/JourneyTrashPanel.tsx timeZone_hits=0  formatV8Date_calls=3
+src/features/shared/SharedJourneyPanel.tsx timeZone_hits=7  formatV8Date_calls=0
+src/features/checkin/checkinCopy.ts timeZone_hits=0  formatV8Date_calls=0
+src/features/studio/V12TripStudioPanel.tsx timeZone_hits=0  formatV8Date_calls=0
+CMD: zone-aware baselines (file-local, not exported from a lib)
+src/app/V8Experience.tsx:417:function clockInZone(value: string, timeZone: string): string {
+src/features/trip/ActivityDetail.tsx:48:function clock(iso: string, timeZone: string): string {
+src/features/trip/ActivityDetail.tsx:61:function dayLabel(iso: string, locale: string, timeZone: string): string {
+src/features/trip/TripItinerary.tsx:67:export function clock(iso: string, timeZone: string): string {
+src/features/trip/TripItinerary.tsx:87:export function dayLabel(key: string, index: number, locale: string): string {
+CMD: the whole file under order
+     1	import { formatMinorMoney } from "./money";
+     2	
+     3	export function formatV8Money(minor: number | null | undefined, currency = "CNY", locale = "en") {
+     4	  return formatMinorMoney(minor, currency, locale === "zh-CN" ? "zh-CN" : "en-US");
+     5	}
+     6	
+     7	export function formatV8Date(value?: string, locale = "en") {
+     8	  return value ? new Intl.DateTimeFormat(locale === "zh-CN" ? "zh-CN" : "en-GB", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "—";
+     9	}

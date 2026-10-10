@@ -1,0 +1,57 @@
+ORD-0558 lane 活明细 — r4 gate readouts (the commander's 去系动词 ruling, three arms of one file)
+candidate branch review/活明细-0558-r4, parent d89cfea25214b4bbb4e886dca765b096237362f1
+(the authoritative tip, ls-remote read at the moment of the re-cut). The branch was first cut on
+73e723d04d20df33dec68952884d7000f71ef941 and re-cut onto the newer tip while still unpublished,
+so the candidate carries only my own bytes — no other lane's bytes are merged into it.
+Ruling followed: `CITYNEXUS_AGENT_CONTROL.md:4010` (three rows of this file in one branch,
+两语各三臂 zero/one/many, before and after) and the exact wording at `CITYNEXUS_AGENT_CONTROL.md:4009`.
+Toolchain: node v24.14.0, typescript 5.9.3, vite 7.3.6, esbuild — via a junction of
+D:/moodle/_qoder_integration_20260919/frontend/node_modules into wt/frontend/node_modules.
+Worktree: D:/moodle/_qoder_huomingxi_0558/wt (isolated; the main tree's uncommitted face untouched).
+
+[1] product face against the current authoritative tip
+  cmd: git diff --numstat d89cfea25214b4bbb4e886dca765b096237362f1 HEAD
+  output: "3       3       frontend/src/features/poiimport/poiImportCopy.ts"
+  one file, three English values; the zh value of each key is on its own untouched line; dictionary,
+  contract and backend faces untouched; no new t("...") call anywhere in the branch.
+
+[2] the three rewrites, exactly as ruled
+  frontend/src/features/poiimport/poiImportCopy.ts:159  "are now on"  -> "now on"
+  frontend/src/features/poiimport/poiImportCopy.ts:163  "were already on" -> "already on"
+  frontend/src/features/poiimport/poiImportCopy.ts:183  "are on"      -> "on"
+  the {plural:place} mark stays in all three, so the noun still declines.
+
+[3] acceptance: 两语各三臂（零数／一数／多数），改前与改后各跑一次
+  cmd: node review/huomingxi/copula_ab_r1.mjs   exit: 0   -> copula_ab_r1.txt
+  method: tip bytes and branch bytes each bundled with the repo's own esbuild over the real import
+  graph (poiImportCopy.ts -> lib/plural.ts), then the exported poiImportCopy() is called per key for
+  n=0, n=1 and n=2 in en and zh. Nothing is retyped by hand.
+  count=1 before -> after (the case that was broken):
+    "1 place are now on Old Town — read back from the same list door."   -> "1 place now on Old Town — …"      (copula_ab_r1.txt:10 / :11)
+    "1 place were already on Old Town, so nothing was written twice."    -> "1 place already on Old Town, …"   (copula_ab_r1.txt:24 / :25)
+    "1 place are on Day 2 — read back from the server."                  -> "1 place on Day 2 — …"             (copula_ab_r1.txt:38 / :39)
+  count=0 and count=2 readings are in the same file (e.g. copula_ab_r1.txt:7, :15, :21, :29, :35, :43).
+  SUMMARY zh_pairs_identical=9/9 en_pairs_changed=9/9 — copula_ab_r1.txt:47.
+
+[4] nothing downstream pins the removed copula
+  grep over frontend/e2e and contracts found no assertion containing "are now on", "were already on"
+  or "places are on" — the single hit is prose in a comment, `frontend/e2e/qoder-ord0445-pending-set.spec.ts:325`.
+  The one spec that uses these keys reads the expected sentence out of the same table it tests
+  (`frontend/e2e/qoder-ord0545s4-poi-screen-walkthrough-r1.spec.ts:407` calls tableHalf("addedCount", …)),
+  so it tracks the new wording instead of contradicting it. That spec was not run in this round.
+
+[5] typecheck
+  cwd: wt/frontend
+  cmd: D:\moodle\_qoder_integration_20260919\frontend\node_modules\.bin\tsc.cmd -p tsconfig.check.json --noEmit
+  exit: 0
+  stdout: 0 lines
+
+[6] build
+  cwd: wt/frontend
+  cmd: npm run build
+  exit: 0
+  key lines: "2040 modules transformed." / "built in 5.16s"
+
+[7] not run this round, named on purpose
+  No browser/e2e pass. The screen's own words were measured by calling the exported function the
+  screen calls (section [3]); a live render is available on request.

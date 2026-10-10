@@ -25,6 +25,7 @@ export const activityDetailCopy = {
     "activity.nearbyStops": "Other stops nearby",
     "activity.otherStops": "Other stops on this trip",
     "activity.otherStopsNote": "These are other stops on the same trip; they are not necessarily within walking distance.",
+    "activity.noOtherStops": "This trip has no other stop beside this one, so there is nothing to place nearby or far away.",
   },
   "zh-CN": {
     "activity.backToItinerary": "返回行程",
@@ -44,6 +45,7 @@ export const activityDetailCopy = {
     "activity.nearbyStops": "附近的其他停靠点",
     "activity.otherStops": "这趟行程的其他停靠点",
     "activity.otherStopsNote": "这些是同一行程的其他停靠点，不一定是步行可达的邻近地点。",
+    "activity.noOtherStops": "这一程除了这一站没有别的停靠点，所以这里既没有邻近的站，也没有远处的站。",
   },
 } as const;
 

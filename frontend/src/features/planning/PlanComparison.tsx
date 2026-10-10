@@ -14,6 +14,7 @@ import { useLocale } from "../../i18n/LocaleContext";
 import type { PlanVersion } from "../../api/v12Authoritative";
 import { readResponseFacts, type RawFacts } from "../../lib/rawFacts";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
+import { englishCountNoun } from "../../lib/plural";
 
 // The generated OpenAPI PlanVersion schema lags the backend, which also emits
 // plan.stale, plan.selectable and per-activity cost_status / metadata. View
@@ -122,7 +123,7 @@ export function PlanComparison({
         <p>
           {zh
             ? `我们按这座城可核验的地点和你的预算，生成了 ${candidates.length} 个可选方案。`
-            : `We built ${candidates.length} options from the places we can verify for this city and this trip's budget.`}
+            : `We built ${candidates.length} ${englishCountNoun(candidates.length, "option")} from the places we can verify for this city and this trip's budget.`}
           {/* ORD-0238: this sentence used to promise the plans followed her 节奏.  `pace` never
               leaves the browser, and `generate_plans(session, journey, planning_mode,
               candidate_count, place_ids)` reads neither it nor the stored preferences -- naming an

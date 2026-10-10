@@ -17,9 +17,11 @@
  * It stores nothing and writes nothing. Completion is not a checkbox: the item disappears when the
  * server stops saying so, which is why there is no "mark done" control.
  *
- * Copy lives here on purpose -- `LocaleContext.tsx` is being edited by two other lanes.
+ * Copy: the empty-state sentence is read from the traveller dictionaries (ORD-0557 兜底行 moved it out
+ * of this file); the two items' own words are still built here, beside the fields that produce them.
  */
 
+import { dictionaryText } from "../i18n/LocaleContext";
 import { englishCountNoun } from "./plural";
 
 export type ChecklistBasis = {
@@ -114,8 +116,11 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
  * the naming of the two classes -- both are still on screen in the note whenever at least one of them
  * is open, which is when the traveller needs to know which.
  */
-export function emptyStateCopy(zh: boolean) {
-  return zh ? "这一代都没有报出。" : "Neither one is open on this generation.";
+export function emptyStateCopy(zh: boolean): string {
+  /* ORD-0557 兜底行: the sentence comes from `detail.pretripNeitherOpen`, both arms, so the panel and
+     any future mount say it the same way. `dictionaryText` because this module is plain functions --
+     its caller hands it the language, so there is no component to hold `useT()`. */
+  return dictionaryText(zh ? "zh-CN" : "en", "detail.pretripNeitherOpen");
 }
 
 /** The action the empty state carries. An empty list must still be something the traveller can do. */
