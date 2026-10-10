@@ -1,10 +1,49 @@
+ORD-0555 tiehegong gate readouts -- every command below was re-run on the tip of review/tihegong-0555-r1
+
+generation pins
+base tip taken at 0912: 7ce836f9afafe9e763527cba828719b414b18db8
+authoritative line re-read at 0934: d435cff26df752908a8a3a58d5c61f9f5c23f40c (nine commits ahead of the base)
+dictionary branch merged onto that line: e0eed932846095c43f671ca305f37d051ff91708
+product branch carries it: see the product branch tip published on refs/heads/review/tihegong-0555-r1
+
+i18n gate, current generation
+command: python review/tihegong-0555/i18n_0555_failure_attribution_r1.py
+exit code 0
 items=3 moved_tip_lines=[454, 462, 475] added_lines=[25, 451, 456, 464, 477]
-  failure.thisTripIsNotOnThisServer: tip:454 -> product:456, dict zh-CN:2513 en:1304
-  failure.networkUnavailable: tip:462 -> product:464, dict zh-CN:2514 en:1305
-  failure.theServiceIsTemporarilyUnavailable: tip:475 -> product:477, dict zh-CN:2515 en:1306
+failure.thisTripIsNotOnThisServer: tip:454 -> product:456, dict zh-CN:2533 en:1314
+failure.networkUnavailable: tip:462 -> product:464, dict zh-CN:2534 en:1315
+failure.theServiceIsTemporarilyUnavailable: tip:475 -> product:477, dict zh-CN:2535 en:1316
 GREEN
-node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit  -> rc=0, 0 bytes
-node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> rc=0, 0 bytes
-node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit (mutated call arity) -> error TS2554 at frontend/src/lib/failureAttribution.ts(451,77)
-python review/tihegong-0555/i18n_0555_failure_attribution_r1.py -> rc=0 GREEN
-python review/tihegong-0555/i18n_0555_failure_attribution_r1.py --negative -> rc=1 RED
+
+i18n gate, the generation the branch was cut from
+command: python review/tihegong-0555/i18n_0555_failure_attribution_r1.py --tip 7ce836f9afafe9e763527cba828719b414b18db8
+exit code 0, same three coordinates, GREEN (the three ternaries are byte-identical on both generations)
+
+i18n gate, negative control (one expected dictionary byte shifted)
+command: python review/tihegong-0555/i18n_0555_failure_attribution_r1.py --negative
+exit code 1, RED, three en arms reported as mismatching -- the gate is not a yes-machine
+
+typecheck, scoped config
+cwd frontend, command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+exit code 0, zero bytes of stdout/stderr
+
+typecheck, whole src
+cwd frontend, command: node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+exit code 0, zero bytes of stdout/stderr
+
+typecheck mutant control (proves the product file is inside the program)
+same scoped command with one extra argument added to the dictionaryCopy call, then reverted
+output line: src/lib/failureAttribution.ts(451,77): error TS2554: Expected 2 arguments, but got 3.
+
+shared dictionary parity ruler, this branch
+command: python frontend/scripts/i18n_detail2_parity_r1.py
+exit code 1, en keys 1097, zh keys 1098, xor = me.asksBeforeProtectedChange
+
+shared dictionary parity ruler, at d435cff26 in a detached worktree (same ruler, unmodified)
+command: python frontend/scripts/i18n_detail2_parity_r1.py
+exit code 1, en keys 1094, zh keys 1095, xor = the same me.asksBeforeProtectedChange
+three keys added per side, no orphan key introduced, the ruler's own source was not touched
+
+production build
+cwd frontend, command: node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0555_dist --emptyOutDir
+exit code 0, success line: precache 8 entries (2913.22 KiB)

@@ -9,7 +9,8 @@ line outside the three titles plus the two wiring lines.
 
 Usage (cwd anywhere, paths derive from this file):
     python i18n_0555_failure_attribution_r1.py
-    python i18n_0555_failure_attribution_r1.py --negative   # a moved byte must go red
+    python i18n_0555_failure_attribution_r1.py --tip <40-hex>   # cut the arms off another generation
+    python i18n_0555_failure_attribution_r1.py --negative       # a moved byte must go red
 """
 from __future__ import annotations
 
@@ -24,7 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.environ.get("CNX_LANE_ROOT") or os.path.dirname(os.path.dirname(HERE))
 PRODUCT = "frontend/src/lib/failureAttribution.ts"
 DICT = "frontend/src/i18n/LocaleContext.tsx"
-TIP = "7ce836f9afafe9e763527cba828719b414b18db8"
+TIP = "d435cff26df752908a8a3a58d5c61f9f5c23f40c"  # the line this branch was brought onto; --tip overrides
 
 # (tip line number, new key) -- the line numbers are read off TIP, the names are the blessed ones.
 ITEMS = [(454, "failure.thisTripIsNotOnThisServer"), (462, "failure.networkUnavailable"),
@@ -76,9 +77,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--negative", action="store_true",
                     help="shift one expected dictionary byte and require this gate goes red")
+    ap.add_argument("--tip", default=TIP, help="40-hex generation to cut the before-arms off")
     args = ap.parse_args()
 
-    tip_product = git_show(TIP, PRODUCT)
+    tip_product = git_show(args.tip, PRODUCT)
     now_product = tree_lines(PRODUCT)
     now_dict = dict_entries(tree_lines(DICT))
 
