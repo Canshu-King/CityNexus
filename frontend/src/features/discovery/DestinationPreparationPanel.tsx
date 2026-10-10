@@ -23,6 +23,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { deviceReadout } from "../../lib/failureAttribution";
+import { englishCountNoun } from "../../lib/plural";
 import { PrepAbandonSurvey } from "./PrepAbandonSurvey";
 import { failureSentence, nameTheFailure } from "./prepFailureCopy";
 import { STOP_ACTION_KEY, SURVEY_COPY, appendSurveyLog } from "./prepAbandonSurveyCopy";
@@ -190,7 +191,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           title: t("discovery.thisDestinationHasNotBeenPrepared"),
           body: zh
             ? `服务器说还缺 ${missing.length} 类事实（${missing.join("、")}），所以现在直接规划会缺依据。可以先准备。`
-            : `The server reports ${missing.length} categories missing (${missing.join(", ")}), so planning now would lack evidence. You can prepare it first.`,
+            : `The server reports ${missing.length} ${englishCountNoun(missing.length, "category")} missing (${missing.join(", ")}), so planning now would lack evidence. You can prepare it first.`,
         };
       case "CATALOG_STALE":
         return {
