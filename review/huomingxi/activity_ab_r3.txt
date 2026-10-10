@@ -1,0 +1,20 @@
+tip=26c8b9791f3559f2f0985bc79325da238c79d6d5
+file=frontend/src/features/trip/ActivityDetail.tsx
+radius_is_a_literal_constant at tip:107 "const nearbyRadiusM = 1500;"
+
+=== site A: the nearby-list note ===
+tip line 293 bytes   ": `All within about ${nearbyRadiusM} m, ordered by straight-line distance.`"
+branch line 293 bytes ": `All within about ${nearbyRadiusM} ${englishCountNoun(nearbyRadiusM, \"metre\")}, ordered by straight-line distance.`"
+  nearbyRadiusM=1500 tip="All within about 1500 m, ordered by straight-line distance." branch="All within about 1500 metres, ordered by straight-line distance."
+  nearbyRadiusM=1 tip="All within about 1 m, ordered by straight-line distance." branch="All within about 1 metre, ordered by straight-line distance."
+  nearbyRadiusM=2 tip="All within about 2 m, ordered by straight-line distance." branch="All within about 2 metres, ordered by straight-line distance."
+  reachable on screen today: only nearbyRadiusM=1500, because line 107 is a literal.
+
+=== site B: a stop further than a kilometre away ===
+tip line 311 bytes    ": `${(metres / 1000).toFixed(1)} km`}"
+branch line 311 bytes ": `${(metres / 1000).toFixed(1)} ${englishCountNoun((metres / 1000).toFixed(1), \"kilometre\")}`}"
+draft's suggested expression, read from _cn12_pl558draft2_1208.txt (comment stripped): "`${(metres / 1000).toFixed(1)} ${englishCountNoun(metres / 1000 < 1 ? 2 : Math.round(metres / 1000), \"kilometre\")}`"
+  metres=900 tip="0.9 km" branch="0.9 kilometres" if_draft_copied="0.9 kilometres"
+  metres=1000 tip="1.0 km" branch="1.0 kilometres" if_draft_copied="1.0 kilometre"
+  metres=1500 tip="1.5 km" branch="1.5 kilometres" if_draft_copied="1.5 kilometres"
+  metres=2400 tip="2.4 km" branch="2.4 kilometres" if_draft_copied="2.4 kilometres"
