@@ -1,0 +1,20 @@
+{
+ "base_tip": "f68b6b55a216d685287b37c95459d3e1fad0b220",
+ "draft_source": "D:/moodle/_cn10_fb557draft_1155.txt",
+ "items": [
+  {
+   "key": "agent.needsConfirmation",
+   "base_line": 458,
+   "new_line": 458,
+   "zh": "需要你确认",
+   "en": "Needs your confirmation",
+   "draft_row": "frontend/src/features/agent/CopilotDock.tsx:458 |           <b>{zh ? \"需要你确认\" : \"Needs your confirmation\"}</b> | agent.needsConfirmation | Needs your confirmation | frontend/src/features/agent/CopilotDock.tsx:421",
+   "before": "<b>{zh ? \"需要你确认\" : \"Needs your confirmation\"}</b>",
+   "after": "<b>{t(\"agent.needsConfirmation\")}</b>",
+   "dict_en_line": 584,
+   "dict_zh_line": 1865
+  }
+ ],
+ "inline_text_pairs_before": 25,
+ "inline_text_pairs_after": 24
+}

@@ -455,7 +455,7 @@ export function NativeMissionTimeline({
 
       {approvalEvent && (
         <div className="cn-copilot-approval" data-testid="native-hermes-approval">
-          <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
+          <b>{t("agent.needsConfirmation")}</b>
           <span>
             {zh
               ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
