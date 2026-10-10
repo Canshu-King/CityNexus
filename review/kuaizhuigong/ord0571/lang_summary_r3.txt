@@ -1,0 +1,3 @@
+# ORD-0571 kuaizhuigong: digest of the runtime readings, live tip 4af8af72fed9 vs this branch.
+EN_SIDE rows_line=22 sha_line=612f72cb920d17fe | rows_branch=22 sha_branch=612f72cb920d17fe | identical=True
+ZH_SIDE rows_line=22 sha_line=af7699563f57fee0 | rows_branch=22 sha_branch=3753a8c6b6de1b48 | identical=False
