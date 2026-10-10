@@ -249,5 +249,13 @@ def test_r97_r98_frontend_api_and_discovery_panel_use_generated_types():
         "BootstrapTwoStopWalkabilityResponse",
     ):
         assert f'components["schemas"]["{schema_name}"]' in api_source, schema_name
-    assert "export interface Bootstrap" not in api_source
+    for legacy_schema_name in (
+        "BootstrapCitySearch",
+        "BootstrapDiscovery",
+        "BootstrapSelection",
+        "BootstrapMapPreview",
+        "BootstrapShortlist",
+        "BootstrapTwoStopWalk",
+    ):
+        assert f"export interface {legacy_schema_name}" not in api_source
     assert 'from "../../api/citynexus"' in panel_source
