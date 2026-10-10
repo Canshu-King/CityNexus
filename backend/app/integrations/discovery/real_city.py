@@ -1020,12 +1020,17 @@ class OverpassPOIProvider:
                 ]
             elif any(token in requested for token in ("park", "garden", "公园", "庭园", "花园")):
                 tag_clauses = ['"leisure"~"park|garden"]["fee"="no"']
+        selectors = ''.join(
+            f"nwr[{clause}](around:{radius_m},{latitude},{longitude});"
+            for clause in tag_clauses
+        )
+        # Every standalone selector overwrites Overpass QL's default set.
+        # Different OSM tag categories must be enclosed in a union block
+        # before the one output statement, or only the LAST category survives.
+        # This applies to art/history, multi-tag gallery, mobility, etc.
         query_text = (
             '[out:json][timeout:10];'
-            + ''.join(
-                f"nwr[{clause}](around:{radius_m},{latitude},{longitude});"
-                for clause in tag_clauses
-            )
+            + (f"({selectors});" if len(tag_clauses) > 1 else selectors)
             + 'out center tags;'
         )
         # Public Overpass mirrors are individually flaky.  Rotating through
