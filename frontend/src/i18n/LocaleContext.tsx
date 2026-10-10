@@ -1467,6 +1467,9 @@ const en: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
   "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
   "lib.failureAttribution.readFailed": "This read failed",
+  "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
+  "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
+  "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
 };
 
 const zhCN: Dict = {
@@ -2840,6 +2843,9 @@ const zhCN: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
   "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
   "lib.failureAttribution.readFailed": "这一次没读到",
+  "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
+  "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
+  "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

@@ -9,6 +9,8 @@
  * so a missing entry reads as a gap instead of silently becoming an invented claim.
  */
 
+import { dictionaryCopy } from "../i18n/LocaleContext";
+
 type Label = { zh: string; en: string };
 
 /* CMDR 10-03 13:5x: the intelligence runtime card prints this value (`ControlTowerPanel.tsx`), and
@@ -19,16 +21,16 @@ type Label = { zh: string; en: string };
    configured endpoint exists, and none repeats the server's own name. */
 const RUNTIME_IDENTITY: Record<string, Label> = {
   HERMES_NATIVE_MCP: {
-    zh: "本机自带的原生网关正在应答",
-    en: "the native gateway installed on this machine is answering",
+    zh: dictionaryCopy("zh-CN", "lib.displayVocabulary.nativeGatewayAnswering"),
+    en: dictionaryCopy("en", "lib.displayVocabulary.nativeGatewayAnswering"),
   },
   HERMES_COMPAT_ENDPOINT: {
-    zh: "这台部署配的兼容端点，原生网关没有验到在应答",
-    en: "the compatibility endpoint this deployment configured; no verified native gateway",
+    zh: dictionaryCopy("zh-CN", "lib.displayVocabulary.compatEndpointUnverified"),
+    en: dictionaryCopy("en", "lib.displayVocabulary.compatEndpointUnverified"),
   },
   NATIVE_DEEPSEEK_TOOL_LOOP: {
-    zh: "这个服务自己直连模型商的那条环",
-    en: "this service's own loop straight to the model provider",
+    zh: dictionaryCopy("zh-CN", "lib.displayVocabulary.serviceOwnLoop"),
+    en: dictionaryCopy("en", "lib.displayVocabulary.serviceOwnLoop"),
   },
   NOT_CONFIGURED: { zh: "未配置", en: "Not configured" },
 };
