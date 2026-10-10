@@ -1,0 +1,123 @@
+# ORD-0559 路牌工甲 · 契约码与代码实际会答的码对拍（现读，只读）
+# 解释器 3.12.14
+
+GET /api/v1/journeys/{journey_id}/acl/roles
+   装饰器与函数体现读 main.py:5155
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200,404
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}
+   装饰器与函数体现读 main.py:1082
+   装饰器点名/隐式可答的码 200,502
+   raise 站点给出的码 502
+   契约列出的码 200,404
+   契约里没有的码 502
+
+GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline
+   装饰器与函数体现读 main.py:1100
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200,404
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events
+   装饰器与函数体现读 main.py:1205
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200,404
+   契约里没有的码 无
+
+POST /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop
+   装饰器与函数体现读 main.py:1217
+   装饰器点名/隐式可答的码 200,502
+   raise 站点给出的码 502
+   契约列出的码 200,404,502
+   契约里没有的码 无
+
+POST /api/v1/journeys/{journey_id}/authoritative-compose
+   装饰器与函数体现读 main.py:7740
+   装饰器点名/隐式可答的码 201,422
+   raise 站点给出的码 422
+   契约列出的码 201,422（经 $ref 复用同一 operation）
+   契约里没有的码 无
+
+PUT /api/v1/journeys/{journey_id}/capabilities
+   装饰器与函数体现读 main.py:2826
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+POST /api/v1/journeys/{journey_id}/capabilities/confirm
+   装饰器与函数体现读 main.py:2851
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/events/{event_id}/impact
+   装饰器与函数体现读 main.py:10007
+   装饰器点名/隐式可答的码 200,404
+   raise 站点给出的码 404
+   契约列出的码 200,404
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/guardian/autopilot/status
+   装饰器与函数体现读 main.py:1694
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/guardian/resilience
+   装饰器与函数体现读 main.py:1770
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+POST /api/v1/journeys/{journey_id}/guardian/resilience/refresh
+   装饰器与函数体现读 main.py:1784
+   装饰器点名/隐式可答的码 200,503
+   raise 站点给出的码 503
+   契约列出的码 200
+   契约里没有的码 503
+
+POST /api/v1/journeys/{journey_id}/guardian/signal-fixture
+   装饰器与函数体现读 main.py:1726
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/inbox
+   装饰器与函数体现读 main.py:6365
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/member-role-limits
+   装饰器与函数体现读 main.py:5465
+   装饰器点名/隐式可答的码 200,404
+   raise 站点给出的码 -
+   契约列出的码 200,404
+   契约里没有的码 无
+
+POST /api/v1/journeys/{journey_id}/members/self-exit
+   装饰器与函数体现读 main.py:5403
+   装饰器点名/隐式可答的码 200,404,409
+   raise 站点给出的码 404,409
+   契约列出的码 200,404,409,422
+   契约里没有的码 无
+
+GET /api/v1/journeys/{journey_id}/multiday
+   装饰器与函数体现读 main.py:5838
+   装饰器点名/隐式可答的码 200
+   raise 站点给出的码 -
+   契约列出的码 200
+   契约里没有的码 无
+
+合计：契约里没列、代码却会答的码共 2 枚（十七枚门全表）
