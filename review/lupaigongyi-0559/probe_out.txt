@@ -1,0 +1,220 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+PROBE_DATABASE=sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_probe_lpy_qo_21o1g/probe.db
+
+=== outcomes empty -> http_status=200
+    content-type=application/json
+    keys=['events', 'journey_id']
+    body<<<
+{"journey_id": "286e62e0-aeec-4f3d-ab28-bf83388a667c", "events": []}
+    >>>
+
+=== outcomes two rows -> http_status=200
+    content-type=application/json
+    keys=['events', 'journey_id']
+    body<<<
+{"journey_id": "286e62e0-aeec-4f3d-ab28-bf83388a667c", "events": [{"id": "8d7d5f02-2fbb-4724-b8b7-67d34879d3a7", "activity_id": null, "event_type": "activity.completed", "actor_type": "USER", "occurred_at_actual": "2026-10-09T04:31:07.514457+00:00", "planned_start_at": "2027-05-08T04:31:07.514457+00:00", "planned_end_at": "2027-05-10T04:31:07.514457+00:00", "source": "DOMAIN", "payload": {"probe": true}, "related_proposal_id": null, "related_agent_run_id": null}, {"id": "56859bd9-1581-4c76-9266-202baf2ac519", "activity_id": null, "event_type": "activity.skipped", "actor_type": "AGENT", "occurred_at_actual": "2026-10-10T04:31:07.514457+00:00", "planned_start_at": null, "planned_end_at": null, "source": "MANUAL", "payload": {}, "related_proposal_id": null, "related_agent_run_id": null}]}
+    >>>
+
+=== outcomes unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey 501bf9a3-3841-4ec9-b95e-d35cb25f7338 was not found", "message_key": "resource.not_found", "trace_id": "2038bbab-3297-4d10-8e80-691ca488306a", "details": null, "error_receipt_id": "CNX-JDTZXPQY"}}
+    >>>
+
+=== web-observations empty -> http_status=200
+    content-type=application/json
+    keys=['authority', 'journey_id', 'observations']
+    body<<<
+{"journey_id": "6eb5f5c5-dc9b-4117-b356-259ad58b2844", "authority": "NON_AUTHORITATIVE", "observations": []}
+    >>>
+
+=== web-observations one row -> http_status=200
+    content-type=application/json
+    keys=['authority', 'journey_id', 'observations']
+    body<<<
+{"journey_id": "6eb5f5c5-dc9b-4117-b356-259ad58b2844", "authority": "NON_AUTHORITATIVE", "observations": [{"id": "c580da18-ab51-4925-90ca-b94e7bf11649", "query": "厦门 周末 展览", "url": "https://example.org/a", "domain": "example.org", "title": "Exhibition", "source_class": "OPEN_WEB", "provider_key": "deepseek_responses", "model": "deepseek-v3", "captured_at": "2026-10-10T04:31:07.514457+00:00", "evidence_fingerprint": "ffffffffffffffff", "authority_status": "NON_AUTHORITATIVE"}]}
+    >>>
+
+=== web-observations unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey f3a4d08a-2251-493e-bf4d-7e0fdd3ce45f was not found", "message_key": "resource.not_found", "trace_id": "6251f4e4-45b0-4373-880c-d05e75544bd3", "details": null, "error_receipt_id": "CNX-WZ886Q39"}}
+    >>>
+
+=== stay-mobility/providers -> http_status=200
+    content-type=application/json
+    keys=['accommodation', 'mobility']
+    body<<<
+{"accommodation": {"captured": {"provider_key": "citynexus-city-fixture", "status": "UNAVAILABLE_FOR_CITY", "provenance": "CAPTURED_REPLAY"}, "live": {"provider_key": "live-accommodation", "status": "NOT_CONFIGURED"}}, "mobility": {"amap": {"status": "NOT_CONFIGURED", "captured_fallback": "UNAVAILABLE_FOR_CITY", "coordinate_crs": "GCJ02 at provider boundary; canonical domain WGS84"}, "valhalla": {"status": "NOT_CONFIGURED"}, "transit_realtime": {"status": "UNKNOWN_REALTIME"}, "ride_hail": {"status": "UNKNOWN_COST"}}}
+    >>>
+
+=== stay-mobility/providers unknown -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey 3a77562b-32ed-477a-970b-efc7ff7e7d1b was not found", "message_key": "resource.not_found", "trace_id": "6be51b42-7784-4e93-999a-b16739897923", "details": null, "error_receipt_id": "CNX-J5SXFJ5Z"}}
+    >>>
+
+=== stays/search tianjin with query -> http_status=200
+    content-type=application/json
+    keys=['offers', 'provenance', 'query']
+    body<<<
+{"query": "probe stay", "provenance": "CAPTURED_REPLAY", "offers": [{"id": "ba0a5644-61bf-4f24-9a51-bf0de75758a7", "property_name": "Haihe Riverside Hotel", "total_amount_minor": 36000, "nightly_amount_minor": 18000, "currency": "CNY", "refundable": true, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1321, "longitude": 117.2056}}, {"id": "cd6448c4-2a24-4c58-bc56-7205061ad905", "property_name": "Central Station Courtyard", "total_amount_minor": 42000, "nightly_amount_minor": 21000, "currency": "CNY", "refundable": true, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1368, "longitude": 117.2101}}, {"id": "26aa1b85-749d-4d86-a414-a878e07e9396", "property_name": "Five Avenues House", "total_amount_minor": 52000, "nightly_amount_minor": 26000, "currency": "CNY", "refundable": true, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1129, "longitude": 117.1988}}, {"id": "fa8384b3-81e0-4d09-9c58-79ce7d5e1236", "property_name": "North Canal Guesthouse", "total_amount_minor": 31000, "nightly_amount_minor": 15500, "currency": "CNY", "refundable": false, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1641, "longitude": 117.1887}}]}
+    >>>
+
+=== stays/search tianjin empty body -> http_status=200
+    content-type=application/json
+    keys=['offers', 'provenance', 'query']
+    body<<<
+{"query": "stay-aware journey", "provenance": "CAPTURED_REPLAY", "offers": [{"id": "95f67837-f03c-49af-b404-1e83c9c8e795", "property_name": "Haihe Riverside Hotel", "total_amount_minor": 36000, "nightly_amount_minor": 18000, "currency": "CNY", "refundable": true, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1321, "longitude": 117.2056}}, {"id": "4c62172a-524d-4590-9662-fe90f46910b3", "property_name": "Central Station Courtyard", "total_amount_minor": 42000, "nightly_amount_minor": 21000, "currency": "CNY", "refundable": true, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1368, "longitude": 117.2101}}, {"id": "1c0d6a3e-10f8-449a-a556-0b633a2eca1c", "property_name": "Five Avenues House", "total_amount_minor": 52000, "nightly_amount_minor": 26000, "currency": "CNY", "refundable": true, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1129, "longitude": 117.1988}}, {"id": "bbddcc42-ea44-4e86-a0d2-9764b9912783", "property_name": "North Canal Guesthouse", "total_amount_minor": 31000, "nightly_amount_minor": 15500, "currency": "CNY", "refundable": false, "check_in_at": "2027-05-08T06:00:00+00:00", "check_out_at": "2027-05-10T04:00:00+00:00", "location": {"latitude": 39.1641, "longitude": 117.1887}}]}
+    >>>
+
+=== stays/search unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey 04c5636b-0498-45ef-a5e3-61a4d50f2663 was not found", "message_key": "resource.not_found", "trace_id": "c093bf28-388f-4fde-98e5-dd4e5ecae464", "details": null, "error_receipt_id": "CNX-XWMY7KJZ"}}
+    >>>
+
+=== stream replay from cursor -> http_status=200
+    content-type=text/event-stream; charset=utf-8
+    body<<<
+id: 783b8e79-0cfe-4561-9e5c-4cc9d2bb1205
+event: trip_studio.accepted
+data: {"id": "783b8e79-0cfe-4561-9e5c-4cc9d2bb1205", "timestamp": "2026-10-10T04:31:07.630654+00:00", "event_type": "trip_studio.accepted", "type": "trip_studio.accepted", "summary": "probe summary", "actor_type": "USER", "actor_id": "d8ca3514-25b2-428e-a7b8-51250ae4fb44", "tool": null, "journey_id": "d8ca3514-25b2-428e-a7b8-51250ae4fb44", "proposal_id": null, "entity_type": "PlanVersion", "entity_id": "probe-plan", "decision": null, "reason_codes": ["PROBE"], "trace_id": "3f4ef05e-5556-403a-92b6-2e37cd9289f5", "source": "audit_log", "facts": {"summary": "probe summary", "new_plan_version_id": "probe-plan", "reason_codes": ["PROBE"]}}
+
+: citynexus-heartbeat
+
+: citynexus-heartbeat
+
+: citynexus-heartbeat
+
+
+    >>>
+
+=== stream heartbeat only -> http_status=200
+    content-type=text/event-stream; charset=utf-8
+    body<<<
+: citynexus-heartbeat
+
+: citynexus-heartbeat
+
+: citynexus-heartbeat
+
+
+    >>>
+
+=== stream unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey a4992f92-5efd-48d2-829a-f7b656eab1c4 was not found", "message_key": "resource.not_found", "trace_id": "20ac9d56-234f-4f11-a037-c34368363b93", "details": null, "error_receipt_id": "CNX-B2C347W8"}}
+    >>>
+
+=== stream timeout out of range -> http_status=422
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "VALIDATION_ERROR", "message": "Request validation failed", "message_key": "request.invalid", "trace_id": "db945475-e8e8-4e32-8fbe-2560f8664db1", "details": {"errors": [{"loc": ["query", "timeout_seconds"], "msg": "Input should be less than or equal to 120", "type": "less_than_equal", "message_key": "validation.less.than.equal"}]}, "error_receipt_id": "CNX-F7BCDMB8"}}
+    >>>
+
+=== recovery/acknowledge no open event -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "no open recovery to acknowledge", "message_key": "resource.not_found", "trace_id": "732e8ed0-04d9-401f-ad7d-9e9e19883974", "details": null, "error_receipt_id": "CNX-A9ZAF2TS"}}
+    >>>
+
+=== recovery/acknowledge open event -> http_status=200
+    content-type=application/json
+    keys=['acknowledged', 'journey_id', 'recovery', 'resolved']
+    body<<<
+{"journey_id": "80378bbc-39e7-4863-9684-e2095c4b1cb0", "acknowledged": true, "resolved": false, "recovery": {"state": "RECOVERY_REQUIRED", "kind": "CAPABILITY_HARD_RECOVERY", "event_id": "59e023b5-5441-4b01-8452-8ec56a3c54c5", "event_status": "ACKNOWLEDGED", "acknowledged": true, "acknowledged_at": "2026-10-10T04:31:09.237047+00:00", "capability_code": "PROBE", "active_plan_version_id": null, "failures": [], "replan_attempted": false, "no_alternative": false, "candidate_plan_count": 0, "candidate_plan_ids": [], "requires_user_decision": true, "silent_plan_mutation": false, "actions": ["REPLAN", "ACKNOWLEDGE_WARNING"], "detected_at": "2026-10-10T04:31:07.514457+00:00"}}
+    >>>
+
+=== recovery/acknowledge twice -> http_status=200
+    content-type=application/json
+    keys=['acknowledged', 'journey_id', 'recovery', 'resolved']
+    body<<<
+{"journey_id": "80378bbc-39e7-4863-9684-e2095c4b1cb0", "acknowledged": true, "resolved": false, "recovery": {"state": "RECOVERY_REQUIRED", "kind": "CAPABILITY_HARD_RECOVERY", "event_id": "59e023b5-5441-4b01-8452-8ec56a3c54c5", "event_status": "ACKNOWLEDGED", "acknowledged": true, "acknowledged_at": "2026-10-10T04:31:09.242997+00:00", "capability_code": "PROBE", "active_plan_version_id": null, "failures": [], "replan_attempted": false, "no_alternative": false, "candidate_plan_count": 0, "candidate_plan_ids": [], "requires_user_decision": true, "silent_plan_mutation": false, "actions": ["REPLAN", "ACKNOWLEDGE_WARNING"], "detected_at": "2026-10-10T04:31:07.514457+00:00"}}
+    >>>
+
+=== recovery/acknowledge unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey e52b840c-2c90-48ed-ad1f-8643f55bbfb8 was not found", "message_key": "resource.not_found", "trace_id": "f906080c-9545-4a64-827a-2d6611f5e9d4", "details": null, "error_receipt_id": "CNX-WN77DRD7"}}
+    >>>
+
+=== provider-mesh/discover default body -> http_status=200
+    content-type=application/json
+    keys=['candidates', 'captured_at', 'city_code', 'city_context', 'expires_at', 'journey_id', 'mode', 'provenance', 'provider_evidence', 'provider_status', 'runtime_provenance']
+    body<<<
+{"journey_id": "378711c7-1a50-4c99-b9fc-31cf2d706a1b", "city_code": "CN-TIANJIN", "city_context": "CN-TIANJIN", "mode": "captured_replay", "captured_at": "2026-10-10T04:31:09.254977+00:00", "expires_at": "2026-10-10T04:46:09.254977+00:00", "provider_status": {"nominatim": "REPLAY_NOT_CALLED", "overpass": "REPLAY_NOT_CALLED", "openstreetmap_replay": "SEALED_REAL_REPLAY", "anchor": {"latitude": 39.3032619, "longitude": 117.4163641, "display_name": "天津市, 中国", "provider": "nominatim"}, "snapshot_anchor": {"latitude": 39.3032619, "longitude": 117.4163641, "display_name": "天津市, 中国", "provider": "nominatim"}, "evidence_completion": 1}, "provider_evidence": {"snapshot_schema": "citynexus.real-city.snapshot.v135", "capture_anchor": {"latitude": 39.3032619, "longitude": 117.4163641, "display_name": "天津市, 中国", "provider": "nominatim"}, "mobility": {"status": "CAPTURED", "provider": "valhalla", "captured_at": "2026-09-13T13:43:17.079369+00:00", "journey_shape": "ARRIVAL -> candidate/commitment -> DEPARTURE", "nodes": [{"key": "anchor:arrival", "role": "ARRIVAL", "anchor_key": "ARRIVAL", "latitude": 39.112, "longitude": 117.198}, {"key": "commitment:place-river-cruise", "role": "COMMITMENT", "place_id": "place-river-cruise", "latitude": 39.12, "longitude": 117.21}, {"key": "anchor:departure", "role": "DEPARTURE", "anchor_key": "DEPARTURE", "latitude": 39.112, "longitude": 117.198}, {"key": "place:way/73422999", "role": "ACTIVITY", "external_id": "way/73422999", "latitude": 39.0867803, "longitude": 117.2059524}, {"key": "place:way/1228981599", "role": "ACTIVITY", "external_id": "way/1228981599", "latitude": 39.168055, "longitude": 117.1405009}, {"key": "place:way/1464199917", "role": "ACTIVITY", "external_id": "way/1464199917", "latitude": 39.1451055, "longitude": 117.1516123}, {"key": "place:node/5172762221", "role": "ACTIVITY", "external_id": "node/5172762221", "latitude": 39.1410547, "longitude": 117.1830107}, {"key": "place:node/5172662927", "role": "ACTIVITY", "external_id": "node/5172662927", "latitude": 39.1406504, "longitude": 117.176858}], "facts": [{"from_key": "anchor:arrival", "to_key": "anchor:arrival", "mode": "WALK", "duration_min": 0, "distance_km": 0.0, "capt
+    >>>
+
+=== provider-mesh/discover unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey 20b2fbea-6e5b-48ad-8459-362abf7950dc was not found", "message_key": "resource.not_found", "trace_id": "13d168cd-6530-4931-8362-607da146c8b1", "details": null, "error_receipt_id": "CNX-DDV4AQ38"}}
+    >>>
+
+=== demo/reset -> http_status=200
+=== authoritative-compose -> http_status=201
+=== composed activities titles=['Tianjin West Station', 'Check in · Haihe Riverside Hotel', 'Italian Gallery', 'Five Avenues', 'Overnight · Haihe Riverside Hotel', 'Design Library', 'Water Park', 'Overnight · Haihe Riverside Hotel', 'Tea House', 'Riverside Eye', 'Check out · Haihe Riverside Hotel', 'Tianjin Binhai Airport']
+=== select -> http_status=200
+
+=== preview-reorder canonical order -> http_status=200
+    content-type=application/json
+    keys=['authoritative_gate', 'base_plan_version_id', 'can_accept', 'deterministic_gate', 'draft_order', 'evidence_snapshot_id', 'impact', 'journey_id', 'mutation', 'preview_id']
+    body<<<
+{"preview_id": "4283f1a0-fbd2-5974-bba9-b847fc652adb", "journey_id": "3d6dd512-1979-44f7-8235-e2f42091cf57", "base_plan_version_id": "181195ad-6c9b-4f53-9876-a955f1683a85", "draft_order": ["62bd599f-60e0-4751-8fce-e0184fbf136d", "2f9eb0c0-f4c7-4d84-b60c-c65f31a84f8c", "29ad95f6-5898-460a-b5d0-d24d5e28f522", "af422c05-d7bb-4004-b824-eb40aa974a45", "bcd444b0-9a2c-48ed-8db5-68b75708e4dc", "77bc4eb7-e1a5-45b4-ac2e-0595d0899231", "cfe65ae7-1e62-411d-b809-e2fd2d96c70c", "8f802d1f-2c3c-4976-b4bc-121fb0007cd9", "703d7db1-dcd5-401e-8a11-d181a4252653", "ad31797e-910d-4000-aa26-80963886ab45", "5fe00334-d1b6-4966-bb8e-f1dccda415ed", "aecab46b-3ca4-420a-8864-c088504df0c7"], "impact": {"changed": false, "changed_activity_ids": [], "protected_activity_ids": ["62bd599f-60e0-4751-8fce-e0184fbf136d", "2f9eb0c0-f4c7-4d84-b60c-c65f31a84f8c", "bcd444b0-9a2c-48ed-8db5-68b75708e4dc", "8f802d1f-2c3c-4976-b4bc-121fb0007cd9", "5fe00334-d1b6-4966-bb8e-f1dccda415ed", "aecab46b-3ca4-420a-8864-c088504df0c7"], "protected_commitments_preserved": true, "route_evidence_gaps": [], "time_delta_min": 0, "cost_delta_minor": 0, "risk_class": "LOW"}, "deterministic_gate": {"status": "PASSED", "failures": [], "evidence_snapshot_id": "v12-authoritative-868502e9a74a5910b5da47816b6986fd", "authoritative": true, "evidence_valid": true}, "evidence_snapshot_id": "v12-authoritative-868502e9a74a5910b5da47816b6986fd", "authoritative_gate": {"failures": [], "evidence_valid": true, "time_delta_min": 0, "cost_delta_minor": 0, "frozen_facts": [{"captured_at": "2026-10-10T04:31:10.147069+00:00", "cost_amount_minor": 400, "cost_provenance": "CITYNEXUS_ESTIMATE", "cost_status": "ESTIMATED", "crs": "WGS84", "currency": "CNY", "destination_key": "v12:3d6dd512-1979-44f7-8235-e2f42091cf57:check-in", "distance_m": 2378, "duration_min": 14, "expires_at": "2026-10-10T08:31:10.147069+00:00", "fact_id": "b835647c-2223-487e-986c-2f86eae6d870", "fact_quality": null, "geometry": {"geometry": {"coordinates": [[117.18, 39.14], [117.2056, 39.1321]], "type": "LineString"}, "properties": {"crs": "WGS84", "mode": "TRANSIT", "provider": "citynexus-synthetic-fixture"}, "type": "Feature"}, "minutes": 14, "mode": "TRANSIT", "origin_key": "
+    >>>
+
+=== preview-reorder swapped order -> http_status=200
+    content-type=application/json
+    keys=['authoritative_gate', 'base_plan_version_id', 'can_accept', 'deterministic_gate', 'draft_order', 'evidence_snapshot_id', 'impact', 'journey_id', 'mutation', 'preview_id']
+    body<<<
+{"preview_id": "845cb6ed-f49f-57fc-98b3-fc72274c2cd1", "journey_id": "3d6dd512-1979-44f7-8235-e2f42091cf57", "base_plan_version_id": "181195ad-6c9b-4f53-9876-a955f1683a85", "draft_order": ["aecab46b-3ca4-420a-8864-c088504df0c7", "2f9eb0c0-f4c7-4d84-b60c-c65f31a84f8c", "29ad95f6-5898-460a-b5d0-d24d5e28f522", "af422c05-d7bb-4004-b824-eb40aa974a45", "bcd444b0-9a2c-48ed-8db5-68b75708e4dc", "77bc4eb7-e1a5-45b4-ac2e-0595d0899231", "cfe65ae7-1e62-411d-b809-e2fd2d96c70c", "8f802d1f-2c3c-4976-b4bc-121fb0007cd9", "703d7db1-dcd5-401e-8a11-d181a4252653", "ad31797e-910d-4000-aa26-80963886ab45", "5fe00334-d1b6-4966-bb8e-f1dccda415ed", "62bd599f-60e0-4751-8fce-e0184fbf136d"], "impact": {"changed": true, "changed_activity_ids": ["aecab46b-3ca4-420a-8864-c088504df0c7", "62bd599f-60e0-4751-8fce-e0184fbf136d"], "protected_activity_ids": ["62bd599f-60e0-4751-8fce-e0184fbf136d", "2f9eb0c0-f4c7-4d84-b60c-c65f31a84f8c", "bcd444b0-9a2c-48ed-8db5-68b75708e4dc", "8f802d1f-2c3c-4976-b4bc-121fb0007cd9", "5fe00334-d1b6-4966-bb8e-f1dccda415ed", "aecab46b-3ca4-420a-8864-c088504df0c7"], "protected_commitments_preserved": false, "route_evidence_gaps": [], "time_delta_min": -5, "cost_delta_minor": 800, "risk_class": "BLOCKED"}, "deterministic_gate": {"status": "FAILED", "failures": ["PROTECTED_ACTIVITY_REORDER", "LOCKED_COMMITMENT_LOST:v12:3d6dd512-1979-44f7-8235-e2f42091cf57:arrival-anchor"], "evidence_snapshot_id": "v12-authoritative-868502e9a74a5910b5da47816b6986fd", "authoritative": true, "evidence_valid": true}, "evidence_snapshot_id": "v12-authoritative-868502e9a74a5910b5da47816b6986fd", "authoritative_gate": {"failures": ["LOCKED_COMMITMENT_LOST:v12:3d6dd512-1979-44f7-8235-e2f42091cf57:arrival-anchor"], "evidence_valid": true, "time_delta_min": -5, "cost_delta_minor": 800, "frozen_facts": [{"captured_at": "2026-10-10T04:31:10.456020+00:00", "cost_amount_minor": 1200, "cost_provenance": "CITYNEXUS_ESTIMATE", "cost_status": "ESTIMATED", "crs": "WGS84", "currency": "CNY", "destination_key": "v12:3d6dd512-1979-44f7-8235-e2f42091cf57:check-in", "distance_m": 12542, "duration_min": 33, "expires_at": "2026-10-10T08:31:10.456020+00:00", "fact_id": "63fa8b8f-6022-47a5-a26b-3f618b9623ab", "fact_qua
+    >>>
+
+=== preview-reorder draft_order alias field -> http_status=200
+    content-type=application/json
+    keys=['authoritative_gate', 'base_plan_version_id', 'can_accept', 'deterministic_gate', 'draft_order', 'evidence_snapshot_id', 'impact', 'journey_id', 'mutation', 'preview_id']
+    body<<<
+{"preview_id": "845cb6ed-f49f-57fc-98b3-fc72274c2cd1", "journey_id": "3d6dd512-1979-44f7-8235-e2f42091cf57", "base_plan_version_id": "181195ad-6c9b-4f53-9876-a955f1683a85", "draft_order": ["aecab46b-3ca4-420a-8864-c088504df0c7", "2f9eb0c0-f4c7-4d84-b60c-c65f31a84f8c", "29ad95f6-5898-460a-b5d0-d24d5e28f522", "af422c05-d7bb-4004-b824-eb40aa974a45", "bcd444b0-9a2c-48ed-8db5-68b75708e4dc", "77bc4eb7-e1a5-45b4-ac2e-0595d0899231", "cfe65ae7-1e62-411d-b809-e2fd2d96c70c", "8f802d1f-2c3c-4976-b4bc-121fb0007cd9", "703d7db1-dcd5-401e-8a11-d181a4252653", "ad31797e-910d-4000-aa26-80963886ab45", "5fe00334-d1b6-4966-bb8e-f1dccda415ed", "62bd599f-60e0-4751-8fce-e0184fbf136d"], "impact": {"changed": true, "changed_activity_ids": ["aecab46b-3ca4-420a-8864-c088504df0c7", "62bd599f-60e0-4751-8fce-e0184fbf136d"], "protected_activity_ids": ["62bd599f-60e0-4751-8fce-e0184fbf136d", "2f9eb0c0-f4c7-4d84-b60c-c65f31a84f8c", "bcd444b0-9a2c-48ed-8db5-68b75708e4dc", "8f802d1f-2c3c-4976-b4bc-121fb0007cd9", "5fe00334-d1b6-4966-bb8e-f1dccda415ed", "aecab46b-3ca4-420a-8864-c088504df0c7"], "protected_commitments_preserved": false, "route_evidence_gaps": [], "time_delta_min": -5, "cost_delta_minor": 800, "risk_class": "BLOCKED"}, "deterministic_gate": {"status": "FAILED", "failures": ["PROTECTED_ACTIVITY_REORDER", "LOCKED_COMMITMENT_LOST:v12:3d6dd512-1979-44f7-8235-e2f42091cf57:arrival-anchor"], "evidence_snapshot_id": "v12-authoritative-868502e9a74a5910b5da47816b6986fd", "authoritative": true, "evidence_valid": true}, "evidence_snapshot_id": "v12-authoritative-868502e9a74a5910b5da47816b6986fd", "authoritative_gate": {"failures": ["LOCKED_COMMITMENT_LOST:v12:3d6dd512-1979-44f7-8235-e2f42091cf57:arrival-anchor"], "evidence_valid": true, "time_delta_min": -5, "cost_delta_minor": 800, "frozen_facts": [{"captured_at": "2026-10-10T04:31:10.456020+00:00", "cost_amount_minor": 1200, "cost_provenance": "CITYNEXUS_ESTIMATE", "cost_status": "ESTIMATED", "crs": "WGS84", "currency": "CNY", "destination_key": "v12:3d6dd512-1979-44f7-8235-e2f42091cf57:check-in", "distance_m": 12542, "duration_min": 33, "expires_at": "2026-10-10T08:31:10.456020+00:00", "fact_id": "63fa8b8f-6022-47a5-a26b-3f618b9623ab", "fact_qua
+    >>>
+
+=== accept-reorder swapped + preview id -> http_status=422
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "VALIDATION_ERROR", "message": "TRIP_STUDIO_DETERMINISTIC_GATE_FAILED:PROTECTED_ACTIVITY_REORDER,LOCKED_COMMITMENT_LOST:v12:3d6dd512-1979-44f7-8235-e2f42091cf57:arrival-anchor", "message_key": "request.invalid", "trace_id": "b1ba9dc0-d3ea-41a4-ac75-ec237eba229a", "details": null, "error_receipt_id": "CNX-AKK5T4E3"}}
+    >>>
+
+=== accept-reorder stale preview id -> http_status=409
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "CONFLICT", "message": "TRIP_STUDIO_PREVIEW_STALE", "message_key": "request.conflict", "trace_id": "93cde278-c948-4065-9fe4-1eba5bab2d6d", "details": null, "error_receipt_id": "CNX-NCCC42H6"}}
+    >>>
+
+=== accept-reorder unknown journey -> http_status=404
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "NOT_FOUND", "message": "Journey c91547a1-cf63-41fa-9a68-8003384bd890 was not found", "message_key": "resource.not_found", "trace_id": "3e02a5ec-1f1a-4a92-8013-6fc5e483db11", "details": null, "error_receipt_id": "CNX-NN57BD32"}}
+    >>>
+
+=== preview-reorder partial order -> http_status=422
+    content-type=application/json
+    keys=['error']
+    body<<<
+{"error": {"code": "VALIDATION_ERROR", "message": "Request validation failed", "message_key": "request.invalid", "trace_id": "23bc9a67-197e-402e-935a-87e9ba299713", "details": {"errors": [{"loc": ["body", "activity_ids"], "msg": "List should have at least 2 items after validation, not 1", "type": "too_short", "message_key": "validation.too_short"}]}, "error_receipt_id": "CNX-8BAJPD5Q"}}
+    >>>
+
+PROBE DONE
