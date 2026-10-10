@@ -3,6 +3,7 @@ import type { V8Data } from "../../app/v8Types";
 import { cityNexusApi, type CopilotResponse } from "../../api/citynexus";
 import { useLocale, useT, type TripLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { formatWhen } from "../../lib/formatWhen";
 import { NativeMissionTimeline } from "./CopilotDock";
 import { classifyReadFailure, copyFor } from "../../lib/failureAttribution";
 import type { Attribution } from "../../lib/failureAttribution";
@@ -262,7 +263,10 @@ export function AgentComposer({
                     <b>
                       {item.response.intent.semantic_envelope.assertion_status}
                       {" · "}
-                      {item.response.intent.semantic_envelope.effective_time}
+                      {formatWhen(item.response.intent.semantic_envelope.effective_time, {
+                        zh: locale.startsWith("zh"),
+                        pending: t("inbox.timePending"),
+                      })}
                       {" · "}
                       {item.response.intent.semantic_envelope.event_type}
                     </b>
