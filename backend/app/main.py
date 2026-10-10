@@ -266,6 +266,7 @@ from app.execution.bootstrap_discovery import (
     remove_bootstrap_shortlist_item,
     preview_bootstrap_shortlist_item,
     preview_bootstrap_two_stop_walk,
+    preview_bootstrap_two_stop_walkability,
     preview_bootstrap_candidate,
     save_bootstrap_shortlist_item,
     select_bootstrap_candidate,
@@ -489,6 +490,7 @@ from app.schemas import (
     BootstrapShortlistPreviewRequest,
     BootstrapShortlistNavigationRequest,
     BootstrapTwoStopWalkRequest,
+    BootstrapTwoStopWalkabilityRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3743,6 +3745,39 @@ def navigate_bootstrap_two_stop_walk(
             public_map_consent=payload.public_map_consent,
         )
         session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability")
+def check_bootstrap_two_stop_walkability(
+    journey_id: UUID,
+    payload: BootstrapTwoStopWalkabilityRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Check one signed, provider-backed public-to-public walking leg."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_two_stop_walkability(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            first_shortlist_id=payload.first_shortlist_id,
+            second_shortlist_id=payload.second_shortlist_id,
+            public_route_consent=payload.public_route_consent,
+        )
+        # The route preview is intentionally ephemeral.  There is no model
+        # mutation to commit, so the returned evidence cannot become a plan.
         return result
     except BootstrapDiscoveryError as exc:
         session.rollback()

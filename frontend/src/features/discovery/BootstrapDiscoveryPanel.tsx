@@ -9,6 +9,7 @@ import {
   type BootstrapShortlistResumeIntent,
   type BootstrapShortlistPreviewResponse,
   type BootstrapTwoStopWalkResponse,
+  type BootstrapTwoStopWalkabilityResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
@@ -327,6 +328,9 @@ export function BootstrapDiscoveryPanel({
   const [twoStopBusy, setTwoStopBusy] = useState(false);
   const [twoStopNotice, setTwoStopNotice] = useState<string | null>(null);
   const [twoStopFallbackUrl, setTwoStopFallbackUrl] = useState<string | null>(null);
+  const [twoStopWalkabilityConsent, setTwoStopWalkabilityConsent] = useState(false);
+  const [twoStopWalkabilityBusy, setTwoStopWalkabilityBusy] = useState(false);
+  const [twoStopWalkability, setTwoStopWalkability] = useState<BootstrapTwoStopWalkabilityResponse | null>(null);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
@@ -372,6 +376,9 @@ export function BootstrapDiscoveryPanel({
     setTwoStopBusy(false);
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
+    setTwoStopWalkabilityConsent(false);
+    setTwoStopWalkabilityBusy(false);
+    setTwoStopWalkability(null);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -465,6 +472,9 @@ export function BootstrapDiscoveryPanel({
     setTwoStopBusy(false);
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
+    setTwoStopWalkabilityConsent(false);
+    setTwoStopWalkabilityBusy(false);
+    setTwoStopWalkability(null);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -513,6 +523,9 @@ export function BootstrapDiscoveryPanel({
     setTwoStopBusy(false);
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
+    setTwoStopWalkabilityConsent(false);
+    setTwoStopWalkabilityBusy(false);
+    setTwoStopWalkability(null);
     setMessage("Journey changed; choose a new public search area.");
   }, [journeyId, cityName]);
 
@@ -779,6 +792,9 @@ export function BootstrapDiscoveryPanel({
       setTwoStopBusy(false);
       setTwoStopFallbackUrl(null);
       setTwoStopNotice(null);
+      setTwoStopWalkabilityConsent(false);
+      setTwoStopWalkabilityBusy(false);
+      setTwoStopWalkability(null);
     }
     setShortlistBusy(item.shortlist_id);
     setMessage(null);
@@ -802,6 +818,9 @@ export function BootstrapDiscoveryPanel({
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
     setTwoStopConsent(false);
+    setTwoStopWalkabilityConsent(false);
+    setTwoStopWalkabilityBusy(false);
+    setTwoStopWalkability(null);
     setTwoStopOrder((current) => {
       const without = current.filter((id) => id !== shortlistId);
       if (position === 1) return [shortlistId, ...without].slice(0, 2);
@@ -814,7 +833,85 @@ export function BootstrapDiscoveryPanel({
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
     setTwoStopConsent(false);
+    setTwoStopWalkabilityConsent(false);
+    setTwoStopWalkabilityBusy(false);
+    setTwoStopWalkability(null);
     setTwoStopOrder((current) => current.filter((id) => id !== shortlistId));
+  };
+
+  const checkTwoStopWalkability = async () => {
+    if (twoStopOrder.length !== 2 || twoStopOrder[0] === twoStopOrder[1]) {
+      setMessage("Choose exactly two different saved public places and set their order first.");
+      return;
+    }
+    if (!twoStopWalkabilityConsent) {
+      setMessage("Confirm the separate release for both public stop coordinates before checking walking feasibility.");
+      return;
+    }
+    const first = shortlist.find((item) => item.shortlist_id === twoStopOrder[0]);
+    const second = shortlist.find((item) => item.shortlist_id === twoStopOrder[1]);
+    if (!first || !second) {
+      setTwoStopOrder([]);
+      setMessage("The saved order is stale. Choose two saved places again.");
+      return;
+    }
+    const fence = captureDiscoveryFence();
+    const releaseGeneration = twoStopReleaseGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && twoStopReleaseGeneration.current === releaseGeneration;
+    setTwoStopWalkabilityBusy(true);
+    setMessage(null);
+    setTwoStopWalkability(null);
+    setTwoStopFallbackUrl(null);
+    try {
+      const released: BootstrapTwoStopWalkabilityResponse = await cityNexusApi.checkBootstrapTwoStopWalkability(
+        journeyId,
+        {
+          first_shortlist_id: first.shortlist_id,
+          second_shortlist_id: second.shortlist_id,
+          public_route_consent: true,
+        },
+      );
+      if (!stillCurrent()) return;
+      if (
+        released.authorization_basis !== "TWO_SAVED_PUBLIC_IDENTITIES" ||
+        released.navigation_mode !== "PUBLIC_POI_TO_PUBLIC_POI_WALKING" ||
+        released.first_stop.shortlist_id !== first.shortlist_id ||
+        released.second_stop.shortlist_id !== second.shortlist_id
+      ) {
+        throw new Error("The walking feasibility response did not match the chosen public stop order.");
+      }
+      const publicMapUrl = validatedPublicTwoStopWalkingUrl(released.navigation_url, first, second);
+      if (!publicMapUrl) {
+        throw new Error("The walking feasibility fallback URL did not match both saved public coordinates.");
+      }
+      if (released.status === "ROUTE_VERIFIED") {
+        if (
+          released.duration_min === null ||
+          released.distance_m === null ||
+          !Number.isFinite(released.duration_min) ||
+          !Number.isFinite(released.distance_m) ||
+          released.duration_min < 0 ||
+          released.distance_m < 0 ||
+          released.provenance === "UNVERIFIED"
+        ) {
+          throw new Error("The walking provider returned incomplete route evidence.");
+        }
+      } else if (released.duration_min !== null || released.distance_m !== null) {
+        throw new Error("An unverified walking response cannot contain a duration or distance.");
+      }
+      setTwoStopWalkability(released);
+      if (released.status === "ROUTE_UNVERIFIED") setTwoStopFallbackUrl(publicMapUrl);
+      setTwoStopWalkabilityConsent(false);
+    } catch (error) {
+      if (stillCurrent()) {
+        setTwoStopWalkability(null);
+        setTwoStopFallbackUrl(null);
+        setMessage(error instanceof Error ? error.message : "Walking feasibility could not be checked.");
+      }
+    } finally {
+      if (stillCurrent()) setTwoStopWalkabilityBusy(false);
+    }
   };
 
   const confirmTwoStopWalk = async () => {
@@ -1781,6 +1878,8 @@ export function BootstrapDiscoveryPanel({
                 setTwoStopConsent(false);
                 setTwoStopFallbackUrl(null);
                 setTwoStopNotice(null);
+                setTwoStopWalkabilityConsent(false);
+                setTwoStopWalkability(null);
               }}
             >
               Prepare public-to-public walking leg
@@ -1822,6 +1921,48 @@ export function BootstrapDiscoveryPanel({
                     Cancel release
                   </button>
                 </div>
+                <div data-testid="bootstrap-two-stop-walkability-consent">
+                  <p>
+                    Separate feasibility check: share only the two public stop coordinates with the configured pedestrian router.
+                    Current location, foreground GPS, member identity, receipt, query center, and private intent stay withheld.
+                  </p>
+                  <label>
+                    <input
+                      type="checkbox"
+                      data-testid="bootstrap-two-stop-walkability-consent-checkbox"
+                      checked={twoStopWalkabilityConsent}
+                      onChange={(event) => setTwoStopWalkabilityConsent(event.target.checked)}
+                    />
+                    I agree to check this public-to-public walking leg now.
+                  </label>
+                  <button
+                    type="button"
+                    data-testid="bootstrap-two-stop-walkability-check"
+                    disabled={!twoStopWalkabilityConsent || twoStopWalkabilityBusy || twoStopBusy}
+                    onClick={() => void checkTwoStopWalkability()}
+                  >
+                    {twoStopWalkabilityBusy ? "Checking…" : "Check walking feasibility"}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {twoStopWalkability ? (
+              <div data-testid="bootstrap-two-stop-walkability" role="status">
+                {twoStopWalkability.status === "ROUTE_VERIFIED" ? (
+                  <>
+                    <p data-testid="bootstrap-two-stop-walkability-result">
+                      Walking feasibility: {twoStopWalkability.duration_min} min · {((twoStopWalkability.distance_m ?? 0) / 1000).toFixed(2)} km · {twoStopWalkability.provider} · {twoStopWalkability.provenance}.
+                    </p>
+                    <p>
+                      Observed {twoStopWalkability.observed_at}. This is advisory provider evidence; safety, accessibility, opening, price, arrival, and a guaranteed ETA remain UNKNOWN.
+                    </p>
+                  </>
+                ) : (
+                  <p data-testid="bootstrap-two-stop-walkability-result">
+                    Cannot verify walkability now ({twoStopWalkability.reason_code ?? "ROUTE_UNVERIFIED"}). {twoStopWalkability.reason ?? "No provider-backed walking route is available."} Use the external public walking map below; no duration or distance was invented.
+                  </p>
+                )}
+                <p>Journey remains draft explore-only; checking this route did not start the Journey.</p>
               </div>
             ) : null}
             {twoStopNotice ? <p role="status" data-testid="bootstrap-two-stop-notice">{twoStopNotice}</p> : null}
@@ -1829,6 +1970,13 @@ export function BootstrapDiscoveryPanel({
               <p>
                 <a href={twoStopFallbackUrl} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-two-stop-fallback">
                   Open authorized two-stop walking leg
+                </a>
+              </p>
+            ) : null}
+            {twoStopWalkability?.status === "ROUTE_UNVERIFIED" && twoStopFallbackUrl ? (
+              <p>
+                <a href={twoStopFallbackUrl} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-two-stop-walkability-fallback">
+                  Open external walking directions
                 </a>
               </p>
             ) : null}

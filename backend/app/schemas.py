@@ -354,6 +354,14 @@ class BootstrapTwoStopWalkRequest(BaseModel):
     public_map_consent: bool = False
 
 
+class BootstrapTwoStopWalkabilityRequest(BaseModel):
+    """Check provider-backed walking evidence for two saved public stops."""
+
+    first_shortlist_id: UUID
+    second_shortlist_id: UUID
+    public_route_consent: bool = False
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)
