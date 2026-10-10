@@ -536,11 +536,11 @@ export function AccessPanel({
             readable while the rows are still arriving; the rows themselves are the door's answer to
             the word this screen sent. */}
         <div className="cn-access-sort" data-testid="access-sort">
-          <span className="cn-access-picker-label">{say("access.sortHeading")}</span>
+          <span className="cn-access-picker-label">{t("access.sortHeading")}</span>
           <p className="cn-access-sort-current" data-testid="access-sort-current">
-            {say("access.sortCurrent", { tier: tierWordKey ? say(tierWordKey) : String(order) })}
+            {t("access.sortCurrent", { tier: tierWordKey ? say(tierWordKey) : String(order) })}
           </p>
-          <div className="cn-access-sort-tiers" role="group" aria-label={say("access.sortHeading")}>
+          <div className="cn-access-sort-tiers" role="group" aria-label={t("access.sortHeading")}>
             {JOURNEY_SORT_LADDER.map((row) => (
               <button
                 key={row.labelKey}
@@ -596,7 +596,7 @@ export function AccessPanel({
             </p>
           ) : null}
         </div>
-        {trips.phase === "loading" && <p data-testid="access-trips-loading">{say("access.pickLoading")}</p>}
+        {trips.phase === "loading" && <p data-testid="access-trips-loading">{t("access.pickLoading")}</p>}
         {trips.phase === "failed" && (
           <div role="alert" data-testid="access-trips-failed">
             <p>{copyFor(trips.attribution, zh).body}</p>
@@ -614,7 +614,7 @@ export function AccessPanel({
              reference the list does not know it paints the failure view (`failure-view`); the panel
              this line sits in never mounts in either shape, so an action here could not be tapped,
              tested, or refused. */
-          <p data-testid="access-trips-empty">{say("access.pickEmpty")}</p>
+          <p data-testid="access-trips-empty">{t("access.pickEmpty")}</p>
         )}
         {/* ORD-0518: the list is rows now, not a closed `<select>`.  A collapsed control held the
             order in its DOM but showed one line of text, so "first and last trip" could not be read
@@ -627,7 +627,7 @@ export function AccessPanel({
             </span>
             {chosen === null ? (
               <p className="cn-access-picker-hint" data-testid="access-trips-hint">
-                {say("access.pickNone")}
+                {t("access.pickNone")}
               </p>
             ) : null}
             {/* A scroll box you cannot reach with the keyboard is a trap: the region is focusable and
@@ -652,7 +652,7 @@ export function AccessPanel({
                     aria-current={row.id === chosen ? "true" : undefined}
                     onClick={() => void openTrip(row.id)}
                   >
-                    {row.title && row.title.trim() !== "" ? row.title : say("access.tripUntitled")}
+                    {row.title && row.title.trim() !== "" ? row.title : t("access.tripUntitled")}
                   </button>
                 </li>
               ))}

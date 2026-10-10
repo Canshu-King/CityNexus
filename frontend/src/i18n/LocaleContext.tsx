@@ -1471,6 +1471,13 @@ const en: Dict = {
   "access.title": "Members and access",
   "access.sub": "Who can change this trip, what each visibility level means, and which of that this server can answer today.",
   "access.pickLabel": "Choose a trip",
+  /* ORD-0570 第二批：`features/access/accessCopy.ts` 表里这 6 枚抬进公共字典，两侧同代、值逐字节照拄，取值点走组件现成的 t()。 */
+  "access.pickNone": "Pick a trip to look at",
+  "access.tripUntitled": "This trip came back with no name.",
+  "access.pickLoading": "Reading your trip list…",
+  "access.pickEmpty": "This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed.",
+  "access.sortHeading": "Order of this list",
+  "access.sortCurrent": "This screen asked the server for: {tier}.",
 };
 
 const zhCN: Dict = {
@@ -2848,6 +2855,13 @@ const zhCN: Dict = {
   "access.title": "成员与权限",
   "access.sub": "谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。",
   "access.pickLabel": "选一条行程",
+  /* ORD-0570 第二批：`features/access/accessCopy.ts` 表里这 6 枚抬进公共字典，两侧同代、值逐字节照拄，取值点走组件现成的 t()。 */
+  "access.pickNone": "先选一条要看的行程",
+  "access.tripUntitled": "这条行程回来时没有名字。",
+  "access.pickLoading": "正在读你的行程列表…",
+  "access.pickEmpty": "这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。",
+  "access.sortHeading": "这一列行程怎么排",
+  "access.sortCurrent": "这一屏向服务器要的是：{tier}。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

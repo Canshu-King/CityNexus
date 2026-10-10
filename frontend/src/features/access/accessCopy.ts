@@ -27,23 +27,16 @@ import { expandPluralMarkers } from "../../lib/plural";
  */
 export const accessCopy = {
   en: {
-    "access.pickNone": "Pick a trip to look at",
     /* A row with no title is named as that. The old control fell back to the trip's uuid, which
        is the one thing this list must never read out (ORD-0518: first and last row, by name). */
-    "access.tripUntitled": "This trip came back with no name.",
-    "access.pickLoading": "Reading your trip list…",
-    "access.pickEmpty":
-      "This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed.",
     /* ORD-0477: the tier words.  `RECENT_UPDATE` / `DEPARTURE_DATE` / `TITLE` are the server's
        (`backend/app/schemas.py::JOURNEY_SORT_TIERS`) and never reach a traveller; these are the words
        the control renders, and the current tier is spelled out in its own sentence so the order a
        list is in is something the screen says rather than something the reader infers. */
-    "access.sortHeading": "Order of this list",
     "access.sortCreation": "Creation order",
     "access.sortRecent": "Recently updated",
     "access.sortDeparture": "Departure date",
     "access.sortTitle": "Name",
-    "access.sortCurrent": "This screen asked the server for: {tier}.",
     /* ORD-0518: two sentences, not one.  What this screen requested and what the door answered are
        different facts, and collapsing them is exactly how a screen ends up claiming a time order a
        server never gave.  `sortServerSilent` is the named absence; `sortMismatch` only renders when
@@ -231,18 +224,12 @@ export const accessCopy = {
       "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
   },
   "zh-CN": {
-    "access.pickNone": "先选一条要看的行程",
-    "access.tripUntitled": "这条行程回来时没有名字。",
-    "access.pickLoading": "正在读你的行程列表…",
-    "access.pickEmpty": "这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。",
     /* ORD-0477: 档位的名字。旅客读的这些词与服务器的 CREATION_ORDER / RECENT_UPDATE /
        DEPARTURE_DATE / TITLE 一一对应（`backend/app/schemas.py::JOURNEY_SORT_TIERS`），机器词从不上屏。 */
-    "access.sortHeading": "这一列行程怎么排",
     "access.sortCreation": "创建序",
     "access.sortRecent": "最近更新",
     "access.sortDeparture": "出发日期",
     "access.sortTitle": "名称",
-    "access.sortCurrent": "这一屏向服务器要的是：{tier}。",
     /* ORD-0518: 两句而不是一句。这一屏要了什么、服务器答了什么，是两件事；把它们并成一句，
        就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
     "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
