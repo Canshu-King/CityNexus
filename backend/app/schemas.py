@@ -321,6 +321,17 @@ class BootstrapMapPreviewRequest(BaseModel):
     coordinate_system: Literal["WGS84"] = "WGS84"
 
 
+class BootstrapShortlistSaveRequest(BaseModel):
+    receipt_id: UUID
+    candidate_id: UUID
+
+
+class BootstrapShortlistPreviewRequest(BaseModel):
+    """Release a saved public destination using fresh per-click consent."""
+
+    public_map_consent: bool = False
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)

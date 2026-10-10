@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   cityNexusApi,
   type BootstrapDiscoveryCandidate,
+  type BootstrapMapPreviewResponse,
   type BootstrapDiscoveryResponse,
+  type BootstrapShortlistItem,
+  type BootstrapShortlistPreviewResponse,
 } from "../../api/citynexus";
+import { readTravelerBearer } from "../../lib/travelerSession";
 
 type SourceKind = "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
 type PendingMapPreview = {
-  candidateId: string;
-  receiptId: string;
+  kind: "candidate" | "shortlist";
+  candidateId?: string;
+  shortlistId?: string;
+  receiptId?: string;
   latitude: number;
   longitude: number;
 };
@@ -24,18 +30,38 @@ function safeHttpsSourceUrl(value: string | undefined): string | null {
   }
 }
 
-function validatedPublicMapUrl(value: string | undefined): string | null {
+function validatedPublicMapUrl(value: string | undefined, expectedLatitude: number, expectedLongitude: number): string | null {
   if (!value) return null;
   try {
     const url = new URL(value);
+    const queryKeys = [...url.searchParams.keys()];
+    const latitudeFromQuery = Number(url.searchParams.get("mlat"));
+    const longitudeFromQuery = Number(url.searchParams.get("mlon"));
+    const hashParts = url.hash.match(/^#map=([^/]+)\/([^/]+)\/([^/]+)$/);
+    const zoomFromHash = hashParts ? Number(hashParts[1]) : NaN;
+    const latitudeFromHash = hashParts ? Number(hashParts[2]) : NaN;
+    const longitudeFromHash = hashParts ? Number(hashParts[3]) : NaN;
     if (
       url.protocol !== "https:" ||
       url.hostname !== "www.openstreetmap.org" ||
-      !url.searchParams.has("mlat") ||
-      !url.searchParams.has("mlon") ||
-      url.searchParams.has("origin") ||
-      url.searchParams.has("query") ||
-      !url.hash.startsWith("#map=")
+      url.pathname !== "/" ||
+      url.port !== "" ||
+      url.username !== "" ||
+      url.password !== "" ||
+      queryKeys.some((key) => key !== "mlat" && key !== "mlon") ||
+      queryKeys.length !== 2 ||
+      url.searchParams.getAll("mlat").length !== 1 ||
+      url.searchParams.getAll("mlon").length !== 1 ||
+      !Number.isFinite(latitudeFromQuery) ||
+      !Number.isFinite(longitudeFromQuery) ||
+      !hashParts ||
+      !Number.isFinite(zoomFromHash) ||
+      !Number.isFinite(latitudeFromHash) ||
+      !Number.isFinite(longitudeFromHash) ||
+      Math.abs(latitudeFromQuery - expectedLatitude) > 1e-6 ||
+      Math.abs(longitudeFromQuery - expectedLongitude) > 1e-6 ||
+      Math.abs(latitudeFromHash - expectedLatitude) > 1e-6 ||
+      Math.abs(longitudeFromHash - expectedLongitude) > 1e-6
     ) {
       return null;
     }
@@ -71,6 +97,30 @@ export function BootstrapDiscoveryPanel({
   const [mapBusy, setMapBusy] = useState(false);
   const [exploreNotice, setExploreNotice] = useState<string | null>(null);
   const [mapFallbackUrl, setMapFallbackUrl] = useState<string | null>(null);
+  const [shortlist, setShortlist] = useState<BootstrapShortlistItem[]>([]);
+  const [shortlistLoading, setShortlistLoading] = useState(true);
+  const [shortlistBusy, setShortlistBusy] = useState<string | null>(null);
+  const travelerBearer = readTravelerBearer();
+
+  useEffect(() => {
+    let active = true;
+    setShortlist([]);
+    setShortlistLoading(true);
+    void cityNexusApi.getBootstrapShortlist(journeyId)
+      .then((saved) => {
+        if (active) setShortlist(saved.items);
+      })
+      .catch(() => {
+        // A draft without a signed member simply has no restorable board yet.
+        if (active) setShortlist([]);
+      })
+      .finally(() => {
+        if (active) setShortlistLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [journeyId, travelerBearer]);
 
   const useForegroundGps = () => {
     setMessage(null);
@@ -152,6 +202,46 @@ export function BootstrapDiscoveryPanel({
     }
   };
 
+  const saveCandidate = async (candidate: BootstrapDiscoveryCandidate) => {
+    if (!result?.receipt_id) {
+      setMessage("Search again before saving a public place.");
+      return;
+    }
+    if (shortlist.some((item) => item.external_id === candidate.external_id)) return;
+    if (shortlist.length >= 3) {
+      setMessage("Your private draft shortlist already has three places. Remove one before saving another.");
+      return;
+    }
+    setShortlistBusy(candidate.candidate_id);
+    setMessage(null);
+    try {
+      const saved = await cityNexusApi.saveBootstrapShortlistItem(journeyId, {
+        receipt_id: result.receipt_id,
+        candidate_id: candidate.candidate_id,
+      });
+      setShortlist((items) => items.some((item) => item.shortlist_id === saved.shortlist_id) ? items : [...items, saved]);
+      setExploreNotice("Saved to your private draft shortlist. This is not a Place, PlanVersion, visit, booking, or payment authorization.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "This public place could not be saved.");
+    } finally {
+      setShortlistBusy(null);
+    }
+  };
+
+  const removeShortlistItem = async (item: BootstrapShortlistItem) => {
+    setShortlistBusy(item.shortlist_id);
+    setMessage(null);
+    try {
+      await cityNexusApi.removeBootstrapShortlistItem(journeyId, item.shortlist_id);
+      if (pendingMapPreview?.shortlistId === item.shortlist_id) cancelMapPreview();
+      setShortlist((items) => items.filter((saved) => saved.shortlist_id !== item.shortlist_id));
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "That saved place could not be removed.");
+    } finally {
+      setShortlistBusy(null);
+    }
+  };
+
   const beginMapPreview = (candidate: BootstrapDiscoveryCandidate) => {
     if (!result?.receipt_id) {
       setMessage("Search again before opening a public map preview.");
@@ -162,10 +252,24 @@ export function BootstrapDiscoveryPanel({
     setMapFallbackUrl(null);
     setMapConsent(false);
     setPendingMapPreview({
+      kind: "candidate",
       candidateId: candidate.candidate_id,
       receiptId: result.receipt_id,
       latitude: candidate.latitude,
       longitude: candidate.longitude,
+    });
+  };
+
+  const beginShortlistMapPreview = (item: BootstrapShortlistItem) => {
+    setMessage(null);
+    setExploreNotice(null);
+    setMapFallbackUrl(null);
+    setMapConsent(false);
+    setPendingMapPreview({
+      kind: "shortlist",
+      shortlistId: item.shortlist_id,
+      latitude: item.latitude,
+      longitude: item.longitude,
     });
   };
 
@@ -175,21 +279,31 @@ export function BootstrapDiscoveryPanel({
   };
 
   const confirmMapPreview = async () => {
-    if (!pendingMapPreview || !result?.receipt_id) return;
+    if (!pendingMapPreview) return;
     if (!mapConsent) {
       setMessage("Confirm this one-time public map release before opening it.");
       return;
     }
-    const current = result.candidates.find((item) => item.candidate_id === pendingMapPreview.candidateId);
-    if (
-      !current ||
-      result.receipt_id !== pendingMapPreview.receiptId ||
-      current.latitude !== pendingMapPreview.latitude ||
-      current.longitude !== pendingMapPreview.longitude
-    ) {
-      cancelMapPreview();
-      setMessage("This map preview is stale. Search again and choose the candidate again.");
-      return;
+    if (pendingMapPreview.kind === "candidate") {
+      const current = result?.candidates.find((item) => item.candidate_id === pendingMapPreview.candidateId);
+      if (
+        !current ||
+        !result?.receipt_id ||
+        result.receipt_id !== pendingMapPreview.receiptId ||
+        current.latitude !== pendingMapPreview.latitude ||
+        current.longitude !== pendingMapPreview.longitude
+      ) {
+        cancelMapPreview();
+        setMessage("This map preview is stale. Search again and choose the candidate again.");
+        return;
+      }
+    } else {
+      const saved = shortlist.find((item) => item.shortlist_id === pendingMapPreview.shortlistId);
+      if (!saved || saved.latitude !== pendingMapPreview.latitude || saved.longitude !== pendingMapPreview.longitude) {
+        cancelMapPreview();
+        setMessage("This saved map destination changed. Reload the private shortlist and try again.");
+        return;
+      }
     }
     setMapBusy(true);
     setMessage(null);
@@ -204,18 +318,32 @@ export function BootstrapDiscoveryPanel({
     }
     let openedAutomatically = false;
     try {
-      const released = await cityNexusApi.previewBootstrapCandidate(journeyId, {
-        receipt_id: pendingMapPreview.receiptId,
-        candidate_id: pendingMapPreview.candidateId,
-        public_map_consent: true,
-        latitude: pendingMapPreview.latitude,
-        longitude: pendingMapPreview.longitude,
-        coordinate_system: "WGS84",
-      });
-      const publicMapUrl = validatedPublicMapUrl(released.destination.map_url);
+      const released: BootstrapMapPreviewResponse | BootstrapShortlistPreviewResponse = pendingMapPreview.kind === "candidate"
+        ? await cityNexusApi.previewBootstrapCandidate(journeyId, {
+            receipt_id: pendingMapPreview.receiptId!,
+            candidate_id: pendingMapPreview.candidateId!,
+            public_map_consent: true,
+            latitude: pendingMapPreview.latitude,
+            longitude: pendingMapPreview.longitude,
+            coordinate_system: "WGS84",
+          })
+        : await cityNexusApi.previewBootstrapShortlistItem(journeyId, pendingMapPreview.shortlistId!);
+      const publicMapUrl = validatedPublicMapUrl(
+        released.destination.map_url,
+        pendingMapPreview.latitude,
+        pendingMapPreview.longitude,
+      );
       if (
-        released.receipt_id !== pendingMapPreview.receiptId ||
-        released.candidate_id !== pendingMapPreview.candidateId ||
+        (pendingMapPreview.kind === "candidate" &&
+          (!("receipt_id" in released) ||
+            !("candidate_id" in released) ||
+            released.receipt_id !== pendingMapPreview.receiptId ||
+            released.candidate_id !== pendingMapPreview.candidateId)) ||
+        (pendingMapPreview.kind === "shortlist" &&
+          (!("shortlist_id" in released) ||
+            !("authorization_basis" in released) ||
+            released.shortlist_id !== pendingMapPreview.shortlistId ||
+            released.authorization_basis !== "SAVED_PUBLIC_IDENTITY")) ||
         Math.abs(released.destination.latitude - pendingMapPreview.latitude) > 1e-6 ||
         Math.abs(released.destination.longitude - pendingMapPreview.longitude) > 1e-6 ||
         !publicMapUrl
@@ -432,7 +560,19 @@ export function BootstrapDiscoveryPanel({
                 >
                   Preview on public map
                 </button>
-                {pendingMapPreview?.candidateId === candidate.candidate_id ? (
+                <button
+                  type="button"
+                  data-testid={`bootstrap-save-${candidate.candidate_id}`}
+                  disabled={shortlistBusy !== null || shortlist.some((item) => item.external_id === candidate.external_id) || shortlist.length >= 3}
+                  onClick={() => void saveCandidate(candidate)}
+                >
+                  {shortlist.some((item) => item.external_id === candidate.external_id)
+                    ? "Saved to private shortlist"
+                    : shortlistBusy === candidate.candidate_id
+                      ? "Saving…"
+                      : "Save to private shortlist"}
+                </button>
+                {pendingMapPreview?.candidateId === candidate.candidate_id && pendingMapPreview.kind === "candidate" ? (
                   <div className="journey-membership-map-consent" data-testid={`bootstrap-map-consent-${candidate.candidate_id}`}>
                     <p>
                       One-time consent: share only this public destination with OpenStreetMap. No saved origin,
@@ -491,6 +631,86 @@ export function BootstrapDiscoveryPanel({
             ))}
           </div>
         ) : null}
+        <section data-testid="bootstrap-shortlist">
+          <h2>Your private draft shortlist</h2>
+          <p>
+            {shortlistLoading
+              ? "Restoring your saved public places…"
+              : `Saved ${shortlist.length} of 3. Only public identity, coordinates, source, capture time, and explicitly supported source facts are retained for this member.`}
+          </p>
+          {shortlist.map((item) => (
+            <article key={item.shortlist_id} data-testid={`bootstrap-shortlist-item-${item.shortlist_id}`}>
+              <h3>{item.name}</h3>
+              <p>
+                {item.category} · opening {item.opening_state || "UNKNOWN"} · price {item.price_state || "UNKNOWN"} · route ETA {item.eta_state || "UNKNOWN"}
+              </p>
+              <p>
+                Source: {item.source_provenance} · captured {item.captured_at}
+                {item.distance_basis === "MANUAL_PUBLIC_CENTER" && item.distance_m != null
+                  ? ` · ${Math.round(item.distance_m)}m straight-line from the manual public center`
+                  : ""}
+              </p>
+              {safeHttpsSourceUrl(item.source_url) ? (
+                <a href={safeHttpsSourceUrl(item.source_url)!} target="_blank" rel="noopener noreferrer">
+                  Open public source
+                </a>
+              ) : null}
+              <div className="v8-actions">
+                <button
+                  type="button"
+                  data-testid={`bootstrap-shortlist-map-${item.shortlist_id}`}
+                  disabled={mapBusy || shortlistBusy !== null}
+                  onClick={() => beginShortlistMapPreview(item)}
+                >
+                  Open this public destination
+                </button>
+                <button
+                  type="button"
+                  data-testid={`bootstrap-shortlist-remove-${item.shortlist_id}`}
+                  disabled={mapBusy || shortlistBusy !== null}
+                  onClick={() => void removeShortlistItem(item)}
+                >
+                  {shortlistBusy === item.shortlist_id ? "Removing…" : "Remove"}
+                </button>
+              </div>
+              {pendingMapPreview?.shortlistId === item.shortlist_id && pendingMapPreview.kind === "shortlist" ? (
+                <div className="journey-membership-map-consent" data-testid={`bootstrap-shortlist-map-consent-${item.shortlist_id}`}>
+                  <p>
+                    Fresh one-time consent: share only this saved public destination with OpenStreetMap. No receipt, origin,
+                    search center, or foreground GPS is reused or sent.
+                  </p>
+                  <label>
+                    <input
+                      type="checkbox"
+                      data-testid="bootstrap-shortlist-map-consent-checkbox"
+                      checked={mapConsent}
+                      onChange={(event) => setMapConsent(event.target.checked)}
+                    />
+                    I agree to open this public destination now.
+                  </label>
+                  <div className="v8-actions">
+                    <button
+                      type="button"
+                      data-testid="bootstrap-shortlist-map-confirm"
+                      disabled={!mapConsent || mapBusy}
+                      onClick={() => void confirmMapPreview()}
+                    >
+                      {mapBusy ? "Opening…" : "Open public map"}
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="bootstrap-shortlist-map-cancel"
+                      disabled={mapBusy}
+                      onClick={cancelMapPreview}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+            </article>
+          ))}
+        </section>
       </section>
     </main>
   );

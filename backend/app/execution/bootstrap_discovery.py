@@ -15,12 +15,20 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.models import IdempotencyKey, Journey, Place, PlanVersion, ProviderCall, RealPlaceCandidate
+from app.db.models import (
+    IdempotencyKey,
+    Journey,
+    MemberDraftShortlistItem,
+    Place,
+    PlanVersion,
+    ProviderCall,
+    RealPlaceCandidate,
+)
 from app.integrations.discovery.real_city import DiscoveryCandidate, OverpassPOIProvider
 
 
@@ -39,6 +47,7 @@ _BOOTSTRAP_GROUNDED_OPENING = frozenset(
     {"NORMALIZED_VALID", "VERIFIED_PROVIDER", "OFFICIAL_WEB_VERIFIED"}
 )
 _MAX_QUERY = 120
+_MAX_SHORTLIST_ITEMS = 3
 _BOOTSTRAP_RATE_LIMIT_SECONDS = 5
 
 
@@ -235,6 +244,64 @@ def _provider_call(
     )
 
 
+def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
+    opening = json.loads(row.opening_hours_json or "{}")
+    if not isinstance(opening, dict):
+        opening = {"status": "UNKNOWN"}
+    cost = json.loads(row.cost_evidence_json or "{}")
+    if not isinstance(cost, dict):
+        cost = {"status": "UNKNOWN"}
+    source_tags = json.loads(row.source_tags_json or "{}")
+    if not isinstance(source_tags, dict):
+        source_tags = {}
+    return {
+        "shortlist_id": row.id,
+        "journey_id": row.journey_id,
+        "provider_key": row.provider_key,
+        "external_id": row.external_id,
+        "name": row.name,
+        "category": row.category,
+        "latitude": row.latitude,
+        "longitude": row.longitude,
+        "coordinate_system": row.coordinate_system,
+        "source_url": row.source_url,
+        "source_provenance": row.source_provenance,
+        "captured_at": row.captured_at,
+        "opening_hours": opening,
+        "opening_state": str(opening.get("status") or "UNKNOWN").upper(),
+        "price_state": str(cost.get("status") or "UNKNOWN").upper(),
+        "eta_state": "UNKNOWN",
+        "source_tags": source_tags,
+        "distance_m": row.distance_m,
+        "distance_basis": row.distance_basis,
+        "status": row.status,
+        "created_at": row.created_at,
+        "updated_at": row.updated_at,
+    }
+
+
+def _public_tags_for_candidate(row: RealPlaceCandidate) -> dict[str, str]:
+    metadata = json.loads(row.metadata_json or "{}")
+    if not isinstance(metadata, dict):
+        metadata = {}
+    tags = metadata.get("osm_tags") or metadata.get("tags") or {}
+    if not isinstance(tags, dict):
+        return {}
+    return {
+        key: str(tags[key])[:512]
+        for key in ("opening_hours",)
+        if tags.get(key) not in (None, "")
+    }
+
+
+def _public_map_url(latitude: float, longitude: float) -> str:
+    return (
+        "https://www.openstreetmap.org/?mlat="
+        f"{float(latitude):.7f}&mlon={float(longitude):.7f}"
+        f"#map=18/{float(latitude):.7f}/{float(longitude):.7f}"
+    )
+
+
 def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Read member-private scopes while retaining compatibility with R87 receipts."""
 
@@ -255,6 +322,7 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         "receipt_id": receipt_id,
                         "source_kind": str(raw.get("source_kind") or ""),
                         "distance_m": raw.get("distance_m"),
+                        "expires_at": str(raw.get("expires_at") or "") or None,
                     }
                 )
     if scopes:
@@ -270,6 +338,7 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 "receipt_id": receipt_id,
                 "source_kind": str(evidence.get("source_kind") or ""),
                 "distance_m": None,
+                "expires_at": None,
             }
         ]
     return []
@@ -302,6 +371,17 @@ def _matching_candidate_scope(
     return None
 
 
+def _scope_expired(scope: dict[str, Any] | None, *, now: datetime | None = None) -> bool:
+    value = scope.get("expires_at") if scope else None
+    if not value:
+        return False
+    try:
+        expires_at = datetime.fromisoformat(str(value)).astimezone(timezone.utc)
+    except ValueError:
+        return True
+    return expires_at <= (now or _now())
+
+
 def _drop_candidate_scope(row: RealPlaceCandidate, *, member_id: str, traveler_id: str) -> bool:
     """Remove one private receipt without deleting another member's identical OSM result."""
 
@@ -330,6 +410,77 @@ def _drop_candidate_scope(row: RealPlaceCandidate, *, member_id: str, traveler_i
     )
     row.evidence_json = _json(evidence)
     return True
+
+
+def _replace_candidate_scope(
+    session: Session,
+    *,
+    journey_id: str,
+    external_id: str,
+    member_id: str,
+    traveler_id: str,
+    scope: dict[str, Any],
+) -> bool:
+    """CAS-merge one private receipt without losing another member's scope."""
+
+    owner_key = (str(member_id), str(traveler_id))
+    for _attempt in range(4):
+        row = session.scalar(
+            select(RealPlaceCandidate)
+            .where(
+                RealPlaceCandidate.journey_id == str(journey_id),
+                RealPlaceCandidate.provider_key == "overpass",
+                RealPlaceCandidate.external_id == str(external_id),
+                RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
+            )
+            .execution_options(populate_existing=True)
+        )
+        if row is None:
+            return False
+        old_json = row.evidence_json or "{}"
+        evidence = json.loads(old_json)
+        if not evidence.get("bootstrap"):
+            return False
+        scopes = [
+            existing
+            for existing in _bootstrap_scope_entries(evidence)
+            if (existing["member_id"], existing["traveler_id"]) != owner_key
+        ]
+        # A member's new discovery receipt replaces that member's old authority;
+        # other members' scopes remain intact.
+        scopes.append(dict(scope))
+        evidence["bootstrap_scopes"] = scopes
+        first = scopes[0]
+        evidence.update(
+            {
+                "member_id": first["member_id"],
+                "traveler_id": first["traveler_id"],
+                "receipt_id": first["receipt_id"],
+                "source_kind": first.get("source_kind") or evidence.get("source_kind"),
+            }
+        )
+        result = session.execute(
+            update(RealPlaceCandidate)
+            .where(
+                RealPlaceCandidate.id == row.id,
+                RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
+                RealPlaceCandidate.evidence_json == old_json,
+            )
+            .values(evidence_json=_json(evidence))
+            .execution_options(synchronize_session=False)
+        )
+        if result.rowcount == 1:
+            session.expire(row, ["evidence_json"])
+            return True
+        # Another request won the compare-and-swap. Drop any identity-map snapshot
+        # and merge against its committed scopes on the next attempt.
+        session.expire_all()
+    raise BootstrapDiscoveryError(
+        "BOOTSTRAP_SCOPE_UPDATE_CONFLICT",
+        "member discovery scopes changed concurrently; retry the search",
+        status_code=409,
+        details={"next_actions": ["SEARCH_AGAIN"]},
+    )
 
 
 def _bootstrap_rate_limited(
@@ -586,27 +737,25 @@ def discover_bootstrap_candidates(
         # member's receipt.
         if existing_candidate is not None:
             if existing_candidate.status == "BOOTSTRAP_PRIVATE":
-                existing_evidence = json.loads(existing_candidate.evidence_json or "{}")
-                scopes = _bootstrap_scope_entries(existing_evidence)
-                if not any(
-                    scope["member_id"] == member_id and scope["traveler_id"] == traveler_id
-                    for scope in scopes
-                ):
-                    scopes.append(
-                        {
-                            "member_id": member_id,
-                            "traveler_id": traveler_id,
-                            "receipt_id": receipt_id,
-                            "source_kind": source_kind,
-                            "distance_m": (
-                                float(candidate.distance_m)
-                                if persisted_distance and candidate.distance_m is not None
-                                else None
-                            ),
-                        }
-                    )
-                    existing_evidence["bootstrap_scopes"] = scopes
-                    existing_candidate.evidence_json = _json(existing_evidence)
+                _replace_candidate_scope(
+                    session,
+                    journey_id=journey.id,
+                    external_id=candidate.external_id,
+                    member_id=member_id,
+                    traveler_id=traveler_id,
+                    scope={
+                        "member_id": member_id,
+                        "traveler_id": traveler_id,
+                        "receipt_id": receipt_id,
+                        "source_kind": source_kind,
+                        "expires_at": _iso(expires_at),
+                        "distance_m": (
+                            float(candidate.distance_m)
+                            if persisted_distance and candidate.distance_m is not None
+                            else None
+                        ),
+                    },
+                )
             continue
         tags = _candidate_tags(candidate)
         cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
@@ -657,6 +806,7 @@ def discover_bootstrap_candidates(
                                 "traveler_id": traveler_id,
                                 "receipt_id": receipt_id,
                                 "source_kind": source_kind,
+                                "expires_at": _iso(expires_at),
                                 "distance_m": (
                                     float(candidate.distance_m)
                                     if persisted_distance and candidate.distance_m is not None
@@ -773,12 +923,13 @@ def preview_bootstrap_candidate(
             "candidate does not belong to this discovery receipt",
             status_code=403,
         )
-    if _matching_candidate_scope(
+    matching_scope = _matching_candidate_scope(
         evidence,
         member_id=str(member.id),
         traveler_id=str(traveler_id),
         receipt_id=str(receipt_id),
-    ) is None:
+    )
+    if matching_scope is None:
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_MEMBER_MISMATCH",
             "candidate belongs to another signed member",
@@ -790,7 +941,14 @@ def preview_bootstrap_candidate(
             "bootstrap candidate is no longer available for map preview",
             status_code=409,
         )
-    if row.expires_at:
+    if _scope_expired(matching_scope):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_RECEIPT_EXPIRED",
+            "the discovery receipt expired; search again before opening a public map",
+            status_code=410,
+            details={"next_actions": ["SEARCH_AGAIN", "CANCEL_MAP_PREVIEW"]},
+        )
+    if not matching_scope.get("expires_at") and row.expires_at:
         try:
             expires_at = datetime.fromisoformat(row.expires_at).astimezone(timezone.utc)
         except ValueError:
@@ -904,6 +1062,290 @@ def preview_bootstrap_candidate(
     }
 
 
+def _bootstrap_scope_for_request(
+    row: RealPlaceCandidate,
+    *,
+    member: Any,
+    traveler_id: str,
+    receipt_id: UUID,
+) -> dict[str, Any]:
+    evidence = json.loads(row.evidence_json or "{}")
+    if not evidence.get("bootstrap"):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_RECEIPT_MISMATCH",
+            "candidate does not belong to this discovery receipt",
+            status_code=403,
+        )
+    scope = _matching_candidate_scope(
+        evidence,
+        member_id=str(member.id),
+        traveler_id=str(traveler_id),
+        receipt_id=str(receipt_id),
+    )
+    if scope is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_MEMBER_MISMATCH",
+            "candidate belongs to another signed member",
+            status_code=403,
+        )
+    if _scope_expired(scope) or (not scope.get("expires_at") and row.expires_at and _scope_expired({"expires_at": row.expires_at})):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_RECEIPT_EXPIRED",
+            "the discovery receipt expired; search again before saving or opening this place",
+            status_code=410,
+            details={"next_actions": ["SEARCH_AGAIN", "CANCEL_MAP_PREVIEW"]},
+        )
+    return scope
+
+
+def save_bootstrap_shortlist_item(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    receipt_id: UUID,
+    candidate_id: UUID,
+) -> dict[str, Any]:
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "saving a shortlist item requires a DRAFT Journey")
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "saving a shortlist item requires no PlanVersion")
+    row = session.scalar(
+        select(RealPlaceCandidate).where(
+            RealPlaceCandidate.id == str(candidate_id),
+            RealPlaceCandidate.journey_id == journey.id,
+            RealPlaceCandidate.provider_key == "overpass",
+        )
+    )
+    if row is None:
+        raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_NOT_FOUND", "bootstrap candidate was not found", status_code=404)
+    scope = _bootstrap_scope_for_request(
+        row, member=member, traveler_id=traveler_id, receipt_id=receipt_id
+    )
+    if row.status != "BOOTSTRAP_PRIVATE" or row.materialized_place_id is not None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_CANDIDATE_UNAVAILABLE",
+            "bootstrap candidate is no longer available to save",
+            status_code=409,
+        )
+    existing = session.scalar(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.external_id == row.external_id,
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    )
+    if existing is not None:
+        return _shortlist_payload(existing)
+    saved_count = session.scalar(
+        select(func.count(MemberDraftShortlistItem.id)).where(
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    ) or 0
+    if saved_count >= _MAX_SHORTLIST_ITEMS:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_LIMIT",
+            "a draft shortlist can contain at most three public places",
+            status_code=409,
+            details={"limit": _MAX_SHORTLIST_ITEMS, "next_actions": ["REMOVE_A_PLACE", "CHOOSE_ANOTHER_CANDIDATE"]},
+        )
+    now = _iso(_now())
+    evidence = json.loads(row.evidence_json or "{}")
+    source_url = str(evidence.get("source_url") or "")
+    osm = _osm_identity(
+        DiscoveryCandidate(
+            provider_key=row.provider_key,
+            external_id=row.external_id,
+            name=row.name,
+            category=row.category,
+            latitude=row.latitude,
+            longitude=row.longitude,
+            tags=(),
+            opening_hours={},
+            metadata={},
+        )
+    )
+    if osm is None:
+        raise BootstrapDiscoveryError("BOOTSTRAP_IDENTITY_INVALID", "candidate OSM identity is invalid", status_code=422)
+    source_url = source_url or f"https://www.openstreetmap.org/{osm[0]}/{osm[1]}"
+    metadata = json.loads(row.metadata_json or "{}")
+    cost = metadata.get("cost_evidence") if isinstance(metadata, dict) else None
+    if not isinstance(cost, dict):
+        cost = {"status": "UNKNOWN"}
+    opening = json.loads(row.opening_hours_json or "{}")
+    if not isinstance(opening, dict):
+        opening = {"status": "UNKNOWN"}
+    source_kind = str(scope.get("source_kind") or "")
+    distance_m = scope.get("distance_m") if source_kind == "MANUAL_PUBLIC_CENTER" else None
+    item = MemberDraftShortlistItem(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        member_id=str(member.id),
+        traveler_id=str(traveler_id),
+        provider_key="overpass",
+        external_id=row.external_id,
+        name=row.name,
+        category=row.category,
+        latitude=row.latitude,
+        longitude=row.longitude,
+        coordinate_system="WGS84",
+        source_url=source_url,
+        source_provenance="LIVE_OPENSTREETMAP_OVERPASS",
+        captured_at=row.captured_at,
+        opening_hours_json=_json(opening),
+        cost_evidence_json=_json(cost),
+        source_tags_json=_json(_public_tags_for_candidate(row)),
+        distance_m=float(distance_m) if distance_m is not None else None,
+        distance_basis=source_kind if distance_m is not None else None,
+        status="SAVED",
+        created_at=now,
+        updated_at=now,
+    )
+    session.add(item)
+    session.flush()
+    return _shortlist_payload(item)
+
+
+def list_bootstrap_shortlist_items(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+) -> dict[str, Any]:
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "a shortlist is available only while the Journey is DRAFT")
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "a shortlist is unavailable after a PlanVersion exists")
+    rows = session.scalars(
+        select(MemberDraftShortlistItem)
+        .where(
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+        .order_by(MemberDraftShortlistItem.created_at, MemberDraftShortlistItem.id)
+    ).all()
+    return {
+        "journey_id": journey.id,
+        "limit": _MAX_SHORTLIST_ITEMS,
+        "items": [_shortlist_payload(row) for row in rows],
+    }
+
+
+def remove_bootstrap_shortlist_item(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    shortlist_id: UUID,
+) -> dict[str, Any]:
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "a shortlist is mutable only while the Journey is DRAFT")
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "a shortlist is immutable after a PlanVersion exists")
+    row = session.scalar(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id == str(shortlist_id),
+            MemberDraftShortlistItem.journey_id == journey.id,
+        )
+    )
+    if row is None:
+        raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_NOT_FOUND", "shortlist item was not found", status_code=404)
+    if row.member_id != str(member.id) or row.traveler_id != str(traveler_id):
+        raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH", "shortlist item belongs to another signed member", status_code=403)
+    session.delete(row)
+    session.flush()
+    return {"journey_id": journey.id, "shortlist_id": str(shortlist_id), "removed": True, "place_id": None}
+
+
+def preview_bootstrap_shortlist_item(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    shortlist_id: UUID,
+    public_map_consent: bool,
+) -> dict[str, Any]:
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "shortlist map preview requires a DRAFT Journey")
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "shortlist map preview requires no PlanVersion")
+    if not public_map_consent:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PUBLIC_MAP_CONSENT_REQUIRED",
+            "explicit per-release public map consent is required",
+            status_code=422,
+            details={"shared": ["public_destination"], "withheld": ["origin", "foreground_gps"], "next_actions": ["CONFIRM_PUBLIC_MAP_CONSENT", "CANCEL_MAP_PREVIEW"]},
+        )
+    row = session.scalar(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id == str(shortlist_id),
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    )
+    if row is None:
+        raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_NOT_FOUND", "shortlist item was not found", status_code=404)
+    if row.member_id != str(member.id) or row.traveler_id != str(traveler_id):
+        raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH", "shortlist item belongs to another signed member", status_code=403)
+    opening = json.loads(row.opening_hours_json or "{}")
+    if not isinstance(opening, dict):
+        opening = {"status": "UNKNOWN"}
+    source_tags = json.loads(row.source_tags_json or "{}")
+    if not isinstance(source_tags, dict):
+        source_tags = {}
+    opening_status = str(opening.get("status") or "UNKNOWN").upper()
+    return {
+        "preview_id": str(uuid4()),
+        "status": "PUBLIC_DESTINATION_READY",
+        "journey_id": journey.id,
+        "shortlist_id": row.id,
+        "authorization_basis": "SAVED_PUBLIC_IDENTITY",
+        "destination": {
+            "name": row.name,
+            "external_id": row.external_id,
+            "source_url": row.source_url,
+            "latitude": row.latitude,
+            "longitude": row.longitude,
+            "coordinate_system": "WGS84",
+            "map_url": _public_map_url(row.latitude, row.longitude),
+        },
+        "opening": {
+            "state": opening_status,
+            "raw": opening.get("raw") or source_tags.get("opening_hours"),
+            "source_tags": source_tags,
+            "source": row.source_provenance,
+            "observed_at": row.captured_at,
+            "claim": "OSM_TAG_CLAIM" if source_tags.get("opening_hours") else "NO_OPENING_TAG",
+            "verification_state": "EXTERNAL_NOT_ATTESTED" if opening_status not in _BOOTSTRAP_GROUNDED_OPENING else "PROVIDER_GROUNDED",
+            "verification_action": "OPEN_SOURCE_PAGE",
+        },
+        "explore_state": "DRAFT_EXPLORE_ONLY",
+        "shared_fields": ["public_destination", "osm_id", "source_url"],
+        "withheld_fields": ["origin", "foreground_gps", "query_center", "member_id", "traveler_id", "receipt_id"],
+        "plan_version_id": None,
+        "selected_place_id": None,
+    }
+
+
 def select_bootstrap_candidate(
     session: Session,
     journey: Journey,
@@ -939,7 +1381,9 @@ def select_bootstrap_candidate(
     )
     if matching_scope is None:
         raise BootstrapDiscoveryError("BOOTSTRAP_MEMBER_MISMATCH", "candidate belongs to another signed member", status_code=403)
-    expires_at = row.expires_at
+    if _scope_expired(matching_scope):
+        raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate receipt expired", status_code=410)
+    expires_at = row.expires_at if not matching_scope.get("expires_at") else None
     if expires_at:
         try:
             if datetime.fromisoformat(expires_at).astimezone(timezone.utc) <= _now():

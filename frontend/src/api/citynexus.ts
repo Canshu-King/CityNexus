@@ -1754,6 +1754,69 @@ export interface BootstrapMapPreviewResponse {
   selected_place_id: string | null;
 }
 
+export interface BootstrapShortlistItem {
+  shortlist_id: string;
+  journey_id: string;
+  provider_key: "overpass";
+  external_id: string;
+  name: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  coordinate_system: "WGS84";
+  source_url: string;
+  source_provenance: string;
+  captured_at: string;
+  opening_hours: Record<string, unknown>;
+  opening_state: string;
+  price_state: "UNKNOWN" | string;
+  eta_state: "UNKNOWN" | string;
+  source_tags: Record<string, string>;
+  distance_m: number | null;
+  distance_basis: string | null;
+  status: "SAVED";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BootstrapShortlistResponse {
+  journey_id: string;
+  limit: number;
+  items: BootstrapShortlistItem[];
+}
+
+export interface BootstrapShortlistPreviewResponse {
+  preview_id: string;
+  status: "PUBLIC_DESTINATION_READY";
+  journey_id: string;
+  shortlist_id: string;
+  authorization_basis: "SAVED_PUBLIC_IDENTITY";
+  destination: {
+    name: string;
+    external_id: string;
+    source_url: string;
+    latitude: number;
+    longitude: number;
+    coordinate_system: "WGS84";
+    map_url: string;
+  };
+  opening: {
+    state: string;
+    raw: string | null;
+    source_tags: Record<string, string>;
+    source: string;
+    observed_at: string;
+    claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
+    verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
+    verification_action: "OPEN_SOURCE_PAGE";
+  };
+  explore_state: "DRAFT_EXPLORE_ONLY";
+  shared_fields: string[];
+  withheld_fields: string[];
+  plan_version_id: string | null;
+  selected_place_id: string | null;
+}
+
 export interface AgentRunStep {
   id?: string;
   sequence_no: number;
@@ -2677,6 +2740,51 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify(input),
+      },
+    );
+  },
+
+  getBootstrapShortlist(journeyId: string): Promise<BootstrapShortlistResponse> {
+    return requestJson<BootstrapShortlistResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  saveBootstrapShortlistItem(
+    journeyId: string,
+    input: { receipt_id: string; candidate_id: string },
+  ): Promise<BootstrapShortlistItem> {
+    return requestJson<BootstrapShortlistItem>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  removeBootstrapShortlistItem(
+    journeyId: string,
+    shortlistId: string,
+  ): Promise<{ journey_id: string; shortlist_id: string; removed: boolean; place_id: null }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/" + shortlistId,
+      { method: "DELETE", headers: travelerAuthHeaders() },
+    );
+  },
+
+  previewBootstrapShortlistItem(
+    journeyId: string,
+    shortlistId: string,
+  ): Promise<BootstrapShortlistPreviewResponse> {
+    return requestJson<BootstrapShortlistPreviewResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/" + shortlistId + "/preview",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ public_map_consent: true }),
       },
     );
   },

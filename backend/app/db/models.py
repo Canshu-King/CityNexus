@@ -1220,6 +1220,46 @@ class RealPlaceCandidate(Base):
     __table_args__ = (UniqueConstraint("journey_id", "provider_key", "external_id"),)
 
 
+class MemberDraftShortlistItem(Base):
+    """One member's public-only POI bookmark inside a DRAFT Journey."""
+
+    __tablename__ = "member_draft_shortlist_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    provider_key: Mapped[str] = mapped_column(String)
+    external_id: Mapped[str] = mapped_column(String)
+    name: Mapped[str] = mapped_column(String)
+    category: Mapped[str] = mapped_column(String)
+    latitude: Mapped[float] = mapped_column()
+    longitude: Mapped[float] = mapped_column()
+    coordinate_system: Mapped[str] = mapped_column(String, default="WGS84", server_default="WGS84")
+    source_url: Mapped[str] = mapped_column(Text)
+    source_provenance: Mapped[str] = mapped_column(String)
+    captured_at: Mapped[str] = mapped_column(String)
+    opening_hours_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    cost_evidence_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    source_tags_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    distance_m: Mapped[float | None] = mapped_column(nullable=True)
+    distance_basis: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, default="SAVED", server_default="SAVED")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "member_id", "external_id"),
+        CheckConstraint("status = 'SAVED'", name="ck_member_draft_shortlist_items_status"),
+        Index(
+            "idx_member_draft_shortlist_items_owner",
+            "journey_id",
+            "member_id",
+            "traveler_id",
+            "updated_at",
+        ),
+    )
+
+
 class JourneyConstraint(Base):
     __tablename__ = "constraints"
     id: Mapped[str] = mapped_column(String, primary_key=True)
