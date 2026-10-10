@@ -86,7 +86,9 @@ def batch_entries(batch):
 
 def split_pair(before):
     """Pull the two literals out of the exact before-snippet; nothing here is re-typed."""
-    body = before[1:] if before.startswith("(") else before
+    body = before.strip()
+    if body.startswith("(") and body.endswith(")"):
+        body = body[1:-1]
     m = TERNARY.match(body)
     if not m:
         raise SystemExit("ABORT cannot cut a zh/en pair out of: %r" % before)

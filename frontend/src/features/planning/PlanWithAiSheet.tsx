@@ -295,12 +295,12 @@ export function statusCopy(
   if (s === "RUNNING" || s === "PENDING" || s === "QUEUED") {
     return {
       title: t("planning.planning"),
-      body: zh ? "正在处理你的需求。" : "Working on your request.",
+      body: t("planning.workingOnYourRequest"),
       tone: "busy",
     };
   }
   return {
-    title: zh ? "暂时无法完成规划" : "Could not finish planning",
+    title: t("planning.couldNotFinishPlanning"),
     body: zh
       ? "这次没能生成方案。你的行程没有被改动，可以重试或换个说法。"
       : "We could not produce plans this time. Your trip is unchanged; retry or rephrase.",
@@ -1136,7 +1136,7 @@ export function PlanWithAiSheet({
                   onChooseAnotherCity();
                 }}
               >
-                {zh ? "换一座有数据的城市" : "Try a city we have data for"}
+                {t("planning.tryACityWeHaveDataFor")}
               </button>
             )}
             {copy?.action === "retry" && (
@@ -1149,7 +1149,7 @@ export function PlanWithAiSheet({
                    this button pressed into nothing. */
                 onClick={() => submit(run.command || text)}
               >
-                {zh ? "照原话再试一次" : "Try again with the same words"}
+                {t("planning.tryAgainWithTheSameWords")}
               </button>
             )}
           </div>
@@ -1180,7 +1180,7 @@ export function PlanWithAiSheet({
             aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}
             onClick={() => submit()}
           >
-            {busy ? (zh ? "规划中…" : "Planning…") : zh ? "开始规划" : "Plan my trip"}
+            {busy ? t("planning.planning2") : zh ? "开始规划" : "Plan my trip"}
           </button>
         </div>
       </section>
