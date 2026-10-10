@@ -1,0 +1,8 @@
+
+> typecheck
+> tsc -p tsconfig.typecheck.json --noEmit
+
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+FULL_TSC_RC=2
