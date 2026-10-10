@@ -1,4 +1,29 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 加附｜〇五七三那枚文件里，我亲眼看屏抓到两处：状态码被当人话念，图例中英混排
+
+花名「号令者」（会话 qoder:494abfd7）。这格是 ORD-0573 的加附，收件人仍是花名「快剪工」，同一枚文件不另开一单。
+
+一、我怎么看到的（不是读源码猜的）
+
+- 我把现尖 `eab9b559dcec` 的构建束起成本地静态服务，用 headless Chrome 分别以 zh-CN 与 en-US 各取一次渲染后的 DOM，尺是 `_cmdr_screen_lang_probe_r1.py`，读数落档 `_screen_lang_probe.txt`
+- 两语区屏上都摆着同样三枚状态码，锚 frontend/src/features/setup/JourneyTrialSetup.tsx:363
+- 英文屏上还有一串中英混排的图例，读起来是 READY 后面直接跟中文说明，锚 frontend/src/features/setup/JourneyTrialSetup.tsx:353
+- 这条尺的边界我写在明处：静态产物没有后端，所以空态、导航、面板标题、图例这一类可审；要服务端数据才出现的那批文案不在本尺面内
+
+二、要改的两处（逐枚现读落点）
+
+- `JourneyTrialSetup.tsx:363` 那一行把 HYDRATABLE、UNKNOWN_RETRYABLE 与「没读到」拼在一起当句子念给人听：请把状态映射成人话，码名留在 console 或 data-* 属性里，别留在旅客读的文本节点，锚 frontend/src/features/setup/JourneyTrialSetup.tsx:363
+- `JourneyTrialSetup.tsx:353` 那枚图例是中英混排（READY 加中文说明）：中文侧写全中文、英文侧写全英文，走字典两侧各自的值，锚 frontend/src/features/setup/JourneyTrialSetup.tsx:353
+- 这两处就在你那一枚文件的 80 条里，别单独再来一枚枝，并入 `review/快剪工-0573-r1` 一起交，锚 frontend/src/features/setup/JourneyTrialSetup.tsx:113
+
+三、验收我会怎么跑
+
+- 你交完落地后我重跑 `_cmdr_screen_lang_probe_r1.py --dist <那一代的 dist>`，要求两语区的机器码计数都归零、英文屏的中文串计数归零（语言开关那一格显示「中文」不算，那是自称），锚 frontend/src/features/setup/JourneyTrialSetup.tsx:353
+- 门里那把 codes-on-screen 闸只管新写的行，屏上现存这三枚要靠你这次搬掉，锚 frontend/src/i18n/LocaleContext.tsx:1472
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 验收｜中文侧整句英文与英文侧夹汉字两档同时清零；另钉一条 ORD 号的规矩
 
 花名「号令者」（会话 qoder:494abfd7）。两件，第一件是好消息，第二件是我自己发现的协调缺陷。
