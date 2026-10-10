@@ -1,0 +1,35 @@
+ORD-0558 单复数那一档 · 量名词 · 两代真模块读数（逐行原样，取自 count_read_harness_r1.ts 跑出来的 stdout）
+
+一、改前（该文件 = 权威线那一代，pendingSetCopy.ts 的 blob 为 c6dab44cc0f167661a2b60380e4bea03528df0c3，与我另放那棵的 git hash-object 逐字同）
+
+  en | pending.count | {"n":1} | 1 places not on a day
+  en | pending.count | {"n":2} | 2 places not on a day
+  en | pending.batchLine | {"planned":1,"picked":3} | This batch carries the 1 places your chosen plan already holds plus the 3 you ticked, so nothing that is planned gets dropped.
+  en | pending.batchLine | {"planned":2,"picked":3} | This batch carries the 2 places your chosen plan already holds plus the 3 you ticked, so nothing that is planned gets dropped.
+  en | pending.blocked.SET_TOO_LARGE | {"max":1} | The batch has more than 1 places, which is the server's bound.
+  en | pending.blocked.SET_TOO_LARGE | {"max":20} | The batch has more than 20 places, which is the server's bound.
+  zh-CN | pending.count | {"n":1} | 1 个地点没有排在某一天
+  zh-CN | pending.count | {"n":2} | 2 个地点没有排在某一天
+  zh-CN | pending.batchLine | {"planned":1,"picked":3} | 这一批带上当前方案已有的 1 个地点，再加你勾的 3 个，已有的一个都不会掉。
+  zh-CN | pending.blocked.SET_TOO_LARGE | {"max":20} | 这一批超过 20 个地点，这是服务器给的上限。
+
+  红就在前六行的偶数行位：数量一那三枚都念成 "1 places"。
+
+二、改后（本枝那一代，三枚英文行带上 {plural:} 标记，resolver 先走 expandPluralMarkers）
+
+  en | pending.count | {"n":1} | 1 place not on a day
+  en | pending.count | {"n":2} | 2 places not on a day
+  en | pending.batchLine | {"planned":1,"picked":3} | This batch carries the 1 place your chosen plan already holds plus the 3 you ticked, so nothing that is planned gets dropped.
+  en | pending.batchLine | {"planned":2,"picked":3} | This batch carries the 2 places your chosen plan already holds plus the 3 you ticked, so nothing that is planned gets dropped.
+  en | pending.blocked.SET_TOO_LARGE | {"max":1} | The batch has more than 1 place, which is the server's bound.
+  en | pending.blocked.SET_TOO_LARGE | {"max":20} | The batch has more than 20 places, which is the server's bound.
+  zh-CN | pending.count | {"n":1} | 1 个地点没有排在某一天
+  zh-CN | pending.count | {"n":2} | 2 个地点没有排在某一天
+  zh-CN | pending.batchLine | {"planned":1,"picked":3} | 这一批带上当前方案已有的 1 个地点，再加你勾的 3 个，已有的一个都不会掉。
+  zh-CN | pending.blocked.SET_TOO_LARGE | {"max":20} | 这一批超过 20 个地点，这是服务器给的上限。
+
+  中文四行与第一节逐字节相同（本件只改英文侧），这条不是口头声明：第一节与第二节的 zh 行位内容一字不差。
+
+三、第四枚本批不取（按单上「一次只吃不超过三处」）
+
+  该行的行号在两代都现读过：改前在 `frontend/src/features/pending/pendingSetCopy.ts:82`，本枝里同一行在 `frontend/src/features/pending/pendingSetCopy.ts:85`，原文仍是「"The server placed {n} of them on {days}. This is candidate version {version}, {stops} stops in it."」，草稿给的改法是把 stops 换成 {plural:stop:stops}。这一枚归我下一批（枝名 r3），本件没动它，字节留在原处。

@@ -1,0 +1,28 @@
+ORD-0558 单复数那一档 · 量名词 · 门禁读数（本批：pendingSetCopy.ts 三枚英文行）
+
+一、枝与基
+
+1. 起手现取尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 996f1b7588580a14fbbdec5301a6e4a7b70c93e4，我这枝 `review/量名词-0558-r2` 就从这一枚起（父笔逐字同值）。
+2. 改动集合只一枚产品文件：`frontend/src/features/pending/pendingSetCopy.ts`（三处英文行 + 一枚 import + 一枚 resolver 行），其余都是本目录里的读数件。
+
+二、类型检查（ORD-0560 只认全量那把）
+
+3. 命令原样 `npm run typecheck`（cwd 本树 frontend，= `tsc -p tsconfig.typecheck.json --noEmit`，见 `frontend/package.json:8`），退出码回 2。
+4. 诊断共三条，全是同一族 TS2307，逐枚：`frontend/src/features/studio/SortableActivityList.tsx:10`（Cannot find module '@dnd-kit/core'）、`frontend/src/features/studio/SortableActivityList.tsx:17`（'@dnd-kit/sortable'）、`frontend/src/features/studio/SortableActivityList.tsx:18`（'@dnd-kit/utilities'）。
+5. 没有一条诊断提到本件那枚文件；这三条在本件起笔之前就在那一把闸上（同一条命令在本树把我的改动 stash 走之后仍出同样三条，见第四节那条反控），成因是共享 store 里没有 `@dnd-kit` 这枚目录，而 `frontend/package.json:16` 声明了它。
+
+三、构建
+
+6. 命令原样 `npm run build`（= `vite build`），退出码回 1，原文关键两行是「Rollup failed to resolve import "@dnd-kit/core" from ".../src/features/studio/SortableActivityList.tsx"」与「Build failed in 907ms」，前面另有「127 modules transformed」，即断点在那枚缺的依赖，不在文案面。
+
+四、本面已有的那一枝（不是我写的）与它的反控臂
+
+7. 命令原样 `npx playwright test e2e/qoder-ord0445-pending-set.spec.ts --reporter=line`，权威模式，端口 frontend 与 backend 各一枚（4211 与 8211）、run id 为 lmcp56r1、库 `_e2e_lmcp56r1.db` 跑前不预存、AI 关、两枚外部 key unset。退出码回 1，读数「14 failed，1 passed」。
+8. 同一条命令、同一棵树的反控臂：把我这三处改动 stash 走（该文件回到现尖那一代，`grep -c "plural:place"` 回 0）再跑，run id 换成 lmcp56ctl、端口 4212 与 8212，退出码同样回 1，读数同样「14 failed，1 passed」，失败位同样停在 boot（「the 待规划 panel is not on 今天」）。两臂只差我的字节、形状完全一致，所以那十四枚红不是本件带来的。
+9. 十四枚红的成因在同一份日志的 WebServer 段里：dev server 的依赖预打包扫描报「The following dependencies are imported but could not be resolved: @dnd-kit/core（imported by .../src/features/studio/SortableActivityList.tsx）」，也就是第二节那同一枚缺依赖把整屏起不来，屏读因此在本批缺席。
+10. 因此本批的两语改前改后读数走的是真模块那条臂：见 `review/liangmingci/p56_readouts/count_read_r1.txt` 第一节与第二节，命令与跑法在 `review/liangmingci/p56_readouts/count_read_harness_r1.ts` 顶部注释里。
+
+五、自报两条环境观察（不是我造成的，但会咬别的车道）
+
+11. 共享 store 的 `.bin` 已经回来了（本树 junction 后清点：条目数 117，`tsc`、`vite`、`playwright` 都在），`@dnd-kit` 仍不在。
+12. 我这棵树起初跑不动 npm 脚本是我自己的错：新建 worktree 时忘了接 `frontend/node_modules` 的 junction，报了「'tsc' 不是内部或外部命令」；接上之后同一条命令就走到了第二节的真退出码。别的车道起新树时值得一并接两枚 junction（node_modules 与 .venv）。
