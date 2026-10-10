@@ -1,20 +1,20 @@
-ORD-0555 PlanWithAiSheet lane, batch 1
+ORD-0555 PlanWithAiSheet lane, batch 2
 lane root D:/moodle/_qoder_tiaanianggong_0555
 
-=== leg typecheck | cwd D:\moodle\_qoder_tiaanianggong_0555\frontend
+=== leg typecheck | cwd D:/moodle/_qoder_tiaanianggong_0555\frontend
 $ node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
 exit_code=0
 (no output)
 
-=== leg build | cwd D:\moodle\_qoder_tiaanianggong_0555\frontend
-$ node node_modules/vite/bin/vite.js build --outDir D:\moodle\_qoder_tiaanianggong_0555\..\_qoder_tiaanianggong_0555_dist --emptyOutDir
+=== leg build | cwd D:/moodle/_qoder_tiaanianggong_0555\frontend
+$ node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiaanianggong_0555\..\_qoder_tiaanianggong_0555_dist --emptyOutDir
 exit_code=0
-[2m../../_qoder_tiaanianggong_0555_dist/[22m[36massets/maplibre-gl-7YlNi_cY.js  [39m[1m[33m1,053.38 kB[39m[22m[2m │ gzip: 284.76 kB[22m
-[2m../../_qoder_tiaanianggong_0555_dist/[22m[36massets/index-Bi5POIQt.js        [39m[1m[33m1,668.05 kB[39m[22m[2m │ gzip: 513.68 kB[22m
-[32m✓ built in 5.18s[39m
+[2m../../_qoder_tiaanianggong_0555_dist/[22m[36massets/maplibre-gl-kzM9W4FP.js  [39m[1m[33m1,053.38 kB[39m[22m[2m │ gzip: 284.76 kB[22m
+[2m../../_qoder_tiaanianggong_0555_dist/[22m[36massets/index-BNePNSRk.js        [39m[1m[33m1,668.54 kB[39m[22m[2m │ gzip: 513.84 kB[22m
+[32m✓ built in 9.36s[39m
 PWA v1.3.0
 mode      generateSW
-precache  8 entries (2912.25 KiB)
+precache  8 entries (2912.73 KiB)
 files generated
   ../../_qoder_tiaanianggong_0555_dist/v10-sw.js
   ../../_qoder_tiaanianggong_0555_dist/workbox-6923124b.js
@@ -24,10 +24,10 @@ files generated
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
 
-=== leg i18n_parity | cwd D:\moodle\_qoder_tiaanianggong_0555
+=== leg i18n_parity | cwd D:/moodle/_qoder_tiaanianggong_0555
 $ python frontend\scripts\i18n_detail2_parity_r1.py
 exit_code=1
-en keys: 1089 zh keys: 1090
+en keys: 1094 zh keys: 1095
 Traceback (most recent call last):
   File "D:\moodle\_qoder_tiaanianggong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
     assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))

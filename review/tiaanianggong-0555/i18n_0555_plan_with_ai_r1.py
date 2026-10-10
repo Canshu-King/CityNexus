@@ -19,7 +19,7 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))
+ROOT = os.environ.get("CNX_LANE_ROOT") or os.path.dirname(os.path.dirname(HERE))
 PRODUCT = os.path.join(ROOT, "frontend", "src", "features", "planning", "PlanWithAiSheet.tsx")
 DICT = os.path.join(ROOT, "frontend", "src", "i18n", "LocaleContext.tsx")
 

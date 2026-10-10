@@ -247,7 +247,7 @@ export function statusCopy(
   }
   if (s.startsWith("HTTP_5")) {
     return {
-      title: zh ? "服务端处理失败" : "The server failed to finish",
+      title: t("planning.theServerFailedToFinish"),
       body: zh
         ? "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。"
         : "The server errored out — not your request. Your trip is unchanged; retry later and keep the technical detail if it repeats.",
@@ -267,7 +267,7 @@ export function statusCopy(
   }
   if (s === "BASELINE_UNAVAILABLE") {
     return {
-      title: zh ? "无法确认这次的结果" : "We could not confirm this run",
+      title: t("planning.weCouldNotConfirmThisRun"),
       body: zh
         ? "无法确认本次是否生成了新方案，请重试或刷新页面。"
         : "We could not confirm whether this run produced new plans. Please retry or refresh.",
@@ -276,7 +276,7 @@ export function statusCopy(
   }
   if (s === "NO_PLANS_PRODUCED") {
     return {
-      title: zh ? "没有生成可行方案" : "No usable plans were produced",
+      title: t("planning.noUsablePlansWereProduced"),
       body: zh
         ? "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。"
         : "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
@@ -285,7 +285,7 @@ export function statusCopy(
   }
   if (s.includes("SKIPPED_EXTERNAL_DEPENDENCY") || s.includes("EXTERNAL")) {
     return {
-      title: zh ? "AI 暂时不可用" : "AI is unavailable right now",
+      title: t("planning.aIIsUnavailableRightNow"),
       body: zh
         ? "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。"
         : "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
@@ -294,7 +294,7 @@ export function statusCopy(
   }
   if (s === "RUNNING" || s === "PENDING" || s === "QUEUED") {
     return {
-      title: zh ? "正在规划…" : "Planning…",
+      title: t("planning.planning"),
       body: zh ? "正在处理你的需求。" : "Working on your request.",
       tone: "busy",
     };
