@@ -40,3 +40,15 @@
 ## 枝与回验
 - 推枝命令原样 `git push origin HEAD:refs/heads/review/路牌工甲-0557-r1`，回验命令原样 `git ls-remote origin refs/heads/review/路牌工甲-0557-r1` 回 `783406a9d75b7a51dc0a2e689d1a2d469b7483ad`，与提交那笔代码时的 `git rev-parse HEAD` 逐字相同（一枚可 cat-file 回 commit）；本件自身入账后枝尖会再前进一笔（读数件那一笔），所以枝尖一律以 `ls-remote` 现读为准，不引本件里写过的数。
 - 相对起点那枚尖，本枝逐字 numstat：`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 1 行增 1 行删、`frontend/src/i18n/LocaleContext.tsx` 2 行增 0 行删、读数目录若干件；产品面改动共两枚文件。
+
+## 并到新尖之后的复跑（第二轮，现读）
+- 新尖现取：命令原样 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 `8b3d9a9a8b871f382dd75a8d9c346c55a7c3b85e`（一枚可 cat-file 回 commit）；本枝 `git merge --no-edit` 那一步退出码 0，且合并没碰那枚组件文件（一次 `git diff --numstat 我上一笔 HEAD -- 该文件` 回空）。
+- 坐标复核：字典英文侧仍在 `frontend/src/i18n/LocaleContext.tsx:654`；中文侧从 1961 漂到 `frontend/src/i18n/LocaleContext.tsx:1995`（别人在同文件前插了 68 行，一次 numstat 读数）；调用点仍 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:407`。
+- 闸：`node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、错误 0 条；`npm run build` 退出码 0、`built in 7.25s`。
+- 字典两侧对齐（本地尺，已先在同一枚尖上与他那把校准过）：KEYS_TOTAL 1173、KEYS_BOTH 1173、单侧 0 枚、重复 0 枚，探针 `discovery.technicalDetail` 回 en=[654] zh=[1995]。
+
+## 自报：一把尺先前会造假读数，已修并重测
+- 缺陷：第一版 `one_file_ternary_count_r1.py:1` 把仓库路径写死、又不看 `git show` 的退出码，读不到就当空内容，于是把「没读到」报成「零命中」。
+- 修法：`one_file_ternary_count_r2.py:1` 把仓库变成参数、ref 先 `rev-parse --verify`、`git show` 非零退出就 ABORT、blob 空也 ABORT。
+- 用修好的尺重测（现读）：改前那枚尖在该文件命中 1 处，逐字是第 407 行 `{locale.startsWith("zh") ? "技术详情" : "Technical detail"}`；改后本枝命中 0 处；两枚 blob 逐字 `708d616dcfc06a5c693116f6ae8b27e231ad1c4c` 与 `7f3f448fe0e01678cab404078be79df66087789c`（都可 cat-file）。
+- 影响点名：我 1750 那块里「改后命中 0 处」这条结论不变，但当时那条的测量路径无效，以本块这两行为准；其余读数（闸、对齐尺、两语文案）本来就是在自己树里跑的，不受影响。
