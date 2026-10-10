@@ -466,6 +466,9 @@ export function BootstrapDiscoveryPanel({
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
+    // Invalidate pending A Pocket Walk mutations before any B state renders.
+    pocketRequestGeneration.current += 1;
+    pocketClearPromiseRef.current = null;
     sourceKindRef.current = "MANUAL_PUBLIC_CENTER";
     try {
       pendingWindowRef.current?.close();
@@ -546,6 +549,9 @@ export function BootstrapDiscoveryPanel({
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
+    // Prior Journey requests must never rehydrate the new Journey's card.
+    pocketRequestGeneration.current += 1;
+    pocketClearPromiseRef.current = null;
     setSourceKind("MANUAL_PUBLIC_CENTER");
     setOutingIntent(null);
     setLatitude("");
@@ -1113,8 +1119,12 @@ export function BootstrapDiscoveryPanel({
   };
 
   const clearPocketWalkPersisted = async (notice = false) => {
+    const fence = captureDiscoveryFence();
     if (pocketClearPromiseRef.current) await pocketClearPromiseRef.current;
+    if (!isCurrentDiscovery(fence)) return;
     const requestGeneration = ++pocketRequestGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && pocketRequestGeneration.current === requestGeneration;
     const hadSavedPocket = pocketWalk !== null;
     setPocketWalk(null);
     setPocketShareConsent(false);
@@ -1124,10 +1134,10 @@ export function BootstrapDiscoveryPanel({
     const pending = (async () => {
       try {
         await cityNexusApi.clearBootstrapPocketWalk(journeyId);
-        if (pocketRequestGeneration.current !== requestGeneration) return;
+        if (!stillCurrent()) return;
         if (notice) setPocketWalkMessage("Pocket Walk cleared. Save the new order when you are ready.");
       } catch (error) {
-        if (pocketRequestGeneration.current !== requestGeneration) return;
+        if (!stillCurrent()) return;
         setPocketWalkMessage(error instanceof Error ? error.message : "The saved Pocket Walk could not be cleared.");
       }
     })();
@@ -1150,8 +1160,12 @@ export function BootstrapDiscoveryPanel({
       setPocketWalkMessage("The saved order is stale. Choose the two public stops again.");
       return;
     }
+    const fence = captureDiscoveryFence();
     if (pocketClearPromiseRef.current) await pocketClearPromiseRef.current;
+    if (!isCurrentDiscovery(fence)) return;
     const requestGeneration = ++pocketRequestGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && pocketRequestGeneration.current === requestGeneration;
     setPocketWalkBusy(true);
     setPocketWalkMessage(null);
     try {
@@ -1160,18 +1174,18 @@ export function BootstrapDiscoveryPanel({
         second_shortlist_id: second.shortlist_id,
         max_walk_minutes: pocketWalkBudget,
       });
-      if (pocketRequestGeneration.current !== requestGeneration) return;
+      if (!stillCurrent()) return;
       setPocketWalk(saved);
       setPocketWalkBudget(saved.max_walk_minutes);
       setPocketShareConsent(false);
       setPocketShareMapLink(false);
       setPocketWalkMessage("Pocket Walk saved privately for this signed member. Map links still require fresh consent.");
     } catch (error) {
-      if (pocketRequestGeneration.current === requestGeneration) {
+      if (stillCurrent()) {
         setPocketWalkMessage(error instanceof Error ? error.message : "The Pocket Walk could not be saved.");
       }
     } finally {
-      if (pocketRequestGeneration.current === requestGeneration) setPocketWalkBusy(false);
+      if (stillCurrent()) setPocketWalkBusy(false);
     }
   };
 
@@ -1180,6 +1194,13 @@ export function BootstrapDiscoveryPanel({
     const firstSource = safeOsmSourceUrl(pocketWalk.first_stop.source_url);
     const secondSource = safeOsmSourceUrl(pocketWalk.second_stop.source_url);
     if (!firstSource || !secondSource) return null;
+    const firstSaved = shortlist.find((item) => item.shortlist_id === pocketWalk.first_stop.shortlist_id);
+    const secondSaved = shortlist.find((item) => item.shortlist_id === pocketWalk.second_stop.shortlist_id);
+    const reviewedMapLink = pocketShareMapLink && twoStopFallbackUrl && firstSaved && secondSaved
+      ? validatedPublicTwoStopWalkingUrl(twoStopFallbackUrl, firstSaved, secondSaved)
+      : null;
+    // A map link released for a previous private pair must not enter a share.
+    if (pocketShareMapLink && !reviewedMapLink) return null;
     const sample = [pocketWalk.first_stop, pocketWalk.second_stop]
       .some((stop) => /TEST_PROVIDER|UNVERIFIED|SIMULAT/i.test(stop.source_provenance));
     const lines = [
@@ -1194,8 +1215,8 @@ export function BootstrapDiscoveryPanel({
       `Walking budget: ${pocketWalk.max_walk_minutes === null ? "not declared" : `${pocketWalk.max_walk_minutes} minutes (human-declared)`}`,
       "Opening, cost, accessibility, arrival, and guaranteed ETA remain unknown.",
     ];
-    if (pocketShareMapLink && twoStopFallbackUrl) {
-      lines.push("Authorized public-to-public walking map link (shared separately by the traveler):", twoStopFallbackUrl);
+    if (reviewedMapLink) {
+      lines.push("Authorized public-to-public walking map link (shared separately by the traveler):", reviewedMapLink);
     }
     return lines.join("\n");
   };
@@ -2570,7 +2591,12 @@ export function BootstrapDiscoveryPanel({
                       type="checkbox"
                       data-testid="bootstrap-pocket-share-map-checkbox"
                       checked={pocketShareMapLink}
-                      onChange={(event) => setPocketShareMapLink(event.target.checked)}
+                      onChange={(event) => {
+                        // Changing the recipient-visible payload revokes consent
+                        // granted for the old share preview.
+                        setPocketShareMapLink(event.target.checked);
+                        setPocketShareConsent(false);
+                      }}
                     />
                     Include the already authorized public-to-public map link in this share.
                   </label>
