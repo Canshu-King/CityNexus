@@ -58,13 +58,21 @@ export function parsePublicMapLink(value: string): PublicCityCenter | null {
   try {
     const url = new URL(value.trim());
     const queryKeys = [...url.searchParams.keys()];
+    const rawLatitude = url.searchParams.get("mlat");
+    const rawLongitude = url.searchParams.get("mlon");
+    // Number("") is 0; a blank URL coordinate must never become an
+    // apparently deliberate public search center at the equator.
     const hasQueryPair =
       queryKeys.length === 2 &&
       queryKeys.every((key) => key === "mlat" || key === "mlon") &&
       url.searchParams.getAll("mlat").length === 1 &&
-      url.searchParams.getAll("mlon").length === 1;
-    const queryLatitude = Number(url.searchParams.get("mlat"));
-    const queryLongitude = Number(url.searchParams.get("mlon"));
+      url.searchParams.getAll("mlon").length === 1 &&
+      rawLatitude !== null &&
+      rawLatitude.trim() !== "" &&
+      rawLongitude !== null &&
+      rawLongitude.trim() !== "";
+    const queryLatitude = rawLatitude?.trim() ? Number(rawLatitude) : NaN;
+    const queryLongitude = rawLongitude?.trim() ? Number(rawLongitude) : NaN;
     const hashMatch = url.hash.match(/^#map=([^/]+)\/([^/]+)\/([^/]+)$/);
     const hashZoom = hashMatch ? Number(hashMatch[1]) : NaN;
     const hashLatitude = hashMatch ? Number(hashMatch[2]) : NaN;
