@@ -235,7 +235,13 @@ function validatedPublicTwoStopWalkingUrl(
     const keys = [...url.searchParams.keys()];
     const parsePair = (raw: string | null) => {
       const pair = raw?.split(",") ?? [];
-      return { latitude: Number(pair[0]), longitude: Number(pair[1]), length: pair.length };
+      // Blank components must not become valid zero-valued coordinates.
+      const valid = pair.length === 2 && pair.every((value) => value.trim() !== "");
+      return {
+        latitude: valid ? Number(pair[0]) : NaN,
+        longitude: valid ? Number(pair[1]) : NaN,
+        length: pair.length,
+      };
     };
     const origin = parsePair(url.searchParams.get("origin"));
     const destination = parsePair(url.searchParams.get("destination"));
@@ -328,6 +334,7 @@ export function BootstrapDiscoveryPanel({
   const discoveryGeneration = useRef(0);
   const gpsRequestGeneration = useRef(0);
   const citySearchGeneration = useRef(0);
+  const twoStopReleaseGeneration = useRef(0);
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
@@ -761,6 +768,17 @@ export function BootstrapDiscoveryPanel({
 
   const removeShortlistItem = async (item: BootstrapShortlistItem) => {
     const fence = captureDiscoveryFence();
+    // A removed stop invalidates any already-authorized fallback and an
+    // in-flight two-stop release, including before the DELETE returns.
+    if (twoStopOrder.includes(item.shortlist_id)) {
+      twoStopReleaseGeneration.current += 1;
+      try { pendingWindowRef.current?.close(); } catch { /* tab already reclaimed */ }
+      pendingWindowRef.current = null;
+      setTwoStopOrder((ids) => ids.filter((id) => id !== item.shortlist_id));
+      setTwoStopConsent(false);
+      setTwoStopFallbackUrl(null);
+      setTwoStopNotice(null);
+    }
     setShortlistBusy(item.shortlist_id);
     setMessage(null);
     try {
@@ -779,6 +797,7 @@ export function BootstrapDiscoveryPanel({
   };
 
   const setTwoStopPosition = (shortlistId: string, position: 1 | 2) => {
+    twoStopReleaseGeneration.current += 1;
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
     setTwoStopConsent(false);
@@ -790,6 +809,7 @@ export function BootstrapDiscoveryPanel({
   };
 
   const clearTwoStopPosition = (shortlistId: string) => {
+    twoStopReleaseGeneration.current += 1;
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
     setTwoStopConsent(false);
@@ -813,6 +833,9 @@ export function BootstrapDiscoveryPanel({
       return;
     }
     const fence = captureDiscoveryFence();
+    const releaseGeneration = twoStopReleaseGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && twoStopReleaseGeneration.current === releaseGeneration;
     setTwoStopBusy(true);
     setMessage(null);
     setTwoStopNotice(null);
@@ -830,7 +853,7 @@ export function BootstrapDiscoveryPanel({
         second_shortlist_id: second.shortlist_id,
         public_map_consent: true,
       });
-      if (!isCurrentDiscovery(fence)) {
+      if (!stillCurrent()) {
         try { pendingWindow?.close(); } catch { /* browser reclaimed it */ }
         return;
       }
@@ -846,27 +869,34 @@ export function BootstrapDiscoveryPanel({
       if (!publicMapUrl) {
         throw new Error("The authorized two-stop walking URL did not match both saved public coordinates.");
       }
+      let sentToMap = false;
       if (pendingWindow && !pendingWindow.closed) {
         try {
           pendingWindow.location.replace(publicMapUrl);
+          sentToMap = true;
         } catch {
           setTwoStopFallbackUrl(publicMapUrl);
         }
       } else {
         setTwoStopFallbackUrl(publicMapUrl);
       }
-      setTwoStopNotice("Public-to-public walking directions opened. Route time, opening, price, arrival, and feasibility remain UNKNOWN; this draft Journey was not started.");
+      setTwoStopNotice(
+        (sentToMap
+          ? "Public-to-public walking directions handed off to the external map. "
+          : "The browser did not open the map automatically; use the authorized link below. ") +
+        "Route time, opening, price, arrival, and feasibility remain UNKNOWN; this draft Journey was not started.",
+      );
       setTwoStopConsent(false);
     } catch (error) {
       try { pendingWindow?.close(); } catch { /* browser reclaimed it */ }
-      if (isCurrentDiscovery(fence)) {
+      if (stillCurrent()) {
         setTwoStopNotice(null);
         setTwoStopFallbackUrl(null);
         setMessage(error instanceof Error ? error.message : "The two-stop walking release was cancelled.");
       }
     } finally {
       if (pendingWindowRef.current === pendingWindow) pendingWindowRef.current = null;
-      if (isCurrentDiscovery(fence)) setTwoStopBusy(false);
+      if (stillCurrent()) setTwoStopBusy(false);
     }
   };
 
