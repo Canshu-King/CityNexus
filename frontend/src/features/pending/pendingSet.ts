@@ -34,9 +34,19 @@ export interface PendingCandidate {
   name: string;
   category: string | null;
   provider_key: string | null;
+  external_id: string | null;
   status: string | null;
   materialized_place_id: string | null;
   captured_at: string | null;
+  opening_hours: {
+    status: string | null;
+    raw: string | null;
+  };
+  cost_evidence: {
+    status: string | null;
+    amount_minor: number | null;
+    currency: string | null;
+  };
 }
 
 /** The two place columns this screen needs (`id` to join a plan stop, `category` to filter on). */
@@ -57,7 +67,13 @@ export interface PendingRow {
   tripEnd: string | null;
   stateToken: string | null;
   providerKey: string | null;
+  externalId: string | null;
   placeId: string | null;
+  openingStatus: string | null;
+  openingRaw: string | null;
+  costStatus: string | null;
+  costAmountMinor: number | null;
+  costCurrency: string | null;
 }
 
 export interface PendingDerivation {
@@ -161,7 +177,13 @@ export function derivePendingSet(input: {
       tripEnd,
       stateToken: candidate.status,
       providerKey: candidate.provider_key,
+      externalId: candidate.external_id,
       placeId: materialised,
+      openingStatus: candidate.opening_hours.status,
+      openingRaw: candidate.opening_hours.raw,
+      costStatus: candidate.cost_evidence.status,
+      costAmountMinor: candidate.cost_evidence.amount_minor,
+      costCurrency: candidate.cost_evidence.currency,
     });
   }
 

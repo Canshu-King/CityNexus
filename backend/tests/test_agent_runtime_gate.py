@@ -234,6 +234,9 @@ def test_agt10_19_catalog_contains_only_v1_allowlist():
         "request_replan",
         "accept_replan",
     }
+    # activate_standby is available only on the typed V2 surface; the
+    # unversioned V1 endpoint is a compatibility contract.
+    assert "activate_standby" not in names
     assert not names & {"payment", "refund", "modify_c4", "set_policy", "raw_sql", "terminal"}
 
 

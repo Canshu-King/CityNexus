@@ -1,0 +1,20 @@
+{
+  "round": "R22",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:/moodle/CityNexus-Revolution-RealTrip-Recovery",
+  "starting_sha": "cd1e5dd214f3ea7e52198674487ffa7d1cbf66e7",
+  "implementation_sha": "01b1a5f7c17115308fa2ced16cc3a99916b6cf41",
+  "final_experimental_code_sha": "c9fb37f9d1c20b7341cf2a3bc2f004408ba494f3",
+  "journey_id": "fd29878e-8c6b-4bba-8a29-72193a710b59",
+  "agent_run_id": "41426e1b-bb9a-4cda-a0af-b968047bd7b3",
+  "agent_provider": "hermes",
+  "agent_model": "cn:deepseek-v4.1-flash",
+  "estimate_authority": false,
+  "event": {"id": "79eacfd8-a3d9-4149-bf40-8d386ee5ecff", "type": "OPPORTUNITY_WINDOW", "provenance": "SYSTEM_DERIVED", "status": "RESOLVED", "resolution_reason": "OPPORTUNITY_CONSUMED"},
+  "proposal": {"id": "c108032b-e225-4984-a4e3-a0bf3954baaa", "family": "F4_OPPORTUNITY_INSERTION", "status": "ACCEPTED", "parent_plan": "bf686752-bf9e-55e8-9de0-ebf739f83b85", "active_plan": "bb321722-3534-4938-8841-7533879db171", "added_place": "real-place-b47a20314c81d5a81381d4a4", "hard_constraints_passed": true, "protected_commitments_preserved": true},
+  "approval": {"id": "313c7257-7bed-47e4-8147-8c7656a73d70", "required_decision": "REQUIRE_CONFIRMATION", "method": "USER_CONFIRMATION", "status": "CONSUMED"},
+  "new_place": {"id": "real-place-b47a20314c81d5a81381d4a4", "provider": "overpass", "external_id": "overpass:node/2465643503", "opening_status": "OFFICIAL_WEB_VERIFIED", "cost_status": "VERIFIED_PROVIDER", "official_url": "https://www.city.nara.lg.jp/site/shisetsu/60140.html"},
+  "mobility": {"snapshot_id": "711b116d-a847-4032-ad0e-e61559c97246", "provider": "valhalla-http", "facts": [{"from": "real-place-22cf72809897ff4c7f312fcf", "to": "real-place-b47a20314c81d5a81381d4a4", "minutes": 22, "hard_eligible": true}, {"from": "real-place-b47a20314c81d5a81381d4a4", "to": "real-place-470b4d1080037ab7f7e9b562", "minutes": 55, "hard_eligible": true}]},
+  "final": {"journey_status": "COMPLETED", "journey_active_plan": "bb321722-3534-4938-8841-7533879db171", "twin_active_plan": "bb321722-3534-4938-8841-7533879db171", "twin_current_activity": null, "selectable": true, "authority_state": "LIVE_PROVIDER_FACTS"},
+  "focused_tests": {"passed": 60, "failed": 0, "warnings": 1}
+}

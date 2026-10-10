@@ -21,7 +21,7 @@ from fastapi.testclient import TestClient
 import app.main as main_module
 from app.agent import guardian as guardian_module
 from app.agent.guardian import scan_guardian
-from app.db.models import AgentRun, AgentRunStep, GuardianRun, Journey
+from app.db.models import AgentRun, AgentRunStep, Event, GuardianRun, Journey
 from app.db.session import SessionLocal
 
 client = TestClient(main_module.app)
@@ -116,7 +116,7 @@ class _StubRuntime:
         self.requested_id = requested_id
         self.accepted_id = accepted_id
 
-    def run(self, session, *, journey, mission):
+    def run(self, session, *, journey, mission, max_steps=12):
         run_id = str(uuid4())
         session.add(
             AgentRun(
@@ -184,6 +184,68 @@ class _StubRuntime:
 
     def close(self) -> None:
         return None
+
+
+class _UnavailableRuntime:
+    def run(self, session, *, journey, mission, max_steps=12):
+        raise guardian_module.AgentRuntimeUnavailable("external provider unavailable")
+
+    def close(self) -> None:
+        return None
+
+
+def test_live_context_conflict_refuses_deterministic_guardian_fallback(monkeypatch):
+    journey_id, traveler_id, plan = _ready_journey()
+    _autonomous_policy(traveler_id)
+    _standing_mission(journey_id)
+    target = next(item for item in plan["activities"] if item.get("place_id"))
+
+    with SessionLocal() as session:
+        event = Event(
+            id=str(uuid4()),
+            journey_id=journey_id,
+            provider_key="truth-mesh",
+            provenance="SYSTEM_DERIVED",
+            event_type="CLOSURE",
+            severity="MAJOR",
+            status="DETECTED",
+            affected_activity_id=target["id"],
+            occurred_at=_now(),
+            detected_at=_now(),
+            payload_json=guardian_module.json.dumps(
+                {
+                    "context_watch_status": "CLOSED_CONFLICT",
+                    "provider_entity": "overpass:node/1",
+                    "observation_ids": ["live-observation-1"],
+                }
+            ),
+            created_at=_now(),
+        )
+        session.add(event)
+        session.commit()
+
+    monkeypatch.setattr(
+        guardian_module,
+        "configured_journey_agent",
+        lambda: _UnavailableRuntime(),
+    )
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        before_plan = journey.active_plan_version_id
+        body = scan_guardian(session, journey)
+
+    assert body["status"] == "PARTIAL"
+    assert body["action_status"] == "RETRYABLE_FAILURE"
+    assert body["proposal_id"] is None
+    assert body["agent_run_id"] is None
+    assert body["active_plan_after_id"] == before_plan
+    assert body["evidence"]["policy"]["decision"] == "NO_FALLBACK"
+    assert (
+        body["evidence"]["inference"]["controller"]
+        == "configured_external_agent_required"
+    )
+    assert body["evidence"]["inference"]["deterministic_fallback_allowed"] is False
 
 
 def test_model_path_evidence_names_the_accepted_proposal(monkeypatch):

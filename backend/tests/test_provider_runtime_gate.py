@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import json
 from uuid import uuid4
 
 import httpx
@@ -15,10 +16,30 @@ from app.integrations.mobility.snapshot_capture import (
 from app.integrations.mobility.valhalla_http import ValhallaHTTPMobilityProvider
 from app.integrations.mock.providers import MockMobilityProvider
 from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
+from app.execution.route_session_contract import fact_is_eligible_for_live_readiness
+from app.integrations.mobility.valhalla_http import TEST_PROVIDER_EMULATOR
 from app.replanning.feasibility import FeasibilityActivity, build_context, evaluate_feasibility
+from app.db.models import PlanVersion
+from app.db.session import SessionLocal
 from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
+
+
+@pytest.mark.parametrize("base_url", ["http://127.0.0.1:9999", "http://valhalla.test"])
+def test_loopback_and_reserved_valhalla_emulators_are_not_live(base_url: str):
+    with httpx.Client(transport=httpx.MockTransport(lambda _request: httpx.Response(200))) as http_client:
+        provider = ValhallaHTTPMobilityProvider(
+            client=http_client,
+            base_url=base_url,
+            place_lookup=lambda key: {"latitude": 39.0, "longitude": 116.0},
+        )
+    assert provider.fact_quality("origin", "destination") == TEST_PROVIDER_EMULATOR
+    assert not fact_is_eligible_for_live_readiness({
+        "provider": provider.provider_key,
+        "provenance": provider.fact_quality("origin", "destination"),
+        "duration_min": 5,
+    })
 
 
 class _Provider:
@@ -275,6 +296,84 @@ def test_prt06_twin_reads_persisted_snapshot_without_runtime_capture(monkeypatch
     assert twin.json()["context"]["mobility"]["provider"] == "valhalla"
 
 
+def test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment():
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
+    jid = ids["journey_id"]
+    generated = client.post(f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1})
+    assert generated.status_code == 201, generated.text
+    plan_id = generated.json()[0]["id"]
+    selected = client.post(f"/api/v1/journeys/{jid}/plans/{plan_id}/select")
+    assert selected.status_code == 200, selected.text
+
+    snapshot_id = "twin-live-snapshot"
+    with SessionLocal() as session:
+        activities = session.query(main_module.Activity).filter(
+            main_module.Activity.plan_version_id == plan_id
+        ).order_by(main_module.Activity.sequence_no).all()
+        assert len(activities) >= 2
+    evidence = {
+        "snapshot_id": snapshot_id,
+        "source_provider": "valhalla-http",
+        "degraded": False,
+        "facts": [
+            {
+                "origin_key": activities[0].place_id,
+                "destination_key": activities[1].place_id,
+                "minutes": 42,
+                "mode": "WALK",
+                "provider": "valhalla-http",
+                "fact_quality": LIVE_PROVIDER_CAPTURE,
+                "route_provenance": LIVE_PROVIDER_CAPTURE,
+                "route_geometry": [[117.0, 39.0], [117.01, 39.01]],
+            }
+        ],
+    }
+    with SessionLocal() as session:
+        plan = session.get(PlanVersion, plan_id)
+        assert plan is not None
+        plan.mobility_snapshot_id = snapshot_id
+        plan.mobility_evidence_json = json.dumps(evidence)
+        session.commit()
+
+    twin = client.get(f"/api/v1/journeys/{jid}/twin")
+    assert twin.status_code == 200, twin.text
+    mobility = twin.json()["context"]["mobility"]
+    assert mobility["provider"] == "valhalla-http"
+    assert mobility["source_provider"] == "valhalla-http"
+    assert mobility["snapshot_id"] == snapshot_id
+    assert mobility["source"] == "selected-plan-frozen-evidence"
+    assert mobility["fact_quality"] == [LIVE_PROVIDER_CAPTURE]
+    assert mobility["route_provenance"] == [LIVE_PROVIDER_CAPTURE]
+    assert mobility["used_edge_ids"] == [[activities[0].place_id, activities[1].place_id]]
+    assert mobility["used_edges"][0]["mode"] == "WALK"
+    assert mobility["used_edges"][0]["minutes"] == 42
+    execution = twin.json()["context"]["execution"]
+    assert execution["cursor_status"] == "ABSENT_FALLBACK"
+    assert execution["now_activity_id"] == activities[0].id
+    assert execution["next_activity_id"] == activities[1].id
+    assert execution["next_leg_id"] == f"plan-evidence:{plan_id}:0"
+    assert execution["next_mode"] == "WALK"
+    assert execution["next_eta_min"] == 42
+
+    experience = client.get(f"/api/v1/journeys/{jid}/experience")
+    assert experience.status_code == 200, experience.text
+    active_plan = experience.json()["active_plan"]
+    assert active_plan["id"] == plan_id
+    assert active_plan["mobility_evidence"]["used_edge_ids"] == [
+        [activities[0].place_id, activities[1].place_id]
+    ]
+    assert len(active_plan["legs"]) == 1
+    assert active_plan["legs"][0]["duration_min"] == 42
+    assert active_plan["legs"][0]["mode"] == "WALK"
+    assert active_plan["mobility_evidence"]["used_edges"][0]["mode"] == "WALK"
+    assert active_plan["legs"][0]["cost_amount_minor"] is None
+    assert active_plan["legs"][0]["geometry"]["geometry"]["coordinates"] == [
+        [117.0, 39.0],
+        [117.01, 39.01],
+    ]
+    assert experience.json()["provider_mesh"]["mobility"]["valhalla"]["status"] == "CAPTURED"
+
+
 def test_prt07_offline_golden_replan_remains_operational():
     jid, _plan, event = _prepare_disruption()
     chosen, proposals = _generate_replan(jid, event)
@@ -351,6 +450,7 @@ def test_prt08_mocktransport_valhalla_to_snapshot_to_gate_chain():
     evidence = snapshot.to_evidence()
     assert evidence["source_provider"] == "valhalla-http"
     assert evidence["facts"][0]["minutes"] == 10
-    assert evidence["facts"][0]["route_provenance"] == "LIVE_PROVIDER_CAPTURE"
+    assert evidence["facts"][0]["route_provenance"] == "TEST_PROVIDER_EMULATOR"
+    assert not fact_is_eligible_for_live_readiness(evidence["facts"][0])
     assert evidence["facts"][0]["cost_provenance"] == "CITYNEXUS_COST_ESTIMATE"
     assert evidence["facts"][0]["time_basis"] == "VALHALLA_ROUTE_CAPTURED_AT"

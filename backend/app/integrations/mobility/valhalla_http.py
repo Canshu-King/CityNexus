@@ -1,12 +1,35 @@
 from __future__ import annotations
 
+import ipaddress
 import math
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
+from urllib.parse import urlsplit
 
 import httpx
 
 from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
+
+TEST_PROVIDER_EMULATOR = "TEST_PROVIDER_EMULATOR"
+
+
+def _is_test_endpoint(base_url: str) -> bool:
+    """Recognize loopback and reserved test hosts that cannot prove live routing."""
+
+    try:
+        hostname = (urlsplit(str(base_url)).hostname or "").rstrip(".").casefold()
+    except ValueError:
+        return True
+    if not hostname:
+        return True
+    try:
+        address = ipaddress.ip_address(hostname)
+    except ValueError:
+        return (
+            hostname in {"localhost", "localhost.localdomain"}
+            or hostname.endswith((".localhost", ".test", ".invalid", ".example"))
+        )
+    return address.is_loopback or address.is_unspecified
 
 
 @dataclass(frozen=True)
@@ -38,7 +61,6 @@ class ValhallaHTTPMobilityProvider:
     """
 
     provider_key = "valhalla-http"
-    capture_provenance = "LIVE_PROVIDER_CAPTURE"
     time_basis = "VALHALLA_ROUTE_CAPTURED_AT"
 
     def __init__(
@@ -49,14 +71,32 @@ class ValhallaHTTPMobilityProvider:
         place_lookup: Callable[[str], Mapping[str, Any]],
         costing: str = "pedestrian",
         timeout_s: float = 10.0,
+        test_provider: bool = False,
     ) -> None:
         if timeout_s <= 0:
             raise ValueError("Valhalla timeout must be positive")
         self._client = client
         self._base_url = base_url.rstrip("/")
         self._place_lookup = place_lookup
-        self._costing = costing
+        self._costing = str(costing).strip().lower()
         self._timeout_s = timeout_s
+        self.capture_provenance = (
+            TEST_PROVIDER_EMULATOR
+            if test_provider or _is_test_endpoint(self._base_url)
+            else LIVE_PROVIDER_CAPTURE
+        )
+
+    @property
+    def mode(self) -> str | None:
+        """Expose the product mode named by the live Valhalla costing request."""
+
+        return {
+            "pedestrian": "WALK",
+            "auto": "AUTO",
+            "bicycle": "BICYCLE",
+            "transit": "TRANSIT",
+            "multimodal": "TRANSIT",
+        }.get(self._costing)
 
     def _location(self, place_id: str) -> dict[str, float]:
         item = self._place_lookup(place_id)
@@ -120,14 +160,14 @@ class ValhallaHTTPMobilityProvider:
         return self.estimate(origin_place_id, destination_place_id).duration_min
 
     def fact_quality(self, origin_place_id: str, destination_place_id: str) -> str:
-        """Valhalla returns a measured route, so it attests LIVE explicitly.
+        """Return the configured/deployment-derived evidence class.
 
-        Hard feasibility trusts this declaration, not the provider's name
-        (V4 #2).  If a request fails, the capture records a failure and the leg
-        is unavailable — it never falls back to a synthetic default here.
+        Loopback and reserved test hosts, plus explicitly configured remote
+        emulators, can return plausible geometry but are never live evidence.
+        If a request fails, capture records a failure and never invents a route.
         """
 
-        return LIVE_PROVIDER_CAPTURE
+        return self.capture_provenance
 
     def status_capabilities(self) -> dict[str, Any]:
         """Read deployment capabilities before labelling traffic as live."""

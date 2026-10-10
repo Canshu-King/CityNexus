@@ -3,14 +3,18 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 
+from demo_stage import demo_reset_headers
 from fastapi.testclient import TestClient
 
 import app.main as main_module
 from app.db.models import TravelerPreferenceEvidence
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
-from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
-from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
+from app.integrations.discovery.real_city import (
+    canonical_cost_evidence,
+    cost_evidence_from_tags,
+    normalize_opening_hours,
+)
 
 client = TestClient(main_module.app)
 
@@ -20,6 +24,56 @@ def test_v7_1_trust_fixes_are_explicit() -> None:
     hours = normalize_opening_hours("Mo-Fr 09:00-18:00; Sa 10:00-14:00")
     assert hours["weekday_intervals"][0]["days"] == ["Mo", "Tu", "We", "Th", "Fr"]
     assert hours["weekday_intervals"][1]["days"] == ["Sa"]
+
+
+def test_osm_fee_boolean_is_not_currency_and_adult_charge_is_authoritative() -> None:
+    unknown = cost_evidence_from_tags({"fee": "yes"}, source="overpass")
+    assert unknown == {
+        "status": "UNKNOWN",
+        "amount_minor": None,
+        "currency": "CNY",
+        "source": "overpass",
+    }
+
+    known = cost_evidence_from_tags(
+        {"fee": "yes", "charge:adult": "1200 JPY"}, source="nominatim"
+    )
+    assert known == {
+        "status": "KNOWN",
+        "amount_minor": 1200,
+        "currency": "JPY",
+        "source": "nominatim",
+    }
+
+    free = cost_evidence_from_tags({"fee": "no"}, source="overpass")
+    assert free == {
+        "status": "KNOWN",
+        "amount_minor": 0,
+        "currency": None,
+        "currency_agnostic": True,
+        "evidence_basis": "OSM_FEE_NO",
+        "source": "overpass",
+    }
+    contradictory = cost_evidence_from_tags(
+        {"fee": "no", "charge:adult": "1200 JPY"}, source="overpass"
+    )
+    assert contradictory["amount_minor"] == 1200
+    assert contradictory["currency"] == "JPY"
+
+
+def test_cached_osm_fee_no_normalizes_old_zero_cny_without_promoting_bare_zero() -> None:
+    normalized = canonical_cost_evidence(
+        {"status": "KNOWN", "amount_minor": 0, "currency": "CNY"},
+        {"fee": "no"},
+    )
+    assert normalized["currency"] is None
+    assert normalized["currency_agnostic"] is True
+    assert normalized["evidence_basis"] == "OSM_FEE_NO"
+
+    bare_zero = canonical_cost_evidence(
+        {"status": "UNKNOWN", "amount_minor": 0, "currency": "CNY"}, {}
+    )
+    assert bare_zero == {"status": "UNKNOWN", "amount_minor": 0, "currency": "CNY"}
 
     ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     with SessionLocal() as session:

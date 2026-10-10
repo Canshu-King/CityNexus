@@ -123,3 +123,9 @@ def test_authoritative_compose_persists_actual_fallback_optimizer_provenance(mon
         explanation = json.loads(plan.explanation_json)
         assert score["optimizer"] == "CITYNEXUS_DETERMINISTIC_ASSIGNMENT"
         assert explanation["optimizer_kind"] == "CITYNEXUS_DETERMINISTIC_ASSIGNMENT"
+        provenance = explanation["score_provenance"]
+        assert provenance["score_sources"]["mobility_fit"] == "selected MobilityFact duration_min and walking_min"
+        assert provenance["score_sources"]["preference_fit"] == "persisted mission/preference keys matched to provider Place category/tags"
+        assert provenance["verified_opening_count"] == len(place_ids)
+        assert provenance["verified_cost_count"] == len(place_ids)
+        assert score["total"] == plan.utility_score

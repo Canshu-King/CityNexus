@@ -156,10 +156,15 @@ class MobilitySnapshot:
         )
 
     def estimate_minutes(self, origin_key: str, destination_key: str) -> int:
-        fact = self.facts.get((origin_key, destination_key))
+        fact = self.fact_for(origin_key, destination_key)
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
         return fact.minutes
+
+    def fact_for(self, origin_key: str, destination_key: str) -> TravelEstimateFact | None:
+        """Return a persisted fact using the canonical anchor-role lookup."""
+
+        return _lookup_fact(self.facts, origin_key, destination_key)
 
     def hard_minutes(self, origin_key: str, destination_key: str) -> int:
         """Travel minutes allowed into a deterministic hard-feasibility decision.
@@ -177,7 +182,7 @@ class MobilitySnapshot:
         are trusted.
         """
 
-        fact = self.facts.get((origin_key, destination_key))
+        fact = self.fact_for(origin_key, destination_key)
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
         # True allowlist (V3-1): only an explicitly trusted quality may drive
@@ -345,3 +350,50 @@ def _normalize_geometry(value: Any) -> tuple[tuple[float, float], ...]:
         if -180 <= lon <= 180 and -90 <= lat <= 90:
             normalized.append((lon, lat))
     return tuple(normalized) if len(normalized) >= 2 else ()
+
+
+def _lookup_fact(
+    facts: Mapping[tuple[str, str], TravelEstimateFact],
+    origin_key: str,
+    destination_key: str,
+) -> TravelEstimateFact | None:
+    """Read one frozen fact across the two persisted anchor-role spellings.
+
+    Activity metadata historically used ``:ARRIVAL-anchor`` / ``:DEPARTURE-anchor``
+    while captured V12 mobility facts used lowercase role suffixes.  The place
+    identity before the role is case-sensitive; only the structural suffix is
+    normalized so this cannot turn two provider entities into one.
+    """
+
+    exact = facts.get((origin_key, destination_key))
+    if exact is not None:
+        return exact
+    for origin_variant in _anchor_role_variants(origin_key):
+        for destination_variant in _anchor_role_variants(destination_key):
+            if (origin_variant, destination_variant) == (origin_key, destination_key):
+                continue
+            fact = facts.get((origin_variant, destination_variant))
+            if fact is not None:
+                return fact
+    return None
+
+
+def _normalize_anchor_role(value: str) -> str:
+    for role in ("ARRIVAL", "DEPARTURE"):
+        suffix = f":{role}-anchor"
+        if value.endswith(suffix):
+            return f"{value[:-len(suffix)]}:{role.lower()}-anchor"
+    return value
+
+
+def _anchor_role_variants(value: str) -> tuple[str, ...]:
+    normalized = _normalize_anchor_role(value)
+    variants = [value]
+    if normalized != value:
+        variants.append(normalized)
+    for role in ("arrival", "departure"):
+        suffix = f":{role}-anchor"
+        if normalized.endswith(suffix):
+            variants.append(f"{normalized[:-len(suffix)]}:{role.upper()}-anchor")
+            break
+    return tuple(dict.fromkeys(variants))

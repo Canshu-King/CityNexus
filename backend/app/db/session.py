@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timezone
 
 from pathlib import Path
 from typing import Generator
@@ -249,21 +250,36 @@ def _backfill_legacy_hydration_rows(connection) -> None:
 JOURNEY_ROLE_CAPABILITIES = (
     ("OWNER", "JOURNEY_READ", "member.scope.owner"),
     ("OWNER", "JOURNEY_UPDATE", "member.scope.owner"),
+    ("OWNER", "JOURNEY_EXECUTION_UPDATE", "member.scope.owner"),
     ("OWNER", "PLACE_EDIT", "member.scope.owner"),
     ("OWNER", "MEMBER_MANAGE", "member.scope.owner"),
     ("OWNER", "SHARE_GRANT_MANAGE", "member.scope.owner"),
     ("ADMIN", "JOURNEY_READ", "member.scope.admin"),
+    ("ADMIN", "JOURNEY_EXECUTION_UPDATE", "member.scope.admin"),
     ("ADMIN", "PLACE_EDIT", "member.scope.admin"),
     ("ADMIN", "MEMBER_MANAGE", "member.scope.admin"),
     ("COLLABORATOR", "JOURNEY_READ", "member.scope.collaborator"),
+    ("COLLABORATOR", "JOURNEY_EXECUTION_UPDATE", "member.scope.collaborator"),
     ("COLLABORATOR", "PLACE_EDIT", "member.scope.collaborator"),
 )
 
 
 def _seed_journey_acl(connection) -> int:
     """Insert the role/capability rows when the table is still empty.  Returns rows added."""
-    if connection.exec_driver_sql("SELECT COUNT(*) FROM journey_role_capabilities").scalar():
-        return 0
+    existing = int(connection.exec_driver_sql("SELECT COUNT(*) FROM journey_role_capabilities").scalar() or 0)
+    if existing:
+        # R62 adds only self-reported execution progress authority.  Backfill
+        # this narrowly on existing databases without rewriting other ACL rows.
+        added = 0
+        for role in ("OWNER", "ADMIN", "COLLABORATOR"):
+            result = connection.exec_driver_sql(
+                "INSERT OR IGNORE INTO journey_role_capabilities"
+                " (role, capability, scope_message_key, created_at)"
+                " VALUES (?, 'JOURNEY_EXECUTION_UPDATE', ?, datetime('now'))",
+                (role, f"member.scope.{role.lower()}"),
+            )
+            added += int(result.rowcount or 0)
+        return added
     for role, capability, message_key in JOURNEY_ROLE_CAPABILITIES:
         connection.exec_driver_sql(
             "INSERT INTO journey_role_capabilities"
@@ -271,6 +287,32 @@ def _seed_journey_acl(connection) -> int:
             (role, capability, message_key),
         )
     return len(JOURNEY_ROLE_CAPABILITIES)
+
+
+def _migrate_journey_execution_capability(connection) -> None:
+    """Extend the SQLite ACL vocabulary while preserving every existing grant."""
+    row = connection.exec_driver_sql(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='journey_role_capabilities'"
+    ).first()
+    schema = str(row[0] or "") if row else ""
+    if not schema or "JOURNEY_EXECUTION_UPDATE" in schema:
+        return
+    connection.exec_driver_sql(
+        "ALTER TABLE journey_role_capabilities RENAME TO journey_role_capabilities_pre_r62"
+    )
+    connection.exec_driver_sql(
+        "CREATE TABLE journey_role_capabilities ("
+        "role TEXT NOT NULL CHECK (role IN ('OWNER','ADMIN','COLLABORATOR')),"
+        "capability TEXT NOT NULL CHECK (capability IN "
+        "('JOURNEY_READ','JOURNEY_UPDATE','JOURNEY_EXECUTION_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')) ,"
+        "scope_message_key TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (role, capability))"
+    )
+    connection.exec_driver_sql(
+        "INSERT INTO journey_role_capabilities (role, capability, scope_message_key, created_at) "
+        "SELECT role, capability, scope_message_key, created_at "
+        "FROM journey_role_capabilities_pre_r62"
+    )
+    connection.exec_driver_sql("DROP TABLE journey_role_capabilities_pre_r62")
 
 
 def _table_exists(connection, name: str) -> bool:
@@ -287,6 +329,30 @@ def _table_names(connection) -> set[str]:
         for row in connection.exec_driver_sql("SELECT name FROM sqlite_master WHERE type='table'")
         if not str(row[0]).startswith("sqlite_")
     }
+
+def _migrate_private_buddy_route_location_bindings(connection) -> None:
+    """Install the R81 additive binding index and write-once guard.
+
+    The canonical table is introduced by ``db/schema.sql``. Existing R80
+    observations are intentionally left unbound: they have no durable record of
+    which accepted handoff authorized their capture and therefore fail closed.
+    Reasserting the index and trigger here makes this an idempotent ensure_schema
+    migration as well as a fresh-database schema change.
+    """
+
+    table = "private_buddy_route_location_bindings"
+    if not _table_exists(connection, table):
+        return
+    connection.exec_driver_sql(
+        "CREATE INDEX IF NOT EXISTS idx_private_buddy_route_bindings_context_expiry "
+        "ON private_buddy_route_location_bindings "
+        "(journey_id, handoff_id, journey_member_id, traveler_id, expires_at)"
+    )
+    connection.exec_driver_sql(
+        "CREATE TRIGGER IF NOT EXISTS trg_private_buddy_route_binding_no_update "
+        "BEFORE UPDATE ON private_buddy_route_location_bindings "
+        "BEGIN SELECT RAISE(ABORT, 'private buddy route location binding is immutable'); END"
+    )
 
 
 def _quarantine_existing_duplicates(connection) -> None:
@@ -585,6 +651,109 @@ def _quarantine_duplicates(connection) -> None:
 
 
 
+def _reconcile_agent_pending_action_status_check(connection) -> None:
+    """Upgrade pre-R32 pending-action CHECK while preserving durable history."""
+
+    row = connection.exec_driver_sql(
+        "SELECT sql FROM sqlite_master "
+        "WHERE type='table' AND name='agent_pending_actions'"
+    ).scalar()
+    if not row or "SUPERSEDED" in str(row):
+        return
+
+    columns = {
+        item[1]
+        for item in connection.exec_driver_sql(
+            "PRAGMA table_info(agent_pending_actions)"
+        )
+    }
+    required = {
+        "id",
+        "approval_id",
+        "run_id",
+        "mission_id",
+        "journey_id",
+        "originating_step_id",
+        "tool_name",
+        "arguments_json",
+        "status",
+        "result_json",
+        "error_json",
+        "created_at",
+        "claimed_at",
+        "resumed_at",
+        "updated_at",
+        "authority_receipt_id",
+        "recovery_epoch_id",
+    }
+    if not required.issubset(columns):
+        raise RuntimeError(
+            "agent_pending_actions cannot be upgraded to R32 safely"
+        )
+
+    connection.exec_driver_sql(
+        """
+        CREATE TABLE agent_pending_actions_r32_reconciled (
+            id TEXT PRIMARY KEY,
+            approval_id TEXT NOT NULL UNIQUE
+                REFERENCES action_approvals(id) ON DELETE CASCADE,
+            run_id TEXT NOT NULL
+                REFERENCES agent_runs(id) ON DELETE CASCADE,
+            mission_id TEXT NOT NULL
+                REFERENCES journey_missions(id) ON DELETE CASCADE,
+            journey_id TEXT NOT NULL
+                REFERENCES journeys(id) ON DELETE CASCADE,
+            originating_step_id TEXT
+                REFERENCES agent_run_steps(id) ON DELETE SET NULL,
+            tool_name TEXT NOT NULL,
+            arguments_json TEXT NOT NULL DEFAULT '{}',
+            status TEXT NOT NULL DEFAULT 'PENDING'
+                CHECK (status IN (
+                    'PENDING','RESUMING','RESUMED','FAILED',
+                    'EXPIRED','SUPERSEDED'
+                )),
+            result_json TEXT NOT NULL DEFAULT '{}',
+            error_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            claimed_at TEXT,
+            resumed_at TEXT,
+            updated_at TEXT NOT NULL,
+            authority_receipt_id TEXT,
+            recovery_epoch_id TEXT
+                REFERENCES recovery_epochs(id) ON DELETE SET NULL
+        )
+        """
+    )
+    connection.exec_driver_sql(
+        """
+        INSERT INTO agent_pending_actions_r32_reconciled (
+            id, approval_id, run_id, mission_id, journey_id,
+            originating_step_id, tool_name, arguments_json, status,
+            result_json, error_json, created_at, claimed_at, resumed_at,
+            updated_at, authority_receipt_id, recovery_epoch_id
+        )
+        SELECT
+            id, approval_id, run_id, mission_id, journey_id,
+            originating_step_id, tool_name, arguments_json, status,
+            result_json, error_json, created_at, claimed_at, resumed_at,
+            updated_at, authority_receipt_id, recovery_epoch_id
+        FROM agent_pending_actions
+        """
+    )
+    connection.exec_driver_sql("DROP TABLE agent_pending_actions")
+    connection.exec_driver_sql(
+        "ALTER TABLE agent_pending_actions_r32_reconciled "
+        "RENAME TO agent_pending_actions"
+    )
+    connection.exec_driver_sql(
+        "CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_run "
+        "ON agent_pending_actions(run_id, status, created_at)"
+    )
+    connection.exec_driver_sql(
+        "CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_journey "
+        "ON agent_pending_actions(journey_id, status, created_at)"
+    )
+
 def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
     """Apply the package SQL schema to an empty or existing SQLite database.
 
@@ -605,6 +774,7 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
             _quarantine_existing_duplicates(connection)
             _collapse_duplicate_active_plans(connection)
             _retire_duplicate_active_anchors(connection)
+            _prepare_shared_stop_grant_slot(connection)
             # ORD-0167: parked before the script so the new table is the one in `db/schema.sql`.
             _preserve_legacy_hydration_table(connection)
         if hasattr(raw, "executescript"):
@@ -614,11 +784,48 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 if statement.strip():
                     connection.exec_driver_sql(statement)
         if target_engine.dialect.name == "sqlite":
+            _reconcile_agent_pending_action_status_check(connection)
+            _migrate_private_buddy_route_location_bindings(connection)
             _reconcile_real_place_candidate_scope(connection)
             _backfill_legacy_hydration_rows(connection)
+            invitation_columns = {
+                row[1] for row in connection.exec_driver_sql(
+                    "PRAGMA table_info(member_place_invitations)"
+                )
+            }
+            if invitation_columns and "disclosure_snapshot_json" not in invitation_columns:
+                # Keep the exact public Place and rendezvous values the inviter
+                # reviewed. Legacy rows without a snapshot fail closed as stale.
+                connection.exec_driver_sql(
+                    "ALTER TABLE member_place_invitations "
+                    "ADD COLUMN disclosure_snapshot_json TEXT NOT NULL DEFAULT '{}'"
+                )
             journey_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journeys)")
             }
+            member_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journey_members)")
+            }
+            if member_columns and "preferences_json" not in member_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE journey_members ADD COLUMN preferences_json TEXT NOT NULL DEFAULT '{}'"
+                )
+            location_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(location_observations)")
+            }
+            if location_columns and "traveler_id" not in location_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE location_observations ADD COLUMN traveler_id TEXT REFERENCES travelers(id) ON DELETE SET NULL"
+                )
+            if location_columns and "journey_member_id" not in location_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE location_observations ADD COLUMN journey_member_id TEXT REFERENCES journey_members(id) ON DELETE SET NULL"
+                )
+            inbox_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journey_inbox_items)")
+            }
+            if inbox_columns and "reality_claim_id" not in inbox_columns:
+                connection.exec_driver_sql("ALTER TABLE journey_inbox_items ADD COLUMN reality_claim_id TEXT")
             if "planning_mode" not in journey_columns:
                 connection.exec_driver_sql(
                     "ALTER TABLE journeys ADD COLUMN planning_mode TEXT NOT NULL DEFAULT 'balanced'"
@@ -635,9 +842,31 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN aborted_at TEXT")
             if "abort_reason" not in journey_columns:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN abort_reason TEXT")
+            plan_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(plan_versions)")
+            }
+            if plan_columns and "lifecycle" not in plan_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE plan_versions ADD COLUMN lifecycle TEXT NOT NULL DEFAULT 'ACTIVE'"
+                )
+            plan_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(plan_versions)")
+            }
+            if plan_columns and "trigger_contract_json" not in plan_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE plan_versions ADD COLUMN trigger_contract_json TEXT NOT NULL DEFAULT '{}'"
+                )
+            # R18 wrote its standby marker into explanation only.  Promote that
+            # persisted intent into an explicit lifecycle without changing the
+            # Journey's one active pointer.
+            connection.exec_driver_sql(
+                "UPDATE plan_versions SET lifecycle='STANDBY' "
+                "WHERE status='CANDIDATE' AND explanation_json LIKE '%NON_ACTIVE_STANDBY%'"
+            )
             _migrate_reservation_identity(connection)
             # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
             # to what a role may do instead of inventing one per screen.
+            _migrate_journey_execution_capability(connection)
             _seed_journey_acl(connection)
             event_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(events)")
@@ -647,6 +876,72 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                     "ALTER TABLE events ADD COLUMN provenance TEXT NOT NULL DEFAULT 'SIMULATED' "
                     "CHECK (provenance IN ('SIMULATED','PROVIDER_VERIFIED','USER_REPORTED','SYSTEM_DERIVED'))"
                 )
+            # R22 adds a server-derived opportunity signal.  Existing SQLite
+            # databases carry the older event_type CHECK constraint, so rebuild
+            # only this table while preserving every historical event row.
+            event_schema_row = connection.exec_driver_sql(
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name='events'"
+            ).first()
+            event_schema = str(event_schema_row[0] or "") if event_schema_row else ""
+            # SQLite may rewrite dependent foreign-key SQL during the rename
+            # even with foreign_keys disabled.  Repair that textual reference
+            # on a retry-safe boot before any dependent insert is attempted.
+            legacy_event_refs = connection.exec_driver_sql(
+                "SELECT COUNT(*) FROM sqlite_master "
+                "WHERE sql IS NOT NULL AND sql LIKE '%events_r22_legacy%'"
+            ).scalar_one()
+            if legacy_event_refs:
+                connection.exec_driver_sql("PRAGMA writable_schema=ON")
+                connection.exec_driver_sql(
+                    "UPDATE sqlite_master SET sql=replace(sql, 'events_r22_legacy', 'events') "
+                    "WHERE sql IS NOT NULL AND sql LIKE '%events_r22_legacy%'"
+                )
+                connection.exec_driver_sql("PRAGMA writable_schema=OFF")
+                schema_version = connection.exec_driver_sql("PRAGMA schema_version").scalar_one()
+                connection.exec_driver_sql(f"PRAGMA schema_version = {int(schema_version) + 1}")
+            if event_schema and "OPPORTUNITY_WINDOW" not in event_schema:
+                connection.exec_driver_sql("PRAGMA legacy_alter_table=ON")
+                connection.exec_driver_sql("PRAGMA foreign_keys=OFF")
+                connection.exec_driver_sql("ALTER TABLE events RENAME TO events_r22_legacy")
+                connection.exec_driver_sql(
+                    """
+                    CREATE TABLE events (
+                        id TEXT PRIMARY KEY,
+                        journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                        provider_key TEXT NOT NULL,
+                        provenance TEXT NOT NULL DEFAULT 'SIMULATED'
+                            CHECK (provenance IN ('SIMULATED','PROVIDER_VERIFIED','USER_REPORTED','SYSTEM_DERIVED')),
+                        event_type TEXT NOT NULL CHECK (event_type IN (
+                            'TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY',
+                            'SERVICE_UNAVAILABLE','USER_CHANGE','OPPORTUNITY_WINDOW','OTHER'
+                        )),
+                        severity TEXT NOT NULL CHECK (severity IN ('INFO','MINOR','MAJOR','CRITICAL')),
+                        status TEXT NOT NULL CHECK (status IN ('DETECTED','ACKNOWLEDGED','RESOLVED','IGNORED')),
+                        affected_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+                        occurred_at TEXT NOT NULL,
+                        detected_at TEXT NOT NULL,
+                        resolved_at TEXT,
+                        payload_json TEXT NOT NULL DEFAULT '{}',
+                        created_at TEXT NOT NULL
+                    )
+                    """
+                )
+                connection.exec_driver_sql(
+                    """
+                    INSERT INTO events (
+                        id, journey_id, provider_key, provenance, event_type, severity,
+                        status, affected_activity_id, occurred_at, detected_at,
+                        resolved_at, payload_json, created_at
+                    )
+                    SELECT id, journey_id, provider_key, provenance, event_type, severity,
+                        status, affected_activity_id, occurred_at, detected_at,
+                        resolved_at, payload_json, created_at
+                    FROM events_r22_legacy
+                    """
+                )
+                connection.exec_driver_sql("DROP TABLE events_r22_legacy")
+                connection.exec_driver_sql("PRAGMA foreign_keys=ON")
+                connection.exec_driver_sql("PRAGMA legacy_alter_table=OFF")
             policy_columns = {
                 row[1]
                 for row in connection.exec_driver_sql("PRAGMA table_info(traveler_agent_policies)")
@@ -724,6 +1019,7 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 "reasoning_summary": "TEXT NOT NULL DEFAULT ''",
                 "is_standing": "INTEGER NOT NULL DEFAULT 0",
                 "parent_mission_id": "TEXT",
+                "clarification_json": "TEXT NOT NULL DEFAULT '{}'",
             }
             for column, declaration in mission_v2_columns.items():
                 if mission_columns and column not in mission_columns:
@@ -770,6 +1066,214 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 connection.exec_driver_sql(
                     "ALTER TABLE action_approvals ADD COLUMN required_decision TEXT NOT NULL DEFAULT 'REQUIRE_CONFIRMATION'"
                 )
+            if approval_columns and "authority_receipt_id" not in approval_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE action_approvals ADD COLUMN authority_receipt_id TEXT"
+                )
+            pending_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(agent_pending_actions)")
+            }
+            if pending_columns and "authority_receipt_id" not in pending_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE agent_pending_actions ADD COLUMN authority_receipt_id TEXT"
+                )
+            # R32: durable server-owned recovery reality epochs.  All bindings
+            # are nullable for legacy rows; new authority paths fail closed
+            # when they have no epoch.
+            if not _table_exists(connection, "recovery_epochs"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_epochs (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    generation INTEGER NOT NULL,
+                    active_plan_version_id_at_open TEXT,
+                    material_world_epoch_at_open TEXT,
+                    recovery_reality_fingerprint TEXT NOT NULL,
+                    triggering_event_ids_json TEXT NOT NULL DEFAULT '[]',
+                    status TEXT NOT NULL CHECK (status IN ('OPEN','SUPERSEDED','COMMITTED','ABANDONED')),
+                    opened_at TEXT NOT NULL,
+                    closed_at TEXT,
+                    close_reason TEXT,
+                    superseded_by_recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+                    UNIQUE(journey_id, generation)
+                    )"""
+                )
+            if not _table_exists(connection, "operator_recovery_resumes"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE operator_recovery_resumes (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    recovery_epoch_id TEXT NOT NULL REFERENCES recovery_epochs(id) ON DELETE CASCADE,
+                    event_id TEXT REFERENCES events(id) ON DELETE SET NULL,
+                    incident_fingerprint TEXT NOT NULL,
+                    standing_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+                    recovery_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+                    guardian_run_id TEXT REFERENCES guardian_runs(id) ON DELETE SET NULL,
+                    active_plan_version_id_at_block TEXT,
+                    material_world_epoch_at_block TEXT,
+                    blocked_reason TEXT NOT NULL,
+                    failure_classification TEXT NOT NULL,
+                    provider_key TEXT,
+                    model_key TEXT,
+                    status TEXT NOT NULL DEFAULT 'PENDING',
+                    next_retry_at TEXT,
+                    retry_count INTEGER NOT NULL DEFAULT 0,
+                    safe_to_resume INTEGER NOT NULL DEFAULT 1,
+                    owner_runtime_key TEXT,
+                    owner_claim_token TEXT,
+                    owner_claimed_at TEXT,
+                    last_attempt_at TEXT,
+                    resumed_at TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    UNIQUE(journey_id, recovery_epoch_id)
+                    )"""
+                )
+            if not _table_exists(connection, "recovery_discovery_attempts"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_discovery_attempts (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    recovery_epoch_id TEXT NOT NULL REFERENCES recovery_epochs(id) ON DELETE CASCADE,
+                    mission_id TEXT,
+                    guardian_run_id TEXT,
+                    query_hash TEXT NOT NULL,
+                    query TEXT NOT NULL,
+                    category TEXT,
+                    radius_m INTEGER NOT NULL DEFAULT 2500,
+                    candidate_limit INTEGER NOT NULL DEFAULT 8,
+                    status TEXT NOT NULL DEFAULT 'COMPLETED',
+                    provider_mode TEXT NOT NULL,
+                    runtime_provenance TEXT NOT NULL,
+                    raw_candidate_count INTEGER NOT NULL DEFAULT 0,
+                    materialized_place_ids_json TEXT NOT NULL DEFAULT '[]',
+                    deep_candidate_ids_json TEXT NOT NULL DEFAULT '[]',
+                    provider_status_json TEXT NOT NULL DEFAULT '{}',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    UNIQUE(recovery_epoch_id, query_hash)
+                    )"""
+                )
+            if not _table_exists(connection, "recovery_execution_plans"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_execution_plans (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    recovery_epoch_id TEXT NOT NULL REFERENCES recovery_epochs(id) ON DELETE CASCADE,
+                    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+                    agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+                    status TEXT NOT NULL DEFAULT 'PLANNED',
+                    semantic_fingerprint TEXT NOT NULL,
+                    approval_id TEXT REFERENCES action_approvals(id) ON DELETE SET NULL,
+                    error_json TEXT NOT NULL DEFAULT '{}',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    completed_at TEXT,
+                    UNIQUE(recovery_epoch_id, proposal_id)
+                    )"""
+                )
+            if not _table_exists(connection, "recovery_execution_actions"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE recovery_execution_actions (
+                    id TEXT PRIMARY KEY,
+                    execution_plan_id TEXT NOT NULL REFERENCES recovery_execution_plans(id) ON DELETE CASCADE,
+                    sequence_no INTEGER NOT NULL,
+                    kind TEXT NOT NULL,
+                    target_type TEXT NOT NULL,
+                    target_id TEXT NOT NULL,
+                    provider_key TEXT,
+                    semantic_fingerprint TEXT NOT NULL,
+                    authority_decision TEXT NOT NULL DEFAULT 'REQUIRE_CONFIRMATION',
+                    approval_id TEXT,
+                    status TEXT NOT NULL DEFAULT 'PENDING',
+                    result_json TEXT NOT NULL DEFAULT '{}',
+                    error_json TEXT NOT NULL DEFAULT '{}',
+                    created_at TEXT NOT NULL,
+                    started_at TEXT,
+                    completed_at TEXT,
+                    UNIQUE(execution_plan_id, semantic_fingerprint)
+                    )"""
+                )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_operator_recovery_resumes_due "
+                "ON operator_recovery_resumes(journey_id, status, next_retry_at)"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_discovery_epoch "
+                "ON recovery_discovery_attempts(journey_id, recovery_epoch_id, created_at)"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_execution_plans_journey "
+                "ON recovery_execution_plans(journey_id, recovery_epoch_id, status, updated_at)"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_execution_actions_plan "
+                "ON recovery_execution_actions(execution_plan_id, sequence_no)"
+            )
+            connection.exec_driver_sql(
+                "CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open "
+                "ON recovery_epochs(journey_id) WHERE status = 'OPEN'"
+            )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status "
+                "ON recovery_epochs(journey_id, status, generation)"
+            )
+            for table, columns in {
+                "agent_runs": {"recovery_epoch_id": "TEXT"},
+                "agent_pending_actions": {"recovery_epoch_id": "TEXT"},
+                "action_approvals": {"recovery_epoch_id": "TEXT"},
+                "replan_proposals": {
+                    "recovery_epoch_id": "TEXT",
+                    "source_agent_run_id": "TEXT",
+                    "semantic_identity": "TEXT",
+                    "canonical_proposal_id": "TEXT",
+                },
+            }.items():
+                existing = {row[1] for row in connection.exec_driver_sql(f"PRAGMA table_info({table})")}
+                if not existing:
+                    continue
+                for column, declaration in columns.items():
+                    if column not in existing:
+                        connection.exec_driver_sql(
+                            f"ALTER TABLE {table} ADD COLUMN {column} {declaration}"
+                        )
+            _reconcile_agent_pending_action_status_check(connection)
+            collective_columns = {
+                row[1]
+                for row in connection.exec_driver_sql(
+                    "PRAGMA table_info(collective_authority_receipts)"
+                )
+            }
+            if collective_columns and "recovery_epoch_id" not in collective_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE collective_authority_receipts ADD COLUMN recovery_epoch_id TEXT"
+                )
+            if not _table_exists(connection, "collective_authority_receipts"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE collective_authority_receipts (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+                    plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+                    authority_mode TEXT NOT NULL,
+                    decision_epoch TEXT NOT NULL,
+                    material_world_epoch TEXT NOT NULL,
+                    candidate_surface_fingerprint TEXT NOT NULL,
+                    source_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+                    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+                    required_member_ids_json TEXT NOT NULL DEFAULT '[]',
+                    response_audit_ids_json TEXT NOT NULL DEFAULT '[]',
+                    principal_actor_ids_json TEXT NOT NULL DEFAULT '[]',
+                    classification TEXT NOT NULL,
+                    issued_at TEXT NOT NULL,
+                    invalidated_at TEXT,
+                    invalidation_code TEXT
+                    )"""
+                )
+                connection.exec_driver_sql(
+                    "CREATE INDEX IF NOT EXISTS idx_collective_authority_receipts_target "
+                    "ON collective_authority_receipts(journey_id, proposal_id, plan_version_id)"
+                )
             provider_columns = {
                 row[1]
                 for row in connection.exec_driver_sql("PRAGMA table_info(provider_observations)")
@@ -792,6 +1296,10 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
             if guardian_columns and "resilience_snapshot_id" not in guardian_columns:
                 connection.exec_driver_sql(
                     "ALTER TABLE guardian_runs ADD COLUMN resilience_snapshot_id TEXT"
+                )
+            if guardian_columns and "recovery_epoch_id" not in guardian_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE guardian_runs ADD COLUMN recovery_epoch_id TEXT"
                 )
             offer_columns = {
                 row[1]
@@ -1113,6 +1621,62 @@ def _reconcile_real_place_candidate_scope(connection) -> None:
         "ON real_place_candidates(journey_id, captured_at)"
     )
     connection.exec_driver_sql("PRAGMA foreign_keys = ON")
+
+
+def _prepare_shared_stop_grant_slot(connection) -> None:
+    """Add and backfill the cross-process uniqueness slot before schema indexes run."""
+
+    table = connection.exec_driver_sql(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='shared_stop_coplanning_grants'"
+    ).first()
+    if table is None:
+        return
+    columns = {
+        row[1]
+        for row in connection.exec_driver_sql("PRAGMA table_info(shared_stop_coplanning_grants)")
+    }
+    added_column = "active_slot" not in columns
+    if added_column:
+        # Historical rows default inactive. Below, retain at most the newest
+        # live grant in each natural invitation/plan/member scope.
+        connection.exec_driver_sql(
+            "ALTER TABLE shared_stop_coplanning_grants "
+            "ADD COLUMN active_slot INTEGER NOT NULL DEFAULT 0"
+        )
+    index_exists = connection.exec_driver_sql(
+        "SELECT 1 FROM sqlite_master WHERE type='index' "
+        "AND name='ux_shared_stop_coplanning_one_unbound_active_grant'"
+    ).first() is not None
+    if not added_column and index_exists:
+        return
+
+    connection.exec_driver_sql("UPDATE shared_stop_coplanning_grants SET active_slot=0")
+    rows = connection.exec_driver_sql(
+        "SELECT id, journey_id, invitation_id, base_plan_version_id, grantee_member_id, "
+        "expires_at FROM shared_stop_coplanning_grants "
+        "WHERE promotion_id IS NULL AND status IN ('OFFERED', 'ACCEPTED') "
+        "ORDER BY updated_at DESC, id DESC"
+    ).all()
+    now = datetime.now(timezone.utc)
+    retained: set[tuple[str, str, str, str]] = set()
+    for row in rows:
+        grant_id, journey_id, invitation_id, plan_id, grantee_id, expires_at = row
+        try:
+            expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            continue
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
+        if expiry <= now:
+            continue
+        scope = (str(journey_id), str(invitation_id), str(plan_id), str(grantee_id))
+        if scope in retained:
+            continue
+        retained.add(scope)
+        connection.exec_driver_sql(
+            "UPDATE shared_stop_coplanning_grants SET active_slot=1 WHERE id=?",
+            (str(grant_id),),
+        )
 
 
 def get_session() -> Generator[Session, None, None]:

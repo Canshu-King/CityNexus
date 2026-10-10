@@ -1,0 +1,81 @@
+{
+  "mission": "R77 Revolution Lab same-destination recovery",
+  "starting_commit": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+  "final_experimental_commit_at_receipt": "c5bc9b3f5d3f7579666913a238b2f17b0d3880e4",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:/moodle/CityNexus-Revolution-RealTrip-Recovery",
+  "clean_before_each_product_call": true,
+  "destination": {
+    "display_name": "贡山独龙族怒族自治县",
+    "city_code": "OSM:R:2729765",
+    "journey_id": "aee858ad-6cb1-48ae-a084-5b75b94e52c4"
+  },
+  "real_catalogue": [
+    {
+      "place_id": "real-place-b80da739cba29adc7cb6a006",
+      "provider_entity": "overpass:way/1417996052",
+      "category": "park"
+    },
+    {
+      "place_id": "real-place-c365c44a508d5cd3c4fc5484",
+      "provider_entity": "overpass:node/13030932589",
+      "category": "viewpoint"
+    }
+  ],
+  "facts_refresh": {
+    "executed_commit": "a55b234edbf911d7fa15b2b3202f4a1ff88f5de5",
+    "http_status": 200,
+    "status": "ACQUIRED",
+    "answered_source": "https://overpass.openstreetmap.fr/api/interpreter",
+    "nominatim_exact_match_count": 2,
+    "official_web": "NO_SOURCE_URL",
+    "search_source": "UNCONFIGURED",
+    "known_opening_count": 0,
+    "known_cost_count": 0,
+    "place_fact_states": [
+      {"place_id": "real-place-b80da739cba29adc7cb6a006", "opening": "UNKNOWN", "cost": "UNKNOWN"},
+      {"place_id": "real-place-c365c44a508d5cd3c4fc5484", "opening": "UNKNOWN", "cost": "UNKNOWN"}
+    ],
+    "receipt_file": "r77_fact_refresh_mirror_receipt.json"
+  },
+  "planning": {
+    "executed_commit": "c5bc9b3f5d3f7579666913a238b2f17b0d3880e4",
+    "generate_http_status": 201,
+    "plan_id": "65d04fbf-e574-5882-ba3b-91619514ef77",
+    "plan_status": "CANDIDATE",
+    "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+    "selectable": false,
+    "mobility_snapshot_id": "f874b516-fb3d-41a8-9aa5-735b675e7416",
+    "mobility_provider": "valhalla-http",
+    "mobility_route_provenance": "LIVE_PROVIDER_CAPTURE",
+    "mobility_matrix_minutes": {
+      "real-place-b80da739cba29adc7cb6a006->real-place-c365c44a508d5cd3c4fc5484": 52,
+      "real-place-c365c44a508d5cd3c4fc5484->real-place-b80da739cba29adc7cb6a006": 53
+    },
+    "actual_used_edge_ids": [
+      ["real-place-b80da739cba29adc7cb6a006", "real-place-c365c44a508d5cd3c4fc5484"]
+    ],
+    "eligibility_receipts": [],
+    "eligibility_receipts_basis": "The authority gate stops on unresolved opening/cost before per-edge eligibility receipts are emitted; none is synthesized."
+  },
+  "selection": {
+    "http_status": 409,
+    "reason_code": "UNRESOLVED_ACTIVITY_FACTS",
+    "error_receipt_id": "CNX-GJ986ZPB",
+    "active_plan_version_id_after_attempt": null,
+    "used_place_ids": [
+      "real-place-b80da739cba29adc7cb6a006",
+      "real-place-c365c44a508d5cd3c4fc5484"
+    ]
+  },
+  "result": {
+    "milestone": "REAL_DRAFT_CLOSED",
+    "result": "EXACT_BLOCKER",
+    "exact_blocker": "UNRESOLVED_ACTIVITY_FACTS: the real product can compose and display a live-mobility draft, but both actual used provider-backed Places still lack authoritative opening and cost observations; exact Nominatim identity matched, with no opening/cost extratags, no official URL, and no configured SearXNG source.",
+    "p7": false,
+    "mock_is_live": false,
+    "unknown_is_accessible": false,
+    "deepseek_execution": "NOT_CONFIGURED",
+    "hermes_execution": "NOT_CONFIGURED"
+  }
+}

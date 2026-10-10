@@ -1,0 +1,144 @@
+{
+  "release": "R55",
+  "capability": "CityNexus can now tell when the real trip is drifting away from the planned schedule — because the traveller actually left, arrived, started, or finished late — and automatically protect the rest of the Journey. It absorbs harmless lateness quietly, warns only when downstream commitments are threatened, and hands material drift to the same Operator for catch-up or replanning.",
+  "outcome": "PROGRESS_DRIFT_BRAIN_BLOCKED",
+  "journey_id": "dee48e8b-162b-46b9-a91a-e5bd09f14520",
+  "active_plan_version_id": "857fe14a-7d09-43f1-8c66-41a6a5a5243e",
+  "completed_activity_id": "241938fd-6265-4262-8207-99de9342ad64",
+  "next_activity_id": "9db0f0cd-8648-4fab-804a-6041083d74e4",
+  "protected_commitment_id": "48fb474d-b72d-44d7-8feb-09d4d5ff0a3e",
+  "protected_commitment_activity_id": "9db0f0cd-8648-4fab-804a-6041083d74e4",
+  "milestone_history": [
+    {
+      "actor_id": "11111111-1111-4111-8111-111111111111",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "captured_at": "2026-10-08T23:30:00+00:00",
+      "evidence": {
+        "auth_method": "SIGNED_HMAC_BEARER",
+        "member_id": "a5b69452-bf56-4bce-b5d8-18f8aa286f82",
+        "operator_confirmed": true,
+        "physical_presence_claimed": false,
+        "role": "OWNER"
+      },
+      "kind": "OPERATOR_CONFIRMED_EXECUTION",
+      "transition": "EN_ROUTE"
+    },
+    {
+      "actor_id": "11111111-1111-4111-8111-111111111111",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "captured_at": "2026-10-08T23:55:00+00:00",
+      "evidence": {
+        "auth_method": "SIGNED_HMAC_BEARER",
+        "member_id": "a5b69452-bf56-4bce-b5d8-18f8aa286f82",
+        "operator_confirmed": true,
+        "physical_presence_claimed": false,
+        "role": "OWNER"
+      },
+      "kind": "OPERATOR_CONFIRMED_EXECUTION",
+      "transition": "ARRIVED"
+    },
+    {
+      "actor_id": "11111111-1111-4111-8111-111111111111",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "captured_at": "2026-10-09T00:00:00+00:00",
+      "evidence": {
+        "auth_method": "SIGNED_HMAC_BEARER",
+        "member_id": "a5b69452-bf56-4bce-b5d8-18f8aa286f82",
+        "operator_confirmed": true,
+        "physical_presence_claimed": false,
+        "role": "OWNER"
+      },
+      "kind": "OPERATOR_CONFIRMED_EXECUTION",
+      "transition": "IN_PROGRESS"
+    },
+    {
+      "actor_id": "11111111-1111-4111-8111-111111111111",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "captured_at": "2026-10-09T00:48:00+00:00",
+      "evidence": {
+        "auth_method": "SIGNED_HMAC_BEARER",
+        "member_id": "a5b69452-bf56-4bce-b5d8-18f8aa286f82",
+        "operator_confirmed": true,
+        "physical_presence_claimed": false,
+        "role": "OWNER"
+      },
+      "kind": "OPERATOR_CONFIRMED_EXECUTION",
+      "transition": "COMPLETED"
+    }
+  ],
+  "truth_kind": "OPERATOR_CONFIRMED_EXECUTION",
+  "planned_end_at": "2026-10-09T08:20:00+08:00",
+  "completed_at_actual": "2026-10-09T00:48:00+00:00",
+  "drift_min": 28,
+  "progress_state": "COMMITMENT_AT_RISK",
+  "slack_before_min": 29,
+  "slack_after_min": 1,
+  "safety_buffer_min": 8,
+  "route_evidence": [
+    {
+      "from_activity_id": "241938fd-6265-4262-8207-99de9342ad64",
+      "to_activity_id": "9db0f0cd-8648-4fab-804a-6041083d74e4",
+      "duration_min": 11,
+      "provenance": "CAPTURED_REPLAY",
+      "provider_snapshot_id": "8be1748d-356c-4c46-b4b4-0bcbbc79a311",
+      "assumption": "FROZEN_PROVIDER_MOBILITY"
+    }
+  ],
+  "event": {
+    "id": "0ce86aaf-3818-47df-947b-0b2ad9f084b2",
+    "event_type": "SCHEDULE_DELAY",
+    "provenance": "SYSTEM_DERIVED",
+    "derivation": "SYSTEM_DERIVED_EXECUTION_FACT",
+    "source_milestone": {
+      "activity_id": "241938fd-6265-4262-8207-99de9342ad64",
+      "activity_title": "Tianjin replay anchor",
+      "actual_at": "2026-10-09T00:48:00+00:00",
+      "milestone": "COMPLETED",
+      "planned_at": "2026-10-09T00:20:00+00:00",
+      "truth_kind": "OPERATOR_CONFIRMED_EXECUTION"
+    },
+    "event_count_delta": 1,
+    "source_execution_provenance": "OPERATOR_CONFIRMED_EXECUTION",
+    "source_execution_milestone_id": "241938fd-6265-4262-8207-99de9342ad64",
+    "source_execution_milestone": "COMPLETED",
+    "source_execution_at": "2026-10-09T00:48:00+00:00"
+  },
+  "guardian": {
+    "count_delta": 1,
+    "action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+    "decision": "RECOVERY_REQUIRED",
+    "trigger_event_id": "0ce86aaf-3818-47df-947b-0b2ad9f084b2"
+  },
+  "current_activity_unchanged_by_recovery": true,
+  "ahead_exposure": {
+    "activity_id": "9db0f0cd-8648-4fab-804a-6041083d74e4",
+    "title": "天津文化中心",
+    "start_at": "2026-10-09T01:00:00+00:00",
+    "starts_at": "2026-10-09T01:00:00+00:00",
+    "risk_score": 95,
+    "risk_kind": "EXECUTION_DRIFT_EXPOSURE",
+    "failure_modes": [
+      "EXECUTION_DRIFT_EXPOSURE"
+    ],
+    "grounded": true,
+    "authority": "SYSTEM_DERIVED_EXECUTION_FACT",
+    "source_execution_activity_id": "241938fd-6265-4262-8207-99de9342ad64",
+    "source_truth_kind": "OPERATOR_CONFIRMED_EXECUTION",
+    "route_slack_minutes": 1,
+    "protected_commitment": true,
+    "risk_identity": "ahead:570f952e62a8787c75a2fc56",
+    "lead_time_minutes": 3110,
+    "actionability_score": 18
+  },
+  "lab_estimate_authority": false,
+  "agent_estimate_authority": 0,
+  "single_execution_trial": true,
+  "execution_actions_replayed_after_correction": false,
+  "correction_continuation": "Materialized the event and Guardian from the same persisted authenticated completion after correcting route sequence indexing and the supported SYSTEM_DERIVED provenance value; no execution endpoint was called again.",
+  "verification": {
+    "progress_drift_unit_tests": "10 passed",
+    "authenticated_read_only_operator_status": 200,
+    "fresh_execution_trial_count": 1,
+    "playwright_r55_spec": "2 passed"
+  }
+}

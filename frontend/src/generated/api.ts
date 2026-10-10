@@ -1843,6 +1843,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/facts/acquire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["acquireJourneyPlaceFacts"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/real-city/intelligence": {
         parameters: {
             query?: never;
@@ -3002,25 +3020,33 @@ export interface components {
         };
         AgentCommandResponse: {
             /** Format: uuid */
-            event_id: string;
+            event_id: string | null;
             mission: {
                 [key: string]: unknown;
             };
-            run: {
-                [key: string]: unknown;
-            };
+            run: components["schemas"]["AgentRunResponse"];
+        };
+        AgentRunOutcome: {
+            status: string;
+            reason_code: string;
+            user_summary: string;
+            recommended_action: string;
+            [key: string]: unknown;
         };
         AgentRunResponse: {
             /** Format: uuid */
-            run_id: string;
+            run_id?: string | null;
             /** Format: uuid */
             mission_id: string;
             /** Format: uuid */
-            journey_id: string;
+            journey_id?: string | null;
             provider_key?: string;
             model_key?: string;
             status: string;
-            outcome?: string | null;
+            completion_contract?: {
+                [key: string]: unknown;
+            };
+            outcome?: string | components["schemas"]["AgentRunOutcome"] | null;
             failure_reason?: string | null;
             mission_status?: string | null;
             /** Format: date-time */
@@ -3358,9 +3384,16 @@ export interface components {
             city_code: string;
             location: components["schemas"]["GeoPoint"];
             tags?: string[];
+            external_id: string;
             provider_key: string;
             coordinate_system: string;
             source_coordinate_system: string | null;
+            opening_hours: {
+                [key: string]: unknown;
+            };
+            cost_evidence: {
+                [key: string]: unknown;
+            };
         };
         CollectionFolderCreate: {
             name: string;
@@ -3681,6 +3714,9 @@ export interface components {
             status: "DETECTED" | "ACKNOWLEDGED" | "RESOLVED" | "IGNORED";
             /** Format: date-time */
             detected_at: string;
+            /** Format: date-time */
+            resolved_at?: string | null;
+            resolution_reason?: string | null;
         };
         Commitment: {
             /** Format: uuid */
@@ -7213,6 +7249,42 @@ export interface operations {
                 content?: never;
             };
             422: components["responses"]["ValidationError"];
+        };
+    };
+    acquireJourneyPlaceFacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    place_ids?: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Source-linked opening and cost facts for existing provider Places */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     streamJourneyOperations: {

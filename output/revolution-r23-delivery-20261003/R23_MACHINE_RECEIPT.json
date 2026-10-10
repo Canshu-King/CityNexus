@@ -1,0 +1,130 @@
+{
+  "round": "R23",
+  "mission": "Adaptive Traveler Twin",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery",
+  "starting_code_sha": "8a7856a98ca32bcfdcc53959fc3db1405a0cebd1",
+  "final_experimental_code_sha": "5f0c69b9bd0ac108eb36dac68a07e50045a29050",
+  "estimate_authority": false,
+  "agent": {
+    "provider": "hermes",
+    "model": "cn:deepseek-v4.1-flash",
+    "runtime": "configured_agent_runtime",
+    "wb2api_endpoint": "http://127.0.0.1:7863/v1/chat/completions",
+    "credential_included": false
+  },
+  "traveler_id": "11111111-1111-4111-8111-111111111111",
+  "learning": {
+    "outcome_event_id": "a9d4d6df-09d1-4306-8351-57948598f1c2",
+    "evidence_id": "3e7c4d11-2967-4b09-8d59-74ad79ccb403",
+    "dimension": "interest",
+    "direction": "garden",
+    "evidence_class": "VOLUNTARY_CHOICE",
+    "source": "LEARNED_SOFT",
+    "strength": 0.55,
+    "confidence": 0.7,
+    "expires_at": "2027-04-01T04:54:57.993013+08:00"
+  },
+  "causal_ranking": {
+    "baseline_journey_id": "02c289f9-fd1c-4b05-9d63-957b4e4534eb",
+    "baseline_plan_id": "c7304bd3-0f1c-565e-a84f-30ea873c2e26",
+    "learned_plan_id": "c83cf9b6-be00-52a8-848e-bd4f96c92fbc",
+    "before_order": [
+      "real-place-1ffd66e7224682f5558f1579",
+      "real-place-22cf72809897ff4c7f312fcf"
+    ],
+    "after_order": [
+      "real-place-22cf72809897ff4c7f312fcf",
+      "real-place-1ffd66e7224682f5558f1579"
+    ],
+    "hard_facts_unchanged": true,
+    "cost_minor_unchanged": 2000,
+    "explicit_override_plan_id": "ced98d5b-d29d-58a4-a35a-4277d22a1ace",
+    "explicit_override_restored": true
+  },
+  "positive_run": {
+    "journey_id": "f7f23556-29f0-4214-a69c-edb126d78d32",
+    "mission_id": "1e87f99e-dd59-41fe-8be5-730e056f82b3",
+    "standing_mission_id": "ff28b1aa-8346-485e-9df0-8f3fc3a9d235",
+    "guardian_scan_id": "077cf416-f895-45dc-9913-87617375b2d7",
+    "agent_run_id": "5faf3952-a8f2-4e7a-bda8-82969b9b1a74",
+    "event_id": "ba0f737c-3277-4399-b711-816e640b6c77",
+    "proposal_id": "60df1c63-1f98-4f1d-b023-5f4555bdd75e",
+    "approval_id": "f52511ad-1a39-44d8-b5a5-042b7b4e6830",
+    "base_plan_id": "69ee3bd6-a5ba-5547-9e15-d61c0228056a",
+    "active_plan_id": "46192c7d-01b7-4b49-94b8-4a3ffe4060f0",
+    "journey_status": "COMPLETED",
+    "twin_status": "COMPLETED",
+    "twin_projection": "READY",
+    "current_activity_id": null,
+    "compiled_bounds": {
+      "max_cost_delta_minor": 1000,
+      "max_schedule_drift_min": 120
+    },
+    "candidate": {
+      "place_id": "real-place-d8820981440574ee50a0c1d5",
+      "name": "奈良市杉岡華邨書道美術館",
+      "opening_status": "OFFICIAL_WEB_VERIFIED",
+      "opening": "09:00-17:00",
+      "cost_status": "VERIFIED_PROVIDER",
+      "cost_minor": 300,
+      "estimate_used": false
+    },
+    "proposal": {
+      "family": "F4_OPPORTUNITY_INSERTION",
+      "hard_constraints_passed": true,
+      "locked_commitments_preserved": true,
+      "cost_delta_minor": 300,
+      "schedule_drift_min": 0,
+      "added_place_count": 1,
+      "gateway_first_decision": "REQUIRE_CONFIRMATION",
+      "approval_consumed": true,
+      "executed": true
+    },
+    "mobility": {
+      "provider": "valhalla-http",
+      "snapshot_id": "67572a8a-058d-4307-9031-9ddfaa799f32",
+      "route_provenance": "LIVE_PROVIDER_CAPTURE",
+      "degraded": false,
+      "used_edge_ids": [
+        ["real-place-22cf72809897ff4c7f312fcf", "real-place-d8820981440574ee50a0c1d5"],
+        ["real-place-d8820981440574ee50a0c1d5", "real-place-1ffd66e7224682f5558f1579"],
+        ["real-place-1ffd66e7224682f5558f1579", "real-place-b47a20314c81d5a81381d4a4"]
+      ],
+      "hard_eligible_all_actual_edges": true,
+      "minutes": [21, 27, 26]
+    },
+    "execution_states": {
+      "real-place-22cf72809897ff4c7f312fcf": "COMPLETED",
+      "real-place-d8820981440574ee50a0c1d5": "COMPLETED",
+      "real-place-1ffd66e7224682f5558f1579": "COMPLETED",
+      "real-place-b47a20314c81d5a81381d4a4": "COMPLETED"
+    },
+    "agent_tool_order": [
+      "inspect_journey",
+      "inspect_twin",
+      "list_replans",
+      "search_city_services",
+      "generate_plans",
+      "generate_plans",
+      "request_replan",
+      "accept_replan",
+      "conclude_recovery"
+    ]
+  },
+  "no_action_control": {
+    "journey_id": "57080c98-8844-445b-822a-28ebb96f573f",
+    "mission_id": "b659023c-fc84-4ce2-9a27-e43bc95234b8",
+    "agent_run_id": "6f7a8a3c-d778-47b5-941c-1e4ec3e9a5a3",
+    "result": "NO_ACTION",
+    "active_plan_unchanged": true,
+    "active_plan_id": "5509823c-dfb7-5023-95f8-ccd770253061"
+  },
+  "tests": {
+    "focused_command": "py -3.13 -m pytest -q tests/test_foundation_opportunity_window.py tests/test_r20_standby_trigger.py tests/test_r21_autonomous_future_synthesis.py tests/test_r22_opportunity_capture.py tests/test_r23_adaptive_traveler_twin.py tests/test_v7_traveler_twin.py tests/test_v19_traveler_capability.py tests/test_agent_mission_runtime.py -s",
+    "passed": 70,
+    "failed": 0,
+    "warnings": 1,
+    "warning": "existing Starlette/httpx deprecation"
+  }
+}

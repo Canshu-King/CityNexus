@@ -85,3 +85,23 @@ def test_frozen_real_provider_snapshot_is_accepted_by_gate():
         _activities(),
     )
     assert gate.passed, gate.failures
+
+
+def test_frozen_snapshot_reads_uppercase_activity_anchor_from_lowercase_capture_key():
+    snapshot = MobilitySnapshot.from_minutes(
+        source_provider_key="valhalla",
+        minutes={("v12:j:arrival-anchor", "real-place-a"): 12},
+        captured_at="2026-10-10T08:59:00+08:00",
+        fact_quality="LIVE_PROVIDER_CAPTURE",
+    )
+    assert snapshot.hard_minutes("v12:j:ARRIVAL-anchor", "real-place-a") == 12
+
+
+def test_frozen_snapshot_reads_lowercase_replay_anchor_from_uppercase_selected_fact():
+    snapshot = MobilitySnapshot.from_minutes(
+        source_provider_key="valhalla",
+        minutes={("v12:j:ARRIVAL-anchor", "real-place-a"): 13},
+        captured_at="2026-10-10T08:59:00+08:00",
+        fact_quality="LIVE_PROVIDER_CAPTURE",
+    )
+    assert snapshot.hard_minutes("v12:j:arrival-anchor", "real-place-a") == 13

@@ -1,7 +1,7 @@
 /* ORD-0525 · the cell the commander's own instrument counts: how many calendar words reach the glass
  *
  * Why this file exists separately from the five arms that landed with ORD-0525: the dispatch at 01:48
- * (`CITYNEXUS_AGENT_CONTROL.md:16604`) still lists 屏上零命中 as owed, and that wording comes from the
+ * (`CITYNEXUS_AGENT_CONTROL.md`) still lists 屏上零命中 as owed, and that wording comes from the
  * commander's own phone walk of 23:35 -- a five-cell probe at viewport 390x844 whose readings are
  * booleans and hit counts, not test names.  A green Playwright suite does not answer a
  * "zero hits on screen" reading; only the same measurement does.  So this arm reproduces his shape:

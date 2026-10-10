@@ -80,6 +80,33 @@ function formatTime(value: string | null | undefined): string {
   });
 }
 
+function guardianWatchCopy(state: string | undefined): string {
+  switch (state) {
+    case "INCIDENT_ACTIVE":
+      return "A live issue needs closer attention, so Guardian is checking more often.";
+    case "APPROACHING":
+      return "Your next activity is within two hours, so Guardian is checking more often.";
+    case "TODAY":
+      return "You have an activity later today, so Guardian is keeping a closer watch.";
+    case "DAY_AHEAD":
+      return "An activity is planned for tomorrow, so Guardian is checking periodically.";
+    default:
+      return "Nothing important is near, so Guardian is checking at a calmer pace.";
+  }
+}
+
+function formatAgentOutcome(outcome: AgentRun["outcome"]): string {
+  if (!outcome) return "";
+  if (typeof outcome === "string") return outcome;
+  const parts = [
+    outcome.status,
+    outcome.reason_code,
+    outcome.user_summary,
+    outcome.recommended_action ? `Next: ${outcome.recommended_action}` : null,
+  ].filter((part): part is string => Boolean(part));
+  return parts.join(" · ");
+}
+
 function formatMoney(amountMinor: number, currency: string): string {
   return formatMinorMoney(amountMinor, currency, "zh-CN");
 }
@@ -678,6 +705,21 @@ function LegacyApp() {
     }
   }
 
+  async function stopLiveAutopilot() {
+    if (!session) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await cityNexusApi.stopGuardianAutopilot(session.journeyId);
+      await refreshAutopilotTruth(session.journeyId);
+      setLastAction("Guardian Watch stopped");
+    } catch (autopilotError) {
+      setError(errorNote(autopilotError, t));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function transitionProviderFixture(state: "NORMAL" | "DISRUPTED" | "OUTAGE") {
     if (!session) return;
     setBusy(true);
@@ -1118,8 +1160,15 @@ function LegacyApp() {
               <span>Loss ceiling · {formatMoney(mission.max_loss_minor, planCurrency)}</span>
               <span>Schedule drift · {mission.max_schedule_drift_min} min</span>
               <span>Protected Activities · {mission.protected_activity_ids.length}</span>
+              {agentRun.completion_contract?.kind && (
+                <span>Server result · {agentRun.completion_contract.kind}</span>
+              )}
             </div>
-            {agentRun.outcome && <p className="mission-outcome">{agentRun.outcome}</p>}
+            {agentRun.outcome && (
+              <p className="mission-outcome" data-testid="agent-run-outcome">
+                {formatAgentOutcome(agentRun.outcome)}
+              </p>
+            )}
             {agentRun.failure_reason && <p className="mission-failure">{agentRun.failure_reason}</p>}
             <div className="run-steps">
               <strong>Persisted tool trace · {agentRun.tool_steps.length} calls</strong>
@@ -1184,6 +1233,14 @@ function LegacyApp() {
           </button>
           <button
             className="secondary-button"
+            data-testid="guardian-autopilot-stop"
+            onClick={() => void stopLiveAutopilot()}
+            disabled={busy || !guardianStatus?.autopilot?.enabled}
+          >
+            Stop Guardian Watch
+          </button>
+          <button
+            className="secondary-button"
             data-testid="guardian-provider-disrupted"
             onClick={() => void transitionProviderFixture("DISRUPTED")}
             disabled={busy || !guardianStatus?.autopilot?.enabled}
@@ -1211,6 +1268,20 @@ function LegacyApp() {
           Autopilot · {guardianStatus?.autopilot?.enabled ? "RUNNING" : "STOPPED"} · provider fixture ·{" "}
           {guardianStatus?.signal_fixture?.state ?? "NORMAL"}
         </p>
+        {guardianStatus?.autopilot?.enabled && guardianStatus.autopilot.watch && (
+          <div className="guardian-watch-panel" data-testid="guardian-watch-status">
+            <strong>Guardian Watch is on</strong>
+            <span>{guardianWatchCopy(guardianStatus.autopilot.watch.watch_state)}</span>
+            <span data-testid="guardian-watch-next-check">
+              Next check around {formatTime(guardianStatus.autopilot.watch.next_due_at)}
+            </span>
+            {guardianStatus.autopilot.watch.next_move?.copy && (
+              <span data-testid="guardian-next-move">
+                {guardianStatus.autopilot.watch.next_move.copy}
+              </span>
+            )}
+          </div>
+        )}
         <div className="predictive-panel" data-testid="guardian-predictive-resilience">
           <div>
             <strong>Predictive resilience</strong>

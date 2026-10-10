@@ -300,6 +300,12 @@ def compile_semantic_envelope(
                 "If the user states a capability or accessibility need, include only a bounded capability "
                 "item with code, severity, and params. Do not claim a place or route is accessible; "
                 "accessibility evidence belongs to CityNexus provider or frozen facts. "
+                "When verified_context includes journey_intent_steering, interpret temporary in-trip "
+                "requests into entities.intent_kind, entities.scope_kind (one of its supplied enum), "
+                "entities.preference_hints, and bounded structured constraints. Treat fatigue/easier "
+                "pace as a temporary preference, never a capability; use ACCESSIBILITY_NEED only for "
+                "an explicit functional limitation. Do not provide activity IDs: the server resolves targets. "
+                "Use UNKNOWN or omit a scope when the request is ambiguous. "
                 "reasoning_summary must be concise and user-safe; do not reveal hidden reasoning."
             ),
         },

@@ -5,12 +5,15 @@ import json
 import hashlib
 import hmac
 import logging
+import math
 import os
+import re
 import secrets
 import time
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from itertools import permutations
 from threading import RLock
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
@@ -20,7 +23,7 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import delete, func, insert, or_, select, update
+from sqlalchemy import and_, delete, exists, func, insert, or_, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
@@ -28,9 +31,11 @@ from app.agent.autorun import (
     autorun_status,
     enrolled_journey_ids,
     ensure_enrollment,
+    pulse_journey,
     start_autorun,
     stop_autorun,
 )
+from app.agent.watch_policy import adaptive_watch_policy
 from app.agent.contracts import (
     AgentAction,
     AgentMode,
@@ -59,6 +64,7 @@ from app.replanning.commitment_remap import (
 from app.agent.guardian import guardian_status, scan_guardian
 from app.agent.mission import create_mission, mission_payload
 from app.agent.mission_plan import mission_plan_for_model
+from app.operator_projection import operator_projection
 from app.agent.runtime_events import normalize_hermes_event
 from app.agent.orchestrator import configured_journey_agent
 from app.agent.predictive import (
@@ -74,7 +80,11 @@ from app.agent.runtime_identity import runtime_status
 from app.agent.runtime import (
     AgentRuntimeUnavailable,
     DeepSeekJourneyAgent,
+    _server_completion_contract,
     persisted_agent_run_payload,
+    reconcile_stale_agent_runs,
+    _structured_failure_outcome,
+    _structured_run_outcome,
     unavailable_run_payload,
 )
 from app.agent.signal_pipeline import fixture_payload, set_fixture_state
@@ -82,6 +92,19 @@ from app.capabilities import (
     CAPABILITY_CODES,
     canonicalize_capabilities,
     summarize_capabilities,
+)
+from app.collective_mediation import (
+    classify_group_decision,
+    collective_mutation_decision,
+    member_fit,
+    plan_collective_fit_subject,
+)
+from app.collective_authority import (
+    AUTHENTICATED_MEMBER_CONSENT,
+    UNANIMOUS_DOMINANCE,
+    candidate_surface_fingerprint,
+    collective_authority_provenance,
+    server_semantic_decision_epoch,
 )
 from app.commerce.idempotency import IdempotencyConflict, canonical_request_signature
 from app.commerce.order_pricing import OrderLineRequest, OrderPricingError
@@ -126,9 +149,12 @@ from app.db.models import (
     CitySignalFixture,
     CollectionFolder,
     CollectionItem,
+    CollectiveAuthorityReceipt,
     CounterfactualSimulation,
     EdgeDevice,
     ExternalReservationDraft,
+    JourneyInboxItem,
+    GuardianPulse,
     IdempotencyKey,
     ImpactAssessment,
     Journey,
@@ -136,11 +162,24 @@ from app.db.models import (
     JourneyLeg,
     JourneyConstraint,
     JourneyMission,
+    JourneyIntent,
     JourneyMember as JourneyMemberModel,
+    JourneyMembershipInvitation as JourneyMembershipInvitationModel,
+    MemberPlaceInvitation,
+    MemberPlaceInvitationRecipient,
+    MemberPlaceGroupShareConsent,
+    MemberPlacePromotion,
+    SharedStopCoPlanningGrant,
+    MemberSideQuest,
+    PlannedSplitMeetupHandshake,
     JourneyRoleCapability,
     JourneyShareGrant,
     JourneyOutcomeEvent,
     JourneyTripContext,
+    JourneyLaunchContext,
+    MemberLiveMomentScoutReceipt,
+    RouteAcquisitionOperation,
+    LocationObservation,
     MobilityFact,
     NotificationEvent,
     OfflineJourneySnapshot,
@@ -148,8 +187,10 @@ from app.db.models import (
     Place,
     PlanVersion,
     Preference,
+    RecoveryEpoch,
     ProviderObservation,
     RealPlaceCandidate,
+    RecoveryExecutionPlan,
     StayJourneyOption,
     TransportReservation,
     Traveler,
@@ -160,13 +201,33 @@ from app.db.models import (
 from app.db.models import (
     Booking as BookingModel,
 )
+from app.recovery_epoch import (
+    RECOVERY_EPOCH_SUPERSEDED,
+    RecoveryEpochSuperseded,
+    close_recovery_epoch,
+    ensure_recovery_epoch,
+    validate_recovery_epoch_binding,
+)
 from app.db.models import (
     Commitment as CommitmentModel,
 )
 from app.db.models import (
     Event as EventModel,
 )
+from app.journey_inbox import (
+    classify_inbox_impact,
+    inbox_artifact_fingerprint,
+    inbox_provenance_for_source,
+)
+from app.reality_reconciliation import (
+    RealityClaimView,
+    reconcile_reservation_time_claims,
+    reservation_time_authority_class,
+    reservation_time_claim_fingerprint,
+)
 from app.db.models import (
+    RealityClaim as RealityClaimModel,
+    RealityConflict as RealityConflictModel,
     JourneyTwin as JourneyTwinModel,
 )
 from app.db.models import (
@@ -207,6 +268,82 @@ from app.security.credential_literals import (  # ORD-0307: 字面量凭据的�
     startup_report as credential_gate_startup,
 )
 from app.execution.clock import execution_clock
+from app.execution.readiness import (
+    departure_readiness_projection,
+    refresh_departure_readiness,
+)
+from app.execution.departure_activation import departure_activation_projection
+from app.execution.bootstrap_discovery import (
+    BootstrapDiscoveryError,
+    discover_bootstrap_candidates,
+    search_bootstrap_city,
+    list_bootstrap_shortlist_items,
+    remember_bootstrap_shortlist_item,
+    remove_bootstrap_shortlist_item,
+    preview_bootstrap_shortlist_item,
+    preview_bootstrap_two_stop_walk,
+    preview_bootstrap_candidate,
+    save_bootstrap_shortlist_item,
+    select_bootstrap_candidate,
+)
+from app.execution.progress_drift import (
+    execution_drift_fingerprint,
+    progress_drift_projection,
+)
+from app.execution.launch_setup import launch_setup_projection
+from app.execution.launch_origin import grounded_launch_origin
+from app.execution.route_session_contract import (
+    ROUTE_PROVIDER_POLICY_VERSION,
+    ROUTE_TRUTH_POLICY_VERSION,
+    RouteRequest,
+)
+from app.execution.in_transit_reroute import (
+    LOCATION_FRESHNESS_SECONDS,
+    active_transit_leg,
+    in_transit_projection,
+    reroute_commitment_risk,
+    reroute_semantic_key,
+)
+from app.execution.group_presence import (
+    LOCATION_FRESHNESS_SECONDS as GROUP_LOCATION_FRESHNESS_SECONDS,
+    MAX_USEFUL_ACCURACY_M as GROUP_MAX_LOCATION_ACCURACY_M,
+    group_recovery_incident_key,
+    group_recovery_projection,
+    group_presence_projection,
+    planned_separation_for_member,
+    public_destination_coordinates,
+    rendezvous_commitment_risk,
+    rendezvous_target,
+)
+from app.execution.member_side_quest import (
+    create_or_replace_member_side_quest,
+    invalidate_member_side_quests_for_intents,
+    navigate_member_side_quest_destination,
+    preview_member_side_quest_fit,
+    resolve_member_side_quest_navigation_target,
+    start_member_side_quest_return_report,
+    transition_member_side_quest,
+)
+from app.execution.planned_split_meetup_handshake import (
+    decide_meetup_handshake,
+    report_meetup_arrival,
+)
+from app.execution.moment_scout import build_moment_scout, select_moment_scout_candidate
+from app.execution.group_recovery_followthrough import (
+    active_group_recovery_spend,
+    build_followthrough_snapshot,
+    close_recovery_if_rejoined,
+    followthrough_projection,
+    register_execution_arrival,
+)
+from app.route_session_operations import operation_payload as route_operation_payload
+from app.route_session_operations import submit_operation as submit_route_operation
+from app.execution.truth import (
+    DEVICE_LOCATION_VERIFIED_EXECUTION,
+    OPERATOR_CONFIRMED_EXECUTION,
+    SIMULATED_STATE_TRANSITION,
+    append_execution_truth,
+)
 from app.execution.traveler_twin import (
     clear_learned,
     learn_from_journey,
@@ -223,6 +360,8 @@ from app.integrations.ai.copilot_contract import (
     classify_copilot_message,
     disruption_event_type,
     disruption_severity,
+    extract_disruption_subject,
+    is_status_inspection_reference,
     simulate_what_if,
     validate_proposed_action,
 )
@@ -239,11 +378,14 @@ from app.integrations.china.amap import amap_status, provider_for_region
 from app.integrations.context.open_meteo import OpenMeteoContextProvider
 from app.integrations.context.weather_runtime import refresh_weather_runtime
 from app.integrations.discovery.real_city import (
+    canonical_cost_evidence,
     capture_real_city_candidates,
     live_failure_reason,
     normalize_opening_hours,
 )
 from app.integrations.discovery.orchestration import orchestrate_discovery
+from app.fact_acquisition import acquire_place_facts
+from app.live_context_watch import run_live_context_watch
 from app.integrations.inbox.vision import extract_reservation_image, extract_reservation_text
 from app.integrations.inbox.semantic_intake import (
     journey_interpreter_context,
@@ -263,7 +405,7 @@ from app.intelligence.impact_resolver import (
     persist_impact_assessment,
     resolve_impact,
 )
-from app.intelligence.opportunity_window import build_window
+from app.intelligence.opportunity_window import OpportunityCandidate, build_window, evaluate_candidate
 from app.intelligence.reason_codes import ReasonCode, VerifiedExplanationFacts
 from app.intelligence.replan_diff import PlanActivitySnapshot, diff_plans
 from app.operations.v9 import (
@@ -301,7 +443,11 @@ from app.planning.solver_v2 import (
     solve_v2,
     solver_v2_problem_fingerprint,
 )
-from app.replanning.candidate_evidence import verified_interest_preference_fit
+from app.replanning.candidate_evidence import (
+    canonical_place_tags,
+    verified_interest_preference_breakdown,
+    verified_interest_preference_fit,
+)
 from app.replanning.feasibility import (
     CANONICAL_RULE_CODES,
     FeasibilityActivity,
@@ -310,7 +456,11 @@ from app.replanning.feasibility import (
     constraint_write_refusal,
     evaluate_feasibility,
 )
-from app.replanning.mock_replan_engine import partition_execution, rank_closure_replacements
+from app.replanning.mock_replan_engine import (
+    ReplacementChoice,
+    partition_execution,
+    rank_closure_replacements,
+)
 from app.replanning.opportunity_window_family import (
     WindowReplacementInput,
     evaluate_window_replacement,
@@ -332,7 +482,11 @@ from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.verified_scoring import score_replan_candidate
 from app.schemas import (
     AgentApprovalRequest,
+    AgentCommandResponse,
     AgentCommandRequest,
+    AgentRunResponse,
+    ClarificationAnswer,
+    CollectiveClarificationAnswer,
     AgentPolicyPayload,
     AgentToolCall,
     BookingCreate,
@@ -343,12 +497,51 @@ from app.schemas import (
     EdgeObservationRequest,
     EventCreate,
     GeneratePlansRequest,
+    BootstrapDiscoveryRequest,
+    BootstrapCitySearchRequest,
+    BootstrapSelectRequest,
+    BootstrapMapPreviewRequest,
+    BootstrapShortlistSaveRequest,
+    BootstrapShortlistPreviewRequest,
+    BootstrapShortlistNavigationRequest,
+    BootstrapTwoStopWalkRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
+    FactAcquisitionRequest,
     GuardianAutopilotStart,
+    JourneyOperatorStartRequest,
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
+    GroupPresenceRouteRequest,
+    RendezvousBuddyPrivateRouteRequest,
+    JourneyRendezvousSignalCreateRequest,
+    RendezvousBuddyHandoffOfferRequest,
+    RendezvousBuddyHandoffDecisionRequest,
+    RendezvousBuddyExecutionWindowRequest,
+    RendezvousBuddyExecutionReceiptRequest,
+    MemberSideQuestCreateRequest,
+    MemberPlaceInvitationCreateRequest,
+    MemberPlaceInvitationDecisionRequest,
+    MemberPlaceInvitationFeasibilityPreviewRequest,
+    MemberPlaceInvitationProgressRequest,
+    MemberPlaceGroupShareConsentRequest,
+    MemberPlacePromotionCreateRequest,
+    MemberPlacePromotionDecisionRequest,
+    SharedStopCoPlanningGrantCreateRequest,
+    SharedStopCoPlanningGrantDecisionRequest,
+    MomentScoutRequest,
+    MomentScoutSelectRequest,
+    LiveMomentScoutRequest,
+    LiveMomentScoutSelectRequest,
+    MemberSideQuestFitPreviewRequest,
+    MemberSideQuestNavigateRequest,
+    GroupRecoveryRequest,
+    GroupRecoveryApplyRequest,
+    InTransitRerouteRequest,
+    LaunchOriginRequest,
+    RouteAcquireRequest,
+    ExecutionTruthAttestation,
     LuggageContextRequest,
     MobilityModeRequest,
     OrderCreate,
@@ -376,6 +569,10 @@ from app.schemas import (
     JourneyMemberCreate,
     JourneyMemberRoleChange,
     JourneyMemberSelfExit,
+    JourneyMemberPreferenceUpdate,
+    JourneyMembershipInvitationCreate,
+    JourneyMembershipInvitationDecision,
+    JourneyMembershipInvitationInboxItem,
     JourneyRoleRule,
     MemberRoleLimits,
     StayAutopilotRecoveryRequest,
@@ -465,17 +662,25 @@ from app.poi_import import (
     resolve as poi_import_resolve,
 )
 from app.services import (
+    COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE,
+    KNOWN_COST_EVIDENCE_STATUSES,
+    _coursework_estimate_covers,
+    _place_has_unresolved_visit_facts,
     _journey_constraints_with_capabilities,
     checkin_schema,
     collection_folder_schema,
     collection_item_schema,
     constraint_schema,
+    dump,
     generate_plans,
     journey_live_view,
+    iso_now,
     journey_schema,
     parse_dt,
     place_schema,
     plan_schema,
+    plan_authority_blocker,
+    plan_unresolved_activity_facts,
     preference_schema,
     recycle_bin_entry_schema,
     seed_demo,
@@ -542,6 +747,16 @@ ensure_schema()
 # here can ever finish them; they are closed as WORKER_LOST rather than left to be polled
 # (see app/stay_generation_operations.py).
 reconcile_interrupted_operations()
+# A process restart cannot resume model tool calls. Close only rows outside
+# the bounded handoff window so a live compatibility run is not interrupted
+# by startup cleanup.
+try:  # pragma: no cover - startup hygiene; helper has direct focused coverage
+    with SessionLocal() as startup_session:
+        reconcile_stale_agent_runs(startup_session)
+except Exception:  # noqa: BLE001
+    logging.getLogger("citynexus.agent").exception(
+        "could not reconcile stale agent runs at startup"
+    )
 # Catalog hydrations run on the same promise: a job is durable, a worker is not.  Wrapped,
 # because startup must not be held hostage by a cleanup pass on a database that predates this
 # table - the row that could not be closed is still reported as open, not silently skipped.
@@ -553,6 +768,25 @@ except Exception:  # noqa: BLE001
     )
 app = FastAPI(title="CityNexus MVP API", version="0.1.0")
 logger = logging.getLogger(__name__)
+
+
+@app.on_event("startup")
+def resume_approved_agent_continuations() -> None:
+    """Finish approval continuations left between durable commit boundaries."""
+
+    try:
+        from app.agent.continuation import reconcile_approved_pending_actions
+
+        with SessionLocal() as startup_session:
+            outcome = reconcile_approved_pending_actions(startup_session)
+        if outcome.get("resumed") or outcome.get("failed"):
+            logger.info("R28 approval continuation startup reconciliation: %s", outcome)
+    except Exception:  # noqa: BLE001
+        # Startup must remain available so an operator can inspect a failed
+        # continuation; the durable row is intentionally left queryable.
+        logger.exception("could not reconcile approved Agent continuations at startup")
+
+
 _trip_studio_accept_lock = RLock()
 
 
@@ -829,6 +1063,7 @@ def _record_outcome_event(
     activity: Activity | None,
     event_type: str,
     actor_type: str,
+    actor_id: str | None = None,
     occurred_at_actual: str | None = None,
     payload: dict[str, Any] | None = None,
     related_proposal_id: str | None = None,
@@ -841,7 +1076,7 @@ def _record_outcome_event(
         activity_id=activity.id if activity is not None else None,
         event_type=event_type,
         actor_type=actor_type,
-        actor_id=str(journey.traveler_id),
+        actor_id=actor_id if actor_id is not None else str(journey.traveler_id),
         occurred_at_actual=occurred_at_actual or now,
         planned_start_at=activity.start_at if activity is not None else None,
         planned_end_at=activity.end_at if activity is not None else None,
@@ -860,7 +1095,7 @@ def _record_outcome_event(
         entity_id=event.id,
         journey_id=journey.id,
         actor_type=actor_type,
-        actor_id=str(journey.traveler_id),
+        actor_id=actor_id if actor_id is not None else str(journey.traveler_id),
         after={
             "event_type": event_type,
             "activity_id": event.activity_id,
@@ -1364,16 +1599,39 @@ def _capture_reported_disruption(
 def run_agent_command(
     journey_id: UUID,
     payload: AgentCommandRequest,
+    request: Request,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     start_request_budget(SCENARIO_AGENT_COMMANDS)
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
-    interpretation = _copilot_fallback_or_ai(payload.command, _copilot_context(session, journey))
+    planned_action = _planned_separation_command_action(payload.command)
+    if planned_action is not None:
+        return _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=payload.command,
+            action=planned_action,
+            now=now_dt,
+        )
+    context = _copilot_context(session, journey)
+    interpretation = _copilot_fallback_or_ai(payload.command, context)
+    if _is_live_journey_intent_request(payload.command, interpretation):
+        return _run_live_journey_intent(
+            request=request,
+            session=session,
+            journey=journey,
+            command=payload.command,
+            interpretation=interpretation,
+            context=context,
+            now=now_dt,
+        )
     event_type = (
         str(interpretation.entities.get("event_type"))
-        if interpretation.intent == "DISRUPTION_REPORT"
+        if not is_status_inspection_reference(payload.command)
+        and interpretation.intent == "DISRUPTION_REPORT"
         and interpretation.entities.get("event_type")
         else None
     )
@@ -1414,6 +1672,21 @@ def run_agent_command(
                     },
                 }
             event = session.get(EventModel, captured["id"])
+            if event is not None:
+                existing_event = session.scalar(
+                    select(EventModel)
+                    .where(
+                        EventModel.journey_id == journey.id,
+                        EventModel.event_type == event_type,
+                        EventModel.affected_activity_id == event.affected_activity_id,
+                        EventModel.status.in_(("DETECTED", "ACKNOWLEDGED")),
+                    )
+                    .order_by(EventModel.detected_at, EventModel.id)
+                )
+                if existing_event is not None and existing_event.id != event.id:
+                    session.delete(event)
+                    session.flush()
+                    event = existing_event
             session.flush()
         mission = create_mission(
             session,
@@ -1442,26 +1715,21 @@ def run_agent_command(
         native = HermesNativeClient()
         try:
             native_plan = mission_plan_for_model(mission)
-            native_tool_sequence = [
-                str(step["tool_name"])
-                for step in native_plan["steps"]
-                if step.get("tool_name")
-            ]
             native_run = native.create_run(
                 mission_id=mission.id,
                 journey_id=journey.id,
                 input_text=payload.command,
                 instructions=(
-                    "Follow the supplied CityNexus mission plan in order. You MUST call each listed MCP tool "
-                    f"in this sequence: {', '.join(native_tool_sequence)}. "
+                    "Use the supplied CityNexus mission plan as an authority envelope, not a script. "
+                    "Inspect first, then choose among the allowed capabilities based on the live "
+                    "Journey, Twin, event, and portfolio; never assume a standby is sufficient and "
+                    "never invent a mutation sequence. "
+                    "For a real-city strategy mission, additional tools in allowed_tools may be used "
+                    "to acquire provider-backed facts and generate candidate plans before approval. "
                     f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
                     f"The CityNexus mission_id is {mission.id}; do not invent or omit either identifier. "
-                    + (
-                        f"For request_replan, set trigger_event_id exactly to {mission.trigger_event_id}, "
-                        "candidate_count to 3, and solver_mode to deterministic. "
-                        if mission.trigger_event_id
-                        else "There is no trigger event; do not call request_replan until CityNexus provides one. "
-                    )
+                    "The current disruption, if any, is discoverable from server-owned JourneyTwin/event inspection; "
+                    "do not assume a trigger identifier or a recovery action from this hand-off. "
                     + "Call one MCP tool at a time (never batch or use tool_call metadata), do not repeat a completed step. "
                     "Use only the configured CityNexus MCP tools and the allowed_tools list. "
                     "Respect the requested autonomy boundary; proposal-only work must not mutate. "
@@ -1538,7 +1806,15 @@ def run_agent_command(
                 "provider_key": "deepseek",
                 "model_key": settings.ai_model.removeprefix("deepseek/"),
                 "runtime_identity": runtime_status()["runtime_identity"],
-                "outcome": None,
+                "outcome": _structured_failure_outcome(
+                    status="FAILED_EXTERNAL",
+                    reason_code=(
+                        ai_state_from_failure_reason(str(exc))
+                        or "AGENT_RUNTIME_UNAVAILABLE"
+                    ),
+                    user_summary="The configured Agent provider did not complete this mission.",
+                    recommended_action="Retry with a configured provider or continue with deterministic tools.",
+                ),
                 "failure_reason": str(exc),
                 "tool_steps": [],
             }
@@ -1592,6 +1868,186 @@ def put_guardian_mission(
     return mission_payload(mission)
 
 
+MIN_ACTIONABLE_OPPORTUNITY_WINDOW_MINUTES = 30
+
+
+def _ensure_opportunity_window_event(session: Session, journey: Journey) -> EventModel | None:
+    """Persist one server-derived opportunity signal from the current Twin.
+
+    The signal is deliberately a compact statement of server-observed facts.
+    It contains no candidate Place and no recovery recipe; the Agent must search
+    and choose a bounded hint later.  A mobility snapshot is required so a
+    deterministic window never rests on the Twin's offline/mock fallback.
+    """
+
+    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+        return None
+    twin = _twin_snapshot(session, journey)
+    context = twin.get("context") or {}
+    window = context.get("opportunity_window")
+    mobility = context.get("mobility") or {}
+    provider = str(mobility.get("provider") or mobility.get("source_provider") or "").lower()
+    if not isinstance(window, dict) or not window.get("available_minutes"):
+        return None
+    if not mobility.get("snapshot_id") or provider.startswith("mock") or mobility.get("degraded"):
+        return None
+    execution = context.get("execution") or {}
+    current_activity = (
+        session.get(Activity, str(execution.get("now_activity_id")))
+        if execution.get("now_activity_id")
+        else None
+    )
+    current_location = (
+        current_activity.place_id or current_activity.city_service_id
+        if current_activity is not None
+        else None
+    )
+    if current_activity is None or current_activity.status not in {"ARRIVED", "IN_PROGRESS"}:
+        return None
+    next_activity = session.scalar(
+        select(Activity).where(
+            Activity.plan_version_id == journey.active_plan_version_id,
+            Activity.sequence_no > current_activity.sequence_no,
+            Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
+        ).order_by(Activity.sequence_no)
+    )
+    if next_activity is None:
+        return None
+    plan = session.get(PlanVersion, journey.active_plan_version_id)
+    if plan is None:
+        return None
+    base_snapshot = MobilitySnapshot.from_evidence(
+        _json_object(plan.mobility_evidence_json)
+    )
+    origin = _activity_routing_key(current_activity)
+    destination = _activity_routing_key(next_activity)
+    next_fact = base_snapshot.fact_for(origin, destination)
+    if next_fact is None or next_fact.fact_quality != "LIVE_PROVIDER_CAPTURE" or next_fact.degraded:
+        return None
+    opens_at = max(
+        datetime.fromisoformat(str(window["opens_at"])),
+        datetime.fromisoformat(current_activity.end_at),
+    )
+    # The first unexecuted activity is movable during an additive opportunity
+    # insertion.  The actual hard boundary is the next protected C4
+    # commitment, not that activity's original start time.  Use the frozen
+    # active-plan edge only as the conservative current->anchor travel burden;
+    # F4 will capture the candidate's two new directed edges separately.
+    commitment_start = None
+    commitment_semantic_key = None
+    commitment_rows = session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.status == "ACTIVE",
+            CommitmentModel.level == "C4_Anchored",
+        )
+    ).all()
+    for commitment in commitment_rows:
+        commitment_policy = _json_object(commitment.policy_json, {})
+        scheduled = commitment_policy.get("scheduled_start_at")
+        if not scheduled:
+            continue
+        try:
+            candidate_start = datetime.fromisoformat(str(scheduled))
+        except ValueError:
+            continue
+        if candidate_start <= datetime.fromisoformat(current_activity.end_at):
+            continue
+        if commitment_start is None or candidate_start < commitment_start:
+            commitment_start = candidate_start
+            commitment_semantic_key = commitment_policy.get("semantic_key")
+    if commitment_start is None:
+        return None
+    must_depart_by = min(
+        datetime.fromisoformat(str(window["must_depart_by"])),
+        commitment_start - timedelta(minutes=next_fact.minutes + 15),
+    )
+    available_minutes = int((must_depart_by - opens_at).total_seconds() // 60)
+    if available_minutes < MIN_ACTIONABLE_OPPORTUNITY_WINDOW_MINUTES:
+        return None
+    payload = {
+        "signal_kind": "OPPORTUNITY_WINDOW",
+        "opens_at": opens_at.isoformat(),
+        "must_depart_by": must_depart_by.isoformat(),
+        "available_minutes": available_minutes,
+        "minimum_actionable_window_min": MIN_ACTIONABLE_OPPORTUNITY_WINDOW_MINUTES,
+        "current_activity_id": twin.get("current_activity_id"),
+        "current_execution_activity_id": execution.get("now_activity_id"),
+        "current_execution_location": current_location,
+        "next_activity_id": next_activity.id,
+        "next_activity_start": next_activity.start_at,
+        "next_commitment_start": commitment_start.isoformat(),
+        "next_commitment_semantic_key": commitment_semantic_key,
+        "safety_buffer_min": 15,
+        "active_plan_version_id": journey.active_plan_version_id,
+        "twin_snapshot_at": twin.get("snapshot_at"),
+        "mobility_snapshot_id": mobility.get("snapshot_id"),
+        "mobility_provider": mobility.get("source_provider") or mobility.get("provider"),
+        "provenance": "SYSTEM_DERIVED_FROM_TWIN_AND_LIVE_MOBILITY",
+    }
+    fingerprint_payload = {
+        key: payload.get(key)
+        for key in (
+            "signal_kind",
+            "opens_at",
+            "must_depart_by",
+            "available_minutes",
+            "current_execution_activity_id",
+            "next_activity_id",
+            "next_commitment_start",
+            "active_plan_version_id",
+        )
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(fingerprint_payload, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["opportunity_fingerprint"] = fingerprint
+    existing_rows = session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.event_type == "OPPORTUNITY_WINDOW",
+        ).order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+    ).all()
+    existing = next(
+        (
+            item
+            for item in existing_rows
+            if _json_object(item.payload_json).get("opportunity_fingerprint") == fingerprint
+        ),
+        None,
+    )
+    if existing is not None:
+        return existing
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="citynexus-twin-opportunity",
+        provenance="SYSTEM_DERIVED",
+        event_type="OPPORTUNITY_WINDOW",
+        severity="INFO",
+        affected_activity_id=None,
+        occurred_at=opens_at.isoformat(),
+        detected_at=str(twin.get("snapshot_at") or datetime.now(timezone.utc).isoformat()),
+        status="DETECTED",
+        resolved_at=None,
+        payload_json=json.dumps(payload, ensure_ascii=False, sort_keys=True),
+        created_at=datetime.now(timezone.utc).isoformat(),
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="opportunity.window.detected",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="citynexus-twin",
+        after={"event_type": event.event_type, "fingerprint": fingerprint, "payload": payload},
+    )
+    return event
+
+
 @app.post("/api/v1/journeys/{journey_id}/guardian/scan")
 def run_guardian_scan(
     journey_id: UUID,
@@ -1599,6 +2055,53 @@ def run_guardian_scan(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     return scan_guardian(session, journey)
+
+
+def _guardian_pulse_payload(row: GuardianPulse | None) -> dict[str, Any] | None:
+    if row is None:
+        return None
+    try:
+        result = json.loads(row.result_json or "{}")
+    except json.JSONDecodeError:
+        result = {}
+    return {
+        "id": row.id,
+        "journey_id": row.journey_id,
+        "status": row.status,
+        "provider_key": row.provider_key,
+        "observation_ids": json.loads(row.observation_ids_json or "[]"),
+        "guardian_run_id": row.guardian_run_id,
+        "started_at": row.started_at,
+        "completed_at": row.completed_at,
+        "result": result,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/guardian/pulse")
+def run_guardian_pulse_now(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Run exactly one live sensing -> Guardian evaluation cycle now."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "Guardian pulse requires an active Journey")
+    return pulse_journey(session, journey)
+
+
+@app.get("/api/v1/journeys/{journey_id}/guardian/pulse/latest")
+def get_latest_guardian_pulse(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    require(session, Journey, str(journey_id), "Journey")
+    row = session.scalar(
+        select(GuardianPulse)
+        .where(GuardianPulse.journey_id == str(journey_id))
+        .order_by(GuardianPulse.started_at.desc(), GuardianPulse.id.desc())
+    )
+    return {"journey_id": str(journey_id), "pulse": _guardian_pulse_payload(row)}
 
 
 @app.post("/api/v1/journeys/{journey_id}/guardian/autopilot/start")
@@ -1655,6 +2158,374 @@ def start_guardian_autopilot(
     }
 
 
+def _operator_actor(request: Request, session: Session, journey: Journey) -> str:
+    """Resolve the authenticated owner/member for Operator mutations."""
+
+    actor_id = journey.traveler_id
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "authenticated member cannot operate this Journey")
+        actor_id = principal.traveler_id
+    return actor_id
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/start")
+def start_journey_operator(
+    journey_id: UUID,
+    request: Request,
+    payload: JourneyOperatorStartRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Put one active Journey under the standing mission + Guardian watch."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "Journey Operator requires an active Journey")
+    actor_id = _operator_actor(request, session, journey)
+    viewer_member_id = None
+    if settings.traveler_auth_secret:
+        viewer_member_id = session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == journey.id,
+                JourneyMemberModel.traveler_id == actor_id,
+            )
+        )
+    body = payload or JourneyOperatorStartRequest()
+    objective = body.objective.strip()
+    current = session.scalar(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if current is None or current.user_text != objective or current.requested_autonomy != body.requested_autonomy:
+        if current is not None:
+            current.status = "SUPERSEDED"
+            current.completed_at = datetime.now(timezone.utc).isoformat()
+        mission = create_mission(
+            session,
+            journey,
+            command=objective,
+            requested_autonomy=body.requested_autonomy,
+            trigger_event_id=None,
+            is_standing=True,
+        )
+        mission.status = "ACTIVE"
+        record_audit(
+            session,
+            action="guardian.mission.activated",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="USER",
+            actor_id=actor_id,
+            after=mission_payload(mission),
+        )
+    else:
+        mission = current
+    enrollment = ensure_enrollment(
+        session,
+        journey,
+        enabled=True,
+        interval_seconds=body.interval_seconds,
+    )
+    session.commit()
+    worker = start_autorun(interval_seconds=body.interval_seconds)
+    record_audit(
+        session,
+        action="operator.started",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=actor_id,
+        after={
+            "objective": objective,
+            "requested_autonomy": mission.requested_autonomy,
+            "mission_id": mission.id,
+            "autopilot_enabled": bool(enrollment.enabled),
+        },
+    )
+    session.commit()
+    return {
+        **operator_projection(session, journey, viewer_member_id=viewer_member_id),
+        "started": True,
+        "worker": worker,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/stop")
+def stop_journey_operator(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    actor_id = _operator_actor(request, session, journey)
+    viewer_member_id = None
+    if settings.traveler_auth_secret:
+        viewer_member_id = session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == journey.id,
+                JourneyMemberModel.traveler_id == actor_id,
+            )
+        )
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if enrollment is not None:
+        enrollment.enabled = False
+        enrollment.updated_at = datetime.now(timezone.utc).isoformat()
+    session.commit()
+    remaining = enrolled_journey_ids(session)
+    worker = stop_autorun() if not remaining else autorun_status()
+    record_audit(
+        session,
+        action="operator.stopped",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=actor_id,
+        after={"autopilot_enabled": False, "remaining_enrolled_journeys": remaining},
+    )
+    session.commit()
+    return {
+        **operator_projection(session, journey, viewer_member_id=viewer_member_id),
+        "stopped": True,
+        "worker": worker,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/operator")
+def get_journey_operator(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    viewer_member_id = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        _principal, viewer_member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        viewer_member_id = viewer_member.id
+    return operator_projection(session, journey, viewer_member_id=viewer_member_id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/intents/{intent_id}/clarification")
+def answer_operator_intent_clarification(
+    journey_id: UUID,
+    intent_id: str,
+    payload: dict[str, Any],
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Resolve a persisted bounded question on the same JourneyIntent lineage."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
+    intent = session.get(JourneyIntent, str(intent_id))
+    if (
+        intent is None
+        or intent.journey_id != journey.id
+        or intent.created_by_traveler_id != principal.traveler_id
+    ):
+        raise HTTPException(404, "Journey intent clarification was not found")
+    if intent.status != "NEEDS_CLARIFICATION":
+        raise HTTPException(409, "Journey intent clarification is no longer pending")
+
+    selected = str(payload.get("answer") or "").strip().upper()
+    envelope = _json_object(intent.semantic_envelope_json or "{}")
+    clarification = envelope.get("r52_clarification")
+    if not isinstance(clarification, dict) or clarification.get("status") != "PENDING":
+        raise HTTPException(409, "Journey intent has no pending bounded clarification")
+    allowed = {
+        str(option.get("value"))
+        for option in clarification.get("options", [])
+        if isinstance(option, dict) and option.get("value")
+    }
+    if selected not in allowed:
+        raise HTTPException(422, "Choose one of the listed clarification options")
+
+    semantic_kind, constraint = {
+        "SLOWER_PACE": ("PACE", {"kind": "PACE", "preference": "SLOWER"}),
+        "LESS_WALKING": ("WALKING_LIMIT", {"kind": "WALKING_LIMIT", "preference": "LOW"}),
+        "FEWER_STOPS": ("GENERAL_GOAL", {"kind": "GENERAL_GOAL", "preference": "FEWER_STOPS"}),
+    }.get(selected, (None, None))
+    if selected in {"REST_OF_TODAY", "NEXT_MORNING", "NEXT_STOP", "REMAINING_JOURNEY"}:
+        semantic_kind, constraint = ("GENERAL_GOAL", {"kind": "GENERAL_GOAL", "preference": "AS_REQUESTED"})
+    if semantic_kind is None or constraint is None:
+        raise HTTPException(422, "This clarification option needs additional semantic interpretation")
+
+    now_dt = datetime.now(timezone.utc)
+    now_text = now_dt.isoformat()
+    intent.intent_kind = semantic_kind
+    intent.constraints_json = json.dumps([constraint], ensure_ascii=False, sort_keys=True)
+    intent.canonical_dimensions_json = json.dumps([
+        "journey-intent:walking" if semantic_kind == "WALKING_LIMIT"
+        else "journey-intent:pace" if semantic_kind == "PACE"
+        else "journey-intent:general"
+    ])
+    clarification["status"] = "ANSWERED"
+    clarification["answer"] = selected
+    clarification["answered_at"] = now_text
+    envelope["r52_clarification"] = clarification
+    intent.semantic_envelope_json = json.dumps(envelope, ensure_ascii=False, sort_keys=True)
+    intent.status = "ACTIVE"
+    intent.evaluation_state = "RUNNING"
+    intent.updated_at = now_text
+
+    standing = session.scalar(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if standing is None:
+        raise HTTPException(409, "Journey Operator is no longer active")
+    protected = {str(journey.current_activity_id)} if journey.current_activity_id else set()
+    commitments = session.scalars(select(CommitmentModel).where(
+        CommitmentModel.journey_id == journey.id,
+        CommitmentModel.status == "ACTIVE",
+        CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
+    )).all()
+    protected.update(str(row.activity_id) for row in commitments if row.activity_id)
+    targets = json.loads(intent.target_activity_ids_json or "[]")
+    context = {
+        "id": intent.id,
+        "source": intent.source,
+        "created_by_traveler_id": principal.traveler_id,
+        "created_by_member_id": member.id,
+        "scope_kind": intent.scope_kind,
+        "scope_start_at": intent.scope_start_at,
+        "scope_end_at": intent.scope_end_at,
+        "local_date": intent.local_date,
+        "target_activity_ids": targets,
+        "canonical_dimensions": json.loads(intent.canonical_dimensions_json or "[]"),
+        "constraints": [constraint],
+    }
+    mission = JourneyMission(
+        id=str(uuid4()), journey_id=journey.id, traveler_id=principal.traveler_id,
+        trigger_event_id=None, user_text=intent.source_text,
+        objective_codes_json=json.dumps(["LIVE_JOURNEY_INTENT_STEERING"]),
+        protected_activity_ids_json=json.dumps(sorted(protected)),
+        mutable_activity_ids_json=json.dumps([item for item in targets if item not in protected]),
+        intent_json=json.dumps({"temporary_journey_intent": context}, ensure_ascii=False),
+        resolved_intent_json=json.dumps({"temporary_journey_intent": context, "authority": "PLAN_ONLY; normal R43/R45/R47 gates remain"}, ensure_ascii=False),
+        allowed_action_classes_json=json.dumps(["REQUEST_REPLAN"]), unresolved_references_json="[]",
+        compiler_provider_key=intent.compiler_provider_key,
+        compiler_model_key=intent.compiler_model_key,
+        compiler_confidence=intent.compiler_confidence,
+        reasoning_summary="The traveller answered a bounded question on the existing JourneyIntent.",
+        is_standing=False, parent_mission_id=standing.id,
+        max_cost_delta_minor=0, max_loss_minor=0, max_schedule_drift_min=0,
+        preferences_json="{}", requested_autonomy="PLAN_ONLY", status="CREATED", created_at=now_text,
+    )
+    session.add(mission)
+    clarification["resumed_mission_id"] = mission.id
+    envelope["r52_clarification"] = clarification
+    intent.semantic_envelope_json = json.dumps(envelope, ensure_ascii=False, sort_keys=True)
+    session.add(intent)
+    session.commit()
+
+    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    try:
+        run = runtime.run(session, journey=journey, mission=mission)
+    except AgentRuntimeUnavailable as exc:
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": str(exc), "outcome": {"reason_code": "AGENT_RUNTIME_UNAVAILABLE"}}
+    except Exception as exc:  # noqa: BLE001
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": type(exc).__name__, "outcome": {"reason_code": "AGENT_RUNTIME_FAILURE"}}
+    finally:
+        runtime.close()
+    run_status = str(run.get("status") or "").upper()
+    intent.evaluation_state = "BRAIN_BLOCKED" if run_status in {"FAILED_EXTERNAL", "BLOCKED", "UNAVAILABLE"} else "QUEUED"
+    intent.updated_at = datetime.now(timezone.utc).isoformat()
+    record_audit(
+        session, action="journey.intent.clarification_answered", entity_type="JourneyIntent",
+        entity_id=intent.id, journey_id=journey.id, actor_type="TRAVELER",
+        actor_id=principal.traveler_id,
+        after={"answer": selected, "mission_id": mission.id, "agent_status": run_status},
+    )
+    session.commit()
+    result = operator_projection(session, journey, viewer_member_id=member.id)
+    result["intent_clarification_result"] = {
+        "intent_id": intent.id, "mission_id": mission.id,
+        "outcome": "DECISION_INBOX_BRAIN_BLOCKED_AFTER_RESPONSE" if intent.evaluation_state == "BRAIN_BLOCKED" else "DECISION_INBOX_CLARIFICATION_RESOLVED",
+        "agent_status": run_status,
+    }
+    return result
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/approvals/{approval_id}/reject")
+def reject_journey_operator_change(
+    journey_id: UUID,
+    approval_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Reject the exact pending recovery without changing the active plan."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    actor_id = _operator_actor(request, session, journey)
+    approval = session.get(ActionApproval, str(approval_id))
+    if approval is None or approval.journey_id != journey.id or approval.traveler_id != journey.traveler_id:
+        raise HTTPException(404, "operator approval was not found")
+    pending = session.scalar(
+        select(AgentPendingAction).where(AgentPendingAction.approval_id == approval.id)
+    )
+    if pending is None:
+        raise HTTPException(409, "operator approval has no pending action")
+    if approval.status in {"REJECTED", "EXPIRED"}:
+        return operator_projection(session, journey)
+    if approval.status != "PENDING":
+        raise HTTPException(409, "operator approval is no longer usable")
+    approval.status = "REJECTED"
+    pending.status = "SUPERSEDED"
+    pending.updated_at = datetime.now(timezone.utc).isoformat()
+    run = session.get(AgentRun, pending.run_id)
+    if run is not None:
+        run.status = "COMPLETED"
+        run.completed_at = pending.updated_at
+        run.outcome = json.dumps({"status": "NO_ACTION", "reason_code": "USER_REJECTED"})
+    guardian_run = session.scalar(
+        select(GuardianRun)
+        .where(GuardianRun.agent_run_id == pending.run_id)
+        .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
+    )
+    if guardian_run is not None:
+        guardian_run.status = "COMPLETED"
+        guardian_run.action_status = "NO_ACTION"
+        guardian_run.reasoning_summary = "The traveller kept the current plan."
+    mission = session.get(JourneyMission, pending.mission_id)
+    if mission is not None:
+        mission.status = "COMPLETED"
+        mission.completed_at = pending.updated_at
+        mission.failure_reason = "USER_REJECTED"
+    record_audit(
+        session,
+        action="agent.action_approval.rejected",
+        entity_type="ActionApproval",
+        entity_id=approval.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=actor_id,
+        after={"approval_id": approval.id, "pending_action_id": pending.id, "status": "REJECTED"},
+    )
+    session.commit()
+    return operator_projection(session, journey)
+
+
 @app.post("/api/v1/journeys/{journey_id}/guardian/autopilot/stop")
 def stop_guardian_autopilot(
     journey_id: UUID,
@@ -1697,6 +2568,14 @@ def get_guardian_autopilot_status(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     enrollment = session.get(AutopilotEnrollment, journey.id)
+    watch = (
+        adaptive_watch_policy(session, journey, enrollment)
+        if enrollment is not None and enrollment.enabled
+        else None
+    )
+    readiness = _readiness_with_departure_activation(
+        session, journey, departure_readiness_projection(session, journey)
+    )
     return {
         "journey_id": journey.id,
         "enrollment": (
@@ -1711,8 +2590,750 @@ def get_guardian_autopilot_status(
             if enrollment is not None
             else None
         ),
+        "watch": watch,
+        "readiness": readiness,
         **autorun_status(),
     }
+
+
+@app.get("/api/v1/journeys/{journey_id}/guardian/readiness")
+def get_guardian_departure_readiness(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    readiness = departure_readiness_projection(session, journey)
+    return _readiness_with_departure_activation(session, journey, readiness)
+
+
+def _readiness_with_departure_activation(
+    session: Session,
+    journey: Journey,
+    readiness: dict[str, Any],
+) -> dict[str, Any]:
+    next_move = readiness.get("next_move") or {}
+    current_move = next_move.get("current_activity") or {}
+    target = next_move.get("next_activity") or current_move or {}
+    activity_status = current_move.get("status") if current_move.get("status") in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"} else target.get("status")
+    activation = departure_activation_projection(
+        readiness,
+        activity_status=activity_status,
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
+    return {
+        **readiness,
+        "departure_activation": activation,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/departure-activation")
+def get_departure_activation(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    readiness = departure_readiness_projection(session, journey)
+    return _readiness_with_departure_activation(session, journey, readiness)
+
+
+@app.post("/api/v1/journeys/{journey_id}/guardian/readiness/refresh")
+def refresh_guardian_departure_readiness(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    result = refresh_departure_readiness(session, journey)
+    session.commit()
+    return result
+
+
+def _launch_target_activity(session: Session, journey: Journey) -> Activity | None:
+    if not journey.active_plan_version_id:
+        return None
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == journey.active_plan_version_id)
+        .order_by(Activity.sequence_no)
+    ).all()
+    terminal = {"COMPLETED", "SKIPPED", "CANCELLED"}
+    if journey.current_activity_id:
+        current = next(
+            (row for row in rows if str(row.id) == str(journey.current_activity_id) and row.status not in terminal),
+            None,
+        )
+        if current is not None:
+            return current
+    return next((row for row in rows if row.status not in terminal), None)
+
+
+def _launch_contract_payload(
+    row: JourneyLaunchContext | None,
+    session: Session | None = None,
+) -> dict[str, Any] | None:
+    if row is None:
+        return None
+    payload = {
+        "journey_id": row.journey_id,
+        "source_kind": row.source_kind,
+        "authority_kind": row.authority_kind,
+        "place_id": row.place_id,
+        "target_activity_id": row.target_activity_id,
+        "display_name": row.display_name,
+        "latitude": row.latitude,
+        "longitude": row.longitude,
+        "coordinate_crs": row.coordinate_crs,
+        "source_ref_type": row.source_ref_type,
+        "source_ref_id": row.source_ref_id,
+        "valid_from": row.valid_from,
+        "valid_until": row.valid_until,
+        "confirmed_by": row.confirmed_by,
+        "confirmation_method": row.confirmation_method,
+        "created_at": row.created_at,
+        "updated_at": row.updated_at,
+    }
+    if session is not None:
+        if row.source_kind == "PLACE" and row.place_id:
+            place = session.get(Place, row.place_id)
+            if place is not None:
+                payload["provenance"] = {
+                    "provider_key": place.provider_key,
+                    "external_id": place.external_id,
+                    "coordinate_system": place.coordinate_system or place.source_coordinate_system,
+                }
+        elif row.source_kind == "SELECTED_STAY" and row.source_ref_id:
+            offer = session.get(AccommodationOfferSnapshot, row.source_ref_id)
+            if offer is not None:
+                payload["provenance"] = {
+                    "provider_key": offer.provider_key,
+                    "external_offer_id": offer.external_offer_id,
+                    "coordinate_system": offer.coordinate_crs,
+                }
+        elif row.source_kind == "ARRIVAL_ANCHOR":
+            payload["provenance"] = {"source_ref_type": row.source_ref_type, "source_ref_id": row.source_ref_id}
+    return payload
+
+
+@app.get("/api/v1/journeys/{journey_id}/launch-setup")
+def get_launch_setup(journey_id: UUID, session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    target = _launch_target_activity(session, journey)
+    projection = launch_setup_projection(session, journey, target_activity=target)
+    return {
+        **projection,
+        "contract": _launch_contract_payload(session.get(JourneyLaunchContext, journey.id), session),
+        "read_only": True,
+        "provider_capture": False,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/launch-origin")
+def set_launch_origin(
+    journey_id: UUID,
+    payload: LaunchOriginRequest,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    target = _launch_target_activity(session, journey)
+    if target is None:
+        raise HTTPException(409, "launch target is unavailable")
+    target_start = datetime.fromisoformat(str(target.start_at).replace("Z", "+00:00"))
+    if target_start.tzinfo is None:
+        target_start = target_start.replace(tzinfo=timezone.utc)
+    target_start = target_start.astimezone(timezone.utc)
+    valid_from = (target_start - timedelta(hours=24)).isoformat()
+    valid_until = (target_start + timedelta(hours=24)).isoformat()
+
+    source_ref_type: str
+    source_ref_id: str | None
+    display_name: str
+    place_id: str | None = None
+    latitude: float | None
+    longitude: float | None
+    coordinate_crs: str | None
+    provenance: dict[str, Any]
+    if payload.source_kind == "PLACE":
+        if payload.place_id is None:
+            raise HTTPException(422, "place_id is required for PLACE")
+        place = session.get(Place, str(payload.place_id))
+        if place is None:
+            raise HTTPException(404, "Place not found")
+        if str(place.city_code).upper() != str(journey.city_code).upper():
+            raise HTTPException(422, "Place is outside this Journey city")
+        if place.latitude is None or place.longitude is None:
+            raise HTTPException(422, "Place has no routable coordinates")
+        place_id = str(place.id)
+        display_name = place.name
+        latitude = float(place.latitude)
+        longitude = float(place.longitude)
+        coordinate_crs = place.coordinate_system or place.source_coordinate_system
+        source_ref_type, source_ref_id = "PLACE", str(place.id)
+        provenance = {
+            "provider_key": place.provider_key,
+            "external_id": place.external_id,
+            "coordinate_system": coordinate_crs,
+        }
+    elif payload.source_kind == "SELECTED_STAY":
+        option = session.scalar(
+            select(StayJourneyOption)
+            .where(StayJourneyOption.journey_id == journey.id, StayJourneyOption.status == "SELECTED")
+            .order_by(StayJourneyOption.rank, StayJourneyOption.id)
+        )
+        offer = session.get(AccommodationOfferSnapshot, option.accommodation_offer_id) if option else None
+        if option is None or offer is None:
+            raise HTTPException(422, "selected stay is unavailable")
+        latitude, longitude = float(offer.latitude), float(offer.longitude)
+        coordinate_crs = offer.coordinate_crs
+        display_name = offer.property_name
+        source_ref_type, source_ref_id = "ACCOMMODATION_OFFER", str(offer.id)
+        provenance = {"provider_key": offer.provider_key, "external_offer_id": offer.external_offer_id}
+    else:
+        context = session.get(JourneyTripContext, journey.id)
+        try:
+            anchor = json.loads(context.arrival_anchor_json or "{}") if context else {}
+        except json.JSONDecodeError:
+            anchor = {}
+        if anchor.get("latitude") is None or anchor.get("longitude") is None:
+            raise HTTPException(422, "arrival anchor has no routable coordinates")
+        latitude, longitude = float(anchor["latitude"]), float(anchor["longitude"])
+        coordinate_crs = str(anchor.get("coordinate_crs") or "WGS84")
+        display_name = str(anchor.get("location") or anchor.get("name") or "Arrival point")
+        source_ref_type, source_ref_id = "ARRIVAL_ANCHOR", str(anchor.get("reservation_id") or "arrival-anchor")
+        provenance = {"provider_key": anchor.get("provider_key"), "reservation_id": anchor.get("reservation_id")}
+
+    now = datetime.now(timezone.utc).isoformat()
+    before = session.get(JourneyLaunchContext, journey.id)
+    before_payload = _launch_contract_payload(before, session)
+    desired = {
+        "source_kind": payload.source_kind,
+        "authority_kind": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "place_id": place_id,
+        "target_activity_id": str(target.id),
+        "display_name": display_name,
+        "latitude": latitude,
+        "longitude": longitude,
+        "coordinate_crs": coordinate_crs,
+        "source_ref_type": source_ref_type,
+        "source_ref_id": source_ref_id,
+        "valid_from": valid_from,
+        "valid_until": valid_until,
+        "confirmed_by": str(journey.traveler_id),
+        "confirmation_method": "USER_CONFIRMED_PLANNED_ORIGIN",
+    }
+    comparable = {key: before_payload.get(key) for key in desired} if before_payload else None
+    idempotent = comparable == desired
+    if not idempotent:
+        if before is None:
+            before = JourneyLaunchContext(journey_id=journey.id, created_at=now)
+            session.add(before)
+        for key, value in desired.items():
+            setattr(before, key, value)
+        before.updated_at = now
+        record_audit(
+            session,
+            action="journey.launch_origin.confirmed",
+            entity_type="JourneyLaunchContext",
+            entity_id=journey.id,
+            journey_id=journey.id,
+            before=before_payload,
+            after={**desired, "provenance": provenance},
+            actor_type="traveler",
+            actor_id=str(journey.traveler_id),
+        )
+        session.commit()
+    row = session.get(JourneyLaunchContext, journey.id)
+    return {
+        "contract": _launch_contract_payload(row, session),
+        "provenance": provenance,
+        "idempotent": idempotent,
+        "audit_action": None if idempotent else "journey.launch_origin.confirmed",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "physical_presence_asserted": False,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/routes/acquire")
+def acquire_route_session(
+    journey_id: UUID,
+    request: Request,
+    payload: RouteAcquireRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Acquire exactly one server-resolved grounded-origin -> target edge."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        resolve_journey_member_principal(request, session, journey_id=journey.id)
+    target = _launch_target_activity(session, journey)
+    requested = payload or RouteAcquireRequest()
+    if target is None or not target.place_id:
+        raise HTTPException(409, "exact route target is unavailable")
+    if requested.target_activity_id and str(requested.target_activity_id) != str(target.id):
+        raise HTTPException(422, "target_activity_id is not the active exact target")
+    origin = grounded_launch_origin(session, journey, target_activity=target)
+    if origin.get("state") != "READY" or not origin.get("origin_key"):
+        raise HTTPException(409, "grounded launch origin is unavailable")
+    if str(origin.get("source") or "") == "FOREGROUND_LOCATION":
+        raise HTTPException(409, "route acquisition requires an exact persisted origin Place")
+    request = RouteRequest(
+        journey_id=str(journey.id),
+        origin_key=str(origin["origin_key"]),
+        target_key=str(target.place_id),
+        target_activity_id=str(target.id),
+        requested_mode=requested.requested_mode,
+        provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+        route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+    )
+    row, reused = submit_route_operation(session, journey, request)
+    body = route_operation_payload(row, reused=reused)
+    body.update(
+        {
+            "origin": {
+                "key": origin.get("origin_key"),
+                "name": origin.get("name"),
+                "authority": origin.get("authority"),
+                "source": origin.get("source"),
+            },
+            "target": {
+                "activity_id": str(target.id),
+                "key": str(target.place_id),
+                "name": target.title,
+            },
+        }
+    )
+    return body
+
+
+def _persist_trusted_transit_deviation_event(
+    session: Session,
+    *,
+    journey: Journey,
+    activity: Activity,
+    active_leg_id: str,
+    transit: dict[str, Any],
+    commitment_risk: dict[str, Any],
+    reroute_operation_id: str,
+    route_provider: str,
+    route_provenance: str,
+) -> EventModel | None:
+    """Persist one Guardian-actionable event only for verified, material risk."""
+    source = str(transit.get("location_source") or "").upper()
+    allowed_route_provenance = {
+        "LIVE_PROVIDER_CAPTURE",
+        "LIVE_CAPTURE",
+        "CAPTURED_REPLAY",
+        "SEALED_REAL_REPLAY",
+    }
+    if (
+        source not in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
+        or not transit.get("authoritative")
+        or not transit.get("material")
+        or str(transit.get("state") or "") != "VERIFIED_DEVIATION"
+        or str(commitment_risk.get("state") or "") != "COMMITMENT_AT_RISK"
+        or not route_provider
+        or route_provider.casefold().startswith(("mock", "fixture"))
+        or str(route_provenance or "").upper() not in allowed_route_provenance
+    ):
+        return None
+    observation_id = str(transit.get("location_observation_id") or "")
+    commitment = commitment_risk.get("next_commitment") or {}
+    commitment_id = str(commitment.get("commitment_id") or "")
+    if not observation_id or not commitment_id:
+        return None
+    # One continuous deviation is one incident even if the device emits another
+    # trusted sample or the traveller taps reroute again.  Observation/operation
+    # ids are evidence *within* the incident, not the incident identity.
+    fingerprint_payload = {
+        "incident_kind": "VERIFIED_ROUTE_DEVIATION",
+        "journey_id": str(journey.id),
+        "active_plan_version_id": str(journey.active_plan_version_id or ""),
+        "activity_id": str(activity.id),
+        "active_leg_id": active_leg_id,
+        "commitment_id": commitment_id,
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(fingerprint_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    existing_rows = session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.provider_key == "journey-in-transit-route",
+            EventModel.event_type == "TRAFFIC_DELAY",
+            EventModel.provenance == "SYSTEM_DERIVED",
+            EventModel.status.in_(("DETECTED", "ACKNOWLEDGED", "OPEN", "ACTIVE")),
+        )
+    ).all()
+    for existing in existing_rows:
+        try:
+            if json.loads(existing.payload_json or "{}").get("incident_fingerprint") == fingerprint:
+                return existing
+        except (TypeError, json.JSONDecodeError):
+            continue
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="journey-in-transit-route",
+        provenance="SYSTEM_DERIVED",
+        event_type="TRAFFIC_DELAY",
+        severity="MAJOR",
+        status="DETECTED",
+        # The causal target is the activity whose active route is deviating.
+        # The protected commitment is the downstream risk and remains explicit
+        # in payload; conflating the two makes recovery target the wrong stop.
+        affected_activity_id=str(activity.id),
+        occurred_at=str(transit.get("location_captured_at") or now),
+        detected_at=now,
+        resolved_at=None,
+        payload_json=json.dumps(
+            {
+                "incident_fingerprint": fingerprint,
+                "derivation": "SYSTEM_DERIVED_TRUSTED_LOCATION_FACT",
+                "predictive_only": False,
+                "location_observation_id": observation_id,
+                "location_source": source,
+                "accuracy_m": transit.get("location_accuracy_m"),
+                "distance_to_route_m": transit.get("distance_to_route_m"),
+                "deviation_threshold_m": transit.get("deviation_threshold_m"),
+                "active_journey_leg_id": active_leg_id,
+                "route_geometry": transit.get("route_geometry"),
+                "reroute_operation_id": reroute_operation_id,
+                "reroute_provider": route_provider,
+                "reroute_provenance": str(route_provenance).upper(),
+                "source_activity_id": str(activity.id),
+                "affected_commitment_activity_id": str(commitment.get("activity_id") or "") or None,
+                "affected_commitment": commitment_risk,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.in_transit_deviation.materialized",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="guardian",
+        after={
+            "event_type": event.event_type,
+            "incident_fingerprint": fingerprint,
+            "source_activity_id": activity.id,
+            "affected_activity_id": event.affected_activity_id,
+            "active_leg_id": active_leg_id,
+            "affected_commitment_id": commitment_id,
+            "affected_commitment_activity_id": str(commitment.get("activity_id") or "") or None,
+        },
+    )
+    return event
+
+
+@app.post("/api/v1/journeys/{journey_id}/in-transit/reroute")
+def acquire_in_transit_reroute(
+    journey_id: UUID,
+    request: Request,
+    payload: InTransitRerouteRequest,
+    session: Session = Depends(get_session),
+):
+    """Acquire a fresh route from one current-leg location sample, without plan mutation."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "journey must have an ACTIVE plan")
+    activity = session.get(Activity, str(journey.current_activity_id or ""))
+    if (
+        activity is None
+        or str(activity.plan_version_id) != str(journey.active_plan_version_id)
+        or str(activity.status).upper() != "EN_ROUTE"
+    ):
+        raise HTTPException(409, "IN_TRANSIT_REROUTE_REQUIRES_CURRENT_EN_ROUTE_ACTIVITY")
+
+    principal = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, _member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+
+    observation = session.get(LocationObservation, str(payload.location_observation_id))
+    if observation is None or str(observation.journey_id) != str(journey.id):
+        raise HTTPException(404, "LOCATION_OBSERVATION_NOT_FOUND")
+    if principal is not None:
+        location_audit = session.scalar(
+            select(AuditLog).where(
+                AuditLog.journey_id == journey.id,
+                AuditLog.action == "journey.location.recorded",
+                AuditLog.entity_type == "LocationObservation",
+                AuditLog.entity_id == observation.id,
+                AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                AuditLog.actor_id == principal.traveler_id,
+            ).order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        )
+        if location_audit is None:
+            raise HTTPException(403, "LOCATION_OBSERVATION_PRINCIPAL_MISMATCH")
+
+    transit = in_transit_projection(session, journey)
+    if transit.get("state") == "ARRIVAL_READY":
+        raise HTTPException(409, "IN_TRANSIT_LOCATION_NEAR_TARGET_USE_ARRIVAL_FLOW")
+    if str(transit.get("location_observation_id") or "") != str(observation.id):
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_CURRENT_FOR_ACTIVE_LEG")
+    if not transit.get("can_reroute"):
+        raise HTTPException(409, "IN_TRANSIT_LOCATION_UNAVAILABLE_OR_STALE")
+
+    leg = active_transit_leg(session, journey, activity)
+    if leg is None or not str(leg.mode or "").strip():
+        raise HTTPException(409, "IN_TRANSIT_ROUTE_MODE_UNAVAILABLE")
+    target = session.get(Place, str(activity.place_id or ""))
+    if target is None:
+        raise HTTPException(409, "IN_TRANSIT_EXACT_TARGET_UNAVAILABLE")
+
+    active_plan_before = str(journey.active_plan_version_id)
+    source = str(observation.source or "UNKNOWN").upper()
+    active_leg_id = str(leg.id)
+    route_request = RouteRequest(
+        journey_id=str(journey.id),
+        origin_key=f"location-observation:{observation.id}",
+        target_key=str(target.id),
+        target_activity_id=str(activity.id),
+        requested_mode=str(leg.mode).upper(),
+        provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+        route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+        origin_evidence={
+            "location_observation_id": str(observation.id),
+            "source": source,
+            "captured_at": observation.captured_at,
+            "accuracy_m": float(observation.accuracy_m),
+            "authority": transit.get("route_authority"),
+        },
+    )
+    row, reused = submit_route_operation(session, journey, route_request)
+    body = route_operation_payload(row, reused=reused)
+    result = body.get("result") if isinstance(body.get("result"), dict) else {}
+    completed = str(body.get("status") or "").upper() == "COMPLETED"
+    commitment_risk = (
+        reroute_commitment_risk(
+            session,
+            journey,
+            activity,
+            current_leg_duration_min=int(result["duration_min"]),
+            authority=str(transit.get("route_authority") or "UNKNOWN"),
+        )
+        if completed and result.get("duration_min") is not None
+        else {
+            "state": "UNKNOWN",
+            "authority": str(transit.get("route_authority") or "UNKNOWN"),
+            "future_mobility_basis": "FROZEN_PLAN_EVIDENCE_NOT_FUTURE_LIVE_TRAFFIC",
+        }
+    )
+    reroute_key = reroute_semantic_key(
+        journey_id=str(journey.id),
+        activity_id=str(activity.id),
+        location_observation_id=str(observation.id),
+        target_place_id=str(target.id),
+        mode=str(leg.mode),
+    )
+    session.expire_all()
+    journey_after = session.get(Journey, str(journey_id))
+    activity_after = session.get(Activity, str(activity.id))
+    transit_after = (
+        in_transit_projection(session, journey_after)
+        if journey_after is not None
+        else {}
+    )
+    plan_unchanged = bool(
+        journey_after is not None
+        and str(journey_after.active_plan_version_id or "") == active_plan_before
+    )
+    context_current = bool(
+        journey_after is not None
+        and activity_after is not None
+        and str(journey_after.status).upper() == "ACTIVE"
+        and str(journey_after.current_activity_id or "") == str(activity.id)
+        and str(activity_after.plan_version_id) == active_plan_before
+        and str(activity_after.status).upper() == "EN_ROUTE"
+        and str(transit_after.get("location_observation_id") or "") == str(observation.id)
+        and bool(transit_after.get("can_reroute"))
+    )
+    deviation_event = None
+    guardian_handoff: dict[str, Any] | None = None
+    if context_current:
+        deviation_event = _persist_trusted_transit_deviation_event(
+            session,
+            journey=journey_after,
+            activity=activity_after,
+            active_leg_id=active_leg_id,
+            transit=transit,
+            commitment_risk=commitment_risk,
+            reroute_operation_id=str(row.id),
+            route_provider=str(result.get("provider") or body.get("provider") or ""),
+            route_provenance=str(result.get("provenance") or body.get("provider_provenance") or ""),
+        )
+        if deviation_event is not None:
+            session.commit()
+            enrollment = session.get(AutopilotEnrollment, journey_id)
+            if enrollment is not None and enrollment.enabled:
+                try:
+                    guardian_handoff = scan_guardian(
+                        session, journey_after, include_opportunity_signals=False
+                    )
+                except Exception as exc:  # preserve the route result if Guardian is unavailable
+                    logging.getLogger(__name__).exception(
+                        "R56 Guardian handoff failed for trusted transit deviation %s",
+                        deviation_event.id,
+                    )
+                    guardian_handoff = {
+                        "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+                        "failure_classification": type(exc).__name__,
+                    }
+            else:
+                guardian_handoff = {"status": "NOT_ENROLLED"}
+            session.expire_all()
+            journey_after = session.get(Journey, str(journey_id))
+            activity_after = session.get(Activity, str(activity.id))
+            transit_after = (
+                in_transit_projection(session, journey_after)
+                if journey_after is not None
+                else {}
+            )
+            plan_unchanged = bool(
+                journey_after is not None
+                and str(journey_after.active_plan_version_id or "") == active_plan_before
+            )
+            context_current = bool(
+                journey_after is not None
+                and activity_after is not None
+                and str(journey_after.status).upper() == "ACTIVE"
+                and str(journey_after.current_activity_id or "") == str(activity.id)
+                and str(activity_after.plan_version_id) == active_plan_before
+                and str(activity_after.status).upper() == "EN_ROUTE"
+                and str(transit_after.get("location_observation_id") or "") == str(observation.id)
+                and bool(transit_after.get("can_reroute"))
+            )
+    body.update(
+        {
+            "reroute_state": (
+                "IN_TRANSIT_CONTEXT_STALE"
+                if not context_current
+                else "IN_TRANSIT_REROUTE_ADVISORY_READY"
+                if completed and source == "FOREGROUND_WEB"
+                else "IN_TRANSIT_REROUTE_READY"
+                if completed
+                else "IN_TRANSIT_REROUTE_PROVIDER_DEGRADED"
+            ),
+            "reroute_key": reroute_key,
+            "origin": {
+                "key": f"location-observation:{observation.id}",
+                "authority": transit.get("route_authority"),
+                "source": source,
+                "captured_at": observation.captured_at,
+                "accuracy_m": observation.accuracy_m,
+                "coordinates_exposed": False,
+            },
+            "target": {
+                "activity_id": str(activity.id),
+                "key": str(target.id),
+                "name": activity.title,
+            },
+            "current_activity_status": (
+                str(activity_after.status)
+                if activity_after is not None
+                else "MISSING"
+            ),
+            "active_plan_version_id": active_plan_before,
+            "active_plan_unchanged": plan_unchanged,
+            "original_route_comparison": {
+                "state": transit.get("state"),
+                "route_shape_available": transit.get("route_shape_available"),
+                "distance_to_route_m": transit.get("distance_to_route_m"),
+                "authoritative": transit.get("authoritative"),
+                "material": transit.get("material"),
+            },
+            "commitment_risk": commitment_risk,
+            "deviation_event_id": str(deviation_event.id) if deviation_event is not None else None,
+            "guardian_handoff": guardian_handoff,
+            "principal_bound": principal is not None,
+            "provenance_statement": (
+                "FOREGROUND_WEB_IS_ADVISORY"
+                if source == "FOREGROUND_WEB"
+                else str(result.get("provenance") or "PROVIDER_PROVENANCE_RECORDED")
+            ),
+            "location_freshness_limit_seconds": LOCATION_FRESHNESS_SECONDS,
+        }
+    )
+    return body
+
+
+@app.get("/api/v1/journeys/{journey_id}/routes/operations/{operation_id}")
+def read_route_session(
+    journey_id: UUID,
+    operation_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Read one route operation without contacting a provider."""
+
+    require(session, Journey, str(journey_id), "Journey")
+    row = session.get(RouteAcquisitionOperation, operation_id)
+    if row is None or str(row.journey_id) != str(journey_id):
+        raise HTTPException(404, f"Route acquisition operation {operation_id} was not found")
+    from app.execution.private_buddy_route import (
+        private_route_scope,
+        read_private_route_operation,
+    )
+
+    if private_route_scope(row.request_json) is not None:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        return read_private_route_operation(
+            session,
+            journey=require(session, Journey, str(journey_id), "Journey"),
+            viewer=member,
+            principal=principal,
+            operation=row,
+        )
+    if settings.traveler_auth_secret:
+        # Legacy non-R80 route operation payloads may expose observation IDs,
+        # exact route geometry, and the caller's route origin. An operation UUID
+        # is not a substitute for member identity or location ownership.
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if str(row.origin_key or "").startswith("location-observation:"):
+            observation_id = str(row.origin_key).split(":", 1)[1]
+            observation = session.get(LocationObservation, observation_id)
+            if (
+                observation is None
+                or str(observation.journey_id) != str(journey_id)
+                or str(observation.journey_member_id or "") != str(member.id)
+                or str(observation.traveler_id or "") != str(principal.traveler_id)
+            ):
+                raise HTTPException(404, "ROUTE_OPERATION_NOT_FOUND")
+        try:
+            request_facts = json.loads(row.request_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            request_facts = {}
+        origin_evidence = request_facts.get("origin_evidence") if isinstance(request_facts, dict) else None
+        if isinstance(origin_evidence, dict):
+            claimed_member = origin_evidence.get("journey_member_id")
+            claimed_traveler = origin_evidence.get("traveler_id")
+            if (
+                claimed_member is not None and str(claimed_member) != str(member.id)
+            ) or (
+                claimed_traveler is not None and str(claimed_traveler) != str(principal.traveler_id)
+            ):
+                raise HTTPException(404, "ROUTE_OPERATION_NOT_FOUND")
+    return route_operation_payload(row)
 
 
 @app.post(
@@ -1746,6 +3367,12 @@ def get_guardian_status(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     result = guardian_status(session, journey)
+    latest_pulse = session.scalar(
+        select(GuardianPulse)
+        .where(GuardianPulse.journey_id == journey.id)
+        .order_by(GuardianPulse.started_at.desc(), GuardianPulse.id.desc())
+    )
+    result["latest_pulse"] = _guardian_pulse_payload(latest_pulse)
     result["autopilot"] = autorun_status()
     enrollment = session.get(AutopilotEnrollment, journey.id)
     result["autopilot"]["enrollment"] = (
@@ -1760,6 +3387,12 @@ def get_guardian_status(
         if enrollment is not None
         else None
     )
+    result["autopilot"]["watch"] = (
+        adaptive_watch_policy(session, journey, enrollment)
+        if enrollment is not None and enrollment.enabled
+        else None
+    )
+    result["readiness"] = departure_readiness_projection(session, journey)
     fixture = session.get(CitySignalFixture, journey.id)
     result["signal_fixture"] = fixture_payload(fixture) if fixture is not None else None
     return result
@@ -1826,6 +3459,45 @@ def list_journey_counterfactuals(
     }
 
 
+def _provider_mesh_candidate_payload(
+    row: RealPlaceCandidate,
+    canonical_place: Place | None = None,
+) -> dict[str, Any]:
+    """Project current canonical Place facts over a historical discovery capture."""
+
+    captured_opening = json.loads(row.opening_hours_json or "{}")
+    captured_metadata = json.loads(row.metadata_json or "{}")
+    captured_cost = captured_metadata.get("cost_evidence", {"status": "UNKNOWN"})
+    if canonical_place is not None:
+        opening = json.loads(canonical_place.opening_hours_json or "{}")
+        canonical_metadata = json.loads(canonical_place.metadata_json or "{}")
+        cost = canonical_metadata.get("cost_evidence", {"status": "UNKNOWN"})
+        facts_source = "CANONICAL_PLACE"
+        facts_updated_at = canonical_place.updated_at
+    else:
+        opening = captured_opening
+        cost = captured_cost
+        facts_source = "CAPTURED_CANDIDATE"
+        facts_updated_at = row.captured_at
+    return {
+        "id": row.id,
+        "provider_key": row.provider_key,
+        "external_id": row.external_id,
+        "name": row.name,
+        "category": row.category,
+        "location": {"latitude": row.latitude, "longitude": row.longitude},
+        "tags": json.loads(row.tags_json or "[]"),
+        "opening_hours": opening,
+        "cost_evidence": cost,
+        "captured_at": row.captured_at,
+        "expires_at": row.expires_at,
+        "materialized_place_id": row.materialized_place_id,
+        "status": row.status,
+        "facts_source": facts_source,
+        "facts_updated_at": facts_updated_at,
+    }
+
+
 @app.get("/api/v1/journeys/{journey_id}/provider-mesh")
 def get_journey_provider_mesh(
     journey_id: UUID,
@@ -1841,9 +3513,19 @@ def get_journey_provider_mesh(
     candidates = session.scalars(
         select(RealPlaceCandidate)
         .where(RealPlaceCandidate.journey_id == journey.id)
+        .where(RealPlaceCandidate.materialized_place_id.is_not(None))
         .order_by(RealPlaceCandidate.captured_at.desc(), RealPlaceCandidate.name)
         .limit(20)
     ).all()
+    materialized_ids = {
+        row.materialized_place_id for row in candidates if row.materialized_place_id
+    }
+    canonical_places = {
+        place.id: place
+        for place in session.scalars(
+            select(Place).where(Place.id.in_(materialized_ids))
+        ).all()
+    }
     return {
         "journey_id": journey.id,
         "providers": [
@@ -1858,27 +3540,362 @@ def get_journey_provider_mesh(
             for row in rows
         ],
         "real_place_candidates": [
-            {
-                "id": row.id,
-                "provider_key": row.provider_key,
-                "external_id": row.external_id,
-                "name": row.name,
-                "category": row.category,
-                "location": {"latitude": row.latitude, "longitude": row.longitude},
-                "tags": json.loads(row.tags_json or "[]"),
-                "opening_hours": json.loads(row.opening_hours_json or "{}"),
-                "cost_evidence": json.loads(row.metadata_json or "{}").get(
-                    "cost_evidence", {"status": "UNKNOWN"}
-                ),
-                "captured_at": row.captured_at,
-                "expires_at": row.expires_at,
-                "materialized_place_id": row.materialized_place_id,
-                "status": row.status,
-            }
+            _provider_mesh_candidate_payload(row, canonical_places.get(row.materialized_place_id))
             for row in candidates
         ],
     }
 
+
+def _bootstrap_http_error(exc: BootstrapDiscoveryError) -> HTTPException:
+    refused = HTTPException(status_code=exc.status_code, detail=str(exc))
+    refused.reason_code = exc.code
+    refused.error_details = exc.details
+    refused.message_key = "bootstrap." + exc.code.lower()
+    return refused
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery")
+@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap")
+def bootstrap_journey_discovery(
+    journey_id: UUID,
+    payload: BootstrapDiscoveryRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Find public candidates for a signed, empty DRAFT Journey without creating a plan."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = discover_bootstrap_candidates(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            query=payload.query,
+            radius_m=payload.radius_m,
+            limit=payload.limit,
+            source_kind=payload.source_kind,
+            provider_consent=payload.provider_consent,
+            latitude=payload.latitude,
+            longitude=payload.longitude,
+            accuracy_m=payload.accuracy_m,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-city-search")
+def search_bootstrap_journey_city(
+    journey_id: UUID,
+    payload: BootstrapCitySearchRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Search one explicitly named city to position the public map camera."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = search_bootstrap_city(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            query=payload.query,
+            provider_consent=payload.provider_consent,
+            limit=payload.limit,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/select")
+@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap/select")
+def select_bootstrap_journey_candidate(
+    journey_id: UUID,
+    payload: BootstrapSelectRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Materialize exactly the selected bootstrap candidate into one public Place."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = select_bootstrap_candidate(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            candidate_id=payload.candidate_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/preview")
+@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap/preview")
+def preview_bootstrap_journey_candidate(
+    journey_id: UUID,
+    payload: BootstrapMapPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Open one public OSM destination without materializing a Place or plan."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_candidate(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            candidate_id=payload.candidate_id,
+            public_map_consent=payload.public_map_consent,
+            latitude=payload.latitude,
+            longitude=payload.longitude,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.get("/api/v1/journeys/{journey_id}/bootstrap-shortlist")
+def get_bootstrap_shortlist(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Return only the signed member's public-only draft shortlist."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        return list_bootstrap_shortlist_items(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+    except BootstrapDiscoveryError as exc:
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/resume")
+def remember_bootstrap_shortlist(
+    journey_id: UUID,
+    shortlist_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Remember the signed member's last explicit saved-place choice for UI resume."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = remember_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            shortlist_id=shortlist_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist")
+def save_bootstrap_shortlist(
+    journey_id: UUID,
+    payload: BootstrapShortlistSaveRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = save_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            candidate_id=payload.candidate_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.delete("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}")
+def delete_bootstrap_shortlist(
+    journey_id: UUID,
+    shortlist_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = remove_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            shortlist_id=shortlist_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/preview")
+def preview_bootstrap_shortlist(
+    journey_id: UUID,
+    shortlist_id: UUID,
+    payload: BootstrapShortlistPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            shortlist_id=shortlist_id,
+            public_map_consent=payload.public_map_consent,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/navigate")
+def navigate_bootstrap_shortlist(
+    journey_id: UUID,
+    shortlist_id: UUID,
+    payload: BootstrapShortlistNavigationRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Release one saved public destination for destination-only walking directions."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            shortlist_id=shortlist_id,
+            public_map_consent=payload.public_map_consent,
+            release_purpose="WALKING",
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walk")
+def navigate_bootstrap_two_stop_walk(
+    journey_id: UUID,
+    payload: BootstrapTwoStopWalkRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Release one signed public-POI-to-public-POI walking leg."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_two_stop_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            first_shortlist_id=payload.first_shortlist_id,
+            second_shortlist_id=payload.second_shortlist_id,
+            public_map_consent=payload.public_map_consent,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
 
 @app.post("/api/v1/journeys/{journey_id}/real-city/discover", response_model=RealCityDiscoveryResponse)
 @app.post("/api/v1/journeys/{journey_id}/provider-mesh/discover", response_model=RealCityDiscoveryResponse)
@@ -1900,6 +3917,65 @@ def discover_real_city_services(
     except RuntimeError as exc:
         raise HTTPException(503, str(exc)) from exc
     session.commit()
+    return result
+
+
+@app.post("/api/v1/journeys/{journey_id}/facts/acquire")
+def acquire_journey_place_facts(
+    journey_id: UUID,
+    payload: FactAcquisitionRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Refresh source-linked opening/cost facts for this journey's Places.
+
+    The endpoint records provider observations, but it does not promote a
+    search result or a missing fee into authoritative truth.  Planning remains
+    responsible for deciding whether the refreshed facts are sufficient.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    try:
+        receipt = acquire_place_facts(
+            session,
+            journey,
+            place_ids=payload.place_ids if payload else None,
+            source_bindings=(
+                {
+                    place_id: binding.model_dump()
+                    for place_id, binding in (payload.source_bindings or {}).items()
+                }
+                if payload
+                else None
+            ),
+        )
+        session.commit()
+    except (httpx.HTTPError, ValueError) as exc:
+        session.rollback()
+        raise HTTPException(502, str(exc)) from exc
+    return receipt
+
+
+@app.post("/api/v1/journeys/{journey_id}/context-watch")
+def run_journey_context_watch(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Refresh exact active-plan venue facts and classify their live context.
+
+    This server-owned watch never starts an Agent itself.  A qualified conflict
+    is persisted as a SYSTEM_DERIVED Event; the existing Agent command path may
+    then decide whether recovery is needed under current authority.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "context watch requires an active Journey")
+    try:
+        result = run_live_context_watch(session, journey)
+        session.commit()
+    except (httpx.HTTPError, ValueError) as exc:
+        session.rollback()
+        raise HTTPException(502, str(exc)) from exc
     return result
 
 
@@ -2025,7 +4101,10 @@ def journey_operations_stream(
     )
 
 
-@app.get("/api/v1/journeys/{journey_id}/agent/runs/{run_id}")
+@app.get(
+    "/api/v1/journeys/{journey_id}/agent/runs/{run_id}",
+    response_model=AgentRunResponse,
+)
 def get_agent_run(
     journey_id: UUID,
     run_id: UUID,
@@ -2043,6 +4122,21 @@ def get_agent_run(
     def decode(value: str) -> Any:
         return json.loads(value)
 
+    step_payloads = [
+        {
+            "id": step.id,
+            "sequence_no": step.sequence_no,
+            "tool_name": step.tool_name,
+            "arguments": decode(step.arguments_json),
+            "result": decode(step.result_json),
+            "decision": step.decision,
+            "status": step.status,
+            "created_at": step.created_at,
+            "completed_at": step.completed_at,
+        }
+        for step in steps
+    ]
+
     return {
         "run_id": run.id,
         "mission_id": run.mission_id,
@@ -2050,34 +4144,26 @@ def get_agent_run(
         "provider_key": run.provider_key,
         "model_key": run.model_key,
         "status": run.status,
-        "outcome": run.outcome,
+        "completion_contract": _server_completion_contract(
+            step_payloads, run_status=run.status
+        ),
+        "outcome": _structured_run_outcome(run.outcome),
         "failure_reason": run.failure_reason,
         "created_at": run.created_at,
         "started_at": run.started_at,
         "completed_at": run.completed_at,
         "mission_status": mission.status if mission else None,
         "mission": mission_payload(mission) if mission else None,
-        "tool_steps": [
-            {
-                "id": step.id,
-                "sequence_no": step.sequence_no,
-                "tool_name": step.tool_name,
-                "arguments": decode(step.arguments_json),
-                "result": decode(step.result_json),
-                "decision": step.decision,
-                "status": step.status,
-                "created_at": step.created_at,
-                "completed_at": step.completed_at,
-            }
-            for step in steps
-        ],
+        "tool_steps": step_payloads,
     }
 
 
+@app.post("/api/v1/journeys/{journey_id}/operator/approvals/{approval_id}/approve")
 @app.post("/api/v1/journeys/{journey_id}/agent/approvals/{approval_id}/approve")
 def approve_agent_action(
     journey_id: UUID,
     approval_id: UUID,
+    request: Request,
     payload: AgentApprovalRequest | None = None,
     session: Session = Depends(get_session),
 ):
@@ -2089,15 +4175,922 @@ def approve_agent_action(
         or approval.traveler_id != journey.traveler_id
     ):
         raise HTTPException(404, "agent approval was not found")
-    from app.agent.approval import approve_action_approval
+    from app.agent.approval import approval_payload, approve_action_approval
+    from app.agent.continuation import resume_pending_action
 
-    return approve_action_approval(
+    actor_id = journey.traveler_id
+    principal = None
+    member = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import (
+            member_has_capability,
+            resolve_journey_member_principal,
+        )
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if principal.traveler_id != approval.traveler_id:
+            raise HTTPException(403, "authenticated member cannot approve for another traveler")
+        if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "authenticated member cannot authorize this Journey mutation")
+        actor_id = principal.traveler_id
+
+    # If a previous request crashed after the mutation committed but before the
+    # continuation row was finalized, the approval is already CONSUMED.  Give
+    # the durable continuation one chance to reconcile from server truth before
+    # returning the historical 409.
+    if approval.status == "CONSUMED":
+        continuation = resume_pending_action(session, approval_id=str(approval_id))
+        if continuation is not None and continuation.get("status") == "RESUMED":
+            current = session.get(ActionApproval, str(approval_id))
+            receipt = approval_payload(current) if current is not None else approval_payload(approval)
+            return {**receipt, "continuation": continuation}
+        raise HTTPException(409, "agent approval is no longer usable")
+
+    approved = approve_action_approval(
         session,
         approval,
         approval_method=payload.approval_method if payload else "USER_CONFIRMATION",
         step_up_code=payload.step_up_code if payload else None,
-        actor_id=journey.traveler_id,
+        actor_id=actor_id,
     )
+    if principal is not None and member is not None:
+        existing_principal_audit = session.scalar(
+            select(AuditLog).where(
+                AuditLog.action == "agent.action_approval.principal_bound",
+                AuditLog.entity_type == "ActionApproval",
+                AuditLog.entity_id == approval.id,
+                AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                AuditLog.actor_id == principal.traveler_id,
+            )
+        )
+        if existing_principal_audit is None:
+            record_audit(
+                session,
+                action="agent.action_approval.principal_bound",
+                entity_type="ActionApproval",
+                entity_id=approval.id,
+                journey_id=journey.id,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=principal.traveler_id,
+                after={
+                    "approval_id": approval.id,
+                    "member_id": member.id,
+                    "role": member.role,
+                    "auth_method": principal.auth_method,
+                    "approval_status": approval.status,
+                },
+            )
+            session.commit()
+    continuation = resume_pending_action(session, approval_id=str(approval_id))
+    if continuation is None:
+        if approval.action == "RECOVERY_EXECUTION" and approval.target_type == "RecoveryExecutionPlan":
+            from app.agent.transactional_operator import execute_recovery_execution_plan
+            execution = execute_recovery_execution_plan(
+                session,
+                approval.target_id,
+                approval_id=str(approval_id),
+            )
+            current = session.get(ActionApproval, str(approval_id))
+            receipt = approval_payload(current) if current is not None else approved
+            return {**receipt, "continuation": {"status": "RESUMED", "result": execution, "model_call_count": 0}}
+        # Approvals created by direct/manual tool calls retain the historical
+        # two-step API. Only a durable AgentRun continuation auto-resumes.
+        return approved
+    current = session.get(ActionApproval, str(approval_id))
+    receipt = approval_payload(current) if current is not None else approved
+    return {**receipt, "continuation": continuation}
+
+
+@app.get("/api/v1/journeys/{journey_id}/missions/pending")
+def pending_journey_missions(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Project durable human/Agent waits into one traveler-facing read model."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    viewer_principal = None
+    viewer_member = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        viewer_principal, viewer_member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+
+    missions = session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(False),
+            or_(
+                JourneyMission.status.in_(("WAITING_FOR_USER", "WAITING_FOR_MEMBERS", "WAITING_FOR_APPROVAL", "RUNNING")),
+                and_(
+                    JourneyMission.parent_mission_id.is_not(None),
+                    JourneyMission.status.in_(("CREATED", "DEGRADED")),
+                ),
+            ),
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        .limit(20)
+    ).all()
+
+    from app.db.models import AgentPendingAction
+
+    items = []
+    for mission in missions:
+        latest_run = session.scalar(
+            select(AgentRun)
+            .where(AgentRun.mission_id == mission.id)
+            .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
+        )
+        mission_view = mission_payload(mission)
+        clarification = dict(mission_view.get("clarification") or {})
+        collective_view = None
+        if clarification.get("kind") == "COLLECTIVE_TRADEOFF":
+            required_ids = [str(item) for item in clarification.get("required_member_ids") or []]
+            responses = clarification.get("responses") or {}
+            member_rows = [
+                row
+                for member_id in required_ids
+                if (row := session.get(JourneyMemberModel, member_id)) is not None
+                and row.journey_id == journey.id
+            ]
+            required_members = []
+            for row in member_rows:
+                traveler = session.get(Traveler, row.traveler_id)
+                required_members.append({
+                    "member_id": row.id,
+                    "traveler_id": row.traveler_id,
+                    "role": row.role,
+                    "display_name": (
+                        traveler.display_name
+                        if viewer_member is not None and traveler is not None
+                        else None
+                    ),
+                    "responded": row.id in responses,
+                    "is_viewer": bool(viewer_member is not None and viewer_member.id == row.id),
+                })
+            option_views = []
+            for option in clarification.get("candidate_options") or []:
+                if not isinstance(option, dict):
+                    continue
+                place_ids = [str(item) for item in option.get("fit_subject_place_ids") or []]
+                place_rows = {
+                    row.id: row
+                    for row in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+                } if place_ids else {}
+                option_views.append({
+                    **option,
+                    "display_places": [
+                        {
+                            "place_id": place_id,
+                            "name": place_rows[place_id].name,
+                            "category": place_rows[place_id].category,
+                        }
+                        for place_id in place_ids
+                        if place_id in place_rows
+                    ],
+                })
+            collective_view = {
+                "status": clarification.get("status"),
+                "policy": clarification.get("policy"),
+                "required_count": len(required_ids),
+                "response_count": len(set(required_ids).intersection(responses)),
+                "required_members": required_members,
+                "viewer_member_id": viewer_member.id if viewer_member is not None else None,
+                "viewer_has_responded": bool(
+                    viewer_member is not None and viewer_member.id in responses
+                ),
+                "candidate_options": option_views,
+                "selected_proposal_id": clarification.get("selected_proposal_id"),
+                "collective_authority_receipt_id": clarification.get(
+                    "authority_receipt_id"
+                ),
+            }
+
+        pending = session.scalar(
+            select(AgentPendingAction)
+            .where(AgentPendingAction.mission_id == mission.id)
+            .order_by(AgentPendingAction.created_at.desc(), AgentPendingAction.id.desc())
+        )
+        continuation_view = None
+        if pending is not None:
+            approval = session.get(ActionApproval, pending.approval_id)
+            can_approve = False
+            if approval is not None and viewer_member is not None and viewer_principal is not None:
+                from app.traveler_principal import member_has_capability
+
+                can_approve = bool(
+                    viewer_principal.traveler_id == approval.traveler_id
+                    and member_has_capability(session, viewer_member, "JOURNEY_UPDATE")
+                    and approval.status == "PENDING"
+                )
+            continuation_view = {
+                "pending_action_id": pending.id,
+                "pending_status": pending.status,
+                "tool_name": pending.tool_name,
+                "approval_id": pending.approval_id,
+                "approval_status": approval.status if approval is not None else None,
+                "required_decision": approval.required_decision if approval is not None else None,
+                "approved_by": approval.approved_by if approval is not None else None,
+                "collective_authority_receipt_id": (
+                    pending.authority_receipt_id
+                    or (
+                        approval.authority_receipt_id
+                        if approval is not None
+                        else None
+                    )
+                ),
+                "viewer_can_approve": can_approve,
+            }
+
+        items.append({
+            "mission": mission_view,
+            "run": persisted_agent_run_payload(session, latest_run) if latest_run else None,
+            "collective": collective_view,
+            "continuation": continuation_view,
+        })
+    return {
+        "journey_id": journey.id,
+        "viewer": (
+            {
+                "traveler_id": viewer_principal.traveler_id,
+                "member_id": viewer_member.id,
+                "role": viewer_member.role,
+                "auth_method": viewer_principal.auth_method,
+            }
+            if viewer_principal is not None and viewer_member is not None
+            else None
+        ),
+        "items": items,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/clarification")
+def answer_journey_clarification(
+    journey_id: UUID,
+    mission_id: UUID,
+    payload: ClarificationAnswer,
+    session: Session = Depends(get_session),
+):
+    """Apply one decision-critical human value answer to this Journey only.
+
+    The answer is never silently promoted to a cross-trip TravelerTwin fact.
+    A child mission inherits the parent's authority envelope and must be run
+    through the normal Agent/Gateway path.
+    """
+    journey = require(session, Journey, str(journey_id), "Journey")
+    parent = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if parent.journey_id != journey.id or parent.status != "WAITING_FOR_USER":
+        raise HTTPException(409, "clarification is not waiting for this Journey")
+    try:
+        stored = json.loads(parent.clarification_json or "{}")
+    except json.JSONDecodeError as exc:
+        raise HTTPException(409, "clarification payload is invalid") from exc
+    if stored.get("clarification_id") != payload.clarification_id:
+        raise HTTPException(409, "clarification id does not match the waiting question")
+    from app.intelligence.decision_sensitivity import clarification_epoch_fingerprint
+
+    twin = _twin_snapshot(session, journey)
+    windows = twin.get("context", {}).get("remaining_opportunity_horizon", {}).get("windows", [])
+    current_fingerprint = clarification_epoch_fingerprint(
+        journey_id=journey.id,
+        active_plan_version_id=journey.active_plan_version_id,
+        current_activity_id=journey.current_activity_id,
+        windows=windows,
+    )
+    if current_fingerprint != stored.get("decision_epoch"):
+        raise HTTPException(409, "CLARIFICATION_STALE_RECOMPUTE_REQUIRED")
+    option_to_strategy = stored.get("option_to_strategy") or {}
+    if payload.option_key not in option_to_strategy:
+        raise HTTPException(422, "clarification option is not server-derived")
+    strategy = str(option_to_strategy[payload.option_key])
+    parent.status = "ANSWERED"
+    parent.completed_at = datetime.now(timezone.utc).isoformat()
+    child_command = (
+        "For this Journey, follow the current opportunity now because that is the traveller's explicit value choice."
+        if strategy == "TAKE_NOW"
+        else "For this Journey, preserve the scarce budget for the later grounded opportunity because that is the traveller's explicit value choice."
+    )
+    child = create_mission(
+        session,
+        journey,
+        command=child_command,
+        requested_autonomy=parent.requested_autonomy,
+        trigger_event_id=parent.trigger_event_id,
+        parent_mission_id=parent.id,
+    )
+    child.max_cost_delta_minor = min(child.max_cost_delta_minor, parent.max_cost_delta_minor)
+    child.max_loss_minor = min(child.max_loss_minor, parent.max_loss_minor)
+    child.max_schedule_drift_min = min(child.max_schedule_drift_min, parent.max_schedule_drift_min)
+    explicit = {
+        "decision_option": payload.option_key,
+        "strategy": strategy,
+        "scope": payload.scope,
+        "source": "CURRENT_EXPLICIT_MISSION",
+        "preference_dimension": stored.get("preference_dimension"),
+        "clarification_id": payload.clarification_id,
+    }
+    child.preferences_json = json.dumps(
+        {**json.loads(child.preferences_json or "{}"), "current_explicit_mission": explicit},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    resolved = json.loads(child.resolved_intent_json or "{}")
+    resolved["current_explicit_mission"] = explicit
+    child.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+    stored["answer"] = {"option_key": payload.option_key, "scope": payload.scope}
+    parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+    session.commit()
+    return {
+        "journey_id": journey.id,
+        "parent_mission": mission_payload(parent),
+        "child_mission": mission_payload(child),
+        "strategy": strategy,
+        "scope": payload.scope,
+        "active_plan_unchanged": True,
+        "resume": {"required": True, "mission_id": child.id},
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}")
+def answer_collective_clarification(
+    journey_id: UUID,
+    mission_id: UUID,
+    member_id: UUID,
+    request: Request,
+    payload: CollectiveClarificationAnswer,
+    session: Session = Depends(get_session),
+):
+    """Record one member answer, identity-bound when traveler auth is configured.
+
+    The member id remains in the URL for compatibility, but in strict R28 mode
+    it is never authority: a signed traveler principal is resolved server-side
+    and must map to this exact in-force JourneyMember.
+    """
+    journey = require(session, Journey, str(journey_id), "Journey")
+    parent = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if parent.journey_id != journey.id:
+        raise HTTPException(404, "Journey mission was not found")
+    stored = _json_object(parent.clarification_json or "{}")
+    if stored.get("kind") != "COLLECTIVE_TRADEOFF" or stored.get("status") != "WAITING_FOR_MEMBERS":
+        raise HTTPException(409, "collective decision is not waiting for members")
+    if stored.get("clarification_id") != payload.clarification_id:
+        raise HTTPException(409, "collective clarification id does not match")
+    authenticated_principal = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        authenticated_principal, authenticated_member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if authenticated_member.id != str(member_id):
+            raise HTTPException(403, "authenticated traveler cannot answer for another Journey member")
+        member = authenticated_member
+    else:
+        member = session.get(JourneyMemberModel, str(member_id))
+        if member is None or member.journey_id != journey.id or _member_state(member, datetime.now(timezone.utc)) != "MEMBER_IN_FORCE":
+            raise HTTPException(409, "member is not in force for this collective decision")
+    required = {str(item) for item in stored.get("required_member_ids") or []}
+    if str(member_id) not in required:
+        raise HTTPException(403, "member is not decision-relevant for this collective trade-off")
+    # Ordinary members remain read-only for general planning. An R73 grant is
+    # accepted only as a one-round extension of this existing collective gate.
+    _require_r73_response_scope(
+        session=session,
+        journey=journey,
+        mission=parent,
+        member=member,
+        principal=authenticated_principal,
+        clarification=stored,
+    )
+    options = [item for item in stored.get("candidate_options") or [] if isinstance(item, dict)]
+    option_ids = {str(item.get("proposal_id")) for item in options}
+    if str(payload.proposal_id) not in option_ids:
+        raise HTTPException(422, "proposal is not a server-derived collective option")
+    from app.collective_mediation import collective_decision_epoch
+    from app.main import collective_proposal_receipt
+    proposals = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == stored.get("trigger_event_id"),
+            ReplanProposalModel.status == "PRESENTED",
+        ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    receipt = collective_proposal_receipt(session, journey, proposals)
+    current_surface_fingerprint = candidate_surface_fingerprint(
+        receipt.get("candidate_fit_matrix") or []
+    )
+    current_options = [
+        item for item in receipt.get("proposal_collective_decisions", {}).values()
+        if str(item.get("proposal_id")) in option_ids and item.get("status") == "GROUNDED_FEASIBLE"
+    ]
+    # Include current physical truth in the decision epoch. A still-selectable
+    # proposal is not necessarily the same executable future after its route
+    # evidence or canonical Place facts have changed.
+    from app.collective_mediation import collective_material_world_epoch
+    for option in current_options:
+        option_plan = session.get(PlanVersion, str(option.get("plan_id") or ""))
+        if option_plan is None:
+            continue
+        option["material_world_epoch"] = collective_material_world_epoch(
+            collective_material_world_basis(
+                session,
+                journey,
+                option_plan,
+                fit_subject_place_ids=list(option.get("fit_subject_place_ids") or []),
+            )
+        )
+    members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    r73_shared_stop = _json_object(parent.resolved_intent_json or "{}").get(
+        "r73_shared_stop"
+    )
+    authority_scope_facts = None
+    if isinstance(r73_shared_stop, dict):
+        current_member_ids = {
+            str(item.get("member_id") or "") for item in members if item.get("member_id")
+        }
+        if current_member_ids != required:
+            stored["status"] = "STALE"
+            parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+            session.commit()
+            raise HTTPException(409, "STALE_COLLECTIVE_MEMBERSHIP")
+        from app.shared_stop_coplanning import decision_scope_facts
+
+        source_invitation = session.get(
+            MemberPlaceInvitation, str(r73_shared_stop.get("invitation_id") or "")
+        )
+        if source_invitation is None or str(source_invitation.journey_id) != str(journey.id):
+            raise HTTPException(409, "NOT_SHARED_TO_GROUP")
+        from app.execution.member_place_group_share import require_group_share
+
+        require_group_share(session, journey, source_invitation)
+
+        authority_scope_facts, _scope_grants = decision_scope_facts(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(r73_shared_stop.get("invitation_id") or ""),
+            base_plan_version_id=str(stored.get("base_plan_version_id") or ""),
+            promotion_id=str(r73_shared_stop.get("promotion_id") or ""),
+            decision_epoch=str(stored.get("decision_epoch") or ""),
+            required_member_ids=sorted(required),
+        )
+    stored_decision_relevant_ids = (
+        stored.get("decision_relevant_member_ids", required)
+        if isinstance(r73_shared_stop, dict)
+        else (
+            (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            )
+            if (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            ) is not None
+            else stored.get("decision_relevant_member_ids", required)
+        )
+    )
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=parent.id,
+        trigger_event_id=str(stored.get("trigger_event_id")),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=current_options,
+        required_member_ids=required,
+        decision_relevant_member_ids=stored_decision_relevant_ids,
+        members=members,
+        authority_scope_facts=authority_scope_facts,
+    )
+    stored_surface_fingerprint = stored.get("candidate_surface_fingerprint")
+    current_option_ids = {str(item.get("proposal_id") or "") for item in current_options}
+    if (
+        decision_epoch != stored.get("decision_epoch")
+        or (
+            stored_surface_fingerprint is not None
+            and stored_surface_fingerprint != current_surface_fingerprint
+        )
+        or current_option_ids != option_ids
+        or str(stored.get("base_plan_version_id") or "")
+        != str(journey.active_plan_version_id or "")
+    ):
+        stored["status"] = "STALE"
+        parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+        session.commit()
+        raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+    responses = dict(stored.get("responses") or {})
+    previous_response = responses.get(str(member_id))
+    if isinstance(previous_response, dict):
+        if str(previous_response.get("proposal_id") or "") != str(payload.proposal_id):
+            raise HTTPException(409, "COLLECTIVE_RESPONSE_ALREADY_RECORDED")
+        # A retried transport request must not create another audit, advance a
+        # response count, or reopen a child mission.
+        return {
+            "journey_id": journey.id,
+            "mission_id": parent.id,
+            "clarification_id": stored.get("clarification_id"),
+            "status": stored.get("status"),
+            "responses": responses,
+            "baseline_preferences_unchanged": True,
+            "traveler_twin_unchanged": True,
+            "child_mission": None,
+            "replayed": True,
+        }
+    responses[str(member_id)] = {"proposal_id": str(payload.proposal_id), "member_id": str(member_id)}
+    stored["responses"] = responses
+    if required.issubset(responses):
+        selected = {str(item.get("proposal_id")) for item in responses.values()}
+        if len(selected) == 1:
+            selected_id = next(iter(selected))
+            selected_option = next(
+                (
+                    item
+                    for item in current_options
+                    if str(item.get("proposal_id") or "") == selected_id
+                ),
+                None,
+            )
+            selected_plan_id = (
+                str(selected_option.get("plan_id") or "")
+                if isinstance(selected_option, dict)
+                else ""
+            )
+            selected_plan = (
+                session.get(PlanVersion, selected_plan_id)
+                if selected_plan_id
+                else None
+            )
+            if selected_option is None or selected_plan is None:
+                stored["status"] = "STALE"
+                parent.clarification_json = json.dumps(
+                    stored, ensure_ascii=False, sort_keys=True
+                )
+                session.commit()
+                raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+
+            from app.collective_mediation import collective_material_world_epoch
+
+            material_world_basis = collective_material_world_basis(
+                session,
+                journey,
+                selected_plan,
+                fit_subject_place_ids=list(
+                    selected_option.get("fit_subject_place_ids") or []
+                ),
+            )
+            stored["material_world_basis"] = material_world_basis
+            stored["material_world_epoch"] = collective_material_world_epoch(
+                material_world_basis
+            )
+            stored["candidate_surface_fingerprint"] = current_surface_fingerprint
+            stored["status"] = "RESOLVED"
+            stored["selected_proposal_id"] = selected_id
+            stored["selected_candidate_id"] = selected_id
+            parent.status = "ANSWERED"
+            parent.completed_at = datetime.now(timezone.utc).isoformat()
+            child = create_mission(
+                session,
+                journey,
+                command="Resume the shared Journey using the server-resolved collective proposal and normal authority boundaries.",
+                requested_autonomy=parent.requested_autonomy,
+                trigger_event_id=stored.get("trigger_event_id") or parent.trigger_event_id,
+                parent_mission_id=parent.id,
+            )
+            # This child is a server-owned continuation of the same human
+            # mission, not a new authority request. Carry the already-bounded
+            # parent envelope exactly; never widen it and never collapse it to
+            # the mediator command compiler's default zero ceilings.
+            child.max_cost_delta_minor = parent.max_cost_delta_minor
+            child.max_loss_minor = parent.max_loss_minor
+            child.max_schedule_drift_min = parent.max_schedule_drift_min
+            child.protected_activity_ids_json = parent.protected_activity_ids_json
+            child.mutable_activity_ids_json = parent.mutable_activity_ids_json
+            child.allowed_action_classes_json = parent.allowed_action_classes_json
+            child.resolved_intent_json = json.dumps({
+                "collective_decision": {
+                    "clarification_id": stored["clarification_id"],
+                    "decision_epoch": stored["decision_epoch"],
+                    "material_world_epoch": stored["material_world_epoch"],
+                    "candidate_surface_fingerprint": stored[
+                        "candidate_surface_fingerprint"
+                    ],
+                    "selected_proposal_id": selected_id,
+                    "selected_candidate_id": selected_id,
+                    "selected_plan_version_id": next(
+                        (
+                            str(item.get("plan_id"))
+                            for item in stored.get("candidate_options") or []
+                            if str(item.get("proposal_id")) == selected_id
+                        ),
+                        None,
+                    ),
+                    "policy": stored["policy"],
+                }
+            }, ensure_ascii=False, sort_keys=True)
+            response_child = mission_payload(child)
+        else:
+            # R29: disagreement is not a terminal dead end. The humans have
+            # completed this decision round, but no proposal has social
+            # authority. Spawn a bounded mediator mission that may search for
+            # a grounded compromise or return a fresh server-owned decision
+            # round. It must never turn disagreement into a majority vote.
+            stored["status"] = "MEDIATION_REQUIRED"
+            parent.status = "ANSWERED"
+            parent.completed_at = datetime.now(timezone.utc).isoformat()
+            parent_intent = _json_object(parent.resolved_intent_json or "{}")
+            prior_mediation = parent_intent.get("collective_mediation")
+            prior_round = (
+                int(prior_mediation.get("round") or 0)
+                if isinstance(prior_mediation, dict)
+                else 0
+            )
+            mediation_round = prior_round + 1
+            child = create_mission(
+                session,
+                journey,
+                command=(
+                    "Mediate the unresolved shared Journey disagreement without choosing a winner. "
+                    "Inspect the member-specific context and grounded proposal evidence, seek a "
+                    "compromise that protects every relevant member from an unacceptable outcome, "
+                    "and if a material value trade-off remains return a fresh collective decision "
+                    "through the normal server-owned boundary."
+                ),
+                requested_autonomy=parent.requested_autonomy,
+                trigger_event_id=stored.get("trigger_event_id") or parent.trigger_event_id,
+                parent_mission_id=parent.id,
+            )
+            # A disagreement-mediation child is a continuation of the same
+            # bounded mission.  Copy the parent envelope exactly: the
+            # create_mission defaults are zero, so min(default, parent) would
+            # silently collapse a valid parent budget and change the mission's
+            # authority rather than inheriting it.
+            child.max_cost_delta_minor = parent.max_cost_delta_minor
+            child.max_loss_minor = parent.max_loss_minor
+            child.max_schedule_drift_min = parent.max_schedule_drift_min
+            child.protected_activity_ids_json = parent.protected_activity_ids_json
+            child.mutable_activity_ids_json = parent.mutable_activity_ids_json
+            child.allowed_action_classes_json = parent.allowed_action_classes_json
+            member_choices = [
+                {
+                    "member_id": member_key,
+                    "proposal_id": str(response.get("proposal_id") or ""),
+                }
+                for member_key, response in sorted(responses.items())
+                if isinstance(response, dict)
+            ]
+            child.resolved_intent_json = json.dumps(
+                {
+                    "collective_mediation": {
+                        "kind": "DISAGREEMENT_MEDIATION",
+                        "round": mediation_round,
+                        "source_mission_id": parent.id,
+                        "source_clarification_id": stored.get("clarification_id"),
+                        "decision_epoch": stored.get("decision_epoch"),
+                        "policy": stored.get("policy"),
+                        "required_member_ids": sorted(required),
+                        "member_preference_snapshots": {
+                            str(item.get("member_id")): (
+                                item.get("journey_scoped_explicit_preferences") or []
+                            )
+                            for item in members
+                            if str(item.get("member_id")) in required
+                        },
+                        "candidate_proposal_ids": sorted(
+                            {
+                                str(item.get("proposal_id"))
+                                for item in stored.get("candidate_options") or []
+                                if isinstance(item, dict) and item.get("proposal_id")
+                            }
+                        ),
+                        "member_choices": member_choices,
+                    }
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            record_audit(
+                session,
+                action="agent.collective_decision.mediation_started",
+                entity_type="JourneyMission",
+                entity_id=child.id,
+                journey_id=journey.id,
+                actor_type="SYSTEM",
+                actor_id="collective-mediator",
+                after={
+                    "parent_mission_id": parent.id,
+                    "clarification_id": stored.get("clarification_id"),
+                    "round": mediation_round,
+                    "required_member_ids": sorted(required),
+                    "distinct_selected_proposal_ids": sorted(selected),
+                    "status": "CREATED",
+                },
+            )
+            response_child = mission_payload(child)
+    else:
+        stored["status"] = "WAITING_FOR_MEMBERS"
+        response_child = None
+    parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+    record_audit(
+        session,
+        action="agent.collective_decision.response",
+        entity_type="JourneyMission",
+        entity_id=parent.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER" if authenticated_principal else "MEMBER_SCOPED_STATE",
+        actor_id=authenticated_principal.traveler_id if authenticated_principal else str(member_id),
+        after={
+            "clarification_id": stored.get("clarification_id"),
+            "member_id": str(member_id),
+            "traveler_id": member.traveler_id,
+            "proposal_id": str(payload.proposal_id),
+            "decision_epoch": stored.get("decision_epoch"),
+            "auth_method": authenticated_principal.auth_method if authenticated_principal else "LEGACY_MEMBER_SCOPED_STATE",
+            "status": stored.get("status"),
+        },
+    )
+    if stored.get("status") == "RESOLVED":
+        # Issue the durable authority only after the final authenticated
+        # response audit has been staged.  The receipt is server-owned and
+        # binds the exact proposal, epochs, and response actors.
+        session.flush()
+        current_round_audits = [
+            item
+            for item in session.scalars(
+                select(AuditLog)
+                .where(
+                    AuditLog.action == "agent.collective_decision.response",
+                    AuditLog.entity_type == "JourneyMission",
+                    AuditLog.entity_id == parent.id,
+                    AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+                )
+                .order_by(AuditLog.created_at, AuditLog.id)
+            ).all()
+            if str(
+                _json_object(item.after_json or "{}").get(
+                    "clarification_id"
+                )
+                or ""
+            )
+            == str(stored.get("clarification_id") or "")
+        ]
+        latest_response_audit_by_member: dict[str, AuditLog] = {}
+        for item in current_round_audits:
+            audit_member_id = str(
+                _json_object(item.after_json or "{}").get("member_id")
+                or ""
+            )
+            if audit_member_id:
+                latest_response_audit_by_member[audit_member_id] = item
+        response_audits = [
+            latest_response_audit_by_member[required_member_id]
+            for required_member_id in sorted(required)
+            if required_member_id in latest_response_audit_by_member
+        ]
+        authenticated_member_ids = {
+            str(_json_object(item.after_json or "{}").get("member_id") or "")
+            for item in response_audits
+        }
+        if not required.issubset(authenticated_member_ids):
+            # A member-scoped legacy answer may render the clarification as
+            # resolved for compatibility, but it can never mint mutation
+            # authority.  The later mutation gate will fail closed without a
+            # durable receipt.
+            response_audits = []
+        from app.collective_authority import (
+            AUTHENTICATED_MEMBER_CONSENT,
+            issue_collective_authority_receipt,
+        )
+        selected_plan_id = next(
+            (
+                str(item.get("plan_id"))
+                for item in stored.get("candidate_options") or []
+                if isinstance(item, dict)
+                and str(item.get("proposal_id") or "")
+                == str(stored.get("selected_proposal_id") or "")
+            ),
+            "",
+        )
+        authority_receipt = None
+        if response_audits:
+            authority_receipt = issue_collective_authority_receipt(
+                session,
+                journey_id=journey.id,
+                proposal_id=str(stored["selected_proposal_id"]),
+                plan_version_id=selected_plan_id,
+                authority_mode=AUTHENTICATED_MEMBER_CONSENT,
+                decision_epoch=str(stored["decision_epoch"]),
+                material_world_epoch=str(stored["material_world_epoch"]),
+                candidate_surface_fingerprint=str(
+                    stored.get("candidate_surface_fingerprint") or ""
+                ),
+                classification="AUTHENTICATED_MEMBER_CONSENT",
+                required_member_ids=required,
+                response_audit_ids=[item.id for item in response_audits],
+                principal_actor_ids=[item.actor_id for item in response_audits if item.actor_id],
+                source_mission_id=parent.id,
+                source_clarification_id=str(
+                    stored.get("clarification_id") or ""
+                ),
+                recovery_epoch_id=ensure_recovery_epoch(session, journey).id,
+            )
+        if authority_receipt is None:
+            session.commit()
+            return {
+                "journey_id": journey.id,
+                "mission_id": parent.id,
+                "clarification_id": stored.get("clarification_id"),
+                "status": stored.get("status"),
+                "responses": stored.get("responses", {}),
+                "baseline_preferences_unchanged": True,
+                "traveler_twin_unchanged": True,
+                "child_mission": response_child,
+            }
+        record_audit(
+            session,
+            action="agent.collective_decision.authority_issued",
+            entity_type="CollectiveAuthorityReceipt",
+            entity_id=authority_receipt.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            actor_id="collective-authority",
+            after={
+                "receipt_id": authority_receipt.id,
+                "source_mission_id": parent.id,
+                "clarification_id": stored.get("clarification_id"),
+                "decision_epoch": stored.get("decision_epoch"),
+                "required_member_ids": sorted(required),
+            },
+        )
+        stored["authority_receipt_id"] = authority_receipt.id
+        parent.clarification_json = json.dumps(stored, ensure_ascii=False, sort_keys=True)
+        response_child["authority_receipt_id"] = authority_receipt.id
+        if response_child and response_child.get("id"):
+            child_row = session.get(JourneyMission, str(response_child["id"]))
+            if child_row is not None:
+                child_intent = _json_object(child_row.resolved_intent_json or "{}")
+                decision_payload = child_intent.get("collective_decision")
+                if isinstance(decision_payload, dict):
+                    decision_payload["authority_receipt_id"] = authority_receipt.id
+                    child_row.resolved_intent_json = json.dumps(
+                        child_intent, ensure_ascii=False, sort_keys=True
+                    )
+    session.commit()
+    return {
+        "journey_id": journey.id,
+        "mission_id": parent.id,
+        "clarification_id": stored.get("clarification_id"),
+        "status": stored.get("status"),
+        "responses": stored.get("responses", {}),
+        "baseline_preferences_unchanged": True,
+        "traveler_twin_unchanged": True,
+        "child_mission": response_child,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/missions/{mission_id}/resume")
+def resume_journey_mission(
+    journey_id: UUID,
+    mission_id: UUID,
+    session: Session = Depends(get_session),
+):
+    """Resume the server-created clarification child through the normal Agent runtime."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    mission = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if (
+        mission.journey_id != journey.id
+        or mission.status not in {"CREATED", "DEGRADED"}
+        or mission.parent_mission_id is None
+    ):
+        raise HTTPException(409, "mission is not a resumable clarification child")
+    start_request_budget(SCENARIO_AGENT_COMMANDS)
+    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    try:
+        run = runtime.run(session, journey=journey, mission=mission)
+    except AgentRuntimeUnavailable as exc:
+        failed_run = session.scalar(
+            select(AgentRun)
+            .where(AgentRun.mission_id == mission.id)
+            .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
+        )
+        run = (
+            persisted_agent_run_payload(session, failed_run)
+            if failed_run is not None
+            else {
+                "run_id": None,
+                "mission_id": mission.id,
+                "status": "FAILED_EXTERNAL",
+                "provider_key": "deepseek",
+                "model_key": settings.ai_model.removeprefix("deepseek/"),
+                "runtime_identity": runtime_status()["runtime_identity"],
+                "outcome": None,
+                "failure_reason": str(exc),
+                "tool_steps": [],
+            }
+        )
+    finally:
+        runtime.close()
+    return {"mission": mission_payload(mission), "run": run}
 
 
 def advance_seed_to_executable(session: Session, journey_id: str) -> dict:
@@ -2186,7 +5179,18 @@ def _advance_steps(session: Session, journey_id: str, timed) -> None:
     # SELECTED plan.  Auto-starting therefore used to make M4's first half impossible to
     # demonstrate; starting is now an explicit action on the stage.
     if plan_id is not None:
-        timed("select", lambda: select_plan(UUID(journey_id), UUID(str(plan_id)), session))
+        # ``select_plan`` is also an HTTP handler and accepts the request so
+        # authenticated deployments can resolve the Journey member.  The demo
+        # stage calls it in-process, so provide a minimal request scope instead
+        # of shifting the session into the request slot (which used to raise
+        # TypeError and leave all generated rows as CANDIDATE).
+        stage_request = Request({"type": "http", "headers": []})
+        timed(
+            "select",
+            lambda: select_plan(
+                UUID(journey_id), UUID(str(plan_id)), stage_request, session
+            ),
+        )
     session.commit()
 
 
@@ -2556,7 +5560,15 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     session.commit()
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
-    return traveler_schema(traveler)
+    body = traveler_schema(traveler).model_dump(mode="json")
+    # The browser's first Journey write must be able to enter the signed-member
+    # bootstrap route without a second, unsourced identity hand-off.  The token
+    # is still server-issued and absent when the auth boundary is not configured.
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import issue_traveler_token
+
+        body["access_token"] = issue_traveler_token(traveler.id)
+    return body
 
 
 @app.get("/api/v1/travelers/{traveler_id}")
@@ -3205,6 +6217,24 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     journey_temporal_shape(trip_context, journey)
     session.add(journey)
     session.add(trip_context)
+    # A shared Journey has an explicit owner member from birth.  Keeping the
+    # owner in the same member set makes the member-aware projection complete;
+    # it must never infer that Journey.traveler_id speaks for everyone else.
+    session.add(
+        JourneyMemberModel(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            traveler_id=journey.traveler_id,
+            role="OWNER",
+            invited_by=journey.traveler_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        )
+    )
     session.commit()
     record_audit(
         session,
@@ -5024,6 +8054,1387 @@ def _member_payload(member: JourneyMemberModel) -> JourneyMember:
     )
 
 
+def active_journey_members_with_capabilities(
+    session: Session, journey: Journey, *, candidate_windows: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
+    """Project the in-force member set without collapsing it into the owner Twin."""
+    from types import SimpleNamespace
+
+    now = datetime.now(timezone.utc)
+    members = list(session.scalars(
+        select(JourneyMemberModel).where(JourneyMemberModel.journey_id == journey.id)
+        .order_by(JourneyMemberModel.created_at, JourneyMemberModel.id)
+    ).all())
+    roles = list(session.scalars(select(JourneyRoleCapability)).all())
+    capabilities_by_role: dict[str, list[str]] = {}
+    for row in roles:
+        capabilities_by_role.setdefault(row.role, []).append(row.capability)
+    projected: list[dict[str, Any]] = []
+    for member in members:
+        if _member_state(member, now) != "MEMBER_IN_FORCE":
+            continue
+        snapshot = refresh_snapshot(session, member.traveler_id)
+        twin = traveler_twin_payload(snapshot)
+        compact = {
+            "explicit_preferences": twin.get("explicit_preferences", []),
+            "learned_soft_preferences": twin.get("learned_soft_preferences", []),
+            "conflicts": twin.get("conflicts", []),
+            "confidence": twin.get("confidence", 0.0),
+            "evidence_count": twin.get("evidence_count", 0),
+        }
+        member_preferences = _json_object(member.preferences_json, {})
+        journey_items = [
+            SimpleNamespace(
+                category=str(item.get("category") or "interest"),
+                preference_key=str(item.get("key") or item.get("preference_key") or ""),
+                value_json=json.dumps(item.get("value", True), ensure_ascii=False),
+                weight=float(item.get("weight", 1.0)),
+                source="EXPLICIT_MISSION",
+            )
+            for item in member_preferences.get("preferences", [])
+            if isinstance(item, dict)
+        ]
+        projected.append({
+            "member_id": member.id,
+            "traveler_id": member.traveler_id,
+            "role": member.role,
+            "member_state": "MEMBER_IN_FORCE",
+            "capabilities": sorted(capabilities_by_role.get(member.role, [])),
+            "journey_scoped_explicit_preferences": member_preferences.get("preferences", []),
+            "traveler_twin": compact,
+            "can_authorize_mutation": "JOURNEY_UPDATE" in capabilities_by_role.get(member.role, []),
+            # Do not pass the shared JourneyMission into this call: its owner-scoped
+            # preference payload must never be copied onto every member.  The
+            # member's own journey-scoped items are appended explicitly below.
+            "_preference_items": planning_preference_items(session, member.traveler_id) + journey_items,
+        })
+    result: dict[str, Any] = {
+        "members": [{key: value for key, value in item.items() if not key.startswith("_")} for item in projected],
+        "member_count": len(projected),
+        "authority_basis": "JourneyRoleCapability",
+    }
+    if candidate_windows is not None:
+        matrix: list[dict[str, Any]] = []
+        for window in candidate_windows:
+            candidate = window.get("candidate") or {}
+            tags = [str(candidate.get("category") or "")] + list(candidate.get("tags") or [])
+            row = {
+                "candidate_id": candidate.get("place_id") or window.get("window_id"),
+                "window_id": window.get("window_id"),
+                "status": window.get("status"),
+                "member_fits": {
+                    item["member_id"]: member_fit(preferences=item["_preference_items"], candidate_tags=tags)
+                    for item in projected
+                },
+            }
+            matrix.append(row)
+        result["candidate_fit_matrix"] = matrix
+        mediation = classify_group_decision(matrix)
+        if matrix and mediation.get("classification") != "INSUFFICIENT_WORLD_FACTS":
+            if not any(item.get("can_authorize_mutation") for item in projected):
+                mediation = {
+                    "classification": "AUTHORITY_CONFLICT",
+                    "reason": "NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE",
+                }
+        result["mediation"] = mediation
+    return result
+
+
+def _pending_collective_authority_freshness(
+    session: Session,
+    journey: Journey,
+    pending_selection: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Recompute whether a resolved collective authority is still consumable.
+
+    A stale consent remains historical truth, but it must stop monopolising the
+    mutation slot.  This helper evaluates the authority against the plan and
+    decision surface it originally selected, independent of whichever new plan
+    a recovery attempt is currently trying to mutate.
+    """
+
+    resolved_decision_epoch = str(
+        pending_selection.get("decision_epoch") or ""
+    )
+    resolved_world_epoch = str(
+        pending_selection.get("material_world_epoch") or ""
+    )
+    current_decision_epoch: str | None = None
+    current_world_epoch: str | None = None
+    semantic_stale = False
+    world_stale = False
+
+    source_mission = session.get(
+        JourneyMission, str(pending_selection.get("mission_id") or "")
+    )
+    source_clarification = (
+        _json_object(source_mission.clarification_json or "{}")
+        if source_mission is not None
+        else {}
+    )
+    selected_plan = session.get(
+        PlanVersion,
+        str(pending_selection.get("selected_plan_version_id") or ""),
+    )
+
+    if source_mission is None or selected_plan is None:
+        return {
+            "resolved_decision_epoch": resolved_decision_epoch,
+            "current_decision_epoch": None,
+            "resolved_material_world_epoch": resolved_world_epoch,
+            "current_material_world_epoch": None,
+            "semantic_stale": True,
+            "world_stale": bool(resolved_world_epoch),
+            "stale": True,
+        }
+
+    if resolved_decision_epoch:
+        original_option_ids = {
+            str(item.get("proposal_id"))
+            for item in (source_clarification.get("candidate_options") or [])
+            if isinstance(item, dict) and item.get("proposal_id")
+        }
+        if original_option_ids:
+            epoch_proposals = session.scalars(
+                select(ReplanProposalModel)
+                .where(
+                    ReplanProposalModel.journey_id == journey.id,
+                    ReplanProposalModel.id.in_(original_option_ids),
+                    ReplanProposalModel.status == "PRESENTED",
+                )
+                .order_by(
+                    ReplanProposalModel.created_at,
+                    ReplanProposalModel.id,
+                )
+            ).all()
+            epoch_receipt = collective_proposal_receipt(
+                session, journey, list(epoch_proposals)
+            )
+            epoch_options = [
+                item
+                for item in epoch_receipt.get(
+                    "proposal_collective_decisions", {}
+                ).values()
+                if str(item.get("proposal_id")) in original_option_ids
+                and item.get("status") == "GROUNDED_FEASIBLE"
+            ]
+            epoch_members = active_journey_members_with_capabilities(
+                session, journey
+            ).get("members", [])
+            from app.collective_mediation import collective_decision_epoch
+
+            current_decision_epoch = collective_decision_epoch(
+                journey_id=journey.id,
+                mission_id=source_mission.id,
+                trigger_event_id=str(
+                    source_clarification.get("trigger_event_id")
+                    or source_mission.trigger_event_id
+                    or ""
+                ),
+                base_plan_version_id=journey.active_plan_version_id,
+                options=epoch_options,
+                required_member_ids=source_clarification.get(
+                    "required_member_ids"
+                )
+                or [],
+                decision_relevant_member_ids=(
+                    (epoch_receipt.get("collective_mediation") or {}).get(
+                        "decision_relevant_member_ids"
+                    )
+                    if (epoch_receipt.get("collective_mediation") or {}).get(
+                        "decision_relevant_member_ids"
+                    ) is not None
+                    else source_clarification.get(
+                        "decision_relevant_member_ids",
+                        source_clarification.get("required_member_ids") or [],
+                    )
+                ),
+                members=epoch_members,
+            )
+            semantic_stale = (
+                current_decision_epoch != resolved_decision_epoch
+            )
+        else:
+            semantic_stale = True
+
+    if resolved_world_epoch:
+        selected_option = next(
+            (
+                item
+                for item in (
+                    source_clarification.get("candidate_options") or []
+                )
+                if isinstance(item, dict)
+                and str(item.get("proposal_id") or "")
+                == str(pending_selection.get("selected_proposal_id") or "")
+            ),
+            None,
+        )
+        if selected_option is None:
+            world_stale = True
+        else:
+            from app.collective_mediation import (
+                collective_material_world_epoch,
+            )
+
+            current_world_basis = collective_material_world_basis(
+                session,
+                journey,
+                selected_plan,
+                fit_subject_place_ids=list(
+                    selected_option.get("fit_subject_place_ids") or []
+                ),
+            )
+            current_world_epoch = collective_material_world_epoch(
+                current_world_basis
+            )
+            world_stale = current_world_epoch != resolved_world_epoch
+
+    return {
+        "resolved_decision_epoch": resolved_decision_epoch,
+        "current_decision_epoch": current_decision_epoch,
+        "resolved_material_world_epoch": resolved_world_epoch,
+        "current_material_world_epoch": current_world_epoch,
+        "semantic_stale": semantic_stale,
+        "world_stale": world_stale,
+        "stale": semantic_stale or world_stale,
+    }
+
+
+def collective_mutation_gate(
+    session: Session,
+    journey: Journey,
+    target_plan: PlanVersion,
+    *,
+    hard_feasible_plan_ids: set[str] | None = None,
+    resolved_decision: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Recompute shared preference governance immediately before mutation.
+
+    Planning receipts are advisory.  This gate reconstructs the in-force member
+    matrix from current rows and compares only the optional delta of each target
+    plan against the current active reality.  Approval can authorize a caller;
+    it cannot manufacture another member's agreement.
+
+    Once members explicitly disagree, that social-authority lock is stronger
+    than a later algorithmic COMPROMISE_AVAILABLE classification.  Every plan
+    transition path that reaches this gate must wait for the mediator lineage
+    to reach a fresh server-owned RESOLVED collective round.
+    """
+    from app.collective_mediation import (
+        journey_has_unresolved_collective_mediation,
+        pending_resolved_mediation_selection,
+    )
+    recovery_epoch = ensure_recovery_epoch(session, journey)
+
+    if journey_has_unresolved_collective_mediation(session, journey.id):
+        return {
+            "allowed": False,
+            "recovery_epoch_id": recovery_epoch.id,
+            "recovery_epoch_generation": recovery_epoch.generation,
+            "code": "COLLECTIVE_MEDIATION_RENEWED_CONSENT_REQUIRED",
+            "classification": "MEDIATION_REQUIRED",
+            "member_count": None,
+            "candidate_fit_matrix": [],
+            "mediation": {
+                "classification": "MEDIATION_REQUIRED",
+                "reason": "EXPLICIT_DISAGREEMENT_AWAITS_RENEWED_MEMBER_CONSENT",
+            },
+            "fit_subject_basis": "PLAN_DIFF",
+        }
+
+    pending_selection = pending_resolved_mediation_selection(
+        session,
+        journey.id,
+        active_plan_version_id=journey.active_plan_version_id,
+    )
+    pending_freshness = (
+        _pending_collective_authority_freshness(
+            session, journey, pending_selection
+        )
+        if pending_selection is not None
+        else {
+            "resolved_decision_epoch": "",
+            "current_decision_epoch": None,
+            "resolved_material_world_epoch": "",
+            "current_material_world_epoch": None,
+            "semantic_stale": False,
+            "world_stale": False,
+            "stale": False,
+        }
+    )
+    if (
+        pending_selection is not None
+        and not pending_freshness.get("stale")
+        and str(target_plan.id)
+        != str(pending_selection["selected_plan_version_id"])
+    ):
+        return {
+            "allowed": False,
+            "recovery_epoch_id": recovery_epoch.id,
+            "recovery_epoch_generation": recovery_epoch.generation,
+            "code": "COLLECTIVE_MEDIATION_SELECTED_PLAN_REQUIRED",
+            "classification": "RESOLVED_MEDIATION_PENDING_CONSUMPTION",
+            "member_count": None,
+            "candidate_fit_matrix": [],
+            "mediation": {
+                "classification": "RESOLVED",
+                "reason": "RENEWED_CONSENT_IS_BOUND_TO_ONE_SELECTED_PLAN",
+                **pending_selection,
+            },
+            "fit_subject_basis": "PLAN_DIFF",
+        }
+
+    member_projection = active_journey_members_with_capabilities(session, journey)
+    if member_projection.get("member_count", 0) < 2:
+        return {
+            "allowed": True,
+            "recovery_epoch_id": recovery_epoch.id,
+            "recovery_epoch_generation": recovery_epoch.generation,
+            "classification": "SINGLE_MEMBER_JOURNEY",
+            "member_count": member_projection.get("member_count", 0),
+        }
+    active = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
+    )
+    plan_rows = [target_plan]
+
+    # R32: an epoch-bound recovery proposal gets an epoch-pure, trigger-pure
+    # authority surface.  Parent-plan equality is not enough: historical
+    # legacy candidates and stale R1 plans can share the same active parent,
+    # while proposals for different simultaneous incidents are not necessarily
+    # interchangeable choices.  Only current, non-alias proposal siblings for
+    # the same trigger may participate in E/S calculation.
+    target_proposal = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.proposed_plan_version_id == target_plan.id,
+            ReplanProposalModel.status.in_(("PRESENTED", "ACCEPTED")),
+        )
+        .order_by(
+            ReplanProposalModel.created_at.desc(),
+            ReplanProposalModel.id.desc(),
+        )
+        .limit(1)
+    ).first()
+    candidate_surface_recovery_epoch_id: str | None = None
+    candidate_surface_trigger_event_id: str | None = None
+
+    if target_proposal is not None and target_proposal.recovery_epoch_id:
+        candidate_surface_recovery_epoch_id = str(
+            target_proposal.recovery_epoch_id
+        )
+        candidate_surface_trigger_event_id = (
+            str(target_proposal.trigger_event_id)
+            if target_proposal.trigger_event_id
+            else None
+        )
+        if candidate_surface_recovery_epoch_id != str(recovery_epoch.id):
+            return {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "recovery_epoch_generation": recovery_epoch.generation,
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "classification": "STALE_RECOVERY_EPOCH",
+                "member_count": member_projection.get("member_count", 0),
+                "candidate_fit_matrix": [],
+                "fit_subject_basis": "PLAN_DIFF",
+                "candidate_surface_scope": "RECOVERY_EPOCH_TRIGGER",
+                "candidate_surface_recovery_epoch_id": (
+                    candidate_surface_recovery_epoch_id
+                ),
+                "candidate_surface_trigger_event_id": (
+                    candidate_surface_trigger_event_id
+                ),
+            }
+
+        sibling_proposal_filters = [
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.recovery_epoch_id == recovery_epoch.id,
+            ReplanProposalModel.status == "PRESENTED",
+            ReplanProposalModel.canonical_proposal_id.is_(None),
+            ReplanProposalModel.proposed_plan_version_id != target_plan.id,
+        ]
+        if target_proposal.trigger_event_id is None:
+            sibling_proposal_filters.append(
+                ReplanProposalModel.trigger_event_id.is_(None)
+            )
+        else:
+            sibling_proposal_filters.append(
+                ReplanProposalModel.trigger_event_id
+                == target_proposal.trigger_event_id
+            )
+        sibling_plan_ids = {
+            str(value)
+            for value in session.scalars(
+                select(ReplanProposalModel.proposed_plan_version_id).where(
+                    *sibling_proposal_filters
+                )
+            ).all()
+            if value
+        }
+        if sibling_plan_ids:
+            sibling_plan_filters = [
+                PlanVersion.id.in_(sibling_plan_ids),
+                PlanVersion.journey_id == journey.id,
+                PlanVersion.status == "CANDIDATE",
+            ]
+            if active is None:
+                sibling_plan_filters.append(
+                    PlanVersion.parent_plan_version_id.is_(None)
+                )
+            else:
+                sibling_plan_filters.append(
+                    PlanVersion.parent_plan_version_id == active.id
+                )
+            siblings = session.scalars(
+                select(PlanVersion)
+                .where(*sibling_plan_filters)
+                .order_by(PlanVersion.created_at, PlanVersion.id)
+            ).all()
+        else:
+            siblings = []
+    else:
+        # Compatibility surface for legacy/non-Agent candidates that predate
+        # RecoveryEpoch binding.  Once a target proposal is epoch-bound this
+        # branch is never used.
+        sibling_filters = [
+            PlanVersion.journey_id == journey.id,
+            PlanVersion.id != target_plan.id,
+            PlanVersion.status == "CANDIDATE",
+        ]
+        if active is None:
+            sibling_filters.append(
+                PlanVersion.parent_plan_version_id.is_(None)
+            )
+        else:
+            sibling_filters.append(
+                PlanVersion.parent_plan_version_id == active.id
+            )
+        siblings = session.scalars(
+            select(PlanVersion)
+            .where(*sibling_filters)
+            .order_by(PlanVersion.created_at, PlanVersion.id)
+        ).all()
+
+    plan_rows.extend(siblings)
+    hard_feasible = {str(item) for item in (hard_feasible_plan_ids or set())}
+    windows: list[dict[str, Any]] = []
+    base_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
+    ).all() if active is not None else []
+    base_items = [
+        {"sequence_no": item.sequence_no, "place_id": item.place_id, "activity_type": item.activity_type, "locked": item.locked}
+        for item in base_activities
+    ]
+    for plan in plan_rows:
+        activities = session.scalars(
+            select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+        ).all()
+        activity_items = []
+        activity_place_ids = [str(item.place_id) for item in activities if item.place_id]
+        activity_places = {
+            item.id: item
+            for item in session.scalars(
+                select(Place).where(Place.id.in_(activity_place_ids))
+            ).all()
+        } if activity_place_ids else {}
+        for item in activities:
+            place = activity_places.get(str(item.place_id)) if item.place_id else None
+            activity_items.append({
+                "sequence_no": item.sequence_no,
+                "place_id": item.place_id,
+                "activity_type": item.activity_type,
+                "locked": item.locked,
+                "category": place.category if place else None,
+                "tags": json.loads(place.tags_json or "[]") if place else [],
+            })
+        subject = plan_collective_fit_subject(base_items, activity_items)
+        subject_places: dict[str, Place] = {}
+        if subject["fit_subject_place_ids"]:
+            subject_places = {
+                item.id: item
+                for item in session.scalars(
+                    select(Place).where(Place.id.in_(subject["fit_subject_place_ids"]))
+                ).all()
+            }
+        tags: list[str] = []
+        for place in subject_places.values():
+            tags.append(str(place.category or ""))
+            tags.extend(json.loads(place.tags_json or "[]"))
+        projection = plan_schema(session, plan).model_dump(mode="json")
+        status = "GROUNDED_FEASIBLE" if (
+            str(plan.id) in hard_feasible or projection.get("selectable") is True
+        ) else "REVALIDATION_REQUIRED"
+        windows.append({
+            "window_id": plan.id,
+            "status": status,
+            "candidate": {
+                "place_id": plan.id,
+                "tags": sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()}),
+                **subject,
+            },
+        })
+    refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
+    mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
+    target_window_status = next(
+        (
+            str(item.get("status") or "")
+            for item in windows
+            if str(item.get("window_id") or "") == str(target_plan.id)
+        ),
+        "",
+    )
+    target_window = next(
+        (
+            item
+            for item in windows
+            if str(item.get("window_id") or "") == str(target_plan.id)
+        ),
+        None,
+    )
+    # E, W and S are separate server-owned facts.  S describes the current
+    # candidate surface, E describes the semantic authority decision over
+    # that surface, and W is recomputed from the material-world basis used by
+    # shock invalidation.  None of them is synthesized from another value.
+    current_surface_fingerprint = candidate_surface_fingerprint(
+        refreshed.get("candidate_fit_matrix") or []
+    )
+    current_decision_epoch_for_gate: str | None = None
+    current_world_epoch_for_gate: str | None = None
+    if str(mediation.get("classification") or "") == "UNANIMOUS_DOMINANCE":
+        current_decision_epoch_for_gate = server_semantic_decision_epoch(
+            journey_id=journey.id,
+            active_plan_version_id=journey.active_plan_version_id,
+            target_plan_version_id=target_plan.id,
+            classification="UNANIMOUS_DOMINANCE",
+            candidate_id=str(mediation.get("candidate_id") or target_plan.id),
+            candidate_fit_matrix=refreshed.get("candidate_fit_matrix") or [],
+            members=refreshed.get("members") or [],
+        )
+        from app.collective_mediation import collective_material_world_epoch
+
+        candidate = (target_window or {}).get("candidate") or {}
+        world_basis = collective_material_world_basis(
+            session,
+            journey,
+            target_plan,
+            fit_subject_place_ids=list(
+                candidate.get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch_for_gate = collective_material_world_epoch(
+            world_basis
+        )
+    r73_shared_stop_consent = bool(
+        isinstance(resolved_decision, Mapping)
+        and resolved_decision.get("r73_shared_stop") is True
+    )
+    if r73_shared_stop_consent and target_window_status == "GROUNDED_FEASIBLE":
+        from app.collective_mediation import collective_material_world_epoch
+
+        candidate = (target_window or {}).get("candidate") or {}
+        world_basis = collective_material_world_basis(
+            session,
+            journey,
+            target_plan,
+            fit_subject_place_ids=list(
+                candidate.get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch_for_gate = collective_material_world_epoch(
+            world_basis
+        )
+    effective_resolved_decision = resolved_decision
+    renewed_consent_selected = bool(
+        pending_selection is not None
+        and str(target_plan.id)
+        == str(pending_selection["selected_plan_version_id"])
+    )
+
+    # R30: evaluate the pending authority against the exact plan and decision
+    # surface it originally selected. A stale historical consent can still
+    # reject its own old plan with a precise code, but it no longer blocks a
+    # different recovery future from entering the current authority process.
+    resolved_decision_epoch = str(
+        pending_freshness.get("resolved_decision_epoch") or ""
+    )
+    current_decision_epoch = pending_freshness.get(
+        "current_decision_epoch"
+    )
+    consent_epoch_stale = bool(
+        renewed_consent_selected
+        and pending_freshness.get("semantic_stale")
+    )
+    resolved_world_epoch = str(
+        pending_freshness.get("resolved_material_world_epoch") or ""
+    )
+    current_world_epoch = pending_freshness.get(
+        "current_material_world_epoch"
+    )
+    world_epoch_stale = bool(
+        renewed_consent_selected
+        and pending_freshness.get("world_stale")
+    )
+
+    if effective_resolved_decision is None and renewed_consent_selected:
+        effective_resolved_decision = {
+            "status": "RESOLVED",
+            "selected_candidate_id": pending_selection["selected_plan_version_id"],
+            "selected_plan_version_id": pending_selection["selected_plan_version_id"],
+            "selected_proposal_id": pending_selection["selected_proposal_id"],
+            "clarification_id": pending_selection["clarification_id"],
+            "authority_receipt_id": pending_selection.get(
+                "authority_receipt_id"
+            ),
+        }
+
+    if r73_shared_stop_consent:
+        selected_proposal_id = str(
+            resolved_decision.get("selected_proposal_id") or ""
+        )
+        selected_plan_id = str(
+            resolved_decision.get("selected_plan_version_id") or ""
+        )
+        resolved_epoch = str(resolved_decision.get("decision_epoch") or "")
+        resolved_world_epoch = str(
+            resolved_decision.get("material_world_epoch") or ""
+        )
+        resolved_surface = str(
+            resolved_decision.get("candidate_surface_fingerprint") or ""
+        )
+        resolved_recovery_epoch = str(
+            resolved_decision.get("recovery_epoch_id") or ""
+        )
+        if (
+            target_proposal is None
+            or selected_proposal_id != str(target_proposal.id)
+            or selected_plan_id != str(target_plan.id)
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_CANDIDATE_NOT_SELECTED",
+                "classification": "R73_MEMBER_CONSENT_TARGET_MISMATCH",
+            }
+        elif (
+            not resolved_epoch
+            or not resolved_world_epoch
+            or not resolved_surface
+            or not resolved_decision.get("authority_receipt_id")
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_AUTHORITY_RECEIPT_MISSING",
+                "classification": "R73_MEMBER_CONSENT_INCOMPLETE",
+            }
+        elif (
+            resolved_recovery_epoch != str(recovery_epoch.id)
+            or (
+                proposal_epoch_id := str(target_proposal.recovery_epoch_id or "")
+            )
+            and proposal_epoch_id != str(recovery_epoch.id)
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": RECOVERY_EPOCH_SUPERSEDED,
+                "classification": "STALE_RECOVERY_EPOCH",
+            }
+        elif target_window_status != "GROUNDED_FEASIBLE":
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
+                "classification": "R73_MEMBER_CONSENT_PLAN_STALE",
+            }
+        elif current_world_epoch_for_gate != resolved_world_epoch:
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+                "classification": "R73_MEMBER_CONSENT_WORLD_STALE",
+                "resolved_material_world_epoch": resolved_world_epoch,
+                "current_material_world_epoch": current_world_epoch_for_gate,
+            }
+        else:
+            decision = {
+                "allowed": True,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": None,
+                "classification": "RENEWED_COLLECTIVE_CONSENT",
+                "authority_receipt_id": str(
+                    resolved_decision.get("authority_receipt_id")
+                ),
+                "resolved_decision_epoch": resolved_epoch,
+                "current_decision_epoch": resolved_epoch,
+                "resolved_material_world_epoch": resolved_world_epoch,
+                "current_material_world_epoch": current_world_epoch_for_gate,
+                "candidate_surface_fingerprint": resolved_surface,
+            }
+    elif renewed_consent_selected:
+        # Semantic staleness and physical infeasibility are intentionally
+        # separate R30 authority failures.  A plan can still be selectable
+        # while the meaning of the human decision has changed.
+        if consent_epoch_stale:
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_CONSENT_EPOCH_STALE",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+                "resolved_decision_epoch": resolved_decision_epoch,
+                "current_decision_epoch": current_decision_epoch,
+            }
+        elif world_epoch_stale:
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+                # Carry both layers into the durable denial audit. At this
+                # branch the semantic epoch already compared equal, which lets
+                # R30 prove that physical-world staleness is not merely an
+                # alias for changed member/option meaning.
+                "resolved_decision_epoch": resolved_decision_epoch,
+                "current_decision_epoch": current_decision_epoch,
+                "resolved_material_world_epoch": resolved_world_epoch,
+                "current_material_world_epoch": current_world_epoch,
+            }
+        # Renewed human consent outranks algorithmic ranking, never hard
+        # feasibility. A stale/unselectable target must be revalidated instead
+        # of being activated merely because people previously chose it.
+        elif target_window_status != "GROUNDED_FEASIBLE":
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_SELECTED_PLAN_REVALIDATION_REQUIRED",
+                "classification": "RENEWED_COLLECTIVE_CONSENT_STALE",
+            }
+        else:
+            decision = {
+                "allowed": True,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": None,
+                "classification": "RENEWED_COLLECTIVE_CONSENT",
+                "resolved_decision_epoch": resolved_decision_epoch or None,
+                "current_decision_epoch": current_decision_epoch,
+                "resolved_material_world_epoch": resolved_world_epoch or None,
+                "current_material_world_epoch": current_world_epoch,
+                "authority_receipt_id": pending_selection.get(
+                    "authority_receipt_id"
+                ),
+            }
+    else:
+        decision = collective_mutation_decision(
+            mediation,
+            str(target_plan.id),
+            resolved_decision=effective_resolved_decision,
+        )
+        stale_prior_authority = bool(
+            pending_selection is not None
+            and pending_freshness.get("stale")
+            and str(target_plan.id)
+            != str(pending_selection.get("selected_plan_version_id") or "")
+        )
+        # R30: expiring old authority must release the dead selected-plan lock
+        # without silently transferring the choice to the algorithm. After a
+        # stale human decision, only a currently unanimous dominant future may
+        # bypass fresh human authority. A mere algorithmic compromise is still
+        # a value choice and must return to the relevant members.
+        if (
+            stale_prior_authority
+            and resolved_decision is None
+            and str(mediation.get("classification") or "")
+            != "UNANIMOUS_DOMINANCE"
+        ):
+            decision = {
+                "allowed": False,
+                "recovery_epoch_id": recovery_epoch.id,
+                "code": "COLLECTIVE_STALE_CONSENT_RENEWAL_REQUIRED",
+                "classification": "POST_STALE_CONSENT_HUMAN_AUTHORITY_REQUIRED",
+                "prior_selected_plan_version_id": pending_selection.get(
+                    "selected_plan_version_id"
+                ),
+                "prior_selected_proposal_id": pending_selection.get(
+                    "selected_proposal_id"
+                ),
+                "current_mediation_classification": mediation.get(
+                    "classification"
+                ),
+                "resolved_decision_epoch": pending_freshness.get(
+                    "resolved_decision_epoch"
+                ),
+                "current_decision_epoch": pending_freshness.get(
+                    "current_decision_epoch"
+                ),
+                "resolved_material_world_epoch": pending_freshness.get(
+                    "resolved_material_world_epoch"
+                ),
+                "current_material_world_epoch": pending_freshness.get(
+                    "current_material_world_epoch"
+                ),
+            }
+    return {
+        **decision,
+        "recovery_epoch_id": recovery_epoch.id,
+        "recovery_epoch_generation": recovery_epoch.generation,
+        "member_count": refreshed.get("member_count", 0),
+        "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
+        "mediation": mediation,
+        "fit_subject_basis": "PLAN_DIFF",
+        "current_decision_epoch": decision.get(
+            "current_decision_epoch", current_decision_epoch_for_gate
+        ),
+        "current_material_world_epoch": decision.get(
+            "current_material_world_epoch", current_world_epoch_for_gate
+        ),
+        "candidate_surface_fingerprint": decision.get(
+            "candidate_surface_fingerprint", current_surface_fingerprint
+        ),
+        "candidate_surface_scope": (
+            "RECOVERY_EPOCH_TRIGGER"
+            if candidate_surface_recovery_epoch_id
+            else "LEGACY_PARENT_PLAN"
+        ),
+        "candidate_surface_recovery_epoch_id": (
+            candidate_surface_recovery_epoch_id
+        ),
+        "candidate_surface_trigger_event_id": (
+            candidate_surface_trigger_event_id
+        ),
+        "authority_provenance": collective_authority_provenance(
+            AUTHENTICATED_MEMBER_CONSENT
+            if (
+                renewed_consent_selected
+                or decision.get("classification")
+                == "RENEWED_COLLECTIVE_CONSENT"
+            )
+            else UNANIMOUS_DOMINANCE
+            if str(mediation.get("classification") or "")
+            == UNANIMOUS_DOMINANCE
+            else None
+        ),
+    }
+
+
+def collective_authority_preflight(
+    session: Session,
+    journey: Journey,
+    proposal: ReplanProposalModel,
+    target_plan: PlanVersion,
+    *,
+    hard_feasible_plan_ids: set[str] | None = None,
+    resolved_decision: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Resolve the exact current collective receipt before approval or mutation."""
+
+    gate = collective_mutation_gate(
+        session,
+        journey,
+        target_plan,
+        hard_feasible_plan_ids=hard_feasible_plan_ids,
+        resolved_decision=resolved_decision,
+    )
+    if gate.get("allowed") is not True:
+        return gate
+
+    from app.collective_authority import authority_receipt_for_allowed_gate
+
+    try:
+        receipt = authority_receipt_for_allowed_gate(
+            session,
+            journey_id=journey.id,
+            proposal_id=proposal.id,
+            plan_version_id=target_plan.id,
+            gate=gate,
+            resolved_decision=(
+                dict(resolved_decision)
+                if isinstance(resolved_decision, Mapping)
+                else None
+            ),
+        )
+    except ValueError as exc:
+        return {
+            **gate,
+            "allowed": False,
+            "code": str(exc),
+            "classification": gate.get("classification"),
+        }
+    return {
+        **gate,
+        "authority_receipt_id": (
+            receipt.id if receipt is not None else gate.get("authority_receipt_id")
+        ),
+    }
+
+
+def _record_collective_mutation_denial(
+    session: Session,
+    journey: Journey,
+    target_plan: PlanVersion,
+    decision: Mapping[str, Any],
+    *,
+    mutation_kind: str,
+    proposal_id: str | None = None,
+) -> None:
+    """Persist a refused authority spend without committing failed action state.
+
+    The Agent gateway may have *flushed* an approval consumption before the
+    replan reaches the collective mutation gate. A denial must roll that failed
+    action transaction back; otherwise persisting this audit on the same
+    Session would accidentally burn the approval receipt for an action that
+    never executed. Capture immutable audit facts, rollback the caller, then
+    persist only the denial in an independent transaction.
+    """
+
+    journey_id = str(journey.id)
+    target_plan_id = str(target_plan.id)
+    after = {
+        "mutation_kind": mutation_kind,
+        "proposal_id": proposal_id,
+        "target_plan_version_id": target_plan_id,
+        "code": decision.get("code"),
+        "classification": decision.get("classification"),
+        "resolved_decision_epoch": decision.get("resolved_decision_epoch"),
+        "current_decision_epoch": decision.get("current_decision_epoch"),
+        "resolved_material_world_epoch": decision.get(
+            "resolved_material_world_epoch"
+        ),
+        "current_material_world_epoch": decision.get(
+            "current_material_world_epoch"
+        ),
+        "candidate_surface_fingerprint": decision.get(
+            "candidate_surface_fingerprint"
+        ),
+        "authority_provenance": decision.get("authority_provenance"),
+    }
+
+    # Nothing in the refused mutation may survive merely because the refusal
+    # itself needs durable evidence. This also releases SQLite write locks
+    # before the independent audit transaction begins.
+    session.rollback()
+
+    with SessionLocal() as audit_session:
+        record_audit(
+            audit_session,
+            action="collective.mutation.denied",
+            entity_type="PlanVersion",
+            entity_id=target_plan_id,
+            journey_id=journey_id,
+            actor_type="SYSTEM",
+            actor_id="collective-mutation-gate",
+            after=after,
+        )
+        audit_session.commit()
+
+
+def collective_proposal_receipt(
+    session: Session,
+    journey: Journey,
+    proposals: list[ReplanProposalModel],
+) -> dict[str, Any]:
+    """Recompute collective choice facts for exactly the presented proposals.
+
+    This is intentionally separate from ``collective_mutation_gate``: the Agent
+    must see the server's decision over the same proposal set before it asks the
+    members, while the mutation gate still recomputes everything at commit time.
+    """
+    # R32 keeps duplicate discovery rows for provenance but exposes one
+    # executable candidate per normalized future.
+    proposals = [item for item in proposals if not getattr(item, "canonical_proposal_id", None)]
+    active = session.get(PlanVersion, journey.active_plan_version_id) if journey.active_plan_version_id else None
+    base_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == active.id).order_by(Activity.sequence_no)
+    ).all() if active is not None else []
+    base_items = [
+        {"sequence_no": item.sequence_no, "place_id": item.place_id, "activity_type": item.activity_type, "locked": item.locked}
+        for item in base_activities
+    ]
+    windows: list[dict[str, Any]] = []
+    for proposal in proposals:
+        plan = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if plan is None:
+            continue
+        activities = session.scalars(
+            select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+        ).all()
+        place_ids = [str(item.place_id) for item in activities if item.place_id]
+        places = {
+            item.id: item
+            for item in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+        } if place_ids else {}
+        activity_items = []
+        for item in activities:
+            place = places.get(str(item.place_id)) if item.place_id else None
+            activity_items.append({
+                "sequence_no": item.sequence_no,
+                "place_id": item.place_id,
+                "activity_type": item.activity_type,
+                "locked": item.locked,
+                "category": place.category if place else None,
+                "tags": json.loads(place.tags_json or "[]") if place else [],
+            })
+        subject = plan_collective_fit_subject(base_items, activity_items)
+        tags: list[str] = []
+        for place_id in subject.get("fit_subject_place_ids", []):
+            place = places.get(str(place_id))
+            if place is not None:
+                tags.append(str(place.category or ""))
+                tags.extend(json.loads(place.tags_json or "[]"))
+        projection = plan_schema(session, plan).model_dump(mode="json")
+        grounded = bool(
+            proposal.hard_constraints_passed
+            and proposal.locked_commitments_preserved
+            and projection.get("selectable") is True
+        )
+        windows.append({
+            "window_id": proposal.id,
+            "status": "GROUNDED_FEASIBLE" if grounded else "REVALIDATION_REQUIRED",
+            "candidate": {
+                "place_id": proposal.id,
+                "tags": sorted({str(tag).strip().lower() for tag in tags if str(tag).strip()}),
+                **subject,
+            },
+            "proposal_id": proposal.id,
+            "plan_id": plan.id,
+        })
+    refreshed = active_journey_members_with_capabilities(session, journey, candidate_windows=windows)
+    mediation = refreshed.get("mediation") or {"classification": "INSUFFICIENT_WORLD_FACTS"}
+    decisions: dict[str, Any] = {}
+    for window in windows:
+        proposal_id = str(window["proposal_id"])
+        decisions[proposal_id] = {
+            "proposal_id": proposal_id,
+            "plan_id": str(window["plan_id"]),
+            "status": window["status"],
+            "fit_subject_place_ids": list(window["candidate"].get("fit_subject_place_ids") or []),
+            "fit_subject_tags": list(window["candidate"].get("fit_subject_tags") or []),
+            "fit_subject_basis": window["candidate"].get("fit_subject_basis"),
+            "member_fits": next(
+                (row.get("member_fits", {}) for row in refreshed.get("candidate_fit_matrix", [])
+                 if str(row.get("candidate_id")) == proposal_id),
+                {},
+            ),
+            "fairness": next(
+                (row.get("fairness", {}) for row in refreshed.get("candidate_fit_matrix", [])
+                 if str(row.get("candidate_id")) == proposal_id),
+                {},
+            ),
+        }
+    return {
+        "collective_mediation": mediation,
+        "proposal_collective_decisions": decisions,
+        "candidate_fit_matrix": refreshed.get("candidate_fit_matrix", []),
+        "member_count": refreshed.get("member_count", 0),
+        "fit_subject_basis": "PLAN_DIFF",
+    }
+
+
+def collective_material_world_basis(
+    session: Session,
+    journey: Journey,
+    target_plan: PlanVersion,
+    *,
+    fit_subject_place_ids: list[str] | tuple[str, ...] | set[str] | None = None,
+) -> dict[str, Any]:
+    """Project only physical facts that can change the meaning of this consent.
+
+    R30 deliberately avoids a Journey-global revision counter.  The basis is
+    scoped to the selected future: immutable plan route evidence, canonical
+    facts for the optional Places people were choosing between, and provider /
+    event facts that actually intersect activities in that selected plan.
+    """
+
+    activities = list(
+        session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == target_plan.id)
+            .order_by(Activity.sequence_no, Activity.id)
+        ).all()
+    )
+    activity_ids = {str(item.id) for item in activities}
+    plan_places = {
+        str(item.place_id)
+        for item in activities
+        if item.place_id
+    }
+    subject_ids = {
+        str(value)
+        for value in (fit_subject_place_ids or [])
+        if value
+    }
+    # A missing stored fit subject should fail safe to the selected plan's
+    # concrete Places rather than silently producing an empty physical epoch.
+    relevant_place_ids = subject_ids or plan_places
+
+    place_rows = (
+        list(
+            session.scalars(
+                select(Place)
+                .where(Place.id.in_(relevant_place_ids))
+                .order_by(Place.id)
+            ).all()
+        )
+        if relevant_place_ids
+        else []
+    )
+    place_basis: list[dict[str, Any]] = []
+    for place in place_rows:
+        metadata = _json_object(place.metadata_json, {})
+        raw_tags = metadata.get("tags")
+        provider_tags = raw_tags if isinstance(raw_tags, Mapping) else {}
+        opening = normalize_opening_hours(
+            _json_object(place.opening_hours_json, {})
+        )
+        cost = canonical_cost_evidence(
+            metadata.get("cost_evidence")
+            if isinstance(metadata.get("cost_evidence"), Mapping)
+            else {},
+            provider_tags,
+        )
+        place_basis.append(
+            {
+                "place_id": str(place.id),
+                "provider_key": str(place.provider_key or ""),
+                "external_id": str(place.external_id or ""),
+                "opening": {
+                    "status": opening.get("status"),
+                    "open": opening.get("open"),
+                    "close": opening.get("close"),
+                    "intervals": opening.get("intervals") or [],
+                    "weekday_intervals": opening.get("weekday_intervals") or [],
+                },
+                "cost": {
+                    "status": cost.get("status"),
+                    "amount_minor": cost.get("amount_minor"),
+                    "currency": cost.get("currency"),
+                    "currency_agnostic": bool(cost.get("currency_agnostic")),
+                    "evidence_basis": cost.get("evidence_basis"),
+                },
+            }
+        )
+
+    mobility = _json_object(target_plan.mobility_evidence_json, {})
+    selected_facts: list[dict[str, Any]] = []
+    if not mobility.get("integrity_hash"):
+        for fact in mobility.get("selected_facts") or []:
+            if not isinstance(fact, Mapping):
+                continue
+            selected_facts.append(
+                {
+                    "origin_key": fact.get("origin_key"),
+                    "destination_key": fact.get("destination_key"),
+                    "mode": fact.get("mode"),
+                    "duration_min": fact.get("duration_min", fact.get("minutes")),
+                    "provider": fact.get("provider"),
+                    "fact_quality": fact.get("fact_quality"),
+                    "degraded": bool(fact.get("degraded")),
+                    "cost_status": fact.get("cost_status"),
+                    "cost_amount_minor": fact.get("cost_amount_minor"),
+                    "currency": fact.get("currency"),
+                }
+            )
+        selected_facts.sort(
+            key=lambda item: (
+                str(item.get("origin_key") or ""),
+                str(item.get("destination_key") or ""),
+                str(item.get("mode") or ""),
+            )
+        )
+    mobility_basis = {
+        "snapshot_id": mobility.get("snapshot_id") or target_plan.mobility_snapshot_id,
+        "integrity_hash": mobility.get("integrity_hash"),
+        "normalizer_version": mobility.get("normalizer_version"),
+        "aggregate_provenance": mobility.get("aggregate_provenance"),
+        "source_provider": mobility.get("source_provider"),
+        "selected_facts": selected_facts,
+    }
+
+    # Events are Journey facts, while candidate-plan Activity ids are version-
+    # local. A real shock will often target the currently active Activity whose
+    # physical Place is also present in the consented candidate. Match both the
+    # exact Activity id and the stable physical location identity; otherwise a
+    # normal active-plan provider event could never stale consent for a
+    # candidate that refers to the same real venue under another Activity row.
+    target_location_keys = {
+        str(item.place_id or item.city_service_id)
+        for item in activities
+        if item.place_id or item.city_service_id
+    }
+    all_events = list(
+        session.scalars(
+            select(EventModel)
+            .where(EventModel.journey_id == journey.id)
+            .order_by(EventModel.detected_at, EventModel.id)
+        ).all()
+    )
+    affected_ids = {
+        str(item.affected_activity_id)
+        for item in all_events
+        if item.affected_activity_id
+    }
+    affected_rows = {
+        str(item.id): item
+        for item in (
+            session.scalars(
+                select(Activity).where(Activity.id.in_(affected_ids))
+            ).all()
+            if affected_ids
+            else []
+        )
+    }
+
+    relevant_events: list[EventModel] = []
+    for event in all_events:
+        payload = _json_object(event.payload_json, {})
+        affected = (
+            affected_rows.get(str(event.affected_activity_id))
+            if event.affected_activity_id
+            else None
+        )
+        affected_location = (
+            str(affected.place_id or affected.city_service_id)
+            if affected is not None and (affected.place_id or affected.city_service_id)
+            else ""
+        )
+        payload_place_ids = {
+            str(value)
+            for value in (
+                payload.get("place_id"),
+                payload.get("affected_place_id"),
+                payload.get("scope_place_id"),
+                payload.get("target_place_id"),
+                (_json_object(json.dumps(payload.get("semantic") or {}))).get("place_id")
+                if isinstance(payload.get("semantic"), Mapping)
+                else None,
+            )
+            if value
+        }
+        if (
+            str(event.affected_activity_id or "") in activity_ids
+            or (affected_location and affected_location in target_location_keys)
+            or bool(payload_place_ids.intersection(target_location_keys))
+        ):
+            relevant_events.append(event)
+
+    relevant_event_ids = {str(item.id) for item in relevant_events}
+
+    # Deduplicate equal world facts. A provider retry that records the same
+    # closure twice is observation churn, not a new decision world.
+    event_basis_by_key: dict[str, dict[str, Any]] = {}
+    for event in relevant_events:
+        payload = _json_object(event.payload_json, {})
+        semantic = payload.get("semantic")
+        affected = (
+            affected_rows.get(str(event.affected_activity_id))
+            if event.affected_activity_id
+            else None
+        )
+        fact = {
+            "event_type": str(event.event_type or ""),
+            "severity": str(event.severity or ""),
+            # DETECTED -> ACKNOWLEDGED is workflow progress, not a changed
+            # physical world. Only semantic incident resolution (or another
+            # genuinely distinct state) may move the consent world epoch.
+            "incident_state": (
+                "ACTIVE"
+                if str(event.status or "") in {"DETECTED", "ACKNOWLEDGED"}
+                else str(event.status or "")
+            ),
+            "affected_location": (
+                str(affected.place_id or affected.city_service_id)
+                if affected is not None and (affected.place_id or affected.city_service_id)
+                else ""
+            ),
+            "scope_place_id": str(
+                payload.get("scope_place_id")
+                or payload.get("target_place_id")
+                or ""
+            ),
+            "provider_key": str(event.provider_key or ""),
+            "provenance": str(event.provenance or ""),
+            "incident_fingerprint": payload.get("incident_fingerprint"),
+            "extra_minutes": payload.get("extra_minutes"),
+            "semantic": semantic if isinstance(semantic, Mapping) else None,
+        }
+        key = json.dumps(
+            fact, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str
+        )
+        event_basis_by_key[key] = fact
+    event_basis = [event_basis_by_key[key] for key in sorted(event_basis_by_key)]
+
+    observation_basis_by_key: dict[str, dict[str, Any]] = {}
+    if relevant_event_ids:
+        observations = session.scalars(
+            select(ProviderObservation)
+            .where(ProviderObservation.journey_id == journey.id)
+            .order_by(
+                ProviderObservation.provider_key,
+                ProviderObservation.observation_type,
+                ProviderObservation.captured_at,
+                ProviderObservation.id,
+            )
+        ).all()
+        for observation in observations:
+            payload = _json_object(observation.payload_json, {})
+            linked_event_id = str(payload.get("event_id") or "")
+            if linked_event_id not in relevant_event_ids:
+                continue
+            mobility_snapshot = payload.get("mobility_snapshot")
+            snapshot = (
+                mobility_snapshot
+                if isinstance(mobility_snapshot, Mapping)
+                else {}
+            )
+            fact = {
+                "provider_key": str(observation.provider_key or ""),
+                "observation_type": str(observation.observation_type or ""),
+                "state": str(observation.state or ""),
+                "provenance": str(observation.provenance or ""),
+                "incident_fingerprint": observation.incident_fingerprint,
+                "snapshot_id": snapshot.get("snapshot_id"),
+                "integrity_hash": snapshot.get("integrity_hash"),
+            }
+            key = json.dumps(
+                fact,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                default=str,
+            )
+            observation_basis_by_key[key] = fact
+    observation_basis = [
+        observation_basis_by_key[key] for key in sorted(observation_basis_by_key)
+    ]
+
+    return {
+        "journey_id": str(journey.id),
+        "plan_version_id": str(target_plan.id),
+        "plan_parent_id": str(target_plan.parent_plan_version_id or ""),
+        "activities": [
+            {
+                "activity_id": str(item.id),
+                "sequence_no": int(item.sequence_no),
+                "place_id": str(item.place_id or ""),
+                "city_service_id": str(item.city_service_id or ""),
+                "start_at": str(item.start_at),
+                "end_at": str(item.end_at),
+                "locked": bool(item.locked),
+            }
+            for item in activities
+        ],
+        "fit_subject_place_ids": sorted(relevant_place_ids),
+        "places": place_basis,
+        "mobility": mobility_basis,
+        "relevant_events": event_basis,
+        "relevant_provider_observations": observation_basis,
+    }
+
+
 def _member_expiry(raw: str | None) -> str | None:
     """Same rule as a grant: an instant with no offset is a guess about whose clock, so refuse it."""
     if raw is None:
@@ -5061,17 +9472,38 @@ def _member_expiry(raw: str | None) -> str | None:
     return normalized
 
 
-@app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)
-def add_journey_member(
-    journey_id: UUID, payload: JourneyMemberCreate, session: Session = Depends(get_session)
+def _require_membership_manager(
+    request: Request, journey_id: str, session: Session
+):
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    principal, actor = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    if not member_has_capability(session, actor, "MEMBER_MANAGE"):
+        raise HTTPException(403, "Journey member role does not have MEMBER_MANAGE authority")
+    return principal, actor
+
+
+def _add_journey_member(
+    journey_id: UUID,
+    payload: JourneyMemberCreate,
+    request: Request,
+    session: Session = Depends(get_session),
 ):
     require(session, Journey, str(journey_id), "Journey")
-    inviter = payload.invited_by.strip()
-    if not inviter:
-        raise _share_refusal(
-            422, "A membership needs the person or device that granted it.",
-            "MEMBER_INVITER_EMPTY", {"field": "invited_by"},
-        )
+    principal, manager = _require_membership_manager(request, str(journey_id), session)
+    # This legacy compatibility path is available only without strict signed
+    # traveler mode; its display metadata still comes from the authenticated manager.
+    supplied_inviter = payload.invited_by.strip()
+    if supplied_inviter not in {str(principal.traveler_id), str(manager.id)}:
+        raise HTTPException(403, "INVITED_BY_MUST_MATCH_AUTHENTICATED_MANAGER")
+    if settings.traveler_auth_secret:
+        raise HTTPException(409, "RECIPIENT_ACCEPTANCE_REQUIRED")
+    if payload.role in {"OWNER", "ADMIN"} and str(manager.role) != "OWNER":
+        raise HTTPException(403, "ONLY_OWNER_CAN_ASSIGN_OWNER_OR_ADMIN")
     traveler_id = str(payload.traveler_id)
     if session.get(Traveler, traveler_id) is None:
         raise _share_refusal(
@@ -5099,7 +9531,7 @@ def add_journey_member(
         journey_id=str(journey_id),
         traveler_id=traveler_id,
         role=payload.role,
-        invited_by=inviter,
+        invited_by=str(principal.traveler_id),
         expires_at=expires_at,
         joined_at=stamp,
         removed_at=None,
@@ -5107,13 +9539,38 @@ def add_journey_member(
         updated_at=stamp,
     )
     session.add(member)
+    record_audit(
+        session,
+        action="journey.member.assigned",
+        entity_type="JourneyMember",
+        entity_id=member.id,
+        journey_id=str(journey_id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal.traveler_id),
+        after={"member_id": member.id, "traveler_id": traveler_id, "role": member.role},
+    )
     session.commit()
     return _member_payload(member)
 
 
+@app.post("/api/v1/journeys/{journey_id}/members", status_code=201, response_model=JourneyMember)
+def add_journey_member(
+    journey_id: UUID,
+    payload: JourneyMemberCreate,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _add_journey_member(journey_id, payload, request, session)
+
+
 @app.get("/api/v1/journeys/{journey_id}/members", response_model=list[JourneyMember])
-def list_journey_members(journey_id: UUID, session: Session = Depends(get_session)):
+def list_journey_members(journey_id: UUID, request: Request, session: Session = Depends(get_session)):
     require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    resolve_journey_member_principal(request, session, journey_id=str(journey_id))
     rows = session.scalars(
         select(JourneyMemberModel)
         .where(JourneyMemberModel.journey_id == str(journey_id))
@@ -5124,11 +9581,598 @@ def list_journey_members(journey_id: UUID, session: Session = Depends(get_sessio
     return [_member_payload(row) for row in rows]
 
 
-@app.post(
-    "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
-    response_model=JourneyMember,
+def _membership_invitation_inbox_item(
+    session: Session, invitation: JourneyMembershipInvitationModel
+) -> JourneyMembershipInvitationInboxItem:
+    inviter = session.get(Traveler, str(invitation.inviter_traveler_id))
+    return JourneyMembershipInvitationInboxItem(
+        invitation_id=str(invitation.id),
+        inviter_display_name=str(inviter.display_name if inviter else "Traveller"),
+        journey_title=str(invitation.title_snapshot),
+        city_code=str(invitation.city_code_snapshot),
+        approximate_start_date=str(invitation.approximate_start_date),
+        proposed_role="COLLABORATOR",
+        expires_at=str(invitation.expires_at),
+        state="OFFERED",
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/membership-invitations", status_code=201)
+def create_journey_membership_invitation(
+    journey_id: UUID,
+    payload: JourneyMembershipInvitationCreate,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+            raise HTTPException(409, "MEMBERSHIP_INVITE_REQUIRES_ACTIVE_JOURNEY")
+        principal, manager = _require_membership_manager(request, str(journey.id), session)
+        request_key = str(idempotency_key or "").strip()
+        if not request_key or len(request_key) > 120:
+            raise HTTPException(422, "IDEMPOTENCY_KEY_REQUIRED_OR_TOO_LONG")
+        target_id = str(payload.target_traveler_id)
+        if target_id == str(principal.traveler_id):
+            raise HTTPException(409, "CANNOT_INVITE_SELF")
+        if session.get(Traveler, target_id) is None:
+            raise HTTPException(404, "MEMBERSHIP_INVITE_TARGET_UNKNOWN")
+        if session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == str(journey.id),
+                JourneyMemberModel.traveler_id == target_id,
+            )
+        ) is not None:
+            raise HTTPException(409, "MEMBER_ALREADY_PRESENT")
+
+        stamp = datetime.now(timezone.utc)
+        stamp_text = stamp.isoformat()
+        request_hash = hashlib.sha256(
+            f"{journey.id}:{target_id}:COLLABORATOR:{journey.active_plan_version_id}:"
+            f"{journey.current_activity_id or ''}".encode("utf-8")
+        ).hexdigest()
+        existing_key = session.scalar(
+            select(JourneyMembershipInvitationModel).where(
+                JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                JourneyMembershipInvitationModel.inviter_member_id == str(manager.id),
+                JourneyMembershipInvitationModel.request_key == request_key,
+            )
+        )
+        if existing_key is not None:
+            if str(existing_key.request_hash) != request_hash:
+                raise HTTPException(409, "MEMBERSHIP_INVITE_IDEMPOTENCY_CONFLICT")
+            return {
+                "invitation_id": str(existing_key.id),
+                "target_traveler_id": str(existing_key.target_traveler_id),
+                "proposed_role": "COLLABORATOR",
+                "state": str(existing_key.state),
+                "expires_at": str(existing_key.expires_at),
+            }
+
+        pending = session.scalars(
+            select(JourneyMembershipInvitationModel).where(
+                JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                JourneyMembershipInvitationModel.target_traveler_id == target_id,
+                JourneyMembershipInvitationModel.state == "OFFERED",
+            )
+        ).all()
+        from app.traveler_principal import member_has_capability
+
+        for old in pending:
+            try:
+                old_expiry = datetime.fromisoformat(str(old.expires_at))
+            except ValueError:
+                old_expiry = stamp
+            old_inviter = session.get(JourneyMemberModel, str(old.inviter_member_id))
+            if (
+                old_expiry.tzinfo is None
+                or old_expiry <= stamp
+                or str(old.base_plan_version_id) != str(journey.active_plan_version_id)
+                or str(old.base_cursor_activity_id or "") != str(journey.current_activity_id or "")
+                or old_inviter is None
+                or _member_state(old_inviter, stamp) != "MEMBER_IN_FORCE"
+                or not member_has_capability(session, old_inviter, "MEMBER_MANAGE")
+            ):
+                old.state = "EXPIRED"
+                old.updated_at = stamp_text
+            else:
+                raise HTTPException(409, "MEMBERSHIP_INVITATION_ALREADY_PENDING")
+        session.flush()
+
+        start_at = str(journey.start_at or "")
+        approximate_start_date = start_at[:7] if len(start_at) >= 7 else "Date not set"
+        invitation = JourneyMembershipInvitationModel(
+            id=str(uuid4()),
+            journey_id=str(journey.id),
+            target_traveler_id=target_id,
+            inviter_member_id=str(manager.id),
+            inviter_traveler_id=str(principal.traveler_id),
+            base_plan_version_id=str(journey.active_plan_version_id),
+            base_cursor_activity_id=(
+                str(journey.current_activity_id) if journey.current_activity_id else None
+            ),
+            proposed_role="COLLABORATOR",
+            title_snapshot=str(journey.title),
+            city_code_snapshot=str(journey.city_code),
+            approximate_start_date=approximate_start_date,
+            state="OFFERED",
+            request_key=request_key,
+            request_hash=request_hash,
+            expires_at=(stamp + timedelta(hours=24)).isoformat(),
+            accepted_at=None,
+            declined_at=None,
+            revoked_at=None,
+            joined_member_id=None,
+            created_at=stamp_text,
+            updated_at=stamp_text,
+        )
+        session.add(invitation)
+        record_audit(
+            session,
+            action="journey.membership_invitation.offered",
+            entity_type="JourneyMembershipInvitation",
+            entity_id=invitation.id,
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={
+                "target_traveler_id": target_id,
+                "proposed_role": "COLLABORATOR",
+                "base_plan_version_id": str(journey.active_plan_version_id),
+                "expires_at": invitation.expires_at,
+            },
+        )
+        try:
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            same_key = session.scalar(
+                select(JourneyMembershipInvitationModel).where(
+                    JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                    JourneyMembershipInvitationModel.inviter_member_id == str(manager.id),
+                    JourneyMembershipInvitationModel.request_key == request_key,
+                )
+            )
+            if same_key is not None and str(same_key.request_hash) == request_hash:
+                return {
+                    "invitation_id": str(same_key.id),
+                    "target_traveler_id": str(same_key.target_traveler_id),
+                    "proposed_role": "COLLABORATOR",
+                    "state": str(same_key.state),
+                    "expires_at": str(same_key.expires_at),
+                }
+            raise HTTPException(409, "MEMBERSHIP_INVITATION_ALREADY_PENDING") from exc
+        return {
+            "invitation_id": str(invitation.id),
+            "target_traveler_id": target_id,
+            "proposed_role": "COLLABORATOR",
+            "state": "OFFERED",
+            "expires_at": invitation.expires_at,
+        }
+
+
+@app.get(
+    "/api/v1/travelers/me/journey-membership-invitations",
+    response_model=list[JourneyMembershipInvitationInboxItem],
 )
-def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session = Depends(get_session)):
+def list_my_journey_membership_invitations(
+    request: Request, session: Session = Depends(get_session)
+):
+    from app.traveler_principal import member_has_capability, resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    now = datetime.now(timezone.utc)
+    rows = session.scalars(
+        select(JourneyMembershipInvitationModel)
+        .where(
+            JourneyMembershipInvitationModel.target_traveler_id == str(principal.traveler_id),
+            JourneyMembershipInvitationModel.state == "OFFERED",
+        )
+        .order_by(JourneyMembershipInvitationModel.created_at, JourneyMembershipInvitationModel.id)
+    ).all()
+    visible: list[JourneyMembershipInvitationInboxItem] = []
+    changed = False
+    for invitation in rows:
+        try:
+            expiry = datetime.fromisoformat(str(invitation.expires_at))
+        except ValueError:
+            expiry = now
+        journey = session.get(Journey, str(invitation.journey_id))
+        inviter = session.get(JourneyMemberModel, str(invitation.inviter_member_id))
+        valid = bool(
+            expiry.tzinfo is not None
+            and expiry > now
+            and journey is not None
+            and str(journey.status).upper() == "ACTIVE"
+            and str(journey.active_plan_version_id or "") == str(invitation.base_plan_version_id)
+            and str(journey.current_activity_id or "") == str(invitation.base_cursor_activity_id or "")
+            and inviter is not None
+            and str(inviter.journey_id) == str(journey.id)
+            and str(inviter.traveler_id) == str(invitation.inviter_traveler_id)
+            and _member_state(inviter, now) == "MEMBER_IN_FORCE"
+            and member_has_capability(session, inviter, "MEMBER_MANAGE")
+        )
+        if not valid:
+            invitation.state = "EXPIRED"
+            invitation.updated_at = now.isoformat()
+            changed = True
+            continue
+        visible.append(_membership_invitation_inbox_item(session, invitation))
+    if changed:
+        session.commit()
+    return visible
+
+
+@app.get("/api/v1/journeys/{journey_id}/membership-invitations")
+def list_journey_membership_invitations(
+    journey_id: UUID, request: Request, session: Session = Depends(get_session)
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _principal, manager = _require_membership_manager(request, str(journey_id), session)
+    now = datetime.now(timezone.utc)
+    rows = session.scalars(
+        select(JourneyMembershipInvitationModel)
+        .where(
+            JourneyMembershipInvitationModel.journey_id == str(journey.id),
+            JourneyMembershipInvitationModel.inviter_member_id == str(manager.id),
+        )
+        .order_by(JourneyMembershipInvitationModel.created_at, JourneyMembershipInvitationModel.id)
+    ).all()
+    changed = False
+    result: list[dict[str, str]] = []
+    for invitation in rows:
+        if invitation.state == "OFFERED":
+            try:
+                expiry = datetime.fromisoformat(str(invitation.expires_at))
+            except ValueError:
+                expiry = now
+            if (
+                expiry.tzinfo is None
+                or expiry <= now
+                or str(invitation.base_plan_version_id) != str(journey.active_plan_version_id or "")
+                or str(invitation.base_cursor_activity_id or "") != str(journey.current_activity_id or "")
+            ):
+                invitation.state = "EXPIRED"
+                invitation.updated_at = now.isoformat()
+                changed = True
+        target = session.get(Traveler, str(invitation.target_traveler_id))
+        result.append(
+            {
+                "invitation_id": str(invitation.id),
+                "target_traveler_id": str(invitation.target_traveler_id),
+                "target_display_name": str(target.display_name if target else "Traveller"),
+                "proposed_role": "COLLABORATOR",
+                "state": str(invitation.state),
+                "expires_at": str(invitation.expires_at),
+            }
+        )
+    if changed:
+        session.commit()
+    return result
+
+
+def _invalidate_shared_stop_authority_after_membership_change(
+    session: Session,
+    *,
+    journey_id: str,
+    invitation_id: str,
+    actor_id: str,
+    stamp: str,
+) -> None:
+    """Close R73/R74 rounds and grants whose member set predates an accepted join."""
+    from app.db.models import CollectiveAuthorityReceipt, SharedStopCoPlanningGrant
+
+    promotions = session.scalars(
+        select(MemberPlacePromotion).where(
+            MemberPlacePromotion.journey_id == str(journey_id),
+            MemberPlacePromotion.state.in_(
+                ("PENDING_ROUTE", "WAITING_FOR_MEMBERS", "AUTHORIZED")
+            ),
+        )
+    ).all()
+    invalidated_promotion_count = 0
+    for promotion in promotions:
+        mission = (
+            session.get(JourneyMission, str(promotion.mission_id))
+            if promotion.mission_id
+            else None
+        )
+        if mission is not None:
+            clarification = _json_object(mission.clarification_json or "{}")
+            if clarification.get("status") in {"WAITING_FOR_MEMBERS", "RESOLVED"}:
+                clarification["status"] = "STALE"
+                clarification["stale_code"] = "STALE_COLLECTIVE_MEMBERSHIP"
+                clarification["stale_at"] = stamp
+                mission.clarification_json = json.dumps(
+                    clarification, ensure_ascii=False, sort_keys=True
+                )
+        promotion_detail = _json_object(promotion.state_detail_json or "{}")
+        promotion.state = "STALE"
+        promotion.state_detail_json = json.dumps(
+            {
+                **promotion_detail,
+                "code": "STALE_COLLECTIVE_MEMBERSHIP",
+                "stale_at": stamp,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        promotion.updated_at = stamp
+        if promotion.authority_receipt_id:
+            receipt = session.get(
+                CollectiveAuthorityReceipt, str(promotion.authority_receipt_id)
+            )
+            if receipt is not None and receipt.invalidated_at is None:
+                receipt.invalidated_at = stamp
+                receipt.invalidation_code = "STALE_COLLECTIVE_MEMBERSHIP"
+        invalidated_promotion_count += 1
+
+    grants = session.scalars(
+        select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == str(journey_id),
+            SharedStopCoPlanningGrant.status.in_(("OFFERED", "ACCEPTED")),
+        )
+    ).all()
+    for grant in grants:
+        grant.status = "REVOKED"
+        grant.active_slot = False
+        grant.revoked_at = stamp
+        grant.updated_at = stamp
+
+    if invalidated_promotion_count or grants:
+        record_audit(
+            session,
+            action="journey.collective_authority.invalidated_by_membership_change",
+            entity_type="JourneyMembershipInvitation",
+            entity_id=str(invitation_id),
+            journey_id=str(journey_id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(actor_id),
+            after={
+                "reason": "STALE_COLLECTIVE_MEMBERSHIP",
+                "invalidated_promotion_count": invalidated_promotion_count,
+                "revoked_scoped_grant_count": len(grants),
+            },
+        )
+
+
+@app.post("/api/v1/journey-membership-invitations/{invitation_id}/respond")
+def respond_to_journey_membership_invitation(
+    invitation_id: str,
+    payload: JourneyMembershipInvitationDecision,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    from app.traveler_principal import member_has_capability, resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    invitation = session.get(JourneyMembershipInvitationModel, str(invitation_id))
+    if invitation is None or str(invitation.target_traveler_id) != str(principal.traveler_id):
+        raise HTTPException(404, "JOURNEY_MEMBERSHIP_INVITATION_NOT_FOUND")
+    journey_id = str(invitation.journey_id)
+    with journey_write_lock(journey_id):
+        session.expire_all()
+        invitation = session.get(JourneyMembershipInvitationModel, str(invitation_id))
+        if invitation is None or str(invitation.target_traveler_id) != str(principal.traveler_id):
+            raise HTTPException(404, "JOURNEY_MEMBERSHIP_INVITATION_NOT_FOUND")
+        if str(invitation.state) != "OFFERED":
+            raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+        now = datetime.now(timezone.utc)
+        stamp = now.isoformat()
+        try:
+            expiry = datetime.fromisoformat(str(invitation.expires_at))
+        except ValueError:
+            expiry = now
+        if expiry.tzinfo is None or expiry <= now:
+            invitation.state = "EXPIRED"
+            invitation.updated_at = stamp
+            session.commit()
+            raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_EXPIRED")
+
+        if payload.decision == "DECLINE":
+            changed = session.execute(
+                update(JourneyMembershipInvitationModel)
+                .where(
+                    JourneyMembershipInvitationModel.id == str(invitation.id),
+                    JourneyMembershipInvitationModel.target_traveler_id == str(principal.traveler_id),
+                    JourneyMembershipInvitationModel.state == "OFFERED",
+                )
+                .values(state="DECLINED", declined_at=stamp, updated_at=stamp)
+            )
+            if int(changed.rowcount or 0) != 1:
+                session.rollback()
+                raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+            record_audit(
+                session,
+                action="journey.membership_invitation.declined",
+                entity_type="JourneyMembershipInvitation",
+                entity_id=str(invitation.id),
+                journey_id=journey_id,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=str(principal.traveler_id),
+                after={"state": "DECLINED"},
+            )
+            session.commit()
+            return {"invitation_id": str(invitation.id), "state": "DECLINED"}
+
+        journey = require(session, Journey, journey_id, "Journey")
+        if (
+            str(journey.status).upper() != "ACTIVE"
+            or str(journey.active_plan_version_id or "") != str(invitation.base_plan_version_id)
+            or str(journey.current_activity_id or "") != str(invitation.base_cursor_activity_id or "")
+        ):
+            invitation.state = "EXPIRED"
+            invitation.updated_at = stamp
+            session.commit()
+            raise HTTPException(409, "JOURNEY_BASE_CHANGED")
+        inviter = session.get(JourneyMemberModel, str(invitation.inviter_member_id))
+        if (
+            inviter is None
+            or str(inviter.journey_id) != journey_id
+            or str(inviter.traveler_id) != str(invitation.inviter_traveler_id)
+            or _member_state(inviter, now) != "MEMBER_IN_FORCE"
+            or not member_has_capability(session, inviter, "MEMBER_MANAGE")
+        ):
+            invitation.state = "EXPIRED"
+            invitation.updated_at = stamp
+            session.commit()
+            raise HTTPException(409, "INVITER_NO_LONGER_AUTHORIZED")
+
+        if session.scalar(
+            select(JourneyMemberModel.id).where(
+                JourneyMemberModel.journey_id == journey_id,
+                JourneyMemberModel.traveler_id == str(principal.traveler_id),
+            )
+        ) is not None:
+            raise HTTPException(409, "MEMBER_ALREADY_PRESENT")
+        member_id = str(uuid4())
+        member = JourneyMemberModel(
+            id=member_id,
+            journey_id=journey_id,
+            traveler_id=str(principal.traveler_id),
+            role="COLLABORATOR",
+            invited_by=str(invitation.inviter_traveler_id),
+            expires_at=None,
+            joined_at=stamp,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=stamp,
+            updated_at=stamp,
+        )
+        session.add(member)
+        try:
+            # The invitation's joined_member_id is an FK, so insert the member
+            # first inside this same transaction; a later claim failure rolls
+            # the row back and cannot leave a partial membership.
+            session.flush()
+            claimed = session.execute(
+                update(JourneyMembershipInvitationModel)
+                .where(
+                    JourneyMembershipInvitationModel.id == str(invitation.id),
+                    JourneyMembershipInvitationModel.target_traveler_id == str(principal.traveler_id),
+                    JourneyMembershipInvitationModel.state == "OFFERED",
+                )
+                .values(
+                    state="ACCEPTED",
+                    accepted_at=stamp,
+                    joined_member_id=member_id,
+                    updated_at=stamp,
+                )
+            )
+            if int(claimed.rowcount or 0) != 1:
+                session.rollback()
+                raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+            record_audit(
+                session,
+                action="journey.membership_invitation.accepted",
+                entity_type="JourneyMembershipInvitation",
+                entity_id=str(invitation.id),
+                journey_id=journey_id,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=str(principal.traveler_id),
+                after={"state": "ACCEPTED", "member_id": member_id, "role": "COLLABORATOR"},
+            )
+            _invalidate_shared_stop_authority_after_membership_change(
+                session,
+                journey_id=journey_id,
+                invitation_id=str(invitation.id),
+                actor_id=str(principal.traveler_id),
+                stamp=stamp,
+            )
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            raise HTTPException(409, "MEMBER_ALREADY_PRESENT") from exc
+        return {
+            "invitation_id": str(invitation.id),
+            "journey_id": journey_id,
+            "state": "ACCEPTED",
+            "membership": _member_payload(member).model_dump(),
+        }
+
+
+@app.post("/api/v1/journeys/{journey_id}/membership-invitations/{invitation_id}/revoke")
+def revoke_journey_membership_invitation(
+    journey_id: UUID,
+    invitation_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        principal, manager = _require_membership_manager(request, str(journey_id), session)
+        invitation = session.get(JourneyMembershipInvitationModel, str(invitation_id))
+        if invitation is None or str(invitation.journey_id) != str(journey.id):
+            raise HTTPException(404, "JOURNEY_MEMBERSHIP_INVITATION_NOT_FOUND")
+        stamp = datetime.now(timezone.utc).isoformat()
+        changed = session.execute(
+            update(JourneyMembershipInvitationModel)
+            .where(
+                JourneyMembershipInvitationModel.id == str(invitation.id),
+                JourneyMembershipInvitationModel.journey_id == str(journey.id),
+                JourneyMembershipInvitationModel.state == "OFFERED",
+            )
+            .values(state="REVOKED", revoked_at=stamp, updated_at=stamp)
+        )
+        if int(changed.rowcount or 0) != 1:
+            session.rollback()
+            raise HTTPException(409, "JOURNEY_MEMBERSHIP_INVITATION_NOT_OFFERED")
+        record_audit(
+            session,
+            action="journey.membership_invitation.revoked",
+            entity_type="JourneyMembershipInvitation",
+            entity_id=str(invitation.id),
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={"state": "REVOKED", "manager_member_id": str(manager.id)},
+        )
+        session.commit()
+        return {"invitation_id": str(invitation.id), "state": "REVOKED"}
+
+
+@app.put("/api/v1/journeys/{journey_id}/members/{member_id}/preferences")
+def replace_journey_member_preferences(
+    journey_id: UUID,
+    member_id: str,
+    payload: JourneyMemberPreferenceUpdate,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Store explicit preference context for this member in this Journey only."""
+    member = session.get(JourneyMemberModel, member_id)
+    if member is None or member.journey_id != str(journey_id):
+        raise _share_refusal(404, "No member of this journey carries that id.", "MEMBER_UNKNOWN", {})
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    _principal, actor = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    if str(actor.id) != str(member.id):
+        raise HTTPException(403, "members may update only their own Journey preferences")
+    member.preferences_json = json.dumps(
+        {"scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": [item.model_dump() for item in payload.preferences]},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    member.updated_at = datetime.now(timezone.utc).isoformat()
+    session.commit()
+    return {"journey_id": str(journey_id), "member_id": member.id, "scope": "THIS_JOURNEY_MEMBER_DECISION", "preferences": payload.preferences}
+
+
+def _withdraw_journey_member(
+    journey_id: UUID,
+    member_id: str,
+    principal_traveler_id: str,
+    session: Session,
+):
     member = session.get(JourneyMemberModel, member_id)
     if member is None or member.journey_id != str(journey_id):
         raise _share_refusal(
@@ -5147,8 +10191,49 @@ def withdraw_journey_member(journey_id: UUID, member_id: str, session: Session =
     stamp = datetime.now(timezone.utc).isoformat()
     member.removed_at = stamp
     member.updated_at = stamp
+    for grant in session.scalars(
+        select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == str(journey_id),
+            SharedStopCoPlanningGrant.status.in_(("OFFERED", "ACCEPTED")),
+            (SharedStopCoPlanningGrant.grantee_member_id == str(member.id))
+            | (SharedStopCoPlanningGrant.grantor_member_id == str(member.id)),
+        )
+    ).all():
+        grant.status = "REVOKED"
+        grant.active_slot = False
+        grant.revoked_at = stamp
+        grant.updated_at = stamp
+    record_audit(
+        session,
+        action="journey.member.withdrawn",
+        entity_type="JourneyMember",
+        entity_id=member.id,
+        journey_id=str(journey_id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal_traveler_id),
+        after={"member_id": member.id, "role": member.role},
+    )
     session.commit()
     return _member_payload(member)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw",
+    response_model=JourneyMember,
+)
+def withdraw_journey_member(
+    journey_id: UUID,
+    member_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        require(session, Journey, str(journey_id), "Journey")
+        principal, _manager = _require_membership_manager(request, str(journey_id), session)
+        return _withdraw_journey_member(
+            journey_id, member_id, principal.traveler_id, session
+        )
 
 
 @app.get("/api/v1/journeys/{journey_id}/acl/roles", response_model=list[JourneyRoleRule])
@@ -5509,11 +10594,46 @@ def get_journey_experience(journey_id: UUID, session: Session = Depends(get_sess
     # Staleness is an independent condition: the selected plan's frozen
     # evidence may have expired without any HARD capability recovery event.
     staleness = any("STALE_RECOMPOSE_REQUIRED" in item for item in failures)
+    authority_blocker: str | None = None
+    active_plan = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
+    )
+    if active_plan is not None:
+        active_activities = session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == active_plan.id)
+            .order_by(Activity.sequence_no)
+        ).all()
+        active_place_ids = {
+            str(item.place_id) for item in active_activities if item.place_id
+        }
+        active_places = {
+            place.id: place
+            for place in session.scalars(
+                select(Place).where(Place.id.in_(active_place_ids))
+            ).all()
+        }
+        authority_blocker = plan_authority_blocker(
+            active_plan,
+            active_places,
+            used_place_ids=[
+                str(item.place_id or item.city_service_id or "")
+                for item in active_activities
+            ],
+        )
+        if isinstance(payload.get("active_plan"), dict):
+            payload["active_plan"]["selectable"] = (
+                not staleness and authority_blocker is None
+            )
+            payload["active_plan"]["authority_blocker"] = authority_blocker
     open_recovery = recovery is not None and recovery.get("state") != "RESOLVED"
     flags = recovery_flags(session, journey)
     flags["staleness"] = staleness
+    flags["authority_blocker"] = authority_blocker
     flags["feasibility_failures"] = failures
-    flags["needs_review"] = bool(open_recovery) or staleness
+    flags["needs_review"] = bool(open_recovery) or staleness or authority_blocker is not None
     flags["recovery_required"] = bool(open_recovery)
     flags["acknowledged"] = bool(recovery and recovery.get("acknowledged"))
     flags["recovery_state"] = recovery.get("state") if recovery else None
@@ -6361,6 +11481,495 @@ def import_journey_reservation(
     return _draft_payload(draft)
 
 
+def _reality_fact_key(reservation_id: str) -> str:
+    return f"reservation:{reservation_id}:scheduled_departure_at"
+
+
+def _record_reservation_time_claim(
+    session: Session, *, journey: Journey, reservation: TransportReservation,
+    value: str, provenance: str, source_ref: str, observed_at: str,
+) -> RealityClaimModel:
+    fact_key = _reality_fact_key(reservation.id)
+    fingerprint = reservation_time_claim_fingerprint(
+        journey_id=journey.id, reservation_id=reservation.id, value=value,
+        provenance=provenance, source_ref=source_ref,
+    )
+    existing = session.scalar(select(RealityClaimModel).where(
+        RealityClaimModel.journey_id == journey.id,
+        RealityClaimModel.fingerprint == fingerprint,
+    ))
+    if existing is not None:
+        return existing
+    generation = int(session.scalar(select(func.max(RealityClaimModel.generation)).where(
+        RealityClaimModel.journey_id == journey.id,
+        RealityClaimModel.fact_key == fact_key,
+    )) or 0) + 1
+    claim = RealityClaimModel(
+        id=str(uuid4()), journey_id=journey.id, fact_domain="RESERVATION_TIME",
+        fact_key=fact_key, subject_type="TransportReservation", subject_id=reservation.id,
+        value_json=json.dumps(value), provenance=provenance, source_ref=source_ref,
+        observed_at=observed_at, effective_at=value, expires_at=None,
+        authority_class=reservation_time_authority_class(provenance),
+        status="CURRENT", generation=generation, fingerprint=fingerprint,
+        created_at=datetime.now(timezone.utc).isoformat(),
+    )
+    session.add(claim)
+    session.flush()
+    return claim
+
+
+def _reservation_time_claim_views(claims: list[RealityClaimModel]) -> list[RealityClaimView]:
+    return [RealityClaimView(
+        claim_id=item.id, fact_domain=item.fact_domain,
+        value=json.loads(item.value_json), provenance=item.provenance,
+        observed_at=item.observed_at, exact_binding=(item.subject_type == "TransportReservation"),
+    ) for item in claims]
+
+
+def _active_reservation_time_claims(
+    session: Session, journey_id: str, reservation_id: str,
+) -> list[RealityClaimModel]:
+    return session.scalars(select(RealityClaimModel).where(
+        RealityClaimModel.journey_id == journey_id,
+        RealityClaimModel.fact_key == _reality_fact_key(reservation_id),
+        RealityClaimModel.status.in_(["CURRENT", "CONFLICTING"]),
+    ).order_by(RealityClaimModel.observed_at, RealityClaimModel.id)).all()
+
+
+def _journey_inbox_payload(item: JourneyInboxItem) -> dict[str, Any]:
+    return {
+        "id": item.id, "kind": item.semantic_kind, "status": item.status,
+        "impact": item.impact_status, "confirmation_ref": item.confirmation_ref,
+        "reservation_id": item.linked_reservation_id,
+        "commitment_id": item.linked_commitment_id,
+        "reality_claim_id": item.reality_claim_id,
+        "provenance": item.provenance,
+        "result": json.loads(item.result_json or "{}"),
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/inbox/intake", status_code=201)
+def intake_journey_change(journey_id: UUID, request: Request, payload: dict[str, Any], session: Session = Depends(get_session)):
+    """Ground a traveller supplied booking update against an exact reservation reference."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    text_value = " ".join(str(payload.get("text") or "").split()).strip()
+    if not text_value:
+        raise HTTPException(422, "text is required")
+    source_kind = str(payload.get("source_kind") or "PASTED_TEXT").upper()
+    if source_kind != "PASTED_TEXT":
+        raise HTTPException(422, "this intake route accepts pasted text only")
+    fingerprint = inbox_artifact_fingerprint(source_kind=source_kind, normalized_text=text_value)
+    existing = session.scalar(select(JourneyInboxItem).where(
+        JourneyInboxItem.journey_id == journey.id, JourneyInboxItem.raw_text_hash == fingerprint
+    ))
+    if existing is not None:
+        return {**_journey_inbox_payload(existing), "replayed": True}
+    import re
+    ref_match = re.search(r"\b(?:confirmation|ref(?:erence)?)\s*(?:#|:)?\s*([A-Z0-9]{4,})\b", text_value, re.I)
+    if ref_match is None:
+        ref_match = re.search(r"\bbooking\s*(?:#|:)?\s*([A-Z0-9]{4,})\b", text_value, re.I)
+    times = re.findall(r"(?<!\d)([01]?\d|2[0-3]):([0-5]\d)(?!\d)", text_value)
+    old_time = ":".join(times[0]) if len(times) >= 2 else None
+    new_time = ":".join(times[1]) if len(times) >= 2 else None
+    ref = ref_match.group(1).upper() if ref_match else None
+    reservation = session.scalar(select(TransportReservation).where(
+        TransportReservation.journey_id == journey.id,
+        TransportReservation.confirmation_ref == ref,
+        TransportReservation.status == "CONFIRMED",
+    )) if ref else None
+    now = datetime.now(timezone.utc).isoformat()
+    row = JourneyInboxItem(
+        id=str(uuid4()), journey_id=journey.id, traveler_id=journey.traveler_id,
+        source_kind=source_kind, raw_text_hash=fingerprint, raw_text=text_value,
+        received_at=now, semantic_kind="SCHEDULE_CHANGE" if old_time and new_time else "UNKNOWN",
+        reservation_type=reservation.reservation_type if reservation else "TRAIN",
+        confirmation_ref=ref, change_kind="SCHEDULE_CHANGE" if old_time and new_time else "UNKNOWN",
+        extracted_json=json.dumps({"old_departure": old_time, "new_departure": new_time}, sort_keys=True),
+        provenance=inbox_provenance_for_source(source_kind),
+        status="RECEIVED", linked_reservation_id=None, linked_commitment_id=None,
+        impact_status="PENDING", result_json="{}", created_at=now, updated_at=now,
+    )
+    session.add(row)
+    session.flush()
+    if reservation is not None:
+        open_conflict = session.scalar(select(RealityConflictModel).where(
+            RealityConflictModel.journey_id == journey.id,
+            RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+            RealityConflictModel.status == "UNRESOLVED_MATERIAL_CONFLICT",
+        ).order_by(RealityConflictModel.generation.desc()))
+        if open_conflict is not None:
+            row.linked_reservation_id = reservation.id
+            row.linked_commitment_id = reservation.commitment_id
+            row.status = "REALITY_CONFLICT"
+            row.impact_status = "UNRESOLVED_MATERIAL_CONFLICT"
+            row.result_json = json.dumps({"conflict_id": open_conflict.id,
+                "question": "Which departure time should CityNexus use?"}, sort_keys=True)
+            session.commit()
+            return {**_journey_inbox_payload(row), "replayed": False}
+    if reservation is None or not old_time or not new_time:
+        row.status = "BINDING_REQUIRED" if reservation is None else "NEEDS_REVIEW"
+        row.impact_status = "BINDING_REQUIRED" if reservation is None else "NEEDS_REVIEW"
+        candidates = session.scalars(select(TransportReservation).where(
+            TransportReservation.journey_id == journey.id,
+            TransportReservation.status == "CONFIRMED",
+            TransportReservation.reservation_type == (reservation.reservation_type if reservation else "TRAIN"),
+        ).order_by(TransportReservation.scheduled_departure_at)).all() if reservation is None else []
+        row.result_json = json.dumps({"question": "Which reservation changed?", "candidates": [
+            {"id": item.id, "label": f"{item.reservation_type} · {item.confirmation_ref or 'Booking'}"}
+            for item in candidates
+        ]})
+    else:
+        old_at = datetime.fromisoformat(reservation.scheduled_departure_at.replace("Z", "+00:00"))
+        old_actual = old_at.strftime("%H:%M")
+        if old_actual != old_time:
+            row.status = "NEEDS_REVIEW"
+            row.impact_status = "OLD_VALUE_MISMATCH"
+            row.result_json = json.dumps({"expected_old_departure": old_actual, "provided_old_departure": old_time})
+        else:
+            new_at = old_at.replace(hour=int(new_time[:2]), minute=int(new_time[3:]))
+            delta = int((new_at - old_at).total_seconds() / 60)
+            commitment = session.get(CommitmentModel, reservation.commitment_id) if reservation.commitment_id else None
+            protected = bool(commitment and commitment.level in {"C2_Reserved", "C3_Guaranteed", "C4_Anchored"})
+            decision = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
+                affects_protected_commitment=protected, schedule_delta_min=delta,
+                current_execution_affected=bool(commitment and commitment.activity_id == journey.current_activity_id))
+            row.linked_reservation_id = reservation.id
+            row.linked_commitment_id = reservation.commitment_id
+            fact_key = _reality_fact_key(reservation.id)
+            active_claims = _active_reservation_time_claims(session, journey.id, reservation.id)
+            if not active_claims:
+                _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+                    value=reservation.scheduled_departure_at,
+                    provenance=reservation.source_provenance or "USER_CONFIRMED_IMPORT",
+                    source_ref=f"reservation-import:{reservation.id}", observed_at=reservation.captured_at or now)
+            user_claim = _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+                value=new_at.isoformat(), provenance=row.provenance,
+                source_ref=f"journey-inbox:{row.id}", observed_at=now)
+            active_claims = _active_reservation_time_claims(session, journey.id, reservation.id)
+            reconciled = reconcile_reservation_time_claims(
+                _reservation_time_claim_views(active_claims), now=datetime.now(timezone.utc))
+            row.reality_claim_id = user_claim.id
+            if reconciled.contested:
+                claim_set = hashlib.sha256("|".join(sorted(item.fingerprint for item in active_claims)).encode("utf-8")).hexdigest()
+                conflict = session.scalar(select(RealityConflictModel).where(
+                    RealityConflictModel.journey_id == journey.id,
+                    RealityConflictModel.fact_key == fact_key,
+                    RealityConflictModel.claim_set_fingerprint == claim_set,
+                ))
+                if conflict is None:
+                    generation = int(session.scalar(select(func.max(RealityConflictModel.generation)).where(
+                        RealityConflictModel.journey_id == journey.id,
+                        RealityConflictModel.fact_key == fact_key,
+                    )) or 0) + 1
+                    conflict = RealityConflictModel(id=str(uuid4()), journey_id=journey.id,
+                        fact_domain="RESERVATION_TIME", fact_key=fact_key, generation=generation,
+                        claim_ids_json=json.dumps([item.id for item in active_claims]),
+                        claim_set_fingerprint=claim_set, status="UNRESOLVED_MATERIAL_CONFLICT",
+                        reason=reconciled.reason, selected_claim_id=None, resolution_claim_id=None,
+                        resolution_provenance=None, created_at=now, updated_at=now, resolved_at=None)
+                    session.add(conflict)
+                for claim in active_claims:
+                    claim.status = "CONFLICTING"
+                row.status = "REALITY_CONFLICT"
+                row.impact_status = "UNRESOLVED_MATERIAL_CONFLICT"
+                row.result_json = json.dumps({"old_departure": old_at.isoformat(),
+                    "new_departure": new_at.isoformat(), "conflict_id": conflict.id,
+                    "reason": reconciled.reason}, sort_keys=True)
+            else:
+                winner = next((item for item in active_claims if item.id == reconciled.winning_claim_id), None)
+                if winner is None:
+                    row.status, row.impact_status = "NEEDS_REVIEW", "WAITING_FOR_TRUTH"
+                    row.result_json = json.dumps({"reason": reconciled.reason}, sort_keys=True)
+                else:
+                    winner_at = datetime.fromisoformat(str(json.loads(winner.value_json)).replace("Z", "+00:00"))
+                    for claim in active_claims:
+                        claim.status = "CURRENT" if claim.id == winner.id else "SUPERSEDED"
+                    reservation.scheduled_departure_at = winner_at.isoformat()
+                    reservation.source_provenance = winner.provenance
+                    reservation.captured_at = now
+                    if commitment is not None:
+                        policy = json.loads(commitment.policy_json or "{}")
+                        policy.update({"scheduled_start_at": winner_at.isoformat(), "source": winner.provenance})
+                        commitment.policy_json = json.dumps(policy, ensure_ascii=False, sort_keys=True)
+                        commitment.updated_at = now
+                    row.status = "APPLIED"
+                    row.impact_status = decision.state
+                    row.result_json = json.dumps({"old_departure": old_at.isoformat(),
+                        "new_departure": winner_at.isoformat(), "schedule_delta_min": delta,
+                        "reconciliation": reconciled.state, "reason": reconciled.reason,
+                        "winning_claim_id": winner.id}, sort_keys=True)
+                    if decision.material:
+                        session.add(EventModel(id=str(uuid4()), journey_id=journey.id,
+                            provider_key="user-pasted-change", provenance="USER_REPORTED",
+                            event_type="SCHEDULE_DELAY", severity="MAJOR", status="DETECTED",
+                            affected_activity_id=commitment.activity_id if commitment else None,
+                            occurred_at=now, detected_at=now, resolved_at=None,
+                            payload_json=json.dumps({"inbox_item_id": row.id, "confirmation_ref": ref,
+                                "old_departure": old_at.isoformat(), "new_departure": winner_at.isoformat(),
+                                "future_change": winner_at > datetime.now(winner_at.tzinfo)}, sort_keys=True), created_at=now))
+                        session.flush()
+    session.commit()
+    replayed = False
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if row.impact_status == "RECOVERY_REQUIRED" and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey)
+        except Exception:
+            logging.getLogger(__name__).exception("R53 Guardian handoff failed for %s", row.id)
+    return {**_journey_inbox_payload(row), "replayed": replayed}
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/inbox/{item_id}/bind")
+def bind_journey_inbox_item(journey_id: UUID, item_id: UUID, request: Request, payload: dict[str, Any], session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    item = require(session, JourneyInboxItem, str(item_id), "Journey Inbox item")
+    reservation_id = str(payload.get("reservation_id") or "")
+    reservation = session.get(TransportReservation, reservation_id)
+    if item.journey_id != journey.id or reservation is None or reservation.journey_id != journey.id:
+        raise HTTPException(404, "reservation candidate not found")
+    if item.status != "BINDING_REQUIRED":
+        return _journey_inbox_payload(item)
+    candidate_ids = {str(candidate.get("id")) for candidate in json.loads(item.result_json or "{}").get("candidates", [])}
+    if reservation.id not in candidate_ids:
+        raise HTTPException(422, "reservation was not offered as a binding candidate")
+    values = json.loads(item.extracted_json or "{}")
+    old_time, new_time = values.get("old_departure"), values.get("new_departure")
+    if not old_time or not new_time:
+        raise HTTPException(409, "message needs review before binding")
+    old_at = datetime.fromisoformat(reservation.scheduled_departure_at.replace("Z", "+00:00"))
+    if old_at.strftime("%H:%M") != old_time:
+        item.status, item.impact_status = "NEEDS_REVIEW", "OLD_VALUE_MISMATCH"
+        session.commit()
+        return _journey_inbox_payload(item)
+    new_at = old_at.replace(hour=int(new_time[:2]), minute=int(new_time[3:]))
+    delta = int((new_at - old_at).total_seconds() / 60)
+    commitment = session.get(CommitmentModel, reservation.commitment_id) if reservation.commitment_id else None
+    decision = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
+        affects_protected_commitment=bool(commitment and commitment.level in {"C2_Reserved", "C3_Guaranteed", "C4_Anchored"}),
+        schedule_delta_min=delta)
+    now = datetime.now(timezone.utc).isoformat()
+    reservation.scheduled_departure_at, reservation.source_provenance = new_at.isoformat(), item.provenance
+    reservation.captured_at = now
+    if commitment:
+        policy = json.loads(commitment.policy_json or "{}")
+        policy.update({"scheduled_start_at": new_at.isoformat(), "source": item.provenance})
+        commitment.policy_json, commitment.updated_at = json.dumps(policy, ensure_ascii=False, sort_keys=True), now
+    item.confirmation_ref = reservation.confirmation_ref
+    item.linked_reservation_id, item.linked_commitment_id = reservation.id, reservation.commitment_id
+    item.status, item.impact_status, item.updated_at = "APPLIED", decision.state, now
+    item.result_json = json.dumps({"old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(), "schedule_delta_min": delta, "reason": decision.reason}, sort_keys=True)
+    if decision.material:
+        session.add(EventModel(id=str(uuid4()), journey_id=journey.id, provider_key="user-pasted-change", provenance="USER_REPORTED", event_type="SCHEDULE_DELAY", severity="MAJOR", status="DETECTED", affected_activity_id=commitment.activity_id if commitment else None, occurred_at=now, detected_at=now, resolved_at=None, payload_json=json.dumps({"inbox_item_id": item.id, "confirmation_ref": reservation.confirmation_ref, "old_departure": old_at.isoformat(), "new_departure": new_at.isoformat()}, sort_keys=True), created_at=now))
+    session.commit()
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if decision.material and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey)
+        except Exception:
+            logging.getLogger(__name__).exception("R53 Guardian handoff failed for %s", item.id)
+    return _journey_inbox_payload(item)
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/reality/provider-replay")
+def add_reservation_time_provider_replay(
+    journey_id: UUID, request: Request, payload: dict[str, Any], session: Session = Depends(get_session),
+):
+    """Ingest an explicitly captured provider replay. This route never asserts live status."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    observation_id = str(payload.get("provider_observation_id") or "")
+    observation = session.get(ProviderObservation, observation_id)
+    if observation is None or observation.journey_id != journey.id:
+        raise HTTPException(404, "captured provider replay was not found")
+    if observation.provenance != "REPLAY" or observation.observation_type != "RESERVATION_TIME":
+        raise HTTPException(422, "only a captured RESERVATION_TIME replay may enter this route")
+    try:
+        evidence = json.loads(observation.payload_json or "{}")
+        ref = str(evidence.get("confirmation_ref") or "").strip().upper()
+        value = str(evidence.get("scheduled_departure_at") or "").strip()
+        datetime.fromisoformat(value.replace("Z", "+00:00"))
+        datetime.fromisoformat(observation.captured_at.replace("Z", "+00:00"))
+    except (ValueError, json.JSONDecodeError) as exc:
+        raise HTTPException(422, "captured replay is missing its exact reservation time") from exc
+    if not ref:
+        raise HTTPException(422, "captured replay is missing its confirmation reference")
+    if observation.expires_at:
+        expires_at = datetime.fromisoformat(observation.expires_at.replace("Z", "+00:00"))
+        if expires_at <= datetime.now(timezone.utc):
+            return {"provenance": "CAPTURED_REPLAY", "reconciliation": "STALE_SOURCE_IGNORED",
+                "conflict_id": None, "reservation_departure_at": None}
+    reservation = session.scalar(select(TransportReservation).where(
+        TransportReservation.journey_id == journey.id,
+        TransportReservation.confirmation_ref == ref,
+        TransportReservation.status == "CONFIRMED",
+    ))
+    if reservation is None:
+        raise HTTPException(404, "exact reservation was not found")
+    open_conflict = session.scalar(select(RealityConflictModel).where(
+        RealityConflictModel.journey_id == journey.id,
+        RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+        RealityConflictModel.status == "UNRESOLVED_MATERIAL_CONFLICT",
+    ).order_by(RealityConflictModel.generation.desc()))
+    claim = _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+        value=datetime.fromisoformat(value.replace("Z", "+00:00")).isoformat(),
+        provenance="CAPTURED_REPLAY", source_ref=f"provider-observation:{observation.id}",
+        observed_at=observation.captured_at)
+    claims = _active_reservation_time_claims(session, journey.id, reservation.id)
+    if open_conflict is not None:
+        claim.status = "CONFLICTING"
+        claim_ids = set(json.loads(open_conflict.claim_ids_json or "[]"))
+        claim_ids.add(claim.id)
+        open_conflict.claim_ids_json = json.dumps(sorted(claim_ids))
+        session.commit()
+        return {"claim_id": claim.id, "provenance": claim.provenance,
+            "authority_class": claim.authority_class,
+            "reconciliation": "UNRESOLVED_MATERIAL_CONFLICT",
+            "conflict_id": open_conflict.id,
+            "reservation_departure_at": reservation.scheduled_departure_at}
+    result = reconcile_reservation_time_claims(_reservation_time_claim_views(claims), now=datetime.now(timezone.utc))
+    now = datetime.now(timezone.utc).isoformat()
+    conflict_id = None
+    if result.contested:
+        claim_set = hashlib.sha256("|".join(sorted(item.fingerprint for item in claims)).encode("utf-8")).hexdigest()
+        conflict = session.scalar(select(RealityConflictModel).where(
+            RealityConflictModel.journey_id == journey.id,
+            RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+            RealityConflictModel.claim_set_fingerprint == claim_set,
+        ))
+        if conflict is None:
+            generation = int(session.scalar(select(func.max(RealityConflictModel.generation)).where(
+                RealityConflictModel.journey_id == journey.id,
+                RealityConflictModel.fact_key == _reality_fact_key(reservation.id),
+            )) or 0) + 1
+            conflict = RealityConflictModel(id=str(uuid4()), journey_id=journey.id,
+                fact_domain="RESERVATION_TIME", fact_key=_reality_fact_key(reservation.id),
+                generation=generation, claim_ids_json=json.dumps([item.id for item in claims]),
+                claim_set_fingerprint=claim_set, status="UNRESOLVED_MATERIAL_CONFLICT",
+                reason=result.reason, selected_claim_id=None, resolution_claim_id=None,
+                resolution_provenance=None, created_at=now, updated_at=now, resolved_at=None)
+            session.add(conflict)
+        for item in claims:
+            item.status = "CONFLICTING"
+        conflict_id = conflict.id
+    elif result.winning_claim_id:
+        for item in claims:
+            item.status = "CURRENT" if item.id == result.winning_claim_id else "SUPERSEDED"
+    session.commit()
+    return {"claim_id": claim.id, "provenance": claim.provenance,
+        "authority_class": claim.authority_class, "reconciliation": result.state,
+        "conflict_id": conflict_id, "reservation_departure_at": reservation.scheduled_departure_at}
+
+
+@app.post("/api/v1/journeys/{journey_id}/operator/reality-conflicts/{conflict_id}/resolve")
+def resolve_journey_reality_conflict(
+    journey_id: UUID, conflict_id: UUID, request: Request, payload: dict[str, Any],
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    _operator_actor(request, session, journey)
+    conflict = require(session, RealityConflictModel, str(conflict_id), "Reality conflict")
+    if conflict.journey_id != journey.id:
+        raise HTTPException(404, "reality conflict was not found")
+    if conflict.status == "RESOLVED":
+        return {"conflict_id": conflict.id, "generation": conflict.generation,
+            "status": conflict.status, "resolution_provenance": conflict.resolution_provenance,
+            "replayed": True}
+    if conflict.status != "UNRESOLVED_MATERIAL_CONFLICT":
+        raise HTTPException(409, "reality conflict is not awaiting a choice")
+    selected_id = str(payload.get("selected_claim_id") or "")
+    claim_ids = set(json.loads(conflict.claim_ids_json or "[]"))
+    if selected_id not in claim_ids:
+        raise HTTPException(422, "selected claim is not part of this conflict")
+    selected = session.get(RealityClaimModel, selected_id)
+    if selected is None or selected.journey_id != journey.id or selected.fact_key != conflict.fact_key:
+        raise HTTPException(404, "selected reality claim was not found")
+    reservation = session.get(TransportReservation, selected.subject_id)
+    if reservation is None or reservation.journey_id != journey.id:
+        raise HTTPException(409, "the reservation binding is no longer valid")
+    now = datetime.now(timezone.utc).isoformat()
+    selected_value = str(json.loads(selected.value_json))
+    resolution = _record_reservation_time_claim(session, journey=journey, reservation=reservation,
+        value=selected_value, provenance="USER_CONFIRMED_REALITY_RESOLUTION",
+        source_ref=f"reality-conflict:{conflict.id}:selected:{selected.id}", observed_at=now)
+    for item_id in claim_ids:
+        item = session.get(RealityClaimModel, item_id)
+        if item is not None:
+            item.status = "CURRENT" if item.id == selected.id else "SUPERSEDED"
+    resolution.status = "CURRENT"
+    reservation.scheduled_departure_at = datetime.fromisoformat(selected_value.replace("Z", "+00:00")).isoformat()
+    reservation.source_provenance = "USER_CONFIRMED_REALITY_RESOLUTION"
+    reservation.captured_at = now
+    commitment = session.get(CommitmentModel, reservation.commitment_id) if reservation.commitment_id else None
+    if commitment is not None:
+        policy = json.loads(commitment.policy_json or "{}")
+        policy.update({"scheduled_start_at": reservation.scheduled_departure_at,
+            "source": "USER_CONFIRMED_REALITY_RESOLUTION", "reality_conflict_id": conflict.id})
+        commitment.policy_json = json.dumps(policy, ensure_ascii=False, sort_keys=True)
+        commitment.updated_at = now
+    conflict.status = "RESOLVED"
+    conflict.selected_claim_id = selected.id
+    conflict.resolution_claim_id = resolution.id
+    conflict.resolution_provenance = "USER_CONFIRMED_REALITY_RESOLUTION"
+    conflict.resolved_at = now
+    conflict.updated_at = now
+    item = session.scalar(select(JourneyInboxItem).where(
+        JourneyInboxItem.journey_id == journey.id,
+        JourneyInboxItem.linked_reservation_id == reservation.id,
+        JourneyInboxItem.semantic_kind == "SCHEDULE_CHANGE",
+    ).order_by(JourneyInboxItem.created_at.desc()))
+    old_value = None
+    if item is not None:
+        old_value = json.loads(item.result_json or "{}").get("old_departure")
+        item.status = "APPLIED"
+        item.impact_status = "USER_CONFIRMED_REALITY_RESOLUTION"
+        item.updated_at = now
+    material = False
+    if old_value:
+        old_at = datetime.fromisoformat(str(old_value).replace("Z", "+00:00"))
+        new_at = datetime.fromisoformat(reservation.scheduled_departure_at.replace("Z", "+00:00"))
+        delta = int((new_at - old_at).total_seconds() / 60)
+        impact = classify_inbox_impact(exact_binding=True, change_kind="SCHEDULE_CHANGE",
+            affects_protected_commitment=bool(commitment and commitment.level in {"C2_Reserved", "C3_Guaranteed", "C4_Anchored"}),
+            schedule_delta_min=delta)
+        material = impact.material
+        event_exists = False
+        for existing_event in session.scalars(select(EventModel).where(
+            EventModel.journey_id == journey.id, EventModel.event_type == "SCHEDULE_DELAY"
+        )).all():
+            try:
+                if json.loads(existing_event.payload_json or "{}").get("inbox_item_id") == (item.id if item else None):
+                    event_exists = True
+                    break
+            except json.JSONDecodeError:
+                continue
+        if material and not event_exists:
+            session.add(EventModel(id=str(uuid4()), journey_id=journey.id,
+                provider_key="journey-reality-reconciliation", provenance="USER_REPORTED",
+                event_type="SCHEDULE_DELAY", severity="MAJOR", status="DETECTED",
+                affected_activity_id=commitment.activity_id if commitment else None,
+                occurred_at=now, detected_at=now, resolved_at=None,
+                payload_json=json.dumps({"reality_conflict_id": conflict.id,
+                    "inbox_item_id": item.id if item else None,
+                    "old_departure": old_at.isoformat(), "new_departure": new_at.isoformat(),
+                    "resolution_provenance": "USER_CONFIRMED_REALITY_RESOLUTION"}, sort_keys=True),
+                created_at=now))
+    session.commit()
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if material and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey)
+        except Exception:
+            logging.getLogger(__name__).exception("R54 Guardian handoff failed for %s", conflict.id)
+    return {"conflict_id": conflict.id, "generation": conflict.generation,
+        "status": conflict.status, "selected_claim_id": selected.id,
+        "resolution_claim_id": resolution.id,
+        "resolution_provenance": conflict.resolution_provenance,
+        "reservation_departure_at": reservation.scheduled_departure_at,
+        "material_impact": material, "replayed": False}
+
+
 @app.get("/api/v1/journeys/{journey_id}/inbox")
 def list_journey_inbox(journey_id: UUID, session: Session = Depends(get_session)):
     journey = require(session, Journey, str(journey_id), "Journey")
@@ -6969,10 +12578,19 @@ def get_offline_journey_snapshot(journey_id: UUID, session: Session = Depends(ge
 @app.post("/api/v1/journeys/{journey_id}/location", status_code=201)
 def post_foreground_location(
     journey_id: UUID,
+    request: Request,
     payload: LocationObservationRequest,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    principal = None
+    member = None
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
     try:
         row = record_location(
             session,
@@ -6981,9 +12599,27 @@ def post_foreground_location(
             longitude=payload.longitude,
             accuracy_m=payload.accuracy_m,
             captured_at=payload.captured_at.isoformat(),
+            traveler_id=principal.traveler_id if principal is not None else None,
+            journey_member_id=member.id if member is not None else None,
         )
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
+    record_audit(
+        session,
+        action="journey.location.recorded",
+        entity_type="LocationObservation",
+        entity_id=row.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER" if principal is not None else "LEGACY_UNAUTHENTICATED_INPUT",
+        actor_id=principal.traveler_id if principal is not None else None,
+        after={
+            "source": row.source,
+            "captured_at": row.captured_at,
+            "accuracy_m": row.accuracy_m,
+            "member_id": member.id if member is not None else None,
+            "principal_bound": principal is not None,
+        },
+    )
     session.commit()
     return {
         "id": row.id,
@@ -6994,7 +12630,4880 @@ def post_foreground_location(
         "captured_at": row.captured_at,
         "source": row.source,
         "background_tracking_claimed": False,
+        "principal_bound": principal is not None,
     }
+
+
+def _persist_trusted_member_rendezvous_risk_event(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMemberModel,
+    traveler_id: str,
+    observation: LocationObservation,
+    target_activity: Activity,
+    target_place: Place,
+    commitment_risk: dict[str, Any],
+    route_operation_id: str,
+    route_provider: str,
+    route_provenance: str,
+) -> EventModel | None:
+    """Materialize one member-scoped incident only from trusted location + grounded route truth."""
+
+    trusted_sources = {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
+    grounded_route_provenance = {
+        "LIVE_PROVIDER_CAPTURE",
+        "LIVE_CAPTURE",
+        "CAPTURED_REPLAY",
+        "SEALED_REAL_REPLAY",
+    }
+    source = str(observation.source or "").upper()
+    provenance = str(route_provenance or "").upper()
+    commitment = commitment_risk.get("next_commitment") or {}
+    commitment_id = str(commitment.get("commitment_id") or "")
+    if (
+        source not in trusted_sources
+        or str(commitment_risk.get("state") or "") != "COMMITMENT_AT_RISK"
+        or not commitment_id
+        or not route_operation_id
+        or not route_provider
+        or route_provider.casefold().startswith(("mock", "fixture"))
+        or provenance not in grounded_route_provenance
+    ):
+        return None
+
+    semantic_payload = {
+        "incident_kind": "MEMBER_RENDEZVOUS_COMMITMENT_RISK",
+        "journey_id": str(journey.id),
+        "active_plan_version_id": str(journey.active_plan_version_id or ""),
+        "traveler_id": str(traveler_id),
+        "journey_member_id": str(member.id),
+        "rendezvous_activity_id": str(target_activity.id),
+        "commitment_id": commitment_id,
+    }
+    semantic_key = hashlib.sha256(
+        json.dumps(
+            semantic_payload,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+    incident_rows = session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.provider_key == "journey-group-presence",
+            EventModel.event_type == "TRAFFIC_DELAY",
+            EventModel.provenance == "SYSTEM_DERIVED",
+        )
+    ).all()
+    prior_episodes: list[int] = []
+    for existing in incident_rows:
+        try:
+            payload = json.loads(existing.payload_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if payload.get("incident_semantic_key") != semantic_key:
+            continue
+        try:
+            prior_episodes.append(max(1, int(payload.get("incident_episode") or 1)))
+        except (TypeError, ValueError):
+            prior_episodes.append(1)
+        if str(existing.status or "").upper() in {
+            "DETECTED",
+            "ACKNOWLEDGED",
+            "OPEN",
+            "ACTIVE",
+        }:
+            return existing
+
+    episode = max(prior_episodes, default=0) + 1
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            {"semantic_key": semantic_key, "episode": episode},
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="journey-group-presence",
+        provenance="SYSTEM_DERIVED",
+        event_type="TRAFFIC_DELAY",
+        severity="MAJOR",
+        status="DETECTED",
+        # There is no member-specific travel-leg entity yet. Do not falsely
+        # blame the downstream protected stop; keep the causal member movement
+        # explicit in the payload instead.
+        affected_activity_id=None,
+        occurred_at=str(observation.captured_at or now),
+        detected_at=now,
+        resolved_at=None,
+        payload_json=json.dumps(
+            {
+                "incident_fingerprint": fingerprint,
+                "incident_semantic_key": semantic_key,
+                "incident_episode": episode,
+                "derivation": "SYSTEM_DERIVED_TRUSTED_MEMBER_RENDEZVOUS_RISK",
+                "predictive_only": False,
+                "active_plan_version_id": str(journey.active_plan_version_id or ""),
+                "traveler_id": str(traveler_id),
+                "journey_member_id": str(member.id),
+                "location_observation_id": str(observation.id),
+                "location_source": source,
+                "accuracy_m": float(observation.accuracy_m),
+                "rendezvous_activity_id": str(target_activity.id),
+                "rendezvous_place_id": str(target_place.id),
+                "affected_commitment_id": commitment_id,
+                "member_route_operation_id": str(route_operation_id),
+                "route_provider": route_provider,
+                "route_provenance": provenance,
+                "shared_commitment_risk": commitment_risk,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.group_presence.member_risk_materialized",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="journey-group-presence",
+        after={
+            "incident_fingerprint": fingerprint,
+            "incident_semantic_key": semantic_key,
+            "incident_episode": episode,
+            "traveler_id": str(traveler_id),
+            "journey_member_id": str(member.id),
+            "rendezvous_activity_id": str(target_activity.id),
+            "affected_commitment_id": commitment_id,
+            "event_type": event.event_type,
+        },
+    )
+    return event
+
+
+@app.post("/api/v1/journeys/{journey_id}/group-presence/route")
+def guide_authenticated_member_to_rendezvous(
+    journey_id: UUID,
+    request: Request,
+    payload: GroupPresenceRouteRequest,
+    session: Session = Depends(get_session),
+):
+    """Route only this authenticated member's fresh location to a server-derived group stop."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_REQUIRES_ACTIVE_JOURNEY")
+    planned = planned_separation_for_member(
+        session,
+        journey,
+        member,
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
+    if planned is not None:
+        target_activity = planned["target"]
+        target_place = planned["place"]
+    else:
+        target_pair = rendezvous_target(session, journey)
+        if target_pair is None:
+            raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_UNAVAILABLE")
+        target_activity, target_place = target_pair
+    target_coordinates = public_destination_coordinates(target_place)
+    if target_coordinates is None:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_TARGET_COORDINATES_UNAVAILABLE")
+
+    observation = session.get(LocationObservation, str(payload.location_observation_id))
+    if observation is None or str(observation.journey_id) != journey.id:
+        raise HTTPException(404, "LOCATION_OBSERVATION_NOT_FOUND")
+    if (
+        str(observation.traveler_id or "") != principal.traveler_id
+        or str(observation.journey_member_id or "") != member.id
+    ):
+        raise HTTPException(403, "LOCATION_OBSERVATION_MEMBER_MISMATCH")
+    source = str(observation.source or "").upper()
+    trusted_source = source in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}
+    if source not in {"FOREGROUND_WEB", "DEVICE_ATTESTED", "LOCATION_ATTESTED"}:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_SOURCE_UNSUPPORTED")
+    route_authority = (
+        "TRUSTED_MEMBER_LOCATION_ROUTE"
+        if trusted_source
+        else "ADVISORY_FOREGROUND_LOCATION"
+    )
+    captured = datetime.fromisoformat(observation.captured_at)
+    if captured.tzinfo is None:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_TIME_UNKNOWN")
+    age_seconds = (execution_clock.now().astimezone(timezone.utc) - captured.astimezone(timezone.utc)).total_seconds()
+    if age_seconds < -30 or age_seconds > GROUP_LOCATION_FRESHNESS_SECONDS:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_STALE")
+    if float(observation.accuracy_m) > GROUP_MAX_LOCATION_ACCURACY_M:
+        raise HTTPException(409, "GROUP_RENDEZVOUS_LOCATION_IMPRECISE")
+    route_request = RouteRequest(
+        journey_id=journey.id,
+        origin_key=f"location-observation:{observation.id}",
+        target_key=str(target_place.id),
+        target_activity_id=str(target_activity.id),
+        requested_mode=payload.requested_mode,
+        provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+        route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+        origin_evidence={
+            "location_observation_id": observation.id,
+            "journey_member_id": member.id,
+            "traveler_id": principal.traveler_id,
+            "source": source,
+            "captured_at": observation.captured_at,
+            "accuracy_m": float(observation.accuracy_m),
+            "authority": route_authority,
+        },
+    )
+    plan_before = str(journey.active_plan_version_id)
+    cursor_before = str(journey.current_activity_id or "")
+    activity_before = str(target_activity.id)
+    place_before = str(target_place.id)
+    place_name_before = str(target_place.name)
+    route, reused = submit_route_operation(session, journey, route_request)
+    body = route_operation_payload(route, reused=reused)
+    result = body.get("result") if isinstance(body.get("result"), dict) else {}
+    completed = (
+        str(body.get("status") or "").upper() == "COMPLETED"
+        and result.get("duration_min") is not None
+    )
+    commitment_risk = (
+        rendezvous_commitment_risk(
+            session,
+            journey,
+            target_activity,
+            route_duration_min=int(result["duration_min"]),
+            authority=route_authority,
+        )
+        if completed
+        else {
+            "state": "UNKNOWN",
+            "authority": route_authority,
+            "next_commitment": None,
+            "predicted_arrival_at": None,
+            "slack_after_buffer_min": None,
+        }
+    )
+    route_provider = str(result.get("provider") or body.get("provider") or "")
+    route_provenance = str(
+        result.get("provenance") or body.get("provider_provenance") or ""
+    )
+    member_risk_event = None
+    if planned is None or route_provenance.upper() == "LIVE_PROVIDER_CAPTURE":
+        member_risk_event = _persist_trusted_member_rendezvous_risk_event(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            observation=observation,
+            target_activity=target_activity,
+            target_place=target_place,
+            commitment_risk=commitment_risk,
+            route_operation_id=str(getattr(route, "id", "") or ""),
+            route_provider=route_provider,
+            route_provenance=route_provenance,
+        )
+    guardian_handoff: dict[str, Any] | None = None
+    guardian_triggered = False
+    if member_risk_event is not None:
+        session.commit()
+        prior_handoff = session.scalar(
+            select(AuditLog.id).where(
+                AuditLog.action == "journey.group_presence.member_risk.guardian_handoff",
+                AuditLog.entity_type == "Event",
+                AuditLog.entity_id == member_risk_event.id,
+            )
+        )
+        if prior_handoff is not None:
+            guardian_handoff = {
+                "status": "INCIDENT_ALREADY_HANDED_OFF",
+                "deduplicated": True,
+            }
+        else:
+            enrollment = session.get(AutopilotEnrollment, journey.id)
+            if enrollment is not None and enrollment.enabled:
+                try:
+                    guardian_handoff = scan_guardian(
+                        session, journey, include_opportunity_signals=False
+                    )
+                    guardian_triggered = True
+                    record_audit(
+                        session,
+                        action="journey.group_presence.member_risk.guardian_handoff",
+                        entity_type="Event",
+                        entity_id=member_risk_event.id,
+                        journey_id=journey.id,
+                        actor_type="SYSTEM",
+                        actor_id="journey-group-presence",
+                        after={
+                            "event_id": member_risk_event.id,
+                            "guardian_status": (
+                                guardian_handoff.get("status")
+                                if isinstance(guardian_handoff, dict)
+                                else None
+                            ),
+                        },
+                    )
+                    session.commit()
+                except Exception as exc:  # route truth remains useful if Agent recovery is unavailable
+                    logging.getLogger(__name__).exception(
+                        "R57 Guardian handoff failed for member rendezvous risk %s",
+                        member_risk_event.id,
+                    )
+                    guardian_handoff = {
+                        "status": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+                        "failure_classification": type(exc).__name__,
+                    }
+            else:
+                guardian_handoff = {"status": "NOT_ENROLLED"}
+
+    session.expire_all()
+    current = session.get(Journey, journey.id)
+    plan_unchanged = bool(
+        current is not None and str(current.active_plan_version_id or "") == plan_before
+    )
+    target_unchanged = False
+    if current is not None and str(current.status).upper() == "ACTIVE":
+        current_member = session.get(JourneyMemberModel, str(member.id))
+        current_planned = (
+            planned_separation_for_member(
+                session,
+                current,
+                current_member,
+                now=execution_clock.now().astimezone(timezone.utc),
+            )
+            if current_member is not None
+            else None
+        )
+        current_pair = (
+            (current_planned["target"], current_planned["place"])
+            if current_planned is not None
+            else rendezvous_target(session, current)
+        )
+        if current_pair is not None:
+            current_activity, current_place = current_pair
+            target_unchanged = bool(
+                plan_unchanged
+                and str(current.current_activity_id or "") == cursor_before
+                and str(current_activity.id) == activity_before
+                and str(current_place.id) == place_before
+                and str(current_place.name) == place_name_before
+                and public_destination_coordinates(current_place) == target_coordinates
+            )
+    return {
+        "plan_version_id": plan_before,
+        "current_activity_id": cursor_before or None,
+        "status": body.get("status"),
+        "outcome": body.get("outcome"),
+        "target": {
+            "activity_id": activity_before,
+            "title": target_activity.title,
+            "place_id": place_before,
+            "place_name": place_name_before,
+            "latitude": target_coordinates[0],
+            "longitude": target_coordinates[1],
+            "coordinate_system": "WGS84",
+        },
+        "route": {
+            "duration_min": result.get("duration_min"),
+            "distance_m": result.get("distance_m"),
+            "provider": route_provider or None,
+            "provenance": route_provenance or None,
+            "captured_at": body.get("finished_at") or body.get("updated_at"),
+        },
+        "authority": route_authority,
+        "shared_commitment_risk": commitment_risk,
+        "member_risk_event_id": member_risk_event.id if member_risk_event is not None else None,
+        "guardian_triggered": guardian_triggered,
+        "guardian_deduplicated": bool(
+            isinstance(guardian_handoff, dict)
+            and guardian_handoff.get("status") == "INCIDENT_ALREADY_HANDED_OFF"
+        ),
+        "guardian": guardian_handoff,
+        "plan_unchanged": plan_unchanged,
+        "target_unchanged": target_unchanged,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-member-signals", status_code=201)
+def share_rendezvous_member_signal(
+    journey_id: UUID,
+    payload: JourneyRendezvousSignalCreateRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Share an explicit, short-lived self-report for the server-derived shared stop."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_coordination import share_member_signal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return share_member_signal(
+            session,
+            journey=journey,
+            member=member,
+            principal=principal,
+            signal_kind=payload.signal_kind,
+            expected_plan_version_id=str(payload.expected_active_plan_version_id),
+            expected_current_activity_id=(
+                str(payload.expected_current_activity_id)
+                if payload.expected_current_activity_id is not None else None
+            ),
+            expected_rendezvous_activity_id=str(payload.expected_rendezvous_activity_id),
+            expected_public_place_id=str(payload.expected_public_place_id),
+            expected_audience_sha256=payload.expected_audience_sha256,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-member-signals/{signal_id}/withdraw")
+def withdraw_rendezvous_member_signal(
+    journey_id: UUID,
+    signal_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Withdraw only the signed member's own signal; old viewers retain prior knowledge."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_coordination import withdraw_member_signal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return withdraw_member_signal(
+            session,
+            journey=journey,
+            member=member,
+            principal=principal,
+            signal_id=str(signal_id),
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-member-signals/{signal_id}/acknowledge")
+def acknowledge_rendezvous_help_request(
+    journey_id: UUID,
+    signal_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Record one signed companion acknowledgement for the exact active help request."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_coordination import acknowledge_help_request
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return acknowledge_help_request(
+            session,
+            journey=journey,
+            responder=member,
+            principal=principal,
+            signal_id=str(signal_id),
+        )
+
+
+@app.get("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/candidates")
+def rendezvous_buddy_handoff_candidates(
+    journey_id: UUID,
+    request: Request,
+    signal_id: UUID = Query(...),
+    session: Session = Depends(get_session),
+):
+    """Return a bounded public-place shortlist only to the signed helper."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import list_handoff_candidates
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return list_handoff_candidates(
+        session,
+        journey=journey,
+        helper=member,
+        principal=principal,
+        signal_id=str(signal_id),
+    )
+
+
+@app.get("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/current")
+def current_rendezvous_buddy_handoffs(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """List only valid handoffs involving the signed current viewer; never the whole group."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import list_current_handoffs
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return list_current_handoffs(
+        session, journey=journey, viewer=member, principal=principal
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs", status_code=201)
+def offer_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    payload: RendezvousBuddyHandoffOfferRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Offer one server-suggested public Place to the exact signed help requester."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import offer_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return offer_handoff(
+            session,
+            journey=journey,
+            helper=member,
+            principal=principal,
+            help_signal_id=str(payload.help_signal_id),
+            expected_plan_version_id=str(payload.expected_active_plan_version_id),
+            expected_current_activity_id=(
+                str(payload.expected_current_activity_id)
+                if payload.expected_current_activity_id is not None else None
+            ),
+            expected_rendezvous_activity_id=str(payload.expected_rendezvous_activity_id),
+            expected_original_public_place_id=str(payload.expected_original_public_place_id),
+            expected_audience_sha256=payload.expected_audience_sha256,
+            handoff_place_id=payload.handoff_place_id,
+            execution_window_minutes=payload.execution_window_minutes,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/respond")
+def respond_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: RendezvousBuddyHandoffDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import respond_to_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return respond_to_handoff(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            decision=payload.decision,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/location", status_code=201)
+def capture_private_buddy_handoff_route_location(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: LocationObservationRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Save one explicit foreground sample for this caller's accepted handoff route only."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.private_buddy_route import capture_private_buddy_route_location
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return capture_private_buddy_route_location(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            latitude=payload.latitude,
+            longitude=payload.longitude,
+            accuracy_m=payload.accuracy_m,
+            captured_at=payload.captured_at,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/cancel")
+def cancel_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import close_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return close_handoff(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            action="CANCEL",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/revoke")
+def revoke_rendezvous_buddy_handoff(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_handoff import close_handoff
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return close_handoff(
+            session,
+            journey=journey,
+            viewer=member,
+            principal=principal,
+            handoff_id=str(handoff_id),
+            action="REVOKE",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window")
+def offer_rendezvous_buddy_execution_window(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: RendezvousBuddyExecutionWindowRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """The signed helper may separately offer a bounded window for a legacy accepted handoff."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_execution import offer_execution_window
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return offer_execution_window(
+            session,
+            journey=journey,
+            handoff_id=str(handoff_id),
+            viewer=member,
+            principal=principal,
+            window_minutes=payload.execution_window_minutes,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window/accept")
+def accept_rendezvous_buddy_execution_window(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """The requester separately accepts a helper's finite execution window."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_execution import accept_execution_window
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return accept_execution_window(
+            session,
+            journey=journey,
+            handoff_id=str(handoff_id),
+            viewer=member,
+            principal=principal,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution/{execution_id}/report")
+def report_rendezvous_buddy_execution(
+    journey_id: UUID,
+    handoff_id: UUID,
+    execution_id: UUID,
+    payload: RendezvousBuddyExecutionReceiptRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Record one authenticated member's explicit self-report for this exact execution."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.rendezvous_buddy_execution import record_execution_report
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    with journey_write_lock(str(journey.id)):
+        return record_execution_report(
+            session,
+            journey=journey,
+            handoff_id=str(handoff_id),
+            execution_id=str(execution_id),
+            viewer=member,
+            principal=principal,
+            receipt_kind=payload.receipt_kind,
+            idempotency_key=idempotency_key or "",
+        )
+
+
+@app.get("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/current")
+def current_private_buddy_handoff_route(
+    journey_id: UUID,
+    handoff_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Read only the signed viewer's current outbound and safe-return route evidence."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.private_buddy_safe_return import current_private_buddy_safe_return
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return current_private_buddy_safe_return(
+        session,
+        journey=journey,
+        viewer=member,
+        principal=principal,
+        handoff_id=str(handoff_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route")
+def acquire_private_buddy_handoff_route(
+    journey_id: UUID,
+    handoff_id: UUID,
+    payload: RendezvousBuddyPrivateRouteRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Acquire the caller's private route to handoff and return to shared stop."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.private_buddy_safe_return import acquire_private_buddy_safe_return
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return acquire_private_buddy_safe_return(
+        session,
+        journey=journey,
+        viewer=member,
+        principal=principal,
+        handoff_id=str(handoff_id),
+        observation_id=str(payload.location_observation_id),
+        external_provider_disclosure_confirmed=payload.external_provider_disclosure_confirmed,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests", status_code=201)
+def create_member_side_quest(
+    journey_id: UUID,
+    payload: MemberSideQuestCreateRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Create or replace only the signed-in member's private stop for an active R63 split."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    create_or_replace_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        destination_text=payload.destination_text,
+        place_id=payload.place_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview")
+def preview_member_place_invitation(
+    journey_id: UUID,
+    side_quest_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_invitation import invitation_preview
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return invitation_preview(
+        session,
+        journey=journey,
+        owner=member,
+        traveler_id=principal.traveler_id,
+        side_quest_id=str(side_quest_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations", status_code=201)
+def create_member_place_invitation(
+    journey_id: UUID,
+    side_quest_id: UUID,
+    payload: MemberPlaceInvitationCreateRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_invitation import create_invitation
+
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        # The literal-true payload is the owner's second, deliberate disclosure step.
+        if payload.confirm_public_place_sharing is not True:
+            raise HTTPException(422, "PLACE_INVITATION_DISCLOSURE_CONFIRMATION_REQUIRED")
+        create_invitation(
+            session,
+            journey=journey,
+            owner=member,
+            traveler_id=principal.traveler_id,
+            side_quest_id=str(side_quest_id),
+            expected_audience_snapshot=payload.audience_snapshot,
+        )
+        return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+def _withdraw_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    invitation = session.scalar(
+        select(MemberPlaceInvitation).where(
+            MemberPlaceInvitation.id == str(invitation_id),
+            MemberPlaceInvitation.journey_id == journey.id,
+            MemberPlaceInvitation.owner_member_id == member.id,
+            MemberPlaceInvitation.owner_traveler_id == principal.traveler_id,
+        ).with_for_update()
+    )
+    if invitation is None:
+        raise HTTPException(404, "PLACE_INVITATION_NOT_FOUND")
+    if invitation.state == "OPEN":
+        now = execution_clock.now().astimezone(timezone.utc).isoformat()
+        invitation.state = "WITHDRAWN"
+        invitation.withdrawn_at = now
+        invitation.updated_at = now
+        session.execute(
+            update(MemberPlaceGroupShareConsent)
+            .where(
+                MemberPlaceGroupShareConsent.journey_id == str(journey.id),
+                MemberPlaceGroupShareConsent.invitation_id == str(invitation.id),
+                MemberPlaceGroupShareConsent.status == "ACTIVE",
+            )
+            .values(status="WITHDRAWN", withdrawn_at=now, updated_at=now)
+        )
+        session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw")
+def withdraw_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _withdraw_member_place_invitation(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            request=request,
+            session=session,
+        )
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/preview")
+def preview_member_place_group_share(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_group_share import group_share_preview
+
+    principal, owner = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    return group_share_preview(
+        session,
+        journey=journey,
+        invitation=invitation,
+        owner_member_id=str(owner.id),
+        owner_traveler_id=str(principal.traveler_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/confirm")
+def confirm_member_place_group_share(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceGroupShareConsentRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_group_share import (
+            _current_facts,
+            build_consent_row,
+            consent_row_for_snapshot,
+            legacy_full_audience_consent,
+        )
+
+        principal, owner = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+        invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+        if (
+            str(invitation.owner_member_id) != str(owner.id)
+            or str(invitation.owner_traveler_id) != str(principal.traveler_id)
+        ):
+            raise HTTPException(403, "GROUP_SHARE_REQUIRES_SIGNED_SOURCE_OWNER")
+        if payload.confirm_full_journey_place_sharing is not True:
+            raise HTTPException(422, "GROUP_SHARE_CONFIRMATION_REQUIRED")
+
+        now = execution_clock.now().astimezone(timezone.utc)
+        facts, _audience = _current_facts(session, journey, invitation, now=now)
+        if str(payload.audience_snapshot) != str(facts["audience_snapshot_hash"]):
+            raise HTTPException(409, "AUDIENCE_CHANGED")
+        if str(payload.plan_snapshot) != str(facts["plan_snapshot_hash"]):
+            raise HTTPException(409, "PLAN_CHANGED")
+        if str(payload.source_snapshot) != str(facts["source_snapshot_hash"]):
+            raise HTTPException(409, "INVITER_SPLIT_STALE")
+        if legacy_full_audience_consent(session, journey, invitation, facts=facts):
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+
+        existing = consent_row_for_snapshot(
+            session=session,
+            journey=journey,
+            invitation=invitation,
+            owner=owner,
+            traveler_id=str(principal.traveler_id),
+            facts=facts,
+            now=now,
+        )
+        if existing is not None:
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+
+        consent = build_consent_row(
+            journey=journey,
+            invitation=invitation,
+            owner=owner,
+            traveler_id=str(principal.traveler_id),
+            facts=facts,
+            now=now,
+        )
+        session.add(consent)
+        record_audit(
+            session,
+            action="journey.member_place_group_share.consented",
+            entity_type="MemberPlaceGroupShareConsent",
+            entity_id=consent.id,
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={
+                "invitation_id": str(invitation.id),
+                "owner_member_id": str(owner.id),
+                "base_plan_version_id": str(journey.active_plan_version_id),
+                "audience_snapshot_hash": consent.audience_snapshot_hash,
+                "expires_at": consent.expires_at,
+            },
+        )
+        try:
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            raced = session.scalar(
+                select(MemberPlaceGroupShareConsent).where(
+                    MemberPlaceGroupShareConsent.journey_id == str(journey.id),
+                    MemberPlaceGroupShareConsent.invitation_id == str(invitation.id),
+                    MemberPlaceGroupShareConsent.status == "ACTIVE",
+                )
+            )
+            if (
+                raced is not None
+                and str(raced.owner_member_id) == str(owner.id)
+                and str(raced.owner_traveler_id) == str(principal.traveler_id)
+                and str(raced.audience_snapshot_hash) == str(facts["audience_snapshot_hash"])
+                and str(raced.plan_snapshot_hash) == str(facts["plan_snapshot_hash"])
+                and str(raced.source_snapshot_hash) == str(facts["source_snapshot_hash"])
+            ):
+                return operator_projection(session, journey, viewer_member_id=owner.id)
+            raise HTTPException(409, "GROUP_SHARE_CONSENT_CONFLICT") from exc
+        return operator_projection(session, journey, viewer_member_id=owner.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/withdraw")
+def withdraw_member_place_group_share(
+    journey_id: UUID,
+    invitation_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_group_share import current_group_share
+
+        principal, owner = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+        invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+        if (
+            str(invitation.owner_member_id) != str(owner.id)
+            or str(invitation.owner_traveler_id) != str(principal.traveler_id)
+        ):
+            raise HTTPException(403, "GROUP_SHARE_REQUIRES_SIGNED_SOURCE_OWNER")
+        state = current_group_share(session, journey, invitation)
+        consent = state.get("receipt")
+        if consent is None:
+            if state.get("status") == "SHARED_BY_ORIGINAL_INVITATION":
+                raise HTTPException(409, "ORIGINAL_INVITATION_ALREADY_SHARED_TO_FULL_AUDIENCE")
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+        if str(consent.status) != "ACTIVE":
+            return operator_projection(session, journey, viewer_member_id=owner.id)
+
+        stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+        changed = session.execute(
+            update(MemberPlaceGroupShareConsent)
+            .where(
+                MemberPlaceGroupShareConsent.id == str(consent.id),
+                MemberPlaceGroupShareConsent.journey_id == str(journey.id),
+                MemberPlaceGroupShareConsent.invitation_id == str(invitation.id),
+                MemberPlaceGroupShareConsent.owner_member_id == str(owner.id),
+                MemberPlaceGroupShareConsent.owner_traveler_id == str(principal.traveler_id),
+                MemberPlaceGroupShareConsent.status == "ACTIVE",
+            )
+            .values(status="WITHDRAWN", withdrawn_at=stamp, updated_at=stamp)
+        )
+        if int(changed.rowcount or 0) != 1:
+            session.rollback()
+            current = session.get(MemberPlaceGroupShareConsent, str(consent.id))
+            if current is not None and str(current.status) == "WITHDRAWN":
+                return operator_projection(session, journey, viewer_member_id=owner.id)
+            raise HTTPException(409, "INVITER_CONSENT_CHANGED_DURING_WITHDRAWAL")
+        record_audit(
+            session,
+            action="journey.member_place_group_share.withdrawn",
+            entity_type="MemberPlaceGroupShareConsent",
+            entity_id=str(consent.id),
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={"invitation_id": str(invitation.id), "future_projection_disabled": True},
+        )
+        session.commit()
+        return operator_projection(session, journey, viewer_member_id=owner.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview")
+def preview_member_place_invitation_feasibility(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationFeasibilityPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    # The only route acquisition for this feature starts from this explicit,
+    # recipient-confirmed request. Passive operator projections never call it.
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_invitation import (
+            get_recipient_invitation,
+            preview_recipient_invitation_feasibility,
+        )
+
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        invitation, response = get_recipient_invitation(
+            session,
+            journey=journey,
+            recipient=member,
+            traveler_id=principal.traveler_id,
+            invitation_id=str(invitation_id),
+        )
+        return preview_recipient_invitation_feasibility(
+            session,
+            journey=journey,
+            recipient=member,
+            traveler_id=principal.traveler_id,
+            invitation=invitation,
+            response=response,
+            location_observation_id=(
+                str(payload.location_observation_id)
+                if payload.location_observation_id is not None
+                else None
+            ),
+            dwell_minutes=payload.dwell_minutes,
+            requested_mode=payload.requested_mode,
+        )
+
+
+def _respond_to_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.execution.member_place_invitation import (
+        get_recipient_invitation,
+        recipient_conflict_reason,
+        recheck_recipient_invitation_feasibility,
+        validate_invitation_for_acceptance,
+    )
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    invitation, response = get_recipient_invitation(
+        session,
+        journey=journey,
+        recipient=member,
+        traveler_id=principal.traveler_id,
+        invitation_id=str(invitation_id),
+    )
+    now = execution_clock.now().astimezone(timezone.utc)
+    if payload.decision == "DECLINE":
+        if response.state == "DECLINED":
+            return operator_projection(session, journey, viewer_member_id=member.id)
+        if response.state != "INVITED":
+            raise HTTPException(409, "PLACE_INVITATION_ALREADY_ACCEPTED")
+        validate_invitation_for_acceptance(
+            session,
+            journey=journey,
+            recipient=member,
+            traveler_id=principal.traveler_id,
+            invitation=invitation,
+            response=response,
+            now=now,
+        )
+        declined = session.execute(
+            update(MemberPlaceInvitationRecipient)
+            .where(
+                MemberPlaceInvitationRecipient.id == response.id,
+                MemberPlaceInvitationRecipient.state == "INVITED",
+                exists(
+                    select(MemberPlaceInvitation.id).where(
+                        MemberPlaceInvitation.id == invitation.id,
+                        MemberPlaceInvitation.state == "OPEN",
+                    )
+                ),
+            )
+            .values(
+                state="DECLINED",
+                responded_at=now.isoformat(),
+                updated_at=now.isoformat(),
+            )
+        )
+        if declined.rowcount != 1:
+            session.rollback()
+            raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
+        session.commit()
+        return operator_projection(session, journey, viewer_member_id=member.id)
+
+    if payload.confirm_exact_public_place is not True:
+        raise HTTPException(422, "PLACE_INVITATION_PIN_CONFIRMATION_REQUIRED")
+    if response.state == "ACCEPTED_OWN_STOP_READY":
+        return operator_projection(session, journey, viewer_member_id=member.id)
+    if response.state not in {"INVITED", "ACCEPTANCE_NEEDS_COMPLETION"}:
+        raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
+
+    context = validate_invitation_for_acceptance(
+        session,
+        journey=journey,
+        recipient=member,
+        traveler_id=principal.traveler_id,
+        invitation=invitation,
+        response=response,
+        now=now,
+    )
+    command = (
+        f"Accept companion Place invitation {invitation.id} and rejoin at the shared Journey stop."
+    )
+    current_split = planned_separation_for_member(session, journey, member, now=now)
+    same_split_id = str(response.accepted_split_intent_id or "") or None
+    if same_split_id is None and response.state == "ACCEPTANCE_NEEDS_COMPLETION" and current_split is not None:
+        current_intent = current_split["intent"]
+        if (
+            str(current_intent.created_by_member_id) == str(member.id)
+            and str(current_intent.created_by_traveler_id) == str(principal.traveler_id)
+            and str(current_intent.source_text) == command
+        ):
+            same_split_id = str(current_intent.id)
+
+    conflict = recipient_conflict_reason(
+        session,
+        journey=journey,
+        recipient=member,
+        invitation=invitation,
+        same_invitation_split_id=same_split_id,
+        now=now,
+    )
+    if conflict:
+        raise HTTPException(409, conflict)
+
+    if response.state == "INVITED":
+        if payload.feasibility_token:
+            feasibility = recheck_recipient_invitation_feasibility(
+                session,
+                journey=journey,
+                recipient=member,
+                traveler_id=principal.traveler_id,
+                invitation=invitation,
+                response=response,
+                token=payload.feasibility_token,
+                now=now,
+            )
+            feasibility_state = str(feasibility.get("state") or "UNKNOWN")
+        elif payload.acknowledge_feasibility_unknown is True:
+            feasibility_state = "UNKNOWN"
+        else:
+            raise HTTPException(422, "PLACE_INVITATION_FEASIBILITY_DECISION_REQUIRED")
+        if feasibility_state == "BLOCKED":
+            raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_BLOCKED")
+        if feasibility_state == "UNKNOWN" and payload.acknowledge_feasibility_unknown is not True:
+            raise HTTPException(409, "PLACE_INVITATION_UNKNOWN_ACKNOWLEDGEMENT_REQUIRED")
+        if feasibility_state == "AT_RISK" and payload.acknowledge_feasibility_risk is not True:
+            raise HTTPException(409, "PLACE_INVITATION_RISK_ACKNOWLEDGEMENT_REQUIRED")
+        if feasibility_state not in {"CAN_MAKE_IT", "AT_RISK", "UNKNOWN", "BLOCKED"}:
+            raise HTTPException(409, "PLACE_INVITATION_FEASIBILITY_UNKNOWN")
+
+    # SQLite ignores SELECT ... FOR UPDATE. Claim the response conditionally so
+    # two server processes cannot create duplicate recipient-owned stops.
+    expected_state = str(response.state)
+    if expected_state == "ACCEPTANCE_NEEDS_COMPLETION":
+        try:
+            updated_at = datetime.fromisoformat(str(response.updated_at).replace("Z", "+00:00"))
+            if updated_at.tzinfo is None:
+                updated_at = updated_at.replace(tzinfo=timezone.utc)
+            if (now - updated_at.astimezone(timezone.utc)).total_seconds() < 30:
+                raise HTTPException(409, "PLACE_INVITATION_ACCEPTANCE_IN_PROGRESS")
+        except ValueError:
+            pass
+    elif expected_state != "INVITED":
+        raise HTTPException(409, "PLACE_INVITATION_ALREADY_RESPONDED")
+    claim = update(MemberPlaceInvitationRecipient).where(
+        MemberPlaceInvitationRecipient.id == response.id,
+        MemberPlaceInvitationRecipient.state == expected_state,
+        exists(
+            select(MemberPlaceInvitation.id).where(
+                MemberPlaceInvitation.id == invitation.id,
+                MemberPlaceInvitation.state == "OPEN",
+            )
+        ),
+        exists(
+            select(Journey.id).where(
+                Journey.id == journey.id,
+                Journey.status == "ACTIVE",
+                Journey.active_plan_version_id == invitation.active_plan_version_id,
+            )
+        ),
+    )
+    if expected_state == "INVITED":
+        claim = claim.where(
+            ~exists(
+                select(MemberSideQuest.id).where(
+                    MemberSideQuest.journey_id == journey.id,
+                    MemberSideQuest.member_id == member.id,
+                    MemberSideQuest.state.in_(
+                        ("DESTINATION_UNRESOLVED", "READY", "EN_ROUTE", "ARRIVED")
+                    ),
+                )
+            ),
+            ~exists(
+                select(JourneyIntent.id).where(
+                    JourneyIntent.journey_id == journey.id,
+                    JourneyIntent.created_by_member_id == member.id,
+                    JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+                    JourneyIntent.status == "ACTIVE",
+                )
+            ),
+        )
+    if expected_state == "ACCEPTANCE_NEEDS_COMPLETION":
+        claim = claim.where(MemberPlaceInvitationRecipient.updated_at == response.updated_at)
+    claimed = session.execute(
+        claim.values(
+            state="ACCEPTANCE_NEEDS_COMPLETION",
+            responded_at=response.responded_at or now.isoformat(),
+            updated_at=now.isoformat(),
+        )
+    )
+    if claimed.rowcount != 1:
+        session.rollback()
+        raise HTTPException(409, "PLACE_INVITATION_ACCEPTANCE_IN_PROGRESS")
+    session.commit()
+    session.refresh(response)
+
+    current_split = planned_separation_for_member(session, journey, member, now=now)
+    if current_split is not None and str(current_split["intent"].id) == str(same_split_id or ""):
+        split_intent_id = str(current_split["intent"].id)
+    elif current_split is None:
+        split_result = _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=command,
+            action="START",
+            now=now,
+            resolved_rendezvous=(
+                context["target"],
+                context["rendezvous"],
+                "INVITATION_CURRENT_SHARED_RENDEZVOUS",
+                None,
+            ),
+        )
+        outcome = split_result.get("planned_separation_result") or {}
+        if outcome.get("outcome") not in {"PLANNED_SPLIT_CREATED", "PLANNED_SPLIT_ALREADY_ACTIVE"}:
+            raise HTTPException(409, "PLACE_INVITATION_SPLIT_COULD_NOT_START")
+        current_split = planned_separation_for_member(session, journey, member, now=now)
+        if current_split is None:
+            raise HTTPException(409, "PLACE_INVITATION_SPLIT_COULD_NOT_START")
+        split_intent_id = str(current_split["intent"].id)
+    else:
+        raise HTTPException(409, "INVITATION_RECIPIENT_HAS_ACTIVE_SPLIT")
+
+    response.accepted_split_intent_id = split_intent_id
+    session.commit()
+    quest = session.get(MemberSideQuest, str(response.accepted_side_quest_id or ""))
+    if quest is None:
+        quest = session.scalar(
+            select(MemberSideQuest).where(
+                MemberSideQuest.journey_id == journey.id,
+                MemberSideQuest.member_id == member.id,
+                MemberSideQuest.planned_separation_intent_id == split_intent_id,
+                MemberSideQuest.side_place_id == invitation.place_id,
+            ).order_by(MemberSideQuest.created_at.desc(), MemberSideQuest.id.desc())
+        )
+    if quest is None:
+        quest = create_or_replace_member_side_quest(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            destination_text=None,
+            place_id=str(invitation.place_id),
+            now=now,
+        )
+    response.accepted_side_quest_id = str(quest.id)
+    response.state = "ACCEPTED_OWN_STOP_READY"
+    response.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond")
+def respond_to_member_place_invitation(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    # Serialize accept/withdraw and other Journey writes from their first read
+    # through their durable R63/R64 state transition.
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _respond_to_member_place_invitation(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+def _update_member_place_invitation_progress(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationProgressRequest,
+    request: Request,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.execution.member_place_invitation import update_member_place_invitation_progress
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    update_member_place_invitation_progress(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        invitation_id=str(invitation_id),
+        action=payload.action,
+        share_audience_token=payload.share_audience_token,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/progress")
+def update_member_place_invitation_progress_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlaceInvitationProgressRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Share or withdraw only the signed-in inviter's or accepted member's own report."""
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _update_member_place_invitation_progress(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+def _r73_member_can_update(session: Session, member: JourneyMemberModel) -> bool:
+    return session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == member.role,
+            JourneyRoleCapability.capability == "JOURNEY_UPDATE",
+        )
+    ) is not None
+
+
+def _r73_member_can_manage_members(session: Session, member: JourneyMemberModel) -> bool:
+    return session.scalar(
+        select(JourneyRoleCapability.role).where(
+            JourneyRoleCapability.role == member.role,
+            JourneyRoleCapability.capability == "MEMBER_MANAGE",
+        )
+    ) is not None
+
+
+def _require_r73_response_scope(
+    *,
+    session: Session,
+    journey: Journey,
+    mission: JourneyMission,
+    member: JourneyMemberModel,
+    principal: Any,
+    clarification: dict[str, Any],
+    expected_promotion_id: str | None = None,
+) -> None:
+    if _r73_member_can_update(session, member):
+        return
+    if principal is None or not getattr(principal, "traveler_id", None):
+        raise HTTPException(403, "SIGNED_TRAVELER_IDENTITY_REQUIRED_FOR_SCOPED_AUTHORITY")
+    marker = _json_object(mission.resolved_intent_json or "{}").get("r73_shared_stop")
+    required = {str(item) for item in clarification.get("required_member_ids") or []}
+    if (
+        not isinstance(marker, dict)
+        or str(member.id) not in required
+        or (expected_promotion_id and str(marker.get("promotion_id") or "") != str(expected_promotion_id))
+        or str(marker.get("active_plan_version_id") or "")
+        != str(clarification.get("base_plan_version_id") or "")
+        or not marker.get("promotion_id")
+        or not marker.get("invitation_id")
+        or not marker.get("proposal_id")
+    ):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    bound_promotion = session.get(
+        MemberPlacePromotion, str(marker.get("promotion_id") or "")
+    )
+    if (
+        bound_promotion is None
+        or str(bound_promotion.journey_id) != str(journey.id)
+        or str(bound_promotion.state) != "WAITING_FOR_MEMBERS"
+        or str(journey.active_plan_version_id or "")
+        != str(marker.get("active_plan_version_id") or "")
+    ):
+        raise HTTPException(409, "SCOPED_COPLANNING_DECISION_ALREADY_CLOSED_OR_STALE")
+    from app.shared_stop_coplanning import require_scoped_response_authority
+
+    require_scoped_response_authority(
+        session,
+        journey_id=str(journey.id),
+        promotion_id=str(marker["promotion_id"]),
+        invitation_id=str(marker["invitation_id"]),
+        base_plan_version_id=str(marker["active_plan_version_id"]),
+        decision_epoch=str(clarification.get("decision_epoch") or ""),
+        member=member,
+        traveler_id=str(principal.traveler_id),
+    )
+
+
+def _shared_stop_grant_payload(
+    grant: SharedStopCoPlanningGrant, *, now: datetime | None = None
+) -> dict[str, Any]:
+    from app.shared_stop_coplanning import grant_status_for_projection
+
+    return {
+        "grant_id": str(grant.id),
+        "journey_id": str(grant.journey_id),
+        "invitation_id": str(grant.invitation_id),
+        "base_plan_version_id": str(grant.base_plan_version_id),
+        "grantee_member_id": str(grant.grantee_member_id),
+        "grantee_traveler_id": str(grant.grantee_traveler_id),
+        "grantor_member_id": str(grant.grantor_member_id),
+        "purpose": str(grant.purpose),
+        "state": grant_status_for_projection(grant, now=now),
+        "expires_at": str(grant.expires_at),
+        "accepted_at": grant.accepted_at,
+        "promotion_id": grant.promotion_id,
+        "decision_epoch": grant.decision_epoch,
+    }
+
+
+def _offer_shared_stop_coplanning_grant(
+    *,
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: SharedStopCoPlanningGrantCreateRequest,
+    request: Request,
+    idempotency_key: str | None,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.shared_stop_coplanning import member_is_in_force
+
+    principal, manager = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    if not _r73_member_can_manage_members(session, manager):
+        raise HTTPException(403, "Journey member role does not have MEMBER_MANAGE authority")
+    if not _r73_member_can_update(session, manager):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        request_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    if invitation.journey_id != journey.id:
+        raise HTTPException(404, "Place invitation was not found")
+    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "SCOPED_COPLANNING_REQUIRES_ACTIVE_JOURNEY")
+    from app.execution.member_place_invitation import _invitation_context_is_current
+
+    now = execution_clock.now().astimezone(timezone.utc)
+    if (
+        str(invitation.state) != "OPEN"
+        or not _invitation_context_is_current(session, journey, invitation, now=now)
+    ):
+        raise HTTPException(409, "SCOPED_COPLANNING_INVITATION_STALE")
+    from app.execution.member_place_group_share import require_group_share_sponsor
+
+    require_group_share_sponsor(
+        session,
+        journey,
+        invitation,
+        actor=manager,
+        traveler_id=str(principal.traveler_id),
+        now=now,
+    )
+    grantee = session.get(JourneyMemberModel, str(payload.grantee_member_id))
+    if (
+        grantee is None
+        or str(grantee.journey_id) != str(journey.id)
+        or not member_is_in_force(grantee, now=now)
+    ):
+        raise HTTPException(404, "SCOPED_COPLANNING_GRANTEE_NOT_IN_FORCE")
+    if str(grantee.id) == str(manager.id) or _r73_member_can_update(session, grantee):
+        raise HTTPException(409, "SCOPED_COPLANNING_ONLY_FOR_READ_ONLY_COLLABORATORS")
+    signature = canonical_request_signature(
+        {
+            "journey_id": str(journey.id),
+            "invitation_id": str(invitation.id),
+            "base_plan_version_id": str(journey.active_plan_version_id),
+            "grantee_member_id": str(grantee.id),
+            "grantor_member_id": str(manager.id),
+            "grantor_traveler_id": str(principal.traveler_id),
+            "purpose": "R73_SHARED_STOP_ONLY",
+        }
+    )
+    replay = session.scalar(
+        select(SharedStopCoPlanningGrant).where(
+            SharedStopCoPlanningGrant.journey_id == str(journey.id),
+            SharedStopCoPlanningGrant.request_key == request_key,
+        )
+    )
+    if replay is not None:
+        if replay.request_hash != signature:
+            raise HTTPException(409, "IDEMPOTENCY_KEY_REUSED_FOR_DIFFERENT_SCOPED_GRANT")
+        return operator_projection(session, journey, viewer_member_id=manager.id)
+    # Repeated offers before a decision round are naturally idempotent even if
+    # the client generated a fresh transport key.
+    existing = session.scalars(
+        select(SharedStopCoPlanningGrant)
+        .where(
+            SharedStopCoPlanningGrant.journey_id == str(journey.id),
+            SharedStopCoPlanningGrant.invitation_id == str(invitation.id),
+            SharedStopCoPlanningGrant.base_plan_version_id == str(journey.active_plan_version_id),
+            SharedStopCoPlanningGrant.grantee_member_id == str(grantee.id),
+            SharedStopCoPlanningGrant.active_slot.is_(True),
+        )
+        .order_by(SharedStopCoPlanningGrant.updated_at.desc())
+    ).first()
+    if existing is not None:
+        if datetime.fromisoformat(existing.expires_at) > now:
+            return operator_projection(session, journey, viewer_member_id=manager.id)
+        # Release the DB-enforced active grant slot before issuing a fresh
+        # invitation. The status transition and replacement offer commit in
+        # the same transaction.
+        existing.active_slot = False
+        existing.updated_at = now.isoformat()
+        session.flush()
+    stamp = now.isoformat()
+    grant = SharedStopCoPlanningGrant(
+        id=str(uuid4()),
+        journey_id=str(journey.id),
+        invitation_id=str(invitation.id),
+        base_plan_version_id=str(journey.active_plan_version_id),
+        grantee_member_id=str(grantee.id),
+        grantee_traveler_id=str(grantee.traveler_id),
+        grantor_member_id=str(manager.id),
+        grantor_traveler_id=str(principal.traveler_id),
+        active_slot=True,
+        purpose="R73_SHARED_STOP_ONLY",
+        status="OFFERED",
+        request_key=request_key,
+        request_hash=signature,
+        expires_at=(now + timedelta(hours=24)).isoformat(),
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    session.add(grant)
+    record_audit(
+        session,
+        action="journey.shared_stop_coplanning.offered",
+        entity_type="SharedStopCoPlanningGrant",
+        entity_id=grant.id,
+        journey_id=str(journey.id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal.traveler_id),
+        after={
+            "grant_id": grant.id,
+            "invitation_id": str(invitation.id),
+            "base_plan_version_id": str(journey.active_plan_version_id),
+            "grantee_member_id": str(grantee.id),
+            "purpose": grant.purpose,
+            "expires_at": grant.expires_at,
+        },
+    )
+    try:
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raced = session.scalar(
+            select(SharedStopCoPlanningGrant).where(
+                SharedStopCoPlanningGrant.journey_id == str(journey.id),
+                SharedStopCoPlanningGrant.request_key == request_key,
+            )
+        )
+        if raced is not None:
+            if raced.request_hash == signature:
+                return operator_projection(session, journey, viewer_member_id=manager.id)
+            raise HTTPException(
+                409, "IDEMPOTENCY_KEY_REUSED_FOR_DIFFERENT_SCOPED_GRANT"
+            ) from exc
+        raced_active = session.scalar(
+            select(SharedStopCoPlanningGrant).where(
+                SharedStopCoPlanningGrant.journey_id == str(journey.id),
+                SharedStopCoPlanningGrant.invitation_id == str(invitation.id),
+                SharedStopCoPlanningGrant.base_plan_version_id == str(journey.active_plan_version_id),
+                SharedStopCoPlanningGrant.grantee_member_id == str(grantee.id),
+                SharedStopCoPlanningGrant.active_slot.is_(True),
+                SharedStopCoPlanningGrant.expires_at > now.isoformat(),
+            )
+        )
+        if raced_active is not None:
+            return operator_projection(session, journey, viewer_member_id=manager.id)
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_CONFLICT") from exc
+    return operator_projection(session, journey, viewer_member_id=manager.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants",
+    status_code=201,
+)
+def offer_shared_stop_coplanning_grant_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: SharedStopCoPlanningGrantCreateRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _offer_shared_stop_coplanning_grant(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            idempotency_key=idempotency_key,
+            session=session,
+        )
+
+
+def _respond_shared_stop_coplanning_grant(
+    *,
+    journey_id: UUID,
+    invitation_id: UUID,
+    grant_id: UUID,
+    payload: SharedStopCoPlanningGrantDecisionRequest,
+    request: Request,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+    from app.shared_stop_coplanning import member_is_in_force
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    grant = require(session, SharedStopCoPlanningGrant, str(grant_id), "Scoped co-planning grant")
+    if grant.journey_id != journey.id or grant.invitation_id != str(invitation_id):
+        raise HTTPException(404, "SCOPED_COPLANNING_GRANT_NOT_FOUND")
+    if grant.grantee_member_id != member.id or grant.grantee_traveler_id != principal.traveler_id:
+        raise HTTPException(403, "SCOPED_COPLANNING_GRANT_REQUIRES_GRANTEE_IDENTITY")
+    if grant.promotion_id is not None:
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_ALREADY_BOUND_TO_DECISION")
+    now = execution_clock.now().astimezone(timezone.utc)
+    expiry = datetime.fromisoformat(str(grant.expires_at).replace("Z", "+00:00"))
+    if expiry.tzinfo is None or expiry <= now:
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_EXPIRED")
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    from app.execution.member_place_invitation import _invitation_context_is_current
+
+    if (
+        journey.active_plan_version_id != grant.base_plan_version_id
+        or not member_is_in_force(member, now=now)
+        or not _invitation_context_is_current(session, journey, invitation, now=now)
+    ):
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_STALE")
+    from app.execution.member_place_group_share import require_group_share
+
+    require_group_share(session, journey, invitation, now=now)
+    already_decided_status = "ACCEPTED" if payload.decision == "ACCEPT" else "DECLINED"
+    if grant.status == already_decided_status:
+        return operator_projection(session, journey, viewer_member_id=member.id)
+    if grant.status != "OFFERED":
+        raise HTTPException(409, "SCOPED_COPLANNING_GRANT_ALREADY_DECIDED")
+    stamp = now.isoformat()
+    grant.status = "ACCEPTED" if payload.decision == "ACCEPT" else "DECLINED"
+    if payload.decision == "ACCEPT":
+        grant.accepted_at = stamp
+    else:
+        grant.declined_at = stamp
+        grant.active_slot = False
+    grant.updated_at = stamp
+    record_audit(
+        session,
+        action="journey.shared_stop_coplanning." + payload.decision.lower(),
+        entity_type="SharedStopCoPlanningGrant",
+        entity_id=grant.id,
+        journey_id=str(journey.id),
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=str(principal.traveler_id),
+        after={
+            "grant_id": grant.id,
+            "member_id": str(member.id),
+            "invitation_id": str(invitation.id),
+            "base_plan_version_id": str(grant.base_plan_version_id),
+            "purpose": grant.purpose,
+            "decision": payload.decision,
+        },
+    )
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/respond"
+)
+def respond_shared_stop_coplanning_grant_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    grant_id: UUID,
+    payload: SharedStopCoPlanningGrantDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _respond_shared_stop_coplanning_grant(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            grant_id=grant_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/revoke"
+)
+def revoke_shared_stop_coplanning_grant_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    grant_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        principal, manager = _require_membership_manager(request, str(journey.id), session)
+        grant = require(session, SharedStopCoPlanningGrant, str(grant_id), "Scoped co-planning grant")
+        if grant.journey_id != journey.id or grant.invitation_id != str(invitation_id):
+            raise HTTPException(404, "SCOPED_COPLANNING_GRANT_NOT_FOUND")
+        if grant.grantor_member_id != manager.id or grant.status not in {"OFFERED", "ACCEPTED"}:
+            raise HTTPException(409, "SCOPED_COPLANNING_GRANT_NOT_REVOCABLE")
+        stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+        grant.status = "REVOKED"
+        grant.active_slot = False
+        grant.revoked_at = stamp
+        grant.updated_at = stamp
+        record_audit(
+            session,
+            action="journey.shared_stop_coplanning.revoked",
+            entity_type="SharedStopCoPlanningGrant",
+            entity_id=grant.id,
+            journey_id=str(journey.id),
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=str(principal.traveler_id),
+            after={"grant_id": grant.id, "promotion_id": grant.promotion_id},
+        )
+        session.commit()
+        return operator_projection(session, journey, viewer_member_id=manager.id)
+
+
+def _r73_recovery_handoff_reason(session: Session, journey: Journey) -> str | None:
+    active_execution = session.scalar(
+        select(RecoveryExecutionPlan.id)
+        .where(
+            RecoveryExecutionPlan.journey_id == journey.id,
+            RecoveryExecutionPlan.status.not_in(("COMPLETED", "CANCELLED", "SUPERSEDED")),
+        )
+        .limit(1)
+    )
+    if active_execution:
+        return "RECOVERY_EXECUTION_ACTIVE"
+    now_text = execution_clock.now().astimezone(timezone.utc).isoformat()
+    pending_handshake = session.scalar(
+        select(PlannedSplitMeetupHandshake.id)
+        .where(
+            PlannedSplitMeetupHandshake.journey_id == journey.id,
+            PlannedSplitMeetupHandshake.state == "PENDING",
+            PlannedSplitMeetupHandshake.expires_at > now_text,
+        )
+        .limit(1)
+    )
+    if pending_handshake:
+        return "RENDEZVOUS_HANDSHAKE_ACTIVE"
+    waiting_missions = session.scalars(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.status == "WAITING_FOR_MEMBERS",
+        )
+    ).all()
+    if any(
+        _json_object(item.clarification_json or "{}").get("kind") == "COLLECTIVE_TRADEOFF"
+        for item in waiting_missions
+    ):
+        return "COLLECTIVE_DECISION_ALREADY_ACTIVE"
+    return None
+
+
+def _r73_invitation_context_reason(
+    session: Session,
+    journey: Journey,
+    invitation: MemberPlaceInvitation,
+    promotion: MemberPlacePromotion,
+) -> str | None:
+    from app.execution.member_place_invitation import _invitation_context_is_current
+
+    place = session.get(Place, str(invitation.place_id))
+    rendezvous = session.get(Activity, str(invitation.rendezvous_activity_id))
+    now = execution_clock.now().astimezone(timezone.utc)
+    try:
+        expires_at = datetime.fromisoformat(str(invitation.expires_at).replace("Z", "+00:00"))
+    except ValueError:
+        return "INVITATION_EXPIRY_INVALID"
+    if (
+        journey.status != "ACTIVE"
+        or not journey.active_plan_version_id
+        or journey.active_plan_version_id != promotion.active_plan_version_id
+        or journey.current_activity_id != promotion.current_activity_id
+    ):
+        return "ACTIVE_PLAN_OR_CURSOR_CHANGED"
+    if (
+        invitation.journey_id != journey.id
+        or invitation.state != "OPEN"
+        or expires_at.tzinfo is None
+        or expires_at.astimezone(timezone.utc) <= now
+    ):
+        return "INVITATION_STALE_OR_EXPIRED"
+    if (
+        place is None
+        or str(place.provider_key or "") != str(invitation.place_provider_key or "")
+        or str(place.external_id or "") != str(invitation.place_external_id or "")
+        or str(place.id) != str(promotion.place_id)
+        or rendezvous is None
+        or str(rendezvous.plan_version_id) != str(promotion.active_plan_version_id)
+        or str(rendezvous.id) != str(promotion.rendezvous_activity_id)
+        or str(invitation.rendezvous_activity_id) != str(promotion.rendezvous_activity_id)
+    ):
+        return "CANONICAL_PLACE_OR_RENDEZVOUS_CHANGED"
+    if not _invitation_context_is_current(session, journey, invitation, now=now):
+        return "INVITATION_CONTEXT_STALE"
+    from app.execution.member_place_group_share import current_group_share
+
+    group_share = current_group_share(session, journey, invitation, now=now)
+    if not group_share.get("shared"):
+        return str(group_share.get("status") or "NOT_SHARED_TO_GROUP")
+    return None
+
+
+def _r73_block_promotion(
+    session: Session,
+    journey: Journey,
+    promotion: MemberPlacePromotion,
+    *,
+    code: str,
+    feasibility: str = "FEASIBILITY_UNKNOWN",
+    proposal: ReplanProposalModel | None = None,
+) -> None:
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    promotion.state = "BLOCKED"
+    promotion.state_detail_json = json.dumps(
+        {
+            "code": code,
+            "feasibility": feasibility,
+            "next_action": "NEEDS_ROUTE_EVIDENCE" if feasibility == "FEASIBILITY_UNKNOWN" else "REVIEW_CANONICAL_FACTS",
+            "shared_plan_changed": False,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    promotion.updated_at = now
+    if proposal is not None:
+        proposal.status = "REJECTED"
+        proposal.decided_at = now
+        proposed_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
+        if proposed_plan is not None and proposed_plan.status == "CANDIDATE":
+            proposed_plan.status = "REJECTED"
+    record_audit(
+        session,
+        action="journey.member_place_promotion.blocked",
+        entity_type="MemberPlacePromotion",
+        entity_id=promotion.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="r73-grounded-promotion-gate",
+        after={"code": code, "feasibility": feasibility, "shared_plan_changed": False},
+    )
+    session.commit()
+
+
+def _create_member_place_promotion(
+    *,
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlacePromotionCreateRequest,
+    request: Request,
+    idempotency_key: str | None,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, actor = resolve_journey_member_principal(request, session, journey_id=journey.id)
+    if not _r73_member_can_update(session, actor):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    invitation = require(session, MemberPlaceInvitation, str(invitation_id), "Place invitation")
+    if invitation.journey_id != journey.id:
+        raise HTTPException(404, "Place invitation was not found")
+    from app.execution.member_place_group_share import require_group_share_sponsor
+
+    require_group_share_sponsor(
+        session,
+        journey,
+        invitation,
+        actor=actor,
+        traveler_id=str(principal.traveler_id),
+        now=execution_clock.now().astimezone(timezone.utc),
+    )
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        request_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    signature = canonical_request_signature(
+        {
+            "journey_id": journey.id,
+            "invitation_id": str(invitation_id),
+            "actor_member_id": actor.id,
+            "actor_traveler_id": principal.traveler_id,
+            "dwell_minutes": payload.dwell_minutes,
+        }
+    )
+    existing = session.scalar(
+        select(MemberPlacePromotion).where(
+            MemberPlacePromotion.journey_id == journey.id,
+            MemberPlacePromotion.request_key == request_key,
+        )
+    )
+    if existing is not None:
+        if existing.request_hash != signature:
+            raise HTTPException(409, "same idempotency key used for a different request")
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    is_inviter = str(invitation.owner_member_id) == str(actor.id)
+    is_joined = session.scalar(
+        select(MemberPlaceInvitationRecipient.id).where(
+            MemberPlaceInvitationRecipient.invitation_id == invitation.id,
+            MemberPlaceInvitationRecipient.recipient_member_id == actor.id,
+            MemberPlaceInvitationRecipient.recipient_traveler_id == principal.traveler_id,
+            MemberPlaceInvitationRecipient.state == "ACCEPTED_OWN_STOP_READY",
+        )
+    ) is not None
+    if not (is_inviter or is_joined):
+        raise HTTPException(403, "SHARED_PLACE_PROMOTION_REQUIRES_INVITATION_PARTICIPANT")
+    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_ACTIVE_JOURNEY")
+    # Do not manufacture a candidate (and its route work) until every current
+    # read-only collaborator has independently accepted a grant for this exact
+    # invitation and active plan. This keeps the ordinary-owner flow honest and
+    # includes members outside the temporary R70/R72 invite group.
+    preflight_members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    preflight_ids = sorted({str(item.get("member_id") or "") for item in preflight_members if item.get("member_id")})
+    if not preflight_ids:
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_CURRENT_MEMBERS")
+    from app.shared_stop_coplanning import find_accepted_grant
+
+    for member_projection in preflight_members:
+        member_id = str(member_projection.get("member_id") or "")
+        if member_projection.get("can_authorize_mutation"):
+            continue
+        grantee = session.get(JourneyMemberModel, member_id)
+        if grantee is None or find_accepted_grant(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(invitation.id),
+            base_plan_version_id=str(journey.active_plan_version_id),
+            grantee=grantee,
+            require_unbound=True,
+        ) is None:
+            raise HTTPException(409, "SCOPED_COPLANNING_ACCEPTANCE_REQUIRED")
+    # The invitation and the exact Place are server authority; callers can only
+    # choose the explicitly requested dwell duration.
+    provisional = MemberPlacePromotion(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        invitation_id=invitation.id,
+        actor_member_id=actor.id,
+        actor_traveler_id=principal.traveler_id,
+        active_plan_version_id=str(journey.active_plan_version_id),
+        place_id=str(invitation.place_id),
+        rendezvous_activity_id=str(invitation.rendezvous_activity_id),
+        current_activity_id=str(journey.current_activity_id) if journey.current_activity_id else None,
+        request_key=request_key,
+        request_hash=signature,
+        dwell_minutes=payload.dwell_minutes,
+        state="PENDING_ROUTE",
+        state_detail_json="{}",
+        created_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
+        updated_at=execution_clock.now().astimezone(timezone.utc).isoformat(),
+    )
+    existing_pending = session.scalar(
+        select(MemberPlacePromotion).where(
+            MemberPlacePromotion.journey_id == journey.id,
+            MemberPlacePromotion.active_plan_version_id == journey.active_plan_version_id,
+            MemberPlacePromotion.invitation_id == invitation.id,
+            MemberPlacePromotion.place_id == invitation.place_id,
+            MemberPlacePromotion.state.in_(("PENDING_ROUTE", "WAITING_FOR_MEMBERS", "AUTHORIZED")),
+        )
+    )
+    if existing_pending is not None:
+        if int(existing_pending.dwell_minutes) == int(payload.dwell_minutes):
+            return operator_projection(session, journey, viewer_member_id=actor.id)
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_ALREADY_PENDING")
+    session.add(provisional)
+    try:
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raced = session.scalar(
+            select(MemberPlacePromotion).where(
+                MemberPlacePromotion.journey_id == journey.id,
+                MemberPlacePromotion.active_plan_version_id == journey.active_plan_version_id,
+                MemberPlacePromotion.invitation_id == invitation.id,
+                MemberPlacePromotion.place_id == invitation.place_id,
+                MemberPlacePromotion.state.in_(("PENDING_ROUTE", "WAITING_FOR_MEMBERS", "AUTHORIZED")),
+            )
+        )
+        if raced is not None and int(raced.dwell_minutes) == int(payload.dwell_minutes):
+            return operator_projection(session, journey, viewer_member_id=actor.id)
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_ALREADY_PENDING") from exc
+    session.refresh(provisional)
+
+    context_problem = _r73_invitation_context_reason(session, journey, invitation, provisional)
+    if context_problem:
+        _r73_block_promotion(session, journey, provisional, code=context_problem)
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    recovery_problem = _r73_recovery_handoff_reason(session, journey)
+    if recovery_problem:
+        _r73_block_promotion(session, journey, provisional, code=recovery_problem)
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    trigger_event = _ensure_opportunity_window_event(session, journey)
+    if trigger_event is None:
+        _r73_block_promotion(session, journey, provisional, code="ROUTE_WINDOW_NOT_GROUNDED")
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    try:
+        generated = generate_replan(
+            journey_id=journey_id,
+            body=ReplanGenerateRequest(
+                trigger_event_id=UUID(str(trigger_event.id)),
+                candidate_count=1,
+                place_ids=[str(invitation.place_id)],
+                promotion_id=UUID(str(provisional.id)),
+                promotion_invitation_id=UUID(str(invitation.id)),
+                promotion_dwell_minutes=payload.dwell_minutes,
+            ),
+            request=request,
+            idempotency_key="r73p-" + hashlib.sha256(provisional.id.encode("utf-8")).hexdigest()[:32],
+            session=session,
+        )
+    except HTTPException as exc:
+        session.rollback()
+        current = session.get(MemberPlacePromotion, provisional.id)
+        if current is None:
+            raise
+        detail = str(exc.detail or "ROUTE_EVIDENCE_UNAVAILABLE")
+        feasibility = "FEASIBILITY_UNKNOWN" if any(
+            token in detail.upper() for token in ("ROUTE", "MOBILITY", "OPPORTUNITY", "EVIDENCE")
+        ) else "BLOCKED"
+        _r73_block_promotion(
+            session,
+            journey,
+            current,
+            code=detail[:180],
+            feasibility=feasibility,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    proposal_id = str(getattr(generated, "id", "") or (generated.get("id") if isinstance(generated, dict) else ""))
+    proposal = session.get(ReplanProposalModel, proposal_id) if proposal_id else None
+    if proposal is None or proposal.status != "PRESENTED":
+        _r73_block_promotion(session, journey, provisional, code="ROUTE_CANDIDATE_NOT_PRESENTED")
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    collective_proposals = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == str(trigger_event.id),
+            ReplanProposalModel.status == "PRESENTED",
+        )
+        .order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    proposal_receipt = collective_proposal_receipt(session, journey, collective_proposals)
+    proposal_decision = (proposal_receipt.get("proposal_collective_decisions") or {}).get(proposal.id)
+    if not isinstance(proposal_decision, dict) or proposal_decision.get("status") != "GROUNDED_FEASIBLE":
+        _r73_block_promotion(
+            session,
+            journey,
+            provisional,
+            code="COLLECTIVE_FEASIBILITY_NOT_GROUNDED",
+            feasibility="FEASIBILITY_UNKNOWN",
+            proposal=proposal,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    members_projection = active_journey_members_with_capabilities(session, journey)
+    members = members_projection.get("members", [])
+    required_ids = sorted({str(item.get("member_id") or "") for item in members if item.get("member_id")})
+    if not required_ids:
+        _r73_block_promotion(
+            session,
+            journey,
+            provisional,
+            code="CURRENT_MEMBERS_UNAVAILABLE",
+            feasibility="BLOCKED",
+            proposal=proposal,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    from app.collective_mediation import collective_decision_epoch, collective_material_world_epoch
+    from app.shared_stop_coplanning import decision_scope_facts
+
+    try:
+        authority_scope_facts, scoped_grants = decision_scope_facts(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(invitation.id),
+            base_plan_version_id=str(journey.active_plan_version_id),
+            promotion_id=str(provisional.id),
+            decision_epoch=None,
+            required_member_ids=required_ids,
+            bind_unbound=True,
+        )
+    except HTTPException:
+        _r73_block_promotion(
+            session,
+            journey,
+            provisional,
+            code="SCOPED_COPLANNING_GRANT_CHANGED_DURING_PROPOSAL",
+            feasibility="BLOCKED",
+            proposal=proposal,
+        )
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+
+    target_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
+    if target_plan is None:
+        _r73_block_promotion(session, journey, provisional, code="ROUTE_CANDIDATE_PLAN_MISSING", proposal=proposal)
+        return operator_projection(session, journey, viewer_member_id=actor.id)
+    option = dict(proposal_decision)
+    world_basis = collective_material_world_basis(
+        session,
+        journey,
+        target_plan,
+        fit_subject_place_ids=list(option.get("fit_subject_place_ids") or []),
+    )
+    option["material_world_epoch"] = collective_material_world_epoch(world_basis)
+    options = [option]
+    decision_relevant_ids = list(required_ids)
+    fingerprint = candidate_surface_fingerprint(proposal_receipt.get("candidate_fit_matrix") or [])
+    mission = create_mission(
+        session,
+        journey,
+        command="Promote the invited public Place into the active shared Journey after unanimous current-member consent.",
+        requested_autonomy="PLAN_ONLY",
+        trigger_event_id=str(trigger_event.id),
+        use_model_draft=False,
+    )
+    resolved_mission_intent = _json_object(mission.resolved_intent_json or "{}")
+    resolved_mission_intent["r73_shared_stop"] = {
+        "promotion_id": provisional.id,
+        "invitation_id": invitation.id,
+        "place_id": invitation.place_id,
+        "proposal_id": proposal.id,
+        "active_plan_version_id": journey.active_plan_version_id,
+        "current_activity_id": journey.current_activity_id,
+        "rendezvous_activity_id": invitation.rendezvous_activity_id,
+    }
+    mission.resolved_intent_json = json.dumps(
+        resolved_mission_intent, ensure_ascii=False, sort_keys=True
+    )
+    # The decision epoch names the actual server-generated mission identity.
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=mission.id,
+        trigger_event_id=str(trigger_event.id),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=required_ids,
+        decision_relevant_member_ids=decision_relevant_ids,
+        members=members,
+        authority_scope_facts=authority_scope_facts,
+    )
+    for grant in scoped_grants.values():
+        grant.decision_epoch = decision_epoch
+    mission.status = "WAITING_FOR_MEMBERS"
+    mission.started_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    mission.clarification_json = json.dumps(
+        {
+            "kind": "COLLECTIVE_TRADEOFF",
+            "policy": "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES",
+            "clarification_id": str(uuid4()),
+            "decision_epoch": decision_epoch,
+            "material_world_epoch": option["material_world_epoch"],
+            "candidate_surface_fingerprint": fingerprint,
+            "trigger_event_id": str(trigger_event.id),
+            "base_plan_version_id": str(journey.active_plan_version_id),
+            "candidate_options": options,
+            "required_member_ids": required_ids,
+            "decision_relevant_member_ids": decision_relevant_ids,
+            "responses": {},
+            "status": "WAITING_FOR_MEMBERS",
+            "selected_proposal_id": None,
+            "selected_candidate_id": None,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    provisional.mission_id = mission.id
+    provisional.trigger_event_id = str(trigger_event.id)
+    provisional.proposal_id = proposal.id
+    provisional.decision_epoch = decision_epoch
+    provisional.material_world_epoch = option["material_world_epoch"]
+    provisional.candidate_surface_fingerprint = fingerprint
+    provisional.state = "WAITING_FOR_MEMBERS"
+    provisional.state_detail_json = json.dumps(
+        {
+            "feasibility": "GROUNDED_FEASIBLE",
+            "route_evidence": "SERVER_REVALIDATED_PROPOSAL",
+            "shared_plan_changed": False,
+            "required_member_count": len(required_ids),
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    provisional.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    record_audit(
+        session,
+        action="journey.member_place_promotion.proposed",
+        entity_type="MemberPlacePromotion",
+        entity_id=provisional.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=principal.traveler_id,
+        after={
+            "invitation_id": invitation.id,
+            "place_id": invitation.place_id,
+            "proposal_id": proposal.id,
+            "mission_id": mission.id,
+            "required_member_ids": required_ids,
+            "decision_epoch": decision_epoch,
+            "shared_plan_changed": False,
+        },
+    )
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=actor.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions",
+    status_code=201,
+)
+def create_member_place_promotion_route(
+    journey_id: UUID,
+    invitation_id: UUID,
+    payload: MemberPlacePromotionCreateRequest,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _create_member_place_promotion(
+            journey_id=journey_id,
+            invitation_id=invitation_id,
+            payload=payload,
+            request=request,
+            idempotency_key=idempotency_key,
+            session=session,
+        )
+
+
+def _respond_to_member_place_promotion(
+    *,
+    journey_id: UUID,
+    promotion_id: UUID,
+    payload: MemberPlacePromotionDecisionRequest,
+    request: Request,
+    session: Session,
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
+    promotion = require(session, MemberPlacePromotion, str(promotion_id), "Shared-stop promotion")
+    if promotion.journey_id != journey.id:
+        raise HTTPException(404, "Shared-stop promotion was not found")
+    mission = session.get(JourneyMission, str(promotion.mission_id)) if promotion.mission_id else None
+    clarification = _json_object(mission.clarification_json or "{}") if mission is not None else {}
+    if mission is None:
+        raise HTTPException(409, "SHARED_PLACE_PROMOTION_MISSION_MISSING")
+    _require_r73_response_scope(
+        session=session,
+        journey=journey,
+        mission=mission,
+        member=member,
+        principal=principal,
+        clarification=clarification,
+        expected_promotion_id=str(promotion.id),
+    )
+    required_ids = {
+        str(item) for item in clarification.get("required_member_ids") or []
+    }
+    if str(member.id) not in required_ids:
+        raise HTTPException(403, "member is not required for this shared Journey decision")
+    if clarification.get("clarification_id") != payload.clarification_id:
+        raise HTTPException(409, "collective clarification id does not match")
+    if promotion.state != "WAITING_FOR_MEMBERS" or clarification.get("status") != "WAITING_FOR_MEMBERS":
+        raise HTTPException(409, "shared-stop promotion is not waiting for members")
+    responses = clarification.get("responses") if isinstance(clarification.get("responses"), dict) else {}
+    previous = responses.get(str(member.id))
+    if isinstance(previous, dict):
+        previous_decision = "APPROVE" if previous.get("proposal_id") else previous.get("decision")
+        if previous_decision != payload.decision:
+            raise HTTPException(409, "COLLECTIVE_RESPONSE_ALREADY_RECORDED")
+        if payload.decision == "APPROVE" and clarification.get("status") == "WAITING_FOR_MEMBERS":
+            pass
+        else:
+            return operator_projection(session, journey, viewer_member_id=member.id)
+    invitation = require(session, MemberPlaceInvitation, str(promotion.invitation_id), "Place invitation")
+    context_problem = _r73_invitation_context_reason(session, journey, invitation, promotion)
+    if context_problem:
+        promotion.state = "STALE"
+        promotion.state_detail_json = json.dumps({"code": context_problem}, sort_keys=True)
+        clarification["status"] = "STALE"
+        mission.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+        promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+        raise HTTPException(409, context_problem)
+    if payload.decision == "APPROVE":
+        proposal_id = str(promotion.proposal_id or "")
+        if not proposal_id:
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_PROPOSAL_MISSING")
+        try:
+            answer = answer_collective_clarification(
+                journey_id=journey_id,
+                mission_id=UUID(str(promotion.mission_id)),
+                member_id=UUID(str(member.id)),
+                request=request,
+                payload=CollectiveClarificationAnswer(
+                    clarification_id=payload.clarification_id,
+                    proposal_id=UUID(proposal_id),
+                ),
+                session=session,
+            )
+        except HTTPException as exc:
+            session.expire_all()
+            mission = session.get(JourneyMission, str(promotion.mission_id))
+            current_promotion = session.get(MemberPlacePromotion, str(promotion.id))
+            current_round = _json_object(mission.clarification_json or "{}") if mission else {}
+            if current_round.get("status") == "STALE" and current_promotion is not None:
+                current_promotion.state = "STALE"
+                current_promotion.state_detail_json = json.dumps(
+                    {"code": "STALE_COLLECTIVE_DECISION"}, sort_keys=True
+                )
+                current_promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+                session.commit()
+            raise exc
+        session.expire_all()
+        current_promotion = session.get(MemberPlacePromotion, str(promotion.id))
+        current_mission = session.get(JourneyMission, str(promotion.mission_id))
+        current_round = _json_object(current_mission.clarification_json or "{}") if current_mission else {}
+        if current_round.get("status") == "RESOLVED" and current_round.get("authority_receipt_id"):
+            current_promotion.state = "AUTHORIZED"
+            current_promotion.authority_receipt_id = str(current_round["authority_receipt_id"])
+            current_promotion.decided_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            current_promotion.state_detail_json = json.dumps(
+                {
+                    "child_mission_id": str((answer.get("child_mission") or {}).get("id") or ""),
+                    "required_member_count": len(current_round.get("required_member_ids") or []),
+                    "all_required_members_approved": True,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            current_promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            session.commit()
+        return operator_projection(session, journey, viewer_member_id=member.id)
+
+    # A single explicit decline ends this promotion round without applying any
+    # shared-plan mutation. Previously recorded approvals are kept as audit.
+    responses = dict(responses)
+    responses[str(member.id)] = {"decision": "DECLINE", "member_id": str(member.id)}
+    clarification["responses"] = responses
+    clarification["status"] = "DECLINED"
+    clarification["declined_by_member_id"] = str(member.id)
+    mission.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+    mission.status = "ANSWERED"
+    mission.completed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    proposal = session.get(ReplanProposalModel, str(promotion.proposal_id)) if promotion.proposal_id else None
+    if proposal is not None:
+        proposal.status = "REJECTED"
+        proposal.decided_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        candidate = session.get(PlanVersion, str(proposal.proposed_plan_version_id))
+        if candidate is not None and candidate.status == "CANDIDATE":
+            candidate.status = "REJECTED"
+    promotion.state = "DECLINED"
+    promotion.decided_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    promotion.state_detail_json = json.dumps(
+        {"declined_by_member_id": str(member.id), "shared_plan_changed": False}, sort_keys=True
+    )
+    promotion.updated_at = promotion.decided_at
+    record_audit(
+        session,
+        action="agent.collective_decision.response",
+        entity_type="JourneyMission",
+        entity_id=mission.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=principal.traveler_id,
+        after={
+            "clarification_id": clarification.get("clarification_id"),
+            "member_id": str(member.id),
+            "traveler_id": principal.traveler_id,
+            "proposal_id": str(promotion.proposal_id or ""),
+            "decision_epoch": clarification.get("decision_epoch"),
+            "decision": "DECLINE",
+            "status": "DECLINED",
+        },
+    )
+    record_audit(
+        session,
+        action="journey.member_place_promotion.declined",
+        entity_type="MemberPlacePromotion",
+        entity_id=promotion.id,
+        journey_id=journey.id,
+        actor_type="AUTHENTICATED_TRAVELER",
+        actor_id=principal.traveler_id,
+        after={"member_id": str(member.id), "shared_plan_changed": False},
+    )
+    session.commit()
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/member-place-promotions/{promotion_id}/respond"
+)
+def respond_to_member_place_promotion_route(
+    journey_id: UUID,
+    promotion_id: UUID,
+    payload: MemberPlacePromotionDecisionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        return _respond_to_member_place_promotion(
+            journey_id=journey_id,
+            promotion_id=promotion_id,
+            payload=payload,
+            request=request,
+            session=session,
+        )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-place-promotions/{promotion_id}/apply")
+def apply_member_place_promotion_route(
+    journey_id: UUID,
+    promotion_id: UUID,
+    request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        journey = require(session, Journey, str(journey_id), "Journey")
+        if not settings.traveler_auth_secret:
+            raise HTTPException(503, "TRAVELER_PRINCIPAL_VERIFIER_NOT_CONFIGURED")
+        from app.traveler_principal import resolve_journey_member_principal
+
+        principal, member = resolve_journey_member_principal(request, session, journey_id=journey.id)
+        if not _r73_member_can_update(session, member):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+        if idempotency_key is None:
+            raise HTTPException(422, "Idempotency-Key header is required")
+        try:
+            idempotency_key = validate_idempotency_key(idempotency_key)
+        except CommerceValidationError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        promotion = require(session, MemberPlacePromotion, str(promotion_id), "Shared-stop promotion")
+        if promotion.journey_id != journey.id or promotion.state != "AUTHORIZED":
+            if (
+                promotion.journey_id == journey.id
+                and promotion.state == "APPLIED"
+                and journey.active_plan_version_id == promotion.applied_plan_version_id
+            ):
+                return operator_projection(session, journey, viewer_member_id=member.id)
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_NOT_AUTHORIZED")
+        # `_accept_replan_impl` commits the authoritative plan transition before
+        # this adapter records its APPLIED projection. If the process stops in
+        # that narrow gap, recover from the durable accepted proposal + active
+        # plan + the exact collective receipt instead of treating the now-new
+        # cursor as a stale invitation and stranding an already-applied stop.
+        accepted_proposal = (
+            session.get(ReplanProposalModel, str(promotion.proposal_id))
+            if promotion.proposal_id
+            else None
+        )
+        if (
+            accepted_proposal is not None
+            and accepted_proposal.status == "ACCEPTED"
+            and str(accepted_proposal.base_plan_version_id)
+            == str(promotion.active_plan_version_id)
+            and str(accepted_proposal.proposed_plan_version_id)
+            == str(journey.active_plan_version_id)
+            and promotion.authority_receipt_id
+        ):
+            from app.db.models import CollectiveAuthorityReceipt
+
+            receipt = session.get(
+                CollectiveAuthorityReceipt, str(promotion.authority_receipt_id)
+            )
+            if (
+                receipt is not None
+                and str(receipt.journey_id) == str(journey.id)
+                and str(receipt.proposal_id) == str(accepted_proposal.id)
+                and str(receipt.plan_version_id)
+                == str(accepted_proposal.proposed_plan_version_id)
+                and receipt.invalidated_at is None
+            ):
+                now = execution_clock.now().astimezone(timezone.utc).isoformat()
+                promotion.state = "APPLIED"
+                promotion.applied_plan_version_id = str(accepted_proposal.proposed_plan_version_id)
+                promotion.applied_at = now
+                promotion.updated_at = now
+                recovered_detail = _json_object(promotion.state_detail_json or "{}")
+                promotion.state_detail_json = json.dumps(
+                    {
+                        **recovered_detail,
+                        "applied_by_member_id": str(member.id),
+                        "applied_plan_version_id": str(accepted_proposal.proposed_plan_version_id),
+                        "authority_receipt_id": str(receipt.id),
+                        "reconciled_after_authoritative_accept": True,
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                )
+                record_audit(
+                    session,
+                    action="journey.member_place_promotion.applied",
+                    entity_type="MemberPlacePromotion",
+                    entity_id=promotion.id,
+                    journey_id=journey.id,
+                    actor_type="AUTHENTICATED_TRAVELER",
+                    actor_id=principal.traveler_id,
+                    after={
+                        "proposal_id": accepted_proposal.id,
+                        "plan_version_id": accepted_proposal.proposed_plan_version_id,
+                        "authority_receipt_id": receipt.id,
+                        "reconciled_after_authoritative_accept": True,
+                    },
+                )
+                session.commit()
+                return operator_projection(session, journey, viewer_member_id=member.id)
+        invitation = require(session, MemberPlaceInvitation, str(promotion.invitation_id), "Place invitation")
+        context_problem = _r73_invitation_context_reason(session, journey, invitation, promotion)
+        if context_problem:
+            promotion.state = "STALE"
+            promotion.state_detail_json = json.dumps({"code": context_problem}, sort_keys=True)
+            promotion.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            session.commit()
+            raise HTTPException(409, context_problem)
+        recovery_problem = _r73_recovery_handoff_reason(session, journey)
+        if recovery_problem:
+            raise HTTPException(409, recovery_problem)
+        proposal = require(session, ReplanProposalModel, str(promotion.proposal_id), "Replan proposal")
+        detail = _json_object(promotion.state_detail_json or "{}")
+        child_mission_id = str(detail.get("child_mission_id") or "")
+        resolved = _collective_resolution_for_child(
+            session,
+            journey,
+            proposal,
+            child_mission_id or None,
+        )
+        if (
+            resolved is None
+            or str(resolved.get("authority_receipt_id") or "")
+            != str(promotion.authority_receipt_id or "")
+        ):
+            raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_MISMATCH")
+        result = _accept_replan_impl(
+            UUID(str(proposal.id)),
+            idempotency_key,
+            session,
+            actor_type="AUTHENTICATED_TRAVELER",
+            actor_id=principal.traveler_id,
+            resolved_decision=resolved,
+            expected_authority_receipt_id=str(promotion.authority_receipt_id),
+            expected_recovery_epoch_id=str(proposal.recovery_epoch_id or "") or None,
+        )
+        accepted = session.get(ReplanProposalModel, str(proposal.id))
+        if accepted is None or accepted.status != "ACCEPTED":
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_PLAN_NOT_APPLIED")
+        promotion.state = "APPLIED"
+        promotion.applied_plan_version_id = str(accepted.proposed_plan_version_id)
+        promotion.applied_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        promotion.updated_at = promotion.applied_at
+        promotion.state_detail_json = json.dumps(
+            {
+                **detail,
+                "applied_by_member_id": str(member.id),
+                "applied_plan_version_id": str(accepted.proposed_plan_version_id),
+                "authority_receipt_id": str(promotion.authority_receipt_id),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        session.commit()
+        return {**operator_projection(session, journey, viewer_member_id=member.id), "promotion_apply": result}
+
+
+MOMENT_SCOUT_SPLIT_COMMAND = (
+    "Moment Scout selection confirmed by the signed member; rejoin at the next shared stop."
+)
+
+
+def _moment_scout_rendezvous_context(
+    session: Session,
+    *,
+    journey: Journey,
+    member: JourneyMemberModel,
+    traveler_id: str,
+) -> dict[str, Any]:
+    now = execution_clock.now().astimezone(timezone.utc)
+    split = planned_separation_for_member(session, journey, member, now=now)
+    if split is not None:
+        return {
+            "split_intent_id": str(split["intent"].id),
+            "target": split["target"],
+            "place": split["place"],
+            "resolution_basis": "CURRENT_R63_SPLIT",
+            "safety_buffer_min": None,
+        }
+
+    stale_own_intent = session.scalar(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_member_id == member.id,
+            JourneyIntent.created_by_traveler_id == traveler_id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        )
+    )
+    if stale_own_intent is not None:
+        raise HTTPException(409, "MOMENT_SCOUT_EXISTING_SPLIT_STALE")
+
+    resolved = _resolve_planned_rendezvous(session, journey, MOMENT_SCOUT_SPLIT_COMMAND)
+    if resolved is None:
+        raise HTTPException(409, "MOMENT_SCOUT_RENDEZVOUS_UNAVAILABLE")
+    target, place, basis, buffer_min = resolved
+    return {
+        "split_intent_id": None,
+        "target": target,
+        "place": place,
+        "resolution_basis": basis,
+        "safety_buffer_min": buffer_min,
+    }
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout")
+def scout_member_moment(
+    journey_id: UUID,
+    payload: MomentScoutRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Return a private shortlist grounded in the signed-in member's one-time location."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    return build_moment_scout(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        location_observation_id=str(payload.location_observation_id),
+        budget_minutes=payload.budget_minutes,
+        interest=payload.interest,
+        rendezvous_context=rendezvous_context,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout/select", status_code=201)
+def select_member_moment_scout_candidate(
+    journey_id: UUID,
+    payload: MomentScoutSelectRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Revalidate the private scout context before creating the existing R64 side quest."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    current_scout = build_moment_scout(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        location_observation_id=str(payload.location_observation_id),
+        budget_minutes=payload.budget_minutes,
+        interest=payload.interest,
+        rendezvous_context=rendezvous_context,
+    )
+    select_moment_scout_candidate(
+        current_scout=current_scout,
+        scout_context=payload.scout_context,
+        place_id=payload.place_id,
+    )
+    if rendezvous_context["split_intent_id"] is None:
+        _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=MOMENT_SCOUT_SPLIT_COMMAND,
+            action="START",
+            now=execution_clock.now().astimezone(timezone.utc),
+            resolved_rendezvous=(
+                rendezvous_context["target"],
+                rendezvous_context["place"],
+                rendezvous_context["resolution_basis"],
+                rendezvous_context["safety_buffer_min"],
+            ),
+        )
+        session.expire(journey)
+        current_rendezvous = _moment_scout_rendezvous_context(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+        if (
+            current_rendezvous["split_intent_id"] is None
+            or str(current_rendezvous["target"].id)
+            != str(rendezvous_context["target"].id)
+        ):
+            raise HTTPException(409, "MOMENT_SCOUT_RENDEZVOUS_CHANGED_AFTER_SELECTION")
+    create_or_replace_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        destination_text=None,
+        place_id=payload.place_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout/live")
+def scout_live_member_moment(
+    journey_id: UUID,
+    payload: LiveMomentScoutRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Run one external nearby search after explicit signed-member consent."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    from app.execution.live_moment_scout import discover_live_moment_scout
+
+    return discover_live_moment_scout(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        location_observation_id=str(payload.location_observation_id),
+        budget_minutes=payload.budget_minutes,
+        interest=payload.interest,
+        radius_m=payload.radius_m,
+        consent_external_location=payload.consent_external_location,
+        rendezvous_context=rendezvous_context,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/moment-scout/live/select", status_code=201)
+def select_live_member_moment_scout_candidate(
+    journey_id: UUID,
+    payload: LiveMomentScoutSelectRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Consume the owner's short-lived receipt and enter the existing R63/R64 flow."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    rendezvous_context = _moment_scout_rendezvous_context(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+    )
+    from app.execution.live_moment_scout import (
+        materialize_selected_live_place,
+        validate_live_scout_selection,
+    )
+
+    receipt, candidate, already_selected = validate_live_scout_selection(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        receipt_id=str(payload.receipt_id),
+        candidate_id=str(payload.candidate_id),
+        rendezvous_context=rendezvous_context,
+    )
+    if already_selected:
+        session.expire_all()
+        current_journey = session.get(Journey, journey.id)
+        return operator_projection(session, current_journey, viewer_member_id=member.id)
+
+    if receipt.status == "OPEN":
+        receipt.status = "SELECTING"
+        receipt.selected_candidate_id = str(payload.candidate_id)
+        receipt.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+
+    selected_place = materialize_selected_live_place(
+        session,
+        journey=journey,
+        candidate=candidate,
+        captured_at=str(receipt.captured_at),
+    )
+    session.flush()
+
+    if rendezvous_context["split_intent_id"] is None:
+        _run_planned_separation_command(
+            request=request,
+            session=session,
+            journey=journey,
+            command=MOMENT_SCOUT_SPLIT_COMMAND,
+            action="START",
+            now=execution_clock.now().astimezone(timezone.utc),
+            resolved_rendezvous=(
+                rendezvous_context["target"],
+                rendezvous_context["place"],
+                rendezvous_context["resolution_basis"],
+                rendezvous_context["safety_buffer_min"],
+            ),
+        )
+        session.expire(journey)
+        rendezvous_context = _moment_scout_rendezvous_context(
+            session,
+            journey=journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+        if (
+            rendezvous_context["split_intent_id"] is None
+            or str(rendezvous_context["target"].id) != str(receipt.rendezvous_activity_id)
+            or str(rendezvous_context["place"].id) != str(receipt.rendezvous_place_id)
+        ):
+            raise HTTPException(409, "SCOUT_EXPIRED")
+        receipt.split_intent_id = str(rendezvous_context["split_intent_id"])
+        receipt.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+        session.commit()
+
+    quest = create_or_replace_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        destination_text=None,
+        place_id=str(selected_place.id),
+    )
+    receipt.status = "SELECTED"
+    receipt.selected_place_id = str(selected_place.id)
+    receipt.side_quest_id = str(quest.id)
+    receipt.updated_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    session.commit()
+    session.expire_all()
+    current_journey = session.get(Journey, journey.id)
+    return operator_projection(session, current_journey, viewer_member_id=member.id)
+
+
+def _advance_member_side_quest(
+    *,
+    journey_id: UUID,
+    side_quest_id: str,
+    action: str,
+    request: Request,
+    session: Session,
+) -> dict[str, Any]:
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    transition_member_side_quest(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+        action=action,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/start")
+def start_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="START",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/arrive")
+def arrive_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="ARRIVE",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/complete")
+def complete_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="COMPLETE",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/cancel")
+def cancel_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    return _advance_member_side_quest(
+        journey_id=journey_id,
+        side_quest_id=side_quest_id,
+        action="CANCEL",
+        request=request,
+        session=session,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/fit-preview")
+def preview_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    payload: MemberSideQuestFitPreviewRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Return owner-only advisory timing without persisting route keys or geometry."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return preview_member_side_quest_fit(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+        location_observation_id=(
+            str(payload.location_observation_id)
+            if payload.location_observation_id is not None
+            else None
+        ),
+        dwell_minutes=payload.dwell_minutes,
+        requested_mode=payload.requested_mode,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/navigate")
+def navigate_to_member_side_quest(
+    journey_id: UUID,
+    side_quest_id: str,
+    payload: MemberSideQuestNavigateRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Capture a private, member-bound outbound route without a Journey-wide route record."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return navigate_member_side_quest_destination(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+        location_observation_id=str(payload.location_observation_id),
+        requested_mode=payload.requested_mode,
+    )
+
+
+@app.get("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/navigation-targets")
+def get_member_side_quest_navigation_target(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Resolve an exact current map pin for the signed-in member only."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    return resolve_member_side_quest_navigation_target(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/head-back")
+def start_member_side_quest_head_back(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Persist a voluntary return report before requesting any fresh location."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    start_member_side_quest_return_report(
+        session,
+        journey=journey,
+        member=member,
+        traveler_id=principal.traveler_id,
+        quest_id=side_quest_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/member-side-quests/{side_quest_id}/meetup-report")
+def report_member_side_quest_meetup_arrival(
+    journey_id: UUID,
+    side_quest_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Let the split owner report arrival and request an explicit peer acknowledgment."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    report_meetup_arrival(
+        session,
+        journey=journey,
+        owner=member,
+        traveler_id=principal.traveler_id,
+        side_quest_id=side_quest_id,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge")
+def acknowledge_member_meetup_arrival(
+    journey_id: UUID,
+    handshake_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """A different current member explicitly acknowledges the owner's report."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    decide_meetup_handshake(
+        session,
+        journey=journey,
+        responder=member,
+        traveler_id=principal.traveler_id,
+        handshake_id=handshake_id,
+        acknowledge=True,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/meetup-handshakes/{handshake_id}/not-yet")
+def decline_member_meetup_arrival(
+    journey_id: UUID,
+    handshake_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """A different current member can report that they cannot confirm the meetup yet."""
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    decide_meetup_handshake(
+        session,
+        journey=journey,
+        responder=member,
+        traveler_id=principal.traveler_id,
+        handshake_id=handshake_id,
+        acknowledge=False,
+    )
+    return operator_projection(session, journey, viewer_member_id=member.id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/group-recovery/adjust")
+def request_group_recovery_plan(
+    journey_id: UUID,
+    request: Request,
+    payload: GroupRecoveryRequest,
+    session: Session = Depends(get_session),
+):
+    """Start one authenticated, PLAN_ONLY Hermes run for the current group-risk incident."""
+    del payload  # All targets and evidence are derived from authenticated server state.
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, requester = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if str(journey.status).upper() != "ACTIVE" or not journey.active_plan_version_id:
+        raise HTTPException(409, "GROUP_RECOVERY_REQUIRES_ACTIVE_JOURNEY")
+
+    presence = group_presence_projection(
+        session, journey, viewer_member_id=requester.id
+    )
+    recovery = group_recovery_projection(presence)
+    if not recovery.get("can_request_planning"):
+        raise HTTPException(409, f"GROUP_RECOVERY_NOT_ACTIONABLE:{recovery.get('state')}")
+    affected = recovery.get("affected_member")
+    commitment = recovery.get("shared_commitment")
+    if not isinstance(affected, dict) or not isinstance(commitment, dict):
+        raise HTTPException(409, "GROUP_RECOVERY_CONTEXT_INCOMPLETE")
+    incident_key = group_recovery_incident_key(
+        journey_id=journey.id,
+        active_plan_version_id=str(journey.active_plan_version_id),
+        affected_member_id=str(affected.get("member_id") or ""),
+        rendezvous_activity_id=str(commitment.get("activity_id") or ""),
+    )
+
+    existing_mission = None
+    for candidate in session.scalars(
+        select(JourneyMission)
+        .where(JourneyMission.journey_id == journey.id, JourneyMission.is_standing.is_(False))
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        .limit(30)
+    ).all():
+        try:
+            existing_intent = json.loads(candidate.resolved_intent_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        group_context = (
+            existing_intent.get("group_recovery")
+            if isinstance(existing_intent, dict)
+            else None
+        )
+        if isinstance(group_context, dict) and group_context.get("incident_key") == incident_key:
+            existing_mission = candidate
+            break
+    if existing_mission is not None:
+        try:
+            context = json.loads(existing_mission.resolved_intent_json or "{}").get("group_recovery", {})
+        except (TypeError, json.JSONDecodeError):
+            context = {}
+        run_id = str(context.get("hermes_run_id") or "") if isinstance(context, dict) else ""
+        return {
+            "status": (
+                "RECOVERY_EXTERNAL_AGENT_BLOCKED"
+                if existing_mission.status == "FAILED_EXTERNAL"
+                else "RECOVERY_OPTIONS_READY"
+            ),
+            "reused": True,
+            "mission": {
+                "id": existing_mission.id,
+                "status": existing_mission.status,
+                "failure_reason": existing_mission.failure_reason,
+            },
+            "run": ({
+                "run_id": run_id,
+                "runtime_identity": "HERMES_NATIVE_MCP",
+                "events_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{run_id}/events",
+                "timeline_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{run_id}/timeline",
+            } if run_id else None),
+            "group_recovery": recovery,
+        }
+
+    trigger_event_id = None
+    if recovery.get("state") == "VERIFIED_MEMBER_RISK":
+        for event in session.scalars(
+            select(EventModel)
+            .where(
+                EventModel.journey_id == journey.id,
+                EventModel.provider_key == "journey-group-presence",
+                EventModel.event_type == "TRAFFIC_DELAY",
+                EventModel.status.in_(("DETECTED", "ACKNOWLEDGED", "OPEN", "ACTIVE")),
+            )
+            .order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+        ).all():
+            try:
+                event_context = json.loads(event.payload_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if (
+                str(event_context.get("journey_member_id") or "") == str(affected.get("member_id"))
+                and str(event_context.get("rendezvous_activity_id") or "") == str(commitment.get("activity_id"))
+                and str(event_context.get("active_plan_version_id") or "") == str(journey.active_plan_version_id)
+            ):
+                trigger_event_id = event.id
+                break
+        if trigger_event_id is None:
+            raise HTTPException(409, "GROUP_RECOVERY_TRUSTED_RISK_EVENT_UNAVAILABLE")
+    elif recovery.get("state") == "ADVISORY_MEMBER_LATE":
+        # The browser location itself is not promoted into a disruption. The
+        # explicit member action below is the USER_CHANGE: it records a request
+        # for help and retains the advisory label in its payload.
+        for event in session.scalars(
+            select(EventModel)
+            .where(
+                EventModel.journey_id == journey.id,
+                EventModel.provider_key == "journey-group-recovery-request",
+                EventModel.event_type == "USER_CHANGE",
+                EventModel.status.in_(("DETECTED", "ACKNOWLEDGED")),
+            )
+            .order_by(EventModel.detected_at.desc(), EventModel.id.desc())
+        ).all():
+            try:
+                event_context = json.loads(event.payload_json or "{}")
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if event_context.get("incident_key") == incident_key:
+                trigger_event_id = event.id
+                break
+        if trigger_event_id is None:
+            now = datetime.now(timezone.utc).isoformat()
+            user_request_event = EventModel(
+                id=str(uuid4()),
+                journey_id=journey.id,
+                provider_key="journey-group-recovery-request",
+                provenance="USER_REPORTED",
+                event_type="USER_CHANGE",
+                severity="MINOR",
+                status="DETECTED",
+                affected_activity_id=str(commitment.get("activity_id") or "") or None,
+                occurred_at=now,
+                detected_at=now,
+                resolved_at=None,
+                payload_json=json.dumps({
+                    "incident_kind": "USER_REQUESTED_GROUP_RECOVERY_PLAN",
+                    "incident_key": incident_key,
+                    "active_plan_version_id": str(journey.active_plan_version_id),
+                    "journey_member_id": str(affected.get("member_id") or ""),
+                    "rendezvous_activity_id": str(commitment.get("activity_id") or ""),
+                    "location_authority": "ADVISORY_FOREGROUND_WEB",
+                    "route_eta_minutes": affected.get("eta_minutes"),
+                    "route_provenance": affected.get("route_provenance"),
+                    "slack_after_buffer_min": commitment.get("slack_after_buffer_min"),
+                    "user_requested": True,
+                    "physical_presence_claim": False,
+                }, ensure_ascii=False, sort_keys=True),
+                created_at=now,
+            )
+            session.add(user_request_event)
+            session.flush()
+            trigger_event_id = user_request_event.id
+            record_audit(
+                session,
+                action="journey.group_recovery.user_requested",
+                entity_type="Event",
+                entity_id=user_request_event.id,
+                journey_id=journey.id,
+                actor_type="USER",
+                actor_id=principal.traveler_id,
+                after={
+                    "requester_member_id": requester.id,
+                    "incident_key": incident_key,
+                    "location_authority": "ADVISORY_FOREGROUND_WEB",
+                    "physical_presence_claim": False,
+                },
+            )
+            session.flush()
+
+    command = (
+        "Help the travellers decide whether a shared group recovery is useful. "
+        "Inspect the current Journey and its member-specific risk context. "
+        "Prepare at most one grounded PLAN_ONLY group-recovery proposal if it is safe and useful; "
+        "otherwise recommend keeping the plan or taking no action. Preserve protected commitments, "
+        "member privacy, collective decision authority, and the normal approval boundary. "
+        "Never execute or accept a plan change."
+    )
+    mission = create_mission(
+        session,
+        journey,
+        command=command,
+        requested_autonomy="PLAN_ONLY",
+        trigger_event_id=trigger_event_id,
+        use_model_draft=False,
+    )
+    objective_codes = json.loads(mission.objective_codes_json or "[]")
+    if "COLLECTIVE_JOURNEY_RECOVERY" not in objective_codes:
+        objective_codes.append("COLLECTIVE_JOURNEY_RECOVERY")
+    mission.objective_codes_json = json.dumps(objective_codes, ensure_ascii=False)
+    intent = json.loads(mission.intent_json or "{}")
+    intent["objective_codes"] = objective_codes
+    mission.intent_json = json.dumps(intent, ensure_ascii=False, sort_keys=True)
+    resolved = json.loads(mission.resolved_intent_json or "{}")
+    resolved["objective_codes"] = objective_codes
+    group_context = {
+        "kind": "R58_SPLIT_GROUP_RECOVERY",
+        "incident_key": incident_key,
+        "source_authority": (
+            "ADVISORY_FOREGROUND_WEB"
+            if recovery.get("state") == "ADVISORY_MEMBER_LATE"
+            else "TRUSTED_MEMBER_LOCATION"
+        ),
+        "affected_member_id": affected.get("member_id"),
+        "affected_display_name": affected.get("display_name"),
+        "route_eta_minutes": affected.get("eta_minutes"),
+        "route_provenance": affected.get("route_provenance"),
+        "route_evidence_state": affected.get("route_evidence_state"),
+        "rendezvous_activity_id": commitment.get("activity_id"),
+        "rendezvous_title": commitment.get("title"),
+        "slack_after_buffer_min": commitment.get("slack_after_buffer_min"),
+        "active_plan_version_id": journey.active_plan_version_id,
+        "requested_by_member_id": requester.id,
+        "incident_key_version": "JOURNEY_PLAN_MEMBER_RENDEZVOUS_V1",
+    }
+    resolved["group_recovery"] = group_context
+    mission.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+    session.commit()  # Durable mission exists before asking the external runtime to start.
+
+    try:
+        native_status = native_hermes_status()
+    except httpx.HTTPError:
+        native_status = {"ready": False, "provider": settings.hermes_native_provider, "model": settings.hermes_native_model}
+    if not native_status.get("ready"):
+        mission.status = "FAILED_EXTERNAL"
+        mission.failure_reason = "NATIVE_HERMES_UNAVAILABLE_FOR_GROUP_RECOVERY"
+        mission.completed_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+        return {
+            "status": "RECOVERY_EXTERNAL_AGENT_BLOCKED",
+            "reused": False,
+            "mission": {"id": mission.id, "status": mission.status, "failure_reason": mission.failure_reason},
+            "run": None,
+            "group_recovery": recovery,
+        }
+
+    native = HermesNativeClient()
+    try:
+        native_plan = mission_plan_for_model(mission)
+        native_run = native.create_run(
+            mission_id=mission.id,
+            journey_id=journey.id,
+            input_text=command,
+            instructions=(
+                "This is a user-requested group recovery assessment. Use only CityNexus MCP tools and the supplied PLAN_ONLY authority envelope. "
+                "Inspect the Journey and Twin, then choose whether to keep the plan, prepare one grounded group-impacting proposal, or recommend no action. "
+                "The affected member's location authority is " + group_context["source_authority"] + ". "
+                "The server-derived context is " + json.dumps(group_context, ensure_ascii=False, sort_keys=True) + ". "
+                "FOREGROUND_WEB is advisory and must never be upgraded to verified physical presence. "
+                "Do not expose coordinates or observation identifiers. Never accept, execute, book, pay, or mutate; normal collective authority and approval remain required. "
+                f"For CityNexus MCP calls use journey_id {journey.id} and mission_id {mission.id}. "
+                "Use one tool at a time and do not assume a recovery action is required."
+            ),
+            autonomy="PLAN_ONLY",
+            mission_plan=native_plan,
+            session_id=f"citynexus-{journey.id}-mission-{mission.id}",
+        )
+        resolved = json.loads(mission.resolved_intent_json or "{}")
+        resolved_group = resolved.get("group_recovery", {})
+        resolved_group["hermes_run_id"] = native_run.run_id
+        resolved["group_recovery"] = resolved_group
+        mission.resolved_intent_json = json.dumps(resolved, ensure_ascii=False, sort_keys=True)
+        mission.status = "RUNNING"
+        mission.started_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+        initial_events = _native_citynexus_events(
+            run_id=native_run.run_id,
+            journey_id=journey.id,
+            mission=mission,
+        )
+        record_audit(
+            session,
+            action="journey.group_recovery.hermes_started",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
+            journey_id=journey.id,
+            actor_type="USER",
+            actor_id=principal.traveler_id,
+            after={
+                "requester_member_id": requester.id,
+                "incident_key": incident_key,
+                "mission_id": mission.id,
+                "runtime_identity": "HERMES_NATIVE_MCP",
+                "autonomy": "PLAN_ONLY",
+            },
+        )
+        session.commit()
+        return {
+            "status": "RECOVERY_OPTIONS_READY",
+            "reused": False,
+            "mission": {"id": mission.id, "status": mission.status},
+            "run": {
+                "run_id": native_run.run_id,
+                "status": native_run.status.upper(),
+                "runtime_identity": "HERMES_NATIVE_MCP",
+                "provider_key": "hermes-native",
+                "model_key": settings.hermes_native_model or f"profile:{settings.hermes_native_profile}",
+                "events_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/events",
+                "timeline_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/timeline",
+                "mission_plan": native_plan,
+                "initial_events": initial_events,
+            },
+            "group_recovery": recovery,
+        }
+    except (httpx.HTTPError, ValueError) as exc:
+        mission.status = "FAILED_EXTERNAL"
+        mission.failure_reason = f"NATIVE_HERMES_GROUP_RECOVERY_START_FAILED:{type(exc).__name__}"
+        mission.completed_at = datetime.now(timezone.utc).isoformat()
+        session.commit()
+        return {
+            "status": "RECOVERY_EXTERNAL_AGENT_BLOCKED",
+            "reused": False,
+            "mission": {"id": mission.id, "status": mission.status, "failure_reason": mission.failure_reason},
+            "run": None,
+            "group_recovery": recovery,
+        }
+    finally:
+        native.close()
+
+
+def _group_recovery_lineage_context(
+    session: Session, mission_id: str | None
+) -> tuple[JourneyMission | None, dict[str, Any]]:
+    """Find the durable R58 root without trusting client-supplied lineage ids.
+
+    Re-consent children intentionally carry the same group-recovery context so
+    they can project the incident.  Returning the first matching child would
+    relabel that successor as the root and lose the original incident lineage.
+    Walk all the way up and keep the oldest matching context instead.
+    """
+    current = session.get(JourneyMission, str(mission_id)) if mission_id else None
+    seen: set[str] = set()
+    root: JourneyMission | None = None
+    root_context: dict[str, Any] = {}
+    while current is not None and current.id not in seen:
+        seen.add(current.id)
+        intent = _json_object(current.resolved_intent_json or "{}")
+        context = intent.get("group_recovery") if isinstance(intent, dict) else None
+        if isinstance(context, dict) and context.get("incident_key"):
+            root = current
+            root_context = dict(context)
+        current = (
+            session.get(JourneyMission, str(current.parent_mission_id))
+            if current.parent_mission_id
+            else None
+        )
+    return root, root_context
+
+
+def _group_recovery_room_for_incident(
+    session: Session, journey: Journey, incident_key: str
+) -> tuple[JourneyMission, dict[str, Any], JourneyMission, dict[str, Any]] | None:
+    for mission in session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(False),
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all():
+        clarification = _json_object(mission.clarification_json or "{}")
+        if clarification.get("kind") != "COLLECTIVE_TRADEOFF":
+            continue
+        root, group_context = _group_recovery_lineage_context(session, mission.id)
+        if (
+            root is not None
+            and str(group_context.get("incident_key") or "") == str(incident_key)
+        ):
+            return mission, clarification, root, group_context
+    return None
+
+
+def _is_group_recovery_collective_proposal(
+    session: Session, proposal: ReplanProposalModel
+) -> bool:
+    if proposal.source_agent_run_id:
+        run = session.get(AgentRun, str(proposal.source_agent_run_id))
+        if run is not None:
+            _root, context = _group_recovery_lineage_context(session, run.mission_id)
+            if context:
+                return True
+    for mission in session.scalars(
+        select(JourneyMission).where(JourneyMission.journey_id == proposal.journey_id)
+    ).all():
+        clarification = _json_object(mission.clarification_json or "{}")
+        option_ids = {
+            str(item.get("proposal_id") or "")
+            for item in clarification.get("candidate_options") or []
+            if isinstance(item, dict)
+        }
+        if str(proposal.id) not in option_ids:
+            continue
+        _root, context = _group_recovery_lineage_context(session, mission.id)
+        if context:
+            return True
+    return False
+
+
+def _group_recovery_reconsent_round(
+    session: Session,
+    journey: Journey,
+    stale_mission: JourneyMission,
+    stale_clarification: dict[str, Any],
+    root_mission: JourneyMission,
+    group_context: dict[str, Any],
+    *,
+    stale_reason: str,
+) -> dict[str, Any]:
+    """Preserve stale consent and create/reuse one server-derived successor room."""
+    from app.collective_mediation import collective_decision_epoch, collective_material_world_epoch
+
+    old_id = str(stale_clarification.get("clarification_id") or "")
+    stale_clarification["status"] = "STALE"
+    stale_clarification["stale_reason"] = stale_reason
+    stale_clarification["staled_at"] = datetime.now(timezone.utc).isoformat()
+    stale_mission.clarification_json = json.dumps(
+        stale_clarification, ensure_ascii=False, sort_keys=True
+    )
+    old_receipt_id = str(stale_clarification.get("authority_receipt_id") or "")
+    if old_receipt_id:
+        from app.db.models import CollectiveAuthorityReceipt
+
+        old_receipt = session.get(CollectiveAuthorityReceipt, old_receipt_id)
+        if old_receipt is not None and old_receipt.invalidated_at is None:
+            old_receipt.invalidated_at = datetime.now(timezone.utc).isoformat()
+            old_receipt.invalidation_code = stale_reason[:120]
+
+    trigger_id = str(stale_clarification.get("trigger_event_id") or "")
+    current_recovery_epoch = ensure_recovery_epoch(session, journey)
+    proposals = session.scalars(
+        select(ReplanProposalModel)
+        .where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == trigger_id,
+            ReplanProposalModel.base_plan_version_id == journey.active_plan_version_id,
+            ReplanProposalModel.recovery_epoch_id == current_recovery_epoch.id,
+            ReplanProposalModel.status == "PRESENTED",
+        )
+        .order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    proposal_receipt = collective_proposal_receipt(session, journey, proposals)
+    mediation = proposal_receipt.get("collective_mediation") or {}
+    options: list[dict[str, Any]] = []
+    seen_shapes: set[str] = set()
+    for item in (proposal_receipt.get("proposal_collective_decisions") or {}).values():
+        if item.get("status") != "GROUNDED_FEASIBLE":
+            continue
+        proposal_id = str(item.get("proposal_id") or "")
+        proposal = session.get(ReplanProposalModel, proposal_id)
+        plan = session.get(PlanVersion, str(item.get("plan_id") or ""))
+        if (
+            proposal is None
+            or plan is None
+            or proposal.status != "PRESENTED"
+            or proposal.base_plan_version_id != journey.active_plan_version_id
+        ):
+            continue
+        shape = json.dumps(
+            {
+                "places": sorted({str(value) for value in item.get("fit_subject_place_ids") or [] if value}),
+                "tags": sorted({str(value).strip().lower() for value in item.get("fit_subject_tags") or [] if str(value).strip()}),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        shape_key = shape if shape != "{}" else str(plan.id)
+        if shape_key in seen_shapes:
+            continue
+        seen_shapes.add(shape_key)
+        item["material_world_epoch"] = collective_material_world_epoch(
+            collective_material_world_basis(
+                session,
+                journey,
+                plan,
+                fit_subject_place_ids=list(item.get("fit_subject_place_ids") or []),
+            )
+        )
+        options.append(item)
+
+    member_projection = active_journey_members_with_capabilities(session, journey)
+    members = member_projection.get("members", [])
+    member_by_id = {str(item.get("member_id")): item for item in members}
+    relevant_ids = {
+        str(item)
+        for item in mediation.get("decision_relevant_member_ids") or []
+    }
+    required_ids = sorted(
+        member_id
+        for member_id in relevant_ids
+        if bool(member_by_id.get(member_id, {}).get("can_authorize_mutation"))
+    )
+    if len(options) < 2 or not required_ids:
+        session.commit()
+        return {
+            "available": False,
+            "reason": (
+                "CURRENT_GROUNDED_OPTIONS_INSUFFICIENT"
+                if len(options) < 2
+                else "AUTHORIZED_MEMBER_REQUIRED"
+            ),
+            "mission_id": None,
+            "clarification_id": None,
+        }
+
+    fingerprint = candidate_surface_fingerprint(
+        proposal_receipt.get("candidate_fit_matrix") or []
+    )
+    generation = int(stale_clarification.get("reconsent_generation") or 0) + 1
+    for existing in session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.parent_mission_id == stale_mission.id,
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all():
+        existing_context = _json_object(existing.resolved_intent_json or "{}").get("group_recovery")
+        existing_round = _json_object(existing.clarification_json or "{}")
+        if not (
+            isinstance(existing_context, dict)
+            and str(existing_context.get("reconsent_for_clarification_id") or "") == old_id
+            and existing_round.get("kind") == "COLLECTIVE_TRADEOFF"
+        ):
+            continue
+        current_epoch = collective_decision_epoch(
+            journey_id=journey.id,
+            mission_id=existing.id,
+            trigger_event_id=trigger_id,
+            base_plan_version_id=journey.active_plan_version_id,
+            options=options,
+            required_member_ids=required_ids,
+            decision_relevant_member_ids=sorted(relevant_ids),
+            members=members,
+        )
+        if (
+            existing_round.get("status") == "WAITING_FOR_MEMBERS"
+            and existing_round.get("decision_epoch") == current_epoch
+            and existing_round.get("candidate_surface_fingerprint") == fingerprint
+        ):
+            session.commit()
+            return {
+                "available": True,
+                "reused": True,
+                "mission_id": existing.id,
+                "clarification_id": existing_round.get("clarification_id"),
+                "required_member_count": len(required_ids),
+            }
+        if existing_round.get("status") != "STALE":
+            existing_round["status"] = "STALE"
+            existing_round["stale_reason"] = "SUCCESSOR_DECISION_EPOCH_CHANGED"
+            existing.clarification_json = json.dumps(existing_round, ensure_ascii=False, sort_keys=True)
+
+    successor = create_mission(
+        session,
+        journey,
+        command="Reconsider the current shared recovery because the previous consent became stale.",
+        requested_autonomy=stale_mission.requested_autonomy,
+        trigger_event_id=trigger_id or stale_mission.trigger_event_id,
+        parent_mission_id=stale_mission.id,
+        use_model_draft=False,
+    )
+    successor.max_cost_delta_minor = stale_mission.max_cost_delta_minor
+    successor.max_loss_minor = stale_mission.max_loss_minor
+    successor.max_schedule_drift_min = stale_mission.max_schedule_drift_min
+    successor.protected_activity_ids_json = stale_mission.protected_activity_ids_json
+    successor.mutable_activity_ids_json = stale_mission.mutable_activity_ids_json
+    successor.allowed_action_classes_json = stale_mission.allowed_action_classes_json
+    successor.status = "WAITING_FOR_MEMBERS"
+    successor.completed_at = None
+    successor.started_at = datetime.now(timezone.utc).isoformat()
+    successor_context = {
+        **group_context,
+        "reconsent_for_clarification_id": old_id,
+        "reconsent_generation": generation,
+        "reconsent_recovery_epoch_id": current_recovery_epoch.id,
+    }
+    successor.resolved_intent_json = json.dumps(
+        {"group_recovery": successor_context}, ensure_ascii=False, sort_keys=True
+    )
+    decision_epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=successor.id,
+        trigger_event_id=trigger_id,
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=required_ids,
+        decision_relevant_member_ids=sorted(relevant_ids),
+        members=members,
+    )
+    successor.clarification_json = json.dumps(
+        {
+            "kind": "COLLECTIVE_TRADEOFF",
+            "policy": "MATERIAL_TRADEOFF_REQUIRES_ALL_RELEVANT_MEMBER_RESPONSES",
+            "clarification_id": str(uuid4()),
+            "decision_epoch": decision_epoch,
+            "candidate_surface_fingerprint": fingerprint,
+            "trigger_event_id": trigger_id,
+            "base_plan_version_id": journey.active_plan_version_id,
+            "candidate_options": options,
+            "required_member_ids": required_ids,
+            "decision_relevant_member_ids": sorted(relevant_ids),
+            "responses": {},
+            "status": "WAITING_FOR_MEMBERS",
+            "selected_proposal_id": None,
+            "selected_candidate_id": None,
+            "reconsent_generation": generation,
+            "supersedes_clarification_id": old_id,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    record_audit(
+        session,
+        action="journey.group_recovery.reconsent.started",
+        entity_type="JourneyMission",
+        entity_id=successor.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        actor_id="group-recovery-reconsent",
+        after={
+            "supersedes_mission_id": stale_mission.id,
+            "supersedes_clarification_id": old_id,
+            "incident_key": group_context.get("incident_key"),
+            "required_member_ids": required_ids,
+            "decision_epoch": decision_epoch,
+            "candidate_surface_fingerprint": fingerprint,
+            "recovery_epoch_id": current_recovery_epoch.id,
+        },
+    )
+    session.commit()
+    return {
+        "available": True,
+        "reused": False,
+        "mission_id": successor.id,
+        "clarification_id": _json_object(successor.clarification_json).get("clarification_id"),
+        "required_member_count": len(required_ids),
+    }
+
+
+def _group_recovery_reconsent_code(detail: Any) -> str | None:
+    """Return a consent-staleness code only when another human round can help.
+
+    A 409 from the generic replan accept path is not automatically stale
+    consent. Feasibility, mobility, protected-commitment, or cursor failures
+    mean the proposal itself must be replanned/revalidated; asking the same
+    humans to vote again would launder an unexecutable future into a new room.
+    """
+
+    if isinstance(detail, Mapping):
+        raw = str(detail.get("code") or "")
+    else:
+        raw = str(detail or "")
+    code = raw.split(":", 1)[0].strip()
+    exact = {
+        "STALE_COLLECTIVE_DECISION",
+        "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE",
+        "COLLECTIVE_CONSENT_EPOCH_STALE",
+        "COLLECTIVE_TRADEOFF_UNRESOLVED",
+        "COLLECTIVE_CANDIDATE_NOT_SELECTED",
+        "COLLECTIVE_MEDIATION_RENEWED_CONSENT_REQUIRED",
+        "RECOVERY_EPOCH_SUPERSEDED",
+        "COLLECTIVE_AUTHORITY_RECEIPT_CHANGED_BEFORE_MUTATION",
+    }
+    prefixes = (
+        "COLLECTIVE_AUTHORITY_RECEIPT_",
+        "COLLECTIVE_AUTHORITY_SURFACE_",
+    )
+    if code in exact or any(code.startswith(prefix) for prefix in prefixes):
+        return code
+    return None
+
+
+def _group_recovery_stale_or_replan_detail(
+    *, cause: str, reconsent: Mapping[str, Any]
+) -> dict[str, Any]:
+    if bool(reconsent.get("available")):
+        return {
+            "code": "COLLECTIVE_CONSENT_STALE_RECONSENT_REQUIRED",
+            "cause": cause,
+            "reconsent": dict(reconsent),
+        }
+    return {
+        "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
+        "cause": cause,
+        "plan_unchanged": True,
+        "consent_stale": True,
+        "reconsent": dict(reconsent),
+    }
+
+
+def _group_recovery_conflict(detail: Mapping[str, Any]) -> HTTPException:
+    """Expose a typed group-recovery conflict through CityNexus' error envelope."""
+
+    payload = dict(detail)
+    code = str(payload.get("code") or "GROUP_RECOVERY_CONFLICT")
+    exc = HTTPException(409, code)
+    exc.reason_code = code
+    exc.error_details = payload
+    return exc
+
+
+def _group_recovery_failure_class(detail: Any) -> str:
+    """Collapse internal apply failures into a small, safe product vocabulary."""
+
+    raw = str(detail.get("code") or "") if isinstance(detail, Mapping) else str(detail or "")
+    value = raw.casefold()
+    if "recovery_epoch" in value or "recovery epoch" in value:
+        return "RECOVERY_EPOCH_CHANGED"
+    if "protected" in value or "commitment" in value or "c4" in value:
+        return "PROTECTED_COMMITMENT_CHANGED"
+    if "mobility" in value or "route evidence" in value:
+        return "MOBILITY_EVIDENCE_INVALID"
+    if "cursor" in value or "current activity" in value or "execution state" in value:
+        return "EXECUTION_CURSOR_CHANGED"
+    if "feasib" in value or "constraint" in value or "schedule" in value:
+        return "FEASIBILITY_CHANGED"
+    if "proposal" in value or "trigger" in value or "base plan" in value:
+        return "PROPOSAL_NO_LONGER_CURRENT"
+    return "UNKNOWN_FAIL_CLOSED"
+
+
+def _group_recovery_reground_mission_for_key(
+    session: Session, journey_id: str, reground_key: str
+) -> JourneyMission | None:
+    for mission in session.scalars(
+        select(JourneyMission)
+        .where(
+            JourneyMission.journey_id == journey_id,
+            JourneyMission.is_standing.is_(False),
+        )
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    ).all():
+        context = _json_object(mission.resolved_intent_json or "{}").get("group_recovery")
+        if isinstance(context, dict) and context.get("reground_key") == reground_key:
+            return mission
+    return None
+
+
+def _group_recovery_reground_state(mission: JourneyMission | None) -> str:
+    if mission is None:
+        return "RECOVERY_REPLAN_REQUIRED"
+    if mission.status == "FAILED_EXTERNAL":
+        return "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+    if mission.status in {"CREATED", "RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}:
+        return "RECOVERY_REGROUNDING"
+    return "RECOVERY_REGROUNDED"
+
+
+def _group_recovery_reground_after_failed_apply(
+    session: Session,
+    request: Request,
+    journey_id: str,
+    room_id: str,
+    root_mission_id: str,
+    proposal_id: str,
+    *,
+    failure_detail: Any,
+) -> dict[str, Any]:
+    """Durably retire an unexecutable group choice and start one PLAN_ONLY re-ground.
+
+    The helper is called only after the failed apply transaction is rolled back.
+    It preserves old member answers as history, invalidates their spend receipt,
+    binds the next mission to the currently open RecoveryEpoch, and never accepts
+    or activates a proposal.
+    """
+
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    now = datetime.now(timezone.utc).isoformat()
+    journey = require(session, Journey, journey_id, "Journey")
+    room = require(session, JourneyMission, room_id, "Journey mission")
+    root = require(session, JourneyMission, root_mission_id, "Journey mission")
+    proposal = session.get(ReplanProposalModel, proposal_id)
+    if proposal is None:
+        raise HTTPException(409, "GROUP_RECOVERY_FAILED_PROPOSAL_UNAVAILABLE")
+    principal, requester = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    clarification = _json_object(room.clarification_json or "{}")
+    root_context = _json_object(root.resolved_intent_json or "{}").get("group_recovery")
+    if not isinstance(root_context, dict):
+        root_context = {}
+    incident_key = str(root_context.get("incident_key") or "")
+    cause_class = _group_recovery_failure_class(failure_detail)
+    cause_detail = str(
+        failure_detail.get("code") or failure_detail
+        if isinstance(failure_detail, Mapping)
+        else failure_detail
+    )[:500]
+
+    # R61 continuation is only justified when the original user-requested
+    # group recovery is still the same live incident and a current member can
+    # authorize eventual Journey mutation. Planning itself remains PLAN_ONLY.
+    presence = group_presence_projection(session, journey, viewer_member_id=requester.id)
+    recovery = group_recovery_projection(presence)
+    affected = recovery.get("affected_member")
+    commitment = recovery.get("shared_commitment")
+    current_incident = (
+        group_recovery_incident_key(
+            journey_id=journey.id,
+            active_plan_version_id=str(journey.active_plan_version_id or ""),
+            affected_member_id=str(affected.get("member_id") or ""),
+            rendezvous_activity_id=str(commitment.get("activity_id") or ""),
+        )
+        if isinstance(affected, dict) and isinstance(commitment, dict) and journey.active_plan_version_id
+        else ""
+    )
+    member_projection = active_journey_members_with_capabilities(session, journey)
+    has_authorized_member = any(
+        bool(item.get("can_authorize_mutation"))
+        for item in member_projection.get("members", [])
+        if isinstance(item, dict)
+    )
+    may_continue = bool(
+        journey.status == "ACTIVE"
+        and journey.active_plan_version_id
+        and root_context.get("requested_by_member_id")
+        and incident_key
+        and incident_key == current_incident
+        and recovery.get("can_request_planning")
+        and has_authorized_member
+        and member_has_capability(session, requester, "JOURNEY_UPDATE")
+    )
+
+    current_epoch = ensure_recovery_epoch(session, journey)
+    reground_key = f"group-recovery-reground:{journey.id}:{incident_key}:{current_epoch.id}"
+
+    # A later world generation supersedes any still-running older re-ground;
+    # it does not reuse its proposals or human responses.
+    for older in session.scalars(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(False),
+        )
+    ).all():
+        older_context = _json_object(older.resolved_intent_json or "{}").get("group_recovery")
+        if not (
+            isinstance(older_context, dict)
+            and older_context.get("kind") == "R61_REGROUNDED_COLLECTIVE_RECOVERY"
+            and older_context.get("incident_key") == incident_key
+            and older_context.get("recovery_epoch_id") != current_epoch.id
+            and older.status in {"CREATED", "RUNNING", "WAITING_FOR_APPROVAL", "WAITING_FOR_MEMBERS"}
+        ):
+            continue
+        older.status = "SUPERSEDED"
+        older.failure_reason = "RECOVERY_EPOCH_SUPERSEDED"
+        older.completed_at = now
+        older_clarification = _json_object(older.clarification_json or "{}")
+        older_clarification["state"] = "STALE"
+        older_clarification["stale_reason"] = "RECOVERY_EPOCH_SUPERSEDED"
+        older.clarification_json = json.dumps(older_clarification, ensure_ascii=False, sort_keys=True)
+
+    old_clarification_id = str(clarification.get("clarification_id") or "")
+    old_receipt_id = str(clarification.get("authority_receipt_id") or "")
+    if not old_receipt_id:
+        for child in session.scalars(
+            select(JourneyMission).where(JourneyMission.parent_mission_id == room.id)
+        ).all():
+            decision = _json_object(child.resolved_intent_json or "{}").get("collective_decision")
+            if (
+                isinstance(decision, dict)
+                and str(decision.get("clarification_id") or "") == old_clarification_id
+            ):
+                old_receipt_id = str(decision.get("authority_receipt_id") or "")
+                if old_receipt_id:
+                    break
+    clarification["status"] = "STALE"
+    clarification["stale_reason"] = "RECOVERY_PLAN_UNEXECUTABLE"
+    clarification["stale_cause_class"] = cause_class
+    clarification["staled_at"] = clarification.get("staled_at") or now
+    clarification["r61_state"] = "RECOVERY_REPLAN_REQUIRED"
+    clarification["r61_reground_key"] = reground_key
+    clarification["r61_recovery_epoch_id"] = current_epoch.id
+    room.clarification_json = json.dumps(clarification, ensure_ascii=False, sort_keys=True)
+
+    receipt = session.get(CollectiveAuthorityReceipt, old_receipt_id) if old_receipt_id else None
+    if receipt is not None and receipt.invalidated_at is None:
+        receipt.invalidated_at = now
+        receipt.invalidation_code = "RECOVERY_PLAN_UNEXECUTABLE"
+    if proposal.status == "PRESENTED":
+        proposal.status = "INVALIDATED"
+    failed_plan = session.get(PlanVersion, str(proposal.proposed_plan_version_id or ""))
+    if failed_plan is not None and failed_plan.status == "CANDIDATE":
+        failed_plan.status = "REJECTED"
+
+    existing_transition = None
+    for audit in session.scalars(
+        select(AuditLog)
+        .where(
+            AuditLog.journey_id == journey.id,
+            AuditLog.action == "journey.group_recovery.replan_required",
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    ).all():
+        after = _json_object(audit.after_json or "{}")
+        if after.get("reground_key") == reground_key:
+            existing_transition = after
+            break
+    if existing_transition is None:
+        record_audit(
+            session,
+            action="journey.group_recovery.replan_required",
+            entity_type="ReplanProposal",
+            entity_id=proposal.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            actor_id="group-recovery-apply",
+            after={
+                "kind": "GROUP_RECOVERY_REPLAN_REQUIRED",
+                "incident_key": incident_key,
+                "failed_proposal_id": proposal.id,
+                "failed_decision_mission_id": room.id,
+                "old_clarification_id": old_clarification_id,
+                "old_authority_receipt_id": old_receipt_id or None,
+                "old_recovery_epoch_id": proposal.recovery_epoch_id,
+                "current_recovery_epoch_id": current_epoch.id,
+                "current_recovery_epoch_generation": current_epoch.generation,
+                "old_active_plan_version_id": journey.active_plan_version_id,
+                "cause_class": cause_class,
+                "cause": cause_detail,
+                "reground_key": reground_key,
+                "plan_unchanged": True,
+            },
+        )
+
+    reground_mission = _group_recovery_reground_mission_for_key(
+        session, journey.id, reground_key
+    )
+    reground_reused = reground_mission is not None
+    if reground_mission is None and may_continue:
+        command = (
+            "Re-ground the previously requested shared Journey recovery against the current reality. "
+            "Inspect the current Journey, member-specific context, protected commitments, and only current grounded options. "
+            "Use PLAN_ONLY authority; propose no mutation, booking, payment, or commitment change. "
+            "If the current evidence does not support a safe shared option, say so rather than reusing stale proposals or answers."
+        )
+        trigger_id = str(clarification.get("trigger_event_id") or room.trigger_event_id or "") or None
+        reground_mission = create_mission(
+            session,
+            journey,
+            command=command,
+            requested_autonomy="PLAN_ONLY",
+            trigger_event_id=trigger_id,
+            parent_mission_id=room.id,
+            use_model_draft=False,
+        )
+        # The deterministic primary key makes incident+epoch idempotency
+        # durable even if a retry lands on another API process.
+        reground_mission.id = str(uuid5(NAMESPACE_URL, reground_key))
+        try:
+            objective_codes = json.loads(reground_mission.objective_codes_json or "[]")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            objective_codes = []
+        reground_mission.objective_codes_json = json.dumps(
+            sorted(set(objective_codes if isinstance(objective_codes, list) else []) | {
+                "COLLECTIVE_JOURNEY_RECOVERY",
+                "COLLECTIVE_RECOVERY_REGROUND",
+            }),
+            ensure_ascii=False,
+        )
+        reground_mission.parent_mission_id = room.id
+        reground_mission.max_cost_delta_minor = min(
+            int(root.max_cost_delta_minor), int(room.max_cost_delta_minor)
+        )
+        reground_mission.max_loss_minor = min(int(root.max_loss_minor), int(room.max_loss_minor))
+        reground_mission.max_schedule_drift_min = min(
+            int(root.max_schedule_drift_min), int(room.max_schedule_drift_min)
+        )
+        reground_mission.protected_activity_ids_json = root.protected_activity_ids_json
+        reground_mission.mutable_activity_ids_json = root.mutable_activity_ids_json
+        reground_mission.allowed_action_classes_json = '["REQUEST_REPLAN"]'
+        reground_context = {
+            **root_context,
+            "kind": "R61_REGROUNDED_COLLECTIVE_RECOVERY",
+            "incident_key": incident_key,
+            "reground_key": reground_key,
+            "reground_generation": current_epoch.generation,
+            "recovery_epoch_id": current_epoch.id,
+            "recovery_epoch_generation": current_epoch.generation,
+            "failed_decision_mission_id": room.id,
+            "failed_clarification_id": old_clarification_id,
+            "failed_proposal_id": proposal.id,
+            "failed_authority_receipt_id": old_receipt_id or None,
+            "cause_class": cause_class,
+            "active_plan_version_id": journey.active_plan_version_id,
+            "hermes_run_id": None,
+        }
+        reground_resolved = _json_object(reground_mission.resolved_intent_json or "{}")
+        reground_resolved["objective_codes"] = json.loads(reground_mission.objective_codes_json)
+        reground_resolved["group_recovery"] = reground_context
+        reground_mission.resolved_intent_json = json.dumps(
+            reground_resolved, ensure_ascii=False, sort_keys=True
+        )
+        reground_intent = _json_object(reground_mission.intent_json or "{}")
+        reground_intent["objective_codes"] = json.loads(reground_mission.objective_codes_json)
+        reground_mission.intent_json = json.dumps(reground_intent, ensure_ascii=False, sort_keys=True)
+        reground_mission.clarification_json = json.dumps(
+            {
+                "kind": "GROUP_RECOVERY_REGROUND",
+                "state": "RECOVERY_REGROUNDING",
+                "incident_key": incident_key,
+                "reground_key": reground_key,
+                "failed_proposal_id": proposal.id,
+                "old_clarification_id": old_clarification_id,
+                "recovery_epoch_id": current_epoch.id,
+                "recovery_epoch_generation": current_epoch.generation,
+                "plan_unchanged": True,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        reground_mission.started_at = now
+        reground_mission.status = "CREATED"
+        session.flush()
+        record_audit(
+            session,
+            action="journey.group_recovery.reground.created",
+            entity_type="JourneyMission",
+            entity_id=reground_mission.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            actor_id="group-recovery-reground",
+            after={
+                "incident_key": incident_key,
+                "reground_key": reground_key,
+                "failed_proposal_id": proposal.id,
+                "old_clarification_id": old_clarification_id,
+                "recovery_epoch_id": current_epoch.id,
+                "recovery_epoch_generation": current_epoch.generation,
+                "requested_autonomy": "PLAN_ONLY",
+            },
+        )
+        session.commit()  # The bounded re-ground mission is durable before Hermes is contacted.
+
+        try:
+            native_status = native_hermes_status()
+        except httpx.HTTPError:
+            native_status = {
+                "ready": False,
+                "provider": settings.hermes_native_provider,
+                "model": settings.hermes_native_model,
+            }
+        if not native_status.get("ready"):
+            reground_mission.status = "FAILED_EXTERNAL"
+            reground_mission.failure_reason = "NATIVE_HERMES_UNAVAILABLE_FOR_GROUP_RECOVERY_REGROUND"
+            reground_mission.completed_at = datetime.now(timezone.utc).isoformat()
+            reground_state = _json_object(reground_mission.clarification_json or "{}")
+            reground_state["state"] = "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+            reground_mission.clarification_json = json.dumps(
+                reground_state, ensure_ascii=False, sort_keys=True
+            )
+            session.commit()
+        else:
+            native = HermesNativeClient()
+            try:
+                native_plan = mission_plan_for_model(reground_mission)
+                if "accept_replan" in native_plan.get("allowed_tools", []):
+                    raise RuntimeError("PLAN_ONLY_REGROUND_EXPOSED_ACCEPT_REPLAN")
+                native_run = native.create_run(
+                    mission_id=reground_mission.id,
+                    journey_id=journey.id,
+                    input_text=command,
+                    instructions=(
+                        "This is a bounded R61 re-grounding continuation of an already requested collective recovery. "
+                        "Inspect current Journey/Twin and current grounded proposals; old proposals and member answers are history only. "
+                        "Use current provider facts and deterministic feasibility. You may prepare current proposals but never accept, execute, book, pay, or mutate. "
+                        "Only request a new collective decision if the current server classification is HUMAN_TRADEOFF_REQUIRED with at least two current grounded feasible options. "
+                        f"For CityNexus MCP calls use journey_id {journey.id} and mission_id {reground_mission.id}."
+                    ),
+                    autonomy="PLAN_ONLY",
+                    mission_plan=native_plan,
+                    session_id=f"citynexus-{journey.id}-mission-{reground_mission.id}",
+                )
+                current_resolved = _json_object(reground_mission.resolved_intent_json or "{}")
+                current_context = current_resolved.get("group_recovery")
+                if isinstance(current_context, dict):
+                    current_context["hermes_run_id"] = native_run.run_id
+                    current_resolved["group_recovery"] = current_context
+                reground_mission.resolved_intent_json = json.dumps(
+                    current_resolved, ensure_ascii=False, sort_keys=True
+                )
+                reground_mission.status = "RUNNING"
+                reground_mission.started_at = datetime.now(timezone.utc).isoformat()
+                session.commit()
+                record_audit(
+                    session,
+                    action="journey.group_recovery.reground.started",
+                    entity_type="JourneyMission",
+                    entity_id=reground_mission.id,
+                    journey_id=journey.id,
+                    actor_type="SYSTEM",
+                    actor_id="group-recovery-reground",
+                    after={
+                        "incident_key": incident_key,
+                        "reground_key": reground_key,
+                        "recovery_epoch_id": current_epoch.id,
+                        "runtime_identity": "HERMES_NATIVE_MCP",
+                        "autonomy": "PLAN_ONLY",
+                    },
+                )
+                session.commit()
+            except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                reground_mission.status = "FAILED_EXTERNAL"
+                reground_mission.failure_reason = (
+                    f"NATIVE_HERMES_GROUP_RECOVERY_REGROUND_START_FAILED:{type(exc).__name__}"
+                )
+                reground_mission.completed_at = datetime.now(timezone.utc).isoformat()
+                state = _json_object(reground_mission.clarification_json or "{}")
+                state["state"] = "RECOVERY_REGROUND_EXTERNAL_AGENT_BLOCKED"
+                reground_mission.clarification_json = json.dumps(
+                    state, ensure_ascii=False, sort_keys=True
+                )
+                session.commit()
+            finally:
+                native.close()
+        session.refresh(reground_mission)
+    elif reground_mission is None:
+        # Keep the old decision unspendable even when the incident has ended,
+        # the plan changed, or no member currently has mutation authority.
+        session.commit()
+
+    return {
+        "state": _group_recovery_reground_state(reground_mission) if may_continue else "RECOVERY_REPLAN_REQUIRED",
+        "mission_id": reground_mission.id if reground_mission is not None else None,
+        "mission_status": reground_mission.status if reground_mission is not None else None,
+        "reused": reground_reused,
+        "reground_key": reground_key,
+        "current_recovery_epoch_id": current_epoch.id,
+        "current_recovery_epoch_generation": current_epoch.generation,
+        "incident_key": incident_key,
+        "cause_class": cause_class,
+        "failed_proposal_id": proposal.id,
+        "old_clarification_id": old_clarification_id,
+        "plan_unchanged": journey.active_plan_version_id == str(root_context.get("active_plan_version_id") or journey.active_plan_version_id),
+    }
+
+
+def _group_recovery_reground_conflict(
+    session: Session,
+    request: Request,
+    journey: Journey,
+    room: JourneyMission,
+    root_mission: JourneyMission,
+    proposal_id: str,
+    *,
+    failure_detail: Any,
+) -> HTTPException:
+    reground = _group_recovery_reground_after_failed_apply(
+        session,
+        request,
+        journey.id,
+        room.id,
+        root_mission.id,
+        proposal_id,
+        failure_detail=failure_detail,
+    )
+    return _group_recovery_conflict(
+        {
+            "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
+            "state": reground["state"],
+            "cause_class": reground["cause_class"],
+            "plan_unchanged": True,
+            "reground": reground,
+        }
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/group-recovery/apply")
+def apply_group_recovery(
+    journey_id: UUID,
+    request: Request,
+    payload: GroupRecoveryApplyRequest,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    """Apply exactly the current server-selected recovery with signed member authority."""
+    del payload  # Strict empty schema: proposal, member and traveler ids are server-owned.
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        external_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+    internal_key = "gr-" + hashlib.sha256(
+        f"{journey.id}|{principal.traveler_id}|{external_key}".encode("utf-8")
+    ).hexdigest()[:60]
+    internal_scoped_key = f"replan.accept:{internal_key}"
+    with journey_write_lock(journey.id):
+        session.expire_all()
+        journey = require(session, Journey, journey.id, "Journey")
+        principal, member = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        if not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+
+        # The durable acceptance record is also the exactly-once record for this
+        # human apply action. Bind its key to Journey + authenticated Traveler,
+        # then verify the original selected proposal signature on replay.
+        existing = session.get(IdempotencyKey, internal_scoped_key)
+        if existing is not None:
+            stored_response = _json_object(existing.response_json or "{}")
+            stored_proposal = stored_response.get("proposal") if isinstance(stored_response, dict) else None
+            stored_proposal_id = str(stored_proposal.get("id") or "") if isinstance(stored_proposal, dict) else ""
+            expected_signature = canonical_request_signature({"proposal_id": stored_proposal_id})
+            if (
+                not stored_proposal_id
+                or existing.request_hash != expected_signature
+                or not isinstance(stored_proposal, dict)
+                or str(stored_proposal.get("journey_id") or "") != journey.id
+            ):
+                raise HTTPException(409, "group recovery idempotency record is invalid")
+            return {**stored_response, "replayed": True}
+
+        if journey.status != "ACTIVE" or not journey.active_plan_version_id:
+            raise HTTPException(409, "GROUP_RECOVERY_JOURNEY_NOT_ACTIVE")
+        current_presence = group_presence_projection(
+            session, journey, viewer_member_id=member.id
+        )
+        current_recovery = group_recovery_projection(current_presence)
+        affected = current_recovery.get("affected_member")
+        commitment = current_recovery.get("shared_commitment")
+        if (
+            not current_recovery.get("can_request_planning")
+            or not isinstance(affected, dict)
+            or not isinstance(commitment, dict)
+        ):
+            raise HTTPException(409, "GROUP_RECOVERY_INCIDENT_NO_LONGER_CURRENT")
+        incident_key = group_recovery_incident_key(
+            journey_id=journey.id,
+            active_plan_version_id=str(journey.active_plan_version_id),
+            affected_member_id=str(affected.get("member_id") or ""),
+            rendezvous_activity_id=str(commitment.get("activity_id") or ""),
+        )
+        room_match = _group_recovery_room_for_incident(
+            session, journey, incident_key
+        )
+        if room_match is not None:
+            room_match = (
+                room_match[0],
+                room_match[1],
+                room_match[2],
+                room_match[3],
+            )
+            room, clarification, root_mission, group_context = room_match
+            # Keep the stable server-owned incident identity authoritative even
+            # when the current risk projection has accrued newer observations.
+            if str(group_context.get("incident_key") or "") != incident_key:
+                room_match = None
+        if room_match is None:
+            raise HTTPException(409, "GROUP_RECOVERY_COLLECTIVE_ROOM_UNAVAILABLE")
+        room, clarification, root_mission, group_context = room_match
+        room_intent = _json_object(room.resolved_intent_json or "{}")
+        room_context = room_intent.get("group_recovery")
+
+        # A repeated stale attempt reuses the fresh successor that the first
+        # attempt created. It never rewrites old answers or chooses for members.
+        if clarification.get("status") != "RESOLVED":
+            if clarification.get("status") == "STALE":
+                if clarification.get("r61_state") == "RECOVERY_REPLAN_REQUIRED":
+                    reground = _group_recovery_reground_after_failed_apply(
+                        session,
+                        request,
+                        journey.id,
+                        room.id,
+                        root_mission.id,
+                        str(clarification.get("selected_proposal_id") or ""),
+                        failure_detail={
+                            "code": clarification.get("stale_cause_class") or "UNKNOWN_FAIL_CLOSED"
+                        },
+                    )
+                    raise _group_recovery_conflict(
+                        {
+                            "code": "GROUP_RECOVERY_REPLAN_REQUIRED",
+                            "state": reground["state"],
+                            "cause_class": reground["cause_class"],
+                            "plan_unchanged": True,
+                            "reground": reground,
+                        }
+                    )
+                reconsent = _group_recovery_reconsent_round(
+                    session,
+                    journey,
+                    room,
+                    clarification,
+                    root_mission,
+                    group_context,
+                    stale_reason=str(clarification.get("stale_reason") or "COLLECTIVE_CONSENT_STALE"),
+                )
+                raise _group_recovery_conflict(
+                    _group_recovery_stale_or_replan_detail(
+                        cause=str(
+                            clarification.get("stale_reason")
+                            or "COLLECTIVE_CONSENT_STALE"
+                        ),
+                        reconsent=reconsent,
+                    )
+                )
+            if (
+                clarification.get("status") == "WAITING_FOR_MEMBERS"
+                and isinstance(room_context, dict)
+                and room_context.get("reconsent_for_clarification_id")
+            ):
+                raise _group_recovery_conflict(
+                    {
+                        "code": "COLLECTIVE_CONSENT_RECONSENT_IN_PROGRESS",
+                        "reconsent": {
+                            "available": True,
+                            "reused": True,
+                            "mission_id": room.id,
+                            "clarification_id": clarification.get("clarification_id"),
+                            "required_member_count": len(
+                                clarification.get("required_member_ids") or []
+                            ),
+                        },
+                    }
+                )
+            raise HTTPException(409, "COLLECTIVE_TRADEOFF_UNRESOLVED")
+
+        trigger_id = str(clarification.get("trigger_event_id") or "")
+        proposal_id = str(clarification.get("selected_proposal_id") or "")
+        proposal = session.get(ReplanProposalModel, proposal_id)
+        trigger = session.get(EventModel, trigger_id) if trigger_id else None
+        if (
+            proposal is None
+            or proposal.journey_id != journey.id
+            or proposal.trigger_event_id != trigger_id
+            or proposal.status != "PRESENTED"
+            or proposal.base_plan_version_id != journey.active_plan_version_id
+            or trigger is None
+            or trigger.journey_id != journey.id
+            or trigger.status not in {"DETECTED", "ACKNOWLEDGED"}
+        ):
+            reconsent = _group_recovery_reconsent_round(
+                session,
+                journey,
+                room,
+                clarification,
+                root_mission,
+                group_context,
+                stale_reason="COLLECTIVE_SELECTED_PROPOSAL_OR_TRIGGER_STALE",
+            )
+            raise _group_recovery_conflict(
+                _group_recovery_stale_or_replan_detail(
+                    cause="COLLECTIVE_SELECTED_PROPOSAL_OR_TRIGGER_STALE",
+                    reconsent=reconsent,
+                )
+            )
+        child = None
+        for candidate in session.scalars(
+            select(JourneyMission)
+            .where(JourneyMission.parent_mission_id == room.id)
+            .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        ).all():
+            decision = _json_object(candidate.resolved_intent_json or "{}").get("collective_decision")
+            if (
+                isinstance(decision, dict)
+                and str(decision.get("clarification_id") or "")
+                == str(clarification.get("clarification_id") or "")
+                and str(decision.get("selected_proposal_id") or "") == proposal_id
+            ):
+                child = candidate
+                break
+        if child is None:
+            raise HTTPException(409, "COLLECTIVE_RESOLVED_CHILD_UNAVAILABLE")
+        try:
+            resolved = _collective_resolution_for_child(
+                session, journey, proposal, child.id
+            )
+            if not isinstance(resolved, dict):
+                raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_UNAVAILABLE")
+        except HTTPException as exc:
+            session.rollback()
+            if exc.status_code == 409:
+                room = require(session, JourneyMission, room.id, "Journey mission")
+                stale = _json_object(room.clarification_json or "{}")
+                reconsent = _group_recovery_reconsent_round(
+                    session,
+                    journey,
+                    room,
+                    stale,
+                    root_mission,
+                    group_context,
+                    stale_reason=str(exc.detail)[:120],
+                )
+                if reconsent.get("reason") == "CURRENT_GROUNDED_OPTIONS_INSUFFICIENT":
+                    raise _group_recovery_reground_conflict(
+                        session,
+                        request,
+                        journey,
+                        room,
+                        root_mission,
+                        proposal.id,
+                        failure_detail={
+                            "code": "PROPOSAL_NO_LONGER_CURRENT_AFTER_CONSENT_STALE",
+                            "cause": str(exc.detail)[:300],
+                        },
+                    ) from exc
+                raise _group_recovery_conflict(
+                    _group_recovery_stale_or_replan_detail(
+                        cause=str(exc.detail),
+                        reconsent=reconsent,
+                    )
+                ) from exc
+            raise
+
+        recovery_epoch_id = str(proposal.recovery_epoch_id or "")
+        if not recovery_epoch_id:
+            raise HTTPException(409, "COLLECTIVE_RECOVERY_EPOCH_UNAVAILABLE")
+        before_plan_id = str(journey.active_plan_version_id or "")
+        actor_context = {
+            "kind": "COLLECTIVE_GROUP_RECOVERY_APPLY",
+            "incident_key": group_context.get("incident_key"),
+            "root_mission_id": root_mission.id,
+            "decision_mission_id": room.id,
+            "clarification_id": clarification.get("clarification_id"),
+            "selected_proposal_id": proposal.id,
+            "trigger_event_id": trigger_id,
+            "authority_receipt_id": resolved.get("authority_receipt_id"),
+            "decision_epoch": resolved.get("decision_epoch"),
+            "material_world_epoch": resolved.get("material_world_epoch"),
+            "candidate_surface_fingerprint": resolved.get("candidate_surface_fingerprint"),
+            "recovery_epoch_id": recovery_epoch_id,
+            "recovery_epoch_generation": (
+                session.get(RecoveryEpoch, recovery_epoch_id).generation
+                if session.get(RecoveryEpoch, recovery_epoch_id) is not None
+                else None
+            ),
+            "principal_traveler_id": principal.traveler_id,
+            "journey_member_id": member.id,
+            "member_role": member.role,
+            "before_plan_version_id": before_plan_id,
+        }
+        try:
+            result = _accept_replan_impl(
+                UUID(proposal.id),
+                internal_key,
+                session,
+                actor_type="AUTHENTICATED_TRAVELER",
+                actor_id=principal.traveler_id,
+                authorization_decision="COLLECTIVE_AUTHORITY_SPENT",
+                reason_codes=("SIGNED_JOURNEY_UPDATE_MEMBER_APPLY",),
+                resolved_decision=resolved,
+                expected_authority_receipt_id=str(resolved.get("authority_receipt_id") or ""),
+                expected_recovery_epoch_id=recovery_epoch_id,
+                actor_context=actor_context,
+            )
+        except HTTPException as exc:
+            if exc.status_code != 409:
+                raise
+            reconsent_code = _group_recovery_reconsent_code(exc.detail)
+            session.rollback()
+            if reconsent_code is not None:
+                room = require(session, JourneyMission, room.id, "Journey mission")
+                stale = _json_object(room.clarification_json or "{}")
+                reconsent = _group_recovery_reconsent_round(
+                    session,
+                    journey,
+                    room,
+                    stale,
+                    root_mission,
+                    group_context,
+                    stale_reason=reconsent_code,
+                )
+                if reconsent.get("reason") == "CURRENT_GROUNDED_OPTIONS_INSUFFICIENT":
+                    raise _group_recovery_reground_conflict(
+                        session,
+                        request,
+                        journey,
+                        room,
+                        root_mission,
+                        proposal.id,
+                        failure_detail={
+                            "code": "PROPOSAL_NO_LONGER_CURRENT_AFTER_CONSENT_STALE",
+                            "cause": str(exc.detail)[:300],
+                        },
+                    ) from exc
+                raise _group_recovery_conflict(
+                    _group_recovery_stale_or_replan_detail(
+                        cause=str(exc.detail),
+                        reconsent=reconsent,
+                    )
+                ) from exc
+
+            # The people may still have agreed, but this concrete future is no
+            # longer executable. Preserve their historical consent and demand
+            # a fresh grounded proposal instead of opening a sham re-vote on
+            # the same invalid plan.
+            session.rollback()
+            raise _group_recovery_reground_conflict(
+                session,
+                request,
+                journey,
+                room,
+                root_mission,
+                proposal.id,
+                failure_detail=exc.detail,
+            ) from exc
+        return result
 
 
 @app.post("/api/v1/travelers/{traveler_id}/push-subscriptions", status_code=201)
@@ -7379,6 +17888,7 @@ def search_services(
 @app.post("/api/v1/journeys/{journey_id}/plans/generate", status_code=201)
 def generate_journey_plans(
     journey_id: UUID,
+    http_request: Request,
     payload: GeneratePlansRequest | None = None,
     session: Session = Depends(get_session),
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
@@ -7404,6 +17914,23 @@ def generate_journey_plans(
     journey = require(session, Journey, str(journey_id), "Journey")
     start_request_budget(SCENARIO_PLANS_GENERATE)
     request = payload or GeneratePlansRequest()
+    cost_unknown_ack_actor: str | None = None
+    if request.allow_unknown_cost:
+        # This flag records a traveller-owned decision, so a deployment with
+        # signed Journey membership enabled must bind it to the current member.
+        if settings.traveler_auth_secret:
+            from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+            _principal, actor = resolve_journey_member_principal(
+                http_request,
+                session,
+                journey_id=str(journey.id),
+            )
+            if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+                raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+            cost_unknown_ack_actor = str(actor.id)
+        else:
+            cost_unknown_ack_actor = "local-development-session"
     transport_key: str | None = None
     if idempotency_key is not None:
         try:
@@ -7412,7 +17939,12 @@ def generate_journey_plans(
             raise HTTPException(422, str(exc)) from exc
     if request.mission_id is None and transport_key is None:
         try:
-            plans = _generate_plans_answer(session, journey, request)
+            plans = _generate_plans_answer(
+                session,
+                journey,
+                request,
+                cost_unknown_ack_actor=cost_unknown_ack_actor,
+            )
         except ValueError as exc:
             return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))
         return [plan_schema(session, plan) for plan in plans]
@@ -7431,7 +17963,8 @@ def generate_journey_plans(
         if raced is not None:
             return _plan_generation_http_answer(raced)
         answer = _execute_plan_generation_claimed(journey, request, keys, continuation_id,
-                                                  now, claim_token)
+                                                  now, claim_token,
+                                                  cost_unknown_ack_actor=cost_unknown_ack_actor)
     return _plan_generation_http_answer(answer)
 
 
@@ -7453,15 +17986,20 @@ def _plan_continuation_identity(journey_id: UUID, journey: Journey,
     """两条身份、两把键，签名材料只有业务语义（键本身不进签名，否则换设备必然对不上）。"""
 
     continuation_id = f"cont:{request.mission_id}" if request.mission_id is not None else None
-    signature = canonical_request_signature(
-        {
-            "journey_id": str(journey_id),
-            "mission_id": request.mission_id,
-            "planning_mode": request.planning_mode or journey.planning_mode,
-            "candidate_count": request.candidate_count,
-            "place_ids": request.place_ids,
-        }
-    )
+    signature_payload = {
+        "journey_id": str(journey_id),
+        "mission_id": request.mission_id,
+        "planning_mode": request.planning_mode or journey.planning_mode,
+        "candidate_count": request.candidate_count,
+        "place_ids": request.place_ids,
+    }
+    # Preserve the pre-R86 continuation signature for ordinary generation;
+    # only explicit opt-in switches need distinct replay identities.
+    if request.allow_single_place:
+        signature_payload["allow_single_place"] = True
+    if request.allow_unknown_cost:
+        signature_payload["allow_unknown_cost"] = True
+    signature = canonical_request_signature(signature_payload)
     keys = [f"plans.generate:{transport_key}"] if transport_key is not None else []
     if continuation_id is not None and f"plans.generate:{continuation_id}" not in keys:
         keys.append(f"plans.generate:{continuation_id}")
@@ -7627,7 +18165,8 @@ def _plan_claim_superseded(token: str | None, expected: int, filled: int) -> HTT
 
 def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansRequest,
                                      keys: list[str], continuation_id: str | None,
-                                     now: datetime, token: str | None = None) -> dict:
+                                     now: datetime, token: str | None = None,
+                                     *, cost_unknown_ack_actor: str | None = None) -> dict:
     """Phase B EXECUTE：候选、审计链接与"占位 → 完成回执"在同一次可回滚提交里。
 
     回执存的是**渲染失败要用到的那几样输入**（状态/原话/具名理由），不是另抄一份错误正文：
@@ -7638,7 +18177,12 @@ def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansReq
         work_session = Session(bind=work_conn, expire_on_commit=False)
         try:
             try:
-                plans = _generate_plans_answer(work_session, journey, request)
+                plans = _generate_plans_answer(
+                    work_session,
+                    journey,
+                    request,
+                    cost_unknown_ack_actor=cost_unknown_ack_actor,
+                )
             except ValueError as exc:
                 answer = _plan_generation_refusal(work_session, journey, exc)
             else:
@@ -7715,7 +18259,8 @@ def _plan_generation_http_answer(answer: dict):
 
 
 def _generate_plans_answer(session: Session, journey: Journey,
-                           request: GeneratePlansRequest) -> list[PlanVersion]:
+                           request: GeneratePlansRequest,
+                           *, cost_unknown_ack_actor: str | None = None) -> list[PlanVersion]:
     """今天这一段的本体：一次生成 + 那次结果的耐久事实。被 Phase B 用同一条事务包住。"""
 
     planning_mode = request.planning_mode or journey.planning_mode
@@ -7725,7 +18270,48 @@ def _generate_plans_answer(session: Session, journey: Journey,
         planning_mode,
         request.candidate_count,
         place_ids=request.place_ids,
+        allow_single_place=request.allow_single_place,
+        allow_unknown_cost=request.allow_unknown_cost,
     )
+    if request.allow_unknown_cost and cost_unknown_ack_actor:
+        for plan in plans:
+            explanation = json.loads(plan.explanation_json or "{}")
+            if explanation.get("authority_state") != "COST_UNKNOWN_ACCEPTED":
+                continue
+            acknowledgement = {
+                "actor_type": "SIGNED_JOURNEY_MEMBER"
+                if cost_unknown_ack_actor != "local-development-session"
+                else "LOCAL_DEVELOPMENT_SESSION",
+                "member_id": (
+                    cost_unknown_ack_actor
+                    if cost_unknown_ack_actor != "local-development-session"
+                    else None
+                ),
+                "policy": "USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED",
+                "recorded_at": iso_now(),
+            }
+            explanation["cost_unknown_acknowledgement"] = acknowledgement
+            plan.explanation_json = dump(explanation)
+            record_audit(
+                session,
+                action="plans.cost_unknown.acknowledged",
+                entity_type="PlanVersion",
+                entity_id=plan.id,
+                journey_id=journey.id,
+                actor_type="USER",
+                actor_id=(
+                    None
+                    if cost_unknown_ack_actor == "local-development-session"
+                    else cost_unknown_ack_actor
+                ),
+                after={
+                    "policy": acknowledgement["policy"],
+                    "unknown_place_ids": explanation.get("cost_summary", {}).get(
+                        "unknown_place_ids", []
+                    ),
+                    "unknown_cost_included": False,
+                },
+            )
     record_replan_outcome(
         session,
         journey,
@@ -7753,6 +18339,7 @@ def authoritative_compose_journey(
             candidate_count=payload.candidate_count,
             stay_offer_id=str(payload.stay_offer_id) if payload.stay_offer_id else None,
             reservation_id=str(payload.reservation_id) if payload.reservation_id else None,
+            discovery_evidence={"require_fully_grounded": payload.require_fully_grounded},
         )
     except ValueError as exc:
         session.rollback()
@@ -7798,7 +18385,12 @@ def get_plan(plan_version_id: UUID, session: Session = Depends(get_session)):
 
 
 @app.post("/api/v1/journeys/{journey_id}/plans/{plan_version_id}/select")
-def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depends(get_session)):
+def select_plan(
+    journey_id: UUID,
+    plan_version_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
     journey = session.scalar(
         select(Journey)
         .where(Journey.id == str(journey_id))
@@ -7806,6 +18398,14 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     )
     if journey is None:
         raise HTTPException(404, f"Journey {journey_id} was not found")
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        _principal, actor = resolve_journey_member_principal(
+            request, session, journey_id=str(journey.id)
+        )
+        if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
     plan = session.scalar(
         select(PlanVersion).where(
             PlanVersion.id == str(plan_version_id), PlanVersion.journey_id == journey.id
@@ -7817,9 +18417,19 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     # Do this before the normal transition/audit path so retries do not emit a
     # second plan.selected audit event.
     if plan.status == "SELECTED" and journey.active_plan_version_id == plan.id:
+        # A planned Journey has no execution cursor.  Clear a cursor left by a
+        # previous plan before returning the idempotent response; otherwise the
+        # plan pointer and execution projection disagree even though selection is
+        # already authoritative.
+        if journey.status == "PLANNED" and journey.current_activity_id is not None:
+            journey.current_activity_id = None
+            journey.updated_at = datetime.now(timezone.utc).isoformat()
+            session.commit()
         return journey_schema(journey)
     if plan.status not in {"CANDIDATE", "SELECTED"}:
         raise HTTPException(422, "Only a candidate plan can be selected")
+    if getattr(plan, "lifecycle", "ACTIVE") == "STANDBY":
+        raise HTTPException(409, "STANDBY branches require the activate_standby Gateway action")
     # Selecting a different plan leaves the one the traveller may have been executing.
     # Retire it here, in the same transaction, with a predicate the database evaluates
     # against the current row.  Without this the abandoned plan stays ACTIVE with
@@ -7846,6 +18456,24 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     activities = session.scalars(
         select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
     ).all()
+    activity_place_ids = [
+        str(activity.place_id or activity.city_service_id or "")
+        for activity in activities
+    ]
+    authority_blocker = plan_authority_blocker(
+        plan,
+        places,
+        used_place_ids=activity_place_ids,
+    )
+    if authority_blocker is not None:
+        refused = HTTPException(409, f"PlanVersion {plan.id} is not authoritative: {authority_blocker}")
+        refused.reason_code = authority_blocker
+        refused.error_details = {
+            "plan_id": plan.id,
+            "unresolved_facts": plan_unresolved_activity_facts(plan),
+            "used_place_ids": activity_place_ids,
+        }
+        raise refused
     evidence_payload = json.loads(plan.mobility_evidence_json or "{}")
     if not evidence_payload.get("snapshot_id"):
         raise HTTPException(409, "STALE_RECOMPOSE_REQUIRED: PlanVersion has no frozen provider evidence")
@@ -7873,6 +18501,24 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     if not gate.passed:
         failures = ", ".join(gate.failures)
         raise HTTPException(422, f"PlanVersion {plan.id} is infeasible: {failures}")
+    collective_gate = collective_mutation_gate(
+        session,
+        journey,
+        plan,
+        hard_feasible_plan_ids={str(plan.id)},
+    )
+    if not collective_gate.get("allowed"):
+        _record_collective_mutation_denial(
+            session,
+            journey,
+            plan,
+            collective_gate,
+            mutation_kind="SELECT_PLAN",
+        )
+        raise HTTPException(
+            409,
+            f"{collective_gate.get('code')}: collective mediation must be resolved before selection",
+        )
 
     current = session.scalar(
         select(PlanVersion).where(
@@ -7956,6 +18602,8 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
                 ),
                 None,
             )
+    if journey.status != "ACTIVE":
+        journey.current_activity_id = None
     journey.status = "PLANNED"
     journey.active_plan_version_id = plan.id
     journey.updated_at = datetime.now(timezone.utc).isoformat()
@@ -7986,6 +18634,7 @@ def _trip_studio_context(
     session: Session,
     journey: Journey,
     requested_ids: list[str],
+    preview_id: str | None = None,
 ) -> tuple[PlanVersion, list[Activity], list[Activity], dict[str, Any]]:
     """Resolve an edit against the current plan and the immutable evidence snapshot."""
 
@@ -8030,6 +18679,19 @@ def _trip_studio_context(
             if item.status in {"COMPLETED", "SKIPPED"} and requested_ids[index] != item.id:
                 execution_failures.append("EXECUTION_HISTORY_REORDER")
     evidence = _json_object(plan.mobility_evidence_json, {})
+    persisted_preview = (
+        session.get(CounterfactualSimulation, str(preview_id)) if preview_id else None
+    )
+    if persisted_preview is not None:
+        preview_parameters = _json_object(persisted_preview.parameters_json, {})
+        preview_order = [str(item) for item in preview_parameters.get("draft_order", [])]
+        if (
+            persisted_preview.journey_id != journey.id
+            or preview_parameters.get("base_plan_version_id") != plan.id
+            or preview_order != [str(item) for item in requested_ids]
+        ):
+            raise HTTPException(409, "TRIP_STUDIO_PREVIEW_STALE")
+        evidence = _json_object(persisted_preview.evidence_json, {})
     fact_pairs = {
         (str(item.get("origin_key")), str(item.get("destination_key"))): item
         for item in evidence.get("facts", [])
@@ -8038,9 +18700,106 @@ def _trip_studio_context(
     route_gaps = []
     for previous, current in zip(ordered, ordered[1:]):
         pair = (str(previous.place_id or previous.city_service_id or ""), str(current.place_id or current.city_service_id or ""))
-        if pair not in fact_pairs:
-            route_gaps.append({"from": pair[0], "to": pair[1]})
+        # Use the same selected/mode-cost policy as the deterministic gate.
+        # A last-in-matrix UNKNOWN fare must not hide a known-cost option.
+        fact = _trip_studio_fact(pair[0], pair[1], evidence)
+        if fact is None:
+            route_gaps.append({"from": pair[0], "to": pair[1], "reason": "MISSING"})
+        elif str(fact.get("cost_status") or "UNKNOWN").upper() == "UNKNOWN":
+            # A duration-only legacy/live row is stale for a hard preview: the
+            # new snapshot must recapture the edge so its cost semantics are
+            # explicit.  Never convert the old unknown into zero.
+            route_gaps.append({"from": pair[0], "to": pair[1], "reason": "UNKNOWN_COST"})
     changed = canonical_ids != requested_ids
+    preview_snapshot_created = False
+    preview_snapshot_id = evidence.get("snapshot_id")
+    preview_record_id = str(persisted_preview.id) if persisted_preview else None
+    if route_gaps and persisted_preview is None:
+        # The active plan's evidence is immutable.  Capture only the new directed
+        # edges needed by this hypothetical order, then bind a separate snapshot
+        # to the preview/counterfactual row.  The deterministic gate below reads
+        # this local preview evidence, never the active plan's frozen matrix.
+        try:
+            captured = capture_runtime_mobility_snapshot(
+                session,
+                journey,
+                [(item["from"], item["to"]) for item in route_gaps],
+                operation_key=f"trip-studio-preview:{plan.id}",
+                require_explicit_facts=True,
+            )
+        except MobilitySnapshotCaptureError as exc:
+            raise HTTPException(503, f"preview mobility evidence unavailable: {exc}") from exc
+        base_snapshot = MobilitySnapshot.from_evidence(evidence)
+        preview_facts = {
+            (str(item["origin_key"]), str(item["destination_key"])): item
+            for item in base_snapshot.to_evidence().get("facts", [])
+            if item.get("origin_key") and item.get("destination_key")
+        }
+        captured_evidence = captured.snapshot.to_evidence()
+        for raw_fact in captured_evidence.get("facts", []):
+            # Only a deterministic no-fare mode may be declared free.  A paid
+            # or unclassified mode remains UNKNOWN and therefore fail-closed.
+            if (
+                str(raw_fact.get("mode") or "").upper() == "WALK"
+                and raw_fact.get("fact_quality") == "LIVE_PROVIDER_CAPTURE"
+            ):
+                raw_fact["cost_status"] = "KNOWN_FREE"
+                raw_fact["cost_amount_minor"] = 0
+                raw_fact["currency"] = journey.budget_currency
+            else:
+                raw_fact["cost_status"] = "UNKNOWN"
+                raw_fact["cost_amount_minor"] = None
+            preview_facts[(str(raw_fact["origin_key"]), str(raw_fact["destination_key"]))] = raw_fact
+        preview_snapshot_id = str(uuid4())
+        preview_evidence = {
+            **evidence,
+            "snapshot_id": preview_snapshot_id,
+            "operation_key": f"trip-studio-preview:{plan.id}",
+            "captured_at": captured.snapshot.captured_at,
+            "source_provider": captured.snapshot.source_provider_key,
+            "facts": list(preview_facts.values()),
+            "preview_of_snapshot_id": plan.mobility_snapshot_id,
+            "preview_only": True,
+        }
+        preview_evidence.pop("integrity_hash", None)
+        preview_id_value = str(uuid5(
+            NAMESPACE_URL,
+            f"citynexus-r18-trip-studio:{plan.id}:{preview_snapshot_id}:{json.dumps(requested_ids)}",
+        ))
+        preview_record_id = preview_id_value
+        session.add(
+            CounterfactualSimulation(
+                id=preview_id_value,
+                journey_id=journey.id,
+                snapshot_id=None,
+                scenario_key=f"trip-studio-preview:{preview_id_value}",
+                scenario_type="TRIP_STUDIO_MOBILITY_PREVIEW",
+                parameters_json=json.dumps(
+                    {
+                        "base_plan_version_id": plan.id,
+                        "draft_order": requested_ids,
+                        "base_snapshot_id": plan.mobility_snapshot_id,
+                    },
+                    sort_keys=True,
+                ),
+                feasible=False,
+                c4_preserved=protected_ok and not execution_failures,
+                cost_delta_minor=0,
+                schedule_drift_min=0,
+                plan_changes_json=json.dumps([{"kind": "DRAFT_ORDER", "activity_ids": requested_ids}], sort_keys=True),
+                evidence_json=json.dumps(preview_evidence, ensure_ascii=False, sort_keys=True),
+                created_at=datetime.now(timezone.utc).isoformat(),
+            )
+        )
+        session.flush()
+        evidence = preview_evidence
+        preview_snapshot_created = True
+        route_gaps = []
+        fact_pairs = {
+            (str(item.get("origin_key")), str(item.get("destination_key"))): item
+            for item in evidence.get("facts", [])
+            if isinstance(item, dict) and item.get("origin_key") and item.get("destination_key")
+        }
     authoritative_gate = _trip_studio_authoritative_gate(
         session,
         journey,
@@ -8069,7 +18828,7 @@ def _trip_studio_context(
     gate = {
         "status": "PASSED" if not gate_failures else "FAILED",
         "failures": gate_failures,
-        "evidence_snapshot_id": plan.mobility_snapshot_id,
+        "evidence_snapshot_id": preview_snapshot_id or plan.mobility_snapshot_id,
         "authoritative": True,
         "evidence_valid": authoritative_gate["evidence_valid"],
     }
@@ -8077,6 +18836,9 @@ def _trip_studio_context(
         "impact": impact,
         "gate": gate,
         "evidence": evidence,
+        "preview_id": preview_record_id,
+        "preview_snapshot_id": preview_snapshot_id,
+        "preview_snapshot_created": preview_snapshot_created,
         "authoritative_gate": authoritative_gate,
     }
 
@@ -8128,7 +18890,12 @@ def _trip_studio_authoritative_gate(
     """Run the shared deterministic gate over a Trip Studio frozen snapshot."""
 
     failures: list[str] = []
-    evidence_valid = bool(evidence.get("snapshot_id")) and evidence.get("snapshot_id") == plan.mobility_snapshot_id
+    preview_bound = bool(evidence.get("preview_only")) and str(
+        evidence.get("preview_of_snapshot_id") or ""
+    ) == str(plan.mobility_snapshot_id or "")
+    evidence_valid = bool(evidence.get("snapshot_id")) and (
+        str(evidence.get("snapshot_id")) == str(plan.mobility_snapshot_id or "") or preview_bound
+    )
     if not evidence_valid:
         failures.append("FROZEN_EVIDENCE_ID_MISMATCH")
     integrity_hash = evidence.get("integrity_hash")
@@ -8221,13 +18988,16 @@ def _trip_studio_authoritative_gate(
         item.id: item
         for item in session.scalars(select(CityService).where(CityService.city_code == journey.city_code)).all()
     }
-    frozen_provider = MobilitySnapshot.from_minutes(
-        source_provider_key=str(evidence.get("source_provider") or "frozen-plan-evidence"),
-        minutes=frozen_minutes,
-        captured_at=str(evidence.get("captured_at") or datetime.now(timezone.utc).isoformat()),
-        snapshot_id=str(evidence.get("snapshot_id") or plan.mobility_snapshot_id or ""),
-        operation_key=str(evidence.get("operation_key") or "trip-studio"),
-    )
+    if str(evidence.get("snapshot_id") or "") != str(plan.mobility_snapshot_id or ""):
+        frozen_provider = MobilitySnapshot.from_evidence(evidence)
+    else:
+        frozen_provider = MobilitySnapshot.from_minutes(
+            source_provider_key=str(evidence.get("source_provider") or "frozen-plan-evidence"),
+            minutes=frozen_minutes,
+            captured_at=str(evidence.get("captured_at") or datetime.now(timezone.utc).isoformat()),
+            snapshot_id=str(evidence.get("snapshot_id") or plan.mobility_snapshot_id or ""),
+            operation_key=str(evidence.get("operation_key") or "trip-studio"),
+        )
     gate = evaluate_feasibility(
         build_context(
             journey,
@@ -8271,12 +19041,12 @@ def _trip_studio_preview_payload(
     details: dict[str, Any],
 ) -> dict[str, Any]:
     signature = json.dumps(
-        {"plan_id": plan.id, "evidence_id": plan.mobility_snapshot_id, "draft_order": requested_ids},
+        {"plan_id": plan.id, "evidence_id": details.get("preview_snapshot_id") or plan.mobility_snapshot_id, "draft_order": requested_ids},
         sort_keys=True,
     )
     authoritative_gate = details["authoritative_gate"]
     return {
-        "preview_id": str(uuid5(NAMESPACE_URL, f"citynexus-v13-trip-studio:{signature}")),
+        "preview_id": details.get("preview_id") or str(uuid5(NAMESPACE_URL, f"citynexus-v13-trip-studio:{signature}")),
         "journey_id": journey.id,
         "base_plan_version_id": plan.id,
         "draft_order": requested_ids,
@@ -8534,6 +19304,10 @@ def trip_studio_preview(
     journey = require(session, Journey, str(journey_id), "Journey")
     requested_ids = [str(item) for item in (payload.draft_order or payload.activity_ids)]
     plan, _activities, _ordered, details = _trip_studio_context(session, journey, requested_ids)
+    # A preview mobility snapshot is durable evidence for the exact draft order;
+    # commit it without touching Journey.active_plan_version_id or the base plan.
+    if details.get("preview_snapshot_created"):
+        session.commit()
     return _trip_studio_preview_payload(journey, plan, requested_ids, details)
 
 
@@ -8544,7 +19318,9 @@ def _trip_studio_accept_impl(
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     requested_ids = [str(item) for item in payload.activity_ids]
-    base, activities, ordered, details = _trip_studio_context(session, journey, requested_ids)
+    base, activities, ordered, details = _trip_studio_context(
+        session, journey, requested_ids, str(payload.preview_id) if payload.preview_id else None
+    )
     if details["gate"]["status"] != "PASSED":
         failures = ",".join(str(item) for item in details["gate"]["failures"])
         raise HTTPException(422, f"TRIP_STUDIO_DETERMINISTIC_GATE_FAILED:{failures}")
@@ -8611,11 +19387,16 @@ def _trip_studio_accept_impl(
             "deterministic_gate": details["gate"],
             "frozen_evidence_id": base.mobility_snapshot_id,
         }, sort_keys=True),
-        mobility_snapshot_id=base.mobility_snapshot_id,
-        mobility_evidence_json=base.mobility_evidence_json,
+        mobility_snapshot_id=str(evidence.get("snapshot_id") or base.mobility_snapshot_id),
+        mobility_evidence_json=json.dumps(evidence, ensure_ascii=False, sort_keys=True),
         created_at=now,
     )
     session.add(new_plan)
+    if details.get("preview_id"):
+        preview_record = session.get(CounterfactualSimulation, str(details["preview_id"]))
+        if preview_record is not None:
+            preview_record.feasible = True
+            preview_record.evidence_json = json.dumps(evidence, ensure_ascii=False, sort_keys=True)
     session.flush()
     new_by_old: dict[str, str] = {}
     new_rows: list[Activity] = []
@@ -8625,7 +19406,7 @@ def _trip_studio_accept_impl(
             "base_activity_id": source.id,
             "accepted_at": now,
             "draft_order": requested_ids,
-            "frozen_evidence_id": base.mobility_snapshot_id,
+            "frozen_evidence_id": str(evidence.get("snapshot_id") or base.mobility_snapshot_id),
             "execution_status_before": source.status,
         }
         row = Activity(
@@ -8736,7 +19517,7 @@ def _trip_studio_accept_impl(
         entity_id=new_plan.id,
         journey_id=journey.id,
         before={"base_plan_version_id": base.id, "draft_order": [item.id for item in activities]},
-        after={"new_plan_version_id": new_plan.id, "draft_order": requested_ids, "frozen_evidence_id": base.mobility_snapshot_id},
+        after={"new_plan_version_id": new_plan.id, "draft_order": requested_ids, "frozen_evidence_id": str(evidence.get("snapshot_id") or base.mobility_snapshot_id)},
     )
     if journey.active_plan_version_id:
         refresh_offline_snapshot(session, journey)
@@ -8777,13 +19558,84 @@ def _json_object(value: str | None, default: dict[str, Any] | None = None) -> di
     return parsed if isinstance(parsed, dict) else (default or {})
 
 
+def _replacement_activity_metadata(
+    candidate_place: Place | None,
+    replacement_choice: Any,
+    *,
+    family: str,
+    replaced_place_id: str | None,
+    reason_codes: tuple[str, ...] | list[str] | None = None,
+    solver_v2_assignment: str | None = None,
+) -> str:
+    """Build replacement metadata from the replacement Place's own facts.
+
+    A replan changes the physical venue. Copying the old activity metadata
+    therefore leaks the old venue's opening hours, coordinates, category, and
+    cost evidence into the new activity. Keep only replan annotations and
+    facts read from the candidate Place itself.
+    """
+
+    place_metadata = _json_object(candidate_place.metadata_json if candidate_place else None)
+    try:
+        opening = json.loads(candidate_place.opening_hours_json or "{}") if candidate_place else {}
+    except (TypeError, ValueError):
+        opening = {}
+    if not isinstance(opening, dict) or not opening:
+        opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
+    raw_cost = place_metadata.get("cost_evidence")
+    cost_evidence = canonical_cost_evidence(
+        raw_cost if isinstance(raw_cost, Mapping) else {},
+        place_metadata.get("tags") if isinstance(place_metadata.get("tags"), Mapping) else {},
+    )
+    if not cost_evidence:
+        cost_evidence = {"status": "UNKNOWN", "amount_minor": None}
+    cost_status = str(cost_evidence.get("status") or "UNKNOWN").upper()
+    known_cost = (
+        cost_status in KNOWN_COST_EVIDENCE_STATUSES
+        and cost_evidence.get("amount_minor") is not None
+    )
+    strategy_estimate = place_metadata.get("strategy_estimate")
+    if not (
+        isinstance(strategy_estimate, Mapping)
+        and str(strategy_estimate.get("status") or "").upper() == "ESTIMATED_AGENT"
+    ):
+        strategy_estimate = None
+    metadata: dict[str, Any] = {
+        "compose_source": "REPLAN_PROVIDER_CATALOGUE",
+        "semantic_key": replacement_choice.place_id,
+        "category": candidate_place.category if candidate_place else None,
+        "opening_state": str(opening.get("status") or "UNKNOWN"),
+        "opening_hours": opening,
+        "cost_evidence": cost_evidence,
+        "cost_status": "KNOWN" if known_cost else "UNKNOWN",
+        "price_known": known_cost,
+        "latitude": candidate_place.latitude if candidate_place else None,
+        "longitude": candidate_place.longitude if candidate_place else None,
+        "crs": candidate_place.coordinate_system if candidate_place else "WGS84",
+        "candidate_family": family,
+        "replan_reason_codes": list(reason_codes or replacement_choice.reason_codes),
+        "replaced_place_id": replaced_place_id,
+    }
+    if strategy_estimate is not None:
+        # Keep the provider-backed opening/cost claims above untouched.  This is
+        # a strategy hint that can be used only when the Revolution Lab explicitly
+        # enables the COURSEWORK_ESTIMATE envelope.
+        metadata["strategy_estimate"] = dict(strategy_estimate)
+    if solver_v2_assignment is not None:
+        metadata["solver_v2_assignment"] = solver_v2_assignment
+    return json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+
+
 def _booking_payload(item: BookingModel) -> dict[str, Any]:
+    from app.agent.transactional_operator import provider_truth_label
+
     return {
         "id": item.id,
         "journey_id": item.journey_id,
         "activity_id": item.activity_id,
         "commitment_id": item.commitment_id,
         "provider_key": item.provider_key,
+        "provider_label": provider_truth_label(item.provider_key),
         "external_ref": item.external_ref,
         "status": item.status,
         "amount": {"amount_minor": item.amount_minor, "currency": item.currency},
@@ -9160,7 +20012,131 @@ def _twin_snapshot(
                 active_c4.append((start, policy))
     active_c4.sort(key=lambda item: (item[0], str(item[1].get("semantic_key", ""))))
     persisted_mobility = _latest_replan_mobility_snapshot(session, journey.id)
-    mobility_context: dict[str, Any] = {
+    selected_plan = session.get(PlanVersion, active_plan_id) if active_plan_id else None
+    selected_plan_evidence = _json_object(
+        selected_plan.mobility_evidence_json if selected_plan is not None else None
+    )
+    selected_plan_facts = selected_plan_evidence.get("facts")
+    if not isinstance(selected_plan_facts, list):
+        selected_plan_facts = []
+    selected_plan_facts_by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in selected_plan_facts
+        if isinstance(item, dict)
+        and item.get("origin_key")
+        and item.get("destination_key")
+    }
+    selected_plan_used_edges: list[dict[str, Any]] = []
+    for previous, current_activity in zip(activities, activities[1:]):
+        origin_key = str(previous.place_id or "").strip()
+        destination_key = str(current_activity.place_id or "").strip()
+        fact = selected_plan_facts_by_pair.get((origin_key, destination_key))
+        if not origin_key or not destination_key or fact is None:
+            continue
+        selected_plan_used_edges.append(
+            {
+                "origin_key": origin_key,
+                "destination_key": destination_key,
+                "mode": fact.get("mode"),
+                "minutes": fact.get("minutes"),
+                "provider": fact.get("provider"),
+                "route_provenance": fact.get("route_provenance"),
+                "fact_quality": fact.get("fact_quality"),
+                "degraded": bool(fact.get("degraded", False)),
+            }
+        )
+    selected_plan_edge_receipts = _plan_mobility_eligibility_receipts(
+        selected_plan,
+        list(activities),
+    )
+    # ``receipts`` deliberately includes every actual consecutive edge so the
+    # caller can see the first uncovered leg and its blocking decision.  The
+    # used-edge inventory is narrower: it contains only edges backed by a
+    # persisted fact.  An uncovered seeded-plan leg must remain visible in the
+    # receipts without being presented as if it were used route evidence.
+    selected_plan_used_edges = [
+        {
+            "origin_key": item["origin_key"],
+            "destination_key": item["destination_key"],
+            "mode": item.get("mode"),
+            "minutes": item.get("persisted_minutes"),
+            "provider": item.get("provider"),
+            "route_provenance": item.get("route_provenance"),
+            "fact_quality": item.get("fact_quality"),
+            "degraded": bool(item.get("degraded", False)),
+        }
+        for item in selected_plan_edge_receipts["receipts"]
+        if item.get("decision") != "MOBILITY_DATA_UNAVAILABLE"
+    ]
+    # A real-trip PlanVersion may carry its frozen provider route in
+    # mobility_evidence_json without materialising JourneyLeg rows.  The
+    # experience projection already exposes that evidence, but the Twin's
+    # execution window used to leave next_mode/next_eta at NONE/0.  When the
+    # persisted Now and Next are consecutive activities, bind the execution
+    # fields to the exact evidence pair as well.  Unknown mode or duration
+    # stays unknown; this branch never turns incomplete evidence into a leg.
+    if not active_plan_legs and execution.get("now_activity_id") and execution.get("next_activity_id"):
+        now_activity = active_plan_activity_by_id.get(str(execution["now_activity_id"]))
+        next_activity = active_plan_activity_by_id.get(str(execution["next_activity_id"]))
+        pair = (
+            str(now_activity.place_id or "").strip() if now_activity is not None else "",
+            str(next_activity.place_id or "").strip() if next_activity is not None else "",
+        )
+        if all(pair):
+            for evidence_index, edge in enumerate(selected_plan_used_edges):
+                if (
+                    edge.get("origin_key") == pair[0]
+                    and edge.get("destination_key") == pair[1]
+                    and edge.get("mode")
+                    and isinstance(edge.get("minutes"), (int, float))
+                ):
+                    execution = {
+                        **execution,
+                        "next_mode": edge["mode"],
+                        "next_eta_min": int(edge["minutes"]),
+                        "next_leg_id": f"plan-evidence:{selected_plan.id}:{evidence_index}",
+                    }
+                    break
+    selected_plan_source = str(selected_plan_evidence.get("source_provider") or "").strip()
+    selected_plan_snapshot_id = str(
+        (selected_plan.mobility_snapshot_id if selected_plan is not None else None)
+        or selected_plan_evidence.get("snapshot_id")
+        or ""
+    ).strip()
+    frozen_plan_mobility: dict[str, Any] | None = None
+    if selected_plan_source and selected_plan_snapshot_id and selected_plan_facts:
+        frozen_plan_mobility = {
+            "provider": selected_plan_source,
+            "source_provider": selected_plan_source,
+            "snapshot_id": selected_plan_snapshot_id,
+            "degraded": bool(selected_plan_evidence.get("degraded", False)),
+            "source": "selected-plan-frozen-evidence",
+            "fact_count": len(selected_plan_facts),
+            "fact_quality": sorted(
+                {
+                    str(item.get("fact_quality"))
+                    for item in selected_plan_facts
+                    if isinstance(item, dict) and item.get("fact_quality")
+                }
+            ),
+            "route_provenance": sorted(
+                {
+                    str(item.get("route_provenance"))
+                    for item in selected_plan_facts
+                    if isinstance(item, dict) and item.get("route_provenance")
+                }
+            ),
+            "used_edge_ids": [
+                [item["origin_key"], item["destination_key"]]
+                for item in selected_plan_used_edges
+            ],
+            "used_edges": selected_plan_used_edges,
+            "eligibility_receipts": selected_plan_edge_receipts["receipts"],
+            "all_actual_edges_hard_eligible": selected_plan_edge_receipts[
+                "all_actual_edges_hard_eligible"
+            ],
+        }
+    mobility_context: dict[str, Any] = frozen_plan_mobility or {
         "provider": "mock-mobility",
         "snapshot_id": None,
         "degraded": False,
@@ -9176,7 +20152,7 @@ def _twin_snapshot(
         travel_min = 0
         if current_key and target_key and current_key != target_key:
             fact = (
-                persisted_mobility.facts.get((current_key, target_key))
+                persisted_mobility.fact_for(current_key, target_key)
                 if persisted_mobility is not None
                 else None
             )
@@ -9256,6 +20232,15 @@ def _twin_snapshot(
         degraded_providers=degraded,
         extra_risk_reason_codes=disruption_risk_codes(unresolved_severities),
     )
+    remaining_horizon = _remaining_opportunity_horizon(
+        session,
+        journey,
+        activities,
+        current,
+        active_c4,
+        projection_now=derived_now,
+        selected_plan_facts_by_pair=selected_plan_facts_by_pair,
+    )
     context = {
         "journey_status": journey.status,
         "provider_level": 1,
@@ -9264,6 +20249,12 @@ def _twin_snapshot(
         "opportunity_window": opportunity,
         "mobility": mobility_context,
         "execution": execution,
+        "remaining_opportunity_horizon": {
+            "max_windows": 2,
+            "windows": remaining_horizon,
+            "strategy_surface": "TAKE_NOW_OR_DEFER",
+            "future_route_is_not_live_traffic": True,
+        },
     }
     snapshot_at = datetime.now(timezone.utc).isoformat()
     projection_status = "DEGRADED" if degraded else "READY"
@@ -9301,6 +20292,192 @@ def _twin_snapshot(
     }
 
 
+def _remaining_opportunity_horizon(
+    session: Session,
+    journey: Journey,
+    activities: list[Activity],
+    current: Activity | None,
+    active_c4: list[tuple[datetime, dict[str, Any]]],
+    *,
+    projection_now: datetime,
+    selected_plan_facts_by_pair: dict[tuple[str, str], dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Expose at most two server-proven future choices without reserving them.
+
+    This is a read projection over the active plan.  It deliberately reuses
+    frozen route evidence when it exists and labels every missing edge as
+    revalidation-required; it never calls the provider or mutates the active
+    PlanVersion while an Agent is merely inspecting the horizon.
+    """
+    if current is None:
+        return []
+    try:
+        current_index = next(index for index, item in enumerate(activities) if item.id == current.id)
+    except StopIteration:
+        return []
+    trip_context = session.get(JourneyTripContext, journey.id)
+    declared_stay_budget = (
+        int(trip_context.stay_budget_amount_minor)
+        if trip_context is not None and trip_context.stay_budget_declared is True
+        else 0
+    )
+    # Future activities are opportunity candidates, not reservations.  Their
+    # costs must remain visible in each window but cannot be subtracted before
+    # the Agent decides whether to take them.  A declared stay allocation is a
+    # separate protected envelope, so only that allocation and already-consumed
+    # activities reduce the optional budget.
+    remaining_budget = int(journey.budget_amount_minor) - declared_stay_budget - sum(
+        int(item.estimated_cost_minor or 0)
+        for item in activities
+        if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
+    )
+    consumed_cost = sum(
+        int(item.estimated_cost_minor or 0)
+        for item in activities
+        if item.status in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"}
+    )
+    protected_future_cost = 0
+    for protected in session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.status == "ACTIVE",
+            CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
+        )
+    ).all():
+        if str(getattr(protected, "monetary_value_status", "KNOWN")).upper() == "KNOWN":
+            protected_future_cost += int(protected.monetary_value_minor or 0)
+    for future in activities[current_index + 1 :]:
+        if future.status not in {"COMPLETED", "IN_PROGRESS", "ARRIVED", "EN_ROUTE"} and future.locked:
+            protected_future_cost += int(future.estimated_cost_minor or 0)
+    unavoidable_future_cost = declared_stay_budget + protected_future_cost
+    remaining_budget = int(journey.budget_amount_minor) - consumed_cost - unavoidable_future_cost
+    horizon: list[dict[str, Any]] = []
+    first_option_index = current_index if current_index > 0 and current.status in {"ACTIVE", "NOT_STARTED"} else current_index + 1
+    for index, item in enumerate(activities[first_option_index :], start=first_option_index):
+        if len(horizon) >= 2 or item.status in {"COMPLETED", "SKIPPED", "CANCELLED"} or not item.place_id:
+            continue
+        try:
+            start = datetime.fromisoformat(item.start_at)
+            end = datetime.fromisoformat(item.end_at)
+        except (TypeError, ValueError):
+            continue
+        next_commitment_start = min(
+            (when for when, _policy in active_c4 if when >= start),
+            default=datetime.fromisoformat(journey.end_at),
+        )
+        place = session.get(Place, item.place_id)
+        if place is None:
+            continue
+        opening = _json_object(place.opening_hours_json)
+        place_metadata = _json_object(place.metadata_json)
+        cost = canonical_cost_evidence(place_metadata.get("cost_evidence"), place_metadata.get("tags"))
+        cost_status = str((cost or {}).get("status") or "UNKNOWN").upper()
+        known_cost = cost_status in KNOWN_COST_EVIDENCE_STATUSES and (cost or {}).get("amount_minor") is not None
+        # Execution adjacency is not the frozen sequence after a skip.  Resolve
+        # the nearest preceding activity that still exists in the physical
+        # history; a skipped row cannot remain the origin of the next live leg.
+        predecessor = current
+        for previous in reversed(activities[:index]):
+            if previous.status not in {"SKIPPED", "CANCELLED"}:
+                predecessor = previous
+                break
+        pair = (str(predecessor.place_id or ""), str(item.place_id or ""))
+        route = selected_plan_facts_by_pair.get(pair)
+        override = _json_object(item.metadata_json).get("execution_mobility_override")
+        if override:
+            override_facts = override.get("snapshot", {}).get("facts", [])
+            route = next(
+                (
+                    fact for fact in override_facts
+                    if isinstance(fact, dict)
+                    and str(fact.get("origin_key")) == pair[0]
+                    and str(fact.get("destination_key")) == pair[1]
+                ),
+                None,
+            )
+            mobility_state = "CURRENT_LIVE_EVIDENCE"
+        else:
+            mobility_state = "FROZEN_PLAN_EVIDENCE" if route else "STALE / REVALIDATION_REQUIRED"
+        try:
+            place_tags = json.loads(place.tags_json or "[]")
+        except json.JSONDecodeError:
+            place_tags = []
+        candidate_tags = canonical_place_tags(category=place.category, tags=place_tags)
+        fit = verified_interest_preference_fit(
+            planning_preference_items(session, journey.traveler_id, journey.id),
+            candidate_tags=candidate_tags,
+        )
+        visit_minutes = max(0, int((end - start).total_seconds() // 60))
+        open_at = close_at = None
+        try:
+            if opening.get("open") and opening.get("close"):
+                open_hour, open_minute = (int(part) for part in str(opening["open"]).split(":", 1))
+                close_hour, close_minute = (int(part) for part in str(opening["close"]).split(":", 1))
+                open_at = start.replace(hour=open_hour, minute=open_minute, second=0, microsecond=0)
+                close_at = start.replace(hour=close_hour, minute=close_minute, second=0, microsecond=0)
+                if close_at <= open_at:
+                    close_at = None
+        except (TypeError, ValueError):
+            open_at = close_at = None
+        window_known = bool(open_at is not None and close_at is not None)
+        route_minutes = int(route.get("minutes") or item.travel_from_prev_min or 0) if route else 0
+        if known_cost and route and window_known:
+            window = build_window(
+                now=max(projection_now, start),
+                next_commitment_start=next_commitment_start,
+                travel_to_commitment_min=0,
+                safety_buffer_min=15,
+            )
+            candidate_fit = evaluate_candidate(
+                window,
+                OpportunityCandidate(
+                    key=str(item.id),
+                    visit_minutes=visit_minutes,
+                    inbound_travel_min=route_minutes,
+                    outbound_travel_min=0,
+                    cost_minor=int(cost["amount_minor"]),
+                    opens_at=open_at,
+                    closes_at=close_at,
+                ),
+                budget_remaining_minor=max(0, remaining_budget),
+            )
+            status = "GROUNDED_FEASIBLE" if candidate_fit.fits else "GROUNDED_INFEASIBLE"
+            feasibility = {
+                "passed": candidate_fit.fits,
+                "failures": list(candidate_fit.failures),
+                "remaining_buffer_min": candidate_fit.remaining_buffer_min,
+            }
+        else:
+            status = "REVALIDATION_REQUIRED"
+            feasibility = {"passed": False, "failures": ["MISSING_CANONICAL_OPENING_OR_COST_OR_ROUTE"]}
+        horizon.append({
+            "window_id": f"remaining-window:{journey.id}:{index}",
+            "window_boundary": {"opens_at": max(projection_now, start).isoformat(), "closes_at": next_commitment_start.isoformat()},
+            "next_commitment": {"start_at": next_commitment_start.isoformat(), "protected": any(when == next_commitment_start for when, _ in active_c4)},
+            "optional_budget_remaining_minor": remaining_budget,
+            "optional_budget_basis": {
+                "journey_budget_minor": int(journey.budget_amount_minor),
+                "declared_stay_allocation_minor": declared_stay_budget,
+                "consumed_activity_cost_minor": consumed_cost,
+                "protected_future_paid_activity_minor": protected_future_cost,
+                "unavoidable_future_cost_minor": unavoidable_future_cost,
+                "future_activities_are_reserved": False,
+            },
+            "candidate": {
+                "place_id": place.id, "category": place.category, "tags": sorted(candidate_tags),
+                "activity_id": item.id, "visit_minutes": visit_minutes,
+                "opening": opening, "cost_evidence": cost or {"status": "UNKNOWN", "amount_minor": None},
+                "preference_fit": fit,
+            },
+            "planning_mobility": {"state": mobility_state, "provider": route.get("provider") if route else None, "pair": list(pair)},
+            "resource_consumption": {"cost_minor": int(item.estimated_cost_minor or 0), "minutes": max(0, int((end - start).total_seconds() // 60))},
+            "future_live_traffic": False,
+            "feasibility": feasibility,
+            "status": status,
+        })
+    return horizon
+
+
 @app.post("/api/v1/journeys/{journey_id}/start", response_model=JourneyTwinSchema)
 def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
     journey = require(session, Journey, str(journey_id), "Journey")
@@ -9313,6 +20490,39 @@ def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
     plan = session.get(PlanVersion, journey.active_plan_version_id)
     if plan is None or plan.status != "SELECTED":
         raise HTTPException(409, "selected plan is missing or inconsistent")
+    # Start is a second authority boundary after selection.  A caller can race
+    # materialization or reach this route directly, so the same provider-fact
+    # rule must be enforced here instead of trusting the selected pointer alone.
+    start_activities = session.scalars(
+        select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+    ).all()
+    start_place_ids = [
+        str(activity.place_id or activity.city_service_id or "")
+        for activity in start_activities
+    ]
+    start_places = {
+        place.id: place
+        for place in session.scalars(
+            select(Place).where(Place.city_code == journey.city_code)
+        ).all()
+    }
+    start_authority_blocker = plan_authority_blocker(
+        plan,
+        start_places,
+        used_place_ids=start_place_ids,
+    )
+    if start_authority_blocker is not None:
+        refused = HTTPException(
+            409,
+            f"PlanVersion {plan.id} is not authoritative: {start_authority_blocker}",
+        )
+        refused.reason_code = start_authority_blocker
+        refused.error_details = {
+            "plan_id": plan.id,
+            "unresolved_facts": plan_unresolved_activity_facts(plan),
+            "used_place_ids": start_place_ids,
+        }
+        raise refused
     # /start must apply the same evidence/staleness truth policy as select and
     # booking.  Starting a journey on expired frozen provider evidence is a
     # silent safety regression, so refuse it and surface the re-sync condition.
@@ -9326,9 +20536,7 @@ def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
             409,
             "START_BLOCKED_INFEASIBLE: " + ", ".join(gate.failures),
         )
-    activities = session.scalars(
-        select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
-    ).all()
+    activities = start_activities
     journey.status = "ACTIVE"
     plan.status = "ACTIVE"
     if activities:
@@ -9356,11 +20564,171 @@ def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return twin
 
 
+def _execution_distance_m(
+    latitude_a: float,
+    longitude_a: float,
+    latitude_b: float,
+    longitude_b: float,
+) -> float:
+    radius_m = 6_371_000.0
+    phi_a = math.radians(latitude_a)
+    phi_b = math.radians(latitude_b)
+    delta_phi = math.radians(latitude_b - latitude_a)
+    delta_lambda = math.radians(longitude_b - longitude_a)
+    hav = (
+        math.sin(delta_phi / 2.0) ** 2
+        + math.cos(phi_a) * math.cos(phi_b) * math.sin(delta_lambda / 2.0) ** 2
+    )
+    return radius_m * 2.0 * math.atan2(math.sqrt(hav), math.sqrt(max(0.0, 1.0 - hav)))
+
+
+def _resolve_execution_truth_attestation(
+    request: Request,
+    session: Session,
+    *,
+    journey: Journey,
+    activity: Activity,
+    transition: str,
+    captured_at: str,
+    attestation: ExecutionTruthAttestation | None,
+) -> dict[str, Any]:
+    """Resolve execution evidence without letting caller prose promote reality."""
+
+    requested = (
+        attestation.truth_kind
+        if attestation is not None
+        else SIMULATED_STATE_TRANSITION
+    )
+    if requested == SIMULATED_STATE_TRANSITION:
+        return {
+            "kind": SIMULATED_STATE_TRANSITION,
+            "actor_type": "SIMULATION",
+            "actor_id": "api-state-machine",
+            "evidence": {
+                "source": "API_STATE_MACHINE",
+                "physical_presence_claimed": False,
+                "operator_confirmed": False,
+            },
+        }
+
+    if not settings.traveler_auth_secret:
+        raise HTTPException(
+            409,
+            "STRONG_EXECUTION_TRUTH_REQUIRES_AUTHENTICATED_TRAVELER",
+        )
+
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+        raise HTTPException(403, "Journey member role cannot report execution progress")
+
+    if requested == OPERATOR_CONFIRMED_EXECUTION:
+        if attestation is None or attestation.operator_confirmed is not True:
+            raise HTTPException(
+                422,
+                "OPERATOR_CONFIRMED_EXECUTION_REQUIRES_EXPLICIT_CONFIRMATION",
+            )
+        return {
+            "kind": OPERATOR_CONFIRMED_EXECUTION,
+            "actor_type": "AUTHENTICATED_TRAVELER",
+            "actor_id": principal.traveler_id,
+            "evidence": {
+                "member_id": member.id,
+                "role": member.role,
+                "auth_method": principal.auth_method,
+                "operator_confirmed": True,
+                "physical_presence_claimed": False,
+            },
+        }
+
+    if requested != DEVICE_LOCATION_VERIFIED_EXECUTION:
+        raise HTTPException(422, "unsupported execution truth kind")
+    if attestation is None or attestation.location_observation_id is None:
+        raise HTTPException(
+            422,
+            "DEVICE_LOCATION_VERIFIED_EXECUTION_REQUIRES_LOCATION_OBSERVATION",
+        )
+
+    observation = session.get(
+        LocationObservation, str(attestation.location_observation_id)
+    )
+    if observation is None or observation.journey_id != journey.id:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_BOUND_TO_JOURNEY")
+    try:
+        observed_at = datetime.fromisoformat(observation.captured_at)
+    except ValueError as exc:
+        raise HTTPException(409, "LOCATION_OBSERVATION_TIME_INVALID") from exc
+    if observed_at.tzinfo is None:
+        raise HTTPException(409, "LOCATION_OBSERVATION_TIME_INVALID")
+    now = datetime.now(timezone.utc)
+    age_seconds = (now - observed_at.astimezone(timezone.utc)).total_seconds()
+    if age_seconds < -60 or age_seconds > 300:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_FRESH")
+    if float(observation.accuracy_m) > 100.0:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_PRECISE_ENOUGH")
+    # A signed traveler posting JSON coordinates is still not a cryptographic
+    # device/location attestation.  Keep this tier fail-closed until a trusted
+    # ingestion path records an attested source instead of FOREGROUND_WEB.
+    if str(observation.source) not in {"DEVICE_ATTESTED", "LOCATION_ATTESTED"}:
+        raise HTTPException(409, "LOCATION_OBSERVATION_NOT_DEVICE_VERIFIED")
+
+    location_audit = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "journey.location.recorded",
+            AuditLog.entity_type == "LocationObservation",
+            AuditLog.entity_id == observation.id,
+            AuditLog.actor_type == "AUTHENTICATED_TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    if location_audit is None:
+        raise HTTPException(409, "LOCATION_OBSERVATION_PRINCIPAL_NOT_PROVEN")
+
+    evidence: dict[str, Any] = {
+        "location_observation_id": observation.id,
+        "captured_at": observation.captured_at,
+        "source": observation.source,
+        "accuracy_m": observation.accuracy_m,
+        "member_id": member.id,
+        "auth_method": principal.auth_method,
+        "physical_presence_claimed": True,
+    }
+    if activity.place_id:
+        place = session.get(Place, str(activity.place_id))
+        if place is not None:
+            distance_m = _execution_distance_m(
+                float(observation.latitude),
+                float(observation.longitude),
+                float(place.latitude),
+                float(place.longitude),
+            )
+            maximum_distance_m = max(150.0, float(observation.accuracy_m) * 2.0)
+            evidence["place_id"] = place.id
+            evidence["distance_to_place_m"] = round(distance_m, 1)
+            evidence["maximum_distance_m"] = round(maximum_distance_m, 1)
+            if distance_m > maximum_distance_m:
+                raise HTTPException(409, "LOCATION_OBSERVATION_TOO_FAR_FROM_ACTIVITY")
+
+    return {
+        "kind": DEVICE_LOCATION_VERIFIED_EXECUTION,
+        "actor_type": "AUTHENTICATED_TRAVELER",
+        "actor_id": principal.traveler_id,
+        "evidence": evidence,
+    }
+
+
 def _transition_activity_state(
     journey_id: UUID,
     activity_id: UUID,
     target_state: str,
     event_type: str,
+    request: Request,
+    attestation: ExecutionTruthAttestation | None,
     session: Session,
 ):
     allowed_predecessors = {
@@ -9376,6 +20744,101 @@ def _transition_activity_state(
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
+    applied_followthrough = active_group_recovery_spend(session, journey)
+    followthrough_snapshot = (
+        applied_followthrough[2] if applied_followthrough else None
+    )
+    if (
+        target_state == "IN_PROGRESS"
+        and isinstance(followthrough_snapshot, dict)
+        and str(followthrough_snapshot.get("rendezvous_activity_id") or "")
+        == str(activity.id)
+    ):
+        rejoin_state = followthrough_projection(
+            session, journey, viewer_member_id=None
+        )
+        if (
+            rejoin_state is not None
+            and rejoin_state.get("state") != "RECOVERY_CLOSED"
+        ):
+            raise HTTPException(
+                409,
+                "GROUP_RECOVERY_WAITING_FOR_MEMBER_REJOIN; "
+                "keep the shared rendezvous at ARRIVED until recovery closes",
+            )
+
+    # Shared Activity state advances once, but each traveller reports their own
+    # authenticated arrival at this exact recovery rendezvous through the same
+    # execution endpoint and server truth boundary.
+    if target_state == "ARRIVED" and activity.status in {"ARRIVED", "IN_PROGRESS"}:
+        applied = active_group_recovery_spend(session, journey)
+        snapshot = applied[2] if applied else None
+        if (
+            isinstance(snapshot, dict)
+            and str(snapshot.get("rendezvous_activity_id") or "") == str(activity.id)
+            and str(snapshot.get("applied_plan_version_id") or "") == str(activity.plan_version_id)
+        ):
+            captured_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+            truth = _resolve_execution_truth_attestation(
+                request,
+                session,
+                journey=journey,
+                activity=activity,
+                transition="ARRIVED",
+                captured_at=captured_at,
+                attestation=attestation,
+            )
+            if truth.get("kind") not in {
+                OPERATOR_CONFIRMED_EXECUTION,
+                DEVICE_LOCATION_VERIFIED_EXECUTION,
+            }:
+                raise HTTPException(
+                    409,
+                    "GROUP_RECOVERY_REJOIN_REQUIRES_AUTHENTICATED_EXECUTION",
+                )
+            member_id = str((truth.get("evidence") or {}).get("member_id") or "")
+            projection = followthrough_projection(
+                session, journey, viewer_member_id=member_id
+            )
+            if projection is None:
+                raise HTTPException(409, "GROUP_RECOVERY_FOLLOWTHROUGH_NOT_CURRENT")
+            if projection.get("viewer_has_confirmed"):
+                return _twin_snapshot(session, journey)
+            if not projection.get("viewer_can_confirm"):
+                raise HTTPException(409, "GROUP_RECOVERY_REJOIN_CONFIRMATION_REQUIRED")
+
+            metadata = _json_object(activity.metadata_json)
+            metadata["arrived_at"] = captured_at
+            metadata["actual_arrived_at"] = captured_at
+            truth_record = append_execution_truth(
+                metadata,
+                kind=str(truth["kind"]),
+                transition="ARRIVED",
+                captured_at=captured_at,
+                actor_type=str(truth["actor_type"]),
+                actor_id=str(truth["actor_id"]),
+                evidence=dict(truth.get("evidence") or {}),
+            )
+            activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+            activity.updated_at = captured_at
+            _record_outcome_event(
+                session,
+                journey,
+                activity=activity,
+                event_type="ACTIVITY_ARRIVED",
+                actor_type=str(truth["actor_type"]),
+                actor_id=str(truth["actor_id"]),
+                occurred_at_actual=captured_at,
+                payload={"execution_truth": truth_record, "group_recovery_member_progress": True},
+            )
+            if not register_execution_arrival(
+                session, journey, activity=activity, truth_record=truth_record
+            ):
+                raise HTTPException(409, "GROUP_RECOVERY_ARRIVAL_NOT_ACCEPTED")
+            close_recovery_if_rejoined(session, journey)
+            session.commit()
+            return _twin_snapshot(session, journey)
+
     predecessors = allowed_predecessors.get(target_state, set())
     if activity.status not in predecessors:
         expected = ", ".join(sorted(predecessors)) or "none"
@@ -9383,14 +20846,51 @@ def _transition_activity_state(
             409,
             f"INVALID_ACTIVITY_TRANSITION:{activity.status}->{target_state}; expected={expected}",
         )
+    if target_state == "EN_ROUTE":
+        metadata = _json_object(activity.metadata_json)
+        override = metadata.get("execution_mobility_override")
+        if override:
+            snapshot_payload = override.get("snapshot") if isinstance(override, dict) else None
+            actual_edge = override.get("actual_edge") if isinstance(override, dict) else None
+            try:
+                snapshot = MobilitySnapshot.from_evidence(snapshot_payload or {})
+                origin_key = str((actual_edge or {}).get("origin_key") or "")
+                destination_key = str((actual_edge or {}).get("destination_key") or "")
+                snapshot.hard_minutes(origin_key, destination_key)
+                fact = snapshot.facts[(origin_key, destination_key)]
+                if fact.fact_quality != "LIVE_PROVIDER_CAPTURE":
+                    raise KeyError("execution override is not live provider truth")
+            except (KeyError, TypeError, ValueError):
+                raise HTTPException(409, "DEPART_BLOCKED_MISSING_LIVE_EXECUTION_MOBILITY")
     metadata = json.loads(activity.metadata_json or "{}")
+    captured_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    truth = _resolve_execution_truth_attestation(
+        request,
+        session,
+        journey=journey,
+        activity=activity,
+        transition=target_state,
+        captured_at=captured_at,
+        attestation=attestation,
+    )
+    applied_recovery = active_group_recovery_spend(session, journey)
+    recovery_snapshot = applied_recovery[2] if applied_recovery else None
+    if (
+        target_state in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"}
+        and isinstance(recovery_snapshot, dict)
+        and str(recovery_snapshot.get("rendezvous_activity_id") or "") == str(activity.id)
+        and truth.get("kind") == SIMULATED_STATE_TRANSITION
+    ):
+        raise HTTPException(
+            409,
+            "GROUP_RECOVERY_REJOIN_REQUIRES_AUTHENTICATED_EXECUTION",
+        )
     actual_key = {
         "EN_ROUTE": "en_route_at",
         "ARRIVED": "arrived_at",
         "IN_PROGRESS": "started_at_actual",
     }.get(target_state)
     if actual_key:
-        captured_at = datetime.now(timezone.utc).isoformat()
         metadata[actual_key] = captured_at
         # Preserve the V11 names for existing consumers while exposing the
         # authoritative V12 execution contract.
@@ -9401,14 +20901,121 @@ def _transition_activity_state(
                 "IN_PROGRESS": "actual_started_at",
             }[target_state]
         ] = captured_at
+    truth_record = append_execution_truth(
+        metadata,
+        kind=str(truth["kind"]),
+        transition=target_state,
+        captured_at=captured_at,
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        evidence=dict(truth.get("evidence") or {}),
+    )
     activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
     activity.status = target_state
-    _record_outcome_event(session, journey, activity=activity, event_type=event_type, actor_type="USER")
-    activity.updated_at = datetime.now(timezone.utc).isoformat()
+    _record_outcome_event(
+        session,
+        journey,
+        activity=activity,
+        event_type=event_type,
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        occurred_at_actual=captured_at,
+        payload={"execution_truth": truth_record},
+    )
+    if target_state == "ARRIVED":
+        register_execution_arrival(
+            session, journey, activity=activity, truth_record=truth_record
+        )
+        close_recovery_if_rejoined(session, journey)
+    activity.updated_at = captured_at
+    from app.execution.continuous_journey import continuous_flow_projection
+
+    flow = continuous_flow_projection(session, journey)
+    notify(
+        session,
+        journey.id,
+        dedupe_key=str(flow["notification_key"]),
+        kind="JOURNEY_FLOW_MILESTONE",
+        priority="HIGH" if flow["state"] == "NEEDS_ATTENTION" else "NORMAL",
+        payload={"state": flow["state"], "activity_id": str(activity.id)},
+    )
     twin = _twin_snapshot(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
     return twin
+
+
+def _persist_material_execution_drift(
+    session: Session, journey: Journey, activity: Activity
+) -> tuple[EventModel | None, dict[str, Any]]:
+    """Persist one material Event from the real completion milestone only."""
+    progress = progress_drift_projection(session, journey)
+    basis = progress.get("basis") or {}
+    risk = progress.get("next_risk") or {}
+    if (
+        basis.get("activity_id") != activity.id
+        or basis.get("milestone") != "COMPLETED"
+        or not progress.get("material")
+    ):
+        return None, progress
+    fingerprint = execution_drift_fingerprint(
+        journey_id=journey.id,
+        activity_id=activity.id,
+        milestone="COMPLETED",
+        actual_at=str(basis.get("actual_at") or ""),
+        affected_target_id=str(risk.get("commitment_id") or "") or None,
+    )
+    for row in session.scalars(
+        select(EventModel).where(
+            EventModel.journey_id == journey.id,
+            EventModel.event_type == "SCHEDULE_DELAY",
+            EventModel.provenance == "SYSTEM_DERIVED",
+        )
+    ).all():
+        if _json_object(row.payload_json).get("drift_fingerprint") == fingerprint:
+            return row, progress
+    now = execution_clock.now().astimezone(timezone.utc).isoformat()
+    event = EventModel(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        provider_key="journey-execution-progress",
+        provenance="SYSTEM_DERIVED",
+        event_type="SCHEDULE_DELAY",
+        severity="MAJOR",
+        status="DETECTED",
+        affected_activity_id=str(risk.get("activity_id") or "") or None,
+        occurred_at=str(basis["actual_at"]),
+        detected_at=now,
+        resolved_at=None,
+        payload_json=json.dumps({
+            "execution_drift": progress,
+            "drift_fingerprint": fingerprint,
+            "source_milestone": basis,
+            "affected_commitment_id": risk.get("commitment_id"),
+            "affected_activity_id": risk.get("activity_id"),
+            "derivation": "SYSTEM_DERIVED_EXECUTION_FACT",
+            "source_execution_provenance": basis.get("truth_kind"),
+            "source_execution_milestone_id": basis.get("activity_id"),
+            "source_execution_milestone": basis.get("milestone"),
+            "source_execution_at": basis.get("actual_at"),
+            "incident_fingerprint": fingerprint,
+            "predictive_only": False,
+        }, ensure_ascii=False, sort_keys=True),
+        created_at=now,
+    )
+    session.add(event)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.execution_drift.materialized",
+        entity_type="Event",
+        entity_id=event.id,
+        journey_id=journey.id,
+        actor_type="SYSTEM",
+        after={"event_type": event.event_type, "drift_fingerprint": fingerprint,
+               "source_activity_id": activity.id, "affected_activity_id": event.affected_activity_id},
+    )
+    return event, progress
 
 
 def _is_authoritative_execution_plan(plan: PlanVersion | None) -> bool:
@@ -9431,26 +21038,113 @@ def _is_authoritative_execution_plan(plan: PlanVersion | None) -> bool:
     )
 
 
+def _invalidate_pending_replans_after_completion(
+    session: Session, journey: Journey, decided_at: str
+) -> None:
+    """Close proposals that cannot act after the Journey has finished.
+
+    A completed Journey has no executable cursor left.  Leaving a presented
+    recovery candidate in that Journey's read model makes the UI offer a
+    change that the authority boundary must reject, and repeated agent runs
+    turn that stale offer into a stack of identical advisories.  Keep the
+    proposal row and its evidence for history, but make the terminal state
+    explicit and reject its still-candidate plan.
+    """
+
+    pending = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.status.in_(("GENERATED", "PRESENTED")),
+        )
+    ).all()
+    for proposal in pending:
+        proposal.status = "INVALIDATED"
+        proposal.decided_at = decided_at
+        candidate = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if candidate is not None and candidate.status == "CANDIDATE":
+            candidate.status = "REJECTED"
+        record_audit(
+            session,
+            action="replan.invalidated",
+            entity_type="ReplanProposal",
+            entity_id=proposal.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            after={
+                "status": proposal.status,
+                "reason": "journey_completed",
+            },
+        )
+
+
 @app.post("/api/v1/journeys/{journey_id}/activities/{activity_id}/depart", response_model=JourneyTwinSchema)
-def depart_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    return _transition_activity_state(journey_id, activity_id, "EN_ROUTE", "ACTIVITY_DEPARTED", session)
+def depart_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
+    return _transition_activity_state(
+        journey_id,
+        activity_id,
+        "EN_ROUTE",
+        "ACTIVITY_DEPARTED",
+        request,
+        payload,
+        session,
+    )
 
 
 @app.post("/api/v1/journeys/{journey_id}/activities/{activity_id}/arrive", response_model=JourneyTwinSchema)
-def arrive_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    return _transition_activity_state(journey_id, activity_id, "ARRIVED", "ACTIVITY_ARRIVED", session)
+def arrive_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
+    return _transition_activity_state(
+        journey_id,
+        activity_id,
+        "ARRIVED",
+        "ACTIVITY_ARRIVED",
+        request,
+        payload,
+        session,
+    )
 
 
 @app.post("/api/v1/journeys/{journey_id}/activities/{activity_id}/begin", response_model=JourneyTwinSchema)
-def begin_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    return _transition_activity_state(journey_id, activity_id, "IN_PROGRESS", "ACTIVITY_IN_PROGRESS", session)
+def begin_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
+    return _transition_activity_state(
+        journey_id,
+        activity_id,
+        "IN_PROGRESS",
+        "ACTIVITY_IN_PROGRESS",
+        request,
+        payload,
+        session,
+    )
 
 
 @app.post(
     "/api/v1/journeys/{journey_id}/activities/{activity_id}/complete",
     response_model=JourneyTwinSchema,
 )
-def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
+def complete_activity(
+    journey_id: UUID,
+    activity_id: UUID,
+    request: Request,
+    payload: ExecutionTruthAttestation | None = None,
+    session: Session = Depends(get_session),
+):
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
@@ -9459,6 +21153,27 @@ def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = De
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
+    applied_recovery = active_group_recovery_spend(session, journey)
+    rejoin_snapshot = applied_recovery[2] if applied_recovery else None
+    if (
+        isinstance(rejoin_snapshot, dict)
+        and str(rejoin_snapshot.get("rendezvous_activity_id") or "") == str(activity.id)
+    ):
+        rejoin_state = followthrough_projection(
+            session, journey, viewer_member_id=None
+        )
+        if (
+            rejoin_state is not None
+            and rejoin_state.get("state") != "RECOVERY_CLOSED"
+            and (
+                rejoin_state.get("membership_reconfirmation_required")
+                or rejoin_state.get("confirmed_count") != rejoin_state.get("required_count")
+            )
+        ):
+            raise HTTPException(
+                409,
+                "GROUP_RECOVERY_WAITING_FOR_MEMBER_REJOIN; keep the rendezvous activity current",
+            )
     plan = session.get(PlanVersion, journey.active_plan_version_id)
     authoritative_execution = _is_authoritative_execution_plan(plan)
     if activity.status != "IN_PROGRESS":
@@ -9470,19 +21185,40 @@ def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = De
                 409,
                 f"INVALID_ACTIVITY_TRANSITION:{activity.status}->COMPLETED; expected=IN_PROGRESS",
             )
-    activity.status = "COMPLETED"
     metadata = json.loads(activity.metadata_json or "{}")
-    completed_at = datetime.now(timezone.utc).isoformat()
+    completed_at = execution_clock.now().astimezone(timezone.utc).isoformat()
+    truth = _resolve_execution_truth_attestation(
+        request,
+        session,
+        journey=journey,
+        activity=activity,
+        transition="COMPLETED",
+        captured_at=completed_at,
+        attestation=payload,
+    )
     metadata["completed_at_actual"] = completed_at
     if not authoritative_execution and metadata.get("execution_state") != "IN_PROGRESS":
         metadata["legacy_execution_compatibility"] = "DIRECT_COMPLETION_PRE_V12_CONTRACT"
+    truth_record = append_execution_truth(
+        metadata,
+        kind=str(truth["kind"]),
+        transition="COMPLETED",
+        captured_at=completed_at,
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        evidence=dict(truth.get("evidence") or {}),
+    )
+    activity.status = "COMPLETED"
     activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
     _record_outcome_event(
         session,
         journey,
         activity=activity,
         event_type="ACTIVITY_COMPLETED",
-        actor_type="USER",
+        actor_type=str(truth["actor_type"]),
+        actor_id=str(truth["actor_id"]) if truth.get("actor_id") is not None else None,
+        occurred_at_actual=completed_at,
+        payload={"execution_truth": truth_record},
     )
     next_activity = session.scalar(
         select(Activity)
@@ -9516,34 +21252,66 @@ def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = De
         entity_type="Activity",
         entity_id=activity.id,
         journey_id=journey.id,
-        after={"status": activity.status, "next_activity_id": journey.current_activity_id},
+        after={
+            "status": activity.status,
+            "next_activity_id": journey.current_activity_id,
+            "execution_truth": truth_record,
+        },
+    )
+    from app.execution.continuous_journey import continuous_flow_projection
+
+    flow = continuous_flow_projection(session, journey)
+    notify(
+        session,
+        journey.id,
+        dedupe_key=str(flow["notification_key"]),
+        kind="JOURNEY_FLOW_MILESTONE",
+        priority="HIGH" if flow["state"] == "NEEDS_ATTENTION" else "NORMAL",
+        payload={"state": flow["state"], "activity_id": flow.get("current", {}).get("id") if flow.get("current") else None},
     )
     twin = _twin_snapshot(session, journey)
     if journey.status == "COMPLETED":
+        _invalidate_pending_replans_after_completion(session, journey, completed_at)
         learn_from_journey(session, journey)
     refresh_offline_snapshot(session, journey)
+    drift_event, _progress = _persist_material_execution_drift(session, journey, activity)
     session.commit()
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    if drift_event is not None and enrollment is not None and enrollment.enabled:
+        try:
+            scan_guardian(session, journey, include_opportunity_signals=False)
+        except Exception:
+            logging.getLogger(__name__).exception(
+                "R55 Guardian handoff failed for execution drift event %s", drift_event.id
+            )
     return twin
 
 
-@app.post(
-    "/api/v1/journeys/{journey_id}/activities/{activity_id}/skip",
-    response_model=JourneyTwinSchema,
-)
-def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
-    journey = require(session, Journey, str(journey_id), "Journey")
+def _skip_current_activity(
+    session: Session,
+    journey: Journey,
+    activity: Activity,
+    *,
+    actor_type: str,
+    reason: str,
+    mission_id: str | None = None,
+    clarification_id: str | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Skip exactly the current activity and preserve the real route truth."""
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
-    activity = session.get(Activity, str(activity_id))
-    if activity is None or activity.plan_version_id != journey.active_plan_version_id:
+    if activity.plan_version_id != journey.active_plan_version_id:
         raise HTTPException(409, "activity is not on the active plan")
     if journey.current_activity_id != activity.id:
         raise HTTPException(409, "activity is not the current activity")
-    if activity.status not in {"ACTIVE", "NOT_STARTED", "EN_ROUTE", "ARRIVED", "IN_PROGRESS"}:
-        raise HTTPException(
-            409,
-            f"INVALID_ACTIVITY_TRANSITION:{activity.status}->SKIPPED",
-        )
+    strategic_skip = bool(mission_id or clarification_id)
+    if activity.status == "EN_ROUTE":
+        raise HTTPException(409, "REVALIDATION_REQUIRED")
+    if strategic_skip and activity.status not in {"ACTIVE", "NOT_STARTED"}:
+        raise HTTPException(409, "CLARIFIED_SKIP_ONLY_PRE_DEPART")
+    if activity.status not in {"ACTIVE", "NOT_STARTED", "ARRIVED", "IN_PROGRESS"}:
+        raise HTTPException(409, f"INVALID_ACTIVITY_TRANSITION:{activity.status}->SKIPPED")
+    active_plan = session.get(PlanVersion, journey.active_plan_version_id)
     protected_commitment = session.scalar(
         select(CommitmentModel).where(
             CommitmentModel.journey_id == journey.id,
@@ -9552,22 +21320,9 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
             CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
         )
     )
-    active_plan = session.get(PlanVersion, journey.active_plan_version_id)
-    authoritative_locked = bool(activity.locked and _is_authoritative_execution_plan(active_plan))
-    if authoritative_locked or protected_commitment is not None:
+    if bool(activity.locked and _is_authoritative_execution_plan(active_plan)) or protected_commitment is not None:
         raise HTTPException(409, "PROTECTED_COMMITMENT_CANNOT_BE_SKIPPED")
-    activity.status = "SKIPPED"
-    metadata = json.loads(activity.metadata_json or "{}")
-    skipped_at = datetime.now(timezone.utc).isoformat()
-    metadata["skipped_at"] = skipped_at
-    activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
-    _record_outcome_event(
-        session,
-        journey,
-        activity=activity,
-        event_type="ACTIVITY_SKIPPED",
-        actor_type="USER",
-    )
+
     next_activity = session.scalar(
         select(Activity)
         .where(
@@ -9576,6 +21331,121 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
             Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
         )
         .order_by(Activity.sequence_no)
+    )
+    execution_override: dict[str, Any] | None = None
+    if next_activity is not None:
+        activities = session.scalars(
+            select(Activity)
+            .where(Activity.plan_version_id == journey.active_plan_version_id)
+            .order_by(Activity.sequence_no)
+        ).all()
+        if activity.status in {"ARRIVED", "IN_PROGRESS"}:
+            origin_activity = activity
+        else:
+            current_index = next(
+                (index for index, item in enumerate(activities) if item.id == activity.id),
+                None,
+            )
+            origin_activity = None
+            if current_index is not None:
+                for previous in reversed(activities[:current_index]):
+                    if previous.status == "COMPLETED" and _activity_routing_key(previous):
+                        origin_activity = previous
+                        break
+
+        origin_key = _activity_routing_key(origin_activity)
+        destination_key = _activity_routing_key(next_activity)
+        if not origin_key or not destination_key or origin_key == destination_key:
+            raise HTTPException(409, "REVALIDATION_REQUIRED")
+
+        frozen_evidence = _json_object(active_plan.mobility_evidence_json if active_plan else None)
+        try:
+            frozen_snapshot = MobilitySnapshot.from_evidence(frozen_evidence)
+        except (KeyError, TypeError, ValueError):
+            frozen_snapshot = None
+
+        # A pre-departure skip creates a fresh physical adjacency.  Only a
+        # hard-eligible live provider capture can authorize that new edge.
+        if activity.status in {"ACTIVE", "NOT_STARTED"}:
+            next_pair = (origin_key, destination_key)
+            try:
+                captured = capture_runtime_mobility_snapshot(
+                    session,
+                    journey,
+                    [next_pair],
+                    operation_key=f"r27-skip:{journey.id}:{activity.id}:{next_activity.id}",
+                    require_explicit_facts=True,
+                )
+                fact = captured.snapshot.fact_for(*next_pair)
+                if fact is None or fact.fact_quality != "LIVE_PROVIDER_CAPTURE" or fact.degraded:
+                    raise KeyError("fresh skip edge is not hard-eligible live provider truth")
+                captured.snapshot.hard_minutes(*next_pair)
+            except (MobilitySnapshotCaptureError, KeyError, TypeError, ValueError) as exc:
+                raise HTTPException(409, "REVALIDATION_REQUIRED") from exc
+            execution_override = {
+                "reason": "PREDECESSOR_SKIPPED_DIRECT_EDGE",
+                "origin_activity_id": origin_activity.id,
+                "destination_activity_id": next_activity.id,
+                "snapshot": captured.snapshot.to_evidence(),
+                "actual_edge": {
+                    "origin_key": origin_key,
+                    "destination_key": destination_key,
+                    "fact_quality": fact.fact_quality,
+                    "route_provenance": fact.route_provenance,
+                },
+            }
+        else:
+            # Once ARRIVED/IN_PROGRESS, the current activity is the truthful
+            # execution position and its original edge remains frozen.
+            if frozen_snapshot is None:
+                raise HTTPException(409, "REVALIDATION_REQUIRED")
+            try:
+                frozen_fact = frozen_snapshot.fact_for(origin_key, destination_key)
+                if frozen_fact is None or frozen_fact.degraded:
+                    raise KeyError("unchanged skip edge is unavailable")
+                frozen_snapshot.hard_minutes(origin_key, destination_key)
+            except (KeyError, TypeError, ValueError) as exc:
+                raise HTTPException(409, "REVALIDATION_REQUIRED") from exc
+
+    skipped_at = datetime.now(timezone.utc).isoformat()
+    metadata = _json_object(activity.metadata_json)
+    metadata.update({
+        "skipped_at": skipped_at,
+        "skip_reason": reason,
+        "skip_provenance": {
+            "actor_type": actor_type,
+            "mission_id": mission_id,
+            "clarification_id": clarification_id,
+        },
+    })
+    activity.status = "SKIPPED"
+    activity.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+    if execution_override is not None and next_activity is not None:
+        next_metadata = _json_object(next_activity.metadata_json)
+        next_metadata["execution_mobility_override"] = execution_override
+        next_activity.metadata_json = json.dumps(next_metadata, ensure_ascii=False, sort_keys=True)
+    outcome = _record_outcome_event(
+        session,
+        journey,
+        activity=activity,
+        event_type="ACTIVITY_SKIPPED",
+        actor_type=actor_type,
+        payload={
+            "skip_reason": reason,
+            "mission_id": mission_id,
+            "clarification_id": clarification_id,
+            "execution_mobility_override": execution_override,
+            "voluntary_choice": False,
+            **(
+                {
+                    "decision_scope": "CLARIFIED_HORIZON_CHOICE",
+                    "preference_learning_eligible": False,
+                }
+                if strategic_skip
+                else {}
+            ),
+        },
+        related_agent_run_id=None,
     )
     if next_activity is None:
         journey.current_activity_id = None
@@ -9590,19 +21460,58 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
             activity=next_activity,
             event_type="ACTIVITY_STARTED",
             actor_type="SYSTEM",
+            payload={"predecessor_skipped": activity.id, "execution_mobility_override": execution_override},
         )
-    journey.updated_at = datetime.now(timezone.utc).isoformat()
+    journey.updated_at = skipped_at
     record_audit(
         session,
         action="activity.skipped",
         entity_type="Activity",
         entity_id=activity.id,
         journey_id=journey.id,
-        after={"status": activity.status, "next_activity_id": journey.current_activity_id},
+        actor_type=actor_type,
+        after={
+            "status": activity.status,
+            "next_activity_id": journey.current_activity_id,
+            "reason": reason,
+            "mission_id": mission_id,
+            "clarification_id": clarification_id,
+        },
     )
     twin = _twin_snapshot(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
+    return twin, {
+        "executed": True,
+        "mutation": "ACTIVITY_SKIPPED",
+        "skipped_activity_id": activity.id,
+        "next_activity_id": journey.current_activity_id,
+        "execution_mobility_snapshot_id": (
+            execution_override or {}).get("snapshot", {}).get("snapshot_id") if execution_override else None,
+        "actual_edge": (execution_override or {}).get("actual_edge"),
+        "reason": reason,
+        "mission_id": mission_id,
+        "clarification_id": clarification_id,
+        "outcome_event_id": outcome.id,
+    }
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/activities/{activity_id}/skip",
+    response_model=JourneyTwinSchema,
+)
+def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    activity = session.get(Activity, str(activity_id))
+    if activity is None:
+        raise HTTPException(409, "activity is not on the active plan")
+    twin, _receipt = _skip_current_activity(
+        session,
+        journey,
+        activity,
+        actor_type="USER",
+        reason="USER_REQUESTED_SKIP",
+    )
     return twin
 
 
@@ -9621,7 +21530,110 @@ def _activity_routing_key(item: Activity | None) -> str | None:
         return None
     metadata = _json_object(item.metadata_json, {})
     semantic = str(metadata.get("semantic_key") or "").strip()
-    return semantic or item.place_id or item.city_service_id
+    value = semantic or item.place_id or item.city_service_id
+    if not value:
+        return None
+    # Older composition rows persisted the anchor role in upper case while
+    # the live mobility snapshot uses the canonical lower-case role.  Keep the
+    # semantic identity intact, but normalize only this structural suffix so
+    # read-time receipts and the deterministic gate address the same edge.
+    for role in ("arrival", "departure"):
+        suffix = f":{role}-anchor"
+        if value.casefold().endswith(suffix):
+            return value[:-len(suffix)] + suffix
+    return value
+
+
+def _plan_mobility_eligibility_receipts(
+    plan: PlanVersion | None,
+    activities: list[Activity],
+) -> dict[str, Any]:
+    """Expose the deterministic hard gate for every actual consecutive plan edge.
+
+    The plan and JourneyTwin already carried the frozen facts, but the agent-facing
+    projection only exposed a hard-eligible count.  That left an agent unable to tell
+    which actual edge was covered without reimplementing the product gate.  These receipts
+    are read-only projections of the persisted plan evidence; they never grant authority.
+    """
+
+    empty = {
+        "used_edge_ids": [],
+        "receipts": [],
+        "all_actual_edges_hard_eligible": False,
+    }
+    if plan is None:
+        return empty
+    evidence = _json_object(plan.mobility_evidence_json, {})
+    raw_facts = evidence.get("facts")
+    facts = [item for item in raw_facts if isinstance(item, dict)] if isinstance(raw_facts, list) else []
+    facts_by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in facts
+        if item.get("origin_key") and item.get("destination_key")
+    }
+    snapshot: MobilitySnapshot | None = None
+    try:
+        snapshot = MobilitySnapshot.from_evidence(evidence)
+    except (KeyError, TypeError, ValueError):
+        pass
+
+    receipts: list[dict[str, Any]] = []
+    for origin_activity, destination_activity in zip(activities, activities[1:]):
+        origin_key = str(_activity_routing_key(origin_activity) or "").strip()
+        destination_key = str(_activity_routing_key(destination_activity) or "").strip()
+        if not origin_key or not destination_key or origin_key == destination_key:
+            continue
+        fact = (
+            snapshot.fact_for(origin_key, destination_key)
+            if snapshot is not None
+            else facts_by_pair.get((origin_key, destination_key))
+        )
+        mode = _mobility_fact_value(fact, "mode")
+        receipt: dict[str, Any] = {
+            "origin_key": origin_key,
+            "destination_key": destination_key,
+            "provider": _mobility_fact_value(fact, "provider", evidence.get("source_provider")),
+            "fact_quality": _mobility_fact_value(fact, "fact_quality"),
+            "route_provenance": _mobility_fact_value(fact, "route_provenance"),
+            "degraded": bool(_mobility_fact_value(fact, "degraded", evidence.get("degraded", False))),
+            "persisted_minutes": _mobility_fact_value(fact, "minutes"),
+            "hard_minutes": None,
+            "hard_eligible": False,
+            "decision": "MOBILITY_DATA_UNAVAILABLE" if fact is None else "HARD_INELIGIBLE",
+        }
+        if mode is not None:
+            receipt["mode"] = mode
+        if snapshot is not None and fact is not None:
+            try:
+                receipt["hard_minutes"] = snapshot.hard_minutes(origin_key, destination_key)
+                receipt["hard_eligible"] = True
+                receipt["decision"] = "HARD_ELIGIBLE"
+            except KeyError:
+                pass
+        receipts.append(receipt)
+
+    return {
+        # Keep the inventory factual.  Unknown actual edges still receive a
+        # receipt below, but they cannot be listed as used evidence.
+        "used_edge_ids": [
+            [item["origin_key"], item["destination_key"]]
+            for item in receipts
+            if item.get("decision") != "MOBILITY_DATA_UNAVAILABLE"
+        ],
+        "receipts": receipts,
+        "all_actual_edges_hard_eligible": bool(receipts)
+        and all(bool(item["hard_eligible"]) for item in receipts),
+    }
+
+
+def _mobility_fact_value(fact: TravelEstimateFact | Mapping[str, Any] | None, field: str, default: Any = None) -> Any:
+    if fact is None:
+        return default
+    if isinstance(fact, TravelEstimateFact):
+        if field == "provider":
+            return fact.provider_key
+        return getattr(fact, field, default)
+    return fact.get(field, default)
 
 
 def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> dict[str, Any]:
@@ -9644,6 +21656,9 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
         "reference_consistent": False,
         "legs_total": 0,
         "legs_hard_eligible": 0,
+        "used_edge_ids": [],
+        "eligibility_receipts": [],
+        "all_actual_edges_hard_eligible": False,
     }
     if plan is None:
         return empty
@@ -9656,6 +21671,7 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
     ).all()
     keys = [str(key) for key in (_activity_routing_key(item) for item in activities) if key]
     legs = [(left, right) for left, right in zip(keys, keys[1:]) if left != right]
+    edge_receipts = _plan_mobility_eligibility_receipts(plan, list(activities))
     snapshot: MobilitySnapshot | None = None
     if snapshot_id is not None:
         try:
@@ -9675,6 +21691,9 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
         "reference_consistent": bool(snapshot_id) and snapshot_id == plan.mobility_snapshot_id,
         "legs_total": len(legs),
         "legs_hard_eligible": hard_eligible,
+        "used_edge_ids": edge_receipts["used_edge_ids"],
+        "eligibility_receipts": edge_receipts["receipts"],
+        "all_actual_edges_hard_eligible": edge_receipts["all_actual_edges_hard_eligible"],
     }
 
 
@@ -9770,6 +21789,9 @@ def demo_scene(session: Session = Depends(get_session)):
             "evidence_reference_consistent": None,
             "mobility_legs_total": None,
             "mobility_legs_hard_eligible": None,
+            "mobility_used_edge_ids": [],
+            "mobility_eligibility_receipts": [],
+            "all_actual_edges_hard_eligible": False,
             # Constant key set: a strict client-side shape check (missing key -> the envelope is
             # dropped) would otherwise turn an honest empty stage into "cannot read the scene",
             # which is the ORD-0070 family of defects seen from the other side.
@@ -9846,6 +21868,9 @@ def demo_scene(session: Session = Depends(get_session)):
         # still decides for itself.
         "mobility_legs_total": coverage["legs_total"],
         "mobility_legs_hard_eligible": coverage["legs_hard_eligible"],
+        "mobility_used_edge_ids": coverage["used_edge_ids"],
+        "mobility_eligibility_receipts": coverage["eligibility_receipts"],
+        "all_actual_edges_hard_eligible": coverage["all_actual_edges_hard_eligible"],
         "plan_version_id": str(plan.id) if plan is not None else None,
         # ORD-0522: which hop the places behind this stage rest on, at which stage a job stopped
         # supplying, and how many of the stops the map can actually stand on.
@@ -9973,6 +21998,8 @@ def create_journey_event(
         "affected_activity_id": item.affected_activity_id,
         "occurred_at": item.occurred_at,
         "detected_at": item.detected_at,
+        "resolved_at": item.resolved_at,
+        "resolution_reason": _json_object(item.payload_json).get("resolution_reason"),
         "payload": json.loads(item.payload_json),
     }
 
@@ -9997,6 +22024,8 @@ def list_journey_events(journey_id: UUID, session: Session = Depends(get_session
             "affected_activity_id": item.affected_activity_id,
             "occurred_at": item.occurred_at,
             "detected_at": item.detected_at,
+            "resolved_at": item.resolved_at,
+            "resolution_reason": _json_object(item.payload_json).get("resolution_reason"),
             "payload": json.loads(item.payload_json),
         }
         for item in items
@@ -10428,7 +22457,7 @@ def _frozen_route_for_plan(
             coordinates.append(coordinate)
         elif previous_key and previous_coordinate:
             segment_count += 1
-            fact = snapshot.facts.get((previous_key, key)) if snapshot is not None else None
+            fact = snapshot.fact_for(previous_key, key) if snapshot is not None else None
             geometry = list(fact.route_geometry) if fact is not None else []
             if len(geometry) >= 2:
                 points = [list(point) for point in geometry]
@@ -10709,8 +22738,16 @@ def journey_route_evidence(
     }
 
 
-def _replan_payload(item: ReplanProposalModel) -> dict[str, Any]:
-    return {
+def _replan_payload(
+    item: ReplanProposalModel,
+    *,
+    include_recovery_fields: bool = False,
+) -> dict[str, Any]:
+    # Keep the ordinary agent read wire-compatible with the original twelve
+    # fields. Recovery epoch/run/canonical metadata is exposed by the newer
+    # authority receipts and can be requested by callers that need it, while
+    # legacy list_replans consumers do not receive nullable bookkeeping keys.
+    payload = {
         "id": item.id,
         "journey_id": item.journey_id,
         "trigger_event_id": item.trigger_event_id,
@@ -10724,12 +22761,27 @@ def _replan_payload(item: ReplanProposalModel) -> dict[str, Any]:
         "diff": json.loads(item.diff_json or "{}"),
         "explanation": json.loads(item.explanation_json or "{}"),
     }
+    if include_recovery_fields:
+        payload.update(
+            {
+                "recovery_epoch_id": item.recovery_epoch_id,
+                "source_agent_run_id": item.source_agent_run_id,
+                "semantic_identity": item.semantic_identity,
+                "canonical_proposal_id": item.canonical_proposal_id,
+            }
+        )
+    return payload
 
 
 @dataclass(frozen=True)
 class _ReplanCandidateSpec:
     family: str
     replacement_choice: Any | None
+    # An opportunity window can contain more than one grounded stop.  Keep the
+    # individual provider-backed choices on the spec so the persisted proposal
+    # can prove the whole recombined itinerary, while the legacy single-choice
+    # field continues to serve replacement and scoring paths.
+    insertion_choices: tuple[Any, ...] = ()
     candidate_delay: int = 0
     candidate_remove: bool = False
     window_evidence: dict[str, Any] | None = None
@@ -10737,6 +22789,7 @@ class _ReplanCandidateSpec:
     solver_provenance: dict[str, Any] | None = None
     v2_plan: SolverV2Plan | None = None
     v2_choices: dict[tuple[str, str], Any] | None = None
+    additive_insertion: bool = False
 
 
 class MobilityDataUnavailable(RuntimeError):
@@ -10930,12 +22983,41 @@ def _replan_estimate(
         return _hard_leg_minutes(captured, origin, destination)
 
 
+def _normalize_replan_schedule_time(value: str, journey: Journey) -> str:
+    """Keep persisted plan wall time while making generated instants comparable.
+
+    Journey activities are persisted in the offset carried by ``journey.start_at``.
+    ``Journey.timezone`` names the traveler's calendar zone, but it is not a
+    license to reinterpret an already materialized local schedule as an instant
+    in a different offset.  The old ``astimezone(ZoneInfo(...))`` conversion
+    moved a +08:00 C4 from 15:00 to 16:00 for a Journey labelled Asia/Tokyo.
+    Use the Journey start offset as the plan's serialization offset; when an
+    event/provider instant arrived in another offset, convert that instant back
+    to the same schedule offset.
+    """
+
+    moment = datetime.fromisoformat(str(value))
+    reference = datetime.fromisoformat(journey.start_at)
+    schedule_tz = reference.tzinfo
+    if schedule_tz is None:
+        try:
+            schedule_tz = ZoneInfo(journey.timezone or "UTC")
+        except (ZoneInfoNotFoundError, ValueError):
+            schedule_tz = timezone.utc
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=schedule_tz)
+    else:
+        moment = moment.astimezone(schedule_tz)
+    return moment.isoformat()
+
+
 @app.post(
     "/api/v1/journeys/{journey_id}/replans", response_model=ReplanProposalSchema, status_code=201
 )
 def generate_replan(
     journey_id: UUID,
     body: ReplanGenerateRequest,
+    request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
@@ -10961,6 +23043,77 @@ def generate_replan(
     if handled is not None:
         raise HTTPException(409, "trigger event has already been handled by an accepted replan")
 
+    promotion: MemberPlacePromotion | None = None
+    promotion_invitation: MemberPlaceInvitation | None = None
+    promotion_fields = (
+        body.promotion_id,
+        body.promotion_invitation_id,
+        body.promotion_dwell_minutes,
+    )
+    if any(value is not None for value in promotion_fields):
+        if not all(value is not None for value in promotion_fields):
+            raise HTTPException(422, "SHARED_PLACE_PROMOTION_BINDING_REQUIRED")
+        from app.traveler_principal import resolve_journey_member_principal
+        from app.execution.member_place_invitation import _invitation_context_is_current
+
+        principal, actor = resolve_journey_member_principal(
+            request, session, journey_id=journey.id
+        )
+        promotion = session.get(MemberPlacePromotion, str(body.promotion_id))
+        promotion_invitation = session.get(
+            MemberPlaceInvitation, str(body.promotion_invitation_id)
+        )
+        if (
+            promotion is None
+            or promotion_invitation is None
+            or promotion.journey_id != journey.id
+            or promotion.invitation_id != promotion_invitation.id
+            or promotion.actor_member_id != actor.id
+            or promotion.actor_traveler_id != principal.traveler_id
+            or promotion.state != "PENDING_ROUTE"
+            or promotion.proposal_id is not None
+            or promotion.active_plan_version_id != base.id
+            or promotion_invitation.journey_id != journey.id
+            or promotion_invitation.active_plan_version_id != base.id
+            or promotion_invitation.state != "OPEN"
+            or promotion_invitation.place_id != promotion.place_id
+            or promotion_invitation.rendezvous_activity_id
+            != promotion.rendezvous_activity_id
+            or int(promotion.dwell_minutes) != int(body.promotion_dwell_minutes)
+            or list(body.place_ids or []) != [str(promotion.place_id)]
+            or int(body.candidate_count) != 1
+        ):
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_BINDING_STALE")
+        if (
+            actor.id != promotion_invitation.owner_member_id
+            and session.scalar(
+                select(MemberPlaceInvitationRecipient.id).where(
+                    MemberPlaceInvitationRecipient.invitation_id
+                    == promotion_invitation.id,
+                    MemberPlaceInvitationRecipient.recipient_member_id == actor.id,
+                    MemberPlaceInvitationRecipient.recipient_traveler_id
+                    == principal.traveler_id,
+                    MemberPlaceInvitationRecipient.state == "ACCEPTED_OWN_STOP_READY",
+                )
+            )
+            is None
+        ):
+            raise HTTPException(403, "SHARED_PLACE_PROMOTION_REQUIRES_INVITATION_PARTICIPANT")
+        now = execution_clock.now().astimezone(timezone.utc)
+        expires_at = datetime.fromisoformat(
+            str(promotion_invitation.expires_at).replace("Z", "+00:00")
+        )
+        if (
+            expires_at.tzinfo is None
+            or expires_at.astimezone(timezone.utc) <= now
+            or not _invitation_context_is_current(
+                session, journey, promotion_invitation, now=now
+            )
+        ):
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_INVITATION_STALE")
+        if trigger_event.event_type != "OPPORTUNITY_WINDOW":
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_REQUIRES_GROUNDED_OPPORTUNITY_WINDOW")
+
     generation_idempotency_key: str | None = None
     generation_signature: str | None = None
     if idempotency_key is not None:
@@ -10974,6 +23127,9 @@ def generate_replan(
                 "base_plan_version_id": base.id,
                 "trigger_event_id": trigger_id,
                 "candidate_count": body.candidate_count,
+                "place_ids": list(body.place_ids or []),
+                "promotion_id": str(body.promotion_id or ""),
+                "promotion_dwell_minutes": body.promotion_dwell_minutes,
             }
         )
         generation_idempotency_key = f"replan.generate:{header_key}"
@@ -11280,6 +23436,7 @@ def generate_replan(
                             )
                             if place is not None
                         ],
+                        allow_strategy_estimate=settings.lab_estimate_authority,
                         max_duration_min=max(
                             1,
                             int(
@@ -11435,6 +23592,7 @@ def generate_replan(
                         candidate_places=candidate_places,
                         occupied_place_ids=occupied_place_ids,
                         occupied_places=occupied_places,
+                        allow_strategy_estimate=settings.lab_estimate_authority,
                         max_duration_min=max(
                             1,
                             int(
@@ -11469,6 +23627,130 @@ def generate_replan(
         if any(datetime.fromisoformat(start) > effective_event_time for _, start in c4_anchors)
         else None
     )
+    opportunity_choices: list[ReplacementChoice] = []
+    opportunity_anchor: Activity | None = None
+    if trigger_event.event_type == "OPPORTUNITY_WINDOW":
+        # Agent-provided ids are only bounded search hints.  The server owns
+        # identity, canonical facts, and the active-plan exclusion.
+        hinted_ids = list(dict.fromkeys(str(item) for item in (body.place_ids or [])))[:3]
+        occupied_place_ids = {str(item.place_id) for item in source if item.place_id}
+        if not hinted_ids:
+            raise HTTPException(422, "OPPORTUNITY_CANDIDATE_REQUIRED")
+        candidate_failures: list[dict[str, str]] = []
+        opportunity_anchor = next(
+            (
+                item
+                for item in source
+                if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                and current_execution is not None
+                and item.sequence_no > current_execution.sequence_no
+            ),
+            None,
+        )
+        if opportunity_anchor is None and future_anchor is not None:
+            opportunity_anchor = next(
+                (
+                    item
+                    for item in source
+                    if _activity_location(item) == future_anchor[1]
+                    and datetime.fromisoformat(item.start_at) == future_anchor[0]
+                ),
+                None,
+            )
+        if current_execution is None or opportunity_anchor is None:
+            raise HTTPException(422, "OPPORTUNITY_WINDOW_ANCHOR_REQUIRED")
+        if (
+            trigger_event.provenance != "SYSTEM_DERIVED"
+            or trigger_event.provider_key != "citynexus-twin-opportunity"
+            or payload.get("active_plan_version_id") != base.id
+            or payload.get("current_execution_activity_id") != current_execution.id
+            or payload.get("next_activity_id") != opportunity_anchor.id
+        ):
+            raise HTTPException(409, "OPPORTUNITY_WINDOW_STALE_OR_UNBOUND")
+        if promotion_invitation is not None and (
+            len(hinted_ids) != 1
+            or hinted_ids[0] != str(promotion_invitation.place_id)
+            or str(opportunity_anchor.id)
+            != str(promotion_invitation.rendezvous_activity_id)
+        ):
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_RENDEZVOUS_CHANGED")
+        effective_event_time = max(
+            effective_event_time, datetime.fromisoformat(current_execution.end_at)
+        )
+        for hinted_id in hinted_ids:
+            candidate_place = places_by_id.get(hinted_id)
+            failure = None
+            if candidate_place is None:
+                failure = "PLACE_NOT_FOUND"
+            elif candidate_place.id in occupied_place_ids:
+                failure = "ALREADY_ACTIVE"
+            elif candidate_place.provider_key in _SERVER_OWNED_PLACE_PROVIDERS:
+                failure = "NOT_CITY_PLACE"
+            elif not candidate_place.external_id or not candidate_place.provider_key:
+                failure = "PROVIDER_IDENTITY_MISSING"
+            if failure is not None:
+                candidate_failures.append({"place_id": hinted_id, "reason": failure})
+                continue
+            candidate_meta = _json_object(candidate_place.metadata_json)
+            candidate_cost = canonical_cost_evidence(
+                candidate_meta.get("cost_evidence"), candidate_meta.get("tags")
+            )
+            if (
+                not isinstance(candidate_cost, dict)
+                or str(candidate_cost.get("status") or "UNKNOWN").upper()
+                not in {"KNOWN", "VERIFIED_PROVIDER"}
+                or candidate_cost.get("amount_minor") is None
+            ):
+                candidate_failures.append({"place_id": hinted_id, "reason": "COST_UNKNOWN"})
+                continue
+            if (
+                not candidate_cost.get("currency_agnostic")
+                and str(candidate_cost.get("currency") or "").upper()
+                != str(journey.budget_currency).upper()
+            ):
+                candidate_failures.append({"place_id": hinted_id, "reason": "CURRENCY_MISMATCH"})
+                continue
+            candidate_opening = normalize_opening_hours(
+                json.loads(candidate_place.opening_hours_json or "{}")
+            )
+            if candidate_opening.get("status") not in {
+                "NORMALIZED_VALID",
+                "OFFICIAL_WEB_VERIFIED",
+                "VERIFIED_PROVIDER",
+            }:
+                candidate_failures.append({"place_id": hinted_id, "reason": "OPENING_UNKNOWN"})
+                continue
+            visit_minutes = int(
+                body.promotion_dwell_minutes
+                if promotion is not None
+                else (candidate_meta.get("typical_visit_minutes") or 30)
+            )
+            if visit_minutes <= 0 or visit_minutes > 240:
+                candidate_failures.append({"place_id": hinted_id, "reason": "VISIT_DURATION_UNSUPPORTED"})
+                continue
+            opportunity_choices.append(
+                ReplacementChoice(
+                    place_id=candidate_place.id,
+                    title=candidate_place.name,
+                    duration_min=visit_minutes,
+                    cost_minor=int(candidate_cost["amount_minor"]),
+                    reason_codes=("OPPORTUNITY_WINDOW_F4", "CANONICAL_COST", "CANONICAL_OPENING"),
+                )
+            )
+        if not opportunity_choices:
+            reason = candidate_failures[0]["reason"] if candidate_failures else "NO_VALID_CANDIDATE"
+            raise HTTPException(422, f"OPPORTUNITY_CANDIDATES_NONE_FEASIBLE:{reason}")
+        for opportunity_choice in opportunity_choices:
+            _need_pair(_activity_location(current_execution), opportunity_choice.place_id)
+            _need_pair(opportunity_choice.place_id, _activity_location(opportunity_anchor))
+        # A mediator may recombine more than one grounded opportunity into a
+        # single executable future.  Capture every adjacent pair up front so
+        # the compound proposal below never falls back to an invented travel
+        # constant when it is re-timed and revalidated.
+        for left in opportunity_choices:
+            for right in opportunity_choices:
+                if left.place_id != right.place_id:
+                    _need_pair(left.place_id, right.place_id)
     for choice in replacement_choices:
         _need_pair(_activity_location(current_execution or previous_affected), choice.place_id)
         _need_pair(_activity_location(previous_affected), choice.place_id)
@@ -11501,7 +23783,10 @@ def generate_replan(
     incident_baseline_reference_fallback = False
     reuse_baseline_for_recovery = (
         is_authoritative_v12_evidence
-        and trigger_event.event_type not in {"TRAFFIC_DELAY", "SCHEDULE_DELAY"}
+        # An opportunity creates new physical adjacencies. Its two new legs
+        # must be captured by the current provider operation; the active plan's
+        # frozen matrix is valid only for the active plan's own edges.
+        and trigger_event.event_type not in {"TRAFFIC_DELAY", "SCHEDULE_DELAY", "OPPORTUNITY_WINDOW"}
     )
     if incident_snapshot is not None:
         mobility_capture = MobilitySnapshotCaptureResult(
@@ -11768,8 +24053,14 @@ def generate_replan(
         if not value:
             return None
         hour, minute = (int(part) for part in str(value).split(":", 1))
+        local_date = effective_event_time.date()
+        if hour == 24 and minute == 0:
+            # Normalized opening-hours data uses 24:00 for the end of the
+            # local day. Represent it as midnight on the following day.
+            local_date += timedelta(days=1)
+            hour = 0
         return datetime.combine(
-            effective_event_time.date(),
+            local_date,
             datetime.min.time().replace(hour=hour, minute=minute),
             effective_event_time.tzinfo,
         )
@@ -11786,9 +24077,204 @@ def generate_replan(
     # the exception's own attributes, not from parsing that message back apart.
     mobility_gaps: list[dict[str, Any]] = []
     heuristic_specs: list[_ReplanCandidateSpec] = []
+    compound_opportunity_specs: list[_ReplanCandidateSpec] = []
     # Set when a physical disruption has no material repair available.
     heuristic_specs_unresolved_reason: str | None = None
-    if replacement_choices:
+    if opportunity_choices and opportunity_anchor is not None:
+        origin = _activity_location(current_execution)
+        destination = _activity_location(opportunity_anchor)
+        for opportunity_choice in opportunity_choices:
+            try:
+                inbound = _replan_estimate(
+                    session,
+                    journey,
+                    mobility,
+                    origin,
+                    opportunity_choice.place_id,
+                    operation_key=f"opportunity-inbound:{trigger_id}:{opportunity_choice.place_id}",
+                )
+                outbound = _replan_estimate(
+                    session,
+                    journey,
+                    mobility,
+                    opportunity_choice.place_id,
+                    destination,
+                    operation_key=f"opportunity-outbound:{trigger_id}:{opportunity_choice.place_id}",
+                )
+            except MobilityDataUnavailable as exc:
+                mobility_unavailable_pairs.add(str(exc))
+                mobility_gaps.append(_mobility_gap_from(exc))
+                failed_reasons.add(exc.reason_code)
+                continue
+            candidate_place = session.get(Place, opportunity_choice.place_id)
+            opening = normalize_opening_hours(
+                json.loads(candidate_place.opening_hours_json or "{}")
+            )
+            evidence = evaluate_window_replacement(
+                now=effective_event_time,
+                next_commitment_start=datetime.fromisoformat(
+                    str(payload.get("next_commitment_start") or opportunity_anchor.start_at)
+                ),
+                safety_buffer_min=int(payload.get("safety_buffer_min") or 15),
+                budget_remaining_minor=journey.budget_amount_minor
+                - sum(item.estimated_cost_minor for item in source),
+                candidate=WindowReplacementInput(
+                    key=opportunity_choice.place_id,
+                    visit_minutes=opportunity_choice.duration_min,
+                    inbound_travel_min=inbound,
+                    outbound_travel_min=outbound,
+                    cost_minor=opportunity_choice.cost_minor,
+                    opens_at=_at_local_time(opening.get("open")),
+                    closes_at=_at_local_time(opening.get("close")),
+                ),
+            )
+            if evidence.fits:
+                heuristic_specs.append(
+                    _ReplanCandidateSpec(
+                        family="F4_OPPORTUNITY_INSERTION",
+                        replacement_choice=opportunity_choice,
+                        window_evidence={
+                            **evidence.as_dict,
+                            "origin_key": origin,
+                            "destination_key": destination,
+                            "inbound_travel_min": inbound,
+                            "outbound_travel_min": outbound,
+                            "safety_buffer_min": int(payload.get("safety_buffer_min") or 15),
+                            "duration_source": "BOUNDED_OPPORTUNITY_POLICY",
+                            "candidate_place_id": opportunity_choice.place_id,
+                        },
+                        additive_insertion=True,
+                    )
+                )
+            else:
+                failed_reasons.update(evidence.failures)
+        # Replanning must expose the same genuinely changed shared future that
+        # exploratory composition can discover.  Single-place F4 insertions
+        # cannot represent a fair garden+museum itinerary, so also evaluate
+        # bounded permutations of two or three distinct grounded Places.  The
+        # provider facts, route legs, opening windows, budget, and final plan
+        # feasibility gate remain authoritative.
+        if len(opportunity_choices) >= 2:
+            max_insertions = min(3, len(opportunity_choices))
+            for insertion_count in range(2, max_insertions + 1):
+                for ordered_choices in permutations(opportunity_choices, insertion_count):
+                    candidate_cost = sum(int(item.cost_minor) for item in ordered_choices)
+                    budget_remaining = journey.budget_amount_minor - sum(
+                        int(item.estimated_cost_minor) for item in source
+                    )
+                    previous_location = _activity_location(current_execution)
+                    cursor = effective_event_time
+                    scheduled_insertions: list[dict[str, Any]] = []
+                    failed_schedule = False
+                    try:
+                        for choice in ordered_choices:
+                            inbound_leg = _replan_estimate(
+                                session,
+                                journey,
+                                mobility,
+                                previous_location,
+                                choice.place_id,
+                                operation_key=(
+                                    f"opportunity-compound-inbound:{trigger_id}:"
+                                    f"{previous_location}:{choice.place_id}"
+                                ),
+                            )
+                            candidate_place = session.get(Place, choice.place_id)
+                            opening = normalize_opening_hours(
+                                json.loads(candidate_place.opening_hours_json or "{}")
+                            )
+                            start_at = cursor + timedelta(minutes=inbound_leg)
+                            opens_at = _at_local_time(opening.get("open"))
+                            closes_at = _at_local_time(opening.get("close"))
+                            if opens_at is not None and start_at < opens_at:
+                                start_at = opens_at
+                            end_at = start_at + timedelta(minutes=choice.duration_min)
+                            if closes_at is not None and end_at > closes_at:
+                                failed_schedule = True
+                                break
+                            scheduled_insertions.append(
+                                {
+                                    "place_id": choice.place_id,
+                                    "start_at": start_at.isoformat(),
+                                    "end_at": end_at.isoformat(),
+                                    "travel_from_prev_min": int(inbound_leg),
+                                }
+                            )
+                            cursor = end_at
+                            previous_location = choice.place_id
+
+                        if failed_schedule or len(scheduled_insertions) != insertion_count:
+                            continue
+                        outbound_leg = _replan_estimate(
+                            session,
+                            journey,
+                            mobility,
+                            previous_location,
+                            _activity_location(opportunity_anchor),
+                            operation_key=(
+                                f"opportunity-compound-outbound:{trigger_id}:"
+                                f"{previous_location}:{_activity_location(opportunity_anchor)}"
+                            ),
+                        )
+                    except MobilityDataUnavailable as exc:
+                        mobility_unavailable_pairs.add(str(exc))
+                        mobility_gaps.append(_mobility_gap_from(exc))
+                        failed_reasons.add(exc.reason_code)
+                        continue
+
+                    first_start = datetime.fromisoformat(
+                        str(scheduled_insertions[0]["start_at"])
+                    )
+                    compound_visit_min = max(
+                        0, int((cursor - first_start).total_seconds() // 60)
+                    )
+                    compound_inbound_min = max(
+                        0, int((first_start - effective_event_time).total_seconds() // 60)
+                    )
+                    compound_evidence = evaluate_window_replacement(
+                        now=effective_event_time,
+                        next_commitment_start=datetime.fromisoformat(
+                            str(payload.get("next_commitment_start") or opportunity_anchor.start_at)
+                        ),
+                        safety_buffer_min=int(payload.get("safety_buffer_min") or 15),
+                        budget_remaining_minor=budget_remaining,
+                        candidate=WindowReplacementInput(
+                            key="|".join(item.place_id for item in ordered_choices),
+                            visit_minutes=compound_visit_min,
+                            inbound_travel_min=compound_inbound_min,
+                            outbound_travel_min=int(outbound_leg),
+                            cost_minor=candidate_cost,
+                        ),
+                    )
+                    if not compound_evidence.fits:
+                        failed_reasons.update(compound_evidence.failures)
+                        continue
+                    compound_opportunity_specs.append(
+                        _ReplanCandidateSpec(
+                            family="F4_OPPORTUNITY_INSERTION",
+                            replacement_choice=ordered_choices[0],
+                            insertion_choices=tuple(ordered_choices),
+                            window_evidence={
+                                **compound_evidence.as_dict,
+                                "origin_key": _activity_location(current_execution),
+                                "destination_key": _activity_location(opportunity_anchor),
+                                "inbound_travel_min": compound_inbound_min,
+                                "outbound_travel_min": int(outbound_leg),
+                                "safety_buffer_min": int(payload.get("safety_buffer_min") or 15),
+                                "duration_source": "BOUNDED_OPPORTUNITY_POLICY",
+                                "candidate_place_ids": [
+                                    item.place_id for item in ordered_choices
+                                ],
+                                "insertions": scheduled_insertions,
+                            },
+                            additive_insertion=True,
+                        )
+                    )
+        # Prefer a whole, materially improved itinerary in the bounded result
+        # set while retaining every single-place alternative as an independent
+        # grounded option for the collective decision surface.
+        heuristic_specs = compound_opportunity_specs + heuristic_specs
+    elif replacement_choices:
         for index, choice in enumerate(replacement_choices):
             family = "F0_SAME_SLOT_REPLACEMENT"
             window_evidence: dict[str, Any] | None = None
@@ -11924,7 +24410,7 @@ def generate_replan(
                 candidate_remove=True,
             )
         )
-    elif trigger_event.event_type not in {"CLOSURE", "WEATHER"}:
+    elif trigger_event.event_type not in {"CLOSURE", "WEATHER", "OPPORTUNITY_WINDOW"}:
         # Only a non-physical event may legitimately settle as "nothing needs
         # to change".  A closure or bad weather that cannot be repaired
         # *materially* must say so, never quietly accept an unchanged copy
@@ -11941,6 +24427,9 @@ def generate_replan(
             heuristic_specs_unresolved_reason = "REPLAN_PROTECTED_CONFLICT"
         else:
             heuristic_specs_unresolved_reason = "REPLAN_NO_ALTERNATIVE"
+
+    if trigger_event.event_type == "OPPORTUNITY_WINDOW" and not heuristic_specs:
+        heuristic_specs_unresolved_reason = "OPPORTUNITY_WINDOW_NO_FEASIBLE_CANDIDATE"
 
     traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
 
@@ -12048,7 +24537,10 @@ def generate_replan(
                 )
                 if candidate_latest <= candidate_earliest:
                     continue
-                candidate_tags = set(json.loads(candidate_place.tags_json or "[]"))
+                candidate_tags = canonical_place_tags(
+                    category=candidate_place.category,
+                    tags=json.loads(candidate_place.tags_json or "[]"),
+                )
                 preference_fit = verified_interest_preference_fit(
                     traveler_preferences, candidate_tags=candidate_tags
                 )
@@ -12209,7 +24701,10 @@ def generate_replan(
             latest_end_min = _minute_from_start(closes_at)
             if latest_end_min <= earliest_start_min:
                 continue
-            candidate_tags = set(json.loads(candidate_place.tags_json or "[]"))
+            candidate_tags = canonical_place_tags(
+                category=candidate_place.category,
+                tags=json.loads(candidate_place.tags_json or "[]"),
+            )
             solver_preference_fit = verified_interest_preference_fit(
                 traveler_preferences, candidate_tags=candidate_tags
             )
@@ -12326,9 +24821,11 @@ def generate_replan(
             _ReplanCandidateSpec(
                 family=spec.family,
                 replacement_choice=spec.replacement_choice,
+                insertion_choices=spec.insertion_choices,
                 candidate_delay=spec.candidate_delay,
                 candidate_remove=spec.candidate_remove,
                 window_evidence=spec.window_evidence,
+                additive_insertion=spec.additive_insertion,
                 solver_provenance={
                     "kind": "DETERMINISTIC_HEURISTIC",
                     "solver_status": fallback_status,
@@ -12418,6 +24915,11 @@ def generate_replan(
     def _spec_assignment_key(spec: _ReplanCandidateSpec) -> str:
         if spec.v2_plan is not None:
             return f"V2:{spec.v2_plan.fingerprint}"
+        if spec.insertion_choices:
+            return (
+                f"{spec.family}:"
+                + ",".join(str(choice.place_id) for choice in spec.insertion_choices)
+            )
         if spec.candidate_remove:
             return "DROP"
         if spec.replacement_choice is not None:
@@ -12505,6 +25007,7 @@ def generate_replan(
                 if replacement_choice is None:
                     failed_reasons.add("SOLVER_V2_OPTION_NOT_MATERIALIZED")
                     continue
+                candidate_place = session.get(Place, replacement_choice.place_id)
                 start_dt = journey_start + timedelta(minutes=int(v2_assignment.start_min or 0))
                 row.update(
                     {
@@ -12517,16 +25020,12 @@ def generate_replan(
                         ).isoformat(),
                         "estimated_cost_minor": replacement_choice.cost_minor,
                         "locked": False,
-                        "metadata_json": json.dumps(
-                            {
-                                **_json_object(row.get("metadata_json"), {}),
-                                "semantic_key": replacement_choice.place_id,
-                                "candidate_family": family,
-                                "replan_reason_codes": replacement_choice.reason_codes,
-                                "replaced_place_id": activity.place_id,
-                                "solver_v2_assignment": v2_assignment.option_key,
-                            },
-                            sort_keys=True,
+                        "metadata_json": _replacement_activity_metadata(
+                            candidate_place,
+                            replacement_choice,
+                            family=family,
+                            replaced_place_id=activity.place_id,
+                            solver_v2_assignment=v2_assignment.option_key,
                         ),
                     }
                 )
@@ -12562,6 +25061,7 @@ def generate_replan(
                     start_dt = datetime.fromisoformat(
                         str(window_evidence["window_opens_at"])
                     ) + timedelta(minutes=int(window_evidence["inbound_travel_min"]))
+                candidate_place = session.get(Place, replacement_choice.place_id)
                 row.update(
                     {
                         "title": replacement_choice.title,
@@ -12573,15 +25073,11 @@ def generate_replan(
                         ).isoformat(),
                         "estimated_cost_minor": replacement_choice.cost_minor,
                         "locked": False,
-                        "metadata_json": json.dumps(
-                            {
-                                **_json_object(row.get("metadata_json"), {}),
-                                "semantic_key": replacement_choice.place_id,
-                                "candidate_family": family,
-                                "replan_reason_codes": replacement_choice.reason_codes,
-                                "replaced_place_id": affected_place_id,
-                            },
-                            sort_keys=True,
+                        "metadata_json": _replacement_activity_metadata(
+                            candidate_place,
+                            replacement_choice,
+                            family=family,
+                            replaced_place_id=affected_place_id,
                         ),
                     }
                 )
@@ -12618,6 +25114,89 @@ def generate_replan(
                         sort_keys=True,
                     )
             copied_rows.append(row)
+
+        if spec.additive_insertion and replacement_choice is not None:
+            if opportunity_anchor is None or window_evidence is None:
+                failed_reasons.add("OPPORTUNITY_INSERTION_CONTEXT_MISSING")
+                session.delete(proposed)
+                session.flush()
+                continue
+            anchor_sequence = int(opportunity_anchor.sequence_no)
+            insertion_choices = spec.insertion_choices or (replacement_choice,)
+            scheduled_insertions = window_evidence.get("insertions")
+            if not isinstance(scheduled_insertions, list) or len(scheduled_insertions) != len(insertion_choices):
+                scheduled_insertions = [
+                    {
+                        "place_id": choice.place_id,
+                        "start_at": (
+                            datetime.fromisoformat(str(window_evidence["window_opens_at"]))
+                            + timedelta(minutes=int(window_evidence["inbound_travel_min"]))
+                        ).isoformat(),
+                        "end_at": (
+                            datetime.fromisoformat(str(window_evidence["window_opens_at"]))
+                            + timedelta(
+                                minutes=int(window_evidence["inbound_travel_min"])
+                                + int(choice.duration_min)
+                            )
+                        ).isoformat(),
+                        "travel_from_prev_min": int(window_evidence["inbound_travel_min"]),
+                    }
+                    for choice in insertion_choices
+                ]
+            for existing_row in copied_rows:
+                if int(existing_row["sequence_no"]) >= anchor_sequence:
+                    existing_row["sequence_no"] = int(existing_row["sequence_no"]) + len(insertion_choices)
+            inserted_rows: list[dict[str, Any]] = []
+            for insertion_index, (choice, scheduled) in enumerate(
+                zip(insertion_choices, scheduled_insertions)
+            ):
+                if str(scheduled.get("place_id") or "") != str(choice.place_id):
+                    failed_reasons.add("OPPORTUNITY_INSERTION_SCHEDULE_MISMATCH")
+                    inserted_rows = []
+                    break
+                candidate_place = session.get(Place, choice.place_id)
+                if candidate_place is None:
+                    failed_reasons.add("OPPORTUNITY_INSERTION_PLACE_MISSING")
+                    inserted_rows = []
+                    break
+                inserted_rows.append(
+                    {
+                        "sequence_no": anchor_sequence + insertion_index,
+                        "activity_type": "visit",
+                        "title": choice.title,
+                        "place_id": choice.place_id,
+                        "city_service_id": None,
+                        "start_at": str(scheduled["start_at"]),
+                        "end_at": str(scheduled["end_at"]),
+                        "travel_from_prev_min": int(scheduled.get("travel_from_prev_min") or 0),
+                        "estimated_cost_minor": int(choice.cost_minor),
+                        "currency": journey.budget_currency,
+                        "status": "PLANNED",
+                        "locked": False,
+                        "metadata_json": _replacement_activity_metadata(
+                            candidate_place,
+                            choice,
+                            family="F4_OPPORTUNITY_INSERTION",
+                            replaced_place_id=None,
+                            reason_codes=choice.reason_codes,
+                        ),
+                        "created_at": datetime.now(timezone.utc).isoformat(),
+                        "updated_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+            if len(inserted_rows) != len(insertion_choices):
+                session.delete(proposed)
+                session.flush()
+                continue
+            insertion_index = next(
+                (
+                    index
+                    for index, existing_row in enumerate(copied_rows)
+                    if int(existing_row["sequence_no"]) > anchor_sequence
+                ),
+                len(copied_rows),
+            )
+            copied_rows[insertion_index:insertion_index] = inserted_rows
 
         def _row_routing_key(row: dict[str, Any]) -> str | None:
             """Same routing identity the gate and the frozen evidence use.
@@ -12688,11 +25267,9 @@ def generate_replan(
         for row in copied_rows:
             for field in ("start_at", "end_at"):
                 try:
-                    moment = datetime.fromisoformat(str(row[field]))
+                    row[field] = _normalize_replan_schedule_time(row[field], journey)
                 except (TypeError, ValueError):
                     continue
-                if moment.tzinfo is not None:
-                    row[field] = moment.astimezone(journey_tz).isoformat()
 
         # 2. Re-time the proposed schedule so the travel it just reserved is
         #    actually reachable.  Moving a replacement into a new slot changes
@@ -12718,6 +25295,46 @@ def generate_replan(
 
         for row in copied_rows:
             session.add(Activity(id=str(uuid4()), plan_version_id=proposed.id, **row))
+
+        content_places: list[Place] = []
+        for row in copied_rows:
+            place = session.get(Place, row.get("place_id")) if row.get("place_id") else None
+            if place is None and row.get("city_service_id"):
+                service = session.get(CityService, row["city_service_id"])
+                place = session.get(Place, service.place_id) if service and service.place_id else None
+            if place is not None and place.provider_key not in _SERVER_OWNED_PLACE_PROVIDERS:
+                content_places.append(place)
+        coursework_authority = (
+            settings.lab_estimate_authority
+            and bool(content_places)
+            and all(_coursework_estimate_covers(place) for place in content_places)
+        )
+        live_provider_authority = (
+            bool(content_places)
+            and not coursework_authority
+            and all(not _place_has_unresolved_visit_facts(place) for place in content_places)
+        )
+        proposed.explanation_json = json.dumps(
+            {
+                "reason": family,
+                "authority_state": (
+                    "COURSEWORK_ESTIMATED_FACTS"
+                    if coursework_authority
+                    else "LIVE_PROVIDER_FACTS"
+                    if live_provider_authority
+                    else "PROVISIONAL_UNRESOLVED_FACTS"
+                ),
+                "authority_envelope": (
+                    COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
+                ),
+                "authority_note": (
+                    "Coursework-only recovery using explicit Agent estimates; this is not a LIVE provider-ready result."
+                    if coursework_authority
+                    else None
+                ),
+            },
+            sort_keys=True,
+        )
 
         proposed.total_cost_minor = sum(int(row["estimated_cost_minor"]) for row in copied_rows)
         if copied_rows:
@@ -12773,6 +25390,11 @@ def generate_replan(
         )
         travel_delta = _frozen_route_total(copied) - base_route_total
         preference_fit = None
+        preference_breakdown: dict[str, Any] = {
+            "explicit_preference_fit": None,
+            "learned_soft_preference_fit": None,
+            "effective_preference_fit": None,
+        }
         opportunity_value = None
         if spec.v2_plan is not None:
             preference_milli = int(spec.v2_plan.objective_breakdown.get("preference_milli", 0))
@@ -12780,7 +25402,13 @@ def generate_replan(
             preference_fit = min(1.0, max(0.0, preference_milli / (1000 * slot_count)))
         elif replacement_choice is not None:
             replacement_place = session.get(Place, replacement_choice.place_id)
-            replacement_tags = set(json.loads(replacement_place.tags_json or "[]"))
+            replacement_tags = canonical_place_tags(
+                category=replacement_place.category,
+                tags=json.loads(replacement_place.tags_json or "[]"),
+            )
+            preference_breakdown = verified_interest_preference_breakdown(
+                traveler_preferences, candidate_tags=replacement_tags
+            )
             preference_fit = verified_interest_preference_fit(
                 traveler_preferences, candidate_tags=replacement_tags
             )
@@ -12811,6 +25439,17 @@ def generate_replan(
             preference_fit=preference_fit,
             opportunity_value=opportunity_value,
         )
+        score.breakdown.update(
+            {
+                "hard_feasibility": "PASS",
+                "explicit_preference_contribution": preference_breakdown["explicit_preference_fit"],
+                "learned_soft_preference_contribution": preference_breakdown[
+                    "learned_soft_preference_fit"
+                ],
+                "effective_preference_fit": preference_breakdown["effective_preference_fit"],
+                "learned_soft_is_authority": False,
+            }
+        )
         proposed.utility_score = score.total
         proposed.score_breakdown_json = json.dumps(score.breakdown, sort_keys=True)
         reason_codes = ["COMMITMENT_PRESERVED", "MINIMAL_DISRUPTION"]
@@ -12828,6 +25467,16 @@ def generate_replan(
             id=str(uuid4()),
             journey_id=journey.id,
             trigger_event_id=trigger_id,
+            recovery_epoch_id=(
+                str(session.info.get("recovery_epoch_id"))
+                if session.info.get("recovery_epoch_id")
+                else None
+            ),
+            source_agent_run_id=(
+                str(session.info.get("source_agent_run_id"))
+                if session.info.get("source_agent_run_id")
+                else None
+            ),
             base_plan_version_id=base.id,
             proposed_plan_version_id=proposed.id,
             status="PRESENTED",
@@ -12984,8 +25633,6 @@ def generate_replan(
         # "NO_DISTINCT_CANDIDATE"`` is never empty, so testing ``not details``
         # afterwards made REPLAN_TARGET_UNRESOLVED / REPLAN_PROTECTED_CONFLICT /
         # REPLAN_NO_ALTERNATIVE unreachable dead code.
-        if heuristic_specs_unresolved_reason:
-            raise HTTPException(422, heuristic_specs_unresolved_reason)
         # T2: "we could not measure the legs" is not the same finding as "no
         # replacement place exists".  Reporting the first as the second would
         # tell the traveller that nothing can be done when the truth is that
@@ -13026,6 +25673,8 @@ def generate_replan(
                 "reason_codes": reason_codes,
             }
             raise refusal
+        if heuristic_specs_unresolved_reason and not failed_reasons:
+            raise HTTPException(422, heuristic_specs_unresolved_reason)
         details = ", ".join(sorted(failed_reasons)) or "NO_DISTINCT_CANDIDATE"
         raise HTTPException(422, f"no feasible replan proposal: {details}")
 
@@ -13069,6 +25718,31 @@ def generate_replan(
         )
 
     created.sort(key=_proposal_rank)
+    if promotion is not None:
+        if len(created) != 1:
+            raise HTTPException(409, "SHARED_PLACE_PROMOTION_CANDIDATE_NOT_UNIQUE")
+        proposal = created[0]
+        # Persist the proposal row before the promotion's foreign key points
+        # at it. A later recovery-epoch lookup can autoflush the promotion on
+        # SQLite, where the ORM otherwise has no relationship edge to order
+        # these two rows.
+        session.flush()
+        promotion.trigger_event_id = trigger_event.id
+        promotion.proposal_id = proposal.id
+        proposal.recovery_epoch_id = ensure_recovery_epoch(session, journey).id
+        proposal_diff = _json_object(proposal.diff_json or "{}")
+        proposal_diff["r73_shared_stop"] = {
+            "promotion_id": promotion.id,
+            "invitation_id": promotion.invitation_id,
+            "place_id": promotion.place_id,
+            "rendezvous_activity_id": promotion.rendezvous_activity_id,
+            "current_activity_id": promotion.current_activity_id,
+            "active_plan_version_id": promotion.active_plan_version_id,
+            "dwell_minutes": promotion.dwell_minutes,
+        }
+        proposal.diff_json = json.dumps(
+            proposal_diff, ensure_ascii=False, sort_keys=True, default=str
+        )
     response = _replan_payload(created[0])
     if generation_idempotency_key is not None and generation_signature is not None:
         now = datetime.now(timezone.utc)
@@ -13110,9 +25784,25 @@ def get_replan(proposal_id: UUID, session: Session = Depends(get_session)):
 @app.post("/api/v1/replans/{proposal_id}/accept")
 def accept_replan(
     proposal_id: UUID,
+    request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
+    proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
+    if settings.traveler_auth_secret:
+        journey = require(session, Journey, str(proposal.journey_id), "Journey")
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        _principal, actor = resolve_journey_member_principal(
+            request, session, journey_id=str(journey.id)
+        )
+        if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+    if _is_group_recovery_collective_proposal(session, proposal):
+        raise HTTPException(
+            409,
+            "GROUP_RECOVERY_REQUIRES_AUTHENTICATED_APPLY",
+        )
     return _accept_replan_impl(proposal_id, idempotency_key, session)
 
 
@@ -13219,6 +25909,258 @@ def _revalidate_locked_commitments(
         )
 
 
+def _collective_resolution_for_child(
+    session: Session,
+    journey: Journey,
+    proposal: ReplanProposalModel,
+    mission_id: str | None,
+) -> dict[str, Any] | None:
+    """Load and revalidate the server-owned collective answer for a child mission."""
+    if mission_id is None:
+        return None
+    child = session.get(JourneyMission, str(mission_id))
+    if child is None or child.journey_id != journey.id or child.parent_mission_id is None:
+        return None
+    resolved = _json_object(child.resolved_intent_json or "{}").get("collective_decision")
+    # Other clarification children (for example a single-traveler horizon
+    # answer) are valid replan context but do not carry a collective decision.
+    # Only the server-owned collective envelope is subject to this gate.
+    if not isinstance(resolved, dict):
+        return None
+    parent = session.get(JourneyMission, child.parent_mission_id)
+    stored = _json_object(parent.clarification_json or "{}") if parent is not None else {}
+    if parent is None or stored.get("kind") != "COLLECTIVE_TRADEOFF" or stored.get("status") != "RESOLVED":
+        raise HTTPException(409, "COLLECTIVE_TRADEOFF_UNRESOLVED")
+    if str(resolved.get("selected_proposal_id")) != str(proposal.id) or str(stored.get("selected_proposal_id")) != str(proposal.id):
+        raise HTTPException(409, "COLLECTIVE_CANDIDATE_NOT_SELECTED")
+    proposals = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.trigger_event_id == proposal.trigger_event_id,
+            ReplanProposalModel.status == "PRESENTED",
+        ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    receipt = collective_proposal_receipt(session, journey, proposals)
+    options = [
+        item
+        for item in receipt.get(
+            "proposal_collective_decisions", {}
+        ).values()
+        if str(item.get("proposal_id"))
+        in {
+            str(value.get("proposal_id"))
+            for value in stored.get("candidate_options") or []
+            if isinstance(value, dict)
+        }
+        and item.get("status") == "GROUNDED_FEASIBLE"
+    ]
+    members = active_journey_members_with_capabilities(session, journey).get("members", [])
+    from app.collective_mediation import collective_decision_epoch
+    r73_shared_stop = _json_object(parent.resolved_intent_json or "{}").get(
+        "r73_shared_stop"
+    )
+    authority_scope_facts = None
+    if isinstance(r73_shared_stop, dict):
+        current_member_ids = {
+            str(item.get("member_id") or "") for item in members if item.get("member_id")
+        }
+        stored_member_ids = {
+            str(item) for item in stored.get("required_member_ids") or []
+        }
+        if current_member_ids != stored_member_ids:
+            raise HTTPException(409, "STALE_COLLECTIVE_MEMBERSHIP")
+        from app.shared_stop_coplanning import decision_scope_facts
+
+        source_invitation = session.get(
+            MemberPlaceInvitation, str(r73_shared_stop.get("invitation_id") or "")
+        )
+        if source_invitation is None or str(source_invitation.journey_id) != str(journey.id):
+            raise HTTPException(409, "NOT_SHARED_TO_GROUP")
+        from app.execution.member_place_group_share import require_group_share
+
+        require_group_share(session, journey, source_invitation)
+
+        authority_scope_facts, _scope_grants = decision_scope_facts(
+            session,
+            journey_id=str(journey.id),
+            invitation_id=str(r73_shared_stop.get("invitation_id") or ""),
+            base_plan_version_id=str(stored.get("base_plan_version_id") or ""),
+            promotion_id=str(r73_shared_stop.get("promotion_id") or ""),
+            decision_epoch=str(stored.get("decision_epoch") or ""),
+            required_member_ids=[
+                str(item) for item in stored.get("required_member_ids") or []
+            ],
+        )
+        current_surface_fingerprint = candidate_surface_fingerprint(
+            receipt.get("candidate_fit_matrix") or []
+        )
+        if current_surface_fingerprint != str(
+            stored.get("candidate_surface_fingerprint") or ""
+        ):
+            raise HTTPException(
+                409, "COLLECTIVE_AUTHORITY_SURFACE_CHANGED_BEFORE_MUTATION"
+            )
+        # R73 adds a server-derived material-world epoch to its collective
+        # option after the generic proposal receipt is built. Keep that frozen
+        # value for decision-epoch comparison; the current world is recomputed
+        # and checked against it below before accepting the proposal.
+        stored_options_by_id = {
+            str(item.get("proposal_id") or ""): item
+            for item in stored.get("candidate_options") or []
+            if isinstance(item, dict)
+        }
+        options = [
+            {
+                **item,
+                "material_world_epoch": stored_options_by_id.get(
+                    str(item.get("proposal_id") or ""), {}
+                ).get("material_world_epoch"),
+            }
+            for item in options
+        ]
+    stored_decision_relevant_ids = (
+        stored.get("decision_relevant_member_ids", stored.get("required_member_ids") or [])
+        if isinstance(r73_shared_stop, dict)
+        else (
+            (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            )
+            if (receipt.get("collective_mediation") or {}).get(
+                "decision_relevant_member_ids"
+            ) is not None
+            else stored.get(
+                "decision_relevant_member_ids",
+                stored.get("required_member_ids") or [],
+            )
+        )
+    )
+    epoch = collective_decision_epoch(
+        journey_id=journey.id,
+        mission_id=parent.id,
+        trigger_event_id=str(proposal.trigger_event_id),
+        base_plan_version_id=journey.active_plan_version_id,
+        options=options,
+        required_member_ids=stored.get("required_member_ids") or [],
+        decision_relevant_member_ids=stored_decision_relevant_ids,
+        members=members,
+        authority_scope_facts=authority_scope_facts,
+    )
+    if (
+        epoch != stored.get("decision_epoch")
+        or epoch != resolved.get("decision_epoch")
+    ):
+        raise HTTPException(409, "STALE_COLLECTIVE_DECISION")
+
+    selected_plan_id = str(proposal.proposed_plan_version_id)
+    selected_plan = session.get(PlanVersion, selected_plan_id)
+    selected_option = next(
+        (
+            item
+            for item in stored.get("candidate_options") or []
+            if isinstance(item, dict)
+            and str(item.get("proposal_id") or "") == str(proposal.id)
+        ),
+        None,
+    )
+    stored_world_epoch = str(stored.get("material_world_epoch") or "")
+    resolved_world_epoch = str(
+        resolved.get("material_world_epoch") or ""
+    )
+    current_world_epoch: str | None = None
+    if stored_world_epoch or resolved_world_epoch:
+        if (
+            selected_plan is None
+            or selected_option is None
+            or not stored_world_epoch
+            or stored_world_epoch != resolved_world_epoch
+        ):
+            raise HTTPException(
+                409, "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+            )
+        from app.collective_mediation import (
+            collective_material_world_epoch,
+        )
+
+        current_world_basis = collective_material_world_basis(
+            session,
+            journey,
+            selected_plan,
+            fit_subject_place_ids=list(
+                selected_option.get("fit_subject_place_ids") or []
+            ),
+        )
+        current_world_epoch = collective_material_world_epoch(
+            current_world_basis
+        )
+        if current_world_epoch != stored_world_epoch:
+            raise HTTPException(
+                409, "COLLECTIVE_CONSENT_WORLD_EPOCH_STALE"
+            )
+
+    stored_surface_fingerprint = str(
+        stored.get("candidate_surface_fingerprint") or ""
+    )
+    resolved_surface_fingerprint = str(
+        resolved.get("candidate_surface_fingerprint") or ""
+    )
+    if (
+        not stored_surface_fingerprint
+        or not resolved_surface_fingerprint
+        or stored_surface_fingerprint != resolved_surface_fingerprint
+    ):
+        raise HTTPException(
+            409, "COLLECTIVE_AUTHORITY_SURFACE_UNAVAILABLE"
+        )
+
+    from app.collective_authority import (
+        AUTHENTICATED_MEMBER_CONSENT,
+        latest_collective_authority_receipt,
+        receipt_validation,
+    )
+    authority_receipt = latest_collective_authority_receipt(
+        session,
+        journey_id=journey.id,
+        proposal_id=proposal.id,
+        plan_version_id=proposal.proposed_plan_version_id,
+    )
+    receipt_check = receipt_validation(
+        authority_receipt,
+        journey_id=journey.id,
+        proposal_id=proposal.id,
+        plan_version_id=proposal.proposed_plan_version_id,
+        decision_epoch=epoch,
+        material_world_epoch=current_world_epoch or stored_world_epoch or resolved_world_epoch,
+        candidate_surface_fingerprint=stored_surface_fingerprint,
+        authority_mode=AUTHENTICATED_MEMBER_CONSENT,
+    )
+    if not receipt_check.get("valid"):
+        raise HTTPException(409, str(receipt_check.get("code") or "COLLECTIVE_AUTHORITY_RECEIPT_INVALID"))
+    if (
+        str(resolved.get("authority_receipt_id") or "") != str(authority_receipt.id)
+        or str(stored.get("authority_receipt_id") or "") != str(authority_receipt.id)
+    ):
+        raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_MISMATCH")
+
+    return {
+        "status": "RESOLVED",
+        "selected_proposal_id": str(proposal.id),
+        # collective_mutation_decision gates the PlanVersion being mutated;
+        # the member envelope names the ReplanProposal. Keep both identities
+        # explicit instead of relying on an accidental equality.
+        "selected_candidate_id": selected_plan_id,
+        "selected_plan_version_id": selected_plan_id,
+        "decision_epoch": epoch,
+        "material_world_epoch": (
+            current_world_epoch or stored_world_epoch or None
+        ),
+        "candidate_surface_fingerprint": stored_surface_fingerprint,
+        "clarification_id": stored.get("clarification_id"),
+        "authority_receipt_id": authority_receipt.id,
+        "recovery_epoch_id": str(proposal.recovery_epoch_id or "") or None,
+        "r73_shared_stop": isinstance(r73_shared_stop, dict),
+    }
+
+
 def _accept_replan_impl(
     proposal_id: UUID,
     idempotency_key: str | None,
@@ -13229,6 +26171,10 @@ def _accept_replan_impl(
     policy_version: int | None = None,
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
+    resolved_decision: Mapping[str, Any] | None = None,
+    expected_authority_receipt_id: str | None = None,
+    expected_recovery_epoch_id: str | None = None,
+    actor_context: Mapping[str, Any] | None = None,
 ):
     """Serialize acceptance for one Journey across its whole transaction.
 
@@ -13251,15 +26197,40 @@ def _accept_replan_impl(
         "policy_version": policy_version,
         "authorization_decision": authorization_decision,
         "reason_codes": reason_codes,
+        "resolved_decision": resolved_decision,
+        "expected_authority_receipt_id": expected_authority_receipt_id,
+        "expected_recovery_epoch_id": expected_recovery_epoch_id,
+        "actor_context": actor_context,
     }
     located = session.get(ReplanProposalModel, str(proposal_id))
     journey_id = located.journey_id if located is not None else None
     if journey_id is None:
         # Unknown proposal: let the body below produce the canonical 404.
-        return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        result = _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        return _compile_transactional_recovery_if_needed(session, result)
     with journey_write_lock(journey_id):
         session.expire_all()
-        return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        result = _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+        return _compile_transactional_recovery_if_needed(session, result)
+
+
+def _compile_transactional_recovery_if_needed(session: Session, result: dict[str, Any]) -> dict[str, Any]:
+    proposal_payload = result.get("proposal") if isinstance(result, dict) else None
+    if not isinstance(proposal_payload, dict) or proposal_payload.get("status") != "ACCEPTED":
+        return result
+    proposal = session.get(ReplanProposalModel, str(proposal_payload.get("id") or ""))
+    journey = session.get(Journey, proposal.journey_id) if proposal is not None else None
+    if proposal is None or journey is None:
+        return result
+    from app.agent.transactional_operator import compile_recovery_execution_plan
+    result["execution_plan"] = compile_recovery_execution_plan(
+        session,
+        journey=journey,
+        proposal=proposal,
+        agent_run_id=proposal.source_agent_run_id,
+        mission_id=None,
+    )
+    return result
 
 
 def _replay_committed_accept(
@@ -13302,6 +26273,10 @@ def _accept_replan_serialized_impl(
     policy_version: int | None = None,
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
+    resolved_decision: Mapping[str, Any] | None = None,
+    expected_authority_receipt_id: str | None = None,
+    expected_recovery_epoch_id: str | None = None,
+    actor_context: Mapping[str, Any] | None = None,
 ):
     """Accept a replan, replaying any response this key already produced.
 
@@ -13329,6 +26304,10 @@ def _accept_replan_serialized_impl(
         "policy_version": policy_version,
         "authorization_decision": authorization_decision,
         "reason_codes": reason_codes,
+        "resolved_decision": resolved_decision,
+        "expected_authority_receipt_id": expected_authority_receipt_id,
+        "expected_recovery_epoch_id": expected_recovery_epoch_id,
+        "actor_context": actor_context,
     }
     try:
         return _accept_replan_executing(proposal_id, idempotency_key, session, **kwargs)
@@ -13359,6 +26338,10 @@ def _accept_replan_executing(
     policy_version: int | None = None,
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
+    resolved_decision: Mapping[str, Any] | None = None,
+    expected_authority_receipt_id: str | None = None,
+    expected_recovery_epoch_id: str | None = None,
+    actor_context: Mapping[str, Any] | None = None,
 ):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
@@ -13382,6 +26365,55 @@ def _accept_replan_executing(
     if proposal.status != "PRESENTED":
         raise HTTPException(409, "replan proposal is no longer actionable")
     journey = require(session, Journey, proposal.journey_id, "Journey")
+    r73_marker = _json_object(proposal.diff_json or "{}").get("r73_shared_stop")
+    if isinstance(r73_marker, dict):
+        promotion = session.get(MemberPlacePromotion, str(r73_marker.get("promotion_id") or ""))
+        if (
+            actor_type != "AUTHENTICATED_TRAVELER"
+            or not actor_id
+            or promotion is None
+            or promotion.journey_id != journey.id
+            or promotion.state != "AUTHORIZED"
+            or str(promotion.proposal_id or "") != str(proposal.id)
+            or str(promotion.invitation_id or "") != str(r73_marker.get("invitation_id") or "")
+            or str(promotion.place_id or "") != str(r73_marker.get("place_id") or "")
+            or str(promotion.active_plan_version_id or "") != str(proposal.base_plan_version_id)
+            or str(promotion.authority_receipt_id or "")
+            != str(expected_authority_receipt_id or "")
+            or str(journey.active_plan_version_id or "")
+            != str(promotion.active_plan_version_id or "")
+            or str(journey.current_activity_id or "")
+            != str(promotion.current_activity_id or "")
+        ):
+            raise HTTPException(409, "R73_SHARED_PLACE_PROMOTION_AUTHORITY_REQUIRED")
+        signed_actor_member = session.scalar(
+            select(JourneyMemberModel).where(
+                JourneyMemberModel.journey_id == journey.id,
+                JourneyMemberModel.traveler_id == str(actor_id),
+                JourneyMemberModel.removed_at.is_(None),
+            )
+        )
+        if signed_actor_member is None or not _r73_member_can_update(session, signed_actor_member):
+            raise HTTPException(403, "R73_SHARED_PLACE_PROMOTION_REQUIRES_CURRENT_AUTHENTICATED_MEMBER")
+        invitation = session.get(MemberPlaceInvitation, str(promotion.invitation_id))
+        if invitation is None or _r73_invitation_context_reason(
+            session, journey, invitation, promotion
+        ):
+            raise HTTPException(409, "R73_SHARED_PLACE_PROMOTION_CONTEXT_STALE")
+        recovery_problem = _r73_recovery_handoff_reason(session, journey)
+        if recovery_problem:
+            raise HTTPException(409, recovery_problem)
+    bound_recovery_epoch_id = expected_recovery_epoch_id or proposal.recovery_epoch_id
+    try:
+        current_recovery_epoch = (
+            validate_recovery_epoch_binding(session, journey.id, bound_recovery_epoch_id)
+            if bound_recovery_epoch_id
+            else ensure_recovery_epoch(session, journey)
+        )
+    except RecoveryEpochSuperseded as exc:
+        raise HTTPException(409, detail=exc.facts)
+    if proposal.recovery_epoch_id and proposal.recovery_epoch_id != current_recovery_epoch.id:
+        raise HTTPException(409, detail={"code": RECOVERY_EPOCH_SUPERSEDED})
     if (
         journey.status != "ACTIVE"
         or journey.active_plan_version_id != proposal.base_plan_version_id
@@ -13415,15 +26447,109 @@ def _accept_replan_executing(
     )
     if not gate.passed:
         raise HTTPException(409, f"replan is no longer feasible: {', '.join(gate.failures)}")
+    collective_gate = collective_authority_preflight(
+        session,
+        journey,
+        proposal,
+        proposed,
+        hard_feasible_plan_ids={str(proposed.id)},
+        resolved_decision=resolved_decision,
+    )
+    # Preflight itself recomputes current collective/world facts and may rotate
+    # the Journey RecoveryEpoch.  Revalidate the proposal/run binding after
+    # that recomputation so single-member and no-receipt paths cannot cross a
+    # shock merely because they do not carry a collective receipt.
+    if bound_recovery_epoch_id:
+        try:
+            current_recovery_epoch = validate_recovery_epoch_binding(
+                session, journey.id, bound_recovery_epoch_id
+            )
+        except RecoveryEpochSuperseded as exc:
+            raise HTTPException(409, detail=exc.facts)
+        gate_recovery_epoch_id = str(
+            collective_gate.get("recovery_epoch_id") or ""
+        )
+        if (
+            gate_recovery_epoch_id
+            and gate_recovery_epoch_id != str(bound_recovery_epoch_id)
+        ):
+            raise HTTPException(
+                409,
+                detail={
+                    "code": RECOVERY_EPOCH_SUPERSEDED,
+                    "stale_recovery_epoch_id": str(bound_recovery_epoch_id),
+                    "current_recovery_epoch_id": gate_recovery_epoch_id,
+                },
+            )
+    if not collective_gate.get("allowed"):
+        _record_collective_mutation_denial(
+            session,
+            journey,
+            proposed,
+            collective_gate,
+            mutation_kind="ACCEPT_REPLAN",
+            proposal_id=proposal.id,
+        )
+        raise HTTPException(
+            409,
+            f"{collective_gate.get('code')}: collective mediation must be resolved before mutation",
+        )
+    authority_receipt_id = (
+        str(collective_gate.get("authority_receipt_id") or "") or None
+    )
+    if (
+        expected_authority_receipt_id is not None
+        and str(authority_receipt_id or "")
+        != str(expected_authority_receipt_id)
+    ):
+        session.rollback()
+        raise HTTPException(
+            409,
+            "COLLECTIVE_AUTHORITY_RECEIPT_CHANGED_BEFORE_MUTATION",
+        )
+
+    authority_receipt_snapshot: dict[str, Any] = {}
+    if authority_receipt_id:
+        from app.db.models import CollectiveAuthorityReceipt
+
+        bound_authority_receipt = session.get(
+            CollectiveAuthorityReceipt, str(authority_receipt_id)
+        )
+        if bound_authority_receipt is None:
+            raise HTTPException(409, "COLLECTIVE_AUTHORITY_RECEIPT_MISSING")
+        authority_receipt_snapshot = {
+            "receipt_id": bound_authority_receipt.id,
+            "authority_mode": bound_authority_receipt.authority_mode,
+            "decision_epoch": bound_authority_receipt.decision_epoch,
+            "material_world_epoch": bound_authority_receipt.material_world_epoch,
+            "candidate_surface_fingerprint": (
+                bound_authority_receipt.candidate_surface_fingerprint
+            ),
+            "classification": bound_authority_receipt.classification,
+            "source_mission_id": bound_authority_receipt.source_mission_id,
+            "source_agent_run_id": bound_authority_receipt.source_agent_run_id,
+            "recovery_epoch_id": bound_authority_receipt.recovery_epoch_id,
+            "provenance": collective_authority_provenance(
+                bound_authority_receipt.authority_mode
+            ),
+        }
+
     old_current = (
         session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
     )
+    proposed_activities = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == proposed.id)
+        .order_by(Activity.sequence_no)
+    ).all()
     replacement_current = None
+    terminal_disruption_removal = False
     if old_current is not None:
         replacement_current = session.scalar(
             select(Activity).where(
                 Activity.plan_version_id == proposed.id,
                 Activity.sequence_no == old_current.sequence_no,
+                Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
             )
         )
         if replacement_current is None:
@@ -13437,7 +26563,24 @@ def _accept_replan_executing(
                 .order_by(Activity.sequence_no)
             )
         if replacement_current is None:
-            raise HTTPException(409, "replan does not preserve the current execution position")
+            # A physical disruption can remove the currently active stop when
+            # the accepted child plan contains only the already completed
+            # prefix.  There is no future cursor to carry forward in that
+            # terminal shape, but the execution position is still resolved:
+            # the disrupted activity is explicitly skipped and the Journey is
+            # complete.  Keep the ordinary rejection for every other missing
+            # mapping so a stale or ambiguous child cannot erase the cursor.
+            terminal_disruption_removal = (
+                str(trigger_event.affected_activity_id or "") == str(old_current.id)
+                and trigger_event.event_type in {"CLOSURE", "WEATHER"}
+                and old_current.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                and not any(
+                    item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                    for item in proposed_activities
+                )
+            )
+            if not terminal_disruption_removal:
+                raise HTTPException(409, "replan does not preserve the current execution position")
 
     decided_at = datetime.now(timezone.utc).isoformat()
 
@@ -13455,21 +26598,95 @@ def _accept_replan_executing(
     _switch_active_plan_atomically(session, base=base, proposed=proposed, decided_at=decided_at)
     journey.active_plan_version_id = proposed.id
     journey.current_activity_id = replacement_current.id if replacement_current else None
+    # A replan acceptance supersedes the old active reality.  Any standby
+    # whose parent was that reality is now stale, even though it was not a
+    # competing ReplanProposal.  Retire those siblings at the same authority
+    # boundary so the portfolio cannot advertise futures from the old parent.
+    stale_standbys = session.scalars(
+        select(PlanVersion).where(
+            PlanVersion.journey_id == journey.id,
+            PlanVersion.parent_plan_version_id == base.id,
+            PlanVersion.lifecycle == "STANDBY",
+            PlanVersion.id != proposed.id,
+        )
+    ).all()
+    for sibling in stale_standbys:
+        sibling.lifecycle = "RETIRED"
+        sibling.status = "REJECTED"
+        record_audit(
+            session,
+            action="standby.retired",
+            entity_type="PlanVersion",
+            entity_id=sibling.id,
+            journey_id=journey.id,
+            actor_type=actor_type,
+            actor_id=actor_id,
+            after={
+                "reason": "parent_superseded_by_replan",
+                "parent_plan_version_id": base.id,
+                "replacement_plan_version_id": proposed.id,
+            },
+        )
+    if terminal_disruption_removal:
+        old_current.status = "SKIPPED"
+        old_metadata = json.loads(old_current.metadata_json or "{}")
+        old_metadata["skipped_at"] = decided_at
+        old_metadata["skip_reason"] = "ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED"
+        old_current.metadata_json = json.dumps(old_metadata, ensure_ascii=False, sort_keys=True)
+        old_current.updated_at = decided_at
+        _record_outcome_event(
+            session,
+            journey,
+            activity=old_current,
+            event_type="ACTIVITY_SKIPPED",
+            actor_type="SYSTEM",
+            payload={
+                "reason": "ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED",
+                "trigger_event_id": trigger_event.id,
+                "replan_proposal_id": proposal.id,
+            },
+        )
+        journey.status = "COMPLETED"
+    # A replan is accepted while the Journey is already ACTIVE.  The proposed
+    # plan is born with PLANNED activity rows, but its execution cursor must be
+    # live immediately after the authoritative handover; otherwise the next
+    # real depart call cannot advance the Journey.
+    if replacement_current is not None and journey.status == "ACTIVE":
+        replacement_current.status = "ACTIVE"
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
-    if trigger_event.status == "DETECTED":
-        trigger_event.status = "ACKNOWLEDGED"
+    if not proposal.recovery_epoch_id:
+        proposal.recovery_epoch_id = current_recovery_epoch.id
+    # Keep the recovery epoch spendable while the accepted plan still has
+    # server-owned booking work to execute.  It is closed by the transactional
+    # operator only after the frozen saga reaches a terminal state.
+    from app.agent.transactional_operator import recovery_requires_execution
+    if not recovery_requires_execution(session, base_plan=base, proposed_plan=proposed):
+        close_recovery_epoch(
+            session,
+            current_recovery_epoch,
+            status="COMMITTED",
+            reason="REPLAN_ACCEPTED",
+        )
+    # An accepted replan has now adapted the Journey to the event.  Keep the
+    # external-world fact intact, but close the Journey-scoped trigger so the
+    # same opportunity/disruption cannot be offered again as unresolved.
+    trigger_payload = _json_object(trigger_event.payload_json)
+    trigger_event.status = "RESOLVED"
+    trigger_event.resolved_at = decided_at
+    trigger_payload["resolved_at"] = decided_at
+    trigger_payload["resolution_reason"] = (
+        "OPPORTUNITY_CONSUMED"
+        if trigger_event.event_type == "OPPORTUNITY_WINDOW"
+        else "JOURNEY_ADAPTED"
+    )
+    trigger_event.payload_json = json.dumps(trigger_payload, ensure_ascii=False, sort_keys=True)
 
     # Commitment.activity_id is PlanVersion-local. The durable authority is
     # the stable semantic/time anchor in policy_json, but JourneyTwin exposes
     # activity_id for the active plan. Remap every active C4 reference after
     # accepting a replan so the projection cannot point into the superseded
     # plan.
-    proposed_activities = session.scalars(
-        select(Activity)
-        .where(Activity.plan_version_id == proposed.id)
-        .order_by(Activity.sequence_no)
-    ).all()
     active_commitments = session.scalars(
         select(CommitmentModel).where(
             CommitmentModel.journey_id == journey.id,
@@ -13533,6 +26750,33 @@ def _accept_replan_executing(
             },
         )
 
+    group_recovery_spend = None
+    if isinstance(actor_context, Mapping) and actor_context.get("kind") == "COLLECTIVE_GROUP_RECOVERY_APPLY":
+        followthrough = build_followthrough_snapshot(
+            session,
+            journey,
+            incident_key=str(actor_context.get("incident_key") or ""),
+            proposal_id=proposal.id,
+            plan_version_id=proposed.id,
+            recovery_epoch_id=current_recovery_epoch.id,
+            authority_receipt_id=authority_receipt_id,
+            trigger_event_id=str(actor_context.get("trigger_event_id") or "") or None,
+            applied_at=decided_at,
+        )
+        group_recovery_spend = {
+            **dict(actor_context),
+            "result": "APPLIED",
+            "selected_proposal_id": proposal.id,
+            "authority_receipt_id": authority_receipt_id,
+            "decision_epoch": collective_gate.get("resolved_decision_epoch"),
+            "material_world_epoch": collective_gate.get("resolved_material_world_epoch"),
+            "candidate_surface_fingerprint": collective_gate.get("candidate_surface_fingerprint"),
+            "recovery_epoch_id": current_recovery_epoch.id,
+            "before_plan_version_id": base.id,
+            "after_plan_version_id": proposed.id,
+            "applied_at": decided_at,
+            "followthrough": followthrough,
+        }
     record_audit(
         session,
         action="replan.accepted",
@@ -13546,6 +26790,40 @@ def _accept_replan_executing(
             "policy_version": policy_version,
             "authorization_decision": authorization_decision,
             "reason_codes": list(reason_codes),
+            "collective_authority": {
+                "receipt_id": authority_receipt_id,
+                "receipt": authority_receipt_snapshot or None,
+                "classification": collective_gate.get("classification"),
+                "code": collective_gate.get("code"),
+                "resolved_decision_epoch": collective_gate.get(
+                    "resolved_decision_epoch"
+                ),
+                "current_decision_epoch": collective_gate.get(
+                    "current_decision_epoch"
+                ),
+                "resolved_material_world_epoch": collective_gate.get(
+                    "resolved_material_world_epoch"
+                ),
+                "current_material_world_epoch": collective_gate.get(
+                    "current_material_world_epoch"
+                ),
+                "candidate_surface_fingerprint": collective_gate.get(
+                    "candidate_surface_fingerprint"
+                ),
+                "candidate_surface_scope": collective_gate.get(
+                    "candidate_surface_scope"
+                ),
+                "candidate_surface_recovery_epoch_id": collective_gate.get(
+                    "candidate_surface_recovery_epoch_id"
+                ),
+                "candidate_surface_trigger_event_id": collective_gate.get(
+                    "candidate_surface_trigger_event_id"
+                ),
+                "authority_provenance": collective_gate.get(
+                    "authority_provenance"
+                ),
+            },
+            "group_recovery_spend": group_recovery_spend,
         },
     )
     twin = _twin_snapshot(session, journey)
@@ -13553,7 +26831,10 @@ def _accept_replan_executing(
         "journey": journey_schema(journey).model_dump(mode="json"),
         "proposal": _replan_payload(proposal),
         "twin": twin,
+        "collective_authority_receipt_id": authority_receipt_id,
     }
+    if group_recovery_spend is not None:
+        response["group_recovery_apply"] = group_recovery_spend
     session.add(
         IdempotencyKey(
             key=scoped_key,
@@ -13693,6 +26974,11 @@ def _copilot_context(session: Session, journey: Journey) -> dict[str, Any]:
             }
         )
     capabilities = capability_payload(session, journey.traveler_id, journey.id)
+    from app.agent.journey_intent import active_journey_intents
+
+    active_intents = active_journey_intents(
+        session, journey, now=execution_clock.now(journey.timezone)
+    )
     mobility_evidence = _json_object(plan.mobility_evidence_json) if plan is not None else {}
     # `timezone` above names a zone; this says which zone it actually resolves to and whether that
     # is the one the journey asked for.  Without the pair the name could point at a zone nothing can
@@ -13729,11 +27015,14 @@ def _copilot_context(session: Session, journey: Journey) -> dict[str, Any]:
         "capabilities": capabilities,
         "capability_summary": summarize_capabilities(capabilities),
         "protected_commitments": [item for item in commitment_payload if item["protected"]],
+        "active_journey_intents": active_intents,
     }
 
 
 def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInterpretation:
     fallback = classify_copilot_message(message)
+    if is_status_inspection_reference(message):
+        return fallback
     client = _deepseek_client()
     if client is None:
         return fallback
@@ -13770,6 +27059,15 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         "preferences": context["preferences"],
         "capabilities": context.get("capabilities", []),
         "capability_summary": context.get("capability_summary", {}),
+        "active_journey_intents": context.get("active_journey_intents", []),
+        "journey_intent_steering": {
+            "purpose": "interpret a temporary request for the already-running Journey",
+            "scope_kind_enum": ["REST_OF_TODAY", "NEXT_MORNING", "NEXT_STOP", "REMAINING_JOURNEY"],
+            "intent_kind_enum": ["PACE", "WALKING_LIMIT", "FOOD_PREFERENCE", "INDOOR_OUTDOOR", "REST_BREAK", "BUDGET_TIGHTENING", "TIME_CONSTRAINT", "INTEREST", "ACCESSIBILITY_NEED", "GENERAL_GOAL"],
+            "return_entities": ["intent_kind", "scope_kind", "preference_hints"],
+            "return_constraints": "bounded structured facts only; never return Activity ids",
+            "distinction": "fatigue or a preference for easier pacing is USER_TEMPORARY_INTENT, not an accessibility capability; only a stated functional limitation is USER_STATED_CAPABILITY",
+        },
         "authority": (
             "The server owns ids, coordinates, prices, provider facts, commitments, "
             "and mutations. Return meaning only; do not claim an authoritative mutation."
@@ -13780,12 +27078,29 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         if envelope is None:
             return fallback
         decision = apply_semantic_policy(envelope)
+        # A clear, current disruption report is a server boundary fact.  A
+        # model may enrich its meaning, but it must not downgrade the report
+        # into a read-only or unrelated route.  This is deliberately narrow:
+        # hypothetical, historical, negated, and unverified text returns no
+        # deterministic event and remains model-routable.
+        deterministic_event_type = disruption_event_type(message)
+        if deterministic_event_type is not None and (
+            decision.route_intent != "DISRUPTION_REPORT"
+            or decision.event_type != deterministic_event_type
+            or not decision.create_event
+        ):
+            return fallback
         entities = dict(envelope.entities)
         if decision.event_type is not None:
             entities["event_type"] = decision.event_type
+        if decision.event_type is not None and not entities.get("subject_text"):
+            subject_text = extract_disruption_subject(message)
+            if subject_text:
+                entities["subject_text"] = subject_text
         entities["assertion_status"] = envelope.assertion_status
         entities["effective_time"] = envelope.effective_time
         semantic_payload = envelope.as_dict()
+        semantic_payload["entities"] = dict(entities)
         semantic_payload.update(
             {
                 "route_intent": decision.route_intent,
@@ -13808,6 +27123,812 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         )
     except (DeepSeekResponsesError, TypeError, ValueError, json.JSONDecodeError, httpx.HTTPError):
         return fallback
+
+
+def _planned_separation_command_action(message: str) -> str | None:
+    """Recognize explicit self-owned split/end commands without an LLM guess."""
+    text = str(message or "").casefold().replace("’", "'")
+    end_markers = (
+        "i'm back with the group", "i am back with the group", "i'm back",
+        "i am back", "end my side trip", "cancel my planned split", "done with my side trip",
+        "我回来了", "我回到队伍了", "结束我的分开行动", "结束单独行动", "取消我的分开计划",
+    )
+    if any(marker in text for marker in end_markers):
+        return "END"
+    negated_split_markers = (
+        "not alone", "not by myself", "don't want to be alone", "do not want to be alone",
+        "don't want a side trip", "do not want a side trip", "don't want to split",
+        "do not want to split", "don't split", "do not split", "don't go alone",
+        "do not go alone", "don't go by myself", "do not go by myself",
+        "不想一个人", "不要一个人", "不想单独", "不要单独", "不想分开", "不要分开",
+        "不想自己去", "不想自己行动", "不和大家分开",
+    )
+    if any(marker in text for marker in negated_split_markers):
+        return None
+    split_markers = (
+        "by myself", "on my own", "alone", "split off", "side trip", "go solo",
+        "我自己去", "我一个人", "单独行动", "分开行动", "暂时分开",
+    )
+    if any(marker in text for marker in split_markers):
+        return "START"
+    return None
+
+
+def _r63_normalized_text(value: str) -> str:
+    return re.sub(r"[^\w]+", "", str(value or "").casefold())
+
+
+def _resolve_planned_rendezvous(
+    session: Session,
+    journey: Journey,
+    command: str,
+) -> tuple[Activity, Place, str, int | None] | None:
+    """Resolve only exact active-plan stops; never accept a model/client Place id."""
+    if not journey.active_plan_version_id:
+        return None
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == journey.active_plan_version_id)
+        .order_by(Activity.sequence_no, Activity.id)
+    ).all()
+    current = next((row for row in rows if str(row.id) == str(journey.current_activity_id or "")), None)
+    terminal = {"COMPLETED", "SKIPPED", "CANCELLED"}
+    future = [
+        row for row in rows
+        if str(row.status or "").upper() not in terminal
+        and row.place_id
+        and (current is None or row.sequence_no > current.sequence_no)
+    ]
+    folded = _r63_normalized_text(command)
+    explicit: dict[str, tuple[Activity, Place]] = {}
+    for activity in future:
+        place = session.get(Place, str(activity.place_id))
+        if place is None:
+            continue
+        for label in (str(activity.title or ""), str(place.name or "")):
+            normalized = _r63_normalized_text(label)
+            if len(normalized) >= 4 and normalized in folded:
+                explicit[str(activity.id)] = (activity, place)
+    if len(explicit) > 1:
+        return None
+    if len(explicit) == 1:
+        activity, place = next(iter(explicit.values()))
+        basis = "EXPLICIT_EXISTING_ACTIVE_PLAN_ACTIVITY"
+    else:
+        # rendezvous_target() is also used for live group-presence guidance and
+        # may legitimately return the current stop while a Journey is ACTIVE.
+        # A planned side trip needs a future return point, so resolve from this
+        # already-filtered future set instead of accepting the current activity.
+        future_ids = [str(row.id) for row in future]
+        commitments = session.scalars(
+            select(CommitmentModel).where(
+                CommitmentModel.journey_id == journey.id,
+                CommitmentModel.activity_id.in_(future_ids),
+                CommitmentModel.status == "ACTIVE",
+            )
+        ).all() if future_ids else []
+        protected_ids = {
+            str(item.activity_id)
+            for item in commitments
+            if str(item.level or "").upper() in {"C3_GUARANTEED", "C4_ANCHORED"}
+        }
+        target = next(
+            (row for row in future if str(row.id) in protected_ids),
+            future[0] if future else None,
+        )
+        if target is None:
+            return None
+        activity = target
+        place = session.get(Place, str(activity.place_id))
+        if place is None:
+            return None
+        protected = next(
+            (item for item in commitments if str(item.level or "").upper() in {"C3_GUARANTEED", "C4_ANCHORED"}),
+            None,
+        )
+        basis = "NEXT_PROTECTED_SHARED_COMMITMENT" if protected else "NEXT_EXACT_ACTIVE_PLAN_STOP"
+    buffer_min = None
+    commitments = session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.activity_id == activity.id,
+            CommitmentModel.status == "ACTIVE",
+        )
+    ).all()
+    for commitment in commitments:
+        if str(commitment.level or "").upper() not in {"C3_GUARANTEED", "C4_ANCHORED"}:
+            continue
+        try:
+            policy = json.loads(commitment.policy_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            policy = {}
+        for key in ("safety_buffer_min", "required_buffer_min", "resilience_buffer_min"):
+            try:
+                if policy.get(key) is not None:
+                    buffer_min = max(0, int(policy[key]))
+                    break
+            except (TypeError, ValueError):
+                continue
+        if buffer_min is not None:
+            break
+    return activity, place, basis, buffer_min
+
+
+def _run_planned_separation_command_impl(
+    *,
+    request: Request,
+    session: Session,
+    journey: Journey,
+    command: str,
+    action: str,
+    now: datetime,
+    resolved_rendezvous: tuple[Activity, Place, str, int | None] | None = None,
+) -> dict[str, Any]:
+    """Create/end only the authenticated member's temporary split intent."""
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    if str(journey.status or "").upper() != "ACTIVE":
+        raise HTTPException(409, "A planned side trip requires an active Journey")
+    now_text = now.astimezone(timezone.utc).isoformat()
+    own_rows = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_member_id == member.id,
+            JourneyIntent.created_by_traveler_id == principal.traveler_id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+            JourneyIntent.status == "ACTIVE",
+        )
+    ).all()
+    if action == "END":
+        for intent in own_rows:
+            intent.status = "CANCELLED"
+            intent.cancelled_at = now_text
+            intent.updated_at = now_text
+            intent.evaluation_state = "PLANNED_SPLIT_ENDED_BY_MEMBER"
+        invalidate_member_side_quests_for_intents(
+            session,
+            journey=journey,
+            intent_ids=[str(intent.id) for intent in own_rows],
+            reason_code="R63_SPLIT_ENDED_BY_MEMBER",
+            now=now,
+        )
+        record_audit(
+            session,
+            action="journey.planned_separation.ended",
+            entity_type="Journey",
+            entity_id=journey.id,
+            journey_id=journey.id,
+            actor_type="TRAVELER",
+            actor_id=principal.traveler_id,
+            after={"member_id": member.id, "cancelled_intent_count": len(own_rows), "physical_reunion_claimed": False},
+        )
+        session.commit()
+        result = operator_projection(session, journey, viewer_member_id=member.id)
+        result["planned_separation_result"] = {
+            "outcome": "PLANNED_SPLIT_ENDED",
+            "message": "Your planned side trip has ended. Current location evidence still determines whether the group is together.",
+            "physical_reunion_claimed": False,
+        }
+        return result
+
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    standing = session.scalar(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if enrollment is None or not enrollment.enabled or standing is None:
+        raise HTTPException(409, "Start the Journey Operator before planning a side trip")
+    rendezvous = resolved_rendezvous or _resolve_planned_rendezvous(session, journey, command)
+    if rendezvous is None:
+        result = operator_projection(session, journey, viewer_member_id=member.id)
+        result["planned_separation_result"] = {
+            "outcome": "PLANNED_SPLIT_RENDEZVOUS_UNRESOLVED",
+            "message": "I could not resolve a future shared Journey stop for your return. Name an existing stop or ask for the next shared commitment.",
+            "physical_reunion_claimed": False,
+        }
+        return result
+    activity, place, basis, buffer_min = rendezvous
+    if (
+        str(activity.plan_version_id) != str(journey.active_plan_version_id or "")
+        or str(activity.place_id or "") != str(place.id)
+        or str(activity.status or "").upper() in {"COMPLETED", "SKIPPED", "CANCELLED"}
+    ):
+        raise HTTPException(409, "PLANNED_SPLIT_RENDEZVOUS_STALE")
+    source = " ".join(command.casefold().split())
+    fingerprint_material = json.dumps(
+        {
+            "journey_id": journey.id,
+            "traveler_id": principal.traveler_id,
+            "member_id": member.id,
+            "kind": "PLANNED_SEPARATION",
+            "active_plan_version_id": journey.active_plan_version_id,
+            "rendezvous_activity_id": activity.id,
+            "source": source,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    fingerprint = hashlib.sha256(fingerprint_material.encode("utf-8")).hexdigest()
+
+    def same_split_request(intent: JourneyIntent) -> bool:
+        if " ".join(str(intent.source_text or "").casefold().split()) != source:
+            return False
+        try:
+            envelope = json.loads(intent.semantic_envelope_json or "{}")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            return False
+        metadata = envelope.get("r63_planned_separation") if isinstance(envelope, dict) else None
+        return (
+            isinstance(metadata, dict)
+            and str(metadata.get("active_plan_version_id") or "")
+            == str(journey.active_plan_version_id or "")
+            and str(metadata.get("rendezvous_activity_id") or "") == str(activity.id)
+            and str(metadata.get("rendezvous_place_id") or "") == str(place.id)
+        )
+
+    # The same request is idempotent while its split is active, but a later
+    # deliberate split must get its own durable intent and meetup history.
+    active_repeat = next((row for row in own_rows if same_split_request(row)), None)
+    if active_repeat is not None:
+        result = operator_projection(session, journey, viewer_member_id=member.id)
+        result["planned_separation_result"] = {
+            "outcome": "PLANNED_SPLIT_ALREADY_ACTIVE",
+            "message": f"Your planned side trip is already active. Rejoin at {place.name}.",
+            "intent_id": active_repeat.id,
+            "physical_reunion_claimed": False,
+        }
+        return result
+
+    previous_same_requests = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.created_by_member_id == member.id,
+            JourneyIntent.created_by_traveler_id == principal.traveler_id,
+            JourneyIntent.intent_kind == "PLANNED_SEPARATION",
+        )
+    ).all()
+    generation = sum(1 for row in previous_same_requests if same_split_request(row))
+    if generation:
+        fingerprint = hashlib.sha256(
+            json.dumps(
+                {"base": fingerprint, "generation": generation},
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+
+    for old in own_rows:
+        old.status = "SUPERSEDED"
+        old.superseded_at = now_text
+        old.updated_at = now_text
+    invalidate_member_side_quests_for_intents(
+        session,
+        journey=journey,
+        intent_ids=[str(intent.id) for intent in own_rows],
+        reason_code="R63_SPLIT_SUPERSEDED",
+        now=now,
+    )
+    metadata = {
+        "kind": "PLANNED_SEPARATION",
+        "active_plan_version_id": str(journey.active_plan_version_id),
+        "rendezvous_activity_id": str(activity.id),
+        "rendezvous_place_id": str(place.id),
+        "rendezvous_title": str(activity.title),
+        "rendezvous_place_name": str(place.name),
+        "scheduled_at": activity.start_at,
+        "safety_buffer_min": buffer_min,
+        "resolution_basis": basis,
+        "member_id": member.id,
+        "authority": "SIGNED_MEMBER_OWN_TEMPORARY_INTENT",
+        "side_destination_authority": "DESCRIPTIVE_ONLY_UNLESS_SEPARATELY_VERIFIED",
+    }
+    intent = JourneyIntent(id=str(uuid4()), journey_id=journey.id)
+    intent.created_by_traveler_id = principal.traveler_id
+    intent.created_by_member_id = member.id
+    intent.source_text = command
+    intent.intent_kind = "PLANNED_SEPARATION"
+    intent.scope_kind = "UNTIL_RENDEZVOUS"
+    intent.scope_start_at = now_text
+    intent.scope_end_at = None
+    intent.local_date = None
+    intent.target_activity_ids_json = json.dumps([str(activity.id)])
+    intent.canonical_dimensions_json = json.dumps([f"journey-intent:planned-separation:{member.id}"])
+    intent.constraints_json = "[]"
+    intent.capabilities_json = "[]"
+    intent.preference_hints_json = "{}"
+    intent.semantic_envelope_json = json.dumps({"r63_planned_separation": metadata}, ensure_ascii=False, sort_keys=True)
+    intent.source = "USER_TEMPORARY_INTENT"
+    intent.compiler_provider_key = "server-rule"
+    intent.compiler_model_key = "planned-separation-v1"
+    intent.compiler_confidence = 1.0
+    intent.status = "ACTIVE"
+    intent.evaluation_state = "PLANNED_SPLIT_ACTIVE"
+    intent.semantic_fingerprint = fingerprint
+    intent.created_at = now_text
+    intent.updated_at = now_text
+    session.add(intent)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.planned_separation.created",
+        entity_type="JourneyIntent",
+        entity_id=intent.id,
+        journey_id=journey.id,
+        actor_type="TRAVELER",
+        actor_id=principal.traveler_id,
+        after={
+            "member_id": member.id,
+            "active_plan_version_id": journey.active_plan_version_id,
+            "rendezvous_activity_id": activity.id,
+            "resolution_basis": basis,
+            "side_destination_authority": "DESCRIPTIVE_ONLY_UNLESS_SEPARATELY_VERIFIED",
+        },
+    )
+    session.commit()
+    result = operator_projection(session, journey, viewer_member_id=member.id)
+    result["planned_separation_result"] = {
+        "outcome": "PLANNED_SPLIT_CREATED",
+        "message": f"Your planned side trip is active. Rejoin the shared Journey at {place.name}.",
+        "intent_id": intent.id,
+        "member_id": member.id,
+        "active_plan_version_id": journey.active_plan_version_id,
+        "rendezvous_activity_id": activity.id,
+        "physical_reunion_claimed": False,
+    }
+    return result
+
+
+def _run_planned_separation_command(
+    *,
+    request: Request,
+    session: Session,
+    journey: Journey,
+    command: str,
+    action: str,
+    now: datetime,
+    resolved_rendezvous: tuple[Activity, Place, str, int | None] | None = None,
+) -> dict[str, Any]:
+    with journey_write_lock(str(journey.id)):
+        session.expire_all()
+        current_journey = session.get(Journey, str(journey.id))
+        if current_journey is None:
+            raise HTTPException(404, "Journey not found")
+        return _run_planned_separation_command_impl(
+            request=request,
+            session=session,
+            journey=current_journey,
+            command=command,
+            action=action,
+            now=now,
+            resolved_rendezvous=resolved_rendezvous,
+        )
+
+
+def _is_live_journey_intent_request(message: str, interpretation: CopilotInterpretation) -> bool:
+    if interpretation.intent not in {"PREFERENCE_CHANGE", "REPLAN_REQUEST"}:
+        return False
+    semantic = interpretation.semantic_envelope or {}
+    entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
+    if any(entities.get(key) for key in ("intent_kind", "scope_kind", "preference_hints")):
+        return True
+    folded = str(message).casefold()
+    return any(
+        marker in folded
+        for marker in (
+            "rest of today", "today easier", "this afternoon", "tonight", "tomorrow morning",
+            "next stop", "rest of the trip", "rest of this journey", "less walking", "walk less",
+            "keep walking", "i'm tired", "i am tired", "tired today", "轻松", "少走", "今天",
+            "明天早上", "下一站", "剩下的行程",
+        )
+    )
+
+
+def _server_intent_scope_from_text(message: str) -> str | None:
+    text = str(message).casefold()
+    choices = (
+        ("REMAINING_JOURNEY", ("rest of the trip", "rest of this journey", "for the rest of the journey", "剩下的行程", "之后整个行程")),
+        ("NEXT_MORNING", ("tomorrow morning", "next morning", "明天早上", "明早")),
+        ("NEXT_STOP", ("next stop", "next one", "下一站", "接下来一站")),
+        ("REST_OF_TODAY", ("rest of today", "for today", "today", "this afternoon", "tonight", "今天", "下午", "今晚")),
+    )
+    return next((kind for kind, markers in choices if any(marker in text for marker in markers)), None)
+
+
+def _bounded_intent_constraints(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    output: list[dict[str, Any]] = []
+    for item in value[:12]:
+        if not isinstance(item, dict):
+            continue
+        cleaned: dict[str, Any] = {}
+        for key, raw in item.items():
+            if str(key).lower() in {"id", "activity_id", "place_id", "journey_id", "member_id", "coordinates", "latitude", "longitude", "price", "route_time", "route_min"}:
+                continue
+            if isinstance(raw, (str, int, float, bool)) or raw is None:
+                cleaned[str(key)[:48]] = raw
+            elif isinstance(raw, list):
+                cleaned[str(key)[:48]] = [str(part)[:120] for part in raw[:12] if isinstance(part, (str, int, float, bool))]
+        if cleaned:
+            output.append(cleaned)
+    return output
+
+
+def _intent_constraint_kind(item: dict[str, Any]) -> str:
+    raw = item.get("kind") or item.get("intent_kind") or item.get("dimension") or item.get("type")
+    value = str(raw or "").strip().upper().replace("-", "_").replace(" ", "_")
+    aliases = {
+        "WALKING": "WALKING_LIMIT", "WALKING_MIN": "WALKING_LIMIT", "MAX_WALKING": "WALKING_LIMIT",
+        "PACE_PREFERENCE": "PACE", "FOOD": "FOOD_PREFERENCE", "REST": "REST_BREAK",
+        "INDOOR": "INDOOR_OUTDOOR", "OUTDOOR": "INDOOR_OUTDOOR", "ACCESSIBILITY": "ACCESSIBILITY_NEED",
+    }
+    value = aliases.get(value, value)
+    allowed = {"PACE", "WALKING_LIMIT", "FOOD_PREFERENCE", "INDOOR_OUTDOOR", "REST_BREAK", "BUDGET_TIGHTENING", "TIME_CONSTRAINT", "INTEREST", "ACCESSIBILITY_NEED", "GENERAL_GOAL"}
+    return value if value in allowed else ""
+
+
+def _run_live_journey_intent(
+    *,
+    request: Request,
+    session: Session,
+    journey: Journey,
+    command: str,
+    interpretation: CopilotInterpretation,
+    context: dict[str, Any],
+    now: datetime,
+) -> dict[str, Any]:
+    """Persist one authenticated temporary intent, then use the existing Agent runtime."""
+    from app.agent.journey_intent import (
+        canonical_intent_dimension,
+        intent_scopes_overlap,
+        journey_intent_payload,
+        resolve_intent_scope,
+        resolve_intent_targets,
+        should_require_clarification,
+    )
+    from app.execution.clock import execution_clock
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey.id
+    )
+    enrollment = session.get(AutopilotEnrollment, journey.id)
+    standing = session.scalar(
+        select(JourneyMission).where(
+            JourneyMission.journey_id == journey.id,
+            JourneyMission.is_standing.is_(True),
+            JourneyMission.status == "ACTIVE",
+        ).order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+    )
+    if enrollment is None or not enrollment.enabled or standing is None:
+        raise HTTPException(409, "Start the Journey Operator before steering the running Journey")
+
+    semantic = interpretation.semantic_envelope if isinstance(interpretation.semantic_envelope, dict) else {}
+    entities = semantic.get("entities") if isinstance(semantic.get("entities"), dict) else {}
+    constraints = _bounded_intent_constraints(semantic.get("constraints"))
+    kinds = list(dict.fromkeys(kind for kind in (_intent_constraint_kind(item) for item in constraints) if kind))
+    requested_kind = str(entities.get("intent_kind") or "").upper().replace("-", "_")
+    allowed_kinds = {"PACE", "WALKING_LIMIT", "FOOD_PREFERENCE", "INDOOR_OUTDOOR", "REST_BREAK", "BUDGET_TIGHTENING", "TIME_CONSTRAINT", "INTEREST", "ACCESSIBILITY_NEED", "GENERAL_GOAL"}
+    intent_kind = requested_kind if requested_kind in allowed_kinds else (kinds[0] if len(kinds) == 1 else "MULTI_CONSTRAINT" if kinds else "")
+    scope_kind = str(entities.get("scope_kind") or "").upper()
+    if scope_kind not in {"REST_OF_TODAY", "NEXT_MORNING", "NEXT_STOP", "REMAINING_JOURNEY"}:
+        scope_kind = _server_intent_scope_from_text(command) or ""
+    preference_hints = entities.get("preference_hints") if isinstance(entities.get("preference_hints"), dict) else {}
+    if not constraints and not kinds and intent_kind == "MULTI_CONSTRAINT":
+        intent_kind = ""
+    if intent_kind == "ACCESSIBILITY_NEED":
+        # Functional limitations use the existing capability path, not a temporary preference.
+        return {
+            "outcome": "INTENT_STEERING_NEEDS_CLARIFICATION",
+            "message": "Is this a temporary preference for this Journey, or a functional accessibility need you want recorded?",
+            "intent": None,
+            "mission": None,
+            "run": None,
+            "source": "USER_STATED_CAPABILITY",
+        }
+
+    semantic_confidence = float(semantic.get("confidence", interpretation.confidence) or 0.0)
+    scope = None
+    if scope_kind:
+        scope = resolve_intent_scope(
+            scope_kind=scope_kind,
+            now=now,
+            timezone_name=journey.timezone,
+            journey_end_at=journey.end_at,
+        )
+        if scope.ends_at and journey.end_at:
+            try:
+                journey_end = datetime.fromisoformat(journey.end_at.replace("Z", "+00:00"))
+                scope_end = datetime.fromisoformat(scope.ends_at.replace("Z", "+00:00"))
+                if journey_end.tzinfo and scope_end.tzinfo and journey_end.astimezone(timezone.utc) < scope_end.astimezone(timezone.utc):
+                    from app.agent.journey_intent import IntentScope
+
+                    scope = IntentScope(scope.kind, scope.starts_at, journey_end.astimezone(timezone.utc).isoformat(), scope.local_date)
+            except ValueError:
+                pass
+
+    activities = list(context.get("plan", {}).get("activities", [])) if context.get("plan") else []
+    target_ids = resolve_intent_targets(
+        scope_kind=scope_kind,
+        activities=activities,
+        now=now,
+        timezone_name=journey.timezone,
+        current_activity_id=journey.current_activity_id,
+    ) if scope is not None else []
+    clarification_needed = should_require_clarification(
+        confidence=semantic_confidence,
+        scope_resolved=scope is not None and bool(target_ids),
+        constraint_count=len(constraints) + len(preference_hints),
+        intent_kind=intent_kind,
+    )
+    if not intent_kind or not constraints and not preference_hints:
+        clarification_needed = True
+
+    dimensions = list(dict.fromkeys(
+        canonical_intent_dimension(intent_kind=kind)
+        for kind in (kinds or ([intent_kind] if intent_kind else []))
+        if kind and kind != "MULTI_CONSTRAINT"
+    ))
+    if not dimensions and intent_kind:
+        dimensions = [canonical_intent_dimension(intent_kind=intent_kind)]
+    normalized_source = " ".join(command.casefold().split())
+    fingerprint_material = json.dumps(
+        {"traveler_id": principal.traveler_id, "source": normalized_source, "scope_start": scope.starts_at if scope else None, "scope_end": scope.ends_at if scope else None, "constraints": constraints, "hints": preference_hints},
+        ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+    )
+    fingerprint = hashlib.sha256(fingerprint_material.encode("utf-8")).hexdigest()
+    existing = session.scalar(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.semantic_fingerprint == fingerprint,
+        )
+    )
+    if existing is not None:
+        existing_outcome = str(existing.evaluation_state or "").upper()
+        allowed_outcomes = {
+            "INTENT_STEERING_PLAN_ALREADY_FITS",
+            "INTENT_STEERING_REPLAN_READY",
+            "INTENT_STEERING_APPLIED",
+            "INTENT_STEERING_NEEDS_CLARIFICATION",
+            "INTENT_STEERING_NO_FEASIBLE_CHANGE",
+            "INTENT_STEERING_BRAIN_BLOCKED",
+        }
+        if existing_outcome not in allowed_outcomes:
+            existing_outcome = "INTENT_STEERING_BRAIN_BLOCKED"
+        return {
+            "outcome": existing_outcome,
+            "message": "I already have this request for the same Journey scope.",
+            "intent": journey_intent_payload(existing),
+            "mission": None,
+            "run": None,
+            "source": existing.source,
+        }
+
+    now_text = now.astimezone(timezone.utc).isoformat()
+    status = "NEEDS_CLARIFICATION" if clarification_needed else "ACTIVE"
+    intent = JourneyIntent(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        created_by_traveler_id=principal.traveler_id,
+        created_by_member_id=member.id,
+        source_text=command,
+        intent_kind=intent_kind or "UNRESOLVED",
+        scope_kind=scope_kind or None,
+        scope_start_at=scope.starts_at if scope else None,
+        scope_end_at=scope.ends_at if scope else None,
+        local_date=scope.local_date if scope else None,
+        target_activity_ids_json=json.dumps(target_ids),
+        canonical_dimensions_json=json.dumps(dimensions),
+        constraints_json=json.dumps(constraints, ensure_ascii=False),
+        capabilities_json=json.dumps(
+            semantic.get("capabilities", []) if intent_kind == "ACCESSIBILITY_NEED" else [],
+            ensure_ascii=False,
+        ),
+        preference_hints_json=json.dumps(preference_hints, ensure_ascii=False),
+        semantic_envelope_json=json.dumps(semantic, ensure_ascii=False, sort_keys=True),
+        source="USER_TEMPORARY_INTENT",
+        compiler_provider_key=interpretation.provider_key,
+        compiler_model_key=(settings.ai_model.removeprefix("deepseek/") if interpretation.provider_key == "deepseek" else "copilot-fallback"),
+        compiler_confidence=semantic_confidence,
+        status=status,
+        evaluation_state="NEEDS_CLARIFICATION" if clarification_needed else "QUEUED",
+        semantic_fingerprint=fingerprint,
+        created_at=now_text,
+        updated_at=now_text,
+    )
+    active_rows = session.scalars(
+        select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id,
+            JourneyIntent.status == "ACTIVE",
+        )
+    ).all()
+    if not clarification_needed and dimensions:
+        for old in active_rows:
+            old_dimensions = json.loads(old.canonical_dimensions_json or "[]")
+            old_targets = json.loads(old.target_activity_ids_json or "[]")
+            if set(dimensions).intersection(old_dimensions) and intent_scopes_overlap(
+                left_kind=old.scope_kind or "",
+                left_start=old.scope_start_at,
+                left_end=old.scope_end_at,
+                left_targets=old_targets,
+                right_kind=intent.scope_kind or "",
+                right_start=intent.scope_start_at,
+                right_end=intent.scope_end_at,
+                right_targets=target_ids,
+            ):
+                old.status = "SUPERSEDED"
+                old.superseded_at = now_text
+                old.updated_at = now_text
+    session.add(intent)
+    session.flush()
+    record_audit(
+        session,
+        action="journey.intent.created",
+        entity_type="JourneyIntent",
+        entity_id=intent.id,
+        journey_id=journey.id,
+        actor_type="USER",
+        actor_id=principal.traveler_id,
+        after={"intent_kind": intent.intent_kind, "scope_kind": intent.scope_kind, "status": intent.status, "target_count": len(target_ids)},
+    )
+    if clarification_needed:
+        if not scope_kind:
+            message = "Should this apply to the rest of today, tomorrow morning, your next stop, or the rest of the trip?"
+            bounded_options = [
+                {"value": "REST_OF_TODAY", "label": "Rest of today"},
+                {"value": "NEXT_MORNING", "label": "Tomorrow morning"},
+                {"value": "NEXT_STOP", "label": "My next stop"},
+            ]
+        elif not intent_kind or not constraints and not preference_hints:
+            message = "Do you mean a slower pace, less walking, or fewer stops?"
+            bounded_options = [
+                {"value": "SLOWER_PACE", "label": "Slower pace"},
+                {"value": "LESS_WALKING", "label": "Less walking"},
+                {"value": "FEWER_STOPS", "label": "Fewer stops"},
+            ]
+        else:
+            message = "I can’t see a non-current stop inside that time window. Which part of the Journey should I adjust?"
+            bounded_options = [
+                {"value": "NEXT_STOP", "label": "My next stop"},
+                {"value": "REMAINING_JOURNEY", "label": "The rest of the trip"},
+            ]
+        envelope = json.loads(intent.semantic_envelope_json or "{}")
+        envelope["r52_clarification"] = {
+            "question": message,
+            "options": bounded_options,
+            "status": "PENDING",
+        }
+        intent.semantic_envelope_json = json.dumps(envelope, ensure_ascii=False, sort_keys=True)
+        intent.evaluation_state = "NEEDS_CLARIFICATION"
+        session.commit()
+        return {"outcome": "INTENT_STEERING_NEEDS_CLARIFICATION", "message": message, "intent": journey_intent_payload(intent), "mission": None, "run": None, "source": intent.source}
+
+    commitments = session.scalars(
+        select(CommitmentModel).where(
+            CommitmentModel.journey_id == journey.id,
+            CommitmentModel.status == "ACTIVE",
+            CommitmentModel.level.in_(("C3_Guaranteed", "C4_Anchored")),
+        )
+    ).all()
+    protected_ids = {str(item.activity_id) for item in commitments if item.activity_id}
+    if journey.current_activity_id:
+        protected_ids.add(str(journey.current_activity_id))
+    mutable_ids = [item for item in target_ids if item not in protected_ids]
+    mission_context = {
+        "id": intent.id,
+        "source": "USER_TEMPORARY_INTENT",
+        "created_by_traveler_id": principal.traveler_id,
+        "created_by_member_id": member.id,
+        "scope_kind": scope.kind,
+        "scope_start_at": scope.starts_at,
+        "scope_end_at": scope.ends_at,
+        "local_date": scope.local_date,
+        "target_activity_ids": target_ids,
+        "canonical_dimensions": dimensions,
+        "constraints": constraints,
+        "preference_hints": preference_hints,
+    }
+    mission = JourneyMission(
+        id=str(uuid4()),
+        journey_id=journey.id,
+        traveler_id=principal.traveler_id,
+        trigger_event_id=None,
+        user_text=command,
+        objective_codes_json=json.dumps(["LIVE_JOURNEY_INTENT_STEERING"]),
+        protected_activity_ids_json=json.dumps(sorted(protected_ids)),
+        mutable_activity_ids_json=json.dumps(mutable_ids),
+        intent_json=json.dumps({"temporary_journey_intent": mission_context}, ensure_ascii=False),
+        resolved_intent_json=json.dumps({"temporary_journey_intent": mission_context, "authority": "PLAN_ONLY; normal R43/R45/R47 gates remain"}, ensure_ascii=False),
+        allowed_action_classes_json=json.dumps(["REQUEST_REPLAN"]),
+        unresolved_references_json="[]",
+        compiler_provider_key=interpretation.provider_key,
+        compiler_model_key=settings.ai_model.removeprefix("deepseek/") if interpretation.provider_key == "deepseek" else "copilot-fallback",
+        compiler_confidence=semantic_confidence,
+        reasoning_summary="One user temporary intent evaluated by the existing Journey Operator Agent.",
+        is_standing=False,
+        parent_mission_id=standing.id,
+        max_cost_delta_minor=0,
+        max_loss_minor=0,
+        max_schedule_drift_min=0,
+        preferences_json="{}",
+        requested_autonomy="PLAN_ONLY",
+        status="CREATED",
+        created_at=now_text,
+    )
+    intent.evaluation_state = "RUNNING"
+    session.add(mission)
+    session.commit()
+    run: dict[str, Any]
+    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    try:
+        run = runtime.run(session, journey=journey, mission=mission)
+    except AgentRuntimeUnavailable as exc:
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": str(exc), "outcome": {"reason_code": "AGENT_RUNTIME_UNAVAILABLE"}}
+    except Exception as exc:  # noqa: BLE001 - keep the temporary intent durable across provider faults
+        run = {"status": "FAILED_EXTERNAL", "failure_reason": type(exc).__name__, "outcome": {"reason_code": "AGENT_RUNTIME_FAILURE"}}
+    finally:
+        runtime.close()
+
+    after_stamp = execution_clock.now(journey.timezone).astimezone(timezone.utc).isoformat()
+    run_outcome = run.get("outcome") if isinstance(run.get("outcome"), dict) else {}
+    reason_code = str(run_outcome.get("reason_code") or "").upper()
+    run_status = str(run.get("status") or "").upper()
+    created_proposals = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.created_at >= now_text,
+        ).order_by(ReplanProposalModel.created_at, ReplanProposalModel.id)
+    ).all()
+    if created_proposals or run_status in {"WAITING_FOR_APPROVAL", "REQUIRE_CONFIRMATION", "REQUIRE_STEP_UP"}:
+        result_code = "INTENT_STEERING_REPLAN_READY"
+    elif run_status in {"FAILED_EXTERNAL", "BLOCKED", "UNAVAILABLE"}:
+        result_code = "INTENT_STEERING_BRAIN_BLOCKED"
+    elif reason_code in {"PLAN_ALREADY_FITS", "CURRENT_PLAN_SATISFIES_INTENT", "INTENT_ALREADY_SATISFIED"}:
+        result_code = "INTENT_STEERING_PLAN_ALREADY_FITS"
+    elif reason_code.startswith("NO_FEASIBLE") or reason_code in {"NO_MATERIAL_CHANGE", "NO_ACTIONABLE_CHANGE"}:
+        result_code = "INTENT_STEERING_NO_FEASIBLE_CHANGE"
+    elif run_outcome.get("clarification"):
+        result_code = "INTENT_STEERING_NEEDS_CLARIFICATION"
+    else:
+        result_code = "INTENT_STEERING_NO_FEASIBLE_CHANGE"
+    intent.evaluation_state = result_code
+    intent.updated_at = after_stamp
+    session.commit()
+    return {
+        "outcome": result_code,
+        "message": _intent_steering_copy(result_code, scope, len(target_ids)),
+        "intent": journey_intent_payload(intent),
+        "mission": mission_payload(mission),
+        "run": run,
+        "source": "USER_TEMPORARY_INTENT",
+        "proposal_ids": [row.id for row in created_proposals],
+    }
+
+
+def _intent_steering_copy(outcome: str, scope: Any, target_count: int) -> str:
+    scope_label = {
+        "REST_OF_TODAY": "for the rest of today",
+        "NEXT_MORNING": "tomorrow morning",
+        "NEXT_STOP": "for your next stop",
+        "REMAINING_JOURNEY": "for the rest of this trip",
+    }.get(getattr(scope, "kind", ""), "for this Journey")
+    if outcome == "INTENT_STEERING_PLAN_ALREADY_FITS":
+        return f"I checked the remaining plan {scope_label}; it already fits what you asked for."
+    if outcome == "INTENT_STEERING_REPLAN_READY":
+        return f"I checked {target_count} remaining stops {scope_label}. A proposed change is ready for the normal review and approval steps."
+    if outcome == "INTENT_STEERING_NEEDS_CLARIFICATION":
+        return "I need one detail before I can safely steer the Journey."
+    if outcome == "INTENT_STEERING_BRAIN_BLOCKED":
+        return "I saved your temporary request, but the Journey planning Agent could not evaluate it yet."
+    if outcome == "INTENT_STEERING_NO_FEASIBLE_CHANGE":
+        return f"I checked the remaining plan {scope_label}; I couldn’t find a grounded change that improves it."
+    return f"I’m keeping this temporary request in view {scope_label}."
 
 
 # Traveller-facing names for the city codes the product can be created with.
@@ -14289,26 +28410,19 @@ async def copilot_message(
             session.commit()
             try:
                 native_plan = mission_plan_for_model(native_mission)
-                native_tool_sequence = [
-                    str(step["tool_name"])
-                    for step in native_plan["steps"]
-                    if step.get("tool_name")
-                ]
                 native_run = native.create_run(
                     mission_id=native_mission.id,
                     journey_id=journey.id,
                     input_text=message,
                     instructions=(
-                        "Follow the supplied CityNexus mission plan in order. You MUST call each listed MCP tool "
-                        f"in this sequence: {', '.join(native_tool_sequence)}. "
+                        "Use the supplied CityNexus mission plan as a neutral authority envelope, not as a scripted "
+                        "mutation sequence. Inspect the Journey, Twin, current event, portfolio, and protected "
+                        "commitments first; then choose the safest available action or NO_ACTION from the returned "
+                        "capabilities. Do not assume a standby is sufficient and do not invent a plan ID. "
                         f"For every CityNexus MCP call, set journey_id exactly to {journey.id}. "
                         f"The CityNexus mission_id is {native_mission.id}; do not invent or omit either identifier. "
-                        + (
-                            f"For request_replan, set trigger_event_id exactly to {native_mission.trigger_event_id}, "
-                            "candidate_count to 3, and solver_mode to deterministic. "
-                            if native_mission.trigger_event_id
-                            else "There is no trigger event; do not call request_replan until CityNexus provides one. "
-                        )
+                        "The current disruption, if any, is discoverable from server-owned JourneyTwin/event inspection; "
+                        "do not assume a trigger identifier or a recovery action from this hand-off. "
                         + "Call one MCP tool at a time (never batch or use tool_call metadata), do not repeat a completed step. "
                         "Use only CityNexus MCP tools and allowed_tools. Inspect the Journey, JourneyTwin, "
                         "and protected commitments before acting. Produce a PLAN_ONLY proposal; never accept, "

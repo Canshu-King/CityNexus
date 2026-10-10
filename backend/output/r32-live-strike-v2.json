@@ -1,0 +1,52 @@
+{
+  "schema": "citynexus.r32.live-strike.v2.failure.v1",
+  "status": "NOT_PROVEN",
+  "failure": {
+    "phase": "A_EXTERNAL_RESPONSE_BOUNDARY",
+    "error_type": "RuntimeError",
+    "message": "Agent A did not reach the durable R1 external-response boundary",
+    "cause": "Configured external WB2api call did not produce the required durable provider invocation within the harness boundary; Shock B was not injected and no causal continuation was fabricated."
+  },
+  "source_receipt": {
+    "git_head": "72a8557a1b874f085ef8c342f513681faf2aa644",
+    "tracked_dirty_before_strike": false,
+    "tracked_dirty_paths_before_strike": [],
+    "source_sha256": {
+      "backend/run_r32_live.py": "f91ed6e5319c811a48d453bdc0eabe4da603a8bbdd50c8793a90e4ae8f048b2a",
+      "backend/app/agent/runtime.py": "fd52c2fa166bff5422c6f5159b888ca36602a0554352e9ba444f0a23aa23beda",
+      "backend/app/recovery_epoch.py": "e453fde39b041965ecbfe8b97c1899e2955cf6bb8926e916b118c8fc582a711e",
+      "backend/app/agent/gateway.py": "50e239a7f2437dadb2ff6073d6dd3f9955ba5b8fe9c714d4d52bdc7d21ddfb70",
+      "backend/scripts/r32_machine_verdict.py": "90c3306c8f0f623f0607da64d1d631b50fdb5be652165276220c79694cb724fa"
+    }
+  },
+  "runtime": {
+    "provider": "WB2api",
+    "configured_model": "cn:glm-5.3-flash",
+    "provider_calls_were_real": false,
+    "concurrent_external_barrier_proven": false
+  },
+  "setup": {},
+  "r1": {},
+  "r2": {},
+  "current_epoch_id": null,
+  "agent_a_bound_before_shock_b": false,
+  "agent_b_bound_after_shock_b": false,
+  "agent_responses": {},
+  "final": {
+    "journey": {},
+    "epochs": [],
+    "runs": [],
+    "steps": [],
+    "events": [],
+    "proposals": [],
+    "receipts": [],
+    "approvals": [],
+    "pending_actions": [],
+    "audits": [],
+    "plans": []
+  },
+  "truth_boundary": {
+    "shock_source": "SERVER_OWNED_PROVIDER_REPLAY_FIXTURE",
+    "physical_travel_proven": false
+  }
+}

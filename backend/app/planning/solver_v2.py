@@ -16,7 +16,9 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Mapping
 
-VALID_OPTION_ACTIONS = frozenset({"KEEP", "REPLACE"})
+# RETIME changes schedule while retaining the same provider-backed Place. It
+# is a material future difference, not a new fact or solver family.
+VALID_OPTION_ACTIONS = frozenset({"KEEP", "RETIME", "REPLACE"})
 
 
 @dataclass(frozen=True)
@@ -324,7 +326,12 @@ def _advance_anchors(
             travel = problem.travel(cursor_location, anchor.location_key)
         except KeyError:
             return None
-        if cursor_time + travel + problem.safety_buffer_min > anchor.start_min:
+        # No movement is required when the cursor is already at the anchor's
+        # location.  Applying a movement buffer to a same-location anchor at
+        # minute zero makes every counterfactual containing the first
+        # executed activity look infeasible.
+        buffer = problem.safety_buffer_min if travel else 0
+        if cursor_time + travel + buffer > anchor.start_min:
             return None
         cursor_time = anchor.end_min
         cursor_location = anchor.location_key
@@ -477,7 +484,8 @@ def _finish_anchors(
             travel = problem.travel(cursor_location, anchor.location_key)
         except KeyError:
             return None
-        if cursor_time + travel + problem.safety_buffer_min > anchor.start_min:
+        buffer = problem.safety_buffer_min if travel else 0
+        if cursor_time + travel + buffer > anchor.start_min:
             return None
         cursor_time = anchor.end_min
         cursor_location = anchor.location_key
@@ -584,7 +592,7 @@ def _solve_v2_enumeration(problem: SolverV2Problem) -> tuple[SolverV2Plan, ...]:
                 if slot.must_change and option.action == "KEEP":
                     continue
                 next_partials.extend(_schedule_option(problem, anchors, partial, slot, option))
-            if slot.allow_drop and not slot.must_change:
+            if slot.allow_drop:
                 visited += 1
                 if visited <= problem.max_combinations:
                     next_partials.extend(_drop_option(problem, anchors, partial, slot))
@@ -714,7 +722,7 @@ def _solve_v2_cp_sat(problem: SolverV2Problem) -> tuple[SolverV2Plan, ...]:
                     "drift": drift,
                 }
             drop = None
-            if slot.allow_drop and not slot.must_change:
+            if slot.allow_drop:
                 drop = model.NewBoolVar(f"drop_{slot_index}")
                 choices.append((None, drop))
                 all_choice_literals.append(drop)

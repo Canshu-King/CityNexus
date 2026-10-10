@@ -40,6 +40,25 @@ CREATE TABLE IF NOT EXISTS journey_outcome_events (
     created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS overnight_steward_cycles (
+    id TEXT PRIMARY KEY,
+    cycle_key TEXT NOT NULL UNIQUE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    local_date TEXT NOT NULL,
+    next_local_date TEXT NOT NULL,
+    plan_version_id TEXT,
+    state TEXT NOT NULL DEFAULT 'DAY_CLOSING',
+    consumed_outcome_ids_json TEXT NOT NULL DEFAULT '[]',
+    learning_summary_by_traveler_json TEXT NOT NULL DEFAULT '{}',
+    briefing_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    closed_at TEXT,
+    morning_ready_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_overnight_steward_journey_day
+    ON overnight_steward_cycles(journey_id, local_date, created_at);
+
 CREATE TABLE IF NOT EXISTS traveler_preference_evidence (
     id TEXT PRIMARY KEY,
     traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
@@ -160,6 +179,8 @@ CREATE TABLE IF NOT EXISTS plan_versions (
     version_no INTEGER NOT NULL CHECK (version_no >= 1),
     planning_mode TEXT NOT NULL CHECK (planning_mode IN ('balanced','budget','explore','strict_schedule')),
     status TEXT NOT NULL CHECK (status IN ('CANDIDATE','SELECTED','ACTIVE','SUPERSEDED','REJECTED')),
+    lifecycle TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (lifecycle IN ('ACTIVE','STANDBY','RETIRED')),
+    trigger_contract_json TEXT NOT NULL DEFAULT '{}',
     source TEXT NOT NULL CHECK (source IN ('INITIAL','REPLAN','MANUAL')),
     parent_plan_version_id TEXT REFERENCES plan_versions(id) ON DELETE SET NULL,
     total_cost_minor INTEGER NOT NULL DEFAULT 0 CHECK (total_cost_minor >= 0),
@@ -310,7 +331,7 @@ CREATE TABLE IF NOT EXISTS events (
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
     provider_key TEXT NOT NULL,
     provenance TEXT NOT NULL DEFAULT 'SIMULATED' CHECK (provenance IN ('SIMULATED','PROVIDER_VERIFIED','USER_REPORTED','SYSTEM_DERIVED')),
-    event_type TEXT NOT NULL CHECK (event_type IN ('TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY','SERVICE_UNAVAILABLE','USER_CHANGE','OTHER')),
+    event_type TEXT NOT NULL CHECK (event_type IN ('TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY','SERVICE_UNAVAILABLE','USER_CHANGE','OPPORTUNITY_WINDOW','OTHER')),
     severity TEXT NOT NULL CHECK (severity IN ('INFO','MINOR','MAJOR','CRITICAL')),
     status TEXT NOT NULL CHECK (status IN ('DETECTED','ACKNOWLEDGED','RESOLVED','IGNORED')),
     affected_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
@@ -360,6 +381,10 @@ CREATE TABLE IF NOT EXISTS replan_proposals (
     explanation_json TEXT NOT NULL,
     created_at TEXT NOT NULL,
     decided_at TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+    semantic_identity TEXT,
+    canonical_proposal_id TEXT REFERENCES replan_proposals(id) ON DELETE SET NULL,
     CHECK (base_plan_version_id <> proposed_plan_version_id)
 );
 
@@ -440,8 +465,55 @@ CREATE TABLE IF NOT EXISTS action_approvals (
     created_at TEXT NOT NULL,
     expires_at TEXT NOT NULL,
     approved_at TEXT,
-    consumed_at TEXT
+    consumed_at TEXT,
+    authority_receipt_id TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
 );
+
+CREATE TABLE IF NOT EXISTS recovery_epochs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    generation INTEGER NOT NULL,
+    active_plan_version_id_at_open TEXT,
+    material_world_epoch_at_open TEXT,
+    recovery_reality_fingerprint TEXT NOT NULL,
+    triggering_event_ids_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL CHECK (status IN ('OPEN','SUPERSEDED','COMMITTED','ABANDONED')),
+    opened_at TEXT NOT NULL,
+    closed_at TEXT,
+    close_reason TEXT,
+    superseded_by_recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    UNIQUE(journey_id, generation)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open
+    ON recovery_epochs(journey_id) WHERE status = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status
+    ON recovery_epochs(journey_id, status, generation);
+
+CREATE TABLE IF NOT EXISTS collective_authority_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+    plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    authority_mode TEXT NOT NULL CHECK (authority_mode IN ('AUTHENTICATED_MEMBER_CONSENT','UNANIMOUS_DOMINANCE')),
+    decision_epoch TEXT NOT NULL,
+    material_world_epoch TEXT NOT NULL,
+    candidate_surface_fingerprint TEXT NOT NULL,
+    source_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+    required_member_ids_json TEXT NOT NULL DEFAULT '[]',
+    response_audit_ids_json TEXT NOT NULL DEFAULT '[]',
+    principal_actor_ids_json TEXT NOT NULL DEFAULT '[]',
+    classification TEXT NOT NULL,
+    issued_at TEXT NOT NULL,
+    invalidated_at TEXT,
+    invalidation_code TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_collective_authority_receipts_target
+    ON collective_authority_receipts(journey_id, proposal_id, plan_version_id);
 
 CREATE INDEX IF NOT EXISTS idx_journeys_traveler ON journeys(traveler_id);
 CREATE INDEX IF NOT EXISTS idx_plan_versions_journey ON plan_versions(journey_id, version_no);
@@ -515,6 +587,278 @@ CREATE TABLE IF NOT EXISTS journey_missions (
     failure_reason TEXT
 );
 
+CREATE TABLE IF NOT EXISTS journey_intents (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    created_by_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    created_by_member_id TEXT,
+    source_text TEXT NOT NULL,
+    intent_kind TEXT NOT NULL,
+    scope_kind TEXT,
+    scope_start_at TEXT,
+    scope_end_at TEXT,
+    local_date TEXT,
+    target_activity_ids_json TEXT NOT NULL DEFAULT '[]',
+    canonical_dimensions_json TEXT NOT NULL DEFAULT '[]',
+    constraints_json TEXT NOT NULL DEFAULT '[]',
+    capabilities_json TEXT NOT NULL DEFAULT '[]',
+    preference_hints_json TEXT NOT NULL DEFAULT '{}',
+    semantic_envelope_json TEXT NOT NULL DEFAULT '{}',
+    source TEXT NOT NULL DEFAULT 'USER_TEMPORARY_INTENT',
+    compiler_provider_key TEXT NOT NULL DEFAULT 'deterministic',
+    compiler_model_key TEXT NOT NULL DEFAULT 'fallback',
+    compiler_confidence REAL NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'ACTIVE',
+    evaluation_state TEXT NOT NULL DEFAULT 'QUEUED',
+    semantic_fingerprint TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    superseded_at TEXT,
+    expired_at TEXT,
+    cancelled_at TEXT,
+    UNIQUE(journey_id, semantic_fingerprint)
+);
+CREATE INDEX IF NOT EXISTS idx_journey_intents_active_scope
+    ON journey_intents(journey_id, status, scope_start_at, scope_end_at);
+
+CREATE TABLE IF NOT EXISTS member_side_quests (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    planned_separation_intent_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL,
+    rendezvous_place_id TEXT NOT NULL,
+    rendezvous_title TEXT NOT NULL,
+    rendezvous_place_name TEXT NOT NULL,
+    rendezvous_scheduled_at TEXT,
+    side_place_id TEXT,
+    side_title TEXT NOT NULL,
+    destination_authority TEXT NOT NULL
+        CHECK (destination_authority IN ('EXACT_KNOWN_PLACE', 'DESCRIPTIVE_ONLY')),
+    state TEXT NOT NULL
+        CHECK (state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED',
+                         'COMPLETED', 'CANCELLED', 'INVALIDATED')),
+    created_at TEXT NOT NULL,
+    started_at TEXT,
+    arrived_at TEXT,
+    completed_at TEXT,
+    cancelled_at TEXT,
+    invalidated_at TEXT,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_side_quests_one_open_per_split
+    ON member_side_quests(journey_id, member_id, planned_separation_intent_id)
+    WHERE state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED');
+CREATE INDEX IF NOT EXISTS idx_member_side_quests_journey_member_updated
+    ON member_side_quests(journey_id, member_id, updated_at);
+
+CREATE TABLE IF NOT EXISTS member_live_moment_scout_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    location_observation_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    split_intent_id TEXT,
+    rendezvous_activity_id TEXT NOT NULL,
+    rendezvous_place_id TEXT NOT NULL,
+    budget_minutes INTEGER NOT NULL,
+    interest TEXT NOT NULL,
+    candidates_json TEXT NOT NULL,
+    provider_attempts_json TEXT NOT NULL,
+    provider_key TEXT NOT NULL,
+    captured_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'OPEN'
+        CHECK (status IN ('OPEN', 'SELECTING', 'SELECTED', 'EXPIRED')),
+    selected_candidate_id TEXT,
+    selected_place_id TEXT,
+    side_quest_id TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_member_live_moment_scout_receipts_owner_expiry
+    ON member_live_moment_scout_receipts(journey_id, member_id, expires_at);
+
+CREATE TABLE IF NOT EXISTS member_side_quest_return_reports (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    side_quest_id TEXT NOT NULL UNIQUE REFERENCES member_side_quests(id) ON DELETE CASCADE,
+    planned_separation_intent_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'RETURN_STARTED_REPORTED'
+        CHECK (status = 'RETURN_STARTED_REPORTED'),
+    reported_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_member_side_quest_return_reports_journey_member
+    ON member_side_quest_return_reports(journey_id, member_id, reported_at);
+
+CREATE TABLE IF NOT EXISTS planned_split_meetup_handshakes (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    owner_member_id TEXT NOT NULL,
+    owner_traveler_id TEXT NOT NULL,
+    planned_separation_intent_id TEXT NOT NULL,
+    member_side_quest_id TEXT NOT NULL,
+    active_plan_version_id TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL,
+    rendezvous_place_id TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'PENDING'
+        CHECK (state IN ('PENDING', 'PEER_ACKNOWLEDGED', 'NOT_CONFIRMED', 'EXPIRED', 'INVALIDATED')),
+    reported_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    responder_member_id TEXT,
+    responder_traveler_id TEXT,
+    decided_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_planned_split_meetup_handshakes_one_pending_per_owner
+    ON planned_split_meetup_handshakes(journey_id, owner_member_id)
+    WHERE state = 'PENDING';
+CREATE INDEX IF NOT EXISTS idx_planned_split_meetup_handshakes_journey_reported
+    ON planned_split_meetup_handshakes(journey_id, reported_at);
+
+CREATE TABLE IF NOT EXISTS member_place_invitations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    owner_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    owner_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    owner_split_intent_id TEXT NOT NULL REFERENCES journey_intents(id) ON DELETE CASCADE,
+    owner_side_quest_id TEXT NOT NULL REFERENCES member_side_quests(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    place_provider_key TEXT NOT NULL,
+    place_external_id TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE CASCADE,
+    rendezvous_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    disclosure_snapshot_json TEXT NOT NULL DEFAULT '{}',
+    state TEXT NOT NULL DEFAULT 'OPEN'
+        CHECK (state IN ('OPEN', 'WITHDRAWN', 'EXPIRED', 'STALE')),
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    withdrawn_at TEXT,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_place_invitations_one_open_per_quest
+    ON member_place_invitations(journey_id, owner_side_quest_id)
+    WHERE state = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_member_place_invitations_journey_owner_created
+    ON member_place_invitations(journey_id, owner_member_id, created_at);
+
+CREATE TABLE IF NOT EXISTS member_place_invitation_recipients (
+    id TEXT PRIMARY KEY,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    recipient_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    recipient_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    state TEXT NOT NULL DEFAULT 'INVITED'
+        CHECK (state IN ('INVITED', 'ACCEPTANCE_NEEDS_COMPLETION', 'ACCEPTED_OWN_STOP_READY', 'DECLINED')),
+    invited_at TEXT NOT NULL,
+    responded_at TEXT,
+    accepted_split_intent_id TEXT REFERENCES journey_intents(id) ON DELETE SET NULL,
+    accepted_side_quest_id TEXT REFERENCES member_side_quests(id) ON DELETE SET NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(invitation_id, recipient_member_id)
+);
+CREATE INDEX IF NOT EXISTS idx_member_place_invitation_recipients_member_state
+    ON member_place_invitation_recipients(recipient_member_id, state, invited_at);
+
+CREATE TABLE IF NOT EXISTS member_place_invitation_progress (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL,
+    traveler_id TEXT NOT NULL,
+    signal_type TEXT NOT NULL
+        CHECK (signal_type IN ('AT_INVITED_PLACE_SELF_REPORTED', 'HEADING_BACK_SELF_REPORTED')),
+    active_plan_version_id TEXT NOT NULL,
+    planned_separation_intent_id TEXT NOT NULL,
+    side_quest_id TEXT NOT NULL,
+    place_id TEXT NOT NULL,
+    consent_version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'WITHDRAWN')),
+    reported_at TEXT NOT NULL,
+    withdrawn_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(invitation_id, member_id, signal_type)
+);
+CREATE INDEX IF NOT EXISTS idx_member_place_invitation_progress_invitation_status
+    ON member_place_invitation_progress(invitation_id, status, signal_type);
+
+CREATE TABLE IF NOT EXISTS member_place_group_share_consents (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    owner_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    owner_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    owner_split_intent_id TEXT NOT NULL REFERENCES journey_intents(id) ON DELETE CASCADE,
+    owner_side_quest_id TEXT NOT NULL REFERENCES member_side_quests(id) ON DELETE CASCADE,
+    base_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    base_cursor_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    place_snapshot_json TEXT NOT NULL,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    rendezvous_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    audience_snapshot_json TEXT NOT NULL,
+    audience_snapshot_hash TEXT NOT NULL,
+    plan_snapshot_hash TEXT NOT NULL,
+    source_snapshot_hash TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'ACTIVE'
+        CHECK (status IN ('ACTIVE', 'WITHDRAWN', 'EXPIRED', 'STALE')),
+    consented_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    withdrawn_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_place_group_share_consents_one_active
+    ON member_place_group_share_consents(journey_id, invitation_id)
+    WHERE status = 'ACTIVE';
+CREATE INDEX IF NOT EXISTS idx_member_place_group_share_consents_invitation_created
+    ON member_place_group_share_consents(journey_id, invitation_id, created_at);
+
+CREATE TABLE IF NOT EXISTS member_place_promotions (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    actor_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    actor_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    trigger_event_id TEXT REFERENCES events(id) ON DELETE SET NULL,
+    proposal_id TEXT REFERENCES replan_proposals(id) ON DELETE SET NULL,
+    mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+    request_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    dwell_minutes INTEGER NOT NULL CHECK (dwell_minutes IN (10, 20, 30)),
+    state TEXT NOT NULL DEFAULT 'PENDING_ROUTE'
+        CHECK (state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED', 'APPLIED', 'DECLINED', 'STALE', 'BLOCKED')),
+    state_detail_json TEXT NOT NULL DEFAULT '{}',
+    decision_epoch TEXT,
+    material_world_epoch TEXT,
+    candidate_surface_fingerprint TEXT,
+    authority_receipt_id TEXT,
+    applied_plan_version_id TEXT REFERENCES plan_versions(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    decided_at TEXT,
+    applied_at TEXT,
+    UNIQUE(journey_id, request_key)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_member_place_promotions_one_pending
+    ON member_place_promotions(journey_id, active_plan_version_id, invitation_id, place_id)
+    WHERE state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED');
+CREATE INDEX IF NOT EXISTS idx_member_place_promotions_journey_state_updated
+    ON member_place_promotions(journey_id, state, updated_at);
+
 CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
     mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,
@@ -526,7 +870,8 @@ CREATE TABLE IF NOT EXISTS agent_runs (
     failure_reason TEXT,
     created_at TEXT NOT NULL,
     started_at TEXT NOT NULL,
-    completed_at TEXT
+    completed_at TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS agent_run_steps (
@@ -541,6 +886,32 @@ CREATE TABLE IF NOT EXISTS agent_run_steps (
     created_at TEXT NOT NULL,
     completed_at TEXT
 );
+
+CREATE TABLE IF NOT EXISTS agent_pending_actions (
+    id TEXT PRIMARY KEY,
+    approval_id TEXT NOT NULL UNIQUE REFERENCES action_approvals(id) ON DELETE CASCADE,
+    run_id TEXT NOT NULL REFERENCES agent_runs(id) ON DELETE CASCADE,
+    mission_id TEXT NOT NULL REFERENCES journey_missions(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    originating_step_id TEXT REFERENCES agent_run_steps(id) ON DELETE SET NULL,
+    tool_name TEXT NOT NULL,
+    arguments_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'PENDING'
+        CHECK (status IN ('PENDING','RESUMING','RESUMED','FAILED','EXPIRED','SUPERSEDED')),
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    claimed_at TEXT,
+    resumed_at TEXT,
+    updated_at TEXT NOT NULL,
+    authority_receipt_id TEXT,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_run
+    ON agent_pending_actions(run_id, status, created_at);
+CREATE INDEX IF NOT EXISTS idx_agent_pending_actions_journey
+    ON agent_pending_actions(journey_id, status, created_at);
 
 CREATE TABLE IF NOT EXISTS guardian_runs (
     id TEXT PRIMARY KEY,
@@ -686,6 +1057,50 @@ CREATE INDEX IF NOT EXISTS idx_counterfactuals_journey
 CREATE INDEX IF NOT EXISTS idx_real_place_candidates_journey
     ON real_place_candidates(journey_id, captured_at);
 
+CREATE TABLE IF NOT EXISTS member_draft_shortlist_items (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    provider_key TEXT NOT NULL,
+    external_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL,
+    coordinate_system TEXT NOT NULL DEFAULT 'WGS84',
+    source_url TEXT NOT NULL,
+    source_provenance TEXT NOT NULL,
+    captured_at TEXT NOT NULL,
+    opening_hours_json TEXT NOT NULL DEFAULT '{}',
+    cost_evidence_json TEXT NOT NULL DEFAULT '{}',
+    source_tags_json TEXT NOT NULL DEFAULT '{}',
+    distance_m REAL,
+    distance_basis TEXT,
+    status TEXT NOT NULL DEFAULT 'SAVED' CHECK (status = 'SAVED'),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, member_id, external_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_member_draft_shortlist_items_owner
+    ON member_draft_shortlist_items(journey_id, member_id, traveler_id, updated_at);
+
+CREATE TABLE IF NOT EXISTS member_draft_resume_intents (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
+    selected_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, member_id, traveler_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_member_draft_resume_intents_owner
+    ON member_draft_resume_intents(journey_id, member_id, traveler_id, updated_at);
+
 CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
     arrival_anchor_json TEXT NOT NULL DEFAULT '{}',
@@ -698,6 +1113,26 @@ CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     -- the question, not an answer of "not declared"; see `stay_budget_declared` in
     -- `app/db/models.py`.  The amount column above keeps its type and nullability unchanged.
     stay_budget_declared INTEGER CHECK (stay_budget_declared IN (0, 1)),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS journey_launch_contexts (
+    journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
+    source_kind TEXT NOT NULL,
+    authority_kind TEXT NOT NULL,
+    place_id TEXT REFERENCES places(id) ON DELETE SET NULL,
+    target_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    display_name TEXT NOT NULL,
+    latitude REAL,
+    longitude REAL,
+    coordinate_crs TEXT,
+    source_ref_type TEXT,
+    source_ref_id TEXT,
+    valid_from TEXT,
+    valid_until TEXT,
+    confirmed_by TEXT,
+    confirmation_method TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -836,6 +1271,74 @@ CREATE TABLE IF NOT EXISTS external_reservation_drafts (
     confirmed_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS journey_inbox_items (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    source_kind TEXT NOT NULL,
+    raw_text_hash TEXT NOT NULL,
+    raw_text TEXT NOT NULL,
+    received_at TEXT NOT NULL,
+    semantic_kind TEXT NOT NULL,
+    reservation_type TEXT NOT NULL,
+    confirmation_ref TEXT,
+    change_kind TEXT NOT NULL,
+    extracted_json TEXT NOT NULL DEFAULT '{}',
+    provenance TEXT NOT NULL,
+    status TEXT NOT NULL,
+    linked_reservation_id TEXT,
+    linked_commitment_id TEXT,
+    reality_claim_id TEXT,
+    impact_status TEXT NOT NULL,
+    result_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, raw_text_hash)
+);
+
+CREATE TABLE IF NOT EXISTS reality_claims (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fact_domain TEXT NOT NULL CHECK (fact_domain IN ('RESERVATION_TIME')),
+    fact_key TEXT NOT NULL,
+    subject_type TEXT NOT NULL,
+    subject_id TEXT NOT NULL,
+    value_json TEXT NOT NULL,
+    provenance TEXT NOT NULL,
+    source_ref TEXT NOT NULL,
+    observed_at TEXT NOT NULL,
+    effective_at TEXT,
+    expires_at TEXT,
+    authority_class TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('CURRENT','SUPERSEDED','CONFLICTING','REJECTED','EXPIRED')),
+    generation INTEGER NOT NULL DEFAULT 1,
+    fingerprint TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(journey_id, fingerprint)
+);
+CREATE INDEX IF NOT EXISTS idx_reality_claims_fact_status
+    ON reality_claims(journey_id, fact_key, status, observed_at);
+
+CREATE TABLE IF NOT EXISTS reality_conflicts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fact_domain TEXT NOT NULL CHECK (fact_domain IN ('RESERVATION_TIME')),
+    fact_key TEXT NOT NULL,
+    generation INTEGER NOT NULL,
+    claim_ids_json TEXT NOT NULL DEFAULT '[]',
+    claim_set_fingerprint TEXT NOT NULL,
+    status TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    selected_claim_id TEXT,
+    resolution_claim_id TEXT,
+    resolution_provenance TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    resolved_at TEXT,
+    UNIQUE(journey_id, fact_key, generation),
+    UNIQUE(journey_id, fact_key, claim_set_fingerprint)
+);
+
 CREATE TABLE IF NOT EXISTS transport_reservations (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
@@ -888,6 +1391,8 @@ CREATE TABLE IF NOT EXISTS offline_journey_snapshots (
 CREATE TABLE IF NOT EXISTS location_observations (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    traveler_id TEXT REFERENCES travelers(id) ON DELETE SET NULL,
+    journey_member_id TEXT REFERENCES journey_members(id) ON DELETE SET NULL,
     latitude REAL NOT NULL,
     longitude REAL NOT NULL,
     accuracy_m REAL NOT NULL,
@@ -1061,6 +1566,36 @@ CREATE INDEX IF NOT EXISTS idx_catalog_hydration_destination_recent
 CREATE INDEX IF NOT EXISTS idx_catalog_hydration_journey_recent
     ON catalog_hydration_operations(journey_id, queued_at);
 
+-- R41: one durable operation for one exact grounded-origin -> target route request.
+CREATE TABLE IF NOT EXISTS route_acquisition_operations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fingerprint TEXT NOT NULL,
+    origin_key TEXT NOT NULL,
+    target_key TEXT NOT NULL,
+    target_activity_id TEXT,
+    requested_mode TEXT NOT NULL,
+    provider_policy_version TEXT NOT NULL,
+    route_truth_policy_version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'QUEUED' CHECK (status IN ('QUEUED','RUNNING','COMPLETED','UNAVAILABLE','FAILED')),
+    phase TEXT,
+    outcome TEXT,
+    request_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    queued_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_route_acquisition_one_open
+    ON route_acquisition_operations(journey_id, fingerprint)
+    WHERE status IN ('QUEUED','RUNNING');
+
+CREATE INDEX IF NOT EXISTS idx_route_acquisition_journey_recent
+    ON route_acquisition_operations(journey_id, queued_at);
+
 -- ORD-0434 step 1: a share grant is a server fact, not a URL the client assembles.
 -- One journey can hold many grants.  `expires_at` and `revoked_at` carry no DEFAULT and no
 -- sentinel: a NULL means that moment was never set, which is the only honest way to say
@@ -1102,6 +1637,7 @@ CREATE TABLE IF NOT EXISTS journey_members (
     expires_at TEXT,
     joined_at TEXT,
     removed_at TEXT,
+    preferences_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -1112,13 +1648,237 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_journey_members_journey_traveler
 CREATE INDEX IF NOT EXISTS idx_journey_members_journey
     ON journey_members(journey_id, created_at);
 
+-- A pending invitation is not a membership. The recipient's signed acceptance is
+-- the only path that inserts an in-force JourneyMember.
+CREATE TABLE IF NOT EXISTS journey_membership_invitations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    target_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    inviter_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    inviter_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    base_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    base_cursor_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    proposed_role TEXT NOT NULL DEFAULT 'COLLABORATOR' CHECK (proposed_role = 'COLLABORATOR'),
+    title_snapshot TEXT NOT NULL,
+    city_code_snapshot TEXT NOT NULL,
+    approximate_start_date TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'OFFERED'
+        CHECK (state IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','EXPIRED')),
+    request_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    accepted_at TEXT,
+    declined_at TEXT,
+    revoked_at TEXT,
+    joined_member_id TEXT REFERENCES journey_members(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, inviter_member_id, request_key)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_membership_invitations_one_offered
+    ON journey_membership_invitations(journey_id, target_traveler_id)
+    WHERE state = 'OFFERED';
+
+CREATE INDEX IF NOT EXISTS idx_journey_membership_invitations_recipient
+    ON journey_membership_invitations(target_traveler_id, state, expires_at);
+
+-- R78: an explicit, short-lived, audience-bound self-report for the current shared rendezvous.
+-- It never stores a location observation, coordinates, route, or physical-arrival claim.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_member_signals (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    journey_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    public_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    signal_kind TEXT NOT NULL CHECK (signal_kind IN ('HEADING_TO_RENDEZVOUS','NEEDS_COORDINATION')),
+    status TEXT NOT NULL DEFAULT 'ACTIVE'
+        CHECK (status IN ('ACTIVE','REVOKED','REPLACED','STALE','EXPIRED')),
+    audience_member_ids_json TEXT NOT NULL,
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    reported_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    revoked_at TEXT,
+    stale_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, journey_member_id, idempotency_key)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_rendezvous_member_signals_one_active
+    ON journey_rendezvous_member_signals(journey_id, journey_member_id)
+    WHERE status = 'ACTIVE';
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_member_signals_expiry
+    ON journey_rendezvous_member_signals(journey_id, status, expires_at);
+
+CREATE TABLE IF NOT EXISTS journey_rendezvous_signal_acknowledgements (
+    id TEXT PRIMARY KEY,
+    signal_id TEXT NOT NULL UNIQUE
+        REFERENCES journey_rendezvous_member_signals(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    requester_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    responder_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    responder_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    acknowledged_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_signal_ack_journey
+    ON journey_rendezvous_signal_acknowledgements(journey_id, acknowledged_at);
+
+-- R79: a pair-private, mutually accepted intention to meet at one exact public Place.
+-- It is not an Activity, route, location observation, booking, commitment, or arrival.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_buddy_handoffs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    signal_id TEXT NOT NULL REFERENCES journey_rendezvous_member_signals(id) ON DELETE CASCADE,
+    acknowledgement_id TEXT NOT NULL REFERENCES journey_rendezvous_signal_acknowledgements(id) ON DELETE CASCADE,
+    requester_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    requester_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    helper_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    helper_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    original_rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    original_public_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    handoff_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    handoff_place_snapshot_json TEXT NOT NULL,
+    audience_member_ids_json TEXT NOT NULL,
+    audience_sha256 TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'OFFERED'
+        CHECK (status IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','CANCELLED','EXPIRED','STALE')),
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    offered_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    responded_at TEXT,
+    closed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, helper_member_id, idempotency_key)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_journey_rendezvous_buddy_handoffs_one_current
+    ON journey_rendezvous_buddy_handoffs(signal_id)
+    WHERE status IN ('OFFERED','ACCEPTED');
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_handoffs_pair_status_expiry
+    ON journey_rendezvous_buddy_handoffs(
+        journey_id, requester_member_id, helper_member_id, status, expires_at
+    );
+
+-- R82: finite pair-consented execution window; this does not extend the R79 offer.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_buddy_executions (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    handoff_id TEXT NOT NULL UNIQUE REFERENCES journey_rendezvous_buddy_handoffs(id) ON DELETE CASCADE,
+    signal_id TEXT NOT NULL REFERENCES journey_rendezvous_member_signals(id) ON DELETE CASCADE,
+    acknowledgement_id TEXT NOT NULL REFERENCES journey_rendezvous_signal_acknowledgements(id) ON DELETE CASCADE,
+    requester_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    requester_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    helper_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    helper_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    current_activity_id TEXT,
+    original_rendezvous_activity_id TEXT NOT NULL REFERENCES activities(id) ON DELETE RESTRICT,
+    original_public_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    original_place_snapshot_json TEXT NOT NULL,
+    handoff_place_id TEXT NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
+    handoff_place_snapshot_json TEXT NOT NULL,
+    audience_member_ids_json TEXT NOT NULL,
+    audience_sha256 TEXT NOT NULL CHECK (length(audience_sha256) = 64),
+    execution_window_minutes INTEGER NOT NULL CHECK (execution_window_minutes IN (30,60,90)),
+    status TEXT NOT NULL DEFAULT 'WINDOW_OFFERED'
+        CHECK (status IN ('WINDOW_OFFERED','ACTIVE','MUTUALLY_ACKNOWLEDGED','REPLAN_REQUIRED','CANCELLED','EXPIRED','STALE')),
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    helper_consent_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    requester_consent_traveler_id TEXT REFERENCES travelers(id) ON DELETE CASCADE,
+    helper_consented_at TEXT NOT NULL,
+    requester_consented_at TEXT,
+    proposed_at TEXT NOT NULL,
+    proposal_expires_at TEXT NOT NULL,
+    started_at TEXT,
+    expires_at TEXT,
+    closed_at TEXT,
+    outcome_code TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, helper_member_id, idempotency_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_executions_pair_status_expiry
+    ON journey_rendezvous_buddy_executions(
+        journey_id, requester_member_id, helper_member_id, status, expires_at
+    );
+
+-- A member can make one durable signed self-report for one execution generation.
+CREATE TABLE IF NOT EXISTS journey_rendezvous_buddy_execution_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    execution_id TEXT NOT NULL REFERENCES journey_rendezvous_buddy_executions(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    receipt_kind TEXT NOT NULL
+        CHECK (receipt_kind IN ('BUDDY_MET_ACK','CANNOT_MEET','CANCEL_PARTICIPATION')),
+    idempotency_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    self_reported_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(execution_id, member_id),
+    UNIQUE(execution_id, idempotency_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_journey_rendezvous_buddy_execution_receipts_journey
+    ON journey_rendezvous_buddy_execution_receipts(journey_id, execution_id, self_reported_at);
+
+-- R81: an exact, write-once authorization receipt for an R80 private location
+-- sample. Legacy location observations are intentionally not backfilled; without
+-- this receipt they cannot enter a private handoff route.
+CREATE TABLE IF NOT EXISTS private_buddy_route_location_bindings (
+    observation_id TEXT PRIMARY KEY
+        REFERENCES location_observations(id) ON DELETE CASCADE,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    handoff_id TEXT NOT NULL REFERENCES journey_rendezvous_buddy_handoffs(id) ON DELETE CASCADE,
+    journey_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    active_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    current_activity_id TEXT,
+    destination_place_id TEXT NOT NULL,
+    destination_place_snapshot_sha256 TEXT NOT NULL
+        CHECK (length(destination_place_snapshot_sha256) = 64),
+    audience_sha256 TEXT NOT NULL CHECK (length(audience_sha256) = 64),
+    handoff_accepted_at TEXT NOT NULL,
+    captured_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    bound_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_private_buddy_route_bindings_context_expiry
+    ON private_buddy_route_location_bindings(
+        journey_id, handoff_id, journey_member_id, traveler_id, expires_at
+    );
+
+-- Appends are the only supported write. Parent retention cascades can still purge
+-- the entire parent scope, while an existing binding cannot be rewritten in place.
+CREATE TRIGGER IF NOT EXISTS trg_private_buddy_route_binding_no_update
+    BEFORE UPDATE ON private_buddy_route_location_bindings
+    BEGIN
+        SELECT RAISE(ABORT, 'private buddy route location binding is immutable');
+    END;
+
 -- The ACL table.  A row says which capability a role has and which message key states its scope in
 -- one sentence - the words themselves stay in the client's dictionary, because a server sentence
 -- reaching a screen is the defect this project keeps having to fix (RELATION:94's shape is a table,
 -- not a string).  Seeded once by `db/session.py`, so it is readable without being editable per trip.
 CREATE TABLE IF NOT EXISTS journey_role_capabilities (
     role TEXT NOT NULL CHECK (role IN ('OWNER','ADMIN','COLLABORATOR')),
-    capability TEXT NOT NULL CHECK (capability IN ('JOURNEY_READ','JOURNEY_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')),
+    capability TEXT NOT NULL CHECK (capability IN ('JOURNEY_READ','JOURNEY_UPDATE','JOURNEY_EXECUTION_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')),
     scope_message_key TEXT NOT NULL,
     created_at TEXT NOT NULL,
     PRIMARY KEY (role, capability)
@@ -1211,3 +1971,45 @@ CREATE INDEX IF NOT EXISTS idx_collection_items_folder_added
 -- would have had no use for it, which is the difference this round is about.
 CREATE INDEX IF NOT EXISTS idx_collection_folders_owner
     ON collection_folders(owner_traveler_id, created_at);
+
+-- R74: a collaborator may answer only one explicitly accepted shared-stop round.
+-- The grant is Journey-, invitation-, base-plan-, member- and grantor-bound; the
+-- proposal id and decision epoch are attached when R73 opens that exact round.
+CREATE TABLE IF NOT EXISTS shared_stop_coplanning_grants (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    invitation_id TEXT NOT NULL REFERENCES member_place_invitations(id) ON DELETE CASCADE,
+    base_plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE RESTRICT,
+    grantee_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    grantee_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    grantor_member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    grantor_traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    promotion_id TEXT REFERENCES member_place_promotions(id) ON DELETE CASCADE,
+    active_slot INTEGER NOT NULL DEFAULT 1,
+    purpose TEXT NOT NULL DEFAULT 'R73_SHARED_STOP_ONLY'
+        CHECK (purpose = 'R73_SHARED_STOP_ONLY'),
+    status TEXT NOT NULL DEFAULT 'OFFERED'
+        CHECK (status IN ('OFFERED','ACCEPTED','DECLINED','REVOKED')),
+    request_key TEXT NOT NULL,
+    request_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    accepted_at TEXT,
+    declined_at TEXT,
+    revoked_at TEXT,
+    decision_epoch TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, request_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_grantee_scope
+    ON shared_stop_coplanning_grants(
+        journey_id, invitation_id, base_plan_version_id, grantee_member_id, status
+    );
+CREATE UNIQUE INDEX IF NOT EXISTS ux_shared_stop_coplanning_one_unbound_active_grant
+    ON shared_stop_coplanning_grants(
+        journey_id, invitation_id, base_plan_version_id, grantee_member_id
+    )
+    WHERE active_slot = 1;
+CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_promotion
+    ON shared_stop_coplanning_grants(promotion_id, decision_epoch);

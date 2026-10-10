@@ -12,7 +12,12 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.ai_availability import ai_availability_state, ai_state_from_failure_reason
-from app.capabilities import canonicalize_capabilities, extract_capabilities_from_text
+from app.capabilities import (
+    canonicalize_capabilities,
+    extract_capabilities_from_text,
+    preference_is_explicitly_excluded,
+    preference_is_positive,
+)
 from app.core.money import major_to_minor
 from app.db.models import Activity, Journey, JourneyMission, Place
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
@@ -38,11 +43,12 @@ class MissionIntentDraft(BaseModel):
 
 _NUMBER_TOKEN = r"(?:\d+(?:\.\d+)?|[零〇一二两三四五六七八九十百千万亿点]+)"
 _MONEY_PATTERN = re.compile(
-    rf"(?:最多(?:可以|可)?(?:多花|增加)?|不超过|低于|少于|under|below|less\s+than|多花|增加|预算)\s*({_NUMBER_TOKEN})\s*(?:元|块|CNY)?",
+    rf"(?:最多(?:可以|可)?(?:多花|增加)?|不超过|低于|少于|under|below|less\s+than|at\s+most|up\s+to|多花|增加|预算)\s*({_NUMBER_TOKEN})\s*(?:元|块|CNY|JPY)?",
     re.IGNORECASE,
 )
 _DRIFT_PATTERN = re.compile(
-    rf"(?:最多|不超过|延误|漂移|偏移)\s*({_NUMBER_TOKEN})\s*分钟", re.IGNORECASE
+    rf"(?:最多|不超过|延误|漂移|偏移|under|below|at\s+most|up\s+to)\s*({_NUMBER_TOKEN})\s*(?:分钟|minutes?|mins?)",
+    re.IGNORECASE,
 )
 _LOSS_PATTERN = re.compile(
     rf"(?:最多(?:可以|可)?(?:损失|接受损失)|可接受损失|最大损失|acceptable\s+loss|loss\s+limit)\s*({_NUMBER_TOKEN})\s*(?:元|块|CNY)?",
@@ -238,6 +244,15 @@ def compile_mission(
     normalized = _text(command)
     objectives: set[str] = set()
     preferences: dict[str, Any] = {}
+    for category, aliases in {
+        "museum": ("museum", "博物馆", "美术馆"),
+        "garden": ("garden", "庭园", "庭院"),
+        "art": ("art gallery", "美术"),
+    }.items():
+        if preference_is_explicitly_excluded(normalized, aliases):
+            preferences[f"avoid:{category}"] = True
+        elif preference_is_positive(normalized, aliases):
+            preferences[category] = True
     capabilities = extract_capabilities_from_text(command, scope="JOURNEY")
     if capabilities:
         objectives.add("CAPABILITY_AWARE")
@@ -246,10 +261,14 @@ def compile_mission(
     if rhythm is not None:
         objectives.add("RESPECT_DAY_RHYTHM")
         preferences["day_rhythm"] = rhythm.as_dict()
-    if any(token in normalized for token in ("淋雨", "下雨", "室内", "indoor", "rain")):
+    if any(token in normalized for token in ("淋雨", "下雨", "rain")) or preference_is_positive(
+        normalized, ("室内", "indoor")
+    ):
         objectives.add("PREFER_INDOOR")
         preferences["indoor"] = True
-    if any(token in normalized for token in ("户外", "室外", "公园", "outdoor", "park")):
+    if preference_is_positive(
+        normalized, ("户外", "室外", "公园", "outdoor", "park")
+    ):
         objectives.add("PREFER_OUTDOOR")
         preferences["outdoor"] = True
     if any(
@@ -390,6 +409,7 @@ def create_mission(
     trigger_event_id: str | None,
     is_standing: bool = False,
     parent_mission_id: str | None = None,
+    use_model_draft: bool = True,
 ) -> JourneyMission:
     spec = compile_mission(
         session,
@@ -397,7 +417,7 @@ def create_mission(
         command,
         requested_autonomy=requested_autonomy,
     )
-    draft = _model_draft(command)
+    draft = _model_draft(command) if use_model_draft else None
     compiler_provider = "deterministic"
     compiler_model = "mission-compiler-v2-fallback"
     compiler_confidence = 1.0
@@ -407,6 +427,7 @@ def create_mission(
         "envelope with the persisted traveler policy."
     )
     if draft is not None:
+        indoor_excluded = preference_is_explicitly_excluded(command, ("室内", "indoor"))
         model_protected = _resolve_model_references(
             session, journey, draft.protected_activity_references
         )
@@ -443,17 +464,36 @@ def create_mission(
             spec.max_schedule_drift_min,
             draft.max_schedule_drift_min,
         )
+        draft_capabilities = [
+            item
+            for item in draft.capabilities
+            if not (
+                indoor_excluded
+                and str(item.get("code") or item.get("rule_code") or "").upper()
+                == "INDOOR_PREFERRED"
+            )
+        ]
         merged_capabilities = tuple(
             canonicalize_capabilities(
-                [*spec.capabilities, *draft.capabilities],
+                [*spec.capabilities, *draft_capabilities],
                 source="MISSION_COMPILER",
                 provenance="USER_STATED",
                 scope="JOURNEY",
             )
         )
         merged_objectives = set(spec.objective_codes) | set(draft.objective_codes)
+        if indoor_excluded:
+            merged_objectives.discard("PREFER_INDOOR")
         if merged_capabilities:
             merged_objectives.add("CAPABILITY_AWARE")
+        merged_preferences = {
+            **spec.preferences,
+            **draft.preferences,
+            **({"day_rhythm": spec.preferences["day_rhythm"]} if "day_rhythm" in spec.preferences else {}),
+            **({"capabilities": [dict(item) for item in merged_capabilities]} if merged_capabilities else {}),
+        }
+        if indoor_excluded:
+            merged_preferences.pop("indoor", None)
         spec = MissionSpec(
             objective_codes=tuple(sorted(merged_objectives)),
             protected_activity_ids=protected,
@@ -461,12 +501,7 @@ def create_mission(
             max_cost_delta_minor=max_cost_delta_minor,
             max_loss_minor=max_loss_minor,
             max_schedule_drift_min=max_schedule_drift_min,
-            preferences={
-                **spec.preferences,
-                **draft.preferences,
-                **({"day_rhythm": spec.preferences["day_rhythm"]} if "day_rhythm" in spec.preferences else {}),
-                **({"capabilities": [dict(item) for item in merged_capabilities]} if merged_capabilities else {}),
-            },
+            preferences=merged_preferences,
             capabilities=merged_capabilities,
             requested_autonomy=requested_autonomy,
         )
@@ -476,6 +511,27 @@ def create_mission(
         compiler_model = settings.ai_model.removeprefix("deepseek/")
         compiler_confidence = draft.confidence
         reasoning_summary = draft.reasoning_summary
+    # The final mission object is the authority input for the Agent runtime.
+    # Re-apply explicit negative preference polarity at this boundary so an
+    # entry-specific semantic path or a model draft cannot resurrect a
+    # positive indoor preference from "不喜欢室内馆".
+    if preference_is_explicitly_excluded(command, ("室内", "indoor")):
+        final_objectives = tuple(
+            item for item in spec.objective_codes if item != "PREFER_INDOOR"
+        )
+        final_preferences = dict(spec.preferences)
+        final_preferences.pop("indoor", None)
+        spec = MissionSpec(
+            objective_codes=final_objectives,
+            protected_activity_ids=spec.protected_activity_ids,
+            mutable_activity_ids=spec.mutable_activity_ids,
+            max_cost_delta_minor=spec.max_cost_delta_minor,
+            max_loss_minor=spec.max_loss_minor,
+            max_schedule_drift_min=spec.max_schedule_drift_min,
+            preferences=final_preferences,
+            capabilities=spec.capabilities,
+            requested_autonomy=spec.requested_autonomy,
+        )
     now = datetime.now(timezone.utc).isoformat()
     from app.agent.delegation_policy import get_or_create_policy, policy_payload
 
@@ -500,6 +556,8 @@ def create_mission(
     allowed_actions = ["REQUEST_REPLAN"]
     if requested_autonomy == "EXECUTE_WITHIN_BOUNDS":
         allowed_actions.append("ACCEPT_REPLAN")
+        if trigger_event_id is not None:
+            allowed_actions.append("ACTIVATE_STANDBY")
     mission = JourneyMission(
         id=str(uuid4()),
         journey_id=journey.id,
@@ -572,6 +630,7 @@ def mission_payload(mission: JourneyMission) -> dict[str, Any]:
         "started_at": mission.started_at,
         "completed_at": mission.completed_at,
         "failure_reason": mission.failure_reason,
+        "clarification": json.loads(getattr(mission, "clarification_json", "{}") or "{}"),
         # ORD-0359: additive.  When this mission stored its own reason, that stored sentence is
         # what gets named - so a refusal is never reported as a missing credential, and an
         # unrecognised reason names nothing rather than the nearest of the three.  Only a mission

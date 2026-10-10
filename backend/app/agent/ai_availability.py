@@ -51,7 +51,10 @@ def ai_availability_state(*, provider_refused: bool = False) -> str:
 
     if provider_refused:
         return AI_PROVIDER_REFUSED
-    if not settings.ai_enabled:
+    # Hermes-compatible execution is independent of the legacy DeepSeek
+    # switch. Reporting DISABLED_BY_OPS while that gateway is executing is
+    # false observability.
+    if not settings.ai_enabled and not (settings.hermes_api_url and settings.hermes_api_key):
         return AI_DISABLED_BY_OPS
     if not settings.ai_api_key and not (settings.hermes_api_url and settings.hermes_api_key):
         return AI_NOT_CONFIGURED

@@ -60,7 +60,9 @@ _READ_TOOLS = (
     "list_replans",
     "search_city_services",
 )
+_CONCLUSION_TOOL = "conclude_recovery"
 _ACTION_TOOLS = (
+    "activate_standby",
     "request_replan",
     "accept_replan",
     "replace_activity",
@@ -68,6 +70,15 @@ _ACTION_TOOLS = (
     "create_booking",
     "cancel_refundable_booking",
     "request_commitment_change",
+    "apply_clarified_horizon_choice",
+)
+_DECISION_TOOLS = (
+    "request_collective_decision",
+)
+_STRATEGY_TOOLS = (
+    "acquire_place_facts",
+    "estimate_place_facts",
+    "generate_plans",
 )
 
 
@@ -79,9 +90,11 @@ def build_mission_plan(
 ) -> AgentMissionPlan:
     """Build a deterministic plan from the already-compiled mission envelope.
 
-    The sequence is intentionally stable for demos and auditing, but the UI
-    must render actual runtime events rather than treating these steps as
-    proof that Hermes executed them.
+    The sequence is an authority envelope, not an action script. In
+    particular, an autonomous recovery mission must not get a deterministic
+    preference for standby activation over fresh replanning (or NO_ACTION).
+    The UI must render actual runtime events rather than treating these steps
+    as proof that Hermes executed them.
     """
 
     objectives = {str(item) for item in objective_codes}
@@ -102,7 +115,20 @@ def build_mission_plan(
                 "inspect_twin",
             ),
         )
-    if "RECOVER_FROM_CITY_DISRUPTION" in objectives or "PREFER_INDOOR" in objectives:
+    steps.insert(
+        3,
+        MissionPlanStep(
+            "evaluate_recovery_options",
+            "Evaluate the current reality and available recovery options",
+            None,
+            requires_authority=True,
+        ),
+    )
+    if (
+        "RECOVER_FROM_CITY_DISRUPTION" in objectives
+        or "PREFER_INDOOR" in objectives
+        or "COLLECTIVE_JOURNEY_RECOVERY" in objectives
+    ):
         steps.extend(
             [
                 MissionPlanStep("inspect_affected", "Inspect affected activities", "inspect_journey"),
@@ -112,13 +138,7 @@ def build_mission_plan(
     steps.extend(
         [
             MissionPlanStep("evaluate_candidates", "Evaluate candidates against constraints", None),
-            MissionPlanStep(
-                "request_replan",
-                "Request a deterministic replan proposal",
-                "request_replan",
-                requires_authority=True,
-            ),
-            MissionPlanStep("inspect_proposal", "Inspect proposal trade-offs", "list_replans"),
+            MissionPlanStep("inspect_proposal", "Inspect available proposal trade-offs", "list_replans"),
             MissionPlanStep(
                 "approval_boundary",
                 "Wait for explicit CityNexus approval before mutation",
@@ -127,6 +147,20 @@ def build_mission_plan(
             ),
         ]
     )
+    if "COLLECTIVE_JOURNEY_RECOVERY" in objectives:
+        # A collective decision is not a Journey mutation. It opens the
+        # existing server-owned member-response round only after grounded
+        # proposals expose a real group trade-off. Keep it inside PLAN_ONLY
+        # while accept/execute tools remain outside that envelope.
+        steps.insert(
+            -1,
+            MissionPlanStep(
+                "collective_decision_boundary",
+                "Open one server-owned collective decision when a grounded group trade-off exists",
+                "request_collective_decision",
+                requires_authority=True,
+            ),
+        )
     if autonomy == "PLAN_ONLY":
         # Keep mutation tools visible as an explicit boundary without granting
         # Hermes permission to call them in this mission.
@@ -136,7 +170,26 @@ def build_mission_plan(
             None,
             requires_authority=True,
         )
-    allowed_tools = (*_READ_TOOLS, "request_replan") if autonomy == "PLAN_ONLY" else (*_READ_TOOLS, *_ACTION_TOOLS)
+    # Fact acquisition and candidate generation are strategy-layer actions. They
+    # do not select or activate a plan, so an autonomous real-city mission may
+    # use them before recovery mutation. PLAN_ONLY keeps its historical
+    # proposal-only surface.
+    if autonomy == "PLAN_ONLY":
+        plan_only_tools = [*_READ_TOOLS]
+        if objectives & {"LIVE_JOURNEY_INTENT_STEERING", "COLLECTIVE_RECOVERY_REGROUND"}:
+            plan_only_tools.extend(_STRATEGY_TOOLS)
+        plan_only_tools.append("request_replan")
+        if "COLLECTIVE_JOURNEY_RECOVERY" in objectives:
+            # R58/R59 group recovery may ask the affected members to decide,
+            # but PLAN_ONLY still cannot accept or execute their choice.
+            plan_only_tools.extend(_DECISION_TOOLS)
+        if "COLLECTIVE_RECOVERY_REGROUND" in objectives:
+            # A re-ground run needs a typed, server-owned terminal result. This
+            # records NO_ACTION/dominant/no-feasible without granting mutation.
+            plan_only_tools.append(_CONCLUSION_TOOL)
+        allowed_tools = tuple(dict.fromkeys(plan_only_tools))
+    else:
+        allowed_tools = (*_READ_TOOLS, *_STRATEGY_TOOLS, *_DECISION_TOOLS, *_ACTION_TOOLS, _CONCLUSION_TOOL)
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
         autonomy=autonomy,
@@ -144,9 +197,7 @@ def build_mission_plan(
         protected_activity_ids=tuple(str(item) for item in protected_activity_ids),
         allowed_tools=tuple(allowed_tools),
         read_only_tools=_READ_TOOLS,
-        approval_required_tools=tuple(
-            item for item in _ACTION_TOOLS if item != "request_replan"
-        ),
+        approval_required_tools=tuple(item for item in (*_DECISION_TOOLS, *_ACTION_TOOLS) if item != "request_replan"),
     )
 
 
@@ -167,4 +218,11 @@ def mission_plan_for_model(mission: Any) -> dict[str, Any]:
         protected_activity_ids=decode("protected_activity_ids_json"),
         objective_codes=decode("objective_codes_json"),
     )
-    return plan.as_dict()
+    result = plan.as_dict()
+    try:
+        intent = json.loads(getattr(mission, "intent_json", "{}") or "{}")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        intent = {}
+    if isinstance(intent, dict) and intent.get("temporary_journey_intent"):
+        result["temporary_journey_intent"] = intent["temporary_journey_intent"]
+    return result

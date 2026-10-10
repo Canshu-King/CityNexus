@@ -385,6 +385,11 @@ def test_projection_matches_the_reference_after_an_accepted_replan() -> None:
         f"/api/v1/replans/{proposal['id']}/accept",
         headers={"Idempotency-Key": f"oracle-accept-{proposal['id']}"},
     ).status_code == 200
+    with SessionLocal() as session:
+        accepted_journey = session.get(Journey, journey_id)
+        current = session.get(Activity, accepted_journey.current_activity_id)
+        assert accepted_journey.status == "ACTIVE"
+        assert current.status == "ACTIVE"
     _oracle_case(journey_id)
 
 

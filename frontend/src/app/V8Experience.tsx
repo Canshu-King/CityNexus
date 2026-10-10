@@ -20,6 +20,7 @@ import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
+import { JourneyMembershipPanel } from "../features/execution/JourneyMembershipPanel";
 import { liveActivityWindow } from "../lib/executionWindow";
 import { installVisualViewportVars } from "../lib/visualViewport";
 import {
@@ -40,6 +41,7 @@ import {
   READ_DEADLINE_MS,
 } from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
+import { storeTravelerBearer, travelerAuthHeaders } from "../lib/travelerSession";
 import {
   clearPendingContinuation,
   continuePendingPlan,
@@ -76,6 +78,8 @@ import {
   tripsTabPanels,
 } from "./v8PanelRegistry";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
+import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
+import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import {
   JourneyTrialSetup,
@@ -83,7 +87,7 @@ import {
   type JourneyTrialDraft,
   type TrialPhase,
 } from "../features/setup/JourneyTrialSetup";
-import type { AgentRuntimeStatus } from "../api/citynexus";
+import { cityNexusApi, type AgentRuntimeStatus } from "../api/citynexus";
 import {
   useAuthoritativePlans,
   useAuthoritativeTwin,
@@ -289,8 +293,8 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
 
 async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetchWithReadDeadline(path, {
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
+    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
   });
   /* Parsed by hand rather than `response.json().catch(() => null)`: that one line turned three
      different answers -- zero bytes, an HTML document, a plain sentence -- into the same `null`, and
@@ -642,6 +646,7 @@ export function V8Experience() {
      held somewhere a later navigate cannot overwrite. */
   const [deepLink] = useState(deepLinkFromPath);
   const [data, setData] = useState<V8Data | null>(null);
+  const [recentlyJoinedJourneyId, setRecentlyJoinedJourneyId] = useState<string | null>(null);
   const [mode, setMode] = useState<V8Mode>("TRANSIT");
   const [comparison, setComparison] = useState<V8Data["mobility_facts"]>([]);
   const [policy, setPolicy] = useState<Policy | null>(null);
@@ -689,6 +694,15 @@ export function V8Experience() {
     string | undefined
   >();
   const [setupOpen, setSetupOpen] = useState(false);
+  const [bootstrapJourney, setBootstrapJourney] = useState<{
+    id: string;
+    cityCode: string;
+    cityName?: string;
+  } | null>(null);
+  const [bootstrapPlan, setBootstrapPlan] = useState<{
+    journeyId: string;
+    placeId: string;
+  } | null>(null);
   const [planAiOpen, setPlanAiOpen] = useState(false);
   // Reference screen 08: the dedicated activity detail surface.
   const [detailActivityId, setDetailActivityId] = useState<string | null>(null);
@@ -843,6 +857,32 @@ export function V8Experience() {
     setCachedCopySaved(await saveOfflineJourneyVerified(nextOffline));
   };
 
+  const detectBootstrapJourney = async (journeyId: string): Promise<boolean> => {
+    try {
+      const journey = await v8Request<{
+        id: string;
+        city_code: string;
+        status: string;
+        active_plan_version_id?: string | null;
+      }>(`/api/v1/journeys/${journeyId}`);
+      if (
+        String(journey.status).toUpperCase() !== "DRAFT" ||
+        journey.active_plan_version_id
+      ) {
+        return false;
+      }
+      const places = await v8Request<Array<{ id: string }>>(
+        `/api/v1/places?city_code=${encodeURIComponent(journey.city_code)}`,
+      );
+      if (places.length !== 0) return false;
+      setBootstrapJourney({ id: journey.id, cityCode: journey.city_code });
+      setSetupOpen(false);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   // Authoritative V12 mutations refetch PlanVersion/JourneyTwin through
   // TanStack Query.  Keep the browser's read-only Dexie cache on the same
   // server snapshot immediately after those mutations as well; it must never
@@ -878,6 +918,10 @@ export function V8Experience() {
       try {
         let journeyId = localStorage.getItem("citynexus.v8.journey_id");
         if (journeyId) {
+          if (await detectBootstrapJourney(journeyId)) {
+            if (!cancelled) setBusy(false);
+            return;
+          }
           try {
             await load(journeyId);
           } catch (error) {
@@ -1065,6 +1109,15 @@ export function V8Experience() {
       setAlertsOpen(false);
     });
   };
+  const openJoinedJourney = async (journeyId: string) => {
+    localStorage.setItem("citynexus.v8.journey_id", journeyId);
+    setRecentlyJoinedJourneyId(journeyId);
+    setFailure(null);
+    setShowCachedCopy(false);
+    await load(journeyId);
+    setSetupOpen(false);
+    navigate("live");
+  };
   /* ORD-0209 (arbitration `5772122180`): the demo entry addresses the sealed demo journey; it does
      not create one.  The previous body POSTed a traveller and a journey on every press -- HARNESS
      measured 6/6 clicks creating rows.  Now: read the sealed id from the server-owned /demo/scene
@@ -1244,7 +1297,7 @@ export function V8Experience() {
         draft.timezone.trim(),
       );
       setCreatePhase("traveler");
-      const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
+      const traveler = await v8Request<{ id: string; access_token?: string }>("/api/v1/travelers", {
         method: "POST",
         signal: controller.signal,
         body: JSON.stringify({
@@ -1253,6 +1306,7 @@ export function V8Experience() {
           timezone: draft.timezone.trim(),
         }),
       });
+      if (traveler.access_token) storeTravelerBearer(traveler.access_token);
       setCreatePhase("journey");
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
@@ -1295,6 +1349,23 @@ export function V8Experience() {
         await syncStatedInterests(traveler.id, draft.interests ?? []);
       } catch {
         /* left un-stated on purpose; see the gate `ord0238-2-…` */
+      }
+      const initialPlaces = await v8Request<Array<{ id: string }>>(
+        `/api/v1/places?city_code=${encodeURIComponent(cityCode)}`,
+        { signal: controller.signal },
+      );
+      if (initialPlaces.length === 0) {
+        // A new Journey with no catalogue must stop at source-linked discovery;
+        // stay search and plan generation would otherwise manufacture a dead end.
+        setCreatePhase("experience");
+        setSetupOpen(false);
+        setBootstrapJourney({ id: journey.id, cityCode, cityName });
+        try {
+          await load(journey.id);
+        } catch {
+          setData(null);
+        }
+        return;
       }
       const stayCount = await searchStayOptions(
         journey.id,
@@ -1343,6 +1414,32 @@ export function V8Experience() {
       createAbortRef.current = null;
     }
   };
+
+  const completeBootstrap = async (placeId: string) => {
+    const pending = bootstrapJourney;
+    if (!pending) return;
+    setBootstrapJourney(null);
+    setBootstrapPlan({ journeyId: pending.id, placeId });
+    setBusy(true);
+    try {
+      await load(pending.id);
+      navigate("hub");
+      setMessage(
+        locale.startsWith("zh")
+          ? `已添加有来源的公共地点（${placeId}）。确认价格未知后即可生成原生行程。`
+          : `A source-linked public place was added (${placeId}). Confirm the unknown price to generate the native Journey.`,
+      );
+    } catch (error) {
+      setBootstrapPlan(null);
+      setMessage(
+        refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
+        refusalFacts(error),
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const selectOption = async (id: string) => {
     if (!data) return;
     setBusy(true);
@@ -1478,29 +1575,97 @@ export function V8Experience() {
       setBusy(false);
     }
   };
-  const shareForegroundLocation = async () => {
-    if (!data || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        await v8Request(`/api/v1/journeys/${data.journey.id}/location`, {
-          method: "POST",
-          body: JSON.stringify({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy_m: position.coords.accuracy,
-            captured_at: new Date(position.timestamp).toISOString(),
-          }),
-        });
-        await load(data.journey.id);
-        setMessage(
-          t("shell.locationUpdated", {
-            n: Math.round(position.coords.accuracy),
-          }),
+  const captureForegroundLocation = async (
+    maximumAgeMs = 30_000,
+    privateHandoffId?: string,
+    signal?: AbortSignal,
+  ): Promise<string | null> => {
+    if (!data || !navigator.geolocation) return null;
+    return await new Promise((resolve) => {
+      let settled = false;
+      let geolocationWatchdog: number | null = null;
+      const finish = (observationId: string | null) => {
+        if (settled) return;
+        settled = true;
+        if (geolocationWatchdog !== null) window.clearTimeout(geolocationWatchdog);
+        signal?.removeEventListener("abort", onAbort);
+        resolve(observationId);
+      };
+      const onAbort = () => finish(null);
+      if (signal?.aborted) {
+        finish(null);
+        return;
+      }
+      signal?.addEventListener("abort", onAbort, { once: true });
+      // The browser geolocation timeout below is authoritative; this watchdog
+      // also releases the consent UI if a browser never calls either callback.
+      geolocationWatchdog = window.setTimeout(() => finish(null), 20_000);
+      try {
+        navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          if (settled || signal?.aborted) {
+            finish(null);
+            return;
+          }
+          if (geolocationWatchdog !== null) {
+            window.clearTimeout(geolocationWatchdog);
+            geolocationWatchdog = null;
+          }
+          try {
+            const locationPayload = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              accuracy_m: position.coords.accuracy,
+              captured_at: new Date(position.timestamp).toISOString(),
+            };
+            if (privateHandoffId) {
+              if (signal?.aborted) {
+                finish(null);
+                return;
+              }
+              const observation = await cityNexusApi.captureRendezvousBuddyPrivateRouteLocation(
+                data.journey.id,
+                privateHandoffId,
+                locationPayload,
+                signal,
+              );
+              finish(signal?.aborted ? null : observation.location_observation_id);
+            } else {
+              const observation = await v8Request<{ id: string }>(
+                `/api/v1/journeys/${data.journey.id}/location`,
+                {
+                  method: "POST",
+                  headers: travelerAuthHeaders(),
+                  body: JSON.stringify(locationPayload),
+                },
+              );
+              await load(data.journey.id);
+              setMessage(
+                t("shell.locationUpdated", {
+                  n: Math.round(position.coords.accuracy),
+                }),
+              );
+              finish(observation.id);
+            }
+          } catch {
+            if (!signal?.aborted && !privateHandoffId) setMessage(t("shell.locationDenied"));
+            finish(null);
+          }
+        },
+        () => {
+          if (!signal?.aborted && !privateHandoffId) setMessage(t("shell.locationDenied"));
+          finish(null);
+        },
+        { enableHighAccuracy: true, maximumAge: maximumAgeMs, timeout: 15_000 },
         );
-      },
-      () => setMessage(t("shell.locationDenied")),
-      { enableHighAccuracy: true, maximumAge: 30000 },
-    );
+      } catch {
+        if (!signal?.aborted && !privateHandoffId) setMessage(t("shell.locationDenied"));
+        finish(null);
+      }
+    });
+  };
+  const shareForegroundLocation = async () => {
+    await captureForegroundLocation();
   };
 
   // Derived for the activity-detail surface (reference 08).
@@ -1729,6 +1894,61 @@ export function V8Experience() {
   // the product decision, not a scoping miss.  Do not "fix" it by moving the return inside
   // the shell: the visual ground for these screens is the onboarding wrapper's job, and a
   // shell migration for one screen is a much larger change than the wording it would buy.
+  if (bootstrapJourney)
+    return (
+      <BootstrapDiscoveryPanel
+        journeyId={bootstrapJourney.id}
+        cityCode={bootstrapJourney.cityCode}
+        cityName={bootstrapJourney.cityName}
+        onCompleted={completeBootstrap}
+        onCancel={() => {
+          setBootstrapJourney(null);
+          setMessage(
+            locale.startsWith("zh")
+              ? "已取消首地点发现；尚未向公共提供方发起请求。"
+              : "First-place discovery was cancelled; no public-provider request was made.",
+          );
+          if (data) navigate("hub");
+          else setSetupOpen(true);
+        }}
+      />
+    );
+  if (bootstrapPlan)
+    return (
+      <BootstrapJourneyStartPanel
+        journeyId={bootstrapPlan.journeyId}
+        placeId={bootstrapPlan.placeId}
+        onStarted={async () => {
+          setBootstrapPlan(null);
+          setBusy(true);
+          try {
+            await load(bootstrapPlan.journeyId);
+            navigate("hub");
+            setMessage(
+              locale.startsWith("zh")
+                ? "原生行程已选择并启动；未知门票价格仍未计入，也未发生预订或扣款。"
+                : "The native Journey is selected and active; the unknown admission price remains excluded and no booking or charge was made.",
+            );
+          } catch (error) {
+            setMessage(
+              refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
+              refusalFacts(error),
+            );
+          } finally {
+            setBusy(false);
+          }
+        }}
+        onCancel={() => {
+          setBootstrapPlan(null);
+          setMessage(
+            locale.startsWith("zh")
+              ? "已取消原生行程启动；已选地点仍保留，未生成计划或产生预订。"
+              : "Native Journey start was cancelled; the selected place remains and no plan or booking was created.",
+          );
+          navigate("hub");
+        }}
+      />
+    );
   if (setupOpen)
     return (
       <>
@@ -1755,6 +1975,11 @@ export function V8Experience() {
           journeyCreated={journeyCreated}
           stoppedWaiting={stoppedWaiting}
           onStopWaiting={stopWaiting}
+        />
+        <JourneyMembershipPanel
+          journeyId={null}
+          recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+          onJourneyJoined={openJoinedJourney}
         />
         {/* ORD-0081 ①: a teacher who has never created a journey is standing on this screen, and
             `demo/reset` is the only action that puts a scenario on the stage.  The stage control
@@ -1791,11 +2016,28 @@ export function V8Experience() {
     );
   if (!data)
     return (
-      <div className="v8-loading">
-        <div className="v8-brand-mark">CN</div>
-        <p>{message ?? t("shell.noJourney")}</p>
+      <div className="v8-join-entry">
+        <div className="v8-loading">
+          <div className="v8-brand-mark">CN</div>
+          <p>{message ?? t("shell.noJourney")}</p>
+        </div>
+        <JourneyMembershipPanel
+          journeyId={null}
+          recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+          onJourneyJoined={openJoinedJourney}
+        />
       </div>
     );
+
+  const routeModes = new Set<string>();
+  data.options.forEach((item) => {
+    item.leg_modes.filter(Boolean).forEach((itemMode) => routeModes.add(itemMode));
+  });
+  data.active_plan?.legs.forEach((leg) => {
+    if (leg.mode) routeModes.add(leg.mode);
+  });
+  const routeModeCount = routeModes.size;
+  const hasKnownRouteMode = routeModeCount > 0;
 
   /* ORD-0392: the fourteen `{route === "x" && <Panel/>}` blocks that used to sit in the content
      area are now one table in `app/v8PanelRegistry.tsx`. This file keeps only what it owns: the
@@ -1855,6 +2097,7 @@ export function V8Experience() {
         data={data}
         selected={selected}
         mode={mode}
+        canChangeMode={Boolean(selected)}
         comparison={comparison}
         isHandledDisruption={isHandledDisruption}
         onMode={changeMode}
@@ -1949,6 +2192,7 @@ export function V8Experience() {
     selectOption,
     triggerRain,
     shareForegroundLocation,
+    captureForegroundLocation,
     changeMode,
     setSheetOpen,
     setPlanAiOpen,
@@ -2010,7 +2254,12 @@ export function V8Experience() {
           <div className="v8-sync">
             <span className="status-dot" />
             {t("shell.factsSynced")}
-            <div>{t("shell.plansModes", { plans: data.options.length })}</div>
+            <div>
+              {t(hasKnownRouteMode ? "shell.plansModes" : "shell.plansModesPending", {
+                plans: data.options.length || (data.active_plan ? 1 : 0),
+                modes: routeModeCount,
+              })}
+            </div>
           </div>
           <button className="v8-user" onClick={() => navigate("me")}>
             <span>{initialsFrom(cityName)}</span>
@@ -2191,10 +2440,19 @@ export function V8Experience() {
           </div>
         )}
         <div className="v8-content">
+          {(route === "hub" || route === "live") && (
+            <JourneyMembershipPanel
+              journeyId={data.journey.id}
+              journeyStatus={data.journey.status}
+              recentlyJoinedJourneyId={recentlyJoinedJourneyId}
+              onRefreshLocation={(privateHandoffId, signal) => captureForegroundLocation(0, privateHandoffId, signal)}
+              onJourneyJoined={openJoinedJourney}
+            />
+          )}
           {renderPanels(routePanels, routeScope)}
         </div>
       </main>
-      <CopilotDock data={data} onNavigate={navigate} />
+      <CopilotDock data={data} onNavigate={navigate} onJourneyUpdated={() => load(data.journey.id)} />
       {/* ORD-0382: the run is no longer owned by whichever surface started it.  This strip is what the
           traveller still sees after closing the sheet -- same seconds, same step words, and the same
           two doors the reference product names (查看会话 / 继续生成). */}
@@ -2328,6 +2586,7 @@ export function V8Experience() {
         <MobilitySheet
           facts={comparison.length ? comparison : data.mobility_facts}
           selectedMode={mode}
+          canChoose={Boolean(selected && (comparison.length || data.mobility_facts.length))}
           onSelect={(next) => void changeMode(next)}
           onClose={() => setSheetOpen(false)}
         />
@@ -2643,6 +2902,9 @@ function Hub({
   const t = useT();
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
+  const activePlanHasKnownMode = Boolean(
+    data.active_plan?.legs.some((leg) => Boolean(leg.mode)),
+  );
   /* ORD-0232: "fewer stops than I asked for" needs its reason on the same screen that shows the
      stops.  An empty list is also what a still-running or failed read gives: no rows, no claims. */
   const dropped = useCandidateRejections(data.journey.id, data.journey.city_code).data ?? [];
@@ -3416,7 +3678,29 @@ function Hub({
             : `Preview of one candidate option — you have not chosen a plan yet.`}
         </p>
       )}
-      {!selected && (
+      {!selected && data.active_plan ? (
+        <div className="v8-empty-state" data-testid="hub-active-plan">
+          <b>{zh ? "已选行程" : "Selected plan"}</b>
+          <p>
+            {zh
+              ? "下面是已采用的真实行程；住宿方案仍未选择。"
+              : "This is the selected real itinerary; no stay option has been chosen."}
+          </p>
+          <p data-testid="hub-active-plan-mode">
+            {activePlanHasKnownMode
+              ? t("hub.routeModeReady")
+              : t("hub.routeModePending")}
+          </p>
+          <p data-testid="hub-active-plan-stops">
+            {activities
+              .map(
+                (item) =>
+                  `${clockInZone(item.start_at, data.journey.timezone || "UTC")} ${item.title}`,
+              )
+              .join(" · ")}
+          </p>
+        </div>
+      ) : !selected ? (
         <div className="v8-empty-state" data-testid="hub-glance-empty">
           <b>{t("hub.nothingToPreview")}</b>
           <p>
@@ -3425,7 +3709,7 @@ function Hub({
               : "Choose a plan and the day-by-day plan appears here."}
           </p>
         </div>
-      )}
+      ) : null}
       <div className="v8-day-row">
         {selected?.days.map((day) => (
           <button
@@ -3775,6 +4059,7 @@ function Live({
 }) {
   const t = useT();
   const { locale } = useLocale();
+  const journeyCompleted = String(data.journey.status ?? "").toUpperCase() === "COMPLETED";
   const {
     now,
     next,
@@ -3792,8 +4077,10 @@ function Live({
               ? t("live.savedDevice", { date: date(offline.updated_at, locale) })
               : t("live.syncing")}
           </p>
-          <h1>{t("live.title")}</h1>
-          <p className="v8-lede">{t("live.lede")}</p>
+          <h1>{journeyCompleted ? t("live.completedTitle") : t("live.title")}</h1>
+          <p className="v8-lede">
+            {journeyCompleted ? t("live.completedLede") : t("live.lede")}
+          </p>
         </div>
       </div>
       <div className="v8-live-main">
@@ -3812,7 +4099,9 @@ function Live({
               // execution state.
               data-cursor-status={cursorStatus ?? "UNKNOWN"}
             >
-              {cursorUnresolved
+              {journeyCompleted
+                ? t("live.completedStatus")
+                : cursorUnresolved
                 ? t("live.unresolvedStep")
                 : now
                   ? now.title
@@ -3821,18 +4110,22 @@ function Live({
                     : t("live.awaitingPlan")}
             </h2>
             <p>
-              {cursorUnresolved
+              {journeyCompleted
+                ? t("live.completedAdvisory")
+                : cursorUnresolved
                 ? t("live.unresolvedStepHint")
                 : next
                   ? t("live.nextLeg", {
                       title: next.title,
                       mode: modeLabel(
-                        nextLeg?.mode ?? mode,
+                        nextLeg?.mode,
                         locale.startsWith("zh"),
                       ),
                       duration:
-                        nextLeg?.duration_min ?? t("live.durationPending"),
-                      unit: nextLeg ? " min" : "",
+                        nextLeg?.co_located
+                          ? t("live.routeCoLocated")
+                          : nextLeg?.duration_min ?? t("live.durationPending"),
+                      unit: nextLeg?.co_located ? "" : nextLeg ? " min" : "",
                     })
                   : data.active_plan
                     ? // A plan that is spent is not a plan that is missing, and the
@@ -3842,7 +4135,9 @@ function Live({
             </p>
           </div>
           <strong>
-            {now && !cursorUnresolved
+            {journeyCompleted
+              ? t("live.completedStatusUpper")
+              : now && !cursorUnresolved
               ? clockInZone(now.start_at, data.journey.timezone || "UTC")
               : cursorUnresolved
                 ? "—"
@@ -3859,6 +4154,7 @@ function LiveSecondary({
   data,
   selected,
   mode,
+  canChangeMode,
   comparison,
   isHandledDisruption,
   onMode,
@@ -3869,6 +4165,7 @@ function LiveSecondary({
   data: V8Data;
   selected: V8Data["options"][number] | null;
   mode: V8Mode;
+  canChangeMode: boolean;
   comparison: V8Data["mobility_facts"];
   isHandledDisruption: (
     item: NonNullable<V8Data["active_plan"]>["disruptions"][number],
@@ -3881,19 +4178,38 @@ function LiveSecondary({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  const journeyCompleted = String(data.journey.status ?? "").toUpperCase() === "COMPLETED";
   const { next, nextLeg } = liveActivityWindow(data.active_plan ?? null);
   const planDisruptions = data.active_plan?.disruptions ?? [];
   const disruptions = planDisruptions.filter(
     (item) => !isHandledDisruption(item),
   );
   /* ORD-0394: the link target is the same joined coordinate the map paints, so the pin and the
-     external navigation app cannot disagree about where a stop is. */
+     external navigation app cannot disagree about where a stop is.  A route mode is appended only
+     when the selected plan's own mobility fact supplied one; a missing mode opens the destination
+     marker instead of silently turning absent evidence into walking. */
   const nextAt = next ? activityCoordinate(next) : null;
+  const amapMode = nextLeg?.mode
+    ? ({
+        WALK: "walk",
+        BICYCLE: "ride",
+        TRANSIT: "bus",
+        AUTO: "car",
+        RIDE_HAIL: "car",
+      } as Record<string, string>)[nextLeg.mode.toUpperCase()] ?? null
+    : null;
   const destination = nextAt != null
       ? data.journey.city_code.startsWith("CN-")
-        ? `https://uri.amap.com/navigation?to=${nextAt.longitude},${nextAt.latitude},${encodeURIComponent(next.title)}&mode=walk&coordinate=wgs84&callnative=1`
+        ? amapMode
+          ? `https://uri.amap.com/navigation?to=${nextAt.longitude},${nextAt.latitude},${encodeURIComponent(next.title)}&mode=${amapMode}&coordinate=wgs84&callnative=1`
+          : `https://uri.amap.com/marker?position=${nextAt.longitude},${nextAt.latitude}&name=${encodeURIComponent(next.title)}&coordinate=wgs84&callnative=1`
         : `https://www.google.com/maps/dir/?api=1&destination=${nextAt.latitude},${nextAt.longitude}`
       : null;
+  const destinationLabel = nextLeg?.mode
+    ? t("live.navigate")
+    : zh
+      ? "打开目的地 →"
+      : "Open destination →";
   return (
     <section className="v8-page" data-testid="v8-live-secondary">
       {/* Pass-8 ruling #3: Live reads Current -> Map -> Disruption/Replan ->
@@ -3923,31 +4239,44 @@ function LiveSecondary({
         <div className="v8-mode-chooser">
           <div>
             <span>{t("live.modeForLeg")}</span>
-            <b>{t("live.chooseRoute")}</b>
+            <b>{canChangeMode ? t("live.chooseRoute") : t("live.modeUnavailable")}</b>
           </div>
           <div className="v8-mode-chips">
             {v8Modes.map((item) => (
               <button
+                type="button"
                 data-testid={`mode-${item.toLowerCase()}`}
                 key={item}
-                className={mode === item ? "active" : ""}
-                data-contrast-role={mode === item ? "state" : "control"}
+                className={canChangeMode && mode === item ? "active" : ""}
+                data-contrast-role={canChangeMode && mode === item ? "state" : "control"}
+                disabled={!canChangeMode}
+                aria-disabled={!canChangeMode}
+                title={!canChangeMode ? t("live.modeUnavailable") : undefined}
                 onClick={() => void onMode(item)}
               >
                 {modeLabel(item, zh)}
               </button>
             ))}
           </div>
-          <button className="v8-compare-button" onClick={onSheet}>
-            {t("live.compareAll")}
+          <button
+            type="button"
+            className="v8-compare-button"
+            disabled={!canChangeMode}
+            aria-disabled={!canChangeMode}
+            title={!canChangeMode ? t("live.compareUnavailable") : undefined}
+            onClick={onSheet}
+          >
+            {canChangeMode ? t("live.compareAll") : t("live.compareUnavailable")}
           </button>
         </div>
         <div className="v8-live-side">
           <div className="v8-next-card">
             <span>{t("live.leaveBy")}</span>
-            <h3>{next?.title ?? t("live.awaitingPlan")}</h3>
+            <h3>{journeyCompleted ? t("live.completedStatus") : next?.title ?? t("live.awaitingPlan")}</h3>
             <p data-testid="live-leave-by">
-              {next
+              {journeyCompleted
+                ? t("live.completedAdvisory")
+                : next
                 ? t("live.arriveBy", {
                     date: dateInZone(
                       next.start_at,
@@ -3960,11 +4289,17 @@ function LiveSecondary({
             </p>
             <div className="v8-eta">
               <strong>
-                {next
+                {journeyCompleted
+                  ? "—"
+                  : next
                   ? clockInZone(next.start_at, data.journey.timezone || "UTC")
                   : "—"}
               </strong>
-              <span>{t("live.eta", { mode: modeLabel(nextLeg?.mode ?? mode, zh) })}</span>
+              <span>
+                {journeyCompleted
+                  ? t("live.completedStatus")
+                  : t("live.eta", { mode: modeLabel(nextLeg?.mode, zh) })}
+              </span>
             </div>
             {destination && (
               <a
@@ -3973,13 +4308,15 @@ function LiveSecondary({
                 target="_blank"
                 rel="noreferrer"
               >
-                {t("live.navigate")}
+                {destinationLabel}
               </a>
             )}
             <div className="v9-risk">
               <b>{t("live.risk")}</b>
               <span>
-                {disruptions.length
+                {journeyCompleted
+                  ? t("live.completedRisk")
+                  : disruptions.length
                   ? t("live.guardianMonitoring", {
                       severity: disruptions[0].severity,
                     })
@@ -3996,33 +4333,59 @@ function LiveSecondary({
               <span>{t("live.routeEvidence")}</span>
               <button onClick={onSheet}>{t("live.compare")}</button>
             </div>
-            {comparison.slice(0, 2).map((fact) => (
-              <div
-                className="v8-route-row"
-                key={`${fact.from_key}-${fact.to_key}-${fact.mode}`}
-              >
-                {/* ORD-0222 1/②: `fact.mode` is a provider enum and the duration words were
-                    hardcoded English, so a Chinese traveller read "TRANSIT 12 min · 5 min walk"
-                    on the same row. */}
-                <b>{modeLabel(fact.mode, zh)}</b>
-                <span>
-                  {t("live.routeDuration", {
-                    duration: fact.duration_min,
-                    walking: fact.walking_min,
-                  })}
-                </span>
-                <strong>
-                  {fact.cost_amount_minor == null
-                    ? "—"
-                    : money(
-                        fact.cost_amount_minor,
-                        fact.currency ?? "CNY",
-                        locale,
-                      )}
-                </strong>
-              </div>
-            ))}
-            <small>{t("live.providerFacts")}</small>
+            {comparison.length
+              ? comparison.slice(0, 2).map((fact) => (
+                  <div
+                    className="v8-route-row"
+                    key={`${fact.from_key}-${fact.to_key}-${fact.mode}`}
+                  >
+                    {/* ORD-0222 1/②: `fact.mode` is a provider enum and the duration words were
+                        hardcoded English, so a Chinese traveller read "TRANSIT 12 min · 5 min walk"
+                        on the same row. */}
+                    <b>{modeLabel(fact.mode, zh)}</b>
+                    <span>
+                      {t("live.routeDuration", {
+                        duration: fact.duration_min,
+                        walking: fact.walking_min,
+                      })}
+                    </span>
+                    <strong>
+                      {fact.cost_amount_minor == null
+                        ? t("mobility.costUnknown")
+                        : money(
+                            fact.cost_amount_minor,
+                            fact.currency ?? "CNY",
+                            locale,
+                          )}
+                    </strong>
+                  </div>
+                ))
+              : nextLeg && (
+                  <div
+                    className="v8-route-row"
+                    data-testid="live-frozen-route-evidence"
+                  >
+                    <b>{modeLabel(nextLeg.mode, zh)}</b>
+                    <span>
+                      {nextLeg.co_located
+                        ? t("live.routeCoLocated")
+                        : t("live.routeDurationOnly", {
+                            duration: nextLeg.duration_min,
+                          })}
+                    </span>
+                    <strong>{t("mobility.costUnknown")}</strong>
+                  </div>
+                )}
+            <small>
+              {comparison.length
+                ? t("live.providerFacts")
+                : nextLeg
+                  ? t("live.frozenRouteEvidence", {
+                      provider: nextLeg.provider_key ?? "unknown",
+                      provenance: nextLeg.provenance ?? "unknown",
+                    })
+                  : t("live.providerFacts")}
+            </small>
           </details>
         </div>
       </div>
@@ -4053,6 +4416,7 @@ function MapPage({
 }) {
   const t = useT();
   const { locale } = useLocale();
+  const { nextLeg } = liveActivityWindow(data.active_plan ?? null);
   /* Only stops the map can actually stand on are offered as rows — the same coordinate test
      `MapPanel` uses to build its markers, so a row can never name a stop with no pin. */
   const planStops = (data.active_plan?.activities ?? []).filter(
@@ -4123,6 +4487,7 @@ function MapPage({
     return () => observer.disconnect();
   }, [stopIds, locale]);
   const stopsPressed = !stopsExpanded && pressHeight != null;
+  const coLocatedLegs = (data.active_plan?.legs ?? []).filter((leg) => leg.co_located);
   const selectedActivity =
     planStops.find((item) => item.id === selectedActivityId) ?? null;
   /* ORD-0390 ①: selection has to be readable on both halves of the screen, and on a phone the card
@@ -4280,6 +4645,11 @@ function MapPage({
               {mapCopy(locale, "stopsWithoutPlace").replace("%s", String(droppedStops.length))}
             </p>
           )}
+          {coLocatedLegs.length > 0 && (
+            <p className="v8-muted" data-testid="map-co-located-evidence">
+              {t("live.routeCoLocatedSummary", { count: coLocatedLegs.length })}
+            </p>
+          )}
           {comparison.slice(0, 3).map((fact) => (
             <div className="v8-route-row" key={fact.mode}>
               {/* ORD-0222 1/②: same row, same two leaks, on the map surface. */}
@@ -4301,7 +4671,25 @@ function MapPage({
               </strong>
             </div>
           ))}
-          <small>{t("map.unknownCosts")}</small>
+          {!comparison.length && nextLeg && (
+            <div className="v8-route-row" data-testid="map-frozen-route-evidence">
+              <b>{modeLabel(nextLeg.mode, locale.startsWith("zh"))}</b>
+              <span>
+                {nextLeg.co_located
+                  ? t("live.routeCoLocated")
+                  : t("live.routeDurationOnly", { duration: nextLeg.duration_min })}
+              </span>
+              <strong>{t("mobility.costUnknown")}</strong>
+            </div>
+          )}
+          <small>
+            {!comparison.length && nextLeg
+              ? t("live.frozenRouteEvidence", {
+                  provider: nextLeg.provider_key ?? "unknown",
+                  provenance: nextLeg.provenance ?? "unknown",
+                })
+              : t("map.unknownCosts")}
+          </small>
         </div>
       </div>
     </section>
@@ -5060,7 +5448,8 @@ function hardRuleLabel(code: string | null, zh: boolean, unknown: string): strin
   return entry ? (zh ? entry.zh : entry.en) : unknown;
 }
 
-function modeLabel(mode: string, zh: boolean): string {
+function modeLabel(mode: string | null | undefined, zh: boolean): string {
+  if (!mode) return zh ? "未提供出行方式" : "Mode not provided";
   const key = String(mode).toUpperCase();
   const labels: Record<string, { zh: string; en: string }> = {
     WALK: { zh: "步行", en: "Walk" },

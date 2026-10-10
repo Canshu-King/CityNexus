@@ -1,0 +1,281 @@
+{
+  "status": "OPERATOR_BRAIN_RESUMED_RECOVERY",
+  "experiment": "LAB_RUNTIME_AVAILABILITY_SIMULATION",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "lab_estimate_authority": false,
+  "external_live_runtime": false,
+  "operator_start": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "state": "WATCHING",
+    "headline": "I’m watching your trip.",
+    "enabled": true,
+    "standing_mission_id": "ccc220cf-3941-41a1-8814-f66dcc597275",
+    "autonomy": "EXECUTE_WITHIN_BOUNDS",
+    "incident": null,
+    "decision": null,
+    "approval": null,
+    "brain": {
+      "state": "UNCONFIGURED",
+      "headline": "I’m watching your trip, but no planning AI is connected.",
+      "configured_runtimes": [],
+      "preferred_runtime": null,
+      "runtime_candidates": [
+        {
+          "key": "hermes",
+          "provider": "Hermes-compatible",
+          "model": "cn:glm-5.3-flash",
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        },
+        {
+          "key": "deepseek",
+          "provider": "DeepSeek",
+          "model": "deepseek-v4-flash",
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        },
+        {
+          "key": "hermes-native",
+          "provider": "Hermes native",
+          "model": null,
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        }
+      ],
+      "last_failure_reason": null,
+      "recovery_resume": {
+        "pending": false,
+        "safe_to_resume": false,
+        "status": null
+      }
+    },
+    "timeline": [
+      {
+        "at": "2026-10-06T14:43:29.190568+00:00",
+        "label": "Watching your trip",
+        "kind": "operator.started"
+      }
+    ],
+    "advanced": {
+      "guardian": null,
+      "agent": null,
+      "recovered_transition": false
+    },
+    "operator": {
+      "watching": true,
+      "will_continue_after_approval": false
+    },
+    "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+    "started": true,
+    "worker": {
+      "enabled": true,
+      "interval_seconds": 3600.0,
+      "signal_provider": "demo",
+      "enrolled_journey_ids": [
+        "22222222-2222-4222-8222-222222222222"
+      ],
+      "last_pulse_at": null,
+      "last_error": null
+    }
+  },
+  "fixture": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "provider_key": "city-signal-fixture",
+    "state": "DISRUPTED",
+    "revision": 1,
+    "payload": {
+      "description": "LAB_FIXTURE: R44 planning brain outage",
+      "target_place_id": "place-tech-art"
+    },
+    "updated_at": "2026-10-06T14:43:29.207113+00:00"
+  },
+  "first_pulse": {
+    "guardian_id": "85a25ddd-450b-4bd8-8a6f-6d7343023f02",
+    "action_status": "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+  },
+  "first_projection": {
+    "state": "DEGRADED",
+    "brain": {
+      "state": "UNCONFIGURED",
+      "headline": "I’m watching your trip, but no planning AI is connected.",
+      "configured_runtimes": [],
+      "preferred_runtime": null,
+      "runtime_candidates": [
+        {
+          "key": "hermes",
+          "provider": "Hermes-compatible",
+          "model": "cn:glm-5.3-flash",
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        },
+        {
+          "key": "deepseek",
+          "provider": "DeepSeek",
+          "model": "deepseek-v4-flash",
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        },
+        {
+          "key": "hermes-native",
+          "provider": "Hermes native",
+          "model": null,
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        }
+      ],
+      "last_failure_reason": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+      "recovery_resume": {
+        "pending": true,
+        "status": "PENDING",
+        "recovery_resume_id": "c5d3344f-ea6b-4a09-a126-c4824bb46b8d",
+        "recovery_epoch_id": "5566beb6-0976-44a7-ad80-0297028c0cd0",
+        "incident_id": "d5442861-8b5f-4a6d-a456-29da5079e3ee",
+        "incident_fingerprint": "4e771f07c3c2890e786a53612d0f2c6ae73e850a4f2084f7fb6c09bee8f24d39",
+        "safe_to_resume": true,
+        "blocked_reason": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+        "failure_classification": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+        "retry_count": 0,
+        "next_retry_at": "2026-10-06T14:44:29.251111+00:00",
+        "owner_runtime": null,
+        "last_attempt_at": null,
+        "resumed_at": null
+      }
+    },
+    "incident": {
+      "id": "d5442861-8b5f-4a6d-a456-29da5079e3ee",
+      "kind": "CLOSURE",
+      "severity": "MAJOR",
+      "activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "provenance": "PROVIDER_VERIFIED"
+    }
+  },
+  "resume_lineage": {
+    "id": "c5d3344f-ea6b-4a09-a126-c4824bb46b8d",
+    "recovery_epoch_id": "5566beb6-0976-44a7-ad80-0297028c0cd0",
+    "event_id": "d5442861-8b5f-4a6d-a456-29da5079e3ee",
+    "standing_mission_id": "ccc220cf-3941-41a1-8814-f66dcc597275",
+    "recovery_mission_id": "914816ae-759a-4a8f-be51-ea4743e26cb6",
+    "guardian_run_id": "85a25ddd-450b-4bd8-8a6f-6d7343023f02",
+    "status": "RESUMED",
+    "safe_to_resume": true,
+    "retry_count": 0,
+    "failure_classification": "OPERATOR_EXTERNAL_AGENT_BLOCKED"
+  },
+  "resumed_pulse": {
+    "guardian_id": "85a25ddd-450b-4bd8-8a6f-6d7343023f02",
+    "action_status": "NO_ACTION"
+  },
+  "final_projection": {
+    "state": "INVESTIGATING",
+    "brain": {
+      "state": "UNCONFIGURED",
+      "headline": "I’m watching your trip, but no planning AI is connected.",
+      "configured_runtimes": [],
+      "preferred_runtime": "deepseek",
+      "runtime_candidates": [
+        {
+          "key": "hermes",
+          "provider": "Hermes-compatible",
+          "model": "cn:glm-5.3-flash",
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        },
+        {
+          "key": "deepseek",
+          "provider": "DeepSeek",
+          "model": "deepseek-v4-flash",
+          "status": "AVAILABLE",
+          "last_attempt_at": "2026-10-06T14:43:29.313639+00:00",
+          "last_success_at": "2026-10-06T14:43:29.313639+00:00",
+          "last_failure_reason": null,
+          "next_retry_at": null
+        },
+        {
+          "key": "hermes-native",
+          "provider": "Hermes native",
+          "model": null,
+          "status": "UNCONFIGURED",
+          "last_attempt_at": null,
+          "last_success_at": null,
+          "last_failure_reason": null,
+          "next_retry_at": null
+        }
+      ],
+      "last_failure_reason": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+      "recovery_resume": {
+        "pending": false,
+        "status": "RESUMED",
+        "recovery_resume_id": "c5d3344f-ea6b-4a09-a126-c4824bb46b8d",
+        "recovery_epoch_id": "5566beb6-0976-44a7-ad80-0297028c0cd0",
+        "incident_id": "d5442861-8b5f-4a6d-a456-29da5079e3ee",
+        "incident_fingerprint": "4e771f07c3c2890e786a53612d0f2c6ae73e850a4f2084f7fb6c09bee8f24d39",
+        "safe_to_resume": true,
+        "blocked_reason": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+        "failure_classification": "OPERATOR_EXTERNAL_AGENT_BLOCKED",
+        "retry_count": 0,
+        "next_retry_at": null,
+        "owner_runtime": null,
+        "last_attempt_at": "2026-10-06T14:43:29.308640+00:00",
+        "resumed_at": "2026-10-06T14:43:29.312639+00:00"
+      }
+    },
+    "incident": {
+      "id": "d5442861-8b5f-4a6d-a456-29da5079e3ee",
+      "kind": "CLOSURE",
+      "severity": "MAJOR",
+      "activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "provenance": "PROVIDER_VERIFIED"
+    },
+    "timeline": [
+      {
+        "at": "2026-10-06T14:43:29.190568+00:00",
+        "label": "Watching your trip",
+        "kind": "operator.started"
+      },
+      {
+        "at": "2026-10-06T14:43:29.224113+00:00",
+        "label": "Detected: Closure",
+        "kind": "city.signal.incident.created"
+      },
+      {
+        "at": "2026-10-06T14:43:29.249110+00:00",
+        "label": "Working on a recovery",
+        "kind": "guardian.mission.compiled"
+      },
+      {
+        "at": "2026-10-06T14:43:29.252110+00:00",
+        "label": "CityNexus could not reach its trip Agent",
+        "kind": "operator.external_agent_blocked"
+      }
+    ]
+  },
+  "counts": {
+    "material_events": 1,
+    "guardian_runs": 1,
+    "journey_missions": 2,
+    "agent_runs": 1
+  },
+  "autopilot_enabled": true,
+  "same_guardian_lineage": true
+}

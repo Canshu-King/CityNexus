@@ -42,6 +42,10 @@ function text(value: unknown): string | null {
   return trimmed ? trimmed : null;
 }
 
+function amount(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
 export async function readCapturedPlaces(journeyId: string): Promise<Door<PendingCandidate>> {
   const json = await getAnswer(`/journeys/${encodeURIComponent(journeyId)}/provider-mesh`);
   const raw = (json as { real_place_candidates?: unknown } | null)?.real_place_candidates;
@@ -54,14 +58,26 @@ export async function readCapturedPlaces(journeyId: string): Promise<Door<Pendin
       /* A row this device cannot name is not a row it may render; it is still counted, so the
          denominator on the details face stays true. */
       if (!id || !name) return null;
+      const opening = record.opening_hours as Record<string, unknown> | undefined;
+      const cost = record.cost_evidence as Record<string, unknown> | undefined;
       return {
         id,
         name,
         category: text(record.category),
         provider_key: text(record.provider_key),
+        external_id: text(record.external_id),
         status: text(record.status),
         materialized_place_id: text(record.materialized_place_id),
         captured_at: text(record.captured_at),
+        opening_hours: {
+          status: text(opening?.status),
+          raw: text(opening?.raw),
+        },
+        cost_evidence: {
+          status: text(cost?.status),
+          amount_minor: amount(cost?.amount_minor),
+          currency: text(cost?.currency),
+        },
       };
     })
     .filter((row): row is PendingCandidate => row !== null);

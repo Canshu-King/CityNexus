@@ -92,7 +92,8 @@
    sentence; both wrap anywhere rather than clipping either. */
 .cn-pending-row-name { color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }
 .cn-pending-row-cause,
-.cn-pending-row-meta {
+.cn-pending-row-meta,
+.cn-pending-row-facts {
   color: var(--cn-ink-tertiary);
   font-size: var(--cn-fs-caption);
   overflow-wrap: anywhere;

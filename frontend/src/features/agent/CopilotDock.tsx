@@ -10,6 +10,7 @@ import {
 } from "../../api/citynexus";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { AgentRunRail, type AgentRailStep } from "./AgentRunRail";
+import { JourneyClarificationPanel } from "./JourneyClarificationPanel";
 import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failureAttribution";
 
 
@@ -575,9 +576,11 @@ type Band = { left: number; top: number; right: number; bottom: number };
 export function CopilotDock({
   data,
   onNavigate,
+  onJourneyUpdated,
 }: {
   data: V8Data;
   onNavigate: (route: string) => void;
+  onJourneyUpdated: () => Promise<void>;
 }) {
   const t = useT();
   const { locale } = useLocale();
@@ -916,6 +919,13 @@ export function CopilotDock({
               onExecutionChange={setExecuted}
             />
           )}
+          <JourneyClarificationPanel
+            key={data.journey.id}
+            journeyId={data.journey.id}
+            refreshKey={messages.length}
+            zh={zh}
+            onJourneyUpdated={onJourneyUpdated}
+          />
           {error && (
             <p id="copilot-error" className="cn-copilot-error" role="alert" aria-live="assertive" data-testid="copilot-send-error"
                data-attribution={sendFacts ?? ""}>{error}</p>

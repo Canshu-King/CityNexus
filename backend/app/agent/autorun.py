@@ -17,8 +17,15 @@ from app.agent.predictive import (
     counterfactual_payload,
     simulate_counterfactuals,
     snapshot_payload,
+    maintain_standby_portfolio,
 )
 from app.agent.signal_pipeline import SignalPipelineResult, refresh_demo_signals
+from app.agent.watch_policy import (
+    adaptive_watch_policy,
+    journey_phase_projection,
+    next_move_projection,
+    watch_is_due,
+)
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import (
@@ -31,7 +38,10 @@ from app.db.models import (
 )
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
+from app.agent.overnight_steward import process_overnight_steward
+from app.execution.clock import execution_clock
 from app.integrations.mobility.runtime import capture_runtime_mobility_snapshot
+from app.live_context_watch import run_live_context_watch
 from app.observability.tracing import persist_span, phoenix_status
 
 _worker_lock = threading.Lock()
@@ -55,7 +65,11 @@ def _live_weather_refresh(session, journey: Journey) -> SignalPipelineResult:
 
     async def capture():
         async with httpx.AsyncClient(timeout=settings.open_meteo_timeout_seconds) as client:
-            provider = OpenMeteoContextProvider(client=client, base_url=settings.open_meteo_url)
+            provider = OpenMeteoContextProvider(
+                client=client,
+                base_url=settings.open_meteo_url,
+                rain_probability_threshold=settings.predictive_risk_threshold,
+            )
             return await refresh_weather_runtime(
                 session,
                 journey,
@@ -232,6 +246,8 @@ def _due(enrollment: AutopilotEnrollment, *, now: datetime) -> bool:
 
 
 def next_due_seconds(session, *, now: datetime | None = None) -> float | None:
+    """Return the shortest adaptive wait across enabled Journey watches."""
+
     stamp = now or datetime.now(timezone.utc)
     rows = list(
         session.scalars(
@@ -242,22 +258,28 @@ def next_due_seconds(session, *, now: datetime | None = None) -> float | None:
         return None
     waits: list[float] = []
     for row in rows:
-        if not row.last_pulse_at:
-            waits.append(0.0)
+        journey = session.get(Journey, row.journey_id)
+        if journey is None or journey.status != "ACTIVE":
             continue
+        policy = adaptive_watch_policy(session, journey, row, now=stamp)
         try:
-            previous = datetime.fromisoformat(row.last_pulse_at)
-            if previous.tzinfo is None:
-                previous = previous.replace(tzinfo=timezone.utc)
-            waits.append(max(0.0, float(row.interval_seconds) - (stamp - previous).total_seconds()))
-        except ValueError:
+            due_at = datetime.fromisoformat(str(policy["next_due_at"]))
+            if due_at.tzinfo is None:
+                due_at = due_at.replace(tzinfo=timezone.utc)
+            waits.append(max(0.0, (due_at - stamp).total_seconds()))
+        except (KeyError, TypeError, ValueError):
             waits.append(0.0)
-    return min(waits)
+    return min(waits) if waits else None
 
 
 def pulse_journey(session, journey: Journey) -> dict[str, Any]:
     """Persist one sensing -> Guardian evaluation cycle."""
 
+    from app.agent.journey_intent import expire_journey_intents
+
+    expire_journey_intents(
+        session, journey, now=execution_clock.now(journey.timezone)
+    )
     started_at = _now()
     trace_id = str(uuid4())
     trace_spans: list[dict[str, Any]] = []
@@ -285,6 +307,17 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
     )
     session.flush()
     try:
+        phase = journey_phase_projection(session, journey)
+        next_move = next_move_projection(session, journey, phase=phase)
+        trace_spans.append(
+            persist_span(
+                session,
+                journey_id=journey.id,
+                trace_id=trace_id,
+                name="guardian.phase",
+                attributes=phase,
+            )
+        )
         signals = refresh_signals(session, journey)
         trace_spans.append(
             persist_span(
@@ -301,7 +334,43 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                 },
             )
         )
-        pulse.observation_ids_json = json.dumps(list(signals.observation_ids))
+        context_watch = (
+            run_live_context_watch(
+                session,
+                journey,
+                activity_ids=tuple(phase.get("monitored_activity_ids") or ()),
+            )
+            if journey.status == "ACTIVE"
+            and settings.guardian_signal_provider in {"open-meteo", "live", "weather"}
+            else None
+        )
+        context_observation_ids = [
+            str(item.get("id"))
+            for item in ((context_watch or {}).get("observations") or [])
+            if isinstance(item, dict) and item.get("id")
+        ]
+        pulse.observation_ids_json = json.dumps(
+            list(dict.fromkeys([*signals.observation_ids, *context_observation_ids]))
+        )
+        if context_watch is not None:
+            trace_spans.append(
+                persist_span(
+                    session,
+                    journey_id=journey.id,
+                    trace_id=trace_id,
+                    name="venue_context.capture",
+                    attributes={
+                        "status": context_watch.get("status"),
+                        "observation_ids": context_observation_ids,
+                        "recovery_event_ids": list(
+                            context_watch.get("recovery_event_ids") or []
+                        ),
+                        "checked_activity_count": len(
+                            context_watch.get("checked_activities") or []
+                        ),
+                    },
+                )
+            )
         guardian_result = None
         resilience = None
         counterfactuals: list[dict[str, Any]] = []
@@ -321,6 +390,7 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
             )
         )
         resilience = build_resilience_snapshot(session, journey)
+        standby_maintenance = maintain_standby_portfolio(session, journey)
         trace_spans.append(
             persist_span(
                 session,
@@ -351,9 +421,13 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                     resilience,
                 )
             else:
-                guardian_result = scan_guardian(session, journey)
+                guardian_result = scan_guardian(
+                    session, journey, include_opportunity_signals=False
+                )
         else:
-            guardian_result = scan_guardian(session, journey)
+            guardian_result = scan_guardian(
+                session, journey, include_opportunity_signals=False
+            )
         if guardian_result is not None:
             pulse.guardian_run_id = guardian_result.get("id")
             evidence = guardian_result.get("evidence") or {}
@@ -451,16 +525,24 @@ def pulse_journey(session, journey: Journey) -> dict[str, Any]:
                 )
             )
         result = {
+            "phase": phase,
+            "next_move": next_move,
             "signals": signals.to_dict(),
+            "context_watch": context_watch,
             "guardian": guardian_result,
             "resilience": snapshot_payload(resilience),
             "counterfactuals": counterfactuals,
+            "standby_maintenance": standby_maintenance,
             "trace": {
                 "trace_id": trace_id,
                 "phoenix": phoenix_status(),
                 "spans": trace_spans,
             },
         }
+        overnight = process_overnight_steward(
+            session, journey, now=execution_clock.now(journey.timezone)
+        )
+        result["overnight"] = overnight
         pulse.status = "COMPLETED"
         pulse.result_json = json.dumps(result, ensure_ascii=False, default=str)
         pulse.completed_at = _now()
@@ -515,7 +597,13 @@ def run_once(
         for journey in journeys:
             enrollment = session.get(AutopilotEnrollment, journey.id)
             if respect_schedule and (
-                enrollment is None or not _due(enrollment, now=datetime.now(timezone.utc))
+                enrollment is None
+                or not watch_is_due(
+                    session,
+                    journey,
+                    enrollment,
+                    now=datetime.now(timezone.utc),
+                )
             ):
                 continue
             mission = session.scalar(

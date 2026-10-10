@@ -100,6 +100,7 @@ def capture_mobility_snapshot(
     captured_at: str | None = None,
     operation_key: str | None = None,
     snapshot_id: str | None = None,
+    fallback_is_live: bool = False,
 ) -> MobilitySnapshotCaptureResult:
     """Capture external mobility facts before the deterministic feasibility gate.
 
@@ -162,7 +163,7 @@ def capture_mobility_snapshot(
                 ) from fallback_exc
             provider_key = str(fallback.provider_key)
             active_provider = fallback
-            degraded = True
+            degraded = not fallback_is_live
             fallback_pairs.append((origin, destination))
             fallback_reasons[(origin, destination)] = type(primary_exc).__name__
             if geometry:
@@ -199,8 +200,7 @@ def capture_mobility_snapshot(
             cost_provenance="CITYNEXUS_COST_ESTIMATE",
             time_basis=time_basis,
             mode=str(
-                getattr(primary, "mode", None)
-                or getattr(fallback, "mode", None)
+                getattr(active_provider, "mode", None)
                 or ""
             ).upper()
             or None,
@@ -213,7 +213,7 @@ def capture_mobility_snapshot(
         facts=facts,
         source_provider_key=str(primary.provider_key),
         captured_at=stamp,
-        degraded=bool(primary_failures),
+        degraded=bool(primary_failures) and not fallback_is_live,
         snapshot_id=snapshot_id or str(uuid4()),
         operation_key=operation_key,
     )

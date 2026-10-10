@@ -12,7 +12,8 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
-from app.execution.traveler_twin import capability_constraint_items
+from app.core.config import settings
+from app.execution.traveler_twin import capability_constraint_items, planning_preference_items
 from app.core.audit import record_audit
 from app.db.models import (
     Activity,
@@ -23,9 +24,12 @@ from app.db.models import (
     Journey,
     JourneyCheckin,
     JourneyConstraint,
+    JourneyMember,
+    JourneyMission,
     Place,
     PlanVersion,
     Preference,
+    RealPlaceCandidate,
     Traveler,
     TravelerTwinSnapshot,
 )
@@ -38,9 +42,14 @@ from app.replanning.feasibility import (
     build_context,
     evaluate_feasibility,
 )
+from app.replanning.candidate_evidence import (
+    canonical_place_tags,
+    verified_interest_preference_breakdown,
+)
 from app.replanning.provider_snapshots import MobilitySnapshot
 from app.planning.anchor_schedule import (
     ANCHOR_DURATION_MIN,
+    ANCHOR_PROVIDER_KEY,
     CandidateActivity,
     MID_TRIP_ROLE,
     active_c4_commitments,
@@ -159,6 +168,16 @@ def reset_all(session: Session) -> None:
         "agent_run_steps",
         "agent_runs",
         "journey_missions",
+        "member_place_group_share_consents",
+        "member_place_promotions",
+        "member_place_invitation_progress",
+        "member_place_invitation_recipients",
+        "member_place_invitations",
+        "member_side_quest_return_reports",
+        "member_side_quests",
+        "member_live_moment_scout_receipts",
+        "planned_split_meetup_handshakes",
+        "collective_authority_receipts",
         "guardian_pulses",
         "provider_observations",
         "journey_outcome_events",
@@ -186,6 +205,8 @@ def reset_all(session: Session) -> None:
         "commitments",
         "events",
         "journey_twins",
+        "journey_intents",
+        "journey_members",
         "activities",
         "plan_versions",
         "constraints",
@@ -322,6 +343,14 @@ def build_demo_fixture_rows(now: str = DEMO_FIXTURE_NOW) -> list[Any]:
         metadata: dict[str, Any] = {
             "duration_min": item["duration_min"],
             "cost_minor": item["cost_minor"],
+            "cost_evidence": {
+                "status": "KNOWN",
+                "amount_minor": item["cost_minor"],
+                "currency": "CNY",
+                "source": "SEALED_DEMO_FIXTURE",
+            },
+            "price_known": True,
+            "authority_envelope": SEALED_DEMO_AUTHORITY_ENVELOPE,
         }
         evidence = _demo_accessibility_evidence(item)
         if evidence:
@@ -394,6 +423,21 @@ def build_demo_fixture_rows(now: str = DEMO_FIXTURE_NOW) -> list[Any]:
         updated_at=now,
     )
     rows.append(journey)
+    rows.append(
+        JourneyMember(
+            id=deterministic_id("journey-member:owner"),
+            journey_id=journey.id,
+            traveler_id=journey.traveler_id,
+            role="OWNER",
+            invited_by=journey.traveler_id,
+            expires_at=None,
+            joined_at=now,
+            removed_at=None,
+            preferences_json="{}",
+            created_at=now,
+            updated_at=now,
+        )
+    )
     for index, item in enumerate(load("demo_journey.json")["constraints"], start=1):
         rows.append(
             JourneyConstraint(
@@ -528,6 +572,11 @@ def constraint_schema(item: JourneyConstraint) -> ConstraintSchema:
 
 
 def place_schema(item: Place) -> PlaceSchema:
+    metadata = json.loads(item.metadata_json or "{}")
+    opening_hours = json.loads(item.opening_hours_json or "{}")
+    cost_evidence = metadata.get("cost_evidence")
+    if not isinstance(cost_evidence, dict):
+        cost_evidence = {"status": "UNKNOWN", "amount_minor": None}
     return PlaceSchema(
         id=item.id,
         name=item.name,
@@ -535,9 +584,12 @@ def place_schema(item: Place) -> PlaceSchema:
         city_code=item.city_code,
         location={"latitude": item.latitude, "longitude": item.longitude},
         tags=json.loads(item.tags_json),
+        external_id=item.external_id,
         provider_key=item.provider_key,
         coordinate_system=item.coordinate_system,
         source_coordinate_system=item.source_coordinate_system,
+        opening_hours=opening_hours,
+        cost_evidence=cost_evidence,
     )
 
 
@@ -702,6 +754,247 @@ def _plan_staleness(item: PlanVersion) -> tuple[bool, str | None]:
     return False, None
 
 
+# These are provider-backed cost states.  ``cost_minor=0`` is retained as a
+# compatibility storage value, but it is never evidence that an attraction is
+# free.  A place is cost-complete only when the evidence object says so.
+KNOWN_COST_EVIDENCE_STATUSES = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+KNOWN_OPENING_EVIDENCE_STATUSES = frozenset(
+    {"NORMALIZED_VALID", "OFFICIAL_WEB_VERIFIED", "VERIFIED_PROVIDER", "CLOSED"}
+)
+
+SYNTHETIC_LIVE_SELECTION_BLOCKED = "SYNTHETIC_MOBILITY_NOT_AUTHORITATIVE_FOR_LIVE_CONTENT"
+UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
+COST_UNKNOWN_ACCEPTED = "COST_UNKNOWN_ACCEPTED"
+COST_UNKNOWN_USER_POLICY = "USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED"
+SEALED_DEMO_AUTHORITY_ENVELOPE = "SEALED_DEMO_FIXTURE"
+SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE = "SEALED_REAL_REPLAY"
+COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE = "COURSEWORK_ESTIMATE"
+SEALED_AUTHORITY_ENVELOPES = frozenset(
+    {SEALED_DEMO_AUTHORITY_ENVELOPE, SEALED_REAL_REPLAY_AUTHORITY_ENVELOPE}
+)
+
+
+def _place_metadata(place: Place) -> dict[str, Any]:
+    return json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+
+
+def _place_strategy_estimate(place: Place) -> dict[str, Any] | None:
+    estimate = _place_metadata(place).get("strategy_estimate")
+    if not isinstance(estimate, Mapping):
+        return None
+    if str(estimate.get("status") or "").upper() != "ESTIMATED_AGENT":
+        return None
+    return dict(estimate)
+
+
+def _coursework_estimate_covers(place: Place) -> bool:
+    estimate = _place_strategy_estimate(place)
+    if estimate is None:
+        return False
+    opening = estimate.get("opening_hours")
+    cost = estimate.get("cost_evidence")
+    if not isinstance(opening, Mapping) or not isinstance(cost, Mapping):
+        return False
+    return (
+        opening.get("open_minutes") is not None
+        and opening.get("close_minutes") is not None
+        and cost.get("amount_minor") is not None
+    )
+
+
+def _coursework_facts_cover(place: Place) -> bool:
+    """Return whether a coursework candidate has either real or lab facts.
+
+    A provider-complete Place must not need a duplicate agent estimate merely
+    because another stop is being evaluated in the isolated coursework
+    envelope.  Estimates cover only the unresolved stop; they never mutate or
+    upgrade canonical provider truth.
+    """
+
+    return not _place_has_unresolved_visit_facts(place) or _coursework_estimate_covers(place)
+
+
+def _place_verified_cost(place: Place) -> int | None:
+    metadata = _place_metadata(place)
+    provider_key = getattr(place, "provider_key", None)
+    evidence = metadata.get("cost_evidence")
+    if not isinstance(evidence, Mapping):
+        legacy_cost = metadata.get("cost_minor")
+        if (
+            provider_key == "mock-city"
+            and isinstance(legacy_cost, (int, float))
+            and legacy_cost > 0
+        ):
+            return int(legacy_cost)
+        return None
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    amount = evidence.get("amount_minor")
+    if status not in KNOWN_COST_EVIDENCE_STATUSES or amount is None:
+        # Once a cost_evidence object exists it is the canonical contract.
+        # Compatibility cost_minor must not override an explicit UNKNOWN or
+        # otherwise non-authoritative evidence state.
+        return None
+    return int(amount)
+
+
+def _place_has_unresolved_visit_facts(place: Place) -> bool:
+    """Return whether a used provider Place still lacks opening or cost truth.
+
+    Compatibility ``cost_minor=0`` is intentionally ignored here.  A live
+    provider Place may enter a provisional/catalogue path with UNKNOWN facts,
+    but those facts cannot cross the selection authority boundary.
+    """
+
+    return _place_has_unresolved_opening(place) or _place_has_unresolved_cost(place)
+
+
+def _place_has_unresolved_opening(place: Place) -> bool:
+    opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+    opening_status = str(opening.get("status") or "UNKNOWN").upper()
+    return opening_status not in KNOWN_OPENING_EVIDENCE_STATUSES
+
+
+def _place_has_unresolved_cost(place: Place) -> bool:
+    metadata = _place_metadata(place)
+    evidence = metadata.get("cost_evidence")
+    if not isinstance(evidence, Mapping):
+        return True
+    cost_status = str(evidence.get("status") or "UNKNOWN").upper()
+    return cost_status not in KNOWN_COST_EVIDENCE_STATUSES or evidence.get("amount_minor") is None
+
+
+def _catalogue_visit_eligible(place: Place) -> bool:
+    """Return true only for content that can be a visit stop.
+
+    Lodging, parking and transport rows are useful provider facts, but they are
+    not attractions.  Keeping that role decision here prevents the provisional
+    lane from turning an accommodation row into a generic visit.
+    """
+
+    category = str(place.category or "").casefold()
+    if category in {
+        "hotel", "lodging", "accommodation", "guest_house", "hostel",
+        "parking", "car_park", "bus_station", "train_station", "transit_station",
+    }:
+        return False
+    role = str(_place_metadata(place).get("place_role") or "").casefold()
+    if role in {"lodging", "accommodation", "parking", "transit"}:
+        return False
+    return category in {
+        "aquarium", "attraction", "cafe", "experience", "food", "gallery", "garden",
+        "heritage", "landmark", "library", "museum", "nightlife", "park",
+        "restaurant", "temple", "theatre", "tourism", "viewpoint", "zoo",
+    }
+
+
+def plan_authority_blocker(
+    item: PlanVersion,
+    places_by_id: Mapping[str, Place],
+    *,
+    used_place_ids: Sequence[str] | None = None,
+) -> str | None:
+    """Return the shared authority blocker for a plan, if any.
+
+    Only mobility edges actually traversed by the plan participate in the
+    synthetic check.  An unused fallback edge in a complete matrix cannot veto
+    a route whose used edges are live/provider-backed.
+    """
+
+    explanation = json.loads(item.explanation_json or "{}")
+    used = [str(value) for value in (used_place_ids or ()) if value]
+    used_unique = list(dict.fromkeys(used))
+    coursework_places = [places_by_id.get(place_id) for place_id in used_unique]
+    coursework_estimate = (
+        settings.lab_estimate_authority
+        and str(explanation.get("authority_envelope") or "").upper()
+        == COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE
+        and bool(coursework_places)
+        and all(place is not None and _coursework_facts_cover(place) for place in coursework_places)
+    )
+    # Replan candidates can be materialised by a different composition path
+    # and therefore may carry a provisional explanation marker even after the
+    # actual used Places have acquired canonical facts.  The used Place rows
+    # remain the authoritative content boundary: live or provider-backed
+    # UNKNOWN opening/cost facts remain non-selectable.  An explicit sealed
+    # demo/replay envelope is the only exception, so fixtures and captured
+    # replay tests keep their existing contract.
+    used_content_places = [
+        places_by_id[place_id]
+        for place_id in used_unique
+        if place_id in places_by_id
+        and places_by_id[place_id].provider_key != ANCHOR_PROVIDER_KEY
+    ]
+    cost_unknown_mode = (
+        explanation.get("authority_state") == COST_UNKNOWN_ACCEPTED
+        and explanation.get("cost_unknown_policy") == COST_UNKNOWN_USER_POLICY
+        and isinstance(explanation.get("cost_summary"), Mapping)
+        and int(explanation["cost_summary"].get("unknown_item_count") or 0) > 0
+    )
+    if cost_unknown_mode and used_content_places and any(
+        _place_has_unresolved_opening(place) for place in used_content_places
+    ):
+        # The explicit R86 acknowledgement covers admission price only.  An
+        # OSM identity is not evidence that a venue is open, so opening facts
+        # still have to be independently grounded before selection/start.
+        return UNRESOLVED_ACTIVITY_FACTS
+    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and not coursework_estimate:
+        if not used_content_places or any(
+            _place_has_unresolved_visit_facts(place) for place in used_content_places
+        ):
+            return UNRESOLVED_ACTIVITY_FACTS
+    elif explanation.get("authority_state") == "COURSEWORK_ESTIMATED_FACTS" and not coursework_estimate:
+        return UNRESOLVED_ACTIVITY_FACTS
+
+    sealed = bool(used_content_places) and all(
+        str(_place_metadata(place).get("authority_envelope") or "").upper()
+        in SEALED_AUTHORITY_ENVELOPES
+        for place in used_content_places
+    )
+    if used_content_places and not sealed and not coursework_estimate and not cost_unknown_mode and any(
+        _place_has_unresolved_visit_facts(place) for place in used_content_places
+    ):
+        return UNRESOLVED_ACTIVITY_FACTS
+
+    evidence = json.loads(item.mobility_evidence_json or "{}")
+    if not isinstance(evidence, Mapping):
+        return None
+    facts = [fact for fact in evidence.get("facts", []) if isinstance(fact, Mapping)]
+    used_edges = set(zip(used, used[1:]))
+    used_facts = [
+        fact for fact in facts
+        if (str(fact.get("origin_key")), str(fact.get("destination_key"))) in used_edges
+    ]
+    relevant = used_facts if used_place_ids is not None else facts
+    synthetic = any(
+        str(fact.get("route_provenance") or "").upper() == "SYNTHETIC_FIXTURE"
+        or str(fact.get("fact_quality") or "").upper() == "SYNTHETIC_DEFAULT"
+        for fact in relevant
+    )
+    if not synthetic and used_place_ids is None:
+        provider = str(evidence.get("source_provider") or "").casefold()
+        synthetic = provider.startswith(("mock", "fixture"))
+    if not synthetic:
+        return None
+    content_places = used_content_places if used_place_ids is not None else [
+        place for place in places_by_id.values()
+        if place.provider_key != ANCHOR_PROVIDER_KEY
+    ]
+    sealed = bool(content_places) and all(
+        str(_place_metadata(place).get("authority_envelope") or "").upper()
+        in SEALED_AUTHORITY_ENVELOPES
+        for place in content_places
+    )
+    return None if sealed else SYNTHETIC_LIVE_SELECTION_BLOCKED
+
+
+def plan_unresolved_activity_facts(item: PlanVersion) -> list[dict[str, Any]]:
+    explanation = json.loads(item.explanation_json or "{}")
+    unresolved = explanation.get("unresolved_facts")
+    if not isinstance(unresolved, list):
+        return []
+    return [dict(row) for row in unresolved if isinstance(row, Mapping)]
+
+
 _CURRENT_UNRESOLVED = object()
 
 #: Why composition refused, named (ORD-0101). `No feasible plan candidates` is one sentence
@@ -717,6 +1010,7 @@ CATALOG_INSUFFICIENT = "CATALOG_INSUFFICIENT"
 # the order adopted, one per condition the raise site can actually observe.
 PLACES_NOT_IN_CATALOG = "PLACES_NOT_IN_CATALOG"
 PLACE_COST_UNVERIFIED = "PLACE_COST_UNVERIFIED"
+LODGING_ROWS_USED_AS_GENERIC_VISITS = "LODGING_ROWS_USED_AS_GENERIC_VISITS"
 PLACE_OUTSIDE_JOURNEY_WINDOW = "PLACE_OUTSIDE_JOURNEY_WINDOW"
 
 
@@ -785,6 +1079,52 @@ def plan_schema(
     if current_plan_version_id is _CURRENT_UNRESOLVED:
         owner = session.get(Journey, item.journey_id)
         current_plan_version_id = owner.active_plan_version_id if owner is not None else None
+    activity_keys = [
+        str(activity.place_id or activity.city_service_id or "")
+        for activity in activities
+    ]
+    authority_blocker = plan_authority_blocker(
+        item,
+        places_by_id,
+        used_place_ids=activity_keys,
+    )
+    explanation = json.loads(item.explanation_json or "{}")
+    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and authority_blocker is None:
+        explanation = {**explanation, "authority_state": "LIVE_PROVIDER_FACTS"}
+    projected_activities = [
+        activity_schema(a, places_by_id.get(str(a.place_id)))
+        for a in activities
+    ]
+    cost_summary = explanation.get("cost_summary")
+    unknown_activity_ids = [
+        str(activity.id)
+        for activity in projected_activities
+        if str(activity.cost_status or "UNKNOWN").upper() == "UNKNOWN"
+    ]
+    total_cost_status = (
+        "PARTIAL_UNKNOWN"
+        if unknown_activity_ids
+        or (
+            isinstance(cost_summary, Mapping)
+            and int(cost_summary.get("unknown_item_count") or 0) > 0
+        )
+        else "KNOWN"
+    )
+    # A few older/replan writers persisted the compatibility integer without the
+    # R86 explanation block.  Repair that public projection from the activity
+    # evidence so every consumer sees PARTIAL_UNKNOWN instead of interpreting a
+    # legacy zero as a free total.  This does not mutate the historical row.
+    if unknown_activity_ids and not isinstance(cost_summary, Mapping):
+        explanation = {
+            **explanation,
+            "cost_summary": {
+                "known_subtotal_minor": int(item.total_cost_minor or 0),
+                "unknown_item_count": len(unknown_activity_ids),
+                "unknown_activity_ids": unknown_activity_ids,
+                "unknown_cost_included": False,
+                "total_is_not_free": True,
+            },
+        }
     return PlanSchema(
         id=item.id,
         journey_id=item.journey_id,
@@ -792,21 +1132,21 @@ def plan_schema(
         is_current=str(current_plan_version_id or "") == item.id,
         planning_mode=item.planning_mode,
         status=item.status,
+        lifecycle=item.lifecycle or "ACTIVE",
+        trigger_contract=json.loads(item.trigger_contract_json or "{}"),
         source=item.source,
         parent_plan_version_id=item.parent_plan_version_id,
         total_cost=Money(amount_minor=item.total_cost_minor, currency=item.currency),
+        total_cost_status=total_cost_status,
         utility_score=item.utility_score,
         score_breakdown=breakdown,
-        activities=[
-            activity_schema(a, places_by_id.get(str(a.place_id)))
-            for a in activities
-        ],
+        activities=projected_activities,
         mobility_snapshot_id=item.mobility_snapshot_id,
         mobility_evidence=json.loads(item.mobility_evidence_json or "{}"),
-        explanation=json.loads(item.explanation_json or "{}"),
+        explanation=explanation,
         created_at=item.created_at or None,
         stale=stale,
-        selectable=not stale,
+        selectable=(item.lifecycle or "ACTIVE") != "STANDBY" and not stale and authority_blocker is None,
         stale_reason=stale_reason,
     )
 
@@ -901,6 +1241,8 @@ def _place_window(place: Place) -> tuple[int, int] | None:
     """A place's own open/close as minutes-of-day, or None if it never says."""
 
     hours = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+    if hours.get("always_available") is True:
+        return 0, 24 * 60
     opened = _hm_to_minutes(hours.get("open"))
     closed = _hm_to_minutes(hours.get("close"))
     if opened is None or closed is None or closed <= opened:
@@ -937,6 +1279,346 @@ def _templates_resting_on_unsourced_hours(
     return total
 
 
+def _latest_strategy_intent(session: Session, journey: Journey) -> dict[str, Any]:
+    """Read the latest user mission as strategy input, never as a truth source."""
+
+    mission = session.scalar(
+        select(JourneyMission)
+        .where(JourneyMission.journey_id == journey.id)
+        .order_by(JourneyMission.created_at.desc(), JourneyMission.id.desc())
+        .limit(1)
+    )
+    if mission is None:
+        return {"user_text": str(journey.title or ""), "preferences": {}}
+    try:
+        preferences = json.loads(mission.preferences_json or "{}")
+    except (TypeError, ValueError):
+        preferences = {}
+    return {
+        "user_text": str(mission.user_text or journey.title or ""),
+        "preferences": preferences if isinstance(preferences, dict) else {},
+        "mission_id": mission.id,
+    }
+
+
+def _strategy_profile(intent: Mapping[str, Any]) -> str:
+    text = " ".join(
+        [
+            str(intent.get("user_text") or ""),
+            json.dumps(intent.get("preferences") or {}, ensure_ascii=False),
+        ]
+    ).casefold()
+    if any(token in text for token in ("少走", "步行少", "low walking", "compact", "紧凑")):
+        return "compact"
+    if any(token in text for token in ("室内", "indoor", "museum", "美术馆", "工艺", "工藝")):
+        return "indoor"
+    if any(token in text for token in ("庭园", "庭園", "garden", "park", "公园", "公園", "heritage", "历史", "歷史", "long walk", "散步")):
+        return "heritage_outdoor"
+    return "balanced"
+
+
+def _strategy_place_score(
+    place: Place,
+    profile: str,
+    traveler_preferences: Sequence[Any] | None = None,
+) -> tuple[int, int, str]:
+    """Rank a provider Place from persisted preference evidence.
+
+    Real-city ordering must be causal: a changed TravelerTwin should be able to
+    change the order without changing hard facts.  The old profile/name heuristic
+    remains only as a neutral legacy fallback when no preference evidence exists;
+    it is never allowed to become a hard feasibility or authority signal.
+    """
+
+    if traveler_preferences is not None:
+        tags = canonical_place_tags(
+            category=place.category,
+            tags=json.loads(place.tags_json or "[]"),
+        )
+        breakdown = verified_interest_preference_breakdown(
+            traveler_preferences,
+            candidate_tags=tags,
+        )
+        effective = breakdown.get("effective_preference_fit")
+        if effective is not None:
+            preference = round(float(effective) * 1000)
+        else:
+            preference = 0
+    else:
+        haystack = " ".join(
+            [
+                str(getattr(place, "name", "") or ""),
+                str(getattr(place, "category", "") or ""),
+                str(getattr(place, "tags_json", "") or ""),
+            ]
+        ).casefold()
+        indoor = any(token in haystack for token in ("museum", "gallery", "craft", "工艺", "工藝", "美術", "美术", "文化館", "library"))
+        outdoor = any(token in haystack for token in ("garden", "park", "庭園", "庭园", "viewpoint", "historic", "temple", "shrine", "heritage"))
+        preference = (
+            3 if profile == "indoor" and indoor else
+            3 if profile == "heritage_outdoor" and outdoor else
+            3 if profile == "compact" and indoor else
+            1 if profile in {"indoor", "compact"} and outdoor else
+            1
+        ) * 100
+    completeness = int(_place_window(place) is not None) + int(_place_verified_cost(place) is not None)
+    return preference, completeness, place.id
+
+
+def _strategy_order(
+    places: Sequence[Place],
+    profile: str,
+    travel: Callable[[str, str], int],
+    traveler_preferences: Sequence[Any] | None = None,
+) -> list[list[Place]]:
+    ranked = sorted(
+        places,
+        key=lambda place: (
+            -_strategy_place_score(place, profile, traveler_preferences)[0],
+            -_strategy_place_score(place, profile, traveler_preferences)[1],
+            place.id,
+        ),
+    )
+    if not ranked:
+        return []
+    compact = [ranked[0]]
+    remaining = ranked[1:]
+    while remaining and len(compact) < min(4, len(ranked)):
+        previous = compact[-1]
+        next_place = min(
+            remaining,
+            key=lambda place: (
+                travel(previous.id, place.id),
+                -_strategy_place_score(place, profile, traveler_preferences)[0],
+                place.id,
+            ),
+        )
+        compact.append(next_place)
+        remaining.remove(next_place)
+    diverse: list[Place] = []
+    seen_categories: set[str] = set()
+    for place in ranked:
+        category = str(place.category or "").casefold()
+        if category not in seen_categories or len(diverse) >= 4:
+            diverse.append(place)
+            seen_categories.add(category)
+        if len(diverse) >= min(5, len(ranked)):
+            break
+    return [ranked, compact, diverse]
+
+
+def _real_strategy_metrics(
+    schedule: Sequence[CandidateActivity],
+    places: Mapping[str, Place],
+    mobility_provider: Any,
+    journey: Journey,
+    profile: str,
+    traveler_preferences: Sequence[Any] | None = None,
+) -> tuple[dict[str, float], dict[str, Any]]:
+    """Derive candidate dimensions from measured facts, with neutral evidence made explicit."""
+
+    total_cost = sum(int(item.cost_minor) for item in schedule)
+    travel_minutes = 0
+    degraded_edges = 0
+    edge_count = 0
+    previous: str | None = None
+    for item in schedule:
+        if previous is not None:
+            fact = mobility_provider.facts.get((previous, item.place_id))
+            if fact is not None:
+                travel_minutes += int(fact.minutes)
+                degraded_edges += int(bool(fact.degraded))
+                edge_count += 1
+        previous = item.place_id
+    slack_minutes = 0
+    known_opening = 0
+    for item in schedule:
+        window = _place_window(places[item.place_id])
+        if window is None:
+            continue
+        known_opening += 1
+        slack_minutes += max(0, window[1] - (item.end_at.hour * 60 + item.end_at.minute))
+    known_cost = sum(
+        int(_place_verified_cost(places[item.place_id]) is not None) for item in schedule
+    )
+    known_ratio = (known_opening + known_cost) / max(1, 2 * len(schedule))
+    budget_fit = max(0.0, min(1.0, 1 - total_cost / max(1, journey.budget_amount_minor)))
+    mobility_fit = max(0.0, min(1.0, 1 - travel_minutes / max(1, len(schedule) * 90)))
+    time_reliability = max(0.0, min(1.0, slack_minutes / max(1, len(schedule) * 120)))
+    robustness = known_ratio * (1 - degraded_edges / max(1, edge_count))
+    preference_breakdowns = []
+    if traveler_preferences is not None:
+        for item in schedule:
+            place = places[item.place_id]
+            preference_breakdowns.append(
+                verified_interest_preference_breakdown(
+                    traveler_preferences,
+                    candidate_tags=canonical_place_tags(
+                        category=place.category,
+                        tags=json.loads(place.tags_json or "[]"),
+                    ),
+                )
+            )
+    effective_values = [
+        float(item["effective_preference_fit"])
+        for item in preference_breakdowns
+        if item.get("effective_preference_fit") is not None
+    ]
+    explicit_values = [
+        float(item["explicit_preference_fit"])
+        for item in preference_breakdowns
+        if item.get("explicit_preference_fit") is not None
+    ]
+    learned_values = [
+        float(item["learned_soft_preference_fit"])
+        for item in preference_breakdowns
+        if item.get("learned_soft_preference_fit") is not None
+    ]
+    if effective_values:
+        preference_fit = sum(effective_values) / len(effective_values)
+        preference_basis = "canonical Place category/tags with explicit and LEARNED_SOFT evidence"
+    elif profile == "balanced":
+        preference_fit = 0.5
+        preference_basis = "NEUTRAL_NO_PREFERENCE_SIGNAL"
+    else:
+        preference_fit = sum(
+            _strategy_place_score(places[item.place_id], profile, traveler_preferences)[0] >= 300
+            for item in schedule
+        ) / max(1, len(schedule))
+        preference_basis = "canonical Place category/tags and explicit mission profile"
+    metrics = {
+        "commitment_preservation": 1.0,
+        "stability": round(time_reliability, 6),
+        "time_reliability": round(time_reliability, 6),
+        "preference_fit": round(preference_fit, 6),
+        "mobility_fit": round(mobility_fit, 6),
+        "budget_fit": round(budget_fit, 6),
+        "robustness": round(robustness, 6),
+        "opportunity_value": round(preference_fit * known_ratio, 6),
+    }
+    provenance = {
+        "strategy_profile": profile,
+        "metric_values": dict(metrics),
+        "travel_minutes": travel_minutes,
+        "degraded_edges": degraded_edges,
+        "edge_count": edge_count,
+        "slack_minutes": slack_minutes,
+        "verified_opening_count": known_opening,
+        "verified_cost_count": known_cost,
+        "preference_fit_basis": preference_basis,
+        "explicit_preference_fit": round(sum(explicit_values) / len(explicit_values), 6) if explicit_values else None,
+        "learned_soft_preference_fit": round(sum(learned_values) / len(learned_values), 6) if learned_values else None,
+        "effective_preference_fit": round(sum(effective_values) / len(effective_values), 6) if effective_values else None,
+        "learned_soft_is_authority": False,
+        "score_sources": {
+            "budget_fit": "verified activity cost / journey budget",
+            "mobility_fit": "LIVE measured travel minutes",
+            "time_reliability": "opening close minus scheduled end",
+            "robustness": "fact completeness and degraded live edges",
+        },
+    }
+    return metrics, provenance
+
+
+def _strategy_voi_decisions(
+    session: Session | None,
+    journey: Journey | None,
+    places: Mapping[str, Place],
+    intent: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Choose the next decision-sensitive fact without promoting it to truth."""
+
+    decisions: list[dict[str, Any]] = []
+    traveler_preferences = (
+        planning_preference_items(session, journey.traveler_id, journey.id)
+        if session is not None and journey is not None
+        else []
+    )
+    for place in places.values():
+        missing: list[str] = []
+        if _place_window(place) is None:
+            missing.append("opening_hours")
+        if _place_verified_cost(place) is None:
+            missing.append("cost")
+        if not missing or not _catalogue_visit_eligible(place):
+            continue
+        metadata = _place_metadata(place)
+        binding = metadata.get("fact_source_binding") if isinstance(metadata, Mapping) else None
+        fact_acquisition = metadata.get("fact_acquisition") if isinstance(metadata, Mapping) else None
+        if not binding and isinstance(fact_acquisition, Mapping):
+            binding = fact_acquisition.get("source_binding")
+        tags = json.loads(place.tags_json or "[]") if place.tags_json else []
+        source_url = None
+        if isinstance(binding, Mapping):
+            source_url = binding.get("source_url")
+        if not source_url and isinstance(tags, Mapping):
+            source_url = tags.get("website") or tags.get("contact:website") or tags.get("url")
+        profile = _strategy_profile(intent)
+        preference_signal = _strategy_place_score(place, profile, traveler_preferences)[0]
+        value = (
+            (3000 if "opening_hours" in missing else 0)
+            + (2000 if "cost" in missing else 0)
+            + preference_signal
+        )
+        decisions.append(
+            {
+                "place_id": place.id,
+                "missing_fact": missing,
+                "value": value,
+                "why": "missing facts can change strict feasibility or ranking",
+                "source_candidate": source_url,
+                "action": "acquire_exact_bound_source" if source_url else "search_and_corroborate_source",
+                "strategy_profile": profile,
+            }
+        )
+    decisions.sort(key=lambda item: (-int(item["value"]), str(item["place_id"])))
+    return decisions[:3]
+
+
+def _strategy_pivot_decisions(
+    places: Mapping[str, Place],
+    intent: Mapping[str, Any],
+    traveler_preferences: Sequence[Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Record a deliberate pivot after a source path yields no structured facts."""
+
+    profile = _strategy_profile(intent)
+    abandoned: list[Place] = []
+    for place in places.values():
+        if not _place_has_unresolved_visit_facts(place):
+            continue
+        acquisition = _place_metadata(place).get("fact_acquisition")
+        official = acquisition.get("official_web") if isinstance(acquisition, Mapping) else None
+        if isinstance(official, Mapping) and official.get("status") in {
+            "NO_STRUCTURED_FACTS",
+            "UNAVAILABLE",
+        }:
+            abandoned.append(place)
+    if not abandoned:
+        return []
+    replacements = [
+        place
+        for place in places.values()
+        if _catalogue_visit_eligible(place)
+        and _place_window(place) is not None
+        and _place_verified_cost(place) is not None
+        and place not in abandoned
+    ]
+    replacements.sort(
+        key=lambda place: (
+            -_strategy_place_score(place, profile, traveler_preferences)[0],
+            str(place.id),
+        )
+    )
+    return [{
+        "decision": "ABANDON_SOURCE_PATH",
+        "abandoned_place_ids": [place.id for place in abandoned],
+        "replacement_place_ids": [place.id for place in replacements[:3]],
+        "reason": "source returned no structured facts; preserve UNKNOWN and switch to verified catalogue rows",
+        "strategy_profile": profile,
+    }]
+
+
 def _catalogue_templates(
     places: Mapping[str, Place],
     travel: Callable[[str, str], int],
@@ -944,6 +1626,8 @@ def _catalogue_templates(
     day_start_minutes: int = 9 * 60,
     day_end_minutes: int = 18 * 60,
     variants: int = 3,
+    intent: Mapping[str, Any] | None = None,
+    traveler_preferences: Sequence[Any] | None = None,
 ) -> list[list[tuple[str, str, str, str]]]:
     """Compose the template shape out of whatever the city's catalogue really holds.
 
@@ -957,41 +1641,47 @@ def _catalogue_templates(
     The contract is kept identical, only its source changes: up to three day sequences of
     `(place_id, title, start HH:MM, end HH:MM)`, built from each place's own open/close and
     duration, with the frozen travel minutes between consecutive stops actually subtracted so
-    the literal windows are ones the gate can honour.  Stops are taken earliest-opening first
-    (ids break ties, so the order is reproducible), a stop that cannot fit before its own
-    closing time is dropped rather than squeezed in, and the variants rotate the queue so the
-    candidates are genuinely different plans instead of one plan three times.
-
-    ORD-0543: a place that never states hours is now placed inside `day_start_minutes` to
-    `day_end_minutes` - declared here, and *not* presented as the venue's opening hours. The
-    count of day sequences that rest on those minutes travels with the shortfall answer as
-    `day_sequences_unsourced_hours`, so "composed" and "composed on unsourced minutes" stay
-    tellable apart by a reader of the response rather than of this comment.
+    the literal windows are ones the gate can honour.  Provider-backed rows use only places with
+    verified visit eligibility, opening windows, and cost evidence.  UNKNOWN-cost or unresolved-hour
+    rows remain available to the provisional lane and never become selectable strict candidates.
+    Fixture-shaped rows without a provider identity keep the legacy bounded working-band widening;
+    that path labels unsourced minutes through `_templates_resting_on_unsourced_hours` and never
+    writes opening hours back to the store.
     """
 
-    band = (day_start_minutes, day_end_minutes)
-    if day_end_minutes <= day_start_minutes:
-        # A band that closes before it opens cannot host a stop: refuse the widening rather than
-        # schedule anything inside a window that does not exist.
-        band = None
-
-    ordered = sorted(
-        (place for place in places.values() if _place_window(place)),
-        key=lambda place: (_place_window(place) or (0, 0))[0],
-    )
-    # ORD-0543 (commander ruling: widen this leg): a city whose places do not state opening hours
-    # used to compose zero day sequences, and every door behind a schedule then reported "no
-    # feasible candidates" as if the city were empty. Those stops are now packed, but strictly after
-    # every place that does state hours (so a real window is never displaced to make room for a
-    # guess), and strictly inside the band named on the parameters below - the product's own working
-    # band, not a claim about the venue. Nothing here writes opening hours back into the store.
-    unsourced = sorted(
-        (place for place in places.values() if not _place_window(place)),
-        key=lambda place: str(place.id),
-    )
-    ordered = ordered + unsourced
-    if not ordered:
+    band = (day_start_minutes, day_end_minutes) if day_end_minutes > day_start_minutes else None
+    provider_backed = any(hasattr(place, "provider_key") for place in places.values())
+    if provider_backed:
+        eligible = sorted(
+            (
+                place
+                for place in places.values()
+                if _place_window(place)
+                and _catalogue_visit_eligible(place)
+                and _place_verified_cost(place) is not None
+            ),
+            key=lambda place: place.id,
+        )
+    else:
+        ordered = sorted(
+            (place for place in places.values() if _place_window(place)),
+            key=lambda place: (_place_window(place) or (0, 0))[0],
+        )
+        unsourced = sorted(
+            (place for place in places.values() if not _place_window(place)),
+            key=lambda place: str(place.id),
+        )
+        eligible = ordered + unsourced if band is not None else []
+    if not eligible:
         return []
+        return []
+    profile = _strategy_profile(intent or {})
+    orders = _strategy_order(
+        eligible,
+        profile,
+        travel,
+        traveler_preferences,
+    )[: max(1, variants)]
 
     def pack(sequence: Sequence[Place]) -> list[tuple[str, str, str, str]]:
         schedule: list[tuple[str, str, str, str]] = []
@@ -1027,12 +1717,327 @@ def _catalogue_templates(
         return schedule
 
     templates: list[list[tuple[str, str, str, str]]] = []
-    for offset in range(max(1, variants)):
-        rotated = list(ordered[offset % len(ordered) :]) + list(ordered[: offset % len(ordered)])
-        packed = pack(rotated)
+    for ordered in orders:
+        packed = pack(ordered)
         if len(packed) >= 2 and packed not in templates:
             templates.append(packed)
     return templates
+
+
+def _mobility_catalogue_place_ids(
+    places: Mapping[str, Place],
+    raw_templates: Sequence[Sequence[tuple[str, str, str, str]]],
+    anchors: Sequence[Any],
+) -> tuple[str, ...]:
+    """Return only nodes that can participate in a strict catalogue schedule.
+
+    Unknown opening windows cannot enter ``_catalogue_templates`` and therefore do
+    not need a live edge in the strict matrix.  Keeping them out here bounds the
+    real provider work for a destination whose catalog also contains unresolved
+    rows; the provisional lane captures its own two selected rows later when it
+    is actually needed.
+    """
+
+    if raw_templates:
+        candidate_ids = [
+            place_id
+            for template in raw_templates
+            for place_id, *_ in template
+            if place_id in places
+        ]
+    else:
+        candidate_ids = [
+            place.id
+            for place in places.values()
+            if _place_window(place) and _catalogue_visit_eligible(place)
+        ]
+    return tuple(
+        dict.fromkeys(
+            [
+                *candidate_ids,
+                *(anchor.place_id for anchor in anchors if anchor.place_id in places),
+            ]
+        )
+    )
+
+
+def _provisional_catalogue_plan(
+    session: Session,
+    journey: Journey,
+    planning_mode: str,
+    preferred_place_ids: Sequence[str] | None = None,
+) -> list[PlanVersion]:
+    """Materialize a useful, explicitly non-authoritative real-catalogue draft.
+
+    This is only reached when strict catalogue composition has no opening-window
+    sequence.  It uses the actual provider Place rows, keeps their unresolved
+    facts visible, and leaves selection to the shared authority gate.
+    """
+
+    places = [
+        place
+        for place in session.scalars(
+            select(Place).where(Place.city_code == journey.city_code)
+        ).all()
+        if _catalogue_visit_eligible(place)
+        and place.latitude is not None
+        and place.longitude is not None
+        and (preferred_place_ids is None or place.id in preferred_place_ids)
+    ]
+    if len(places) < 2:
+        return []
+    preferred = {"park": 0, "viewpoint": 1, "attraction": 2, "landmark": 3}
+    requested_order = {
+        str(place_id): index
+        for index, place_id in enumerate(preferred_place_ids or ())
+    }
+    strategy_intent = _latest_strategy_intent(session, journey)
+    strategy_profile = _strategy_profile(strategy_intent)
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+    places.sort(
+        key=lambda item: (
+            -int(_coursework_facts_cover(item)),
+            -_strategy_place_score(item, strategy_profile, traveler_preferences)[0],
+            -_strategy_place_score(item, strategy_profile, traveler_preferences)[1],
+            -int(_coursework_estimate_covers(item)),
+            0 if item.id in requested_order else 1,
+            requested_order.get(item.id, preferred.get(str(item.category).casefold(), 9)),
+            item.id,
+        )
+    )
+    selected = places[:2]
+    pairs = tuple(
+        (origin.id, destination.id)
+        for origin in selected
+        for destination in selected
+        if origin.id != destination.id
+    )
+    mobility = capture_runtime_mobility_snapshot(
+        session,
+        journey,
+        pairs,
+        operation_key=f"provisional-compose:{journey.id}",
+    ).snapshot
+    cursor = parse_dt(journey.start_at)
+    rows: list[tuple[Place, datetime, datetime, int]] = []
+    previous: str | None = None
+    strategy_estimates: list[dict[str, Any]] = []
+    estimated_total_cost = 0
+    for place in selected:
+        travel = _safe_estimate_minutes(mobility, previous, place.id) if previous else 0
+        begin = cursor + timedelta(minutes=travel)
+        estimate = _place_strategy_estimate(place)
+        if estimate is not None:
+            opening_estimate = estimate.get("opening_hours")
+            if isinstance(opening_estimate, Mapping):
+                open_minutes = opening_estimate.get("open_minutes")
+                try:
+                    if open_minutes is not None:
+                        estimated_open = datetime.combine(
+                            begin.date(),
+                            datetime.min.time(),
+                            begin.tzinfo,
+                        ) + timedelta(minutes=int(open_minutes))
+                        begin = max(begin, estimated_open)
+                except (TypeError, ValueError, OverflowError):
+                    pass
+            cost_estimate = estimate.get("cost_evidence")
+            if isinstance(cost_estimate, Mapping) and cost_estimate.get("amount_minor") is not None:
+                try:
+                    amount = int(cost_estimate["amount_minor"])
+                except (TypeError, ValueError):
+                    amount = 0
+                if amount >= 0:
+                    estimated_total_cost += amount
+            strategy_estimates.append(
+                {
+                    "place_id": place.id,
+                    "status": "ESTIMATED_AGENT",
+                    "authority_eligible": False,
+                    "basis": estimate.get("basis"),
+                    "opening_hours": opening_estimate or {"status": "ESTIMATED_AGENT"},
+                    "cost_evidence": cost_estimate or {"status": "ESTIMATED_AGENT"},
+                }
+            )
+        end = begin + timedelta(minutes=_place_duration(place))
+        rows.append((place, begin, end, travel))
+        cursor = end
+        previous = place.id
+    if rows[-1][2] > parse_dt(journey.end_at):
+        return []
+
+    unresolved: list[dict[str, Any]] = []
+    unknown_cost_count = 0
+    for place in selected:
+        opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+        opening_status = str(opening.get("status") or "UNKNOWN").upper()
+        if opening_status not in {"NORMALIZED_VALID", "OFFICIAL_WEB_VERIFIED", "VERIFIED_PROVIDER"}:
+            unresolved.append(
+                {
+                    "place_id": place.id,
+                    "place_name": place.name,
+                    "fact": "opening",
+                    "state": "REQUIRES_CONFIRMATION",
+                    "reason": "No provider opening window was captured",
+                }
+            )
+        cost = _place_metadata(place).get("cost_evidence")
+        cost_status = str(cost.get("status") or "UNKNOWN").upper() if isinstance(cost, Mapping) else "UNKNOWN"
+        if cost_status not in KNOWN_COST_EVIDENCE_STATUSES or not isinstance(cost, Mapping) or cost.get("amount_minor") is None:
+            unknown_cost_count += 1
+            unresolved.append(
+                {
+                    "place_id": place.id,
+                    "place_name": place.name,
+                    "fact": "cost",
+                    "state": "UNKNOWN",
+                    "reason": "No provider cost evidence was captured",
+                }
+            )
+
+    if not unresolved:
+        return []
+    coursework_authority = (
+        settings.lab_estimate_authority
+        and bool(strategy_estimates)
+        and all(_coursework_facts_cover(place) for place in selected)
+    )
+    version_no = (
+        session.scalar(
+            select(PlanVersion.version_no)
+            .where(PlanVersion.journey_id == journey.id)
+            .order_by(PlanVersion.version_no.desc())
+            .limit(1)
+        )
+        or 0
+    ) + 1
+    plan_id = deterministic_id(
+        f"plan:{journey.id}:{version_no}:provisional:{','.join(item.id for item in selected)}"
+    )
+    explanation = {
+        "reason": "Real provider Places arranged as a provisional itinerary",
+        "authority_state": (
+            "COURSEWORK_ESTIMATED_FACTS"
+            if coursework_authority
+            else "PROVISIONAL_UNRESOLVED_FACTS"
+        ),
+        "authority_envelope": (
+            COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
+        ),
+        "authority_note": (
+            "Coursework-only selection using explicit Agent estimates; this is not a LIVE provider-ready result."
+            if coursework_authority
+            else None
+        ),
+        "unresolved_facts": unresolved,
+        "cost_summary": {
+            "status": "PARTIAL",
+            "known_subtotal_minor": sum(_place_verified_cost(place) or 0 for place in selected),
+            "unknown_item_count": unknown_cost_count,
+            "currency": journey.budget_currency,
+        },
+        "opening_summary": {
+            "status": "REQUIRES_CONFIRMATION",
+            "unknown_item_count": sum(1 for item in unresolved if item["fact"] == "opening"),
+        },
+        "strategy_estimate_summary": {
+            "status": "ESTIMATED_AGENT" if strategy_estimates else "NONE",
+            "authority_eligible": coursework_authority,
+            "authority_envelope": (
+                COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
+            ),
+            "estimated_total_cost_minor": estimated_total_cost,
+            "facts": strategy_estimates,
+            "note": (
+                "Coursework estimate envelope is enabled for this isolated lab; values remain explicitly estimated."
+                if coursework_authority
+                else "Estimates guide this provisional strategy only; canonical authority still requires provider evidence."
+            ),
+        },
+        "mobility_snapshot_id": mobility.snapshot_id,
+        "mobility_provider": mobility.source_provider_key,
+    }
+    now = iso_now()
+    plan = PlanVersion(
+        id=plan_id,
+        journey_id=journey.id,
+        version_no=version_no,
+        planning_mode=planning_mode,
+        status="CANDIDATE",
+        source="INITIAL",
+        parent_plan_version_id=None,
+        total_cost_minor=sum(_place_verified_cost(place) or 0 for place in selected),
+        currency=journey.budget_currency,
+        estimated_duration_min=sum(
+            int((end - begin).total_seconds() // 60) + travel
+            for _place, begin, end, travel in rows
+        ),
+        utility_score=None,
+        score_breakdown_json=None,
+        explanation_json=dump(explanation),
+        mobility_snapshot_id=mobility.snapshot_id,
+        mobility_evidence_json=dump(mobility.to_evidence()),
+        created_at=now,
+    )
+    session.add(plan)
+    session.flush()
+    for sequence, (place, begin, end, travel) in enumerate(rows, start=1):
+        metadata = _place_metadata(place)
+        cost = metadata.get("cost_evidence")
+        known_cost = (
+            isinstance(cost, Mapping)
+            and str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_EVIDENCE_STATUSES
+            and cost.get("amount_minor") is not None
+        )
+        opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+        session.add(
+            Activity(
+                id=deterministic_id(f"activity:{plan_id}:{sequence}"),
+                plan_version_id=plan.id,
+                sequence_no=sequence,
+                activity_type="visit",
+                title=place.name,
+                place_id=place.id,
+                city_service_id=None,
+                start_at=begin.isoformat(),
+                end_at=end.isoformat(),
+                travel_from_prev_min=travel,
+                estimated_cost_minor=int(cost.get("amount_minor") if known_cost else 0),
+                currency=journey.budget_currency,
+                status="PLANNED",
+                locked=False,
+                metadata_json=dump(
+                    {
+                        "compose_source": "PROVISIONAL_REAL_CATALOGUE",
+                        "category": place.category,
+                        "opening_state": str(opening.get("status") or "UNKNOWN"),
+                        "opening_hours": opening,
+                        "cost_evidence": cost if isinstance(cost, Mapping) else {"status": "UNKNOWN"},
+                        "cost_status": "KNOWN" if known_cost else "UNKNOWN",
+                        "price_known": known_cost,
+                        "strategy_estimate": _place_strategy_estimate(place),
+                        "latitude": place.latitude,
+                        "longitude": place.longitude,
+                        "crs": "WGS84",
+                    }
+                ),
+                created_at=now,
+                updated_at=now,
+            )
+        )
+    record_audit(
+        session,
+        action="plans.generated.provisional",
+        entity_type="PlanVersion",
+        entity_id=plan.id,
+        journey_id=journey.id,
+        after={
+            "place_ids": [item.id for item in selected],
+            "authority_state": explanation["authority_state"],
+            "unresolved_facts": unresolved,
+        },
+    )
+    return [plan]
 
 
 def _safe_estimate_minutes(provider, origin: str | None, destination: str | None) -> int:
@@ -1160,6 +2165,9 @@ def _generic_compose_plans(
     journey: Journey,
     planning_mode: str,
     place_ids: Sequence[str],
+    *,
+    allow_single_place: bool = False,
+    allow_unknown_cost: bool = False,
 ) -> list[PlanVersion]:
     """Compose a bounded plan from explicit POIs rather than city templates.
 
@@ -1191,8 +2199,51 @@ def _generic_compose_plans(
                 "requested_place_ids": list(selected_ids),
             },
         )
-    if len(places) < 2:
+    if len(places) < 2 and not (allow_single_place and len(places) == 1):
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
+
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+
+    # Agent discovery commonly hands this seam the whole real-city catalogue.
+    # Preserve caller order for demo/fixture and mixed inputs, but let a
+    # provider-backed city use the same fact/profile signal as the native
+    # strategy path. Without this bridge, the explicit-POI seam quietly
+    # reintroduced Place.id order and a verified venue could lose to unresolved
+    # rows merely because their IDs sorted first.
+    provider_backed = len(places) >= 2 and all(
+        str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
+        and str(place.external_id or "").casefold().startswith("overpass:")
+        for place in places.values()
+    )
+    if provider_backed:
+        strategy_intent = _latest_strategy_intent(session, journey)
+        strategy_profile = _strategy_profile(strategy_intent)
+        ranked_places = sorted(
+            places.values(),
+            key=lambda place: (
+                -_strategy_place_score(place, strategy_profile, traveler_preferences)[0],
+                -_strategy_place_score(place, strategy_profile, traveler_preferences)[1],
+                str(place.id),
+            ),
+        )
+        ranked = [place.id for place in ranked_places]
+        if ranked != selected_ids:
+            record_audit(
+                session,
+                action="strategy.explicit_catalogue_reordered",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after={
+                    "strategy_profile": strategy_profile,
+                    "requested_place_ids": selected_ids,
+                    "ranked_place_ids": ranked,
+                    "ranking_basis": "provider fact completeness, preference category/tags, stable id tie-break",
+                },
+                actor_type="strategy_engine",
+                actor_id="r14-autonomous-strategy",
+            )
+            selected_ids = ranked
 
     constraints = _journey_constraints_with_capabilities(session, journey, active_only=True)
     # A confirmed C4 anchor is a requirement to build around on this path too.
@@ -1223,11 +2274,19 @@ def _generic_compose_plans(
         operation_key=f"generic-compose:{journey.id}",
     ).snapshot
     bounded_orders = tuple(permutations(selected_ids))
+    # Mobility remains the primary physical constraint.  When two orders carry
+    # the same measured travel burden, preserve the already computed strategy
+    # ranking as the deterministic tie-break so LEARNED_SOFT evidence can cause
+    # a real order change instead of disappearing behind Place.id.
+    strategy_rank = {place_id: index for index, place_id in enumerate(selected_ids)}
     ordered_ids = min(
         bounded_orders,
-        key=lambda order: sum(
-            mobility_provider.estimate_minutes(order[index - 1], order[index])
-            for index in range(1, len(order))
+        key=lambda order: (
+            sum(
+                mobility_provider.estimate_minutes(order[index - 1], order[index])
+                for index in range(1, len(order))
+            ),
+            tuple(strategy_rank.get(place_id, len(selected_ids)) for place_id in order),
         ),
     )
     journey_start = parse_dt(journey.start_at)
@@ -1243,12 +2302,14 @@ def _generic_compose_plans(
     facts: list[FeasibilityActivity] = []
     rows: list[tuple[Place, datetime, datetime, int, int]] = []
     total_cost = 0
+    unknown_cost_place_ids: list[str] = []
 
     for place_id in ordered_ids:
         place = places[place_id]
         metadata = json.loads(place.metadata_json or "{}")
-        raw_cost = metadata.get("cost_minor")
-        if raw_cost is None:
+        verified_cost = _place_verified_cost(place)
+        unknown_cost = verified_cost is None
+        if unknown_cost and not allow_unknown_cost:
             # "Unknown cost" is not "your budget is too tight": it means this place has no
             # price we can vouch for, which is a catalog fact the caller can act on.
             raise CompositionRefusal(
@@ -1260,7 +2321,36 @@ def _generic_compose_plans(
                     "journey_budget_minor": journey.budget_amount_minor,
                 },
             )
-        cost_minor = int(raw_cost)
+        if unknown_cost and allow_unknown_cost:
+            selected_bootstrap = session.scalar(
+                select(RealPlaceCandidate.id).where(
+                    RealPlaceCandidate.journey_id == journey.id,
+                    RealPlaceCandidate.materialized_place_id == place_id,
+                    RealPlaceCandidate.status == "BOOTSTRAP_SELECTED",
+                ).limit(1)
+            )
+            if (
+                str(place.provider_key or "").casefold() != "overpass"
+                or not str(place.external_id or "").startswith("overpass:")
+                or not selected_bootstrap
+            ):
+                raise CompositionRefusal(
+                    f"GENERIC_COMPOSE_UNKNOWN_COST_NOT_SELECTED_BOOTSTRAP_PLACE:{place_id}",
+                    reason_code=PLACE_COST_UNVERIFIED,
+                    details={"city_code": journey.city_code, "place_ids": [place_id]},
+                )
+            if _place_has_unresolved_opening(place):
+                raise CompositionRefusal(
+                    f"GENERIC_COMPOSE_OPENING_UNVERIFIED:{place_id}",
+                    reason_code=UNRESOLVED_ACTIVITY_FACTS,
+                    details={"city_code": journey.city_code, "place_ids": [place_id]},
+                )
+        if unknown_cost:
+            unknown_cost_place_ids.append(place_id)
+        # The Activity schema retains an integer compatibility slot.  An
+        # UNKNOWN price is accompanied by explicit metadata and is never a
+        # claim that the attraction is free or included in the subtotal.
+        cost_minor = int(verified_cost) if verified_cost is not None else 0
         duration_min = max(15, int(metadata.get("duration_min", 60)))
         travel_min = (
             mobility_provider.estimate_minutes(previous, place_id) if previous else 0
@@ -1363,17 +2453,27 @@ def _generic_compose_plans(
     plan_id = deterministic_id(
         f"plan:{journey.id}:{version_no}:generic:{','.join(ordered_ids)}"
     )
-    budget_fit = max(0.0, min(1.0, 1 - total_cost / max(1, journey.budget_amount_minor)))
-    metrics = {
-        "commitment_preservation": 1.0,
-        "stability": 0.9,
-        "time_reliability": 0.9,
-        "preference_fit": 0.8,
-        "mobility_fit": 0.85,
-        "budget_fit": budget_fit,
-        "robustness": 0.85,
-        "opportunity_value": 0.8,
-    }
+    strategy_intent = _latest_strategy_intent(session, journey)
+    strategy_profile = _strategy_profile(strategy_intent)
+    schedule = [
+        CandidateActivity(
+            place_id=place.id,
+            title=place.name,
+            start_at=start_at,
+            end_at=end_at,
+            cost_minor=cost_minor,
+            metadata={"category": place.category},
+        )
+        for place, start_at, end_at, _travel_min, cost_minor in rows
+    ]
+    metrics, score_provenance = _real_strategy_metrics(
+        schedule,
+        places,
+        mobility_provider,
+        journey,
+        strategy_profile,
+        traveler_preferences,
+    )
     breakdown = {**metrics, "total": _score(metrics)}
     now = iso_now()
     plan = PlanVersion(
@@ -1398,6 +2498,33 @@ def _generic_compose_plans(
                 "input_place_ids": selected_ids,
                 "compose_order": list(ordered_ids),
                 "deterministic_gate": "PASSED",
+                "authority_state": (
+                    COST_UNKNOWN_ACCEPTED
+                    if unknown_cost_place_ids
+                    else "LIVE_PROVIDER_FACTS"
+                ),
+                "cost_unknown_policy": (
+                    COST_UNKNOWN_USER_POLICY if unknown_cost_place_ids else None
+                ),
+                "unresolved_facts": [
+                    {
+                        "kind": "ADMISSION_PRICE",
+                        "place_id": place_id,
+                        "status": "UNKNOWN",
+                        "resolution": "USER_ACCEPTED_PRICE_NOT_INCLUDED",
+                    }
+                    for place_id in unknown_cost_place_ids
+                ],
+                "cost_summary": {
+                    "known_subtotal_minor": total_cost,
+                    "unknown_item_count": len(unknown_cost_place_ids),
+                    "unknown_place_ids": list(unknown_cost_place_ids),
+                    "unknown_cost_included": False,
+                    "total_is_not_free": bool(unknown_cost_place_ids),
+                },
+                "strategy_profile": strategy_profile,
+                "strategy_intent": strategy_intent,
+                "score_provenance": score_provenance,
                 "mobility_provider": mobility_provider.source_provider_key,
                 "mobility_snapshot_id": mobility_provider.snapshot_id,
                 "mobility_provenance": [
@@ -1444,6 +2571,13 @@ def _generic_compose_plans(
                         ),
                         "category": place.category,
                         "opening_hours": json.loads(place.opening_hours_json or "{}"),
+                        "cost_status": (
+                            "UNKNOWN" if _place_verified_cost(place) is None else "KNOWN"
+                        ),
+                        "price_known": _place_verified_cost(place) is not None,
+                        "cost_included_in_total": _place_verified_cost(place) is not None,
+                        "cost_evidence": _place_metadata(place).get("cost_evidence")
+                        or {"status": "UNKNOWN", "amount_minor": None},
                         # The map resolves pins from activity metadata; without
                         # them a real Xiamen plan renders no Xiamen coordinates.
                         "latitude": place.latitude,
@@ -1475,6 +2609,9 @@ def _generic_compose_variants(
     planning_mode: str,
     place_ids: Sequence[str],
     candidate_count: int,
+    *,
+    allow_single_place: bool = False,
+    allow_unknown_cost: bool = False,
 ) -> list[PlanVersion]:
     """Compose genuinely different candidates from the same discovered POIs.
 
@@ -1487,11 +2624,77 @@ def _generic_compose_variants(
     """
 
     ordered = list(dict.fromkeys(str(item) for item in place_ids))
-    if len(ordered) < 2:
+    if len(ordered) < 2 and not (allow_single_place and len(ordered) == 1):
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
 
-    # Distinct scopes, longest first, never below two stops.
+    places_for_scope = {
+        place.id: place
+        for place in session.scalars(select(Place).where(Place.id.in_(ordered))).all()
+    }
+    provider_backed = len(places_for_scope) >= 2 and all(
+        str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
+        and str(place.external_id or "").casefold().startswith("overpass:")
+        for place in places_for_scope.values()
+    )
+    if provider_backed:
+        strategy_intent = _latest_strategy_intent(session, journey)
+        strategy_profile = _strategy_profile(strategy_intent)
+        traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+        ranked = [
+            place.id
+            for place in sorted(
+                places_for_scope.values(),
+                key=lambda place: (
+                    -_strategy_place_score(place, strategy_profile, traveler_preferences)[0],
+                    -_strategy_place_score(place, strategy_profile, traveler_preferences)[1],
+                    str(place.id),
+                ),
+            )
+        ]
+        if ranked != ordered:
+            record_audit(
+                session,
+                action="strategy.explicit_catalogue_reordered",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after={
+                    "strategy_profile": strategy_profile,
+                    "requested_place_ids": ordered,
+                    "ranked_place_ids": ranked,
+                    "ranking_basis": "provider fact completeness, preference category/tags, stable id tie-break",
+                },
+                actor_type="strategy_engine",
+                actor_id="r14-autonomous-strategy",
+            )
+            ordered = ranked
+            places_for_scope = {
+                place_id: places_for_scope[place_id]
+                for place_id in ordered
+            }
+    lodging_ids = [
+        place_id
+        for place_id, place in places_for_scope.items()
+        if not _catalogue_visit_eligible(place)
+        and (
+            str(place.category or "").casefold()
+            in {"hotel", "lodging", "accommodation", "guest_house", "hostel"}
+            or str(_place_metadata(place).get("place_role") or "").casefold()
+            in {"lodging", "accommodation"}
+        )
+    ]
+    if lodging_ids:
+        raise CompositionRefusal(
+            "GENERIC_COMPOSE_LODGING_IS_NOT_A_VISIT",
+            reason_code=LODGING_ROWS_USED_AS_GENERIC_VISITS,
+            details={"city_code": journey.city_code, "place_ids": lodging_ids},
+        )
+
+    # Distinct scopes, longest first. The one-place scope exists only for the
+    # explicit zero-catalogue bootstrap opt-in.
     scopes: list[list[str]] = []
+    if allow_single_place and len(ordered) == 1:
+        scopes = [ordered]
     for drop in range(min(3, len(ordered) - 1)):
         scope = ordered[: len(ordered) - drop]
         if len(scope) >= 2 and scope not in scopes:
@@ -1508,8 +2711,19 @@ def _generic_compose_variants(
     shared: dict[str, Any] = {}
     for scope in scopes:
         try:
+            compose_options: dict[str, bool] = {}
+            if allow_single_place:
+                compose_options["allow_single_place"] = True
+            if allow_unknown_cost:
+                compose_options["allow_unknown_cost"] = True
             created.extend(
-                _generic_compose_plans(session, journey, planning_mode, scope)
+                _generic_compose_plans(
+                    session,
+                    journey,
+                    planning_mode,
+                    scope,
+                    **compose_options,
+                )
             )
         except ValueError as exc:
             failures.append(str(exc))
@@ -1525,6 +2739,40 @@ def _generic_compose_variants(
                 if key != "place_ids" and key not in shared:
                     shared[key] = value
     if not created:
+        provider_places = [
+            places_for_scope.get(place_id)
+            for place_id in ordered
+            if places_for_scope.get(place_id) is not None
+        ]
+        all_cost_failures = bool(failures) and len(names) == len(failures) and all(
+            name == PLACE_COST_UNVERIFIED for name in names
+        )
+        provider_backed = len(provider_places) >= (1 if allow_single_place else 2) and all(
+            str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
+            and str(place.external_id or "").casefold().startswith("overpass:")
+            for place in provider_places
+        )
+        if all_cost_failures and provider_backed and not allow_unknown_cost:
+            provisional = _provisional_catalogue_plan(
+                session,
+                journey,
+                planning_mode,
+                preferred_place_ids=ordered,
+            )
+            if provisional:
+                record_audit(
+                    session,
+                    action="plans.generated.provisional_from_explicit_catalogue",
+                    entity_type="Journey",
+                    entity_id=journey.id,
+                    journey_id=journey.id,
+                    after={
+                        "requested_place_ids": ordered,
+                        "reason_code": PLACE_COST_UNVERIFIED,
+                        "authority_state": "PROVISIONAL_UNRESOLVED_FACTS",
+                    },
+                )
+                return provisional
         message = "GENERIC_COMPOSE_INFEASIBLE:" + "|".join(failures[:3] or ["NO_VARIANT"])
         # A name is published only when every scope tried blames the same condition.  Mixed or
         # anonymous causes stay anonymous here, because "the widest scope failed on cost" would
@@ -1742,10 +2990,18 @@ def generate_plans(
     candidate_count: int,
     *,
     place_ids: Sequence[str] | None = None,
+    allow_single_place: bool = False,
+    allow_unknown_cost: bool = False,
 ) -> list[PlanVersion]:
     if place_ids:
         return _generic_compose_variants(
-            session, journey, planning_mode, place_ids, candidate_count
+            session,
+            journey,
+            planning_mode,
+            place_ids,
+            candidate_count,
+            allow_single_place=allow_single_place,
+            allow_unknown_cost=allow_unknown_cost,
         )
     existing_max = (
         session.scalar(
@@ -1767,6 +3023,31 @@ def generate_plans(
         ).all()
     }
     constraints = _journey_constraints_with_capabilities(session, journey)
+    strategy_intent = _latest_strategy_intent(session, journey)
+    strategy_profile = _strategy_profile(strategy_intent)
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+    voi_decisions = _strategy_voi_decisions(session, journey, places, strategy_intent)
+    pivot_decisions = _strategy_pivot_decisions(
+        places,
+        strategy_intent,
+        traveler_preferences,
+    )
+    record_audit(
+        session,
+        action="strategy.value_of_information",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        after={
+            "strategy_profile": strategy_profile,
+            "intent": strategy_intent,
+            "decisions": voi_decisions,
+            "pivots": pivot_decisions,
+            "outcome": "prioritize_missing_facts_before broad acquisition",
+        },
+        actor_type="strategy_engine",
+        actor_id="r14-autonomous-strategy",
+    )
     # The frozen fixture templates stay authoritative for the city they were authored for:
     # taking only the templates whose every place id exists keeps `CNX-DEMO` on the identical
     # path (all three resolve there) while a city with its own real catalogue - where none
@@ -1793,59 +3074,11 @@ def generate_plans(
     )
     journey_start = parse_dt(effective_start_text)
     journey_end = parse_dt(effective_end_text)
-    metrics_list = [
-        {
-            "commitment_preservation": 0.98,
-            "stability": 0.95,
-            "time_reliability": 0.94,
-            "preference_fit": 0.92,
-            "mobility_fit": 0.88,
-            "budget_fit": 0.90,
-            "robustness": 0.90,
-            "opportunity_value": 0.82,
-        },
-        {
-            "commitment_preservation": 0.98,
-            "stability": 0.93,
-            "time_reliability": 0.96,
-            "preference_fit": 0.90,
-            "mobility_fit": 0.93,
-            "budget_fit": 0.96,
-            "robustness": 0.92,
-            "opportunity_value": 0.78,
-        },
-        {
-            "commitment_preservation": 0.98,
-            "stability": 0.92,
-            "time_reliability": 0.95,
-            "preference_fit": 0.91,
-            "mobility_fit": 0.91,
-            "budget_fit": 0.95,
-            "robustness": 0.91,
-            "opportunity_value": 0.80,
-        },
-    ]
     # Capture one frozen mobility matrix over every node a candidate can visit
     # (template POIs plus resolved anchors) *before* scheduling, so the
     # scheduler inserts real travel gaps and the gate consumes the exact same
     # frozen evidence.
-    schedulable_ids = tuple(
-        dict.fromkeys(
-            [
-                *(
-                    place_id
-                    for template in raw_templates
-                    for place_id, *_ in template
-                    if place_id in places
-                ),
-                # A city with no frozen template of its own is priced over its whole
-                # catalogue: without this the matrix would be captured empty, and the
-                # derived day sequences below would have no travel minutes to respect.
-                *(sorted(places) if not raw_templates else ()),
-                *(anchor.place_id for anchor in anchors),
-            ]
-        )
-    )
+    schedulable_ids = _mobility_catalogue_place_ids(places, raw_templates, anchors)
     mobility_provider = capture_runtime_mobility_snapshot(
         session,
         journey,
@@ -1867,6 +3100,8 @@ def generate_plans(
         raw_templates = _catalogue_templates(
             places,
             lambda origin, destination: travel_minutes.get((origin, destination), 0),
+            intent=strategy_intent,
+            traveler_preferences=traveler_preferences,
         )
     schedules: list[list[CandidateActivity]] = []
     for template in raw_templates:
@@ -1885,10 +3120,33 @@ def generate_plans(
     for offset, schedule in enumerate(schedules):
         if len(created) >= candidate_count:
             break
+        unverified_cost_places = [
+            item.place_id
+            for item in schedule
+            if item.anchor_role is None
+            and item.place_id in places
+            and _place_verified_cost(places[item.place_id]) is None
+        ]
+        if unverified_cost_places:
+            rejection = {
+                "reason_codes": [PLACE_COST_UNVERIFIED],
+                "summary": "candidate dropped before persistence: provider cost evidence is UNKNOWN",
+                "place_ids": unverified_cost_places,
+                "candidate_sequence": offset,
+            }
+            candidate_rejections.append(rejection)
+            record_audit(
+                session,
+                action="plans.candidate_rejected",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after=rejection,
+            )
+            continue
         total_cost = sum(int(item.cost_minor) for item in schedule)
         if total_cost > journey.budget_amount_minor:
             continue
-        metrics = metrics_list[offset % len(metrics_list)]
         activity_facts: list[FeasibilityActivity] = []
         previous_place: str | None = None
         for item in schedule:
@@ -1947,6 +3205,14 @@ def generate_plans(
                 after=rejection,
             )
             continue
+        metrics, score_provenance = _real_strategy_metrics(
+            schedule,
+            places,
+            mobility_provider,
+            journey,
+            strategy_profile,
+            traveler_preferences,
+        )
         # Version numbers remain contiguous among accepted candidates even
         # when an earlier raw template is rejected by a hard constraint.
         version_no = existing_max + len(created) + 1
@@ -1966,7 +3232,17 @@ def generate_plans(
             estimated_duration_min=570,
             utility_score=total,
             score_breakdown_json=dump(breakdown),
-            explanation_json=dump({"reason": "Deterministic provider-backed candidate", "mobility_snapshot_id": mobility_provider.snapshot_id}),
+        explanation_json=dump(
+            {
+                "reason": "Strategy-ranked provider-backed candidate",
+                "strategy_profile": strategy_profile,
+                "strategy_intent": strategy_intent,
+                "voi_decisions": voi_decisions,
+                "pivot_decisions": pivot_decisions,
+                "score_provenance": score_provenance,
+                "mobility_snapshot_id": mobility_provider.snapshot_id,
+            }
+        ),
             mobility_snapshot_id=mobility_provider.snapshot_id,
             mobility_evidence_json=dump(mobility_provider.to_evidence()),
             created_at=now,
@@ -2019,6 +3295,13 @@ def generate_plans(
             raise ValueError(
                 "C4_ANCHOR_UNRESOLVED:" + ",".join(sorted(set(unresolved_anchors)))
             )
+        # A real catalogue with no opening-window sequence is not the same as
+        # an empty catalogue.  Preserve its provider Places as a visible draft
+        # and keep strict composition as the only path to authority.
+        if not raw_templates:
+            provisional = _provisional_catalogue_plan(session, journey, planning_mode)
+            if provisional:
+                return provisional
         detail = _anchor_block_reason(session, journey)
         # "No feasible plan candidates" is true for both "this city has nothing to plan with"
         # and "there were places, and none of the combinations survived the gate" - and a

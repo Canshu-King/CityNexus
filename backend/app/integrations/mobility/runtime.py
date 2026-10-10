@@ -10,8 +10,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.models import CityService, Journey, Place
+from app.db.models import CityService, Journey, LocationObservation, Place
 from app.integrations.mobility.snapshot_capture import (
+    MobilitySnapshotCaptureError,
     MobilitySnapshotCaptureResult,
     capture_mobility_snapshot,
 )
@@ -22,7 +23,9 @@ from app.integrations.mobility.valhalla_http import (
 from app.integrations.mock.providers import MockMobilityProvider
 
 
-def _place_lookup(session: Session, key: str) -> dict[str, float]:
+def _place_lookup(
+    session: Session, key: str, *, journey_id: str | None = None
+) -> dict[str, float]:
     """Resolve a routing key to coordinates.
 
     Two key spaces are in play and they must agree, or every leg reports
@@ -35,6 +38,18 @@ def _place_lookup(session: Session, key: str) -> dict[str, float]:
 
     Trying both keeps the frozen evidence and the gate on one identity.
     """
+
+    if str(key).startswith("location-observation:"):
+        observation_id = str(key).split(":", 1)[1]
+        observation = session.get(LocationObservation, observation_id)
+        if observation is None or (
+            journey_id is not None and str(observation.journey_id) != str(journey_id)
+        ):
+            raise KeyError(f"no journey-scoped location coordinates for {key}")
+        return {
+            "latitude": float(observation.latitude),
+            "longitude": float(observation.longitude),
+        }
 
     candidates = [key]
     if ":arrival-anchor" in key or ":departure-anchor" in key:
@@ -82,6 +97,7 @@ def capture_runtime_mobility_snapshot(
     operation_key: str,
     captured_at: str | None = None,
     require_explicit_facts: bool = False,
+    requested_mode: str | None = None,
 ) -> MobilitySnapshotCaptureResult:
     """Capture one immutable mobility reality for a product operation.
 
@@ -103,8 +119,19 @@ def capture_runtime_mobility_snapshot(
     """
 
     normalized_pairs = tuple(sorted({(str(a), str(b)) for a, b in pairs if a and b and a != b}))
+
+    # Some focused callers provide no Journey and replace ``_place_lookup``
+    # with the historical two-argument seam.  Keep that contract while still
+    # binding production lookups to the Journey when one is available.
+    journey_key = getattr(journey, "id", None)
+
+    def resolve_place(key: str) -> dict[str, float]:
+        if journey_key is None:
+            return _place_lookup(session, key)
+        return _place_lookup(session, key, journey_id=journey_key)
+
     mock = MockMobilityProvider(
-        place_lookup=lambda key: _place_lookup(session, key),
+        place_lookup=resolve_place,
         strict=require_explicit_facts,
     )
     if not settings.live_valhalla_url:
@@ -115,11 +142,33 @@ def capture_runtime_mobility_snapshot(
             operation_key=operation_key,
         )
 
+    # Production Settings defines this flag, but older/light-weight settings
+    # doubles may only provide a live URL.  An absent flag means the normal
+    # provider path; it must not turn into an AttributeError before capture.
+    test_provider = bool(getattr(settings, "live_valhalla_test_provider", False))
     with httpx.Client(timeout=10.0) as client:
+        requested = str(requested_mode or "WALK").upper()
+        costing_by_mode = {
+            "WALK": "pedestrian",
+            "BICYCLE": "bicycle",
+            "TRANSIT": "multimodal",
+            "AUTO": "auto",
+            "RIDE_HAIL": "auto",
+        }
+        costing = costing_by_mode.get(requested, "pedestrian")
         primary: Any = ValhallaHTTPMobilityProvider(
             client=client,
             base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key),
+            place_lookup=resolve_place,
+            costing=costing,
+            test_provider=test_provider,
+        )
+        live_auto_fallback: Any = ValhallaHTTPMobilityProvider(
+            client=client,
+            base_url=settings.live_valhalla_url,
+            place_lookup=resolve_place,
+            costing=(costing if requested_mode is not None else "auto"),
+            test_provider=test_provider,
         )
         try:
             capabilities = primary.status_capabilities()
@@ -132,13 +181,25 @@ def capture_runtime_mobility_snapshot(
         # V4 #4: a live-configured HARD capture must not fall back to the mock
         # fixture.  Soft/offline captures keep the pair-level mock fallback.
         hard_capture = require_explicit_facts
-        captured = capture_mobility_snapshot(
-            normalized_pairs,
-            primary=primary,
-            fallback=None if hard_capture else mock,
-            captured_at=captured_at,
-            operation_key=operation_key,
-        )
+        try:
+            captured = capture_mobility_snapshot(
+                normalized_pairs,
+                primary=primary,
+                fallback=live_auto_fallback,
+                fallback_is_live=True,
+                captured_at=captured_at,
+                operation_key=operation_key,
+            )
+        except MobilitySnapshotCaptureError:
+            if hard_capture:
+                raise
+            captured = capture_mobility_snapshot(
+                normalized_pairs,
+                primary=primary,
+                fallback=mock,
+                captured_at=captured_at,
+                operation_key=operation_key,
+            )
         # V5 blocker-1: with a live routing provider configured, a leg the live
         # provider FAILED must not enter hard feasibility just because the mock
         # happened to carry an explicit matrix value for it.  The bulk replan
@@ -150,9 +211,25 @@ def capture_runtime_mobility_snapshot(
         # Offline demos have no fallback pairs, so they keep using their
         # legitimate explicit mock facts as hard truth.
         snapshot = captured.snapshot
-        if captured.fallback_pairs:
+        if requested_mode is not None:
+            requested_product_mode = str(requested_mode).upper()
+            facts = {
+                pair: replace(fact, mode=requested_product_mode)
+                for pair, fact in snapshot.facts.items()
+            }
+            snapshot = replace(snapshot, facts=facts)
+        synthetic_fallback_pairs = tuple(
+            pair
+            for pair in captured.fallback_pairs
+            if str(captured.snapshot.facts[pair].provider_key).casefold().startswith(
+                ("mock", "fixture")
+            )
+            or str(captured.snapshot.facts[pair].route_provenance or "").upper()
+            in {"SYNTHETIC_FIXTURE", "SYNTHETIC_DEFAULT"}
+        )
+        if synthetic_fallback_pairs:
             facts = dict(snapshot.facts)
-            for pair in captured.fallback_pairs:
+            for pair in synthetic_fallback_pairs:
                 fact = facts.get(pair)
                 if fact is not None and fact.fact_quality is not None:
                     facts[pair] = replace(fact, fact_quality=None)
@@ -219,6 +296,7 @@ def capture_journey_mobility_matrix(
                     base_url=settings.live_valhalla_url,
                     place_lookup=lambda key: lookup[key],
                     costing=costing,
+                    test_provider=bool(getattr(settings, "live_valhalla_test_provider", False)),
                 )
                 if mode == "WALK":
                     try:

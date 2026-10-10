@@ -10,7 +10,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 from uuid import uuid4
 
 import httpx
@@ -18,10 +18,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.integrations.provider_config import (
-    ExternalProviderSettings,
-    trust_environment_for_public_providers,
-)
+from app.core.money import major_to_minor
 from app.db.models import (
     AccommodationOfferSnapshot,
     Activity,
@@ -35,7 +32,10 @@ from app.db.models import (
     StayJourneyOption,
     WebObservation,
 )
-
+from app.integrations.provider_config import (
+    ExternalProviderSettings,
+    trust_environment_for_public_providers,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -50,14 +50,17 @@ def _place_metadata(
 ) -> dict[str, Any]:
     """Metadata for a materialised discovery Place.
 
-    ``cost_minor`` is required by the compose path.  When the provider gives no
-    price we record an explicit **zero-cost unknown** and keep the honest
-    ``cost_evidence`` alongside it, rather than inventing a price or refusing to
-    plan at all: an OSM attraction genuinely has no known ticket price.
+    ``cost_minor`` is retained as a compatibility storage value.  When the
+    provider gives no price it is explicitly **UNKNOWN**, and the zero storage
+    value is never exposed as proof of a free attraction.
     """
 
+    candidate_metadata = dict(getattr(candidate, "metadata", {}) or {})
+    cost_evidence = canonical_cost_evidence(
+        cost_evidence, candidate_metadata.get("tags")
+    )
     metadata: dict[str, Any] = {
-        **candidate.metadata,
+        **candidate_metadata,
         "discovery_mode": mode,
         "cost_evidence": cost_evidence,
     }
@@ -69,15 +72,67 @@ def _place_metadata(
         # replay and live legs a mark here would *strengthen* their class, which the classifier
         # exists to refuse.
         metadata["provenance"] = "OFFLINE_SNAPSHOT"
+    if getattr(candidate, "provider_key", None) == "openstreetmap-replay" and mode in {
+        "replay", "captured_replay", "replay-fallback"
+    }:
+        # Replay is never LIVE.  This explicit envelope permits sealed test/replay
+        # assertions without making the same synthetic mobility authoritative for
+        # an unsealed provider-backed Place.
+        metadata["authority_envelope"] = "SEALED_REAL_REPLAY"
     status = str(cost_evidence.get("status") or "UNKNOWN").upper()
     if status == "KNOWN" and cost_evidence.get("amount_minor") is not None:
         metadata["cost_minor"] = int(cost_evidence["amount_minor"])
     else:
         metadata.setdefault("cost_minor", 0)
-    metadata["price_known"] = status == "KNOWN"
+    metadata["price_known"] = status in {"KNOWN", "VERIFIED_PROVIDER"}
     if not opening_hours:
         metadata.setdefault("opening_hours", {"status": "UNKNOWN"})
     return metadata
+
+
+def _merge_existing_canonical_place_truth(
+    existing: Place | None,
+    candidate: Any,
+    *,
+    mode: str,
+    incoming_cost: dict[str, Any],
+    incoming_opening: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Keep acquired authority when a later discovery only has identity data.
+
+    Search/discovery is allowed to refresh identity and coordinates, but an
+    UNKNOWN cache hit must not erase facts already promoted from provider tags
+    or a corroborated official page.  This is a merge at the materialization
+    boundary, not an authority upgrade: the incoming candidate can still
+    replace an existing value when it carries equal or stronger evidence.
+    """
+    incoming_metadata = _place_metadata(candidate, mode, incoming_cost, incoming_opening)
+    if existing is None:
+        return incoming_opening, incoming_cost, incoming_metadata
+    previous_metadata = _load_json(existing.metadata_json, {})
+    previous_opening = normalize_opening_hours(_load_json(existing.opening_hours_json, {}))
+    previous_cost = canonical_cost_evidence(
+        previous_metadata.get("cost_evidence") or {}, previous_metadata.get("tags")
+    )
+    incoming_cost_status = str(incoming_cost.get("status") or "UNKNOWN").upper()
+    previous_cost_status = str(previous_cost.get("status") or "UNKNOWN").upper()
+    incoming_opening_status = str(incoming_opening.get("status") or "UNKNOWN").upper()
+    previous_opening_status = str(previous_opening.get("status") or "UNKNOWN").upper()
+    if incoming_cost_status in {"UNKNOWN", "NOT_AVAILABLE"} and previous_cost_status in {"KNOWN", "VERIFIED_PROVIDER"}:
+        incoming_cost = previous_cost
+        incoming_metadata["cost_evidence"] = previous_cost
+        incoming_metadata["cost_minor"] = previous_metadata.get("cost_minor", 0)
+        incoming_metadata["price_known"] = True
+    if incoming_opening_status in {"UNKNOWN", "NOT_AVAILABLE"} and previous_opening_status not in {"UNKNOWN", "NOT_AVAILABLE"}:
+        incoming_opening = previous_opening
+        incoming_metadata["opening_hours"] = previous_opening
+    # A later discovery response does not get to downgrade a source binding or
+    # an already corroborated identity assertion.
+    if previous_metadata.get("source_binding") and not incoming_metadata.get("source_binding"):
+        incoming_metadata["source_binding"] = previous_metadata["source_binding"]
+    if previous_metadata.get("identity_authority") and not incoming_metadata.get("identity_authority"):
+        incoming_metadata["identity_authority"] = previous_metadata["identity_authority"]
+    return incoming_opening, incoming_cost, {**previous_metadata, **incoming_metadata}
 
 def _json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
@@ -96,7 +151,7 @@ def _distance_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return 2 * radius * math.asin(math.sqrt(a))
 
 
-_TIME_PATTERN = re.compile(r"(?P<open>\d{1,2}(?::\d{2})?)\s*[-–]\s*(?P<close>\d{1,2}(?::\d{2})?)")
+_TIME_PATTERN = re.compile(r"(?P<open>\d{1,2}(?::\d{2})?)\s*[-–—～〜]\s*(?P<close>\d{1,2}(?::\d{2})?)")
 _DAY_PATTERN = re.compile(
     r"^(?P<days>(?:Mo|Mon|Tu|Tue|We|Wed|Th|Thu|Fr|Fri|Sa|Sat|Su|Sun)"
     r"(?:\s*[-–]\s*(?:Mo|Mon|Tu|Tue|We|Wed|Th|Thu|Fr|Fri|Sa|Sat|Su|Sun))?)\s+(?P<times>.+)$",
@@ -118,6 +173,44 @@ _DAY_NAMES = {
     "su": "Su",
     "sun": "Su",
 }
+
+# OSM's ``fee`` field is a boolean-ish tag (``yes``/``no``), not a currency
+# code.  Keep the set here deliberately small and explicit: an arbitrary
+# three-letter word from a free-form tag must not become money metadata.
+_KNOWN_CURRENCY_CODES = frozenset(
+    {
+        "AUD",
+        "BRL",
+        "CAD",
+        "CHF",
+        "CNY",
+        "CZK",
+        "DKK",
+        "EUR",
+        "GBP",
+        "HKD",
+        "HUF",
+        "IDR",
+        "INR",
+        "JPY",
+        "KRW",
+        "MXN",
+        "MYR",
+        "NOK",
+        "NZD",
+        "PHP",
+        "PLN",
+        "RUB",
+        "SEK",
+        "SGD",
+        "THB",
+        "TRY",
+        "TWD",
+        "USD",
+        "VND",
+        "ZAR",
+    }
+)
 
 
 def _expand_days(raw: str) -> list[str]:
@@ -202,13 +295,64 @@ def normalize_opening_hours(raw: Any) -> dict[str, Any]:
     }
 
 
+def _fee_is_explicitly_free(tags: Mapping[str, Any] | None) -> bool:
+    value = (tags or {}).get("fee")
+    return str(value or "").strip().casefold() in {"no", "false", "0", "free", "免费"}
+
+
+def canonical_cost_evidence(
+    cost_evidence: Mapping[str, Any] | None,
+    tags: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Normalize an explicit provider free assertion without guessing currency.
+
+    Older catalog rows were written as ``KNOWN / 0 / CNY`` for OSM ``fee=no``.
+    That is not a paid CNY observation and must not make a non-CNY Journey fail
+    with a currency mismatch.  The fee tag is the required provider evidence;
+    a bare zero, compatibility field, or missing tag remains unchanged.
+    """
+
+    evidence = dict(cost_evidence or {})
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    amount = evidence.get("amount_minor")
+    if (
+        _fee_is_explicitly_free(tags)
+        and status in {"KNOWN", "KNOWN_FREE", "VERIFIED_PROVIDER"}
+        and amount is not None
+        and int(amount) == 0
+    ):
+        evidence.update(
+            {
+                "status": "KNOWN",
+                "amount_minor": 0,
+                "currency": None,
+                "currency_agnostic": True,
+                "evidence_basis": "OSM_FEE_NO",
+            }
+        )
+    return evidence
+
+
 def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict[str, Any]:
     values = tags or {}
-    currency = str(values.get("currency") or values.get("currency:code") or "CNY").upper()
+    tagged_currency = str(values.get("currency") or values.get("currency:code") or "").strip().upper()
+    currency = tagged_currency if tagged_currency in _KNOWN_CURRENCY_CODES else "CNY"
     fee = values.get("fee")
-    charge = values.get("charge") or values.get("price")
-    if isinstance(fee, str) and fee.casefold() in {"no", "false", "free", "免费"}:
-        return {"status": "KNOWN", "amount_minor": 0, "currency": currency, "source": source}
+    # OSM commonly stores admission under ``charge:adult`` rather than the
+    # generic ``charge`` key.  Adult admission is the useful default for a
+    # general itinerary; child/disabled rates must not silently replace it.
+    charge = values.get("charge:adult") or values.get("charge") or values.get("price")
+    # An explicit adult charge outranks a generic fee flag.  This avoids
+    # treating inconsistent ``fee=no`` + ``charge:adult`` observations as free.
+    if charge is None and _fee_is_explicitly_free(values):
+        return {
+            "status": "KNOWN",
+            "amount_minor": 0,
+            "currency": None,
+            "currency_agnostic": True,
+            "evidence_basis": "OSM_FEE_NO",
+            "source": source,
+        }
     candidate = charge if charge is not None else fee
     if candidate is not None:
         candidate_text = str(candidate)
@@ -218,13 +362,13 @@ def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict
             if symbol in candidate_text:
                 currency = code
                 break
-        if suffix:
+        if suffix and suffix.group(1).upper() in _KNOWN_CURRENCY_CODES:
             currency = suffix.group(1).upper()
         match = re.search(r"(\d+(?:\.\d+)?)", candidate_text)
         if match:
             return {
                 "status": "KNOWN",
-                "amount_minor": round(float(match.group(1)) * 100),
+                "amount_minor": major_to_minor(match.group(1), currency),
                 "currency": currency,
                 "source": source,
             }
@@ -619,7 +763,13 @@ class NominatimGeocoder:
 
     provider_key = "nominatim"
 
-    def __init__(self, *, client: httpx.Client | None = None, base_url: str | None = None):
+    def __init__(
+        self,
+        *,
+        client: httpx.Client | None = None,
+        base_url: str | None = None,
+        user_agent: str | None = None,
+    ):
         # Public-provider network policy (docs/NETWORK_POLICY.md): honour the
         # environment/proxy configuration by default so a Mihomo setup works,
         # and let the operator pin DIRECT or ENV_PROXY explicitly.
@@ -628,19 +778,20 @@ class NominatimGeocoder:
             trust_env=trust_environment_for_public_providers(),
         )
         self.base_url = (base_url or settings.nominatim_url).rstrip("/")
+        self.user_agent = user_agent or "CityNexus/7.0 (+https://citynexus.local/real-city)"
         self._owned_client = client is None
 
     def search(self, query: str, *, city: str, limit: int) -> list[DiscoveryCandidate]:
         response = self.client.get(
             f"{self.base_url}/search",
             params={
-                "q": f"{query}, {city}",
+                "q": ", ".join(part.strip() for part in (query, city) if part.strip()),
                 "format": "jsonv2",
                 "limit": min(limit, 10),
                 "addressdetails": 1,
                 "extratags": 1,
             },
-            headers={"User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"},
+            headers={"User-Agent": self.user_agent},
         )
         response.raise_for_status()
         rows = response.json()
@@ -679,12 +830,96 @@ class NominatimGeocoder:
             self.client.close()
 
 
+class PhotonCityGeocoder:
+    """Photon fallback for a city anchor when Nominatim is unavailable.
+
+    Photon supplies an OSM-backed coordinate only.  It does not promote opening,
+    cost, or a Place identity; Overpass remains the discovery source for the
+    actual catalogue.  The fallback exists at the resolver boundary so a
+    transient Nominatim outage cannot prevent an otherwise live city discovery.
+    """
+
+    provider_key = "photon"
+
+    def __init__(
+        self,
+        *,
+        client: httpx.Client | None = None,
+        base_url: str | None = None,
+        user_agent: str | None = None,
+    ):
+        self.client = client or httpx.Client(
+            timeout=settings.real_city_timeout_seconds,
+            trust_env=trust_environment_for_public_providers(),
+        )
+        self.base_url = (
+            base_url or ExternalProviderSettings().photon_base_url
+        ).rstrip("/")
+        self.user_agent = user_agent or "CityNexus/7.0 (+https://citynexus.local/real-city)"
+        self._owned_client = client is None
+
+    def search(self, query: str, *, city: str, limit: int) -> list[DiscoveryCandidate]:
+        response = self.client.get(
+            f"{self.base_url}/api/",
+            params={
+                "q": ", ".join(part.strip() for part in (query, city) if part.strip()),
+                "limit": min(limit, 10),
+            },
+            headers={"User-Agent": self.user_agent},
+        )
+        response.raise_for_status()
+        features = (response.json() or {}).get("features") or []
+        candidates: list[DiscoveryCandidate] = []
+        for feature in features:
+            properties = feature.get("properties") or {}
+            coordinates = (feature.get("geometry") or {}).get("coordinates") or []
+            if len(coordinates) < 2 or properties.get("osm_id") is None:
+                continue
+            try:
+                latitude, longitude = float(coordinates[1]), float(coordinates[0])
+            except (TypeError, ValueError):
+                continue
+            osm_type = str(properties.get("osm_type") or "place")
+            name = properties.get("name") or properties.get("city") or query
+            category = str(
+                properties.get("type")
+                or properties.get("osm_value")
+                or properties.get("osm_key")
+                or "service"
+            )
+            candidates.append(
+                DiscoveryCandidate(
+                    provider_key=self.provider_key,
+                    external_id=_external_id(self.provider_key, f"{osm_type}/{properties['osm_id']}"),
+                    name=str(name),
+                    category=category,
+                    latitude=latitude,
+                    longitude=longitude,
+                    tags=(category, "real_city"),
+                    opening_hours={},
+                    metadata={
+                        "photon_type": properties.get("type"),
+                        "countrycode": properties.get("countrycode"),
+                    },
+                    cost_evidence=cost_evidence_from_tags(
+                        properties.get("extra"), source=self.provider_key
+                    ),
+                )
+            )
+        return candidates
+
+    def close(self) -> None:
+        if self._owned_client:
+            self.client.close()
+
+
 # Public Overpass mirrors, tried in order; they are frequently unavailable or
 # slow, which is exactly why a fallback exists.
 OVERPASS_MIRRORS = (
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
+    "https://overpass.openstreetmap.fr/api/interpreter",
 )
 
 
@@ -831,9 +1066,15 @@ class OverpassPOIProvider:
         longitude: float,
         radius_m: int,
         limit: int,
+        max_attempts: int | None = None,
     ) -> list[DiscoveryCandidate]:
         candidates, _attempts = self.search_with_evidence(
-            query, latitude=latitude, longitude=longitude, radius_m=radius_m, limit=limit
+            query,
+            latitude=latitude,
+            longitude=longitude,
+            radius_m=radius_m,
+            limit=limit,
+            max_attempts=max_attempts,
         )
         return candidates
 
@@ -845,6 +1086,7 @@ class OverpassPOIProvider:
         longitude: float,
         radius_m: int,
         limit: int,
+        max_attempts: int | None = None,
     ) -> tuple[list[DiscoveryCandidate], list[dict[str, Any]]]:
         """Ask one bounded category question, and report which endpoints actually answered.
 
@@ -856,36 +1098,68 @@ class OverpassPOIProvider:
         # The provider must answer the question that was actually asked.  A
         # single fixed cafe/restaurant tag set meant "any museums nearby" came
         # back with cafes, which then looked like a relevant answer.
-        tags = '"amenity"~"cafe|restaurant|library|arts_centre|theatre"'
+        tag_clauses = ['"amenity"~"cafe|restaurant|library|arts_centre|theatre"']
+        free_only = any(token in requested for token in ("free", "免费", "免票", "免费票"))
         for keywords, candidate_tags in (
-            (("museum", "博物馆"), '"tourism"="museum"'),
-            (("gallery", "美术馆", "画廊"), '"tourism"="gallery"|"amenity"="arts_centre"'),
-            (("theatre", "theater", "剧院", "剧场"), '"amenity"="theatre"'),
-            (("library", "图书馆"), '"amenity"="library"'),
-            (("cafe", "coffee", "咖啡馆", "咖啡"), '"amenity"~"cafe|coffee"'),
-            (("restaurant", "food", "餐厅", "吃饭", "美食"), '"amenity"~"restaurant|food_court"'),
-            (("park", "garden", "公园", "户外", "outdoor"), '"leisure"~"park|garden"'),
-            (("hotel", "住宿", "酒店"), '"tourism"~"hotel|hostel|guest_house"'),
-            (("attraction", "sight", "景点", "tourist"), '"tourism"~"attraction|viewpoint"'),
+            # R96 sends these bounded compound categories from the explicit
+            # outing-intent choice surface. Keep the union here so an intent
+            # cannot silently collapse to the first word (museum or park).
+            (("museum/gallery", "museum gallery", "art history", "arts and history"), ['"tourism"~"museum|gallery"', '"amenity"="arts_centre"']),
+            (("park/garden", "park garden", "green walk", "quiet green"), ['"leisure"~"park|garden"']),
+            (("museum", "博物馆"), ['"tourism"="museum"']),
+            # Different key/value filters must be emitted as an Overpass union;
+            # joining them with ``|`` inside one nwr filter is invalid syntax.
+            (("gallery", "美术馆", "画廊"), ['"tourism"="gallery"', '"amenity"="arts_centre"']),
+            (("theatre", "theater", "剧院", "剧场"), ['"amenity"="theatre"']),
+            (("library", "图书馆"), ['"amenity"="library"']),
+            (("cafe", "coffee", "咖啡馆", "咖啡"), ['"amenity"~"cafe|coffee"']),
+            (("restaurant", "food", "餐厅", "吃饭", "美食"), ['"amenity"~"restaurant|food_court"']),
+            (("park", "garden", "公园", "户外", "outdoor"), ['"leisure"~"park|garden"']),
+            (("hotel", "住宿", "酒店"), ['"tourism"~"hotel|hostel|guest_house"']),
+            (("attraction", "sight", "viewpoint", "景点", "tourist"), ['"tourism"~"attraction|viewpoint"']),
             # The three coverage categories that used to borrow the default set (g18a/g18b):
             # each asks its own question, so "0 answers" reads as a real zero per category
             # instead of "the default cafe query found nothing".
-            (("nightlife", "夜生活", "酒吧", "夜店"), '"amenity"~"bar|pub|nightclub"'),
+            (("nightlife", "夜生活", "酒吧", "夜店"), ['"amenity"~"bar|pub|nightclub"']),
             (
                 ("mobility", "地铁站", "公交", "交通站点"),
-                '"railway"~"station|subway_entrance"|"amenity"="bus_station"|"highway"="bus_stop"',
+                ['"railway"~"station|subway_entrance"', '"amenity"="bus_station"', '"highway"="bus_stop"'],
             ),
             (
                 ("booking", "门票预约", "票务", "售票"),
-                '"tourism"="ticket_converter"|"amenity"="ticket_office"',
+                ['"tourism"="ticket_converter"', '"amenity"="ticket_office"'],
             ),
         ):
             if any(token in requested for token in keywords):
-                tags = candidate_tags
+                tag_clauses = candidate_tags
                 break
+        # A free-only question is still provider discovery, but it must ask the
+        # provider for an explicit fee=no tag.  That lets a real catalog expose
+        # multiple provider-backed known-zero places without treating UNKNOWN as
+        # free.  Keep this narrow and deterministic; other fee vocabularies stay
+        # on the ordinary category query until the provider returns evidence.
+        if free_only:
+            if any(token in requested for token in ("museum", "博物馆")):
+                tag_clauses = ['"tourism"="museum"]["fee"="no"']
+            elif any(token in requested for token in ("gallery", "美术馆", "画廊")):
+                tag_clauses = [
+                    '"tourism"="gallery"]["fee"="no"',
+                    '"amenity"="arts_centre"]["fee"="no"',
+                ]
+            elif any(token in requested for token in ("park", "garden", "公园", "庭园", "花园")):
+                tag_clauses = ['"leisure"~"park|garden"]["fee"="no"']
+        # Different tag clauses are separate Overpass statements.  They must be
+        # placed in one explicit union before ``out``; otherwise Overpass replaces
+        # the default result set on each statement and the final ``out`` can only
+        # return the last category (for example, arts centres without museums).
+        statements = ''.join(
+            f"nwr[{clause}](around:{radius_m},{latitude},{longitude});"
+            for clause in tag_clauses
+        )
         query_text = (
-            f"[out:json][timeout:10];nwr[{tags}](around:{radius_m},{latitude},{longitude});"
-            "out center tags;"
+            '[out:json][timeout:10];'
+            + (f'({statements});' if len(tag_clauses) > 1 else statements)
+            + 'out center tags;'
         )
         # Public Overpass mirrors are individually flaky.  Rotating through
         # them is what keeps a real category question answerable instead of
@@ -896,6 +1170,10 @@ class OverpassPOIProvider:
         urls = [f"{self.base_url}/interpreter"] + [
             url for url in OVERPASS_MIRRORS if url != f"{self.base_url}/interpreter"
         ]
+        if max_attempts is not None:
+            if max_attempts < 1:
+                raise ValueError("max_attempts must be positive")
+            urls = urls[:max_attempts]
         for url in urls:
             started = time.monotonic()
             try:
@@ -1163,6 +1441,7 @@ def materialize_candidates(
     captured_at: str,
     mode: str,
     city_code: str | None = None,
+    query: str | None = None,
 ) -> list[dict[str, Any]]:
     """Apply captured candidates to the store.
 
@@ -1226,6 +1505,7 @@ def materialize_candidates(
         row.evidence_json = _json(
             {
                 "provider": candidate.provider_key,
+                "request": {"query": query} if query else {},
                 "captured_at": captured_at,
                 "ttl_seconds": settings.real_city_cache_ttl_seconds,
                 "provenance": (
@@ -1305,6 +1585,13 @@ def materialize_candidates(
                 Place.external_id == external_id,
             )
         )
+        opening_hours, cost_evidence, merged_metadata = _merge_existing_canonical_place_truth(
+            place,
+            candidate,
+            mode=mode,
+            incoming_cost=cost_evidence,
+            incoming_opening=opening_hours,
+        )
         if place is None:
             place = Place(
                 id=f"real-place-{hashlib.sha1(f'{candidate.provider_key}|{external_id}'.encode()).hexdigest()[:24]}",
@@ -1317,9 +1604,7 @@ def materialize_candidates(
                 longitude=candidate.longitude,
                 opening_hours_json=_json(opening_hours),
                 tags_json=_json(list(candidate.tags)),
-                metadata_json=_json(
-                    _place_metadata(candidate, mode, cost_evidence, opening_hours)
-                ),
+                metadata_json=_json(merged_metadata),
                 updated_at=captured_at,
             )
             session.add(place)
@@ -1331,9 +1616,7 @@ def materialize_candidates(
             place.longitude = candidate.longitude
             place.opening_hours_json = _json(opening_hours)
             place.tags_json = _json(list(candidate.tags))
-            place.metadata_json = _json(
-                _place_metadata(candidate, mode, cost_evidence, opening_hours)
-            )
+            place.metadata_json = _json(merged_metadata)
             place.updated_at = captured_at
         session.flush()
         row.materialized_place_id = place.id
@@ -1500,7 +1783,12 @@ def capture_real_city_candidates(
                 )
             )
             materialized_hit = materialize_candidates(
-                session, journey, cached, captured_at=captured_at_hit, mode="live"
+                session,
+                journey,
+                cached,
+                captured_at=captured_at_hit,
+                mode="live",
+                query=query,
             )
             return {
                 "journey_id": journey.id,
@@ -1547,15 +1835,19 @@ def capture_real_city_candidates(
         # anchor legs were asked and what each one did.
         anchor_leg_readings: list[dict[str, Any]] = []
         anchor = journey_anchor
+        nominatim_status = "NOT_CALLED"
+        photon_status = "NOT_CALLED"
         if not settings.real_city_enabled:
             live_error = "REAL_CITY_DISABLED"
         else:
             geocoder = NominatimGeocoder()
+            photon_geocoder = PhotonCityGeocoder()
             poi = OverpassPOIProvider()
             stage = "anchor_geocode"
             try:
-                # Nominatim grounds the Journey/city anchor and names; Overpass
-                # owns bounded category discovery around that server-derived anchor.
+                # Nominatim is the primary anchor source. Photon is an identified
+                # OSM-backed fallback for a resolver outage/empty answer; it only
+                # supplies coordinates, while Overpass still owns the catalogue.
                 city_label = _resolver_city_label(journey.city_code)
                 context = session.get(JourneyTripContext, journey.id)
                 arrival = _load_json(context.arrival_anchor_json if context else None, {})
@@ -1663,13 +1955,24 @@ def capture_real_city_candidates(
                         f"SKIPPED_ANCHOR_GROUNDED_BY_{(anchor or {}).get('source')}"
                     )
                 else:
-                    # The bounded fallback is a *second* attempt at the same bounded
-                    # question, so it must be asked with the same words: `city_code` is
-                    # our identifier, not a place name, and sending it asked Nominatim
-                    # for "tea shops, CN-TIANJIN" (ORD-0099 ①, measured).
+                    # Nominatim remains first; Photon is an identified OSM-backed fallback and
+                    # still cannot promote facts without the catalogue evidence path.
                     stage = "fallback_geocode"
                     fallback_geocode = "ASKED"
-                    candidates = geocoder.search(query, city=city_label, limit=limit)
+                    try:
+                        candidates = geocoder.search(query, city=city_label, limit=limit)
+                        nominatim_status = "CAPTURED" if candidates else "NO_RESULTS"
+                    except (httpx.HTTPError, KeyError, TypeError, ValueError, AttributeError, RuntimeError) as exc:
+                        candidates = []
+                        nominatim_status = live_failure_reason(exc)
+                    if not candidates:
+                        try:
+                            candidates = photon_geocoder.search(query, city=city_label, limit=limit)
+                            photon_status = "CAPTURED" if candidates else "NO_RESULTS"
+                            if candidates:
+                                fallback_geocode = "ASKED_PHOTON"
+                        except (httpx.HTTPError, KeyError, TypeError, ValueError, AttributeError, RuntimeError) as exc:
+                            photon_status = live_failure_reason(exc)
                 leg_states: dict[str, str] = {}
                 for reading in anchor_leg_readings:
                     name = reading.get("leg")
@@ -1686,9 +1989,13 @@ def capture_real_city_candidates(
                     # different fact from who grounded the city.  Naming it separately is what keeps
                     # "photon grounded this" from being overwritten by "nominatim said something".
                     leg_states["nominatim"] = "CAPTURED_FOR_POI"
+                if stage == "fallback_geocode" and candidates and fallback_geocode == "ASKED_PHOTON":
+                    leg_states["photon"] = "CAPTURED_FOR_POI"
                 provider_status = {
                     "nominatim": leg_states.get("nominatim", "NOT_ASKED"),
                     "photon": leg_states.get("photon", "NOT_ASKED"),
+                    "nominatim_status": nominatim_status,
+                    "photon_status": photon_status,
                     # An answered mirror owns the answer even when it found nothing; only
                     # "no endpoint replied" is a failure-shaped status.
                     "overpass": "CAPTURED"
@@ -1730,6 +2037,7 @@ def capture_real_city_candidates(
                 )
             finally:
                 geocoder.close()
+                photon_geocoder.close()
                 poi.close()
         if live_error or not candidates:
             if _is_tianjin_replay_city(journey.city_code):
@@ -1764,11 +2072,15 @@ def capture_real_city_candidates(
                 candidates = []
                 mode = "live-unavailable"
                 provider_status = {
-                    "nominatim": "UNAVAILABLE",
-                    "overpass": "UNAVAILABLE",
+                    "nominatim": nominatim_status if nominatim_status != "NOT_CALLED" else "UNAVAILABLE",
+                    "photon": photon_status if photon_status != "NOT_CALLED" else "UNAVAILABLE",
+                    "overpass": "CAPTURED"
+                    if any(a.get("answered") for a in overpass_attempts)
+                    else "UNAVAILABLE",
                     "anchor": anchor or journey_anchor,
                     "anchor_credit_kept": anchor is not None,
                     "fallback_geocode": fallback_geocode,
+
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,
@@ -1830,7 +2142,12 @@ def capture_real_city_candidates(
         )
     )
     materialized = materialize_candidates(
-        session, journey, candidates, captured_at=captured_at, mode=mode
+        session,
+        journey,
+        candidates,
+        captured_at=captured_at,
+        mode=mode,
+        query=query,
     )
     return {
         "journey_id": journey.id,

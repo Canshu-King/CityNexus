@@ -248,6 +248,16 @@ def _location_key(activity: FeasibilityActivity) -> str | None:
     if isinstance(metadata, Mapping):
         semantic = str(metadata.get("semantic_key") or "").strip()
         if semantic:
+            # Structural anchors are canonicalized by role.  Older generic
+            # composition rows could persist ``:ARRIVAL-anchor`` while the
+            # commitment and frozen mobility evidence use the canonical
+            # lower-case ``:arrival-anchor`` identity.  Treating those as
+            # different nodes makes a valid selected plan fail both C4 and
+            # provider-matrix lookup at the selection gate.
+            for role in ("arrival", "departure"):
+                suffix = f":{role}-anchor"
+                if semantic.casefold().endswith(suffix):
+                    return semantic[: -len(suffix)] + suffix
             return semantic
     return activity.place_id or activity.city_service_id or None
 

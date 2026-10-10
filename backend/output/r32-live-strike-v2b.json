@@ -1,0 +1,1496 @@
+{
+  "agent_a_bound_before_shock_b": true,
+  "agent_a_run_at_barrier": {
+    "failure_reason": null,
+    "id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+    "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+    "model_key": "cn:glm-5.3-flash",
+    "provider_key": "hermes",
+    "recovery_epoch_id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+    "status": "RUNNING"
+  },
+  "agent_b_bound_after_shock_b": false,
+  "agent_b_run_at_barrier": null,
+  "agent_responses": {},
+  "agent_threads_still_running_at_checkpoint": {
+    "a": true,
+    "b": false
+  },
+  "authority_setup": {
+    "human_action_after_shock": false,
+    "member_preferences": [
+      {
+        "member_id": "64c893fd-8d2f-4c59-a028-adaa8e177a50",
+        "preferences": [
+          {
+            "category": "interest",
+            "key": "garden",
+            "value": true,
+            "weight": 1.0
+          }
+        ],
+        "status_code": 200
+      },
+      {
+        "member_id": "4c6184a0-4666-4d5e-b956-8ab4bf6c9edd",
+        "preferences": [
+          {
+            "category": "interest",
+            "key": "garden",
+            "value": true,
+            "weight": 1.0
+          }
+        ],
+        "status_code": 200
+      }
+    ],
+    "owner_policy": {
+      "allow_auto_commitment_management": false,
+      "allow_auto_on_critical_event": false,
+      "allow_auto_when_provider_degraded": false,
+      "auto_accept_replan": true,
+      "max_auto_loss_minor": 25000,
+      "max_auto_replan_cost_delta_minor": 25000,
+      "max_auto_schedule_drift_min": 240,
+      "mode": "AUTONOMOUS",
+      "protected_commitment_levels": [
+        "C3_Guaranteed",
+        "C4_Anchored"
+      ],
+      "version": 2
+    },
+    "requested_member_preference": {
+      "category": "interest",
+      "key": "garden",
+      "value": true,
+      "weight": 1.0
+    },
+    "timing": "PRE_SHOCK_STANDING_AUTHORITY"
+  },
+  "current_epoch_id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+  "database": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-eade82e880ab4b5e.sqlite3",
+  "failure": {
+    "cause": "The harness stopped at the first unmet causal boundary and preserved the durable partial state without injecting later shocks or authority.",
+    "error_type": "RuntimeError",
+    "message": "Agent A did not reach the durable R1 external-response boundary",
+    "phase": "A_EXTERNAL_RESPONSE_BOUNDARY"
+  },
+  "final": {
+    "approvals": [],
+    "audits": [
+      {
+        "action": "journey.created",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {},
+        "created_at": "2026-10-06T05:14:05.936268+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "5aa4c321-e9a9-47b3-bb12-c707eb2b41a4"
+      },
+      {
+        "action": "plans.generated.generic_compose",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "gate": "PASSED",
+          "place_ids": [
+            "real-place-22cf72809897ff4c7f312fcf",
+            "real-place-a346e8f7f72a4d8f523d81e3"
+          ]
+        },
+        "created_at": "2026-10-06T05:14:08.101686+00:00",
+        "entity_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+        "entity_type": "PlanVersion",
+        "id": "76218024-9e4d-4556-90b1-f933c5e1ded9"
+      },
+      {
+        "action": "plan.selected",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "journey": {
+            "active_plan_version_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+            "budget": {
+              "amount_minor": 100000,
+              "currency": "JPY"
+            },
+            "city_code": "NARA",
+            "current_activity_id": null,
+            "end_at": "2026-10-08T18:00:00+09:00",
+            "id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+            "planning_mode": "balanced",
+            "start_at": "2026-10-08T09:00:00+09:00",
+            "status": "PLANNED",
+            "timezone": "Asia/Tokyo",
+            "title": "R28 fresh authenticated collective continuity",
+            "traveler_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e"
+          },
+          "plan_status": "SELECTED",
+          "previous_selected_plan_id": null,
+          "resolved_recovery_events": 0
+        },
+        "created_at": "2026-10-06T05:14:08.202739+00:00",
+        "entity_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+        "entity_type": "PlanVersion",
+        "id": "403dd3cb-45ec-467a-869b-13b795cf6ec7"
+      },
+      {
+        "action": "journey.outcome.recorded",
+        "actor_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e",
+        "actor_type": "SYSTEM",
+        "after": {
+          "activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+          "event_type": "ACTIVITY_STARTED",
+          "occurred_at_actual": "2026-10-06T05:14:08.240347+00:00",
+          "payload": {},
+          "planned_end_at": "2026-10-08T10:00:00+09:00",
+          "planned_start_at": "2026-10-08T09:00:00+09:00"
+        },
+        "created_at": "2026-10-06T05:14:08.241324+00:00",
+        "entity_id": "1ecde2f5-2a5c-4681-931b-1e3dfecfc624",
+        "entity_type": "JourneyOutcomeEvent",
+        "id": "81b8d73f-c3c9-4547-ab77-9fe51cc98342"
+      },
+      {
+        "action": "journey.started",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "current_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+          "status": "ACTIVE"
+        },
+        "created_at": "2026-10-06T05:14:08.241324+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "905e1c2b-a44d-48ae-854a-7bb75b4c91d0"
+      },
+      {
+        "action": "journey.outcome.recorded",
+        "actor_id": "api-state-machine",
+        "actor_type": "SIMULATION",
+        "after": {
+          "activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+          "event_type": "ACTIVITY_DEPARTED",
+          "occurred_at_actual": "2026-10-06T05:14:08.265208+00:00",
+          "payload": {
+            "execution_truth": {
+              "actor_id": "api-state-machine",
+              "actor_type": "SIMULATION",
+              "captured_at": "2026-10-06T05:14:08.265208+00:00",
+              "evidence": {
+                "operator_confirmed": false,
+                "physical_presence_claimed": false,
+                "source": "API_STATE_MACHINE"
+              },
+              "kind": "SIMULATED_STATE_TRANSITION",
+              "transition": "EN_ROUTE"
+            }
+          },
+          "planned_end_at": "2026-10-08T10:00:00+09:00",
+          "planned_start_at": "2026-10-08T09:00:00+09:00"
+        },
+        "created_at": "2026-10-06T05:14:08.265208+00:00",
+        "entity_id": "f9540950-632c-4636-894b-f0101af736d3",
+        "entity_type": "JourneyOutcomeEvent",
+        "id": "040243fa-900c-4b62-828e-a75ffde19458"
+      },
+      {
+        "action": "journey.outcome.recorded",
+        "actor_id": "api-state-machine",
+        "actor_type": "SIMULATION",
+        "after": {
+          "activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+          "event_type": "ACTIVITY_ARRIVED",
+          "occurred_at_actual": "2026-10-06T05:14:09.771412+00:00",
+          "payload": {
+            "execution_truth": {
+              "actor_id": "api-state-machine",
+              "actor_type": "SIMULATION",
+              "captured_at": "2026-10-06T05:14:09.771412+00:00",
+              "evidence": {
+                "operator_confirmed": false,
+                "physical_presence_claimed": false,
+                "source": "API_STATE_MACHINE"
+              },
+              "kind": "SIMULATED_STATE_TRANSITION",
+              "transition": "ARRIVED"
+            }
+          },
+          "planned_end_at": "2026-10-08T10:00:00+09:00",
+          "planned_start_at": "2026-10-08T09:00:00+09:00"
+        },
+        "created_at": "2026-10-06T05:14:09.771412+00:00",
+        "entity_id": "8ee5eee1-1910-4404-ab75-89795ea9edfc",
+        "entity_type": "JourneyOutcomeEvent",
+        "id": "17c2b96c-3865-48d1-aa5f-48b6885ace95"
+      },
+      {
+        "action": "agent_tool_requested",
+        "actor_id": "citynexus-local-agent",
+        "actor_type": "AI_AGENT",
+        "after": {
+          "proposal_id": null,
+          "request_id": "r28-setup-opportunity",
+          "tool": "inspect_twin",
+          "trigger_event_id": null
+        },
+        "created_at": "2026-10-06T05:14:11.583927+00:00",
+        "entity_id": "r28-setup-opportunity",
+        "entity_type": "AgentToolRequest",
+        "id": "25f36752-20fb-4a1e-90b9-a74f6402af7b"
+      },
+      {
+        "action": "opportunity.window.detected",
+        "actor_id": "citynexus-twin",
+        "actor_type": "SYSTEM",
+        "after": {
+          "event_type": "OPPORTUNITY_WINDOW",
+          "fingerprint": "08c564bd4fadfa5cc2b06dad30bfe33672e88a8613be23cae43481a280e35393",
+          "payload": {
+            "active_plan_version_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+            "available_minutes": 233,
+            "current_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+            "current_execution_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+            "current_execution_location": "real-place-22cf72809897ff4c7f312fcf",
+            "minimum_actionable_window_min": 30,
+            "mobility_provider": "valhalla-http",
+            "mobility_snapshot_id": "8380ed04-8b11-4c57-bd3b-3ac464711982",
+            "must_depart_by": "2026-10-08T13:53:00+09:00",
+            "next_activity_id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+            "next_activity_start": "2026-10-08T15:00:00+09:00",
+            "next_commitment_semantic_key": "real-place-a346e8f7f72a4d8f523d81e3",
+            "next_commitment_start": "2026-10-08T15:00:00+09:00",
+            "opens_at": "2026-10-08T10:00:00+09:00",
+            "opportunity_fingerprint": "08c564bd4fadfa5cc2b06dad30bfe33672e88a8613be23cae43481a280e35393",
+            "provenance": "SYSTEM_DERIVED_FROM_TWIN_AND_LIVE_MOBILITY",
+            "safety_buffer_min": 15,
+            "signal_kind": "OPPORTUNITY_WINDOW",
+            "twin_snapshot_at": "2026-10-06T05:14:13.073626+00:00"
+          }
+        },
+        "created_at": "2026-10-06T05:14:13.076626+00:00",
+        "entity_id": "1b3e82bd-22b7-4e00-bf3b-94701499c13e",
+        "entity_type": "Event",
+        "id": "f5e3205d-e719-472b-b94b-746d52dc2b04"
+      },
+      {
+        "action": "impact_rejected",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "assessment_id": "56ffccdb-6e10-4b13-82e5-f2dc09d5a5da",
+          "corroboration_refs": [],
+          "independent_evidence_count": 0,
+          "maturity_stage": null,
+          "model_key": "disabled",
+          "primary_recovery_target_id": null,
+          "provider_key": "deterministic-fallback",
+          "reason_codes": [
+            "NO_VALID_IMPACT_CANDIDATE"
+          ],
+          "secondary_risk_activity_ids": [],
+          "selected_activity_id": null,
+          "semantic_explanation": "",
+          "status": "DETERMINISTIC"
+        },
+        "created_at": "2026-10-06T05:14:14.700299+00:00",
+        "entity_id": "56ffccdb-6e10-4b13-82e5-f2dc09d5a5da",
+        "entity_type": "ImpactAssessment",
+        "id": "17c9b330-73bd-4fb3-bfd0-d60da91deea6"
+      },
+      {
+        "action": "impact_hypothesis_created",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "assessment_id": "56ffccdb-6e10-4b13-82e5-f2dc09d5a5da",
+          "corroboration_refs": [],
+          "independent_evidence_count": 0,
+          "maturity_stage": null,
+          "model_key": "disabled",
+          "primary_recovery_target_id": null,
+          "provider_key": "deterministic-fallback",
+          "reason_codes": [
+            "NO_VALID_IMPACT_CANDIDATE"
+          ],
+          "secondary_risk_activity_ids": [],
+          "selected_activity_id": null,
+          "semantic_explanation": "",
+          "status": "DETERMINISTIC"
+        },
+        "created_at": "2026-10-06T05:14:14.700299+00:00",
+        "entity_id": "56ffccdb-6e10-4b13-82e5-f2dc09d5a5da",
+        "entity_type": "ImpactAssessment",
+        "id": "4b771340-cab7-404b-8fba-4c0352a851e6"
+      },
+      {
+        "action": "replan.incident.provider_observation.captured",
+        "actor_id": "citynexus-v14-recovery",
+        "actor_type": "SYSTEM",
+        "after": {
+          "observation_type": "MOBILITY",
+          "provenance": "RUNTIME_CAPTURE",
+          "provider_key": "valhalla-http",
+          "snapshot_id": "c26106e4-17c6-41ff-830f-625e89cfe536"
+        },
+        "created_at": "2026-10-06T05:14:17.285936+00:00",
+        "entity_id": "bdba34ee-6e66-42d6-bdd6-289975718c58",
+        "entity_type": "ProviderObservation",
+        "id": "083ff618-dcfa-43e5-ad28-ebb55c296ee4"
+      },
+      {
+        "action": "replan.generated",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "candidate_family": "F4_OPPORTUNITY_INSERTION",
+          "feasibility_authority": "CITYNEXUS_DETERMINISTIC_GATE",
+          "generator": {
+            "fallback_reason": "SOLVER_DISABLED",
+            "kind": "DETERMINISTIC_HEURISTIC",
+            "mobility_snapshot_id": "c26106e4-17c6-41ff-830f-625e89cfe536",
+            "problem_fingerprint": null,
+            "rank": 0,
+            "solver_status": "DISABLED"
+          },
+          "status": "PRESENTED"
+        },
+        "created_at": "2026-10-06T05:14:17.292054+00:00",
+        "entity_id": "d99b9a73-3a8d-4efd-97eb-bfe11e50ae2b",
+        "entity_type": "ReplanProposal",
+        "id": "178c591f-5c6f-45de-9371-ddae05b69a90"
+      },
+      {
+        "action": "solver_candidates_generated",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "candidate_count": 1,
+          "feasibility_authority": "CITYNEXUS_DETERMINISTIC_GATE",
+          "proposal_ids": [
+            "d99b9a73-3a8d-4efd-97eb-bfe11e50ae2b"
+          ]
+        },
+        "created_at": "2026-10-06T05:14:17.293062+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "244899bc-d739-4a32-9d6d-c1eabc6c3ef6"
+      },
+      {
+        "action": "impact_rejected",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "assessment_id": "8f0febfe-ab54-40fc-a201-f4bc8262c12e",
+          "corroboration_refs": [],
+          "independent_evidence_count": 0,
+          "maturity_stage": null,
+          "model_key": "disabled",
+          "primary_recovery_target_id": null,
+          "provider_key": "deterministic-fallback",
+          "reason_codes": [
+            "NO_VALID_IMPACT_CANDIDATE"
+          ],
+          "secondary_risk_activity_ids": [],
+          "selected_activity_id": null,
+          "semantic_explanation": "",
+          "status": "DETERMINISTIC"
+        },
+        "created_at": "2026-10-06T05:14:17.318263+00:00",
+        "entity_id": "8f0febfe-ab54-40fc-a201-f4bc8262c12e",
+        "entity_type": "ImpactAssessment",
+        "id": "873230d0-8aef-4536-b5e2-c52a3733f6eb"
+      },
+      {
+        "action": "impact_hypothesis_created",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "assessment_id": "8f0febfe-ab54-40fc-a201-f4bc8262c12e",
+          "corroboration_refs": [],
+          "independent_evidence_count": 0,
+          "maturity_stage": null,
+          "model_key": "disabled",
+          "primary_recovery_target_id": null,
+          "provider_key": "deterministic-fallback",
+          "reason_codes": [
+            "NO_VALID_IMPACT_CANDIDATE"
+          ],
+          "secondary_risk_activity_ids": [],
+          "selected_activity_id": null,
+          "semantic_explanation": "",
+          "status": "DETERMINISTIC"
+        },
+        "created_at": "2026-10-06T05:14:17.318263+00:00",
+        "entity_id": "8f0febfe-ab54-40fc-a201-f4bc8262c12e",
+        "entity_type": "ImpactAssessment",
+        "id": "f16c478c-e3ca-4514-a0ac-56ae0e4f7e5c"
+      },
+      {
+        "action": "replan.incident.provider_observation.captured",
+        "actor_id": "citynexus-v14-recovery",
+        "actor_type": "SYSTEM",
+        "after": {
+          "observation_type": "MOBILITY",
+          "provenance": "RUNTIME_CAPTURE",
+          "provider_key": "valhalla-http",
+          "snapshot_id": "552a0622-3be0-4d2a-b01a-2edf6fb328bf"
+        },
+        "created_at": "2026-10-06T05:14:19.656568+00:00",
+        "entity_id": "37cc9973-800b-4841-8147-ae809032e21d",
+        "entity_type": "ProviderObservation",
+        "id": "6d26a06d-21fc-46e7-8bf4-51aac74c4455"
+      },
+      {
+        "action": "replan.generated",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "candidate_family": "F4_OPPORTUNITY_INSERTION",
+          "feasibility_authority": "CITYNEXUS_DETERMINISTIC_GATE",
+          "generator": {
+            "fallback_reason": "SOLVER_DISABLED",
+            "kind": "DETERMINISTIC_HEURISTIC",
+            "mobility_snapshot_id": "552a0622-3be0-4d2a-b01a-2edf6fb328bf",
+            "problem_fingerprint": null,
+            "rank": 0,
+            "solver_status": "DISABLED"
+          },
+          "status": "PRESENTED"
+        },
+        "created_at": "2026-10-06T05:14:19.663593+00:00",
+        "entity_id": "228c1620-44bf-4d36-9bbe-9e3d5b3c1c67",
+        "entity_type": "ReplanProposal",
+        "id": "76c74073-b61e-432a-93f1-6d7e0af7ec0a"
+      },
+      {
+        "action": "solver_candidates_generated",
+        "actor_id": null,
+        "actor_type": "system",
+        "after": {
+          "candidate_count": 1,
+          "feasibility_authority": "CITYNEXUS_DETERMINISTIC_GATE",
+          "proposal_ids": [
+            "228c1620-44bf-4d36-9bbe-9e3d5b3c1c67"
+          ]
+        },
+        "created_at": "2026-10-06T05:14:19.663593+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "ac141b04-f1d5-4249-a593-3299a23518a6"
+      },
+      {
+        "action": "city.signal.fixture.updated",
+        "actor_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e",
+        "actor_type": "USER",
+        "after": {
+          "payload": {
+            "purpose": "AUTONOMOUS_RECOVERY_MESH_CONCURRENCY",
+            "r32_live_strike": "SHOCK_A",
+            "target_place_id": "real-place-22cf72809897ff4c7f312fcf"
+          },
+          "provider_key": "city-signal-fixture",
+          "revision": 1,
+          "state": "DISRUPTED"
+        },
+        "created_at": "2026-10-06T05:14:19.685699+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "CitySignalFixture",
+        "id": "b0c7ed59-240f-4e19-8e34-33c17900f450"
+      },
+      {
+        "action": "city.signal.mobility_captured",
+        "actor_id": "city-signal-pipeline",
+        "actor_type": "SYSTEM",
+        "after": {
+          "observation_type": "MOBILITY",
+          "provider_key": "city-signal-fixture"
+        },
+        "created_at": "2026-10-06T05:14:21.180169+00:00",
+        "entity_id": "1abe0e1e-38cc-421c-b533-fde23dfc374f",
+        "entity_type": "ProviderObservation",
+        "id": "32f3e82f-a877-4283-a115-8ccd6eef504a"
+      },
+      {
+        "action": "city.signal.incident.created",
+        "actor_id": "city-signal-pipeline",
+        "actor_type": "SYSTEM",
+        "after": {
+          "affected_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+          "event_type": "CLOSURE",
+          "incident_fingerprint": "0cede0eddc51b151cb7b7243702df9f1dcb7bf38f0a4f6100d8ce5edf04ac9fc",
+          "provider_key": "city-signal-fixture"
+        },
+        "created_at": "2026-10-06T05:14:21.182172+00:00",
+        "entity_id": "756d9fe9-1333-48ad-9aa7-b96f1eda9d54",
+        "entity_type": "Event",
+        "id": "42c97b28-8798-4954-b832-72a0f91060a6"
+      },
+      {
+        "action": "city.signal.observation.received",
+        "actor_id": "city-signal-pipeline",
+        "actor_type": "SYSTEM",
+        "after": {
+          "incident_fingerprints": [
+            "0cede0eddc51b151cb7b7243702df9f1dcb7bf38f0a4f6100d8ce5edf04ac9fc"
+          ],
+          "observation_type": "CITY_SIGNAL",
+          "provider_key": "open-meteo-replay",
+          "state": "DISRUPTED"
+        },
+        "created_at": "2026-10-06T05:14:21.182172+00:00",
+        "entity_id": "1331b4fd-8c1a-4f19-bf5d-897831c0c72e",
+        "entity_type": "ProviderObservation",
+        "id": "a9bd2433-1d3e-4583-a720-21c20c6bd880"
+      },
+      {
+        "action": "agent.mission.created",
+        "actor_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e",
+        "actor_type": "USER",
+        "after": {
+          "event_id": null,
+          "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "created_at": "2026-10-06T05:14:21.197707+00:00",
+        "entity_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+        "entity_type": "JourneyMission",
+        "id": "9231f062-7ba5-4442-8fa2-1af4c98fd9e3"
+      },
+      {
+        "action": "agent.run.started",
+        "actor_id": "deepseek-agent",
+        "actor_type": "AI_AGENT",
+        "after": {
+          "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+          "model": "cn:glm-5.3-flash",
+          "recovery_epoch_generation": 2,
+          "recovery_epoch_id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+          "run_id": "5bff0cce-53cd-4638-83f9-90cf8e985607"
+        },
+        "created_at": "2026-10-06T05:14:21.222819+00:00",
+        "entity_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+        "entity_type": "AgentRun",
+        "id": "da3aa1ab-0931-43b0-9167-544bde522975"
+      },
+      {
+        "action": "trace.span",
+        "actor_id": "citynexus-observability",
+        "actor_type": "SYSTEM",
+        "after": {
+          "attributes": {
+            "source": "server_persisted_snapshot",
+            "traveler_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e"
+          },
+          "exporter": "PHOENIX_OPTIONAL",
+          "name": "traveler_twin.lookup",
+          "status": "OK",
+          "trace_id": "b6d08b62-704a-4960-bd08-eebe63b96f9e"
+        },
+        "created_at": "2026-10-06T05:14:21.223819+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "0d895f39-9747-4c01-a407-ad4f9e1e0acb"
+      },
+      {
+        "action": "trace.span",
+        "actor_id": "citynexus-observability",
+        "actor_type": "SYSTEM",
+        "after": {
+          "attributes": {
+            "compiler_model_key": "mission-compiler-v2-fallback",
+            "compiler_provider_key": "deterministic",
+            "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054"
+          },
+          "exporter": "PHOENIX_OPTIONAL",
+          "name": "mission.compile",
+          "status": "OK",
+          "trace_id": "b6d08b62-704a-4960-bd08-eebe63b96f9e"
+        },
+        "created_at": "2026-10-06T05:14:21.223819+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "e6a541de-968e-430c-8162-8da9800e7032"
+      },
+      {
+        "action": "agent_tool_requested",
+        "actor_id": "hermes-compat",
+        "actor_type": "AI_AGENT",
+        "after": {
+          "proposal_id": null,
+          "request_id": "agent-run-5bff0cce-53cd-4638-83f9-90cf8e985607-1",
+          "tool": "inspect_journey",
+          "trigger_event_id": null
+        },
+        "created_at": "2026-10-06T05:15:06.352509+00:00",
+        "entity_id": "agent-run-5bff0cce-53cd-4638-83f9-90cf8e985607-1",
+        "entity_type": "AgentToolRequest",
+        "id": "4d454696-50ea-438d-9370-d455b98c26b0"
+      },
+      {
+        "action": "trace.span",
+        "actor_id": "citynexus-observability",
+        "actor_type": "SYSTEM",
+        "after": {
+          "attributes": {
+            "model_key": "cn:glm-5.3-flash",
+            "provider_key": "hermes",
+            "tool_call_count": 2
+          },
+          "exporter": "PHOENIX_OPTIONAL",
+          "name": "deepseek.call",
+          "status": "OK",
+          "trace_id": "b6d08b62-704a-4960-bd08-eebe63b96f9e"
+        },
+        "created_at": "2026-10-06T05:15:06.352509+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "527be0ee-e97c-4551-861c-f6a26aaa4285"
+      },
+      {
+        "action": "agent.run.tool",
+        "actor_id": "deepseek-agent",
+        "actor_type": "AI_AGENT",
+        "after": {
+          "decision": "ALLOW_AUTO",
+          "run_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+          "sequence_no": 1,
+          "status": "COMPLETED",
+          "tool": "inspect_journey"
+        },
+        "created_at": "2026-10-06T05:15:06.358947+00:00",
+        "entity_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+        "entity_type": "AgentRun",
+        "id": "13d61302-c1f3-47b1-afd9-871b2f756a39"
+      },
+      {
+        "action": "trace.span",
+        "actor_id": "citynexus-observability",
+        "actor_type": "SYSTEM",
+        "after": {
+          "attributes": {
+            "decision": "ALLOW_AUTO",
+            "status": "COMPLETED",
+            "tool_name": "inspect_journey"
+          },
+          "exporter": "PHOENIX_OPTIONAL",
+          "name": "agent.tool_call",
+          "status": "OK",
+          "trace_id": "b6d08b62-704a-4960-bd08-eebe63b96f9e"
+        },
+        "created_at": "2026-10-06T05:15:06.359465+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "74fe3a23-8a5f-451b-b822-8e03bfb73be4"
+      },
+      {
+        "action": "agent_tool_requested",
+        "actor_id": "hermes-compat",
+        "actor_type": "AI_AGENT",
+        "after": {
+          "proposal_id": null,
+          "request_id": "agent-run-5bff0cce-53cd-4638-83f9-90cf8e985607-2",
+          "tool": "inspect_twin",
+          "trigger_event_id": null
+        },
+        "created_at": "2026-10-06T05:15:06.361675+00:00",
+        "entity_id": "agent-run-5bff0cce-53cd-4638-83f9-90cf8e985607-2",
+        "entity_type": "AgentToolRequest",
+        "id": "834ee749-d4cc-4c53-a976-92e4c1b20e14"
+      },
+      {
+        "action": "trace.span",
+        "actor_id": "citynexus-observability",
+        "actor_type": "SYSTEM",
+        "after": {
+          "attributes": {
+            "decision": "ALLOW_AUTO",
+            "status": "COMPLETED",
+            "tool_name": "inspect_twin"
+          },
+          "exporter": "PHOENIX_OPTIONAL",
+          "name": "agent.tool_call",
+          "status": "OK",
+          "trace_id": "b6d08b62-704a-4960-bd08-eebe63b96f9e"
+        },
+        "created_at": "2026-10-06T05:15:06.378381+00:00",
+        "entity_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+        "entity_type": "Journey",
+        "id": "5be9a6e1-17fc-41b1-9f29-2f8fc297b8d2"
+      },
+      {
+        "action": "agent.run.tool",
+        "actor_id": "deepseek-agent",
+        "actor_type": "AI_AGENT",
+        "after": {
+          "decision": "ALLOW_AUTO",
+          "run_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+          "sequence_no": 2,
+          "status": "COMPLETED",
+          "tool": "inspect_twin"
+        },
+        "created_at": "2026-10-06T05:15:06.378381+00:00",
+        "entity_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+        "entity_type": "AgentRun",
+        "id": "a0ba5c9a-e57c-4150-8b18-d5455809dbcf"
+      }
+    ],
+    "epochs": [
+      {
+        "active_plan_version_id_at_open": null,
+        "close_reason": "RECOVERY_REALITY_CHANGED",
+        "closed_at": "2026-10-06T05:14:21.184172+00:00",
+        "generation": 1,
+        "id": "2420f5f7-7fb8-45a0-9692-74a49d550e26",
+        "opened_at": "2026-10-06T05:14:08.186735+00:00",
+        "recovery_reality_fingerprint": "5f0e3b6730f8aae65877a72a0c63efa3c5a01e9ea0c2104ab3e6a894f52f95ef",
+        "status": "SUPERSEDED",
+        "superseded_by_recovery_epoch_id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+        "triggering_event_ids_json": "[]"
+      },
+      {
+        "active_plan_version_id_at_open": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+        "close_reason": null,
+        "closed_at": null,
+        "generation": 2,
+        "id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+        "opened_at": "2026-10-06T05:14:21.184172+00:00",
+        "recovery_reality_fingerprint": "b68b921ee4a9d5c7b6420172d2ff8863dc85f2df2ae7c614a97ea1c696f29934",
+        "status": "OPEN",
+        "superseded_by_recovery_epoch_id": null,
+        "triggering_event_ids_json": "[\"1b3e82bd-22b7-4e00-bf3b-94701499c13e\",\"756d9fe9-1333-48ad-9aa7-b96f1eda9d54\"]"
+      }
+    ],
+    "events": [
+      {
+        "affected_activity_id": null,
+        "detected_at": "2026-10-06T05:14:13.073626+00:00",
+        "event_type": "OPPORTUNITY_WINDOW",
+        "id": "1b3e82bd-22b7-4e00-bf3b-94701499c13e",
+        "occurred_at": "2026-10-08T10:00:00+09:00",
+        "payload": {},
+        "provenance": "SYSTEM_DERIVED",
+        "provider_key": "citynexus-twin-opportunity",
+        "severity": "INFO",
+        "status": "DETECTED"
+      },
+      {
+        "affected_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+        "detected_at": "2026-10-06T05:14:21.182172+00:00",
+        "event_type": "CLOSURE",
+        "id": "756d9fe9-1333-48ad-9aa7-b96f1eda9d54",
+        "occurred_at": "2026-10-08T08:57:00+09:00",
+        "payload": {
+          "disruption_class": "PLACE_CLOSURE",
+          "fixture_revision": 1,
+          "incident_fingerprint": "0cede0eddc51b151cb7b7243702df9f1dcb7bf38f0a4f6100d8ce5edf04ac9fc",
+          "scope_place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "source": "server_city_signal_pipeline",
+          "target_place_id": "real-place-22cf72809897ff4c7f312fcf"
+        },
+        "provenance": "PROVIDER_VERIFIED",
+        "provider_key": "city-signal-fixture",
+        "severity": "MAJOR",
+        "status": "DETECTED"
+      }
+    ],
+    "journey": {
+      "active_plan_version_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+      "current_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+      "id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+      "status": "ACTIVE"
+    },
+    "pending_actions": [],
+    "plans": [
+      {
+        "activated_at": null,
+        "created_at": "2026-10-06T05:14:08.100687+00:00",
+        "id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+        "selected_at": null,
+        "status": "ACTIVE"
+      },
+      {
+        "activated_at": null,
+        "created_at": "2026-10-06T05:14:17.288941+00:00",
+        "id": "0924041f-6a92-4eb5-ab22-a54abe16ab86",
+        "selected_at": null,
+        "status": "CANDIDATE"
+      },
+      {
+        "activated_at": null,
+        "created_at": "2026-10-06T05:14:19.659580+00:00",
+        "id": "d06ddc85-e725-4b89-a74e-7a9b7bf5d83a",
+        "selected_at": null,
+        "status": "CANDIDATE"
+      }
+    ],
+    "proposals": [
+      {
+        "canonical_proposal_id": null,
+        "created_at": "2026-10-06T05:14:17.292054+00:00",
+        "decided_at": null,
+        "hard_constraints_passed": true,
+        "id": "d99b9a73-3a8d-4efd-97eb-bfe11e50ae2b",
+        "locked_commitments_preserved": true,
+        "proposed_plan_version_id": "0924041f-6a92-4eb5-ab22-a54abe16ab86",
+        "recovery_epoch_id": null,
+        "semantic_identity": null,
+        "source_agent_run_id": null,
+        "status": "PRESENTED",
+        "trigger_event_id": "1b3e82bd-22b7-4e00-bf3b-94701499c13e"
+      },
+      {
+        "canonical_proposal_id": null,
+        "created_at": "2026-10-06T05:14:19.663593+00:00",
+        "decided_at": null,
+        "hard_constraints_passed": true,
+        "id": "228c1620-44bf-4d36-9bbe-9e3d5b3c1c67",
+        "locked_commitments_preserved": true,
+        "proposed_plan_version_id": "d06ddc85-e725-4b89-a74e-7a9b7bf5d83a",
+        "recovery_epoch_id": null,
+        "semantic_identity": null,
+        "source_agent_run_id": null,
+        "status": "PRESENTED",
+        "trigger_event_id": "1b3e82bd-22b7-4e00-bf3b-94701499c13e"
+      }
+    ],
+    "receipts": [],
+    "runs": [
+      {
+        "completed_at": null,
+        "created_at": "2026-10-06T05:14:21.221816+00:00",
+        "failure_reason": null,
+        "id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+        "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+        "model_key": "cn:glm-5.3-flash",
+        "outcome": null,
+        "provider_key": "hermes",
+        "recovery_epoch_id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+        "status": "RUNNING"
+      }
+    ],
+    "steps": [
+      {
+        "arguments": {
+          "agent_id": "hermes-compat",
+          "journey_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+          "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+          "request_id": "agent-run-5bff0cce-53cd-4638-83f9-90cf8e985607-1"
+        },
+        "decision": "ALLOW_AUTO",
+        "id": "9875d433-ed0e-456a-985a-ee6754f8d343",
+        "result": {
+          "collective_journey": {
+            "authority_basis": "JourneyRoleCapability",
+            "member_count": 2,
+            "members": [
+              {
+                "can_authorize_mutation": true,
+                "capabilities": [
+                  "JOURNEY_READ",
+                  "JOURNEY_UPDATE",
+                  "MEMBER_MANAGE",
+                  "PLACE_EDIT",
+                  "SHARE_GRANT_MANAGE"
+                ],
+                "journey_scoped_explicit_preferences": [
+                  {
+                    "category": "interest",
+                    "key": "garden",
+                    "value": true,
+                    "weight": 1.0
+                  }
+                ],
+                "member_id": "64c893fd-8d2f-4c59-a028-adaa8e177a50",
+                "member_state": "MEMBER_IN_FORCE",
+                "role": "OWNER",
+                "traveler_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e",
+                "traveler_twin": {
+                  "confidence": 0.0,
+                  "conflicts": [],
+                  "evidence_count": 0,
+                  "explicit_preferences": [],
+                  "learned_soft_preferences": []
+                }
+              },
+              {
+                "can_authorize_mutation": false,
+                "capabilities": [
+                  "JOURNEY_READ",
+                  "MEMBER_MANAGE",
+                  "PLACE_EDIT"
+                ],
+                "journey_scoped_explicit_preferences": [
+                  {
+                    "category": "interest",
+                    "key": "garden",
+                    "value": true,
+                    "weight": 1.0
+                  }
+                ],
+                "member_id": "4c6184a0-4666-4d5e-b956-8ab4bf6c9edd",
+                "member_state": "MEMBER_IN_FORCE",
+                "role": "ADMIN",
+                "traveler_id": "c6600fb9-a547-40a1-9750-9015a358368f",
+                "traveler_twin": {
+                  "confidence": 0.0,
+                  "conflicts": [],
+                  "evidence_count": 0,
+                  "explicit_preferences": [],
+                  "learned_soft_preferences": []
+                }
+              }
+            ]
+          },
+          "decision": "ALLOW_AUTO",
+          "journey": {
+            "active_plan_version_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+            "budget": {
+              "amount_minor": 100000,
+              "currency": "JPY"
+            },
+            "city_code": "NARA",
+            "current_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+            "end_at": "2026-10-08T18:00:00+09:00",
+            "id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+            "planning_mode": "balanced",
+            "start_at": "2026-10-08T09:00:00+09:00",
+            "status": "ACTIVE",
+            "timezone": "Asia/Tokyo",
+            "title": "R28 fresh authenticated collective continuity",
+            "traveler_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e"
+          },
+          "protected_commitments": [
+            {
+              "activity_id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+              "external_ref": "R28-C4-ANCHOR",
+              "id": "f9c7c341-a497-4fa5-b599-e1be6f5cb4d4",
+              "kind": "APPOINTMENT",
+              "level": "C4_Anchored",
+              "protected": true
+            }
+          ],
+          "tool": "inspect_journey"
+        },
+        "run_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+        "sequence_no": 1,
+        "status": "COMPLETED",
+        "tool_name": "inspect_journey"
+      },
+      {
+        "arguments": {
+          "agent_id": "hermes-compat",
+          "journey_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+          "mission_id": "4ad37cbe-8316-43b3-81b6-d3927f76d054",
+          "request_id": "agent-run-5bff0cce-53cd-4638-83f9-90cf8e985607-2"
+        },
+        "decision": "ALLOW_AUTO",
+        "id": "e255ac43-628a-4f1d-af0c-fd3125bbc44b",
+        "result": {
+          "actionable_events": [
+            {
+              "affected_scope": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+              "event_id": "756d9fe9-1333-48ad-9aa7-b96f1eda9d54",
+              "provenance": "PROVIDER_VERIFIED",
+              "severity": "MAJOR",
+              "type": "CLOSURE"
+            },
+            {
+              "affected_scope": null,
+              "event_id": "1b3e82bd-22b7-4e00-bf3b-94701499c13e",
+              "provenance": "SYSTEM_DERIVED",
+              "severity": "INFO",
+              "type": "OPPORTUNITY_WINDOW"
+            }
+          ],
+          "collective_journey": {
+            "authority_basis": "JourneyRoleCapability",
+            "candidate_fit_matrix": [
+              {
+                "candidate_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                "member_fits": {
+                  "4c6184a0-4666-4d5e-b956-8ab4bf6c9edd": {
+                    "conflict": null,
+                    "effective_fit": 0.0,
+                    "explicit_contribution": 0.0,
+                    "learned_soft_contribution": null,
+                    "preference_tier": "CURRENT_EXPLICIT_MISSION"
+                  },
+                  "64c893fd-8d2f-4c59-a028-adaa8e177a50": {
+                    "conflict": null,
+                    "effective_fit": 0.0,
+                    "explicit_contribution": 0.0,
+                    "learned_soft_contribution": null,
+                    "preference_tier": "CURRENT_EXPLICIT_MISSION"
+                  }
+                },
+                "status": "GROUNDED_INFEASIBLE",
+                "window_id": "remaining-window:af985609-7d91-4ed9-b3df-1f02d03a1a87:1"
+              }
+            ],
+            "mediation": {
+              "classification": "INSUFFICIENT_WORLD_FACTS",
+              "reason": "NO_GROUNDED_FEASIBLE_MEMBER_OPTIONS",
+              "rejected_candidate_ids": [
+                "real-place-a346e8f7f72a4d8f523d81e3"
+              ]
+            },
+            "member_count": 2,
+            "members": [
+              {
+                "can_authorize_mutation": true,
+                "capabilities": [
+                  "JOURNEY_READ",
+                  "JOURNEY_UPDATE",
+                  "MEMBER_MANAGE",
+                  "PLACE_EDIT",
+                  "SHARE_GRANT_MANAGE"
+                ],
+                "journey_scoped_explicit_preferences": [
+                  {
+                    "category": "interest",
+                    "key": "garden",
+                    "value": true,
+                    "weight": 1.0
+                  }
+                ],
+                "member_id": "64c893fd-8d2f-4c59-a028-adaa8e177a50",
+                "member_state": "MEMBER_IN_FORCE",
+                "role": "OWNER",
+                "traveler_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e",
+                "traveler_twin": {
+                  "confidence": 0.0,
+                  "conflicts": [],
+                  "evidence_count": 0,
+                  "explicit_preferences": [],
+                  "learned_soft_preferences": []
+                }
+              },
+              {
+                "can_authorize_mutation": false,
+                "capabilities": [
+                  "JOURNEY_READ",
+                  "MEMBER_MANAGE",
+                  "PLACE_EDIT"
+                ],
+                "journey_scoped_explicit_preferences": [
+                  {
+                    "category": "interest",
+                    "key": "garden",
+                    "value": true,
+                    "weight": 1.0
+                  }
+                ],
+                "member_id": "4c6184a0-4666-4d5e-b956-8ab4bf6c9edd",
+                "member_state": "MEMBER_IN_FORCE",
+                "role": "ADMIN",
+                "traveler_id": "c6600fb9-a547-40a1-9750-9015a358368f",
+                "traveler_twin": {
+                  "confidence": 0.0,
+                  "conflicts": [],
+                  "evidence_count": 0,
+                  "explicit_preferences": [],
+                  "learned_soft_preferences": []
+                }
+              }
+            ]
+          },
+          "current_event": null,
+          "decision": "ALLOW_AUTO",
+          "decision_sensitivity": {
+            "counterfactuals": [],
+            "decision_sensitive": false,
+            "options": [],
+            "reason": "INSUFFICIENT_GROUNDED_FEASIBLE_OPTIONS",
+            "resource_conflict": false
+          },
+          "event_selection_error": "EVENT_SELECTION_REQUIRED",
+          "event_selection_required": true,
+          "presented_collective_proposals": {
+            "classification": "INSUFFICIENT_WORLD_FACTS",
+            "options": []
+          },
+          "standby_portfolio": [],
+          "tool": "inspect_twin",
+          "traveler_twin_context": {
+            "confidence": 0.0,
+            "conflicts": [],
+            "evidence_count": 0,
+            "explicit_preferences": [],
+            "learned_soft_preferences": []
+          },
+          "twin": {
+            "active_plan_version_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+            "context": {
+              "degraded_providers": [],
+              "execution": {
+                "cursor_status": "VALID",
+                "execution_truth": {
+                  "actor_id": "api-state-machine",
+                  "actor_type": "SIMULATION",
+                  "captured_at": "2026-10-06T05:14:09.771412+00:00",
+                  "evidence": {
+                    "operator_confirmed": false,
+                    "physical_presence_claimed": false,
+                    "source": "API_STATE_MACHINE"
+                  },
+                  "kind": "SIMULATED_STATE_TRANSITION",
+                  "transition": "ARRIVED"
+                },
+                "next": {
+                  "end_at": "2026-10-08T16:00:00+09:00",
+                  "execution_truth": null,
+                  "id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+                  "locked": true,
+                  "start_at": "2026-10-08T15:00:00+09:00",
+                  "state": "PLANNED",
+                  "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)"
+                },
+                "next_activity_id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+                "next_eta_min": 52,
+                "next_leg_id": "plan-evidence:6968038f-cdd9-5a8a-82e0-ade66a5fb112:0",
+                "next_mode": "WALK",
+                "next_state": "PLANNED",
+                "now": {
+                  "end_at": "2026-10-08T10:00:00+09:00",
+                  "execution_truth": {
+                    "actor_id": "api-state-machine",
+                    "actor_type": "SIMULATION",
+                    "captured_at": "2026-10-06T05:14:09.771412+00:00",
+                    "evidence": {
+                      "operator_confirmed": false,
+                      "physical_presence_claimed": false,
+                      "source": "API_STATE_MACHINE"
+                    },
+                    "kind": "SIMULATED_STATE_TRANSITION",
+                    "transition": "ARRIVED"
+                  },
+                  "id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+                  "locked": false,
+                  "start_at": "2026-10-08T09:00:00+09:00",
+                  "state": "ARRIVED",
+                  "title": "依水園"
+                },
+                "now_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+                "now_state": "ARRIVED",
+                "persisted_cursor": "c8ef924f-db7d-5a75-818f-4394c1711bb5"
+              },
+              "feasibility_envelope": {
+                "budget_remaining_minor": 98800,
+                "degraded_providers": [],
+                "journey_end_slack_min": 120,
+                "next_commitment_buffer_min": 293,
+                "preserved_commitment_count": 1,
+                "risk_reason_codes": [],
+                "robust": true
+              },
+              "journey_status": "ACTIVE",
+              "mobility": {
+                "degraded": false,
+                "fallback_reason": null,
+                "provider": "valhalla-http",
+                "snapshot_degraded": false,
+                "snapshot_id": "552a0622-3be0-4d2a-b01a-2edf6fb328bf",
+                "source": "persisted-replan-snapshot",
+                "source_provider": "valhalla-http"
+              },
+              "opportunity_window": {
+                "available_minutes": 293,
+                "must_depart_by": "2026-10-08T13:53:00+09:00",
+                "next_commitment_start": "2026-10-08T15:00:00+09:00",
+                "opens_at": "2026-10-08T09:00:00+09:00"
+              },
+              "provider_level": 1,
+              "remaining_opportunity_horizon": {
+                "future_route_is_not_live_traffic": true,
+                "max_windows": 2,
+                "strategy_surface": "TAKE_NOW_OR_DEFER",
+                "windows": [
+                  {
+                    "candidate": {
+                      "activity_id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+                      "category": "museum",
+                      "cost_evidence": {
+                        "amount_minor": 0,
+                        "currency": "JPY",
+                        "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん",
+                        "source": "official_web",
+                        "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                        "status": "VERIFIED_PROVIDER"
+                      },
+                      "opening": {
+                        "close": "16:30",
+                        "intervals": [
+                          {
+                            "close": "16:30",
+                            "days": [
+                              "*"
+                            ],
+                            "open": "10:00"
+                          }
+                        ],
+                        "open": "10:00",
+                        "raw": "午前10時00分～午後4時30分",
+                        "source": "official_web",
+                        "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                        "status": "OFFICIAL_WEB_VERIFIED",
+                        "weekday_intervals": [
+                          {
+                            "days": [
+                              "*"
+                            ],
+                            "intervals": [
+                              {
+                                "close": "16:30",
+                                "open": "10:00"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                      "preference_fit": null,
+                      "tags": [
+                        "category:museum",
+                        "indoor",
+                        "museum",
+                        "real_city"
+                      ],
+                      "visit_minutes": 60
+                    },
+                    "feasibility": {
+                      "failures": [
+                        "CLOSED_BEFORE_VISIT_END",
+                        "NEXT_COMMITMENT_AT_RISK"
+                      ],
+                      "passed": false,
+                      "remaining_buffer_min": 0
+                    },
+                    "future_live_traffic": false,
+                    "next_commitment": {
+                      "protected": true,
+                      "start_at": "2026-10-08T15:00:00+09:00"
+                    },
+                    "optional_budget_basis": {
+                      "consumed_activity_cost_minor": 1200,
+                      "declared_stay_allocation_minor": 0,
+                      "future_activities_are_reserved": false,
+                      "journey_budget_minor": 100000,
+                      "protected_future_paid_activity_minor": 0,
+                      "unavoidable_future_cost_minor": 0
+                    },
+                    "optional_budget_remaining_minor": 98800,
+                    "planning_mobility": {
+                      "pair": [
+                        "real-place-22cf72809897ff4c7f312fcf",
+                        "real-place-a346e8f7f72a4d8f523d81e3"
+                      ],
+                      "provider": "valhalla-http",
+                      "state": "FROZEN_PLAN_EVIDENCE"
+                    },
+                    "resource_consumption": {
+                      "cost_minor": 0,
+                      "minutes": 60
+                    },
+                    "status": "GROUNDED_INFEASIBLE",
+                    "window_boundary": {
+                      "closes_at": "2026-10-08T15:00:00+09:00",
+                      "opens_at": "2026-10-08T15:00:00+09:00"
+                    },
+                    "window_id": "remaining-window:af985609-7d91-4ed9-b3df-1f02d03a1a87:1"
+                  }
+                ]
+              }
+            },
+            "current_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+            "journey_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+            "latest_event_id": "756d9fe9-1333-48ad-9aa7-b96f1eda9d54",
+            "projection_status": "READY",
+            "snapshot_at": "2026-10-06T05:15:06.373381+00:00",
+            "traveler_twin_context": {
+              "confidence": 0.0,
+              "conflicts": [],
+              "evidence_count": 0,
+              "explicit_preferences": [],
+              "learned_soft_preferences": []
+            },
+            "upcoming_commitments": [
+              {
+                "activity_id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+                "external_ref": "R28-C4-ANCHOR",
+                "id": "f9c7c341-a497-4fa5-b599-e1be6f5cb4d4",
+                "journey_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+                "kind": "APPOINTMENT",
+                "level": "C4_Anchored",
+                "monetary_value": {
+                  "amount_minor": 0,
+                  "currency": "JPY"
+                },
+                "monetary_value_status": "KNOWN",
+                "policy": {
+                  "anchor_role": "MID_TRIP",
+                  "scheduled_start_at": "2026-10-08T15:00:00+09:00",
+                  "semantic_key": "real-place-a346e8f7f72a4d8f523d81e3",
+                  "source": "R28_OPERATOR_SETUP_PROVIDER_BACKED"
+                },
+                "status": "ACTIVE"
+              }
+            ]
+          }
+        },
+        "run_id": "5bff0cce-53cd-4638-83f9-90cf8e985607",
+        "sequence_no": 2,
+        "status": "COMPLETED",
+        "tool_name": "inspect_twin"
+      }
+    ]
+  },
+  "journey_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+  "r1": {
+    "fingerprint": "b68b921ee4a9d5c7b6420172d2ff8863dc85f2df2ae7c614a97ea1c696f29934",
+    "generation": 2,
+    "id": "6fa7ca77-e394-4489-9295-bd7fec2851bb",
+    "status": "OPEN",
+    "triggering_event_ids": [
+      "1b3e82bd-22b7-4e00-bf3b-94701499c13e",
+      "756d9fe9-1333-48ad-9aa7-b96f1eda9d54"
+    ]
+  },
+  "r2": {},
+  "runtime": {
+    "concurrent_external_barrier_proven": false,
+    "configured_model": "cn:glm-5.3-flash",
+    "endpoint": "http://127.0.0.1:7863/v1/chat/completions",
+    "external_call_outcomes": [
+      {
+        "at": "2026-10-06T05:14:21.226828+00:00",
+        "has_content": true,
+        "model_key": "cn:glm-5.3-flash",
+        "provider_call_finished_at": "2026-10-06T05:14:31.033444+00:00",
+        "provider_call_invoked": true,
+        "provider_call_started_at": "2026-10-06T05:14:21.226828+00:00",
+        "provider_returned": true,
+        "release_was_set": false,
+        "response_released_at": "2026-10-06T05:15:06.351465+00:00",
+        "response_released_to_runtime": true,
+        "thread": "AnyIO worker thread",
+        "tool_call_count": 2
+      },
+      {
+        "at": "2026-10-06T05:15:06.380391+00:00",
+        "model_key": "cn:glm-5.3-flash",
+        "provider_call_invoked": true,
+        "provider_call_started_at": "2026-10-06T05:15:06.380391+00:00",
+        "provider_returned": false,
+        "release_was_set": true,
+        "response_released_to_runtime": false,
+        "thread": "AnyIO worker thread"
+      }
+    ],
+    "fallback_models": "cn:glm-5.3-flash,cn:deepseek-v4.1-flash",
+    "provider": "WB2api",
+    "provider_calls_were_real": true,
+    "provider_invoked_threads": [
+      "AnyIO worker thread"
+    ]
+  },
+  "runtime_preflight": {
+    "hermes_api_key_configured": true,
+    "hermes_api_url_configured": true,
+    "model_key": "cn:glm-5.3-flash",
+    "native_hermes_configured": false,
+    "native_hermes_ready": false,
+    "provider_key": "hermes",
+    "runtime_type": "HermesJourneyAgent",
+    "selected_openai_compatible_hermes": true,
+    "semantic_ai_api_key_configured": false
+  },
+  "schema": "citynexus.r32.live-strike.v2.failure.v2",
+  "setup": {
+    "active_plan_id": "6968038f-cdd9-5a8a-82e0-ade66a5fb112",
+    "admin_id": "c6600fb9-a547-40a1-9750-9015a358368f",
+    "admin_member_id": "4c6184a0-4666-4d5e-b956-8ab4bf6c9edd",
+    "c4_activity_id": "11e28d39-8c91-5cd3-93fa-99b40e0ef6f8",
+    "current_activity_id": "c8ef924f-db7d-5a75-818f-4394c1711bb5",
+    "db": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r28-live-eade82e880ab4b5e.sqlite3",
+    "estimate_authority": "false",
+    "journey_id": "af985609-7d91-4ed9-b3df-1f02d03a1a87",
+    "mobility_provider": "https://valhalla1.openstreetmap.de",
+    "opportunity_event_id": "1b3e82bd-22b7-4e00-bf3b-94701499c13e",
+    "owner_id": "a98529e8-a911-4eeb-9d38-7a53fe18677e",
+    "owner_member_id": "64c893fd-8d2f-4c59-a028-adaa8e177a50",
+    "proposal_count": 2,
+    "proposal_fingerprints": 2,
+    "selected_place_keys": {
+      "real-place-22cf72809897ff4c7f312fcf": "current_garden",
+      "real-place-8c09b32224152e3e1ae12843": "candidate_museum",
+      "real-place-a346e8f7f72a4d8f523d81e3": "c4_anchor_museum",
+      "real-place-b47a20314c81d5a81381d4a4": "c4_craft",
+      "real-place-ebd30de67691cab346be66ec": "candidate_garden"
+    }
+  },
+  "shock_a": {
+    "fixture": {
+      "payload": {
+        "purpose": "AUTONOMOUS_RECOVERY_MESH_CONCURRENCY",
+        "r32_live_strike": "SHOCK_A",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf"
+      },
+      "revision": 1,
+      "state": "DISRUPTED"
+    },
+    "label": "SHOCK_A",
+    "signals": {
+      "captured_at": "2026-10-06T05:14:19.685699+00:00",
+      "created_event_ids": [
+        "756d9fe9-1333-48ad-9aa7-b96f1eda9d54"
+      ],
+      "degraded": false,
+      "event_ids": [
+        "756d9fe9-1333-48ad-9aa7-b96f1eda9d54"
+      ],
+      "observation_ids": [
+        "1331b4fd-8c1a-4f19-bf5d-897831c0c72e",
+        "1abe0e1e-38cc-421c-b533-fde23dfc374f"
+      ],
+      "provider_key": "city-signal-fixture",
+      "provider_provenance": {
+        "city_discovery": "REPLAY",
+        "mobility": "REPLAY",
+        "weather": "REPLAY"
+      },
+      "provider_states": {
+        "city_discovery": "AVAILABLE",
+        "mobility": "AVAILABLE",
+        "weather": "DISRUPTED"
+      },
+      "resolved_event_ids": [],
+      "state": "DISRUPTED"
+    }
+  },
+  "shock_b": {},
+  "source_receipt": {
+    "git_head": "2db713e06b86055d731175566e4ad631e49004d9",
+    "source_sha256": {
+      "backend/app/agent/gateway.py": "50e239a7f2437dadb2ff6073d6dd3f9955ba5b8fe9c714d4d52bdc7d21ddfb70",
+      "backend/app/agent/runtime.py": "fd52c2fa166bff5422c6f5159b888ca36602a0554352e9ba444f0a23aa23beda",
+      "backend/app/recovery_epoch.py": "e453fde39b041965ecbfe8b97c1899e2955cf6bb8926e916b118c8fc582a711e",
+      "backend/run_r32_live.py": "7cd8ae1f3c5918e7672f0919838b1e5fad8e5c5b6d376ed58f04777054d6d4d4",
+      "backend/scripts/r32_machine_verdict.py": "e6ded79a009a5fa65af9f05eb79419021eb7c8a3af92f9a64698b049a9b2c38a"
+    },
+    "tracked_dirty_before_strike": false,
+    "tracked_dirty_paths_before_strike": []
+  },
+  "stale_binding_assertion": {
+    "detail": "not exercised before a complete R1 -> R2 chronology",
+    "typed": false
+  },
+  "status": "NOT_PROVEN",
+  "timestamp": "2026-10-06T05:15:11.370145+00:00",
+  "truth_boundary": {
+    "external_runtime": "WB2api OpenAI-compatible Hermes endpoint",
+    "physical_travel_proven": false,
+    "shock_source": "SERVER_OWNED_PROVIDER_REPLAY_FIXTURE"
+  }
+}

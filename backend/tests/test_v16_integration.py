@@ -15,6 +15,7 @@ from app.integrations.ai.copilot_contract import (
     _disruption_semantic_status,
     classify_copilot_message,
     disruption_event_type,
+    is_status_inspection_reference,
     what_if_parameters,
 )
 from app.planning.day_rhythm import DayRhythm, apply_day_rhythm, extract_day_rhythm
@@ -107,6 +108,26 @@ def test_v16_current_boundary_separates_real_and_non_real_statements() -> None:
     assert disruption_event_type(
         "I am on a business trip: keep walking minimal and leave a quiet buffer before my meetings."
     ) is None
+
+
+def test_v16_recovery_status_inspection_does_not_reopen_the_trigger_event() -> None:
+    message = (
+        "检查当前已经启动的苏州行程，确认闭馆后的恢复提案是否已成为权威计划，并报告当前站、"
+        "下一站、路线来源和是否还有待处理调整；只读，不要修改。"
+    )
+    assert is_status_inspection_reference(message) is True
+    assert disruption_event_type(message) is None
+    assert classify_copilot_message(message).intent != "DISRUPTION_REPORT"
+
+
+def test_v16_new_replan_request_with_current_disruption_is_not_old_recovery_inspection() -> None:
+    message = (
+        "诊断实验：狮子林现在闭馆了。请检查当前苏州行程，提出一个保持已确认安排不变的替代方案；"
+        "只生成重规划提案，不要接受、预订或修改。"
+    )
+    assert is_status_inspection_reference(message) is False
+    assert disruption_event_type(message) == "CLOSURE"
+    assert classify_copilot_message(message).intent == "DISRUPTION_REPORT"
 
 
 @pytest.mark.skipif(settings.ai_api_key, reason="legacy command would invoke the configured live agent")

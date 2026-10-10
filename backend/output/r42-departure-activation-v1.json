@@ -1,0 +1,749 @@
+{
+  "schema": "citynexus.r42.departure-activation.v1",
+  "status": "DEPARTURE_CONFIRMED_EN_ROUTE",
+  "source_head_before_live": "273b8c5a641ad561c85af15fe6e76945c3614794",
+  "database": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery\\backend\\r42-live-06c6a7e6e07d18b4.sqlite3",
+  "journey_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+  "fresh_journey": true,
+  "active_plan_before": "d0c3ccbf-ea86-5bd3-a026-f963f76a2619",
+  "active_plan_after": "d0c3ccbf-ea86-5bd3-a026-f963f76a2619",
+  "activity": {
+    "id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "title": "依水園",
+    "place_id": "real-place-22cf72809897ff4c7f312fcf",
+    "status_before": "ACTIVE",
+    "status_after": "EN_ROUTE"
+  },
+  "initial_setup": {
+    "status": "NEEDS_ORIGIN",
+    "current_origin": null,
+    "candidates": [],
+    "actions": [
+      "SHARE_LOCATION",
+      "CHOOSE_PLACE"
+    ],
+    "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "authority": "READ_ONLY_PROJECTION",
+    "contract": null,
+    "read_only": true,
+    "provider_capture": false
+  },
+  "launch_contract": {
+    "journey_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+    "source_kind": "PLACE",
+    "authority_kind": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "place_id": "real-place-b47a20314c81d5a81381d4a4",
+    "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "display_name": "なら工藝館",
+    "latitude": 34.678661,
+    "longitude": 135.8281897,
+    "coordinate_crs": "WGS84",
+    "source_ref_type": "PLACE",
+    "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+    "valid_from": "2026-10-06T01:11:00+00:00",
+    "valid_until": "2026-10-08T01:11:00+00:00",
+    "confirmed_by": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed",
+    "confirmation_method": "USER_CONFIRMED_PLANNED_ORIGIN",
+    "created_at": "2026-10-06T13:11:11.998608+00:00",
+    "updated_at": "2026-10-06T13:11:11.998608+00:00",
+    "provenance": {
+      "provider_key": "overpass",
+      "external_id": "overpass:node/2465643503",
+      "coordinate_system": "WGS84"
+    }
+  },
+  "confirmed_place": {
+    "id": "real-place-b47a20314c81d5a81381d4a4",
+    "name": "なら工藝館",
+    "provider_key": "overpass"
+  },
+  "route_session": {
+    "operation_id": "b443252f-75a1-4dbb-8372-d3ba155ab80e",
+    "operation_count": 1,
+    "status": "COMPLETED",
+    "outcome": "ROUTE_READY",
+    "provider": "valhalla-http",
+    "duration_min": 22,
+    "provider_capture_calls": 1
+  },
+  "readiness_before": {
+    "state": "ACTION_NEEDED",
+    "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "target_title": "依水園",
+    "starts_at": "2026-10-07T10:11:00+09:00",
+    "minutes_until_start": 27.0,
+    "must_leave_by": "2026-10-07T00:39:00+00:00",
+    "must_leave_by_absent_reason": null,
+    "safety_buffer_minutes": 10,
+    "launch_origin": {
+      "state": "READY",
+      "source": "PLACE",
+      "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "name": "なら工藝館",
+      "latitude": 34.678661,
+      "longitude": 135.8281897,
+      "captured_at": "2026-10-06T13:11:11.998608+00:00",
+      "provider_key": null,
+      "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "launch_context_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+      "source_ref_type": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "valid_from": "2026-10-06T01:11:00+00:00",
+      "valid_until": "2026-10-08T01:11:00+00:00"
+    },
+    "launch_edge": {
+      "state": "LAUNCH_ROUTE_READY",
+      "kind": "LAUNCH_EDGE",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "target_key": "real-place-22cf72809897ff4c7f312fcf",
+      "from_activity_id": null,
+      "to_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "provider": "valhalla-http",
+      "provenance": "LIVE_PROVIDER_CAPTURE",
+      "captured_at": "2026-10-06T13:11:13.893069+00:00",
+      "expires_at": "2026-10-07T13:11:13.893069+00:00",
+      "duration_min": 22,
+      "distance_m": 0,
+      "mode": "WALK",
+      "walking_min": 22,
+      "degraded": false,
+      "geometry": {},
+      "reason_code": "EXACT_MOBILITY_FACT_MATCH"
+    },
+    "blocking_reasons": [],
+    "warning_reasons": [
+      "LOCATION_UNAVAILABLE",
+      "VENUE_NOT_VERIFIED"
+    ],
+    "checks": {
+      "venue": "UNKNOWN",
+      "route": "AVAILABLE",
+      "reservation": "NONE",
+      "reservation_realtime": null,
+      "commitment": "NONE",
+      "presence": "LOCATION_UNAVAILABLE"
+    },
+    "recommended_action": "CHECK_BEFORE_LEAVING",
+    "authority": "READ_ONLY_PROJECTION",
+    "next_move": {
+      "current_activity": {
+        "id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T10:11:00+09:00",
+        "end_at": "2026-10-07T11:11:00+09:00"
+      },
+      "next_activity": {
+        "id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T10:11:00+09:00",
+        "end_at": "2026-10-07T11:11:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "AVAILABLE",
+        "kind": "LAUNCH_EDGE",
+        "provider": "valhalla-http",
+        "provenance": "LIVE_PROVIDER_CAPTURE",
+        "captured_at": "2026-10-06T13:11:13.893069+00:00",
+        "expires_at": "2026-10-07T13:11:13.893069+00:00",
+        "minutes": 22,
+        "from_activity_id": null,
+        "to_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "edge_match": true,
+        "degraded": false,
+        "reason_code": "EXACT_MOBILITY_FACT_MATCH",
+        "launch_origin": {
+          "state": "READY",
+          "source": "PLACE",
+          "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+          "name": "なら工藝館",
+          "latitude": 34.678661,
+          "longitude": 135.8281897,
+          "captured_at": "2026-10-06T13:11:11.998608+00:00",
+          "provider_key": null,
+          "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+          "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "launch_context_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+          "source_ref_type": "PLACE",
+          "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+          "valid_from": "2026-10-06T01:11:00+00:00",
+          "valid_until": "2026-10-08T01:11:00+00:00"
+        }
+      },
+      "launch_origin": {
+        "state": "READY",
+        "source": "PLACE",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "name": "なら工藝館",
+        "latitude": 34.678661,
+        "longitude": 135.8281897,
+        "captured_at": "2026-10-06T13:11:11.998608+00:00",
+        "provider_key": null,
+        "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "launch_context_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+        "source_ref_type": "PLACE",
+        "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+        "valid_from": "2026-10-06T01:11:00+00:00",
+        "valid_until": "2026-10-08T01:11:00+00:00"
+      },
+      "launch_edge": {
+        "state": "LAUNCH_ROUTE_READY",
+        "kind": "LAUNCH_EDGE",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "from_activity_id": null,
+        "to_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "provider": "valhalla-http",
+        "provenance": "LIVE_PROVIDER_CAPTURE",
+        "captured_at": "2026-10-06T13:11:13.893069+00:00",
+        "expires_at": "2026-10-07T13:11:13.893069+00:00",
+        "duration_min": 22,
+        "distance_m": 0,
+        "mode": "WALK",
+        "walking_min": 22,
+        "degraded": false,
+        "geometry": {},
+        "reason_code": "EXACT_MOBILITY_FACT_MATCH"
+      },
+      "journey_phase": "APPROACHING_NEXT",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "copy": "Using なら工藝館, the next stop is about 22 minutes away.",
+      "authority": "NONE"
+    },
+    "evidence": {
+      "material_event_ids": [],
+      "commitment_ids": [],
+      "reservation_id": null
+    },
+    "departure_activation": {
+      "activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "target_title": "依水園",
+      "must_leave_by": "2026-10-07T00:39:00+00:00",
+      "readiness_state": "ACTION_NEEDED",
+      "state": "DUE_NOW",
+      "minutes_to_leave": -5.0,
+      "can_confirm_departure": true,
+      "recommended_action": "CONFIRM_DEPARTURE",
+      "authority_required": "OPERATOR_CONFIRMED_EXECUTION"
+    }
+  },
+  "activation_before": {
+    "state": "ACTION_NEEDED",
+    "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "target_title": "依水園",
+    "starts_at": "2026-10-07T10:11:00+09:00",
+    "minutes_until_start": 27.0,
+    "must_leave_by": "2026-10-07T00:39:00+00:00",
+    "must_leave_by_absent_reason": null,
+    "safety_buffer_minutes": 10,
+    "launch_origin": {
+      "state": "READY",
+      "source": "PLACE",
+      "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "name": "なら工藝館",
+      "latitude": 34.678661,
+      "longitude": 135.8281897,
+      "captured_at": "2026-10-06T13:11:11.998608+00:00",
+      "provider_key": null,
+      "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+      "launch_context_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+      "source_ref_type": "PLACE",
+      "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+      "valid_from": "2026-10-06T01:11:00+00:00",
+      "valid_until": "2026-10-08T01:11:00+00:00"
+    },
+    "launch_edge": {
+      "state": "LAUNCH_ROUTE_READY",
+      "kind": "LAUNCH_EDGE",
+      "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+      "target_key": "real-place-22cf72809897ff4c7f312fcf",
+      "from_activity_id": null,
+      "to_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "provider": "valhalla-http",
+      "provenance": "LIVE_PROVIDER_CAPTURE",
+      "captured_at": "2026-10-06T13:11:13.893069+00:00",
+      "expires_at": "2026-10-07T13:11:13.893069+00:00",
+      "duration_min": 22,
+      "distance_m": 0,
+      "mode": "WALK",
+      "walking_min": 22,
+      "degraded": false,
+      "geometry": {},
+      "reason_code": "EXACT_MOBILITY_FACT_MATCH"
+    },
+    "blocking_reasons": [],
+    "warning_reasons": [
+      "LOCATION_UNAVAILABLE",
+      "VENUE_NOT_VERIFIED"
+    ],
+    "checks": {
+      "venue": "UNKNOWN",
+      "route": "AVAILABLE",
+      "reservation": "NONE",
+      "reservation_realtime": null,
+      "commitment": "NONE",
+      "presence": "LOCATION_UNAVAILABLE"
+    },
+    "recommended_action": "CHECK_BEFORE_LEAVING",
+    "authority": "READ_ONLY_PROJECTION",
+    "next_move": {
+      "current_activity": {
+        "id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T10:11:00+09:00",
+        "end_at": "2026-10-07T11:11:00+09:00"
+      },
+      "next_activity": {
+        "id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "title": "依水園",
+        "status": "ACTIVE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T10:11:00+09:00",
+        "end_at": "2026-10-07T11:11:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "target_place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "AVAILABLE",
+        "kind": "LAUNCH_EDGE",
+        "provider": "valhalla-http",
+        "provenance": "LIVE_PROVIDER_CAPTURE",
+        "captured_at": "2026-10-06T13:11:13.893069+00:00",
+        "expires_at": "2026-10-07T13:11:13.893069+00:00",
+        "minutes": 22,
+        "from_activity_id": null,
+        "to_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "edge_match": true,
+        "degraded": false,
+        "reason_code": "EXACT_MOBILITY_FACT_MATCH",
+        "launch_origin": {
+          "state": "READY",
+          "source": "PLACE",
+          "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+          "name": "なら工藝館",
+          "latitude": 34.678661,
+          "longitude": 135.8281897,
+          "captured_at": "2026-10-06T13:11:11.998608+00:00",
+          "provider_key": null,
+          "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+          "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+          "launch_context_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+          "source_ref_type": "PLACE",
+          "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+          "valid_from": "2026-10-06T01:11:00+00:00",
+          "valid_until": "2026-10-08T01:11:00+00:00"
+        }
+      },
+      "launch_origin": {
+        "state": "READY",
+        "source": "PLACE",
+        "authority": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "name": "なら工藝館",
+        "latitude": 34.678661,
+        "longitude": 135.8281897,
+        "captured_at": "2026-10-06T13:11:11.998608+00:00",
+        "provider_key": null,
+        "target_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "reason_code": "USER_CONFIRMED_PLANNED_ORIGIN",
+        "launch_context_id": "77eb5360-5fba-4b45-a647-e9235ca7eab4",
+        "source_ref_type": "PLACE",
+        "source_ref_id": "real-place-b47a20314c81d5a81381d4a4",
+        "valid_from": "2026-10-06T01:11:00+00:00",
+        "valid_until": "2026-10-08T01:11:00+00:00"
+      },
+      "launch_edge": {
+        "state": "LAUNCH_ROUTE_READY",
+        "kind": "LAUNCH_EDGE",
+        "origin_key": "real-place-b47a20314c81d5a81381d4a4",
+        "target_key": "real-place-22cf72809897ff4c7f312fcf",
+        "from_activity_id": null,
+        "to_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "provider": "valhalla-http",
+        "provenance": "LIVE_PROVIDER_CAPTURE",
+        "captured_at": "2026-10-06T13:11:13.893069+00:00",
+        "expires_at": "2026-10-07T13:11:13.893069+00:00",
+        "duration_min": 22,
+        "distance_m": 0,
+        "mode": "WALK",
+        "walking_min": 22,
+        "degraded": false,
+        "geometry": {},
+        "reason_code": "EXACT_MOBILITY_FACT_MATCH"
+      },
+      "journey_phase": "APPROACHING_NEXT",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "copy": "Using なら工藝館, the next stop is about 22 minutes away.",
+      "authority": "NONE"
+    },
+    "evidence": {
+      "material_event_ids": [],
+      "commitment_ids": [],
+      "reservation_id": null
+    },
+    "departure_activation": {
+      "activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "target_title": "依水園",
+      "must_leave_by": "2026-10-07T00:39:00+00:00",
+      "readiness_state": "ACTION_NEEDED",
+      "state": "DUE_NOW",
+      "minutes_to_leave": -5.0,
+      "can_confirm_departure": true,
+      "recommended_action": "CONFIRM_DEPARTURE",
+      "authority_required": "OPERATOR_CONFIRMED_EXECUTION"
+    }
+  },
+  "cue": {
+    "eligible": true,
+    "created_or_reused": true,
+    "id": "b403dd35-811a-409b-8a96-a19e2d9d55fe",
+    "dedupe_key": "departure-activation:77eb5360-5fba-4b45-a647-e9235ca7eab4:b1e28be82ed1117d1cd3a4ec06d9fe68eae2f0da88bef663092e41e311cd137a",
+    "priority": "HIGH",
+    "occurrence_count": 1,
+    "state": "DUE_NOW"
+  },
+  "must_leave_by": "2026-10-07T00:39:00+00:00",
+  "departure_action_count": 1,
+  "authenticated_principal": {
+    "traveler_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed",
+    "member_id": "58c52a9e-546d-44d9-91a6-c42ad4813fe6",
+    "auth_method": "SIGNED_HMAC_BEARER"
+  },
+  "execution_truth": {
+    "actor_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed",
+    "actor_type": "AUTHENTICATED_TRAVELER",
+    "captured_at": "2026-10-06T13:11:14.612243+00:00",
+    "evidence": {
+      "auth_method": "SIGNED_HMAC_BEARER",
+      "member_id": "58c52a9e-546d-44d9-91a6-c42ad4813fe6",
+      "operator_confirmed": true,
+      "physical_presence_claimed": false,
+      "role": "OWNER"
+    },
+    "kind": "OPERATOR_CONFIRMED_EXECUTION",
+    "transition": "EN_ROUTE"
+  },
+  "readiness_after": {
+    "state": "READY_WITH_UNCERTAINTY",
+    "target_activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+    "target_title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+    "starts_at": "2026-10-07T12:03:00+09:00",
+    "minutes_until_start": 139.0,
+    "must_leave_by": "2026-10-07T02:01:00+00:00",
+    "must_leave_by_absent_reason": null,
+    "safety_buffer_minutes": 10,
+    "launch_origin": null,
+    "launch_edge": null,
+    "blocking_reasons": [],
+    "warning_reasons": [
+      "LOCATION_UNAVAILABLE",
+      "VENUE_NOT_VERIFIED"
+    ],
+    "checks": {
+      "venue": "UNKNOWN",
+      "route": "AVAILABLE",
+      "reservation": "NONE",
+      "reservation_realtime": null,
+      "commitment": "NONE",
+      "presence": "LOCATION_UNAVAILABLE"
+    },
+    "recommended_action": "LEAVE_ON_SCHEDULE",
+    "authority": "READ_ONLY_PROJECTION",
+    "next_move": {
+      "current_activity": {
+        "id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "title": "依水園",
+        "status": "EN_ROUTE",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "start_at": "2026-10-07T10:11:00+09:00",
+        "end_at": "2026-10-07T11:11:00+09:00"
+      },
+      "next_activity": {
+        "id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+        "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+        "status": "PLANNED",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "start_at": "2026-10-07T12:03:00+09:00",
+        "end_at": "2026-10-07T13:03:00+09:00"
+      },
+      "presence": {
+        "state": "LOCATION_UNAVAILABLE",
+        "authority": "NONE",
+        "location_observation_id": null,
+        "source": null,
+        "captured_at": null,
+        "age_seconds": null,
+        "accuracy_m": null,
+        "target_activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+        "target_place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "distance_to_target_m": null,
+        "maximum_near_distance_m": null,
+        "arrival_transition_allowed": false,
+        "reason_code": "NO_LOCATION_OBSERVATION"
+      },
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+        "source": null,
+        "observed_at": null
+      },
+      "route_evidence": {
+        "state": "AVAILABLE",
+        "kind": "ACTIVITY_EDGE",
+        "provider": "valhalla-http",
+        "provenance": "LIVE_PROVIDER_CAPTURE",
+        "captured_at": "2026-10-06T13:11:09.096693+00:00",
+        "expires_at": null,
+        "minutes": 52,
+        "from_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+        "to_activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+        "edge_match": true,
+        "degraded": false,
+        "reason_code": "ROUTE_EDGE_MATCHED"
+      },
+      "launch_origin": null,
+      "launch_edge": null,
+      "journey_phase": "IN_TRANSIT",
+      "phase_authority": "EXECUTION_TRUTH",
+      "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+      "authority": "NONE"
+    },
+    "evidence": {
+      "material_event_ids": [],
+      "commitment_ids": [],
+      "reservation_id": null
+    },
+    "departure_activation": {
+      "activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+      "target_title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+      "must_leave_by": "2026-10-07T02:01:00+00:00",
+      "readiness_state": "READY_WITH_UNCERTAINTY",
+      "state": "ALREADY_EN_ROUTE",
+      "minutes_to_leave": null,
+      "can_confirm_departure": false,
+      "recommended_action": "CONTINUE_ROUTE",
+      "authority_required": null
+    }
+  },
+  "phase_before": "APPROACHING_NEXT",
+  "phase_after": {
+    "journey_phase": "IN_TRANSIT",
+    "phase_reason_code": "EXPLICIT_EN_ROUTE_EXECUTION_TRUTH",
+    "phase_authority": "EXECUTION_TRUTH",
+    "current_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "monitored_activity_ids": [
+      "9727d527-1f2d-5caa-8979-81128751319e",
+      "4a3e9b78-eb96-564e-9323-c3b48b9983e5"
+    ]
+  },
+  "journey_outcome_events": [
+    {
+      "id": "0eecc7ee-c6d0-40ed-a583-665bf3b84d87",
+      "event_type": "ACTIVITY_STARTED",
+      "actor_type": "SYSTEM",
+      "actor_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed"
+    },
+    {
+      "id": "f3557c93-a7fb-4408-b50d-b74e1b6fb913",
+      "event_type": "ACTIVITY_DEPARTED",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "actor_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed"
+    }
+  ],
+  "material_event_count": 0,
+  "agent_run_count": 0,
+  "proposal_count": 0,
+  "plan_mutation_count": 0,
+  "route_fact_before": {
+    "id": "48fa493d-67d1-4b85-9321-70fe7feb5a58",
+    "from_key": "real-place-b47a20314c81d5a81381d4a4",
+    "to_key": "real-place-22cf72809897ff4c7f312fcf",
+    "mode": "WALK",
+    "duration_min": 22,
+    "provider_key": "valhalla-http",
+    "provenance": "LIVE_PROVIDER_CAPTURE",
+    "captured_at": "2026-10-06T13:11:13.893069+00:00",
+    "expires_at": "2026-10-07T13:11:13.893069+00:00"
+  },
+  "route_fact_after": {
+    "id": "48fa493d-67d1-4b85-9321-70fe7feb5a58",
+    "from_key": "real-place-b47a20314c81d5a81381d4a4",
+    "to_key": "real-place-22cf72809897ff4c7f312fcf",
+    "mode": "WALK",
+    "duration_min": 22,
+    "provider_key": "valhalla-http",
+    "provenance": "LIVE_PROVIDER_CAPTURE",
+    "captured_at": "2026-10-06T13:11:13.893069+00:00",
+    "expires_at": "2026-10-07T13:11:13.893069+00:00"
+  },
+  "offline_departure_activation": {
+    "activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+    "authority_required": null,
+    "can_confirm_departure": false,
+    "captured_at": "2026-10-07T00:44:00+00:00",
+    "cue": null,
+    "departure_confirmed": true,
+    "execution_status": "EN_ROUTE",
+    "execution_truth": {
+      "actor_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "captured_at": "2026-10-06T13:11:14.612243+00:00",
+      "evidence": {
+        "auth_method": "SIGNED_HMAC_BEARER",
+        "member_id": "58c52a9e-546d-44d9-91a6-c42ad4813fe6",
+        "operator_confirmed": true,
+        "physical_presence_claimed": false,
+        "role": "OWNER"
+      },
+      "kind": "OPERATOR_CONFIRMED_EXECUTION",
+      "transition": "EN_ROUTE"
+    },
+    "freshness_semantics": "CAPTURED_READ_MODEL",
+    "minutes_to_leave": null,
+    "must_leave_by": "2026-10-07T02:01:00+00:00",
+    "readiness_state": "READY_WITH_UNCERTAINTY",
+    "recommended_action": "CONTINUE_ROUTE",
+    "state": "ALREADY_EN_ROUTE",
+    "target_title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)"
+  },
+  "offline_execution": {
+    "cursor_status": "VALID",
+    "execution_truth": {
+      "actor_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed",
+      "actor_type": "AUTHENTICATED_TRAVELER",
+      "captured_at": "2026-10-06T13:11:14.612243+00:00",
+      "evidence": {
+        "auth_method": "SIGNED_HMAC_BEARER",
+        "member_id": "58c52a9e-546d-44d9-91a6-c42ad4813fe6",
+        "operator_confirmed": true,
+        "physical_presence_claimed": false,
+        "role": "OWNER"
+      },
+      "kind": "OPERATOR_CONFIRMED_EXECUTION",
+      "transition": "EN_ROUTE"
+    },
+    "next": {
+      "end_at": "2026-10-07T13:03:00+09:00",
+      "execution_truth": null,
+      "id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+      "locked": false,
+      "start_at": "2026-10-07T12:03:00+09:00",
+      "state": "PLANNED",
+      "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)"
+    },
+    "next_activity_id": "4a3e9b78-eb96-564e-9323-c3b48b9983e5",
+    "next_eta_min": 0,
+    "next_leg_id": null,
+    "next_mode": "NONE",
+    "next_state": "PLANNED",
+    "now": {
+      "end_at": "2026-10-07T11:11:00+09:00",
+      "execution_truth": {
+        "actor_id": "57adfc91-8da0-4da5-a679-dc2c6f6d14ed",
+        "actor_type": "AUTHENTICATED_TRAVELER",
+        "captured_at": "2026-10-06T13:11:14.612243+00:00",
+        "evidence": {
+          "auth_method": "SIGNED_HMAC_BEARER",
+          "member_id": "58c52a9e-546d-44d9-91a6-c42ad4813fe6",
+          "operator_confirmed": true,
+          "physical_presence_claimed": false,
+          "role": "OWNER"
+        },
+        "kind": "OPERATOR_CONFIRMED_EXECUTION",
+        "transition": "EN_ROUTE"
+      },
+      "id": "9727d527-1f2d-5caa-8979-81128751319e",
+      "locked": false,
+      "start_at": "2026-10-07T10:11:00+09:00",
+      "state": "EN_ROUTE",
+      "title": "依水園"
+    },
+    "now_activity_id": "9727d527-1f2d-5caa-8979-81128751319e",
+    "now_state": "EN_ROUTE",
+    "persisted_cursor": "9727d527-1f2d-5caa-8979-81128751319e"
+  },
+  "notifications": [
+    {
+      "id": "f19cf7f1-e28c-4490-a56e-5e311cf12ad0",
+      "kind": "DEPARTURE_READINESS",
+      "priority": "HIGH",
+      "dedupe_key": "departure-readiness:77eb5360-5fba-4b45-a647-e9235ca7eab4:d74debbb4ddece7dccf3d184",
+      "occurrence_count": 1,
+      "status": "RECORDED"
+    },
+    {
+      "id": "b403dd35-811a-409b-8a96-a19e2d9d55fe",
+      "kind": "DEPARTURE_ACTIVATION",
+      "priority": "HIGH",
+      "dedupe_key": "departure-activation:77eb5360-5fba-4b45-a647-e9235ca7eab4:b1e28be82ed1117d1cd3a4ec06d9fe68eae2f0da88bef663092e41e311cd137a",
+      "occurrence_count": 1,
+      "status": "RECORDED"
+    }
+  ],
+  "provider_calls": [
+    {
+      "provider_key": "valhalla",
+      "operation": "ROUTE_ACQUISITION",
+      "status": "SUCCESS"
+    }
+  ],
+  "citynexus_lab_estimate_authority": false,
+  "captured_at": "2026-10-06T13:11:14.645241+00:00"
+}

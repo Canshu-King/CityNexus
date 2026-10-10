@@ -262,7 +262,9 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
           {s.slots.live()}
           <LiveRecovery
             journeyId={s.data.journey.id}
+            journeyStatus={s.data.journey.status}
             handledEventIds={s.handledEventIds}
+            onRefreshLocation={s.captureForegroundLocation}
             onAccepted={() => void s.load(s.data.journey.id)}
           />
           {s.slots.liveSecondary()}

@@ -70,7 +70,11 @@ function activity(id: string, title: string, start: string, end: string) {
   };
 }
 
-function experience(disruptions: Disruption[], withActivities: boolean) {
+function experience(
+  disruptions: Disruption[],
+  withActivities: boolean,
+  journeyStatus = "ACTIVE",
+) {
   return {
     journey: {
       id: JOURNEY_ID,
@@ -80,6 +84,7 @@ function experience(disruptions: Disruption[], withActivities: boolean) {
       timezone: "Asia/Shanghai",
       start_at: "2026-10-09T18:00:00+08:00",
       end_at: "2026-10-11T15:00:00+08:00",
+      status: journeyStatus,
       budget: { amount_minor: 120000, currency: "CNY" },
     },
     trip: {
@@ -141,7 +146,10 @@ function offline() {
   };
 }
 
-async function mockApi(page: Page, fx: { experience: unknown; replans: unknown }) {
+async function mockApi(
+  page: Page,
+  fx: { experience: unknown; replans: unknown; journeyStatus?: string },
+) {
   await page.route(/\/api\/v1\//, (route) => {
     const pathname = new URL(route.request().url()).pathname;
     const send = (json: unknown) =>
@@ -149,7 +157,11 @@ async function mockApi(page: Page, fx: { experience: unknown; replans: unknown }
     if (pathname.endsWith("/experience")) return send(fx.experience);
     if (pathname.endsWith("/replans")) return send(fx.replans);
     if (pathname.endsWith("/plans")) return send([]);
-    if (pathname.endsWith("/twin")) return send({ id: "twin-1", context: {} });
+    if (pathname.endsWith("/twin"))
+      return send({
+        id: "twin-1",
+        context: { journey_status: fx.journeyStatus ?? "ACTIVE" },
+      });
     if (pathname.endsWith("/agent-policy"))
       return send({ mode: "ADVISORY", auto_accept_replan: false, version: 1, max_auto_replan_cost_delta_minor: 5000, max_auto_loss_minor: 0, max_auto_schedule_drift_min: 20 });
     if (pathname.endsWith("/wallet")) return send({ reservations: [], commitments: [], offline_ready: true });
@@ -162,7 +174,10 @@ async function mockApi(page: Page, fx: { experience: unknown; replans: unknown }
   });
 }
 
-async function openLive(page: Page, fx: { experience: unknown; replans: unknown }) {
+async function openLive(
+  page: Page,
+  fx: { experience: unknown; replans: unknown; journeyStatus?: string },
+) {
   await page.setViewportSize({ width: 412, height: 915 });
   await seed(page);
   await mockApi(page, fx);
@@ -423,6 +438,33 @@ test.describe("Qoder Live state-coverage matrix (Phase 1)", () => {
     await openLive(page, { experience: experience([CLOSURE], true), replans: [rejected] });
     expect(await acceptCtaCount(page)).toBe(0);
     await expect(page.getByTestId("live-no-proposal")).toBeVisible();
+  });
+
+  test("completed Journey keeps an unaccepted proposal advisory-only", async ({ page }) => {
+    const proposal: Proposal = {
+      id: "r-completed-p1",
+      status: "PRESENTED",
+      trigger_event_id: "evt-close",
+      hard_constraints_passed: true,
+      locked_commitments_preserved: true,
+      diff: { removed: ["菽庄花园"], added: ["厦门科技馆"], moved: [] },
+    };
+    await openLive(page, {
+      experience: experience([CLOSURE], true, "COMPLETED"),
+      replans: [proposal],
+      journeyStatus: "COMPLETED",
+    });
+
+    await expect(page.getByTestId("live-completed")).toBeVisible();
+    await expect(page.getByTestId("live-proposal")).toHaveAttribute(
+      "data-authority",
+      "advisory-after-completion",
+    );
+    await expect(page.getByTestId("live-proposal-heading")).toContainText("未采纳");
+    await expect(page.getByTestId("live-advisory-only")).toHaveCount(1);
+    await expect(page.getByTestId("live-accept")).toHaveCount(0);
+    await expect(page.getByTestId("live-today-only")).toHaveCount(0);
+    await expect(page.getByTestId("live-remind-later")).toHaveCount(0);
   });
 });
 

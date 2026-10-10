@@ -43,7 +43,19 @@ class Settings:
         for item in os.getenv("CITYNEXUS_AGENT_ALLOWED_TRAVELER_IDS", "").split(",")
         if item.strip()
     )
+    # R28 human principal boundary.  This secret signs short-lived traveler
+    # bearer tokens; when absent, authenticated-human routes fail closed rather
+    # than trusting caller-supplied traveler/member ids.
+    traveler_auth_secret: str | None = os.getenv("CITYNEXUS_TRAVELER_AUTH_SECRET") or None
+    traveler_auth_ttl_seconds: int = int(
+        os.getenv("CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS", "3600")
+    )
     live_valhalla_url: str | None = os.getenv("CITYNEXUS_LIVE_VALHALLA_URL") or None
+    # Remote Valhalla emulators must opt into test provenance explicitly. The
+    # adapter independently marks loopback and reserved test hosts as test.
+    live_valhalla_test_provider: bool = (
+        os.getenv("CITYNEXUS_LIVE_VALHALLA_TEST_PROVIDER", "false").lower() == "true"
+    )
     open_meteo_url: str = os.getenv("CITYNEXUS_OPEN_METEO_URL", "https://api.open-meteo.com")
     open_meteo_timeout_seconds: float = float(
         os.getenv("CITYNEXUS_OPEN_METEO_TIMEOUT_SECONDS", "10")
@@ -51,7 +63,17 @@ class Settings:
     solver_mode: str = os.getenv("CITYNEXUS_SOLVER", "deterministic")
     hermes_api_url: str | None = os.getenv("CITYNEXUS_HERMES_API_URL")
     hermes_api_key: str | None = os.getenv("CITYNEXUS_HERMES_API_KEY")
-    hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "hermes")
+    # Prefer the domestic WB2api route when the international quota is fused.
+    # Environment configuration still overrides this for explicit experiments.
+    hermes_model: str = os.getenv("CITYNEXUS_HERMES_MODEL", "cn:glm-5.3-flash")
+    hermes_model_fallbacks: tuple[str, ...] = tuple(
+        item.strip()
+        for item in os.getenv(
+            "CITYNEXUS_HERMES_MODEL_FALLBACKS",
+            "cn:glm-5.3-flash,cn:deepseek-v4.1-flash",
+        ).split(",")
+        if item.strip()
+    )
     hermes_native_binary: str | None = os.getenv("CITYNEXUS_HERMES_BINARY") or None
     hermes_native_proven: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_PROVEN") or None
     hermes_native_api_url: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_API_URL") or None
@@ -67,11 +89,35 @@ class Settings:
     guardian_cooldown_seconds: int = int(os.getenv("CITYNEXUS_GUARDIAN_COOLDOWN_SECONDS", "900"))
     real_city_enabled: bool = os.getenv("CITYNEXUS_REAL_CITY_ENABLED", "false").lower() == "true"
     real_city_mode: str = os.getenv("CITYNEXUS_REAL_CITY_MODE", "replay").lower()
+    # Revolution Lab only: estimated opening/cost facts may make a plan selectable inside an
+    # explicitly labelled coursework envelope. The default remains false.
+    lab_estimate_authority: bool = (
+        os.getenv("CITYNEXUS_LAB_ESTIMATE_AUTHORITY", "false").lower() == "true"
+    )
     real_city_replay_snapshot_path: str = os.getenv(
         "CITYNEXUS_REAL_CITY_REPLAY_SNAPSHOT", "data/replay/tianjin_v135_journey_snapshot.json"
     )
     nominatim_url: str = os.getenv("CITYNEXUS_NOMINATIM_URL", "https://nominatim.openstreetmap.org")
+    # R95 city-camera search is opt-in.  It is deliberately separate from the
+    # older live discovery switch so enabling Overpass cannot silently enable a
+    # general-purpose public geocoder.
+    city_search_enabled: bool = os.getenv("CITYNEXUS_CITY_SEARCH_ENABLED", "false").lower() == "true"
+    city_search_provider: str = os.getenv("CITYNEXUS_CITY_SEARCH_PROVIDER", "disabled").strip().lower()
+    city_search_base_url: str | None = os.getenv("CITYNEXUS_CITY_SEARCH_BASE_URL") or None
+    city_search_user_agent: str = os.getenv("CITYNEXUS_CITY_SEARCH_USER_AGENT", "").strip()
+    city_search_test_provider: bool = (
+        os.getenv("CITYNEXUS_CITY_SEARCH_TEST_PROVIDER", "false").lower() == "true"
+    )
+    city_search_cache_ttl_seconds: int = int(
+        os.getenv("CITYNEXUS_CITY_SEARCH_CACHE_TTL_SECONDS", "604800")
+    )
+    city_search_global_min_interval_seconds: float = float(
+        os.getenv("CITYNEXUS_CITY_SEARCH_GLOBAL_MIN_INTERVAL_SECONDS", "1.0")
+    )
     overpass_url: str = os.getenv("CITYNEXUS_OVERPASS_URL", "https://overpass-api.de/api")
+    # Optional sourceful search for fact acquisition. Search results are leads only;
+    # they never become authoritative opening or cost facts by themselves.
+    searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
     real_city_timeout_seconds: float = float(os.getenv("CITYNEXUS_REAL_CITY_TIMEOUT_SECONDS", "12"))
     real_city_cache_ttl_seconds: int = int(
         os.getenv("CITYNEXUS_REAL_CITY_CACHE_TTL_SECONDS", "900")

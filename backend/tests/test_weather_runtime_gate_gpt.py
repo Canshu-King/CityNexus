@@ -6,10 +6,11 @@ from uuid import uuid4
 
 import httpx
 import pytest
+from demo_stage import demo_reset_headers
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
-from app.db.models import Activity, Commitment, Event, Journey, Place
+from app.db.models import Activity, Commitment, Event, Journey, Place, PlanVersion, ReplanProposal
 from app.db.session import SessionLocal
 from app.integrations.context.open_meteo import (
     OpenMeteoContextProvider,
@@ -27,7 +28,6 @@ from app.integrations.context.weather_snapshot import (
     freeze_weather_risks,
 )
 from app.main import app
-from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -302,6 +302,77 @@ async def test_wrt08_repeated_polling_is_idempotent_for_same_weather_fact_activi
     assert first.event_ids == second.event_ids
     assert len(first.created_event_ids) == 1
     assert second.created_event_ids == ()
+
+
+@pytest.mark.asyncio
+async def test_wrt08a_cleared_weather_retires_only_its_pending_replan():
+    jid, plan = _prepare_started_journey()
+    target = next(item for item in plan["activities"] if item["place_id"] == "place-tech-art")
+    for activity in plan["activities"]:
+        if activity["id"] == target["id"]:
+            break
+        completed = client.post(f"/api/v1/journeys/{jid}/activities/{activity['id']}/complete")
+        assert completed.status_code == 200, completed.text
+    risk_at = datetime.fromisoformat(target["start_at"]).astimezone(timezone.utc)
+    with SessionLocal() as session:
+        journey = session.get(Journey, jid)
+        assert journey is not None
+        target_place = session.get(Place, target["place_id"])
+        assert target_place is not None
+        target_place.tags_json = json.dumps(["outdoor"])
+        session.flush()
+        await refresh_weather_runtime(
+            session,
+            journey,
+            provider=_WeatherProvider(risk_at=risk_at),
+            captured_at="2026-10-10T06:55:00+00:00",
+        )
+        session.commit()
+        weather_event = session.scalar(
+            select(Event).where(
+                Event.journey_id == jid,
+                Event.event_type == "WEATHER",
+                Event.status == "DETECTED",
+            )
+        )
+        assert weather_event is not None
+        assert weather_event.affected_activity_id == target["id"]
+
+    created = client.post(
+        f"/api/v1/journeys/{jid}/replans",
+        json={"trigger_event_id": weather_event.id, "candidate_count": 1},
+        headers={"Idempotency-Key": f"weather-clear-replan-{uuid4()}"},
+    )
+    assert created.status_code == 201, created.text
+    proposal_id = created.json()["id"]
+    candidate_plan_id = created.json()["proposed_plan_version_id"]
+
+    with SessionLocal() as session:
+        journey = session.get(Journey, jid)
+        assert journey is not None
+        recovered = await refresh_weather_runtime(
+            session,
+            journey,
+            provider=_WeatherProvider(risk_at=risk_at, probability=10),
+            captured_at="2026-10-10T07:01:00+00:00",
+        )
+        session.commit()
+        proposal = session.get(ReplanProposal, proposal_id)
+        candidate = session.get(PlanVersion, candidate_plan_id)
+        event = session.get(Event, weather_event.id)
+
+    assert event is not None and event.status == "RESOLVED"
+    assert recovered.degraded is False
+    assert proposal is not None and proposal.status == "INVALIDATED"
+    assert candidate is not None and candidate.status == "REJECTED"
+    history = client.get(f"/api/v1/journeys/{jid}/replans")
+    assert history.status_code == 200, history.text
+    assert next(item for item in history.json() if item["id"] == proposal_id)["status"] == "INVALIDATED"
+    accepted = client.post(
+        f"/api/v1/replans/{proposal_id}/accept",
+        headers={"Idempotency-Key": f"weather-clear-accept-{uuid4()}"},
+    )
+    assert accepted.status_code == 409, accepted.text
 
 
 @pytest.mark.asyncio

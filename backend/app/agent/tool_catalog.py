@@ -34,11 +34,32 @@ TOOLS = (
         False,
         False,
     ),
+    ToolDescriptor(
+        AgentAction.DISCOVER_RECOVERY_OPTIONS,
+        "discover_recovery_options",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.RESEARCH_PLACE_SOURCES,
+        "research_place_sources",
+        False,
+        False,
+        False,
+    ),
     ToolDescriptor(AgentAction.REQUEST_REPLAN, "request_replan", True, False, False),
     ToolDescriptor(AgentAction.ACCEPT_REPLAN, "accept_replan", True, False, False),
+    ToolDescriptor(AgentAction.ACTIVATE_STANDBY, "activate_standby", True, False, False),
 )
 
 TYPED_TOOLS = (
+    ToolDescriptor(AgentAction.REQUEST_COLLECTIVE_DECISION, "request_collective_decision", True, False, False),
+    ToolDescriptor(AgentAction.CONCLUDE_RECOVERY, "conclude_recovery", False, False, False),
+    ToolDescriptor(AgentAction.APPLY_CLARIFIED_HORIZON_CHOICE, "apply_clarified_horizon_choice", True, False, False),
+    ToolDescriptor(AgentAction.ACQUIRE_PLACE_FACTS, "acquire_place_facts", True, False, False),
+    ToolDescriptor(AgentAction.ESTIMATE_PLACE_FACTS, "estimate_place_facts", False, False, False),
+    ToolDescriptor(AgentAction.GENERATE_PLANS, "generate_plans", True, False, False),
     ToolDescriptor(AgentAction.REPLACE_ACTIVITY, "replace_activity", True, False, False),
     ToolDescriptor(AgentAction.RESCHEDULE_ACTIVITY, "reschedule_activity", True, False, False),
     ToolDescriptor(AgentAction.CREATE_BOOKING, "create_booking", True, True, False),
@@ -64,7 +85,18 @@ RUNTIME_MCP_ALLOWLIST_V2 = frozenset(item.tool_name for item in (*TOOLS, *TYPED_
 
 
 def tool_catalog() -> list[dict[str, object]]:
-    return [item.as_dict() for item in TOOLS]
+    # The unversioned V1 surface is a compatibility contract.  R27 additions
+    # are available through the typed V2 catalog and must not silently change
+    # the legacy endpoint's exact set.
+    legacy_names = {
+        "inspect_journey",
+        "inspect_twin",
+        "list_replans",
+        "search_city_services",
+        "request_replan",
+        "accept_replan",
+    }
+    return [item.as_dict() for item in TOOLS if item.tool_name in legacy_names]
 
 
 def tool_catalog_v2() -> list[dict[str, object]]:

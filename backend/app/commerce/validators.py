@@ -30,10 +30,17 @@ class PaymentTargetContext:
     target_status: str
 
 
-def validate_booking_target(context: BookingTargetContext) -> None:
-    if context.journey_status != "PLANNED":
+def validate_booking_target(
+    context: BookingTargetContext, *, allow_active_recovery: bool = False
+) -> None:
+    allowed_journey_statuses = {"PLANNED"}
+    allowed_plan_statuses = {"SELECTED"}
+    if allow_active_recovery:
+        allowed_journey_statuses.add("ACTIVE")
+        allowed_plan_statuses.add("ACTIVE")
+    if context.journey_status not in allowed_journey_statuses:
         raise CommerceValidationError("booking requires a PLANNED Journey")
-    if not context.selected_plan_id or context.selected_plan_status != "SELECTED":
+    if not context.selected_plan_id or context.selected_plan_status not in allowed_plan_statuses:
         raise CommerceValidationError("booking requires the selected PlanVersion")
     if context.activity_plan_id != context.selected_plan_id:
         raise CommerceValidationError("activity does not belong to the selected PlanVersion")

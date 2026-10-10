@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.audit import record_audit
 from app.db.models import Event
 from app.integrations.context.weather_snapshot import WeatherRiskFact
+from app.replanning.proposal_lifecycle import invalidate_pending_replans_for_event
 
 
 def _weather_event_identity(
@@ -258,6 +259,13 @@ def resolve_cleared_weather_events(
                 "resolved_at": resolved_at,
                 "reason": "FORECAST_CLEARED",
             },
+        )
+        invalidate_pending_replans_for_event(
+            session,
+            event_id=item.id,
+            journey_id=str(journey_id),
+            decided_at=resolved_at,
+            reason="trigger_event_resolved",
         )
     session.flush()
     return tuple(resolved)

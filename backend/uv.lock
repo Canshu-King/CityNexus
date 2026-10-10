@@ -442,6 +442,7 @@ dependencies = [
 dev = [
     { name = "pytest" },
     { name = "pytest-asyncio" },
+    { name = "pyyaml" },
     { name = "ruff" },
 ]
 push = [
@@ -463,6 +464,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8,<10" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24,<1" },
     { name = "pywebpush", marker = "extra == 'push'", specifier = ">=2,<3" },
+    { name = "pyyaml", marker = "extra == 'dev'", specifier = ">=6,<7" },
     { name = "rapidfuzz", specifier = ">=3.10,<4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6,<1" },
     { name = "shapely", specifier = ">=2.0,<3" },

@@ -132,13 +132,33 @@ class AgentToolCall(BaseModel):
     journey_id: UUID | None = None
     mission_id: UUID | None = None
     proposal_id: UUID | None = None
+    standby_plan_id: UUID | None = None
     trigger_event_id: UUID | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
     solver_mode: Literal["deterministic", "ortools", "auto", "v2"] | None = None
     city_code: str | None = Field(default=None, min_length=1, max_length=32)
     q: str | None = Field(default=None, max_length=120)
     category: str | None = Field(default=None, max_length=80)
+    radius_m: int | None = Field(default=None, ge=250, le=5000)
+    discovery_limit: int | None = Field(default=None, ge=1, le=8)
     service_type: str | None = Field(default=None, max_length=80)
+    place_id: str | None = Field(default=None, min_length=1, max_length=128)
+    source_url: str | None = Field(default=None, min_length=1, max_length=2048)
+    source_observation_id: UUID | None = None
+    source_class: Literal[
+        "OFFICIAL_WEB",
+        "OFFICIAL_OPERATOR",
+        "OFFICIAL_TICKETING",
+        "MUNICIPAL_AUTHORITY",
+    ] = "OFFICIAL_WEB"
+    estimated_open_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_close_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_cost_minor: int | None = Field(default=None, ge=0)
+    # A replan hint may contain one newly discovered Place. The gateway still
+    # enforces the larger input required by generic plan generation; keeping
+    # this field at one lets F4 opportunity insertion use a single bounded hint.
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
+    planning_mode: PlanningMode | None = None
     approval_id: UUID | None = None
     activity_id: UUID | None = None
     replacement_activity_id: UUID | None = None
@@ -149,6 +169,17 @@ class AgentToolCall(BaseModel):
     end_at: datetime | None = None
     provider_key: str = Field(default="mock-booking", min_length=1, max_length=64)
     reason: str | None = Field(default=None, min_length=1, max_length=500)
+    outcome: Literal[
+        "MUTATION_EXECUTED",
+        "APPROVAL_PENDING",
+        "NO_ACTION",
+        "UNRESOLVED",
+        "CLARIFICATION_REQUIRED",
+    ] | None = None
+    horizon_decision: Literal["TAKE_NOW", "DEFER", "NO_ACTION"] | None = None
+    question: str | None = Field(default=None, min_length=1, max_length=500)
+    option_keys: list[str] | None = Field(default=None, min_length=2, max_length=3)
+    preference_dimension: str | None = Field(default=None, min_length=1, max_length=120)
     # Compatibility-only input. The gateway never treats this caller-owned
     # boolean as authorization; approvals are server-issued and user-bound.
     user_confirmed: bool = False
@@ -171,7 +202,75 @@ class AgentCommandRequest(BaseModel):
     requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
 
 
+class AgentRunOutcome(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    status: str
+    reason_code: str | None = None
+    user_summary: str | None = None
+    recommended_action: str | None = None
+
+
+class AgentRunResponse(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    run_id: UUID | None = None
+    mission_id: UUID
+    journey_id: UUID | None = None
+    provider_key: str | None = None
+    runtime_identity: str | None = None
+    model_key: str | None = None
+    status: str
+    completion_contract: dict[str, Any] | None = None
+    outcome: str | AgentRunOutcome | None = None
+    failure_reason: str | None = None
+    mission_status: str | None = None
+    created_at: str | None = None
+    started_at: str | None = None
+    completed_at: str | None = None
+    mission: dict[str, Any] | None = None
+    tool_steps: list[dict[str, Any]] = Field(default_factory=list)
+    native_events_url: str | None = None
+    events_url: str | None = None
+    timeline_url: str | None = None
+    initial_events: list[dict[str, Any]] | None = None
+    protected_commitments: list[dict[str, Any]] | None = None
+
+
+class AgentCommandResponse(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    event_id: UUID | None = None
+    mission: dict[str, Any] = Field(default_factory=dict)
+    run: AgentRunResponse
+
+
+class ClarificationAnswer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    clarification_id: str = Field(min_length=1, max_length=128)
+    option_key: str = Field(min_length=1, max_length=64)
+    scope: Literal["THIS_JOURNEY", "REMEMBER_FOR_FUTURE_TRIPS"] = "THIS_JOURNEY"
+
+
 class GuardianAutopilotStart(BaseModel):
+    interval_seconds: float | None = Field(default=None, gt=0, le=3600)
+
+
+class JourneyOperatorStartRequest(BaseModel):
+    """Plain-language one-click activation for the Journey Operator."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    objective: str = Field(
+        default=(
+            "Take care of this trip. Protect confirmed commitments, keep changes reasonable, "
+            "and ask me before important changes."
+        ),
+        min_length=8,
+        max_length=2000,
+    )
+    requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
     interval_seconds: float | None = Field(default=None, gt=0, le=3600)
 
 
@@ -190,6 +289,69 @@ class RealCityDiscoveryRequest(BaseModel):
     limit: int = Field(default=8, ge=1, le=20)
     mode: Literal["replay", "captured_replay", "live"] = "captured_replay"
 
+
+class BootstrapDiscoveryRequest(BaseModel):
+    """Pre-plan discovery for a new Journey with no materialized catalogue."""
+
+    query: str = Field(default="cafe", min_length=1, max_length=120)
+    radius_m: int = Field(default=2500, ge=100, le=5000)
+    limit: int = Field(default=3, ge=1, le=3)
+    source_kind: Literal["FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"]
+    provider_consent: bool = False
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"] = "WGS84"
+    accuracy_m: float | None = Field(default=None, gt=0, le=1000)
+    mode: Literal["live"] = "live"
+
+
+class BootstrapCitySearchRequest(BaseModel):
+    """One explicit, bounded city lookup before a traveler taps a public area."""
+
+    query: str = Field(min_length=2, max_length=120)
+    provider_consent: bool = False
+    limit: int = Field(default=3, ge=1, le=3)
+
+
+class BootstrapSelectRequest(BaseModel):
+    receipt_id: UUID
+    candidate_id: UUID
+
+
+class BootstrapMapPreviewRequest(BaseModel):
+    """Release one selected public destination to an external map."""
+
+    receipt_id: UUID
+    candidate_id: UUID
+    public_map_consent: bool = False
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"] = "WGS84"
+
+
+class BootstrapShortlistSaveRequest(BaseModel):
+    receipt_id: UUID
+    candidate_id: UUID
+
+
+class BootstrapShortlistPreviewRequest(BaseModel):
+    """Release a saved public destination using fresh per-click consent."""
+
+    public_map_consent: bool = False
+
+
+class BootstrapShortlistNavigationRequest(BaseModel):
+    """Release a saved public destination for destination-only walking directions."""
+
+    public_map_consent: bool = False
+
+
+class BootstrapTwoStopWalkRequest(BaseModel):
+    """Release a walking leg between two explicitly ordered saved public stops."""
+
+    first_shortlist_id: UUID
+    second_shortlist_id: UUID
+    public_map_consent: bool = False
 
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
@@ -417,10 +579,293 @@ class ScheduleChangeRequest(BaseModel):
 
 
 class LocationObservationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     latitude: float = Field(ge=-90, le=90)
     longitude: float = Field(ge=-180, le=180)
     accuracy_m: float = Field(gt=0, le=10000)
     captured_at: datetime
+
+
+class GroupPresenceRouteRequest(BaseModel):
+    """Request one member-specific route from a fresh, server-bound location sample."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
+class RendezvousBuddyPrivateRouteRequest(BaseModel):
+    """One private route to an accepted R79 place after a separate disclosure action."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    requested_mode: Literal["WALK"] = "WALK"
+    external_provider_disclosure_confirmed: bool = False
+
+
+class JourneyRendezvousSignalCreateRequest(BaseModel):
+    """The client may confirm the displayed target, but never choose a destination."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    signal_kind: Literal["HEADING_TO_RENDEZVOUS", "NEEDS_COORDINATION"]
+    expected_active_plan_version_id: UUID
+    expected_current_activity_id: UUID | None = None
+    expected_rendezvous_activity_id: UUID
+    expected_public_place_id: str = Field(min_length=1, max_length=128)
+    expected_audience_sha256: str = Field(
+        min_length=64, max_length=64, pattern="^[0-9a-f]{64}$"
+    )
+
+
+class RendezvousBuddyHandoffOfferRequest(BaseModel):
+    """An authorized helper selects only a server-suggested public Place."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    help_signal_id: UUID
+    expected_active_plan_version_id: UUID
+    expected_current_activity_id: UUID | None = None
+    expected_rendezvous_activity_id: UUID
+    expected_original_public_place_id: str = Field(min_length=1, max_length=128)
+    expected_audience_sha256: str = Field(
+        min_length=64, max_length=64, pattern="^[0-9a-f]{64}$"
+    )
+    handoff_place_id: str = Field(min_length=1, max_length=128)
+    execution_window_minutes: Literal[30, 60, 90] | None = None
+
+
+class RendezvousBuddyHandoffDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+
+
+class RendezvousBuddyExecutionWindowRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    execution_window_minutes: Literal[30, 60, 90]
+
+
+class RendezvousBuddyExecutionReceiptRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    receipt_kind: Literal["BUDDY_MET_ACK", "CANNOT_MEET", "CANCEL_PARTICIPATION"]
+
+
+class MemberSideQuestCreateRequest(BaseModel):
+    """Create or replace the authenticated member's private side-quest destination."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    destination_text: str | None = Field(default=None, max_length=240)
+    place_id: str | None = Field(default=None, min_length=1, max_length=128)
+
+
+class MemberPlaceInvitationCreateRequest(BaseModel):
+    """The owner must explicitly confirm disclosure of one exact public Place."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    confirm_public_place_sharing: Literal[True]
+    audience_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+
+
+class MemberPlaceInvitationDecisionRequest(BaseModel):
+    """An addressed companion must make an explicit accept/decline decision."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+    confirm_exact_public_place: Literal[True] | None = None
+    feasibility_token: str | None = Field(default=None, min_length=16, max_length=12000)
+    acknowledge_feasibility_unknown: Literal[True] | None = None
+    acknowledge_feasibility_risk: Literal[True] | None = None
+
+
+class MemberPlaceInvitationFeasibilityPreviewRequest(BaseModel):
+    """One explicitly consented, recipient-only route feasibility request."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    consent_route_provider: Literal[True]
+    location_observation_id: UUID | None = None
+    dwell_minutes: Literal[10, 20, 30] = 20
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
+class MemberPlaceInvitationProgressRequest(BaseModel):
+    """An invitation participant explicitly shares or withdraws one coarse status."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal[
+        "SHARE_ARRIVAL",
+        "WITHDRAW_ARRIVAL",
+        "SHARE_HEADING_BACK",
+        "WITHDRAW_HEADING_BACK",
+    ]
+    share_audience_token: str | None = Field(default=None, min_length=64, max_length=64)
+
+
+class MemberPlacePromotionCreateRequest(BaseModel):
+    """One deliberate request to propose an invited Place as a shared stop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    dwell_minutes: Literal[10, 20, 30]
+
+
+class MemberPlaceGroupShareConsentRequest(BaseModel):
+    """Explicit confirmation of a frozen whole-Journey Place audience preview."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    confirm_full_journey_place_sharing: Literal[True]
+    audience_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+    plan_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+    source_snapshot: str = Field(min_length=64, max_length=64, pattern="^[0-9a-f]{64}$")
+
+
+class MemberPlacePromotionDecisionRequest(BaseModel):
+    """One current Journey member's independent decision on a shared-stop proposal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    clarification_id: str = Field(min_length=1, max_length=128)
+    decision: Literal["APPROVE", "DECLINE"]
+
+
+class SharedStopCoPlanningGrantCreateRequest(BaseModel):
+    """Offer one named Journey collaborator bounded authority for one public Place."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    grantee_member_id: str = Field(min_length=1, max_length=128)
+
+
+class SharedStopCoPlanningGrantDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+
+
+class MomentScoutRequest(BaseModel):
+    """One-time owner-only discovery request; location is always server-bound."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    budget_minutes: Literal[15, 30, 45] = 30
+    interest: Literal["ANYTHING", "COFFEE_FOOD", "CULTURE", "NATURE"] = "ANYTHING"
+
+
+class MomentScoutSelectRequest(MomentScoutRequest):
+    """Explicitly confirm one candidate from a fresh private Moment Scout result."""
+
+    place_id: str = Field(min_length=1, max_length=128)
+    scout_context: str = Field(min_length=32, max_length=64)
+
+
+class LiveMomentScoutRequest(BaseModel):
+    """One bounded external lookup, called only after explicit location-transfer consent."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    consent_external_location: Literal[True]
+    location_observation_id: UUID
+    budget_minutes: Literal[15, 30, 45] = 30
+    interest: Literal["ANYTHING", "COFFEE_FOOD", "CULTURE", "NATURE"] = "ANYTHING"
+    radius_m: int = Field(default=1200, ge=800, le=2000)
+
+
+class LiveMomentScoutSelectRequest(BaseModel):
+    """Select a server-held live result and confirm its exact shared rendezvous."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    receipt_id: UUID
+    candidate_id: UUID
+    confirm_return_to_rendezvous: Literal[True]
+
+
+class MemberSideQuestFitPreviewRequest(BaseModel):
+    """One-time owner-only detour fit check; current location is optional for UNKNOWN."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID | None = None
+    dwell_minutes: Literal[10, 20, 30] = 20
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
+class MemberSideQuestNavigateRequest(BaseModel):
+    """Route only the authenticated member from a fresh one-time location to their stop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
+class GroupRecoveryRequest(BaseModel):
+    """Ask the existing Journey Agent to prepare one bounded group recovery proposal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class GroupRecoveryApplyRequest(BaseModel):
+    """Spend the server-selected collective recovery; callers choose no proposal."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class LaunchOriginRequest(BaseModel):
+    """Explicit planned-origin confirmation; coordinates and authority are server-owned."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source_kind: Literal["PLACE", "SELECTED_STAY", "ARRIVAL_ANCHOR"]
+    place_id: str | None = None
+
+
+class RouteAcquireRequest(BaseModel):
+    """Request exactly one server-resolved route edge; no client coordinates."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    target_activity_id: str | None = None
+    requested_mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] = "WALK"
+
+
+class InTransitRerouteRequest(BaseModel):
+    """Reroute from one server-stored current location sample to the exact active stop."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    location_observation_id: UUID
+
+
+class ExecutionTruthAttestation(BaseModel):
+    """Optional evidence class for one execution-state transition.
+
+    Omitting the body intentionally means SIMULATED_STATE_TRANSITION.  Stronger
+    labels require evidence and are checked server-side; callers cannot promote
+    an HTTP state-machine exercise into physical presence by choosing a string.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    truth_kind: Literal[
+        "SIMULATED_STATE_TRANSITION",
+        "OPERATOR_CONFIRMED_EXECUTION",
+        "DEVICE_LOCATION_VERIFIED_EXECUTION",
+    ] = "SIMULATED_STATE_TRANSITION"
+    operator_confirmed: bool = False
+    location_observation_id: UUID | None = None
 
 
 class PushSubscriptionRequest(BaseModel):
@@ -469,6 +914,10 @@ class Place(BaseModel):
     city_code: str
     location: GeoPoint
     tags: list[str] = Field(default_factory=list)
+    # Display names are not identities: a live catalogue can carry an OSM way and
+    # node with the same label.  The public catalogue must expose the provider
+    # entity so a user-visible fact can be traced to the exact row.
+    external_id: str
     # A coordinate means nothing without the system it is written in, and a place
     # read from a provider is only checkable if the payload says which provider.
     # No defaults on purpose: a producer has to state these, so the value that
@@ -478,6 +927,11 @@ class Place(BaseModel):
     # What the provider actually handed us; None means it was never recorded --
     # which is a different fact from "WGS84" and must not collapse into it.
     source_coordinate_system: str | None
+    # These are the place's own captured facts.  In particular, UNKNOWN cost is
+    # represented by the evidence status and a null amount; the compatibility
+    # cost_minor=0 storage field is deliberately not projected as price truth.
+    opening_hours: dict[str, Any]
+    cost_evidence: dict[str, Any]
 
 
 class CollectionFolderCreate(BaseModel):
@@ -662,9 +1116,15 @@ class PlanVersion(BaseModel):
     version_no: int = Field(ge=1)
     planning_mode: PlanningMode
     status: Literal["CANDIDATE", "SELECTED", "ACTIVE", "SUPERSEDED", "REJECTED"]
+    lifecycle: Literal["ACTIVE", "STANDBY", "RETIRED"] = "ACTIVE"
+    trigger_contract: dict[str, Any] = Field(default_factory=dict)
     source: Literal["INITIAL", "REPLAN", "MANUAL"]
     parent_plan_version_id: UUID | None = None
     total_cost: Money
+    # A persisted integer total is retained for compatibility, but a live plan
+    # may deliberately exclude one or more unresolved prices.  This status is
+    # the public distinction between a known subtotal and a claimed total.
+    total_cost_status: Literal["KNOWN", "PARTIAL_UNKNOWN"] = "KNOWN"
     utility_score: float | None = Field(default=None, ge=0, le=1)
     score_breakdown: ScoreBreakdown | None = None
     activities: list[Activity]
@@ -693,7 +1153,15 @@ class PlanVersion(BaseModel):
 class GeneratePlansRequest(BaseModel):
     planning_mode: PlanningMode | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
-    place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
+    # The zero-catalogue bootstrap may hand native planning exactly one selected
+    # public Place.  It is opt-in so existing explicit-POI callers retain the
+    # two-stop contract and its refusal code.
+    allow_single_place: bool = False
+    # Explicit traveller-owned acknowledgement for a provider Place whose
+    # admission price is UNKNOWN.  Unknown admission is never treated as free,
+    # included in the subtotal, or eligible for booking/payment.
+    allow_unknown_cost: bool = False
     #: ORD-0272: *whose* batch this is - business semantics, so it lives in the body.
     #: `Idempotency-Key` stays the transport-level "is this the same send" control; merging the
     #: two into one key would make "same mission, different request" and "same request, resent"
@@ -715,11 +1183,35 @@ class CatalogHydrationRequest(BaseModel):
     requested_categories: list[str] | None = Field(default=None, max_length=6)
 
 
+class FactAcquisitionRequest(BaseModel):
+    """Acquire source-linked facts for existing provider Places."""
+
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=50)
+    source_bindings: dict[str, "FactSourceBindingRequest"] | None = None
+
+
+class FactSourceBindingRequest(BaseModel):
+    """Bind an operator-confirmed official page to one existing provider Place."""
+
+    source_url: str = Field(min_length=1, max_length=2048)
+    source_class: Literal[
+        "OFFICIAL_WEB",
+        "OFFICIAL_OPERATOR",
+        "OFFICIAL_TICKETING",
+        "MUNICIPAL_AUTHORITY",
+    ] = "OFFICIAL_WEB"
+
+
 class AuthoritativeComposeRequest(BaseModel):
     """User-selected bounded input for the V12 multi-day planner."""
 
     place_ids: list[str] = Field(min_length=2, max_length=12)
     candidate_count: int = Field(default=3, ge=1, le=5)
+    # R25 closure may only promote a plan whose selected mobility evidence is
+    # provider-confirmed.  The planner already has this bounded mode; expose it
+    # at the product boundary instead of letting synthetic alternate modes make
+    # a live plan look authoritative.
+    require_fully_grounded: bool = False
     stay_offer_id: UUID | None = None
     reservation_id: UUID | None = None
 
@@ -755,6 +1247,7 @@ class EventCreate(BaseModel):
         "CLOSURE",
         "WEATHER",
         "SCHEDULE_DELAY",
+        "OPPORTUNITY_WINDOW",
         "SERVICE_UNAVAILABLE",
         "USER_CHANGE",
         "OTHER",
@@ -770,6 +1263,11 @@ class Event(EventCreate):
     journey_id: UUID
     status: Literal["DETECTED", "ACKNOWLEDGED", "RESOLVED", "IGNORED"]
     detected_at: datetime
+    # Resolution is part of the user-visible event lifecycle.  Keeping it out
+    # of the response made a resolved event look indistinguishable from one
+    # that had merely been observed.
+    resolved_at: datetime | None = None
+    resolution_reason: str | None = None
 
 
 class OutcomeEventCreate(BaseModel):
@@ -813,6 +1311,11 @@ class ReplanProposal(BaseModel):
     trigger_event_id: UUID | None = None
     base_plan_version_id: UUID
     proposed_plan_version_id: UUID
+    # Product-visible provenance for autonomous recovery. These are durable
+    # server-owned bindings; clients may explain that an Agent proposed the
+    # change, but must never treat either identifier as mutation authority.
+    recovery_epoch_id: UUID | None = None
+    source_agent_run_id: UUID | None = None
     status: Literal["GENERATED", "PRESENTED", "ACCEPTED", "REJECTED", "EXPIRED", "INVALIDATED"]
     hard_constraints_passed: bool
     locked_commitments_preserved: bool
@@ -827,6 +1330,14 @@ class ReplanGenerateRequest(BaseModel):
     candidate_count: int = Field(default=3, ge=1, le=5)
     solver_mode: Literal["deterministic", "ortools", "auto", "v2"] | None = None
     protected_activity_ids: list[UUID] = Field(default_factory=list, max_length=50)
+    # Candidate hints are not authority; the server reloads and revalidates
+    # every Place and every mobility edge before materializing a plan.
+    place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)
+    # R73's typed adapter binds a user-selected dwell to one server-derived
+    # invited public Place. It never grants authority to apply the result.
+    promotion_id: UUID | None = None
+    promotion_invitation_id: UUID | None = None
+    promotion_dwell_minutes: Literal[10, 20, 30] | None = None
 
 
 # === WP04 COMMERCE API SCHEMAS (generated) ===
@@ -853,6 +1364,7 @@ class Booking(BaseModel):
     activity_id: UUID | None
     commitment_id: UUID | None
     provider_key: str
+    provider_label: str | None = None
     external_ref: str | None
     status: Literal["DRAFT", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED", "FAILED"]
     amount: Money
@@ -1079,7 +1591,7 @@ class SharedPlan(BaseModel):
 MemberRole = Literal["OWNER", "ADMIN", "COLLABORATOR"]
 MemberState = Literal["MEMBER_IN_FORCE", "MEMBER_LAPSED", "MEMBER_WITHDRAWN"]
 JourneyCapability = Literal[
-    "JOURNEY_READ", "JOURNEY_UPDATE", "PLACE_EDIT", "MEMBER_MANAGE", "SHARE_GRANT_MANAGE"
+    "JOURNEY_READ", "JOURNEY_UPDATE", "JOURNEY_EXECUTION_UPDATE", "PLACE_EDIT", "MEMBER_MANAGE", "SHARE_GRANT_MANAGE"
 ]
 
 
@@ -1089,6 +1601,29 @@ class JourneyMemberCreate(BaseModel):
     invited_by: str = Field(min_length=1, max_length=120)
     # None means the membership was given no end.  No default instant, no far-future sentinel.
     expires_at: str | None = None
+
+
+class JourneyMembershipInvitationCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    target_traveler_id: UUID
+
+
+class JourneyMembershipInvitationDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["ACCEPT", "DECLINE"]
+
+
+class JourneyMembershipInvitationInboxItem(BaseModel):
+    invitation_id: str
+    inviter_display_name: str
+    journey_title: str
+    city_code: str
+    approximate_start_date: str
+    proposed_role: Literal["COLLABORATOR"]
+    expires_at: str
+    state: Literal["OFFERED"]
 
 
 class JourneyMember(BaseModel):
@@ -1103,6 +1638,19 @@ class JourneyMember(BaseModel):
     created_at: str
     updated_at: str
     member_state: MemberState
+
+
+class JourneyMemberPreferenceUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    preferences: list[PreferenceInput] = Field(default_factory=list, max_length=20)
+
+
+class CollectiveClarificationAnswer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    clarification_id: str = Field(min_length=1, max_length=128)
+    proposal_id: UUID
 
 
 class JourneyRoleRule(BaseModel):

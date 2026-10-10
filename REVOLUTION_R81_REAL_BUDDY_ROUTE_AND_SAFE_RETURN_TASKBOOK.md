@@ -1,0 +1,67 @@
+# Revolution R81 — Route Reality and Safe Buddy Return
+
+## Verified handoff — do not waste the next strike re-reviewing history
+
+Work ONLY on `gpt/revolution-r33-open-world-journey-adaptation`, fetch current remote HEAD `480b3bb69fbf8be28aed747ace59fa4e23a14d13`. Never merge into Qoder's `commander/control` or default; no R58–R79 strike reruns.
+
+Codex R80 implementation `50eeef97fe07a44ed7a3193b7c867df99c0ca637`; report `8d6d7e8fe62f391ceee4cd03d08f981eff2dc281` (`REVOLUTION_R80_PRIVATE_BUDDY_NAVIGATION_RESULT.md`). Codex reported **52 directly related backend passes**, 2 fresh isolated Chromium passes, typecheck:all/build/compileall/diff check passed. A and C each independently signed two consents, captured `BUDDY_HANDOFF_ROUTE_PRIVATE` locations, and called the exact R79 handoff route. In the browser DB there were 2 such private observations, 2 `UNAVAILABLE` RouteAcquisitionOperations, **0 ProviderCalls, 0 MobilityFacts, 0 AgentRuns, 0 GuardianRuns/Pulses**, unchanged PlanVersion/cursor. Their actual route outcomes were `UNKNOWN / ROUTE_UNAVAILABLE`, **NOT** real routing success. The destination was a `DEMO_FIXTURE_NOT_LIVE_VERIFIED` Place. One ACTIVITY_STARTED outcome predated R80 and came from demo setup. Test-issued HMAC identities are not production login proof.
+
+GPT follow-up changes **pushed but NOT locally run**:
+1. `2d3d0fbcce4b70388f54ce87d14a7e769e55a784`: `backend/app/execution/private_buddy_route.py` LIVE result now needs a matching **successful** internally persisted Valhalla receipt for the exact route operation, exact request, provider, provenance and duration. A mock/failed/mismatched receipt can no longer promote an alleged LIVE route. Legitimate Valhalla uses `ProviderCall.provider_key=valhalla` and route-result `provider=valhalla-http`. Degraded receipts intentionally fail closed until specifically evaluated.
+2. `01f6998b382002fb974af6e3fbd45531d7792d83`: R80 backend test adds adversarial mismatched receipts, and a clearly synthetic matching-receipt contract case. A manually injected receipt in a database test is **NOT external live-provider evidence**.
+3. `ace0aea6ba684602c3db247c1cb2fff1d82f5ce6`: strict-signed `/routes/acquire` requires an authenticated in-force Journey member; strict-signed generic `GET /routes/operations/{id}` now requires membership and exact ownership for any `location-observation:` origin, and checks request origin member/traveler binding. Previously opaque IDs could return another member's route geometry. The R80 dedicated read path still uses its narrower member/hand-off validation. Unsigned, explicitly isolated demo compatibility remains unchanged. This changed only about 45 lines of the large `main.py`.
+4. `480b3bb69fbf8be28aed747ace59fa4e23a14d13`: R80 tests add an adversarial nonprivate/legacy route-operation read with signed owner versus bystander and anonymous route acquisition. The synthetic geometry is test-only.
+
+**FIRST RUN ONE BOUNDED CHECK** from configured local backend Python env: `pytest tests/test_r80_private_buddy_route.py -q --tb=short`. Run the directly affected route-session tests if errors; `npm run typecheck:all` after UI changes. Note the GitHub-only GPT workspace could not independently run Codex's backend/Playwright. Fix actual failures, do not misreport new GPT commits as passing until executed.
+
+## Revolution's real-world blocker
+
+R79 gave companions a mutually accepted public place. R80 made each personal route request consented and private, **but with no configured provider both users still see UNKNOWN**. The next product milestone must help a traveller *actually reach* the handoff and understand whether coming back to the original Journey jeopardizes a protected commitment.
+
+Deliver one everyday, understandable experience:
+
+> “We agreed to meet at this public place. On my own phone, show me how to go there, what route source I am using, and whether I can still make our group's protected next commitment. Do not share my exact location with my friend. If CityNexus can't obtain a real route, let me deliberately hand off the destination to a navigation app without pretending a server-calculated ETA.”
+
+No more generic status ledgers, no new free-form chat, no new collective voting system.
+
+## Mandatory integrity gate — exact handoff-bound private location
+
+A real gap in inspected R80 code: `LocationObservation` has no field for a handoff ID, and `_validate_observation()` in `private_buddy_route.py` checks signed member/Journey/freshness/source but NOT the **handoff whose capture consent produced this sample**. This means an accepted H1 observation (source `BUDDY_HANDOFF_ROUTE_PRIVATE`) can be presented to the route endpoint for another accepted H2 in the same Journey for the same member, if fresh. Separate provider confirmation exists, but the *capture-consent scope* is lost.
+
+Close this before marketing R81:
+- Add a small durable immutable link, e.g. `PrivateBuddyLocationConsentBinding`: unique observation_id, handoff_id, Journey, authenticated member/traveler, active PlanVersion and cursor, agreed public Place snapshot hash, recording timestamp, expiry. Atomic with the captured `LocationObservation`. Use additive SQLite migrations in `backend/db/schema.sql`, `backend/app/db/session.py` and SQLAlchemy model, or an equally sound existing source-owned storage pattern. Do **not** place precise coordinates, observation IDs, or a private handoff into group-visible `AuditLog.after_json` or Operator.
+- On R80 `/route`, require private scoped samples to match the **exact accepted handoff, caller identity, plan/cursor/target snapshot**, and age. Generic pre-R80 FOREGROUND samples should either require a clearly separate explicit re-use consent or be rejected on this private route; do not silently upgrade public/team observations into private-handoff consent.
+- The user can explicitly take a fresh observation for a different H2; no cross-handoff reuse. Expiry/revocation, membership changes, a new shared PlanVersion, a second concurrent route consent and another member's observation all fail closed. Do not confuse consent to capture and consent to transmit to a provider.
+- Prefer a narrow indexed table/DB constraint to stuffing unparseable handoff IDs into the `source` enum, which is already used across location filters.
+
+## R81 vertical feature — route to handoff AND protect rejoining original Journey
+
+**A. Two-leg, evidence-labelled feasibility when supported**
+1. In the existing R79/R80 accepted-handoff card, each participant can deliberately request a WALK route: leg 1 from **their own** fresh consented origin to that **exact** privately agreed public Place. If available, also check leg 2 from that public handoff Place to the **current original shared-plan rendezvous**. Keep the two distinct and their provider/evidence receipts separate, never use the R77 group route (its target is the original stop, not the buddy destination).
+2. Route operations are signed caller-private, plan/cursor/handoff/source-snapshot-bound. No origin/geometry/observation ID exposed to A, C, B or D except the actual route owner; never place geometry or private route facts into shared MobilityFacts or offline group snapshots. Preserve R80 audit without private material in public after_json.
+3. Derive C3/C4 risk from actual schedule and BOTH credible legs, with safety buffer and current shared commitment; one good leg with unknown onward route must remain `UNKNOWN` overall. If evidence shows the protected commitment cannot be met, surface `COMMITMENT_AT_RISK` and a real next action (“return to shared stop” or “request an authorized group recovery”), not a green “safe” badge. Do not auto-change PlanVersion or call Guardian from passive reads. Existing collective authority governs any shared adjustment.
+4. Current Valhalla adapter (`backend/app/integrations/mobility/valhalla_http.py`) and `capture_runtime_mobility_snapshot` already support live pedestrian directions when `settings.live_valhalla_url` is actually configured. Build on them; do not invent another router or a hidden mock-fallback that produces a green hard commitment. Ensure successful receipt status/provenance and same operation/target; a local HTTP emulator is **TEST_PROVIDER**, not real external LIVE even if the adapter emits its live-shaped payload. Limit to one expressly consented call per action; no background provider retries or “make the strike green” live loops.
+
+**B. Useful navigation even when server ProviderCall=0 (must ship)**
+5. Provide a separate, visible `Open walking directions in an external map` option from the **already accepted exact WGS84 public handoff destination**. Prefer a destination-only external-directions URL that sends only that agreed public destination; let the map app separately request the user's device origin under its own permission. Offer a clear provider label and consent: external app receives the chosen destination and may collect its own location, CityNexus does not silently send the stored private origin or claim an ETA/verified route. Distinguish this from the existing “open static public pin” action. Do not hide the only useful action behind configured Valhalla credentials; if a country/app does not support the directions URL, keep the exact pin fallback visible.
+6. Re-fetch the current pair-private handoff and current shared stop immediately before opening directions; if accepted handoff expired, helper/requester revoked it, member removed, Place snapshot changed, or plan cursor moved, do not send stale coordinates to an external map. Each participant independently opts in. A map app launching is NOT proof of navigation, physical arrival or group rejoin.
+7. Label fixture catalog provenance `DEMO_FIXTURE_NOT_LIVE_VERIFIED` and unknown opening/accessibility. Avoid framing a private roadside or restricted Place as publicly safe. Existing R79 nested access-tag restrictions stay active.
+
+**C. Route/result release races and privacy**
+8. Provider work can outlast an R79 revocation. Keep a durable capture even when stale, but after any slow request recheck accepted agreement, signed member set, target, plan, cursor and commitment. Return typed `STALE` (no actionable ETA) and never trigger an unintended Event/Guardian or plan mutation. Test two separate sessions (not just a JavaScript stale-state simulation) for revoke-before-release.
+9. Protect non-R80 legacy route reads as in GPT `ace0aea`: no anonymous generic operation/route acquisition when the signed mode is configured; do not fix a failing test by re-opening a location geometry leak. Background domain calls do not need to impersonate humans to bypass the HTTP boundary.
+
+## Bounded product closure and stop rules
+
+Fresh isolated SQLite; A signed OWNER, C signed COLLABORATOR, B signed bystander; one R78 help -> A ack -> R79 pair-private offer -> C accepts. Never upgrade B/C to OWNER.
+- Before explicit per-user actions: no location observation, no route ProviderCall or AgentRun; B has no pair-specific Place/route details.
+- A and C independently capture private H1 locations and confirm provider disclosure. Attempt H1 observation for another accepted H2 with same member -> forbidden; attempt B or C observation as A -> forbidden; expired revoked H1 -> forbidden. No private observation ID/geometry through generic operation read / Operator / group offline snapshot. Test anonymous legacy route read rejection with strict signed mode.
+- With no Valhalla configured, both R80/R81 private server ETAs remain UNKNOWN, but A/C can each explicitly launch a destination-only external **walking-directions** link to the correct current handoff WGS84 point; test the URL and permission with Playwright interception, do not pretend an external map was really visited.
+- With a controlled route adapter, verify actual two-leg calculation, origin/destination exactness, honest per-leg provenance and C4 slack classification; TEST_PROVIDER_EMULATOR is not production LIVE. If a real provider URL exists, **at most one** consented live attempt with exact real observation/call receipt; otherwise record NO_LIVE_PROVIDER_CONFIGURED, not failure of the human action.
+- Change handoff/plan/cursor while route or external map consent is open -> no stale result/URL. Do not start new Guardian, booking, money, R62/R69 arrival, or plan mutation.
+- Focused backend tests, one fresh 3-context signed Chromium, TypeScript/build, compileall, diff check. **No R58–R80 historical strike reruns**. Show useful UX before adding extensive verifier infrastructure.
+
+## Delivery
+Write `REVOLUTION_R81_REAL_BUDDY_ROUTE_AND_SAFE_RETURN_RESULT.md` with exact implementation/result SHAs, narrow tests, no-provider external-navigation behavior, simulated vs real provider source, route-operation/provider-call counts, location binding negatives, original PlanVersion/C3/C4 outcome, privacy assertions and honest BLOCKED items. Push SAME Revolution branch. No implicit production-ready claim without identity-provider + live route evidence.
+
+**Revolution is not a prettier UNKNOWN badge: people who agreed to help each other need a real path to act, with their own location controlled by them and the rest of the shared Journey protected.**

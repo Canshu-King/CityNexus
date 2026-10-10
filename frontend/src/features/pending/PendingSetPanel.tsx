@@ -57,6 +57,26 @@ type DoorState<T> =
 
 const LOADING: DoorState<never> = { phase: "loading" };
 
+function openingLabel(row: PendingRow, zh: boolean): string {
+  const status = row.openingStatus?.toUpperCase();
+  if (!status || status === "UNKNOWN") return zh ? "营业时间未知" : "Opening hours unknown";
+  return row.openingRaw || status;
+}
+
+function costLabel(row: PendingRow, zh: boolean): string {
+  const status = row.costStatus?.toUpperCase();
+  if (status === "KNOWN_FREE" || (status === "KNOWN" && row.costAmountMinor === 0)) {
+    return zh ? "免费" : "Free";
+  }
+  const paid =
+    (status === "KNOWN_PAID" || status === "KNOWN" || status === "VERIFIED_PROVIDER") &&
+    row.costAmountMinor != null;
+  if (paid) {
+    return `${row.costCurrency ?? ""} ${Math.round(row.costAmountMinor / 100)}`.trim();
+  }
+  return zh ? "暂无价格（未知）" : "Price unavailable (unknown)";
+}
+
 function failed(cause: unknown): DoorState<never> {
   const rejection = cause instanceof RejectionWithFacts ? cause : null;
   return {
@@ -434,6 +454,9 @@ export function PendingSetPanel({
                     ? say("pending.rowCategoryMissing")
                     : categoryLabel(row.categoryToken, zh)}
                 </p>
+                <p className="cn-pending-row-facts" data-testid="pending-row-facts">
+                  {zh ? "营业" : "Opening"}: {openingLabel(row, zh)} · {zh ? "费用" : "Cost"}: {costLabel(row, zh)}
+                </p>
               </li>
             ))}
           </ul>
@@ -631,7 +654,8 @@ export function PendingSetPanel({
         {derived.rows.map((row) => (
           <p key={row.key} className="cn-pending-token">
             {row.key} · {row.stateToken ?? say("pending.stateMissing")} ·{" "}
-            {row.providerKey ?? "no_provider_key"} · {row.placeId ?? "no_place_row_yet"} ·{" "}
+            {row.providerKey ?? "no_provider_key"} · {row.externalId ?? "no_external_id"} ·{" "}
+            {row.placeId ?? "no_place_row_yet"} ·{" "}
             {row.categoryToken ?? "no_category_token"}
           </p>
         ))}

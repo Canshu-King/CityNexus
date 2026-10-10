@@ -1796,6 +1796,47 @@ paths:
               schema: {$ref: '#/components/schemas/AgentCommandResponse'}
         '404': {$ref: '#/components/responses/NotFound'}
         '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/missions/{mission_id}/clarification:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - name: mission_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    post:
+      operationId: answerJourneyClarification
+      description: Apply one server-derived human-value answer and create a bounded child mission.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ClarificationAnswer'}
+      responses:
+        '200':
+          description: Answered parent mission and resumable child mission
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/missions/{mission_id}/resume:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - name: mission_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    post:
+      operationId: resumeJourneyMission
+      description: Resume a server-created clarification child through the configured Agent runtime.
+      responses:
+        '200':
+          description: Persisted child mission and AgentRun result
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/ValidationError'}
   /journeys/{journey_id}/guardian/mission:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2268,6 +2309,29 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/RealCityDiscoveryResponse'}
+  /journeys/{journey_id}/facts/acquire:
+    parameters: [{$ref: '#/components/parameters/JourneyId'}]
+    post:
+      operationId: acquireJourneyPlaceFacts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                place_ids:
+                  type: array
+                  minItems: 1
+                  maxItems: 50
+                  items: {type: string}
+      responses:
+        '200':
+          description: Source-linked opening and cost facts for existing provider Places
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        '502': {description: Provider acquisition unavailable}
   /journeys/{journey_id}/real-city/intelligence:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     post:
@@ -2803,6 +2867,3066 @@ paths:
       operationId: createEdgeObservation
       responses:
         '201': {description: Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}}}
+  /journeys/{journey_id}/guardian/pulse:
+    post:
+      summary: Run Guardian Pulse Now
+      description: Run exactly one live sensing -> Guardian evaluation cycle now.
+      operationId: run_guardian_pulse_now_api_v1_journeys__journey_id__guardian_pulse_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/guardian/pulse/latest:
+    get:
+      summary: Get Latest Guardian Pulse
+      operationId: get_latest_guardian_pulse_api_v1_journeys__journey_id__guardian_pulse_latest_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/start:
+    post:
+      summary: Start Journey Operator
+      description: Put one active Journey under the standing mission + Guardian watch.
+      operationId: start_journey_operator_api_v1_journeys__journey_id__operator_start_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/JourneyOperatorStartRequest'
+              - type: 'null'
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/stop:
+    post:
+      summary: Stop Journey Operator
+      operationId: stop_journey_operator_api_v1_journeys__journey_id__operator_stop_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator:
+    get:
+      summary: Get Journey Operator
+      operationId: get_journey_operator_api_v1_journeys__journey_id__operator_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/intents/{intent_id}/clarification:
+    post:
+      summary: Answer Operator Intent Clarification
+      description: Resolve a persisted bounded question on the same JourneyIntent lineage.
+      operationId: answer_operator_intent_clarification_api_v1_journeys__journey_id__operator_intents__intent_id__clarification_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: intent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Intent Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/approvals/{approval_id}/reject:
+    post:
+      summary: Reject Journey Operator Change
+      description: Reject the exact pending recovery without changing the active plan.
+      operationId: reject_journey_operator_change_api_v1_journeys__journey_id__operator_approvals__approval_id__reject_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Approval Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/guardian/readiness:
+    get:
+      summary: Get Guardian Departure Readiness
+      operationId: get_guardian_departure_readiness_api_v1_journeys__journey_id__guardian_readiness_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/departure-activation:
+    get:
+      summary: Get Departure Activation
+      operationId: get_departure_activation_api_v1_journeys__journey_id__departure_activation_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/guardian/readiness/refresh:
+    post:
+      summary: Refresh Guardian Departure Readiness
+      operationId: refresh_guardian_departure_readiness_api_v1_journeys__journey_id__guardian_readiness_refresh_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/launch-setup:
+    get:
+      summary: Get Launch Setup
+      operationId: get_launch_setup_api_v1_journeys__journey_id__launch_setup_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/launch-origin:
+    post:
+      summary: Set Launch Origin
+      operationId: set_launch_origin_api_v1_journeys__journey_id__launch_origin_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LaunchOriginRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/routes/acquire:
+    post:
+      summary: Acquire Route Session
+      description: Acquire exactly one server-resolved grounded-origin -> target edge.
+      operationId: acquire_route_session_api_v1_journeys__journey_id__routes_acquire_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/RouteAcquireRequest'
+              - type: 'null'
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/in-transit/reroute:
+    post:
+      summary: Acquire In Transit Reroute
+      description: Acquire a fresh route from one current-leg location sample, without
+        plan mutation.
+      operationId: acquire_in_transit_reroute_api_v1_journeys__journey_id__in_transit_reroute_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InTransitRerouteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/routes/operations/{operation_id}:
+    get:
+      summary: Read Route Session
+      description: Read one route operation without contacting a provider.
+      operationId: read_route_session_api_v1_journeys__journey_id__routes_operations__operation_id__get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: operation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Operation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/real-city/bootstrap:
+    post:
+      summary: Bootstrap Journey Discovery
+      description: Find public candidates for a signed, empty DRAFT Journey without
+        creating a plan.
+      operationId: bootstrap_journey_discovery_api_v1_journeys__journey_id__real_city_bootstrap_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapDiscoveryRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-discovery:
+    post:
+      summary: Bootstrap Journey Discovery
+      description: Find public candidates for a signed, empty DRAFT Journey without
+        creating a plan.
+      operationId: bootstrap_journey_discovery_api_v1_journeys__journey_id__bootstrap_discovery_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapDiscoveryRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-city-search:
+    post:
+      summary: Search Bootstrap Journey City
+      description: Search one explicitly named city to position the public map camera.
+      operationId: search_bootstrap_journey_city_api_v1_journeys__journey_id__bootstrap_city_search_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapCitySearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/real-city/bootstrap/select:
+    post:
+      summary: Select Bootstrap Journey Candidate
+      description: Materialize exactly the selected bootstrap candidate into one public
+        Place.
+      operationId: select_bootstrap_journey_candidate_api_v1_journeys__journey_id__real_city_bootstrap_select_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapSelectRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-discovery/select:
+    post:
+      summary: Select Bootstrap Journey Candidate
+      description: Materialize exactly the selected bootstrap candidate into one public
+        Place.
+      operationId: select_bootstrap_journey_candidate_api_v1_journeys__journey_id__bootstrap_discovery_select_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapSelectRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/real-city/bootstrap/preview:
+    post:
+      summary: Preview Bootstrap Journey Candidate
+      description: Open one public OSM destination without materializing a Place or
+        plan.
+      operationId: preview_bootstrap_journey_candidate_api_v1_journeys__journey_id__real_city_bootstrap_preview_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapMapPreviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-discovery/preview:
+    post:
+      summary: Preview Bootstrap Journey Candidate
+      description: Open one public OSM destination without materializing a Place or
+        plan.
+      operationId: preview_bootstrap_journey_candidate_api_v1_journeys__journey_id__bootstrap_discovery_preview_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapMapPreviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist:
+    get:
+      summary: Get Bootstrap Shortlist
+      description: Return only the signed member's public-only draft shortlist.
+      operationId: get_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      summary: Save Bootstrap Shortlist
+      operationId: save_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapShortlistSaveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/resume:
+    post:
+      summary: Remember Bootstrap Shortlist
+      description: Remember the signed member's last explicit saved-place choice for
+        UI resume.
+      operationId: remember_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__resume_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: shortlist_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shortlist Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}:
+    delete:
+      summary: Delete Bootstrap Shortlist
+      operationId: delete_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__delete
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: shortlist_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shortlist Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/preview:
+    post:
+      summary: Preview Bootstrap Shortlist
+      operationId: preview_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__preview_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: shortlist_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shortlist Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapShortlistPreviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/navigate:
+    post:
+      summary: Navigate Bootstrap Shortlist
+      description: Release one saved public destination for destination-only walking
+        directions.
+      operationId: navigate_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__navigate_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: shortlist_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shortlist Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapShortlistNavigationRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist/two-stop-walk:
+    post:
+      summary: Navigate Bootstrap Two Stop Walk
+      description: Release one signed public-POI-to-public-POI walking leg.
+      operationId: navigate_bootstrap_two_stop_walk_api_v1_journeys__journey_id__bootstrap_shortlist_two_stop_walk_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapTwoStopWalkRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/context-watch:
+    post:
+      summary: Run Journey Context Watch
+      description: 'Refresh exact active-plan venue facts and classify their live context.
+
+
+        This server-owned watch never starts an Agent itself.  A qualified conflict
+
+        is persisted as a SYSTEM_DERIVED Event; the existing Agent command path may
+
+        then decide whether recovery is needed under current authority.'
+      operationId: run_journey_context_watch_api_v1_journeys__journey_id__context_watch_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/approvals/{approval_id}/approve:
+    post:
+      summary: Approve Agent Action
+      operationId: approve_agent_action_api_v1_journeys__journey_id__operator_approvals__approval_id__approve_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Approval Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/AgentApprovalRequest'
+              - type: 'null'
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/missions/pending:
+    get:
+      summary: Pending Journey Missions
+      description: Project durable human/Agent waits into one traveler-facing read model.
+      operationId: pending_journey_missions_api_v1_journeys__journey_id__missions_pending_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}:
+    post:
+      summary: Answer Collective Clarification
+      description: 'Record one member answer, identity-bound when traveler auth is configured.
+
+
+        The member id remains in the URL for compatibility, but in strict R28 mode
+
+        it is never authority: a signed traveler principal is resolved server-side
+
+        and must map to this exact in-force JourneyMember.'
+      operationId: answer_collective_clarification_api_v1_journeys__journey_id__missions__mission_id__collective_clarification__member_id__post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: mission_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Mission Id
+      - name: member_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Member Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectiveClarificationAnswer'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/membership-invitations:
+    post:
+      summary: Create Journey Membership Invitation
+      operationId: create_journey_membership_invitation_api_v1_journeys__journey_id__membership_invitations_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JourneyMembershipInvitationCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      summary: List Journey Membership Invitations
+      operationId: list_journey_membership_invitations_api_v1_journeys__journey_id__membership_invitations_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /travelers/me/journey-membership-invitations:
+    get:
+      summary: List My Journey Membership Invitations
+      operationId: list_my_journey_membership_invitations_api_v1_travelers_me_journey_membership_invitations_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/JourneyMembershipInvitationInboxItem'
+                type: array
+                title: Response List My Journey Membership Invitations Api V1 Travelers
+                  Me Journey Membership Invitations Get
+  /journey-membership-invitations/{invitation_id}/respond:
+    post:
+      summary: Respond To Journey Membership Invitation
+      operationId: respond_to_journey_membership_invitation_api_v1_journey_membership_invitations__invitation_id__respond_post
+      parameters:
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Invitation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JourneyMembershipInvitationDecision'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/membership-invitations/{invitation_id}/revoke:
+    post:
+      summary: Revoke Journey Membership Invitation
+      operationId: revoke_journey_membership_invitation_api_v1_journeys__journey_id__membership_invitations__invitation_id__revoke_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Invitation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/members/{member_id}/preferences:
+    put:
+      summary: Replace Journey Member Preferences
+      description: Store explicit preference context for this member in this Journey
+        only.
+      operationId: replace_journey_member_preferences_api_v1_journeys__journey_id__members__member_id__preferences_put
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: member_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Member Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JourneyMemberPreferenceUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/inbox/intake:
+    post:
+      summary: Intake Journey Change
+      description: Ground a traveller supplied booking update against an exact reservation
+        reference.
+      operationId: intake_journey_change_api_v1_journeys__journey_id__operator_inbox_intake_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/inbox/{item_id}/bind:
+    post:
+      summary: Bind Journey Inbox Item
+      operationId: bind_journey_inbox_item_api_v1_journeys__journey_id__operator_inbox__item_id__bind_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Item Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/reality/provider-replay:
+    post:
+      summary: Add Reservation Time Provider Replay
+      description: Ingest an explicitly captured provider replay. This route never asserts
+        live status.
+      operationId: add_reservation_time_provider_replay_api_v1_journeys__journey_id__operator_reality_provider_replay_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/operator/reality-conflicts/{conflict_id}/resolve:
+    post:
+      summary: Resolve Journey Reality Conflict
+      operationId: resolve_journey_reality_conflict_api_v1_journeys__journey_id__operator_reality_conflicts__conflict_id__resolve_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: conflict_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conflict Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payload
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/group-presence/route:
+    post:
+      summary: Guide Authenticated Member To Rendezvous
+      description: Route only this authenticated member's fresh location to a server-derived
+        group stop.
+      operationId: guide_authenticated_member_to_rendezvous_api_v1_journeys__journey_id__group_presence_route_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupPresenceRouteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-member-signals:
+    post:
+      summary: Share Rendezvous Member Signal
+      description: Share an explicit, short-lived self-report for the server-derived
+        shared stop.
+      operationId: share_rendezvous_member_signal_api_v1_journeys__journey_id__rendezvous_member_signals_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JourneyRendezvousSignalCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-member-signals/{signal_id}/withdraw:
+    post:
+      summary: Withdraw Rendezvous Member Signal
+      description: Withdraw only the signed member's own signal; old viewers retain
+        prior knowledge.
+      operationId: withdraw_rendezvous_member_signal_api_v1_journeys__journey_id__rendezvous_member_signals__signal_id__withdraw_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: signal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Signal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-member-signals/{signal_id}/acknowledge:
+    post:
+      summary: Acknowledge Rendezvous Help Request
+      description: Record one signed companion acknowledgement for the exact active
+        help request.
+      operationId: acknowledge_rendezvous_help_request_api_v1_journeys__journey_id__rendezvous_member_signals__signal_id__acknowledge_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: signal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Signal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/candidates:
+    get:
+      summary: Rendezvous Buddy Handoff Candidates
+      description: Return a bounded public-place shortlist only to the signed helper.
+      operationId: rendezvous_buddy_handoff_candidates_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_candidates_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: signal_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Signal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/current:
+    get:
+      summary: Current Rendezvous Buddy Handoffs
+      description: List only valid handoffs involving the signed current viewer; never
+        the whole group.
+      operationId: current_rendezvous_buddy_handoffs_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_current_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs:
+    post:
+      summary: Offer Rendezvous Buddy Handoff
+      description: Offer one server-suggested public Place to the exact signed help
+        requester.
+      operationId: offer_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RendezvousBuddyHandoffOfferRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/respond:
+    post:
+      summary: Respond Rendezvous Buddy Handoff
+      operationId: respond_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__respond_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RendezvousBuddyHandoffDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/location:
+    post:
+      summary: Capture Private Buddy Handoff Route Location
+      description: Save one explicit foreground sample for this caller's accepted handoff
+        route only.
+      operationId: capture_private_buddy_handoff_route_location_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_location_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationObservationRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/cancel:
+    post:
+      summary: Cancel Rendezvous Buddy Handoff
+      operationId: cancel_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__cancel_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/revoke:
+    post:
+      summary: Revoke Rendezvous Buddy Handoff
+      operationId: revoke_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__revoke_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window:
+    post:
+      summary: Offer Rendezvous Buddy Execution Window
+      description: The signed helper may separately offer a bounded window for a legacy
+        accepted handoff.
+      operationId: offer_rendezvous_buddy_execution_window_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution_window_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RendezvousBuddyExecutionWindowRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window/accept:
+    post:
+      summary: Accept Rendezvous Buddy Execution Window
+      description: The requester separately accepts a helper's finite execution window.
+      operationId: accept_rendezvous_buddy_execution_window_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution_window_accept_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution/{execution_id}/report:
+    post:
+      summary: Report Rendezvous Buddy Execution
+      description: Record one authenticated member's explicit self-report for this exact
+        execution.
+      operationId: report_rendezvous_buddy_execution_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution__execution_id__report_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      - name: execution_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Execution Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RendezvousBuddyExecutionReceiptRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/current:
+    get:
+      summary: Current Private Buddy Handoff Route
+      description: Read only the signed viewer's current outbound and safe-return route
+        evidence.
+      operationId: current_private_buddy_handoff_route_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_current_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route:
+    post:
+      summary: Acquire Private Buddy Handoff Route
+      description: Acquire the caller's private route to handoff and return to shared
+        stop.
+      operationId: acquire_private_buddy_handoff_route_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handoff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Handoff Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RendezvousBuddyPrivateRouteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests:
+    post:
+      summary: Create Member Side Quest
+      description: Create or replace only the signed-in member's private stop for an
+        active R63 split.
+      operationId: create_member_side_quest_api_v1_journeys__journey_id__member_side_quests_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberSideQuestCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview:
+    get:
+      summary: Preview Member Place Invitation
+      operationId: preview_member_place_invitation_api_v1_journeys__journey_id__member_side_quests__side_quest_id__place_invitation_preview_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations:
+    post:
+      summary: Create Member Place Invitation
+      operationId: create_member_place_invitation_api_v1_journeys__journey_id__member_side_quests__side_quest_id__place_invitations_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Side Quest Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlaceInvitationCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw:
+    post:
+      summary: Withdraw Member Place Invitation
+      operationId: withdraw_member_place_invitation_api_v1_journeys__journey_id__member_place_invitations__invitation_id__withdraw_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/preview:
+    get:
+      summary: Preview Member Place Group Share
+      operationId: preview_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_preview_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/confirm:
+    post:
+      summary: Confirm Member Place Group Share
+      operationId: confirm_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_confirm_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlaceGroupShareConsentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/withdraw:
+    post:
+      summary: Withdraw Member Place Group Share
+      operationId: withdraw_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_withdraw_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview:
+    post:
+      summary: Preview Member Place Invitation Feasibility
+      operationId: preview_member_place_invitation_feasibility_api_v1_journeys__journey_id__member_place_invitations__invitation_id__feasibility_preview_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlaceInvitationFeasibilityPreviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/respond:
+    post:
+      summary: Respond To Member Place Invitation
+      operationId: respond_to_member_place_invitation_api_v1_journeys__journey_id__member_place_invitations__invitation_id__respond_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlaceInvitationDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/progress:
+    post:
+      summary: Update Member Place Invitation Progress Route
+      description: Share or withdraw only the signed-in inviter's or accepted member's
+        own report.
+      operationId: update_member_place_invitation_progress_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__progress_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlaceInvitationProgressRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants:
+    post:
+      summary: Offer Shared Stop Coplanning Grant Route
+      operationId: offer_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SharedStopCoPlanningGrantCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/respond:
+    post:
+      summary: Respond Shared Stop Coplanning Grant Route
+      operationId: respond_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants__grant_id__respond_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      - name: grant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Grant Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SharedStopCoPlanningGrantDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/revoke:
+    post:
+      summary: Revoke Shared Stop Coplanning Grant Route
+      operationId: revoke_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants__grant_id__revoke_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      - name: grant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Grant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions:
+    post:
+      summary: Create Member Place Promotion Route
+      operationId: create_member_place_promotion_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__promotions_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlacePromotionCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-promotions/{promotion_id}/respond:
+    post:
+      summary: Respond To Member Place Promotion Route
+      operationId: respond_to_member_place_promotion_route_api_v1_journeys__journey_id__member_place_promotions__promotion_id__respond_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: promotion_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Promotion Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberPlacePromotionDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-place-promotions/{promotion_id}/apply:
+    post:
+      summary: Apply Member Place Promotion Route
+      operationId: apply_member_place_promotion_route_api_v1_journeys__journey_id__member_place_promotions__promotion_id__apply_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: promotion_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Promotion Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/moment-scout:
+    post:
+      summary: Scout Member Moment
+      description: Return a private shortlist grounded in the signed-in member's one-time
+        location.
+      operationId: scout_member_moment_api_v1_journeys__journey_id__moment_scout_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MomentScoutRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/moment-scout/select:
+    post:
+      summary: Select Member Moment Scout Candidate
+      description: Revalidate the private scout context before creating the existing
+        R64 side quest.
+      operationId: select_member_moment_scout_candidate_api_v1_journeys__journey_id__moment_scout_select_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MomentScoutSelectRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/moment-scout/live:
+    post:
+      summary: Scout Live Member Moment
+      description: Run one external nearby search after explicit signed-member consent.
+      operationId: scout_live_member_moment_api_v1_journeys__journey_id__moment_scout_live_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveMomentScoutRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/moment-scout/live/select:
+    post:
+      summary: Select Live Member Moment Scout Candidate
+      description: Consume the owner's short-lived receipt and enter the existing R63/R64
+        flow.
+      operationId: select_live_member_moment_scout_candidate_api_v1_journeys__journey_id__moment_scout_live_select_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveMomentScoutSelectRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/start:
+    post:
+      summary: Start Member Side Quest
+      operationId: start_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__start_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/arrive:
+    post:
+      summary: Arrive Member Side Quest
+      operationId: arrive_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__arrive_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/complete:
+    post:
+      summary: Complete Member Side Quest
+      operationId: complete_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__complete_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/cancel:
+    post:
+      summary: Cancel Member Side Quest
+      operationId: cancel_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__cancel_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/fit-preview:
+    post:
+      summary: Preview Member Side Quest
+      description: Return owner-only advisory timing without persisting route keys or
+        geometry.
+      operationId: preview_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__fit_preview_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberSideQuestFitPreviewRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/navigate:
+    post:
+      summary: Navigate To Member Side Quest
+      description: Capture a private, member-bound outbound route without a Journey-wide
+        route record.
+      operationId: navigate_to_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__navigate_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberSideQuestNavigateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/navigation-targets:
+    get:
+      summary: Get Member Side Quest Navigation Target
+      description: Resolve an exact current map pin for the signed-in member only.
+      operationId: get_member_side_quest_navigation_target_api_v1_journeys__journey_id__member_side_quests__side_quest_id__navigation_targets_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/head-back:
+    post:
+      summary: Start Member Side Quest Head Back
+      description: Persist a voluntary return report before requesting any fresh location.
+      operationId: start_member_side_quest_head_back_api_v1_journeys__journey_id__member_side_quests__side_quest_id__head_back_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/member-side-quests/{side_quest_id}/meetup-report:
+    post:
+      summary: Report Member Side Quest Meetup Arrival
+      description: Let the split owner report arrival and request an explicit peer acknowledgment.
+      operationId: report_member_side_quest_meetup_arrival_api_v1_journeys__journey_id__member_side_quests__side_quest_id__meetup_report_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: side_quest_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Side Quest Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge:
+    post:
+      summary: Acknowledge Member Meetup Arrival
+      description: A different current member explicitly acknowledges the owner's report.
+      operationId: acknowledge_member_meetup_arrival_api_v1_journeys__journey_id__meetup_handshakes__handshake_id__acknowledge_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handshake_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Handshake Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/meetup-handshakes/{handshake_id}/not-yet:
+    post:
+      summary: Decline Member Meetup Arrival
+      description: A different current member can report that they cannot confirm the
+        meetup yet.
+      operationId: decline_member_meetup_arrival_api_v1_journeys__journey_id__meetup_handshakes__handshake_id__not_yet_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: handshake_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Handshake Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/group-recovery/adjust:
+    post:
+      summary: Request Group Recovery Plan
+      description: Start one authenticated, PLAN_ONLY Hermes run for the current group-risk
+        incident.
+      operationId: request_group_recovery_plan_api_v1_journeys__journey_id__group_recovery_adjust_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRecoveryRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/group-recovery/apply:
+    post:
+      summary: Apply Group Recovery
+      description: Apply exactly the current server-selected recovery with signed member
+        authority.
+      operationId: apply_group_recovery_api_v1_journeys__journey_id__group_recovery_apply_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRecoveryApplyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
 components:
   parameters:
     DemoResetToken:
@@ -3129,20 +6253,45 @@ components:
       type: object
       required: [mission, event_id, run]
       properties:
-        event_id: {type: string, format: uuid}
+        event_id: {type: [string, 'null'], format: uuid}
         mission: {type: object, additionalProperties: true}
-        run: {type: object, additionalProperties: true}
+        run: {$ref: '#/components/schemas/AgentRunResponse'}
+    AgentRunOutcome:
+      type: object
+      additionalProperties: true
+      required: [status, reason_code, user_summary, recommended_action]
+      properties:
+        status: {type: string}
+        reason_code: {type: string}
+        user_summary: {type: string}
+        recommended_action: {type: string}
+    ClarificationAnswer:
+      type: object
+      additionalProperties: false
+      required: [clarification_id, option_key]
+      properties:
+        clarification_id: {type: string, minLength: 1, maxLength: 128}
+        option_key: {type: string, minLength: 1, maxLength: 64}
+        scope:
+          type: string
+          enum: [THIS_JOURNEY, REMEMBER_FOR_FUTURE_TRIPS]
+          default: THIS_JOURNEY
     AgentRunResponse:
       type: object
-      required: [run_id, mission_id, journey_id, status, tool_steps]
+      required: [mission_id, status, tool_steps]
       properties:
-        run_id: {type: string, format: uuid}
+        run_id: {type: [string, 'null'], format: uuid}
         mission_id: {type: string, format: uuid}
-        journey_id: {type: string, format: uuid}
+        journey_id: {type: [string, 'null'], format: uuid}
         provider_key: {type: string}
         model_key: {type: string}
         status: {type: string}
-        outcome: {type: [string, 'null']}
+        completion_contract: {type: object, additionalProperties: true}
+        outcome:
+          oneOf:
+            - {type: string}
+            - {$ref: '#/components/schemas/AgentRunOutcome'}
+            - {type: 'null'}
         failure_reason: {type: [string, 'null']}
         mission_status: {type: [string, 'null']}
         created_at: {type: string, format: date-time}
@@ -3556,7 +6705,7 @@ components:
             active: {type: boolean}
     Place:
       type: object
-      required: [id, name, category, location, city_code, provider_key, coordinate_system, source_coordinate_system]
+      required: [id, name, category, location, city_code, external_id, provider_key, coordinate_system, source_coordinate_system, opening_hours, cost_evidence]
       properties:
         id: {type: string}
         name: {type: string}
@@ -3564,6 +6713,9 @@ components:
         city_code: {type: string}
         location: {$ref: '#/components/schemas/GeoPoint'}
         tags: {type: array, items: {type: string}}
+        # Provider entity identity stays beside the display label so duplicate
+        # live rows cannot be conflated by a consumer.
+        external_id: {type: string}
         provider_key: {type: string}
         # The system the stored geometry is written in; NOT NULL in the schema.
         coordinate_system: {type: string}
@@ -3572,6 +6724,9 @@ components:
         # and a null value is the server answering "never recorded", which is not the
         # same fact as WGS84 and is therefore typed nullable rather than defaulted.
         source_coordinate_system: {type: [string, 'null']}
+        # Fact payloads are passed through with their evidence status. UNKNOWN cost is not a free-price amount.
+        opening_hours: {type: object}
+        cost_evidence: {type: object}
     CollectionFolderCreate:
       # ORD-0444: what creating a shelf asks for -- its name and whose it is.  The name's bounds are
       # copied from `TravelerCreate`'s `display_name` rather than invented, and the name is stored
@@ -3935,6 +7090,8 @@ components:
             journey_id: {type: string, format: uuid}
             status: {type: string, enum: [DETECTED, ACKNOWLEDGED, RESOLVED, IGNORED]}
             detected_at: {type: string, format: date-time}
+            resolved_at: {type: [string, 'null'], format: date-time}
+            resolution_reason: {type: [string, 'null']}
     Commitment:
       type: object
       required: [id, journey_id, kind, level, status]
@@ -4166,3 +7323,2257 @@ components:
         recommendations:
           type: array
           items: {type: object, additionalProperties: true}
+    BootstrapCitySearchRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 120
+          minLength: 2
+          title: Query
+        provider_consent:
+          type: boolean
+          title: Provider Consent
+          default: false
+        limit:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Limit
+          default: 3
+      type: object
+      required:
+      - query
+      title: BootstrapCitySearchRequest
+      description: One explicit, bounded city lookup before a traveler taps a public area.
+    BootstrapDiscoveryRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Query
+          default: cafe
+        radius_m:
+          type: integer
+          maximum: 5000.0
+          minimum: 100.0
+          title: Radius M
+          default: 2500
+        limit:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Limit
+          default: 3
+        source_kind:
+          type: string
+          enum:
+          - FOREGROUND_GPS
+          - MANUAL_PUBLIC_CENTER
+          title: Source Kind
+        provider_consent:
+          type: boolean
+          title: Provider Consent
+          default: false
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+          default: WGS84
+        accuracy_m:
+          anyOf:
+          - type: number
+            maximum: 1000.0
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Accuracy M
+        mode:
+          type: string
+          const: live
+          title: Mode
+          default: live
+      type: object
+      required:
+      - source_kind
+      - latitude
+      - longitude
+      title: BootstrapDiscoveryRequest
+      description: Pre-plan discovery for a new Journey with no materialized catalogue.
+    BootstrapMapPreviewRequest:
+      properties:
+        receipt_id:
+          type: string
+          format: uuid
+          title: Receipt Id
+        candidate_id:
+          type: string
+          format: uuid
+          title: Candidate Id
+        public_map_consent:
+          type: boolean
+          title: Public Map Consent
+          default: false
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+          default: WGS84
+      type: object
+      required:
+      - receipt_id
+      - candidate_id
+      - latitude
+      - longitude
+      title: BootstrapMapPreviewRequest
+      description: Release one selected public destination to an external map.
+    BootstrapSelectRequest:
+      properties:
+        receipt_id:
+          type: string
+          format: uuid
+          title: Receipt Id
+        candidate_id:
+          type: string
+          format: uuid
+          title: Candidate Id
+      type: object
+      required:
+      - receipt_id
+      - candidate_id
+      title: BootstrapSelectRequest
+    BootstrapShortlistNavigationRequest:
+      properties:
+        public_map_consent:
+          type: boolean
+          title: Public Map Consent
+          default: false
+      type: object
+      title: BootstrapShortlistNavigationRequest
+      description: Release a saved public destination for destination-only walking directions.
+    BootstrapShortlistPreviewRequest:
+      properties:
+        public_map_consent:
+          type: boolean
+          title: Public Map Consent
+          default: false
+      type: object
+      title: BootstrapShortlistPreviewRequest
+      description: Release a saved public destination using fresh per-click consent.
+    BootstrapShortlistSaveRequest:
+      properties:
+        receipt_id:
+          type: string
+          format: uuid
+          title: Receipt Id
+        candidate_id:
+          type: string
+          format: uuid
+          title: Candidate Id
+      type: object
+      required:
+      - receipt_id
+      - candidate_id
+      title: BootstrapShortlistSaveRequest
+    BootstrapTwoStopWalkRequest:
+      properties:
+        first_shortlist_id:
+          type: string
+          format: uuid
+          title: First Shortlist Id
+        second_shortlist_id:
+          type: string
+          format: uuid
+          title: Second Shortlist Id
+        public_map_consent:
+          type: boolean
+          title: Public Map Consent
+          default: false
+      type: object
+      required:
+      - first_shortlist_id
+      - second_shortlist_id
+      title: BootstrapTwoStopWalkRequest
+      description: Release a walking leg between two explicitly ordered saved public stops.
+    CapabilityInput:
+      properties:
+        code:
+          type: string
+          maxLength: 64
+          minLength: 2
+          title: Code
+        class:
+          type: string
+          title: Class
+          default: SOFT_PREFERENCE
+        severity:
+          type: string
+          enum:
+          - HARD
+          - STRONG
+          - SOFT
+          title: Severity
+          default: SOFT
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+        scope:
+          type: string
+          enum:
+          - TRAVELER
+          - JOURNEY
+          title: Scope
+          default: TRAVELER
+        source:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Source
+          default: USER_CONFIRMED
+        provenance:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Provenance
+          default: USER_STATED
+        explicit:
+          type: boolean
+          title: Explicit
+          default: true
+        confirmed:
+          type: boolean
+          title: Confirmed
+          default: false
+        active:
+          type: boolean
+          title: Active
+          default: true
+      additionalProperties: false
+      type: object
+      required:
+      - code
+      title: CapabilityInput
+      description: Validated explicit capability input (JSON uses ``class``).
+    CatalogHydrationRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Query
+        journey_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Journey Id
+        requested_categories:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 6
+          - type: 'null'
+          title: Requested Categories
+      type: object
+      required:
+      - query
+      title: CatalogHydrationRequest
+      description: 'Ask the backend to prepare one destination''s catalog (ORD-0095-1
+        §6).
+
+
+        `query` is what the traveller typed, not an internal code: the whole point of
+        the operation
+
+        is that a person can ask about a place they can name.  `journey_id` is optional
+        because the
+
+        job belongs to the *destination* - two travellers preparing the same county under
+        the same
+
+        policy share one job, and the fingerprint says why they did.'
+    CitySignalFixtureRequest:
+      properties:
+        state:
+          type: string
+          enum:
+          - NORMAL
+          - DISRUPTED
+          - OUTAGE
+          - RISK_FORECAST
+          title: State
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - state
+      title: CitySignalFixtureRequest
+    CollectiveClarificationAnswer:
+      properties:
+        clarification_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Clarification Id
+        proposal_id:
+          type: string
+          format: uuid
+          title: Proposal Id
+      additionalProperties: false
+      type: object
+      required:
+      - clarification_id
+      - proposal_id
+      title: CollectiveClarificationAnswer
+    EdgeActionRequest:
+      properties:
+        action:
+          type: string
+          enum:
+          - ACKNOWLEDGE
+          - NEXT
+          - REJECT_PROPOSAL
+          - SOS
+          title: Action
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - action
+      title: EdgeActionRequest
+    EdgeDeviceCreateRequest:
+      properties:
+        display_name:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Display Name
+          default: Trip companion
+      type: object
+      title: EdgeDeviceCreateRequest
+    EdgeObservationRequest:
+      properties:
+        observation_type:
+          type: string
+          enum:
+          - RAIN
+          - SOS
+          - TEMP
+          - ACK
+          title: Observation Type
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        option_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Option Id
+      type: object
+      required:
+      - observation_type
+      title: EdgeObservationRequest
+    ExecutionTruthAttestation:
+      properties:
+        truth_kind:
+          type: string
+          enum:
+          - SIMULATED_STATE_TRANSITION
+          - OPERATOR_CONFIRMED_EXECUTION
+          - DEVICE_LOCATION_VERIFIED_EXECUTION
+          title: Truth Kind
+          default: SIMULATED_STATE_TRANSITION
+        operator_confirmed:
+          type: boolean
+          title: Operator Confirmed
+          default: false
+        location_observation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Location Observation Id
+      additionalProperties: false
+      type: object
+      title: ExecutionTruthAttestation
+      description: 'Optional evidence class for one execution-state transition.
+
+
+        Omitting the body intentionally means SIMULATED_STATE_TRANSITION.  Stronger
+
+        labels require evidence and are checked server-side; callers cannot promote
+
+        an HTTP state-machine exercise into physical presence by choosing a string.'
+    FactAcquisitionRequest:
+      properties:
+        place_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 50
+            minItems: 1
+          - type: 'null'
+          title: Place Ids
+        source_bindings:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/FactSourceBindingRequest'
+            type: object
+          - type: 'null'
+          title: Source Bindings
+      type: object
+      title: FactAcquisitionRequest
+      description: Acquire source-linked facts for existing provider Places.
+    FactSourceBindingRequest:
+      properties:
+        source_url:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Source Url
+        source_class:
+          type: string
+          enum:
+          - OFFICIAL_WEB
+          - OFFICIAL_OPERATOR
+          - OFFICIAL_TICKETING
+          - MUNICIPAL_AUTHORITY
+          title: Source Class
+          default: OFFICIAL_WEB
+      type: object
+      required:
+      - source_url
+      title: FactSourceBindingRequest
+      description: Bind an operator-confirmed official page to one existing provider Place.
+    GeneratePlansRequest:
+      properties:
+        planning_mode:
+          anyOf:
+          - type: string
+            enum:
+            - balanced
+            - budget
+            - explore
+            - strict_schedule
+          - type: 'null'
+          title: Planning Mode
+        candidate_count:
+          type: integer
+          maximum: 5.0
+          minimum: 1.0
+          title: Candidate Count
+          default: 3
+        place_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 12
+            minItems: 1
+          - type: 'null'
+          title: Place Ids
+        allow_single_place:
+          type: boolean
+          title: Allow Single Place
+          default: false
+        allow_unknown_cost:
+          type: boolean
+          title: Allow Unknown Cost
+          default: false
+        mission_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mission Id
+      type: object
+      title: GeneratePlansRequest
+    GroupPresenceRouteRequest:
+      properties:
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+        requested_mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Requested Mode
+          default: WALK
+      additionalProperties: false
+      type: object
+      required:
+      - location_observation_id
+      title: GroupPresenceRouteRequest
+      description: Request one member-specific route from a fresh, server-bound location
+        sample.
+    GroupRecoveryApplyRequest:
+      properties: {}
+      additionalProperties: false
+      type: object
+      title: GroupRecoveryApplyRequest
+      description: Spend the server-selected collective recovery; callers choose no proposal.
+    GroupRecoveryRequest:
+      properties: {}
+      additionalProperties: false
+      type: object
+      title: GroupRecoveryRequest
+      description: Ask the existing Journey Agent to prepare one bounded group recovery
+        proposal.
+    GuardianAutopilotStart:
+      properties:
+        interval_seconds:
+          anyOf:
+          - type: number
+            maximum: 3600.0
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Interval Seconds
+      type: object
+      title: GuardianAutopilotStart
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InTransitRerouteRequest:
+      properties:
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+      additionalProperties: false
+      type: object
+      required:
+      - location_observation_id
+      title: InTransitRerouteRequest
+      description: Reroute from one server-stored current location sample to the exact
+        active stop.
+    JourneyAnchor:
+      properties:
+        at:
+          type: string
+          format: date-time
+          title: At
+        location:
+          type: string
+          maxLength: 240
+          minLength: 1
+          title: Location
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - at
+      - location
+      title: JourneyAnchor
+    JourneyMemberPreferenceUpdate:
+      properties:
+        preferences:
+          items:
+            $ref: '#/components/schemas/PreferenceInput'
+          type: array
+          maxItems: 20
+          title: Preferences
+      additionalProperties: false
+      type: object
+      title: JourneyMemberPreferenceUpdate
+    JourneyMembershipInvitationCreate:
+      properties:
+        target_traveler_id:
+          type: string
+          format: uuid
+          title: Target Traveler Id
+      additionalProperties: false
+      type: object
+      required:
+      - target_traveler_id
+      title: JourneyMembershipInvitationCreate
+    JourneyMembershipInvitationDecision:
+      properties:
+        decision:
+          type: string
+          enum:
+          - ACCEPT
+          - DECLINE
+          title: Decision
+      additionalProperties: false
+      type: object
+      required:
+      - decision
+      title: JourneyMembershipInvitationDecision
+    JourneyMembershipInvitationInboxItem:
+      properties:
+        invitation_id:
+          type: string
+          title: Invitation Id
+        inviter_display_name:
+          type: string
+          title: Inviter Display Name
+        journey_title:
+          type: string
+          title: Journey Title
+        city_code:
+          type: string
+          title: City Code
+        approximate_start_date:
+          type: string
+          title: Approximate Start Date
+        proposed_role:
+          type: string
+          const: COLLABORATOR
+          title: Proposed Role
+        expires_at:
+          type: string
+          title: Expires At
+        state:
+          type: string
+          const: OFFERED
+          title: State
+      type: object
+      required:
+      - invitation_id
+      - inviter_display_name
+      - journey_title
+      - city_code
+      - approximate_start_date
+      - proposed_role
+      - expires_at
+      - state
+      title: JourneyMembershipInvitationInboxItem
+    JourneyOperatorStartRequest:
+      properties:
+        objective:
+          type: string
+          maxLength: 2000
+          minLength: 8
+          title: Objective
+          default: Take care of this trip. Protect confirmed commitments, keep changes
+            reasonable, and ask me before important changes.
+        requested_autonomy:
+          type: string
+          enum:
+          - PLAN_ONLY
+          - EXECUTE_WITHIN_BOUNDS
+          title: Requested Autonomy
+          default: EXECUTE_WITHIN_BOUNDS
+        interval_seconds:
+          anyOf:
+          - type: number
+            maximum: 3600.0
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Interval Seconds
+      additionalProperties: false
+      type: object
+      title: JourneyOperatorStartRequest
+      description: Plain-language one-click activation for the Journey Operator.
+    JourneyRendezvousSignalCreateRequest:
+      properties:
+        signal_kind:
+          type: string
+          enum:
+          - HEADING_TO_RENDEZVOUS
+          - NEEDS_COORDINATION
+          title: Signal Kind
+        expected_active_plan_version_id:
+          type: string
+          format: uuid
+          title: Expected Active Plan Version Id
+        expected_current_activity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Expected Current Activity Id
+        expected_rendezvous_activity_id:
+          type: string
+          format: uuid
+          title: Expected Rendezvous Activity Id
+        expected_public_place_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Expected Public Place Id
+        expected_audience_sha256:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-f]{64}$
+          title: Expected Audience Sha256
+      additionalProperties: false
+      type: object
+      required:
+      - signal_kind
+      - expected_active_plan_version_id
+      - expected_rendezvous_activity_id
+      - expected_public_place_id
+      - expected_audience_sha256
+      title: JourneyRendezvousSignalCreateRequest
+      description: The client may confirm the displayed target, but never choose a destination.
+    LaunchOriginRequest:
+      properties:
+        source_kind:
+          type: string
+          enum:
+          - PLACE
+          - SELECTED_STAY
+          - ARRIVAL_ANCHOR
+          title: Source Kind
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
+      additionalProperties: false
+      type: object
+      required:
+      - source_kind
+      title: LaunchOriginRequest
+      description: Explicit planned-origin confirmation; coordinates and authority are
+        server-owned.
+    LiveMomentScoutRequest:
+      properties:
+        consent_external_location:
+          type: boolean
+          const: true
+          title: Consent External Location
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+        budget_minutes:
+          type: integer
+          enum:
+          - 15
+          - 30
+          - 45
+          title: Budget Minutes
+          default: 30
+        interest:
+          type: string
+          enum:
+          - ANYTHING
+          - COFFEE_FOOD
+          - CULTURE
+          - NATURE
+          title: Interest
+          default: ANYTHING
+        radius_m:
+          type: integer
+          maximum: 2000.0
+          minimum: 800.0
+          title: Radius M
+          default: 1200
+      additionalProperties: false
+      type: object
+      required:
+      - consent_external_location
+      - location_observation_id
+      title: LiveMomentScoutRequest
+      description: One bounded external lookup, called only after explicit location-transfer
+        consent.
+    LiveMomentScoutSelectRequest:
+      properties:
+        receipt_id:
+          type: string
+          format: uuid
+          title: Receipt Id
+        candidate_id:
+          type: string
+          format: uuid
+          title: Candidate Id
+        confirm_return_to_rendezvous:
+          type: boolean
+          const: true
+          title: Confirm Return To Rendezvous
+      additionalProperties: false
+      type: object
+      required:
+      - receipt_id
+      - candidate_id
+      - confirm_return_to_rendezvous
+      title: LiveMomentScoutSelectRequest
+      description: Select a server-held live result and confirm its exact shared rendezvous.
+    LocationObservationRequest:
+      properties:
+        latitude:
+          type: number
+          maximum: 90.0
+          minimum: -90.0
+          title: Latitude
+        longitude:
+          type: number
+          maximum: 180.0
+          minimum: -180.0
+          title: Longitude
+        accuracy_m:
+          type: number
+          maximum: 10000.0
+          exclusiveMinimum: 0.0
+          title: Accuracy M
+        captured_at:
+          type: string
+          format: date-time
+          title: Captured At
+      additionalProperties: false
+      type: object
+      required:
+      - latitude
+      - longitude
+      - accuracy_m
+      - captured_at
+      title: LocationObservationRequest
+    LuggageContextRequest:
+      properties:
+        baggage_present:
+          type: boolean
+          title: Baggage Present
+          default: true
+        baggage_size_class:
+          type: string
+          enum:
+          - NONE
+          - CABIN
+          - MEDIUM
+          - HEAVY
+          title: Baggage Size Class
+          default: MEDIUM
+        luggage_drop_required:
+          type: boolean
+          title: Luggage Drop Required
+          default: true
+      type: object
+      title: LuggageContextRequest
+    MemberPlaceGroupShareConsentRequest:
+      properties:
+        confirm_full_journey_place_sharing:
+          type: boolean
+          const: true
+          title: Confirm Full Journey Place Sharing
+        audience_snapshot:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-f]{64}$
+          title: Audience Snapshot
+        plan_snapshot:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-f]{64}$
+          title: Plan Snapshot
+        source_snapshot:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-f]{64}$
+          title: Source Snapshot
+      additionalProperties: false
+      type: object
+      required:
+      - confirm_full_journey_place_sharing
+      - audience_snapshot
+      - plan_snapshot
+      - source_snapshot
+      title: MemberPlaceGroupShareConsentRequest
+      description: Explicit confirmation of a frozen whole-Journey Place audience preview.
+    MemberPlaceInvitationCreateRequest:
+      properties:
+        confirm_public_place_sharing:
+          type: boolean
+          const: true
+          title: Confirm Public Place Sharing
+        audience_snapshot:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-f]{64}$
+          title: Audience Snapshot
+      additionalProperties: false
+      type: object
+      required:
+      - confirm_public_place_sharing
+      - audience_snapshot
+      title: MemberPlaceInvitationCreateRequest
+      description: The owner must explicitly confirm disclosure of one exact public Place.
+    MemberPlaceInvitationDecisionRequest:
+      properties:
+        decision:
+          type: string
+          enum:
+          - ACCEPT
+          - DECLINE
+          title: Decision
+        confirm_exact_public_place:
+          anyOf:
+          - type: boolean
+            const: true
+          - type: 'null'
+          title: Confirm Exact Public Place
+        feasibility_token:
+          anyOf:
+          - type: string
+            maxLength: 12000
+            minLength: 16
+          - type: 'null'
+          title: Feasibility Token
+        acknowledge_feasibility_unknown:
+          anyOf:
+          - type: boolean
+            const: true
+          - type: 'null'
+          title: Acknowledge Feasibility Unknown
+        acknowledge_feasibility_risk:
+          anyOf:
+          - type: boolean
+            const: true
+          - type: 'null'
+          title: Acknowledge Feasibility Risk
+      additionalProperties: false
+      type: object
+      required:
+      - decision
+      title: MemberPlaceInvitationDecisionRequest
+      description: An addressed companion must make an explicit accept/decline decision.
+    MemberPlaceInvitationFeasibilityPreviewRequest:
+      properties:
+        consent_route_provider:
+          type: boolean
+          const: true
+          title: Consent Route Provider
+        location_observation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Location Observation Id
+        dwell_minutes:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 30
+          title: Dwell Minutes
+          default: 20
+        requested_mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Requested Mode
+          default: WALK
+      additionalProperties: false
+      type: object
+      required:
+      - consent_route_provider
+      title: MemberPlaceInvitationFeasibilityPreviewRequest
+      description: One explicitly consented, recipient-only route feasibility request.
+    MemberPlaceInvitationProgressRequest:
+      properties:
+        action:
+          type: string
+          enum:
+          - SHARE_ARRIVAL
+          - WITHDRAW_ARRIVAL
+          - SHARE_HEADING_BACK
+          - WITHDRAW_HEADING_BACK
+          title: Action
+        share_audience_token:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 64
+          - type: 'null'
+          title: Share Audience Token
+      additionalProperties: false
+      type: object
+      required:
+      - action
+      title: MemberPlaceInvitationProgressRequest
+      description: An invitation participant explicitly shares or withdraws one coarse
+        status.
+    MemberPlacePromotionCreateRequest:
+      properties:
+        dwell_minutes:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 30
+          title: Dwell Minutes
+      additionalProperties: false
+      type: object
+      required:
+      - dwell_minutes
+      title: MemberPlacePromotionCreateRequest
+      description: One deliberate request to propose an invited Place as a shared stop.
+    MemberPlacePromotionDecisionRequest:
+      properties:
+        clarification_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Clarification Id
+        decision:
+          type: string
+          enum:
+          - APPROVE
+          - DECLINE
+          title: Decision
+      additionalProperties: false
+      type: object
+      required:
+      - clarification_id
+      - decision
+      title: MemberPlacePromotionDecisionRequest
+      description: One current Journey member's independent decision on a shared-stop
+        proposal.
+    MemberSideQuestCreateRequest:
+      properties:
+        destination_text:
+          anyOf:
+          - type: string
+            maxLength: 240
+          - type: 'null'
+          title: Destination Text
+        place_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 1
+          - type: 'null'
+          title: Place Id
+      additionalProperties: false
+      type: object
+      title: MemberSideQuestCreateRequest
+      description: Create or replace the authenticated member's private side-quest destination.
+    MemberSideQuestFitPreviewRequest:
+      properties:
+        location_observation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Location Observation Id
+        dwell_minutes:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 30
+          title: Dwell Minutes
+          default: 20
+        requested_mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Requested Mode
+          default: WALK
+      additionalProperties: false
+      type: object
+      title: MemberSideQuestFitPreviewRequest
+      description: One-time owner-only detour fit check; current location is optional
+        for UNKNOWN.
+    MemberSideQuestNavigateRequest:
+      properties:
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+        requested_mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Requested Mode
+          default: WALK
+      additionalProperties: false
+      type: object
+      required:
+      - location_observation_id
+      title: MemberSideQuestNavigateRequest
+      description: Route only the authenticated member from a fresh one-time location
+        to their stop.
+    MobilityModeRequest:
+      properties:
+        mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Mode
+      type: object
+      required:
+      - mode
+      title: MobilityModeRequest
+    MomentScoutRequest:
+      properties:
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+        budget_minutes:
+          type: integer
+          enum:
+          - 15
+          - 30
+          - 45
+          title: Budget Minutes
+          default: 30
+        interest:
+          type: string
+          enum:
+          - ANYTHING
+          - COFFEE_FOOD
+          - CULTURE
+          - NATURE
+          title: Interest
+          default: ANYTHING
+      additionalProperties: false
+      type: object
+      required:
+      - location_observation_id
+      title: MomentScoutRequest
+      description: One-time owner-only discovery request; location is always server-bound.
+    MomentScoutSelectRequest:
+      properties:
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+        budget_minutes:
+          type: integer
+          enum:
+          - 15
+          - 30
+          - 45
+          title: Budget Minutes
+          default: 30
+        interest:
+          type: string
+          enum:
+          - ANYTHING
+          - COFFEE_FOOD
+          - CULTURE
+          - NATURE
+          title: Interest
+          default: ANYTHING
+        place_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Place Id
+        scout_context:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Scout Context
+      additionalProperties: false
+      type: object
+      required:
+      - location_observation_id
+      - place_id
+      - scout_context
+      title: MomentScoutSelectRequest
+      description: Explicitly confirm one candidate from a fresh private Moment Scout
+        result.
+    OrderItem:
+      properties:
+        sku:
+          type: string
+          title: Sku
+        quantity:
+          type: integer
+          maximum: 99.0
+          minimum: 1.0
+          title: Quantity
+        unit_amount_minor:
+          type: integer
+          minimum: 0.0
+          title: Unit Amount Minor
+        line_total_minor:
+          type: integer
+          minimum: 0.0
+          title: Line Total Minor
+      type: object
+      required:
+      - sku
+      - quantity
+      - unit_amount_minor
+      - line_total_minor
+      title: OrderItem
+      description: Server-priced order line returned after catalog authority is applied.
+    OrderItemInput:
+      properties:
+        sku:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Sku
+        quantity:
+          type: integer
+          maximum: 99.0
+          minimum: 1.0
+          title: Quantity
+      type: object
+      required:
+      - sku
+      - quantity
+      title: OrderItemInput
+    OutcomeEventCreate:
+      properties:
+        event_type:
+          type: string
+          enum:
+          - ACTIVITY_STARTED
+          - ACTIVITY_COMPLETED
+          - ACTIVITY_SKIPPED
+          - MANUAL_OVERRIDE
+          - AGENT_PROPOSED
+          - USER_ACCEPTED
+          - USER_REJECTED
+          title: Event Type
+        occurred_at_actual:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Occurred At Actual
+        activity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Activity Id
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        actor_type:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Actor Type
+          default: USER
+        related_proposal_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Related Proposal Id
+        related_agent_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Related Agent Run Id
+      additionalProperties: false
+      type: object
+      required:
+      - event_type
+      title: OutcomeEventCreate
+    PoiImportAddRequest:
+      properties:
+        place_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 30
+          minItems: 1
+          title: Place Ids
+        day:
+          anyOf:
+          - type: string
+            pattern: ^\d{4}-\d{2}-\d{2}$
+          - type: 'null'
+          title: Day
+      additionalProperties: false
+      type: object
+      required:
+      - place_ids
+      title: PoiImportAddRequest
+    PoiImportAddResponse:
+      properties:
+        journey_id:
+          type: string
+          title: Journey Id
+        plan_version_id:
+          type: string
+          title: Plan Version Id
+        day:
+          type: string
+          title: Day
+        day_source:
+          type: string
+          enum:
+          - TRAVELLER_CHOSEN
+          - JOURNEY_FIRST_DAY
+          title: Day Source
+        added:
+          items:
+            $ref: '#/components/schemas/PoiImportAddedActivity'
+          type: array
+          title: Added
+        already_present:
+          items:
+            type: string
+          type: array
+          title: Already Present
+        readback_path:
+          type: string
+          title: Readback Path
+      type: object
+      required:
+      - journey_id
+      - plan_version_id
+      - day
+      - day_source
+      - added
+      - readback_path
+      title: PoiImportAddResponse
+    PoiImportAddedActivity:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        place_id:
+          type: string
+          title: Place Id
+        sequence_no:
+          type: integer
+          title: Sequence No
+        start_at:
+          type: string
+          title: Start At
+        end_at:
+          type: string
+          title: End At
+      type: object
+      required:
+      - id
+      - title
+      - place_id
+      - sequence_no
+      - start_at
+      - end_at
+      title: PoiImportAddedActivity
+    PoiImportItem:
+      properties:
+        title:
+          type: string
+          title: Title
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+        char_count:
+          type: integer
+          title: Char Count
+        status:
+          type: string
+          enum:
+          - RESOLVED
+          - AMBIGUOUS
+          - UNRESOLVED
+          title: Status
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
+        place_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Name
+        latitude:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Latitude
+        longitude:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Longitude
+        coordinate_system:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Coordinate System
+        matches:
+          items:
+            type: string
+          type: array
+          title: Matches
+        addable:
+          type: boolean
+          title: Addable
+          default: false
+      type: object
+      required:
+      - title
+      - char_count
+      - status
+      title: PoiImportItem
+    PoiImportParseRequest:
+      properties:
+        text:
+          type: string
+          maxLength: 20000
+          title: Text
+          default: ''
+      additionalProperties: false
+      type: object
+      title: PoiImportParseRequest
+    PoiImportParseResponse:
+      properties:
+        source_channel:
+          type: string
+          const: LOCAL_TEXT_PARSER
+          title: Source Channel
+        forms:
+          items:
+            type: string
+          type: array
+          title: Forms
+        unsupported_forms:
+          items:
+            type: string
+          type: array
+          title: Unsupported Forms
+        link_hosts:
+          items:
+            type: string
+          type: array
+          title: Link Hosts
+        counts:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Counts
+        items:
+          items:
+            $ref: '#/components/schemas/PoiImportItem'
+          type: array
+          title: Items
+        char_count:
+          type: integer
+          title: Char Count
+      type: object
+      required:
+      - source_channel
+      - forms
+      - unsupported_forms
+      - link_hosts
+      - counts
+      - items
+      - char_count
+      title: PoiImportParseResponse
+    PushSubscriptionRequest:
+      properties:
+        endpoint:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Endpoint
+        keys:
+          additionalProperties:
+            type: string
+          type: object
+          title: Keys
+      type: object
+      required:
+      - endpoint
+      title: PushSubscriptionRequest
+    RealCityDiscoveryRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Query
+          default: indoor cafe
+        radius_m:
+          type: integer
+          maximum: 5000.0
+          minimum: 100.0
+          title: Radius M
+          default: 2500
+        limit:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Limit
+          default: 8
+        mode:
+          type: string
+          enum:
+          - replay
+          - captured_replay
+          - live
+          title: Mode
+          default: captured_replay
+      type: object
+      title: RealCityDiscoveryRequest
+    RealCityIntelligenceRequest:
+      properties:
+        goal:
+          type: string
+          maxLength: 1000
+          minLength: 3
+          title: Goal
+        radius_m:
+          type: integer
+          maximum: 5000.0
+          minimum: 100.0
+          title: Radius M
+          default: 3000
+        limit:
+          type: integer
+          maximum: 10.0
+          minimum: 1.0
+          title: Limit
+          default: 8
+        mode:
+          type: string
+          enum:
+          - replay
+          - captured_replay
+          - live
+          title: Mode
+          default: captured_replay
+        candidate_count:
+          type: integer
+          maximum: 4.0
+          minimum: 1.0
+          title: Candidate Count
+          default: 2
+        require_fully_grounded:
+          type: boolean
+          title: Require Fully Grounded
+          default: false
+      type: object
+      required:
+      - goal
+      title: RealCityIntelligenceRequest
+    RendezvousBuddyExecutionReceiptRequest:
+      properties:
+        receipt_kind:
+          type: string
+          enum:
+          - BUDDY_MET_ACK
+          - CANNOT_MEET
+          - CANCEL_PARTICIPATION
+          title: Receipt Kind
+      additionalProperties: false
+      type: object
+      required:
+      - receipt_kind
+      title: RendezvousBuddyExecutionReceiptRequest
+    RendezvousBuddyExecutionWindowRequest:
+      properties:
+        execution_window_minutes:
+          type: integer
+          enum:
+          - 30
+          - 60
+          - 90
+          title: Execution Window Minutes
+      additionalProperties: false
+      type: object
+      required:
+      - execution_window_minutes
+      title: RendezvousBuddyExecutionWindowRequest
+    RendezvousBuddyHandoffDecisionRequest:
+      properties:
+        decision:
+          type: string
+          enum:
+          - ACCEPT
+          - DECLINE
+          title: Decision
+      additionalProperties: false
+      type: object
+      required:
+      - decision
+      title: RendezvousBuddyHandoffDecisionRequest
+    RendezvousBuddyHandoffOfferRequest:
+      properties:
+        help_signal_id:
+          type: string
+          format: uuid
+          title: Help Signal Id
+        expected_active_plan_version_id:
+          type: string
+          format: uuid
+          title: Expected Active Plan Version Id
+        expected_current_activity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Expected Current Activity Id
+        expected_rendezvous_activity_id:
+          type: string
+          format: uuid
+          title: Expected Rendezvous Activity Id
+        expected_original_public_place_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Expected Original Public Place Id
+        expected_audience_sha256:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-f]{64}$
+          title: Expected Audience Sha256
+        handoff_place_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Handoff Place Id
+        execution_window_minutes:
+          anyOf:
+          - type: integer
+            enum:
+            - 30
+            - 60
+            - 90
+          - type: 'null'
+          title: Execution Window Minutes
+      additionalProperties: false
+      type: object
+      required:
+      - help_signal_id
+      - expected_active_plan_version_id
+      - expected_rendezvous_activity_id
+      - expected_original_public_place_id
+      - expected_audience_sha256
+      - handoff_place_id
+      title: RendezvousBuddyHandoffOfferRequest
+      description: An authorized helper selects only a server-suggested public Place.
+    RendezvousBuddyPrivateRouteRequest:
+      properties:
+        location_observation_id:
+          type: string
+          format: uuid
+          title: Location Observation Id
+        requested_mode:
+          type: string
+          const: WALK
+          title: Requested Mode
+          default: WALK
+        external_provider_disclosure_confirmed:
+          type: boolean
+          title: External Provider Disclosure Confirmed
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - location_observation_id
+      title: RendezvousBuddyPrivateRouteRequest
+      description: One private route to an accepted R79 place after a separate disclosure
+        action.
+    ReplanGenerateRequest:
+      properties:
+        trigger_event_id:
+          type: string
+          format: uuid
+          title: Trigger Event Id
+        candidate_count:
+          type: integer
+          maximum: 5.0
+          minimum: 1.0
+          title: Candidate Count
+          default: 3
+        solver_mode:
+          anyOf:
+          - type: string
+            enum:
+            - deterministic
+            - ortools
+            - auto
+            - v2
+          - type: 'null'
+          title: Solver Mode
+        protected_activity_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 50
+          title: Protected Activity Ids
+        place_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 12
+            minItems: 1
+          - type: 'null'
+          title: Place Ids
+        promotion_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Promotion Id
+        promotion_invitation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Promotion Invitation Id
+        promotion_dwell_minutes:
+          anyOf:
+          - type: integer
+            enum:
+            - 10
+            - 20
+            - 30
+          - type: 'null'
+          title: Promotion Dwell Minutes
+      type: object
+      required:
+      - trigger_event_id
+      title: ReplanGenerateRequest
+    ReservationDraftPatchRequest:
+      properties:
+        reservation_type:
+          anyOf:
+          - type: string
+            maxLength: 40
+            minLength: 1
+          - type: 'null'
+          title: Reservation Type
+        confirmation_ref:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Confirmation Ref
+        origin:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Origin
+        destination:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Destination
+        scheduled_departure_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled Departure At
+        scheduled_arrival_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scheduled Arrival At
+        price_amount_minor:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Price Amount Minor
+        currency:
+          anyOf:
+          - type: string
+            maxLength: 8
+          - type: 'null'
+          title: Currency
+        anchor_role:
+          anyOf:
+          - type: string
+            enum:
+            - ARRIVAL
+            - DEPARTURE
+            - MID_TRIP
+            - UNKNOWN
+          - type: 'null'
+          title: Anchor Role
+        semantic_node_key:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Semantic Node Key
+        semantic_target:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Semantic Target
+      type: object
+      title: ReservationDraftPatchRequest
+    ReservationImportRequest:
+      properties:
+        artifact_type:
+          type: string
+          enum:
+          - STRUCTURED_JSON
+          - ICS
+          - TEXT
+          title: Artifact Type
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - artifact_type
+      - payload
+      title: ReservationImportRequest
+    ReservationTextExtractionRequest:
+      properties:
+        text:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Text
+      type: object
+      required:
+      - text
+      title: ReservationTextExtractionRequest
+    ReservationVisionRequest:
+      properties:
+        image_url:
+          type: string
+          maxLength: 12000000
+          minLength: 8
+          title: Image Url
+        hint:
+          type: string
+          maxLength: 200
+          title: Hint
+          default: booking confirmation
+      type: object
+      required:
+      - image_url
+      title: ReservationVisionRequest
+    ResilienceRefreshRequest:
+      properties:
+        mode:
+          type: string
+          enum:
+          - replay
+          - captured_replay
+          - live
+          title: Mode
+          default: replay
+      type: object
+      title: ResilienceRefreshRequest
+    RouteAcquireRequest:
+      properties:
+        target_activity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Activity Id
+        requested_mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Requested Mode
+          default: WALK
+      additionalProperties: false
+      type: object
+      title: RouteAcquireRequest
+      description: Request exactly one server-resolved route edge; no client coordinates.
+    ScheduleChangeRequest:
+      properties:
+        estimated_arrival_at:
+          type: string
+          format: date-time
+          title: Estimated Arrival At
+        status:
+          type: string
+          enum:
+          - DELAYED
+          - CANCELLED
+          - RESCHEDULED
+          title: Status
+          default: DELAYED
+        provider_key:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Provider Key
+          default: captured-transit-status
+        captured_at:
+          type: string
+          format: date-time
+          title: Captured At
+        service_alert:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Service Alert
+      type: object
+      required:
+      - estimated_arrival_at
+      - captured_at
+      title: ScheduleChangeRequest
+    SharedStopCoPlanningGrantCreateRequest:
+      properties:
+        grantee_member_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Grantee Member Id
+      additionalProperties: false
+      type: object
+      required:
+      - grantee_member_id
+      title: SharedStopCoPlanningGrantCreateRequest
+      description: Offer one named Journey collaborator bounded authority for one public
+        Place.
+    SharedStopCoPlanningGrantDecisionRequest:
+      properties:
+        decision:
+          type: string
+          enum:
+          - ACCEPT
+          - DECLINE
+          title: Decision
+      additionalProperties: false
+      type: object
+      required:
+      - decision
+      title: SharedStopCoPlanningGrantDecisionRequest
+    StayAutopilotRecoveryRequest:
+      properties:
+        state:
+          type: string
+          enum:
+          - RAIN
+          - SEVERE_RAIN
+          - TRANSIT_DISRUPTION
+          title: State
+          default: RAIN
+      type: object
+      title: StayAutopilotRecoveryRequest
+    StayModeChangeRequest:
+      properties:
+        mode:
+          type: string
+          enum:
+          - WALK
+          - BICYCLE
+          - TRANSIT
+          - AUTO
+          - RIDE_HAIL
+          title: Mode
+        from_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Key
+        to_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: To Key
+      type: object
+      required:
+      - mode
+      title: StayModeChangeRequest
+    StayPlanGenerateRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Query
+          default: stay-aware journey
+        weather_state:
+          type: string
+          enum:
+          - NORMAL
+          - RAIN
+          - SEVERE_RAIN
+          - TRANSIT_DISRUPTION
+          title: Weather State
+          default: NORMAL
+        candidate_count:
+          type: integer
+          maximum: 8.0
+          minimum: 3.0
+          title: Candidate Count
+          default: 4
+        sort:
+          type: string
+          enum:
+          - BEST_FOR_JOURNEY
+          - CHEAPEST
+          - LEAST_TRAVEL
+          - MOST_FLEXIBLE
+          title: Sort
+          default: BEST_FOR_JOURNEY
+      type: object
+      title: StayPlanGenerateRequest
+    TravelerRecycleBinJourney:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        traveler_id:
+          type: string
+          format: uuid
+          title: Traveler Id
+        title:
+          type: string
+          title: Title
+        city_code:
+          type: string
+          title: City Code
+        timezone:
+          type: string
+          title: Timezone
+        start_at:
+          type: string
+          format: date-time
+          title: Start At
+        end_at:
+          type: string
+          format: date-time
+          title: End At
+        timezone_honoured:
+          type: boolean
+          title: Timezone Honoured
+          default: true
+        budget:
+          $ref: '#/components/schemas/Money'
+        planning_mode:
+          type: string
+          enum:
+          - balanced
+          - budget
+          - explore
+          - strict_schedule
+          title: Planning Mode
+          default: balanced
+        status:
+          type: string
+          enum:
+          - DRAFT
+          - PLANNED
+          - ACTIVE
+          - COMPLETED
+          - CANCELLED
+          title: Status
+        active_plan_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Active Plan Version Id
+        current_activity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Current Activity Id
+        aborted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Aborted At
+        abort_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Abort Reason
+        live_view:
+          $ref: '#/components/schemas/JourneyLiveView'
+        deleted_at:
+          type: string
+          format: date-time
+          title: Deleted At
+        bin_state:
+          type: string
+          const: IN_RECYCLE_BIN
+          title: Bin State
+        ownership:
+          type: string
+          enum:
+          - OWNED_BY_THIS_TRAVELER
+          - OWNED_BY_ANOTHER_TRAVELER
+          - NOT_STATED
+          title: Ownership
+        member_role:
+          anyOf:
+          - type: string
+            enum:
+            - OWNER
+            - ADMIN
+            - COLLABORATOR
+          - type: 'null'
+          title: Member Role
+        recovery:
+          type: string
+          enum:
+          - RECOVERY_ALLOWED
+          - RECOVERY_REFUSED_NOT_OWNER
+          - RECOVERY_REFUSED_ROLE_CANNOT_RESTORE
+          - RECOVERY_REFUSED_NO_SEAT
+          title: Recovery
+      type: object
+      required:
+      - id
+      - traveler_id
+      - title
+      - city_code
+      - timezone
+      - start_at
+      - end_at
+      - budget
+      - status
+      - live_view
+      - deleted_at
+      - bin_state
+      - ownership
+      - recovery
+      title: TravelerRecycleBinJourney
+      description: "One binned trip, answered from one traveller's seat (ORD-0531).\n\n\
+        The two extra names are the whole point of this shape.  A bin row used to say\
+        \ only \"this is in\nthe bin\", which left a screen to decide whether it may offer\
+        \ 找回 by comparing ids it was never\ngiven a rule about -- the same mistake ORD-0239\
+        \ names for every other derived state on this\nproduct.  So the server says it:\n\
+        \n* `ownership` -- whose trip this is, relative to the traveller named in the\
+        \ path.  The column\n  already exists (`journeys.traveler_id`); no new column\
+        \ was needed to know it, so none was\n  invented.  `NOT_STATED` is reserved for\
+        \ a row the store cannot attribute, and a screen must\n  treat it as no authority\
+        \ rather than as a missing value to guess at.\n* `recovery` -- whether this traveller\
+        \ may take the trip back, and if not, in which of the three\n  ways not.  It is\
+        \ decided from `journey_role_capabilities`, read through the same helper the\n\
+        \  member doors use, so narrowing that table narrows this answer the same instant.\n\
+        \nA refused row still appears: an owner who shared a trip must be able to see\
+        \ that it is there and\nread why it is not theirs to restore.  What may not happen\
+        \ is a row that looks restorable."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WeatherDisruptionRequest:
+      properties:
+        state:
+          type: string
+          enum:
+          - NORMAL
+          - RAIN
+          - SEVERE_RAIN
+          - TRANSIT_DISRUPTION
+          title: State
+      type: object
+      required:
+      - state
+      title: WeatherDisruptionRequest
+    WebResearchRequest:
+      properties:
+        query:
+          type: string
+          maxLength: 500
+          minLength: 3
+          title: Query
+        source_class:
+          type: string
+          enum:
+          - OFFICIAL_NOTICE
+          - OPERATOR_NOTICE
+          - OPEN_WEB
+          title: Source Class
+          default: OPEN_WEB
+      type: object
+      required:
+      - query
+      title: WebResearchRequest

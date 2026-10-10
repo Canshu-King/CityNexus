@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -64,6 +64,26 @@ class JourneyOutcomeEvent(Base):
     related_agent_run_id: Mapped[str | None] = mapped_column(String, nullable=True)
     payload_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     created_at: Mapped[str] = mapped_column(String)
+
+
+class OvernightStewardCycle(Base):
+    """One durable closeout and morning handoff per Journey local day and plan."""
+
+    __tablename__ = "overnight_steward_cycles"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    cycle_key: Mapped[str] = mapped_column(String, unique=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    local_date: Mapped[str] = mapped_column(String)
+    next_local_date: Mapped[str] = mapped_column(String)
+    plan_version_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    state: Mapped[str] = mapped_column(String, default="DAY_CLOSING", server_default="DAY_CLOSING")
+    consumed_outcome_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    learning_summary_by_traveler_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    briefing_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    morning_ready_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class TravelerPreferenceEvidence(Base):
@@ -246,6 +266,720 @@ class JourneyMission(Base):
     started_at: Mapped[str | None] = mapped_column(String, nullable=True)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     failure_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    clarification_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+
+
+class JourneyIntent(Base):
+    """A member-scoped, time-bounded steering request for one running Journey."""
+
+    __tablename__ = "journey_intents"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    created_by_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    created_by_member_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_text: Mapped[str] = mapped_column(Text)
+    intent_kind: Mapped[str] = mapped_column(String)
+    scope_kind: Mapped[str | None] = mapped_column(String, nullable=True)
+    scope_start_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    scope_end_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    local_date: Mapped[str | None] = mapped_column(String, nullable=True)
+    target_activity_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    canonical_dimensions_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    constraints_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    capabilities_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    preference_hints_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    semantic_envelope_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    source: Mapped[str] = mapped_column(String, default="USER_TEMPORARY_INTENT", server_default="USER_TEMPORARY_INTENT")
+    compiler_provider_key: Mapped[str] = mapped_column(String, default="deterministic", server_default="deterministic")
+    compiler_model_key: Mapped[str] = mapped_column(String, default="fallback", server_default="fallback")
+    compiler_confidence: Mapped[float] = mapped_column(default=0.0, server_default="0")
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    evaluation_state: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    semantic_fingerprint: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    superseded_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    expired_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "semantic_fingerprint"),
+        Index("idx_journey_intents_active_scope", "journey_id", "status", "scope_start_at", "scope_end_at"),
+    )
+
+
+class MemberSideQuest(Base):
+    """Private execution state for one traveller's stop during an R63 split."""
+
+    __tablename__ = "member_side_quests"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    rendezvous_activity_id: Mapped[str] = mapped_column(String)
+    rendezvous_place_id: Mapped[str] = mapped_column(String)
+    rendezvous_title: Mapped[str] = mapped_column(String)
+    rendezvous_place_name: Mapped[str] = mapped_column(String)
+    rendezvous_scheduled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    side_place_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    side_title: Mapped[str] = mapped_column(Text)
+    destination_authority: Mapped[str] = mapped_column(String)
+    state: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    arrived_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    invalidated_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "destination_authority IN ('EXACT_KNOWN_PLACE', 'DESCRIPTIVE_ONLY')",
+            name="ck_member_side_quests_destination_authority",
+        ),
+        CheckConstraint(
+            "state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED', "
+            "'COMPLETED', 'CANCELLED', 'INVALIDATED')",
+            name="ck_member_side_quests_state",
+        ),
+        Index(
+            "ux_member_side_quests_one_open_per_split",
+            "journey_id",
+            "member_id",
+            "planned_separation_intent_id",
+            unique=True,
+            sqlite_where=text(
+                "state IN ('DESTINATION_UNRESOLVED', 'READY', 'EN_ROUTE', 'ARRIVED')"
+            ),
+        ),
+        Index(
+            "idx_member_side_quests_journey_member_updated",
+            "journey_id",
+            "member_id",
+            "updated_at",
+        ),
+    )
+
+
+class MemberLiveMomentScoutReceipt(Base):
+    """Short-lived member-private results from an explicitly consented OSM lookup."""
+
+    __tablename__ = "member_live_moment_scout_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    location_observation_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    split_intent_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    rendezvous_activity_id: Mapped[str] = mapped_column(String)
+    rendezvous_place_id: Mapped[str] = mapped_column(String)
+    budget_minutes: Mapped[int] = mapped_column(Integer)
+    interest: Mapped[str] = mapped_column(String)
+    candidates_json: Mapped[str] = mapped_column(Text)
+    provider_attempts_json: Mapped[str] = mapped_column(Text)
+    provider_key: Mapped[str] = mapped_column(String)
+    captured_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    selected_candidate_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    selected_place_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    side_quest_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('OPEN', 'SELECTING', 'SELECTED', 'EXPIRED')",
+            name="ck_member_live_moment_scout_receipts_status",
+        ),
+        Index(
+            "idx_member_live_moment_scout_receipts_owner_expiry",
+            "journey_id",
+            "member_id",
+            "expires_at",
+        ),
+    )
+
+
+class MemberSideQuestReturnReport(Base):
+    """Member-owned, idempotent report that a completed private stop is heading back."""
+
+    __tablename__ = "member_side_quest_return_reports"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    side_quest_id: Mapped[str] = mapped_column(
+        ForeignKey("member_side_quests.id", ondelete="CASCADE"), unique=True
+    )
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(
+        String,
+        default="RETURN_STARTED_REPORTED",
+        server_default="RETURN_STARTED_REPORTED",
+    )
+    reported_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status = 'RETURN_STARTED_REPORTED'",
+            name="ck_member_side_quest_return_reports_status",
+        ),
+        Index(
+            "idx_member_side_quest_return_reports_journey_member",
+            "journey_id",
+            "member_id",
+            "reported_at",
+        ),
+    )
+
+
+class PlannedSplitMeetupHandshake(Base):
+    """A member-reported meetup arrival acknowledged by another current member."""
+
+    __tablename__ = "planned_split_meetup_handshakes"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    owner_member_id: Mapped[str] = mapped_column(String)
+    owner_traveler_id: Mapped[str] = mapped_column(String)
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    member_side_quest_id: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    rendezvous_activity_id: Mapped[str] = mapped_column(String)
+    rendezvous_place_id: Mapped[str] = mapped_column(String)
+    state: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    reported_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    responder_member_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    responder_traveler_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('PENDING', 'PEER_ACKNOWLEDGED', 'NOT_CONFIRMED', 'EXPIRED', 'INVALIDATED')",
+            name="ck_planned_split_meetup_handshakes_state",
+        ),
+        Index(
+            "ux_planned_split_meetup_handshakes_one_pending_per_owner",
+            "journey_id",
+            "owner_member_id",
+            unique=True,
+            sqlite_where=text("state = 'PENDING'"),
+        ),
+        Index(
+            "idx_planned_split_meetup_handshakes_journey_reported",
+            "journey_id",
+            "reported_at",
+        ),
+    )
+
+
+class MemberPlaceInvitation(Base):
+    """A member's explicit, time-bounded disclosure of one public Place to companions."""
+
+    __tablename__ = "member_place_invitations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    owner_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    owner_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    owner_split_intent_id: Mapped[str] = mapped_column(ForeignKey("journey_intents.id", ondelete="CASCADE"))
+    owner_side_quest_id: Mapped[str] = mapped_column(ForeignKey("member_side_quests.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="CASCADE"))
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    place_provider_key: Mapped[str] = mapped_column(String)
+    place_external_id: Mapped[str] = mapped_column(String)
+    rendezvous_activity_id: Mapped[str] = mapped_column(ForeignKey("activities.id", ondelete="CASCADE"))
+    rendezvous_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    disclosure_snapshot_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    state: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    created_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    withdrawn_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('OPEN', 'WITHDRAWN', 'EXPIRED', 'STALE')",
+            name="ck_member_place_invitations_state",
+        ),
+        Index(
+            "ux_member_place_invitations_one_open_per_quest",
+            "journey_id",
+            "owner_side_quest_id",
+            unique=True,
+            sqlite_where=text("state = 'OPEN'"),
+        ),
+        Index(
+            "idx_member_place_invitations_journey_owner_created",
+            "journey_id",
+            "owner_member_id",
+            "created_at",
+        ),
+    )
+
+
+class MemberPlaceInvitationRecipient(Base):
+    """One addressed companion's own response and resulting R63/R64 execution objects."""
+
+    __tablename__ = "member_place_invitation_recipients"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    recipient_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    recipient_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    state: Mapped[str] = mapped_column(String, default="INVITED", server_default="INVITED")
+    invited_at: Mapped[str] = mapped_column(String)
+    responded_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    accepted_split_intent_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_intents.id", ondelete="SET NULL"), nullable=True
+    )
+    accepted_side_quest_id: Mapped[str | None] = mapped_column(
+        ForeignKey("member_side_quests.id", ondelete="SET NULL"), nullable=True
+    )
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("invitation_id", "recipient_member_id"),
+        CheckConstraint(
+            "state IN ('INVITED', 'ACCEPTANCE_NEEDS_COMPLETION', 'ACCEPTED_OWN_STOP_READY', 'DECLINED')",
+            name="ck_member_place_invitation_recipients_state",
+        ),
+        Index(
+            "idx_member_place_invitation_recipients_member_state",
+            "recipient_member_id",
+            "state",
+            "invited_at",
+        ),
+    )
+
+
+class MemberPlaceInvitationProgress(Base):
+    """A participant's explicit, revocable disclosure about one invited public Place."""
+
+    __tablename__ = "member_place_invitation_progress"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    member_id: Mapped[str] = mapped_column(String)
+    traveler_id: Mapped[str] = mapped_column(String)
+    signal_type: Mapped[str] = mapped_column(String)
+    active_plan_version_id: Mapped[str] = mapped_column(String)
+    planned_separation_intent_id: Mapped[str] = mapped_column(String)
+    side_quest_id: Mapped[str] = mapped_column(String)
+    place_id: Mapped[str] = mapped_column(String)
+    consent_version: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    reported_at: Mapped[str] = mapped_column(String)
+    withdrawn_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "invitation_id", "member_id", "signal_type",
+            name="ux_member_place_invitation_progress_member_signal",
+        ),
+        CheckConstraint(
+            "signal_type IN ('AT_INVITED_PLACE_SELF_REPORTED', 'HEADING_BACK_SELF_REPORTED')",
+            name="ck_member_place_invitation_progress_signal",
+        ),
+        CheckConstraint(
+            "status IN ('ACTIVE', 'WITHDRAWN')",
+            name="ck_member_place_invitation_progress_status",
+        ),
+        Index(
+            "idx_member_place_invitation_progress_invitation_status",
+            "invitation_id",
+            "status",
+            "signal_type",
+        ),
+    )
+
+
+class MemberPlaceGroupShareConsent(Base):
+    """A source-owned, revocable receipt for widening one exact Place disclosure."""
+
+    __tablename__ = "member_place_group_share_consents"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    owner_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    owner_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    owner_split_intent_id: Mapped[str] = mapped_column(ForeignKey("journey_intents.id", ondelete="CASCADE"))
+    owner_side_quest_id: Mapped[str] = mapped_column(ForeignKey("member_side_quests.id", ondelete="CASCADE"))
+    base_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    base_cursor_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    place_snapshot_json: Mapped[str] = mapped_column(Text)
+    rendezvous_activity_id: Mapped[str] = mapped_column(ForeignKey("activities.id", ondelete="RESTRICT"))
+    rendezvous_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    audience_snapshot_json: Mapped[str] = mapped_column(Text)
+    audience_snapshot_hash: Mapped[str] = mapped_column(String)
+    plan_snapshot_hash: Mapped[str] = mapped_column(String)
+    source_snapshot_hash: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    consented_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    withdrawn_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('ACTIVE', 'WITHDRAWN', 'EXPIRED', 'STALE')",
+            name="ck_member_place_group_share_consents_status",
+        ),
+        Index(
+            "ux_member_place_group_share_consents_one_active",
+            "journey_id",
+            "invitation_id",
+            unique=True,
+            sqlite_where=text("status = 'ACTIVE'"),
+            postgresql_where=text("status = 'ACTIVE'"),
+        ),
+        Index(
+            "idx_member_place_group_share_consents_invitation_created",
+            "journey_id",
+            "invitation_id",
+            "created_at",
+        ),
+    )
+
+
+class MemberPlacePromotion(Base):
+    """One explicitly proposed, collectively authorized shared stop."""
+
+    __tablename__ = "member_place_promotions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    actor_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    actor_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    active_plan_version_id: Mapped[str] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="RESTRICT")
+    )
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    rendezvous_activity_id: Mapped[str] = mapped_column(
+        ForeignKey("activities.id", ondelete="RESTRICT")
+    )
+    current_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    trigger_event_id: Mapped[str | None] = mapped_column(
+        ForeignKey("events.id", ondelete="SET NULL"), nullable=True
+    )
+    proposal_id: Mapped[str | None] = mapped_column(
+        ForeignKey("replan_proposals.id", ondelete="SET NULL"), nullable=True
+    )
+    mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    request_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    dwell_minutes: Mapped[int] = mapped_column(Integer)
+    state: Mapped[str] = mapped_column(String, default="PENDING_ROUTE", server_default="PENDING_ROUTE")
+    state_detail_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    decision_epoch: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch: Mapped[str | None] = mapped_column(String, nullable=True)
+    candidate_surface_fingerprint: Mapped[str | None] = mapped_column(String, nullable=True)
+    authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    applied_plan_version_id: Mapped[str | None] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="SET NULL"), nullable=True
+    )
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    applied_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        CheckConstraint(
+            "dwell_minutes IN (10, 20, 30)",
+            name="ck_member_place_promotions_dwell",
+        ),
+        CheckConstraint(
+            "state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED', 'APPLIED', "
+            "'DECLINED', 'STALE', 'BLOCKED')",
+            name="ck_member_place_promotions_state",
+        ),
+        UniqueConstraint(
+            "journey_id", "request_key", name="ux_member_place_promotions_request_key"
+        ),
+        Index(
+            "ux_member_place_promotions_one_pending",
+            "journey_id",
+            "active_plan_version_id",
+            "invitation_id",
+            "place_id",
+            unique=True,
+            sqlite_where=text(
+                "state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED')"
+            ),
+            postgresql_where=text(
+                "state IN ('PENDING_ROUTE', 'WAITING_FOR_MEMBERS', 'AUTHORIZED')"
+            ),
+        ),
+        Index(
+            "idx_member_place_promotions_journey_state_updated",
+            "journey_id",
+            "state",
+            "updated_at",
+        ),
+    )
+
+
+class SharedStopCoPlanningGrant(Base):
+    """A member's short-lived, one-promotion authority to answer an R73 decision."""
+
+    __tablename__ = "shared_stop_coplanning_grants"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    invitation_id: Mapped[str] = mapped_column(
+        ForeignKey("member_place_invitations.id", ondelete="CASCADE")
+    )
+    base_plan_version_id: Mapped[str] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="RESTRICT")
+    )
+    grantee_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    grantee_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    grantor_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    grantor_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE")
+    )
+    promotion_id: Mapped[str | None] = mapped_column(
+        ForeignKey("member_place_promotions.id", ondelete="CASCADE"), nullable=True
+    )
+    active_slot: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("true"))
+    purpose: Mapped[str] = mapped_column(String, default="R73_SHARED_STOP_ONLY")
+    status: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
+    request_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    accepted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    declined_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    decision_epoch: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "purpose = 'R73_SHARED_STOP_ONLY'",
+            name="ck_shared_stop_coplanning_grant_purpose",
+        ),
+        CheckConstraint(
+            "status IN ('OFFERED', 'ACCEPTED', 'DECLINED', 'REVOKED')",
+            name="ck_shared_stop_coplanning_grant_status",
+        ),
+        UniqueConstraint(
+            "journey_id", "request_key", name="ux_shared_stop_coplanning_request_key"
+        ),
+        Index(
+            "idx_shared_stop_coplanning_grantee_scope",
+            "journey_id",
+            "invitation_id",
+            "base_plan_version_id",
+            "grantee_member_id",
+            "status",
+        ),
+        Index(
+            "ux_shared_stop_coplanning_one_unbound_active_grant",
+            "journey_id",
+            "invitation_id",
+            "base_plan_version_id",
+            "grantee_member_id",
+            unique=True,
+            sqlite_where=text("active_slot = 1"),
+            postgresql_where=text("active_slot = true"),
+        ),
+        Index(
+            "idx_shared_stop_coplanning_promotion",
+            "promotion_id",
+            "decision_epoch",
+        ),
+    )
+
+
+class RecoveryEpoch(Base):
+    """Server-owned recovery reality binding for one Journey."""
+
+    __tablename__ = "recovery_epochs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    generation: Mapped[int] = mapped_column(Integer)
+    active_plan_version_id_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_reality_fingerprint: Mapped[str] = mapped_column(String)
+    triggering_event_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    status: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    opened_at: Mapped[str] = mapped_column(String)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    close_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    superseded_by_recovery_epoch_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "generation"),
+        Index(
+            "ux_recovery_epochs_one_open",
+            "journey_id",
+            unique=True,
+            sqlite_where=text("status = 'OPEN'"),
+        ),
+        Index("idx_recovery_epochs_journey_status", "journey_id", "status", "generation"),
+    )
+
+
+class OperatorRecoveryResume(Base):
+    """Durable resume intent for one unresolved Operator recovery epoch."""
+
+    __tablename__ = "operator_recovery_resumes"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    recovery_epoch_id: Mapped[str] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="CASCADE")
+    )
+    event_id: Mapped[str | None] = mapped_column(
+        ForeignKey("events.id", ondelete="SET NULL"), nullable=True
+    )
+    incident_fingerprint: Mapped[str] = mapped_column(String)
+    standing_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    recovery_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    guardian_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("guardian_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    active_plan_version_id_at_block: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch_at_block: Mapped[str | None] = mapped_column(String, nullable=True)
+    blocked_reason: Mapped[str] = mapped_column(String)
+    failure_classification: Mapped[str] = mapped_column(String)
+    provider_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    model_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    next_retry_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    retry_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    safe_to_resume: Mapped[bool] = mapped_column(Boolean, default=True, server_default="1")
+    owner_runtime_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    owner_claim_token: Mapped[str | None] = mapped_column(String, nullable=True)
+    owner_claimed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    last_attempt_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    resumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "recovery_epoch_id"),
+        Index("idx_operator_recovery_resumes_due", "journey_id", "status", "next_retry_at"),
+    )
+
+
+class RecoveryDiscoveryAttempt(Base):
+    """Durable bounded open-world discovery inside one recovery epoch."""
+
+    __tablename__ = "recovery_discovery_attempts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    recovery_epoch_id: Mapped[str] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="CASCADE")
+    )
+    mission_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    guardian_run_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    query_hash: Mapped[str] = mapped_column(String)
+    query: Mapped[str] = mapped_column(String)
+    category: Mapped[str | None] = mapped_column(String, nullable=True)
+    radius_m: Mapped[int] = mapped_column(Integer, default=2500, server_default="2500")
+    candidate_limit: Mapped[int] = mapped_column(Integer, default=8, server_default="8")
+    status: Mapped[str] = mapped_column(String, default="COMPLETED", server_default="COMPLETED")
+    provider_mode: Mapped[str] = mapped_column(String)
+    runtime_provenance: Mapped[str] = mapped_column(String)
+    raw_candidate_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    materialized_place_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    deep_candidate_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    provider_status_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("recovery_epoch_id", "query_hash"),
+        Index("idx_recovery_discovery_epoch", "journey_id", "recovery_epoch_id", "created_at"),
+    )
+
+
+class RecoveryExecutionPlan(Base):
+    """Frozen server-owned commerce work for one accepted recovery."""
+
+    __tablename__ = "recovery_execution_plans"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    recovery_epoch_id: Mapped[str] = mapped_column(ForeignKey("recovery_epochs.id", ondelete="CASCADE"))
+    proposal_id: Mapped[str] = mapped_column(ForeignKey("replan_proposals.id", ondelete="CASCADE"))
+    agent_run_id: Mapped[str | None] = mapped_column(ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True)
+    status: Mapped[str] = mapped_column(String, default="PLANNED", server_default="PLANNED")
+    semantic_fingerprint: Mapped[str] = mapped_column(String)
+    approval_id: Mapped[str | None] = mapped_column(ForeignKey("action_approvals.id", ondelete="SET NULL"), nullable=True)
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (UniqueConstraint("recovery_epoch_id", "proposal_id"),)
+
+
+class RecoveryExecutionAction(Base):
+    """One idempotent action in a frozen recovery execution plan."""
+
+    __tablename__ = "recovery_execution_actions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    execution_plan_id: Mapped[str] = mapped_column(ForeignKey("recovery_execution_plans.id", ondelete="CASCADE"))
+    sequence_no: Mapped[int] = mapped_column(Integer)
+    kind: Mapped[str] = mapped_column(String)
+    target_type: Mapped[str] = mapped_column(String)
+    target_id: Mapped[str] = mapped_column(String)
+    provider_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    semantic_fingerprint: Mapped[str] = mapped_column(String)
+    authority_decision: Mapped[str] = mapped_column(String, default="REQUIRE_CONFIRMATION", server_default="REQUIRE_CONFIRMATION")
+    approval_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (UniqueConstraint("execution_plan_id", "semantic_fingerprint"),)
 
 
 class AgentRun(Base):
@@ -263,6 +997,9 @@ class AgentRun(Base):
     created_at: Mapped[str] = mapped_column(String)
     started_at: Mapped[str] = mapped_column(String)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
 
 
 class AgentRunStep(Base):
@@ -279,6 +1016,42 @@ class AgentRunStep(Base):
     status: Mapped[str] = mapped_column(String, default="COMPLETED")
     created_at: Mapped[str] = mapped_column(String)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+class AgentPendingAction(Base):
+    """Durable human-in-the-loop continuation owned by one AgentRun."""
+
+    __tablename__ = "agent_pending_actions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    approval_id: Mapped[str] = mapped_column(
+        ForeignKey("action_approvals.id", ondelete="CASCADE"), unique=True
+    )
+    run_id: Mapped[str] = mapped_column(ForeignKey("agent_runs.id", ondelete="CASCADE"))
+    mission_id: Mapped[str] = mapped_column(ForeignKey("journey_missions.id", ondelete="CASCADE"))
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    originating_step_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_run_steps.id", ondelete="SET NULL"), nullable=True
+    )
+    tool_name: Mapped[str] = mapped_column(String)
+    arguments_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    status: Mapped[str] = mapped_column(String, default="PENDING", server_default="PENDING")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    claimed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    resumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+    authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('PENDING','RESUMING','RESUMED','FAILED','EXPIRED','SUPERSEDED')",
+            name="ck_agent_pending_actions_status",
+        ),
+    )
 
 
 class AutopilotEnrollment(Base):
@@ -325,6 +1098,9 @@ class GuardianRun(Base):
     active_plan_after_id: Mapped[str | None] = mapped_column(String, nullable=True)
     trigger_kind: Mapped[str] = mapped_column(String, default="REACTIVE", server_default="REACTIVE")
     resilience_snapshot_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
     created_at: Mapped[str] = mapped_column(String)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
     cooldown_until: Mapped[str | None] = mapped_column(String, nullable=True)
@@ -450,6 +1226,73 @@ class RealPlaceCandidate(Base):
     __table_args__ = (UniqueConstraint("journey_id", "provider_key", "external_id"),)
 
 
+class MemberDraftShortlistItem(Base):
+    """One member's public-only POI bookmark inside a DRAFT Journey."""
+
+    __tablename__ = "member_draft_shortlist_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    provider_key: Mapped[str] = mapped_column(String)
+    external_id: Mapped[str] = mapped_column(String)
+    name: Mapped[str] = mapped_column(String)
+    category: Mapped[str] = mapped_column(String)
+    latitude: Mapped[float] = mapped_column()
+    longitude: Mapped[float] = mapped_column()
+    coordinate_system: Mapped[str] = mapped_column(String, default="WGS84", server_default="WGS84")
+    source_url: Mapped[str] = mapped_column(Text)
+    source_provenance: Mapped[str] = mapped_column(String)
+    captured_at: Mapped[str] = mapped_column(String)
+    opening_hours_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    cost_evidence_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    source_tags_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    distance_m: Mapped[float | None] = mapped_column(nullable=True)
+    distance_basis: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, default="SAVED", server_default="SAVED")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "member_id", "external_id"),
+        CheckConstraint("status = 'SAVED'", name="ck_member_draft_shortlist_items_status"),
+        Index(
+            "idx_member_draft_shortlist_items_owner",
+            "journey_id",
+            "member_id",
+            "traveler_id",
+            "updated_at",
+        ),
+    )
+
+
+class MemberDraftResumeIntent(Base):
+    """Private UI resume pointer for one member's saved draft destination."""
+
+    __tablename__ = "member_draft_resume_intents"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    shortlist_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
+    )
+    selected_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "member_id", "traveler_id"),
+        Index(
+            "idx_member_draft_resume_intents_owner",
+            "journey_id",
+            "member_id",
+            "traveler_id",
+            "updated_at",
+        ),
+    )
+
+
 class JourneyConstraint(Base):
     __tablename__ = "constraints"
     id: Mapped[str] = mapped_column(String, primary_key=True)
@@ -522,6 +1365,10 @@ class PlanVersion(Base):
     version_no: Mapped[int] = mapped_column(Integer)
     planning_mode: Mapped[str] = mapped_column(String)
     status: Mapped[str] = mapped_column(String)
+    # Lifecycle is deliberately separate from status: CANDIDATE/SELECTED describe
+    # the generic plan state, while STANDBY is a governed, non-current branch.
+    lifecycle: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    trigger_contract_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     source: Mapped[str] = mapped_column(String)
     parent_plan_version_id: Mapped[str | None] = mapped_column(
         ForeignKey("plan_versions.id", ondelete="SET NULL"), nullable=True
@@ -713,6 +1560,49 @@ class ActionApproval(Base):
     expires_at: Mapped[str] = mapped_column(String)
     approved_at: Mapped[str | None] = mapped_column(String, nullable=True)
     consumed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    authority_receipt_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+
+
+class CollectiveAuthorityReceipt(Base):
+    """Server-issued proof that one exact collective future is executable.
+
+    The receipt is deliberately separate from a planning proposal, member
+    response, or user approval.  Those rows are evidence used to issue it;
+    this row is the durable authority boundary consumed by a mutation.
+    """
+
+    __tablename__ = "collective_authority_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    proposal_id: Mapped[str] = mapped_column(ForeignKey("replan_proposals.id", ondelete="CASCADE"))
+    plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="CASCADE"))
+    authority_mode: Mapped[str] = mapped_column(String)
+    decision_epoch: Mapped[str] = mapped_column(String)
+    material_world_epoch: Mapped[str] = mapped_column(String)
+    candidate_surface_fingerprint: Mapped[str] = mapped_column(String)
+    source_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    source_agent_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+    required_member_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    response_audit_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    principal_actor_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    classification: Mapped[str] = mapped_column(String)
+    issued_at: Mapped[str] = mapped_column(String)
+    invalidated_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    invalidation_code: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        Index("idx_collective_authority_receipts_target", "journey_id", "proposal_id", "plan_version_id"),
+    )
 
 
 class Event(Base):
@@ -808,6 +1698,14 @@ class ReplanProposal(Base):
     explanation_json: Mapped[str] = mapped_column(Text)
     created_at: Mapped[str] = mapped_column(String)
     decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+    source_agent_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    semantic_identity: Mapped[str | None] = mapped_column(String, nullable=True)
+    canonical_proposal_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class JourneyTripContext(Base):
@@ -830,6 +1728,35 @@ class JourneyTripContext(Base):
     # therefore cannot say.  NULL is deliberately not folded into False, because a legacy row
     # may hold an amount a traveller really typed.
     stay_budget_declared: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=None)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class JourneyLaunchContext(Base):
+    """Durable planned launch origin, separate from execution truth."""
+
+    __tablename__ = "journey_launch_contexts"
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), primary_key=True
+    )
+    source_kind: Mapped[str] = mapped_column(String)
+    authority_kind: Mapped[str] = mapped_column(String)
+    place_id: Mapped[str | None] = mapped_column(
+        ForeignKey("places.id", ondelete="SET NULL"), nullable=True
+    )
+    target_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    display_name: Mapped[str] = mapped_column(String)
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
+    coordinate_crs: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_type: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_from: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_until: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmed_by: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmation_method: Mapped[str | None] = mapped_column(String, nullable=True)
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
 
@@ -1002,6 +1929,77 @@ class ExternalReservationDraft(Base):
     confirmed_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
+class JourneyInboxItem(Base):
+    __tablename__ = "journey_inbox_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    source_kind: Mapped[str] = mapped_column(String)
+    raw_text_hash: Mapped[str] = mapped_column(String)
+    raw_text: Mapped[str] = mapped_column(Text)
+    received_at: Mapped[str] = mapped_column(String)
+    semantic_kind: Mapped[str] = mapped_column(String)
+    reservation_type: Mapped[str] = mapped_column(String)
+    confirmation_ref: Mapped[str | None] = mapped_column(String, nullable=True)
+    change_kind: Mapped[str] = mapped_column(String)
+    extracted_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    provenance: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    linked_reservation_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    linked_commitment_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    reality_claim_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    impact_status: Mapped[str] = mapped_column(String)
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    __table_args__ = (UniqueConstraint("journey_id", "raw_text_hash"),)
+
+
+class RealityClaim(Base):
+    __tablename__ = "reality_claims"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    fact_domain: Mapped[str] = mapped_column(String)
+    fact_key: Mapped[str] = mapped_column(String)
+    subject_type: Mapped[str] = mapped_column(String)
+    subject_id: Mapped[str] = mapped_column(String)
+    value_json: Mapped[str] = mapped_column(Text)
+    provenance: Mapped[str] = mapped_column(String)
+    source_ref: Mapped[str] = mapped_column(String)
+    observed_at: Mapped[str] = mapped_column(String)
+    effective_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    authority_class: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    generation: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
+    fingerprint: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    __table_args__ = (UniqueConstraint("journey_id", "fingerprint"),)
+
+
+class RealityConflict(Base):
+    __tablename__ = "reality_conflicts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    fact_domain: Mapped[str] = mapped_column(String)
+    fact_key: Mapped[str] = mapped_column(String)
+    generation: Mapped[int] = mapped_column(Integer)
+    claim_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    claim_set_fingerprint: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    reason: Mapped[str] = mapped_column(String)
+    selected_claim_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    resolution_claim_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    resolution_provenance: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+    resolved_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    __table_args__ = (
+        UniqueConstraint("journey_id", "fact_key", "generation"),
+        UniqueConstraint("journey_id", "fact_key", "claim_set_fingerprint"),
+    )
+
+
 class TransportReservation(Base):
     __tablename__ = "transport_reservations"
     id: Mapped[str] = mapped_column(String, primary_key=True)
@@ -1069,6 +2067,14 @@ class LocationObservation(Base):
     __tablename__ = "location_observations"
     id: Mapped[str] = mapped_column(String, primary_key=True)
     journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    # NULL means the historical/browser row was never bound to a verified traveler principal.
+    # Do not infer identity later from Journey.traveler_id or request-body claims.
+    traveler_id: Mapped[str | None] = mapped_column(
+        ForeignKey("travelers.id", ondelete="SET NULL"), nullable=True
+    )
+    journey_member_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="SET NULL"), nullable=True
+    )
     latitude: Mapped[float] = mapped_column()
     longitude: Mapped[float] = mapped_column()
     accuracy_m: Mapped[float] = mapped_column()
@@ -1241,6 +2247,33 @@ class CatalogHydrationOperation(Base):
     updated_at: Mapped[str] = mapped_column(String)
 
 
+class RouteAcquisitionOperation(Base):
+    """Durable lifecycle for one exact on-demand mobility edge."""
+
+    __tablename__ = "route_acquisition_operations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), index=True
+    )
+    fingerprint: Mapped[str] = mapped_column(String)
+    origin_key: Mapped[str] = mapped_column(String)
+    target_key: Mapped[str] = mapped_column(String)
+    target_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    requested_mode: Mapped[str] = mapped_column(String)
+    provider_policy_version: Mapped[str] = mapped_column(String)
+    route_truth_policy_version: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    phase: Mapped[str | None] = mapped_column(String, nullable=True)
+    outcome: Mapped[str | None] = mapped_column(String, nullable=True)
+    request_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    queued_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
 class JourneyShareGrant(Base):
     """One share grant: a token, a visibility, and the two moments that end it.
 
@@ -1290,8 +2323,350 @@ class JourneyMember(Base):
     expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
     joined_at: Mapped[str | None] = mapped_column(String, nullable=True)
     removed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    preferences_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
+
+
+class JourneyMembershipInvitation(Base):
+    """A recipient-owned invitation; membership begins only after that traveller accepts."""
+
+    __tablename__ = "journey_membership_invitations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    target_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    inviter_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    inviter_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    base_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    base_cursor_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    proposed_role: Mapped[str] = mapped_column(String, default="COLLABORATOR", server_default="COLLABORATOR")
+    title_snapshot: Mapped[str] = mapped_column(String)
+    city_code_snapshot: Mapped[str] = mapped_column(String)
+    approximate_start_date: Mapped[str] = mapped_column(String)
+    state: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
+    request_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    accepted_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    declined_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    joined_member_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="SET NULL"), nullable=True
+    )
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','EXPIRED')",
+            name="ck_journey_membership_invitations_state",
+        ),
+        CheckConstraint(
+            "proposed_role = 'COLLABORATOR'",
+            name="ck_journey_membership_invitations_role",
+        ),
+        UniqueConstraint(
+            "journey_id", "inviter_member_id", "request_key",
+            name="uq_journey_membership_invitations_request",
+        ),
+        Index(
+            "ux_journey_membership_invitations_one_offered",
+            "journey_id", "target_traveler_id",
+            unique=True,
+            sqlite_where=text("state = 'OFFERED'"),
+            postgresql_where=text("state = 'OFFERED'"),
+        ),
+        Index(
+            "idx_journey_membership_invitations_recipient",
+            "target_traveler_id", "state", "expires_at",
+        ),
+    )
+
+
+class JourneyRendezvousMemberSignal(Base):
+    """One member's voluntary, coarse status for one exact shared rendezvous."""
+
+    __tablename__ = "journey_rendezvous_member_signals"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    journey_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    current_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    rendezvous_activity_id: Mapped[str] = mapped_column(ForeignKey("activities.id", ondelete="RESTRICT"))
+    public_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    signal_kind: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", server_default="ACTIVE")
+    audience_member_ids_json: Mapped[str] = mapped_column(Text)
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    reported_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    stale_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "signal_kind IN ('HEADING_TO_RENDEZVOUS','NEEDS_COORDINATION')",
+            name="ck_journey_rendezvous_member_signals_kind",
+        ),
+        CheckConstraint(
+            "status IN ('ACTIVE','REVOKED','REPLACED','STALE','EXPIRED')",
+            name="ck_journey_rendezvous_member_signals_status",
+        ),
+        UniqueConstraint(
+            "journey_id", "journey_member_id", "idempotency_key",
+            name="uq_journey_rendezvous_member_signals_request",
+        ),
+        Index(
+            "ux_journey_rendezvous_member_signals_one_active",
+            "journey_id", "journey_member_id",
+            unique=True,
+            sqlite_where=text("status = 'ACTIVE'"),
+            postgresql_where=text("status = 'ACTIVE'"),
+        ),
+        Index(
+            "idx_journey_rendezvous_member_signals_expiry",
+            "journey_id", "status", "expires_at",
+        ),
+    )
+
+
+class JourneyRendezvousSignalAcknowledgement(Base):
+    """A signed companion's one-time acknowledgement of a current help request."""
+
+    __tablename__ = "journey_rendezvous_signal_acknowledgements"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    signal_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_member_signals.id", ondelete="CASCADE"), unique=True
+    )
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    requester_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    responder_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    responder_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    acknowledged_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+
+
+class JourneyRendezvousBuddyHandoff(Base):
+    """Pair-private offer to meet at one public Place after a signed help request."""
+
+    __tablename__ = "journey_rendezvous_buddy_handoffs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    signal_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_member_signals.id", ondelete="CASCADE")
+    )
+    acknowledgement_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_signal_acknowledgements.id", ondelete="CASCADE")
+    )
+    requester_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    requester_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    helper_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    helper_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    current_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    original_rendezvous_activity_id: Mapped[str] = mapped_column(
+        ForeignKey("activities.id", ondelete="RESTRICT")
+    )
+    original_public_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    handoff_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    handoff_place_snapshot_json: Mapped[str] = mapped_column(Text)
+    audience_member_ids_json: Mapped[str] = mapped_column(Text)
+    audience_sha256: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="OFFERED", server_default="OFFERED")
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    offered_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    responded_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('OFFERED','ACCEPTED','DECLINED','REVOKED','CANCELLED','EXPIRED','STALE')",
+            name="ck_journey_rendezvous_buddy_handoffs_status",
+        ),
+        UniqueConstraint(
+            "journey_id", "helper_member_id", "idempotency_key",
+            name="uq_journey_rendezvous_buddy_handoffs_request",
+        ),
+        Index(
+            "ux_journey_rendezvous_buddy_handoffs_one_current",
+            "signal_id",
+            unique=True,
+            sqlite_where=text("status IN ('OFFERED','ACCEPTED')"),
+            postgresql_where=text("status IN ('OFFERED','ACCEPTED')"),
+        ),
+        Index(
+            "idx_journey_rendezvous_buddy_handoffs_pair_status_expiry",
+            "journey_id", "requester_member_id", "helper_member_id", "status", "expires_at",
+        ),
+    )
+
+
+class JourneyRendezvousBuddyExecution(Base):
+    """Pair-private, mutually consented finite execution window for one handoff."""
+
+    __tablename__ = "journey_rendezvous_buddy_executions"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    handoff_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_buddy_handoffs.id", ondelete="CASCADE"), unique=True
+    )
+    signal_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_member_signals.id", ondelete="CASCADE")
+    )
+    acknowledgement_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_signal_acknowledgements.id", ondelete="CASCADE")
+    )
+    requester_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    requester_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    helper_member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    helper_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="RESTRICT"))
+    current_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    original_rendezvous_activity_id: Mapped[str] = mapped_column(
+        ForeignKey("activities.id", ondelete="RESTRICT")
+    )
+    original_public_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    original_place_snapshot_json: Mapped[str] = mapped_column(Text)
+    handoff_place_id: Mapped[str] = mapped_column(ForeignKey("places.id", ondelete="RESTRICT"))
+    handoff_place_snapshot_json: Mapped[str] = mapped_column(Text)
+    audience_member_ids_json: Mapped[str] = mapped_column(Text)
+    audience_sha256: Mapped[str] = mapped_column(String)
+    execution_window_minutes: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String, default="WINDOW_OFFERED", server_default="WINDOW_OFFERED")
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    helper_consent_traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    requester_consent_traveler_id: Mapped[str | None] = mapped_column(
+        ForeignKey("travelers.id", ondelete="CASCADE"), nullable=True
+    )
+    helper_consented_at: Mapped[str] = mapped_column(String)
+    requester_consented_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    proposed_at: Mapped[str] = mapped_column(String)
+    proposal_expires_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    outcome_code: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('WINDOW_OFFERED','ACTIVE','MUTUALLY_ACKNOWLEDGED','REPLAN_REQUIRED','CANCELLED','EXPIRED','STALE')",
+            name="ck_journey_rendezvous_buddy_executions_status",
+        ),
+        CheckConstraint(
+            "execution_window_minutes IN (30,60,90)",
+            name="ck_journey_rendezvous_buddy_executions_window",
+        ),
+        UniqueConstraint(
+            "journey_id", "helper_member_id", "idempotency_key",
+            name="uq_journey_rendezvous_buddy_executions_request",
+        ),
+        Index(
+            "idx_journey_rendezvous_buddy_executions_pair_status_expiry",
+            "journey_id", "requester_member_id", "helper_member_id", "status", "expires_at",
+        ),
+    )
+
+
+class JourneyRendezvousBuddyExecutionReceipt(Base):
+    """One signed self-report per member for one exact private execution window."""
+
+    __tablename__ = "journey_rendezvous_buddy_execution_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    execution_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_buddy_executions.id", ondelete="CASCADE")
+    )
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    receipt_kind: Mapped[str] = mapped_column(String)
+    idempotency_key: Mapped[str] = mapped_column(String)
+    request_hash: Mapped[str] = mapped_column(String)
+    self_reported_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "receipt_kind IN ('BUDDY_MET_ACK','CANNOT_MEET','CANCEL_PARTICIPATION')",
+            name="ck_journey_rendezvous_buddy_execution_receipts_kind",
+        ),
+        UniqueConstraint(
+            "execution_id", "member_id",
+            name="uq_journey_rendezvous_buddy_execution_receipts_member",
+        ),
+        UniqueConstraint(
+            "execution_id", "idempotency_key",
+            name="uq_journey_rendezvous_buddy_execution_receipts_idempotency",
+        ),
+        Index(
+            "idx_journey_rendezvous_buddy_execution_receipts_journey",
+            "journey_id", "execution_id", "self_reported_at",
+        ),
+    )
+
+
+class PrivateBuddyRouteLocationBinding(Base):
+    """Write-once context receipt for one R80 private location observation.
+
+    The observation itself contains coordinates. This table stores only the exact
+    authorization scope needed to decide whether that sample may still be used by
+    a private handoff route. Old observations are deliberately not backfilled.
+    """
+
+    __tablename__ = "private_buddy_route_location_bindings"
+    observation_id: Mapped[str] = mapped_column(
+        ForeignKey("location_observations.id", ondelete="CASCADE"), primary_key=True
+    )
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    handoff_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_rendezvous_buddy_handoffs.id", ondelete="CASCADE")
+    )
+    journey_member_id: Mapped[str] = mapped_column(
+        ForeignKey("journey_members.id", ondelete="CASCADE")
+    )
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    active_plan_version_id: Mapped[str] = mapped_column(
+        ForeignKey("plan_versions.id", ondelete="CASCADE")
+    )
+    current_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    destination_place_id: Mapped[str] = mapped_column(String)
+    destination_place_snapshot_sha256: Mapped[str] = mapped_column(String)
+    audience_sha256: Mapped[str] = mapped_column(String)
+    handoff_accepted_at: Mapped[str] = mapped_column(String)
+    captured_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    bound_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        CheckConstraint(
+            "length(destination_place_snapshot_sha256) = 64",
+            name="ck_private_buddy_route_binding_destination_hash",
+        ),
+        CheckConstraint(
+            "length(audience_sha256) = 64",
+            name="ck_private_buddy_route_binding_audience_hash",
+        ),
+        Index(
+            "idx_private_buddy_route_bindings_context_expiry",
+            "journey_id", "handoff_id", "journey_member_id", "traveler_id", "expires_at",
+        ),
+    )
 
 
 class JourneyRoleCapability(Base):

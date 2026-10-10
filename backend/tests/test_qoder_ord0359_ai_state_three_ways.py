@@ -380,4 +380,10 @@ def test_the_skip_path_stores_this_state_not_a_fixed_literal(monkeypatch) -> Non
     assert payload["ai_state"] == AI_DISABLED_BY_OPS, payload
     assert payload["failure_reason"] == reason_sentence(AI_DISABLED_BY_OPS), payload
     assert payload["failure_reason"] != "DeepSeek API key is not configured", payload
+    assert payload["outcome"] == {
+        "status": "BLOCKED",
+        "reason_code": AI_DISABLED_BY_OPS,
+        "user_summary": "The configured Agent runtime did not execute this mission.",
+        "recommended_action": "Enable a configured Agent runtime or continue with deterministic tools.",
+    }, payload
     assert payload["mission"]["ai_state"] == AI_DISABLED_BY_OPS, payload["mission"]

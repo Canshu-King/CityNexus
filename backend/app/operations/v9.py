@@ -45,10 +45,12 @@ from app.db.models import (
     Place,
     PlanVersion,
     PushSubscription,
+    RouteAcquisitionOperation,
     StayJourneyOption,
     TransportReservation,
 )
 from app.execution.clock import execution_clock
+from app.execution.truth import current_execution_truth
 from app.planning.anchors import (
     LOCATION_RESOLVED,
     STRUCTURAL_ANCHOR_KEYS,
@@ -177,6 +179,10 @@ def _execution_truth(
     def compact(item: Activity | None) -> dict[str, Any] | None:
         if item is None:
             return None
+        try:
+            metadata = json.loads(item.metadata_json or "{}")
+        except json.JSONDecodeError:
+            metadata = {}
         return {
             "id": item.id,
             "title": item.title,
@@ -184,11 +190,15 @@ def _execution_truth(
             "start_at": item.start_at,
             "end_at": item.end_at,
             "locked": bool(item.locked),
+            "execution_truth": current_execution_truth(metadata),
         }
 
+    now_payload = compact(now_item)
+    next_payload = compact(next_item)
     return {
-        "now": compact(now_item),
-        "next": compact(next_item),
+        "now": now_payload,
+        "next": next_payload,
+        "execution_truth": now_payload.get("execution_truth") if now_payload else None,
         "now_activity_id": now_item.id if now_item else None,
         "next_activity_id": next_item.id if next_item else None,
         "now_state": now_item.status if now_item else ("STALE_CURSOR" if stale_cursor else "COMPLETE"),
@@ -1293,6 +1303,11 @@ def notify(
 
 
 def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourneySnapshot:
+    # Keep the offline card as a captured read model.  This deliberately uses
+    # the pure projection, never the notification-producing refresh helper.
+    from app.execution.readiness import departure_readiness_projection
+    from app.execution.departure_activation import departure_activation_projection
+
     reference, used_timezone, timezone_honoured = execution_clock.now_honest(journey.timezone)
     window_end = reference + timedelta(hours=24)
     activities = []
@@ -1350,6 +1365,52 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         if stay_offer_id:
             offer = session.get(AccommodationOfferSnapshot, str(stay_offer_id))
     execution = _execution_truth(activities, legs, journey.current_activity_id)
+    readiness = departure_readiness_projection(session, journey, now=reference.astimezone(timezone.utc))
+    next_move = readiness.get("next_move") or {}
+    current_move = next_move.get("current_activity") or {}
+    activation_target = next_move.get("next_activity") or current_move or {}
+    activation_status = current_move.get("status") if current_move.get("status") in {"EN_ROUTE", "ARRIVED", "IN_PROGRESS"} else activation_target.get("status")
+    departure_activation = departure_activation_projection(
+        readiness,
+        activity_status=activation_status,
+        now=reference.astimezone(timezone.utc),
+    )
+    route_operations = session.scalars(
+        select(RouteAcquisitionOperation)
+        .where(
+            RouteAcquisitionOperation.journey_id == journey.id,
+            RouteAcquisitionOperation.status.in_(("COMPLETED", "UNAVAILABLE", "FAILED")),
+        )
+        .order_by(RouteAcquisitionOperation.finished_at.desc(), RouteAcquisitionOperation.updated_at.desc())
+    ).all()
+    route_operation = None
+    for candidate in route_operations:
+        try:
+            request_payload = json.loads(candidate.request_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            request_payload = {}
+        evidence = request_payload.get("origin_evidence") if isinstance(request_payload, dict) else None
+        if isinstance(evidence, dict) and evidence.get("private_scope") == "R80_PRIVATE_BUDDY_HANDOFF":
+            continue
+        route_operation = candidate
+        break
+    route_session = None
+    if route_operation is not None:
+        route_session = {
+            "operation_id": route_operation.id,
+            "status": route_operation.status,
+            "phase": route_operation.phase,
+            "outcome": route_operation.outcome,
+            "fingerprint": route_operation.fingerprint,
+            "origin_key": route_operation.origin_key,
+            "target_key": route_operation.target_key,
+            "target_activity_id": route_operation.target_activity_id,
+            "requested_mode": route_operation.requested_mode,
+            "result": _load(route_operation.result_json, {}),
+            "error": _load(route_operation.error_json, {}),
+            "finished_at": route_operation.finished_at,
+            "freshness_semantics": "LAST_TERMINAL_ROUTE_SESSION",
+        }
     provider_times = [item.captured_at for item in legs if item.captured_at]
     now = execution_clock.now().isoformat()
     existing = session.get(OfflineJourneySnapshot, journey.id)
@@ -1389,10 +1450,55 @@ def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourn
         ],
         "read_only": True,
         "financial_actions_allowed": False,
+        "departure_readiness": {
+            "state": readiness.get("state"),
+            "target_activity_id": readiness.get("target_activity_id"),
+            "target_title": readiness.get("target_title"),
+            "recommended_action": readiness.get("recommended_action"),
+            "must_leave_by": readiness.get("must_leave_by"),
+            "must_leave_by_absent_reason": readiness.get("must_leave_by_absent_reason"),
+            "safety_buffer_minutes": readiness.get("safety_buffer_minutes"),
+            "launch_origin": readiness.get("launch_origin"),
+            "launch_edge": readiness.get("launch_edge"),
+            "checks": readiness.get("checks"),
+            "venue_last_known": (readiness.get("next_move") or {}).get("venue_readiness"),
+            "route_evidence": (readiness.get("next_move") or {}).get("route_evidence"),
+            "captured_at": now,
+            "freshness_semantics": "CAPTURED_READ_MODEL",
+        },
+        "route_session": route_session,
+        "departure_activation": {
+            **departure_activation,
+            "captured_at": now,
+            "cue": None,
+            "departure_confirmed": activation_status == "EN_ROUTE",
+            "execution_status": activation_status,
+            "execution_truth": (execution.get("now") or {}).get("execution_truth"),
+            "freshness_semantics": "CAPTURED_READ_MODEL",
+        },
     }
+    # R48 continuous day flow is captured alongside the existing offline read
+    # model.  It is projection-only and never advances the execution cursor.
+    from app.execution.continuous_journey import continuous_flow_projection
+
+    payload["continuous_flow"] = continuous_flow_projection(session, journey)
+    from app.agent.overnight_steward import overnight_steward_projection
+
+    payload["overnight"] = overnight_steward_projection(
+        session, journey, viewer_traveler_id=journey.traveler_id
+    )
     freshness = {
         "latest_provider_capture_at": max(provider_times) if provider_times else None,
         "transit_realtime": "UNKNOWN_REALTIME",
+        "departure_readiness_captured_at": now,
+        "departure_readiness": {
+            "venue": (readiness.get("next_move") or {}).get("venue_readiness", {}).get("observed_at"),
+            "route": (readiness.get("next_move") or {}).get("route_evidence", {}).get("captured_at"),
+            "launch_origin": (readiness.get("launch_origin") or {}).get("captured_at"),
+            "launch_edge": (readiness.get("launch_edge") or {}).get("captured_at"),
+            "route_session": route_operation.finished_at if route_operation else None,
+            "semantics": "last_known_at_capture",
+        },
     }
     if existing is None:
         existing = OfflineJourneySnapshot(
@@ -1422,6 +1528,8 @@ def record_location(
     longitude: float,
     accuracy_m: float,
     captured_at: str,
+    traveler_id: str | None = None,
+    journey_member_id: str | None = None,
 ) -> LocationObservation:
     captured = datetime.fromisoformat(captured_at)
     if captured.tzinfo is None:
@@ -1429,6 +1537,8 @@ def record_location(
     row = LocationObservation(
         id=str(uuid4()),
         journey_id=journey.id,
+        traveler_id=traveler_id,
+        journey_member_id=journey_member_id,
         latitude=latitude,
         longitude=longitude,
         accuracy_m=accuracy_m,

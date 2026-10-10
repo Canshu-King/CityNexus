@@ -14,11 +14,11 @@ two honest:
   answered "nothing" is not reported as down, and
   `RESOLVER_LABEL_CARRIES_INTERNAL_CODE` so our own malformed request is not blamed on
   somebody else's outage.
-* **The default resolver is still the Nominatim client, and the Tianjin replay fallback still
-  answers.** Swapping the default resolver is a contract decision (bus R1), and silently
-  flipping behaviour because some environment value exists is exactly the implicit switch the
-  order banned. What is observable now is *why* a live attempt failed and at which of the
-  three provider calls - the evidence a later decision has to be argued from.
+* **Nominatim remains primary, with an identified Photon anchor fallback, and the Tianjin replay
+  fallback still answers.** Photon is used only when the primary resolver cannot produce an
+  anchor; it supplies coordinates, not canonical Place facts. What is observable now is *why*
+  a live attempt failed and at which provider stage - the evidence a later decision has to be
+  argued from.
 """
 
 from __future__ import annotations
@@ -82,8 +82,11 @@ class _RecordingGeocoder:
 
     provider_key = "nominatim"
 
-    def __init__(self, *, error: BaseException | None = None) -> None:
+    def __init__(
+        self, *, error: BaseException | None = None, provider_key: str = "nominatim"
+    ) -> None:
         self.error = error
+        self.provider_key = provider_key
         self.calls: list[tuple[str, int]] = []
 
     def search(self, query: str, *, city: str, limit: int):
@@ -91,7 +94,11 @@ class _RecordingGeocoder:
         if self.error is not None:
             raise self.error
         if limit == 1:
-            return [_anchor_row()]
+            return [
+                _anchor_row()
+                if self.provider_key == "nominatim"
+                else replace(_anchor_row(), provider_key="photon")
+            ]
         return []
 
     def close(self) -> None:
@@ -125,8 +132,13 @@ def _providers(monkeypatch) -> dict:
     box: dict = {}
 
     def make_geocoder(*args, **kwargs):
-        instance = _RecordingGeocoder(error=box.get("geocode_error"))
+        instance = _RecordingGeocoder(error=box.get("geocode_error"), provider_key="nominatim")
         box["geocoder"] = instance
+        return instance
+
+    def make_photon(*args, **kwargs):
+        instance = _RecordingGeocoder(error=box.get("photon_error"), provider_key="photon")
+        box["photon"] = instance
         return instance
 
     def make_poi(*args, **kwargs):
@@ -135,6 +147,7 @@ def _providers(monkeypatch) -> dict:
         return instance
 
     monkeypatch.setattr(real_city, "NominatimGeocoder", make_geocoder)
+    monkeypatch.setattr(real_city, "PhotonCityGeocoder", make_photon)
     monkeypatch.setattr(real_city, "OverpassPOIProvider", make_poi)
     return box
 
@@ -354,6 +367,18 @@ def test_finding_nothing_is_not_reported_as_a_provider_failure(_providers, monke
     assert {city for city, _limit in _providers["geocoder"].calls} == {"BEIJING"}, (
         _providers["geocoder"].calls
     )
+
+
+def test_photon_anchor_fallback_reaches_live_catalogue_stage(_providers) -> None:
+    """A Nominatim outage must not prevent a live Overpass question from being attempted."""
+
+    _providers["geocode_error"] = httpx.ConnectError("nominatim down")
+    body = _discover(_journey("CN-GUILIN"))
+    status = body["provider_status"]
+    assert status["nominatim"] == "RESOLVER_UNREACHABLE", status
+    assert status["photon"] == "CAPTURED", status
+    assert status["anchor"]["source"] == "photon_city_anchor", status
+    assert _providers["poi"].calls, "the fallback anchor never reached Overpass"
 
 
 def test_our_own_malformed_label_is_not_blamed_on_the_provider(_providers) -> None:

@@ -100,7 +100,11 @@ def _provider_call(
 
 
 def selected_activity(
-    session: Session, journey_id: str, activity_id: str
+    session: Session,
+    journey_id: str,
+    activity_id: str,
+    *,
+    allow_active_recovery: bool = False,
 ) -> tuple[Journey, PlanVersion, Activity, BookingTargetContext]:
     journey = session.get(Journey, journey_id)
     if journey is None:
@@ -124,7 +128,17 @@ def selected_activity(
         activity_place_id=activity.place_id,
         activity_service_id=activity.city_service_id,
     )
-    validate_booking_target(context)
+    validate_booking_target(context, allow_active_recovery=allow_active_recovery)
+    activity_metadata = json.loads(activity.metadata_json or "{}")
+    cost_status = str(
+        activity_metadata.get("cost_status")
+        or activity_metadata.get("price_status")
+        or ""
+    ).upper()
+    if cost_status == "UNKNOWN" or activity_metadata.get("price_known") is False:
+        raise CommerceValidationError(
+            "booking requires a verified admission price; unknown cost is not bookable"
+        )
     return journey, plan, activity, context
 
 
@@ -230,9 +244,15 @@ def create_booking(
     booking_source_type_code: str,
     assert_selected_plan_feasible: Callable[[Session, Journey, PlanVersion], Any] | None = None,
     force_failure: bool = False,
+    allow_active_recovery: bool = False,
 ) -> Booking:
     _validate_source_codes(source_strength_codes)
-    journey, plan, activity, context = selected_activity(session, journey_id, activity_id)
+    journey, plan, activity, context = selected_activity(
+        session,
+        journey_id,
+        activity_id,
+        allow_active_recovery=allow_active_recovery,
+    )
     _assert_feasible(session, journey, plan, assert_selected_plan_feasible)
     service_id = _service_for_activity(session, activity, load_catalog(), order=False)
     active_booking = session.scalar(
