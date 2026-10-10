@@ -108,6 +108,14 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
       <section className="plan-ranking" data-testid="plan-ranking">
         <p className="v8-muted" data-testid="rank-none">{say("rank.none")}</p>
         <p className="v8-muted plan-ranking-hint" data-testid="rank-none-hint">{say("rank.noneHint")}</p>
+        <button
+          type="button"
+          className="v8-outline-button"
+          data-testid="rank-none-retry"
+          onClick={() => void plans.refetch()}
+        >
+          {say("rank.retry")}
+        </button>
       </section>
     );
   }
@@ -190,7 +198,17 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
       )}
 
       {visible.length === 0 ? (
-        <p className="v8-muted" data-testid="rank-filtered-none">{say("rank.filteredNone")}</p>
+        <p className="v8-muted" data-testid="rank-filtered-none">
+          {say("rank.filteredNone")}
+          <button
+            type="button"
+            className="v8-text-button"
+            data-testid="rank-filtered-none-clear"
+            onClick={() => setHidden([])}
+          >
+            {say("rank.filterClear")}
+          </button>
+        </p>
       ) : (
         <div className="plan-ranking-scroll" ref={scrollRef}>
           <table
