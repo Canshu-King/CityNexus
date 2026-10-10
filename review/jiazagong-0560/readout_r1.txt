@@ -1,0 +1,16 @@
+1 ORD-0560 加闸工 读数件（现尖那一代，独立副本实测，命令全部原样）
+2 取尖命令原样：git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+3 取尖回读：de2dd46e762c1068cea6a469e93572cad4765ebc
+4 独立副本：git archive de2dd46e762c1068cea6a469e93572cad4765ebc frontend | tar -x -C D:\moodle\_qoder_jiazagong_0560，node_modules 用 junction 接 D:\moodle\CityNexus\frontend\node_modules，零第二份字节
+5 改前原文 frontend/package.json:8 -> "typecheck": "tsc -p tsconfig.check.json --noEmit",
+6 改后原文 frontend/package.json:8 -> "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
+7 全量配置 include frontend/tsconfig.typecheck.json:3 -> "include": ["src/**/*.ts","src/**/*.tsx"]
+8 未改动的窄配置 frontend/tsconfig.check.json:16（五枚种子在 :17 到 :21），字节与现尖一致，git blob bf143494f9c609468556d7b6eac5e29650d8f53d
+9 改后 npm run typecheck：cwd frontend，退出码 0，error TS 0 条，脚本回显 "> tsc -p tsconfig.typecheck.json --noEmit"
+10 改后 npx tsc -p tsconfig.typecheck.json --listFilesOnly：cwd frontend，退出码 0，总 950 行，其中 src 下 .ts/.tsx 156 个（与现尖 frontend/src 下 156 个一致，不短）
+11 改后 npx tsc -p tsconfig.typecheck.json --noEmit：cwd frontend，退出码 0，error TS 0 条
+12 现尖文件计数对照：git ls-tree -r --name-only de2dd46e762c1068cea6a469e93572cad4765ebc -- frontend/src | grep -cE '\.(ts|tsx)$' = 156（.ts 91 个 + .tsx 65 个）
+13 反控（我放弃的那条路，实测过）：只把 tsconfig.check.json 的 include 换成 src/**/*.ts + src/**/*.tsx、types 保持 [] → npx tsc -p tsconfig.check.json --listFilesOnly 退出码 0 且 src 下 156 个；npx tsc -p tsconfig.check.json --noEmit 退出码 2，1 条红 src/main.tsx(1863,21): error TS2339: Property 'env' does not exist on type 'ImportMeta'
+14 那枚红的用法行现读 frontend/src/main.tsx:1863 -> if (import.meta.env.DEV) { ；成因是窄配置 frontend/tsconfig.check.json:14 的 "types": []，全量配置在 frontend/tsconfig.typecheck.json:2 写的是 "types":["vite/client"]
+15 扩面后新增的红：0 条（我走的那条路复用的就是全量配置，现尖那一代本就零条 error TS，见第 11 行）
+16 本件两笔提交：第一笔只改 frontend/package.json 一枚文件，第二笔只加本读数件；主工作树 11 处他人未提交改动零触碰，权威线零移动，force-push 0 次

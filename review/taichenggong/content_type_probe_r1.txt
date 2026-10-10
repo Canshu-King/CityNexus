@@ -1,0 +1,5 @@
+arm=empty sent="" -> page saw "" (typeof string) :: the header is present and empty
+arm=absent sent=null -> page saw null (typeof object) :: no Content-Type at all
+arm=html sent="text/html" -> page saw "text/html" (typeof string) :: a real media type
+
+read this back: the fallback cell can only paint if some arm above yields an empty string that survives into Response.headers.get(); 'null' means the classification's own fallback phrase is what reaches the screen instead.

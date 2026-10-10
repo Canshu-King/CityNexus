@@ -1,0 +1,125 @@
+== route declaration lines in backend/app/main.py (method + path line) ==
+main.py:5154	get	@app.get("/api/v1/journeys/{journey_id}/acl/roles", response_model=lis
+main.py:1081	get	@app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}")
+main.py:1099	get	@app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/tim
+main.py:1204	get	@app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/eve
+main.py:1216	post	@app.post("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/st
+main.py:1099	get	@app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/tim
+main.py:1204	get	@app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/eve
+main.py:1216	post	@app.post("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/st
+main.py:7739	post	@app.post("/api/v1/journeys/{journey_id}/authoritative-compose", statu
+main.py:2818	get	@app.get("/api/v1/journeys/{journey_id}/capabilities")
+main.py:2825	put	@app.put("/api/v1/journeys/{journey_id}/capabilities")
+main.py:2850	post	@app.post("/api/v1/journeys/{journey_id}/capabilities/confirm")
+main.py:2850	post	@app.post("/api/v1/journeys/{journey_id}/capabilities/confirm")
+main.py:10006	get	@app.get("/api/v1/journeys/{journey_id}/events/{event_id}/impact")
+main.py:1693	get	@app.get("/api/v1/journeys/{journey_id}/guardian/autopilot/status")
+main.py:1769	get	@app.get("/api/v1/journeys/{journey_id}/guardian/resilience")
+main.py:1783	post	@app.post("/api/v1/journeys/{journey_id}/guardian/resilience/refresh")
+main.py:1783	post	@app.post("/api/v1/journeys/{journey_id}/guardian/resilience/refresh")
+main.py:1723	.post	"/api/v1/journeys/{journey_id}/guardian/signal-fixture",
+main.py:6347	post	@app.post("/api/v1/journeys/{journey_id}/inbox/import", status_code=20
+main.py:6364	get	@app.get("/api/v1/journeys/{journey_id}/inbox")
+main.py:6432	.post	"/api/v1/journeys/{journey_id}/inbox/text-extract",
+main.py:6486	.post	"/api/v1/journeys/{journey_id}/inbox/vision",
+main.py:6545	patch	@app.patch("/api/v1/journeys/{journey_id}/inbox/{draft_id}")
+main.py:6586	post	@app.post("/api/v1/journeys/{journey_id}/inbox/{draft_id}/smart-apply"
+main.py:6780	post	@app.post("/api/v1/journeys/{journey_id}/inbox/{draft_id}/confirm")
+main.py:5461	get	@app.get("/api/v1/journeys/{journey_id}/member-role-limits", response_
+main.py:5390	.post	"/api/v1/journeys/{journey_id}/members/self-exit",
+main.py:5837	get	@app.get("/api/v1/journeys/{journey_id}/multiday")
+
+== contract path lines in contracts/openapi.yaml ==
+openapi.yaml:1243	/journeys/{journey_id}/acl/roles:
+openapi.yaml:356	/journeys/{journey_id}/agent/hermes/runs/{run_id}:
+openapi.yaml:372	/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline:
+openapi.yaml:392	/journeys/{journey_id}/agent/hermes/runs/{run_id}/events:
+openapi.yaml:408	/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop:
+openapi.yaml:2020	/journeys/{journey_id}/authoritative-compose:
+openapi.yaml:2401	/journeys/{journey_id}/capabilities:
+openapi.yaml:2416	/journeys/{journey_id}/capabilities/confirm:
+openapi.yaml:1939	/journeys/{journey_id}/events/{event_id}/impact:
+openapi.yaml:2185	/journeys/{journey_id}/guardian/autopilot/status:
+openapi.yaml:2211	/journeys/{journey_id}/guardian/resilience:
+openapi.yaml:2223	/journeys/{journey_id}/guardian/resilience/refresh:
+openapi.yaml:2201	/journeys/{journey_id}/guardian/signal-fixture:
+openapi.yaml:2644	/journeys/{journey_id}/inbox:
+openapi.yaml:1225	/journeys/{journey_id}/member-role-limits:
+openapi.yaml:1189	/journeys/{journey_id}/members/self-exit:
+openapi.yaml:2614	/journeys/{journey_id}/multiday:
+
+== helper definitions the assertions read their field names from ==
+backend/app/main.py:6271	_draft_payload	def _draft_payload(item: ExternalReservationDraft) -> dict[s
+backend/app/main.py:5011	_member_payload	def _member_payload(member: JourneyMemberModel) -> JourneyMe
+backend/app/main.py:1035	_native_event_stream	def _native_event_stream(run_id: str, journey_id: str | None
+backend/app/main.py:940	_persist_native_event	def _persist_native_event(event: dict[str, Any], *, journey_
+backend/app/main.py:2634	_capability_input_rows	def _capability_input_rows(
+backend/app/main.py:4479	_share_refusal	def _share_refusal(status: int, message: str, reason_code: s
+backend/app/main.py:818	require	def require(session: Session, model: type, identifier: str, 
+backend/app/main.py:5206	_member_admin_count_in_force	def _member_admin_count_in_force(session: Session, journey_i
+backend/app/schemas.py:1108	JourneyRoleRule	class JourneyRoleRule(BaseModel):
+backend/app/schemas.py:1135	MemberRoleLimits	class MemberRoleLimits(BaseModel):
+backend/app/schemas.py:1094	JourneyMember	class JourneyMember(BaseModel):
+backend/app/schemas.py:178	CitySignalFixtureRequest	class CitySignalFixtureRequest(BaseModel):
+backend/app/schemas.py:718	AuthoritativeComposeRequest	class AuthoritativeComposeRequest(BaseModel):
+backend/app/schemas.py:51	CapabilityInput	class CapabilityInput(BaseModel):
+backend/app/schemas.py:183	ResilienceRefreshRequest	class ResilienceRefreshRequest(BaseModel):
+backend/app/intelligence/impact_resolver.py:492	impact_payload	def impact_payload(row: ImpactAssessment) -> dict[str, Any]:
+backend/app/agent/predictive.py:132	snapshot_payload	def snapshot_payload(snapshot: JourneyResilienceSnapshot | N
+backend/app/agent/predictive.py:665	counterfactual_payload	def counterfactual_payload(row: CounterfactualSimulation) ->
+backend/app/agent/predictive.py:174	build_resilience_snapshot	def build_resilience_snapshot(session: Session, journey: Jou
+backend/app/agent/signal_pipeline.py:122	set_fixture_state	def set_fixture_state(
+backend/app/agent/signal_pipeline.py:156	fixture_payload	def fixture_payload(row: CitySignalFixture) -> dict[str, Any
+backend/app/agent/autorun.py:604	autorun_status	def autorun_status() -> dict[str, Any]:
+backend/app/execution/traveler_twin.py:160	capability_payload	def capability_payload(session: Session, traveler_id: str, j
+backend/app/capabilities.py:979	summarize_capabilities	def summarize_capabilities(capabilities: Iterable[Mapping[st
+backend/app/capabilities.py:85	capability_write_refusal	def capability_write_refusal(code: object, severity: object)
+backend/app/capabilities.py:19	CAPABILITY_CODES	CAPABILITY_CODES = (
+backend/app/stay_mobility.py:1838	experience_payload	def experience_payload(session: Session, journey: Journey) -
+backend/app/services.py:753	plan_schema	def plan_schema(
+backend/app/integrations/hermes/native_client.py:34	HermesNativeClient	class HermesNativeClient:
+backend/app/integrations/hermes/native_client.py:127	get_run	def get_run(self, run_id: str) -> dict[str, Any]:
+backend/app/integrations/hermes/native_client.py:167	stop	def stop(self, run_id: str) -> dict[str, Any]:
+backend/app/integrations/hermes/native_client.py:132	iter_events	def iter_events(self, run_id: str) -> Iterator[dict[str, Any
+backend/app/planning/authoritative_v12.py:1153	compose_authoritative_multiday	def compose_authoritative_multiday(
+backend/app/planning/authoritative_v12.py:173	_place_facts	def _place_facts(place: Place) -> tuple[int, int, str]:
+
+== my test module: test function lines and every assert line count per function ==
+test_route_gap_lupaigongjia_0559_r1.py:176	test_acl_roles_answers_the_seeded_role_table_field_by_field	asserts=7
+test_route_gap_lupaigongjia_0559_r1.py:199	test_acl_roles_on_an_unknown_journey_names_the_missing_resource	asserts=5
+test_route_gap_lupaigongjia_0559_r1.py:210	test_member_role_limits_answers_the_same_cap_the_role_door_enforces	asserts=7
+test_route_gap_lupaigongjia_0559_r1.py:226	test_member_role_limits_counts_a_lapsed_seat_out	asserts=1
+test_route_gap_lupaigongjia_0559_r1.py:240	test_self_exit_returns_the_row_read_back_and_writes_only_its_own_seat	asserts=13
+test_route_gap_lupaigongjia_0559_r1.py:271	test_self_exit_refusals_answer_with_their_own_reason_code_and_details	asserts=14
+test_route_gap_lupaigongjia_0559_r1.py:303	test_self_exit_body_takes_no_member_id_field	asserts=4
+test_route_gap_lupaigongjia_0559_r1.py:316	test_multiday_places_the_window_and_the_day_count_the_pricer_uses	asserts=20
+test_route_gap_lupaigongjia_0559_r1.py:346	test_multiday_on_an_unknown_journey_is_a_named_absence	asserts=3
+test_route_gap_lupaigongjia_0559_r1.py:355	test_inbox_hands_back_the_draft_with_its_interpretation_split_out	asserts=10
+test_route_gap_lupaigongjia_0559_r1.py:391	test_inbox_keeps_drafts_of_this_journey_only	asserts=2
+test_route_gap_lupaigongjia_0559_r1.py:406	test_autopilot_status_separates_the_enrollment_row_from_the_worker	asserts=15
+test_route_gap_lupaigongjia_0559_r1.py:441	test_resilience_get_builds_once_and_then_answers_with_the_stored_snapshot	asserts=9
+test_route_gap_lupaigongjia_0559_r1.py:466	test_resilience_refresh_answers_the_snapshot_the_counterfactuals_were_run_against	asserts=9
+test_route_gap_lupaigongjia_0559_r1.py:486	test_resilience_refresh_live_mode_reports_the_provider_answer_it_actually_got	asserts=9
+test_route_gap_lupaigongjia_0559_r1.py:502	test_resilience_refresh_refuses_a_mode_the_product_does_not_have	asserts=5
+test_route_gap_lupaigongjia_0559_r1.py:515	test_signal_fixture_writes_the_state_and_answers_the_revision_it_stored	asserts=13
+test_route_gap_lupaigongjia_0559_r1.py:546	test_signal_fixture_state_vocabulary_is_closed	asserts=3
+test_route_gap_lupaigongjia_0559_r1.py:557	test_capabilities_put_answers_the_row_summary_and_twin_it_just_wrote	asserts=19
+test_route_gap_lupaigongjia_0559_r1.py:591	test_capabilities_put_refuses_a_hard_accessibility_class_declared_soft	asserts=7
+test_route_gap_lupaigongjia_0559_r1.py:616	test_capabilities_put_refuses_a_hard_row_that_was_never_confirmed	asserts=5
+test_route_gap_lupaigongjia_0559_r1.py:630	test_capabilities_confirm_marks_the_hard_row_and_answers_the_feasibility_slot	asserts=7
+test_route_gap_lupaigongjia_0559_r1.py:647	test_capabilities_confirm_on_an_active_journey_without_a_plan_says_so_by_name	asserts=5
+test_route_gap_lupaigongjia_0559_r1.py:664	test_capabilities_confirm_refuses_a_code_the_product_has_no_meaning_for	asserts=4
+test_route_gap_lupaigongjia_0559_r1.py:707	test_event_impact_returns_the_assessment_row_field_by_field	asserts=20
+test_route_gap_lupaigongjia_0559_r1.py:741	test_event_impact_keeps_the_two_absences_apart	asserts=6
+test_route_gap_lupaigongjia_0559_r1.py:756	test_event_impact_does_not_answer_for_another_journeys_event	asserts=2
+test_route_gap_lupaigongjia_0559_r1.py:767	test_authoritative_compose_answers_the_candidate_plans_it_froze	asserts=19
+test_route_gap_lupaigongjia_0559_r1.py:800	test_authoritative_compose_names_the_poi_it_cannot_price	asserts=4
+test_route_gap_lupaigongjia_0559_r1.py:871	test_hermes_run_detail_adds_the_journey_scoped_fields_to_what_hermes_answered	asserts=10
+test_route_gap_lupaigongjia_0559_r1.py:889	test_hermes_run_detail_names_the_upstream_that_did_not_answer	asserts=5
+test_route_gap_lupaigongjia_0559_r1.py:901	test_hermes_stop_hands_back_the_upstreams_answer_for_the_named_run	asserts=5
+test_route_gap_lupaigongjia_0559_r1.py:913	test_hermes_stop_names_the_upstream_that_did_not_answer	asserts=3
+test_route_gap_lupaigongjia_0559_r1.py:923	test_hermes_events_stream_replays_frames_and_the_timeline_reads_them_back	asserts=23
+test_route_gap_lupaigongjia_0559_r1.py:969	test_hermes_timeline_hydrates_a_terminal_the_reconnect_missed	asserts=6
+test_route_gap_lupaigongjia_0559_r1.py:982	test_hermes_timeline_refuses_a_limit_the_query_rule_does_not_allow	asserts=3
+test_route_gap_lupaigongjia_0559_r1.py:992	test_hermes_doors_all_require_a_journey_that_exists	asserts=3
+TOTAL tests=37 assert_lines=305
