@@ -1,0 +1,6 @@
+access.sortHeading | NATURAL | PANEL | 字典=这一列行程怎么排 | 屏上=这一列行程怎么排
+access.pickLabel | NATURAL | PANEL | 字典=选一条行程 | 屏上=选一条行程
+access.sortCurrent | STUB_REVERSED_ROWS | PANEL | 字典=这一屏向服务器要的是：{tier}。 | 屏上=这一屏向服务器要的是：最近更新。
+access.pickEmpty | STUB_EMPTY_ROWS | PANEL | 字典=这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。 | 屏上=这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。
+access.tripUntitled | STUB_EMPTY_TITLE | PANEL | 字典=这条行程回来时没有名字。 | 屏上=这条行程回来时没有名字。
+access.pickLoading | STUB_DELAY | PANEL | 字典=正在读你的行程列表… | 屏上=正在读你的行程列表…

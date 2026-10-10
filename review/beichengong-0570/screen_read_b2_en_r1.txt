@@ -1,0 +1,6 @@
+access.sortHeading | NATURAL | PANEL | 字典=Order of this list | 屏上=Order of this list
+access.pickLabel | NATURAL | PANEL | 字典=Choose a trip | 屏上=Choose a trip
+access.sortCurrent | STUB_REVERSED_ROWS | PANEL | 字典=This screen asked the server for: {tier}. | 屏上=This screen asked the server for: Recently updated.
+access.pickEmpty | STUB_EMPTY_ROWS | PANEL | 字典=This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed. | 屏上=This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed.
+access.tripUntitled | STUB_EMPTY_TITLE | PANEL | 字典=This trip came back with no name. | 屏上=This trip came back with no name.
+access.pickLoading | STUB_DELAY | PANEL | 字典=Reading your trip list… | 屏上=Reading your trip list…
