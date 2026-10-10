@@ -831,6 +831,11 @@ const en: Dict = {
   "inbox.needsReview": "Needs review:",
   "inbox.pendingQueue": "Confirmations waiting on you",
   "inbox.queueEmpty": "Nothing here is waiting for your review.",
+  /* ORD-0557 follow-up table: the inbox workbench's own last-resort words. Each English
+     value is the exact string the label function printed before the key existed, and the
+     Chinese value is the string its zh arm printed, so neither screen can move. */
+  "inbox.handled": "Handled",
+  "inbox.toConfirm": "To confirm",
   /* ORD-0370: a queue row with neither a confirmation number nor a title still needs a label;
      the component may not invent one in whichever language it happens to be compiled for.
      ORD-0517 names the gap the same way on every card: what is missing is a name from the server,
@@ -2105,6 +2110,8 @@ const zhCN: Dict = {
   "inbox.needsReview": "需要审核：",
   "inbox.pendingQueue": "等你审核的确认单",
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
+  "inbox.handled": "已处理",
+  "inbox.toConfirm": "待确认",
   "inbox.unnamedArtifact": "服务器没有给这张确认单的名字",
   "inbox.memoryUnnamedPlace": "服务器没有给这条行程事实的地点名字",
   "inbox.memoryRefInsteadOfName": "服务器只给了这条行程事实的确认号，没有给地点名字",
