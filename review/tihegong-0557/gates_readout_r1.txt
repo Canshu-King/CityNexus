@@ -94,3 +94,18 @@ typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typech
 parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1158, zh keys 1159, xor = me.asksBeforeProtectedChange
 parity ruler at the tip in a detached worktree, same unmodified ruler -> exit code 1, en keys 1148, zh keys 1149, xor = the same single key; this lane nets ten keys per side, no orphan
 build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+
+re-cut onto the 23:0x generation (authoritative line b80bd95ac576612fe84515d8b1de047798117ea9, read by ls-remote)
+dictionary branch merged that line: one conflict, two dictionary tails; both sides kept -- 大柜工's two new simulation rows stay first, this lane's ten follow, nothing deleted -> tip fa0cb2984cc1d38c617c393f479f93d57a17cc3e (behind 0 ahead 7)
+product branch merged that dictionary tip with zero conflicts: 10 reads at product 462, 470, 483, 490, 523, 535, 543, 570, 578, 586 and 0 leftover title ternaries
+gate repointed to this generation: TIP constant now b80bd95ac576612fe84515d8b1de047798117ea9
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN; keys at dict en 1395-1404 and zh 2705-2714, accessor at 2725, accessor unchanged in shape
+i18n gate: same command with --negative -> exit code 1, RED on the ten en arms
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1183, zh keys 1184, xor = me.asksBeforeProtectedChange
+parity ruler at that tip in a detached worktree, same unmodified ruler -> exit code 1, en keys 1173, zh keys 1174, xor = the same single key: this lane nets ten keys per side and no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+
+correction evidence for the coverage table row naming this lane (号令者数给你 · 现尖缺的十三枚...):
+net delta of the dictionary branch against the tip, `git diff --numstat` -> 35 insertions and 0 deletions in frontend/src/i18n/LocaleContext.tsx, and the only key names it adds are the ten lib.failureAttribution.* (none of them simulation.*)
+simulation.* entry lines counted on both sides of that same diff: tip 22, branch 22 -- so this branch adds zero simulation keys; the table's 补得上 9 枚 row was read with the ruler pinned to a generation older than this branch, which is how a re-cut branch looks like it carries other lanes' keys
