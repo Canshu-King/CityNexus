@@ -1,0 +1,14 @@
+{
+ "tip": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "declared": 175,
+ "response_asserted": 175,
+ "assert_not_on_response": 0,
+ "call_only": 0,
+ "none": 0,
+ "gap_total": 0,
+ "test_files_read": 253,
+ "cn_rows_parsed": 175,
+ "cn_row_line_matches_current_tip": 175,
+ "tsv": "D:/moodle/_qoder_yanlugong_0559b/review/\u9a8c\u8def\u5de5-0559b/ROUTE_STUB_GAP_r1.tsv",
+ "gap_by_first_segment": []
+}
