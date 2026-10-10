@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 
-const TOKEN = "r28-ui-signed-bearer";
+const TOKEN = "r28-ui-signed-bearer-test-key";
 const mission = {
   id: "r28-ui-mission",
   journey_id: "journey-from-route",
@@ -215,7 +215,7 @@ test.describe("R28 collective decision surface", () => {
     let round2OwnerAuthorization = "";
     let round2AdminAuthorization = "";
     let approvalAuthorization = "";
-    const adminToken = "r29-ui-admin-signed-bearer";
+    const adminToken = "r29-ui-admin-signed-bearer-test-key";
     const ownerProposal = "11111111-1111-1111-1111-111111111111";
     const adminProposal = "22222222-2222-2222-2222-222222222222";
     const compromiseProposal = "33333333-3333-3333-3333-333333333333";

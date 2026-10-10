@@ -1,73 +1,16 @@
 {
-  "authoritative": false,
+  "authoritative": true,
   "suite": "current-product",
-  "provenance_mode": "parallel-evidence-only",
-  "decision": "The Qoder head and the Revolution merge head describe different isolated E2E runs. No single authoritative winner is claimed.",
-  "source_path": "reports/e2e-provenance/authoritative.json",
-  "base_stage_blob": "f5c24f40619231f2c52b3472dc40cd7b136bce48",
-  "entries": [
-    {
-      "source_role": "qoder-head",
-      "source_commit": "a6e2cdbff94e2bce463fde61e3bc363792b75e45",
-      "stage_blob": "c6ff742aa0174292747a2a2032e02b7763cfcbb3",
-      "record": {
-        "authoritative": true,
-        "suite": "current-product",
-        "runId": "poientry_r4",
-        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-        "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-        "frontendPort": 4611,
-        "backendPort": 4612,
-        "databaseUrl": "sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_r4.db",
-        "ai": "disabled",
-        "reuseExistingServer": false,
-        "workers": 1,
-        "retries": 0,
-        "recordedAt": "2026-10-08T12:18:48.282Z",
-        "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4611 backend=:4612 db=sqlite:///D:/moodle/_qoder_lane_poi_entry_20261008/db/_e2e_poientry_r4.db ai=disabled reuseExistingServer=false"
-      }
-    },
-    {
-      "source_role": "revolution-merge-head",
-      "source_commit": "0c755fc19332c5d4bb5a3b7ceb273d0d50a8f029",
-      "stage_blob": "d46415d3fad968cffb13b9df94183fe1b6aa19f5",
-      "record": {
-        "authoritative": true,
-        "suite": "current-product",
-        "runId": "r95-20261010-05",
-        "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
-        "pythonResolved": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
-        "frontendPort": 4219,
-        "backendPort": 8219,
-        "databaseUrl": "sqlite:///D:/moodle/CityNexus-Revolution-R63-Relay-20261008/backend/_r95-20261010-05.db",
-        "ai": "disabled",
-        "reuseExistingServer": false,
-        "workers": 1,
-        "retries": 0,
-        "recordedAt": "2026-10-10T12:03:34.96Z",
-        "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe frontend=:4219 backend=:8219 db=sqlite:///D:/moodle/CityNexus-Revolution-R63-Relay-20261008/backend/_r95-20261010-05.db ai=disabled reuseExistingServer=false"
-      }
-    },
-    {
-      "source_role": "revolution-r98-source-head",
-      "source_commit": "a7769c57a9",
-      "stage_blob": "69ed6ad064e5f0f26c268dc809661d3075f20689",
-      "record": {
-        "authoritative": true,
-        "suite": "current-product",
-        "runId": "r97-20261010-09",
-        "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-        "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-        "frontendPort": 4229,
-        "backendPort": 8229,
-        "databaseUrl": "sqlite:///D:/moodle/CityNexus-Revolution-R63-Relay-20261008/frontend/_r97-20261010-09.db",
-        "ai": "disabled",
-        "reuseExistingServer": false,
-        "workers": 1,
-        "retries": 0,
-        "recordedAt": "2026-10-10T14:00:58.620Z",
-        "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4229 backend=:8229 db=sqlite:///D:/moodle/CityNexus-Revolution-R63-Relay-20261008/frontend/_r97-20261010-09.db ai=disabled reuseExistingServer=false"
-      }
-    }
-  ]
+  "runId": "r98-20261011b",
+  "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "pythonResolved": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "frontendPort": 4179,
+  "backendPort": 8009,
+  "databaseUrl": "sqlite:///D:/moodle/_codex_workers/revolution-integration/evidence/_r98-20261011b.db",
+  "ai": "disabled",
+  "reuseExistingServer": false,
+  "workers": 1,
+  "retries": 0,
+  "recordedAt": "2026-10-10T19:28:31.856Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe frontend=:4179 backend=:8009 db=sqlite:///D:/moodle/_codex_workers/revolution-integration/evidence/_r98-20261011b.db ai=disabled reuseExistingServer=false"
 }

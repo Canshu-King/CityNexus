@@ -3738,6 +3738,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability:
+    post:
+      summary: Check Bootstrap Two Stop Walkability
+      description: Check one signed, provider-backed public-to-public walking leg.
+      operationId: check_bootstrap_two_stop_walkability_api_v1_journeys__journey_id__bootstrap_shortlist_two_stop_walkability_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootstrapTwoStopWalkabilityRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BootstrapTwoStopWalkabilityResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /journeys/{journey_id}/context-watch:
     post:
       summary: Run Journey Context Watch
@@ -7506,6 +7538,235 @@ components:
       - second_shortlist_id
       title: BootstrapTwoStopWalkRequest
       description: Release a walking leg between two explicitly ordered saved public stops.
+    BootstrapTwoStopWalkabilityRequest:
+      properties:
+        first_shortlist_id:
+          type: string
+          format: uuid
+          title: First Shortlist Id
+        second_shortlist_id:
+          type: string
+          format: uuid
+          title: Second Shortlist Id
+        public_route_consent:
+          type: boolean
+          title: Public Route Consent
+      type: object
+      required:
+      - first_shortlist_id
+      - second_shortlist_id
+      - public_route_consent
+      title: BootstrapTwoStopWalkabilityRequest
+      description: Check provider-backed walking evidence for two saved public stops.
+    BootstrapTwoStopWalkStop:
+      properties:
+        position:
+          type: integer
+          enum:
+          - 1
+          - 2
+          title: Position
+        shortlist_id:
+          type: string
+          format: uuid
+          title: Shortlist Id
+        name:
+          type: string
+          title: Name
+        category:
+          type: string
+          title: Category
+        external_id:
+          type: string
+          title: External Id
+        source_url:
+          type: string
+          title: Source Url
+        source_provenance:
+          type: string
+          title: Source Provenance
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          enum:
+          - WGS84
+          title: Coordinate System
+        opening_state:
+          type: string
+          title: Opening State
+        price_state:
+          type: string
+          enum:
+          - UNKNOWN
+          title: Price State
+      type: object
+      required:
+      - position
+      - shortlist_id
+      - name
+      - category
+      - external_id
+      - source_url
+      - source_provenance
+      - latitude
+      - longitude
+      - coordinate_system
+      - opening_state
+      - price_state
+      title: BootstrapTwoStopWalkStop
+    BootstrapTwoStopWalkabilityResponse:
+      properties:
+        preview_id:
+          type: string
+          format: uuid
+          title: Preview Id
+        status:
+          type: string
+          enum:
+          - ROUTE_VERIFIED
+          - ROUTE_UNVERIFIED
+          title: Status
+        route_state:
+          type: string
+          enum:
+          - ROUTE_VERIFIED
+          - ROUTE_UNVERIFIED
+          title: Route State
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        authorization_basis:
+          type: string
+          enum:
+          - TWO_SAVED_PUBLIC_IDENTITIES
+          title: Authorization Basis
+        release_purpose:
+          type: string
+          enum:
+          - PUBLIC_POI_TO_PUBLIC_POI_WALKABILITY
+          title: Release Purpose
+        navigation_mode:
+          type: string
+          enum:
+          - PUBLIC_POI_TO_PUBLIC_POI_WALKING
+          title: Navigation Mode
+        navigation_url:
+          type: string
+          title: Navigation Url
+        first_stop:
+          $ref: '#/components/schemas/BootstrapTwoStopWalkStop'
+        second_stop:
+          $ref: '#/components/schemas/BootstrapTwoStopWalkStop'
+        provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+        router_profile:
+          type: string
+          enum:
+          - pedestrian
+          title: Router Profile
+        provenance:
+          type: string
+          title: Provenance
+        reason_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason Code
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+        observed_at:
+          type: string
+          format: date-time
+          title: Observed At
+        duration_min:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Min
+        distance_m:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Distance M
+        route_time_state:
+          type: string
+          enum:
+          - PROVIDER_CAPTURED
+          - UNKNOWN
+          title: Route Time State
+        route_distance_state:
+          type: string
+          enum:
+          - PROVIDER_CAPTURED
+          - UNKNOWN
+          title: Route Distance State
+        route_caveats:
+          items:
+            type: string
+          type: array
+          title: Route Caveats
+        shared_fields:
+          items:
+            type: string
+          type: array
+          title: Shared Fields
+        withheld_fields:
+          items:
+            type: string
+          type: array
+          title: Withheld Fields
+        explore_state:
+          type: string
+          enum:
+          - DRAFT_EXPLORE_ONLY
+          title: Explore State
+        plan_version_id:
+          type: 'null'
+          title: Plan Version Id
+        selected_place_id:
+          type: 'null'
+          title: Selected Place Id
+      type: object
+      required:
+      - preview_id
+      - status
+      - route_state
+      - journey_id
+      - authorization_basis
+      - release_purpose
+      - navigation_mode
+      - navigation_url
+      - first_stop
+      - second_stop
+      - provider
+      - router_profile
+      - provenance
+      - reason_code
+      - reason
+      - observed_at
+      - duration_min
+      - distance_m
+      - route_time_state
+      - route_distance_state
+      - route_caveats
+      - shared_fields
+      - withheld_fields
+      - explore_state
+      - plan_version_id
+      - selected_place_id
+      title: BootstrapTwoStopWalkabilityResponse
     CapabilityInput:
       properties:
         code:

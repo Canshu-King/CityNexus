@@ -24,7 +24,7 @@ const ARMS = [
   { locale: "zh", storage: "zh-CN" },
   { locale: "en", storage: "en" },
 ];
-const TOKEN = "qoder-0578-not-a-real-token";
+const TOKEN = "qoder-0578-not-a-real-token-test-key";
 const MALFORMED = "not-a-share-tail";
 
 async function readScreen(page: import("@playwright/test").Page) {

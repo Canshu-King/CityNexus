@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const JOURNEY_ID = "r56-in-transit-reroute";
-const TOKEN = "r56-signed-traveler-bearer";
+const TOKEN = "r56-signed-traveler-bearer-test-key";
 
 test("EN_ROUTE traveller can recalculate from one freshly shared advisory location", async ({ page, context }) => {
   await context.grantPermissions(["geolocation"]);

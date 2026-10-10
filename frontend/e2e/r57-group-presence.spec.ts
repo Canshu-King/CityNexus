@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const JOURNEY_ID = "r57-group-presence";
-const TOKEN = "r57-signed-traveler-bearer";
+const TOKEN = "r57-signed-traveler-bearer-test-key";
 
 test("shared Journey shows coarse member presence and guides only the viewer to a grounded rendezvous", async ({ page, context }) => {
   await context.grantPermissions(["geolocation"]);
@@ -89,7 +89,7 @@ test("shared Journey shows coarse member presence and guides only the viewer to 
 });
 
 test("R58 distinguishes keeping the shared plan from asking Hermes to prepare a governed group option", async ({ page, context }) => {
-  const token = "r58-signed-traveler-bearer";
+  const token = "r58-signed-traveler-bearer-test-key";
   await page.addInitScript(({ journeyId, bearer }) => {
     localStorage.setItem("citynexus.v8.journey_id", journeyId);
     localStorage.setItem("citynexus.locale", "en-US");
@@ -223,8 +223,8 @@ test("R58 distinguishes keeping the shared plan from asking Hermes to prepare a 
 });
 
 test("two signed member contexts share independently and see themselves as You", async ({ browser }) => {
-  const ownerToken = "r57-owner-signed-bearer";
-  const adminToken = "r57-admin-signed-bearer";
+  const ownerToken = "r57-owner-signed-bearer-test-key";
+  const adminToken = "r57-admin-signed-bearer-test-key";
   const sharedSamples: Record<string, { id: string; latitude: number; longitude: number } | undefined> = {
     owner: undefined,
     admin: undefined,

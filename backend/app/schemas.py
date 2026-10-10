@@ -353,6 +353,61 @@ class BootstrapTwoStopWalkRequest(BaseModel):
     second_shortlist_id: UUID
     public_map_consent: bool = False
 
+
+class BootstrapTwoStopWalkabilityRequest(BaseModel):
+    """Check provider-backed walking evidence for two saved public stops."""
+
+    first_shortlist_id: UUID
+    second_shortlist_id: UUID
+    public_route_consent: bool
+
+
+class BootstrapTwoStopWalkStop(BaseModel):
+    position: Literal[1, 2]
+    shortlist_id: UUID
+    name: str
+    category: str
+    external_id: str
+    source_url: str
+    source_provenance: str
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    opening_state: str
+    price_state: Literal["UNKNOWN"]
+
+
+class BootstrapTwoStopWalkabilityResponse(BaseModel):
+    """Advisory provider evidence or an honest unverified fallback."""
+
+    preview_id: UUID
+    status: Literal["ROUTE_VERIFIED", "ROUTE_UNVERIFIED"]
+    route_state: Literal["ROUTE_VERIFIED", "ROUTE_UNVERIFIED"]
+    journey_id: UUID
+    authorization_basis: Literal["TWO_SAVED_PUBLIC_IDENTITIES"]
+    release_purpose: Literal["PUBLIC_POI_TO_PUBLIC_POI_WALKABILITY"]
+    navigation_mode: Literal["PUBLIC_POI_TO_PUBLIC_POI_WALKING"]
+    navigation_url: str
+    first_stop: BootstrapTwoStopWalkStop
+    second_stop: BootstrapTwoStopWalkStop
+    provider: str | None
+    router_profile: Literal["pedestrian"]
+    provenance: str
+    reason_code: str | None
+    reason: str | None
+    observed_at: datetime
+    duration_min: int | None
+    distance_m: int | None
+    route_time_state: Literal["PROVIDER_CAPTURED", "UNKNOWN"]
+    route_distance_state: Literal["PROVIDER_CAPTURED", "UNKNOWN"]
+    route_caveats: list[str]
+    shared_fields: list[str]
+    withheld_fields: list[str]
+    explore_state: Literal["DRAFT_EXPLORE_ONLY"]
+    plan_version_id: None
+    selected_place_id: None
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)
