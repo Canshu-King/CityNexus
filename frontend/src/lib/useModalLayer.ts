@@ -88,9 +88,13 @@ export function useModalLayer({
     const sheet = sheetRef.current;
     if (!sheet) return;
 
-    /* Initial focus: the first focusable inside the sheet, or the close button. */
-    const first = sheet.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-    first?.focus({ preventScroll: true });
+    /* Where the surface says the traveller means to be.  Falling back to the first focusable puts
+       focus on the close control purely because it is first in the DOM, which is the wrong door for
+       a screen whose whole purpose is typing. */
+    const target =
+      sheet.querySelector<HTMLElement>("[data-autofocus]") ??
+      sheet.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+    target?.focus({ preventScroll: true });
 
     const trap = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
