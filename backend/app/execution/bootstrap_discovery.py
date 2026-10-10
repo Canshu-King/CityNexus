@@ -167,11 +167,18 @@ def _provider_provenance(attempts: list[dict[str, Any]], *, configured_url: str 
     # a loopback answer is useful evidence, but it is not a public OSM answer.
     if host in {"127.0.0.1", "localhost", "::1"} or host.endswith(".local"):
         return "TEST_PROVIDER"
+    # Source grading cannot claim a verified public endpoint over plaintext
+    # HTTP (or from a URL with embedded credentials).  Local test fixtures
+    # remain TEST_PROVIDER regardless of scheme, above.
+    if parsed.scheme.lower() != "https" or parsed.username or parsed.password:
+        return "UNVERIFIED"
     if host in {
         "overpass-api.de",
         "overpass.kumi.systems",
         "overpass.private.coffee",
         "overpass.openstreetmap.fr",
+        "nominatim.openstreetmap.org",
+        "photon.komoot.io",
     }:
         return "LIVE_PROVIDER"
     return "UNVERIFIED"
@@ -742,12 +749,16 @@ def _reserve_city_search_global_slot(session: Session, *, now: datetime) -> bool
 
     key = _CITY_RATE_KEY
     row = session.get(IdempotencyKey, key)
+    # A public Nominatim deployment must never be configured below the OSMF
+    # one-request-per-second application-wide bound. Apply this floor at the
+    # enforcement point even if an operator misconfigures the environment.
+    minimum_seconds = max(1.0, settings.city_search_global_min_interval_seconds)
     if row is not None:
         try:
             last = datetime.fromisoformat(row.created_at)
         except (TypeError, ValueError):
-            last = now - timedelta(seconds=settings.city_search_global_min_interval_seconds)
-        if (now - last).total_seconds() < settings.city_search_global_min_interval_seconds:
+            last = now - timedelta(seconds=minimum_seconds)
+        if (now - last).total_seconds() < minimum_seconds:
             return False
         changed = session.execute(
             update(IdempotencyKey)
@@ -794,9 +805,18 @@ def _city_search_config() -> tuple[str, str | None, str | None] | None:
     base_url = settings.city_search_base_url
     if not base_url:
         return None
-    parsed = urlparse(base_url)
-    host = (parsed.hostname or "").lower()
-    is_test = settings.city_search_test_provider or host in {"127.0.0.1", "localhost", "::1"}
+    try:
+        parsed = urlparse(base_url)
+        host = (parsed.hostname or "").lower()
+    except ValueError:
+        return None
+    is_loopback = host in {"127.0.0.1", "localhost", "::1"}
+    # A test flag may relax the identifying User-Agent requirement for a
+    # deliberately configured fixture, but must never authorize plaintext
+    # public-service requests.
+    if not host or (parsed.scheme != "https" and not (is_loopback and parsed.scheme == "http")):
+        return None
+    is_test = settings.city_search_test_provider or is_loopback
     if not is_test:
         # A public endpoint must have a real identifying contact in the UA. The
         # built-in localhost placeholder is intentionally not accepted.
@@ -916,6 +936,11 @@ def search_bootstrap_city(
             "cache_hit": False,
             "results": [],
         }
+
+    # The global slot is an independent, durable request claim. Commit it
+    # before an external HTTP wait: otherwise SQLite holds a writer lock
+    # across provider latency, and a rollback could erase the rate boundary.
+    session.commit()
 
     geocoder: NominatimGeocoder | PhotonCityGeocoder
     if provider_name == "nominatim":
