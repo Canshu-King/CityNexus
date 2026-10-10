@@ -36,6 +36,7 @@ const en: Dict = {
   "planning.thisOneSResultIsUnknownNotItDidNotHappen": "This one's result is unknown (not: it did not happen)",
   "planning.theServerCouldNotBeReached": "The server could not be reached",
   "planning.theRequestWasRefused": "The request was refused",
+  "planning.startPlanning": "Plan my trip",
   "poiImport.favoriteNotWired": "Favourites have no door in this build yet, so this cannot promise a save.",
   "poiImport.newJourney": "Create as a new plan",
   "poiImport.newJourneyNotWired": "Creating a plan from imported places belongs to the batch entry step; it is not wired here.",
@@ -840,6 +841,8 @@ const en: Dict = {
      a reference number or a booking type (`semantic_intake.py`).  The latter two are not names, so the
      row states which of them it got instead of passing one off as the trip fact's name. */
   "inbox.memoryUnnamedPlace": "The server gave no place name for this trip fact",
+  "inbox.handled": "Handled",
+  "inbox.toConfirm": "To confirm",
   "inbox.memoryRefInsteadOfName": "The server gave a reference number for this trip fact, not a place name",
   "inbox.memoryTypeInsteadOfName": "The server gave a booking type for this trip fact, not a place name",
   "inbox.readyToConfirm": "The server says this one is ready to accept",
@@ -1358,6 +1361,7 @@ const zhCN: Dict = {
   "planning.thisOneSResultIsUnknownNotItDidNotHappen": "这一笔的结果未知（不是没发生）",
   "planning.theServerCouldNotBeReached": "连不上服务端",
   "planning.theRequestWasRefused": "这个要求被明确拒绝",
+  "planning.startPlanning": "开始规划",
   "poiImport.favoriteNotWired": "这一版还没有收藏的门，所以这里不能承诺保存。",
   "poiImport.newJourney": "新建为一个计划",
   "poiImport.newJourneyNotWired": "从导入地点新建计划属于批量录入那一步，本屏没有接。",
@@ -2108,6 +2112,8 @@ const zhCN: Dict = {
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
   "inbox.unnamedArtifact": "服务器没有给这张确认单的名字",
   "inbox.memoryUnnamedPlace": "服务器没有给这条行程事实的地点名字",
+  "inbox.handled": "已处理",
+  "inbox.toConfirm": "待确认",
   "inbox.memoryRefInsteadOfName": "服务器只给了这条行程事实的确认号，没有给地点名字",
   "inbox.memoryTypeInsteadOfName": "服务器只给了这条行程事实的预订类型，没有给地点名字",
   "inbox.readyToConfirm": "服务器说这条可以收下了",

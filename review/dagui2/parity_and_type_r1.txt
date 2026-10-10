@@ -1,0 +1,8 @@
+base en=1112 zh=1113 diff=['me.asksBeforeProtectedChange']
+now  en=1115 zh=1116 diff=['me.asksBeforeProtectedChange']
+added en=3 zh=3
+existing_text_rewritten en=0 zh=0
+my_keys_on_both_sides=3 of 3
+NEG2c tsc_rc=2 error_lines=1 first=src/features/simulation/SimulationPanel.tsx(7,7): error TS2322: Type 'string' is not assignable to type 'number'.
+restored_same_bytes=1
+verdict=PROVEN
