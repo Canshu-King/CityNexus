@@ -196,3 +196,73 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         object.__setattr__(settings, "city_search_provider", previous["city_search_provider"])
         object.__setattr__(settings, "city_search_base_url", previous["city_search_base_url"])
         object.__setattr__(settings, "city_search_test_provider", previous["city_search_test_provider"])
+
+
+def test_r95_source_grade_operator_scheme_and_global_rate_guard(monkeypatch):
+    """Public-provider claims require TLS and a durable >=1s application gate."""
+
+    from datetime import datetime, timedelta, timezone
+
+    from sqlalchemy import delete
+
+    import app.execution.bootstrap_discovery as bootstrap
+    from app.db.models import IdempotencyKey
+
+    assert bootstrap._provider_provenance([
+        {"endpoint": "http://overpass-api.de/api/interpreter", "answered": True}
+    ]) == "UNVERIFIED"
+    assert bootstrap._provider_provenance([
+        {"endpoint": "https://overpass-api.de/api/interpreter", "answered": True}
+    ]) == "LIVE_PROVIDER"
+    assert bootstrap._provider_provenance([
+        {"endpoint": "https://nominatim.openstreetmap.org/search", "answered": True}
+    ]) == "LIVE_PROVIDER"
+    assert bootstrap._provider_provenance([
+        {"endpoint": "http://127.0.0.1:8214/interpreter", "answered": True}
+    ]) == "TEST_PROVIDER"
+    assert bootstrap._provider_provenance([
+        {"endpoint": "https://[broken", "answered": True}
+    ]) == "UNVERIFIED"
+
+    keys = (
+        "city_search_enabled",
+        "city_search_provider",
+        "city_search_base_url",
+        "city_search_user_agent",
+        "city_search_test_provider",
+        "city_search_global_min_interval_seconds",
+    )
+    previous = {key: getattr(settings, key) for key in keys}
+    try:
+        object.__setattr__(settings, "city_search_enabled", True)
+        object.__setattr__(settings, "city_search_provider", "nominatim")
+        object.__setattr__(settings, "city_search_user_agent", "CityNexus/1.0 (ops@example.org)")
+        object.__setattr__(settings, "city_search_test_provider", True)
+        object.__setattr__(settings, "city_search_base_url", "http://nominatim.openstreetmap.org")
+        assert bootstrap._city_search_config() is None
+        object.__setattr__(settings, "city_search_base_url", "https://nominatim.openstreetmap.org")
+        object.__setattr__(settings, "city_search_user_agent", "")
+        assert bootstrap._city_search_config() is None
+        object.__setattr__(settings, "city_search_user_agent", "CityNexus/1.0 (ops@example.org)")
+        assert bootstrap._city_search_config() is not None
+
+        object.__setattr__(settings, "city_search_global_min_interval_seconds", 0.1)
+        unique_key = f"r95-test-city-global-rate:{uuid4()}"
+        monkeypatch.setattr(bootstrap, "_CITY_RATE_KEY", unique_key)
+        now = datetime.now(timezone.utc)
+        with SessionLocal() as session:
+            try:
+                assert bootstrap._reserve_city_search_global_slot(session, now=now)
+                session.commit()
+                # Even an erroneous 100ms operator setting cannot permit
+                # another public city geocode at 200ms.
+                assert not bootstrap._reserve_city_search_global_slot(
+                    session, now=now + timedelta(milliseconds=200)
+                )
+            finally:
+                session.rollback()
+                session.execute(delete(IdempotencyKey).where(IdempotencyKey.key == unique_key))
+                session.commit()
+    finally:
+        for key, value in previous.items():
+            object.__setattr__(settings, key, value)
