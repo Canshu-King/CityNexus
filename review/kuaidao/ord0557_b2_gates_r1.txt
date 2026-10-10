@@ -5,12 +5,14 @@ scope: frontend/src/features/planning/PlanComparison.tsx rows :108 :115 :124 (dr
   tip read: `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
     -> f68b6b55a216d685287b37c95459d3e1fad0b220, branches cut from here (worktree D:\moodle\_qoder_kuaidao_0557,
     `git status --porcelain` empty before cutting)
-  dict branch   refs/heads/review/快刀工-0557-dict-r2  tip 4a3f42e662173272050f805f82975ac8ac9c0d06
+  dict branch   refs/heads/review/快刀工-0557-dict-r2  code tip 4a3f42e662173272050f805f82975ac8ac9c0d06
+    (the merge-up in section 7 adds a merge commit on top of both halves -- the tips to land are the
+    ls-remote ones quoted in this lane's ledger block, not the code tips written here)
     one file only, frontend/src/i18n/LocaleContext.tsx, `git diff --numstat` 6 insertions 0 deletions
     new arms en :40 :41 :42 / zh :1365 :1366 :1367, appended right after planning.startPlanning on both arms
   product branch refs/heads/review/快刀工-0557-r2  code tip 5ee3679caa9db781fb2888f40497307e8b1b3e18, merge tip
     f8a8579fbe0ba1e75e759ee8a85901c7b1e6da80 carrying the dict tip as second parent (no rebase of published
-    branches, force-push zero)
+    branches, force-push zero); the section 7 merge-up and the commit adding this file both sit on top of it.
 
 2 GATES (cwd D:\moodle\_qoder_kuaidao_0557\frontend; node_modules is a junction to
   D:\moodle\_qoder_integration_20260919\frontend\node_modules, not installed from this tree's lock)
@@ -44,3 +46,31 @@ scope: frontend/src/features/planning/PlanComparison.tsx rows :108 :115 :124 (dr
 6 SAME SENTENCE ELSEWHERE, NOT TOUCHED
   frontend/src/app/V8Experience.tsx:270 holds its own `Could not reach the server. Try again.` ternary --
   different host file, on 短瓦工's row of the table, untouched by this branch.
+
+7 THE LINE MOVED AGAIN WHILE THIS BATCH WAS RUNNING -- both halves merged up, gates re-run
+  `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+    -> 26136afacf9e0c951bf4911f4d219161e07c4746 (f68b6b55... is its ancestor, `git merge-base --is-ancestor` rc 0)
+  that generation moved LocaleContext.tsx (my dictionary file) but PlanComparison.tsx is byte-identical between
+  the two tips (`git show` of both blobs compared, equal) -- so the before-line rows :108 :115 :124 still read
+  the same on the new tip, and `git show 26136af...:frontend/src/i18n/LocaleContext.tsx` counts each of my three
+  key names zero times before my merge, so nothing duplicated.
+  26136af merged into review/快刀工-0557-dict-r2 (rc 0, no conflict) and into review/快刀工-0557-r2 (rc 0, no
+  conflict). After the merge the six arms read en :40 :41 :42 / zh :1367 :1368 :1369 (the zh pair moved two rows
+  down because that generation added keys above it); the three product reads stayed :107 :112 :121.
+  gates on the merged generation, same three commands as section 2: tsc check rc 0, tsc all rc 0 (both zero bytes
+  of output), vite build rc 0. Verbatim control re-run against 26136af as the before generation:
+  `python D:/moodle/_qoder_kuaidao_0557_gate/verbatim_pc_r1.py HEAD` rc 0, VERDICT ALL_GREEN, all six
+  identical_to_before=True, identical_to_draft=True on the three en arms, negative control still says red.
+
+8 COLLISION WITH AN EARLIER UNLANDED CANDIDATE ON THIS SAME FILE (fact, not a ruling -- commander picks)
+  `refs/heads/review/比价工-0555-r1` (0f81ab5ddff28d4c8565f99b616df310ed009e86, Sat Oct 10 01:46:46 2026 +08)
+  carried the same six sentences under planning.thisPlanCouldNotBeChosen, planning.couldNotReachTheServerTryAgain,
+  planning.chooseYourPlan, planning.totalCost, planning.stops, planning.walking. None of those six names is on the
+  current tip dictionary (`git show 26136af...:frontend/src/i18n/LocaleContext.tsx` then grep -c -> 0), so that
+  branch never landed.
+  Overlap with this batch: planning.chooseYourPlan is the same name with the same text; the other two of my three
+  rows use the names the current draft gives (planning.planCannotBeChosen, planning.couldNotReachServer), which
+  differ from that branch's names for the identical strings. If both generations land, those two sentences exist
+  twice in the dictionary under different keys. I took the names from _cn10_bldraft_1155.txt as the order says and
+  did not touch or rebase their branch.
+
