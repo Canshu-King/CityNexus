@@ -1296,6 +1296,14 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+
+  // ── Failure attribution titles (ORD-0555) ──
+  /* The three titles `lib/failureAttribution.ts` shows when the server's answer is missing, the
+     network is down, or the service is failing on itself. These values are the bytes those screens
+     were already showing -- a move, not a rewrite. */
+  "failure.thisTripIsNotOnThisServer": "This trip is not on this server",
+  "failure.networkUnavailable": "Network unavailable",
+  "failure.theServiceIsTemporarilyUnavailable": "The service is temporarily unavailable",
 };
 
 const zhCN: Dict = {
@@ -2498,9 +2506,25 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+
+  // ── 故障归因小标题（ORD-0555）──
+  /* `lib/failureAttribution.ts` 在「行程不在这台服务器上」「网络不可用」「服务暂时不可用」三种回答下
+     显示的那三句小标题。值就是屏上原本在显示的那串字，这是搬运不是改写。 */
+  "failure.thisTripIsNotOnThisServer": "这台服务器上没有这一趟行程了",
+  "failure.networkUnavailable": "网络不可用",
+  "failure.theServiceIsTemporarilyUnavailable": "服务暂时不可用",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/* ORD-0555: the lookup for copy tables that are plain module functions instead of components.
+   `lib/failureAttribution.ts` builds its titles inside `copyFor(attribution, zh)`, whose call sites
+   sit on eleven other screens, so that function cannot call the `useT()` hook. Same fallback order as
+   `t()`: this locale, then English, then the key itself. No `{param}` substitution and no
+   `{plural:}` expansion -- a line that needs either still has to go through `t()`. */
+export function dictionaryCopy(locale: TripLocale, key: string): string {
+  return dictionaries[locale][key] ?? dictionaries.en[key] ?? key;
+}
 
 type LocaleState = {
   locale: TripLocale;
