@@ -190,6 +190,26 @@ def test_r98_two_stop_walkability_is_provider_grounded_or_honestly_unknown(monke
         )
         assert cross_member.status_code == 403, cross_member.text
 
+        # A configured public plaintext endpoint must not be contacted or
+        # graded as LIVE_PROVIDER_CAPTURE. Only loopback HTTP test emulators
+        # and TLS-protected remote routers are accepted.
+        object.__setattr__(settings, "live_valhalla_url", "http://routing.public.example")
+        unsafe = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability",
+            headers=owner_headers,
+            json={
+                "first_shortlist_id": first_id,
+                "second_shortlist_id": second_id,
+                "public_route_consent": True,
+            },
+        )
+        assert unsafe.status_code == 200, unsafe.text
+        assert unsafe.json()["status"] == "ROUTE_UNVERIFIED"
+        assert unsafe.json()["reason_code"] == "ROUTE_PROVIDER_ENDPOINT_UNTRUSTED"
+        assert unsafe.json()["duration_min"] is None
+        assert unsafe.json()["distance_m"] is None
+        assert len(calls) == 1
+
         object.__setattr__(settings, "live_valhalla_url", None)
         unavailable = client.post(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability",
