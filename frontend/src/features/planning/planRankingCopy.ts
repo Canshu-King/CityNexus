@@ -5,6 +5,7 @@
  * ours: 预算 / 步行时长 / 受保护锚点 / 硬可用证据段数. No competitor vocabulary is carried in -- the
  * order forbids borrowing a dimension name onto our screen.
  */
+import { expandPluralMarkers } from "../../lib/plural";
 export const planRankingCopy = {
   en: {
     "rank.title": "Compare the plans this trip can choose from",
@@ -23,7 +24,7 @@ export const planRankingCopy = {
     "rank.tie": "These plans cannot be separated on {dims}; they are listed in the order the server wrote them.",
     "rank.onlyOne": "There is only one plan to compare here, so nothing is ranked.",
     "rank.none": "No plan is available to compare right now.",
-    "rank.evidenceNote": "{hard} of {total} legs on this plan rest on evidence the gate accepts as hard; the rest are {quality}.",
+    "rank.evidenceNote": "{hard} of {total} {plural:leg:total} on this plan rest on evidence the gate accepts as hard; the rest are {quality}.",
     "rank.loading": "Reading the plans\u2026",
     "rank.failed": "The plan list could not be read from this server. Nothing about your trip was changed.",
     "rank.retry": "Read again",
@@ -88,5 +89,5 @@ export function rankCopy(locale: string, key: PlanRankCopyKey): string {
 }
 
 export function fillRank(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
 }

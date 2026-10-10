@@ -18,6 +18,7 @@
  *  - nothing here offers a second action on a deleted trip. There is no permanent-delete route on
  *    this server, so no sentence may imply one (ORD-0385: copy may not exceed the mechanism).
  */
+import { expandPluralMarkers } from "../../lib/plural";
 export const journeyTrashCopy = {
   en: {
     "trash.title": "Recycle bin",
@@ -25,7 +26,7 @@ export const journeyTrashCopy = {
       "The trips this server says are in the bin. Each row has one action: bring it back into your trip list.",
     "trash.loading": "Reading the bin…",
     "trash.empty": "The bin is empty: this server named no trip in it.",
-    "trash.count": "{n} trips in the bin",
+    "trash.count": "{n} {plural:trip} in the bin",
     "trash.rowState": "in the bin",
     "trash.rowStateMissing": "this server gave no bin state for this row",
     "trash.deletedAt": "put in the bin at {when}",
@@ -123,5 +124,5 @@ export function trashCopy(locale: string, key: JourneyTrashCopyKey): string {
 
 /** `{n}` and `{title}` come from the read and the response, never from a number this file knows. */
 export function fillTrash(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
 }
