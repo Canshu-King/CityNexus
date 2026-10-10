@@ -1,0 +1,270 @@
+{
+ "base_tip": "ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a",
+ "items": [
+  {
+   "key": "agent.aRuntimeEventCouldNotBeRead",
+   "base_line": 242,
+   "new_line": 242,
+   "zh": "运行事件暂时无法解析",
+   "en": "A runtime event could not be read",
+   "before": "setStreamError(zh ? \"运行事件暂时无法解析\" : \"A runtime event could not be read\");",
+   "after": "setStreamError(t(\"agent.aRuntimeEventCouldNotBeRead\"));",
+   "dict_en_line": 587,
+   "dict_zh_line": 1917
+  },
+  {
+   "key": "agent.reconnectingToRuntimeEvents",
+   "base_line": 253,
+   "new_line": 253,
+   "zh": "正在重新连接运行事件",
+   "en": "Reconnecting to runtime events",
+   "before": "setStreamError(zh ? \"正在重新连接运行事件\" : \"Reconnecting to runtime events\");",
+   "after": "setStreamError(t(\"agent.reconnectingToRuntimeEvents\"));",
+   "dict_en_line": 588,
+   "dict_zh_line": 1918
+  },
+  {
+   "key": "agent.eventStreamUnavailableReceivedEventsArePreserved",
+   "base_line": 256,
+   "new_line": 256,
+   "zh": "运行事件流不可用；已保留已收到的事件",
+   "en": "Event stream unavailable; received events are preserved",
+   "before": "setStreamError(zh ? \"运行事件流不可用；已保留已收到的事件\" : \"Event stream unavailable; received events are preserved\");",
+   "after": "setStreamError(t(\"agent.eventStreamUnavailableReceivedEventsArePreserved\"));",
+   "dict_en_line": 589,
+   "dict_zh_line": 1919
+  },
+  {
+   "key": "agent.stopping",
+   "base_line": 357,
+   "new_line": 357,
+   "zh": "正在停止…",
+   "en": "Stopping…",
+   "before": "setActionState(zh ? \"正在停止…\" : \"Stopping…\");",
+   "after": "setActionState(t(\"agent.stopping\"));",
+   "dict_en_line": 590,
+   "dict_zh_line": 1920
+  },
+  {
+   "key": "agent.stoppedThroughCityNexus",
+   "base_line": 361,
+   "new_line": 361,
+   "zh": "已通过 CityNexus 停止",
+   "en": "Stopped through CityNexus",
+   "before": "setActionState(zh ? \"已通过 CityNexus 停止\" : \"Stopped through CityNexus\");",
+   "after": "setActionState(t(\"agent.stoppedThroughCityNexus\"));",
+   "dict_en_line": 591,
+   "dict_zh_line": 1921
+  },
+  {
+   "key": "agent.approvalIsDisabledWhileOffline",
+   "base_line": 371,
+   "new_line": 371,
+   "zh": "离线时不能确认方案",
+   "en": "Approval is disabled while offline",
+   "before": "setActionState(zh ? \"离线时不能确认方案\" : \"Approval is disabled while offline\");",
+   "after": "setActionState(t(\"agent.approvalIsDisabledWhileOffline\"));",
+   "dict_en_line": 592,
+   "dict_zh_line": 1922
+  },
+  {
+   "key": "agent.cityNexusApprovalIdIsNotAvailableReviewInRecovery",
+   "base_line": 375,
+   "new_line": 375,
+   "zh": "缺少 CityNexus approval_id，需打开恢复中心审核",
+   "en": "CityNexus approval_id is not available; review in Recovery",
+   "before": "setActionState(zh ? \"缺少 CityNexus approval_id，需打开恢复中心审核\" : \"CityNexus approval_id is not available; review in Recovery\");",
+   "after": "setActionState(t(\"agent.cityNexusApprovalIdIsNotAvailableReviewInRecovery\"));",
+   "dict_en_line": 593,
+   "dict_zh_line": 1923
+  },
+  {
+   "key": "agent.recordingCityNexusApproval",
+   "base_line": 378,
+   "new_line": 378,
+   "zh": "正在记录 CityNexus 确认…",
+   "en": "Recording CityNexus approval…",
+   "before": "setActionState(zh ? \"正在记录 CityNexus 确认…\" : \"Recording CityNexus approval…\");",
+   "after": "setActionState(t(\"agent.recordingCityNexusApproval\"));",
+   "dict_en_line": 594,
+   "dict_zh_line": 1924
+  },
+  {
+   "key": "agent.approvalRecordedCityNexusStillOwnsExecutionAuthorization",
+   "base_line": 381,
+   "new_line": 381,
+   "zh": "确认已记录；仍需由 CityNexus 执行授权",
+   "en": "Approval recorded; CityNexus still owns execution authorization",
+   "before": "setActionState(zh ? \"确认已记录；仍需由 CityNexus 执行授权\" : \"Approval recorded; CityNexus still owns execution authorization\");",
+   "after": "setActionState(t(\"agent.approvalRecordedCityNexusStillOwnsExecutionAuthorization\"));",
+   "dict_en_line": 595,
+   "dict_zh_line": 1925
+  },
+  {
+   "key": "agent.workingOnYourRequest",
+   "base_line": 393,
+   "new_line": 393,
+   "zh": "正在为你处理",
+   "en": "Working on your request",
+   "before": "<b>{zh ? \"正在为你处理\" : \"Working on your request\"}</b>",
+   "after": "<b>{t(\"agent.workingOnYourRequest\")}</b>",
+   "dict_en_line": 596,
+   "dict_zh_line": 1926
+  },
+  {
+   "key": "agent.ranAgainstYourJourneyFacts",
+   "base_line": 396,
+   "new_line": 396,
+   "zh": "已按你的行程事实执行",
+   "en": "Ran against your journey facts",
+   "before": "? zh ? \"已按你的行程事实执行\" : \"Ran against your journey facts\"",
+   "after": "? t(\"agent.ranAgainstYourJourneyFacts\")",
+   "dict_en_line": 597,
+   "dict_zh_line": 1927
+  },
+  {
+   "key": "agent.checkingYourJourneyFacts",
+   "base_line": 397,
+   "new_line": 397,
+   "zh": "正在核对你的行程事实…",
+   "en": "Checking your journey facts…",
+   "before": ": zh ? \"正在核对你的行程事实…\" : \"Checking your journey facts…\"}",
+   "after": ": t(\"agent.checkingYourJourneyFacts\")}",
+   "dict_en_line": 598,
+   "dict_zh_line": 1928
+  },
+  {
+   "key": "agent.checkingYourJourneyFacts2",
+   "base_line": 406,
+   "new_line": 406,
+   "zh": "正在核对你的行程事实…",
+   "en": "Checking your journey facts…",
+   "before": "{zh ? \"正在核对你的行程事实…\" : \"Checking your journey facts…\"}",
+   "after": "{t(\"agent.checkingYourJourneyFacts2\")}",
+   "dict_en_line": 599,
+   "dict_zh_line": 1929
+  },
+  {
+   "key": "agent.viewSafeMissionPlan",
+   "base_line": 427,
+   "new_line": 427,
+   "zh": "查看安全任务计划",
+   "en": "View safe mission plan",
+   "before": "<summary>{zh ? \"查看安全任务计划\" : \"View safe mission plan\"}</summary>",
+   "after": "<summary>{t(\"agent.viewSafeMissionPlan\")}</summary>",
+   "dict_en_line": 600,
+   "dict_zh_line": 1930
+  },
+  {
+   "key": "agent.cityNexusAuthority",
+   "base_line": 432,
+   "new_line": 432,
+   "zh": "CityNexus 授权",
+   "en": "CityNexus authority",
+   "before": "{step.requires_authority && <small>{zh ? \"CityNexus 授权\" : \"CityNexus authority\"}</small>}",
+   "after": "{step.requires_authority && <small>{t(\"agent.cityNexusAuthority\")}</small>}",
+   "dict_en_line": 601,
+   "dict_zh_line": 1931
+  },
+  {
+   "key": "agent.suggestionsProtectedPlans",
+   "base_line": 440,
+   "new_line": 440,
+   "zh": "建议与受保护安排",
+   "en": "Suggestions & protected plans",
+   "before": "<b>{zh ? \"建议与受保护安排\" : \"Suggestions & protected plans\"}</b>",
+   "after": "<b>{t(\"agent.suggestionsProtectedPlans\")}</b>",
+   "dict_en_line": 602,
+   "dict_zh_line": 1932
+  },
+  {
+   "key": "agent.aSuggestionIsReadyOpenAdvancedDetailToSeeHowItWasProduced",
+   "base_line": 443,
+   "new_line": 443,
+   "zh": "已经生成建议，展开高级详情可以看到过程。",
+   "en": "A suggestion is ready; open advanced detail to see how it was produced.",
+   "before": "? zh ? \"已经生成建议，展开高级详情可以看到过程。\" : \"A suggestion is ready; open advanced detail to see how it was produced.\"",
+   "after": "? t(\"agent.aSuggestionIsReadyOpenAdvancedDetailToSeeHowItWasProduced\")",
+   "dict_en_line": 603,
+   "dict_zh_line": 1933
+  },
+  {
+   "key": "agent.thereIsNothingForYouToDecideYet",
+   "base_line": 444,
+   "new_line": 444,
+   "zh": "还没有需要你决定的改动。",
+   "en": "There is nothing for you to decide yet.",
+   "before": ": zh ? \"还没有需要你决定的改动。\" : \"There is nothing for you to decide yet.\"}",
+   "after": ": t(\"agent.thereIsNothingForYouToDecideYet\")}",
+   "dict_en_line": 604,
+   "dict_zh_line": 1934
+  },
+  {
+   "key": "agent.protectedCommitment",
+   "base_line": 448,
+   "new_line": 448,
+   "zh": "受保护承诺",
+   "en": "Protected commitment",
+   "before": "<span key={String(commitment.id ?? index)}>{zh ? \"受保护承诺\" : \"Protected commitment\"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : \"\"}</span>",
+   "after": "<span key={String(commitment.id ?? index)}>{t(\"agent.protectedCommitment\")}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : \"\"}</span>",
+   "dict_en_line": 605,
+   "dict_zh_line": 1935
+  },
+  {
+   "key": "agent.protectedActivity",
+   "base_line": 451,
+   "new_line": 451,
+   "zh": "受保护活动",
+   "en": "Protected activity",
+   "before": "<span key={id}>{zh ? \"受保护活动\" : \"Protected activity\"} · {id.slice(0, 8)}</span>",
+   "after": "<span key={id}>{t(\"agent.protectedActivity\")} · {id.slice(0, 8)}</span>",
+   "dict_en_line": 606,
+   "dict_zh_line": 1936
+  },
+  {
+   "key": "agent.approve",
+   "base_line": 465,
+   "new_line": 465,
+   "zh": "批准",
+   "en": "Approve",
+   "before": "<button type=\"button\" className=\"v8-primary\" onClick={() => void approve()}>{zh ? \"批准\" : \"Approve\"}</button>",
+   "after": "<button type=\"button\" className=\"v8-primary\" onClick={() => void approve()}>{t(\"agent.approve\")}</button>",
+   "dict_en_line": 607,
+   "dict_zh_line": 1937
+  },
+  {
+   "key": "agent.reject",
+   "base_line": 466,
+   "new_line": 466,
+   "zh": "拒绝",
+   "en": "Reject",
+   "before": "<button type=\"button\" className=\"v8-secondary\" onClick={() => void stop()}>{zh ? \"拒绝\" : \"Reject\"}</button>",
+   "after": "<button type=\"button\" className=\"v8-secondary\" onClick={() => void stop()}>{t(\"agent.reject\")}</button>",
+   "dict_en_line": 608,
+   "dict_zh_line": 1938
+  },
+  {
+   "key": "agent.modifyReview",
+   "base_line": 467,
+   "new_line": 467,
+   "zh": "修改 / 审核",
+   "en": "Modify / Review",
+   "before": "<button type=\"button\" className=\"v8-outline-button\" onClick={() => onNavigate(\"authoritative\")}>{zh ? \"修改 / 审核\" : \"Modify / Review\"}</button>",
+   "after": "<button type=\"button\" className=\"v8-outline-button\" onClick={() => onNavigate(\"authoritative\")}>{t(\"agent.modifyReview\")}</button>",
+   "dict_en_line": 609,
+   "dict_zh_line": 1939
+  },
+  {
+   "key": "agent.stopMission",
+   "base_line": 477,
+   "new_line": 477,
+   "zh": "停止任务",
+   "en": "Stop mission",
+   "before": "{active && <button type=\"button\" className=\"cn-copilot-stop\" onClick={() => void stop()}>{zh ? \"停止任务\" : \"Stop mission\"}</button>}",
+   "after": "{active && <button type=\"button\" className=\"cn-copilot-stop\" onClick={() => void stop()}>{t(\"agent.stopMission\")}</button>}",
+   "dict_en_line": 610,
+   "dict_zh_line": 1940
+  }
+ ],
+ "moved": 24
+}
