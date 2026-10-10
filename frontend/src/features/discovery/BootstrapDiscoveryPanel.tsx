@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   cityNexusApi,
   type BootstrapDiscoveryCandidate,
@@ -8,7 +8,7 @@ import {
   type BootstrapShortlistResumeIntent,
   type BootstrapShortlistPreviewResponse,
 } from "../../api/citynexus";
-import { readTravelerBearer } from "../../lib/travelerSession";
+import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 
 type SourceKind = "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
 type PendingMapPreview = {
@@ -20,6 +20,12 @@ type PendingMapPreview = {
   latitude: number;
   longitude: number;
 };
+
+function parsePublicCoordinate(value: string, minimum: number, maximum: number): number | null {
+  if (!value.trim()) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= minimum && parsed <= maximum ? parsed : null;
+}
 
 function safeHttpsSourceUrl(value: string | undefined): string | null {
   if (!value) return null;
@@ -120,8 +126,8 @@ export function BootstrapDiscoveryPanel({
 }) {
   const [sourceKind, setSourceKind] = useState<SourceKind>("MANUAL_PUBLIC_CENTER");
   const [query, setQuery] = useState("cafe");
-  const [latitude, setLatitude] = useState(39.12);
-  const [longitude, setLongitude] = useState(117.20);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [accuracy, setAccuracy] = useState<number | undefined>();
   const [providerConsent, setProviderConsent] = useState(false);
   const [result, setResult] = useState<BootstrapDiscoveryResponse | null>(null);
@@ -138,10 +144,66 @@ export function BootstrapDiscoveryPanel({
   const [shortlistLoading, setShortlistLoading] = useState(true);
   const [shortlistBusy, setShortlistBusy] = useState<string | null>(null);
   const [resumeIntent, setResumeIntent] = useState<BootstrapShortlistResumeIntent | null>(null);
-  const travelerBearer = readTravelerBearer();
+  const [travelerBearer, setTravelerBearer] = useState<string | null>(() => readTravelerBearer());
+  const identityGeneration = useRef(0);
+  const pendingWindowRef = useRef<Window | null>(null);
+  const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
+  const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
+  const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
+  const isCurrentIdentity = (bearer: string | null, generation: number) =>
+    identityGeneration.current === generation && readTravelerBearer() === bearer;
+
+  const resetPrivateStateForBearer = (nextBearer: string | null) => {
+    identityGeneration.current += 1;
+    try {
+      pendingWindowRef.current?.close();
+    } catch {
+      // A browser may already have reclaimed the pre-opened tab.
+    }
+    pendingWindowRef.current = null;
+    setTravelerBearer(nextBearer);
+    setResult(null);
+    setShortlist([]);
+    setResumeIntent(null);
+    setPendingMapPreview(null);
+    setMapConsent(false);
+    setMapFallbackUrl(null);
+    setLastNavigationLaunched(false);
+    setExploreNotice(null);
+    setShortlistBusy(null);
+    setSelecting(null);
+    setBusy(false);
+    setMapBusy(false);
+    setProviderConsent(false);
+    setSourceKind("MANUAL_PUBLIC_CENTER");
+    setQuery("cafe");
+    setLatitude("");
+    setLongitude("");
+    setAccuracy(undefined);
+    setShortlistLoading(true);
+    setMessage("Session changed; private exploration state was cleared.");
+  };
+
+  useEffect(() => {
+    let previousBearer = readTravelerBearer();
+    const onBearerSignal = () => {
+      const nextBearer = readTravelerBearer();
+      if (nextBearer === previousBearer) return;
+      previousBearer = nextBearer;
+      resetPrivateStateForBearer(nextBearer);
+    };
+    const unsubscribe = subscribeTravelerBearer(onBearerSignal);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
+    const stillCurrent = () => active && isCurrentIdentity(requestBearer, requestGeneration);
+    setResult(null);
     setShortlist([]);
     setResumeIntent(null);
     setPendingMapPreview(null);
@@ -154,7 +216,7 @@ export function BootstrapDiscoveryPanel({
       if (initial) setShortlistLoading(true);
       try {
         const saved = await cityNexusApi.getBootstrapShortlist(journeyId);
-        if (!active) return;
+        if (!stillCurrent()) return;
         const restorable = saved.resume && saved.items.some((item) => item.shortlist_id === saved.resume?.shortlist_id)
           ? saved.resume
           : null;
@@ -162,7 +224,7 @@ export function BootstrapDiscoveryPanel({
         setResumeIntent(restorable);
       } catch {
         // A draft without a signed member simply has no restorable board yet.
-        if (active) {
+        if (stillCurrent()) {
           setShortlist([]);
           setResumeIntent(null);
           setPendingMapPreview(null);
@@ -172,19 +234,15 @@ export function BootstrapDiscoveryPanel({
           setExploreNotice(null);
         }
       } finally {
-        if (active && initial) setShortlistLoading(false);
+        if (stillCurrent() && initial) setShortlistLoading(false);
       }
     };
     void loadShortlist(true);
     const refreshOnReturn = () => {
       if (readTravelerBearer() !== travelerBearer) {
-        setPendingMapPreview(null);
-        setMapConsent(false);
-        setMapFallbackUrl(null);
-        setLastNavigationLaunched(false);
-        setExploreNotice(null);
+        return;
       }
-      if (document.visibilityState === "visible") void loadShortlist(false);
+      if (document.visibilityState === "visible" && stillCurrent()) void loadShortlist(false);
     };
     document.addEventListener("visibilitychange", refreshOnReturn);
     window.addEventListener("focus", refreshOnReturn);
@@ -197,15 +255,19 @@ export function BootstrapDiscoveryPanel({
 
   const useForegroundGps = () => {
     setMessage(null);
+    setSourceKind("FOREGROUND_GPS");
+    setLatitude("");
+    setLongitude("");
+    setAccuracy(undefined);
+    setResult(null);
     if (!navigator.geolocation) {
       setMessage("Foreground location is unavailable. Choose a public map center instead.");
       return;
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setSourceKind("FOREGROUND_GPS");
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
+        setLatitude(String(position.coords.latitude));
+        setLongitude(String(position.coords.longitude));
         setAccuracy(position.coords.accuracy > 0 ? position.coords.accuracy : undefined);
         setMessage("Location is held for this search only; it is not saved as presence or a route origin.");
       },
@@ -219,12 +281,15 @@ export function BootstrapDiscoveryPanel({
       setMessage("Confirm the OpenStreetMap/Overpass provider disclosure before searching.");
       return;
     }
-    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    if (parsedLatitude === null || parsedLongitude === null) {
       setMessage("Enter a valid public WGS84 search center.");
       return;
     }
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
     setBusy(true);
     setMessage(null);
+    setResult(null);
     try {
       const next = await cityNexusApi.bootstrapDiscovery(journeyId, {
         query: query.trim() || "cafe",
@@ -232,12 +297,13 @@ export function BootstrapDiscoveryPanel({
         limit: 3,
         source_kind: sourceKind,
         provider_consent: true,
-        latitude,
-        longitude,
+        latitude: parsedLatitude,
+        longitude: parsedLongitude,
         coordinate_system: "WGS84",
         accuracy_m: accuracy,
         mode: "live",
       });
+      if (!isCurrentIdentity(requestBearer, requestGeneration)) return;
       setResult(next);
       setPendingMapPreview(null);
       setMapConsent(false);
@@ -252,27 +318,35 @@ export function BootstrapDiscoveryPanel({
         setMessage("No named public places were returned for that center.");
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Discovery could not be completed.");
+      if (isCurrentIdentity(requestBearer, requestGeneration)) {
+        setMessage(error instanceof Error ? error.message : "Discovery could not be completed.");
+      }
     } finally {
-      setBusy(false);
+      if (isCurrentIdentity(requestBearer, requestGeneration)) setBusy(false);
     }
   };
 
   const selectCandidate = async (candidate: BootstrapDiscoveryCandidate) => {
     if (!result?.receipt_id) return;
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
+    const receiptId = result.receipt_id;
     setSelecting(candidate.candidate_id);
     setMessage(null);
     try {
       const selected = await cityNexusApi.selectBootstrapCandidate(
         journeyId,
-        result.receipt_id,
+        receiptId,
         candidate.candidate_id,
       );
+      if (!isCurrentIdentity(requestBearer, requestGeneration)) return;
       await onCompleted(selected.selected_place_id);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "That place is no longer selectable.");
+      if (isCurrentIdentity(requestBearer, requestGeneration)) {
+        setMessage(error instanceof Error ? error.message : "That place is no longer selectable.");
+      }
     } finally {
-      setSelecting(null);
+      if (isCurrentIdentity(requestBearer, requestGeneration)) setSelecting(null);
     }
   };
 
@@ -286,34 +360,45 @@ export function BootstrapDiscoveryPanel({
       setMessage("Your private draft shortlist already has three places. Remove one before saving another.");
       return;
     }
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
+    const receiptId = result.receipt_id;
     setShortlistBusy(candidate.candidate_id);
     setMessage(null);
     try {
       const saved = await cityNexusApi.saveBootstrapShortlistItem(journeyId, {
-        receipt_id: result.receipt_id,
+        receipt_id: receiptId,
         candidate_id: candidate.candidate_id,
       });
+      if (!isCurrentIdentity(requestBearer, requestGeneration)) return;
       setShortlist((items) => items.some((item) => item.shortlist_id === saved.shortlist_id) ? items : [...items, saved]);
       setExploreNotice("Saved to your private draft shortlist. This is not a Place, PlanVersion, visit, booking, or payment authorization.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "This public place could not be saved.");
+      if (isCurrentIdentity(requestBearer, requestGeneration)) {
+        setMessage(error instanceof Error ? error.message : "This public place could not be saved.");
+      }
     } finally {
-      setShortlistBusy(null);
+      if (isCurrentIdentity(requestBearer, requestGeneration)) setShortlistBusy(null);
     }
   };
 
   const removeShortlistItem = async (item: BootstrapShortlistItem) => {
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
     setShortlistBusy(item.shortlist_id);
     setMessage(null);
     try {
       await cityNexusApi.removeBootstrapShortlistItem(journeyId, item.shortlist_id);
+      if (!isCurrentIdentity(requestBearer, requestGeneration)) return;
       if (pendingMapPreview?.shortlistId === item.shortlist_id) cancelMapPreview();
       setShortlist((items) => items.filter((saved) => saved.shortlist_id !== item.shortlist_id));
       if (resumeIntent?.shortlist_id === item.shortlist_id) setResumeIntent(null);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "That saved place could not be removed.");
+      if (isCurrentIdentity(requestBearer, requestGeneration)) {
+        setMessage(error instanceof Error ? error.message : "That saved place could not be removed.");
+      }
     } finally {
-      setShortlistBusy(null);
+      if (isCurrentIdentity(requestBearer, requestGeneration)) setShortlistBusy(null);
     }
   };
 
@@ -341,6 +426,8 @@ export function BootstrapDiscoveryPanel({
     item: Pick<BootstrapShortlistItem, "shortlist_id" | "latitude" | "longitude"> | BootstrapShortlistResumeIntent,
     purpose: "PIN" | "WALKING",
   ) => {
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
     setMessage(null);
     setExploreNotice(null);
     setMapFallbackUrl(null);
@@ -348,11 +435,15 @@ export function BootstrapDiscoveryPanel({
     setMapConsent(false);
     try {
       const remembered = await cityNexusApi.rememberBootstrapShortlistItem(journeyId, item.shortlist_id);
+      if (!isCurrentIdentity(requestBearer, requestGeneration)) return;
       setResumeIntent(remembered);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "This saved place could not be resumed.");
+      if (isCurrentIdentity(requestBearer, requestGeneration)) {
+        setMessage(error instanceof Error ? error.message : "This saved place could not be resumed.");
+      }
       return;
     }
+    if (!isCurrentIdentity(requestBearer, requestGeneration)) return;
     setPendingMapPreview({
       kind: "shortlist",
       purpose,
@@ -377,6 +468,8 @@ export function BootstrapDiscoveryPanel({
 
   const confirmMapPreview = async () => {
     if (!pendingMapPreview) return;
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
     if (!mapConsent) {
       setMessage("Confirm this one-time public map release before opening it.");
       return;
@@ -408,6 +501,7 @@ export function BootstrapDiscoveryPanel({
     // Reserve a tab while this click still has user activation.  Mobile browsers
     // may reject a later async window.open after the receipt request completes.
     const pendingWindow = window.open("about:blank", "_blank");
+    pendingWindowRef.current = pendingWindow;
     try {
       if (pendingWindow) pendingWindow.opener = null;
     } catch {
@@ -427,6 +521,15 @@ export function BootstrapDiscoveryPanel({
         : pendingMapPreview.purpose === "WALKING"
           ? await cityNexusApi.navigateBootstrapShortlistItem(journeyId, pendingMapPreview.shortlistId!)
           : await cityNexusApi.previewBootstrapShortlistItem(journeyId, pendingMapPreview.shortlistId!);
+      if (!isCurrentIdentity(requestBearer, requestGeneration)) {
+        try {
+          pendingWindow?.close();
+        } catch {
+          // A browser may already have reclaimed the pre-opened tab.
+        }
+        if (pendingWindowRef.current === pendingWindow) pendingWindowRef.current = null;
+        return;
+      }
       const publicMapUrl = pendingMapPreview.purpose === "WALKING"
         ? validatedPublicWalkingUrl(
             "navigation_url" in released ? released.navigation_url : null,
@@ -462,6 +565,7 @@ export function BootstrapDiscoveryPanel({
         } catch {
           // A browser may have already reclaimed the pre-opened tab.
         }
+        if (pendingWindowRef.current === pendingWindow) pendingWindowRef.current = null;
         throw new Error("The authorized public map destination did not match this candidate; release cancelled.");
       }
       if (pendingWindow && !pendingWindow.closed) {
@@ -489,10 +593,14 @@ export function BootstrapDiscoveryPanel({
       } catch {
         // A browser may have already reclaimed the pre-opened tab.
       }
-      cancelMapPreview();
-      setMessage(error instanceof Error ? error.message : "The public map release was cancelled.");
+      if (pendingWindowRef.current === pendingWindow) pendingWindowRef.current = null;
+      if (isCurrentIdentity(requestBearer, requestGeneration)) {
+        cancelMapPreview();
+        setMessage(error instanceof Error ? error.message : "The public map release was cancelled.");
+      }
     } finally {
-      setMapBusy(false);
+      if (pendingWindowRef.current === pendingWindow) pendingWindowRef.current = null;
+      if (isCurrentIdentity(requestBearer, requestGeneration)) setMapBusy(false);
     }
   };
 
@@ -507,8 +615,8 @@ export function BootstrapDiscoveryPanel({
   };
 
   const mapFallback =
-    sourceKind === "MANUAL_PUBLIC_CENTER" && Number.isFinite(latitude) && Number.isFinite(longitude)
-      ? `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`
+    sourceKind === "MANUAL_PUBLIC_CENTER" && parsedLatitude !== null && parsedLongitude !== null
+      ? `https://www.openstreetmap.org/?mlat=${encodeURIComponent(parsedLatitude)}&mlon=${encodeURIComponent(parsedLongitude)}#map=16/${encodeURIComponent(parsedLatitude)}/${encodeURIComponent(parsedLongitude)}`
       : null;
 
   return (
@@ -529,7 +637,14 @@ export function BootstrapDiscoveryPanel({
             type="button"
             data-testid="bootstrap-source-manual"
             aria-pressed={sourceKind === "MANUAL_PUBLIC_CENTER"}
-            onClick={() => setSourceKind("MANUAL_PUBLIC_CENTER")}
+            onClick={() => {
+              setSourceKind("MANUAL_PUBLIC_CENTER");
+              setLatitude("");
+              setLongitude("");
+              setAccuracy(undefined);
+              setResult(null);
+              setMessage(null);
+            }}
           >
             Use public map center
           </button>
@@ -542,6 +657,22 @@ export function BootstrapDiscoveryPanel({
             Use foreground GPS
           </button>
         </div>
+        {hasValidSearchCenter ? (
+          <div data-testid="bootstrap-selected-center">
+            <p>
+              Selected public center: {parsedLatitude.toFixed(6)}, {parsedLongitude.toFixed(6)} · source {sourceKind}
+              {accuracy != null ? ` · accuracy ${Math.round(accuracy)}m` : ""}
+            </p>
+            <p>
+              This is a user-selected public search center. City relation is unsupported until separately verified;
+              it is not a route origin, presence claim, or proof of arrival. Provider disclosure remains separate from this selection.
+            </p>
+          </div>
+        ) : (
+          <p data-testid="bootstrap-center-required">
+            Choose a public map center or deliberately allow foreground GPS before searching. No provider request will be made yet.
+          </p>
+        )}
         {resumeIntent ? (
           <section data-testid="bootstrap-resume" aria-labelledby="bootstrap-resume-title">
             <h2 id="bootstrap-resume-title">Continue exploring</h2>
@@ -601,7 +732,10 @@ export function BootstrapDiscoveryPanel({
               data-testid="bootstrap-latitude"
               inputMode="decimal"
               value={latitude}
-              onChange={(event) => setLatitude(Number(event.target.value))}
+              onChange={(event) => {
+                setLatitude(event.target.value);
+                setAccuracy(undefined);
+              }}
             />
           </label>
           <label>
@@ -610,7 +744,10 @@ export function BootstrapDiscoveryPanel({
               data-testid="bootstrap-longitude"
               inputMode="decimal"
               value={longitude}
-              onChange={(event) => setLongitude(Number(event.target.value))}
+              onChange={(event) => {
+                setLongitude(event.target.value);
+                setAccuracy(undefined);
+              }}
             />
           </label>
         </div>
@@ -624,7 +761,7 @@ export function BootstrapDiscoveryPanel({
           I understand that this search sends the query and public center to OpenStreetMap/Overpass.
         </label>
         <div className="v8-actions">
-          <button type="button" data-testid="bootstrap-search" disabled={busy} onClick={() => void search()}>
+          <button type="button" data-testid="bootstrap-search" disabled={busy || !hasValidSearchCenter} onClick={() => void search()}>
             {busy ? "Searching…" : "Search public places"}
           </button>
           {onCancel ? (
