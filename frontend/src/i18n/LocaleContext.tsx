@@ -1332,7 +1332,7 @@ const en: Dict = {
   // ── Itinerary list: empty state & status headers ──
   /* I18N_细节补齐 (slice 2): the itinerary screen's empty state and its day-strip status headers each
      carried their own inline `zh ? "..." : "..."` arm, so neither half was reachable by a key lookup.
-     Both halves move here. The interpolated per-day stop count lives under `detail.dayStops`;
+     Both halves move here. The interpolated arms are not this section's business;
      this section is only the sentence arms. Values are the
      strings the screen was already showing, not new copy. */
   "itinerary.importPrompt": "Import places for this trip",
@@ -2591,7 +2591,7 @@ const zhCN: Dict = {
 
   // ── 行程列表：空态与状态头 ──
   /* I18N_细节补齐（第二片）：行程屏的空态和它那些逐日状态头，各自把中文写在 `zh ? "..." : "..."` 的分支
-     里，两边都查不到键。两端都搬进字典。插值的分支（每天站点数）已经在 `detail.dayStops`，这一段只收句子分支。值仍是这些屏本来就在显示的那句，不是新写的文案。 */
+     里，两边都查不到键。两端都搬进字典。带插值的那几支不归这一段，这一段只收句子分支。值仍是这些屏本来就在显示的那句，不是新写的文案。 */
   "itinerary.importPrompt": "去导入这趟的地点",
   "itinerary.planWithAiNeedsPlaces": "AI 帮我规划（要先有地点）",
   "itinerary.planWithAi": "AI 帮我规划",
