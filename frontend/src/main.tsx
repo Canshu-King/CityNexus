@@ -1460,7 +1460,7 @@ function LegacyApp() {
           <div className="upcoming-list">
             <strong>Explicit preferences</strong>
             {travelerTwin.explicit_preferences.length === 0 ? (
-              <span>None recorded.</span>
+              <span>{t("main.noneRecorded")}</span>
             ) : (
               travelerTwin.explicit_preferences.map((item, index) => (
                 <span key={(String(item.dimension ?? "explicit")) + index}>
