@@ -1,0 +1,20 @@
+39 passed, 2 warnings in 9.26s
+repeat_1 RC=0
+39 passed, 2 warnings in 10.67s
+repeat_2 RC=0
+39 passed, 2 warnings in 9.18s
+repeat_3 RC=0
+........................................................................ [ 67%]
+..................................                                       [100%]
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+106 passed, 2 warnings in 36.37s
+NEIGHBOUR_RC=0

@@ -1,0 +1,12 @@
+== A. dictionary value vs the literal that was on the line before ==
+OK   line=783 key=simulation.closeStage zh=收起舞台 en=Close the stage
+OK   line=831 key=simulation.onStage zh=台上行程 en=On stage
+OK   line=835 key=simulation.sceneWindow zh=场景窗口 en=Scene window
+== B. call sites and leftovers ==
+line=783 now={t("simulation.closeStage")} calls=1 leftover=0
+line=831 now=<dt>{t("simulation.onStage")}</dt> calls=1 leftover=0
+line=835 now=<dt>{t("simulation.sceneWindow")}</dt> calls=1 leftover=0
+call_missing=0 leftover_present=0
+== C. neighbours that must not have moved ==
+other_arms_still_inline_base=5 now=2
+files_touched_vs_base=['frontend/src/features/simulation/SimulationPanel.tsx', 'frontend/src/i18n/LocaleContext.tsx']

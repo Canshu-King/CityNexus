@@ -1,0 +1,11 @@
+TYPECHECK_CMD=node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+TSC_EXIT=2
+BUILD_CMD=node node_modules/vite/bin/vite.js build
+VITE_EXIT=1
+    at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12)
+    at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19)
+    at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153)
+    at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)[39m
