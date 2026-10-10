@@ -29,5 +29,4 @@ english_arm_smallcase_unknown_now=9 base=9
 == D. untouched neighbours (negative controls) ==
 different_sentence_at_875_survives=1
 base_has_that_sentence=1
-other_files_changed=['frontend/src/features/simulation/SimulationPanel.tsx', 'frontend/src/i18n/LocaleContext.tsx']
-VERDICT all_equal
+product_files_touched_vs_base=['frontend/src/features/simulation/SimulationPanel.tsx', 'frontend/src/i18n/LocaleContext.tsx']
