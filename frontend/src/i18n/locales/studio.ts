@@ -1,0 +1,152 @@
+// ORD-0572: this domain's slice of ../LocaleContext.tsx, moved verbatim -- no value was reworded.
+
+export const studio = {
+  en: {
+
+
+
+  // ── Studio ──
+  "studio.kicker": "Trip Studio · multi-day plan",
+  "studio.title": "Shape the journey around what matters.",
+  "studio.lede": "Switch the hotel or a leg mode and CityNexus recomputes the travel impact against the same hard commitments.",
+  "studio.reportRain": "Report rain disruption",
+  "studio.draftPreview": "Draft reorder preview",
+  "studio.dayActivities": "Day {day} · {count} activities",
+  "studio.draftCheck": "We check time, travel, cost, opening hours and your confirmed bookings before anything is accepted.",
+  "studio.selectedStay": "SELECTED STAY",
+  "studio.change": "Change",
+  "studio.noStaySelected": "NO STAY SELECTED",
+  "studio.chooseStay": "Choose a stay",
+  "studio.notChosen": "Not chosen yet",
+  "studio.priceUnknown": "Price unknown",
+  "studio.noPlanChecked": "Nothing checked yet",
+  "studio.noPlanCheckedSub": "There is no chosen plan to validate. Choose a plan first — CityNexus will not claim checks it has not run.",
+  "studio.total": "total",
+  "studio.stayTotal": "Stay total",
+  "studio.dailyMovement": "Daily movement",
+  "studio.walkingExposure": "Walking exposure",
+  "studio.planHealth": "Plan health",
+  "studio.protected": "Protected · Est. {n} min slack",
+  "studio.feasibilityPassed": "Trip constraint checks passed",
+  "studio.feasibilityPassedPartial": "Constraint checks passed, cost evidence incomplete",
+  "studio.feasibilitySub": "Arrival, departure, and protected commitments verified. Activity costs are complete for every stop; the total trip budget (including stay and transport) is not verified here.",
+  "studio.feasibilityNoPrice": "Arrival, departure, and protected commitments verified. Budget not verified: no stop has a provider price yet.",
+  "studio.feasibilityPartialSub": "Arrival, departure, and protected commitments verified. Budget not verified: {n} {plural:item} without a verified provider price, so no total is claimed.",
+  "studio.walkingMinutes": "Est. {minutes} min",
+
+  // ── Studio: Sortable Activity List ──
+  "studio.protectedLabel": "protected",
+
+  // ── Studio: V12 Trip Studio Panel ──
+  "studio.v12Kicker": "TRIP STUDIO · DRAFT THEN ACCEPT",
+  "studio.v12Title": "Adjust the authoritative journey",
+  "studio.v12Sub": "Reorder ordinary activities against the same frozen mobility matrix. Protected anchors stay in place.",
+  "studio.sameEvidence": "same evidence",
+  "studio.evidencePending": "evidence pending",
+  /* ORD-0370: after t("studio.frozenEvidence") the word "evidence" is already on screen, so the
+     snapshot-state slot gets its own key rather than borrowing that one and saying it twice.
+     The English value is the word this row printed before, byte for byte. */
+  "studio.snapshotPending": "pending",
+  "studio.draftDiffers": "Draft differs from active plan",
+  "studio.noDraft": "No draft changes",
+  "studio.lockedLegend": "locked/protected positions never move",
+  "studio.previewLegend": "Preview is stateless; accept rechecks the live plan and evidence",
+  "studio.impactPass": "The edited order preserves commitments and has captured route evidence.",
+  "studio.impactFail": "This change did not pass our safety checks.",
+  "studio.readyNext": "Ready to build the next version of your plan.",
+  "studio.frozenEvidence": "Frozen evidence",
+  "studio.checking": "Checking…",
+  "studio.previewImpact": "Preview impact",
+  "studio.accepting": "Accepting…",
+  "studio.acceptEdit": "Accept edit",
+  /* ORD-0369: measured on a 390x844 viewport -- reordering the sealed demo's plan answered with
+     `PROTECTED_ACTIVITY_REORDER, FROZEN_ROUTE_EVIDENCE_MISSING, STALE_FROZEN_EVIDENCE,
+     MOBILITY_DATA_UNAVAILABLE:<uuid>|<uuid> ×4` pasted straight into the traveller's line. The codes
+     are contract vocabulary, so they are now translated one by one; anything outside the declared
+     set is counted and left in the technical fold rather than printed as if it were an explanation. */
+  "studio.allProtected": "All {n} {plural:activity} on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.",
+  "studio.dragHint": "Hold an activity and drag it to a new position to draft a change.",
+  "studio.blockedReasons": "Why this change cannot be accepted:",
+  "studio.gate.PROTECTED_ACTIVITY_REORDER": "the new order moves a protected commitment",
+  "studio.gate.FROZEN_ROUTE_EVIDENCE_MISSING": "this plan holds no frozen route evidence for the new order",
+  "studio.gate.FROZEN_EVIDENCE_INTEGRITY_MISMATCH": "the frozen evidence on file does not match this plan",
+  "studio.gate.STALE_FROZEN_EVIDENCE": "the frozen evidence expired before it could be used",
+  "studio.gate.INVALID_FROZEN_EVIDENCE_EXPIRY": "the frozen evidence carries an expiry this device cannot read",
+  "studio.gate.MOBILITY_DATA_UNAVAILABLE": "live route data is unavailable for {n} {plural:leg} of the new order",
+  "studio.gate.unknown": "{n} further {plural:refusal} this screen cannot name — the server's own words are in the technical detail",
+  "studio.technicalDetail": "Technical detail",
+  "studio.requestRefused": "The server refused this request (http_status={status}). The draft on this screen is unchanged.",
+  "studio.costDelta": "Est. cost Δ {v}",
+  "studio.timeDelta": "Est. time Δ {n} min",
+  },
+  zh: {
+
+
+
+  // ── Studio ──
+  "studio.kicker": "行程工作台 · 多日方案",
+  "studio.title": "围绕重要的事塑造行程。",
+  "studio.lede": "更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。",
+  "studio.reportRain": "报告降雨中断",
+  "studio.draftPreview": "草稿重排预览",
+  "studio.dayActivities": "第 {day} 天 · {count} 个活动",
+  "studio.draftCheck": "接受前我们会检查时间、出行、费用、营业时间和你已确认的预订。",
+  "studio.selectedStay": "已选住宿",
+  "studio.change": "更换",
+  "studio.noStaySelected": "尚未选择住宿",
+  "studio.chooseStay": "选择住宿",
+  "studio.notChosen": "尚未选择",
+  "studio.priceUnknown": "价格未知",
+  "studio.noPlanChecked": "尚未核对",
+  "studio.noPlanCheckedSub": "你还没有选定方案，因此没有可核对的内容。先选定方案——CityNexus 不会宣称没有做过的检查。",
+  "studio.total": "合计",
+  "studio.stayTotal": "住宿总计",
+  "studio.dailyMovement": "日均出行",
+  "studio.walkingExposure": "步行暴露",
+  "studio.planHealth": "方案健康度",
+  "studio.protected": "受保护 · 约{n}分钟余量",
+  "studio.feasibilityPassed": "行程约束检查已通过",
+  "studio.feasibilityPassedPartial": "行程约束检查通过，费用证据不完整",
+  "studio.feasibilitySub": "到达、出发和受保护承诺已验证。所有站点的活动费用已完整；整趟行程预算（含住宿与交通）未在此处验证。",
+  "studio.feasibilityNoPrice": "到达、出发和受保护承诺已验证。预算未验证：目前没有任何一站拿到供应商价格。",
+  "studio.feasibilityPartialSub": "到达、出发和受保护承诺已验证。预算未验证：还有 {n} 项缺少已验证的供应商价格，因此不给出总价结论。",
+  "studio.walkingMinutes": "约{minutes}分钟",
+
+  // ── 工作台：可排序活动列表 ──
+  "studio.protectedLabel": "受保护",
+
+  // ── 工作台：V12 行程方案面板 ──
+  "studio.v12Kicker": "行程工作台 · 起草后接受",
+  "studio.v12Title": "调整权威行程",
+  "studio.v12Sub": "在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。",
+  "studio.sameEvidence": "相同证据",
+  "studio.evidencePending": "证据待定",
+  "studio.snapshotPending": "待定",
+  "studio.draftDiffers": "草稿与活跃方案不同",
+  "studio.noDraft": "无草稿变更",
+  "studio.lockedLegend": "锁定/受保护位置为确定性",
+  "studio.previewLegend": "预览无状态；接受将重新检查活跃方案和证据",
+  "studio.impactPass": "编辑后的顺序保留了承诺并已采集路线证据。",
+  "studio.impactFail": "此修改未通过安全检查。",
+  "studio.readyNext": "已准备好生成方案的下一版本。",
+  "studio.frozenEvidence": "冻结证据",
+  "studio.checking": "检查中…",
+  "studio.previewImpact": "预览影响",
+  "studio.accepting": "接受中…",
+  "studio.acceptEdit": "接受编辑",
+  "studio.allProtected": "这一版 {n} 个活动全部是受保护锚点，所以在这里无论怎么重排都不会被接受。什么也没有被改动。",
+  "studio.dragHint": "按住一项活动，拖到新的位置，就是一次草稿改动。",
+  "studio.blockedReasons": "这次改动不能被接受的原因：",
+  "studio.gate.PROTECTED_ACTIVITY_REORDER": "新的顺序挪动了受保护的承诺",
+  "studio.gate.FROZEN_ROUTE_EVIDENCE_MISSING": "这一版在新顺序上没有冻结的路线证据",
+  "studio.gate.FROZEN_EVIDENCE_INTEGRITY_MISMATCH": "档案里的冻结证据与这一版对不上",
+  "studio.gate.STALE_FROZEN_EVIDENCE": "冻结证据在能被使用之前就已经过期",
+  "studio.gate.INVALID_FROZEN_EVIDENCE_EXPIRY": "冻结证据上的过期时间这台设备读不出来",
+  "studio.gate.MOBILITY_DATA_UNAVAILABLE": "新顺序里有 {n} 段路程拿不到实时路线数据",
+  "studio.gate.unknown": "还有 {n} 条这个界面叫不出名字的拒绝，原文在技术详情里",
+  "studio.technicalDetail": "技术详情",
+  "studio.requestRefused": "服务器拒绝了这次请求（http_status={status}）。这个屏幕上的草稿没有变化。",
+  "studio.costDelta": "成本变化约{v}",
+  "studio.timeDelta": "时间变化约{n}分钟",
+  },
+};

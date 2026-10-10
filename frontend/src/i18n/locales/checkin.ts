@@ -1,0 +1,36 @@
+// ORD-0572: this domain's slice of ../LocaleContext.tsx, moved verbatim -- no value was reworded.
+
+export const checkin = {
+  en: {
+  "checkin.title": "Footprints",
+  "checkin.scope": "Every stamp the server recorded on this trip, oldest first.",
+  "checkin.retry": "Read again",
+  "checkin.loading": "Reading the footprints…",
+  "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
+  "checkin.readFailed": "This screen could not read the footprints from the server.",
+  "checkin.empty": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
+  "checkin.count": "This trip holds {count} footprints.",
+  "checkin.targetGone": "That stop has left the plan",
+  "checkin.noteAbsent": "no note was written",
+  "checkin.button": "Check in",
+  "checkin.done": "Checked in",
+  "checkin.buttonAria": "Check in at {stop}",
+  "checkin.doneAria": "Already checked in at {stop}",
+  },
+  zh: {
+  "checkin.title": "足迹",
+  "checkin.scope": "这一屏只列服务器替这次行程记下的印，按打的先后排。",
+  "checkin.retry": "重读一次",
+  "checkin.loading": "正在读足迹…",
+  "checkin.noJourney": "现在没有打开的行程，所以没向服务器问任何东西。",
+  "checkin.readFailed": "这一屏没能从服务器读到足迹。",
+  "checkin.empty": "还没有足迹。打开行程，在一站上按「打卡」。",
+  "checkin.count": "这次行程共有 {count} 枚足迹。",
+  "checkin.targetGone": "那一站已经不在计划里",
+  "checkin.noteAbsent": "没写备注",
+  "checkin.button": "打卡",
+  "checkin.done": "已打卡",
+  "checkin.buttonAria": "在{stop}打卡",
+  "checkin.doneAria": "已在{stop}打过卡",
+  },
+};
