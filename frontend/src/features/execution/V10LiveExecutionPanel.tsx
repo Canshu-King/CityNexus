@@ -82,14 +82,17 @@ export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
           <span>{t("exec.clock")}</span>
           <strong>
             {now
-              ? now.toLocaleTimeString([], {
+              ? now.toLocaleTimeString(locale === "zh-CN" ? "zh-CN" : "en-GB", {
                   hour: "2-digit",
                   minute: "2-digit",
                   /* ORD-0553: the label under this number names the journey's zone (line below),
                      while the number itself was computed in the device's zone. On a traveller whose
                      device is not on the journey's zone the two disagree -- the screen reads
                      "07:30 / Asia/Shanghai" for an instant that is 15:30 there. Rendered in the zone
-                     the label claims, so number and label are one fact. */
+                     the label claims, so number and label are one fact. An empty locale array would
+                     hand the *shape* of that number to the device as well -- digits and separator from
+                     one place, the words under them from the traveller's chosen language -- so the
+                     locale is named the same way the rest of this family names it. */
                   timeZone: clockZone,
                 })
               : "—"}
