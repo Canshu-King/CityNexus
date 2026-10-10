@@ -1,0 +1,73 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4636 backend=:8156 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557b-r16.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [23940]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8156 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:55350 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55358 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=yfg0557b-r16 frontend=:4636 -> backend=:8156 ai=disabled db=_e2e_yfg0557b-r16.db
+
+Running 3 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4636 backend=:8156 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557b-r16.db ai=disabled reuseExistingServer=false
+
+[1/3] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:55359 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55360 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55359 - "POST /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55360 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55359 - "POST /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/stay-options/bec6c306-195d-47f8-aa5e-e50cf64b25bd/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=627f51c1-c943-4181-a6fc-874615626d2e options=4 chosen=bec6c306-195d-47f8-aa5e-e50cf64b25bd (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:55449 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55450 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63755 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63757 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63754 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/plans HTTP/1.1" 200 OK
+
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, context_json=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-10T01:43:16.591446+00:00', '{"degraded_providers": [], "execution": {"cursor_status": "VALID", "next": {"end_at": "2026-10-09T19:05:00+08:00", "id": "75c506e2-383c-47f2-b089-d94 ... (923 characters truncated) ... raded": false, "provider": "mock-mobility", "snapshot_id": null, "source": "deterministic-offline"}, "opportunity_window": null, "provider_level": 1}', '2026-10-10T01:43:16.591446+00:00', '627f51c1-c943-4181-a6fc-874615626d2e')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+[WebServer] INFO:     127.0.0.1:55451 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54359 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65313 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65312 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63756 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59924 - "GET /api/v1/journeys/627f51c1-c943-4181-a6fc-874615626d2e/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65314 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65311 - "GET /api/v1/travelers/f04fda41-0536-4528-b6b5-74bb099f997c/agent-policy HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4636 backend=:8156 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557b-r16.db ai=disabled reuseExistingServer=false
+
+[2/3] [chromium] › e2e\qoder-yufanggong-0557b-trial-placeholder-r1.spec.ts:36:3 › the zh-CN trial form keeps its own placeholder words
+[WebServer] INFO:     127.0.0.1:55733 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[3/3] [chromium] › e2e\qoder-yufanggong-0557b-trial-placeholder-r1.spec.ts:36:3 › the en trial form keeps its own placeholder words
+[WebServer] INFO:     127.0.0.1:57606 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+  3 passed (14.4s)

@@ -1,0 +1,3 @@
+npm run build  (= vite build) on base d435cff26, both branches' bytes in the tree
+[32m✓ built in 6.84s[39m
+BUILD_RC=0
