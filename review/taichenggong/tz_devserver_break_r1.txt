@@ -1,0 +1,4 @@
+CMD=vite dev on this worktree, one .tsx and one .ts fetched, at 10-10 15:20
+/src/main.tsx http=500 Cannot find package '@babel/core'
+/src/features/execution/V10LiveExecutionPanel.tsx http=500 Cannot find package '@babel/core'
+/src/lib/failureAttribution.ts http=200 no-package-error-here

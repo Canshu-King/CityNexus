@@ -1,0 +1,15 @@
+# tz branch readback (each command with the answer it gave at run time)
+$ git ls-remote origin refs/heads/review/抬秤工-0553-tz-r1
+76cf69c910416a0bb4ce8f53330baf8270edf106	refs/heads/review/抬秤工-0553-tz-r1
+$ git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+26136afacf9e0c951bf4911f4d219161e07c4746	refs/heads/mirror/integration-frontend-apple-pass1
+$ git rev-parse HEAD
+76cf69c910416a0bb4ce8f53330baf8270edf106
+$ git rev-parse HEAD~3  (the generation this branch was cut from; three commits sit on top of it)
+26136afacf9e0c951bf4911f4d219161e07c4746
+$ git diff --numstat <that generation> HEAD -- frontend/src/features/execution/V10LiveExecutionPanel.tsx
+5	2	frontend/src/features/execution/V10LiveExecutionPanel.tsx
+$ git rev-parse <that generation>:frontend/src/features/execution/V10LiveExecutionPanel.tsx  (the bytes BEFORE)
+2b75e1ef7c353a0fa5625c013f20ea318386bd84
+$ git rev-parse HEAD:frontend/src/features/execution/V10LiveExecutionPanel.tsx  (the bytes ON this branch)
+c452db076da920c77ede5afad0cd15b1f51c70f6

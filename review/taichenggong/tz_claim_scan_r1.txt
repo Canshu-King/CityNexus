@@ -1,0 +1,20 @@
+0 tip read live: 3e9bd42d5dc72007e9c5c946376d1e23cccb58be
+A row 85 of that tip's bytes: ? now.toLocaleTimeString([], {
+OK   A1 the row the order names is still the row :: frontend/src/features/execution/V10LiveExecutionPanel.tsx:85 reads: ? now.toLocaleTimeString([], {
+A2 file blob on that tip: 2b75e1ef7c353a0fa5625c013f20ea318386bd84
+A2b blobs this file has had along the fetched part of the authoritative line: 2 (2b75e1ef7c 6c4ed75236)
+A3 the same file already names a zone at: [(93, 'timeZone: clockZone,')]
+A4 the same file's explicit-locale baseline: [(30, 'new Intl.DateTimeFormat("en-GB", { timeZone: name });')]
+B remote review branches whose name carries 0553: 7
+  cmdr-batch-ord-0553-063131                     blob=6c4ed75236b6 a version the authoritative line already carried (stale base, not an edit)
+  link-0553-r1                                   blob=6c4ed75236b6 a version the authoritative line already carried (stale base, not an edit)
+  safebottom-0553-r1                             blob=2b75e1ef7c35 SAME_AS_TIP
+  xiaochuigong-0553-r1                           blob=6c4ed75236b6 a version the authoritative line already carried (stale base, not an edit)
+  短瓦工-0553-r1                                    blob=6c4ed75236b6 a version the authoritative line already carried (stale base, not an edit)
+  量尺工-0553-r2                                    blob=2b75e1ef7c35 SAME_AS_TIP
+  长瓦工-0553-r1                                    blob=6c4ed75236b6 a version the authoritative line already carried (stale base, not an edit)
+OK   B1 no sibling 0553 branch carries other bytes for this file :: 0 branch(es) differ from the tip on this file
+C ledger lines naming this file with a claim word: 0
+C2 inbox blocks naming this file or the timezone table with this panel: 0
+OK   C3 nobody has an undelivered block on this file :: inbox names: none
+VERDICT PASS surface clear for this lane

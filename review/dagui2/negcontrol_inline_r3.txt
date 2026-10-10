@@ -1,0 +1,3 @@
+NEG2c module-level string assigned to a number tsc_rc=1 error_lines=0 first=
+restored_same_bytes=1
+verdict=CHECK
