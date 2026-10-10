@@ -37,17 +37,25 @@ type Props = {
   journeyId?: string | null;
   /** Hand the traveller on to planning once the destination is ready. */
   onOpenPlan?: () => void;
+  /** ORD-0566: `PREPARE_PLACES` says the place rows themselves need work, so the advice is a door. */
+  onOpenPreparePlaces?: () => void;
   initialQuery?: string;
 };
 
 /** The server's structural verdicts.  Anything unrecognised is shown as itself, not guessed at. */
 const CAPABILITY_READY = "READY";
 
-export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuery = "" }: Props) {
+export function DestinationPreparationPanel({
+  journeyId,
+  onOpenPlan,
+  onOpenPreparePlaces,
+  initialQuery = "",
+}: Props) {
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
 
+  const queryRef = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState(initialQuery);
   const [capability, setCapability] = useState<DestinationCapability | null>(null);
   const [capabilityError, setCapabilityError] = useState<string | null>(null);
@@ -290,20 +298,20 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         };
       case "ABANDONED_BY_TRAVELLER":
         return {
-          title: zh ? "你已经停止这次准备" : "You stopped this preparation",
-          body: zh ? "服务器记下了你的停止，它不再用这次的结果。" : "The server recorded the stop and will not use this run's result.",
+          title: t("discovery.youStoppedThisPreparation"),
+          body: t("discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult"),
         };
       case "RESOLVER_RUNTIME_FAILURE":
         return {
-          title: zh ? "解析这次运行失败了" : "The resolver failed at runtime",
+          title: t("discovery.theResolverFailedAtRuntime"),
           body: zh
             ? "服务器说这是它那边的一次运行性失败（可以重试），不是「这个地方不存在」。"
             : "The server reports a runtime failure on its side (retryable), not that the place does not exist.",
         };
       case "WORKER_LOST":
         return {
-          title: zh ? "这次准备中途丢了" : "This preparation was lost mid-run",
-          body: zh ? "服务器说执行它的工作进程没了，这次不算数。可以再来一次。" : "The server says the worker running it disappeared, so this attempt does not count. Starting again is the route.",
+          title: t("discovery.thisPreparationWasLostMidRun"),
+          body: t("discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute"),
         };
       default:
         return {
@@ -313,6 +321,19 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             : `The server's outcome is ${String(job.outcome ?? "—")}; there is no local copy for it, so it is shown as-is.`,
         };
     }
+  };
+
+  /* ORD-0566: the server's own advice for a destination it cannot name.  The cell below this one has
+     always offered the reset; what was missing is that when the server *recommends* it, the screen
+     treated that advice as having no action at all.  Focusing the field is the part that makes the
+     click a route rather than a repaint: the traveller lands on an empty query with the cursor in it. */
+  const chooseAnotherDestination = () => {
+    stopPolling();
+    setCapability(null);
+    setJob(null);
+    setQuery("");
+    setActionError(null);
+    queryRef.current?.focus();
   };
 
   /* ORD-0440 second half: this cell used to print `job.error.message`, i.e. whatever sentence the
@@ -358,7 +379,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         data-focus="stop-survey"
       >
         <p className="v8-kicker" data-testid="prep-survey-context">
-          {zh ? "准备进度" : "Preparation"} · {job.status}
+          {t("discovery.preparation")} · {job.status}
         </p>
         <PrepAbandonSurvey
           zh={zh}
@@ -383,8 +404,8 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     >
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "准备目的地" : "Prepare a destination"}</p>
-          <h1>{zh ? "先看这座城能不能规划" : "First, whether this city can be planned"}</h1>
+          <p className="v8-kicker">{t("discovery.prepareADestination")}</p>
+          <h1>{t("discovery.firstWhetherThisCityCanBePlanned")}</h1>
           <p className="v8-lede">
             {zh
               ? "输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。"
@@ -395,12 +416,13 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
       <div className="prep-form">
         <label>
-          <span>{zh ? "目的地" : "Destination"}</span>
+          <span>{t("discovery.destination")}</span>
           <input
+            ref={queryRef}
             data-testid="prep-query"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={zh ? "例如：天津、贡山独龙族怒族自治县" : "e.g. Tianjin"}
+            placeholder={t("discovery.eGTianjin")}
           />
         </label>
         <button
@@ -410,7 +432,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           disabled={checking || busy || query.trim().length === 0}
           onClick={() => void check()}
         >
-          {checking ? (zh ? "正在问服务器…" : "Asking the server…") : zh ? "看看能不能规划" : "Check this destination"}
+          {checking ? (t("discovery.askingTheServer")) : zh ? "看看能不能规划" : "Check this destination"}
         </button>
       </div>
 
@@ -423,7 +445,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       {capability && (
         <div className="prep-verdict" data-testid="prep-verdict" data-capability={verdict}>
           <span className="v8-kicker">
-            {zh ? "服务器判定" : "Server verdict"} · {verdict}
+            {t("discovery.serverVerdict")} · {verdict}
           </span>
           <h2 data-testid="prep-verdict-title">{verdictCopy().title}</h2>
           <p data-testid="prep-verdict-body">{verdictCopy().body}</p>
@@ -453,7 +475,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
           {candidates.length > 0 && (
             <div className="prep-candidates" data-testid="prep-candidates">
-              <b>{zh ? "服务器说这些都对得上，请挑一个" : "The server says these all match -- pick one"}</b>
+              <b>{t("discovery.theServerSaysTheseAllMatchPickOne")}</b>
               <ul>
                 {candidates.map((candidate, index) => (
                   <li key={String(candidate.id ?? index)}>
@@ -478,7 +500,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 onClick={() => onOpenPlan?.()}
                 disabled={!onOpenPlan}
               >
-                {zh ? "去规划" : "Go and plan"}
+                {t("discovery.goAndPlan")}
               </button>
             ) : action === "RETRY_LATER" ? (
               <button
@@ -488,7 +510,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={checking || !retryable}
                 onClick={() => void check()}
               >
-                {checking ? (zh ? "正在重试…" : "Trying again…") : zh ? "稍后重试" : "Try again later"}
+                {checking ? (t("discovery.tryingAgain")) : zh ? "稍后重试" : "Try again later"}
               </button>
             ) : action === "START_HYDRATION" ? (
               <button
@@ -498,12 +520,32 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={busy || Boolean(job && !job.terminal)}
                 onClick={() => void prepare()}
               >
-                {busy ? (zh ? "正在开始…" : "Starting…") : zh ? "开始准备" : "Prepare this destination"}
+                {busy ? (t("discovery.starting")) : zh ? "开始准备" : "Prepare this destination"}
+              </button>
+            ) : action === "CHOOSE_ANOTHER_DESTINATION" ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="prep-choose-another-primary"
+                onClick={chooseAnotherDestination}
+              >
+                {t("discovery.pickAnotherDestination")}
+              </button>
+            ) : action === "PREPARE_PLACES" ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="prep-prepare-places"
+                onClick={() => onOpenPreparePlaces?.()}
+                disabled={!onOpenPreparePlaces}
+              >
+                {t("discovery.preparePlaces")}
               </button>
             ) : null}
-            {/* CHOOSE_ANOTHER_DESTINATION names no primary action of its own: the server's advice for
-                a destination it cannot name is to pick a different one, which is the button below.
-                Named explicitly so no future action string silently inherits "prepare this". */}
+            {/* The outline exit below stays for every verdict, including CHOOSE_ANOTHER_DESTINATION:
+                the server's advice for a destination it cannot name now has its own arm (ORD-0566),
+                and this row remains the always-available way out.  Named so no future action string
+                silently inherits "prepare this". */}
             <button
               type="button"
               className="v8-outline-button"
@@ -516,7 +558,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 setActionError(null);
               }}
             >
-              {zh ? "换一个目的地" : "Choose another destination"}
+              {t("discovery.chooseAnotherDestination")}
             </button>
           </div>
         </div>
@@ -533,7 +575,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           data-elapsed-ms={Math.round(job.elapsed_ms)}
           role="status"
         >
-          <span className="v8-kicker">{zh ? "准备进度" : "Preparation"} · {job.status}</span>
+          <span className="v8-kicker">{t("discovery.preparation2")} · {job.status}</span>
           <h3 data-testid="prep-job-title">{jobCopy().title}</h3>
           <p data-testid="prep-job-body">{jobCopy().body}</p>
           {serverSentence && (
@@ -571,7 +613,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 data-testid="prep-go-plan"
                 onClick={() => onOpenPlan()}
               >
-                {zh ? "去规划" : "Go and plan"}
+                {t("discovery.goAndPlan2")}
               </button>
             )}
             {job.terminal && (
@@ -582,7 +624,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={busy || checking}
                 onClick={() => void check()}
               >
-                {zh ? "重新判定" : "Check again"}
+                {t("discovery.checkAgain")}
               </button>
             )}
           </div>

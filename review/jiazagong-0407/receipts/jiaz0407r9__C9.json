@@ -1,0 +1,38 @@
+{
+ "run_id": "jiaz0407r9",
+ "arm": "C9",
+ "spec": "e2e/qoder-ord0407-empty-state-actions.spec.ts",
+ "per_cell": {
+  "spend-empty": {
+   "route": "trips",
+   "actions_inside": 1,
+   "names": [
+    "临时对照"
+   ]
+  },
+  "spend-no-lines": {
+   "route": "trips",
+   "actions_inside": 1,
+   "names": [
+    "临时对照"
+   ]
+  },
+  "twin-no-capability": {
+   "route": "twin",
+   "actions_inside": 1,
+   "names": [
+    "临时对照"
+   ]
+  },
+  "inbox-queue-empty": {
+   "route": "bookings",
+   "actions_inside": 1,
+   "names": [
+    "临时对照"
+   ]
+  }
+ },
+ "cells_without_own_action": [],
+ "nodeid": "D:\\moodle\\_qoder_jiazagong_0407\\wt2\\frontend\\e2e\\qoder-ord0407-empty-state-actions.spec.ts:825 > C9 every census cell owns at least one action inside its own notice (red by design until ORD-0407 slice 2 lands)",
+ "test_status": "passed"
+}

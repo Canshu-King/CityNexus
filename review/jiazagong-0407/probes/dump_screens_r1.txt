@@ -1,0 +1,31 @@
+ROUTE hub url=/v8/hub
+  text: 菜单 / 今天 跟随系统 EN TI 晚上好 天津之旅 10月9日 18:00 — 10月11日 15:00 · Asia/Shanghai · 行程时区 · 1 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Arrival 接下来 18:45 Check in · Haihe Riverside Hotel 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 1 Arrival 2 Check in · Haihe Riverside Hotel 3 4 5
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | AI帮我规划 | 试用其他城市 | 打开行程工作台 | 复制行程链接 | 查看实时行程 | 回到行程视野 | 去看这一代方案 | 对比住宿→
+ROUTE trips url=/v8/trips
+  text: 菜单 / 行程 跟随系统 EN TI 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。 中止这趟行程 行程 3 天行程 逐日安排。已确认的预订会被标记为受保护。 第 1 天 / 共 3 天。9 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。 导出日历 10月9日周五 3 
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | 行程 | 住宿 | 预订 | 花费 | 展开行程长图 | 导出日历 | 10月9日周五3项 | 10月10日周六4项
+  AFTER-CLICK-花费 tab_changed=true
+  after text: 菜单 / 行程 跟随系统 EN TI 行程 住宿 预订 花费 花费 这趟旅行花多少 这台服务器答出了 9 项有金额的既成事实，另有 0 项它记着但没有价。 声明的预算（是自己许的，不是已经付的） CNY 1,200.00 按币种合计 CNY 这个币种还没有已确认的项 · 估算 CNY 432.00 按行程的每一天 10月9日周五 这个币种还没有已确认的项 · 估算 CNY 372.00 10月10日周六 这个币种还没有已确认的项 · 估算 CNY 48.00 10月11日周日 这个币种还没有已确认的项 · 估算 CNY 12.00 这些合计背后的每一项 方案里的路段 CNY 12.00 估算 
+  after probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":1}
+ROUTE spend url=/v8/spend
+  text: 菜单 / 今天 跟随系统 EN TI 这个地址没有对应的屏（它点的是「spend」），所以留在今天。 晚上好 天津之旅 10月9日 18:00 — 10月11日 15:00 · Asia/Shanghai · 行程时区 · 1 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 现在 Arrival 接下来 18:45 Check in · Haihe Riverside Hotel 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 1 Arrival 2 Check 
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | AI帮我规划 | 试用其他城市 | 打开行程工作台 | 复制行程链接 | 查看实时行程 | 回到行程视野 | 去看这一代方案 | 对比住宿→
+ROUTE bookings url=/v8/bookings
+  text: 菜单 / 旅行票夹 跟随系统 EN TI 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 Haihe Riverside Hotel City twin · 免费取消 ¥360.00 合计 未预订 导入预订 结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。 高级：结构化数据 权限始终明确 导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。 扫描票据代码 ZXing 确定性解码 · 仍需确认 打开扫描器 多模态收件箱 将确认带入行程 已读取 · 已核对 ·
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":1,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | 打开扫描器 | 复制行程链接 | 粘贴确认信息 | 手动填写 | 提取文本草稿 | 提取图片草稿 | ✦ | 今天
+ROUTE twin url=/v8/twin
+  text: 菜单 / 旅行者画像 跟随系统 EN TI 旅行者画像 · 软上下文 有边界的个性化。 显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。 显式 没有明确偏好 来自此次行程请求 直接应用于当前方案目标。 能力需求 没有记录到明确的能力事实。 学习到的软信号 没有习得信号 来自已完成的行程结果 仅用于排序 · 随证据新鲜度过期。 习得的能力状态 无障碍硬性需求不会从行为里推断出来。 权限边界 你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。 可检查的溯源可用 来源不明的无障碍证据，不作为无障碍依据。 ✦ CityNexus Copilot
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":1,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | ✦CityNexusCo | 今天 | 行程 | 地图 | Copilot | 我的
+ROUTE stay url=/v8/stay
+  text: 菜单 / 住宿选择 跟随系统 EN TI 住宿选择 · 已采集证据 选择锚点，看见行程。 每个费率都明确标注币种、房型、入住人数、退改政策、新鲜度和它所塑造的行程。 已采集回放 已按这台服务器的记录排定：Haihe Riverside Hotel 行程里受保护的站：Arrival、Check in · Haihe Riverside Hotel、Overnight · Haihe Riverside Hotel、Check out · Haihe Riverside Hotel、Departure 这条行程没有声明住宿预算，所以这里没有一条预算界线可比。 TIANJIN 01 Haihe Ri
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | 回到行程视野 | ✦CityNexusCo | 今天 | 行程 | 地图 | Copilot | 我的
+ROUTE me url=/v8/me
+  text: 菜单 / 我的 跟随系统 EN TI 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 天津 1 位旅行者 · ¥1,200.00 住宿 Haihe Riverside Hotel 已确认的住宿 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ CityNexus Copilot 今天 行程 地图 Copilo
+  probes: {"[data-testid=\"spend-empty\"]":0,"[data-testid=\"spend-no-lines\"]":0,"[data-testid=\"inbox-pending-empty\"]":0,"p.v8-empty-note":0,"[data-testid=\"spend-declared\"]":0}
+  clickables: 今天 | 实时行程 | 地图 | 行程工作台 | 住宿选择 | 城市探索 | 导入地点 | 旅行票夹 | 足迹 | Copilot | 恢复与执行 | 智能守护 | 旅行者画像 | 回收站 | 成员与权限 | 收起侧边栏 | TITianjin1位旅 | 菜单 | 跟随系统 | EN | ◌ | TI | 启用WebPush | ✦CityNexusCo | 今天 | 行程 | 地图 | Copilot | 我的
