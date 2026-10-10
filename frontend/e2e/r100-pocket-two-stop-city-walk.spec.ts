@@ -282,6 +282,45 @@ test("R100 Pocket Walk persists two public stops, authorizes each map separately
     await expect(collaboratorPanel).not.toContainText(/R100 Shanghai (Museum|Gallery|Park)/);
     await collaboratorPage.close();
 
+    // Race regression: the backend completes an authorized A save, but the
+    // browser response is deliberately delayed until this SAME tab switches
+    // to B. The old A card must never repopulate B's private React state.
+    let releaseOwnerResponse: (() => void) | null = null;
+    const heldOwnerResponse = new Promise<void>((resolve) => {
+      releaseOwnerResponse = resolve;
+    });
+    let ownerSaveCaptured = 0;
+    await page.route(`**/api/v1/journeys/${journey.id}/bootstrap-shortlist/pocket-walk`, async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.continue();
+        return;
+      }
+      const realBackendResponse = await route.fetch();
+      ownerSaveCaptured += 1;
+      await heldOwnerResponse;
+      await route.fulfill({ response: realBackendResponse });
+    });
+    await reloadedPanel.getByTestId("bootstrap-pocket-walk-save").click();
+    await expect.poll(() => ownerSaveCaptured).toBe(1);
+    await page.evaluate((token) => {
+      sessionStorage.setItem("citynexus.traveler.bearer", token);
+      window.dispatchEvent(new CustomEvent("citynexus.traveler.bearer.changed"));
+    }, collaborator.access_token);
+    await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-empty")).toBeVisible();
+    await expect(reloadedPanel.getByTestId("bootstrap-shortlist")).toContainText("Saved 0 of 3");
+    releaseOwnerResponse?.();
+    await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-card")).toHaveCount(0);
+    await expect(reloadedPanel).not.toContainText(/R100 Shanghai (Museum|Gallery|Park)/);
+    await page.unroute(`**/api/v1/journeys/${journey.id}/bootstrap-shortlist/pocket-walk`);
+
+    // Restore A by a fresh signed read, not by accepting A's late POST.
+    await page.evaluate((token) => {
+      sessionStorage.setItem("citynexus.traveler.bearer", token);
+      window.dispatchEvent(new CustomEvent("citynexus.traveler.bearer.changed"));
+    }, owner.access_token);
+    await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-stops")).toContainText("R100 Shanghai Museum");
+    await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-stops")).toContainText("R100 Shanghai Gallery");
+
     // Deleting either saved stop invalidates and deletes the private pair.
     await reloadedPanel.getByTestId(`bootstrap-shortlist-remove-${museumId!}`).click();
     await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-empty")).toBeVisible();
