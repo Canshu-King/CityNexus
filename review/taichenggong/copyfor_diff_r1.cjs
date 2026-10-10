@@ -123,8 +123,9 @@ function diff(a, b) {
   // Second counter-arm, aimed at this edit rather than at the alternative: a key name that does not
   // exist in the table still renders *something* (the label helper humanises the token), so the only
   // thing that proves my two lines are really reading the key is breaking the key name on purpose.
-  const mutantSrc = candSrc.replace('categoryLabel("UNKNOWN"', 'categoryLabel("UNKNOWX"');
+  const mutantSrc = candSrc.split('categoryLabel("UNKNOWN"').join('categoryLabel("UNKNOWX"');
   if (mutantSrc === candSrc) throw new Error("mutant patch did not apply - the read is not where this tool thinks it is");
+  if (mutantSrc.includes('categoryLabel("UNKNOWN"')) throw new Error("mutant patch was partial; every site must change");
 
   const base = await bundle("base", baseSrc);
   const cand = await bundle("cand", candSrc);
@@ -160,11 +161,15 @@ function diff(a, b) {
     say(`9 mutant ${name} now ${after.slice(0, 220)}`);
   }
 
+  const verdict = candMoved.length !== 0
+    ? "FAIL candidate moved screen bytes"
+    : (counterMoved.length === 0 ? "FAIL counter-arm did not bite; the ruler is blind"
+      : (mutantMoved.length === 0 ? "FAIL mutant did not bite; the screen is not reading the key"
+        : `PASS candidate=0 moved, counter-arm bit ${counterMoved.length}, mutant bit ${mutantMoved.length}`));
+  say(`10 ${verdict}`);
   const text = lines.join("\n") + "\n";
   fs.writeFileSync(path.join(HERE, "copyfor_diff_r1.txt"), text, "utf8");
   process.stdout.write(text);
-  if (candMoved.length !== 0) { console.error("FAIL candidate moved screen bytes"); process.exit(1); }
-  if (counterMoved.length === 0) { console.error("FAIL counter-arm did not bite; the ruler is blind"); process.exit(1); }
-  if (mutantMoved.length === 0) { console.error("FAIL mutant did not bite; the screen is not reading the key"); process.exit(1); }
-  console.log(`PASS candidate=0 moved, counter-arm bit ${counterMoved.length}, mutant bit ${mutantMoved.length}`);
+  console.log(verdict);
+  if (!verdict.startsWith("PASS")) process.exit(1);
 })().catch((err) => { console.error("ERROR " + err.message); process.exit(2); });

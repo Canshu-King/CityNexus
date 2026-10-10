@@ -1,4 +1,4 @@
-0 tip read live for this run: 08577f1986b8bbc095f1c319a952909fcf343717
+0 tip read live for this run: cea62adc3350936f3ed17508585263b4af520e6c
 A where the four strings this order names sit right now (read, not copied)
   item1 content-type unknown     working-tree sites=1 [126]
   item2 empty-body fallback      working-tree sites=1 [192]
@@ -11,8 +11,8 @@ OK   B2b the CATEGORY_LABELS row the order points at is found :: CATEGORY_LABELS
 OK   B3 the key resolves to the very word that was removed :: frontend/src/i18n/travelerLabels.ts:78 zh arm '未知' en arm 'Unknown'
 OK   D1 both arms exist for the key this branch reads :: row at frontend/src/i18n/travelerLabels.ts:78 carries zh and en
   other UNKNOWN rows in the same table file: [72, 88, 139, 168]
-OK   B4 this branch added no dictionary key :: dictionary files changed by this branch: none
-  files this branch changes: ['frontend/src/lib/failureAttribution.ts']
+RED  B4 this branch added no dictionary key :: dictionary files changed by this branch: ['frontend/src/i18n/LocaleContext.tsx']
+  files this branch changes: ['frontend/e2e/qoder-8ac89982-ord0577-desktop-entries-census-r1.spec.ts', 'frontend/e2e/qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts', 'frontend/playwright.shuangshugong-0558.config.ts', 'frontend/src/features/discovery/DestinationPreparationPanel.tsx', 'frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx', 'frontend/src/features/stay/StayExplorer.tsx', 'frontend/src/i18n/LocaleContext.tsx', 'frontend/src/lib/failureAttribution.ts']
 C the pair that stayed, and the reason, read off the tree
 OK   C1 the error is built where no locale exists :: frontend/src/lib/failureAttribution.ts:125 constructor(status: number, contentType: string | null, bodyKind: "html" | "not_json" | "empty") {
   frontend/src/lib/failureAttribution.ts:182 export function classifyReadFailure(error: unknown, server?: ServerErrorShape | null): Attribution {
@@ -30,3 +30,4 @@ OK   C3 this module holds no locale channel of its own :: locale globals read in
   the field the second string writes is read at: copy arms [500, 509], telemetry [172], another screen [365, 367]
 OK   C4 the first string's only consumer declares the prop and never renders it :: frontend/src/features/setup/JourneyTrialSetup.tsx mentions: [(592, 'sealedDemoDetail?: { message: string; name: string } | null;')]
   standing rule that an error's own prose stays off the screen: ['frontend/src/app/V8Experience.tsx:253 * and `error.message` is not a safe stand-in for "our own words"', 'frontend/src/app/V8Experience.tsx:924 own prose, and this branch used to print the raw error message a', 'frontend/src/app/V8Experience.tsx:1104 /* ORD-0273-TEXT: the user sentence comes from an i18n key -- th', 'frontend/src/app/V8Experience.tsx:1105 MIME/content-type and error shapes) must not reach the main copy']
+VERDICT FAIL arms: B4 this branch added no dictionary key

@@ -125,11 +125,13 @@ def main():
         say("  other UNKNOWN rows in the same table file: %s"
             % [n for n, _ in rows if n != entry_line])
 
-    dict_files = [f for f in git("diff", "--name-only", tip, "--", "frontend/").split()
-                  if f and "/i18n/" in f]
-    changed = [f for f in git("diff", "--name-only", tip, "--", "frontend/").split() if f]
+    # This branch's own changes only: diffing the working tree against a tip that has moved would
+    # hand every other lane's dictionary edits to this arm as if they were mine (it did, once).
+    base = git("merge-base", "HEAD", tip) or tip
+    changed = [f for f in git("diff", "--name-only", base, "HEAD", "--", "frontend/").split() if f]
+    dict_files = [f for f in changed if "/i18n/" in f]
     check("B4 this branch added no dictionary key", dict_files == [],
-          "dictionary files changed by this branch: %s" % (dict_files or "none"))
+          "merge-base=%s; dictionary files changed by this branch: %s" % (base[:12], dict_files or "none"))
     say("  files this branch changes: %s" % changed)
 
     # ---- C -----------------------------------------------------------------------------
@@ -191,13 +193,15 @@ def main():
             rule_sites.append("%s:%d %s" % (rel, n, ln[:64]))
     say("  standing rule that an error's own prose stays off the screen: %s" % rule_sites[:4])
 
+    if failures:
+        say("VERDICT FAIL arms: %s" % ",".join(failures))
+    else:
+        say("VERDICT PASS all arms green")
     text = "\n".join(lines) + "\n"
     open(OUT, "w", encoding="utf-8", newline="\n").write(text)
     sys.stdout.write(text)
     if failures:
-        sys.stdout.write("FAIL arms: %s\n" % ",".join(failures))
         raise SystemExit(1)
-    sys.stdout.write("PASS all arms green\n")
 
 
 if __name__ == "__main__":
