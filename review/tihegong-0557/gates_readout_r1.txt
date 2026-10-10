@@ -82,3 +82,15 @@ generation relation now: candidate ahead 11 behind 0 against that tip; files the
 self-sufficiency: the product branch's parent chain carries the dictionary tip, so landing it alone still brings the ten keys with the ten reads -- no intermediate state where a screen reads a key the dictionary lacks
 gates re-run on these bytes just now: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, ten lines, GREEN; node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit (cwd frontend) -> exit code 0, zero bytes
 the two titles no table lists, read on that tip: frontend/src/lib/failureAttribution.ts:550 and :557 are template-literal arms (${READ_DEADLINE_SECONDS}); the plural draft marks both rows ND (its own reason: the constant is twelve, it never lands on the singular), and taking them would need interpolation in the accessor -- out of this lane's radius, so untouched
+
+re-cut onto the 18:09 generation, per the commander's点名 block 号令者点名退回 · 产品枝与字典枝必须同代（先落字典）
+authoritative line, read with ls-remote: 4d69eb860d619538a40133e96a0f8819666fd11e
+dictionary branch merged that line in, conflict only in the two dictionary tails, both sides kept: 大柜工's nine simulation.* keys stay first, this lane's ten follow -- dict tip 4905c25f1fb9569c88da64c9973c6e0666884cd6 (behind 0 ahead 5)
+product branch merged that dictionary tip with no conflict at all -- product tip below this commit (behind 0 ahead 14 before it)
+gate repointed to the new generation: TIP constant now 4d69eb860d619538a40133e96a0f8819666fd11e
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN; ten reads unchanged at product 462, 470, 483, 490, 523, 535, 543, 570, 578, 586; ten keys at dict en 1368-1377 and zh 2651-2660
+i18n gate: same command with --negative -> exit code 1, RED on the ten en arms
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1158, zh keys 1159, xor = me.asksBeforeProtectedChange
+parity ruler at the tip in a detached worktree, same unmodified ruler -> exit code 1, en keys 1148, zh keys 1149, xor = the same single key; this lane nets ten keys per side, no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0

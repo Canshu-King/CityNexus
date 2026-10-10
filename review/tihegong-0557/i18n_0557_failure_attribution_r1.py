@@ -25,7 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.environ.get("CNX_LANE_ROOT") or os.path.dirname(os.path.dirname(HERE))
 PRODUCT = "frontend/src/lib/failureAttribution.ts"
 DICT = "frontend/src/i18n/LocaleContext.tsx"
-TIP = "996f1b7588580a14fbbdec5301a6e4a7b70c93e4"  # the line this branch was cut from; --tip overrides
+TIP = "4d69eb860d619538a40133e96a0f8819666fd11e"  # the line this branch was cut from; --tip overrides
 
 # (tip line number, draft key name) -- names copied from _cn10_fb557draft_1155.txt, lines read off TIP.
 ITEMS = [(457, "lib.failureAttribution.tripNotOnServer"),
