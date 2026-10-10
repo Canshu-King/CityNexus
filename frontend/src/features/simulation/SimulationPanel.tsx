@@ -779,7 +779,7 @@ export function SimulationPanel({
           data-testid="sim-close"
           onClick={onClose}
         >
-          {zh ? "收起舞台" : "Close the stage"}
+          {t("simulation.closeTheStage")}
         </button>
       )}
       <p
@@ -827,11 +827,11 @@ export function SimulationPanel({
 
       <dl className="cn-sim-facts" data-testid="sim-scene-facts">
         <div>
-          <dt>{zh ? "台上行程" : "On stage"}</dt>
+          <dt>{t("simulation.onStage")}</dt>
           <dd data-testid="sim-journey">{`${shortId(scene.scene?.journeyId ?? null)} · ${scene.scene?.journeyStatus ?? "—"}`}</dd>
         </div>
         <div>
-          <dt>{zh ? "场景窗口" : "Scene window"}</dt>
+          <dt>{t("simulation.sceneWindow")}</dt>
           <dd data-testid="sim-window">{`${sceneInstant(scene.scene?.sceneStartAt ?? null)} → ${sceneInstant(scene.scene?.sceneEndAt ?? null)}`}</dd>
         </div>
         <div>

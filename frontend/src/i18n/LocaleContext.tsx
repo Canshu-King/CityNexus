@@ -1296,6 +1296,9 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+  "simulation.closeTheStage": "Close the stage",
+  "simulation.onStage": "On stage",
+  "simulation.sceneWindow": "Scene window",
 };
 
 const zhCN: Dict = {
@@ -2498,6 +2501,9 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+  "simulation.closeTheStage": "收起舞台",
+  "simulation.onStage": "台上行程",
+  "simulation.sceneWindow": "场景窗口",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
