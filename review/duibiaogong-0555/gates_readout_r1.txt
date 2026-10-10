@@ -1,0 +1,9 @@
+=== BASELINE @ tip 3bb001aef, taken 09:56:29 local ===
+--- cmd: python frontend/scripts/i18n_detail2_parity_r1.py (cwd repo root) ---
+en keys: 1084 zh keys: 1085
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_duibiaogong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+rc_parity_baseline=0

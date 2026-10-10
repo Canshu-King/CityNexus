@@ -1,0 +1,93 @@
+run_id=run599929 port=4537/8537 target=e2e/qoder-today-follows-the-stage.spec.ts
+      1202 |   }
+      1203 | });
+      1204 |
+        at D:\moodle\_qoder_duibiaogong_0555\frontend\e2e\qoder-today-follows-the-stage.spec.ts:1201:5
+
+    Error Context: test-results\qoder-today-follows-the-st-4a974-nder-a-finger-—-手指能滑到第十一枚按钮-chromium\error-context.md
+
+  3) [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1424:1 › sim-replan-receipt-names-the-proposal-the-row-sends — 印出来的方案 id 就是被送出去的那一个 
+
+    Error: e2e/qoder-today-follows-the-stage.spec.ts :: sim-replan-receipt-names-the-proposal-the-row-sends — the receipt printed no proposal id at all: "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan"
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      1497 |     printed.length,
+      1498 |     node(NODE, `the receipt printed no proposal id at all: ${JSON.stringify(receipt)}`),
+    > 1499 |   ).toBeGreaterThan(0);
+           |     ^
+      1500 |   expect(
+      1501 |     named,
+      1502 |     node(NODE, `the accept row does not name the single proposal it will send: ${JSON.stringify(label)}`),
+        at D:\moodle\_qoder_duibiaogong_0555\frontend\e2e\qoder-today-follows-the-stage.spec.ts:1499:5
+
+    Error Context: test-results\qoder-today-follows-the-st-177ff-ends-—-印出来的方案-id-就是被送出去的那一个-chromium\error-context.md
+
+  4) [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1985:1 › sim-refusal-does-not-outlive-the-reading — “还在读”不能读完还挂着 
+
+    Error: e2e/qoder-today-follows-the-stage.spec.ts :: sim-refusal-does-not-outlive-the-reading — the refusal does not say it is about a reading: "simulation.thisActionIsUnavailableRightNow"
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "还在读服务器的场景状态"
+    Received string:    "simulation.thisActionIsUnavailableRightNow"
+
+      2039 |     refusal,
+      2040 |     node("sim-refusal-does-not-outlive-the-reading", `the refusal does not say it is about a reading: ${JSON.stringify(refusal)}`),
+    > 2041 |   ).toContain("还在读服务器的场景状态");
+           |     ^
+      2042 |   expect(
+      2043 |     await outcome.getAttribute("data-transient"),
+      2044 |     node("sim-refusal-does-not-outlive-the-reading", "a refusal about a missing reading is not marked transient, so nothing can retire it"),
+        at D:\moodle\_qoder_duibiaogong_0555\frontend\e2e\qoder-today-follows-the-stage.spec.ts:2041:5
+
+    Error Context: test-results\qoder-today-follows-the-st-cfbd4--the-reading-—-“还在读”不能读完还挂着-chromium\error-context.md
+
+  5) [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:2070:1 › today-attention-agrees-with-the-map-when-nothing-can-be-placed — 无坐标时两屏同一句话 
+
+    Error: e2e/qoder-today-follows-the-stage.spec.ts :: today-attention-agrees-with-the-map-when-nothing-can-be-placed — a journey with no coordinates and no route geometry should draw the map's honest empty state
+
+    expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('v8-map-empty')
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+      - e2e/qoder-today-follows-the-stage.spec.ts :: today-attention-agrees-with-the-map-when-nothing-can-be-placed — a journey with no coordinates and no route geometry should draw the map's honest empty state getByTestId('v8-map-empty') with timeout 30000ms
+      - waiting for getByTestId('v8-map-empty')
+
+
+      2117 |     page.getByTestId("v8-map-empty"),
+      2118 |     node(NODE, "a journey with no coordinates and no route geometry should draw the map's honest empty state"),
+    > 2119 |   ).toBeVisible({ timeout: 30_000 });
+           |     ^
+      2120 |   const mapSaid = clean(await page.getByTestId("v8-map-empty").innerText());
+      2121 |   const attention = clean(await page.getByTestId("today-attention").innerText());
+      2122 |   expect(
+        at D:\moodle\_qoder_duibiaogong_0555\frontend\e2e\qoder-today-follows-the-stage.spec.ts:2119:5
+
+    Error Context: test-results\qoder-today-follows-the-st-b081e--can-be-placed-—-无坐标时两屏同一句话-chromium\error-context.md
+
+  5 failed
+    [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:674:1 › sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不遮内容，展开后每行都可按、导航仍可点 
+    [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1099:1 › sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮 
+    [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1424:1 › sim-replan-receipt-names-the-proposal-the-row-sends — 印出来的方案 id 就是被送出去的那一个 
+    [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1985:1 › sim-refusal-does-not-outlive-the-reading — “还在读”不能读完还挂着 
+    [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:2070:1 › today-attention-agrees-with-the-map-when-nothing-can-be-placed — 无坐标时两屏同一句话 
+  18 passed (5.6m)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run599929 frontend=:4537 -> backend=:8537 ai=disabled db=_run599929.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4537 backend=:8537 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run599929.db ai=disabled reuseExistingServer=false
+exit=1 log=D:/moodle/_qoder_duibiaogong_0555/review/run-run599929.log
+e2e_runner_rc=1

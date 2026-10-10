@@ -1,0 +1,31 @@
+authoritative tip (ls-remote at write time) = bf057bb6f6eab117f030037c54ee0f515bd6a486
+branch heads: dict=d0dc23a3aeb3d49289a48c2c8a8c58618b50a56e r1=8502daf815ccc805fdccdca39c744305a06096b2
+
+per spot: before-line on tip -> after-line on branch, and the two dictionary sides
+frontend/src/lib/sceneClock.ts:177 -> sceneClock.ts:178 | key scene.theExecutionCursor | en at LocaleContext.tsx:1323 | zh at LocaleContext.tsx:2555
+      before text on tip = if (basis === "CURSOR") return zh ? "执行游标" : "the execution cursor";
+frontend/src/lib/sceneClock.ts:178 -> sceneClock.ts:179 | key scene.theJourneySStart | en at LocaleContext.tsx:1324 | zh at LocaleContext.tsx:2556
+      before text on tip = if (basis === "JOURNEY_START") return zh ? "行程起点" : "the journey's start";
+frontend/src/lib/sceneClock.ts:179 -> sceneClock.ts:180 | key scene.theServerGaveNoBasis | en at LocaleContext.tsx:1325 | zh at LocaleContext.tsx:2557
+      before text on tip = return zh ? "服务器没有说明依据" : "the server gave no basis";
+frontend/src/lib/sceneClock.ts:184 -> sceneClock.ts:184 | key scene.theFrozenEvidenceCarriesAnExpiry | en at LocaleContext.tsx:1326 | zh at LocaleContext.tsx:2558
+      before text on tip = return zh ? "这批证据带冻结期" : "the frozen evidence carries an expiry";
+frontend/src/lib/sceneClock.ts:197 -> sceneClock.ts:196 | key scene.noFrozenEvidenceOnThisTrip | en at LocaleContext.tsx:1327 | zh at LocaleContext.tsx:2559
+      before text on tip = return zh ? "这趟没有冻结证据" : "no frozen evidence on this trip";
+frontend/src/lib/sceneClock.ts:198 -> sceneClock.ts:197 | key scene.noScenarioOnStage | en at LocaleContext.tsx:1328 | zh at LocaleContext.tsx:2560
+      before text on tip = if (state === "NO_SCENARIO") return zh ? "台上没有场景" : "no scenario on stage";
+
+call sites that hand the reader down
+      SimulationPanel.tsx:841 = {basisWord(scene.scene?.basis ?? null, t)}
+      SimulationPanel.tsx:846 = <dd data-testid="sim-evidence">{`${evidenceWord(scene.scene?.evidenceState ?? null, zh, t)} · ${
+      t already in scope: SimulationPanel.tsx:105
+
+inline pairs left untouched (not in the ORD-0555 table, no spare key invented)
+      sceneClock.ts:198
+      sceneClock.ts:189
+      sceneClock.ts:193
+      sceneClock.ts:198
+
+dictionary counts, parsed the same way on both states
+      tip: en=1085 zh=1085 duplicate_names_in_zh=0
+      branch: en=1114 zh=1114 duplicate_names_in_zh=0

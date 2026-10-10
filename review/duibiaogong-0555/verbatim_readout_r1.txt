@@ -1,0 +1,28 @@
+ruler = review/duibiaogong-0555/verbatim_move_check_r1.py
+side A = git show 3bb001aef:frontend/src/lib/sceneClock.ts
+side B = worktree frontend/src/i18n/LocaleContext.tsx
+
+line 177  key=scene.theExecutionCursor
+   zh identical=True   old='执行游标'  new='执行游标'
+   en identical=True   old='the execution cursor'  new='the execution cursor'
+line 178  key=scene.theJourneySStart
+   zh identical=True   old='行程起点'  new='行程起点'
+   en identical=True   old="the journey's start"  new="the journey's start"
+line 179  key=scene.theServerGaveNoBasis
+   zh identical=True   old='服务器没有说明依据'  new='服务器没有说明依据'
+   en identical=True   old='the server gave no basis'  new='the server gave no basis'
+line 184  key=scene.theFrozenEvidenceCarriesAnExpiry
+   zh identical=True   old='这批证据带冻结期'  new='这批证据带冻结期'
+   en identical=True   old='the frozen evidence carries an expiry'  new='the frozen evidence carries an expiry'
+line 197  key=scene.noFrozenEvidenceOnThisTrip
+   zh identical=True   old='这趟没有冻结证据'  new='这趟没有冻结证据'
+   en identical=True   old='no frozen evidence on this trip'  new='no frozen evidence on this trip'
+line 198  key=scene.noScenarioOnStage
+   zh identical=True   old='台上没有场景'  new='台上没有场景'
+   en identical=True   old='no scenario on stage'  new='no scenario on stage'
+
+all_six_identical = True
+negative_control: one trailing space added -> ruler red = True
+negative_control: value restored          -> ruler green = True
+residual inline zh branches left in sceneClock.ts (lines): [189, 190, 193, 194, 198]
+VERDICT = VERBATIM_MOVE_PROVED

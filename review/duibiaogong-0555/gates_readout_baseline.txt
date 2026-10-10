@@ -1,0 +1,42 @@
+stage = baseline
+tree_head = 3bb001aef4e2158dbdc53454ee14d56988f28405
+dirty_files = 1
+python = D:\moodle\CityNexus\.venv\Scripts\python.exe
+
+### gate 1 i18n parity (shared ruler)
+cwd = D:/moodle/_qoder_duibiaogong_0555
+cmd = D:\moodle\CityNexus\.venv\Scripts\python.exe frontend\scripts\i18n_detail2_parity_r1.py
+started_local = 09:57:01
+exit_code = 1
+nonempty_lines = 6
+tail:
+    en keys: 1084 zh keys: 1085
+    Traceback (most recent call last):
+      File "D:\moodle\_qoder_duibiaogong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+        assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+               ^^^^^^^^^^^^^^^^^^
+    AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+### gate 2 typecheck
+cwd = D:/moodle/_qoder_duibiaogong_0555/frontend
+cmd = node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+started_local = 09:57:01
+exit_code = 0
+nonempty_lines = 0
+tail:
+
+### gate 3 production build
+cwd = D:/moodle/_qoder_duibiaogong_0555/frontend
+cmd = node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_duibiaogong_0555_dist --emptyOutDir
+started_local = 09:57:04
+exit_code = 0
+nonempty_lines = 23
+tail:
+    files generated
+      ../../_qoder_duibiaogong_0555_dist/v10-sw.js
+      ../../_qoder_duibiaogong_0555_dist/workbox-6923124b.js
+    [33m
+    (!) Some chunks are larger than 500 kB after minification. Consider:
+    - Using dynamic import() to code-split the application
+    - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+    - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m

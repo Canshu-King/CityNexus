@@ -1,0 +1,19 @@
+run_id=run598974 port=4531/8531 target=e2e/qoder-speaks-the-travellers-language.spec.ts
+
+Running 5 tests using 1 worker
+
+[qoder-real-seed] journey=9db9cd36-47fd-4fbc-86ea-3af41d5c5b6b options=4 chosen=57c1bf3b-470f-4981-8461-6c038f2dce4b (Haihe Riverside Hotel)
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (6.0s)
+  ok 2 [chromium] › e2e\qoder-speaks-the-travellers-language.spec.ts:59:1 › ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间按行程时区 (1.1s)
+  ok 3 [chromium] › e2e\qoder-speaks-the-travellers-language.spec.ts:168:1 › ord0208-chips-carry-their-state-for-ears-not-only-eyes — 选中态读得出，不只看得出 (1.1s)
+  ok 4 [chromium] › e2e\qoder-speaks-the-travellers-language.spec.ts:233:1 › ord0208-inferred-defaults-are-marked-on-the-confirmation-step — 默认值不再冒充你填的 (1.1s)
+  ok 5 [chromium] › e2e\qoder-speaks-the-travellers-language.spec.ts:318:1 › ord0208-the-day-card-speaks-the-language-the-screen-uses — 日卡不再混内部枚举 (975ms)
+
+  5 passed (16.8s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4531 backend=:8531 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run598974.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run598974 frontend=:4531 -> backend=:8531 ai=disabled db=_run598974.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4531 backend=:8531 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run598974.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4531 backend=:8531 db=sqlite:///D:/moodle/_qoder_duibiaogong_0555/review/evidence/_run598974.db ai=disabled reuseExistingServer=false
+exit=0 log=D:/moodle/_qoder_duibiaogong_0555/review/run-run598974.log
+e2e_runner_rc=0
