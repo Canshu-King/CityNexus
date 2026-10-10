@@ -816,8 +816,10 @@ def _city_search_config() -> tuple[str, str | None, str | None] | None:
     # public-service requests.
     if not host or (parsed.scheme != "https" and not (is_loopback and parsed.scheme == "http")):
         return None
-    is_test = settings.city_search_test_provider or is_loopback
-    if not is_test:
+    # The test-mode switch must not strip an external service of the
+    # identifying operator contact.  Only an actual loopback endpoint is
+    # exempt from the public-facing User-Agent requirement.
+    if not is_loopback:
         # A public endpoint must have a real identifying contact in the UA. The
         # built-in localhost placeholder is intentionally not accepted.
         agent = settings.city_search_user_agent
