@@ -1,0 +1,33 @@
+ORD-0558 量名词 · 全量那把闸与共享 store 缺口 · 补读（十二点后那一代，权威线尖见第 2 行）
+
+一、尖与代
+
+1. 命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读权威线尖 f6e936c8e85e3d349f132a2034487962583e6333
+2. 命令原样 `git -C D:\moodle\CityNexus merge-base --is-ancestor 26c249f87a634cc6e0fce685e6b8d730b07942ed f6e936c8e85e3d349f132a2034487962583e6333` 退出码回 0，即我这枝已在权威线之内
+3. 现尖上 `git rev-parse f6e936c8e85e3d349f132a2034487962583e6333:frontend/src/features/discovery/DestinationPreparationPanel.tsx` 回 8edf8df56b4e8174a468957f57ca994ca8d2e0b1，与我枝尖上同一枚文件的 blob 相同，落进去后没人再动这枚文件
+
+二、全量那把闸（ORD-0560 换的那把）
+
+4. 带扩闸进线的那笔：dea5fb3b6f6b3fa97159363a63acfe71157fabe0，`frontend/package.json:8` 现在跑 `tsc -p tsconfig.typecheck.json --noEmit`
+5. 命令原样 `node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit`（在 D:\moodle\_qoder_liangmingci_0558\frontend 下，绕开 `.bin` 直接用包内入口），退出码回 2
+6. 红共三条，全是 TS2307「Cannot find module '@dnd-kit/…'」，逐枚坐标：`frontend/src/features/studio/SortableActivityList.tsx:10`、`frontend/src/features/studio/SortableActivityList.tsx:17`、`frontend/src/features/studio/SortableActivityList.tsx:18`
+7. 那三行现读逐字分别是从 `@dnd-kit/core`、`@dnd-kit/sortable`、`@dnd-kit/utilities` 收 import，即红在装不上的依赖，不在任何一句文案或我这枚文件
+8. 命令原样 `npm run typecheck`，退出码回 1，原文是 `'tsc' 不是内部或外部命令`（GBK 控制台，非产品码）
+
+三、共享 store 现状的清点（说「缺」之前先把依据摊开）
+
+9. `ls -d D:/moodle/CityNexus/frontend/node_modules/.bin` 回 No such file or directory
+10. `ls D:/moodle/CityNexus/frontend/node_modules` 条目数现读 389
+11. `ls -d D:/moodle/CityNexus/frontend/node_modules/@dnd-kit` 回 No such file or directory
+12. `grep -n "dnd-kit" frontend/package.json` 现读声明在 `frontend/package.json:16` 与 `frontend/package.json:17`，即包是要的，store 里没有
+13. 对照那棵 store 完好的树：`ls D:/moodle/_qoder_b_ord0435b_20260929/frontend/node_modules/.bin` 条目数现读 120，同目录下 `@dnd-kit` 在
+14. 反控臂：同一枚命令（第 5 行那条）在主树 D:/moodle/CityNexus 停在别人那一代、字节里没有我的改动时，出的正是第 6 行那同样三条，且三条都不提我这枚文件
+
+四、构建在同一代的状态
+
+15. 命令原样 `node node_modules/vite/bin/vite.js build`，退出码回 1，rollup 报的就是第 11 行那枚解析不上的依赖，日志尾给了 `build.rollupOptions.external` 那句提示
+16. e2e 在这一代复跑不了：webServer 走 `npm run dev`，仍要第 9 行那个不存在的 `.bin`；本件此前那批 e2e 数（本件那一枝五臂、本面已有那一枝六臂）出自 store 完好时的那两代，命令与退出码在 `review/liangmingci/ord0558_readouts/gates_r1.txt` 第五节与第六节
+
+五、一句线索（没证，不当结论）
+
+17. 这台机子 D 盘此刻不是满盘状态，而 10-08 曾满到过把落地闸崩在 Errno 28；一次被掐断的 npm 安装正好能留下「包目录在、`.bin` 不在、个别包不在」这个形状。这条只作线索交给号闸的那几扇车道，我不据它下结论。
