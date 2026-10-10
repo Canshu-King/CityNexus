@@ -1,0 +1,74 @@
+== 1) verbatim wording ruler ==
+base tip: 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+simulation.basis
+  base line 839 zh='依据' en='Basis'
+  en dict line 1327 identical=True
+  zh dict line 2562 identical=True
+simulation.evidence
+  base line 845 zh='证据' en='Evidence'
+  en dict line 1328 identical=True
+  zh dict line 2563 identical=True
+keys this branch reads from the component: 2 of 2
+verbatim failures: 0
+
+== 2) cross-line-aware dictionary recount ==
+en keys parsed: 1115
+zh keys parsed: 1115
+sets equal: True
+
+== 3) gates ==
+## 3a) typecheck
+cwd: D:/moodle/_qoder_bijiagong_0555\frontend
+command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+exit_code=2
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+
+(attribution: red is the shared store missing @dnd-kit, no red line names a file this branch touches; counter-control in store_countercontrol_readout_r1.txt)
+
+## 3b) shared parity ruler (unmodified)
+cwd: D:/moodle/_qoder_bijiagong_0555
+command: D:/moodle/CityNexus/.venv/Scripts/python.exe frontend/scripts/i18n_detail2_parity_r1.py
+exit_code=1
+en keys: 1114 zh keys: 1115
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_bijiagong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+## 3c) production build
+cwd: D:/moodle/_qoder_bijiagong_0555\frontend
+command: node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_bijiagong_0557_dist --emptyOutDir
+exit_code=1
+[36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 125 modules transformed.
+[31m✗[39m Build failed in 837ms
+[31merror during build:
+[31m[vite-plugin-pwa:build] [plugin vite-plugin-pwa:build] There was an error during the build:
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_bijiagong_0555/frontend/src/features/studio/SortableActivityList.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+Additionally, handling the error in the 'buildEnd' hook caused the following error:
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_bijiagong_0555/frontend/src/features/studio/SortableActivityList.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`[31m
+    at getRollupError (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/parseAst.js:317:41)
+    at file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23759:39
+    at async catchUnfinishedHookActions (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23215:16)
+    at async rollupInternal (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5)
+    at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12)
+    at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19)
+    at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153)
+    at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)[39m
+
+(attribution: red is the shared store missing @dnd-kit, no red line names a file this branch touches; counter-control in store_countercontrol_readout_r1.txt)
+
+shared ruler's XOR list is exactly the known cross-line key me.asksBeforeProtectedChange -> pre-existing instrument defect
+checks run: 3, non-zero exits: 0
+gates forgiven as the shared-store defect: 2 (shape: missing @dnd-kit, no red line names my files)
+VERDICT: R3_ALL_GREEN

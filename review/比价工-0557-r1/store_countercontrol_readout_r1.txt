@@ -1,0 +1,23 @@
+# counter-control: does the red exist without my bytes?
+# tree: D:/moodle/_qoder_bijiagong_0555, node_modules is a junction to D:/moodle/CityNexus/frontend/node_modules
+
+## A) with MY changes (2 product files dirty vs base)
+command: git status --porcelain
+ M frontend/src/features/simulation/SimulationPanel.tsx
+ M frontend/src/i18n/LocaleContext.tsx
+?? "review/\346\257\224\344\273\267\345\267\245-0557-r1/"
+command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+exit_code=2
+
+## B) same ruler with my two files RESTORED to the base tip (zero of my bytes)
+command: git checkout 996f1b7588580a14fbbdec5301a6e4a7b70c93e4 -- frontend/src/features/simulation/SimulationPanel.tsx frontend/src/i18n/LocaleContext.tsx
+dirty files now: 1
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+exit_code=2
+=== is @dnd-kit in the store at all? ===
+ls: cannot access 'frontend/node_modules/@dnd-kit': No such file or directory

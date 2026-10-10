@@ -836,13 +836,13 @@ export function SimulationPanel({
           <dd data-testid="sim-window">{`${sceneInstant(scene.scene?.sceneStartAt ?? null)} → ${sceneInstant(scene.scene?.sceneEndAt ?? null)}`}</dd>
         </div>
         <div>
-          <dt>{zh ? "依据" : "Basis"}</dt>
+          <dt>{t("simulation.basis")}</dt>
           <dd data-testid="sim-basis">
             {basisWord(scene.scene?.basis ?? null, zh)}
           </dd>
         </div>
         <div>
-          <dt>{zh ? "证据" : "Evidence"}</dt>
+          <dt>{t("simulation.evidence")}</dt>
           <dd data-testid="sim-evidence">{`${evidenceWord(scene.scene?.evidenceState ?? null, zh)} · ${
             scene.scene?.evidenceExpiresAt
               ? sceneInstant(scene.scene.evidenceExpiresAt)
