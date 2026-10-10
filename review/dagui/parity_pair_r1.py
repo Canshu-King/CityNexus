@@ -1,7 +1,8 @@
-import re, subprocess, sys
+import io, os, re, subprocess, sys
 
 KEY = re.compile(r'^\s*"([^"]+)":\s*"((?:[^"\\]|\\.)*)"\s*,?\s*$')
 PATH = "frontend/src/i18n/LocaleContext.tsx"
+BASE_REF = os.environ.get("DAGUI_BASE_REF", "d435cff26d")
 MINE = [
     "simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot",
     "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan",
@@ -31,7 +32,7 @@ def load(text):
 
 
 base = subprocess.check_output(
-    ["git", "show", "HEAD:%s" % PATH], text=True, encoding="utf-8"
+    ["git", "show", "%s:%s" % (BASE_REF, PATH)], text=True, encoding="utf-8"
 )
 with open(PATH, encoding="utf-8") as f:
     now = f.read()

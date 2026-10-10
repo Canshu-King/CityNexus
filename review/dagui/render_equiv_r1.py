@@ -1,8 +1,9 @@
-import io, re, subprocess, sys
+import io, os, re, subprocess, sys
 
 SRC = "frontend/src/features/simulation/SimulationPanel.tsx"
 DICT = "frontend/src/i18n/LocaleContext.tsx"
 LABELS = "frontend/src/i18n/travelerLabels.ts"
+BASE_REF = os.environ.get("DAGUI_BASE_REF", "d435cff26d")
 OUT = []
 
 
@@ -13,7 +14,7 @@ def w(line):
 
 def show(path):
     return subprocess.check_output(
-        ["git", "show", "HEAD:%s" % path], text=True, encoding="utf-8"
+        ["git", "show", "%s:%s" % (BASE_REF, path)], text=True, encoding="utf-8"
     )
 
 
@@ -112,8 +113,10 @@ w("english_arm_smallcase_unknown_now=%d base=%d"
 w("== D. untouched neighbours (negative controls) ==")
 w("different_sentence_at_875_survives=%d" % now_src.count(u'zh: "上一个动作还没回来。",'))
 w("base_has_that_sentence=%d" % base_src.count(u'zh: "上一个动作还没回来。",'))
-w("other_files_changed=%s"
-  % subprocess.check_output(["git", "diff", "--name-only", "HEAD"], text=True, encoding="utf-8").split())
+w("product_files_touched_vs_base=%s"
+  % subprocess.check_output(
+      ["git", "diff", "--name-only", BASE_REF, "--", "frontend/src"],
+      text=True, encoding="utf-8").split())
 
 if mismatch or bad or leftover:
     sys.exit(5)
