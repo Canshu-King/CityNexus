@@ -1,0 +1,17 @@
+0 state=cand pinned=e4e9eb20f1bdf2305f9138ea83ff163a75a7e688 live_tip=e4e9eb20f1bdf2305f9138ea83ff163a75a7e688 bytes sha=ef3987e46674
+0b bundle length 1361056, carries the cand marker
+1 arm app=zh-CN device=fi-FI :: fi lays a dot where the app writes a colon
+2   painted="15:30" label="上海时间" expectation_from_app_locale="15:30" agrees=true
+3   screenshot=review/taichenggong/screenshots/tzbundle_cand_zh-CN_fi-FI.png page_errors=none
+1 arm app=zh-CN device=ar-EG :: Arabic-Indic digits under a Latin zone name
+2   painted="15:30" label="上海时间" expectation_from_app_locale="15:30" agrees=true
+3   screenshot=review/taichenggong/screenshots/tzbundle_cand_zh-CN_ar-EG.png page_errors=none
+1 arm app=en device=fi-FI :: the English arm against the same device shape
+2   painted="15:30" label="Shanghai time" expectation_from_app_locale="15:30" agrees=true
+3   screenshot=review/taichenggong/screenshots/tzbundle_cand_en_fi-FI.png page_errors=none
+1 arm app=en device=en-US :: a device that already agrees must not move
+2   painted="15:30" label="Shanghai time" expectation_from_app_locale="15:30" agrees=true
+3   screenshot=review/taichenggong/screenshots/tzbundle_cand_en_en-US.png page_errors=none
+4 restored candidate bytes sha=ef3987e46674 expected=ef3987e46674 match=true
+5 arms=4 arms_following_the_device_instead_of_the_app_locale=0
+6 PASS every arm reads in the app locale's shape

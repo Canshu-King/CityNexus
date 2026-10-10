@@ -1,0 +1,17 @@
+0 state=base pinned=996f1b7588580a14fbbdec5301a6e4a7b70c93e4 live_tip=f68b6b55a216d685287b37c95459d3e1fad0b220 bytes sha=3a0d751ea1e5
+0b bundle length 1360716, carries the base marker
+1 arm app=zh-CN device=fi-FI :: fi lays a dot where the app writes a colon
+2   painted="15.30" label="上海时间" expectation_from_app_locale="15:30" agrees=false
+3   screenshot=review/taichenggong/screenshots/tzbundle_base_zh-CN_fi-FI.png page_errors=none
+1 arm app=zh-CN device=ar-EG :: Arabic-Indic digits under a Latin zone name
+2   painted="٠٣:٣٠ م" label="上海时间" expectation_from_app_locale="15:30" agrees=false
+3   screenshot=review/taichenggong/screenshots/tzbundle_base_zh-CN_ar-EG.png page_errors=none
+1 arm app=en device=fi-FI :: the English arm against the same device shape
+2   painted="15.30" label="Shanghai time" expectation_from_app_locale="15:30" agrees=false
+3   screenshot=review/taichenggong/screenshots/tzbundle_base_en_fi-FI.png page_errors=none
+1 arm app=en device=en-US :: a device that already agrees must not move
+2   painted="03:30 PM" label="Shanghai time" expectation_from_app_locale="15:30" agrees=false
+3   screenshot=review/taichenggong/screenshots/tzbundle_base_en_en-US.png page_errors=none
+4 restored candidate bytes sha=ef3987e46674 expected=ef3987e46674 match=true
+5 arms=4 arms_following_the_device_instead_of_the_app_locale=4
+6 BASE recorded: 4 arm(s) follow the device on the tip this branch was cut from
