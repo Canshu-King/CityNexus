@@ -1331,6 +1331,9 @@ const en: Dict = {
   "lib.failureAttribution.tripNotOnServer": "This trip is not on this server",
   "lib.failureAttribution.networkUnavailable": "Network unavailable",
   "lib.failureAttribution.serviceUnavailable": "The service is temporarily unavailable",
+  "lib.failureAttribution.serverCouldNotRead": "The server could not read your trip",
+  "lib.failureAttribution.slowDownRate": "The server asked us to slow down",
+  "lib.failureAttribution.slowDownRetry": "The server asked us to slow down",
 };
 
 const zhCN: Dict = {
@@ -2570,6 +2573,9 @@ const zhCN: Dict = {
   "lib.failureAttribution.tripNotOnServer": "这台服务器上没有这一趟行程了",
   "lib.failureAttribution.networkUnavailable": "网络不可用",
   "lib.failureAttribution.serviceUnavailable": "服务暂时不可用",
+  "lib.failureAttribution.serverCouldNotRead": "服务器这次没能把行程读出来",
+  "lib.failureAttribution.slowDownRate": "服务器请我们慢一点",
+  "lib.failureAttribution.slowDownRetry": "服务器请我们慢一点",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
