@@ -1,0 +1,45 @@
+tip=7ce836f9afafe9e763527cba828719b414b18db8
+branch_worktree=D:/moodle/_qoder_huomingxi_0558/wt
+bundled_with=esbuild (repo node_modules, real import graph, no hand copy)
+
+key=addedCount
+  one en tip="1 places are on Day 2 — read back from the server."
+  one en branch="1 places are on Day 2 — read back from the server." same=true
+  one zh tip="1 个地点已在 Day 2 ——这是从服务端读回来的结果。"
+  one zh branch="1 个地点已在 Day 2 ——这是从服务端读回来的结果。" same=true
+  two en tip="2 places are on Day 2 — read back from the server."
+  two en branch="2 places are on Day 2 — read back from the server." same=true
+  two zh tip="2 个地点已在 Day 2 ——这是从服务端读回来的结果。"
+  two zh branch="2 个地点已在 Day 2 ——这是从服务端读回来的结果。" same=true
+
+key=charCount
+  one en tip="1 characters"
+  one en branch="1 character" same=false
+  one zh tip="1 字"
+  one zh branch="1 字" same=true
+  two en tip="2 characters"
+  two en branch="2 characters" same=true
+  two zh tip="2 字"
+  two zh branch="2 字" same=true
+
+key=counts
+  one en tip="1 lines read · 1 matched · 0 need your choice · 0 not found"
+  one en branch="1 line read · 1 matched · 0 need your choice · 0 not found" same=false
+  one zh tip="读出 1 行 · 对上 1 个 · 0 个要你选 · 0 个没找到"
+  one zh branch="读出 1 行 · 对上 1 个 · 0 个要你选 · 0 个没找到" same=true
+  two en tip="2 lines read · 1 matched · 3 need your choice · 4 not found"
+  two en branch="2 lines read · 1 matched · 3 need your choice · 4 not found" same=true
+  two zh tip="读出 2 行 · 对上 1 个 · 3 个要你选 · 4 个没找到"
+  two zh branch="读出 2 行 · 对上 1 个 · 3 个要你选 · 4 个没找到" same=true
+
+key=selectedCount
+  one en tip="1 of 1 matched places selected"
+  one en branch="1 of 1 matched place selected" same=false
+  one zh tip="已选 1 / 可加 1"
+  one zh branch="已选 1 / 可加 1" same=true
+  two en tip="2 of 5 matched places selected"
+  two en branch="2 of 5 matched places selected" same=true
+  two zh tip="已选 2 / 可加 5"
+  two zh branch="已选 2 / 可加 5" same=true
+
+SUMMARY zh_pairs_identical=8/8 en_pairs_changed=3/8
