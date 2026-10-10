@@ -1,0 +1,65 @@
+# i18n equivalent gate for ORD-0557 main.tsx (judgement mirrors LocaleContext.tsx:2538)
+en_block_keys=1109 zh_block_keys=1091 main_keys_called=8
+en object spans LocaleContext.tsx:8..1323, zh object spans LocaleContext.tsx:1326..2531
+line 170 | key main.cityNexusRequestFailed | en_equal=True zh_equal=True | PASS
+line 171 | key main.cityNexusRequestRefusedHttp | en_equal=True zh_equal=True | PASS
+line 566 | key main.persistedOperationUpdate | en_equal=True zh_equal=True | PASS
+line 1111 | key main.generalRecovery | en_equal=True zh_equal=True | PASS
+line 1154 | key main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | en_equal=True zh_equal=True | PASS
+line 1218 | key main.noDominantFailureMode | en_equal=True zh_equal=True | PASS
+line 1415 | key main.notEvaluated | en_equal=True zh_equal=True | PASS
+line 1423 | key main.validatedActivity | en_equal=True zh_equal=True | PASS
+line 1424 | key main.noActionableTarget | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='no actionable target'
+    en='no actionable target'
+    zh='no actionable target'
+line 1475 | key main.outcomeEvidence | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='outcome evidence'
+    en='outcome evidence'
+    zh='outcome evidence'
+line 1487 | key main.explicitWins | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='explicit wins'
+    en='explicit wins'
+    zh='explicit wins'
+line 1545 | key main.notReported | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='not reported'
+    en='not reported'
+    zh='not reported'
+line 1547 | key main.noUpcomingActivity | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='no upcoming activity'
+    en='no upcoming activity'
+    zh='no upcoming activity'
+line 1551 | key main.noActiveC4 | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='No active C4'
+    en='No active C4'
+    zh='No active C4'
+line 1560 | key main.notAvailable | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='not available'
+    en='not available'
+    zh='not available'
+line 1595 | key main.unnamedCommitmentServerGaveNoName | en_equal=False zh_equal=True | PENDING-NOT-ROUTED
+    want='未命名承诺 · 服务器没给名字'
+    en='main.unnamedCommitmentServerGaveNoName'
+    zh='未命名承诺 · 服务器没给名字'
+line 1646 | key main.verifiedFeasible | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='verified feasible'
+    en='verified feasible'
+    zh='verified feasible'
+line 1646 | key main.notFeasible | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='not feasible'
+    en='not feasible'
+    zh='not feasible'
+line 1680 | key main.notPreserved | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='not preserved'
+    en='not preserved'
+    zh='not preserved'
+line 1682 | key main.verifiedEvidenceAttached | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='verified evidence attached'
+    en='verified evidence attached'
+    zh='verified evidence attached'
+line 1683 | key main.evidenceUnavailable | en_equal=True zh_equal=True | PENDING-NOT-ROUTED
+    want='evidence unavailable'
+    en='evidence unavailable'
+    zh='evidence unavailable'
+CALLED_BUT_ABSENT_IN_DICT=none
+PASS=8 FAIL=0 PENDING=13 TOTAL=21
