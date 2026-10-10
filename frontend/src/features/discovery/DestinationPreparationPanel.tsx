@@ -410,7 +410,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           disabled={checking || busy || query.trim().length === 0}
           onClick={() => void check()}
         >
-          {checking ? (t("discovery.askingTheServer")) : zh ? "看看能不能规划" : "Check this destination"}
+          {checking ? (t("discovery.askingTheServer")) : t("discovery.checkThisDestination")}
         </button>
       </div>
 
@@ -488,7 +488,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={checking || !retryable}
                 onClick={() => void check()}
               >
-                {checking ? (t("discovery.tryingAgain")) : zh ? "稍后重试" : "Try again later"}
+                {checking ? (t("discovery.tryingAgain")) : t("discovery.tryAgainLater")}
               </button>
             ) : action === "START_HYDRATION" ? (
               <button
@@ -498,7 +498,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={busy || Boolean(job && !job.terminal)}
                 onClick={() => void prepare()}
               >
-                {busy ? (t("discovery.starting")) : zh ? "开始准备" : "Prepare this destination"}
+                {busy ? (t("discovery.starting")) : t("discovery.prepareThisDestination")}
               </button>
             ) : null}
             {/* CHOOSE_ANOTHER_DESTINATION names no primary action of its own: the server's advice for

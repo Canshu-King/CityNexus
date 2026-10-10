@@ -703,6 +703,9 @@ const en: Dict = {
   "discovery.goAndPlan2": "Go and plan",
   "discovery.checkAgain": "Check again",
   "discovery.destination": "Destination",
+  "discovery.checkThisDestination": "Check this destination",
+  "discovery.tryAgainLater": "Try again later",
+  "discovery.prepareThisDestination": "Prepare this destination",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -2037,6 +2040,9 @@ const zhCN: Dict = {
   "discovery.goAndPlan2": "去规划",
   "discovery.checkAgain": "重新判定",
   "discovery.destination": "目的地",
+  "discovery.checkThisDestination": "看看能不能规划",
+  "discovery.tryAgainLater": "稍后重试",
+  "discovery.prepareThisDestination": "开始准备",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
