@@ -1,0 +1,37 @@
+ORD-0558 量名词 · 现取尖记录（每一枚都是那一刻现读，不是缓存）
+
+命令原样：git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+
+一、起工那一刻读到的尖
+
+  7f08160743b3b46e600c2c05e6863eaabd722f54
+  git -C D:\moodle\CityNexus cat-file -t 7f08160743b3b46e600c2c05e6863eaabd722f54 -> commit
+  隔离工作树 D:\moodle\_qoder_liangmingci_0558 与枝 review/量名词-0558-r1 都从这一枚起。
+  本地工作树当时停在别人的 review/boli-party-occupancy-scope-r1 的 cca117cf1a9c98aba8bd1edda325232e773503c0，
+  所以我所有行号都从现尖 blob 现读，没有读那棵工作树。
+
+二、改完第一臂、推之前重读到的尖（权威线在这一晚在动）
+
+  08577f1986b8bbc095f1c319a952909fcf343717
+  git cat-file -t -> commit；它的父两枚 8bc584613cc5fb047453f497b2152f8ab5102ca9、f7048671229227b794fc048a22a058aed0c5db03
+  git merge-base --is-ancestor 7f08160743b3b46e600c2c05e6863eaabd722f54 08577f1986b8bbc095f1c319a952909fcf343717 -> rc 0
+  也就是说新尖含我起手那一代，我是往前走而不是分叉。
+
+  过程留一句教训：本地库 D:\moodle\CityNexus 是 shallow（.git/shallow 在），第一次不带 --depth 的
+  git rebase 08577f1986 因为看不见祖先层，把别人的历史笔当成我的来重放，撞出一片 AA（both added），
+  我 git rebase --abort 回到原状（没落任何脏东西），改用 git fetch --depth=200 把关系取回来，
+  确认 merge-base 存在后再 rebase，一次成功。
+
+三、我交的那一笔
+
+  枝 review/量名词-0558-r1 = 08577f1986b8bbc095f1c319a952909fcf343717 + 我这两笔（产品改动与规格一笔、读数件一笔），
+  再加写下这行时的第三笔（只是把这段说清，字节里没有产品面）。枝尖推后现读回验，两处（本机库与 GitHub）同一枚，
+  逐枚值在交块里给 —— 这行不钉自己的尖，因为它一提交尖就变了。
+  产品改动与规格：见 gates_r1.txt；屏读与坐标：见 screen_readings_r1.txt。
+  本件自证块：_qoder_ledger_inbox/量名词_0135.md（落账回执 _processed/量名词_0135.md.inserted_013729）。
+
+四、推完之后权威线又动了一次
+
+  命令原样 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 再读，尖变成
+  7cb796734bdd0b0985b3b7c80f9fbd9744faa0f6；我这枝相对它现读十一格落后、其中一笔 f8be36abb 动过同一枚文件。
+  枝已发布，不 rebase，按规矩把现尖 merge 进来（一次干净），再重跑全部门禁，数在 gates_r1.txt 第六节。

@@ -1,0 +1,29 @@
+wt=D:\moodle\_qoder_huomingxi_0558\wt
+file=frontend/src/features/trip/ActivityDetail.tsx
+file_lines=310
+plural_module=D:/moodle/_qoder_huomingxi_0558/plural_real.mjs
+
+site frontend/src/features/trip/ActivityDetail.tsx:150 template_holds_bytes=true
+  line_verbatim=": `${duration} min`;"
+  count=1 -> as_is="1 min" | if_ruler="1 min"
+  count=2 -> as_is="2 min" | if_ruler="2 mins"
+
+site frontend/src/features/trip/ActivityDetail.tsx:186 template_holds_bytes=true
+  line_verbatim=": `${activity.travel_from_prev_min} min`}"
+  count=1 -> as_is="1 min" | if_ruler="1 min"
+  count=2 -> as_is="2 min" | if_ruler="2 mins"
+
+site frontend/src/features/trip/ActivityDetail.tsx:279 template_holds_bytes=true
+  line_verbatim=": `All within about ${nearbyRadiusM} m, ordered by straight-line distance.`"
+  count=1 -> as_is="All within about 1 m, ordered by straight-line distance." | if_ruler="1 m"
+  count=2 -> as_is="All within about 2 m, ordered by straight-line distance." | if_ruler="2 ms"
+
+site frontend/src/features/trip/ActivityDetail.tsx:294 template_holds_bytes=true
+  line_verbatim=": `${Math.round(metres)} m`"
+  count=1 -> as_is="1 m" | if_ruler="1 m"
+  count=2 -> as_is="2 m" | if_ruler="2 ms"
+
+site frontend/src/features/trip/ActivityDetail.tsx:297 template_holds_bytes=true
+  line_verbatim=": `${(metres / 1000).toFixed(1)} km`}"
+  count=1000 -> as_is="1.0 km" | if_ruler="1.0 kms"
+  count=2400 -> as_is="2.4 km" | if_ruler="2.4 kms"

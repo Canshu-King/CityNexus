@@ -1,0 +1,25 @@
+{
+  "order": "ORD-0558",
+  "lane": "shuangshugong",
+  "arm": "E1en_one",
+  "locale": "en",
+  "proposals_fed": 2,
+  "duplicate_count_expected": 1,
+  "expected_text": "Merged 1 identical suggestion.",
+  "forbidden_text_ruled_out": "Merged 1 identical suggestions.",
+  "rendered_text": "Merged 1 identical suggestion.",
+  "match": true,
+  "requests_escaped_the_fixtures": [],
+  "screenshot": "D:\\moodle\\_qoder_shuangshugong_0558\\review\\shuangshugong\\ord0558_readouts\\mutant_B_always_singular\\ord0558\\E1en_one.png",
+  "source_probe": {
+    "file": "frontend/src/features/execution/LiveRecovery.tsx",
+    "totalLines": 469,
+    "zhArmLine": 347,
+    "enArmLine": 348,
+    "duplicateCountLine": 221,
+    "rulerImportLine": 14,
+    "enArmCarriesRuler": false,
+    "enArmText": ": `Merged ${duplicateCount} identical suggestion.`}"
+  },
+  "ruler_module": "frontend/src/lib/plural.ts"
+}

@@ -228,11 +228,11 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   },
   charCount: {
     zh: "{n} 字",
-    en: "{n} characters",
+    en: "{n} {plural:character}",
   },
   counts: {
     zh: "读出 {extracted} 行 · 对上 {resolved} 个 · {ambiguous} 个要你选 · {unresolved} 个没找到",
-    en: "{extracted} lines read · {resolved} matched · {ambiguous} need your choice · {unresolved} not found",
+    en: "{extracted} {plural:line:extracted} read · {resolved} matched · {ambiguous} need your choice · {unresolved} not found",
   },
   dayLabel: {
     zh: "落点日子",
@@ -380,7 +380,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   },
   selectedCount: {
     zh: "已选 {n} / 可加 {total}",
-    en: "{n} of {total} matched places selected",
+    en: "{n} of {total} {plural:matched place:total} selected",
   },
   technicalToggle: {
     zh: "技术细节",

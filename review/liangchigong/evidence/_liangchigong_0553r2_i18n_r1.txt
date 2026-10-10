@@ -1,0 +1,26 @@
+# ORD-0553-r2 i18n arm  (tip 7f08160743b3b46e600c2c05e6863eaabd722f54)
+panel blob read :: f0bd07e3fd83986562dd0454431881ade3f62d5c
+keys called by this file :: 17
+en dictionary block starts :: frontend/src/i18n/LocaleContext.tsx:8
+zh dictionary block starts :: frontend/src/i18n/LocaleContext.tsx:1291
+keys missing on either side :: 0 []
+verdict :: PASS
+
+key | en line | zh line
+exec.authoritativeJourney | frontend/src/i18n/LocaleContext.tsx:671 | frontend/src/i18n/LocaleContext.tsx:1906
+exec.complete | frontend/src/i18n/LocaleContext.tsx:689 | frontend/src/i18n/LocaleContext.tsx:1924
+exec.evidencePending | frontend/src/i18n/LocaleContext.tsx:674 | frontend/src/i18n/LocaleContext.tsx:1909
+exec.frozenEvidence | frontend/src/i18n/LocaleContext.tsx:673 | frontend/src/i18n/LocaleContext.tsx:1908
+exec.journeyComplete | frontend/src/i18n/LocaleContext.tsx:676 | frontend/src/i18n/LocaleContext.tsx:1911
+exec.markInProgress | frontend/src/i18n/LocaleContext.tsx:687 | frontend/src/i18n/LocaleContext.tsx:1922
+exec.next | frontend/src/i18n/LocaleContext.tsx:678 | frontend/src/i18n/LocaleContext.tsx:1913
+exec.noNextStep | frontend/src/i18n/LocaleContext.tsx:679 | frontend/src/i18n/LocaleContext.tsx:1914
+exec.now | frontend/src/i18n/LocaleContext.tsx:675 | frontend/src/i18n/LocaleContext.tsx:1910
+exec.offlineSnapshot | frontend/src/i18n/LocaleContext.tsx:682 | frontend/src/i18n/LocaleContext.tsx:1917
+exec.oneTruth | frontend/src/i18n/LocaleContext.tsx:672 | frontend/src/i18n/LocaleContext.tsx:1907
+exec.protectedAnchor | frontend/src/i18n/LocaleContext.tsx:677 | frontend/src/i18n/LocaleContext.tsx:1912
+exec.railLabel | frontend/src/i18n/LocaleContext.tsx:680 | frontend/src/i18n/LocaleContext.tsx:1915
+exec.serverTruth | frontend/src/i18n/LocaleContext.tsx:683 | frontend/src/i18n/LocaleContext.tsx:1918
+exec.state.notStarted | frontend/src/i18n/LocaleContext.tsx:702 | frontend/src/i18n/LocaleContext.tsx:1937
+exec.updating | frontend/src/i18n/LocaleContext.tsx:684 | frontend/src/i18n/LocaleContext.tsx:1919
+inbox.timePending | frontend/src/i18n/LocaleContext.tsx:785 | frontend/src/i18n/LocaleContext.tsx:2018

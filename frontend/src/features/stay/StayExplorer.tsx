@@ -300,7 +300,7 @@ function roomLabel(roomType: string | undefined, zh: boolean, t: (key: string) =
   const value = String(roomType ?? "").trim().toLowerCase();
   if (!value) return t("stay.roomTypeUnknown");
   if (value === "hotel" || value === "hostel" || value === "guest_house" || value === "apartment") {
-    return zh ? "酒店" : "Hotel";
+    return t("inbox.typeHotel");
   }
   return roomType as string;
 }

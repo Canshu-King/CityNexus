@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:53748 - "GET /api/v1/travelers/49efc471-a815-4c3a-a371-51ba879dc5cc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55215 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60235 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/agent-feed?limit=50 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57463 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57464 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58603 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60741 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60695 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63473 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/member-role-limits HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63472 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63474 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63294 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63301 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63306 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65125 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50898 - "GET /api/v1/travelers/49efc471-a815-4c3a-a371-51ba879dc5cc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63633 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63308 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63309 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63634 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56155 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56164 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56165 - "GET /api/v1/travelers/49efc471-a815-4c3a-a371-51ba879dc5cc/push-config HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56166 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60490 - "GET /api/v1/travelers/49efc471-a815-4c3a-a371-51ba879dc5cc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61264 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61265 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56167 - "GET /api/v1/journeys/aab2237b-126c-4541-b217-a98cfc4f48fb/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61266 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  3 passed (1.3m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-desktop-entries-census-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577desktop_r1.db ports 5218/5219 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0577desktop_r1 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577desktop_r1.log

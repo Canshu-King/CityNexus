@@ -1,0 +1,19 @@
+# ORD-0558 counter-arm: does this lane's instrument actually bite?
+# cmd: npx playwright test --config playwright.shuangshugong-0558.config.ts e2e/qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts -g "both count states"
+# each mutant is restored from LiveRecovery.tsx.pristine and re-hashed right after
+mutant=A_always_plural exit_code=1 green=3 red=2
+  green 条 ok 3 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › E2en_two (1.2s)
+  green 条 ok 4 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › Z1zh_one (1.2s)
+  green 条 ok 5 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › Z2zh_two (961ms)
+  red 条 x  1 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:311:3 › ORD-0558 LiveRecovery merged-suggestions line, both count states › S0probe: the counted noun on the English arm reaches the ruler, and the arms are adjacent (6ms)
+  red 条 x  2 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › E1en_one (20.8s)
+  summary 3 passed (29.4s)
+state=restored mutant=restored_after_A_always_plural git_hash_object=82d1a3c427e0590accd010c9cb3d64ec36e709c2
+mutant=B_always_singular exit_code=1 green=3 red=2
+  green 条 ok 2 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › E1en_one (1.4s)
+  green 条 ok 4 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › Z1zh_one (1.1s)
+  green 条 ok 5 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › Z2zh_two (990ms)
+  red 条 x  1 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:311:3 › ORD-0558 LiveRecovery merged-suggestions line, both count states › S0probe: the counted noun on the English arm reaches the ruler, and the arms are adjacent (7ms)
+  red 条 x  3 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › E2en_two (15.5s)
+  summary 3 passed (26.5s)
+state=restored mutant=restored_after_B_always_singular git_hash_object=82d1a3c427e0590accd010c9cb3d64ec36e709c2

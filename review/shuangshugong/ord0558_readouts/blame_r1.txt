@@ -1,0 +1,7 @@
+^f7cae570f (仓鼠王   2026-09-29 344)       {duplicateCount > 0 && (
+^f7cae570f (仓鼠王   2026-09-29 345)         <p className="v8-muted" data-testid="live-deduped">
+^f7cae570f (仓鼠王   2026-09-29 346)           {zh
+^f7cae570f (仓鼠王   2026-09-29 347)             ? `已合并 ${duplicateCount} 个内容相同的建议。`
+147e0c54dd (cff87c64 2026-10-08 348)             : `Merged ${duplicateCount} identical ${englishCountNoun(duplicateCount, "suggestion")}.`}
+^f7cae570f (仓鼠王   2026-09-29 349)         </p>
+^f7cae570f (仓鼠王   2026-09-29 350)       )}
