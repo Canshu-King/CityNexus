@@ -1,0 +1,10 @@
+items=3 moved_tip_lines=[454, 462, 475] added_lines=[25, 451, 456, 464, 477]
+  failure.thisTripIsNotOnThisServer: tip:454 -> product:456, dict zh-CN:2513 en:1304
+  failure.networkUnavailable: tip:462 -> product:464, dict zh-CN:2514 en:1305
+  failure.theServiceIsTemporarilyUnavailable: tip:475 -> product:477, dict zh-CN:2515 en:1306
+GREEN
+node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit  -> rc=0, 0 bytes
+node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> rc=0, 0 bytes
+node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit (mutated call arity) -> error TS2554 at frontend/src/lib/failureAttribution.ts(451,77)
+python review/tihegong-0555/i18n_0555_failure_attribution_r1.py -> rc=0 GREEN
+python review/tihegong-0555/i18n_0555_failure_attribution_r1.py --negative -> rc=1 RED

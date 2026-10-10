@@ -22,6 +22,7 @@
  */
 
 import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from "./readDeadline";
+import { dictionaryCopy } from "../i18n/LocaleContext";
 
 export type AttributionReason =
   | "JOURNEY_NOT_FOUND"
@@ -447,11 +448,12 @@ export function copyFor(
   const id = detail.journeyId ? `${detail.journeyId.slice(0, 8)}…` : "";
   const kickerOf = (name: keyof typeof KICKER_COPY) =>
     (zh ? KICKER_COPY[name].zh : KICKER_COPY[name].en);
+  const titleOf = (key: string) => dictionaryCopy(zh ? "zh-CN" : "en", key);
   switch (attribution.message_key) {
     case "failure.journeyNotFound":
       return {
         kicker: kickerOf("connectionFine"),
-        title: zh ? "这台服务器上没有这一趟行程了" : "This trip is not on this server",
+        title: titleOf("failure.thisTripIsNotOnThisServer"),
         body: zh
           ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
           : `This device remembered trip ${id}, and the server answered plainly that it does not exist (http_status=${attribution.http_status}). This is not a network problem: the server just answered. Your other trips are untouched.`,
@@ -459,7 +461,7 @@ export function copyFor(
     case "failure.networkUnavailable":
       return {
         kicker: kickerOf("connection"),
-        title: zh ? "网络不可用" : "Network unavailable",
+        title: titleOf("failure.networkUnavailable"),
         body: detail.hasCachedCopy
           ? zh
             ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。"
@@ -472,7 +474,7 @@ export function copyFor(
       return detail.hasCachedCopy
         ? {
             kicker: kickerOf("server"),
-            title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
+            title: titleOf("failure.theServiceIsTemporarilyUnavailable"),
             body: zh
               ? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
               : `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
