@@ -13,6 +13,34 @@ import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerS
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
 
 type SourceKind = "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
+const OUTING_INTENTS = [
+  {
+    value: "ART_HISTORY",
+    label: "Art and history",
+    query: "museum/gallery",
+    reason: "museum, gallery, or arts centre",
+  },
+  {
+    value: "GREEN_WALK",
+    label: "Quiet green walk",
+    query: "park/garden",
+    reason: "park or garden",
+  },
+  {
+    value: "COFFEE_STROLL",
+    label: "Coffee and a short stroll",
+    query: "cafe",
+    reason: "cafe or coffee stop",
+  },
+  {
+    value: "QUIET_BOOKS",
+    label: "Books and quiet",
+    query: "library",
+    reason: "library",
+  },
+] as const;
+type OutingIntent = (typeof OUTING_INTENTS)[number]["value"];
+
 type PendingMapPreview = {
   kind: "candidate" | "shortlist";
   purpose: "PIN" | "WALKING";
@@ -209,7 +237,7 @@ export function BootstrapDiscoveryPanel({
   onCancel?: () => void;
 }) {
   const [sourceKind, setSourceKind] = useState<SourceKind>("MANUAL_PUBLIC_CENTER");
-  const [query, setQuery] = useState("cafe");
+  const [outingIntent, setOutingIntent] = useState<OutingIntent | null>(null);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [accuracy, setAccuracy] = useState<number | undefined>();
@@ -250,6 +278,9 @@ export function BootstrapDiscoveryPanel({
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
+  const selectedOutingIntent = outingIntent
+    ? OUTING_INTENTS.find((item) => item.value === outingIntent) ?? null
+    : null;
   const isCurrentIdentity = (bearer: string | null, generation: number) =>
     identityGeneration.current === generation && readTravelerBearer() === bearer;
   const invalidateDiscovery = () => {
@@ -301,6 +332,11 @@ export function BootstrapDiscoveryPanel({
       setAccuracy(undefined);
     }
   };
+  const chooseOutingIntent = (next: OutingIntent) => {
+    invalidateDiscovery();
+    setOutingIntent(next);
+    setMessage(null);
+  };
   const applyPublicCenter = (center: PublicCityCenter) => {
     chooseSearchSource("MANUAL_PUBLIC_CENTER", false);
     setLatitude(center.latitude.toFixed(6));
@@ -344,7 +380,7 @@ export function BootstrapDiscoveryPanel({
     setMapBusy(false);
     setProviderConsent(false);
     setSourceKind("MANUAL_PUBLIC_CENTER");
-    setQuery("cafe");
+    setOutingIntent(null);
     setLatitude("");
     setLongitude("");
     setAccuracy(undefined);
@@ -385,6 +421,7 @@ export function BootstrapDiscoveryPanel({
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
     setSourceKind("MANUAL_PUBLIC_CENTER");
+    setOutingIntent(null);
     setLatitude("");
     setLongitude("");
     setAccuracy(undefined);
@@ -545,6 +582,10 @@ export function BootstrapDiscoveryPanel({
   };
 
   const search = async () => {
+    if (!selectedOutingIntent) {
+      setMessage("Choose what you want from this outing before searching public places.");
+      return;
+    }
     if (!providerConsent) {
       setMessage("Confirm the OpenStreetMap/Overpass provider disclosure before searching.");
       return;
@@ -562,7 +603,7 @@ export function BootstrapDiscoveryPanel({
     setResult(null);
     try {
       const next = await cityNexusApi.bootstrapDiscovery(journeyId, {
-        query: query.trim() || "cafe",
+        query: selectedOutingIntent.query,
         radius_m: 2500,
         limit: 3,
         source_kind: fence.sourceKind,
@@ -1157,15 +1198,36 @@ export function BootstrapDiscoveryPanel({
             </div>
           </section>
         ) : null}
-        <label>
-          Public place query
-          <input
-            data-testid="bootstrap-query"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            maxLength={120}
-          />
-        </label>
+        <section data-testid="bootstrap-outing-intents" aria-labelledby="bootstrap-outing-intents-title">
+          <h2 id="bootstrap-outing-intents-title">What would make this first outing feel good?</h2>
+          <p>
+            Choose one preference you are declaring for this search. CityNexus sends only the fixed public category below;
+            it does not infer a preference or invent a venue.
+          </p>
+          <div className="v8-actions" role="radiogroup" aria-label="First outing preference">
+            {OUTING_INTENTS.map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                role="radio"
+                aria-checked={outingIntent === item.value}
+                aria-pressed={outingIntent === item.value}
+                data-testid={`bootstrap-intent-${item.value}`}
+                disabled={busy}
+                onClick={() => chooseOutingIntent(item.value)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          {selectedOutingIntent ? (
+            <p data-testid="bootstrap-intent-selected">
+              Selected: <strong>{selectedOutingIntent.label}</strong> · bounded public category <code>{selectedOutingIntent.query}</code> · each result should fit because it is tagged as a {selectedOutingIntent.reason}.
+            </p>
+          ) : (
+            <p role="status" data-testid="bootstrap-intent-required">Choose one preference before the one deliberate public discovery action.</p>
+          )}
+        </section>
         <div className="v8-form-grid">
           <label>
             Latitude (WGS84) · accessible fallback
@@ -1196,7 +1258,7 @@ export function BootstrapDiscoveryPanel({
           I understand that this search sends the query and public center to OpenStreetMap/Overpass.
         </label>
         <div className="v8-actions">
-          <button type="button" data-testid="bootstrap-search" disabled={busy || !hasValidSearchCenter} onClick={() => void search()}>
+          <button type="button" data-testid="bootstrap-search" disabled={busy || !hasValidSearchCenter || !selectedOutingIntent} onClick={() => void search()}>
             {busy ? "Searching…" : "Search public places"}
           </button>
           {onCancel ? (
@@ -1250,6 +1312,9 @@ export function BootstrapDiscoveryPanel({
             {result.candidates.slice(0, 3).map((candidate) => (
               <article key={candidate.candidate_id} data-testid={`bootstrap-candidate-${candidate.candidate_id}`}>
                 <h3>{candidate.name}</h3>
+                <p data-testid={`bootstrap-intent-reason-${candidate.candidate_id}`}>
+                  Fits your declared intent: {selectedOutingIntent?.reason ?? "the selected public category"}.
+                </p>
                 <p>
                   {candidate.category} · opening {candidate.opening_state} · price UNKNOWN · ETA UNKNOWN
                 </p>

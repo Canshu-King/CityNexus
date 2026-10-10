@@ -973,6 +973,11 @@ class OverpassPOIProvider:
         tag_clauses = ['"amenity"~"cafe|restaurant|library|arts_centre|theatre"']
         free_only = any(token in requested for token in ("free", "免费", "免票", "免费票"))
         for keywords, candidate_tags in (
+            # R96 sends these bounded compound categories from the explicit
+            # outing-intent choice surface. Keep the union here so an intent
+            # cannot silently collapse to the first word (museum or park).
+            (("museum/gallery", "museum gallery", "art history", "arts and history"), ['"tourism"~"museum|gallery"', '"amenity"="arts_centre"']),
+            (("park/garden", "park garden", "green walk", "quiet green"), ['"leisure"~"park|garden"']),
             (("museum", "博物馆"), ['"tourism"="museum"']),
             # Different key/value filters must be emitted as an Overpass union;
             # joining them with ``|`` inside one nwr filter is invalid syntax.
