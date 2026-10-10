@@ -1,0 +1,40 @@
+CMD: git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+e4e9eb20f1bdf2305f9138ea83ff163a75a7e688	refs/heads/mirror/integration-frontend-apple-pass1
+CMD: git -C D:\moodle\CityNexus ls-remote origin "refs/heads/review/路牌工乙-0559-r1"
+813182d24f694bce90b09cf1b9e20f67ea58505a	refs/heads/review/路牌工乙-0559-r1
+CMD: git rev-list --count e13b2215..996f1b75
+40
+CMD: git merge-base --is-ancestor 996f1b75 813182d2 ; echo rc=$?
+rc=0
+CMD: git diff --name-only 996f1b75 813182d2
+backend/tests/test_route_gap_lupaigongyi_0559_r1.py
+review/lupaigongyi-0559/coords_r1.txt
+review/lupaigongyi-0559/mutant_r1.txt
+review/lupaigongyi-0559/probe_out.txt
+review/lupaigongyi-0559/probe_r1.py
+review/lupaigongyi-0559/repeat_r1.txt
+review/lupaigongyi-0559/run_on_merged_tip_r1.txt
+review/lupaigongyi-0559/run_r1.txt
+review/lupaigongyi-0559/run_r2.txt
+review/lupaigongyi-0559/run_r3.txt
+review/lupaigongyi-0559/run_r4.txt
+review/lupaigongyi-0559/run_r5.txt
+CMD: git diff --name-only 996f1b75 813182d2 -- backend/app contracts
+(above line empty means zero product bytes)
+CMD: git rev-parse 996f1b75:backend/app/main.py and e13b2215:backend/app/main.py
+4cd1770924227257bad4d2e84ef0c2fc14441035
+4cd1770924227257bad4d2e84ef0c2fc14441035
+CMD: git rev-parse 996f1b75:contracts/openapi.yaml and e13b2215:contracts/openapi.yaml
+9f16f37c490cd27fddeb532bde81d909293da28a
+9f16f37c490cd27fddeb532bde81d909293da28a
+CMD: git rev-parse 813182d2:backend/tests/test_route_gap_lupaigongyi_0559_r1.py
+db8ede9120a785f5c31045c8365ff26d76655540
+CMD: git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1  (again, while writing this block)
+f68b6b55a216d685287b37c95459d3e1fad0b220	refs/heads/mirror/integration-frontend-apple-pass1
+CMD: git rev-parse e4e9eb20:backend/app/main.py e4e9eb20:contracts/openapi.yaml
+4cd1770924227257bad4d2e84ef0c2fc14441035
+9f16f37c490cd27fddeb532bde81d909293da28a
+CMD: git diff --name-only 996f1b75 e4e9eb20 -- <the nine doors' files>
+(empty means none of them moved)
+CMD: git merge --no-edit e4e9eb20  -> my branch head
+f062e82544a4e3ccd67596ac0f3a23b1ea34493b
