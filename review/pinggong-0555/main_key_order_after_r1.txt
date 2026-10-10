@@ -1,0 +1,3 @@
+en main.* rows=21 zh main.* rows=21
+orders equal now=True
+value sets identical=True
