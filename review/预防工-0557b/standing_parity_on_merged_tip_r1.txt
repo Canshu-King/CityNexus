@@ -1,0 +1,3 @@
+## standing parity ruler, base generation 24a50a8a, my zh-only key present
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange', 'setup.somePlace'])
+PARITY_RC=1
