@@ -1,10 +1,10 @@
-1. base_tip ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a
-2. product_head e5323c85fa492bc68150305f5dde055a34436dce
-3. dict_head 9da5ce1ef8f55298ea838f5b86938110ec024e41
-4. ls-remote_now 9da5ce1ef8f55298ea838f5b86938110ec024e41	refs/heads/review/快钉工-0557-dict-r3 | e5323c85fa492bc68150305f5dde055a34436dce	refs/heads/review/快钉工-0557-r3
+1. base_tip 4d69eb860d619538a40133e96a0f8819666fd11e
+2. product_head 0f6ce61033639f39eaf9da2d523d3753a2f122ed
+3. dict_head a4b2128287f636ff07021a2766d65341ac328b6f
+4. ls-remote_now 9da5ce1ef8f55298ea838f5b86938110ec024e41	refs/heads/review/快钉工-0557-dict-r3 | c3fafa74ccc392c2381a54c9b64ffa03f8ef4086	refs/heads/review/快钉工-0557-r3
 5. key_already_in_base_dictionary 0
 6. base_literal_line [(283, 'return name ? String(name) : zh ? "已记录" : "Recorded";')]
-7. dict_sides inbox.recorded en=[(849, '"inbox.recorded": "Recorded",')] zh=[(2144, '"inbox.recorded": "已记录",')]
+7. dict_sides inbox.recorded en=[(849, '"inbox.recorded": "Recorded",')] zh=[(2155, '"inbox.recorded": "已记录",')]
 8. ev_values ['Recorded', '已记录']
 9. numstat_product 1	1	frontend/src/features/inbox/JourneyInboxWorkbench.tsx
 10. numstat_dict 2	0	frontend/src/i18n/LocaleContext.tsx

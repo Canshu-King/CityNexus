@@ -3,7 +3,7 @@ from pathlib import Path
 
 WT = "D:/moodle/_qoder_kuaidinggong_0557/wt2"
 ROOT = "D:/moodle/"
-BASE = "ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a"
+BASE = "4d69eb860d619538a40133e96a0f8819666fd11e"
 PROD = "review/快钉工-0557-r3"
 DICT = "review/快钉工-0557-dict-r3"
 F = "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
