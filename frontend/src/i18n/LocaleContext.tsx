@@ -862,6 +862,7 @@ const en: Dict = {
   "main.notPreserved": "not preserved",
   "main.verifiedEvidenceAttached": "verified evidence attached",
   "main.evidenceUnavailable": "evidence unavailable",
+  "main.unnamedCommitmentServerGaveNoName": "未命名承诺 · 服务器没给名字",
   "inbox.smartDecision": "Smart decision:",
   "inbox.applied": "Saved to your trip",
   "inbox.applySmart": "Apply smart decision",
