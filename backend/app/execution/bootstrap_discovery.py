@@ -162,7 +162,7 @@ def _provider_provenance(attempts: list[dict[str, Any]], *, configured_url: str 
         parsed = urlparse(endpoint)
         host = (parsed.hostname or "").lower()
     except ValueError:
-        host = ""
+        return "UNVERIFIED"
     # The authoritative browser suite binds its provider boundary to loopback;
     # a loopback answer is useful evidence, but it is not a public OSM answer.
     if host in {"127.0.0.1", "localhost", "::1"} or host.endswith(".local"):
