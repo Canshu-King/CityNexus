@@ -1470,6 +1470,7 @@ const en: Dict = {
   "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
+  "simulation.notGiven": "not given",
   /* ORD-0570：`features/access/accessCopy.ts` 自带的三条措辞抬进公共字典，两侧同代、值逐字节照拄，取值点走组件里现成的 t()。 */
   "access.title": "Members and access",
   "access.sub": "Who can change this trip, what each visibility level means, and which of that this server can answer today.",
@@ -2857,6 +2858,7 @@ const zhCN: Dict = {
   "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
   "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
   "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
+  "simulation.notGiven": "服务器未给证据状态",
   /* ORD-0570：`features/access/accessCopy.ts` 自带的三条措辞抬进公共字典，两侧同代、值逐字节照拄，取值点走组件里现成的 t()。 */
   "access.title": "成员与权限",
   "access.sub": "谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。",
