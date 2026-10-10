@@ -39,12 +39,13 @@ def test_r97_two_stop_public_walk_is_signed_ordered_and_explore_only():
     client = TestClient(main_module.app)
     owner = _traveler(f"R97 two-stop owner {uuid4().hex[:6]}")
     bystander = _traveler(f"R97 two-stop bystander {uuid4().hex[:6]}")
+    city_code = f"CN-R97-{uuid4().hex[:8].upper()}"
     journey_response = client.post(
         "/api/v1/journeys",
         json={
             "traveler_id": owner["id"],
             "title": "R97 two-stop public walk",
-            "city_code": f"CN-R97-{uuid4().hex[:8].upper()}",
+            "city_code": city_code,
             "timezone": "Asia/Shanghai",
             "start_at": "2026-10-16T10:00:00+08:00",
             "end_at": "2026-10-17T18:00:00+08:00",
@@ -164,7 +165,7 @@ def test_r97_two_stop_public_walk_is_signed_ordered_and_explore_only():
         assert cross_member.status_code == 403, cross_member.text
 
         with SessionLocal() as session:
-            assert session.scalar(select(func.count(Place.id)).where(Place.city_code == journey_id)) == 0
+            assert session.scalar(select(func.count(Place.id)).where(Place.city_code == city_code)) == 0
             assert session.scalar(select(func.count(PlanVersion.id)).where(PlanVersion.journey_id == journey_id)) == 0
             assert session.scalar(select(func.count(AgentRun.id)).where(AgentRun.journey_id == journey_id)) == 0
             assert session.scalar(select(func.count(GuardianRun.id)).where(GuardianRun.journey_id == journey_id)) == 0
