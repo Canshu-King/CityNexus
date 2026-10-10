@@ -73,7 +73,7 @@ export function StayExplorer({
           </div>
         </div>
         <div className="v8-empty-state" data-testid="stay-no-options">
-          <b>{zh ? "还没有可用的住宿候选" : "No stay candidates yet"}</b>
+          <b>{t("stay.noStayCandidatesYet")}</b>
           <p>
             {zh
               ? "我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。"
@@ -111,11 +111,11 @@ export function StayExplorer({
           {door?.kind === "ok" ? (
             <dl className="v8-detail-panel" data-testid="stay-generation-facts">
               <div>
-                <dt>{zh ? "这一轮排定的候选数" : "Candidates ranked this run"}</dt>
+                <dt>{t("stay.candidatesRankedThisRun")}</dt>
                 <dd>{door.ranked ?? "—"}</dd>
               </div>
               <div>
-                <dt>{zh ? "这台服务器交回的住宿数" : "Stays this server returned"}</dt>
+                <dt>{t("stay.staysThisServerReturned")}</dt>
                 <dd>{door.offers ?? "—"}</dd>
               </div>
             </dl>
@@ -161,7 +161,7 @@ export function StayExplorer({
     <div className="v8-stay-layout">
       <div className="v8-stay-list">{data.options.slice(0, 4).map((item) => <article data-testid="stay-offer-card" className={item.id === data.selected_option_id ? "v8-stay-card selected" : "v8-stay-card"} key={item.id} onClick={() => onSelect(item.id)} onKeyDown={(event) => { if (event.key === "Enter") onSelect(item.id); }} role="button" tabIndex={0}>
         <div className="v8-hotel-thumb large"><Icon name="bed" /><span>{cityLabel}</span></div>
-        <div className="v8-stay-card-body"><div className="v8-stay-card-title"><div><span className="v8-rank">0{item.rank}</span><h3>{item.stay.property_name}</h3></div>{item.id === data.selected_option_id && <span className="v8-selected-label">{t("stay.selected")}</span>}</div><p>{roomLabel(item.stay.room_type, zh)} · {data.trip.party_size} {zh ? "位旅客" : "travelers"} · {item.stay.refundable ? t("stay.freeCancel") : t("stay.nonRefundable")}</p><div className="v8-stay-price">{pricePair(item.stay_total_minor, item.stay.nightly_amount_minor, item.stay.currency, locale, zh)}</div><div className="v8-stay-impact"><span>{t("stay.journeyImpact")}</span><b>{item.walking_min} {zh ? "分钟步行" : "min walk"}</b><b>{item.protected_margin_min} {zh ? "分钟余量" : "min slack"}</b><em>{modeLabel(item.leg_modes[0], zh)}</em></div></div>
+        <div className="v8-stay-card-body"><div className="v8-stay-card-title"><div><span className="v8-rank">0{item.rank}</span><h3>{item.stay.property_name}</h3></div>{item.id === data.selected_option_id && <span className="v8-selected-label">{t("stay.selected")}</span>}</div><p>{roomLabel(item.stay.room_type, zh, t)} · {data.trip.party_size} {t("stay.travelers")} · {item.stay.refundable ? t("stay.freeCancel") : t("stay.nonRefundable")}</p><div className="v8-stay-price">{pricePair(item.stay_total_minor, item.stay.nightly_amount_minor, item.stay.currency, locale, zh)}</div><div className="v8-stay-impact"><span>{t("stay.journeyImpact")}</span><b>{item.walking_min} {zh ? "分钟步行" : "min walk"}</b><b>{item.protected_margin_min} {zh ? "分钟余量" : "min slack"}</b><em>{modeLabel(item.leg_modes[0], zh)}</em></div></div>
       </article>)}</div>
       <div className="v8-stay-detail"><MapPanel data={data} option={selected} /><div className="v8-detail-panel"><div><span>{t("stay.rateEvidence")}</span><b>{selected?.stay.property_name}</b></div><dl>
             <div>
@@ -177,11 +177,11 @@ export function StayExplorer({
             </div>
             <div>
               <dt>{t("stay.cancellation")}</dt>
-              <dd>{cancellationLabel(selected?.stay.cancellation_policy?.summary, zh)}</dd>
+              <dd>{cancellationLabel(selected?.stay.cancellation_policy?.summary, zh, t)}</dd>
             </div>
             <div>
               <dt>{t("stay.provider")}</dt>
-              <dd>{evidenceLabel(selected, zh)}</dd>
+              <dd>{evidenceLabel(selected, zh, t)}</dd>
             </div>
           </dl>
           {selected ? (
@@ -296,9 +296,9 @@ function pricePair(
   );
 }
 
-function roomLabel(roomType: string | undefined, zh: boolean): string {
+function roomLabel(roomType: string | undefined, zh: boolean, t: (key: string) => string): string {
   const value = String(roomType ?? "").trim().toLowerCase();
-  if (!value) return zh ? "房型未知" : "Room type unknown";
+  if (!value) return t("stay.roomTypeUnknown");
   if (value === "hotel" || value === "hostel" || value === "guest_house" || value === "apartment") {
     return zh ? "酒店" : "Hotel";
   }
@@ -352,20 +352,20 @@ function priceLabel(
   return `${money(minor, currency, locale)} · ${currency || "CNY"}`;
 }
 
-function cancellationLabel(summary: string | null | undefined, zh: boolean): string {
+function cancellationLabel(summary: string | null | undefined, zh: boolean, t: (key: string) => string): string {
   const text = String(summary ?? "").trim();
-  if (!text) return zh ? "退改政策未知" : "Cancellation terms unknown";
+  if (!text) return t("stay.cancellationTermsUnknown");
   // The provider returns a machine-facing English summary; a Chinese screen
   // must not print it raw.
   if (/non-refundable/i.test(text)) return zh ? "不可取消" : "Non-refundable";
-  if (/free cancellation/i.test(text)) return zh ? "入住前可免费取消" : "Free cancellation before arrival";
+  if (/free cancellation/i.test(text)) return t("stay.freeCancellationBeforeArrival");
   return text;
 }
 
-function evidenceLabel(option: V8Data["options"][number] | null | undefined, zh: boolean): string {
+function evidenceLabel(option: V8Data["options"][number] | null | undefined, zh: boolean, t: (key: string) => string): string {
   const confidence = option?.stay?.evidence?.confidence;
   if (typeof confidence !== "number" || confidence <= 0) {
-    return zh ? "暂无供应商证据" : "No provider evidence";
+    return t("stay.noProviderEvidence");
   }
   return zh
     ? `供应商证据置信度 ${Math.round(confidence * 100)}%`

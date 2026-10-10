@@ -899,6 +899,14 @@ const en: Dict = {
   "stay.reacquire": "Re-acquire stays for this city",
   "stay.chooseTitle": "Choose where to stay",
   "stay.arrivalFit": "Arrival / departure fit",
+  "stay.noStayCandidatesYet": "No stay candidates yet",
+  "stay.candidatesRankedThisRun": "Candidates ranked this run",
+  "stay.staysThisServerReturned": "Stays this server returned",
+  "stay.travelers": "travelers",
+  "stay.roomTypeUnknown": "Room type unknown",
+  "stay.cancellationTermsUnknown": "Cancellation terms unknown",
+  "stay.freeCancellationBeforeArrival": "Free cancellation before arrival",
+  "stay.noProviderEvidence": "No provider evidence",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2125,6 +2133,14 @@ const zhCN: Dict = {
   "stay.reacquire": "重新采集这家城市的住宿",
   "stay.chooseTitle": "选一家住的地方",
   "stay.arrivalFit": "到达/离开衔接",
+  "stay.noStayCandidatesYet": "还没有可用的住宿候选",
+  "stay.candidatesRankedThisRun": "这一轮排定的候选数",
+  "stay.staysThisServerReturned": "这台服务器交回的住宿数",
+  "stay.travelers": "位旅客",
+  "stay.roomTypeUnknown": "房型未知",
+  "stay.cancellationTermsUnknown": "退改政策未知",
+  "stay.freeCancellationBeforeArrival": "入住前可免费取消",
+  "stay.noProviderEvidence": "暂无供应商证据",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
