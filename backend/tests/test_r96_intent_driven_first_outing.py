@@ -35,8 +35,15 @@ def test_r96_explicit_outing_intents_emit_bounded_overpass_categories():
         provider.close()
 
     assert len(queries) == 4
-    assert 'nwr["tourism"~"museum|gallery"]' in queries[0]
-    assert 'nwr["amenity"="arts_centre"]' in queries[0]
+    museum_query = queries[0]
+    assert museum_query.startswith('[out:json][timeout:10];(')
+    assert museum_query.count('nwr[') == 2
+    assert 'nwr["tourism"~"museum|gallery"]' in museum_query
+    assert 'nwr["amenity"="arts_centre"]' in museum_query
+    assert museum_query.index('nwr["tourism"~"museum|gallery"]') < museum_query.index(
+        'nwr["amenity"="arts_centre"]'
+    )
+    assert museum_query.endswith(');out center tags;')
     assert 'nwr["leisure"~"park|garden"]' in queries[1]
     assert 'nwr["amenity"~"cafe|coffee"]' in queries[2]
     assert 'nwr["amenity"="library"]' in queries[3]
