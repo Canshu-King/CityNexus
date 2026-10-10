@@ -1,0 +1,39 @@
+ORD-0557 lane kuaidao (快刀工) gate readout -- 2026-10-10
+scope: frontend/src/features/estimation/estimationLadder.ts, two fallback tokens at tip line 172
+
+TIP AND BRANCHES (every sha below was read with the command printed with it)
+1 tip read: `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+  -> 7ce836f9afafe9e763527cba828719b414b18db8  (branches cut from here)
+2 the line moved while this lane worked, re-read the same way:
+  -> d435cff26df752908a8a3a58d5c61f9f5c23f40c
+  7ce836f9... is an ancestor of d435cff2... (`git merge-base --is-ancestor` rc 0), and the 11 files
+  that moved in between do not include estimationLadder.ts or estimationLadderCopy.ts
+  (`git diff --name-only 7ce836f9..d435cff2` -> PlanWithAiSheet.tsx, LocaleContext.tsx, review/* only)
+3 both branches therefore carry d435cff2 as a merge parent (no rebase of a published branch, force-push 0)
+  dict branch   refs/heads/review/快刀工-0557-dict-r1   tip 927810649
+  product branch refs/heads/review/快刀工-0557-r1        tip 132874b63 (merge parents: my product
+  commit 88768f772 + the dict tip 927810649, so the dictionary half is an ancestor of the product half)
+
+GATES (cwd D:\moodle\_qoder_kuaidao_0557\frontend, node_modules is a junction to
+D:\moodle\_qoder_integration_20260919\frontend\node_modules, not installed from this tree's lock)
+4 `node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit`  -> rc 0, zero error lines
+5 `node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit` (whole src) -> rc 0, zero error lines
+6 `node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_kuaidao_0557_dist --emptyOutDir` -> rc 0
+7 same three commands were also run on review/快刀工-0557-dict-r1 alone: tsc -p tsconfig.typecheck.json
+  -> rc 0, zero error lines
+
+A/B DICTIONARY GATE (the screen-text control for this order)
+8 method: both trees' estimationLadder.ts + estimationLadderCopy.ts emitted with tsc to CommonJS, then
+  driven through node -- baseline = the tip files, candidate = this branch's files. For every reading the
+  driver compares, per locale ("en" and "zh-CN"), each rung's tier, key, trigger and the filled sentence
+  (`fillLadder(ladderCopyFor(locale, key), vars)`), plus every facts cell.
+9 readings=864  cases=1728  cells_compared=15232  cells_differing=0
+10 tokens the post_verify rung still emits after the move: "amount,non_refundable", "amount,refundable"
+   -- byte-identical to the ones the tip invented at :172
+11 key resolution, both sides: ladderCopyFor("en","estimation.amountNonRefundable") = amount,non_refundable
+   ladderCopyFor("zh-CN","estimation.amountNonRefundable") = amount,non_refundable
+   ladderCopyFor("en","estimation.amountRefundable") = amount,refundable
+   ladderCopyFor("zh-CN","estimation.amountRefundable") = amount,refundable
+12 landing order is load-bearing: with the dictionary half absent, ladderCopyFor falls back to the key name
+   (control run on the tip dictionary: estimation.amountRefundable), so the dict half must land first -- the
+   product branch carries it as an ancestor, so the pair cannot land out of order.
