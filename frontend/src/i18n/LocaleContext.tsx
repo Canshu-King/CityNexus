@@ -391,6 +391,8 @@ const en: Dict = {
   "live.compare": "Compare",
   "live.providerFacts": "Provider facts · unknown costs never become zero",
   "live.durationPending": "duration pending",
+  "live.tripUpdated": "Your trip has been updated.",
+  "live.remindLaterOk": "Okay, we will remind you later.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -1820,6 +1822,8 @@ const zhCN: Dict = {
   "live.compare": "对比",
   "live.providerFacts": "供应商事实 · 未知费用不会被视为零",
   "live.durationPending": "时长待定",
+  "live.tripUpdated": "已按新安排更新你的行程。",
+  "live.remindLaterOk": "好的，稍后再提醒你。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
