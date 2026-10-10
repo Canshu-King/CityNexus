@@ -1337,6 +1337,7 @@ const en: Dict = {
   "lib.failureAttribution.stateAlreadyMoved": "The state already moved - this was not a failed read",
   "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
   "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
+  "lib.failureAttribution.readFailed": "This read failed",
 };
 
 const zhCN: Dict = {
@@ -2582,6 +2583,7 @@ const zhCN: Dict = {
   "lib.failureAttribution.stateAlreadyMoved": "这件事的状态已经变了，不是没读到",
   "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
   "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
+  "lib.failureAttribution.readFailed": "这一次没读到",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
