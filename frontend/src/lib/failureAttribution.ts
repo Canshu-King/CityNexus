@@ -469,12 +469,8 @@ export function copyFor(
         kicker: kickerOf("connection"),
         title: titleOf("lib.failureAttribution.networkUnavailable"),
         body: detail.hasCachedCopy
-          ? zh
-            ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。"
-            : "This request could not travel and nothing came back, so this is a network problem. Your trip data has not been lost and the saved read-only copy is still available. Check your connection and try again."
-          : zh
-            ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。"
-            : "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
+          ? titleOf("lib.failureAttribution.networkCopyStillReadable")
+          : titleOf("lib.failureAttribution.networkNoOfflineCopy"),
       };
     case "failure.serverError":
       return detail.hasCachedCopy
@@ -584,9 +580,7 @@ export function copyFor(
       return {
         kicker: kickerOf("read"),
         title: titleOf("lib.failureAttribution.readFailed"),
-        body: zh
-          ? "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。"
-          : "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",
+        body: titleOf("lib.failureAttribution.readCauseNotClassified"),
       };
   }
 }
