@@ -51,7 +51,7 @@ zh-CN（locale 未设时浏览器 navigator.language 也是中文，读数以显
   .v8-muted           = 这台服务器说这些地点属于这一程，还没排在任何一天。
   [data-testid=pending-loading] = 正在读待规划集合…
   整块 innerText      = 待规划 / 这台服务器说这些地点属于这一程，还没排在任何一天。 / 正在读待规划集合… / 技术详情
-  截图 review_artifacts_0570/shot_0570_zh.png  16068 字节  sha256 e4e81ab1d678ca126b9f67adbc8ff564ab9e0d995a5d98507dab695ccd1a9578
+  截图 review/lupaigongjia-0570/shot_0570_zh.png  16068 字节  sha256 e4e81ab1d678ca126b9f67adbc8ff564ab9e0d995a5d98507dab695ccd1a9578
 
 en
   section[aria-label]  = Not on a day yet
@@ -59,14 +59,14 @@ en
   .v8-muted           = Places this server says belong to this trip, in no day of it yet.
   [data-testid=pending-loading] = Reading the pending set…
   整块 innerText      = Not on a day yet / Places this server says belong to this trip, in no day of it yet. / Reading the pending set… / Technical details
-  截图 review_artifacts_0570/shot_0570_en.png  14209 字节  sha256 24fc83a2d4d997f06cc482e5058b445e06921a8f300cad7562dcb021fb25c87e
+  截图 review/lupaigongjia-0570/shot_0570_en.png  14209 字节  sha256 24fc83a2d4d997f06cc482e5058b445e06921a8f300cad7562dcb021fb25c87e
 
 控制台：browser_console_messages level=error → Total messages: 3 (Errors: 0, Warnings: 0)，页面自身 0 条错误。
 
 
 三、同树 A/B（搬动前后文案一字不差）
 
-命令原样：node _ab_probe_0570.cjs   →  rc=0，产出 _ab_readings_0570.txt（27 行）
+命令原样：node review/lupaigongjia-0570/ab_probe_0570.cjs   →  rc=0，产出 review/lupaigongjia-0570/ab_readings_0570.txt（27 行）
 before = git show ae2d96198b:frontend/src/features/pending/pendingSetCopy.ts 经 esbuild stdin（resolveDir 指真模块目录）打包；
 after  = 本工作树同一文件打包。两臂解到同一份 src/lib/plural.ts；after 另解到本树字典。
 before_bytes=11452  after_bytes=11789
@@ -90,7 +90,7 @@ before_bytes=11452  after_bytes=11789
   python frontend/scripts/i18n_detail2_parity_r1.py                          →  退出码 1（红，不是我弄的）
      打印 "en keys: 1236 zh keys: 1237"，AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
      这枚缺键不是我这一扇：zh 侧有 me.asksBeforeProtectedChange、en 侧没有，尖上同样红。
-     我对拍（parity_diff_0570_r1.py，同一把解析尺跑两枚 blob）：
+     我对拍（review/lupaigongjia-0570/parity_diff_0570_r1.py，同一把解析尺跑两枚 blob，读数 review/lupaigongjia-0570/parity_diff_0570.txt）：
         尖 ae2d96198b  en=1233 zh=1234  对称差 1 项 ['me.asksBeforeProtectedChange']
         本树          en=1236 zh=1237  对称差 1 项 ['me.asksBeforeProtectedChange']
         delta_en=+3 delta_zh=+3，新增键名 ['pending.loading','pending.sub','pending.title']，删除 0 枚，对称差不变。
@@ -103,18 +103,19 @@ pendingSetCopy.ts 文件头注释原本说这三对（以及其余）刻意留�
 （同一形状：模块函数里用 dictionaryCopy 问共享字典）。头注释我没改字，只在类型上方补了一句说明。
 
 
-六、探针件（不入库，随树留在工作区）
+六、探针件去向
 
-  frontend/probe-pending-0570.html
-  frontend/src/__probe_pending_0570/main.tsx
-  _ab_probe_0570.cjs / _ab_readings_0570.txt / parity_diff_0570_r1.py / parity_diff_0570.txt
-  tsc_0570_after.txt / build_0570_after.txt / parity_0570_after.txt / vite_probe_0570.log
-入库的只有：两枚产品文件的改动 + review/lupaigongjia-0570/ 下这份读数件与两张截图。
+  入库（review/lupaigongjia-0570/）：readout_0570_r1.md、shot_0570_zh.png、shot_0570_en.png、
+    ab_probe_0570.cjs、ab_readings_0570.txt、parity_diff_0570_r1.py、parity_diff_0570.txt、
+    tsc_0570_final.txt、tsc_0570_with_probe.txt、build_0570_after.txt、parity_0570_after.txt。
+  不入库、已从树上删掉：frontend/probe-pending-0570.html 与 frontend/src/__probe_pending_0570/main.tsx
+    （屏读探针，删掉后终树复跑过类型闸，见第七节）。
+  不入库、留在工作区：vite_probe_0570.log（起 dev 的原样输出）。
 
 
 七、删探针后终树复跑
 
   探针两件（frontend/probe-pending-0570.html、frontend/src/__probe_pending_0570/main.tsx）删掉后，
   在要入库的那棵树上复跑：node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
-  → 退出码 0，输出 0 行（tsc_0570_final.txt）。
+  → 退出码 0，输出 0 行（review/lupaigongjia-0570/tsc_0570_final.txt）。
   开发服务是我起的（PID 61868，端口 4786），取完读数已 taskkill，端口现读 0 个监听。
