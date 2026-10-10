@@ -49,7 +49,7 @@ def write_cfg():
     src = json.loads(io.open(WT + "/frontend/tsconfig.typecheck.json", encoding="utf-8").read())
     src["compilerOptions"]["types"] = []
     src["include"] = [str(Path(WT) / F), str(Path(WT) / D)]
-    io.open(ROOT + CFG, "w", encoding="utf-8").write(json.dumps(src, indent=2) + NL)
+    io.open(ROOT + CFG, "w", encoding="utf-8", newline=chr(10)).write(json.dumps(src, indent=2) + NL)
 
 
 def measure(state, expect_head, expect_keys, expect_reads):
@@ -112,10 +112,10 @@ G.append(measure("dict_branch", dict_head, 2, 0))
 git("checkout", "-q", PROD)
 G.append(measure("product_branch", prod_head, 2, 1))
 
-with io.open(ROOT + GT, "w", encoding="utf-8") as fh:
+with io.open(ROOT + GT, "w", encoding="utf-8", newline=chr(10)) as fh:
     for i, ln in enumerate(G):
         fh.write(str(i + 1) + ". " + ln + NL)
-with io.open(ROOT + EV, "w", encoding="utf-8") as fh:
+with io.open(ROOT + EV, "w", encoding="utf-8", newline=chr(10)) as fh:
     for i, ln in enumerate(E):
         fh.write(str(i + 1) + ". " + ln + NL)
 for ln in G:
