@@ -1,0 +1,23 @@
+ts_version=5.9.3
+plural_blob_at_tip=aefcc082623f11b473d75020dae37787c4fcb6e8
+plural_bytes_local_sha1=df28310b1f25bc613ba9f1c559b0009d54ae49e1
+src_lines=53
+unit=min count=1 -> englishCountNoun="min" regularPlural="mins"
+unit=min count=2 -> englishCountNoun="mins" regularPlural="mins"
+unit=min count=45 -> englishCountNoun="mins" regularPlural="mins"
+unit=min count=1.5 -> englishCountNoun="mins" regularPlural="mins"
+unit=min count=800 -> englishCountNoun="mins" regularPlural="mins"
+unit=m count=1 -> englishCountNoun="m" regularPlural="ms"
+unit=m count=2 -> englishCountNoun="ms" regularPlural="ms"
+unit=m count=45 -> englishCountNoun="ms" regularPlural="ms"
+unit=m count=1.5 -> englishCountNoun="ms" regularPlural="ms"
+unit=m count=800 -> englishCountNoun="ms" regularPlural="ms"
+unit=km count=1 -> englishCountNoun="km" regularPlural="kms"
+unit=km count=2 -> englishCountNoun="kms" regularPlural="kms"
+unit=km count=45 -> englishCountNoun="kms" regularPlural="kms"
+unit=km count=1.5 -> englishCountNoun="kms" regularPlural="kms"
+unit=km count=800 -> englishCountNoun="kms" regularPlural="kms"
+noun=change count=2 -> "changes" (control: ruler still works on real nouns)
+noun=leg count=2 -> "legs" (control: ruler still works on real nouns)
+noun=stop count=2 -> "stops" (control: ruler still works on real nouns)
+isOne_string_1.0 -> englishCountNoun("1.0","km")="kms" (km arm feeds toFixed(1))

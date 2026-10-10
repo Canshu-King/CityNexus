@@ -1,0 +1,26 @@
+# screen read TAG=after url=http://localhost:4581/legacy
+key main.cityNexusRequestFailed | needle "CityNexus request failed" | en=false zh=false
+key main.cityNexusRequestRefusedHttp | needle "CityNexus request refused (HTTP" | en=true zh=true
+key main.persistedOperationUpdate | needle "Persisted operation update" | en=false zh=false
+key main.generalRecovery | needle "general recovery" | en=false zh=false
+key main.activateAStandingMissionOnce | needle "Activate a standing mission once; subsequent city signals" | en=false zh=false
+key main.noDominantFailureMode | needle "No dominant failure mode" | en=false zh=false
+key main.notEvaluated | needle "not evaluated" | en=false zh=false
+key main.validatedActivity | needle "validated Activity" | en=false zh=false
+key main.noActionableTarget | needle "no actionable target" | en=false zh=false
+key main.outcomeEvidence | needle "outcome evidence" | en=false zh=false
+key main.explicitWins | needle "explicit wins" | en=false zh=false
+key main.notReported | needle "not reported" | en=false zh=false
+key main.noUpcomingActivity | needle "no upcoming activity" | en=false zh=false
+key main.noActiveC4 | needle "No active C4" | en=false zh=false
+key main.notAvailable | needle "not available" | en=false zh=false
+key main.unnamedCommitmentServerGaveNoName | needle "未命名承诺 · 服务器没给名字" | en=false zh=false
+key main.verifiedFeasible | needle "verified feasible" | en=false zh=false
+key main.notFeasible | needle "not feasible" | en=false zh=false
+key main.notPreserved | needle "not preserved" | en=false zh=false
+key main.verifiedEvidenceAttached | needle "verified evidence attached" | en=false zh=false
+key main.evidenceUnavailable | needle "evidence unavailable" | en=false zh=false
+HITS en=1/21 zh=1/21
+png_en=review/pinggong-0557/screen_after_en.png bytes=15506
+png_zh=review/pinggong-0557/screen_after_zh-CN.png bytes=15506
+body_chars en=142 zh=142
