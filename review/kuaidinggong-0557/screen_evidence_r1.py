@@ -101,7 +101,9 @@ for root, dirs, files in os.walk(WT + "/frontend/src"):
             if any(OLD[k] in txt for k in KEYS):
                 hits.append(os.path.relpath(os.path.join(root, fn), WT).replace("\\", "/"))
 R.append("files_under_src_holding_the_two_literals_in_this_checkout " + str(hits))
-R.append("gate_readings_see D:/moodle/_kd0557_gates_r1.txt")
+R.append("key_names_absent_in_tip_dictionary occurrences " + str(len(find_lines(blob(TIP, LOCF), '"recovery.noDominantMode"') + find_lines(blob(TIP, LOCF), '"recovery.noneOnThisJourney"'))))
+R.append("evidence_measured_on_checkout_state " + git("rev-parse", "--abbrev-ref", "HEAD").strip())
+R.append("gate_readings_see review/kuaidinggong-0557/gates_readout_r1.txt")
 
 with io.open(EVIDENCE, "w", encoding="utf-8", newline="\n") as fh:
     for i, line in enumerate(R):
