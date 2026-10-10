@@ -1,0 +1,28 @@
+demo/reset answered for journey=22222222 token_present=yes
+[with-delay/en] run=244eced3 journey=22222222 dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[with-delay/en] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot 4aa8ca74-0ebb-4955-9276-b003142ae2af · ?"
+[with-delay/en] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[with-delay/en] screenshot = review/预防工-0557/with-delay_en_r1.png
+[with-delay/en] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot 4aa8ca74-0ebb-4955-9276-b003142ae2af · ?"
+[with-delay/en] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"
+demo/reset answered for journey=22222222 token_present=yes
+[with-delay/zh] run=9be05641 journey=22222222 dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[with-delay/zh] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot 786bef0e-7b80-4524-bb74-59223027ec8f · ?"
+[with-delay/zh] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[with-delay/zh] screenshot = review/预防工-0557/with-delay_zh_r1.png
+[with-delay/zh] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot 786bef0e-7b80-4524-bb74-59223027ec8f · ?"
+[with-delay/zh] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"
+demo/reset answered for journey=22222222 token_present=yes
+[no-signal/en] run=be85e3be journey=22222222 dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[no-signal/en] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot 24c72ad7-a4ba-467a-bd85-71db33d8be12 · ?"
+[no-signal/en] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[no-signal/en] screenshot = review/预防工-0557/no-signal_en_r1.png
+[no-signal/en] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot 24c72ad7-a4ba-467a-bd85-71db33d8be12 · ?"
+[no-signal/en] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"
+demo/reset answered for journey=22222222 token_present=yes
+[no-signal/zh] run=3e651985 journey=22222222 dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[no-signal/zh] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot a3183881-34c1-4339-96d5-bf8f60fe6d1a · ?"
+[no-signal/zh] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[no-signal/zh] screenshot = review/预防工-0557/no-signal_zh_r1.png
+[no-signal/zh] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot a3183881-34c1-4339-96d5-bf8f60fe6d1a · ?"
+[no-signal/zh] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"

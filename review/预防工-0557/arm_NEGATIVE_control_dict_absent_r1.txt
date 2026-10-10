@@ -1,0 +1,29 @@
+base: panel prints the literal 'no dominant mode'          ok hits=1
+base: panel prints the literal 'none on this journey'      ok hits=1
+after: panel reads t('recovery.noDominantMode') exactly once FAIL reads=0
+after: literal 'no dominant mode' is gone from the panel   FAIL left=1
+after: panel reads t('recovery.noneOnThisJourney') exactly once FAIL reads=0
+after: literal 'none on this journey' is gone from the panel FAIL left=1
+en: recovery.noDominantMode present exactly once           FAIL occurrences=0
+en: value byte-identical to the old literal                FAIL got=None
+en: recovery.noneOnThisJourney present exactly once        FAIL occurrences=0
+en: value byte-identical to the old literal                FAIL got=None
+zh: recovery.noDominantMode absent by the en_only ruling   ok 
+zh: recovery.noneOnThisJourney absent by the en_only ruling ok 
+t(): English fallback line unchanged from base             ok base=1 after=1
+en: only the two stamped keys added                        FAIL added=0 removed=0 changed=0
+zh: dictionary untouched                                   ok added=0 removed=0 changed=0
+panel: line count unchanged                                ok 241 vs 241
+panel: exactly the two moved lines differ                  FAIL touched=[]
+
+ARM i18n_0557_preventive_panel: 17 checks, 10 failed
+  failed: after: panel reads t('recovery.noDominantMode') exactly once
+  failed: after: literal 'no dominant mode' is gone from the panel
+  failed: after: panel reads t('recovery.noneOnThisJourney') exactly once
+  failed: after: literal 'none on this journey' is gone from the panel
+  failed: en: recovery.noDominantMode present exactly once
+  failed: en: value byte-identical to the old literal
+  failed: en: recovery.noneOnThisJourney present exactly once
+  failed: en: value byte-identical to the old literal
+  failed: en: only the two stamped keys added
+  failed: panel: exactly the two moved lines differ

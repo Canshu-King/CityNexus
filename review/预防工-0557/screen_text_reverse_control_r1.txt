@@ -1,0 +1,33 @@
+# reverse control: the same four arms, run twice on base generation d435cff26df752908a8a3a58d5c61f9f5c23f40c
+#  BEFORE = panel bytes taken from that base (the two literals still inline, t() reads 0)
+#  AFTER  = panel bytes from this branch (both slots read the dictionary)
+# run id / journey id / snapshot uuid are per-run by nature; they are stripped in both sides.
+lines_before=28 lines_after=28 identical=28 differing=0
+demo/reset answered for journey=<per-run> token_present=yes
+[with-delay/en] run=<per-run> journey=<per-run> dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[with-delay/en] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[with-delay/en] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[with-delay/en] screenshot = review/预防工-0557/with-delay_en_r1.png
+[with-delay/en] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[with-delay/en] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"
+demo/reset answered for journey=<per-run> token_present=yes
+[with-delay/zh] run=<per-run> journey=<per-run> dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[with-delay/zh] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[with-delay/zh] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[with-delay/zh] screenshot = review/预防工-0557/with-delay_zh_r1.png
+[with-delay/zh] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[with-delay/zh] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"
+demo/reset answered for journey=<per-run> token_present=yes
+[no-signal/en] run=<per-run> journey=<per-run> dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[no-signal/en] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[no-signal/en] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[no-signal/en] screenshot = review/预防工-0557/no-signal_en_r1.png
+[no-signal/en] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[no-signal/en] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"
+demo/reset answered for journey=<per-run> token_present=yes
+[no-signal/zh] run=<per-run> journey=<per-run> dominant_failure_modes=array len 1 protected_in_run_evidence=no such field
+[no-signal/zh] v14-preventive-evidence textContent = "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[no-signal/zh] v14-preventive-protected textContent = "none on this journey" data-count="0"
+[no-signal/zh] screenshot = review/预防工-0557/no-signal_zh_r1.png
+[no-signal/zh] arm 196 expected tail "?"; glass read "solver ORTOOLS_CP_SAT_V2 · snapshot <per-run> · ?"
+[no-signal/zh] arm 228 expected "none on this journey" (data-count=0); glass read "none on this journey"

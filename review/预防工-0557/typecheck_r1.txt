@@ -1,0 +1,6 @@
+npm run typecheck  (= tsc -p tsconfig.check.json --noEmit), run on the new base d435cff26
+
+> typecheck
+> tsc -p tsconfig.check.json --noEmit
+
+TYPECHECK_RC=0

@@ -334,6 +334,11 @@ const en: Dict = {
      cannot move; only the Chinese screen stops reading English. */
   "recovery.statusUnavailable": "unavailable",
   "recovery.guardianEnvelope": "guardian envelope",
+  /* ORD-0557: the preventive panel's own two last-resort lines. Each English value is
+     the exact string that panel printed before the key existed, and it has no Chinese
+     branch, so only the English side is supplied -- t() falls back to this dictionary. */
+  "recovery.noDominantMode": "no dominant mode",
+  "recovery.noneOnThisJourney": "none on this journey",
   "recovery.changedFromActivity": "Current activity",
   "recovery.changedToActivity": "recovered activity",
   "live.nothingDue": "Nothing is due right now",

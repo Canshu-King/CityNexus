@@ -1,0 +1,242 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4621 backend=:8141 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557r9.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [42816]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8141 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:60119 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60126 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=yfg0557r9 frontend=:4621 -> backend=:8141 ai=disabled db=_e2e_yfg0557r9.db
+
+Running 5 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4621 backend=:8141 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557r9.db ai=disabled reuseExistingServer=false
+
+[1/5] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:60129 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:60130 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:60129 - "POST /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60130 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60129 - "POST /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/stay-options/421a4927-9c0e-4fc3-9a7d-6f5e1a99ab97/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=9c705da1-c6cd-4686-8ccb-e2333176f5b8 options=4 chosen=421a4927-9c0e-4fc3-9a7d-6f5e1a99ab97 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:64336 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64337 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53005 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53007 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53004 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64338 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50179 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53006 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55486 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55485 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65397 - "GET /api/v1/travelers/119645c2-41c5-4803-be6a-a62df7d3e028/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51679 - "GET /api/v1/journeys/9c705da1-c6cd-4686-8ccb-e2333176f5b8/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55487 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4621 backend=:8141 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557r9.db ai=disabled reuseExistingServer=false
+
+[2/5] [chromium] › e2e\qoder-yufanggong-0557-preventive-fallback-words-r1.spec.ts:150:5 › with-delay / en: the two last-resort slots read the dictionary words
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/demo/reset HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "PUT /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/55523d40-cafe-5bd2-b30a-de057ec7a839/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "PUT /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/mission HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/provider-fixture HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/stop HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63746 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63747 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65385 - "GET /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63781 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63780 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63749 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63748 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63782 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57938 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57937 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58588 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[3/5] [chromium] › e2e\qoder-yufanggong-0557-preventive-fallback-words-r1.spec.ts:150:5 › with-delay / zh: the two last-resort slots read the dictionary words
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/demo/reset HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "PUT /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/55523d40-cafe-5bd2-b30a-de057ec7a839/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "PUT /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/mission HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/provider-fixture HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58589 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/stop HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63724 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63725 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50454 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50453 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63728 - "GET /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63727 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63726 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50457 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63246 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63245 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65025 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[4/5] [chromium] › e2e\qoder-yufanggong-0557-preventive-fallback-words-r1.spec.ts:150:5 › no-signal / en: the two last-resort slots read the dictionary words
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/demo/reset HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "PUT /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/55523d40-cafe-5bd2-b30a-de057ec7a839/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "PUT /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/mission HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/provider-fixture HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53119 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/stop HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54929 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54930 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54933 - "GET /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60629 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60628 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54932 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54931 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60630 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59369 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59368 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56338 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[5/5] [chromium] › e2e\qoder-yufanggong-0557-preventive-fallback-words-r1.spec.ts:150:5 › no-signal / zh: the two last-resort slots read the dictionary words
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/demo/reset HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "PUT /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/55523d40-cafe-5bd2-b30a-de057ec7a839/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "PUT /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/mission HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/provider-fixture HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/start HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56340 - "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/autopilot/stop HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52338 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52341 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52344 - "GET /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52343 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57699 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57698 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52342 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57700 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50756 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/guardian/status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50757 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56123 - "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience HTTP/1.1" 200 OK
+
+  5 passed (20.3s)

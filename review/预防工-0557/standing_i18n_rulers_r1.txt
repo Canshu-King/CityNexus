@@ -1,0 +1,15 @@
+# standing i18n rulers, run with both branches' bytes in the tree
+## i18n_detail2_parity_r1.py on BASE dict (control, one line above the two new keys)
+verdict: PARITY BREAK ['me.asksBeforeProtectedChange'] rc=1  (measured earlier in this session, same command)
+
+## i18n_detail2_parity_r1.py with my two en_only keys
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange', 'recovery.noDominantMode', 'recovery.noneOnThisJourney'])
+PARITY_RC=1
+
+## i18n_detail2_audit_r1.py (TARGETS coverage of this file)
+MISS features/trip/TripItinerary.tsx:455 zh='${day.activities.length} 项' en='${day.activities.length} stops'
+MISS features/progress/journeyProgress.ts:86 zh='共 ${p.day_total} 天。' en='${p.day_total} days.'
+AUDIT_RC=0
+audit TARGETS mentions V14PreventivePanel:
+0

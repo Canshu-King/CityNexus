@@ -1,0 +1,3 @@
+npm run build  (= vite build), run on the new base d435cff26
+[32m✓ built in 5.43s[39m
+BUILD_RC=0
