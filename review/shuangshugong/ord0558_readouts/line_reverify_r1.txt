@@ -1,0 +1,14 @@
+# ORD-0558 shuangshugong: this lane's instrument re-run ON the authoritative line
+authoritative_tip=3bb001aef4e2158dbdc53454ee14d56988f28405
+worktree_head=3bb001aef4e2158dbdc53454ee14d56988f28405
+target_blob_on_line=82d1a3c427e0590accd010c9cb3d64ec36e709c2
+gate_typecheck_exit_code=0
+spec_exit_code=0
+spec_green=5 条
+spec_red=0 条
+arm: ok 1 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:311:3 › ORD-0558 LiveRecovery merged-suggestions line, both count states › S0probe: the counted noun on the English arm reaches the ruler, and the arms are adjacent (5ms)
+arm: ok 2 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › E1en_one (2.3s)
+arm: ok 3 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › E2en_two (937ms)
+arm: ok 4 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › Z1zh_one (1.0s)
+arm: ok 5 e2e\qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts:325:5 › ORD-0558 LiveRecovery merged-suggestions line, both count states › Z2zh_two (986ms)
+summary: 5 passed (7.0s)

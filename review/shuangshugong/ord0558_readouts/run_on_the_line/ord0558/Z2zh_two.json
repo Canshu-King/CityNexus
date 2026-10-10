@@ -1,0 +1,25 @@
+{
+  "order": "ORD-0558",
+  "lane": "shuangshugong",
+  "arm": "Z2zh_two",
+  "locale": "zh-CN",
+  "proposals_fed": 3,
+  "duplicate_count_expected": 2,
+  "expected_text": "已合并 2 个内容相同的建议。",
+  "forbidden_text_ruled_out": "",
+  "rendered_text": "已合并 2 个内容相同的建议。",
+  "match": true,
+  "requests_escaped_the_fixtures": [],
+  "screenshot": "D:\\moodle\\_qoder_shuangshugong_0558\\review\\shuangshugong\\ord0558_readouts\\run_on_the_line\\ord0558\\Z2zh_two.png",
+  "source_probe": {
+    "file": "frontend/src/features/execution/LiveRecovery.tsx",
+    "totalLines": 469,
+    "zhArmLine": 347,
+    "enArmLine": 348,
+    "duplicateCountLine": 221,
+    "rulerImportLine": 14,
+    "enArmCarriesRuler": true,
+    "enArmText": ": `Merged ${duplicateCount} identical ${englishCountNoun(duplicateCount, \"suggestion\")}.`}"
+  },
+  "ruler_module": "frontend/src/lib/plural.ts"
+}
