@@ -1,0 +1,3 @@
+BASE CONTROL npm run build on untouched base bytes
+[31merror during build:
+BUILD_BASE_RC=1

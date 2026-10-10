@@ -1,0 +1,2 @@
+BASE CONTROL npm run typecheck on the untouched base bytes
+      3 src/features/studio/SortableActivityList.tsx

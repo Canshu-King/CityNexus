@@ -1,0 +1,3 @@
+npm run build  (= vite build) on the complete store, base 996f1b75, both branches' bytes
+[32m✓ built in 22.44s[39m
+BUILD_RC=0

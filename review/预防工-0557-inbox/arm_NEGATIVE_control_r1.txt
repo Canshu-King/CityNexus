@@ -1,0 +1,44 @@
+base: pair 已处理/Handled is inline on the moved lines              ok at=[253]
+base: pair 待确认/To confirm is inline on the moved lines           ok at=[258, 279]
+after: t("inbox.handled") read once                              FAIL reads=0
+after: t("inbox.toConfirm") read twice (two places, one key)     FAIL reads=0
+after: literal '已处理' gone from the workbench                     FAIL 
+after: literal 'Handled' gone from the workbench                 FAIL 
+after: literal '待确认' gone from the workbench                     FAIL 
+after: literal 'To confirm' gone from the workbench              FAIL 
+after: the reads sit on lines [253, 258, 279]                    FAIL at=[]
+en: inbox.handled once with the string the en arm printed        FAIL en=None zh=None
+base: inbox.handled was not already in either side               ok 
+en: inbox.toConfirm once with the string the en arm printed      FAIL en=None zh=None
+base: inbox.toConfirm was not already in either side             ok 
+en: only the two stamped keys added                              FAIL added=0 removed=0 changed=0
+zh: only the two stamped keys added                              FAIL added=0 removed=0 changed=0
+decisionLabel takes t in its signature                           FAIL function decisionLabel(value: string, zh: boolean): string {
+timeLabel takes t in its signature                               FAIL function timeLabel(value: unknown, zh: boolean): string {
+renderFact takes t in its signature                              FAIL function renderFact(value: unknown, zh: boolean): string {
+every call site passes three arguments                           FAIL decision=0 time=0 render=0
+no call site left on the old two-argument shape                  FAIL left=4
+deferred: '已记录' still inline until the next branch               ok 
+deferred: 'Recorded' still inline until the next branch          ok 
+workbench: line count unchanged                                  ok 1064 vs 1064
+workbench: the only changed lines are signatures, reads and call sites FAIL touched=[]
+workbench: moneyLabel untouched -- its row is dead code, reported not moved ok 
+
+ARM i18n_0557_inbox_labels: 25 checks, 17 failed
+  failed: after: t("inbox.handled") read once
+  failed: after: t("inbox.toConfirm") read twice (two places, one key)
+  failed: after: literal '已处理' gone from the workbench
+  failed: after: literal 'Handled' gone from the workbench
+  failed: after: literal '待确认' gone from the workbench
+  failed: after: literal 'To confirm' gone from the workbench
+  failed: after: the reads sit on lines [253, 258, 279]
+  failed: en: inbox.handled once with the string the en arm printed
+  failed: en: inbox.toConfirm once with the string the en arm printed
+  failed: en: only the two stamped keys added
+  failed: zh: only the two stamped keys added
+  failed: decisionLabel takes t in its signature
+  failed: timeLabel takes t in its signature
+  failed: renderFact takes t in its signature
+  failed: every call site passes three arguments
+  failed: no call site left on the old two-argument shape
+  failed: workbench: the only changed lines are signatures, reads and call sites

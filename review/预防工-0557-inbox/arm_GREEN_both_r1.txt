@@ -1,0 +1,27 @@
+base: pair 已处理/Handled is inline on the moved lines              ok at=[253]
+base: pair 待确认/To confirm is inline on the moved lines           ok at=[258, 279]
+after: t("inbox.handled") read once                              ok reads=1
+after: t("inbox.toConfirm") read twice (two places, one key)     ok reads=2
+after: literal '已处理' gone from the workbench                     ok 
+after: literal 'Handled' gone from the workbench                 ok 
+after: literal '待确认' gone from the workbench                     ok 
+after: literal 'To confirm' gone from the workbench              ok 
+after: the reads sit on lines [253, 258, 279]                    ok at=[253, 258, 279]
+en: inbox.handled once with the string the en arm printed        ok en='Handled' zh='已处理'
+base: inbox.handled was not already in either side               ok 
+en: inbox.toConfirm once with the string the en arm printed      ok en='To confirm' zh='待确认'
+base: inbox.toConfirm was not already in either side             ok 
+en: only the two stamped keys added                              ok added=2 removed=0 changed=0
+zh: only the two stamped keys added                              ok added=2 removed=0 changed=0
+decisionLabel takes t in its signature                           ok function decisionLabel(value: string, zh: boolean, t: (key: string) => string)
+timeLabel takes t in its signature                               ok function timeLabel(value: unknown, zh: boolean, t: (key: string) => string): s
+renderFact takes t in its signature                              ok function renderFact(value: unknown, zh: boolean, t: (key: string) => string): 
+every call site passes three arguments                           ok decision=2 time=1 render=1
+no call site left on the old two-argument shape                  ok left=0
+deferred: '已记录' still inline until the next branch               ok 
+deferred: 'Recorded' still inline until the next branch          ok 
+workbench: line count unchanged                                  ok 1064 vs 1064
+workbench: the only changed lines are signatures, reads and call sites ok touched=[251, 253, 256, 258, 278, 279, 288, 996, 1006, 1007]
+workbench: moneyLabel untouched -- its row is dead code, reported not moved ok 
+
+ARM i18n_0557_inbox_labels: 25 checks, 0 failed
