@@ -651,6 +651,7 @@ const en: Dict = {
   "discovery.openAuthoritative": "Open authoritative plan",
   "discovery.rejectedIds": "Rejected model IDs:",
   "discovery.defaultGoal": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+  "discovery.technicalDetail": "Technical detail",
   /* ORD-0435 -- the POI batch: tick several result cards, see how many are ticked, and write
      that set into a day through the server's own compose route. One contiguous block per locale,
      same keys in the other half, because a key that exists in one language only is how this screen
@@ -1957,6 +1958,7 @@ const zhCN: Dict = {
   "discovery.openAuthoritative": "打开权威方案",
   "discovery.rejectedIds": "已拒绝的模型 ID：",
   "discovery.defaultGoal": "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+  "discovery.technicalDetail": "技术详情",
   /* ORD-0435 -- 与英文半区同一批键、同一段连续插入：结果卡多选、计数、目标容器与写入回读。 */
   "discovery.pickedCount": "已选 {n} 处",
   "discovery.pick": "选它",

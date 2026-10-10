@@ -404,7 +404,7 @@ export function RealCityDiscoveryPanel({
           {failureFacts && (
             <details className="v8-advanced" data-testid="v13-discovery-technical">
               <summary data-testid="v13-discovery-technical-toggle">
-                {locale.startsWith("zh") ? "技术详情" : "Technical detail"}
+                {t("discovery.technicalDetail")}
               </summary>
               <CnxMeasuredFacts
                 facts={failureFacts}
