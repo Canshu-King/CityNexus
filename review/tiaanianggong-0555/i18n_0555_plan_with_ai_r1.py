@@ -19,7 +19,7 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))
+ROOT = os.environ.get("CNX_LANE_ROOT") or os.path.dirname(os.path.dirname(HERE))
 PRODUCT = os.path.join(ROOT, "frontend", "src", "features", "planning", "PlanWithAiSheet.tsx")
 DICT = os.path.join(ROOT, "frontend", "src", "i18n", "LocaleContext.tsx")
 
@@ -86,7 +86,9 @@ def batch_entries(batch):
 
 def split_pair(before):
     """Pull the two literals out of the exact before-snippet; nothing here is re-typed."""
-    body = before[1:] if before.startswith("(") else before
+    body = before.strip()
+    if body.startswith("(") and body.endswith(")"):
+        body = body[1:-1]
     m = TERNARY.match(body)
     if not m:
         raise SystemExit("ABORT cannot cut a zh/en pair out of: %r" % before)
