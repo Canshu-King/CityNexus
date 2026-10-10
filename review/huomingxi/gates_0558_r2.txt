@@ -1,12 +1,14 @@
 ORD-0558 lane 活明细 — r2 gate readouts (three English count phrases in poiImportCopy.ts)
-branch review/活明细-0558-r2, parent 7ce836f9afafe9e763527cba828719b414b18db8 (ls-remote of the
-authoritative mirror branch, read twice, same value)
+candidate branch review/活明细-0558-r2
+Authoritative line when this lane started: 7ce836f9afafe9e763527cba828719b414b18db8 (ls-remote).
+The line moved to d435cff26df752908a8a3a58d5c61f9f5c23f40c while this lane worked; the published
+branch was merged forward onto that tip, not rebased (a published branch must not be rebased).
 Toolchain: node v24.14.0, typescript 5.9.3, vite 7.3.6, esbuild — resolved through a junction of
 D:/moodle/_qoder_integration_20260919/frontend/node_modules into wt/frontend/node_modules.
 Worktree: D:/moodle/_qoder_huomingxi_0558/wt (isolated; the main tree's uncommitted face untouched).
 
-[1] product face
-  cmd: git diff --numstat 7ce836f9afafe9e763527cba828719b414b18db8 HEAD -- frontend/src
+[1] product face, measured against the current authoritative tip
+  cmd: git diff --numstat d435cff26df752908a8a3a58d5c61f9f5c23f40c HEAD -- frontend/src
   output: "3       3       frontend/src/features/poiimport/poiImportCopy.ts"
   one file, three lines rewritten; dictionary, contract and backend faces untouched; every zh arm
   byte-identical (see [4]).
@@ -21,27 +23,27 @@ Worktree: D:/moodle/_qoder_huomingxi_0558/wt (isolated; the main tree's uncommit
   cwd: wt/frontend
   cmd: npm run build
   exit: 0
-  key lines: "2038 modules transformed." / "built in 6.79s"
+  key lines: "2038 modules transformed." / "built in 6.41s"
 
 [4] A/B against the REAL module — this is the two-state reading, not a paraphrase
   cmd: node review/huomingxi/poi_ab_r1.mjs   exit: 0   -> poi_copy_ab_r1.txt
-  method: the tip's bytes and the branch's bytes are each bundled with the repo's own esbuild over the
-  real import graph (poiImportCopy.ts -> lib/plural.ts), then the exported poiImportCopy() is called
-  for count=1 and count=2 in both locales. No string is re-typed by hand.
+  method: the current tip's bytes and the branch's bytes are each bundled with the repo's own esbuild
+  over the real import graph (poiImportCopy.ts -> lib/plural.ts), then the exported poiImportCopy() is
+  called for count=1 and count=2 in both locales. No string is re-typed by hand.
   English count=1, tip -> branch:
-    "1 characters"                                       -> "1 character"                      (key charCount)
-    "1 lines read · 1 matched · 0 need your choice ..."   -> "1 line read · 1 matched ..."       (key counts)
-    "1 of 1 matched places selected"                      -> "1 of 1 matched place selected"     (key selectedCount)
+    "1 characters"                                     -> "1 character"                    (key charCount)
+    "1 lines read · 1 matched · 0 need your choice ..." -> "1 line read · 1 matched ..."     (key counts)
+    "1 of 1 matched places selected"                    -> "1 of 1 matched place selected"   (key selectedCount)
   English count=2: tip and branch identical on all four keys (same=true).
   Chinese: zh_pairs_identical=8/8, en_pairs_changed=3/8.
 
 [5] the row this lane deliberately did NOT ship, and why
   key addedCount, frontend/src/features/poiimport/poiImportCopy.ts:183, en
-  "{n} places are on {day} — read back from the server." carries a copula. Putting the marker on the
-  noun alone yields "1 place are on Day 2" — measured, poi_copy_ab_r1.txt line for that key. The ruler
-  in lib/plural.ts only declines a noun, not a verb, so a compliant one-shape fix would ship new bad
-  English. This row stays at the tip's bytes until the commander rules on the wording
-  (dropping the copula reads "{n} {plural:place} on {day} — read back from the server.").
+  "{n} places are on {day} — read back from the server." carries a copula. Marking only the noun
+  yields "1 place are on Day 2" — that reading is in poi_copy_ab_r1.txt for the key. lib/plural.ts
+  declines a noun, not a verb, so the two sanctioned shapes cannot produce a grammatical singular for
+  this sentence without touching the wording. The row stays at the tip's bytes until the commander
+  rules; dropping the copula reads "{n} {plural:place} on {day} — read back from the server."
 
 [6] marker count keys wired to real params (no silently-dead marker)
   frontend/src/features/poiimport/PoiImportPanel.tsx:427 -> poiImportCopy(locale, "charCount", { n: text.length })
@@ -52,5 +54,4 @@ Worktree: D:/moodle/_qoder_huomingxi_0558/wt (isolated; the main tree's uncommit
 [7] not run this round, named on purpose
   No browser/e2e pass: PoiImportPanel.tsx is the only importer of this copy table and every read goes
   through the single exported poiImportCopy(), which is exactly what the bundle above calls, so the
-  measured path is the screen's path rather than a hand-written copy. A live render is available on
-  request.
+  measured path is the screen's path rather than a hand-written copy. A live render is on request.

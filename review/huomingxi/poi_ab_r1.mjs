@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const WT = "D:/moodle/_qoder_huomingxi_0558/wt";
-const TIP = "7ce836f9afafe9e763527cba828719b414b18db8";
+const TIP = "d435cff26df752908a8a3a58d5c61f9f5c23f40c";
 const REPO = "D:/moodle/CityNexus";
 const ESBUILD = "D:/moodle/_qoder_integration_20260919/frontend/node_modules/.bin/esbuild.cmd";
 const REL = "frontend/src/features/poiimport/poiImportCopy.ts";
