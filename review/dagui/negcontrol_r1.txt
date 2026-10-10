@@ -1,0 +1,7 @@
+NEG1 dictionary one-char-off probe_rc=7 failed_lines=1
+NEG1b dictionary restored probe_rc=0 ok_lines=12
+NEG2 typecheck injected-error rc=2 error_lines=1
+NEG3 build syntax-break rc=1 transform_error=1
+restored_same_bytes frontend\src\features\simulation\SimulationPanel.tsx=1
+restored_same_bytes frontend\src\i18n\LocaleContext.tsx=1
+verdict=PROVEN clean=1 neg1_fails=1 neg1_rc=7 neg1b_rc=0 tsc_rc=2 build_rc=1

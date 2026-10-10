@@ -1,0 +1,33 @@
+== A. twelve table rows plus two shared english arms: rebuild and byte-compare ==
+OK   side=zh key=simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot base_hits=1
+OK   side=en key=simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot base_hits=1
+OK   side=zh key=simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan base_hits=1
+OK   side=zh key=simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine base_hits=1
+OK   side=en key=simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan base_hits=1
+OK   side=en key=simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine base_hits=1
+OK   side=zh key=simulation.now base_hits=2
+OK   side=en key=simulation.now base_hits=2
+OK   side=zh key=simulation.thisActionIsUnavailableRightNow base_hits=1
+OK   side=zh key=simulation.thePreviousActionHasNotReturnedYet base_hits=1
+OK   side=en key=simulation.thisActionIsUnavailableRightNow base_hits=1
+OK   side=en key=simulation.thePreviousActionHasNotReturnedYet base_hits=1
+== B. call sites now go through t(), hardcoded literals are gone ==
+calls key=simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot count=2
+calls key=simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan count=2
+calls key=simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine count=2
+calls key=simulation.now count=4
+calls key=simulation.thisActionIsUnavailableRightNow count=2
+calls key=simulation.thePreviousActionHasNotReturnedYet count=2
+call_shape_mismatch=0
+leftover_inline_literals=0
+== C. the nine hardcoded UNKNOWN reads now resolve through the existing key ==
+existing_key_value_zh=未知 en=Unknown
+unknown_reads_count=9
+unknown_hardcoded_left=0
+base_unknown_hardcoded=9
+english_arm_smallcase_unknown_now=9 base=9
+== D. untouched neighbours (negative controls) ==
+different_sentence_at_875_survives=1
+base_has_that_sentence=1
+other_files_changed=['frontend/src/features/simulation/SimulationPanel.tsx', 'frontend/src/i18n/LocaleContext.tsx']
+VERDICT all_equal
