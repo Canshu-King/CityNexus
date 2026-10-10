@@ -80,7 +80,7 @@ export const pendingSetCopy = {
       "The batch has fewer than 2 places, and the planner's door needs 2.",
     "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} {plural:place:max}, which is the server's bound.",
     "pending.receipt":
-      "The server placed {n} of them on {days}. This is candidate version {version}, {stops} stops in it.",
+      "The server placed {n} of them on {days}. This is candidate version {version}, {stops} {plural:stop:stops} in it.",
     "pending.receiptNoDay": "no day was given",
     "pending.missing": "Not placed: {names}.",
     "pending.notSelected": "Nothing you are running has changed yet.",
