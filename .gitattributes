@@ -1,2 +1,5 @@
 # Python sources on this line are LF; CRLF here produced whole-file rebases (ORD-0532).
 *.py text eol=lf
+# The checked-in OpenAPI contract is historically CRLF; treat that carriage
+# return as an end-of-line marker so contract additions pass diff hygiene.
+contracts/openapi.yaml whitespace=cr-at-eol
