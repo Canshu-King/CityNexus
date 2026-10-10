@@ -934,6 +934,9 @@ const en: Dict = {
   "mobility.noProvider": "No provider evidence",
   "mobility.letChoose": "Let CityNexus choose",
   "mobility.note": "Costs are shown only when captured from a provider. Unknown is not treated as zero.",
+  "sceneClock.executionCursor": "the execution cursor",
+  "sceneClock.journeyStart": "the journey's start",
+  "sceneClock.serverGaveNoBasis": "the server gave no basis",
 
   // ── Stay Explorer ──
   "stay.kicker": "Stay Explorer · captured evidence",
@@ -2228,6 +2231,9 @@ const zhCN: Dict = {
   "mobility.noProvider": "无供应商证据",
   "mobility.letChoose": "让 CityNexus 选择",
   "mobility.note": "费用仅在从供应商采集时显示。未知不被视为零。",
+  "sceneClock.executionCursor": "执行游标",
+  "sceneClock.journeyStart": "行程起点",
+  "sceneClock.serverGaveNoBasis": "服务器没有说明依据",
 
   // ── 住宿选择 ──
   "stay.kicker": "住宿选择 · 已采集证据",
@@ -2614,6 +2620,13 @@ const zhCN: Dict = {
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+export function dictionaryCopy(
+  locale: TripLocale,
+  key: string,
+): string {
+  return dictionaries[locale][key] ?? dictionaries.en[key] ?? key;
+}
 
 type LocaleState = {
   locale: TripLocale;
