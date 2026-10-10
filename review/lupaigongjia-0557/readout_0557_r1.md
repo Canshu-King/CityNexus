@@ -38,5 +38,5 @@
 - 这一格若要补，给我一句：允许我在真后端上造一次「该城无封印回放、live 提供者失败」的发现请求（需要起后端与前端两枚服务，端口由你点，避免撞在工车道）。
 
 ## 枝与回验
-- 推枝命令原样 `git push origin HEAD:refs/heads/review/路牌工甲-0557-r1`，回验命令原样 `git ls-remote origin refs/heads/review/路牌工甲-0557-r1` 回 `783406a9d75b7a51dc0a2e689d1a2d469b7483ad`，与 `git rev-parse HEAD` 逐字相同（一枚可 cat-file 回 commit）。
+- 推枝命令原样 `git push origin HEAD:refs/heads/review/路牌工甲-0557-r1`，回验命令原样 `git ls-remote origin refs/heads/review/路牌工甲-0557-r1` 回 `783406a9d75b7a51dc0a2e689d1a2d469b7483ad`，与提交那笔代码时的 `git rev-parse HEAD` 逐字相同（一枚可 cat-file 回 commit）；本件自身入账后枝尖会再前进一笔（读数件那一笔），所以枝尖一律以 `ls-remote` 现读为准，不引本件里写过的数。
 - 相对起点那枚尖，本枝逐字 numstat：`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 1 行增 1 行删、`frontend/src/i18n/LocaleContext.tsx` 2 行增 0 行删、读数目录若干件；产品面改动共两枚文件。
