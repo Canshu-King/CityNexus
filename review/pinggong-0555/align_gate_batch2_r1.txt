@@ -1,6 +1,6 @@
 # alignment gate over all six takeable rows of sceneClock (batch 1 + batch 2)
 en_keys=1146 zh_keys=1146 equal=True
-key order identical on both sides=False
+key order identical on both sides=True
 key sceneClock.executionCursor | was_on_base sceneClock.ts:177 | en_equal=True LocaleContext.tsx:937 | zh_equal=True LocaleContext.tsx:2237 | PASS
 key sceneClock.journeyStart | was_on_base sceneClock.ts:178 | en_equal=True LocaleContext.tsx:938 | zh_equal=True LocaleContext.tsx:2238 | PASS
 key sceneClock.serverGaveNoBasis | was_on_base sceneClock.ts:179 | en_equal=True LocaleContext.tsx:939 | zh_equal=True LocaleContext.tsx:2239 | PASS

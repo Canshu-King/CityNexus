@@ -1,0 +1,6 @@
+authoritative tip: main.* en order == zh order? False (21 vs 21 rows)
+authoritative tip:   en first two=['main.cityNexusRequestFailed', 'main.cityNexusRequestRefusedHttp'] | zh first two=['main.unnamedCommitmentServerGaveNoName', 'main.cityNexusRequestFailed']
+authoritative tip: sceneClock.* en order == zh order? True
+my 0555 branch: main.* en order == zh order? False (21 vs 21 rows)
+my 0555 branch:   en first two=['main.cityNexusRequestFailed', 'main.cityNexusRequestRefusedHttp'] | zh first two=['main.unnamedCommitmentServerGaveNoName', 'main.cityNexusRequestFailed']
+my 0555 branch: sceneClock.* en order == zh order? True
