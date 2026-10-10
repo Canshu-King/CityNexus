@@ -1,0 +1,6 @@
+# ORD-0558 shuangshugong landing state, read at the moment this note was written
+authoritative_tip=7ce836f9afafe9e763527cba828719b414b18db8
+is_the_tip_this_lanes_commit=True
+tip_equals_my_commit_7ce836f9afafe9e763527cba828719b414b18db8=True
+my_pushed_branch_head=bfd9c3e2725aee6e1a4091cb89400f8d32afc49c
+target_blob_at_tip=82d1a3c427e0590accd010c9cb3d64ec36e709c2
