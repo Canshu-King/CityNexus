@@ -1,0 +1,70 @@
+ORD-0557 PlanWithAiSheet (提案工) gates, branch generation
+lane root D:/moodle/_qoder_tiaanianggong_0555
+
+=== leg typecheck_full | cwd D:/moodle/_qoder_tiaanianggong_0555/frontend
+$ node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+exit_code=2
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+
+=== leg typecheck_narrow | cwd D:/moodle/_qoder_tiaanianggong_0555/frontend
+$ node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+exit_code=2
+src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+
+=== leg build | cwd D:/moodle/_qoder_tiaanianggong_0555/frontend
+$ node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiaanianggong_0555\..\_qoder_tiaanianggong_0557_dist --emptyOutDir
+exit_code=1
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+Additionally, handling the error in the 'buildEnd' hook caused the following error:
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_tiaanianggong_0555/frontend/src/features/studio/SortableActivityList.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`[31m
+    at getRollupError (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/parseAst.js:317:41)
+    at file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23759:39
+    at async catchUnfinishedHookActions (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23215:16)
+    at async rollupInternal (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5)
+    at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12)
+    at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19)
+    at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153)
+    at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)[39m
+
+=== leg i18n_parity | cwd D:/moodle/_qoder_tiaanianggong_0555
+$ python frontend\scripts\i18n_detail2_parity_r1.py
+exit_code=1
+en keys: 1113 zh keys: 1114
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_tiaanianggong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+=== leg lane_gate_rows | cwd D:/moodle/_qoder_tiaanianggong_0555
+$ python D:/moodle/_qoder_tiaanianggong_0555\..\_qoder_tiaanianggong_0555_tools\i18n_0557_plan_with_ai_r1.py --rows
+exit_code=0
+draft_line=75 coord=frontend/src/features/planning/PlanWithAiSheet.tsx:1183 key=planning.startPlanning en=Plan my trip tail=frontend/src/features/planning/PlanWithAiSheet.tsx:1183
+draft_line=180 coord=frontend/src/features/planning/PlanWithAiSheet.tsx:84 key=— en=— tail=EXCLUDED: localeCompare locale 码，非文案
+rows_for_this_file=2 shippable=1 excluded=1
+
+=== leg lane_gate_verify | cwd D:/moodle/_qoder_tiaanianggong_0555
+$ python D:/moodle/_qoder_tiaanianggong_0555\..\_qoder_tiaanianggong_0555_tools\i18n_0557_plan_with_ai_r1.py --verify
+exit_code=0
+planning.startPlanning | coord=frontend/src/features/planning/PlanWithAiSheet.tsx:1183 | dict_en_line=39 | dict_zh_line=1361 | prod_line=1183 | leftover_arm=0 | wording=identical
+
+=== control: parity ruler on base 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+=== leg i18n_parity_base | cwd D:/moodle/_qoder_tiaanianggong_0555
+$ python frontend\scripts\i18n_detail2_parity_r1.py
+exit_code=1
+en keys: 1112 zh keys: 1113
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_tiaanianggong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+restore_identical=True
+git_status_after_restore='?? review/tiaanianggong-0557/\n'
