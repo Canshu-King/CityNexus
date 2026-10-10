@@ -1,0 +1,7 @@
+target_bytes=3617 cr_count=0
+found_by_content=1
+OK 草稿行 263｜名词 places｜档 A｜侧 en_only
+  改前 78:     : `Read back from the server: this city now has ${count} places that can go into a trip.`;
+  改后 79:     : `Read back from the server: this city now has ${count} ${englishCountNoun(count, "place")} that can go into a trip.`;
+  import 插入 18: import { englishCountNoun } from "../../lib/plural";
+written_bytes=3699
