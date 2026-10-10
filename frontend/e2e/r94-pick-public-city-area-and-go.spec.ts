@@ -163,6 +163,12 @@ test("R94 tap-to-pick, real signed outing resume, and stale GPS/discovery fences
 
     // Opening the map does not fetch tiles. They begin only after their own disclosure.
     await panel.getByTestId("bootstrap-source-manual").click();
+    // A blank URL parameter is not a user-selected coordinate: Number("") is 0.
+    await panel.getByTestId("bootstrap-osm-map-link").fill("https://www.openstreetmap.org/?mlat=&mlon=");
+    await panel.getByTestId("bootstrap-osm-map-link-apply").click();
+    await expect(panel.getByTestId("bootstrap-public-area-confirm")).toBeDisabled();
+    await expect(panel.getByTestId("bootstrap-osm-map-link-message")).toContainText("Paste an exact");
+    await panel.getByTestId("bootstrap-osm-map-link").fill("");
     await expect(panel.getByTestId("bootstrap-map-tile-not-loaded")).toBeVisible();
     expect(tileRequests).toHaveLength(0);
     await panel.getByTestId("bootstrap-map-tile-consent").check();
