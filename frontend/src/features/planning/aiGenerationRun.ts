@@ -30,6 +30,7 @@
 import { useSyncExternalStore } from "react";
 import { markPendingContinuation } from "../../api/journeyContinuation";
 import { classifyReadFailure, type Attribution } from "../../lib/failureAttribution";
+import { englishCountNoun } from "../../lib/plural";
 import {
   fetchWithKeylessWriteDeadline,
   isKeylessWriteDeadlineMissed,
@@ -624,7 +625,7 @@ export async function beginAiRun(args: {
           return settle({
             status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
             failureReason: {
-              text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+              text: `GET /places?city_code=${cityCode} -> ${knownIds.size} ${englishCountNoun(knownIds.size, "place")}`,
               from: "device",
             },
             summary: null,

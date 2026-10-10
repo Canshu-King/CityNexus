@@ -1,0 +1,5 @@
+# real helper readings for the one row of aiGenerationRun.ts
+count=1 after="GET /places?city_code=CN1 -> 1 place" before="GET /places?city_code=CN1 -> 1 places"
+count=2 after="GET /places?city_code=CN1 -> 2 places" before="GET /places?city_code=CN1 -> 2 places"
+count=0 after="GET /places?city_code=CN1 -> 0 places" before="GET /places?city_code=CN1 -> 0 places"
+count=56 after="GET /places?city_code=CN1 -> 56 places" before="GET /places?city_code=CN1 -> 56 places"
