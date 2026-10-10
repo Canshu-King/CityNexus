@@ -1,3 +1,5 @@
+import { expandPluralMarkers } from "../../lib/plural";
+
 /**
  * ORD-0436 -- the sentences the 成员与权限 screen says, in one file, both languages.
  *
@@ -83,7 +85,7 @@ export const accessCopy = {
     "access.roleCollaborator": "Collaborator",
     "access.roleDetails": "Read the full permission rules",
     "access.roleLadderHeading": "What each role may do, read off this server's own ACL rows",
-    "access.roleCapabilityCount": "This server grants this role {count} capabilities.",
+    "access.roleCapabilityCount": "This server grants this role {count} {plural:capability:count}.",
     "access.capabilityTokens": "The capability codes, as the server names them",
     "access.scopeKeyUnread":
       "This server named a scope key this dictionary has no sentence for: {key}.",
@@ -97,9 +99,9 @@ export const accessCopy = {
     "access.confirmSelfExit":
       "This takes you out of this trip. The row stays listed, so anybody reading the roster can see you left.",
     "access.adminCapOpen":
-      "This server lets this trip hold {cap} admin seats, and {used} of them are taken right now.",
+      "This server lets this trip hold {cap} {plural:admin seat:cap}, and {used} of them are taken right now.",
     "access.adminCapFull":
-      "All {cap} admin seats this server allows are taken, so one further promotion is refused.",
+      "All {cap} {plural:admin seat:cap} this server allows are taken, so one further promotion is refused.",
     "access.adminCapUnanswered":
       "The seat door did not answer, so this screen says nothing about how many admins this trip may hold.",
     // ORD-0527: who this device is speaking for, said in the same breath as what it will not do.
@@ -421,5 +423,5 @@ export function accessCopyFor(locale: string, key: AccessCopyKey): string {
  *  visible as the placeholder, so a field the server did not send reads as missing instead of
  *  arriving as a finished sentence. */
 export function fillAccess(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
 }
