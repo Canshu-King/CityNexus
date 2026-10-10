@@ -1,3 +1,5 @@
+import { expandPluralMarkers } from "../../lib/plural";
+
 /**
  * ORD-0530 -- the footprint screen's own copy table.
  *
@@ -79,8 +81,8 @@ const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
                en: "No trip is open, so nothing was asked of the server." },
   loading: { zh: "正在读足迹…", en: "Reading the footprints…" },
   retry: { zh: "重读一次", en: "Read again" },
-  count: { zh: "这次行程共有 {count} 枚足迹。", en: "This trip holds {count} footprints." },
-  dayCount: { zh: "分成 {count} 天。", en: "Across {count} days." },
+  count: { zh: "这次行程共有 {count} 枚足迹。", en: "This trip holds {count} {plural:footprint:count}." },
+  dayCount: { zh: "分成 {count} 天。", en: "Across {count} {plural:day:count}." },
 };
 
 /** Same rule the map copy table uses: anything starting with `zh` takes the Chinese arm. */
@@ -93,7 +95,7 @@ export function footprintCopy(
   for (const [name, value] of Object.entries(slots ?? {})) {
     text = text.replace(`{${name}}`, String(value));
   }
-  return text;
+  return expandPluralMarkers(text, slots);
 }
 
 /**
