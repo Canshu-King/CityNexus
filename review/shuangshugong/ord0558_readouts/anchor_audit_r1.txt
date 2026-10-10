@@ -1,0 +1,6 @@
+# ORD-0558 anchor audit of the DELIVERED block (its subject is fixed text, so these lines do not move)
+ruler=review/shuangshugong/ord0558_anchor_audit_r1.py
+subject=D:/moodle/_qoder_ledger_inbox/_processed/双数工_0258.md.inserted_090229
+anchors_resolved=83
+anchors_bad=0
+note_this_file_deliberately_does_not_record_the_erratum_run=an audit output must not be pinned by the text it audits

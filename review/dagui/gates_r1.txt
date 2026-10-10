@@ -1,0 +1,15 @@
+$ node_modules/.bin/tsc -p tsconfig.check.json --noEmit
+typecheck_rc=0
+$ node_modules/.bin/vite build
+PWA v1.3.0
+mode      generateSW
+precache  8 entries (2913.45 KiB)
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+build_rc=0
+$ python ../frontend/scripts/i18n_detail2_parity_r1.py
+en keys: 1090 zh keys: 1091
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_dagui_0557\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+note: the parity gate assertion is red on me.asksBeforeProtectedChange in BOTH generations (see review/dagui/parity_pair_r1.txt lines 1-2), so it is pre-existing on the authoritative line, not introduced here; my six keys land on both sides (parity_pair_r1.txt lines 3-7).

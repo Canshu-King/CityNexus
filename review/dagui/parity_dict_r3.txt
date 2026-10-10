@@ -1,0 +1,7 @@
+baseline en=1094 zh=1095 diff=['me.asksBeforeProtectedChange']
+current  en=1100 zh=1101 diff=['me.asksBeforeProtectedChange']
+added en=6 added zh=6
+my_keys_missing=0
+baseline_text_rewritten=0
+baseline_text_rewritten_zh=0
+PROVEN parity_delta=0 my_keys_both_sides=6

@@ -1,0 +1,42 @@
+# ORD-0559 路牌工甲 final readouts (interpreter: 3.12.14)
+
+$ PYTHONIOENCODING=utf-8 PYTHONPATH=. python -m pytest tests/test_route_gap_lupaigongjia_0559_r1.py --collect-only -q
+37 tests collected in 2.08s
+exit_code=0
+
+$ PYTHONIOENCODING=utf-8 PYTHONPATH=. python -m pytest tests/test_route_gap_lupaigongjia_0559_r1.py -p no:cacheprovider -q
+37 passed, 2 warnings in 7.32s
+pytest_exit_code=0
+
+$ python -m pytest tests/test_route_gap_lupaigongjia_0559_r1.py <6 neighbour modules> -p no:cacheprovider -q
+78 passed, 2 warnings in 13.93s
+neighbour_exit_code=0
+
+$ credential_literals.scan() hit inventory, this branch vs the tip it merged
+branch cc6fc3e82c verdict LIVE_CREDENTIAL_IN_ENVIRONMENT hits 6
+  hit frontend/e2e/qoder-8ac89982-ord0578-token-route-chrome-r1.spec.ts
+  hit frontend/e2e/qoder-e2e-config-guard.spec.ts
+  hit frontend/e2e/qoder-e2e-config-guard.spec.ts
+  hit frontend/src/features/poster/TripPosterPanel.tsx
+  hit frontend/src/features/poster/TripPosterPanel.tsx
+  hit frontend/src/features/shared/SharedJourneyPanel.tsx
+
+$ git diff --numstat <tip> HEAD
+  1030	0	backend/tests/test_route_gap_lupaigongjia_0559_r1.py
+  49	0	review/lupaigongjia-0559/collect.txt
+  125	0	review/lupaigongjia-0559/coords_out.txt
+  106	0	review/lupaigongjia-0559/coords_r1.py
+  60	0	review/lupaigongjia-0559/handler_dump_r1.py
+  501	0	review/lupaigongjia-0559/handlers.txt
+  181	0	review/lupaigongjia-0559/hermes_and_models.txt
+  566	0	review/lupaigongjia-0559/payloads.txt
+  62	0	review/lupaigongjia-0559/probe2_out.txt
+  51	0	review/lupaigongjia-0559/probe3_out.txt
+  34	0	review/lupaigongjia-0559/probe4_out.txt
+  247	0	review/lupaigongjia-0559/probe_calls_r1.py
+  222	0	review/lupaigongjia-0559/probe_calls_r2.py
+  130	0	review/lupaigongjia-0559/probe_calls_r3.py
+  104	0	review/lupaigongjia-0559/probe_calls_r4.py
+  123	0	review/lupaigongjia-0559/probe_out.txt
+  12	0	review/lupaigongjia-0559/run_mine.txt
+  13	0	review/lupaigongjia-0559/run_together.txt

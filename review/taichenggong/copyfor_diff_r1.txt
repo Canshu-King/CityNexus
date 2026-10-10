@@ -1,0 +1,30 @@
+0 tip read for this run: 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+1 cells rendered on both sides: 588
+2 candidate vs tip: cells moved = 0
+4 counter-arm (leave the field unset instead) vs tip: cells moved = 4
+5 counter MOVED classified:empty:nullHeader|zh|cached
+   was {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=empty empty body），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"}
+   now {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"}
+5 counter MOVED classified:empty:nullHeader|zh|nocache
+   was {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=empty empty body），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。"}
+   now {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。"}
+5 counter MOVED classified:empty:nullHeader|en|cached
+   was {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=empty empty body) — the answer simply was not a journey response that could be parsed. The service i
+   now {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavail
+5 counter MOVED classified:empty:nullHeader|en|nocache
+   was {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=empty empty body) — the answer simply was not a journey response that could be parsed. The service i
+   now {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavail
+6 this order's edited cell reads, on tip: {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"}
+6 this order's edited cell reads, on tip: {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。"}
+6 this order's edited cell reads, on tip: {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused i
+6 this order's edited cell reads, on tip: {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused i
+7 the same cell on candidate: {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"}
+7 the same cell on candidate: {"kicker":"服务器","title":"服务器答了 http_status=200，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。"}
+7 the same cell on candidate: {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused i
+7 the same cell on candidate: {"kicker":"The origin","title":"The origin answered http_status=200, but not with data this screen can use","body":"It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused i
+8 mutant (the key name broken on purpose) vs tip: cells moved = 14
+9 mutant failure.originInvalidResponse|status=404|ct:unset|nocode|zh|cached now {"kicker":"服务器","title":"服务器答了 http_status=404，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=404，content_type=unknowx），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"}
+9 mutant failure.originInvalidResponse|status=404|ct:unset|nocode|zh|nocache now {"kicker":"服务器","title":"服务器答了 http_status=404，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=404，content_type=unknowx），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。"}
+9 mutant failure.originInvalidResponse|status=404|ct:unset|code|zh|cached now {"kicker":"服务器","title":"服务器答了 http_status=404，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=404，content_type=unknowx），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"}
+9 mutant failure.originInvalidResponse|status=404|ct:unset|code|zh|nocache now {"kicker":"服务器","title":"服务器答了 http_status=404，可带回来的不是这一屏能用的数据","body":"它确实回了话（http_status=404，content_type=unknowx），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。"}
+10 PASS candidate=0 moved, counter-arm bit 4, mutant bit 14

@@ -1,0 +1,20 @@
+1 ORD-0560 加闸工 读数件 r2（本枝合入现尖那一代后的读数，命令全部原样）
+2 现尖命令原样：git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+3 起手尖 de2dd46e762c1068cea6a469e93572cad4765ebc 是现尖的祖先（权威线前移，不是横移）：命令原样 git merge-base 24a50a8aecf0a1fe4704400c687540d3e05d74fb de2dd46e762c1068cea6a469e93572cad4765ebc 回 de2dd46e762c1068cea6a469e93572cad4765ebc，命令原样 git rev-list --count de2dd46e762c1068cea6a469e93572cad4765ebc..24a50a8aecf0a1fe4704400c687540d3e05d74fb 回 33
+4 我早先一次读数（单枚 sha 刚 fetch 进来、对象图还没读全时）把上面这条读成了横移，那枚假读数与随它算出的 176 笔一起作废，第 3 行是本代重读的值
+5 本枝按已发布枝不 rebase 的规矩把现尖 merge 进来，枝尖 d18ca085e3a1f85eb183c46ed355f7c07becd856；命令原样 git rev-list --count 24a50a8aecf0a1fe4704400c687540d3e05d74fb..d18ca085e3a1f85eb183c46ed355f7c07becd856 回 3（改动一笔 + 读数件 r1 一笔 + merge 一笔），落后命令原样 git rev-list --count d18ca085e3a1f85eb183c46ed355f7c07becd856..24a50a8aecf0a1fe4704400c687540d3e05d74fb 回 0
+6 本枝树与现尖只差两枚路径，命令原样 git diff --name-only 24a50a8aecf0a1fe4704400c687540d3e05d74fb d18ca085e3a1f85eb183c46ed355f7c07becd856 回 frontend/package.json 与 review/jiazagong-0560/readout_r1.txt；本读数件落下后为三枚
+7 读数那代与本枝尖逐字节同树：命令原样 git rev-parse d18ca085e3a1f85eb183c46ed355f7c07becd856^{tree} 与 git rev-parse d54513dd1c5e716b2baa3f80b91c852e825b6f01^{tree} 都回 de2de4703f88768dcfe24299a2d87770eabdbac5，所以下面三条尺是在同一代字节上跑的
+8 本代 frontend/src 下 .ts/.tsx 现读 156 个，命令原样 git ls-tree -r --name-only 24a50a8aecf0a1fe4704400c687540d3e05d74fb -- frontend/src | grep -cE '\.(ts|tsx)$'
+9 独立副本命令原样 git archive d54513dd1c5e716b2baa3f80b91c852e825b6f01 frontend | tar -x -C D:\moodle\_qoder_jiazagong_0560b，node_modules 走 junction 指现有那份，副本 16 MB，主工作树零触碰
+10 改后原文 frontend/package.json:8 -> "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
+11 同文件 frontend/package.json:9 原样未动 -> "typecheck:all": "tsc -p tsconfig.typecheck.json --noEmit",，改完这两枚脚本名是同一条命令，属别名，不是我让那把闸跑两遍；要收窄成别的形状由你点单
+12 窄配置一个字未改：frontend/tsconfig.check.json:16 起那五枚种子原样，git blob bf143494f9c609468556d7b6eac5e29650d8f53d 与现尖逐字节一致
+13 命令原样 npm run typecheck（cwd frontend，本代副本）：退出码 0，error TS 0 条，回显 "> tsc -p tsconfig.typecheck.json --noEmit"
+14 命令原样 npx tsc -p tsconfig.typecheck.json --listFilesOnly（cwd frontend，本代副本）：退出码 0，输出总 950 行，其中 src 下 .ts/.tsx 156 个，与第 8 行的 156 个齐平（不短）
+15 命令原样 npx tsc -p tsconfig.typecheck.json --noEmit（cwd frontend，本代副本）：退出码 0，error TS 0 条
+16 扩面后新增的红：0 条，我没有为绿改产品码、没有 skip、没有改断言
+17 反控（我放弃的那条路，真跑过）：只把 frontend/tsconfig.check.json:16 的 include 换成整棵 src、types 保持第 18 行那枚 [] -> listFilesOnly 退出码 0 且 src 下 156 个，noEmit 退出码 2，1 条红 src/main.tsx(1863,21): error TS2339: Property 'env' does not exist on type 'ImportMeta'，用法在 frontend/src/main.tsx:1863
+18 那枚红的成因是窄配置 frontend/tsconfig.check.json:14 写着 "types": []，全量配置 frontend/tsconfig.typecheck.json:2 写的是 "types":["vite/client"]，走那条路就得连 types 一起改，超出本单「只扩 include」的形状
+19 勘正 r1 第 16 行：那行「领先 2 笔」是相对起手尖 de2dd46e762c1068cea6a469e93572cad4765ebc 量的，换成现尖这一代的重读在第 5 行
+20 force-push 0 次，他人枝零改动零删除，权威线零移动
