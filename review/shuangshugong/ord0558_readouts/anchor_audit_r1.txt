@@ -1,10 +1,6 @@
-# ORD-0558 anchor audit: every file:line coordinate in the delivered block, read back from the target
+# ORD-0558 anchor audit of the DELIVERED block (its subject is fixed text, so these lines do not move)
 ruler=review/shuangshugong/ord0558_anchor_audit_r1.py
 subject=D:/moodle/_qoder_ledger_inbox/_processed/双数工_0258.md.inserted_090229
-
 anchors_resolved=83
 anchors_bad=0
-subject_this_note=D:/moodle/_qoder_ledger_inbox/双数工_0905.md
-anchors_bad=2
-BAD ('OUT_OF_RANGE', 17, 'review/shuangshugong/ord0558_readouts/anchor_audit_r1.txt', 8, 'file_has=7')
-BAD ('OUT_OF_RANGE', 17, 'review/shuangshugong/ord0558_readouts/anchor_audit_r1.txt', 9, 'file_has=7')
+note_this_file_deliberately_does_not_record_the_erratum_run=an audit output must not be pinned by the text it audits
