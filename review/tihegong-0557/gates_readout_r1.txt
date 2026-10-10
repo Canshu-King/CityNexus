@@ -71,3 +71,14 @@ i18n gate: same command with --negative, exit code 1, RED on the ten en arms
 typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
 parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1122, zh keys 1123, xor = me.asksBeforeProtectedChange
 build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
+
+send-back answer, read 15:0x on the same bytes (no product byte touched by this section)
+landing receipt of round 17, quoted verbatim from _batch_land_round17_144855.json: AUTO1 review/铁盒工-0557-r1 note "REF_UNRESOLVED rc=0 out= err=" | AUTO2 review/铁盒工-0557-dict-r1 note "RECUT_ABORT: fetch failed: ssh: connect to host ssh.github.com port 443: Connection timed out"
+ref lookup now, command: git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/铁盒工-0557-r1 -> e80ced1b014e69568a5376a9df3b3efd00e088bc (40 hex, rc 0)
+ref lookup now, command: git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/铁盒工-0557-dict-r1 -> 1aa96180b346c01975ca74690ab0d404546bd4a2 (40 hex, rc 0)
+same probe against a sibling CJK branch, command: git ls-remote origin refs/heads/review/起手工-0555-dict-r1 -> resolves too, so the 12:11 style CJK-name worry is not what bit this pair: the leg's probe died on the network and its own note prints an empty out= for that
+merge prediction (read only), command: git merge-tree --write-tree 996f1b7588580a14fbbdec5301a6e4a7b70c93e4 e80ced1b014e69568a5376a9df3b3efd00e088bc -> one tree oid b56b7fbf0a3d9251000965585da44e26768f1684, exit code 0, no conflicted file listed
+generation relation now: candidate ahead 11 behind 0 against that tip; files the candidate moves: 2 product files (frontend/src/i18n/LocaleContext.tsx, frontend/src/lib/failureAttribution.ts) and 2 lane instruments under review/tihegong-0557/
+self-sufficiency: the product branch's parent chain carries the dictionary tip, so landing it alone still brings the ten keys with the ten reads -- no intermediate state where a screen reads a key the dictionary lacks
+gates re-run on these bytes just now: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, ten lines, GREEN; node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit (cwd frontend) -> exit code 0, zero bytes
+the two titles no table lists, read on that tip: frontend/src/lib/failureAttribution.ts:550 and :557 are template-literal arms (${READ_DEADLINE_SECONDS}); the plural draft marks both rows ND (its own reason: the constant is twelve, it never lands on the singular), and taking them would need interpolation in the accessor -- out of this lane's radius, so untouched
