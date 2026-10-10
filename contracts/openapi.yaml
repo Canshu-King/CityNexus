@@ -3315,7 +3315,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapDiscoveryResponse'
         '422':
           description: Validation Error
           content:
@@ -3347,7 +3348,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapDiscoveryResponse'
         '422':
           description: Validation Error
           content:
@@ -3378,7 +3380,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapCitySearchResponse'
         '422':
           description: Validation Error
           content:
@@ -3410,7 +3413,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapSelectionResponse'
         '422':
           description: Validation Error
           content:
@@ -3442,7 +3446,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapSelectionResponse'
         '422':
           description: Validation Error
           content:
@@ -3474,7 +3479,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapMapPreviewResponse'
         '422':
           description: Validation Error
           content:
@@ -3506,7 +3512,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapMapPreviewResponse'
         '422':
           description: Validation Error
           content:
@@ -3531,7 +3538,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapShortlistResponse'
         '422':
           description: Validation Error
           content:
@@ -3560,7 +3568,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapShortlistItem'
         '422':
           description: Validation Error
           content:
@@ -3593,7 +3602,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapShortlistResumeIntent'
         '422':
           description: Validation Error
           content:
@@ -3624,7 +3634,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapShortlistDeleteResponse'
         '422':
           description: Validation Error
           content:
@@ -3661,7 +3672,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapShortlistPreviewResponse'
         '422':
           description: Validation Error
           content:
@@ -3700,7 +3712,8 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/BootstrapShortlistPreviewResponse'
         '422':
           description: Validation Error
           content:
@@ -7519,6 +7532,936 @@ components:
       - receipt_id
       - candidate_id
       title: BootstrapShortlistSaveRequest
+    BootstrapDiscoveryCandidate:
+      properties:
+        candidate_id:
+          type: string
+          format: uuid
+          title: Candidate Id
+        name:
+          type: string
+          title: Name
+        category:
+          type: string
+          title: Category
+        external_id:
+          type: string
+          title: External Id
+        osm_type:
+          type: string
+          title: Osm Type
+        osm_id:
+          type: string
+          title: Osm Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+        distance_m:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Distance M
+        opening_state:
+          type: string
+          title: Opening State
+        selection_state:
+          type: string
+          enum:
+          - READY_FOR_NATIVE_PLAN
+          - OPENING_UNVERIFIED
+          title: Selection State
+        selection_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Selection Action
+        availability_confidence:
+          type: string
+          const: UNVERIFIED
+          title: Availability Confidence
+        price_state:
+          type: string
+          const: UNKNOWN
+          title: Price State
+        eta_state:
+          type: string
+          const: UNKNOWN
+          title: Eta State
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        opening_hours:
+          additionalProperties: true
+          type: object
+          title: Opening Hours
+        opening_observed_at:
+          type: string
+          format: date-time
+          title: Opening Observed At
+        opening_source:
+          type: string
+          title: Opening Source
+        opening_claim:
+          type: string
+          enum:
+          - OSM_TAG_CLAIM
+          - NO_OPENING_TAG
+          title: Opening Claim
+        opening_verification_state:
+          type: string
+          enum:
+          - PROVIDER_GROUNDED
+          - EXTERNAL_NOT_ATTESTED
+          title: Opening Verification State
+        opening_verification_action:
+          type: string
+          const: OPEN_SOURCE_PAGE
+          title: Opening Verification Action
+        source_tags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Source Tags
+        provider_provenance:
+          type: string
+          title: Provider Provenance
+      additionalProperties: true
+      type: object
+      required:
+      - candidate_id
+      - name
+      - category
+      - external_id
+      - osm_type
+      - osm_id
+      - source_url
+      - latitude
+      - longitude
+      - coordinate_system
+      - distance_m
+      - opening_state
+      - selection_state
+      - selection_action
+      - availability_confidence
+      - price_state
+      - eta_state
+      - tags
+      - opening_hours
+      - opening_observed_at
+      - opening_source
+      - opening_claim
+      - opening_verification_state
+      - opening_verification_action
+      - source_tags
+      - provider_provenance
+      title: BootstrapDiscoveryCandidate
+      description: One provider-backed public candidate returned by bootstrap discovery.
+    BootstrapDiscoveryResponse:
+      properties:
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        status:
+          type: string
+          enum:
+          - LIVE_RESULTS
+          - LIVE_ZERO_RESULTS
+          - PROVIDER_DISABLED
+          - PROVIDER_UNAVAILABLE
+          title: Status
+        receipt_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Receipt Id
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        source_kind:
+          type: string
+          enum:
+          - FOREGROUND_GPS
+          - MANUAL_PUBLIC_CENTER
+          title: Source Kind
+        provider:
+          type: string
+          title: Provider
+        provider_provenance:
+          type: string
+          title: Provider Provenance
+        attempts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Attempts
+        candidates:
+          items:
+            $ref: '#/components/schemas/BootstrapDiscoveryCandidate'
+          type: array
+          title: Candidates
+        failure_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failure Code
+      additionalProperties: true
+      type: object
+      required:
+      - journey_id
+      - status
+      - receipt_id
+      - expires_at
+      - source_kind
+      - provider
+      - provider_provenance
+      - attempts
+      - candidates
+      title: BootstrapDiscoveryResponse
+      description: Provider-backed bootstrap candidates and the bounded discovery receipt.
+    BootstrapCitySearchResult:
+      properties:
+        result_id:
+          type: string
+          title: Result Id
+        name:
+          type: string
+          title: Name
+        display_name:
+          type: string
+          title: Display Name
+        provider:
+          type: string
+          title: Provider
+        provider_provenance:
+          type: string
+          title: Provider Provenance
+        osm_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Osm Type
+        osm_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Osm Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+        confidence:
+          type: string
+          const: CITY_CENTROID_UNCERTAIN
+          title: Confidence
+        selection_state:
+          type: string
+          const: CAMERA_ONLY_TAP_REQUIRED
+          title: Selection State
+        uncertainty:
+          type: string
+          title: Uncertainty
+      additionalProperties: true
+      type: object
+      required:
+      - result_id
+      - name
+      - display_name
+      - provider
+      - provider_provenance
+      - osm_type
+      - osm_id
+      - source_url
+      - latitude
+      - longitude
+      - coordinate_system
+      - confidence
+      - selection_state
+      - uncertainty
+      title: BootstrapCitySearchResult
+      description: One city geocoder result that may position the map camera.
+    BootstrapCitySearchResponse:
+      properties:
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        status:
+          type: string
+          enum:
+          - CITY_RESULTS
+          - CITY_NO_RESULTS
+          - GEOCODER_DISABLED
+          - GEOCODER_UNAVAILABLE
+          - GEOCODER_RATE_LIMITED
+          title: Status
+        query:
+          type: string
+          title: Query
+        provider_provenance:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Provenance
+        provider_attempts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Provider Attempts
+        cache_hit:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Cache Hit
+        results:
+          items:
+            $ref: '#/components/schemas/BootstrapCitySearchResult'
+          type: array
+          title: Results
+      additionalProperties: true
+      type: object
+      required:
+      - journey_id
+      - status
+      - query
+      - provider_attempts
+      - results
+      title: BootstrapCitySearchResponse
+      description: Bounded city search results used only to position the public map.
+    BootstrapSelectionResponse:
+      properties:
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        selected_place_id:
+          type: string
+          format: uuid
+          title: Selected Place Id
+        plan_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Plan Version Id
+        journey_status:
+          type: string
+          title: Journey Status
+        provider_provenance:
+          type: string
+          title: Provider Provenance
+      additionalProperties: true
+      type: object
+      required:
+      - journey_id
+      - selected_place_id
+      - plan_version_id
+      - journey_status
+      - provider_provenance
+      title: BootstrapSelectionResponse
+      description: One public bootstrap candidate materialized into a Place.
+    BootstrapMapPreviewDestination:
+      properties:
+        name:
+          type: string
+          title: Name
+        external_id:
+          type: string
+          title: External Id
+        osm_type:
+          type: string
+          title: Osm Type
+        osm_id:
+          type: string
+          title: Osm Id
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+        source_url:
+          type: string
+          title: Source Url
+        map_url:
+          type: string
+          title: Map Url
+      type: object
+      required:
+      - name
+      - external_id
+      - osm_type
+      - osm_id
+      - latitude
+      - longitude
+      - coordinate_system
+      - source_url
+      - map_url
+      title: BootstrapMapPreviewDestination
+    BootstrapMapPreviewOpening:
+      properties:
+        state:
+          type: string
+          title: State
+        raw:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Raw
+        source_tags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Source Tags
+        source:
+          type: string
+          title: Source
+        observed_at:
+          type: string
+          format: date-time
+          title: Observed At
+        claim:
+          type: string
+          enum:
+          - OSM_TAG_CLAIM
+          - NO_OPENING_TAG
+          title: Claim
+        verification_state:
+          type: string
+          enum:
+          - PROVIDER_GROUNDED
+          - EXTERNAL_NOT_ATTESTED
+          title: Verification State
+        verification_action:
+          type: string
+          const: OPEN_SOURCE_PAGE
+          title: Verification Action
+      type: object
+      required:
+      - state
+      - raw
+      - source_tags
+      - source
+      - observed_at
+      - claim
+      - verification_state
+      - verification_action
+      title: BootstrapMapPreviewOpening
+    BootstrapMapPreviewResponse:
+      properties:
+        preview_id:
+          type: string
+          format: uuid
+          title: Preview Id
+        status:
+          type: string
+          const: PUBLIC_DESTINATION_READY
+          title: Status
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        receipt_id:
+          type: string
+          format: uuid
+          title: Receipt Id
+        candidate_id:
+          type: string
+          format: uuid
+          title: Candidate Id
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        provider:
+          type: string
+          title: Provider
+        provider_provenance:
+          type: string
+          title: Provider Provenance
+        destination:
+          $ref: '#/components/schemas/BootstrapMapPreviewDestination'
+        opening:
+          $ref: '#/components/schemas/BootstrapMapPreviewOpening'
+        explore_state:
+          type: string
+          const: DRAFT_EXPLORE_ONLY
+          title: Explore State
+        shared_fields:
+          items:
+            type: string
+          type: array
+          title: Shared Fields
+        withheld_fields:
+          items:
+            type: string
+          type: array
+          title: Withheld Fields
+        plan_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Plan Version Id
+        selected_place_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Selected Place Id
+      additionalProperties: true
+      type: object
+      required:
+      - preview_id
+      - status
+      - journey_id
+      - receipt_id
+      - candidate_id
+      - expires_at
+      - provider
+      - provider_provenance
+      - destination
+      - opening
+      - explore_state
+      - shared_fields
+      - withheld_fields
+      - plan_version_id
+      - selected_place_id
+      title: BootstrapMapPreviewResponse
+      description: Public map release for one selected discovery candidate.
+    BootstrapShortlistItem:
+      properties:
+        shortlist_id:
+          type: string
+          format: uuid
+          title: Shortlist Id
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        provider_key:
+          type: string
+          title: Provider Key
+        external_id:
+          type: string
+          title: External Id
+        name:
+          type: string
+          title: Name
+        category:
+          type: string
+          title: Category
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+        source_url:
+          type: string
+          title: Source Url
+        source_provenance:
+          type: string
+          title: Source Provenance
+        captured_at:
+          type: string
+          format: date-time
+          title: Captured At
+        opening_hours:
+          additionalProperties: true
+          type: object
+          title: Opening Hours
+        opening_state:
+          type: string
+          title: Opening State
+        price_state:
+          type: string
+          title: Price State
+        eta_state:
+          type: string
+          title: Eta State
+        source_tags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Source Tags
+        distance_m:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Distance M
+        distance_basis:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Distance Basis
+        status:
+          type: string
+          const: SAVED
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - shortlist_id
+      - journey_id
+      - provider_key
+      - external_id
+      - name
+      - category
+      - latitude
+      - longitude
+      - coordinate_system
+      - source_url
+      - source_provenance
+      - captured_at
+      - opening_hours
+      - opening_state
+      - price_state
+      - eta_state
+      - source_tags
+      - distance_m
+      - distance_basis
+      - status
+      - created_at
+      - updated_at
+      title: BootstrapShortlistItem
+      description: One member-scoped saved public identity.
+    BootstrapShortlistResumeIntent:
+      properties:
+        shortlist_id:
+          type: string
+          format: uuid
+          title: Shortlist Id
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        name:
+          type: string
+          title: Name
+        category:
+          type: string
+          title: Category
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+        source_url:
+          type: string
+          title: Source Url
+        source_provenance:
+          type: string
+          title: Source Provenance
+        captured_at:
+          type: string
+          format: date-time
+          title: Captured At
+        selected_at:
+          type: string
+          format: date-time
+          title: Selected At
+        status:
+          type: string
+          const: CHOSEN
+          title: Status
+      additionalProperties: true
+      type: object
+      required:
+      - shortlist_id
+      - journey_id
+      - name
+      - category
+      - latitude
+      - longitude
+      - coordinate_system
+      - source_url
+      - source_provenance
+      - captured_at
+      - selected_at
+      - status
+      title: BootstrapShortlistResumeIntent
+      description: Member-private resume identity for the last chosen shortlist item.
+    BootstrapShortlistResponse:
+      properties:
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        limit:
+          type: integer
+          title: Limit
+        items:
+          items:
+            $ref: '#/components/schemas/BootstrapShortlistItem'
+          type: array
+          title: Items
+        resume:
+          anyOf:
+          - $ref: '#/components/schemas/BootstrapShortlistResumeIntent'
+          - type: 'null'
+      additionalProperties: true
+      type: object
+      required:
+      - journey_id
+      - limit
+      - items
+      - resume
+      title: BootstrapShortlistResponse
+      description: The signed member's saved public shortlist and optional resume intent.
+    BootstrapShortlistDeleteResponse:
+      properties:
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        shortlist_id:
+          type: string
+          format: uuid
+          title: Shortlist Id
+        removed:
+          type: boolean
+          title: Removed
+        place_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Place Id
+      type: object
+      required:
+      - journey_id
+      - shortlist_id
+      - removed
+      - place_id
+      title: BootstrapShortlistDeleteResponse
+      description: Result of removing one member-scoped shortlist item.
+    BootstrapShortlistPreviewDestination:
+      properties:
+        name:
+          type: string
+          title: Name
+        external_id:
+          type: string
+          title: External Id
+        source_url:
+          type: string
+          title: Source Url
+        latitude:
+          type: number
+          title: Latitude
+        longitude:
+          type: number
+          title: Longitude
+        coordinate_system:
+          type: string
+          const: WGS84
+          title: Coordinate System
+        map_url:
+          type: string
+          title: Map Url
+      type: object
+      required:
+      - name
+      - external_id
+      - source_url
+      - latitude
+      - longitude
+      - coordinate_system
+      - map_url
+      title: BootstrapShortlistPreviewDestination
+    BootstrapShortlistPreviewOpening:
+      properties:
+        state:
+          type: string
+          title: State
+        raw:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Raw
+        source_tags:
+          additionalProperties:
+            type: string
+          type: object
+          title: Source Tags
+        source:
+          type: string
+          title: Source
+        observed_at:
+          type: string
+          format: date-time
+          title: Observed At
+        claim:
+          type: string
+          enum:
+          - OSM_TAG_CLAIM
+          - NO_OPENING_TAG
+          title: Claim
+        verification_state:
+          type: string
+          enum:
+          - PROVIDER_GROUNDED
+          - EXTERNAL_NOT_ATTESTED
+          title: Verification State
+        verification_action:
+          type: string
+          const: OPEN_SOURCE_PAGE
+          title: Verification Action
+      type: object
+      required:
+      - state
+      - raw
+      - source_tags
+      - source
+      - observed_at
+      - claim
+      - verification_state
+      - verification_action
+      title: BootstrapShortlistPreviewOpening
+    BootstrapShortlistPreviewResponse:
+      properties:
+        preview_id:
+          type: string
+          format: uuid
+          title: Preview Id
+        status:
+          type: string
+          const: PUBLIC_DESTINATION_READY
+          title: Status
+        journey_id:
+          type: string
+          format: uuid
+          title: Journey Id
+        shortlist_id:
+          type: string
+          format: uuid
+          title: Shortlist Id
+        authorization_basis:
+          type: string
+          const: SAVED_PUBLIC_IDENTITY
+          title: Authorization Basis
+        release_purpose:
+          type: string
+          enum:
+          - PIN
+          - WALKING
+          title: Release Purpose
+        navigation_mode:
+          type: string
+          enum:
+          - PUBLIC_PIN
+          - WALKING_DIRECTIONS
+          title: Navigation Mode
+        navigation_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Navigation Url
+        destination:
+          $ref: '#/components/schemas/BootstrapShortlistPreviewDestination'
+        opening:
+          $ref: '#/components/schemas/BootstrapShortlistPreviewOpening'
+        explore_state:
+          type: string
+          const: DRAFT_EXPLORE_ONLY
+          title: Explore State
+        shared_fields:
+          items:
+            type: string
+          type: array
+          title: Shared Fields
+        withheld_fields:
+          items:
+            type: string
+          type: array
+          title: Withheld Fields
+        plan_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Plan Version Id
+        selected_place_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Selected Place Id
+      additionalProperties: true
+      type: object
+      required:
+      - preview_id
+      - status
+      - journey_id
+      - shortlist_id
+      - authorization_basis
+      - release_purpose
+      - navigation_mode
+      - navigation_url
+      - destination
+      - opening
+      - explore_state
+      - shared_fields
+      - withheld_fields
+      - plan_version_id
+      - selected_place_id
+      title: BootstrapShortlistPreviewResponse
+      description: Public map or destination-only walking release for one saved stop.
     BootstrapTwoStopWalkRequest:
       properties:
         first_shortlist_id:

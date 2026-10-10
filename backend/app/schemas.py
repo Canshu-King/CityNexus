@@ -346,6 +346,270 @@ class BootstrapShortlistNavigationRequest(BaseModel):
     public_map_consent: bool = False
 
 
+class BootstrapDiscoveryCandidate(BaseModel):
+    """One provider-backed public candidate returned by bootstrap discovery."""
+
+    model_config = ConfigDict(extra="allow")
+
+    candidate_id: UUID
+    name: str
+    category: str
+    external_id: str
+    osm_type: str
+    osm_id: str
+    source_url: str | None
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    distance_m: float | None
+    opening_state: str
+    selection_state: Literal["READY_FOR_NATIVE_PLAN", "OPENING_UNVERIFIED"]
+    selection_action: str | None
+    availability_confidence: Literal["UNVERIFIED"]
+    price_state: Literal["UNKNOWN"]
+    eta_state: Literal["UNKNOWN"]
+    tags: list[str]
+    opening_hours: dict[str, Any]
+    opening_observed_at: datetime
+    opening_source: str
+    opening_claim: Literal["OSM_TAG_CLAIM", "NO_OPENING_TAG"]
+    opening_verification_state: Literal["PROVIDER_GROUNDED", "EXTERNAL_NOT_ATTESTED"]
+    opening_verification_action: Literal["OPEN_SOURCE_PAGE"]
+    source_tags: dict[str, str]
+    provider_provenance: str
+
+
+class BootstrapDiscoveryResponse(BaseModel):
+    """Provider-backed bootstrap candidates and the bounded discovery receipt."""
+
+    model_config = ConfigDict(extra="allow")
+
+    journey_id: UUID
+    status: Literal[
+        "LIVE_RESULTS",
+        "LIVE_ZERO_RESULTS",
+        "PROVIDER_DISABLED",
+        "PROVIDER_UNAVAILABLE",
+    ]
+    receipt_id: UUID | None
+    expires_at: datetime | None
+    source_kind: Literal["FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"]
+    provider: str
+    provider_provenance: str
+    attempts: list[dict[str, Any]]
+    candidates: list[BootstrapDiscoveryCandidate]
+    failure_code: str | None = None
+
+
+class BootstrapCitySearchResult(BaseModel):
+    """One city geocoder result that may position the map camera."""
+
+    model_config = ConfigDict(extra="allow")
+
+    result_id: str
+    name: str
+    display_name: str
+    provider: str
+    provider_provenance: str
+    osm_type: str | None
+    osm_id: str | None
+    source_url: str | None
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    confidence: Literal["CITY_CENTROID_UNCERTAIN"]
+    selection_state: Literal["CAMERA_ONLY_TAP_REQUIRED"]
+    uncertainty: str
+
+
+class BootstrapCitySearchResponse(BaseModel):
+    """Bounded city search results used only to position the public map."""
+
+    model_config = ConfigDict(extra="allow")
+
+    journey_id: UUID
+    status: Literal[
+        "CITY_RESULTS",
+        "CITY_NO_RESULTS",
+        "GEOCODER_DISABLED",
+        "GEOCODER_UNAVAILABLE",
+        "GEOCODER_RATE_LIMITED",
+    ]
+    query: str
+    provider_provenance: str | None = None
+    provider_attempts: list[dict[str, Any]]
+    cache_hit: bool | None = None
+    results: list[BootstrapCitySearchResult]
+
+
+class BootstrapSelectionResponse(BaseModel):
+    """One public bootstrap candidate materialized into a Place."""
+
+    model_config = ConfigDict(extra="allow")
+
+    journey_id: UUID
+    selected_place_id: UUID
+    plan_version_id: UUID | None
+    journey_status: str
+    provider_provenance: str
+
+
+class BootstrapMapPreviewDestination(BaseModel):
+    name: str
+    external_id: str
+    osm_type: str
+    osm_id: str
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    source_url: str
+    map_url: str
+
+
+class BootstrapMapPreviewOpening(BaseModel):
+    state: str
+    raw: str | None
+    source_tags: dict[str, str]
+    source: str
+    observed_at: datetime
+    claim: Literal["OSM_TAG_CLAIM", "NO_OPENING_TAG"]
+    verification_state: Literal["PROVIDER_GROUNDED", "EXTERNAL_NOT_ATTESTED"]
+    verification_action: Literal["OPEN_SOURCE_PAGE"]
+
+
+class BootstrapMapPreviewResponse(BaseModel):
+    """Public map release for one selected discovery candidate."""
+
+    model_config = ConfigDict(extra="allow")
+
+    preview_id: UUID
+    status: Literal["PUBLIC_DESTINATION_READY"]
+    journey_id: UUID
+    receipt_id: UUID
+    candidate_id: UUID
+    expires_at: datetime | None
+    provider: str
+    provider_provenance: str
+    destination: BootstrapMapPreviewDestination
+    opening: BootstrapMapPreviewOpening
+    explore_state: Literal["DRAFT_EXPLORE_ONLY"]
+    shared_fields: list[str]
+    withheld_fields: list[str]
+    plan_version_id: UUID | None
+    selected_place_id: UUID | None
+
+
+class BootstrapShortlistItem(BaseModel):
+    """One member-scoped saved public identity."""
+
+    model_config = ConfigDict(extra="allow")
+
+    shortlist_id: UUID
+    journey_id: UUID
+    provider_key: str
+    external_id: str
+    name: str
+    category: str
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    source_url: str
+    source_provenance: str
+    captured_at: datetime
+    opening_hours: dict[str, Any]
+    opening_state: str
+    price_state: str
+    eta_state: str
+    source_tags: dict[str, str]
+    distance_m: float | None
+    distance_basis: str | None
+    status: Literal["SAVED"]
+    created_at: datetime
+    updated_at: datetime
+
+
+class BootstrapShortlistResumeIntent(BaseModel):
+    """Member-private resume identity for the last chosen shortlist item."""
+
+    model_config = ConfigDict(extra="allow")
+
+    shortlist_id: UUID
+    journey_id: UUID
+    name: str
+    category: str
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    source_url: str
+    source_provenance: str
+    captured_at: datetime
+    selected_at: datetime
+    status: Literal["CHOSEN"]
+
+
+class BootstrapShortlistResponse(BaseModel):
+    """The signed member's saved public shortlist and optional resume intent."""
+
+    model_config = ConfigDict(extra="allow")
+
+    journey_id: UUID
+    limit: int
+    items: list[BootstrapShortlistItem]
+    resume: BootstrapShortlistResumeIntent | None
+
+
+class BootstrapShortlistDeleteResponse(BaseModel):
+    """Result of removing one member-scoped shortlist item."""
+
+    journey_id: UUID
+    shortlist_id: UUID
+    removed: bool
+    place_id: UUID | None
+
+
+class BootstrapShortlistPreviewDestination(BaseModel):
+    name: str
+    external_id: str
+    source_url: str
+    latitude: float
+    longitude: float
+    coordinate_system: Literal["WGS84"]
+    map_url: str
+
+
+class BootstrapShortlistPreviewOpening(BaseModel):
+    state: str
+    raw: str | None
+    source_tags: dict[str, str]
+    source: str
+    observed_at: datetime
+    claim: Literal["OSM_TAG_CLAIM", "NO_OPENING_TAG"]
+    verification_state: Literal["PROVIDER_GROUNDED", "EXTERNAL_NOT_ATTESTED"]
+    verification_action: Literal["OPEN_SOURCE_PAGE"]
+
+
+class BootstrapShortlistPreviewResponse(BaseModel):
+    """Public map or destination-only walking release for one saved stop."""
+
+    model_config = ConfigDict(extra="allow")
+
+    preview_id: UUID
+    status: Literal["PUBLIC_DESTINATION_READY"]
+    journey_id: UUID
+    shortlist_id: UUID
+    authorization_basis: Literal["SAVED_PUBLIC_IDENTITY"]
+    release_purpose: Literal["PIN", "WALKING"]
+    navigation_mode: Literal["PUBLIC_PIN", "WALKING_DIRECTIONS"]
+    navigation_url: str | None
+    destination: BootstrapShortlistPreviewDestination
+    opening: BootstrapShortlistPreviewOpening
+    explore_state: Literal["DRAFT_EXPLORE_ONLY"]
+    shared_fields: list[str]
+    withheld_fields: list[str]
+    plan_version_id: UUID | None
+    selected_place_id: UUID | None
+
+
 class BootstrapTwoStopWalkRequest(BaseModel):
     """Release a walking leg between two explicitly ordered saved public stops."""
 

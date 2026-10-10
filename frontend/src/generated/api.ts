@@ -5875,6 +5875,627 @@ export interface components {
             candidate_id: string;
         };
         /**
+         * BootstrapDiscoveryCandidate
+         * @description One provider-backed public candidate returned by bootstrap discovery.
+         */
+        BootstrapDiscoveryCandidate: {
+            /**
+             * Candidate Id
+             * Format: uuid
+             */
+            candidate_id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** External Id */
+            external_id: string;
+            /** Osm Type */
+            osm_type: string;
+            /** Osm Id */
+            osm_id: string;
+            /** Source Url */
+            source_url: string | null;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /** Distance M */
+            distance_m: number | null;
+            /** Opening State */
+            opening_state: string;
+            /**
+             * Selection State
+             * @enum {string}
+             */
+            selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
+            /** Selection Action */
+            selection_action: string | null;
+            /**
+             * Availability Confidence
+             * @constant
+             */
+            availability_confidence: "UNVERIFIED";
+            /**
+             * Price State
+             * @constant
+             */
+            price_state: "UNKNOWN";
+            /**
+             * Eta State
+             * @constant
+             */
+            eta_state: "UNKNOWN";
+            /** Tags */
+            tags: string[];
+            /** Opening Hours */
+            opening_hours: {
+                [key: string]: unknown;
+            };
+            /**
+             * Opening Observed At
+             * Format: date-time
+             */
+            opening_observed_at: string;
+            /** Opening Source */
+            opening_source: string;
+            /**
+             * Opening Claim
+             * @enum {string}
+             */
+            opening_claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
+            /**
+             * Opening Verification State
+             * @enum {string}
+             */
+            opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
+            /**
+             * Opening Verification Action
+             * @constant
+             */
+            opening_verification_action: "OPEN_SOURCE_PAGE";
+            /** Source Tags */
+            source_tags: {
+                [key: string]: string;
+            };
+            /** Provider Provenance */
+            provider_provenance: string;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapDiscoveryResponse
+         * @description Provider-backed bootstrap candidates and the bounded discovery receipt.
+         */
+        BootstrapDiscoveryResponse: {
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "LIVE_RESULTS" | "LIVE_ZERO_RESULTS" | "PROVIDER_DISABLED" | "PROVIDER_UNAVAILABLE";
+            /** Receipt Id */
+            receipt_id: string | null;
+            /** Expires At */
+            expires_at: string | null;
+            /**
+             * Source Kind
+             * @enum {string}
+             */
+            source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
+            /** Provider */
+            provider: string;
+            /** Provider Provenance */
+            provider_provenance: string;
+            /** Attempts */
+            attempts: {
+                [key: string]: unknown;
+            }[];
+            /** Candidates */
+            candidates: components["schemas"]["BootstrapDiscoveryCandidate"][];
+            /** Failure Code */
+            failure_code?: string | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapCitySearchResult
+         * @description One city geocoder result that may position the map camera.
+         */
+        BootstrapCitySearchResult: {
+            /** Result Id */
+            result_id: string;
+            /** Name */
+            name: string;
+            /** Display Name */
+            display_name: string;
+            /** Provider */
+            provider: string;
+            /** Provider Provenance */
+            provider_provenance: string;
+            /** Osm Type */
+            osm_type: string | null;
+            /** Osm Id */
+            osm_id: string | null;
+            /** Source Url */
+            source_url: string | null;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /**
+             * Confidence
+             * @constant
+             */
+            confidence: "CITY_CENTROID_UNCERTAIN";
+            /**
+             * Selection State
+             * @constant
+             */
+            selection_state: "CAMERA_ONLY_TAP_REQUIRED";
+            /** Uncertainty */
+            uncertainty: string;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapCitySearchResponse
+         * @description Bounded city search results used only to position the public map.
+         */
+        BootstrapCitySearchResponse: {
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "CITY_RESULTS" | "CITY_NO_RESULTS" | "GEOCODER_DISABLED" | "GEOCODER_UNAVAILABLE" | "GEOCODER_RATE_LIMITED";
+            /** Query */
+            query: string;
+            /** Provider Provenance */
+            provider_provenance?: string | null;
+            /** Provider Attempts */
+            provider_attempts: {
+                [key: string]: unknown;
+            }[];
+            /** Cache Hit */
+            cache_hit?: boolean | null;
+            /** Results */
+            results: components["schemas"]["BootstrapCitySearchResult"][];
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapSelectionResponse
+         * @description One public bootstrap candidate materialized into a Place.
+         */
+        BootstrapSelectionResponse: {
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Selected Place Id
+             * Format: uuid
+             */
+            selected_place_id: string;
+            /** Plan Version Id */
+            plan_version_id: string | null;
+            /** Journey Status */
+            journey_status: string;
+            /** Provider Provenance */
+            provider_provenance: string;
+        } & {
+            [key: string]: unknown;
+        };
+        /** BootstrapMapPreviewDestination */
+        BootstrapMapPreviewDestination: {
+            /** Name */
+            name: string;
+            /** External Id */
+            external_id: string;
+            /** Osm Type */
+            osm_type: string;
+            /** Osm Id */
+            osm_id: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /** Source Url */
+            source_url: string;
+            /** Map Url */
+            map_url: string;
+        };
+        /** BootstrapMapPreviewOpening */
+        BootstrapMapPreviewOpening: {
+            /** State */
+            state: string;
+            /** Raw */
+            raw: string | null;
+            /** Source Tags */
+            source_tags: {
+                [key: string]: string;
+            };
+            /** Source */
+            source: string;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Claim
+             * @enum {string}
+             */
+            claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
+            /**
+             * Verification State
+             * @enum {string}
+             */
+            verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
+            /**
+             * Verification Action
+             * @constant
+             */
+            verification_action: "OPEN_SOURCE_PAGE";
+        };
+        /**
+         * BootstrapMapPreviewResponse
+         * @description Public map release for one selected discovery candidate.
+         */
+        BootstrapMapPreviewResponse: {
+            /**
+             * Preview Id
+             * Format: uuid
+             */
+            preview_id: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "PUBLIC_DESTINATION_READY";
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Receipt Id
+             * Format: uuid
+             */
+            receipt_id: string;
+            /**
+             * Candidate Id
+             * Format: uuid
+             */
+            candidate_id: string;
+            /** Expires At */
+            expires_at: string | null;
+            /** Provider */
+            provider: string;
+            /** Provider Provenance */
+            provider_provenance: string;
+            destination: components["schemas"]["BootstrapMapPreviewDestination"];
+            opening: components["schemas"]["BootstrapMapPreviewOpening"];
+            /**
+             * Explore State
+             * @constant
+             */
+            explore_state: "DRAFT_EXPLORE_ONLY";
+            /** Shared Fields */
+            shared_fields: string[];
+            /** Withheld Fields */
+            withheld_fields: string[];
+            /** Plan Version Id */
+            plan_version_id: string | null;
+            /** Selected Place Id */
+            selected_place_id: string | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapShortlistItem
+         * @description One member-scoped saved public identity.
+         */
+        BootstrapShortlistItem: {
+            /**
+             * Shortlist Id
+             * Format: uuid
+             */
+            shortlist_id: string;
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /** Provider Key */
+            provider_key: string;
+            /** External Id */
+            external_id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /** Source Url */
+            source_url: string;
+            /** Source Provenance */
+            source_provenance: string;
+            /**
+             * Captured At
+             * Format: date-time
+             */
+            captured_at: string;
+            /** Opening Hours */
+            opening_hours: {
+                [key: string]: unknown;
+            };
+            /** Opening State */
+            opening_state: string;
+            /** Price State */
+            price_state: string;
+            /** Eta State */
+            eta_state: string;
+            /** Source Tags */
+            source_tags: {
+                [key: string]: string;
+            };
+            /** Distance M */
+            distance_m: number | null;
+            /** Distance Basis */
+            distance_basis: string | null;
+            /**
+             * Status
+             * @constant
+             */
+            status: "SAVED";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapShortlistResumeIntent
+         * @description Member-private resume identity for the last chosen shortlist item.
+         */
+        BootstrapShortlistResumeIntent: {
+            /**
+             * Shortlist Id
+             * Format: uuid
+             */
+            shortlist_id: string;
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /** Source Url */
+            source_url: string;
+            /** Source Provenance */
+            source_provenance: string;
+            /**
+             * Captured At
+             * Format: date-time
+             */
+            captured_at: string;
+            /**
+             * Selected At
+             * Format: date-time
+             */
+            selected_at: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "CHOSEN";
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapShortlistResponse
+         * @description The signed member's saved public shortlist and optional resume intent.
+         */
+        BootstrapShortlistResponse: {
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /** Limit */
+            limit: number;
+            /** Items */
+            items: components["schemas"]["BootstrapShortlistItem"][];
+            resume: components["schemas"]["BootstrapShortlistResumeIntent"] | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * BootstrapShortlistDeleteResponse
+         * @description Result of removing one member-scoped shortlist item.
+         */
+        BootstrapShortlistDeleteResponse: {
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Shortlist Id
+             * Format: uuid
+             */
+            shortlist_id: string;
+            /** Removed */
+            removed: boolean;
+            /** Place Id */
+            place_id: string | null;
+        };
+        /** BootstrapShortlistPreviewDestination */
+        BootstrapShortlistPreviewDestination: {
+            /** Name */
+            name: string;
+            /** External Id */
+            external_id: string;
+            /** Source Url */
+            source_url: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /** Map Url */
+            map_url: string;
+        };
+        /** BootstrapShortlistPreviewOpening */
+        BootstrapShortlistPreviewOpening: {
+            /** State */
+            state: string;
+            /** Raw */
+            raw: string | null;
+            /** Source Tags */
+            source_tags: {
+                [key: string]: string;
+            };
+            /** Source */
+            source: string;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Claim
+             * @enum {string}
+             */
+            claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
+            /**
+             * Verification State
+             * @enum {string}
+             */
+            verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
+            /**
+             * Verification Action
+             * @constant
+             */
+            verification_action: "OPEN_SOURCE_PAGE";
+        };
+        /**
+         * BootstrapShortlistPreviewResponse
+         * @description Public map or destination-only walking release for one saved stop.
+         */
+        BootstrapShortlistPreviewResponse: {
+            /**
+             * Preview Id
+             * Format: uuid
+             */
+            preview_id: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "PUBLIC_DESTINATION_READY";
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Shortlist Id
+             * Format: uuid
+             */
+            shortlist_id: string;
+            /**
+             * Authorization Basis
+             * @constant
+             */
+            authorization_basis: "SAVED_PUBLIC_IDENTITY";
+            /**
+             * Release Purpose
+             * @enum {string}
+             */
+            release_purpose: "PIN" | "WALKING";
+            /**
+             * Navigation Mode
+             * @enum {string}
+             */
+            navigation_mode: "PUBLIC_PIN" | "WALKING_DIRECTIONS";
+            /** Navigation Url */
+            navigation_url: string | null;
+            destination: components["schemas"]["BootstrapShortlistPreviewDestination"];
+            opening: components["schemas"]["BootstrapShortlistPreviewOpening"];
+            /**
+             * Explore State
+             * @constant
+             */
+            explore_state: "DRAFT_EXPLORE_ONLY";
+            /** Shared Fields */
+            shared_fields: string[];
+            /** Withheld Fields */
+            withheld_fields: string[];
+            /** Plan Version Id */
+            plan_version_id: string | null;
+            /** Selected Place Id */
+            selected_place_id: string | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
          * BootstrapTwoStopWalkRequest
          * @description Release a walking leg between two explicitly ordered saved public stops.
          */
@@ -12719,7 +13340,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapDiscoveryResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12754,7 +13375,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapDiscoveryResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12789,7 +13410,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapCitySearchResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12824,7 +13445,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapSelectionResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12859,7 +13480,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapSelectionResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12894,7 +13515,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapMapPreviewResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12929,7 +13550,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapMapPreviewResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12960,7 +13581,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapShortlistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -12995,7 +13616,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapShortlistItem"];
                 };
             };
             /** @description Validation Error */
@@ -13027,7 +13648,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapShortlistResumeIntent"];
                 };
             };
             /** @description Validation Error */
@@ -13059,7 +13680,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapShortlistDeleteResponse"];
                 };
             };
             /** @description Validation Error */
@@ -13095,7 +13716,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapShortlistPreviewResponse"];
                 };
             };
             /** @description Validation Error */
@@ -13131,7 +13752,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["BootstrapShortlistPreviewResponse"];
                 };
             };
             /** @description Validation Error */

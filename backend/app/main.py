@@ -499,12 +499,21 @@ from app.schemas import (
     EventCreate,
     GeneratePlansRequest,
     BootstrapDiscoveryRequest,
+    BootstrapDiscoveryResponse,
     BootstrapCitySearchRequest,
+    BootstrapCitySearchResponse,
     BootstrapSelectRequest,
+    BootstrapSelectionResponse,
     BootstrapMapPreviewRequest,
+    BootstrapMapPreviewResponse,
     BootstrapShortlistSaveRequest,
+    BootstrapShortlistItem,
     BootstrapShortlistPreviewRequest,
+    BootstrapShortlistPreviewResponse,
     BootstrapShortlistNavigationRequest,
+    BootstrapShortlistResponse,
+    BootstrapShortlistResumeIntent,
+    BootstrapShortlistDeleteResponse,
     BootstrapTwoStopWalkRequest,
     BootstrapTwoStopWalkResponse,
     BootstrapTwoStopWalkabilityRequest,
@@ -3558,8 +3567,14 @@ def _bootstrap_http_error(exc: BootstrapDiscoveryError) -> HTTPException:
     return refused
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery")
-@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-discovery",
+    response_model=BootstrapDiscoveryResponse,
+)
+@app.post(
+    "/api/v1/journeys/{journey_id}/real-city/bootstrap",
+    response_model=BootstrapDiscoveryResponse,
+)
 def bootstrap_journey_discovery(
     journey_id: UUID,
     payload: BootstrapDiscoveryRequest,
@@ -3596,7 +3611,10 @@ def bootstrap_journey_discovery(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-city-search")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-city-search",
+    response_model=BootstrapCitySearchResponse,
+)
 def search_bootstrap_journey_city(
     journey_id: UUID,
     payload: BootstrapCitySearchRequest,
@@ -3628,8 +3646,14 @@ def search_bootstrap_journey_city(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/select")
-@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap/select")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-discovery/select",
+    response_model=BootstrapSelectionResponse,
+)
+@app.post(
+    "/api/v1/journeys/{journey_id}/real-city/bootstrap/select",
+    response_model=BootstrapSelectionResponse,
+)
 def select_bootstrap_journey_candidate(
     journey_id: UUID,
     payload: BootstrapSelectRequest,
@@ -3660,8 +3684,14 @@ def select_bootstrap_journey_candidate(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/preview")
-@app.post("/api/v1/journeys/{journey_id}/real-city/bootstrap/preview")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-discovery/preview",
+    response_model=BootstrapMapPreviewResponse,
+)
+@app.post(
+    "/api/v1/journeys/{journey_id}/real-city/bootstrap/preview",
+    response_model=BootstrapMapPreviewResponse,
+)
 def preview_bootstrap_journey_candidate(
     journey_id: UUID,
     payload: BootstrapMapPreviewRequest,
@@ -3695,7 +3725,10 @@ def preview_bootstrap_journey_candidate(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.get("/api/v1/journeys/{journey_id}/bootstrap-shortlist")
+@app.get(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+    response_model=BootstrapShortlistResponse,
+)
 def get_bootstrap_shortlist(
     journey_id: UUID,
     request: Request,
@@ -3720,7 +3753,10 @@ def get_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/resume")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/resume",
+    response_model=BootstrapShortlistResumeIntent,
+)
 def remember_bootstrap_shortlist(
     journey_id: UUID,
     shortlist_id: UUID,
@@ -3750,7 +3786,10 @@ def remember_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+    response_model=BootstrapShortlistItem,
+)
 def save_bootstrap_shortlist(
     journey_id: UUID,
     payload: BootstrapShortlistSaveRequest,
@@ -3779,7 +3818,10 @@ def save_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.delete("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}")
+@app.delete(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}",
+    response_model=BootstrapShortlistDeleteResponse,
+)
 def delete_bootstrap_shortlist(
     journey_id: UUID,
     shortlist_id: UUID,
@@ -3807,7 +3849,10 @@ def delete_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/preview")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/preview",
+    response_model=BootstrapShortlistPreviewResponse,
+)
 def preview_bootstrap_shortlist(
     journey_id: UUID,
     shortlist_id: UUID,
@@ -3837,7 +3882,10 @@ def preview_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
-@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/navigate")
+@app.post(
+    "/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/navigate",
+    response_model=BootstrapShortlistPreviewResponse,
+)
 def navigate_bootstrap_shortlist(
     journey_id: UUID,
     shortlist_id: UUID,
