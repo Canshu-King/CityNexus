@@ -1,0 +1,19 @@
+[WebServer] 
+[WebServer] > dev
+[WebServer] > vite --host 127.0.0.1 --port 5188
+[WebServer] 
+[WebServer] 
+[WebServer]   VITE v7.3.6  ready in 273 ms
+[WebServer] 
+[WebServer]   ➜  Local:   http://127.0.0.1:5188/
+
+Running 6 tests using 1 worker
+
+  ok 1 e2e\qoder-ack-rendered.spec.ts:198:3 › T3 acknowledgement vs resolution (rendered integration) › an ACKNOWLEDGED disruption with no linked acceptance stays open: both '发生了什么' and '已知晓，仍待处理' render (1.6s)
+  ok 2 e2e\qoder-ack-rendered.spec.ts:223:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal linked to the event by trigger_event_id closes it: no open/acknowledged notice, shown as handled (484ms)
+  ok 3 e2e\qoder-ack-rendered.spec.ts:246:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal with an UNRELATED trigger_event_id leaves the event open (585ms)
+  ok 4 e2e\qoder-ack-rendered.spec.ts:280:3 › T3 ack vs resolution — Today surface (rendered integration) › an ACKNOWLEDGED event with no acceptance stays an unresolved change on Today (521ms)
+  ok 5 e2e\qoder-ack-rendered.spec.ts:292:3 › T3 ack vs resolution — Today surface (rendered integration) › a matching ACCEPTED replan clears the change count on Today (632ms)
+  ok 6 e2e\qoder-ack-rendered.spec.ts:311:3 › T3 ack vs resolution — Today surface (rendered integration) › an UNRELATED accepted proposal still leaves the change unresolved on Today (518ms)
+
+  6 passed (8.5s)

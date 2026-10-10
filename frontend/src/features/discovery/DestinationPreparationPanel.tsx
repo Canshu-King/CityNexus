@@ -23,6 +23,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { deviceReadout } from "../../lib/failureAttribution";
+import { englishCountNoun } from "../../lib/plural";
 import { PrepAbandonSurvey } from "./PrepAbandonSurvey";
 import { failureSentence, nameTheFailure } from "./prepFailureCopy";
 import { STOP_ACTION_KEY, SURVEY_COPY, appendSurveyLog } from "./prepAbandonSurveyCopy";
@@ -180,35 +181,35 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     switch (reasonCode) {
       case "CATALOG_CURRENT":
         return {
-          title: zh ? "这个目的地已经准备好了" : "This destination is ready",
+          title: t("discovery.thisDestinationIsReady"),
           body: zh
             ? "服务器说这座城需要的事实都在，而且是新的，可以直接规划。"
             : "The server says the facts this city needs are present and current, so planning can start.",
         };
       case "COVERAGE_INCOMPLETE":
         return {
-          title: zh ? "这个目的地还没准备过" : "This destination has not been prepared",
+          title: t("discovery.thisDestinationHasNotBeenPrepared"),
           body: zh
             ? `服务器说还缺 ${missing.length} 类事实（${missing.join("、")}），所以现在直接规划会缺依据。可以先准备。`
-            : `The server reports ${missing.length} categories missing (${missing.join(", ")}), so planning now would lack evidence. You can prepare it first.`,
+            : `The server reports ${missing.length} ${englishCountNoun(missing.length, "category")} missing (${missing.join(", ")}), so planning now would lack evidence. You can prepare it first.`,
         };
       case "CATALOG_STALE":
         return {
-          title: zh ? "这个目的地的事实过期了" : "This destination's facts have aged",
+          title: t("discovery.thisDestinationSFactsHaveAged"),
           body: zh
             ? "服务器说需要的事实都在，但已经不新了。直接规划会用到过季的资料，建议先刷新。"
             : "The server says nothing is missing but what it holds has aged; planning would use last season's facts. Refreshing first is the honest route.",
         };
       case "DESTINATION_AMBIGUOUS":
         return {
-          title: zh ? "这个名字对不上一个地方" : "That name does not name one place",
+          title: t("discovery.thatNameDoesNotNameOnePlace"),
           body: zh
             ? `服务器说「${capability.query}」能对上不止一个候选，它没有替你选。请从下面挑一个。`
             : `The server says "${capability.query}" matches more than one candidate and did not choose for you. Pick one below.`,
         };
       case "NO_CANONICAL_IDENTITY":
         return {
-          title: zh ? "这个目的地这个名字认不出来" : "This destination cannot be named from a traceable source",
+          title: t("discovery.thisDestinationCannotBeNamedFromATraceableSource"),
           body: zh
             ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`
             : `The server says "${capability.pending_destination_label ?? capability.query}" cannot be resolved to a destination from any traceable source. This is not a network problem: the server just answered. Try another spelling, or choose another place.`,
@@ -219,7 +220,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       case "PROVIDER_SERVER_ERROR":
       case "CATALOG_PREPARING":
         return {
-          title: zh ? "提供方这次没能回答" : "A provider could not answer this time",
+          title: t("discovery.aProviderCouldNotAnswerThisTime"),
           body: zh
             ? `服务器说这是提供方一侧的一次临时失败（${reasonCode}），可以重试；这不是「这个地方不存在」。`
             : `The server reports a transient failure on a provider's side (${reasonCode}); retrying is right, and this is not "the place does not exist".`,
@@ -232,7 +233,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
            needs data poured in (that would be a claim about the place) and NOT that it cannot be
            planned (that is the UNAVAILABLE cell's claim, which the server did not make). */
         return {
-          title: zh ? "没人回答我们" : "Nobody answered us",
+          title: t("discovery.nobodyAnsweredUs"),
           body: zh
             ? `服务器说这一问没有拿到答复（${reasonCode}）——是它去问的那一头没答话，不是「这个地方不能规划」，也不是「这城市还要灌数据」。这两句服务器都没说。可以稍后重试。`
             : `The server reports that nothing answered this request (${reasonCode}). That is not "this place cannot be planned" and not "this city still needs data loaded" -- the server said neither. Trying again later is the route.`,
@@ -268,21 +269,21 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     switch (String(job.outcome ?? "")) {
       case "CATALOG_PREPARED":
         return {
-          title: zh ? "准备好了，可以去规划" : "Prepared -- you can go and plan",
+          title: t("discovery.preparedYouCanGoAndPlan"),
           body: zh
             ? "服务器说这座城需要的事实已经落库。现在规划会用到它们。"
             : "The server says the facts this city needs are now stored, so planning will use them.",
         };
       case "ALREADY_CURRENT":
         return {
-          title: zh ? "本来就是新的，没有改动" : "Already current -- nothing was changed",
+          title: t("discovery.alreadyCurrentNothingWasChanged"),
           body: zh
             ? "服务器说这份资料已经是新的，所以这次准备什么也没做。这不是失败。"
             : "The server says this material was already current, so this run changed nothing. That is not a failure.",
         };
       case "NO_REGISTERED_SOURCE":
         return {
-          title: zh ? "这个目的地没有可追溯的来源" : "No traceable source for this destination",
+          title: t("discovery.noTraceableSourceForThisDestination"),
           body: zh
             ? "服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。"
             : "The server says it has no traceable source for this destination, so it cannot prepare it. That is a fact about the place, not a network or server fault. Choose another destination.",

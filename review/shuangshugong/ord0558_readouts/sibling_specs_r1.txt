@@ -1,0 +1,9 @@
+# ORD-0558 shuangshugong: the Live screen's own specs, re-run on this worktree's bytes
+# harness: playwright.shuangshugong-0558.config.ts (vite only, /api proxy pointed at a port nothing listens on)
+# env CITYNEXUS_SPEC selects which spec the harness discovers
+spec_label=this_lane pattern=qoder-shuangshugong-0558-live-dedup-plural-r1 exit_code=0 green=5 red=0
+  last_line: 5 passed (7.2s)
+spec_label=ack_rendered pattern=qoder-ack-rendered exit_code=0 green=6 red=0
+  last_line: 6 passed (8.5s)
+spec_label=live_structure pattern=qoder-live-structure exit_code=1 green=8 red=1
+  last_line: 8 passed (13.0s)

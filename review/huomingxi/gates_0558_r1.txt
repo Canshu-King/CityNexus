@@ -1,0 +1,43 @@
+ORD-0558 lane 活明细 — gate readouts, branch review/活明细-0558-r1, parent 7ce836f9afafe9e763527cba828719b414b18db8
+Toolchain: node v24.14.0, typescript 5.9.3 + vite 7.3.6 resolved through a junction of
+D:/moodle/_qoder_integration_20260919/frontend/node_modules into wt/frontend/node_modules.
+Worktree: D:/moodle/_qoder_huomingxi_0558/wt (isolated; main tree D:/moodle/CityNexus untouched).
+
+[1] typecheck
+  cwd: wt/frontend
+  cmd: D:\moodle\_qoder_integration_20260919\frontend\node_modules\.bin\tsc.cmd -p tsconfig.check.json --noEmit
+  exit: 0
+  stdout: 0 lines (kept verbatim as tsc_r1.txt, which is empty = clean)
+
+[2] build
+  cwd: wt/frontend
+  cmd: npm run build
+  exit: 0
+  key lines: "vite v7.3.6 building client environment for production..."
+             "2038 modules transformed."
+             "built in 10.49s"
+             "precache 8 entries (2911.62 KiB)"
+
+[3] product face
+  cmd: git diff --numstat 7ce836f9afafe9e763527cba828719b414b18db8 HEAD -- frontend/src
+  output: empty -> zero product bytes changed in frontend/src
+  cmd: git diff --name-only 7ce836f9afafe9e763527cba828719b414b18db8 HEAD
+  output: 7 paths, all under review/huomingxi/
+
+[4] ruler executed against the real module (no hand copy)
+  cmd: node review/huomingxi/unit_probe_r1.mjs   exit: 0   -> unit_probe_r1.txt
+  plural.ts blob at the tip: aefcc082623f11b473d75020dae37787c4fcb6e8
+  englishCountNoun(2, "m") -> "ms"   (metres would read as milliseconds)
+  englishCountNoun("1.0", "km") -> "kms"   (the km arm feeds toFixed(1), so the count text is never "1")
+  control on real nouns: change->changes, leg->legs, stop->stops
+
+[5] the five sites, template bytes read out of the tip file and evaluated
+  cmd: node review/huomingxi/unit_readings_r1.mjs   exit: 0   -> unit_readings_0558_r1.txt
+  each site first asserts that the recorded template is a substring of that line of the tip file
+  (template_holds_bytes=true for all five, else the instrument prints VERDICT=ABORT)
+
+[6] what was NOT run this round, and why
+  No browser/e2e render: this lane changed zero product bytes, so no screen string moved.
+  The two English readings (count=1 and count=2) come from evaluating the tip's own template
+  expressions instead. A live render is available on request if the ruler is ruled onto the
+  min rows.

@@ -1,0 +1,501 @@
+
+########## GET /api/v1/journeys/{journey_id}/acl/roles :: def at line 5155 name=list_journey_role_rules
+5155	def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_session)):
+5156	    """The product's own answer to what a role may do, read off the seeded table."""
+5157	    require(session, Journey, str(journey_id), "Journey")
+5158	    rows = session.scalars(
+5159	        select(JourneyRoleCapability).order_by(JourneyRoleCapability.role, JourneyRoleCapability.capability)
+5160	    ).all()
+5161	    by_role: dict[str, JourneyRoleRule] = {}
+5162	    for row in rows:
+5163	        rule = by_role.get(row.role)
+5164	        if rule is None:
+5165	            rule = JourneyRoleRule(role=row.role, capabilities=[], scope_message_key=row.scope_message_key)
+5166	            by_role[row.role] = rule
+5167	        rule.capabilities.append(row.capability)
+5168	    return [by_role[role] for role in sorted(by_role)]
+
+########## GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id} :: def at line 1082 name=get_journey_native_hermes_run
+1082	def get_journey_native_hermes_run(
+1083	    journey_id: UUID, run_id: str, session: Session = Depends(get_session)
+1084	) -> dict[str, Any]:
+1085	    require(session, Journey, str(journey_id), "Journey")
+1086	    client = HermesNativeClient()
+1087	    try:
+1088	        payload = client.get_run(run_id)
+1089	    except (httpx.HTTPError, ValueError) as exc:
+1090	        raise HTTPException(502, "native Hermes run status is unavailable") from exc
+1091	    finally:
+1092	        client.close()
+1093	    payload["runtime_identity"] = "HERMES_NATIVE_MCP"
+1094	    payload["journey_id"] = str(journey_id)
+1095	    payload["timeline_url"] = f"/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline"
+1096	    return payload
+
+########## GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline :: def at line 1100 name=get_native_hermes_timeline
+1100	def get_native_hermes_timeline(
+1101	    journey_id: UUID,
+1102	    run_id: str,
+1103	    limit: int = Query(default=100, ge=1, le=250),
+1104	    session: Session = Depends(get_session),
+1105	) -> dict[str, Any]:
+1106	    require(session, Journey, str(journey_id), "Journey")
+1107	    rows = session.scalars(
+1108	        select(AuditLog)
+1109	        .where(
+1110	            AuditLog.action == "agent.native_hermes.event",
+1111	            AuditLog.entity_id == run_id,
+1112	            AuditLog.journey_id == str(journey_id),
+1113	        )
+1114	        .order_by(AuditLog.created_at, AuditLog.id)
+1115	        .limit(limit)
+1116	    ).all()
+1117	    events: list[dict[str, Any]] = []
+1118	    for row in rows:
+1119	        try:
+1120	            value = json.loads(row.after_json or "{}")
+1121	        except json.JSONDecodeError:
+1122	            continue
+1123	        if isinstance(value, dict):
+1124	            events.append(value)
+1125	    tool_started = [item for item in events if item.get("event_type") == "tool.started"]
+1126	    gateway_checks = [item for item in events if item.get("event_type") == "gateway.checked"]
+1127	    guardian_checks = [item for item in events if item.get("event_type") == "guardian.checked"]
+1128	    terminal = next(
+1129	        (
+1130	            item
+1131	            for item in reversed(events)
+1132	            if item.get("event_type") in {"run.completed", "run.failed", "run.stopped"}
+1133	        ),
+1134	        None,
+1135	    )
+1136	    # A reconnect can arrive after Hermes has closed its replay window.  In
+1137	    # that case the upstream run status is still authoritative; reconcile the
+1138	    # missing terminal lifecycle event into the same safe contract instead of
+1139	    # leaving the UI permanently in ``running``.  This is status hydration,
+1140	    # not simulated progress, and it never copies Hermes output or secrets.
+1141	    if terminal is None:
+1142	        client = HermesNativeClient()
+1143	        try:
+1144	            upstream = client.get_run(run_id)
+1145	            upstream_status = str(upstream.get("status") or "").lower()
+1146	            if upstream_status in {"completed", "failed", "cancelled", "canceled", "stopped", "error"}:
+1147	                event_name = str(upstream.get("last_event") or "")
+1148	                if event_name not in {"run.completed", "run.failed", "run.stopped"}:
+1149	                    event_name = "run.stopped" if upstream_status in {"cancelled", "canceled", "stopped"} else (
+1150	                        "run.failed" if upstream_status in {"failed", "error"} else "run.completed"
+1151	                    )
+1152	                hydrated = normalize_hermes_event(
+1153	                    {
+1154	                        "event_type": event_name,
+1155	                        "run_id": run_id,
+1156	                        "status": "stopped" if event_name == "run.stopped" else (
+1157	                            "failed" if event_name == "run.failed" else "completed"
+1158	                        ),
+1159	                        "timestamp": upstream.get("updated_at"),
+1160	                        "source": "HERMES_NATIVE",
+1161	                        "result": {"upstream_status": upstream_status},
+1162	                    },
+1163	                    run_id=run_id,
+1164	                )
+1165	                if hydrated is not None:
+1166	                    _persist_native_event(hydrated, journey_id=str(journey_id))
+1167	                    events.append(hydrated)
+1168	                    terminal = hydrated
+1169	        except (httpx.HTTPError, ValueError):
+1170	            pass
+1171	        finally:
+1172	            client.close()
+1173	    return {
+1174	        "run_id": run_id,
+1175	        "journey_id": str(journey_id),
+1176	        "runtime_identity": "HERMES_NATIVE_MCP",
+1177	        "events": events,
+1178	        "observability": {
+1179	            "run_id": run_id,
+1180	            "runtime_identity": "HERMES_NATIVE_MCP",
+1181	            "current_mission": next(
+1182	                (
+1183	                    item.get("result_summary", {}).get("mission_id")
+1184	                    for item in events
+1185	                    if isinstance(item.get("result_summary"), dict)
+1186	                    and item.get("result_summary", {}).get("mission_id")
+1187	                ),
+1188	                None,
+1189	            ),
+1190	            "tool_count": len(tool_started),
+1191	            "current_tool": tool_started[-1].get("tool_name") if tool_started else None,
+1192	            "completion_status": terminal.get("status") if terminal else "running",
+1193	            "gateway_decision": gateway_checks[-1].get("policy_decision") if gateway_checks else None,
+1194	            "guardian_decision": guardian_checks[-1].get("policy_decision") if guardian_checks else None,
+1195	            "total_duration_ms": sum(
+1196	                float(item.get("duration_ms") or 0)
+1197	                for item in events
+1198	                if isinstance(item.get("duration_ms"), (int, float))
+1199	            ),
+1200	        },
+1201	    }
+
+########## GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events :: def at line 1205 name=stream_journey_native_hermes_events
+1205	def stream_journey_native_hermes_events(
+1206	    journey_id: UUID, run_id: str, session: Session = Depends(get_session)
+1207	) -> StreamingResponse:
+1208	    require(session, Journey, str(journey_id), "Journey")
+1209	    return StreamingResponse(
+1210	        _native_event_stream(run_id, str(journey_id)),
+1211	        media_type="text/event-stream",
+1212	        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+1213	    )
+
+########## POST /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop :: def at line 1217 name=stop_native_hermes_run
+1217	def stop_native_hermes_run(journey_id: UUID, run_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
+1218	    """Stop a native run through CityNexus; Hermes is never called directly by the UI."""
+1219	    require(session, Journey, str(journey_id), "Journey")
+1220	    client = HermesNativeClient()
+1221	    try:
+1222	        return client.stop(run_id)
+1223	    except (httpx.HTTPError, ValueError) as exc:
+1224	        raise HTTPException(502, "native Hermes run stop is unavailable") from exc
+1225	    finally:
+1226	        client.close()
+
+########## POST /api/v1/journeys/{journey_id}/authoritative-compose :: def at line 7740 name=authoritative_compose_journey
+7740	def authoritative_compose_journey(
+7741	    journey_id: UUID,
+7742	    payload: AuthoritativeComposeRequest,
+7743	    session: Session = Depends(get_session),
+7744	):
+7745	    """Compose bounded multi-day candidates from actual user-selected POIs."""
+7746	
+7747	    journey = require(session, Journey, str(journey_id), "Journey")
+7748	    try:
+7749	        result = compose_authoritative_multiday(
+7750	            session,
+7751	            journey,
+7752	            place_ids=payload.place_ids,
+7753	            candidate_count=payload.candidate_count,
+7754	            stay_offer_id=str(payload.stay_offer_id) if payload.stay_offer_id else None,
+7755	            reservation_id=str(payload.reservation_id) if payload.reservation_id else None,
+7756	        )
+7757	    except ValueError as exc:
+7758	        session.rollback()
+7759	        raise HTTPException(422, str(exc)) from exc
+7760	    return {
+7761	        "optimizer": result.optimizer_kind,
+7762	        "complete_plan_count": len(result.plans),
+7763	        "frozen_evidence_ids": list(result.evidence_ids),
+7764	        "stay_offer_id": result.stay_offer.id if result.stay_offer else None,
+7765	        "top_k": [plan_schema(session, plan) for plan in result.plans],
+7766	    }
+
+########## GET /api/v1/journeys/{journey_id}/capabilities :: def at line 2819 name=list_journey_capabilities
+2819	def list_journey_capabilities(journey_id: UUID, session: Session = Depends(get_session)):
+2820	    journey = require(session, Journey, str(journey_id), "Journey")
+2821	    rows = capability_payload(session, journey.traveler_id, journey.id)
+2822	    return {"journey_id": journey.id, "capabilities": rows, "summary": summarize_capabilities(rows)}
+
+########## PUT /api/v1/journeys/{journey_id}/capabilities :: def at line 2826 name=replace_journey_capabilities
+2826	def replace_journey_capabilities(
+2827	    journey_id: UUID,
+2828	    payload: list[CapabilityInput],
+2829	    session: Session = Depends(get_session),
+2830	):
+2831	    journey = require(session, Journey, str(journey_id), "Journey")
+2832	    capabilities = _capability_input_rows(
+2833	        payload, scope="JOURNEY", journey_id=journey.id, require_confirmation=False
+2834	    )
+2835	    if any(item.get("severity") == "HARD" and not item.get("confirmed") for item in capabilities):
+2836	        raise HTTPException(status_code=409, detail="hard capability needs require /confirm")
+2837	    rows = _replace_capability_rows(
+2838	        session,
+2839	        traveler_id=journey.traveler_id,
+2840	        journey_id=journey.id,
+2841	        capabilities=capabilities,
+2842	        scope="JOURNEY",
+2843	        actor_id=journey.traveler_id,
+2844	    )
+2845	    snapshot = refresh_snapshot(session, journey.traveler_id)
+2846	    session.commit()
+2847	    return {"journey_id": journey.id, "capabilities": rows, "summary": summarize_capabilities(rows), "traveler_twin": traveler_twin_payload(snapshot)}
+
+########## POST /api/v1/journeys/{journey_id}/capabilities/confirm :: def at line 2851 name=confirm_journey_capabilities
+2851	def confirm_journey_capabilities(
+2852	    journey_id: UUID,
+2853	    payload: list[CapabilityInput],
+2854	    session: Session = Depends(get_session),
+2855	):
+2856	    journey = require(session, Journey, str(journey_id), "Journey")
+2857	    capabilities = _capability_input_rows(
+2858	        payload, scope="JOURNEY", journey_id=journey.id, require_confirmation=True
+2859	    )
+2860	    rows = _replace_capability_rows(
+2861	        session,
+2862	        traveler_id=journey.traveler_id,
+2863	        journey_id=journey.id,
+2864	        capabilities=capabilities,
+2865	        scope="JOURNEY",
+2866	        actor_id=journey.traveler_id,
+2867	        replace_missing=False,
+2868	    )
+2869	    feasibility = None
+2870	    recovery = None
+2871	    if journey.status == "ACTIVE":
+2872	        # Re-evaluate the active plan against the newly confirmed capability.
+2873	        # A HARD need (or any evidence regression) invalidates it; the active
+2874	        # plan itself is never silently rewritten.
+2875	        try:
+2876	            gate = validate_selected_plan_feasibility(session, journey)
+2877	            failures = list(gate.failures) if gate else []
+2878	            passed = gate.passed if gate else None
+2879	        except ValueError as exc:
+2880	            # Stale/inconsistent frozen evidence is itself an invalidation.
+2881	            failures = [str(exc)]
+2882	            passed = False
+2883	        feasibility = {
+2884	            "passed": passed,
+2885	            "failures": failures,
+2886	            "state": (
+2887	                "PLAN_FEASIBLE"
+2888	                if passed
+2889	                else "REPLAN_REQUIRED"
+2890	                if passed is False
+2891	                else "NO_ACTIVE_PLAN"
+2892	            ),
+2893	        }
+2894	        hard_codes = [
+2895	            str(item["code"])
+2896	            for item in rows
+2897	            if str(item.get("severity", "")).upper() == "HARD"
+2898	        ]
+2899	        if passed is False:
+2900	            # Durable, governed recovery state - not a response-only field.
+2901	            hard_code = hard_codes[0] if hard_codes else "EVIDENCE_REGRESSION"
+2902	            event = open_recovery_event(
+2903	                session,
+2904	                journey,
+2905	                capability_code=hard_code,
+2906	                capability_params={},
+2907	                failures=failures,
+2908	            )
+2909	            record_audit(
+2910	                session,
+2911	                action="journey.recovery.required",
+2912	                entity_type="Event",
+2913	                entity_id=event.id,
+2914	                journey_id=journey.id,
+2915	                actor_type="USER",
+2916	                actor_id=journey.traveler_id,
+2917	                after={
+2918	                    "reason": "HARD_CAPABILITY_INVALIDATES_ACTIVE_PLAN",
+2919	                    "capability_code": hard_code,
+2920	                    "failures": failures,
+2921	                },
+2922	            )
+2923	            recovery = recovery_state(
+2924	                session, journey, is_feasible=False, failures=failures
+2925	            )
+2926	        elif passed is True:
+2927	            resolve_recovery_events(session, journey)
+2928	    snapshot = refresh_snapshot(session, journey.traveler_id)
+2929	    session.commit()
+2930	    return {
+2931	        "journey_id": journey.id,
+2932	        "capabilities": rows,
+2933	        "summary": summarize_capabilities(rows),
+2934	        "traveler_twin": traveler_twin_payload(snapshot),
+2935	        "active_plan_feasibility": feasibility,
+2936	        "recovery": recovery,
+2937	    }
+
+########## GET /api/v1/journeys/{journey_id}/events/{event_id}/impact :: def at line 10007 name=get_event_impact
+10007	def get_event_impact(
+10008	    journey_id: UUID,
+10009	    event_id: UUID,
+10010	    session: Session = Depends(get_session),
+10011	):
+10012	    require(session, Journey, str(journey_id), "Journey")
+10013	    event = session.get(EventModel, str(event_id))
+10014	    if event is None or event.journey_id != str(journey_id):
+10015	        raise HTTPException(404, "Event was not found on this Journey")
+10016	    assessment = session.scalar(
+10017	        select(ImpactAssessment)
+10018	        .where(
+10019	            ImpactAssessment.event_id == event.id,
+10020	            ImpactAssessment.journey_id == str(journey_id),
+10021	        )
+10022	        .order_by(ImpactAssessment.created_at.desc(), ImpactAssessment.id.desc())
+10023	    )
+10024	    if assessment is None:
+10025	        raise HTTPException(404, "Impact assessment has not been resolved")
+10026	    return impact_payload(assessment)
+
+########## GET /api/v1/journeys/{journey_id}/guardian/autopilot/status :: def at line 1694 name=get_guardian_autopilot_status
+1694	def get_guardian_autopilot_status(
+1695	    journey_id: UUID,
+1696	    session: Session = Depends(get_session),
+1697	):
+1698	    journey = require(session, Journey, str(journey_id), "Journey")
+1699	    enrollment = session.get(AutopilotEnrollment, journey.id)
+1700	    return {
+1701	        "journey_id": journey.id,
+1702	        "enrollment": (
+1703	            {
+1704	                "journey_id": enrollment.journey_id,
+1705	                "enabled": bool(enrollment.enabled),
+1706	                "interval_seconds": enrollment.interval_seconds,
+1707	                "provider_mesh": json.loads(enrollment.provider_mesh_json or "{}"),
+1708	                "last_pulse_at": enrollment.last_pulse_at,
+1709	                "last_error": enrollment.last_error,
+1710	            }
+1711	            if enrollment is not None
+1712	            else None
+1713	        ),
+1714	        **autorun_status(),
+1715	    }
+
+########## GET /api/v1/journeys/{journey_id}/guardian/resilience :: def at line 1770 name=get_journey_resilience
+1770	def get_journey_resilience(
+1771	    journey_id: UUID,
+1772	    session: Session = Depends(get_session),
+1773	):
+1774	    journey = require(session, Journey, str(journey_id), "Journey")
+1775	    snapshot = latest_snapshot(session, journey.id)
+1776	    if snapshot is None:
+1777	        snapshot = build_resilience_snapshot(session, journey)
+1778	        session.commit()
+1779	    return snapshot_payload(snapshot)
+
+########## POST /api/v1/journeys/{journey_id}/guardian/resilience/refresh :: def at line 1784 name=refresh_journey_resilience
+1784	def refresh_journey_resilience(
+1785	    journey_id: UUID,
+1786	    payload: ResilienceRefreshRequest | None = None,
+1787	    session: Session = Depends(get_session),
+1788	):
+1789	    journey = require(session, Journey, str(journey_id), "Journey")
+1790	    mode = payload.mode if payload else "replay"
+1791	    discovery = None
+1792	    if mode in {"live", "captured_replay"}:
+1793	        try:
+1794	            discovery = capture_real_city_candidates(
+1795	                session,
+1796	                journey,
+1797	                query="indoor city service",
+1798	                mode=mode,
+1799	            )
+1800	        except RuntimeError as exc:
+1801	            raise HTTPException(503, str(exc)) from exc
+1802	    snapshot = build_resilience_snapshot(session, journey)
+1803	    simulations = simulate_counterfactuals(session, journey, snapshot)
+1804	    session.commit()
+1805	    return {
+1806	        "snapshot": snapshot_payload(snapshot),
+1807	        "counterfactuals": [counterfactual_payload(item) for item in simulations],
+1808	        "discovery": discovery,
+1809	    }
+
+########## POST /api/v1/journeys/{journey_id}/guardian/signal-fixture :: def at line 1726 name=update_guardian_provider_fixture
+1726	def update_guardian_provider_fixture(
+1727	    journey_id: UUID,
+1728	    payload: CitySignalFixtureRequest,
+1729	    session: Session = Depends(get_session),
+1730	):
+1731	    journey = require(session, Journey, str(journey_id), "Journey")
+1732	    fixture = set_fixture_state(
+1733	        session,
+1734	        journey,
+1735	        state=payload.state,
+1736	        payload=payload.payload,
+1737	    )
+1738	    session.commit()
+1739	    return fixture_payload(fixture)
+
+########## GET /api/v1/journeys/{journey_id}/inbox :: def at line 6365 name=list_journey_inbox
+6365	def list_journey_inbox(journey_id: UUID, session: Session = Depends(get_session)):
+6366	    journey = require(session, Journey, str(journey_id), "Journey")
+6367	    drafts = session.scalars(
+6368	        select(ExternalReservationDraft)
+6369	        .where(ExternalReservationDraft.journey_id == journey.id)
+6370	        .order_by(ExternalReservationDraft.created_at)
+6371	    ).all()
+6372	    return {"journey_id": journey.id, "drafts": [_draft_payload(item) for item in drafts]}
+
+########## GET /api/v1/journeys/{journey_id}/member-role-limits :: def at line 5465 name=read_journey_member_role_limits
+5465	def read_journey_member_role_limits(journey_id: UUID, session: Session = Depends(get_session)):
+5466	    """The cap and the seat count behind it, answered by the server.
+5467	
+5468	    The roster screen's иооч sentence reads this instead of carrying a number: `max_administrators`
+5469	    is `MAX_ADMINISTRATORS_PER_JOURNEY`, which the role door compares against in the same breath it
+5470	    refuses on, and which `contracts/openapi.yaml` names a third time.  All three are pinned equal by
+5471	    an arm, so a screen cannot be the only place a stale number lives.
+5472	    """
+5473	
+5474	    require(session, Journey, str(journey_id), "Journey")
+5475	    now = datetime.now(timezone.utc)
+5476	    return MemberRoleLimits(
+5477	        max_administrators=MAX_ADMINISTRATORS_PER_JOURNEY,
+5478	        admin_count_in_force=_member_admin_count_in_force(session, str(journey_id), now),
+5479	        roles=["OWNER", "ADMIN", "COLLABORATOR"],
+5480	    )
+
+########## POST /api/v1/journeys/{journey_id}/members/self-exit :: def at line 5403 name=leave_journey_as_self
+5403	def leave_journey_as_self(journey_id: UUID, payload: JourneyMemberSelfExit,
+5404	                          session: Session = Depends(get_session)):
+5405	    """ORD-0503: the person named on the request takes themselves out of this journey.
+5406	
+5407	    Not the withdraw door.  `POST .../members/{member_id}/withdraw` answers to whoever calls it about
+5408	    whomever it names and asks no question -- right for an OWNER clearing a seat, wrong for leaving,
+5409	    where the row being written has to be the caller's own.  So this door takes no `member_id`: the
+5410	    seat is found from the traveller it belongs to, and the only row it can write is that one.
+5411	
+5412	    The OWNER refusal is the one that keeps a trip from becoming unowned by its own owner walking
+5413	    out.  A withdrawn row stays in the list carrying `removed_at`, which is how the roster can say
+5414	    "this person was here and is out" instead of showing a vanishing row.
+5415	    """
+5416	
+5417	    require(session, Journey, str(journey_id), "Journey")
+5418	    traveler_id = str(payload.traveler_id)
+5419	    now = datetime.now(timezone.utc)
+5420	    member = _member_in_force_for(session, str(journey_id), traveler_id, now)
+5421	    if member is None:
+5422	        raise _share_refusal(
+5423	            404,
+5424	            "That traveller holds no membership row on this journey.",
+5425	            "MEMBER_SELF_EXIT_NOT_A_MEMBER",
+5426	            {"field": "traveler_id", "journey_id": str(journey_id)},
+5427	        )
+5428	    if member.removed_at:
+5429	        raise _share_refusal(
+5430	            409,
+5431	            "This membership was already withdrawn; leaving again is not a new fact.",
+5432	            "MEMBER_ALREADY_WITHDRAWN",
+5433	            {"member_id": member.id, "removed_at": member.removed_at},
+5434	        )
+5435	    if member.role == "OWNER":
+5436	        raise _share_refusal(
+5437	            409,
+5438	            "The owner of a journey cannot leave it through this door while it is still owned.",
+5439	            "MEMBER_OWNER_CANNOT_LEAVE",
+5440	            {"member_id": member.id, "journey_id": str(journey_id)},
+5441	        )
+5442	    stamp = datetime.now(timezone.utc).isoformat()
+5443	    member.removed_at = stamp
+5444	    member.updated_at = stamp
+5445	    session.commit()
+5446	    record_audit(
+5447	        session,
+5448	        action="member.self_exited",
+5449	        entity_type="JourneyMember",
+5450	        entity_id=member.id,
+5451	        journey_id=str(journey_id),
+5452	        before={"removed_at": None},
+5453	        after={"removed_at": stamp},
+5454	        actor_type="traveler",
+5455	        actor_id=traveler_id,
+5456	    )
+5457	    session.commit()
+5458	    return _member_payload(member)
+
+########## GET /api/v1/journeys/{journey_id}/multiday :: def at line 5838 name=get_multiday_journey
+5838	def get_multiday_journey(journey_id: UUID, session: Session = Depends(get_session)):
+5839	    journey = require(session, Journey, str(journey_id), "Journey")
+5840	    return experience_payload(session, journey)

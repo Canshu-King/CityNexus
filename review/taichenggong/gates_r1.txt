@@ -1,0 +1,7 @@
+TYPECHECK_CMD=node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+TSC_EXIT=0 (bytes above should be zero)
+BUILD_CMD=node node_modules/vite/bin/vite.js build
+VITE_EXIT=0
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
