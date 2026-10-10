@@ -937,6 +937,9 @@ const en: Dict = {
   "stay.cancellationTermsUnknown": "Cancellation terms unknown",
   "stay.freeCancellationBeforeArrival": "Free cancellation before arrival",
   "stay.noProviderEvidence": "No provider evidence",
+  "stay.night": "night",
+  "stay.minutesSuffix": " min",
+  "stay.whyPrefix": "Why: ",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2204,6 +2207,9 @@ const zhCN: Dict = {
   "stay.cancellationTermsUnknown": "退改政策未知",
   "stay.freeCancellationBeforeArrival": "入住前可免费取消",
   "stay.noProviderEvidence": "暂无供应商证据",
+  "stay.night": "晚",
+  "stay.minutesSuffix": " 分钟",
+  "stay.whyPrefix": "推荐理由：",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
