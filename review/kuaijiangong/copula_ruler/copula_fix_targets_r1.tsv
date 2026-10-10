@@ -1,0 +1,4 @@
+file	line	full_before_line	full_after_line	copula	rule
+frontend/src/features/poiimport/poiImportCopy.ts	159	en: "{n} {plural:place} are now on {shelf} — read back from the same list door.",	en: "{n} {plural:place} now on {shelf} — read back from the same list door.",	are	去系动词（号令者裁定，中文面一字不动）
+frontend/src/features/poiimport/poiImportCopy.ts	163	en: "{n} {plural:place} were already on {shelf}, so nothing was written twice.",	en: "{n} {plural:place} already on {shelf}, so nothing was written twice.",	were	去系动词（号令者裁定，中文面一字不动）
+frontend/src/i18n/LocaleContext.tsx	570	"agent.aiRunLanded": "What was produced is still there: {n} {plural:plan} were added.",	"agent.aiRunLanded": "What was produced is still there: {n} {plural:plan} added.",	were	去系动词（号令者裁定，中文面一字不动）
