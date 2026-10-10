@@ -1296,6 +1296,13 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+  // ── Scene clock: what the stage says its basis and evidence are ──
+  "scene.theExecutionCursor": "the execution cursor",
+  "scene.theJourneySStart": "the journey's start",
+  "scene.theServerGaveNoBasis": "the server gave no basis",
+  "scene.theFrozenEvidenceCarriesAnExpiry": "the frozen evidence carries an expiry",
+  "scene.noFrozenEvidenceOnThisTrip": "no frozen evidence on this trip",
+  "scene.noScenarioOnStage": "no scenario on stage",
 };
 
 const zhCN: Dict = {
@@ -2498,6 +2505,13 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+  // ── 场景时钟：舞台的依据与证据口径 ──
+  "scene.theExecutionCursor": "执行游标",
+  "scene.theJourneySStart": "行程起点",
+  "scene.theServerGaveNoBasis": "服务器没有说明依据",
+  "scene.theFrozenEvidenceCarriesAnExpiry": "这批证据带冻结期",
+  "scene.noFrozenEvidenceOnThisTrip": "这趟没有冻结证据",
+  "scene.noScenarioOnStage": "台上没有场景",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
