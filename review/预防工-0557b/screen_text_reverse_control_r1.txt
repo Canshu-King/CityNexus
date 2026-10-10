@@ -1,0 +1,8 @@
+# reverse control: same case, two runs on base generation d435cff26df752908a8a3a58d5c61f9f5c23f40c
+#  BEFORE = JourneyTrialSetup.tsx from that base (the word inline, t() reads 0)
+#  AFTER  = JourneyTrialSetup.tsx from this branch (both places read setup.somePlace)
+placeholder_lines_before=4 placeholder_lines_after=4 identical=4 differing=0
+[zh-CN] trial-arrival placeholder = "例如：某地站 / 机场" (expected "例如：某地站 / 机场")
+[zh-CN] trial-departure placeholder = "例如：某地站 / 机场" (expected "例如：某地站 / 机场")
+[en] trial-arrival placeholder = "e.g. station or airport" (expected "e.g. station or airport")
+[en] trial-departure placeholder = "e.g. station or airport" (expected "e.g. station or airport")
