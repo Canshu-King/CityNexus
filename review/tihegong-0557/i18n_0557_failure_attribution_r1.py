@@ -36,7 +36,8 @@ ITEMS = [(457, "lib.failureAttribution.tripNotOnServer"),
          (530, "lib.failureAttribution.slowDownRetry"),
          (538, "lib.failureAttribution.stateAlreadyMoved"),
          (565, "lib.failureAttribution.needsFreshSignIn"),
-         (573, "lib.failureAttribution.stepNotAllowed")]
+         (573, "lib.failureAttribution.stepNotAllowed"),
+         (581, "lib.failureAttribution.readFailed")]
 
 TERNARY = re.compile(r'^title: zh \? "(?P<zh>[^"]*)" : "(?P<en>[^"]*)",$')
 READS = re.compile(r'^title: titleOf\("(?P<key>[^"]*)"\),$')

@@ -63,3 +63,11 @@ typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfi
 parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1121, zh keys 1122, xor = me.asksBeforeProtectedChange
 build, my own instrument mis-fired first: the same command run from the branch root instead of frontend exited 1 with Cannot find module .../wt_product/node_modules/vite/bin/vite.js -- a cwd mistake of mine, no product byte involved
 build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
+
+batch four, the last key (dictionary branch tip 1aa96180b346c01975ca74690ab0d404546bd4a2)
+i18n gate: command python review/tihegong-0557/i18n_0557_failure_attribution_r1.py, exit code 0, items=10, GREEN
+gate reading for this batch: tip:581 -> product:586, dict en 1340, dict zh 2586
+i18n gate: same command with --negative, exit code 1, RED on the ten en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1122, zh keys 1123, xor = me.asksBeforeProtectedChange
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0

@@ -583,7 +583,7 @@ export function copyFor(
     default:
       return {
         kicker: kickerOf("read"),
-        title: zh ? "这一次没读到" : "This read failed",
+        title: titleOf("lib.failureAttribution.readFailed"),
         body: zh
           ? "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。"
           : "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",
