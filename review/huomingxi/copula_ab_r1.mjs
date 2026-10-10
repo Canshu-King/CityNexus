@@ -10,7 +10,7 @@ import path from "node:path";
 const esbuild = createRequire(import.meta.url)("D:/moodle/_qoder_integration_20260919/frontend/node_modules/esbuild");
 const WT = "D:/moodle/_qoder_huomingxi_0558/wt";
 const REPO = "D:/moodle/CityNexus";
-const TIP = "73e723d04d20df33dec68952884d7000f71ef941";
+const TIP = "d89cfea25214b4bbb4e886dca765b096237362f1";
 const REL = "frontend/src/features/poiimport/poiImportCopy.ts";
 const PLURAL = "frontend/src/lib/plural.ts";
 
