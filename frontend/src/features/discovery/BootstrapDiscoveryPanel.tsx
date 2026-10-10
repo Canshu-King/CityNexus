@@ -344,6 +344,7 @@ export function BootstrapDiscoveryPanel({
   const gpsRequestGeneration = useRef(0);
   const citySearchGeneration = useRef(0);
   const twoStopReleaseGeneration = useRef(0);
+  const adaptiveRequestGeneration = useRef(0);
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
@@ -934,7 +935,9 @@ export function BootstrapDiscoveryPanel({
         throw new Error("An unverified walking response cannot contain a duration or distance.");
       }
       setTwoStopWalkability(released);
-      if (released.status === "ROUTE_UNVERIFIED") setTwoStopFallbackUrl(publicMapUrl);
+      // Router consent is NOT consent to send the pair to Google Maps.
+      // Only confirmTwoStopWalk can expose an external-map fallback after
+      // separate signed map consent and a fresh server release.
       setTwoStopWalkabilityConsent(false);
     } catch (error) {
       if (stillCurrent()) {
@@ -970,8 +973,11 @@ export function BootstrapDiscoveryPanel({
     }
     const fence = captureDiscoveryFence();
     const releaseGeneration = twoStopReleaseGeneration.current;
+    const requestGeneration = ++adaptiveRequestGeneration.current;
     const stillCurrent = () =>
-      isCurrentDiscovery(fence) && twoStopReleaseGeneration.current === releaseGeneration;
+      isCurrentDiscovery(fence) &&
+      twoStopReleaseGeneration.current === releaseGeneration &&
+      adaptiveRequestGeneration.current === requestGeneration;
     setAdaptiveWalkBusy(true);
     setMessage(null);
     setAdaptiveWalkComparison(null);
@@ -2125,11 +2131,11 @@ export function BootstrapDiscoveryPanel({
                 </a>
               </p>
             ) : null}
-            {twoStopWalkability?.status === "ROUTE_UNVERIFIED" && twoStopFallbackUrl ? (
-              <p>
-                <a href={twoStopFallbackUrl} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-two-stop-walkability-fallback">
-                  Open external walking directions
-                </a>
+            {twoStopWalkability?.status === "ROUTE_UNVERIFIED" ? (
+              <p data-testid="bootstrap-two-stop-walkability-fallback">
+                The router could not verify this walk. To open public-to-public
+                directions in Google Maps, use the separate external-map consent
+                above and select Open walking leg to stop 2.
               </p>
             ) : null}
             {orderedTwoStopItems.length === 2 && adaptiveAlternativeSecond ? (
@@ -2146,9 +2152,14 @@ export function BootstrapDiscoveryPanel({
                     data-testid="bootstrap-adaptive-walk-budget"
                     value={adaptiveWalkBudget === null ? "" : String(adaptiveWalkBudget)}
                     onChange={(event) => {
+                      // A previously consented response belongs to the old
+                      // walking budget; an in-flight response must not revive
+                      // its recommendation after the user changes the budget.
+                      adaptiveRequestGeneration.current += 1;
                       const value = event.target.value;
                       setAdaptiveWalkBudget(value ? Number(value) : null);
                       setAdaptiveWalkConsent(false);
+                      setAdaptiveWalkBusy(false);
                       setAdaptiveWalkComparison(null);
                     }}
                   >
@@ -2167,7 +2178,14 @@ export function BootstrapDiscoveryPanel({
                     type="checkbox"
                     data-testid="bootstrap-adaptive-walk-consent-checkbox"
                     checked={adaptiveWalkConsent}
-                    onChange={(event) => setAdaptiveWalkConsent(event.target.checked)}
+                    onChange={(event) => {
+                      if (!event.target.checked) {
+                        adaptiveRequestGeneration.current += 1;
+                        setAdaptiveWalkBusy(false);
+                        setAdaptiveWalkComparison(null);
+                      }
+                      setAdaptiveWalkConsent(event.target.checked);
+                    }}
                   />
                   I agree to compare these three public stop coordinates now.
                 </label>
@@ -2221,15 +2239,35 @@ export function BootstrapDiscoveryPanel({
                             .filter((caveat, index, caveats) => caveats.indexOf(caveat) === index)
                             .map((caveat) => <li key={caveat}>{caveat}</li>)}
                         </ul>
-                        <p>{adaptiveWalkComparison.recommendation_reason} Use either external public walking map below after a fresh consent.</p>
                         <p>
-                          <a href={adaptiveWalkComparison.navigation_url} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-adaptive-current-fallback">
-                            Open current public walking map
-                          </a>{" "}
-                          <a href={adaptiveWalkComparison.alternative_navigation_url} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-adaptive-alternative-fallback">
-                            Open alternative public walking map
-                          </a>
+                          {adaptiveWalkComparison.recommendation_reason} You can keep
+                          the current stop or choose the other saved public stop.
+                          Before sharing either route with Google Maps, use the
+                          separate signed external-map consent above. Router
+                          consent does not authorize an external map.
                         </p>
+                        <div className="v8-actions">
+                          <button
+                            type="button"
+                            data-testid="bootstrap-adaptive-current-fallback"
+                            onClick={() => {
+                              setTwoStopPosition(adaptiveWalkComparison.current_second_stop.shortlist_id, 2);
+                              setMessage("Current second stop retained. Grant fresh external-map consent above to open walking directions.");
+                            }}
+                          >
+                            Keep current second stop — authorize map separately
+                          </button>
+                          <button
+                            type="button"
+                            data-testid="bootstrap-adaptive-alternative-fallback"
+                            onClick={() => {
+                              setTwoStopPosition(adaptiveWalkComparison.alternative_second_stop.shortlist_id, 2);
+                              setMessage("Alternative second stop selected without verified route evidence. Grant fresh external-map consent above before opening directions.");
+                            }}
+                          >
+                            Choose alternate stop 2 — authorize map separately
+                          </button>
+                        </div>
                       </>
                     )}
                     <p>Comparison is private to this signed member and remains DRAFT_EXPLORE_ONLY.</p>
