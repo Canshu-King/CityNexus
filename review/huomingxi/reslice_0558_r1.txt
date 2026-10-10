@@ -1,0 +1,83 @@
+base_tip=2f02024c2a1165f68a1a8c275dd7c336c72ec7b2
+current_tip=7ce836f9afafe9e763527cba828719b414b18db8
+base_rows_parsed=209 addendum_code_files=32
+
+=== per-file, addendum code-side rows classified by CN's own judgement, re-anchored on the current tip ===
+file | NOUN | UNIT | ZH | OTHER | noun_rows_now_at
+frontend/src/features/pending/pendingSetCopy.ts | 4 | 0 | 6 | 0 | :25->25 :74->74 :80->80 :82->82
+frontend/src/features/poiimport/poiImportCopy.ts | 4 | 0 | 5 | 0 | :183->183 :231->231 :235->235 :383->383
+frontend/src/app/V8Experience.tsx | 3 | 0 | 4 | 0 | :3252->3252 :3259->3259 :4974->4974
+frontend/src/features/access/accessCopy.ts | 3 | 0 | 3 | 0 | :86->86 :100->100 :102->102
+frontend/src/features/setup/JourneyTrialSetup.tsx | 3 | 0 | 4 | 0 | :288->288 :299->299 :340->340
+frontend/src/features/simulation/SimulationPanel.tsx | 3 | 0 | 4 | 0 | :382->382 :386->386 :630->630
+frontend/src/features/progress/journeyProgress.ts | 2 | 0 | 5 | 0 | :95->95 :100->100
+frontend/src/features/studio/planVersionHistoryCopy.ts | 2 | 0 | 2 | 0 | :34->34 :35->35
+frontend/src/lib/entryLimits.ts | 2 | 0 | 1 | 0 | :104->104 :105->105
+frontend/src/main.tsx | 2 | 1 | 0 | 0 | :1120->1120 :1221->1221
+frontend/src/features/discovery/DestinationPreparationPanel.tsx | 1 | 0 | 2 | 0 | -
+frontend/src/features/estimation/estimationLadderCopy.ts | 1 | 0 | 1 | 0 | :52->52
+frontend/src/features/mobility/MobilitySheet.tsx | 1 | 0 | 0 | 0 | :15->15
+frontend/src/features/planning/PlanComparison.tsx | 1 | 1 | 2 | 0 | :128->128
+frontend/src/features/planning/PlanWithAiSheet.tsx | 1 | 1 | 2 | 0 | :261->261
+frontend/src/features/planning/aiGenerationRun.ts | 1 | 0 | 0 | 0 | :627->627
+frontend/src/features/planning/catalogueReadback.ts | 1 | 0 | 1 | 0 | :78->78
+frontend/src/features/planning/planRankingCopy.ts | 1 | 0 | 2 | 0 | :26->26
+frontend/src/features/stay/HotelsPanel.tsx | 1 | 1 | 2 | 0 | :205->205
+frontend/src/features/trash/journeyTrashCopy.ts | 1 | 0 | 2 | 0 | :28->28
+frontend/src/features/agent/AgentComposer.tsx | 0 | 1 | 0 | 0 | -
+frontend/src/features/agent/CopilotDock.tsx | 0 | 2 | 0 | 0 | -
+frontend/src/features/checkin/footprintCopy.ts | 0 | 0 | 2 | 0 | -
+frontend/src/features/simulation/simulationAdapter.ts | 0 | 0 | 1 | 0 | -
+frontend/src/features/traveler-twin/TwinPanel.tsx | 0 | 1 | 0 | 0 | -
+frontend/src/features/trip/ActivityDetail.tsx | 0 | 5 | 2 | 0 | -
+frontend/src/features/trip/TripItinerary.tsx | 0 | 1 | 3 | 0 | -
+frontend/src/features/trip/spendCopy.ts | 0 | 0 | 2 | 2 | -
+frontend/src/lib/failureAttribution.ts | 0 | 0 | 2 | 0 | -
+frontend/src/lib/keylessWriteDeadline.ts | 0 | 1 | 1 | 0 | -
+frontend/src/lib/readDeadline.ts | 0 | 1 | 0 | 0 | -
+frontend/src/lib/writeDeadline.ts | 0 | 2 | 1 | 0 | -
+
+TOTALS over addendum code-side files: NOUN=38 UNIT=18 ZH=62 OTHER=2 (addendum claimed 61 code-side)
+re-anchor hits=39 misses=1
+
+=== NOUN rows with current-tip coordinates (each line: file:base_line -> current line | stem | text) ===
+frontend/src/features/pending/pendingSetCopy.ts:25 -> frontend/src/features/pending/pendingSetCopy.ts:25 | stem=place|places | "pending.count": "{n} places not on a day",
+frontend/src/features/pending/pendingSetCopy.ts:74 -> frontend/src/features/pending/pendingSetCopy.ts:74 | stem=place|places | "This batch carries the {planned} places your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.",
+frontend/src/features/pending/pendingSetCopy.ts:80 -> frontend/src/features/pending/pendingSetCopy.ts:80 | stem=place|places | "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} places, which is the server's bound.",
+frontend/src/features/pending/pendingSetCopy.ts:82 -> frontend/src/features/pending/pendingSetCopy.ts:82 | stem=stop|stops | "The server placed {n} of them on {days}. This is candidate version {version}, {stops} stops in it.",
+frontend/src/features/poiimport/poiImportCopy.ts:183 -> frontend/src/features/poiimport/poiImportCopy.ts:183 | stem=place|places | en: "{n} places are on {day} — read back from the server.",
+frontend/src/features/poiimport/poiImportCopy.ts:231 -> frontend/src/features/poiimport/poiImportCopy.ts:231 | stem=character|characters | en: "{n} characters",
+frontend/src/features/poiimport/poiImportCopy.ts:235 -> frontend/src/features/poiimport/poiImportCopy.ts:235 | stem=line|lines | en: "{extracted} lines read · {resolved} matched · {ambiguous} need your choice · {unresolved} not found",
+frontend/src/features/poiimport/poiImportCopy.ts:383 -> frontend/src/features/poiimport/poiImportCopy.ts:383 | stem=matched place|matched places | en: "{n} of {total} matched places selected",
+frontend/src/app/V8Experience.tsx:3252 -> frontend/src/app/V8Experience.tsx:3252 | stem=stop|stops | : `${todayStops.length} stops today`
+frontend/src/app/V8Experience.tsx:3259 -> frontend/src/app/V8Experience.tsx:3259 | stem=stop|stops | : `${remainingAfterNext} stops after this`
+frontend/src/app/V8Experience.tsx:4974 -> frontend/src/app/V8Experience.tsx:4974 | stem=数量 {policy?.max_auto_sch | {policy?.max_auto_schedule_drift_min ?? 20} {t("me.minutes")}
+frontend/src/features/access/accessCopy.ts:86 -> frontend/src/features/access/accessCopy.ts:86 | stem=capability|capabilities | "access.roleCapabilityCount": "This server grants this role {count} capabilities.",
+frontend/src/features/access/accessCopy.ts:100 -> frontend/src/features/access/accessCopy.ts:100 | stem=seat|seats | "This server lets this trip hold {cap} admin seats, and {used} of them are taken right now.",
+frontend/src/features/access/accessCopy.ts:102 -> frontend/src/features/access/accessCopy.ts:102 | stem=seat|seats | "All {cap} admin seats this server allows are taken, so one further promotion is refused.",
+frontend/src/features/setup/JourneyTrialSetup.tsx:288 -> frontend/src/features/setup/JourneyTrialSetup.tsx:288 | stem=place|places | : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
+frontend/src/features/setup/JourneyTrialSetup.tsx:299 -> frontend/src/features/setup/JourneyTrialSetup.tsx:299 | stem=category|categories | : `The server names "${spell}" but is short ${count} categories (${missing}), so planning now would lack evidence. You can prepare it first.`,
+frontend/src/features/setup/JourneyTrialSetup.tsx:340 -> frontend/src/features/setup/JourneyTrialSetup.tsx:340 | stem=row|rows | : `the server names it, holds ${row.place_count ?? 0} rows and is short ${row.missing_categories.length} categories`;
+frontend/src/features/simulation/SimulationPanel.tsx:382 -> frontend/src/features/simulation/SimulationPanel.tsx:382 | stem=open activity|open activities | en: `The server says none of this journey's ${openActivities.length} open activities carries an orderable service type in this city's catalogue, so there is nothing to build a hard commitment on. To change the journey, use "Request a replan" below.`,
+frontend/src/features/simulation/SimulationPanel.tsx:386 -> frontend/src/features/simulation/SimulationPanel.tsx:386 | stem=read|reads | en: `The server says ${bookableRead.data.withOrderableService} of this journey's activities carry an orderable service type, but asked for each one's own window it returned no slot at all${bookableRead.data.unreadable ? ` (${bookableRead.data.unreadable} reads did not answer, which is not the same as "no slot")` : ""}, so there is nothing to book right now.`,
+frontend/src/features/simulation/SimulationPanel.tsx:630 -> frontend/src/features/simulation/SimulationPanel.tsx:630 | stem=proposal|proposals | ? `The server answered with ${listed.length} proposals, ${open.length} still open; "Accept the proposal" below now points at ${shortId(open[0].id)}. Accepting is what changes the plan.`
+frontend/src/features/progress/journeyProgress.ts:95 -> frontend/src/features/progress/journeyProgress.ts:95 | stem=stop|stops | : `none of the ${p.planned_total} stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.`);
+frontend/src/features/progress/journeyProgress.ts:100 -> frontend/src/features/progress/journeyProgress.ts:100 | stem=stop|stops | : `${p.completed_count}/${p.planned_total} stops completed`
+frontend/src/features/studio/planVersionHistoryCopy.ts:34 -> frontend/src/features/studio/planVersionHistoryCopy.ts:34 | stem=version|versions | "history.retention": "No retention limit is applied: this trip currently holds {n} versions and all of them are listed here. Nothing is dropped as newer versions are written.",
+frontend/src/features/studio/planVersionHistoryCopy.ts:35 -> frontend/src/features/studio/planVersionHistoryCopy.ts:35 | stem=version|versions | "history.count": "{n} versions listed",
+frontend/src/lib/entryLimits.ts:104 -> frontend/src/lib/entryLimits.ts:104 | stem=数量与单位词都是变量：unitEn 存 peop | ? `from ${field.min} ${field.unitEn}`
+frontend/src/lib/entryLimits.ts:105 -> frontend/src/lib/entryLimits.ts:105 | stem=数量与单位词都是变量：unitEn 存 peop | : `${field.min}-${field.max} ${field.unitEn}`;
+frontend/src/main.tsx:1120 -> frontend/src/main.tsx:1120 | stem=call|calls | <strong>Persisted tool trace · {agentRun.tool_steps.length} calls</strong>
+frontend/src/main.tsx:1221 -> frontend/src/main.tsx:1221 | stem=observation|observations | Mesh · {providerMesh?.providers.length ?? 0} observations · {providerMesh?.real_place_candidates.length ?? 0} real-city POIs
+frontend/src/features/estimation/estimationLadderCopy.ts:52 -> frontend/src/features/estimation/estimationLadderCopy.ts:52 | stem=candidate|candidates | "To get a number you can compare: switch to another of the {n} candidates on this screen, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
+frontend/src/features/mobility/MobilitySheet.tsx:15 -> frontend/src/features/mobility/MobilitySheet.tsx:15 | stem=transfer|transfers | return <div className="v8-sheet-backdrop" role="presentation" data-state={closing ? "closing" : "open"} onMouseDown={onBackdropMouseDown}><section ref={sheetRef} tabIndex={-1} className="v8-mobility-sheet" role="dialog" aria-modal="true" aria-labelledby="mobility-sheet-title" data-state={closing ? "closing" : "open"} onClick={(event) => event.stopPropagation()}><div className="v8-sheet-handle" /><div className="v8-sheet-heading"><div><p className="v8-kicker">{t("mobility.kicker")}</p><h2 id="mobility-sheet-title">{t("mobility.title")}</h2></div><button className="v8-close-button" onClick={requestClose} aria-label={t("mobility.closeLabel")}>×</button></div><div className="v8-mode-comparison">{v8Modes.map((mode) => { const fact = facts.find((item) => item.mode === mode); const unavailable = !fact; return <button key={mode} className={selectedMode === mode ? "v8-mode-option active" : "v8-mode-option"} disabled={unavailable} onClick={() => { if (!unavailable) { onSelect(mode); requestClose(); } }}><strong>{mode.replace("_", " ")}</strong><span>{unavailable ? t("mobility.unavailable") : `${fact.duration_min} min · ${fact.walking_min} min walk`}</span><b>{unavailable ? "—" : fact.cost_amount_minor == null ? t("mobility.costUnknown") : money(fact.cost_amount_minor, fact.currency ?? "CNY", locale)}</b><small>{unavailable ? t("mobility.noProvider") : `${fact.transfers} transfers · ${fact.weather_exposure.toLowerCase()} exposure · ${Math.round(fact.reliability_score * 100)}% reliability`}</small></button>; })}</div><button className="v8-primary v8-sheet-primary" onClick={() => { onSelect("TRANSIT"); requestClose(); }}>{t("mobility.letChoose")}</button><p className="v8-sheet-note">{t("mobility.note")}</p></section></div>;
+frontend/src/features/planning/PlanComparison.tsx:128 -> frontend/src/features/planning/PlanComparison.tsx:128 | stem=option|options | : `We built ${candidates.length} options from the places we can verify for this city and this trip's budget.`}
+frontend/src/features/planning/PlanWithAiSheet.tsx:261 -> frontend/src/features/planning/PlanWithAiSheet.tsx:261 | stem=option|options | : `AI did not take part — ${planCount} options were still assembled`,
+frontend/src/features/planning/aiGenerationRun.ts:627 -> frontend/src/features/planning/aiGenerationRun.ts:627 | stem=place|places | text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+frontend/src/features/planning/catalogueReadback.ts:78 -> frontend/src/features/planning/catalogueReadback.ts:78 | stem=place|places | : `Read back from the server: this city now has ${count} places that can go into a trip.`;
+frontend/src/features/planning/planRankingCopy.ts:26 -> frontend/src/features/planning/planRankingCopy.ts:26 | stem=leg|legs | "rank.evidenceNote": "{hard} of {total} legs on this plan rest on evidence the gate accepts as hard; the rest are {quality}.",
+frontend/src/features/stay/HotelsPanel.tsx:205 -> frontend/src/features/stay/HotelsPanel.tsx:205 | stem=stay|stays | : `${options.length} stays ranked by how they fit your itinerary. Where price is unknown we say so.`}
+frontend/src/features/trash/journeyTrashCopy.ts:28 -> frontend/src/features/trash/journeyTrashCopy.ts:28 | stem=trip|trips | "trash.count": "{n} trips in the bin",
+
+=== misses (row text not found verbatim on the current tip) ===
+frontend/src/features/discovery/DestinationPreparationPanel.tsx:193 | NOUN | : `The server reports ${missing.length} categories missing (${missing.

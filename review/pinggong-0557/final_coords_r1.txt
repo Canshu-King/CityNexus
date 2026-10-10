@@ -1,0 +1,24 @@
+# all 21 coordinates at branch tip 769a365ffd5ebd20e9ee8b73834ed6bcb9099ffc on landing base d435cff26df752908a8a3a58d5c61f9f5c23f40c
+en object LocaleContext.tsx:8..1330  zh object LocaleContext.tsx:1332..2543
+key main.cityNexusRequestFailed | routed main.tsx:173 | was_on_base main.tsx:170 | en LocaleContext.tsx:845 | zh LocaleContext.tsx:absent
+key main.cityNexusRequestRefusedHttp | routed main.tsx:174 | was_on_base main.tsx:171 | en LocaleContext.tsx:846 | zh LocaleContext.tsx:absent
+key main.persistedOperationUpdate | routed main.tsx:570 | was_on_base main.tsx:566 | en LocaleContext.tsx:847 | zh LocaleContext.tsx:absent
+key main.generalRecovery | routed main.tsx:1115 | was_on_base main.tsx:1111 | en LocaleContext.tsx:848 | zh LocaleContext.tsx:absent
+key main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | routed main.tsx:1158 | was_on_base main.tsx:1154 | en LocaleContext.tsx:849 | zh LocaleContext.tsx:absent
+key main.noDominantFailureMode | routed main.tsx:1222 | was_on_base main.tsx:1218 | en LocaleContext.tsx:850 | zh LocaleContext.tsx:absent
+key main.notEvaluated | routed main.tsx:1419 | was_on_base main.tsx:1415 | en LocaleContext.tsx:851 | zh LocaleContext.tsx:absent
+key main.validatedActivity | routed main.tsx:1427 | was_on_base main.tsx:1423 | en LocaleContext.tsx:852 | zh LocaleContext.tsx:absent
+key main.noActionableTarget | routed main.tsx:1428 | was_on_base main.tsx:1424 | en LocaleContext.tsx:853 | zh LocaleContext.tsx:absent
+key main.outcomeEvidence | routed main.tsx:1479 | was_on_base main.tsx:1475 | en LocaleContext.tsx:854 | zh LocaleContext.tsx:absent
+key main.explicitWins | routed main.tsx:1491 | was_on_base main.tsx:1487 | en LocaleContext.tsx:855 | zh LocaleContext.tsx:absent
+key main.notReported | routed main.tsx:1549 | was_on_base main.tsx:1545 | en LocaleContext.tsx:856 | zh LocaleContext.tsx:absent
+key main.noUpcomingActivity | routed main.tsx:1551 | was_on_base main.tsx:1547 | en LocaleContext.tsx:857 | zh LocaleContext.tsx:absent
+key main.noActiveC4 | routed main.tsx:1555 | was_on_base main.tsx:1551 | en LocaleContext.tsx:858 | zh LocaleContext.tsx:absent
+key main.notAvailable | routed main.tsx:1564 | was_on_base main.tsx:1560,1576 | en LocaleContext.tsx:859 | zh LocaleContext.tsx:absent
+key main.unnamedCommitmentServerGaveNoName | routed main.tsx:1599 | was_on_base main.tsx:1595 | en LocaleContext.tsx:865 | zh LocaleContext.tsx:2112
+key main.verifiedFeasible | routed main.tsx:1650 | was_on_base main.tsx:1646 | en LocaleContext.tsx:860 | zh LocaleContext.tsx:absent
+key main.notFeasible | routed main.tsx:1650 | was_on_base main.tsx:1646 | en LocaleContext.tsx:861 | zh LocaleContext.tsx:absent
+key main.notPreserved | routed main.tsx:1684 | was_on_base main.tsx:1680 | en LocaleContext.tsx:862 | zh LocaleContext.tsx:absent
+key main.verifiedEvidenceAttached | routed main.tsx:1686 | was_on_base main.tsx:1682 | en LocaleContext.tsx:863 | zh LocaleContext.tsx:absent
+key main.evidenceUnavailable | routed main.tsx:1687 | was_on_base main.tsx:1683 | en LocaleContext.tsx:864 | zh LocaleContext.tsx:absent
+ROWS_WITH_MISSING_ROUT_OR_MISSING_BASE=0 out of 21

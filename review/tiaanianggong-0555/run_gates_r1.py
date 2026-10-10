@@ -13,9 +13,9 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))
+ROOT = os.environ.get("CNX_LANE_ROOT") or os.path.dirname(os.path.dirname(HERE))
 FE = os.path.join(ROOT, "frontend")
-OUT = os.path.join(HERE, "gates_readout_r1.txt")
+OUT = os.path.join(ROOT, "review", "tiaanianggong-0555", "gates_readout_r1.txt")
 DIST = os.path.join(ROOT, "..", "_qoder_tiaanianggong_0555_dist")
 
 LEGS = [
