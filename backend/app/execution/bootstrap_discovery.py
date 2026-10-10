@@ -26,6 +26,7 @@ from app.core.config import settings
 from app.db.models import (
     IdempotencyKey,
     Journey,
+    MemberDraftPocketWalk,
     MemberDraftResumeIntent,
     MemberDraftShortlistItem,
     Place,
@@ -380,6 +381,82 @@ def _resume_payload(intent: MemberDraftResumeIntent, item: MemberDraftShortlistI
         "selected_at": intent.selected_at,
         "status": "CHOSEN",
     }
+
+
+def _pocket_stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[str, Any]:
+    item = _shortlist_payload(row)
+    return {
+        "position": position,
+        "shortlist_id": item["shortlist_id"],
+        "name": item["name"],
+        "category": item["category"],
+        "external_id": item["external_id"],
+        "source_url": item["source_url"],
+        "source_provenance": item["source_provenance"],
+        "captured_at": item["captured_at"],
+        "coordinate_system": item["coordinate_system"],
+        "opening_state": item["opening_state"],
+        "price_state": item["price_state"],
+        "route_eta_state": "UNKNOWN",
+    }
+
+
+def _pocket_walk_payload(
+    row: MemberDraftPocketWalk | None,
+    items: dict[str, MemberDraftShortlistItem],
+) -> dict[str, Any] | None:
+    if row is None:
+        return None
+    first = items.get(str(row.first_shortlist_id))
+    second = items.get(str(row.second_shortlist_id))
+    if first is None or second is None or first.id == second.id:
+        return None
+    return {
+        "status": "POCKET_WALK_SAVED",
+        "journey_id": row.journey_id,
+        "first_stop": _pocket_stop_payload(first, 1),
+        "second_stop": _pocket_stop_payload(second, 2),
+        "max_walk_minutes": row.max_walk_minutes,
+        "map_authorization": "NONE",
+        "explore_state": "DRAFT_EXPLORE_ONLY",
+        "shared_fields": [
+            "two ordered public shortlist identities",
+            "public OSM source URLs",
+            "source provenance and capture time",
+            "optional human-declared walking budget",
+        ],
+        "withheld_fields": [
+            "member_id",
+            "traveler_id",
+            "journey_id",
+            "foreground GPS",
+            "query center",
+            "route estimate",
+            "navigation URL",
+            "provider receipt",
+            "private comments",
+        ],
+        "plan_version_id": None,
+        "selected_place_id": None,
+    }
+
+
+def _load_member_pocket_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    items: list[MemberDraftShortlistItem],
+) -> dict[str, Any] | None:
+    row = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    return _pocket_walk_payload(row, {str(item.id): item for item in items})
 
 
 def _public_tags_for_candidate(row: RealPlaceCandidate) -> dict[str, str]:
@@ -1781,6 +1858,142 @@ def list_bootstrap_shortlist_items(
         "limit": _MAX_SHORTLIST_ITEMS,
         "items": [_shortlist_payload(row) for row in rows],
         "resume": resume_payload,
+        "pocket_walk": _load_member_pocket_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=traveler_id,
+            items=rows,
+        ),
+    }
+
+
+def save_bootstrap_pocket_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    first_shortlist_id: UUID,
+    second_shortlist_id: UUID,
+    max_walk_minutes: int | None,
+) -> dict[str, Any]:
+    """Persist exactly two ordered shortlist identities for a member's DRAFT Journey."""
+
+    locked = session.execute(
+        update(Journey)
+        .where(Journey.id == journey.id)
+        .values(updated_at=Journey.updated_at)
+    )
+    if locked.rowcount != 1:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_JOURNEY_NOT_FOUND",
+            "Journey disappeared while saving the Pocket Walk",
+            status_code=404,
+        )
+    session.flush()
+    journey = session.get(Journey, journey.id)
+    if journey is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_JOURNEY_NOT_FOUND",
+            "Journey disappeared while saving the Pocket Walk",
+            status_code=404,
+        )
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "a Pocket Walk can be saved only for a DRAFT Journey",
+        )
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "a Pocket Walk can be saved only before a PlanVersion exists",
+        )
+    first_id = str(first_shortlist_id)
+    second_id = str(second_shortlist_id)
+    if first_id == second_id:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_STOPS_NOT_DISTINCT",
+            "a Pocket Walk requires two different saved public places",
+            status_code=422,
+        )
+    if max_walk_minutes is not None and not 1 <= int(max_walk_minutes) <= 180:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_BUDGET_INVALID",
+            "the optional walking budget must be between 1 and 180 minutes",
+            status_code=422,
+        )
+    rows = session.scalars(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id.in_([first_id, second_id]),
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    ).all()
+    by_id = {str(item.id): item for item in rows}
+    if first_id not in by_id or second_id not in by_id:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_STOP_NOT_FOUND",
+            "both Pocket Walk stops must be saved public places owned by this signed member",
+            status_code=403,
+        )
+    now = _iso(_now())
+    pocket = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    if pocket is None:
+        pocket = MemberDraftPocketWalk(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            member_id=str(member.id),
+            traveler_id=str(traveler_id),
+            first_shortlist_id=first_id,
+            second_shortlist_id=second_id,
+            max_walk_minutes=int(max_walk_minutes) if max_walk_minutes is not None else None,
+            created_at=now,
+            updated_at=now,
+        )
+        session.add(pocket)
+    else:
+        pocket.first_shortlist_id = first_id
+        pocket.second_shortlist_id = second_id
+        pocket.max_walk_minutes = int(max_walk_minutes) if max_walk_minutes is not None else None
+        pocket.updated_at = now
+    session.flush()
+    return _pocket_walk_payload(pocket, by_id) or {}
+
+
+def clear_bootstrap_pocket_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+) -> dict[str, Any]:
+    """Clear only this signed member's saved Pocket Walk intent."""
+
+    row = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    if row is not None:
+        session.delete(row)
+        session.flush()
+    return {
+        "journey_id": journey.id,
+        "cleared": row is not None,
+        "pocket_walk": None,
     }
 
 
@@ -1883,6 +2096,17 @@ def remove_bootstrap_shortlist_item(
     )
     if resume is not None:
         session.delete(resume)
+    pocket = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+            (MemberDraftPocketWalk.first_shortlist_id == row.id)
+            | (MemberDraftPocketWalk.second_shortlist_id == row.id),
+        )
+    )
+    if pocket is not None:
+        session.delete(pocket)
     session.delete(row)
     session.flush()
     return {"journey_id": journey.id, "shortlist_id": str(shortlist_id), "removed": True, "place_id": None}

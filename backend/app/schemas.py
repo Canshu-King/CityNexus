@@ -372,6 +372,14 @@ class BootstrapAdaptiveShortWalkRequest(BaseModel):
     public_route_consent: bool = False
 
 
+class BootstrapPocketWalkSaveRequest(BaseModel):
+    """Persist two ordered saved public stops for a member-private Pocket Walk."""
+
+    first_shortlist_id: UUID
+    second_shortlist_id: UUID
+    max_walk_minutes: int | None = Field(default=None, ge=1, le=180)
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)

@@ -1822,11 +1822,41 @@ export interface BootstrapShortlistResumeIntent {
   status: "CHOSEN";
 }
 
+export interface BootstrapPocketWalkStop {
+  position: 1 | 2;
+  shortlist_id: string;
+  name: string;
+  category: string;
+  external_id: string;
+  source_url: string;
+  source_provenance: string;
+  captured_at: string;
+  coordinate_system: "WGS84";
+  opening_state: string;
+  price_state: string;
+  route_eta_state: "UNKNOWN" | string;
+}
+
+export interface BootstrapPocketWalkResponse {
+  status: "POCKET_WALK_SAVED";
+  journey_id: string;
+  first_stop: BootstrapPocketWalkStop;
+  second_stop: BootstrapPocketWalkStop;
+  max_walk_minutes: number | null;
+  map_authorization: "NONE";
+  explore_state: "DRAFT_EXPLORE_ONLY";
+  shared_fields: string[];
+  withheld_fields: string[];
+  plan_version_id: null;
+  selected_place_id: null;
+}
+
 export interface BootstrapShortlistResponse {
   journey_id: string;
   limit: number;
   items: BootstrapShortlistItem[];
   resume: BootstrapShortlistResumeIntent | null;
+  pocket_walk: BootstrapPocketWalkResponse | null;
 }
 
 export interface BootstrapShortlistPreviewResponse {
@@ -3043,6 +3073,31 @@ export const cityNexusApi = {
         headers: travelerAuthHeaders(),
         body: JSON.stringify(input),
       },
+    );
+  },
+
+  saveBootstrapPocketWalk(
+    journeyId: string,
+    input: {
+      first_shortlist_id: string;
+      second_shortlist_id: string;
+      max_walk_minutes: number | null;
+    },
+  ): Promise<BootstrapPocketWalkResponse> {
+    return requestJson<BootstrapPocketWalkResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/pocket-walk",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  clearBootstrapPocketWalk(journeyId: string): Promise<{ journey_id: string; cleared: boolean; pocket_walk: null }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/pocket-walk",
+      { method: "DELETE", headers: travelerAuthHeaders() },
     );
   },
 

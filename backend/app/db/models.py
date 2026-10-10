@@ -1287,6 +1287,44 @@ class MemberDraftResumeIntent(Base):
     )
 
 
+class MemberDraftPocketWalk(Base):
+    """Private ordered two-stop intent for a member's draft Pocket Walk."""
+
+    __tablename__ = "member_draft_pocket_walks"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    first_shortlist_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
+    )
+    second_shortlist_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
+    )
+    max_walk_minutes: Mapped[int | None] = mapped_column(nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "member_id", "traveler_id"),
+        CheckConstraint(
+            "first_shortlist_id <> second_shortlist_id",
+            name="ck_member_draft_pocket_walk_distinct_stops",
+        ),
+        CheckConstraint(
+            "max_walk_minutes IS NULL OR (max_walk_minutes >= 1 AND max_walk_minutes <= 180)",
+            name="ck_member_draft_pocket_walk_max_minutes",
+        ),
+        Index(
+            "idx_member_draft_pocket_walk_owner",
+            "journey_id",
+            "member_id",
+            "traveler_id",
+            "updated_at",
+        ),
+    )
+
+
 class JourneyConstraint(Base):
     __tablename__ = "constraints"
     id: Mapped[str] = mapped_column(String, primary_key=True)

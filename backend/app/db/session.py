@@ -764,6 +764,30 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             _migrate_private_buddy_route_location_bindings(connection)
             _reconcile_real_place_candidate_scope(connection)
             _backfill_legacy_hydration_rows(connection)
+            # R100: a member-private, ordered Pocket Walk intent stores only
+            # shortlist identities and an optional human walking budget.  The
+            # public coordinates and source facts remain on the signed
+            # shortlist rows and are never duplicated here.
+            if not _table_exists(connection, "member_draft_pocket_walks"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE member_draft_pocket_walks (
+                    id TEXT PRIMARY KEY,
+                    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+                    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+                    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+                    first_shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
+                    second_shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
+                    max_walk_minutes INTEGER CHECK (max_walk_minutes IS NULL OR (max_walk_minutes >= 1 AND max_walk_minutes <= 180)),
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    UNIQUE(journey_id, member_id, traveler_id),
+                    CHECK(first_shortlist_id <> second_shortlist_id)
+                    )"""
+                )
+            connection.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS idx_member_draft_pocket_walk_owner "
+                "ON member_draft_pocket_walks(journey_id, member_id, traveler_id, updated_at)"
+            )
             invitation_columns = {
                 row[1] for row in connection.exec_driver_sql(
                     "PRAGMA table_info(member_place_invitations)"
