@@ -47,3 +47,6 @@ three keys added per side, no orphan key introduced, the ruler's own source was 
 production build
 cwd frontend, command: node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0555_dist --emptyOutDir
 exit code 0, success line: precache 8 entries (2913.22 KiB)
+
+generation relation, read with `git rev-list --count` against d435cff26df752908a8a3a58d5c61f9f5c23f40c: dictionary branch ahead 2 behind 0, product branch ahead 5 behind 0
+files this branch moves against that line, read with `git diff --name-only`: frontend/src/i18n/LocaleContext.tsx, frontend/src/lib/failureAttribution.ts, review/tihegong-0555/gates_readout_r1.txt, review/tihegong-0555/i18n_0555_failure_attribution_r1.py
