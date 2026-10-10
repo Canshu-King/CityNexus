@@ -37,8 +37,11 @@ export const COLLECTION_COPY = {
     en: "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.",
   },
   noShelf: {
-    zh: "这位旅客名下没有架子。",
-    en: "No shelf is written under this traveller.",
+    /* This row renders inside a shelf that the screen has just named and counted, so the sentence
+       cannot claim the traveller owns no shelf -- the panel above already owns a different message
+       for that state (`empty`). What is true here is that this one shelf lists nothing. */
+    zh: "这一枚架子上还没有放地点。",
+    en: "No places are on this shelf yet.",
   },
   loading: {
     zh: "正在读架子…",
