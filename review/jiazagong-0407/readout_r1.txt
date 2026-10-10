@@ -9,7 +9,7 @@
 9 绿臂 run jiaz0407r9：同一条命令同一把尺，只把那四枚格各临时加一枚按钮，跑出去 3 项通过、退出码零，四枚格 格内各 1 枚、名字都是 临时对照，cells_without_own_action 为空
 10 变异与复位各一次：命令原样 git -C D:\moodle\_qoder_jiazagong_0407\wt2 checkout -- 那三枚产品文件，复位后命令原样 git diff --name-only HEAD -- frontend/src 回 0 行，命令原样 grep -c 临时对照 对那三枚文件各回 0
 11 我这枚改动的面：一枚文件、219 行新增、零行删除，产品字节零（第 10 行就是它的现读）
-12 四枚读数 JSON 随枝交在 receipts 目录里（这仓的 .gitignore:23 把 evidence/ 整类忽略，我不硬闯闸门，换了目录名）：r8 的 C8 与 C9、r9 的 C8 与 C9
+12 6 枚读数 JSON 随枝交在 receipts 目录里：红臂 r8 一对、绿臂 r9 一对、合入现尖后 r10 一对（这仓的 .gitignore:23 把 evidence/ 整类忽略，我不硬闯闸门，换了目录名）：r8 的 C8 与 C9、r9 的 C8 与 C9
 13 枝的下落要说清：我先前那一次把同一件改动推成 review/加闸工-0407-r1 并向远端逐字回验过 33f4510682c9154b6d247959e279294b2548b550 与 e818d5317d71f4d706c158f2e25e23912223e25c（那次交付的账本块标题是「加闸工 交付 ORD-0407 那把空态尺只数整屏」）；此刻命令原样 git ls-remote origin "refs/heads/review/加闸工*" 只回 0558 与 0560 两行，远端已无那枚枝，本地同名 ref 的流水只剩「Created from 4d69eb86」一条，我那两枚对象在本树命令原样 git cat-file -t 报 could not get object info。本枝 r2 是在现尖上重做的同一件事，不是接着那枚枝往下走，也没强推任何东西。
 14 另一面顺手现读：命令原样 git show 0fb1938e39016efeaa0b8c2a5c5fd873388b0809:frontend/src/features/progress/journeyProgress.ts | grep -c englishCountNoun 回 0，也就是我 ORD-0558 那三行目前不在权威线上（线上那笔提交自述「还原为现尖那枚 blob（加闸工的枝覆盖此面）」，是别人在处理撞面）；我那枚枝 review/加闸工-0558-r1 仍在远端等号令者点。
 15 ORD-0560 那把全量闸此刻在权威线上并是绿的：命令原样 git show 0fb1938e39016efeaa0b8c2a5c5fd873388b0809:frontend/package.json 的第 8 行就是 tsc -p tsconfig.typecheck.json --noEmit；本枝这一代上命令原样 npm run typecheck 退出码 0、error TS 0 条，命令原样 npx tsc -p tsconfig.typecheck.json --listFilesOnly 里 src 下 .ts/.tsx 156 个。我那三处 TS2307（@dnd-kit 缺包）此刻不复现——共享 store 里 @dnd-kit 目录已在（作用域目录 28 枚），那是别人补的，不是我补的
