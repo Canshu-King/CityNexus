@@ -1334,6 +1334,9 @@ const en: Dict = {
   "lib.failureAttribution.serverCouldNotRead": "The server could not read your trip",
   "lib.failureAttribution.slowDownRate": "The server asked us to slow down",
   "lib.failureAttribution.slowDownRetry": "The server asked us to slow down",
+  "lib.failureAttribution.stateAlreadyMoved": "The state already moved - this was not a failed read",
+  "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
+  "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
 };
 
 const zhCN: Dict = {
@@ -2576,6 +2579,9 @@ const zhCN: Dict = {
   "lib.failureAttribution.serverCouldNotRead": "服务器这次没能把行程读出来",
   "lib.failureAttribution.slowDownRate": "服务器请我们慢一点",
   "lib.failureAttribution.slowDownRetry": "服务器请我们慢一点",
+  "lib.failureAttribution.stateAlreadyMoved": "这件事的状态已经变了，不是没读到",
+  "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
+  "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
