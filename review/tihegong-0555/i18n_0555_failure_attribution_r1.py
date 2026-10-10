@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""ORD-0555 lane gate, first three failure.* keys of lib/failureAttribution.ts.
+"""ORD-0555 lane gate, the failure.* keys of lib/failureAttribution.ts this lane moved (ITEMS).
 
 The screen text must not move, so nothing here is hand-typed: the zh and en arms are cut out of the
 exact ternary line read off the authoritative tip with `git show`, and after the move the two
@@ -29,7 +29,8 @@ TIP = "d435cff26df752908a8a3a58d5c61f9f5c23f40c"  # the line this branch was bro
 
 # (tip line number, new key) -- the line numbers are read off TIP, the names are the blessed ones.
 ITEMS = [(454, "failure.thisTripIsNotOnThisServer"), (462, "failure.networkUnavailable"),
-         (475, "failure.theServiceIsTemporarilyUnavailable")]
+         (475, "failure.theServiceIsTemporarilyUnavailable"),
+         (482, "failure.theServerCouldNotReadYourTrip")]
 
 TERNARY = re.compile(r'^title: zh \? "(?P<zh>[^"]*)" : "(?P<en>[^"]*)",$')
 READS = re.compile(r'^title: titleOf\("(?P<key>[^"]*)"\),$')

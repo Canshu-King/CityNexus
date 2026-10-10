@@ -481,7 +481,7 @@ export function copyFor(
           }
         : {
             kicker: kickerOf("server"),
-            title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
+            title: titleOf("failure.theServerCouldNotReadYourTrip"),
             body: zh
               ? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
               : `The server reported an error of its own (http_status=${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,

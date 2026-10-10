@@ -50,3 +50,12 @@ exit code 0, success line: precache 8 entries (2913.22 KiB)
 
 generation relation, read with `git rev-list --count` against d435cff26df752908a8a3a58d5c61f9f5c23f40c: dictionary branch ahead 2 behind 0, product branch ahead 5 behind 0
 files this branch moves against that line, read with `git diff --name-only`: frontend/src/i18n/LocaleContext.tsx, frontend/src/lib/failureAttribution.ts, review/tihegong-0555/gates_readout_r1.txt, review/tihegong-0555/i18n_0555_failure_attribution_r1.py
+
+batch two, the fourth key (dictionary branch tip 2c2093749ca443744fbbd6bf3086699a490192dd)
+i18n gate: command python review/tihegong-0555/i18n_0555_failure_attribution_r1.py, exit code 0, items=4, GREEN
+i18n gate: same command with --tip 7ce836f9afafe9e763527cba828719b414b18db8, exit code 0, GREEN
+i18n gate: same command with --negative, exit code 1, RED on the four en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit, exit code 0, zero bytes
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py run from the branch root, exit code 1, en keys 1098, zh keys 1099, xor = me.asksBeforeProtectedChange
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0555_dist --emptyOutDir, exit code 0
