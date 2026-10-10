@@ -1,15 +1,15 @@
-1. line_tip 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
-2. product_branch_head ae485af0b5fa6a5f3e985cae528da50d8bb0295c
-3. dict_branch_head 8704e854d5fc6deea9f609595c8483a77bd0ad21
-4. ls-remote_origin_readback 8704e854d5fc6deea9f609595c8483a77bd0ad21	refs/heads/review/快钉工-0557-dict-r2 | ae485af0b5fa6a5f3e985cae528da50d8bb0295c	refs/heads/review/快钉工-0557-r2
+1. line_tip b4e3e049c851200a0ab0e421c335694fc607cda7
+2. product_branch_head fe67cdbb7efe1daf8ba3296876374b7e823de6f0
+3. dict_branch_head df6d2a552b34ac5a7b4dd1e6fa73ed0001d3db2f
+4. ls-remote_origin_readback df6d2a552b34ac5a7b4dd1e6fa73ed0001d3db2f	refs/heads/review/快钉工-0557-dict-r2 | fe67cdbb7efe1daf8ba3296876374b7e823de6f0	refs/heads/review/快钉工-0557-r2
 5. keys_missing_in_tip_dictionary [0, 0]
 6. tip_literal_lines inbox.handled [(253, 'return entry ? (zh ? entry.zh : entry.en) : zh ? "已处理" : "Handled";')]
-7. dict_sides inbox.handled en=[(843, '"inbox.handled": "Handled",')] zh=[(2112, '"inbox.handled": "已处理",')]
+7. dict_sides inbox.handled en=[(844, '"inbox.handled": "Handled",')] zh=[(2114, '"inbox.handled": "已处理",')]
 8. screen_unchanged inbox.handled en_value_matches_tip_literal=True zh_value_matches_tip_literal=True
 9. tip_literal_lines inbox.toConfirm [(258, 'if (!raw) return zh ? "待确认" : "To confirm";'), (279, 'if (value === null || value === undefined || value === "") return zh ? "待确认" : "To confirm";')]
-10. dict_sides inbox.toConfirm en=[(844, '"inbox.toConfirm": "To confirm",')] zh=[(2113, '"inbox.toConfirm": "待确认",')]
+10. dict_sides inbox.toConfirm en=[(845, '"inbox.toConfirm": "To confirm",')] zh=[(2115, '"inbox.toConfirm": "待确认",')]
 11. screen_unchanged inbox.toConfirm en_value_matches_tip_literal=True zh_value_matches_tip_literal=True
-12. files_touched_by_product_vs_tip ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx', 'frontend/src/i18n/LocaleContext.tsx']
+12. files_touched_by_product_vs_tip ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx', 'frontend/src/i18n/LocaleContext.tsx', 'review/kuaidinggong-0557r2/gates_readout_r1.txt', 'review/kuaidinggong-0557r2/instrument_r1.py', 'review/kuaidinggong-0557r2/screen_text_readout_r1.txt']
 13. files_touched_by_dict_vs_tip ['frontend/src/i18n/LocaleContext.tsx']
 14. product_carries_dict_is_ancestor_rc 0
 15. numstat_product 10	10	frontend/src/features/inbox/JourneyInboxWorkbench.tsx
