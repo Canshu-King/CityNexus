@@ -1424,6 +1424,11 @@ const zhCN: Dict = {
   "trial.end": "行程结束",
   "trial.arrival": "抵达地点",
   "trial.departure": "离开地点",
+  /* ORD-0557: the trial form's own placeholder city. The Chinese value is the exact
+     string the form printed before the key existed, so the Chinese screen cannot move;
+     the English arm of that placeholder is a different, complete sentence and does not
+     read this key, which is why the English side stays empty. */
+  "setup.somePlace": "某地",
   "trial.budget": "行程预算",
   "trial.stayBudget": "住宿预算",
   "trial.currency": "货币",
