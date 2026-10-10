@@ -1350,6 +1350,17 @@ const en: Dict = {
   "setup.stoppedWaiting": "Stopped waiting",
   "setup.back": "Back",
   "setup.createTrip": "Create trip",
+  "setup.identityNotReadYet": "identity not read yet",
+  "setup.theServerNamedIt": "the server named it",
+  "setup.noIdentityYet": "no identity yet",
+  "setup.thisName": "this name",
+  "setup.theServerCannotNameThisPlace": "The server cannot name this place",
+  "setup.thePlacesAreHereButNoneHasACoordinate": "The places are here, but none has a coordinate",
+  "setup.thisDestinationHasNotBeenPrepared": "This destination has not been prepared",
+  "setup.noPlacesAreRegisteredForThisDestination": "No places are registered for this destination",
+  "setup.theServerSaysThisDestinationCanBePlannedNow": "the server says this destination can be planned now",
+  "setup.itWasAskedAndNothingAnsweredThisRound": "it was asked, and nothing answered this round",
+  "setup.theServerGaveSomeOtherVerdict": "the server gave some other verdict",
 
 };
 
@@ -2609,6 +2620,17 @@ const zhCN: Dict = {
   "setup.stoppedWaiting": "已停止等待",
   "setup.back": "返回",
   "setup.createTrip": "确认创建",
+  "setup.identityNotReadYet": "身份还没读到",
+  "setup.theServerNamedIt": "服务器给了身份",
+  "setup.noIdentityYet": "还没有身份",
+  "setup.thisName": "这个名字",
+  "setup.theServerCannotNameThisPlace": "服务器认不出这个名字",
+  "setup.thePlacesAreHereButNoneHasACoordinate": "这里有地点，但它们没有坐标",
+  "setup.thisDestinationHasNotBeenPrepared": "这座城还没准备过",
+  "setup.noPlacesAreRegisteredForThisDestination": "这座城还没登记任何地点",
+  "setup.theServerSaysThisDestinationCanBePlannedNow": "服务器说这座城现在就能规划",
+  "setup.itWasAskedAndNothingAnsweredThisRound": "问了，这一轮没人回答",
+  "setup.theServerGaveSomeOtherVerdict": "服务器给了别的判定",
 
 };
 
