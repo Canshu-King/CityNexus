@@ -239,7 +239,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                   </dd>
                 </div>
                 <div>
-                  <dt>{zh ? "步行" : "Walking"}</dt>
+                  <dt>{t("stay.walking")}</dt>
                   <dd>{option.walking_min}{zh ? " 分钟" : " min"}</dd>
                 </div>
                 <div>
@@ -248,7 +248,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 </div>
                 <div>
                   <dt>{zh ? "退改" : "Cancellation"}</dt>
-                  <dd>{stay.refundable ? (zh ? "可取消" : "Refundable") : zh ? "不可取消" : "Non-refundable"}</dd>
+                  <dd>{stay.refundable ? (t("stay.refundable")) : zh ? "不可取消" : "Non-refundable"}</dd>
                 </div>
               </dl>
               <p className="hotel-reason">
@@ -271,8 +271,8 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 {isChosen
                   ? zh ? "已选择这家" : "Selected"
                   : busy === option.id
-                    ? zh ? "选择中…" : "Choosing…"
-                    : zh ? "选择这家住宿" : "Choose this stay"}
+                    ? t("stay.choosing")
+                    : t("stay.chooseThisStay")}
               </button>
             </article>
           );
