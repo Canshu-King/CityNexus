@@ -1,0 +1,7 @@
+target_bytes=11438 has_cr=0
+found_by_content=1
+OK 草稿行 112｜名词 stops｜档 B｜侧 en_only
+  落点现读 83（草稿坐标写的是 82，r1 那批顶过一格）
+  改前       "The server placed {n} of them on {days}. This is candidate version {version}, {stops} stops in it.",
+  改后       "The server placed {n} of them on {days}. This is candidate version {version}, {stops} {plural:stop:stops} in it.",
+written_bytes=11452
