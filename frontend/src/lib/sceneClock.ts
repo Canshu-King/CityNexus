@@ -190,7 +190,9 @@ export type SceneCopyKey =
   | "basisUnknown"
   | "evidenceReferenced"
   | "evidenceNoFrozen"
-  | "evidenceNoScenario";
+  | "evidenceNoScenario"
+  | "evidenceSealedWithoutExpiry"
+  | "evidenceReferenceMismatch";
 
 const SCENE_COPY: Record<SceneCopyKey, { zh: string; en: string }> = {
   basisCursor: { zh: "执行游标", en: "the execution cursor" },
@@ -199,6 +201,8 @@ const SCENE_COPY: Record<SceneCopyKey, { zh: string; en: string }> = {
   evidenceReferenced: { zh: "这批证据带冻结期", en: "the frozen evidence carries an expiry" },
   evidenceNoFrozen: { zh: "这趟没有冻结证据", en: "no frozen evidence on this trip" },
   evidenceNoScenario: { zh: "台上没有场景", en: "no scenario on stage" },
+  evidenceSealedWithoutExpiry: { zh: "这趟的出行数据是封存的，没有到期时间", en: "this trip's travel data is sealed, with no expiry" },
+  evidenceReferenceMismatch: { zh: "证据的引用对不上（服务器说有封存记录，但引用不一致）", en: "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)" },
 };
 
 export function sceneCopy(zh: boolean, key: SceneCopyKey): string {
@@ -219,14 +223,8 @@ export function evidenceWord(state: string | null, zh: boolean): string {
   /* The state `924461e` added, and the one a naive reading gets wrong: sealed pairs exist and are
      used by a replan -- only the expiry is missing.  Showing this as "没有数据" tells a traveller
      the trip has no travel data when the server said it has 56 pairs. */
-  if (state === "FROZEN_WITHOUT_TTL")
-    return zh
-      ? "这趟的出行数据是封存的，没有到期时间"
-      : "this trip's travel data is sealed, with no expiry";
-  if (state === "EVIDENCE_REFERENCE_INCONSISTENT")
-    return zh
-      ? "证据的引用对不上（服务器说有封存记录，但引用不一致）"
-      : "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)";
+  if (state === "FROZEN_WITHOUT_TTL") return sceneCopy(zh, "evidenceSealedWithoutExpiry");
+  if (state === "EVIDENCE_REFERENCE_INCONSISTENT") return sceneCopy(zh, "evidenceReferenceMismatch");
   if (state === "NO_FROZEN_EVIDENCE")
     return sceneCopy(zh, "evidenceNoFrozen");
   if (state === "NO_SCENARIO") return sceneCopy(zh, "evidenceNoScenario");

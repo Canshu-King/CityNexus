@@ -1,0 +1,267 @@
+{
+ "arm": "codes-on-screen-r3",
+ "ref": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "base": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "require_name": true,
+ "only_added": false,
+ "files_judged": 1,
+ "problems": [
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 358,
+   "entry_line": 355,
+   "token": "NO_CANONICAL_IDENTITY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"NO_CANONICAL_IDENTITY\","
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 363,
+   "entry_line": 360,
+   "token": "HYDRATABLE",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到\","
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 363,
+   "entry_line": 360,
+   "token": "UNKNOWN_RETRYABLE",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到\","
+  }
+ ],
+ "informational": [
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 512,
+   "entry_line": 512,
+   "token": "review-edit",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`review-edit-${row.name}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 532,
+   "entry_line": 532,
+   "token": "trial-city",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"city\", zh: \"目的地\", en: \"Destination\", target: \"trial-city\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 533,
+   "entry_line": 533,
+   "token": "trial-arrival",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"arrival\", zh: \"抵达\", en: \"Arrival\", target: \"trial-arrival\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 534,
+   "entry_line": 534,
+   "token": "trial-departure",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"departure\", zh: \"离开\", en: \"Departure\", target: \"trial-departure\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 535,
+   "entry_line": 535,
+   "token": "trial-party",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"party\", zh: \"人数 / 房间\", en: \"Travellers / rooms\", target: \"trial-party\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 536,
+   "entry_line": 536,
+   "token": "trial-budget",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"budget\", zh: \"总预算 / 住宿\", en: \"Total / stay budget\", target: \"trial-budget\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 537,
+   "entry_line": 537,
+   "token": "trial-pace-fieldset",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"pace\", zh: \"节奏\", en: \"Pace\", target: \"trial-pace-fieldset\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 538,
+   "entry_line": 538,
+   "token": "trial-interests-fieldset",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"interests\", zh: \"兴趣\", en: \"Interests\", target: \"trial-interests-fieldset\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 539,
+   "entry_line": 539,
+   "token": "trial-special",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"special\", zh: \"特殊要求\", en: \"Special requirements\", target: \"trial-special\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 542,
+   "entry_line": 542,
+   "token": "auto-set",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"auto-set\", zh: \"自动设置\", en: \"Auto-set\", target: \"trial-show-advanced\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 542,
+   "entry_line": 542,
+   "token": "trial-show-advanced",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "{ name: \"auto-set\", zh: \"自动设置\", en: \"Auto-set\", target: \"trial-show-advanced\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 882,
+   "entry_line": 882,
+   "token": "trial-city",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": { label: t(\"trial.navDestination\"), target: \"trial-city\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 885,
+   "entry_line": 885,
+   "token": "trial-arrival",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": { label: t(\"trial.navArrival\"), target: \"trial-arrival\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 888,
+   "entry_line": 888,
+   "token": "trial-departure",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": { label: t(\"trial.navDeparture\"), target: \"trial-departure\" },"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 983,
+   "entry_line": 983,
+   "token": "trial-step",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-step-${n}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1072,
+   "entry_line": 1072,
+   "token": "trial-supported-group",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-supported-group-${group}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1075,
+   "entry_line": 1075,
+   "token": "trial-supported-group-rule",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "lassName=\"trial-supported-group-rule\" data-testid={`trial-supported-group-rule-${group}`}>"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1079,
+   "entry_line": 1079,
+   "token": "trial-supported-none",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "<p className=\"trial-supported-none\" data-testid={`trial-supported-none-${group}`}>"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1088,
+   "entry_line": 1088,
+   "token": "trial-supported-row",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-supported-row-${row.spelling}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1100,
+   "entry_line": 1100,
+   "token": "trial-supported-identity",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-supported-identity-${row.spelling}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1107,
+   "entry_line": 1107,
+   "token": "trial-supported-fields",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-supported-fields-${row.spelling}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1142,
+   "entry_line": 1142,
+   "token": "trial-required-hint",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": \"trial-required-hint\""
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1171,
+   "entry_line": 1171,
+   "token": "trial-required-hint",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": \"trial-required-hint\""
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1326,
+   "entry_line": 1326,
+   "token": "trial-pace",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-pace-${option.key}`}"
+  },
+  {
+   "file": "ctrl/JourneyTrialSetup.tsx",
+   "line": 1346,
+   "entry_line": 1346,
+   "token": "trial-interest",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trial-interest-${option.key}`}"
+  }
+ ]
+}

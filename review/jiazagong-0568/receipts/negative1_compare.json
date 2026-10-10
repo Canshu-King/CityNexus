@@ -1,0 +1,38 @@
+{
+ "arm": "codes-on-screen-r3",
+ "ref": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "base": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "require_name": true,
+ "only_added": false,
+ "files_judged": 1,
+ "problems": [],
+ "informational": [
+  {
+   "file": "ctrl/DestinationPreparationPanel.tsx",
+   "line": 254,
+   "entry_line": 249,
+   "token": "as-is",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "nCode}); there is no local copy for it, so it is shown as-is rather than explained away.`,"
+  },
+  {
+   "file": "ctrl/DestinationPreparationPanel.tsx",
+   "line": 321,
+   "entry_line": 316,
+   "token": "as-is",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "e is ${String(job.outcome ?? \"—\")}; there is no local copy for it, so it is shown as-is.`,"
+  },
+  {
+   "file": "ctrl/DestinationPreparationPanel.tsx",
+   "line": 569,
+   "entry_line": 569,
+   "token": "prep-job",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "className={`prep-job ${job.terminal ? \"terminal\" : \"running\"}`}"
+  }
+ ]
+}

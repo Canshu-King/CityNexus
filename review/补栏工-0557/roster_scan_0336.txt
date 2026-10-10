@@ -1,0 +1,20 @@
+通播（兜底行表）现存行数=22
+其中草稿判 EXCLUDED 的行数=7
+其中真给建议键的行数=15
+真给建议键且我已交的行数=2（frontend/src/lib/errorReceipt.ts、frontend/src/lib/pretripChecklist.ts）
+还能新吃的行数=13
+  真文案行：frontend/src/features/setup/JourneyTrialSetup.tsx
+  真文案行：frontend/src/features/agent/CopilotDock.tsx
+  真文案行：frontend/src/features/discovery/DestinationPreparationPanel.tsx
+  真文案行：frontend/src/features/execution/LiveRecovery.tsx
+  真文案行：frontend/src/features/stay/HotelsPanel.tsx
+  真文案行：frontend/src/lib/failureAttribution.ts
+  真文案行：frontend/src/features/planning/PlanComparison.tsx
+  真文案行：frontend/src/features/stay/StayExplorer.tsx
+  真文案行：frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+  真文案行：frontend/src/lib/sceneClock.ts
+  真文案行：frontend/src/features/simulation/SimulationPanel.tsx
+  真文案行：frontend/src/app/V8Experience.tsx
+  真文案行：frontend/src/features/planning/PlanWithAiSheet.tsx
+  真文案行：frontend/src/lib/errorReceipt.ts
+  真文案行：frontend/src/lib/pretripChecklist.ts

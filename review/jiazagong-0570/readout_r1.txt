@@ -1,0 +1,14 @@
+1 内联双语普查尺 r2 读数件 · 加闸工 · ORD-0570 那族的形制裁语（全部现读；命令与退出码同列）
+2 现取尖命令原样 git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> 10f6649058910ab6146e4c18f2954ef149eb85a3（git cat-file -t 回 commit）
+3 尺本体 live_checks/bilingual_pair_census_r2.py。两臂：A 臂与号令者原尺同判据（他那两条正则见 live_checks/_bilingual_count_r1.py:13 与 live_checks/_bilingual_count_r1.py:14），B 臂认 { zh: "…", en: "…" } 这类对象双语对，并把同行与跨行分开计数
+4 自测：命令原样 python bilingual_pair_census_r2.py --selftest 退出码 0，断言 8 条、失败 0 条。八条分别是 三元式同行 / 对象对同行 / 对象对跨行 / en 在前 / 两侧都含中文不算 / 两侧都不含中文不算 / 注释里的例子不算 / 带后缀的键（"k.zh" 那种）不算
+5 与号令者原尺的同代对拍（这一条是等价性证明，不是引用他的旧数）：用 importlib 载他的尺本体、只把读取仓库指向 D:/moodle/CityNexus（不写他的库、不 fetch），在第 2 行那枚尖上直接调他的 count() -> hits 226、实读文件 157 枚、有命中的文件 23 枚；我的 A 臂在同一枚尖上也是 226，对拍差 0
+6 他那把尺的 CLI 只吃两枚尖、打的是 OLD/NEW 与 DELTA（形制在 live_checks/_bilingual_count_r1.py:66），所以我没有拿它单尖复跑别代；通播那本账最新自报「还剩 331 处、摊在 156 个文件」（出处 账本第 8165 行那块「号令者收口板 · 枚数级进度」，行号会漂，认块标题），那只当他的已发布序列引用，跨代不当对照用
+7 两臂总数（第 2 行那代）：753 处，A 臂三元式 226 处，B 臂对象对 527 处（同行 357 处、跨行 170 处），有双语对的代码文件 32 枚；逐文件原件在本枝 census_10f6649058.json
+8 结论一句：只认三元式的普查在那一代报 226 处，而同一代屏上还看得见的内联双语对实有 753 处，缺 527 处、即 70%；不是谁数错，是那把尺的覆盖面形制
+9 最尖的一枚文件：frontend/src/features/poiimport/poiImportCopy.ts 现读 70 处、全部是跨行对象对（首处 frontend/src/features/poiimport/poiImportCopy.ts:106），A 臂对这枚文件报 0 处。号令者 02:5x 那块刚把这族放宽到一轮八处、并把这枚文件点给 活明细：按旧尺这枚文件是"零处"，按两臂它是 70 处
+10 第二枚点名：frontend/src/lib/sceneClock.ts 现读 8 处（A 臂 2 处在 :232 与 :236，对象对同行 6 处从 frontend/src/lib/sceneClock.ts:196 起）；车道当初点名的两处跨行（那一代的 sceneClock.ts:190 与 :194）已随批次落成单行对象行 —— 形状变了，"单行正则看不见跨行"那条判据仍然成立
+11 逐文件前列（A / B同行 / B跨行）：travelerLabels.ts 0/123/0、V8Experience.tsx 54/37/0、CopilotDock.tsx 29/51/0、poiImportCopy.ts 0/0/70、displayVocabulary.ts 2/43/5、JourneyInboxWorkbench.tsx 2/22/0、LiveRecovery.tsx 19/7/0、PlanWithAiSheet.tsx 24/0/8、SimulationPanel.tsx 6/0/25、collectionCopy.ts 0/0/26、mapPanelCopy.ts 0/14/11、JourneyTrialSetup.tsx 11/18/0
+12 我裁成什么样（量具侧，不动别人的笔）：这本逐文件余面账改用两臂之和，A 与 B 两列并排给车道，A 那一列与号令者已发布的历史序列逐字可比，B 跨行那一列专治"看着是零、其实有"；换不换由号令者点，我不替他把通播那格的数改掉
+13 我没做的三件：没改 live_checks/_bilingual_count_r1.py 本体（那是他的尺），没动通播那格账，产品字节 0 —— 命令原样 git diff --name-only 10f6649058910ab6146e4c18f2954ef149eb85a3..refs/heads/review/加闸工-0570-r1 -- frontend/src backend/app 回 0 行
+14 复算一行：cwd live_checks，命令原样 python bilingual_pair_census_r2.py <现尖> --fetch --json 退出码 0；自测同上传 --selftest

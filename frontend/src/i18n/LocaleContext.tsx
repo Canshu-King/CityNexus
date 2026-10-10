@@ -72,7 +72,7 @@ const en: Dict = {
   "checkin.loading": "Reading the footprints…",
   "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
   "checkin.readFailed": "This screen could not read the footprints from the server.",
-  "checkin.empty": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
+  "checkin.empty": "No footprints yet. Open the itinerary and tap \"Check in\" on a stop.",
   "checkin.count": "This trip holds {count} footprints.",
   "checkin.targetGone": "That stop has left the plan",
   "checkin.noteAbsent": "no note was written",
@@ -391,6 +391,8 @@ const en: Dict = {
   "live.compare": "Compare",
   "live.providerFacts": "Provider facts · unknown costs never become zero",
   "live.durationPending": "duration pending",
+  "live.tripUpdated": "Your trip has been updated.",
+  "live.remindLaterOk": "Okay, we will remind you later.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -722,6 +724,9 @@ const en: Dict = {
   "discovery.destination": "Destination",
   "discovery.preparePlaces": "Prepare places",
   "discovery.pickAnotherDestination": "Pick another destination",
+  "pending.title": "Not on a day yet",
+  "pending.sub": "Places this server says belong to this trip, in no day of it yet.",
+  "pending.loading": "Reading the pending set…",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -917,7 +922,7 @@ const en: Dict = {
   "main.notPreserved": "not preserved",
   "main.verifiedEvidenceAttached": "verified evidence attached",
   "main.evidenceUnavailable": "evidence unavailable",
-  "main.unnamedCommitmentServerGaveNoName": "未命名承诺 · 服务器没给名字",
+  "main.unnamedCommitmentServerGaveNoName": "unnamed commitment · the server gave no name",
   "inbox.smartDecision": "Smart decision:",
   "inbox.applied": "Saved to your trip",
   "inbox.applySmart": "Apply smart decision",
@@ -1462,6 +1467,9 @@ const en: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
   "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
   "lib.failureAttribution.readFailed": "This read failed",
+  "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
+  "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
+  "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
   "simulation.notGiven": "not given",
 };
 
@@ -1821,6 +1829,8 @@ const zhCN: Dict = {
   "live.compare": "对比",
   "live.providerFacts": "供应商事实 · 未知费用不会被视为零",
   "live.durationPending": "时长待定",
+  "live.tripUpdated": "已按新安排更新你的行程。",
+  "live.remindLaterOk": "好的，稍后再提醒你。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
@@ -2136,6 +2146,9 @@ const zhCN: Dict = {
   "discovery.destination": "目的地",
   "discovery.preparePlaces": "准备地点",
   "discovery.pickAnotherDestination": "另选一个目的地",
+  "pending.title": "待规划",
+  "pending.sub": "这台服务器说这些地点属于这一程，还没排在任何一天。",
+  "pending.loading": "正在读待规划集合…",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
@@ -2831,6 +2844,9 @@ const zhCN: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
   "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
   "lib.failureAttribution.readFailed": "这一次没读到",
+  "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
+  "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
+  "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
   "simulation.notGiven": "服务器未给证据状态",
 };
 
