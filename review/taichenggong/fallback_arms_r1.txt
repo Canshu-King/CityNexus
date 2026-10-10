@@ -1,4 +1,4 @@
-0 live authoritative tip: bf057bb6f6eab117f030037c54ee0f515bd6a486
+0 live authoritative tip: f6e936c8e85e3d349f132a2034487962583e6333
 0b generation this arm compares against (pinned): 24a50a8aecf0a1fe4704400c687540d3e05d74fb
 0c file blob at live=a0c636f743c49fb2c00f0ab6572f66f11844feca
  at pinned=f6a1f10e20a71caa638710f70c671d73978325db
@@ -15,8 +15,9 @@ OK   B2b the CATEGORY_LABELS row the order points at is found :: CATEGORY_LABELS
 OK   B3 the key resolves to the very word that was removed :: frontend/src/i18n/travelerLabels.ts:78 zh arm '未知' en arm 'Unknown'
 OK   D1 both arms exist for the key this branch reads :: row at frontend/src/i18n/travelerLabels.ts:78 carries zh and en
   other UNKNOWN rows in the same table file: [72, 88, 139, 168]
+  (readout: base=24a50a8aecf0 branch_tip=2270ae838730 changed_under_frontend=1)
 OK   B4 this branch added no dictionary key :: merge-base=24a50a8aecf0; dictionary files changed by this branch: none
-  files this branch changes: []
+  files this branch changes: ['frontend/src/lib/failureAttribution.ts']
 C the pair that stayed, and the reason, read off the tree
 OK   C1 the error is built where no locale exists :: frontend/src/lib/failureAttribution.ts:125 constructor(status: number, contentType: string | null, bodyKind: "html" | "not_json" | "empty") {
   frontend/src/lib/failureAttribution.ts:182 export function classifyReadFailure(error: unknown, server?: ServerErrorShape | null): Attribution {

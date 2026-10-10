@@ -136,8 +136,19 @@ def main():
 
     # This branch's own changes only: diffing the working tree against a tip that has moved would
     # hand every other lane's dictionary edits to this arm as if they were mine (it did, once).
-    base = git("merge-base", "HEAD", tip) or tip
-    changed = [f for f in git("diff", "--name-only", base, "HEAD", "--", "frontend/").split() if f]
+    base = (git("merge-base", "HEAD", tip) or tip).strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", base):
+        raise SystemExit("2 merge-base did not answer with a 40-hex commit: %r" % base[:60])
+    cmd = ["git", "-C", REPO, "diff", "--name-only", base, "HEAD", "--", "frontend/"]
+    proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if proc.returncode != 0:
+        # An unreadable diff must never be reported as "this branch changed nothing".
+        raise SystemExit("2 %s -> rc=%d %s" % (" ".join(cmd[3:]), proc.returncode,
+                                               proc.stderr.strip()[:160]))
+    raw = proc.stdout.strip()
+    changed = [f for f in raw.split() if f]
+    say("  (readout: base=%s branch_tip=%s changed_under_frontend=%d)"
+        % (base[:12], (git("rev-parse", "HEAD") or "").strip()[:12], len(changed)))
     dict_files = [f for f in changed if "/i18n/" in f]
     check("B4 this branch added no dictionary key", dict_files == [],
           "merge-base=%s; dictionary files changed by this branch: %s" % (base[:12], dict_files or "none"))
