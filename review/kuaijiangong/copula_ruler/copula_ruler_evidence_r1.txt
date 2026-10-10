@@ -1,0 +1,11 @@
+tip ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a cat-file -t rc=0 type=commit
+files_with_a_counted_noun_surface 8
+counted_noun_tokens 47
+marker_tokens 40
+helper_tokens 7
+copula_after_counted_noun 3
+HIT frontend/src/features/poiimport/poiImportCopy.ts:159 arm=marker token={plural:place} copula=are before=[en: "{n} {plural:place} are now on {shelf} — read bac] after=[en: "{n} {plural:place} now on {shelf} — read back from]
+HIT frontend/src/features/poiimport/poiImportCopy.ts:163 arm=marker token={plural:place} copula=were before=[en: "{n} {plural:place} were already on {shelf}, so n] after=[en: "{n} {plural:place} already on {shelf}, so nothing w]
+HIT frontend/src/i18n/LocaleContext.tsx:570 arm=marker token={plural:plan} copula=were before=[ll there: {n} {plural:plan} were added.",] after=[l there: {n} {plural:plan} added.",]
+calibration_against_the_ruling_rows poiImportCopy:159=True poiImportCopy:163=True dict_line_now=['frontend/src/i18n/LocaleContext.tsx:570']
+SELFTEST OK cases=7
