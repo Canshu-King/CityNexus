@@ -1,0 +1,18 @@
+# ORD-0558/0557 卡点反控 · 路牌工甲 · 缺 @dnd-kit 是不是那三格红的唯一成因
+# 同一棵树、同一把闸、只换依赖
+
+## A 臂：node_modules 是指向共享库的链接（库里无 @dnd-kit）
+  npm run typecheck -> exit_code=2，三条 TS2307 全在 frontend/src/features/studio/SortableActivityList.tsx（逐字见 typecheck_mine.txt:1）
+  npm run build     -> exit_code=1，第一句 Rollup failed to resolve import "@dnd-kit/core"（逐字见 build_mine.txt:2）
+  npx vite --port 5317 --strictPort -> 起不来，日志尾行 'Are they installed?'（逐字见 vite_boot_without_dndkit.txt:6），端口零监听，curl 回 http_status=000 bytes=0
+
+## B 臂：只在本树补那三枚包（共享库未动：两侧 inode 不同，共享侧目录 mtime 仍是 14:55:24，only_in_shared 0 项）
+  命令原样 npm install --no-save --no-package-lock --no-audit --no-fund @dnd-kit/core@^6.1.0 @dnd-kit/sortable@^8.0.0 @dnd-kit/utilities
+  npm run typecheck -> exit_code=0，错误 0 条
+  npm run build     -> exit_code=0，built in 6.38s，dist 约 2994 千伏托（du -sk 读数）
+  npx vite --port 5319 --strictPort -> ready in 424 ms，GET /src/app/V8Experience.tsx 回 http_status=200 bytes=712370（跑完已 taskkill，端口不复用给别车道）
+
+## 结论（只报测得的）
+  那三格红与任何车道字节无关：A 臂与 B 臂只差依赖，只差就是 0 条错误对 3 条、失败对成功、起不来到 200 回包。
+  修共享库是一条命令：package-lock.json:1659 里已有 node_modules/@dnd-kit/core 这一条，npm ci 即复原；我没擅自动它。
+  代价实测：本树 node_modules 由链接变真目录后 357 兆对比共享库 327 兆，D 盘此刻余 7.5 千兆（一次 shutil.disk_usage 读数）。
