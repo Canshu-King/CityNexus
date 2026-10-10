@@ -93,6 +93,7 @@ async function createProviderFixtures() {
                 : 0.9,
             },
             legs: [{}],
+            locations: body.locations,
           },
         }));
         routeState.completed += 1;

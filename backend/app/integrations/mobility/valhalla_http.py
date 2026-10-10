@@ -39,6 +39,13 @@ class ValhallaRouteEstimate:
     shape: str | None
     raw: dict[str, Any]
     geometry: tuple[tuple[float, float], ...] = ()
+    # Keep the requested pair attached to the captured result.  Callers that
+    # compare multiple public legs must reject a response that is later paired
+    # with a different saved identity.
+    origin_place_id: str | None = None
+    destination_place_id: str | None = None
+    request_locations: tuple[tuple[float, float], tuple[float, float]] | None = None
+    response_locations: tuple[tuple[float, float], tuple[float, float]] | None = None
 
 
 @dataclass(frozen=True)
@@ -103,13 +110,42 @@ class ValhallaHTTPMobilityProvider:
         location = item.get("location", item)
         return {"lat": float(location["latitude"]), "lon": float(location["longitude"])}
 
+    @staticmethod
+    def _route_locations(value: Any) -> tuple[tuple[float, float], tuple[float, float]] | None:
+        """Normalize optional Valhalla response endpoints without weakening old fixtures."""
+
+        if value is None:
+            return None
+        if not isinstance(value, list) or len(value) != 2:
+            raise ValhallaProviderError("Valhalla route locations must contain exactly two points")
+        points: list[tuple[float, float]] = []
+        for item in value:
+            if not isinstance(item, Mapping):
+                raise ValhallaProviderError("Valhalla route location must be an object")
+            try:
+                latitude = float(item["lat"])
+                longitude = float(item["lon"])
+            except (KeyError, TypeError, ValueError) as exc:
+                raise ValhallaProviderError("Valhalla route location is incomplete") from exc
+            if (
+                not math.isfinite(latitude)
+                or not math.isfinite(longitude)
+                or not -90 <= latitude <= 90
+                or not -180 <= longitude <= 180
+            ):
+                raise ValhallaProviderError("Valhalla route location is outside WGS84 bounds")
+            points.append((latitude, longitude))
+        return points[0], points[1]
+
     def estimate(self, origin_place_id: str, destination_place_id: str) -> ValhallaRouteEstimate:
+        origin_location = self._location(origin_place_id)
+        destination_location = self._location(destination_place_id)
         payload = self._post(
             "/route",
             {
                 "locations": [
-                    self._location(origin_place_id),
-                    self._location(destination_place_id),
+                    origin_location,
+                    destination_location,
                 ],
                 "costing": self._costing,
                 "units": "kilometers",
@@ -119,6 +155,7 @@ class ValhallaHTTPMobilityProvider:
         summary = trip.get("summary") if isinstance(trip, dict) else None
         if not isinstance(summary, dict) or "time" not in summary:
             raise ValhallaProviderError("Valhalla route response has no valid summary time")
+        response_locations = self._route_locations(trip.get("locations"))
         try:
             seconds = float(summary["time"])
         except (TypeError, ValueError) as exc:
@@ -141,6 +178,13 @@ class ValhallaHTTPMobilityProvider:
             shape=shape,
             raw=payload,
             geometry=_decode_polyline6(shape),
+            origin_place_id=str(origin_place_id),
+            destination_place_id=str(destination_place_id),
+            request_locations=(
+                (origin_location["lat"], origin_location["lon"]),
+                (destination_location["lat"], destination_location["lon"]),
+            ),
+            response_locations=response_locations,
         )
 
     def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:

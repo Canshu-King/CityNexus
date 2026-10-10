@@ -68,6 +68,9 @@ def test_r99_adaptive_short_walk_compares_two_public_legs_without_persistence(mo
     class FakeValhalla:
         provider_key = "valhalla-http"
         capture_provenance = "TEST_PROVIDER_EMULATOR"
+        response_pair_swapped = False
+        mutate_during_call = False
+        mutation_done = False
 
         def __init__(self, **kwargs):
             self._lookup = kwargs["place_lookup"]
@@ -75,6 +78,13 @@ def test_r99_adaptive_short_walk_compares_two_public_legs_without_persistence(mo
         def estimate(self, origin: str, destination: str):
             first = self._lookup(origin)
             second = self._lookup(destination)
+            if self.mutate_during_call and not type(self).mutation_done:
+                with SessionLocal() as raced_session:
+                    raced_row = raced_session.get(MemberDraftShortlistItem, current_id)
+                    assert raced_row is not None
+                    raced_row.updated_at = "2026-10-11T10:00:01+00:00"
+                    raced_session.commit()
+                type(self).mutation_done = True
             calls.append(
                 (
                     f"{first['latitude']},{first['longitude']}",
@@ -82,8 +92,25 @@ def test_r99_adaptive_short_walk_compares_two_public_legs_without_persistence(mo
                 )
             )
             if float(second["longitude"]) == 121.474:
-                return SimpleNamespace(duration_min=42, distance_m=3100)
-            return SimpleNamespace(duration_min=13, distance_m=900)
+                duration_min, distance_m = 42, 3100
+            else:
+                duration_min, distance_m = 13, 900
+            response_origin, response_destination = origin, destination
+            request_locations = (
+                (float(first["latitude"]), float(first["longitude"])),
+                (float(second["latitude"]), float(second["longitude"])),
+            )
+            response_locations = request_locations
+            if self.response_pair_swapped:
+                response_locations = (request_locations[1], request_locations[0])
+            return SimpleNamespace(
+                duration_min=duration_min,
+                distance_m=distance_m,
+                origin_place_id=response_origin,
+                destination_place_id=response_destination,
+                request_locations=request_locations,
+                response_locations=response_locations,
+            )
 
     monkeypatch.setattr(bootstrap_module, "ValhallaHTTPMobilityProvider", FakeValhalla)
     try:
@@ -191,6 +218,7 @@ def test_r99_adaptive_short_walk_compares_two_public_legs_without_persistence(mo
             ("31.2304,121.4737", "31.231,121.474"),
             ("31.2304,121.4737", "31.2315,121.4745"),
         ]
+        grounded_calls = list(calls)
         for forbidden in (
             "origin",
             "foreground_gps",
@@ -210,6 +238,108 @@ def test_r99_adaptive_short_walk_compares_two_public_legs_without_persistence(mo
         assert body["explore_state"] == "DRAFT_EXPLORE_ONLY"
         assert body["plan_version_id"] is None
         assert body["selected_place_id"] is None
+
+        FakeValhalla.response_pair_swapped = True
+        swapped_pair = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk",
+            headers=owner_headers,
+            json={
+                "first_shortlist_id": first_id,
+                "current_second_shortlist_id": current_id,
+                "alternative_second_shortlist_id": alternative_id,
+                "max_walk_minutes": 20,
+                "public_route_consent": True,
+            },
+        )
+        assert swapped_pair.status_code == 200, swapped_pair.text
+        swapped_body = swapped_pair.json()
+        assert swapped_body["status"] == "ADAPTIVE_WALK_UNVERIFIED"
+        assert swapped_body["route_state"] == "ROUTE_UNVERIFIED"
+        assert swapped_body["suggested_second_shortlist_id"] is None
+        assert swapped_body["current_leg"]["route_state"] == "ROUTE_UNVERIFIED"
+        assert swapped_body["alternative_leg"]["route_state"] == "ROUTE_UNVERIFIED"
+        FakeValhalla.response_pair_swapped = False
+
+        FakeValhalla.mutate_during_call = True
+        FakeValhalla.mutation_done = False
+        raced_snapshot = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk",
+            headers=owner_headers,
+            json={
+                "first_shortlist_id": first_id,
+                "current_second_shortlist_id": current_id,
+                "alternative_second_shortlist_id": alternative_id,
+                "max_walk_minutes": 20,
+                "public_route_consent": True,
+            },
+        )
+        assert raced_snapshot.status_code == 409, raced_snapshot.text
+        assert "BOOTSTRAP_ADAPTIVE_STALE" in raced_snapshot.text
+        calls_after_race = list(calls)
+        FakeValhalla.mutate_during_call = False
+        with SessionLocal() as session:
+            current_row = session.get(MemberDraftShortlistItem, current_id)
+            assert current_row is not None
+            current_row.updated_at = stamp
+            session.commit()
+
+        identity_payload = {
+            "first_shortlist_id": first_id,
+            "current_second_shortlist_id": current_id,
+            "alternative_second_shortlist_id": alternative_id,
+            "max_walk_minutes": 20,
+            "public_route_consent": True,
+        }
+
+        with SessionLocal() as session:
+            current_row = session.get(MemberDraftShortlistItem, current_id)
+            assert current_row is not None
+            current_row.provider_key = "fixture"
+            session.commit()
+        invalid_provider = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk",
+            headers=owner_headers,
+            json=identity_payload,
+        )
+        assert invalid_provider.status_code == 422, invalid_provider.text
+        assert "BOOTSTRAP_IDENTITY_INVALID" in invalid_provider.text
+        assert calls == calls_after_race
+
+        with SessionLocal() as session:
+            current_row = session.get(MemberDraftShortlistItem, current_id)
+            assert current_row is not None
+            current_row.provider_key = "overpass"
+            current_row.external_id = "fixture:node/99002"
+            session.commit()
+        invalid_external_id = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk",
+            headers=owner_headers,
+            json=identity_payload,
+        )
+        assert invalid_external_id.status_code == 422, invalid_external_id.text
+        assert "BOOTSTRAP_IDENTITY_INVALID" in invalid_external_id.text
+        assert calls == calls_after_race
+
+        with SessionLocal() as session:
+            current_row = session.get(MemberDraftShortlistItem, current_id)
+            assert current_row is not None
+            current_row.external_id = "overpass:node/99002"
+            current_row.coordinate_system = "EPSG:4326"
+            session.commit()
+        invalid_coordinate_system = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk",
+            headers=owner_headers,
+            json=identity_payload,
+        )
+        assert invalid_coordinate_system.status_code == 422, invalid_coordinate_system.text
+        assert "BOOTSTRAP_COORDINATE_SYSTEM_UNSUPPORTED" in invalid_coordinate_system.text
+        assert calls == calls_after_race
+
+        with SessionLocal() as session:
+            current_row = session.get(MemberDraftShortlistItem, current_id)
+            assert current_row is not None
+            current_row.coordinate_system = "WGS84"
+            session.commit()
 
         cross_member = client.post(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk",
@@ -244,7 +374,7 @@ def test_r99_adaptive_short_walk_compares_two_public_legs_without_persistence(mo
         assert unavailable_body["suggested_second_shortlist_id"] is None
         assert unavailable_body["current_leg"]["duration_min"] is None
         assert unavailable_body["alternative_leg"]["duration_min"] is None
-        assert len(calls) == 2
+        assert len(calls) == len(calls_after_race)
 
         with SessionLocal() as session:
             assert session.scalar(select(func.count(Place.id)).where(Place.city_code == city_code)) == 0

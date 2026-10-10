@@ -26,6 +26,7 @@ from app.core.config import settings
 from app.db.models import (
     IdempotencyKey,
     Journey,
+    JourneyMember,
     MemberDraftResumeIntent,
     MemberDraftShortlistItem,
     Place,
@@ -2565,6 +2566,16 @@ def preview_bootstrap_adaptive_short_walk(
             "all three saved public places must belong to the signed member",
             status_code=403,
         )
+    for row in (first, current_second, alternative_second):
+        if (
+            str(row.provider_key).strip().casefold() != "overpass"
+            or _OSM_EXTERNAL_ID.fullmatch(str(row.external_id)) is None
+        ):
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_IDENTITY_INVALID",
+                "all saved public places must retain a valid OpenStreetMap identity",
+                status_code=422,
+            )
     if len({str(row.external_id) for row in (first, current_second, alternative_second)}) != 3:
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_ADAPTIVE_STOPS_DISTINCT_REQUIRED",
@@ -2579,6 +2590,38 @@ def preview_bootstrap_adaptive_short_walk(
                 status_code=422,
             )
         _finite_coordinate(float(row.latitude), float(row.longitude))
+
+    journey_key = str(journey.id)
+    member_key = str(member.id)
+    protected_rows = (first, current_second, alternative_second)
+
+    def row_fingerprint(row: MemberDraftShortlistItem) -> tuple[str, ...]:
+        return (
+            str(row.id),
+            str(row.journey_id),
+            str(row.member_id),
+            str(row.traveler_id),
+            str(row.status),
+            str(row.provider_key),
+            str(row.external_id),
+            str(row.coordinate_system),
+            str(row.latitude),
+            str(row.longitude),
+            str(row.updated_at),
+        )
+
+    initial_journey_fingerprint = (
+        str(journey.status).upper(),
+        str(journey.active_plan_version_id or ""),
+    )
+    initial_member_fingerprint = (
+        str(member.journey_id),
+        str(member.traveler_id),
+        str(member.removed_at or ""),
+        str(member.expires_at or ""),
+        str(member.updated_at),
+    )
+    initial_row_fingerprints = {str(row.id): row_fingerprint(row) for row in protected_rows}
 
     def stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[str, Any]:
         try:
@@ -2660,11 +2703,40 @@ def preview_bootstrap_adaptive_short_walk(
             ],
         }
 
-    def verified_leg(route: Any, provider: Any, observed_at: str) -> dict[str, Any] | None:
+    def verified_leg(
+        route: Any,
+        provider: Any,
+        observed_at: str,
+        *,
+        expected_origin: str,
+        expected_destination: str,
+        expected_locations: tuple[tuple[float, float], tuple[float, float]],
+    ) -> dict[str, Any] | None:
+        def locations_match(value: Any) -> bool:
+            if not isinstance(value, (tuple, list)) or len(value) != 2:
+                return False
+            try:
+                return all(
+                    math.isclose(float(actual[0]), float(expected[0]), rel_tol=0.0, abs_tol=1e-5)
+                    and math.isclose(float(actual[1]), float(expected[1]), rel_tol=0.0, abs_tol=1e-5)
+                    for actual, expected in zip(value, expected_locations)
+                )
+            except (IndexError, TypeError, ValueError):
+                return False
+
         duration_min = int(route.duration_min)
         distance_m = int(route.distance_m) if route.distance_m is not None else None
         provenance = str(getattr(provider, "capture_provenance", "UNVERIFIED") or "UNVERIFIED").upper()
-        if duration_min < 0 or distance_m is None or distance_m < 0 or provenance == "UNVERIFIED":
+        if (
+            duration_min < 0
+            or distance_m is None
+            or distance_m < 0
+            or provenance == "UNVERIFIED"
+            or str(getattr(route, "origin_place_id", "")) != str(expected_origin)
+            or str(getattr(route, "destination_place_id", "")) != str(expected_destination)
+            or not locations_match(getattr(route, "request_locations", None))
+            or not locations_match(getattr(route, "response_locations", None))
+        ):
             return None
         return {
             "status": "ROUTE_VERIFIED",
@@ -2746,6 +2818,9 @@ def preview_bootstrap_adaptive_short_walk(
                 "longitude": alternative_second.longitude,
             },
         }
+        first_location = (float(first.latitude), float(first.longitude))
+        current_second_location = (float(current_second.latitude), float(current_second.longitude))
+        alternative_second_location = (float(alternative_second.latitude), float(alternative_second.longitude))
         try:
             with httpx.Client(
                 timeout=timeout,
@@ -2761,7 +2836,14 @@ def preview_bootstrap_adaptive_short_walk(
                 )
                 try:
                     current_route = provider.estimate(str(first.id), str(current_second.id))
-                    current_leg = verified_leg(provider=provider, route=current_route, observed_at=_iso(_now())) or unverified_leg(
+                    current_leg = verified_leg(
+                        provider=provider,
+                        route=current_route,
+                        observed_at=_iso(_now()),
+                        expected_origin=str(first.id),
+                        expected_destination=str(current_second.id),
+                        expected_locations=(first_location, current_second_location),
+                    ) or unverified_leg(
                         "ROUTE_RESPONSE_INVALID",
                         "The configured walking provider returned incomplete or unclassified route evidence.",
                         provider="valhalla-http",
@@ -2774,7 +2856,14 @@ def preview_bootstrap_adaptive_short_walk(
                     )
                 try:
                     alternative_route = provider.estimate(str(first.id), str(alternative_second.id))
-                    alternative_leg = verified_leg(provider=provider, route=alternative_route, observed_at=_iso(_now())) or unverified_leg(
+                    alternative_leg = verified_leg(
+                        provider=provider,
+                        route=alternative_route,
+                        observed_at=_iso(_now()),
+                        expected_origin=str(first.id),
+                        expected_destination=str(alternative_second.id),
+                        expected_locations=(first_location, alternative_second_location),
+                    ) or unverified_leg(
                         "ROUTE_RESPONSE_INVALID",
                         "The configured walking provider returned incomplete or unclassified route evidence.",
                         provider="valhalla-http",
@@ -2807,6 +2896,57 @@ def preview_bootstrap_adaptive_short_walk(
                 f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
                 provider="valhalla-http",
             )
+
+    # Provider calls are external I/O. Re-open the transaction and re-read every
+    # protected identity before accepting their result; a draft/member/shortlist
+    # mutation that races the calls must fail closed instead of returning a stale
+    # comparison built from the pre-call snapshot.
+    session.rollback()
+    fresh_journey = session.get(Journey, journey_key)
+    fresh_member = session.get(JourneyMember, member_key)
+    fresh_rows = session.scalars(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id.in_(requested_ids),
+            MemberDraftShortlistItem.journey_id == journey_key,
+        )
+    ).all()
+    fresh_by_id = {str(row.id): row for row in fresh_rows}
+    fresh_plan = session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey_key).limit(1)
+    )
+    fresh_journey_fingerprint = (
+        str(fresh_journey.status).upper(),
+        str(fresh_journey.active_plan_version_id or ""),
+    ) if fresh_journey is not None else None
+    fresh_member_fingerprint = (
+        (
+            str(fresh_member.journey_id),
+            str(fresh_member.traveler_id),
+            str(fresh_member.removed_at or ""),
+            str(fresh_member.expires_at or ""),
+            str(fresh_member.updated_at),
+        )
+        if fresh_member is not None
+        else None
+    )
+    if (
+        fresh_journey is None
+        or fresh_plan is not None
+        or fresh_journey_fingerprint != initial_journey_fingerprint
+        or fresh_member_fingerprint != initial_member_fingerprint
+        or set(fresh_by_id) != set(initial_row_fingerprints)
+        or any(
+            row_fingerprint(fresh_by_id[row_id]) != fingerprint
+            for row_id, fingerprint in initial_row_fingerprints.items()
+            if row_id in fresh_by_id
+        )
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ADAPTIVE_STALE",
+            "Journey membership or saved public stop identities changed while walking evidence was in flight",
+            status_code=409,
+            details={"next_actions": ["RELOAD_ADAPTIVE_SHORT_WALK"]},
+        )
 
     current_verified = current_leg.get("status") == "ROUTE_VERIFIED"
     alternative_verified = alternative_leg.get("status") == "ROUTE_VERIFIED"
