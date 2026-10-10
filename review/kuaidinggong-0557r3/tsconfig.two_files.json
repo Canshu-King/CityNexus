@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "strict": false,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "types": []
+  },
+  "include": [
+    "D:\\moodle\\_qoder_kuaidinggong_0557\\wt2\\frontend\\src\\features\\inbox\\JourneyInboxWorkbench.tsx",
+    "D:\\moodle\\_qoder_kuaidinggong_0557\\wt2\\frontend\\src\\i18n\\LocaleContext.tsx"
+  ]
+}

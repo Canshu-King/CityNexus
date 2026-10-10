@@ -1,0 +1,17 @@
+1. base_tip 26136afacf9e0c951bf4911f4d219161e07c4746
+2. product_head 13bdc523901009e97407d57a38987db5047df3ec
+3. dict_head c5f905132d95c497649031e27b16cc3f61b04276
+4. ls-remote_now c5f905132d95c497649031e27b16cc3f61b04276	refs/heads/review/快钉工-0557-dict-r3 | 13bdc523901009e97407d57a38987db5047df3ec	refs/heads/review/快钉工-0557-r3
+5. key_already_in_base_dictionary 0
+6. base_literal_line [(283, 'return name ? String(name) : zh ? "已记录" : "Recorded";')]
+7. dict_sides inbox.recorded en=[(846, '"inbox.recorded": "Recorded",')] zh=[(2117, '"inbox.recorded": "已记录",')]
+8. ev_values ['Recorded', '已记录']
+9. numstat_product 1	1	frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+10. numstat_dict 2	0	frontend/src/i18n/LocaleContext.tsx
+11. files_product_vs_base ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx', 'frontend/src/i18n/LocaleContext.tsx']
+12. files_dict_vs_base ['frontend/src/i18n/LocaleContext.tsx']
+13. product_carries_dict_rc 0
+14. moneyLabel_scan_hits 1
+15. moneyLabel_definitions ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx:270:function moneyLabel(minor: unknown, currency: unknown, zh: boolean): string {']
+16. moneyLabel_call_sites 0
+17. gate_readings_see _kd0557r3_gates_r1.txt
