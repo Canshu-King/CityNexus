@@ -4027,6 +4027,7 @@ def run_journey_context_watch(
 def run_real_city_intelligence(
     journey_id: UUID,
     payload: RealCityIntelligenceRequest,
+    request: Request,
     session: Session = Depends(get_session),
 ):
     """Run the V13.4 provider-truth discovery path through authoritative Compose."""
@@ -4060,8 +4061,7 @@ def run_real_city_intelligence(
         for candidate_plan in result.plans:
             candidate_id = str(candidate_plan.id)
             try:
-                stage_request = Request({"type": "http", "headers": []})
-                select_plan(UUID(str(journey.id)), UUID(candidate_id), stage_request, session)
+                select_plan(UUID(str(journey.id)), UUID(candidate_id), request, session)
             except HTTPException as exc:
                 session.rollback()
                 if exc.status_code not in {409, 422}:
