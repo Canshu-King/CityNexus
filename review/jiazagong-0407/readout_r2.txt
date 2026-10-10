@@ -1,0 +1,18 @@
+1 ORD-0407 加闸工 读数件 r2：这把尺现在同时数格内与整屏，判据与坐标逐枚说明（行号是本枝现读）
+2 被改的那枚尺：frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts，本枝那代共 843 行，我这枚改动是 219 行纯新增、零行删除
+3 旧尺为什么把这四枚当不存在：命令原样 git show 现尖:frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts | grep -c "spend-empty\|spend-no-lines\|inbox-pending-empty\|v8-empty-note" 回 0 —— 它那五枚格是地图／票夹／live 那三对，普查这四位根本没进它的表，所以不是判错，是零覆盖；它确有格内计数但只给自己那五枚，见 frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:207（只测不判）与 :296（判的是「别长出控件」那一形）
+4 我加的表：frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:630 起，四枚逐枚带 locator、expect_text（屏上那句话）、routes、tab_text、journey 与该格的产品坐标
+5 四枚格的坐标与句子（产品侧行号是本枝现读，分支守卫行与元素行各给）：
+6 spend-empty 守卫 frontend/src/features/trip/SpendPanel.tsx:105、元素 :109，句子 zh 现在还没有可加的花费，键 frontend/src/i18n/LocaleContext.tsx:1239
+7 spend-no-lines 守卫 frontend/src/features/trip/SpendPanel.tsx:173、元素 :174，句子 zh 这台服务器对这趟行程一条花费项都没有答出来。，键英文面在 frontend/src/i18n/LocaleContext.tsx:1250
+8 twin-no-capability 元素 frontend/src/features/traveler-twin/TwinPanel.tsx:33，句子 zh 没有记录到明确的能力事实。，这枚格没有 data-testid，所以按类名 p.v8-empty-note 取
+9 inbox-queue-empty 守卫 frontend/src/features/inbox/JourneyInboxWorkbench.tsx:892、元素 :893，句子 zh 这里没有等你审核的确认单。
+10 到格的路（现读，不是我猜的）：/v8/spend 不是路由，屏上回的是「这个地址没有对应的屏」并停在今天；花费是 /v8/trips 上的一枚标签，标签文本是 花费，见 frontend/src/app/V8Experience.tsx:2366
+11 两枚花费格要另造一趟行程：那趟没方案、 catalogue 为空，走公共端点 POST /travelers 与 /journeys 造，复用这枚尺已有的 frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:105 那个 helper；票夹与画像两枚用已种好的那趟，见 :91 的 stageJourneyId
+12 「格内」的口径：frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:682 起那把尺，命中元素若是叶子标签（p、b、span、small、dt、dd、code、li）就取它的父节点作格根，否则取它自己；数格根里可见的可控件
+13 「整屏」的口径：同一次取值里数全页可见可控件，并单列其中落在导航壳里的枚数（closest nav / .v8-mobile-nav / testid 含 nav），见 frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:714
+14 两臂：C8 在 frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:785，要求四枚格逐枚交出两个数并且句子对得上（:799 是文本判据、:800 是两数必须是整数），另把格内为零的那几枚点名记进读数（:811 起）；C9 在 :825，判每枚格至少一枚自己的动作，今天必红，红话原文见 :840
+15 C9 为什么可以带着红入账：它是号令者点单里那句「把这四位当作负对照先跑红再跑绿」的绿半截——四枚格的动作由屏读工（SpendPanel 两枚、TwinPanel 一枚）与快钉工（票夹那一枚）落地，他们交完这臂自己变绿，本文件不必再改；我不为绿去改产品码、不 skip、不改别人的断言
+16 跑过的两代读数都在 evidence 目录：r8 的 C8/C9 是红，r9 的 C8/C9 是绿（绿是临时给那四枚格各加一枚按钮跑出来的，跑完整文件覆回、产品字节归零，见 readout_r1.txt 第 10 行）
+17 我这趟自己错三处，都修在尺里而不是掩盖：一是最初量了还没落定的骨架屏，见 :669 那把等待；二是把花费格挂到不存在的 /v8/spend 上，见 :729 那枚 journey 选择；三是重构取值函数时把一个循环变量留在了闭包里，报 ReferenceError: route is not defined，同一次我还用分号让跑批绕过了自己写的补丁断言——那是我自己钉过的规矩，本轮记过一次
+18 我这枚改动零行删除：旧尺那五枚格的 controls_inside 与 C1..C7 全部原样还在（第 2 行的 219 行纯新增），我只是把「格内」这个口径从它自己那五枚扩到普查那四枚，并把它从「不许长出」扩成「至少一枚自己的动作」
