@@ -1,0 +1,47 @@
+stage = control
+tree = D:/moodle/_qoder_duibiaogong_0557_ctl
+tree_head = 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+dirty_files = 1
+python = D:\moodle\CityNexus\.venv\Scripts\python.exe
+
+### arm: the two strings moved without being rewritten
+  skipped: this tree carries none of the lane's bytes
+
+### gate 1 i18n parity (shared ruler)
+cwd = D:/moodle/_qoder_duibiaogong_0557_ctl
+cmd = D:\moodle\CityNexus\.venv\Scripts\python.exe frontend\scripts\i18n_detail2_parity_r1.py
+started_local = 14:42:23
+exit_code = 1
+nonempty_lines = 6
+tail:
+    en keys: 1112 zh keys: 1113
+    Traceback (most recent call last):
+      File "D:\moodle\_qoder_duibiaogong_0557_ctl\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+        assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+               ^^^^^^^^^^^^^^^^^^
+    AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+### gate 2 typecheck (package.json line 8 shape)
+cwd = D:/moodle/_qoder_duibiaogong_0557_ctl/frontend
+cmd = node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+started_local = 14:42:30
+exit_code = 2
+nonempty_lines = 3
+tail:
+    src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+    src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+    src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+
+### gate 3 production build
+cwd = D:/moodle/_qoder_duibiaogong_0557_ctl/frontend
+cmd = node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_duibiaogong_0557_dist --emptyOutDir
+started_local = 14:42:31
+exit_code = 1
+nonempty_lines = 23
+tail:
+        at async catchUnfinishedHookActions (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23215:16)
+        at async rollupInternal (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5)
+        at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12)
+        at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19)
+        at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153)
+        at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)[39m
