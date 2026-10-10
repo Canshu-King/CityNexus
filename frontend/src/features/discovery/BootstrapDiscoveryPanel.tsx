@@ -11,6 +11,7 @@ import {
   type BootstrapTwoStopWalkResponse,
   type BootstrapTwoStopWalkabilityResponse,
   type BootstrapAdaptiveShortWalkResponse,
+  type BootstrapPocketWalkResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
@@ -73,6 +74,19 @@ function safeHttpsSourceUrl(value: string | undefined): string | null {
   try {
     const url = new URL(value);
     if (url.protocol !== "https:" || !url.hostname || url.username || url.password) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+function safeOsmSourceUrl(value: string | undefined): string | null {
+  const safe = safeHttpsSourceUrl(value);
+  if (!safe) return null;
+  try {
+    const url = new URL(safe);
+    if (url.hostname !== "www.openstreetmap.org" && url.hostname !== "openstreetmap.org") return null;
+    if (!/^\/(node|way|relation)\/[1-9][0-9]*$/.test(url.pathname)) return null;
     return url.toString();
   } catch {
     return null;
@@ -336,6 +350,12 @@ export function BootstrapDiscoveryPanel({
   const [adaptiveWalkConsent, setAdaptiveWalkConsent] = useState(false);
   const [adaptiveWalkBusy, setAdaptiveWalkBusy] = useState(false);
   const [adaptiveWalkComparison, setAdaptiveWalkComparison] = useState<BootstrapAdaptiveShortWalkResponse | null>(null);
+  const [pocketWalk, setPocketWalk] = useState<BootstrapPocketWalkResponse | null>(null);
+  const [pocketWalkBudget, setPocketWalkBudget] = useState<number | null>(null);
+  const [pocketWalkBusy, setPocketWalkBusy] = useState(false);
+  const [pocketWalkMessage, setPocketWalkMessage] = useState<string | null>(null);
+  const [pocketShareConsent, setPocketShareConsent] = useState(false);
+  const [pocketShareMapLink, setPocketShareMapLink] = useState(false);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
@@ -345,6 +365,8 @@ export function BootstrapDiscoveryPanel({
   const citySearchGeneration = useRef(0);
   const twoStopReleaseGeneration = useRef(0);
   const adaptiveRequestGeneration = useRef(0);
+  const pocketRequestGeneration = useRef(0);
+  const pocketClearPromiseRef = useRef<Promise<void> | null>(null);
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
@@ -377,7 +399,8 @@ export function BootstrapDiscoveryPanel({
     setCitySearchResults([]);
     setCitySearchMessage(null);
     setMapFocusCenter(null);
-    setTwoStopOrder([]);
+    setTwoStopOrder(pocketWalk ? [pocketWalk.first_stop.shortlist_id, pocketWalk.second_stop.shortlist_id] : []);
+    setPocketWalkBudget(pocketWalk?.max_walk_minutes ?? null);
     setTwoStopConsent(false);
     setTwoStopBusy(false);
     setTwoStopNotice(null);
@@ -389,6 +412,9 @@ export function BootstrapDiscoveryPanel({
     setAdaptiveWalkConsent(false);
     setAdaptiveWalkBusy(false);
     setAdaptiveWalkComparison(null);
+    setPocketWalkMessage(null);
+    setPocketShareConsent(false);
+    setPocketShareMapLink(false);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -489,6 +515,12 @@ export function BootstrapDiscoveryPanel({
     setAdaptiveWalkConsent(false);
     setAdaptiveWalkBusy(false);
     setAdaptiveWalkComparison(null);
+    setPocketWalk(null);
+    setPocketWalkBudget(null);
+    setPocketWalkBusy(false);
+    setPocketWalkMessage(null);
+    setPocketShareConsent(false);
+    setPocketShareMapLink(false);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -544,6 +576,12 @@ export function BootstrapDiscoveryPanel({
     setAdaptiveWalkConsent(false);
     setAdaptiveWalkBusy(false);
     setAdaptiveWalkComparison(null);
+    setPocketWalk(null);
+    setPocketWalkBudget(null);
+    setPocketWalkBusy(false);
+    setPocketWalkMessage(null);
+    setPocketShareConsent(false);
+    setPocketShareMapLink(false);
     setMessage("Journey changed; choose a new public search area.");
   }, [journeyId, cityName]);
 
@@ -571,6 +609,16 @@ export function BootstrapDiscoveryPanel({
           : null;
         setShortlist(saved.items);
         setResumeIntent(restorable);
+        const savedPocket = saved.pocket_walk &&
+          saved.items.some((item) => item.shortlist_id === saved.pocket_walk?.first_stop.shortlist_id) &&
+          saved.items.some((item) => item.shortlist_id === saved.pocket_walk?.second_stop.shortlist_id)
+          ? saved.pocket_walk
+          : null;
+        setPocketWalk(savedPocket);
+        setPocketWalkBudget(savedPocket?.max_walk_minutes ?? null);
+        setTwoStopOrder(savedPocket ? [savedPocket.first_stop.shortlist_id, savedPocket.second_stop.shortlist_id] : []);
+        setPocketShareConsent(false);
+        setPocketShareMapLink(false);
       } catch {
         // A draft without a signed member simply has no restorable board yet.
         if (stillCurrent()) {
@@ -581,6 +629,11 @@ export function BootstrapDiscoveryPanel({
           setMapFallbackUrl(null);
           setLastNavigationLaunched(false);
           setExploreNotice(null);
+          setPocketWalk(null);
+          setPocketWalkBudget(null);
+          setTwoStopOrder([]);
+          setPocketShareConsent(false);
+          setPocketShareMapLink(false);
         }
       } finally {
         if (stillCurrent() && initial) setShortlistLoading(false);
@@ -802,6 +855,11 @@ export function BootstrapDiscoveryPanel({
     // A removed stop invalidates any already-authorized fallback and an
     // in-flight two-stop release, including before the DELETE returns.
     if (twoStopOrder.includes(item.shortlist_id)) {
+      // Wait for the private persistence clear before deleting the shortlist
+      // item.  Clearing local React state first is safe for rendering, but a
+      // fire-and-forget DELETE races the shortlist DELETE and lets a reload
+      // observe the stale pair between the two commits.
+      await clearPocketWalkPersisted();
       twoStopReleaseGeneration.current += 1;
       try { pendingWindowRef.current?.close(); } catch { /* tab already reclaimed */ }
       pendingWindowRef.current = null;
@@ -817,6 +875,7 @@ export function BootstrapDiscoveryPanel({
       setAdaptiveWalkConsent(false);
       setAdaptiveWalkBusy(false);
       setAdaptiveWalkComparison(null);
+      setPocketWalkBudget(null);
     }
     setShortlistBusy(item.shortlist_id);
     setMessage(null);
@@ -836,6 +895,7 @@ export function BootstrapDiscoveryPanel({
   };
 
   const setTwoStopPosition = (shortlistId: string, position: 1 | 2) => {
+    if (pocketWalk) void clearPocketWalkPersisted();
     twoStopReleaseGeneration.current += 1;
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
@@ -847,6 +907,7 @@ export function BootstrapDiscoveryPanel({
     setAdaptiveWalkConsent(false);
     setAdaptiveWalkBusy(false);
     setAdaptiveWalkComparison(null);
+    setPocketWalkBudget(null);
     setTwoStopOrder((current) => {
       const without = current.filter((id) => id !== shortlistId);
       if (position === 1) return [shortlistId, ...without].slice(0, 2);
@@ -859,6 +920,7 @@ export function BootstrapDiscoveryPanel({
   };
 
   const clearTwoStopPosition = (shortlistId: string) => {
+    if (pocketWalk) void clearPocketWalkPersisted();
     twoStopReleaseGeneration.current += 1;
     setTwoStopNotice(null);
     setTwoStopFallbackUrl(null);
@@ -870,6 +932,7 @@ export function BootstrapDiscoveryPanel({
     setAdaptiveWalkConsent(false);
     setAdaptiveWalkBusy(false);
     setAdaptiveWalkComparison(null);
+    setPocketWalkBudget(null);
     setTwoStopOrder((current) => current.filter((id) => id !== shortlistId));
   };
 
@@ -1038,7 +1101,6 @@ export function BootstrapDiscoveryPanel({
         throw new Error("The adaptive walking suggestion did not match the available alternative.");
       }
       setAdaptiveWalkComparison(released);
-      if (released.route_state === "ROUTE_UNVERIFIED") setTwoStopFallbackUrl(publicMapUrl);
       setAdaptiveWalkConsent(false);
     } catch (error) {
       if (stillCurrent()) {
@@ -1048,6 +1110,152 @@ export function BootstrapDiscoveryPanel({
     } finally {
       if (stillCurrent()) setAdaptiveWalkBusy(false);
     }
+  };
+
+  const clearPocketWalkPersisted = async (notice = false) => {
+    if (pocketClearPromiseRef.current) await pocketClearPromiseRef.current;
+    const requestGeneration = ++pocketRequestGeneration.current;
+    const hadSavedPocket = pocketWalk !== null;
+    setPocketWalk(null);
+    setPocketShareConsent(false);
+    setPocketShareMapLink(false);
+    setPocketWalkMessage(null);
+    if (!hadSavedPocket) return;
+    const pending = (async () => {
+      try {
+        await cityNexusApi.clearBootstrapPocketWalk(journeyId);
+        if (pocketRequestGeneration.current !== requestGeneration) return;
+        if (notice) setPocketWalkMessage("Pocket Walk cleared. Save the new order when you are ready.");
+      } catch (error) {
+        if (pocketRequestGeneration.current !== requestGeneration) return;
+        setPocketWalkMessage(error instanceof Error ? error.message : "The saved Pocket Walk could not be cleared.");
+      }
+    })();
+    pocketClearPromiseRef.current = pending;
+    try {
+      await pending;
+    } finally {
+      if (pocketClearPromiseRef.current === pending) pocketClearPromiseRef.current = null;
+    }
+  };
+
+  const savePocketWalk = async () => {
+    if (twoStopOrder.length !== 2 || twoStopOrder[0] === twoStopOrder[1]) {
+      setPocketWalkMessage("Choose and order exactly two saved public places first.");
+      return;
+    }
+    const first = shortlist.find((item) => item.shortlist_id === twoStopOrder[0]);
+    const second = shortlist.find((item) => item.shortlist_id === twoStopOrder[1]);
+    if (!first || !second) {
+      setPocketWalkMessage("The saved order is stale. Choose the two public stops again.");
+      return;
+    }
+    if (pocketClearPromiseRef.current) await pocketClearPromiseRef.current;
+    const requestGeneration = ++pocketRequestGeneration.current;
+    setPocketWalkBusy(true);
+    setPocketWalkMessage(null);
+    try {
+      const saved = await cityNexusApi.saveBootstrapPocketWalk(journeyId, {
+        first_shortlist_id: first.shortlist_id,
+        second_shortlist_id: second.shortlist_id,
+        max_walk_minutes: pocketWalkBudget,
+      });
+      if (pocketRequestGeneration.current !== requestGeneration) return;
+      setPocketWalk(saved);
+      setPocketWalkBudget(saved.max_walk_minutes);
+      setPocketShareConsent(false);
+      setPocketShareMapLink(false);
+      setPocketWalkMessage("Pocket Walk saved privately for this signed member. Map links still require fresh consent.");
+    } catch (error) {
+      if (pocketRequestGeneration.current === requestGeneration) {
+        setPocketWalkMessage(error instanceof Error ? error.message : "The Pocket Walk could not be saved.");
+      }
+    } finally {
+      if (pocketRequestGeneration.current === requestGeneration) setPocketWalkBusy(false);
+    }
+  };
+
+  const pocketShareText = () => {
+    if (!pocketWalk) return null;
+    const firstSource = safeOsmSourceUrl(pocketWalk.first_stop.source_url);
+    const secondSource = safeOsmSourceUrl(pocketWalk.second_stop.source_url);
+    if (!firstSource || !secondSource) return null;
+    const sample = [pocketWalk.first_stop, pocketWalk.second_stop]
+      .some((stop) => /TEST_PROVIDER|UNVERIFIED|SIMULAT/i.test(stop.source_provenance));
+    const lines = [
+      "CityNexus public Pocket Walk",
+      ...(sample ? ["sample/unverified location - not real-world verified"] : []),
+      `1. ${pocketWalk.first_stop.name} (${pocketWalk.first_stop.category})`,
+      `   OSM source: ${firstSource}`,
+      `   Source: ${pocketWalk.first_stop.source_provenance}; captured ${pocketWalk.first_stop.captured_at}`,
+      `2. ${pocketWalk.second_stop.name} (${pocketWalk.second_stop.category})`,
+      `   OSM source: ${secondSource}`,
+      `   Source: ${pocketWalk.second_stop.source_provenance}; captured ${pocketWalk.second_stop.captured_at}`,
+      `Walking budget: ${pocketWalk.max_walk_minutes === null ? "not declared" : `${pocketWalk.max_walk_minutes} minutes (human-declared)`}`,
+      "Opening, cost, accessibility, arrival, and guaranteed ETA remain unknown.",
+    ];
+    if (pocketShareMapLink && twoStopFallbackUrl) {
+      lines.push("Authorized public-to-public walking map link (shared separately by the traveler):", twoStopFallbackUrl);
+    }
+    return lines.join("\n");
+  };
+
+  const sharePocketWalk = async () => {
+    if (!pocketWalk) {
+      setPocketWalkMessage("Save a Pocket Walk before sharing it.");
+      return;
+    }
+    if (!pocketShareConsent) {
+      setPocketWalkMessage("Confirm the public-only share preview before sending or copying it.");
+      return;
+    }
+    const text = pocketShareText();
+    if (!text) {
+      setPocketWalkMessage("Sharing is blocked because both saved sources are not trusted OpenStreetMap links.");
+      return;
+    }
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({ title: "CityNexus public Pocket Walk", text });
+        setPocketWalkMessage("Public-only Pocket Walk shared. No private identity or Journey data was included.");
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        setPocketWalkMessage("Public-only Pocket Walk copied. No private identity or Journey data was included.");
+      } else {
+        throw new Error("This browser does not provide a share sheet or clipboard.");
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        setPocketWalkMessage("Share cancelled; nothing was sent.");
+      } else {
+        setPocketWalkMessage(error instanceof Error ? error.message : "The public-only share was not completed.");
+      }
+    }
+  };
+
+  const changePocketWalkBudget = (value: string) => {
+    const next = value ? Number(value) : null;
+    if (pocketWalk && next !== pocketWalk.max_walk_minutes) {
+      void clearPocketWalkPersisted();
+    }
+    setPocketWalkBudget(next);
+    setPocketShareConsent(false);
+    setPocketShareMapLink(false);
+  };
+
+  const focusPocketWalkSection = () => {
+    document.querySelector('[data-testid="bootstrap-pocket-walk"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const focusShortlistControls = () => {
+    document.querySelector('[data-testid="bootstrap-shortlist"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setPocketWalkMessage("Use the stop 1, stop 2, or Remove controls above, then save the changed private order.");
+  };
+
+  const focusTwoStopConsent = () => {
+    setTwoStopConsent(false);
+    setTwoStopNotice(null);
+    document.querySelector('[data-testid="bootstrap-two-stop-consent"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const chooseAdaptiveAlternative = () => {
@@ -1420,6 +1628,12 @@ export function BootstrapDiscoveryPanel({
     .map((shortlistId) => shortlist.find((item) => item.shortlist_id === shortlistId) ?? null)
     .filter((item): item is BootstrapShortlistItem => item !== null);
   const adaptiveAlternativeSecond = shortlist.find((item) => !twoStopOrder.includes(item.shortlist_id)) ?? null;
+  const pocketMatchesOrder = Boolean(
+    pocketWalk &&
+    pocketWalk.first_stop.shortlist_id === twoStopOrder[0] &&
+    pocketWalk.second_stop.shortlist_id === twoStopOrder[1],
+  );
+  const pocketSharePreview = pocketShareText();
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -2273,6 +2487,116 @@ export function BootstrapDiscoveryPanel({
                 ) : null}
               </div>
             ) : null}
+          </section>
+          <section data-testid="bootstrap-pocket-walk" aria-labelledby="bootstrap-pocket-walk-title">
+            <h3 id="bootstrap-pocket-walk-title">Pocket Walk</h3>
+            <p>
+              Save exactly these two public stops for this signed member so the compact card can return after a map switch,
+              lock screen, refresh, or later visit. This stores only the ordered shortlist identities and an optional walking preference;
+              it never stores GPS, a route estimate, a map URL, a receipt, or a Journey plan.
+            </p>
+            <label>
+              Optional maximum public-to-public walking time
+              <select
+                data-testid="bootstrap-pocket-walk-budget"
+                value={pocketWalkBudget === null ? "" : String(pocketWalkBudget)}
+                onChange={(event) => changePocketWalkBudget(event.target.value)}
+              >
+                <option value="">No preference declared</option>
+                {[15, 20, 30, 45].map((minutes) => (
+                  <option key={minutes} value={minutes}>{minutes} minutes</option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              data-testid="bootstrap-pocket-walk-save"
+              disabled={orderedTwoStopItems.length !== 2 || pocketWalkBusy || twoStopBusy}
+              onClick={() => void savePocketWalk()}
+            >
+              {pocketWalkBusy ? "Saving…" : pocketMatchesOrder ? "Update private Pocket Walk" : "Save private Pocket Walk"}
+            </button>
+            {pocketWalkMessage ? <p role="status" data-testid="bootstrap-pocket-walk-message">{pocketWalkMessage}</p> : null}
+            {pocketWalk ? (
+              <div data-testid="bootstrap-pocket-walk-card" role="status">
+                <p>
+                  Saved privately for this signed member. The card does not infer arrival, movement, opening, cost, accessibility,
+                  safety, or a guaranteed ETA. Sources were captured at the times shown below.
+                </p>
+                <ol data-testid="bootstrap-pocket-walk-stops">
+                  {[pocketWalk.first_stop, pocketWalk.second_stop].map((stop) => {
+                    const source = safeOsmSourceUrl(stop.source_url);
+                    return (
+                      <li key={stop.shortlist_id}>
+                        <strong>{stop.position}. {stop.name}</strong> · {stop.category} · {stop.source_provenance} · captured {stop.captured_at}
+                        {source ? <> · <a href={source} target="_blank" rel="noopener noreferrer">OSM source</a></> : null}
+                      </li>
+                    );
+                  })}
+                </ol>
+                <div className="v8-actions">
+                  <button
+                    type="button"
+                    data-testid="bootstrap-pocket-navigate-first"
+                    disabled={!orderedTwoStopItems[0] || mapBusy}
+                    onClick={() => orderedTwoStopItems[0] && beginShortlistNavigation(orderedTwoStopItems[0])}
+                  >
+                    Navigate to stop 1
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="bootstrap-pocket-open-walk"
+                    disabled={!pocketMatchesOrder || twoStopBusy}
+                    onClick={focusTwoStopConsent}
+                  >
+                    Open walk to stop 2
+                  </button>
+                  <button type="button" data-testid="bootstrap-pocket-swap-remove" onClick={focusShortlistControls}>
+                    Swap or remove stop
+                  </button>
+                  <button type="button" data-testid="bootstrap-pocket-back" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                    Back to full exploration
+                  </button>
+                </div>
+                <h4>Share public walk</h4>
+                <p>
+                  Review this exact public-only text before sending or copying it. It contains no member, traveler, Journey,
+                  GPS, query center, token, receipt, private preference, or internal evidence identifier.
+                </p>
+                <pre data-testid="bootstrap-pocket-share-preview">{pocketSharePreview ?? "Sharing is blocked until both trusted OpenStreetMap source links are available."}</pre>
+                {twoStopFallbackUrl ? (
+                  <label>
+                    <input
+                      type="checkbox"
+                      data-testid="bootstrap-pocket-share-map-checkbox"
+                      checked={pocketShareMapLink}
+                      onChange={(event) => setPocketShareMapLink(event.target.checked)}
+                    />
+                    Include the already authorized public-to-public map link in this share.
+                  </label>
+                ) : null}
+                <label>
+                  <input
+                    type="checkbox"
+                    data-testid="bootstrap-pocket-share-consent-checkbox"
+                    checked={pocketShareConsent}
+                    onChange={(event) => setPocketShareConsent(event.target.checked)}
+                  />
+                  I reviewed this public-only preview and agree to share or copy it now.
+                </label>
+                <button
+                  type="button"
+                  data-testid="bootstrap-pocket-share"
+                  disabled={!pocketShareConsent || !pocketSharePreview}
+                  onClick={() => void sharePocketWalk()}
+                >
+                  Share public walk
+                </button>
+                <p>Mobile Web Share is used when available; otherwise this copies the reviewed text once you click.</p>
+              </div>
+            ) : (
+              <p data-testid="bootstrap-pocket-walk-empty">No Pocket Walk is saved yet.</p>
+            )}
           </section>
         </section>
       </section>
