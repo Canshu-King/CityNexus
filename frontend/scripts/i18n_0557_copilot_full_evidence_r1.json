@@ -1,0 +1,408 @@
+{
+ "base_tip": "4d69eb860d619538a40133e96a0f8819666fd11e",
+ "draft": "D:/moodle/_cn10_fb557draft_1155.txt",
+ "items": [
+  {
+   "key": "agent.streamUnparseable",
+   "draft_row": 6,
+   "draft_line": 242,
+   "base_line": 242,
+   "zh": "运行事件暂时无法解析",
+   "en": "A runtime event could not be read",
+   "match_mode": "整行逐字",
+   "before": "setStreamError(zh ? \"运行事件暂时无法解析\" : \"A runtime event could not be read\");",
+   "new_line": 242,
+   "dict_en_line": 610,
+   "dict_zh_line": 1951,
+   "site_lines": [
+    242
+   ]
+  },
+  {
+   "key": "agent.streamReconnecting",
+   "draft_row": 7,
+   "draft_line": 253,
+   "base_line": 253,
+   "zh": "正在重新连接运行事件",
+   "en": "Reconnecting to runtime events",
+   "match_mode": "整行逐字",
+   "before": "setStreamError(zh ? \"正在重新连接运行事件\" : \"Reconnecting to runtime events\");",
+   "new_line": 253,
+   "dict_en_line": 609,
+   "dict_zh_line": 1950,
+   "site_lines": [
+    253
+   ]
+  },
+  {
+   "key": "agent.streamUnavailable",
+   "draft_row": 8,
+   "draft_line": 256,
+   "base_line": 256,
+   "zh": "运行事件流不可用；已保留已收到的事件",
+   "en": "Event stream unavailable; received events are preserved",
+   "match_mode": "整行逐字",
+   "before": "setStreamError(zh ? \"运行事件流不可用；已保留已收到的事件\" : \"Event stream unavailable; received events are preserved\");",
+   "new_line": 256,
+   "dict_en_line": 608,
+   "dict_zh_line": 1949,
+   "site_lines": [
+    256
+   ]
+  },
+  {
+   "key": "agent.stopping",
+   "draft_row": 9,
+   "draft_line": 357,
+   "base_line": 357,
+   "zh": "正在停止…",
+   "en": "Stopping…",
+   "match_mode": "整行逐字",
+   "before": "setActionState(zh ? \"正在停止…\" : \"Stopping…\");",
+   "new_line": 357,
+   "dict_en_line": 607,
+   "dict_zh_line": 1948,
+   "site_lines": [
+    357
+   ]
+  },
+  {
+   "key": "agent.stoppedViaCitynexus",
+   "draft_row": 10,
+   "draft_line": 361,
+   "base_line": 361,
+   "zh": "已通过 CityNexus 停止",
+   "en": "Stopped through CityNexus",
+   "match_mode": "整行逐字",
+   "before": "setActionState(zh ? \"已通过 CityNexus 停止\" : \"Stopped through CityNexus\");",
+   "new_line": 361,
+   "dict_en_line": 606,
+   "dict_zh_line": 1947,
+   "site_lines": [
+    361
+   ]
+  },
+  {
+   "key": "agent.approveDisabledOffline",
+   "draft_row": 11,
+   "draft_line": 371,
+   "base_line": 371,
+   "zh": "离线时不能确认方案",
+   "en": "Approval is disabled while offline",
+   "match_mode": "整行逐字",
+   "before": "setActionState(zh ? \"离线时不能确认方案\" : \"Approval is disabled while offline\");",
+   "new_line": 371,
+   "dict_en_line": 605,
+   "dict_zh_line": 1946,
+   "site_lines": [
+    371
+   ]
+  },
+  {
+   "key": "agent.missingApprovalId",
+   "draft_row": 12,
+   "draft_line": 375,
+   "base_line": 375,
+   "zh": "缺少 CityNexus approval_id，需打开恢复中心审核",
+   "en": "CityNexus approval_id is not available; review in Recovery",
+   "match_mode": "整行逐字",
+   "before": "setActionState(zh ? \"缺少 CityNexus approval_id，需打开恢复中心审核\" : \"CityNexus approval_id is not available; review in Recovery\");",
+   "new_line": 375,
+   "dict_en_line": 604,
+   "dict_zh_line": 1945,
+   "site_lines": [
+    375
+   ]
+  },
+  {
+   "key": "agent.recordingApproval",
+   "draft_row": 13,
+   "draft_line": 378,
+   "base_line": 378,
+   "zh": "正在记录 CityNexus 确认…",
+   "en": "Recording CityNexus approval…",
+   "match_mode": "整行逐字",
+   "before": "setActionState(zh ? \"正在记录 CityNexus 确认…\" : \"Recording CityNexus approval…\");",
+   "new_line": 378,
+   "dict_en_line": 603,
+   "dict_zh_line": 1944,
+   "site_lines": [
+    378
+   ]
+  },
+  {
+   "key": "agent.approvalRecorded",
+   "draft_row": 14,
+   "draft_line": 381,
+   "base_line": 381,
+   "zh": "确认已记录；仍需由 CityNexus 执行授权",
+   "en": "Approval recorded; CityNexus still owns execution authorization",
+   "match_mode": "整行逐字",
+   "before": "setActionState(zh ? \"确认已记录；仍需由 CityNexus 执行授权\" : \"Approval recorded; CityNexus still owns execution authorization\");",
+   "new_line": 381,
+   "dict_en_line": 602,
+   "dict_zh_line": 1943,
+   "site_lines": [
+    381
+   ]
+  },
+  {
+   "key": "agent.workingOnRequest",
+   "draft_row": 15,
+   "draft_line": 393,
+   "base_line": 393,
+   "zh": "正在为你处理",
+   "en": "Working on your request",
+   "match_mode": "整行逐字",
+   "before": "<b>{zh ? \"正在为你处理\" : \"Working on your request\"}</b>",
+   "new_line": 393,
+   "dict_en_line": 601,
+   "dict_zh_line": 1942,
+   "site_lines": [
+    393
+   ]
+  },
+  {
+   "key": "agent.ranAgainstFacts",
+   "draft_row": 16,
+   "draft_line": 396,
+   "base_line": 396,
+   "zh": "已按你的行程事实执行",
+   "en": "Ran against your journey facts",
+   "match_mode": "整行逐字",
+   "before": "? zh ? \"已按你的行程事实执行\" : \"Ran against your journey facts\"",
+   "new_line": 396,
+   "dict_en_line": 600,
+   "dict_zh_line": 1941,
+   "site_lines": [
+    396
+   ]
+  },
+  {
+   "key": "agent.checkingFacts",
+   "draft_row": 17,
+   "draft_line": 397,
+   "base_line": 397,
+   "zh": "正在核对你的行程事实…",
+   "en": "Checking your journey facts…",
+   "match_mode": "整行逐字",
+   "before": ": zh ? \"正在核对你的行程事实…\" : \"Checking your journey facts…\"}",
+   "new_line": 397,
+   "dict_en_line": 599,
+   "dict_zh_line": 1940,
+   "site_lines": [
+    397,
+    406
+   ]
+  },
+  {
+   "key": "agent.checkingFacts",
+   "draft_row": 18,
+   "draft_line": 406,
+   "base_line": 406,
+   "zh": "正在核对你的行程事实…",
+   "en": "Checking your journey facts…",
+   "match_mode": "整行逐字",
+   "before": "{zh ? \"正在核对你的行程事实…\" : \"Checking your journey facts…\"}",
+   "new_line": 406
+  },
+  {
+   "key": "agent.viewSafeMissionPlan",
+   "draft_row": 19,
+   "draft_line": 427,
+   "base_line": 427,
+   "zh": "查看安全任务计划",
+   "en": "View safe mission plan",
+   "match_mode": "整行逐字",
+   "before": "<summary>{zh ? \"查看安全任务计划\" : \"View safe mission plan\"}</summary>",
+   "new_line": 427,
+   "dict_en_line": 598,
+   "dict_zh_line": 1939,
+   "site_lines": [
+    427
+   ]
+  },
+  {
+   "key": "agent.citynexusAuthority",
+   "draft_row": 20,
+   "draft_line": 432,
+   "base_line": 432,
+   "zh": "CityNexus 授权",
+   "en": "CityNexus authority",
+   "match_mode": "整行逐字",
+   "before": "{step.requires_authority && <small>{zh ? \"CityNexus 授权\" : \"CityNexus authority\"}</small>}",
+   "new_line": 432,
+   "dict_en_line": 597,
+   "dict_zh_line": 1938,
+   "site_lines": [
+    432
+   ]
+  },
+  {
+   "key": "agent.suggestionsProtected",
+   "draft_row": 21,
+   "draft_line": 440,
+   "base_line": 440,
+   "zh": "建议与受保护安排",
+   "en": "Suggestions & protected plans",
+   "match_mode": "整行逐字",
+   "before": "<b>{zh ? \"建议与受保护安排\" : \"Suggestions & protected plans\"}</b>",
+   "new_line": 440,
+   "dict_en_line": 596,
+   "dict_zh_line": 1937,
+   "site_lines": [
+    440
+   ]
+  },
+  {
+   "key": "agent.suggestionReady",
+   "draft_row": 22,
+   "draft_line": 443,
+   "base_line": 443,
+   "zh": "已经生成建议，展开高级详情可以看到过程。",
+   "en": "A suggestion is ready; open advanced detail to see how it was produced.",
+   "match_mode": "整行逐字",
+   "before": "? zh ? \"已经生成建议，展开高级详情可以看到过程。\" : \"A suggestion is ready; open advanced detail to see how it was produced.\"",
+   "new_line": 443,
+   "dict_en_line": 595,
+   "dict_zh_line": 1936,
+   "site_lines": [
+    443
+   ]
+  },
+  {
+   "key": "agent.nothingToDecide",
+   "draft_row": 23,
+   "draft_line": 444,
+   "base_line": 444,
+   "zh": "还没有需要你决定的改动。",
+   "en": "There is nothing for you to decide yet.",
+   "match_mode": "整行逐字",
+   "before": ": zh ? \"还没有需要你决定的改动。\" : \"There is nothing for you to decide yet.\"}",
+   "new_line": 444,
+   "dict_en_line": 594,
+   "dict_zh_line": 1935,
+   "site_lines": [
+    444
+   ]
+  },
+  {
+   "key": "agent.protectedCommitment",
+   "draft_row": 24,
+   "draft_line": 448,
+   "base_line": 448,
+   "zh": "受保护承诺",
+   "en": "Protected commitment",
+   "match_mode": "草稿原文是截断前缀",
+   "before": "<span key={String(commitment.id ?? index)}>{zh ? \"受保护承诺\" : \"Protected commitment\"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : \"\"}</span>",
+   "new_line": 448,
+   "dict_en_line": 593,
+   "dict_zh_line": 1934,
+   "site_lines": [
+    448
+   ]
+  },
+  {
+   "key": "agent.protectedActivity",
+   "draft_row": 25,
+   "draft_line": 451,
+   "base_line": 451,
+   "zh": "受保护活动",
+   "en": "Protected activity",
+   "match_mode": "整行逐字",
+   "before": "<span key={id}>{zh ? \"受保护活动\" : \"Protected activity\"} · {id.slice(0, 8)}</span>",
+   "new_line": 451,
+   "dict_en_line": 592,
+   "dict_zh_line": 1933,
+   "site_lines": [
+    451
+   ]
+  },
+  {
+   "key": "agent.needsConfirmation",
+   "draft_row": 26,
+   "draft_line": 458,
+   "base_line": 458,
+   "zh": "需要你确认",
+   "en": "Needs your confirmation",
+   "match_mode": "整行逐字",
+   "before": "<b>{zh ? \"需要你确认\" : \"Needs your confirmation\"}</b>",
+   "new_line": 458,
+   "dict_en_line": 591,
+   "dict_zh_line": 1932,
+   "site_lines": [
+    458
+   ]
+  },
+  {
+   "key": "agent.approve",
+   "draft_row": 27,
+   "draft_line": 465,
+   "base_line": 465,
+   "zh": "批准",
+   "en": "Approve",
+   "match_mode": "整行逐字",
+   "before": "<button type=\"button\" className=\"v8-primary\" onClick={() => void approve()}>{zh ? \"批准\" : \"Approve\"}</button>",
+   "new_line": 465,
+   "dict_en_line": 590,
+   "dict_zh_line": 1931,
+   "site_lines": [
+    465
+   ]
+  },
+  {
+   "key": "agent.reject",
+   "draft_row": 28,
+   "draft_line": 466,
+   "base_line": 466,
+   "zh": "拒绝",
+   "en": "Reject",
+   "match_mode": "整行逐字",
+   "before": "<button type=\"button\" className=\"v8-secondary\" onClick={() => void stop()}>{zh ? \"拒绝\" : \"Reject\"}</button>",
+   "new_line": 466,
+   "dict_en_line": 589,
+   "dict_zh_line": 1930,
+   "site_lines": [
+    466
+   ]
+  },
+  {
+   "key": "agent.modifyReview",
+   "draft_row": 29,
+   "draft_line": 467,
+   "base_line": 467,
+   "zh": "修改 / 审核",
+   "en": "Modify / Review",
+   "match_mode": "整行逐字",
+   "before": "<button type=\"button\" className=\"v8-outline-button\" onClick={() => onNavigate(\"authoritative\")}>{zh ? \"修改 / 审核\" : \"Modify / Review\"}</button>",
+   "new_line": 467,
+   "dict_en_line": 588,
+   "dict_zh_line": 1929,
+   "site_lines": [
+    467
+   ]
+  },
+  {
+   "key": "agent.stopMission",
+   "draft_row": 30,
+   "draft_line": 477,
+   "base_line": 477,
+   "zh": "停止任务",
+   "en": "Stop mission",
+   "match_mode": "整行逐字",
+   "before": "{active && <button type=\"button\" className=\"cn-copilot-stop\" onClick={() => void stop()}>{zh ? \"停止任务\" : \"Stop mission\"}</button>}",
+   "new_line": 477,
+   "dict_en_line": 587,
+   "dict_zh_line": 1928,
+   "site_lines": [
+    477
+   ]
+  }
+ ],
+ "keys_added": 24,
+ "sites_converted": 25,
+ "shared_key_rows": 1,
+ "skipped": [],
+ "inline_text_pairs_before": 25,
+ "inline_text_pairs_after": 0
+}

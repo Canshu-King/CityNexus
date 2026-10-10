@@ -239,7 +239,7 @@ export function NativeMissionTimeline({
             source = null;
           }
         } catch {
-          setStreamError(zh ? "运行事件暂时无法解析" : "A runtime event could not be read");
+          setStreamError(t("agent.streamUnparseable"));
         }
       };
       source.addEventListener("message", handleEvent);
@@ -250,10 +250,10 @@ export function NativeMissionTimeline({
         source = null;
         attempts += 1;
         if (attempts <= 3) {
-          setStreamError(zh ? "正在重新连接运行事件" : "Reconnecting to runtime events");
+          setStreamError(t("agent.streamReconnecting"));
           retryTimer = window.setTimeout(connect, Math.min(5000, 500 * 2 ** (attempts - 1)));
         } else {
-          setStreamError(zh ? "运行事件流不可用；已保留已收到的事件" : "Event stream unavailable; received events are preserved");
+          setStreamError(t("agent.streamUnavailable"));
         }
       };
     };
@@ -354,11 +354,11 @@ export function NativeMissionTimeline({
 
   const stop = async () => {
     if (!active) return;
-    setActionState(zh ? "正在停止…" : "Stopping…");
+    setActionState(t("agent.stopping"));
     try {
       await cityNexusApi.stopNativeHermesRun(data.journey.id, run.run_id);
       setRunState("stopped");
-      setActionState(zh ? "已通过 CityNexus 停止" : "Stopped through CityNexus");
+      setActionState(t("agent.stoppedViaCitynexus"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -368,17 +368,17 @@ export function NativeMissionTimeline({
 
   const approve = async () => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
-      setActionState(zh ? "离线时不能确认方案" : "Approval is disabled while offline");
+      setActionState(t("agent.approveDisabledOffline"));
       return;
     }
     if (!approvalEvent?.approval_id) {
-      setActionState(zh ? "缺少 CityNexus approval_id，需打开恢复中心审核" : "CityNexus approval_id is not available; review in Recovery");
+      setActionState(t("agent.missingApprovalId"));
       return;
     }
-    setActionState(zh ? "正在记录 CityNexus 确认…" : "Recording CityNexus approval…");
+    setActionState(t("agent.recordingApproval"));
     try {
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
-      setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
+      setActionState(t("agent.approvalRecorded"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -390,11 +390,11 @@ export function NativeMissionTimeline({
     <section className={`cn-native-mission ${compact ? "compact" : ""}`} data-testid="native-hermes-timeline">
       <header className="cn-native-mission-head">
         <div>
-          <b>{zh ? "正在为你处理" : "Working on your request"}</b>
+          <b>{t("agent.workingOnRequest")}</b>
           <small>
             {executed
-              ? zh ? "已按你的行程事实执行" : "Ran against your journey facts"
-              : zh ? "正在核对你的行程事实…" : "Checking your journey facts…"}
+              ? t("agent.ranAgainstFacts")
+              : t("agent.checkingFacts")}
           </small>
         </div>
       </header>
@@ -403,7 +403,7 @@ export function NativeMissionTimeline({
         <AgentRunRail steps={steps} />
       ) : (
         <p className="cn-native-empty">
-          {zh ? "正在核对你的行程事实…" : "Checking your journey facts…"}
+          {t("agent.checkingFacts")}
         </p>
       )}
 
@@ -424,12 +424,12 @@ export function NativeMissionTimeline({
 
       {run.mission_plan && (
         <details className="cn-native-plan">
-          <summary>{zh ? "查看安全任务计划" : "View safe mission plan"}</summary>
+          <summary>{t("agent.viewSafeMissionPlan")}</summary>
           <ol>
             {run.mission_plan.steps.map((step) => (
               <li key={step.id}>
                 <span>{zh ? localizePlanStep(step.operation) : step.operation}</span>
-                {step.requires_authority && <small>{zh ? "CityNexus 授权" : "CityNexus authority"}</small>}
+                {step.requires_authority && <small>{t("agent.citynexusAuthority")}</small>}
               </li>
             ))}
           </ol>
@@ -437,34 +437,34 @@ export function NativeMissionTimeline({
       )}
 
       <div className="cn-native-proposal">
-        <b>{zh ? "建议与受保护安排" : "Suggestions & protected plans"}</b>
+        <b>{t("agent.suggestionsProtected")}</b>
         <span>
           {proposalEvent
-            ? zh ? "已经生成建议，展开高级详情可以看到过程。" : "A suggestion is ready; open advanced detail to see how it was produced."
-            : zh ? "还没有需要你决定的改动。" : "There is nothing for you to decide yet."}
+            ? t("agent.suggestionReady")
+            : t("agent.nothingToDecide")}
         </span>
         <div className="cn-protected-badges">
           {(run.protected_commitments ?? []).map((commitment, index) => (
-            <span key={String(commitment.id ?? index)}>{zh ? "受保护承诺" : "Protected commitment"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</span>
+            <span key={String(commitment.id ?? index)}>{t("agent.protectedCommitment")}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</span>
           ))}
           {!run.protected_commitments?.length && run.mission_plan?.protected_activity_ids.map((id) => (
-            <span key={id}>{zh ? "受保护活动" : "Protected activity"} · {id.slice(0, 8)}</span>
+            <span key={id}>{t("agent.protectedActivity")} · {id.slice(0, 8)}</span>
           ))}
         </div>
       </div>
 
       {approvalEvent && (
         <div className="cn-copilot-approval" data-testid="native-hermes-approval">
-          <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
+          <b>{t("agent.needsConfirmation")}</b>
           <span>
             {zh
               ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
               : "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically."}
           </span>
           <div>
-            <button type="button" className="v8-primary" onClick={() => void approve()}>{zh ? "批准" : "Approve"}</button>
-            <button type="button" className="v8-secondary" onClick={() => void stop()}>{zh ? "拒绝" : "Reject"}</button>
-            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{zh ? "修改 / 审核" : "Modify / Review"}</button>
+            <button type="button" className="v8-primary" onClick={() => void approve()}>{t("agent.approve")}</button>
+            <button type="button" className="v8-secondary" onClick={() => void stop()}>{t("agent.reject")}</button>
+            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{t("agent.modifyReview")}</button>
           </div>
         </div>
       )}
@@ -474,7 +474,7 @@ export function NativeMissionTimeline({
            data-attribution={actionFacts ?? ""}>{actionState}</p>
       )}
       {streamError && <p className="cn-copilot-stream-state" role="status">{streamError}</p>}
-      {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{zh ? "停止任务" : "Stop mission"}</button>}
+      {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{t("agent.stopMission")}</button>}
     </section>
   );
 }
