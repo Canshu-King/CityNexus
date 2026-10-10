@@ -1,0 +1,54 @@
+ORD-0558 lane 活明细 — r5 gate readouts (ActivityDetail.tsx re-cut onto the current tip)
+candidate branch review/活明细-0558-r5, parent d89cfea25214b4bbb4e886dca765b096237362f1
+(the authoritative tip, ls-remote read at the moment of the cut).
+Why a re-cut: the earlier branch review/活明细-0558-r3 was cut on 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+and the line moved twice since (ORD-0551 and ORD-0552 landed in this same file, so the metres arm drifted
+from :294 to :307). Per the commander's ruling at `CITYNEXUS_AGENT_CONTROL.md:4128` (重切到现尖，别把别人
+的字节并进自己枝里) this branch is a fresh cut carrying only my own bytes; r3 is left as history and is
+NOT for landing — please drop it when you point.
+Draft rows still being copied, not invented: _cn12_pl558draft2_1208.txt:14, _cn12_pl558draft2_1208.txt:15,
+_cn12_pl558draft2_1208.txt:17.
+Toolchain: node v24.14.0, typescript 5.9.3, vite 7.3.6 — junction of
+D:/moodle/_qoder_integration_20260919/frontend/node_modules into wt/frontend/node_modules.
+
+[1] product face against the current authoritative tip
+  cmd: git diff --numstat d89cfea25214b4bbb4e886dca765b096237362f1 HEAD
+  output: "4       3       frontend/src/features/trip/ActivityDetail.tsx"
+  three English arms rewritten plus one import at `frontend/src/features/trip/ActivityDetail.tsx:10`;
+  every Chinese arm sits on its own untouched line; dictionary, contract and backend faces untouched.
+
+[2] the three sites, before and after, at count 0 / 1 / 2 (and two realistic values)
+  cmd: node review/huomingxi/activity_ab_r2.mjs   exit: 0   -> activity_ab_r2.txt
+  method: the tip's line bytes and this branch's line bytes, each asserted to contain the recorded
+  template verbatim (holds=true for all six reads), then evaluated with lib/plural.ts transpiled from
+  the tip's own bytes (blob `aefcc082623f11b473d75020dae37787c4fcb6e8`).
+    `frontend/src/features/trip/ActivityDetail.tsx:150` -> `frontend/src/features/trip/ActivityDetail.tsx:151`
+      "1 min" -> "1 minute", "2 min" -> "2 minutes", "45 min" -> "45 minutes"   (activity_ab_r2.txt:10, :11, :12)
+    `frontend/src/features/trip/ActivityDetail.tsx:186` -> `frontend/src/features/trip/ActivityDetail.tsx:187`
+      "1 min" -> "1 minute", "2 min" -> "2 minutes"                              (activity_ab_r2.txt:17, :18)
+    `frontend/src/features/trip/ActivityDetail.tsx:307` -> `frontend/src/features/trip/ActivityDetail.tsx:308`
+      "1 m" -> "1 metre", "2 m" -> "2 metres", "850 m" -> "850 metres"           (activity_ab_r2.txt:23, :24, :25)
+  the compact over-one-hour arm of the same duration concept is byte-identical on both sides
+  (activity_ab_r2.txt:28, identical=true), so "2h30m" still renders as before.
+
+[3] typecheck
+  cwd: wt/frontend
+  cmd: D:\moodle\_qoder_integration_20260919\frontend\node_modules\.bin\tsc.cmd -p tsconfig.check.json --noEmit
+  exit: 0
+  stdout: 0 lines
+
+[4] build
+  cwd: wt/frontend
+  cmd: npm run build
+  exit: 0
+  key lines: "2040 modules transformed." / "built in 6.44s"
+
+[5] rows still not taken, named
+  `frontend/src/features/trip/ActivityDetail.tsx:292` (the "All within about {n} m" note) is next in the
+  draft and obeys the same rule as the metre arm; it waits because the order caps a round at three sites
+  (`CITYNEXUS_AGENT_CONTROL.md:6769`). `frontend/src/features/trip/ActivityDetail.tsx:310` (the km arm) is
+  the one carrying the decimal trap this lane reported: with the draft's expression a flat 1000 m reads
+  "1.0 kilometre", which English does not do — it needs a ruling, not a copy.
+
+[6] not run this round, named on purpose
+  No browser/e2e pass; the readings above come from the tip's and the branch's own bytes.
