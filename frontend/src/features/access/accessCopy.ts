@@ -27,10 +27,6 @@ import { expandPluralMarkers } from "../../lib/plural";
  */
 export const accessCopy = {
   en: {
-    "access.title": "Members and access",
-    "access.sub":
-      "Who can change this trip, what each visibility level means, and which of that this server can answer today.",
-    "access.pickLabel": "Choose a trip",
     "access.pickNone": "Pick a trip to look at",
     /* A row with no title is named as that. The old control fell back to the trip's uuid, which
        is the one thing this list must never read out (ORD-0518: first and last row, by name). */
@@ -235,9 +231,6 @@ export const accessCopy = {
       "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
   },
   "zh-CN": {
-    "access.title": "成员与权限",
-    "access.sub": "谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。",
-    "access.pickLabel": "选一条行程",
     "access.pickNone": "先选一条要看的行程",
     "access.tripUntitled": "这条行程回来时没有名字。",
     "access.pickLoading": "正在读你的行程列表…",

@@ -522,11 +522,11 @@ export function AccessPanel({
       className="cn-access"
       data-testid="access-panel"
       {...(chosen ? { "data-journey": chosen } : {})}
-      aria-label={say("access.title")}
+      aria-label={t("access.title")}
     >
       <header className="cn-access-head">
-        <span className="v8-kicker">{say("access.title")}</span>
-        <p className="v8-muted">{say("access.sub")}</p>
+        <span className="v8-kicker">{t("access.title")}</span>
+        <p className="v8-muted">{t("access.sub")}</p>
       </header>
 
       {/* ---------------------------------------------------------- read from this server */}
@@ -623,7 +623,7 @@ export function AccessPanel({
         {trips.phase === "ready" && rows.length > 0 && (
           <div className="cn-access-trips">
             <span className="cn-access-picker-label" id="access-trips-label">
-              {say("access.pickLabel")}
+              {t("access.pickLabel")}
             </span>
             {chosen === null ? (
               <p className="cn-access-picker-hint" data-testid="access-trips-hint">

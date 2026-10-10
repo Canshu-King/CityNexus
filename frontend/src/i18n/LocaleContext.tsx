@@ -1464,6 +1464,10 @@ const en: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
   "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
   "lib.failureAttribution.readFailed": "This read failed",
+  /* ORD-0570：`features/access/accessCopy.ts` 自带的三条措辞抬进公共字典，两侧同代、值逐字节照拄，取值点走组件里现成的 t()。 */
+  "access.title": "Members and access",
+  "access.sub": "Who can change this trip, what each visibility level means, and which of that this server can answer today.",
+  "access.pickLabel": "Choose a trip",
 };
 
 const zhCN: Dict = {
@@ -2834,6 +2838,10 @@ const zhCN: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
   "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
   "lib.failureAttribution.readFailed": "这一次没读到",
+  /* ORD-0570：`features/access/accessCopy.ts` 自带的三条措辞抬进公共字典，两侧同代、值逐字节照拄，取值点走组件里现成的 t()。 */
+  "access.title": "成员与权限",
+  "access.sub": "谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。",
+  "access.pickLabel": "选一条行程",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
