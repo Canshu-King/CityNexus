@@ -1,0 +1,13 @@
+{
+  "order": "ORD-0558",
+  "lane": "shuangshugong",
+  "arm": "S0probe",
+  "file": "frontend/src/features/execution/LiveRecovery.tsx",
+  "totalLines": 469,
+  "zhArmLine": 347,
+  "enArmLine": 348,
+  "duplicateCountLine": 221,
+  "rulerImportLine": 14,
+  "enArmCarriesRuler": true,
+  "enArmText": ": `Merged ${duplicateCount} identical ${englishCountNoun(duplicateCount, \"suggestion\")}.`}"
+}

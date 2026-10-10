@@ -1,0 +1,7 @@
+branch review/大柜工-0557-dict-r1 tip e602325e7, product file still baseline
+$ node_modules/.bin/tsc -p tsconfig.check.json --noEmit
+typecheck_rc=0
+$ node_modules/.bin/vite build
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+build_rc=0

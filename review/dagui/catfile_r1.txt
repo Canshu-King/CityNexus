@@ -1,0 +1,10 @@
+$ git cat-file -t d435cff26df752908a8a3a58d5c61f9f5c23f40c  (authority tip)
+commit
+$ git cat-file -t e602325e7420a30ff0520b25f0b1f9dfd27b2c3a  (dict branch tip)
+commit
+product branch tip at this moment:
+38dad50266843eeb6973f234acde38e580ab9a65
+commit
+keys in the dict-branch generation:
+905:  "simulation.now": " (now {state})"
+2159:  "simulation.now": "（现值 {sta

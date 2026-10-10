@@ -1,0 +1,8 @@
+$ git ls-remote origin refs/heads/review/大柜工-0557-dict-r1 refs/heads/review/大柜工-0557-r1 refs/heads/mirror/integration-frontend-apple-pass1
+d435cff26df752908a8a3a58d5c61f9f5c23f40c	refs/heads/mirror/integration-frontend-apple-pass1
+e602325e7420a30ff0520b25f0b1f9dfd27b2c3a	refs/heads/review/大柜工-0557-dict-r1
+87f046c09d1ea34f05c20b3c1e594f1f0edacbab	refs/heads/review/大柜工-0557-r1
+$ git rev-parse --short review/大柜工-0557-dict-r1 review/大柜工-0557-r1
+fatal: Needed a single revision
+$ git rev-list --count <authority>..<branch>  (behind / ahead)
+dict_behind=
