@@ -724,6 +724,9 @@ const en: Dict = {
   "discovery.destination": "Destination",
   "discovery.preparePlaces": "Prepare places",
   "discovery.pickAnotherDestination": "Pick another destination",
+  "pending.title": "Not on a day yet",
+  "pending.sub": "Places this server says belong to this trip, in no day of it yet.",
+  "pending.loading": "Reading the pending set…",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -2143,6 +2146,9 @@ const zhCN: Dict = {
   "discovery.destination": "目的地",
   "discovery.preparePlaces": "准备地点",
   "discovery.pickAnotherDestination": "另选一个目的地",
+  "pending.title": "待规划",
+  "pending.sub": "这台服务器说这些地点属于这一程，还没排在任何一天。",
+  "pending.loading": "正在读待规划集合…",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
