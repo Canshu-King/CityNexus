@@ -501,6 +501,7 @@ function ReviewEdit({
   zh: boolean;
   onEdit: (target: string) => void;
 }) {
+  const t = useT();
   return (
     <button
       type="button"
@@ -510,7 +511,7 @@ function ReviewEdit({
       aria-label={(zh ? "改这一项：" : "Change ") + (zh ? row.zh : row.en)}
       onClick={() => onEdit(row.target)}
     >
-      {zh ? "改这一项" : "Change"}
+      {t("setup.change2")}
     </button>
   );
 }
@@ -545,10 +546,11 @@ const REVIEW_ROWS: ReviewTarget[] = [
  * vocabularies.  This marker is the third state: chosen, unanswered (「—」), and filled in for you.
  */
 function DefaultMark({ zh }: { zh: boolean }) {
+  const t = useT();
   return (
     <span className="trial-default-mark" data-testid="review-default-mark">
       {" "}
-      · {zh ? "我们替你填的" : "we filled this in for you"}
+      · {t("setup.weFilledThisInForYou")}
     </span>
   );
 }
@@ -951,7 +953,7 @@ export function JourneyTrialSetup({
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("trial.kicker")}</p>
-          <h1>{zh ? "新建行程" : "Create a trip"}</h1>
+          <h1>{t("setup.createATrip")}</h1>
           <p className="v8-lede">
             {zh
               ? "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
@@ -992,7 +994,7 @@ export function JourneyTrialSetup({
               data-testid="trial-city"
               value={draft.cityName}
               onChange={(event) => applyCity(event.target.value)}
-              placeholder={zh ? "例如：天津、东京、新加坡" : "e.g. Tianjin, Tokyo, Singapore"}
+              placeholder={t("setup.eGTianjinTokyoSingapore")}
               aria-describedby={unrecognizedCity ? "trial-city-warning" : undefined}
               autoFocus
             />
@@ -1054,7 +1056,7 @@ export function JourneyTrialSetup({
                 "supported destinations", which is what a traveller read as a promise.  The body now
                 groups the same names by what `GET /destinations/capability` answered for each one. */}
             <summary data-testid="trial-supported-toggle">
-              {zh ? "看支持的目的地" : "See supported destinations"}
+              {t("setup.seeSupportedDestinations")}
             </summary>
             {DESTINATION_GROUPS.map((group) => {
               const rows = (zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en)
@@ -1072,7 +1074,7 @@ export function JourneyTrialSetup({
                   </p>
                   {rows.length === 0 ? (
                     <p className="trial-supported-none" data-testid={`trial-supported-none-${group}`}>
-                      {zh ? "这一轮没有名字落在这一组。" : "No name landed in this group this round."}
+                      {t("setup.noNameLandedInThisGroupThisRound")}
                     </p>
                   ) : (
                     <ul className="trial-supported-list">
@@ -1174,7 +1176,7 @@ export function JourneyTrialSetup({
           </label>
           <div className="trial-row">
             <label className="trial-field">
-              <span>{zh ? "抵达时间" : "Arrival time"}</span>
+              <span>{t("setup.arrivalTime")}</span>
               <input
                 data-testid="trial-start"
                 type="datetime-local"
@@ -1183,7 +1185,7 @@ export function JourneyTrialSetup({
               />
             </label>
             <label className="trial-field">
-              <span>{zh ? "离开时间" : "Departure time"}</span>
+              <span>{t("setup.departureTime")}</span>
               <input
                 data-testid="trial-end"
                 type="datetime-local"
@@ -1198,7 +1200,7 @@ export function JourneyTrialSetup({
             open={advanced}
             onToggle={(event) => setAdvanced((event.target as HTMLDetailsElement).open)}
           >
-            <summary>{zh ? "高级设置" : "Advanced settings"}</summary>
+            <summary>{t("setup.advancedSettings")}</summary>
             <div className="trial-row">
               <label className="trial-field">
                 <span>{t("trial.country")}</span>
@@ -1306,7 +1308,7 @@ export function JourneyTrialSetup({
           </div>
 
           <fieldset className="trial-fieldset" data-testid="trial-pace-fieldset" tabIndex={-1}>
-            <legend>{zh ? "旅行节奏" : "Pace"}</legend>
+            <legend>{t("setup.pace")}</legend>
             <div className="trial-chips">
               {PACE_OPTIONS.map((option) => (
                 <button
@@ -1328,7 +1330,7 @@ export function JourneyTrialSetup({
           </fieldset>
 
           <fieldset className="trial-fieldset" data-testid="trial-interests-fieldset" tabIndex={-1}>
-            <legend>{zh ? "兴趣" : "Interests"}</legend>
+            <legend>{t("setup.interests")}</legend>
             <div className="trial-chips">
               {INTEREST_OPTIONS.map((option) => {
                 const selected = (draft.interests ?? []).includes(option.key);
@@ -1356,7 +1358,7 @@ export function JourneyTrialSetup({
           </fieldset>
 
           <label className="trial-field">
-            <span>{zh ? "特殊要求" : "Special requirements"}</span>
+            <span>{t("setup.specialRequirements")}</span>
             <textarea
               data-testid="trial-special"
               rows={3}
@@ -1395,7 +1397,7 @@ export function JourneyTrialSetup({
                 data-testid="review-arrival"
                 data-missing={draft.arrivalLocation.trim() ? undefined : "true"}
               >
-                {draft.arrivalLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {draft.arrivalLocation.trim() || t("setup.notFilledInRequired")}
                 {" · "}
                 {draft.startAt.replace("T", " ")}
               </dd>
@@ -1412,21 +1414,21 @@ export function JourneyTrialSetup({
               </dd>
             </div>
             <div>
-              <dt>{zh ? "人数 / 房间" : "Travellers / rooms"}{reviewEdit("party")}</dt>
+              <dt>{t("setup.travellersRooms")}{reviewEdit("party")}</dt>
               <dd data-testid="review-party">
                 {draft.partySize} · {draft.rooms}
                 {!touched.has("partySize") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "总预算 / 住宿" : "Total / stay budget"}{reviewEdit("budget")}</dt>
+              <dt>{t("setup.totalStayBudget")}{reviewEdit("budget")}</dt>
               <dd data-testid="review-budget">
                 {draft.currency} {draft.budgetMajor} / {draft.stayBudgetMajor}
                 {(!touched.has("budgetMajor") || !touched.has("stayBudgetMajor")) && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "节奏" : "Pace"}{reviewEdit("pace")}</dt>
+              <dt>{t("setup.pace2")}{reviewEdit("pace")}</dt>
               <dd data-testid="review-pace">
                 {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
                 {!touched.has("pace") && <DefaultMark zh={zh} />}
@@ -1443,7 +1445,7 @@ export function JourneyTrialSetup({
               <dd data-testid="review-special">{draft.specialRequirements || "—"}</dd>
             </div>
             <div>
-              <dt>{zh ? "自动设置" : "Auto-set"}{reviewEdit("auto-set")}</dt>
+              <dt>{t("setup.autoSet2")}{reviewEdit("auto-set")}</dt>
               <dd>
                 {draft.countryCode} · {draft.currency} · {draft.timezone}
               </dd>
@@ -1504,7 +1506,7 @@ export function JourneyTrialSetup({
         /* Giving up on the wait is not a failure and not a cancel: the request this screen
            stopped is described by what actually happened to it. */
         <div className="trial-wait-outcome" data-testid="trial-wait-outcome" role="status">
-          <strong>{zh ? "已停止等待" : "Stopped waiting"}</strong>
+          <strong>{t("setup.stoppedWaiting")}</strong>
           <span>{message}</span>
         </div>
       )}
@@ -1659,7 +1661,7 @@ export function JourneyTrialSetup({
             disabled={busy}
             onClick={() => setStep((current) => (current === 3 ? 2 : 1))}
           >
-            {zh ? "返回" : "Back"}
+            {t("setup.back")}
           </button>
         )}
         {step < 3 && (
@@ -1707,7 +1709,7 @@ export function JourneyTrialSetup({
               void submit();
             }}
           >
-            {busy ? t("trial.creating") : zh ? "确认创建" : "Create trip"}
+            {busy ? t("trial.creating") : t("setup.createTrip")}
           </button>
         )}
       </div>
