@@ -121,3 +121,15 @@ typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typech
 parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1185, zh keys 1186, xor = me.asksBeforeProtectedChange
 parity ruler at d54e431113f0f147bf750e31c621ca2c47bbaa0c, same unmodified ruler -> exit code 1, en keys 1175, zh keys 1176, xor = the same single key: ten added per side, no orphan
 build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+
+re-cut onto the 00:4x generation, fourth one tonight (the line moved 43 commits in fifty minutes; each re-cut buys queue-head position, nothing else changes)
+why the anchor-relocation idea in the previous block was wrong, read from the gate itself: preflight_and_land_r7.py:556 computes the intersection as FILE sets (line side vs candidate side since the merge base), not hunks -- so moving these ten keys elsewhere in LocaleContext.tsx cannot reduce the collision, and merging the tip is the only thing that drives intersection to zero
+dict tip after this merge: 5393917fb4ee8842061c08c7b4b198a96dc7b0a0, behind 0 ahead 9, merge clean with no conflict
+product merged it clean: 10 reads, 0 leftover title ternaries; the ten tip-side ternaries still at 457, 465, 478, 485, 518, 530, 538, 565, 573, 581
+gate repointed: TIP constant now 9e4699ee6af8849464a76d46440c849a62d09fb1
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN
+i18n gate: same command with --negative -> exit code 1
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch -> exit code 1, en keys 1227, zh keys 1228; at the tip -> exit code 1, en keys 1217, zh keys 1218; xor both generations = me.asksBeforeProtectedChange, so ten added per side and no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+coordinates by name, not by line (the dictionary line numbers drifted again with this merge): ten key names lib.failureAttribution.tripNotOnServer, .networkUnavailable, .serviceUnavailable, .serverCouldNotRead, .slowDownRate, .slowDownRetry, .stateAlreadyMoved, .needsFreshSignIn, .stepNotAllowed, .readFailed -- read them with `git grep -n '"lib.failureAttribution.' <dict tip> -- frontend/src/i18n/LocaleContext.tsx`
