@@ -1,0 +1,52 @@
+# ORD-0557 kuaizhuigong: tip advance, replay state, and my own change sets. Each number below was read from the command on the line above it.
+cmd_tip = git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+tip_at_start = 7ce836f9afafe9e763527cba828719b414b18db8
+tip_at_delivery = d435cff26df752908a8a3a58d5c61f9f5c23f40c
+cmd_advance = git rev-list --count 7ce836f9afafe9e763527cba828719b414b18db8..d435cff26df752908a8a3a58d5c61f9f5c23f40c
+line_moved_by_cells_before_my_replay = 9
+cmd_ancestor = git merge-base --is-ancestor 7ce836f9afafe9e763527cba828719b414b18db8 d435cff26df752908a8a3a58d5c61f9f5c23f40c
+ancestor_verdict = OLD_IS_ANCESTOR_OF_NEW_forward_not_fork
+cmd_line_files = git diff --name-only 7ce836f9afafe9e763527cba828719b414b18db8 d435cff26df752908a8a3a58d5c61f9f5c23f40c
+-- files the line moved while I worked; PlanWithAiSheet.tsx is on this list --
+frontend/src/features/planning/PlanWithAiSheet.tsx
+frontend/src/i18n/LocaleContext.tsx
+review/shuangshugong/ord0558_anchor_audit_r1.py
+review/shuangshugong/ord0558_readouts/anchor_audit_r1.txt
+review/shuangshugong/ord0558_readouts/disk_face_r1.txt
+review/shuangshugong/ord0558_readouts/landing_state_r1.txt
+review/tiaanianggong-0555/gates_readout_r1.txt
+review/tiaanianggong-0555/i18n_0555_plan_with_ai_r1.py
+review/tiaanianggong-0555/parity_on_my_branch.txt
+review/tiaanianggong-0555/parity_on_tip.txt
+review/tiaanianggong-0555/run_gates_r1.py
+cmd_line_touched_my_paths = git diff --name-only 7ce836f9afafe9e763527cba828719b414b18db8 d435cff26df752908a8a3a58d5c61f9f5c23f40c -- frontend/src/lib/entryLimits.ts frontend/src/i18n/LocaleContext.tsx
+-- of my two product paths, the ones the line also moved (the dict file; hence the replay) --
+frontend/src/i18n/LocaleContext.tsx
+cmd_ahead = git rev-list --count d435cff26df752908a8a3a58d5c61f9f5c23f40c..review/快锥工-0557-r2  and  git rev-list --count d435cff26df752908a8a3a58d5c61f9f5c23f40c..review/快锥工-0557-dict-r2
+product_branch_cells_ahead_of_the_line = 3
+dict_branch_cells_ahead_of_the_line = 1
+cmd_behind = git rev-list --count review/快锥工-0557-r2..d435cff26df752908a8a3a58d5c61f9f5c23f40c  and  git rev-list --count review/快锥工-0557-dict-r2..d435cff26df752908a8a3a58d5c61f9f5c23f40c
+product_branch_cells_behind_the_line = 0
+dict_branch_cells_behind_the_line = 0
+cmd_my_product_changeset = git diff --name-only d435cff26df752908a8a3a58d5c61f9f5c23f40c review/快锥工-0557-r2
+frontend/src/lib/entryLimits.ts
+review/kuaizhuigong/i18n_gate_after_r2.txt
+review/kuaizhuigong/i18n_gate_baseline_r1.txt
+review/kuaizhuigong/i18n_gate_before_r2.txt
+review/kuaizhuigong/i18n_gate_r1.txt
+review/kuaizhuigong/probe_r1.ts
+review/kuaizhuigong/screen_after_r1.txt
+review/kuaizhuigong/screen_after_r2.txt
+review/kuaizhuigong/screen_before_r1.txt
+review/kuaizhuigong/screen_before_r2.txt
+review/kuaizhuigong/typecheck_after_r2.txt
+review/kuaizhuigong/typecheck_before_r2.txt
+review/kuaizhuigong/typecheck_r1.txt
+cmd_my_dict_changeset = git diff --name-only d435cff26df752908a8a3a58d5c61f9f5c23f40c review/快锥工-0557-dict-r2
+frontend/src/i18n/LocaleContext.tsx
+cmd_collision_my_two_branches = comm -12 on the two sorted path lists above
+collision_between_my_own_two_branches = 0
+-- the one path the dict branch owns, listed here so it reads positively --
+frontend/src/i18n/LocaleContext.tsx
+cmd_wantsChinese = git show review/快锥工-0557-r2:frontend/src/lib/entryLimits.ts | grep -n 'function wantsChinese'
+85:function wantsChinese(zh?: boolean | string | null): boolean {
