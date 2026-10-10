@@ -1,0 +1,5 @@
+rows_in_draft=3 checked=3 failed=0
+OK live.tripUpdated: tip frontend/src/features/execution/LiveRecovery.tsx:248 carried zh='已按新安排更新你的行程。' en='Your trip has been updated.'; dict reads them back verbatim at frontend/src/i18n/LocaleContext.tsx:343 (en) and frontend/src/i18n/LocaleContext.tsx:1638 (zh); read site is now frontend/src/features/execution/LiveRecovery.tsx:248
+OK live.serverUnreachable: tip frontend/src/features/execution/LiveRecovery.tsx:261 carried zh='连不上服务器，请重试。' en='Could not reach the server. Try again.'; dict reads them back verbatim at frontend/src/i18n/LocaleContext.tsx:344 (en) and frontend/src/i18n/LocaleContext.tsx:1639 (zh); read site is now frontend/src/features/execution/LiveRecovery.tsx:261
+OK live.remindLaterOk: tip frontend/src/features/execution/LiveRecovery.tsx:269 carried zh='好的，稍后再提醒你。' en='Okay, we will remind you later.'; dict reads them back verbatim at frontend/src/i18n/LocaleContext.tsx:345 (en) and frontend/src/i18n/LocaleContext.tsx:1640 (zh); read site is now frontend/src/features/execution/LiveRecovery.tsx:269
+VERDICT=PASS all three keys carry the exact words the tip printed, in both languages
