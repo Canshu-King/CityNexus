@@ -232,7 +232,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                   <dt>{zh ? "价格" : "Price"}</dt>
                   <dd data-testid="hotel-price">
                     {priceKnown
-                      ? `${stay.currency} ${Math.round(stay.nightly_amount_minor / 100)} / ${zh ? "晚" : "night"}`
+                      ? `${stay.currency} ${Math.round(stay.nightly_amount_minor / 100)} / ${t("stay.night")}`
                       : zh
                         ? "暂无价格"
                         : "Price unavailable"}
@@ -240,7 +240,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 </div>
                 <div>
                   <dt>{zh ? "步行" : "Walking"}</dt>
-                  <dd>{option.walking_min}{zh ? " 分钟" : " min"}</dd>
+                  <dd>{option.walking_min}{t("stay.minutesSuffix")}</dd>
                 </div>
                 <div>
                   <dt>{t("stay.arrivalFit")}</dt>
@@ -252,7 +252,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 </div>
               </dl>
               <p className="hotel-reason">
-                {zh ? "推荐理由：" : "Why: "}
+                {t("stay.whyPrefix")}
                 {option.hard_constraints_passed
                   ? zh
                     ? `与行程冲突最少，步行负担 ${option.walking_min} 分钟，预留缓冲 ${option.protected_margin_min} 分钟。`
