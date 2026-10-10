@@ -1,0 +1,19 @@
+base: form paints the literal '某地' twice                       ok hits=2
+base: the two hits sit on lines [1125, 1154]                   ok at=[1125, 1154]
+after: form reads t('setup.somePlace') twice                   ok reads=2
+after: literal is gone from the form                           ok 
+after: the reads sit on lines [1125, 1154]                     ok 
+zh: setup.somePlace present exactly once                       FAIL occurrences=0
+zh: value byte-identical to the word the form painted          FAIL got=None
+en: setup.somePlace absent by the zh_only ruling               ok 
+base and after both carry the English sentence twice           ok before=2 after=2
+en: dictionary untouched                                       ok added=0 removed=0 changed=0
+zh: only setup.somePlace was added                             FAIL added=0 removed=0 changed=0
+t(): English fallback line unchanged from base                 ok 
+form: line count unchanged                                     ok 1717 vs 1717
+form: exactly the two placeholder lines differ                 ok touched=[1125, 1154]
+
+ARM i18n_0557_trial_place: 14 checks, 3 failed
+  failed: zh: setup.somePlace present exactly once
+  failed: zh: value byte-identical to the word the form painted
+  failed: zh: only setup.somePlace was added

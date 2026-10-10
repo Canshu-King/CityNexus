@@ -1,0 +1,5 @@
+npm run typecheck  (= tsc -p tsconfig.check.json --noEmit) on base d435cff26, both branches' bytes in the tree
+> typecheck
+> tsc -p tsconfig.check.json --noEmit
+
+TYPECHECK_RC=0

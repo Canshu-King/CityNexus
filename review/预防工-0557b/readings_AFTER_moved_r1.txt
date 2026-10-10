@@ -1,0 +1,6 @@
+[zh-CN] trial-arrival placeholder = "例如：某地站 / 机场" (expected "例如：某地站 / 机场")
+[zh-CN] trial-departure placeholder = "例如：某地站 / 机场" (expected "例如：某地站 / 机场")
+[zh-CN] screenshot = review/预防工-0557b/placeholder_zh-CN_r1.png
+[en] trial-arrival placeholder = "e.g. station or airport" (expected "e.g. station or airport")
+[en] trial-departure placeholder = "e.g. station or airport" (expected "e.g. station or airport")
+[en] screenshot = review/预防工-0557b/placeholder_en_r1.png
