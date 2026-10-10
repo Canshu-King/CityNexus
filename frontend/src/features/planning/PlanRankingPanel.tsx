@@ -108,6 +108,18 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
       <section className="plan-ranking" data-testid="plan-ranking">
         <p className="v8-muted" data-testid="rank-none">{say("rank.none")}</p>
         <p className="v8-muted plan-ranking-hint" data-testid="rank-none-hint">{say("rank.noneHint")}</p>
+        {/* The two lines above explain the state but leave the traveller nowhere to go with it, so the
+            empty branch carries the same control the failure branch already has: the read is a live
+            query, and plans can appear from the workbench or a run while this screen is open.
+            Reuses `rank.retry` rather than adding copy. */}
+        <button
+          type="button"
+          className="v8-outline-button"
+          data-testid="rank-none-retry"
+          onClick={() => void plans.refetch()}
+        >
+          {say("rank.retry")}
+        </button>
       </section>
     );
   }
