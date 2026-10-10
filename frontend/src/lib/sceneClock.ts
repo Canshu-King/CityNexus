@@ -1,4 +1,5 @@
 import { useQuery, type QueryClient } from "@tanstack/react-query";
+import { dictionaryCopy } from "../i18n/LocaleContext";
 
 /**
  * ORD-0059 (a) -- the one place the frontend learns "what time is it for this journey", and it
@@ -174,9 +175,10 @@ export function invalidateScene(client: QueryClient): void {
 
 /** The server's words, mapped to what a traveller can act on.  Unknown stays unknown. */
 export function basisWord(basis: string | null, zh: boolean): string {
-  if (basis === "CURSOR") return zh ? "执行游标" : "the execution cursor";
-  if (basis === "JOURNEY_START") return zh ? "行程起点" : "the journey's start";
-  return zh ? "服务器没有说明依据" : "the server gave no basis";
+  const copy = (key: string) => dictionaryCopy(zh ? "zh-CN" : "en", key);
+  if (basis === "CURSOR") return copy("sceneClock.executionCursor");
+  if (basis === "JOURNEY_START") return copy("sceneClock.journeyStart");
+  return copy("sceneClock.serverGaveNoBasis");
 }
 
 export function evidenceWord(state: string | null, zh: boolean): string {
