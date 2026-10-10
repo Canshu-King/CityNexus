@@ -44,17 +44,28 @@ def git(*args):
     return proc.stdout.strip()
 
 
-def main():
-    say_lines = []
-    say = say_lines.append
+lines = []
+failures = []
 
+
+def say(text):
+    lines.append(text)
+
+
+def check(name, ok, detail):
+    say("%-4s %s :: %s" % ("OK" if ok else "RED", name, detail))
+    if not ok:
+        failures.append(name)
+
+
+def main():
     live = (git("ls-remote", "origin", REF).split() or ["<no answer>"])[0]
     say("0 roots: repo=%s ledger=%s inbox=%s" % (REPO, LEDGER, INBOX))
     say("1 authoritative tip read now via ls-remote: %s" % live)
-    tip_blob = git("rev-parse", "%s:%s" % (TIP, TARGET))
+    tip_blob = git("rev-parse", "%s:%s" % (live, TARGET))
     say("2 target file blob on that tip: %s" % tip_blob)
 
-    carriers = git("rev-list", "--branches", "--not", TIP, "--", TARGET).split()
+    carriers = git("rev-list", "--branches", "--not", live, "--", TARGET).split()
     say("3 commits on this machine's branch heads that touch the target and are not in the tip: %d"
         % len(carriers))
     for sha in carriers:
@@ -90,9 +101,39 @@ def main():
     for name in named:
         say("11 %s" % name)
 
-    out_text = "\n".join(say_lines) + "\n"
+    # Third channel: the sibling lanes' own review branches for this order.  A branch whose copy of
+    # this file is byte-identical to the tip's is not an editor of it, however many commits it carries.
+    refs = [ln.split()[1] for ln in git("ls-remote", "origin", "refs/heads/review/*").splitlines()
+            if "-0557" in ln and "cmdr-batch" not in ln and "mirror-read" not in ln
+            and not ln.split()[1].startswith("refs/heads/review/抬秤工")]
+    say("12 remote review branches whose name carries order 0557: %d" % len(refs))
+    if refs:
+        subprocess.run(["git", "-C", REPO, "fetch", "--depth=1", "origin"] + refs,
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+        editors = 0
+        for ref in refs:
+            sha = git("ls-remote", "origin", ref).split()[:1]
+            if not sha:
+                say("13 %s -> ls-remote answered nothing" % ref)
+                continue
+            blob = git("rev-parse", "%s:%s" % (sha[0], TARGET))
+            if not blob:
+                editors += 1
+                say("13 %s -> file absent on that branch, which would be an edit" % ref)
+                continue
+            verdict = "same bytes as tip" if blob == tip_blob else "DIFFERENT bytes (%s)" % blob[:12]
+            if blob != tip_blob:
+                editors += 1
+            say("13 %s -> %s" % (ref.split("/")[-1], verdict))
+        check("14 no sibling 0557 branch edits this file", editors == 0,
+              "%d branch(es) carry bytes the tip does not have for this file" % editors)
+
+    say("VERDICT %s" % ("PASS claim surface is clear" if not failures else "FAIL " + ",".join(failures)))
+    out_text = "\n".join(lines) + "\n"
     open(OUT, "w", encoding="utf-8", newline="\n").write(out_text)
     sys.stdout.write(out_text)
+    if failures:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

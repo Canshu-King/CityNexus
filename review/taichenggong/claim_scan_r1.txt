@@ -1,65 +1,26 @@
 0 roots: repo=D:\moodle\_qoder_taicheng_0557_20261010\wt ledger=D:\moodle\CITYNEXUS_AGENT_CONTROL.md inbox=D:\moodle\_qoder_ledger_inbox
-1 authoritative tip read now via ls-remote: 08577f1986b8bbc095f1c319a952909fcf343717
+1 authoritative tip read now via ls-remote: 24a50a8aecf0a1fe4704400c687540d3e05d74fb
 2 target file blob on that tip: f6a1f10e20a71caa638710f70c671d73978325db
-3 commits on this machine's branch heads that touch the target and are not in the tip: 19
-4 commit=e83b907e2|10-08_16:02|fix(i18n): the Live page's own three headings read the dictionary
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/laneE9-i18n-live-title-r1
-4 commit=8293e029f|10-08_15:52|add the r2 counter arm: the counters no longer pin a sibling cell's 
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/laneE9-i18n-advanced-detail-r2
-4 commit=27b331810|10-08_20:31|the refusal and the promise about it were two rules that only happen
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/wagong-model-premise-r1
-4 commit=a22dd8a92|10-08_14:06|a reported disruption carries no magnitude this build chose
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/wagong-honest-premise-r4
-4 commit=be2cc1a11|10-08_07:12|an unnamed journey anchor must not become a place called "Arrival" o
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/wagong-anchor-honesty-r1
-4 commit=ac8aa9fce|10-08_04:28|the counter arm takes the tree root, so it can be pointed at a mutat
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/laneE9-i18n-advanced-detail-r1
-4 commit=64923ff12|10-08_05:09|ORD-0355's shape applied to the headcount: an undeclared party size 
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/wagong-honest-premise-r2
-4 commit=7e9c2de79|10-08_04:49|r26 part 2: migrate feasibilityLabel to dictionary keys
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/wagong-honest-premise-r1
-4 commit=dfa50ed6c|09-30_00:48|ORD-0457: the 0440 bytes live on the other branch, so read them from
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: review/N3-ord0457-named-failure-exits-r4
-4 commit=62855bcbb|09-29_15:04|ORD-0457: read delivered refs off origin, and prove the r1 ruler is 
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
-6   heads carrying it: newlane-ord0444-r5,ord0462-r2,review/N3-ord0457-named-failure-exits-r3,review/R-ord0417-tap-names-stop-r9,review/R-ord04
-4 commit=190281be4|09-29_13:18|ORD-0457: the durable before-reading, taken off the tip's own build 
-5   numstat=[<parent not local>] blob=8f3a4d913523 -> produces bytes the tip does not have
+3 commits on this machine's branch heads that touch the target and are not in the tip: 6
+4 commit=5e6e3d150a|10-10_01:51|ORD-0557: the two media-type fallbacks in failureAttribution.ts rea
+5   numstat=[5	2	frontend/src/lib/failureAttribution.ts] blob=a0c636f743c4 -> produces bytes the tip does not have
+6   heads carrying it: <none>
+4 commit=f659c22550|10-10_09:35|i18n(ORD-0555): move the fourth inline bilingual title of failureAt
+5   numstat=[1	1	frontend/src/lib/failureAttribution.ts] blob=d6dd3072fc4e -> produces bytes the tip does not have
+6   heads carrying it: review/铁盒工-0555-r1
+4 commit=b899f46b6f|10-10_09:24|i18n(ORD-0555): move failureAttribution's first three inline biling
+5   numstat=[5	3	frontend/src/lib/failureAttribution.ts] blob=06588e0d8696 -> produces bytes the tip does not have
+6   heads carrying it: review/铁盒工-0555-r1
+4 commit=33d990b26d|09-29_13:10|ORD-0457: a 429 and a 409 stop being reported as an unclassified re
+5   numstat=[91	1	frontend/src/lib/failureAttribution.ts] blob=8f3a4d913523 -> produces bytes the tip does not have
 6   heads carrying it: review/N3-ord0457-named-failure-exits-r1,review/N3-ord0457-named-failure-exits-r2
-4 commit=663cfa306|09-28_18:39|ORD-0398 step 2: one named producer for the whitelist readouts
-5   numstat=[37	0	frontend/src/lib/failureAttribution.ts] blob=a9f7659e0434 -> produces bytes the tip does not have
-6   heads carrying it: cmdr/ord0417-fetched-tip,qoder/n2-ord0425-old,qoder/n2-ord0425-probe,qoder/n2-ord0425-probe-r2,review/AI-ord0400-drawer-
-4 commit=f3a168627|09-28_18:39|ORD-0398 step 2: one named producer for the whitelist readouts
+4 commit=f3a1686274|09-28_18:39|ORD-0398 step 2: one named producer for the whitelist readouts
 5   numstat=[37	0	frontend/src/lib/failureAttribution.ts] blob=a9f7659e0434 -> produces bytes the tip does not have
 6   heads carrying it: review/REL-ord0398-named-reading
-4 commit=4fcfe6e59|09-28_15:54|ORD-0391 step 2: name the field beside every number these rows show 
-5   numstat=[18	18	frontend/src/lib/failureAttribution.ts] blob=d1e9094ea5f5 -> produces bytes the tip does not have
-6   heads carrying it: cmdr/ord0417-fetched-tip,qoder/n2-ord0425-old,qoder/n2-ord0425-probe,qoder/n2-ord0425-probe-r2,review/AI-ord0400-drawer-
-4 commit=c79e2b4f4|09-24_01:06|fix(frontend): name an answered-but-unusable 200 as its own failure 
-5   numstat=[71	1	frontend/src/lib/failureAttribution.ts] blob=5956e880abf6 -> produces bytes the tip does not have
-6   heads carrying it: agent/S1-q64sweep-candidates,agent/S1-q64sweep-candidates-r2,agent/S1-q64sweep-candidates-r3,agent/S1-q64sweep-candidate
-4 commit=2b49e3cab|09-23_19:29|fix(frontend): give every read a deadline, and let an answered origi
-5   numstat=[89	12	frontend/src/lib/failureAttribution.ts] blob=1fcac1007d5b -> produces bytes the tip does not have
-6   heads carrying it: agent/S1-q64sweep-candidates,agent/S1-q64sweep-candidates-r2,agent/S1-q64sweep-candidates-r3,agent/S1-q64sweep-candidate
-4 commit=954462847|09-23_01:09|fix(frontend): a 403 says permission, not sign-in, and the screen's 
-5   numstat=[23	2	frontend/src/lib/failureAttribution.ts] blob=2524d7e1d8b5 -> produces bytes the tip does not have
-6   heads carrying it: agent/S1-q64sweep-candidates,agent/S1-q64sweep-candidates-r2,agent/S1-q64sweep-candidates-r3,agent/S1-q64sweep-candidate
-4 commit=827f0a0d2|09-22_13:02|feat(frontend): close mobile golden path
+4 commit=827f0a0d25|09-22_13:02|feat(frontend): close mobile golden path
 5   numstat=[266	0	frontend/src/lib/failureAttribution.ts] blob=d92af11c44df -> produces bytes the tip does not have
 6   heads carrying it: codex/mobile-golden-path-20260922
-4 commit=8ee64ae0c|09-21_23:57|fix(frontend): one classification per failure, read by banner, aria-
-5   numstat=[266	0	frontend/src/lib/failureAttribution.ts] blob=d92af11c44df -> produces bytes the tip does not have
-6   heads carrying it: agent/S1-q64sweep-candidates,agent/S1-q64sweep-candidates-r2,agent/S1-q64sweep-candidates-r3,agent/S1-q64sweep-candidate
-7 ledger lines naming the file stem: 46
+7 ledger lines naming the file stem: 77
 8 ledger lines that both name the file and use a claim word: 6
 9 **我挑的是 `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`（表里 1 枚）**，理由现读：表里其余候选要么在飞有主（`SimulationPanel.tsx` 在最新落地分母里命中三枚），要么形状是**模块层**——`lib/errorReceipt.ts` 与 `components/
 9 - failureAttribution：「新车道·电工 自派清单取 failureAttribution.ts」那块在做，已收十四枚小标题，还剩标题与正文两族
@@ -67,4 +28,29 @@
 9 ### 新车道·电工 自派清单取 `failureAttribution.ts`：十四枚小标题收进一张表，差分证明无一句屏文移动
 9 **新扫范围**：按号令者自派清单（账本 `### 号令者落地腿 自派清单 现尖内联双语前几名 无人认领者取之`，尖现读 `cf5915ea948579b4dc80aa57a299639b5440150e`）取第 4 名 `frontend/src/lib/failureAttribution.ts`。认领前按规矩查过账本有没有人点名：该文件名在账本命中两枚
 9 **下一轮要扫的新范围**：同文件还剩 `title` 十四处与 `body` 十四处（现读 `grep -c 'title: zh'` 与 `grep -c 'body: zh\|body: detail'` 各得十四，先前草稿写「十处」是印象数，已按现读改掉）。`title` 十四处全是单行内联对，如现读 `frontend/src/lib/failur
-10 inbox blocks naming the file or order 0557: 0
+10 inbox blocks naming the file or order 0557: 3
+11 pinggong_0935.md
+11 yufanggong_0946.md
+11 补栏工_0146.md
+12 remote review branches whose name carries order 0557: 19
+13 大柜工-0557-dict-r1 -> same bytes as tip
+13 大柜工-0557-r1 -> same bytes as tip
+13 屏工-0557-dict-r1 -> same bytes as tip
+13 屏工-0557-r1 -> same bytes as tip
+13 快刀工-0557-dict-r1 -> same bytes as tip
+13 快刀工-0557-r1 -> same bytes as tip
+13 快剪工-0557-dict-r1 -> same bytes as tip
+13 快剪工-0557-r1 -> same bytes as tip
+13 快钉工-0557-dict-r1 -> same bytes as tip
+13 快钉工-0557-r1 -> same bytes as tip
+13 快锥工-0557-dict-r1 -> same bytes as tip
+13 快锥工-0557-dict-r2 -> same bytes as tip
+13 快锥工-0557-r1 -> same bytes as tip
+13 快锥工-0557-r2 -> same bytes as tip
+13 补栏工-0557-r1 -> same bytes as tip
+13 预防工-0557-dict-r1 -> same bytes as tip
+13 预防工-0557-dict-r2 -> same bytes as tip
+13 预防工-0557-r1 -> same bytes as tip
+13 预防工-0557-r2 -> same bytes as tip
+OK   14 no sibling 0557 branch edits this file :: 0 branch(es) carry bytes the tip does not have for this file
+VERDICT PASS claim surface is clear
