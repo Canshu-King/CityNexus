@@ -1,5 +1,5 @@
-authoritative tip (ls-remote at write time) = bf057bb6f6eab117f030037c54ee0f515bd6a486
-branch heads: dict=d0dc23a3aeb3d49289a48c2c8a8c58618b50a56e r1=8502daf815ccc805fdccdca39c744305a06096b2
+authoritative tip (ls-remote at write time) = 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+branch heads: dict=d0dc23a3aeb3d49289a48c2c8a8c58618b50a56e r1=762d910fd2e277fbf91aa406bbef8b9fc6683d41
 
 per spot: before-line on tip -> after-line on branch, and the two dictionary sides
 frontend/src/lib/sceneClock.ts:177 -> sceneClock.ts:178 | key scene.theExecutionCursor | en at LocaleContext.tsx:1323 | zh at LocaleContext.tsx:2555
