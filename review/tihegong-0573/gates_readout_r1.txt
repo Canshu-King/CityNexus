@@ -1,0 +1,24 @@
+ORD-0573 batch one gate readouts -- three plain quoted body arms moved onto lib.failureAttribution.* keys
+
+generation: authoritative line read by ls-remote = 3085e1c05c54d4d9fdb55cfd01b7dd664b93c28c; branches cut from it, both behind 0
+dictionary branch tip 73ff8d6cdb151fef3c972e4f75b9ba9bc5aaf42d; product branch tip ce0ba37ef48539e6fdd474b1c591fe7269075640
+naming: this lane did NOT wait for the promised CN draft table -- no 0573 draft exists yet for failureAttribution.ts (newest CN pieces are _cn19_copydraft_0213.txt and _cn20_copydraft_0249.txt, neither names the file). The three names follow the family already shipped on the line for this same file, and were checked against the dictionary before use.
+synonym check before writing keys: the three Chinese strings and the three English strings each count zero in frontend/src/i18n at that tip -- no existing key says them
+
+keys added, both sides: en frontend/src/i18n/LocaleContext.tsx:1470, :1471, :1472 -- zh :2849, :2850, :2851 (read on the dictionary tip)
+reads, branch side: frontend/src/lib/failureAttribution.ts:472 (? arm of the cached-copy pair), :473 (: arm of the same pair), :583 (default case body)
+tip side they replace: zh arm 473 / en arm 474, zh arm 476 / en arm 477, zh arm 588 / en arm 589
+
+i18n gate: python review/tihegong-0573/i18n_0573_failure_body_r1.py -> exit code 0, items=3, GREEN
+i18n gate, negative control: same command --negative -> exit code 1, RED on the en arms
+gate note, in honesty: the ruler was wrong twice before it was right -- it required a trailing comma on inner arms that never have one, and paired the default case with the wrong line; both were fixed in the ruler, no product byte was touched to make it pass
+typecheck (the one ORD-0560 accepts): cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler: python frontend/scripts/i18n_detail2_parity_r1.py -> branch exit code 1, en keys 1242, zh keys 1243; at the tip in a detached tree -> exit code 1, en keys 1239, zh keys 1240; xor unchanged = me.asksBeforeProtectedChange, so three added per side and no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0573_dist --emptyOutDir -> exit code 0
+
+fixture pair-check on the branch, same suite and same authoritative shape as the reading taken on the line last night:
+command and env recorded in review/tihegong-0573/e2e_provenance_thg0527.json (runId thg0527 frontend :4193 backend :8149 ai=disabled reuse=False), suite e2e/qoder-stored-journey-link-is-an-entry.spec.ts -> 6 passed in 24.4s, playwright exit code 0
+rendered screen body contains the dictionary string of networkNoOfflineCopy byte for byte -- the 网络不可用 body now served from the dictionary reads exactly what it read before the move
+the other two keys have both arms in the dictionary but no reachable screen state in this fixture (the cached-copy network state and the unclassified default), so they stay on the source-level proof, named as absent rather than claimed
+
+remaining inline CJK in this file after the batch, counted on the branch: see `git grep -c -E '[\"”][^\"]*[一-龥]' ce0ba37ef48539e6fdd474b1c591fe7269075640 -- frontend/src/lib/failureAttribution.ts`
