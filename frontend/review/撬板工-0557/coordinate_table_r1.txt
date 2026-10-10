@@ -1,0 +1,25 @@
+改前列取自 08577f1986b8bbc095f1c319a952909fcf343717 这枚现尖对象里的 frontend/src/main.tsx；改后列取自本枝工作树。
+键名                                 改前行          改后行          en 字典行       zhCN 字典行
+legacy.persistedOperationUpdate    566          567          1291         2504
+legacy.generalRecovery             1111         1112         1292         2505
+legacy.standingMissionHint         1154         1154         1293         2506
+legacy.noDominantFailureMode       1218         1218         1294         2507
+legacy.notEvaluated                1415         1415         1295         2508
+legacy.validatedActivity           1423         1423         1296         2509
+legacy.noActionableTarget          1424         1424         1297         2510
+legacy.outcomeEvidence             1475         1475         1298         2511
+legacy.explicitWins                1487         1487         1299         2512
+legacy.notReported                 1545         1545         1300         2513
+legacy.noUpcomingActivity          1547         1547         1301         2514
+legacy.noActiveC4                  1551         1551         1302         2515
+legacy.notAvailable                1560,1576    1560         1303         2516
+legacy.unnamedCommitment           1595         1595         1304         2517
+legacy.verifiedFeasible            1646         1646         1305         2518
+legacy.notFeasible                 1646         1646         1306         2519
+legacy.notPreserved                1680         1680         1307         2520
+legacy.verifiedEvidenceAttached    1682         1682         1308         2521
+legacy.evidenceUnavailable         1683         1683         1309         2522
+逐枚四列齐的 19 枚，不齐 0 枚（分母 19 枚）
+本单没搬走的（表里点了名、但落在模块层，等号令者裁『透传取词函数』那一档）：
+  'CityNexus request failed'｜改前行 [170]｜本枝行 [170]（仍在原处）｜成因：模块层 errorNote()，该文件此处无取词钩子
+  'CityNexus request refused (HTTP ${status})'｜改前行 [171]｜本枝行 [171]（仍在原处）｜成因：同上，且带插值

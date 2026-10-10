@@ -1,0 +1,7 @@
+CITYNEXUS · DETERMINISTIC JOURNEY MODE
+
+Journey connection unavailable
+
+ERROR · CityNexus request failed
+
+Retry backend connection

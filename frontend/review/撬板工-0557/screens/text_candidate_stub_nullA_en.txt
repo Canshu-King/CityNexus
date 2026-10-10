@@ -1,0 +1,150 @@
+CITYNEXUS · DETERMINISTIC JOURNEY MODE
+
+Commitment-aware recovery
+UNKNOWN · backend truth
+
+UI workflow · ready
+
+CONTROL TOWER · DELEGATED AUTONOMOUS JOURNEY AGENT
+
+Tell CityNexus what changed
+
+DeepSeek interprets the city signal and your intent. Hermes-style tool orchestration, policy, and deterministic feasibility gates decide what can actually change.
+
+Ordinary reversible Activities can run inside the envelope; protected Commitments stay intact unless an explicitly authorized stronger action passes the Gateway.
+
+Natural-language mission
+Execution envelope
+Execute within policy bounds
+Plan only · no mutation
+Run Agent mission
+
+PROACTIVE JOURNEY GUARDIAN · PERSISTENT CONTROL PLANE
+
+Journey Operations
+WATCHING
+
+Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.
+
+Activate standing mission
+Inject city signal + proactive scan
+Start live Autopilot
+Provider: heavy rain + route delay
+Run Predictive Real-City Twin
+Provider: normal
+
+Autopilot · STOPPED · provider fixture · NORMAL
+
+Predictive resilience9/100 weakness
+STABLENo dominant failure modeMesh · 0 observations · 0 real-city POIs
+OBSERVATION
+—
+INFERENCE
+—
+SOLVER
+—
+POLICY
+—
+MUTATION
+—
+city_signal_received
+Persisted operation update
+
+DELEGATION BOUNDARY
+
+Agent Mode
+Operating mode
+建议模式 · always ask
+协助模式 · bounded auto-accept
+自主模式 · policy-gated
+Auto-accept envelope-safe replans
+Max automatic cost increase (minor units)
+Max automatic acceptable loss (minor units)
+Max automatic schedule drift (minutes)
+Allowed automatic Activity types (comma separated; blank = ordinary types)
+Allowed automatic Booking types (comma separated; blank = all)
+Pre-authorize commitment management within the envelope
+
+Policy v1 · protected commitment levels C3_Guaranteed, C4_Anchoredremain server-owned.
+
+EXPLAINABLE EXECUTION
+
+Agent Activity Feed
+Journey.created · journey.created
+V9.plan.materialized · v9.plan.materialized
+
+Server decision · not evaluated
+
+Impact evidence · unknown · deterministic · no actionable target
+
+RECOVER → REFLECT
+
+Journey history
+
+Plan versions · 1 · replans · 0 · disruptions · 0
+
+Estimated cost · ¥512.00
+
+No actual Activity transition has been recorded yet.
+
+TRAVELERTWIN CONTROL TOWER
+
+Inspectable cross-Journey learning
+
+Explicit 0 · learned soft 1 · confidence 50% · evidence 1
+
+Explicit preferences
+None recorded.
+quiet_mornings · strength 40% · evidence 2 · observed unknown · outcome evidence
+Conflicts and resolution
+budget · cheap vs central · explicit wins
+
+Learned evidence is soft planning input only; it never expands budget, payment, Commitment, or autonomy authority.
+
+Clear learned soft evidence
+Journey map · backend route evidence
+Place geometry unavailable · offline evidence mode
+Old plan geometry
+Active proposal geometry
+
+Current: not reported
+
+Next: no upcoming activity
+
+🔒 No active C4 · — C4
+
+Next activity · —
+
+Next commitment buffer · not available
+
+Budget remaining · ¥0.00
+
+Opportunity window · —–09:00 · 120 min available
+
+Feasibility envelope · review · persisted backend evidence
+
+Provider status · ready
+
+Upcoming commitments from JourneyTwin
+未命名承诺 · 服务器没给名字 · — · SOFT
+未命名承诺 · 服务器没给名字 · — · C4_Anchored
+Demo Event Simulator
+Journey timeline · active PlanVersion
+— ·
+— ·
+Replan comparison · persisted proposals
+shift_morning · not feasible
+shift_morning
+
+Utility score · 0.500 ·
+
+Evidence · hard constraints fail · C4 not preserved · verified evidence attached
+
+Removed none · added none · protected preserved none
+
+Cost Δ ¥0.00 · travel Δ +0 min · end Δ +0 min · protected commitments unchanged
+
+Accept backend replan
+Reject
+
+Explanations are limited to verified JourneyTwin and ReplanDiff evidence.

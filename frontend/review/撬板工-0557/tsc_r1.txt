@@ -1,0 +1,6 @@
+命令原样（工作目录 frontend，node_modules 是指向主树的符号链接）:
+  node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+  退出码=0 输出字节=0
+  node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+  退出码=0 输出字节=0
+备注：tsconfig.check.json 的 include 只列五枚文件（含 LocaleContext.tsx，不含 main.tsx），所以本件的类型门以 tsconfig.typecheck.json（include=src/**/*.tsx）为准，check 那枚只作字典侧的旁证。

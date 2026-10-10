@@ -1,0 +1,47 @@
+活单读数｜账本 CITYNEXUS_AGENT_CONTROL.md｜行=10617｜ORD 号头去重=43 枚
+   ORD-0558 命中 6 次｜首现账本行 2｜块头未见交收字样（提示，不是定论）｜块头：### 号令者发表（数字与名词直拼、没走单复数那把尺）：ORD-0558 起按文件自认领，每一枚我自己在现尖对过
+   ORD-0553 命中 18 次｜首现账本行 57｜块头带交收字样｜块头：### 号令者开单 ORD-0553：时间值裸排在屏上的那一族，我现尖复算后还剩 7 枚
+   ORD-0559 命中 2 次｜首现账本行 81｜块头未见交收字样（提示，不是定论）｜块头：### 号令者发表（契约里有、测试里没人走过的那批路由）：ORD-0559 按组自认领，每条我自己在现尖核过
+   ORD-0239 命中 1 次｜首现账本行 182｜块头未见交收字样（提示，不是定论）｜块头：### 号令者发表（契约里有、测试里没人走过的那批路由）：ORD-0559 按组自认领，每条我自己在现尖核过
+   ORD-0555 命中 10 次｜首现账本行 286｜块头带交收字样｜块头：### 号令者发表（新建键提案表）：每一枚我都自己复核过了，ORD-0555 起按文件自认领，从此可以动字典了
+   ORD-0435 命中 7 次｜首现账本行 301｜块头未见交收字样（提示，不是定论）｜块头：### 长瓦工 · ORD-0553 撞面让回：我这枚比对方晚两分钟，调用形制与产品字节逐字同一读法；另附 ORD-0552 剩下几枚本轮做不了的逐枚实测
+   ORD-0554 命中 7 次｜首现账本行 641｜块头未见交收字样（提示，不是定论）｜块头：### 号令者开单 ORD-0554：字典里我逐枚重数确认的死键 20 枚（分 8 个命名域），删或接都行但要证据
+   ORD-0547 命中 7 次｜首现账本行 730｜块头未见交收字样（提示，不是定论）｜块头：### 号令者裁语：合约工-0395 请裁四件，逐件点名，并新开 ORD-0547 收那处界面矛盾
+   ORD-0550 命中 8 次｜首现账本行 766｜块头未见交收字样（提示，不是定论）｜块头：### 号令者发表：后端吐给用户的那 56 行文案，我在现尖上逐行重验过了 —— ORD-0550 按文件自认领
+   ORD-0549 命中 38 次｜首现账本行 800｜块头带交收字样｜块头：### 号令者发表：内联双语里那些「字典已经有这段字」的枚，逐枚现读复核过了，按花名自认领
+   ORD-0557 命中 3 次｜首现账本行 800｜块头未见交收字样（提示，不是定论）｜块头：### 号令者发表（服务端没给时前端自己造的文案，逐枚我自己在现尖对过）：ORD-0557 起按文件自认领
+   ORD-0423 命中 1 次｜首现账本行 818｜块头未见交收字样（提示，不是定论）｜块头：### 短瓦工 · ORD-0553 交件 · 逐字认领 discovery 批量回读那一枚整文件 · 甲案落了，两 locale 的屏上读数各拿到手
+   ORD-0533 命中 5 次｜首现账本行 881｜块头未见交收字样（提示，不是定论）｜块头：### ORD-0549 补齐细节页词典键 认领一枚整文件 折叠标题改读它本就有的键 附同文两键待裁
+   ORD-0552 命中 9 次｜首现账本行 905｜块头未见交收字样（提示，不是定论）｜块头：### 号令者开单 ORD-0552：空态带动作那一族，我现尖复算后还剩 5 枚面板没有空态
+合计：块头未见交收字样 37 枚、带字样 6 枚（分母=号头去重 43 枚；按首现行号从新到旧）
+认领看板（只列账本里**逐字写着**的认领声明，不是定论；口头没写进账本的它看不见）：命中 25 处、去重后文件 20 枚
+   账本第 50 行｜（这句没写花名）｜frontend/src/features/execution/LiveRecovery.tsx
+   账本第 203 行｜（这句没写花名）｜frontend/src/features/discovery/DestinationPreparationPanel.tsx
+   账本第 766 行｜（这句没写花名）｜errorReceipt.ts
+   账本第 767 行｜（这句没写花名）｜backend/app/agent/runtime_events.py
+   账本第 812 行｜（这句没写花名）｜frontend/src/features/discovery/RealCityDiscoveryPanel.tsx
+   账本第 910 行｜（这句没写花名）｜_qoder_cmdr_ref_20260921/live_checks/patrol/_live_orders_reader_r1.py
+   账本第 1144 行｜fuiweigong-0428｜frontend/src/app/v8PanelRegistry.tsx
+   账本第 1596 行｜（这句没写花名）｜block_selfcheck_r1.py
+   账本第 1606 行｜（这句没写花名）｜PretripChecklistPanel.tsx
+   账本第 1717 行｜自认领；本车道花名「架子工｜_live_orders_reader_r1.py
+   账本第 1721 行｜（这句没写花名）｜frontend/src/features/checklist/PretripChecklistPanel.tsx
+   账本第 1810 行｜（这句没写花名）｜features/checklist/PretripChecklistPanel.tsx
+   账本第 2121 行｜逐字认领，故选它里那枚内联三元式｜DestinationPreparationPanel.tsx
+   账本第 2298 行｜（这句没写花名）｜frontend/src/api/citynexus.ts
+   账本第 2625 行｜（这句没写花名）｜frontend/src/features/stay/StayExplorer.tsx
+   账本第 2853 行｜（这句没写花名）｜frontend/src/features/agent/AgentComposer.tsx
+   账本第 5468 行｜（这句没写花名）｜V8Experience.tsx
+   账本第 5519 行｜（这句没写花名）｜frontend/src/lib/failureAttribution.ts
+   账本第 7657 行｜（这句没写花名）｜frontend/src/features/planning/PlanWithAiSheet.tsx
+   账本第 8362 行｜（这句没写花名）｜frontend/src/features/setup/JourneyTrialSetup.tsx
+空位看板（只认块头带「号令者发表」的表；**提示不是定论**：口头占了没写进账本的看不见）：表 7 张｜可取面 53 枚｜逐字认领已占 16 枚｜还空 37 枚
+   账本第 81 行｜### 号令者发表（契约里有、测试里没人走过的那批路由）：ORD-0559 按组自认领，｜列 1 枚
+   账本第 356 行｜### 号令者发表（数字与名词直拼、没走单复数那把尺）：ORD-0558 起按文件自认领｜列 36 枚
+   账本第 972 行｜### 号令者发表（服务端没给时前端自己造的文案，逐枚我自己在现尖对过）：ORD-055｜列 12 枚
+   账本第 1267 行｜### 号令者发表（新建键提案表）：每一枚我都自己复核过了，ORD-0555 起按文件自｜列 16 枚
+   账本第 2042 行｜### 号令者发表（第二张表）：内联双语剩下的面里，我现尖又验出 20 枚字典早就备好的｜列 10 枚
+   账本第 2702 行｜### 号令者发表：后端吐给用户的那 56 行文案，我在现尖上逐行重验过了 —— ORD｜列 2 枚
+   账本第 3122 行｜### 号令者发表：内联双语里那些「字典已经有这段字」的枚，逐枚现读复核过了，按花名自认｜列 14 枚
+   还空：HotelsPanel.tsx, JourneyInboxWorkbench.tsx, LocaleContext.tsx, MobilitySheet.tsx, PlanComparison.tsx, SimulationPanel.tsx, TripItinerary.tsx, TwinPanel.tsx, V14PreventivePanel.tsx, V14RecoveryTruthPanel.tsx, _fallback2_rows_r1.json, _keyswap_dispatch_rows_r1.json
+引用规矩：交块或回话要点单号时，写成 ORD-号 + 本尺报出的账本行号，别抄短号；行号现读，我不替你负数。

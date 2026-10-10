@@ -1,0 +1,28 @@
+{
+  "h1": "Journey connection unavailable",
+  "mounted": true,
+  "chars": 130,
+  "error_line": "ERROR · CityNexus request failed",
+  "painted": [],
+  "not_painted": [
+    "legacy.persistedOperationUpdate",
+    "legacy.generalRecovery",
+    "legacy.standingMissionHint",
+    "legacy.noDominantFailureMode",
+    "legacy.notEvaluated",
+    "legacy.validatedActivity",
+    "legacy.noActionableTarget",
+    "legacy.outcomeEvidence",
+    "legacy.explicitWins",
+    "legacy.notReported",
+    "legacy.noUpcomingActivity",
+    "legacy.noActiveC4",
+    "legacy.notAvailable",
+    "legacy.unnamedCommitment",
+    "legacy.verifiedFeasible",
+    "legacy.notFeasible",
+    "legacy.notPreserved",
+    "legacy.verifiedEvidenceAttached",
+    "legacy.evidenceUnavailable"
+  ]
+}

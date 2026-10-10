@@ -1,0 +1,80 @@
+树根 D:/moodle/_qoder_qiaobangong_0557/ctrl
+en 键 1075 枚、zhCN 键 1075 枚（跨行写法已按同一正则的补形读到）
+本单搬走的串 19 枚，逐枚五格；反控三格；合计判 98 格，绿 21 格，坏 77 格
+  坏：A1 legacy.persistedOperationUpdate 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.persistedOperationUpdate 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.persistedOperationUpdate 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.persistedOperationUpdate") 调用
+  坏：A1 legacy.generalRecovery 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.generalRecovery 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.generalRecovery 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.generalRecovery") 调用
+  坏：A1 legacy.standingMissionHint 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.standingMissionHint 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.standingMissionHint 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.standingMissionHint") 调用
+  坏：A1 legacy.noDominantFailureMode 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.noDominantFailureMode 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.noDominantFailureMode 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.noDominantFailureMode") 调用
+  坏：A1 legacy.notEvaluated 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.notEvaluated 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.notEvaluated 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.notEvaluated") 调用
+  坏：A1 legacy.validatedActivity 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.validatedActivity 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.validatedActivity 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.validatedActivity") 调用
+  坏：A1 legacy.noActionableTarget 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.noActionableTarget 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.noActionableTarget 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.noActionableTarget") 调用
+  坏：A1 legacy.outcomeEvidence 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.outcomeEvidence 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.outcomeEvidence 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.outcomeEvidence") 调用
+  坏：A1 legacy.explicitWins 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.explicitWins 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.explicitWins 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.explicitWins") 调用
+  坏：A1 legacy.notReported 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.notReported 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.notReported 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.notReported") 调用
+  坏：A1 legacy.noUpcomingActivity 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.noUpcomingActivity 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.noUpcomingActivity 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.noUpcomingActivity") 调用
+  坏：A1 legacy.noActiveC4 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.noActiveC4 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.noActiveC4 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.noActiveC4") 调用
+  坏：A1 legacy.notAvailable 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.notAvailable 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.notAvailable 的字面量已不残留｜实读命中 2 处
+  坏：A5 main.tsx 里有 t("legacy.notAvailable") 调用
+  坏：A1 legacy.unnamedCommitment 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.unnamedCommitment 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.unnamedCommitment 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.unnamedCommitment") 调用
+  坏：A1 legacy.verifiedFeasible 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.verifiedFeasible 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.verifiedFeasible 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.verifiedFeasible") 调用
+  坏：A1 legacy.notFeasible 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.notFeasible 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.notFeasible 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.notFeasible") 调用
+  坏：A1 legacy.notPreserved 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.notPreserved 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.notPreserved 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.notPreserved") 调用
+  坏：A1 legacy.verifiedEvidenceAttached 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.verifiedEvidenceAttached 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.verifiedEvidenceAttached 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.verifiedEvidenceAttached") 调用
+  坏：A1 legacy.evidenceUnavailable 在 en 字典且值逐字等于屏上现字｜en 实读 None
+  坏：A2 legacy.evidenceUnavailable 在 zhCN 字典且值逐字等于屏上现字｜zhCN 实读 None
+  坏：A4 main.tsx 里 legacy.evidenceUnavailable 的字面量已不残留｜实读命中 1 处
+  坏：A5 main.tsx 里有 t("legacy.evidenceUnavailable") 调用
+  坏：C2 表里没列的兄弟串仍在（opportunity window 那枚 not available、以及 preserved）

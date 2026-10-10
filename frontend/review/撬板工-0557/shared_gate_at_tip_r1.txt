@@ -1,0 +1,7 @@
+命令原样：python scripts/i18n_detail2_parity_r1.py（树根＝现尖 08577f1986b8bbc095f1c319a952909fcf343717 那枚对象里取出的字典原件，只读，不含本车道任何字节）
+en keys: 1074 zh keys: 1075
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_qiaobangong_0557\gate_at_tip\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+退出码=1

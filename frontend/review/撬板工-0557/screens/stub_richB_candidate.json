@@ -1,0 +1,63 @@
+{
+  "shape": "richB",
+  "zh_h1": "Commitment-aware recovery",
+  "en_h1": "Commitment-aware recovery",
+  "zh_lang": "zh-CN",
+  "en_lang": "en",
+  "zh_page_errors": [],
+  "en_page_errors": [],
+  "zh_painted": [
+    "legacy.persistedOperationUpdate",
+    "legacy.standingMissionHint",
+    "legacy.noDominantFailureMode",
+    "legacy.notEvaluated",
+    "legacy.validatedActivity",
+    "legacy.outcomeEvidence",
+    "legacy.explicitWins",
+    "legacy.notReported",
+    "legacy.noUpcomingActivity",
+    "legacy.noActiveC4",
+    "legacy.notAvailable",
+    "legacy.unnamedCommitment",
+    "legacy.verifiedFeasible",
+    "legacy.verifiedEvidenceAttached"
+  ],
+  "zh_not_painted": [
+    "legacy.generalRecovery",
+    "legacy.noActionableTarget",
+    "legacy.notFeasible",
+    "legacy.notPreserved",
+    "legacy.evidenceUnavailable"
+  ],
+  "en_painted": [
+    "legacy.persistedOperationUpdate",
+    "legacy.standingMissionHint",
+    "legacy.noDominantFailureMode",
+    "legacy.notEvaluated",
+    "legacy.validatedActivity",
+    "legacy.outcomeEvidence",
+    "legacy.explicitWins",
+    "legacy.notReported",
+    "legacy.noUpcomingActivity",
+    "legacy.noActiveC4",
+    "legacy.notAvailable",
+    "legacy.unnamedCommitment",
+    "legacy.verifiedFeasible",
+    "legacy.verifiedEvidenceAttached"
+  ],
+  "count_painted_zh": 14,
+  "count_painted_en": 14,
+  "denominator_keys": 19,
+  "zh_text": {
+    "file": "D:\\moodle\\_qoder_qiaobangong_0557\\wt\\frontend\\review\\撬板工-0557\\screens\\text_candidate_stub_richB_zh.txt",
+    "sha1": "f77a08995085ff37c29bf3bbf829436fe19028aa",
+    "chars": 3668
+  },
+  "en_text": {
+    "file": "D:\\moodle\\_qoder_qiaobangong_0557\\wt\\frontend\\review\\撬板工-0557\\screens\\text_candidate_stub_richB_en.txt",
+    "sha1": "f77a08995085ff37c29bf3bbf829436fe19028aa",
+    "chars": 3668
+  },
+  "key_leak_zh": [],
+  "key_leak_en": []
+}
