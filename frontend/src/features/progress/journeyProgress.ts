@@ -23,6 +23,7 @@
  * concurrent edit by other lanes.
  */
 import { TERMINAL_ACTIVITY_STATES } from "../../lib/executionWindow";
+import { englishCountNoun } from "../../lib/plural";
 
 export type ProgressActivity = { id: string; status: string };
 export type ProgressDayGroup = { key: string; activityIds: string[] };
@@ -83,7 +84,7 @@ export function progressContractCopy(p: JourneyProgress, zh: boolean): string {
       ? "服务端没给出整天数（这一趟的起止排不出序），天数留空。"
       : "The server gives no whole-day count (this journey's window cannot be ordered), so the day total stays blank.");
   } else if (p.day_of === null) {
-    parts.push(zh ? `共 ${p.day_total} 天。` : `${p.day_total} days.`);
+    parts.push(zh ? `共 ${p.day_total} 天。` : `${p.day_total} ${englishCountNoun(p.day_total, "day")}.`);
   } else {
     parts.push(zh
       ? `第 ${p.day_of} 天 / 共 ${p.day_total} 天。`
@@ -92,12 +93,12 @@ export function progressContractCopy(p: JourneyProgress, zh: boolean): string {
   if (p.completed_count === 0) {
     parts.push(zh
       ? `${p.planned_total} 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。`
-      : `none of the ${p.planned_total} stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.`);
+      : `none of the ${p.planned_total} ${englishCountNoun(p.planned_total, "stop")} is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.`);
   } else {
     parts.push(zh
       ? `已完成 ${p.completed_count}/${p.planned_total} 站`
         + (skipped > 0 ? `，另有 ${skipped} 站被跳过或取消（不算走完）。` : "。")
-      : `${p.completed_count}/${p.planned_total} stops completed`
+      : `${p.completed_count}/${p.planned_total} ${englishCountNoun(p.planned_total, "stop")} completed`
         + (skipped > 0 ? `, ${skipped} more skipped or cancelled (not counted as walked).` : "."));
   }
   return parts.join(zh ? "" : " ");
