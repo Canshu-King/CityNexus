@@ -27,9 +27,16 @@
 - 同一判据的我方本地尺（本目录 `dict_parity_local_r1.py:1`）：
   - 跑现尖那枚文件 → 1140 / 1140 / 0 / 0，BOUNDS 与上面逐字相同 —— 先证明我这把尺与他的在同一枚字节上同值；
   - 跑我这枝 → KEYS_TOTAL 1141、KEYS_BOTH 1141、KEYS_ONE_SIDED 0、KEYS_MULTI 0，探针 `discovery.technicalDetail` 回 en=[654] zh=[1961]。
-- 三元式余面：我这枝上该文件「两支各一条字面量、恰好一支含汉字」的命中行 0 行（一次 python 现读，改前是 1 行，即账上那一处）。
+- 三元式余面这一格我只引「同一枚文件、同一把尺、改前与改后」这一条，并且先交代两件事：
+  - 他的尺（`_bilingual_count_r1.py`）跑在他自己的集成仓里，我这枝那枚对象不在那棵树，我没有往别人的树里写东西（一次 `git ls-tree CODE_FAIL` 就是它报的错），所以那把尺的数留给落地门去跑。
+  - 我另写了一把同判据的本地副本（本目录 `ternary_count_local_r1.py:1`），先做校准：同一枚现尖上他的尺印 `files=156 hits=318`，我的副本印 `files=17 hits=169` —— 不同值，所以我的副本任何全局数一律不引。
+  - 副本只用于单文件两侧对照（`one_file_ternary_count_r1.py:1`）：改前那枚尖在该文件命中 1 处，逐字是第 407 行 `{locale.startsWith("zh") ? "技术详情" : "Technical detail"}`；改后我这枝命中 0 处，两臂都真出了读数（`both_arms_produced_readings: True`）。
 
 ## 没做的那一格（具名，不糊）
 
 - 屏上读数没取。原因：那个折叠层只在 `failureFacts` 非空时才渲染（条件在 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:404`），要真取屏读得跑起一次真会失败并带测量事实的发现请求；`frontend/e2e/` 全树对该折叠层的 testid `v13-discovery-technical-toggle` 现读 0 份命中（一次 grep 计数），所以没有现成夹具可借。我不拿假数据凑一张屏读，也不拿字典读数冒充屏读——上面那节明写它们是字典读数。
 - 这一格若要补，给我一句：允许我在真后端上造一次「该城无封印回放、live 提供者失败」的发现请求（需要起后端与前端两枚服务，端口由你点，避免撞在工车道）。
+
+## 枝与回验
+- 推枝命令原样 `git push origin HEAD:refs/heads/review/路牌工甲-0557-r1`，回验命令原样 `git ls-remote origin refs/heads/review/路牌工甲-0557-r1` 回 `783406a9d75b7a51dc0a2e689d1a2d469b7483ad`，与 `git rev-parse HEAD` 逐字相同（一枚可 cat-file 回 commit）。
+- 相对起点那枚尖，本枝逐字 numstat：`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 1 行增 1 行删、`frontend/src/i18n/LocaleContext.tsx` 2 行增 0 行删、读数目录若干件；产品面改动共两枚文件。
