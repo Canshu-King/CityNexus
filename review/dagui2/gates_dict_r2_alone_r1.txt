@@ -1,0 +1,5 @@
+dictionary branch review/大柜工-0557-dict-r2 on its own (product file still baseline)
+typecheck_rc=0
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+build_rc=0
