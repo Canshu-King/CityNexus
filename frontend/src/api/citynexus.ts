@@ -1,5 +1,6 @@
 import type { JourneyTwin } from "../contracts/journeyTwin";
 import type { ReplanProposal } from "../contracts/replan";
+import type { components } from "../generated/api";
 import { fetchWithReadDeadline } from "../lib/readDeadline";
 import { OriginResponseUnusableError } from "../lib/failureAttribution";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
@@ -1675,293 +1676,33 @@ export interface ProviderMeshResponse {
   }>;
 }
 
-export interface BootstrapDiscoveryCandidate {
-  candidate_id: string;
-  name: string;
-  category: string;
-  external_id: string;
-  osm_type: string;
-  osm_id: string;
-  source_url: string | null;
-  latitude: number;
-  longitude: number;
-  coordinate_system: "WGS84";
-  distance_m: number | null;
-  opening_state: string;
-  selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
-  selection_action: string | null;
-  availability_confidence: "UNVERIFIED";
-  price_state: "UNKNOWN";
-  eta_state: "UNKNOWN";
-  tags: string[];
-  opening_hours: Record<string, unknown>;
-  opening_observed_at: string;
-  opening_source: string;
-  opening_claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
-  opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
-  opening_verification_action: "OPEN_SOURCE_PAGE";
-  source_tags: Record<string, string>;
-  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
-}
+// R97/R98 request and response types are aliases of the generated OpenAPI
+// components. Keeping these names at the API boundary lets existing callers
+// migrate without maintaining a second, potentially stale contract surface.
+export type BootstrapCitySearchRequest = components["schemas"]["BootstrapCitySearchRequest"];
+export type BootstrapDiscoveryRequest = components["schemas"]["BootstrapDiscoveryRequest"];
+export type BootstrapMapPreviewRequest = components["schemas"]["BootstrapMapPreviewRequest"];
+export type BootstrapSelectRequest = components["schemas"]["BootstrapSelectRequest"];
+export type BootstrapShortlistNavigationRequest = components["schemas"]["BootstrapShortlistNavigationRequest"];
+export type BootstrapShortlistPreviewRequest = components["schemas"]["BootstrapShortlistPreviewRequest"];
+export type BootstrapShortlistSaveRequest = components["schemas"]["BootstrapShortlistSaveRequest"];
+export type BootstrapTwoStopWalkRequest = components["schemas"]["BootstrapTwoStopWalkRequest"];
+export type BootstrapTwoStopWalkabilityRequest = components["schemas"]["BootstrapTwoStopWalkabilityRequest"];
 
-export interface BootstrapDiscoveryResponse {
-  journey_id: string;
-  status: "LIVE_RESULTS" | "LIVE_ZERO_RESULTS" | "PROVIDER_DISABLED" | "PROVIDER_UNAVAILABLE" | "RATE_LIMITED";
-  receipt_id: string | null;
-  expires_at: string | null;
-  source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
-  provider: "overpass";
-  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
-  attempts: Array<Record<string, unknown>>;
-  candidates: BootstrapDiscoveryCandidate[];
-  failure_code?: string;
-}
-
-export interface BootstrapSelectionResponse {
-  journey_id: string;
-  selected_place_id: string;
-  plan_version_id: string | null;
-  journey_status: string;
-  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
-}
-
-export interface BootstrapCitySearchResult {
-  result_id: string;
-  name: string;
-  display_name: string;
-  provider: string;
-  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
-  osm_type: string | null;
-  osm_id: string | null;
-  source_url: string | null;
-  latitude: number;
-  longitude: number;
-  coordinate_system: "WGS84";
-  confidence: "CITY_CENTROID_UNCERTAIN";
-  selection_state: "CAMERA_ONLY_TAP_REQUIRED";
-  uncertainty: string;
-}
-
-export interface BootstrapCitySearchResponse {
-  journey_id: string;
-  status: "CITY_RESULTS" | "CITY_NO_RESULTS" | "GEOCODER_DISABLED" | "GEOCODER_UNAVAILABLE" | "GEOCODER_RATE_LIMITED";
-  query: string;
-  provider_provenance?: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
-  provider_attempts: Array<Record<string, unknown>>;
-  cache_hit?: boolean;
-  results: BootstrapCitySearchResult[];
-}
-
-export interface BootstrapMapPreviewResponse {
-  preview_id: string;
-  status: "PUBLIC_DESTINATION_READY";
-  journey_id: string;
-  receipt_id: string;
-  candidate_id: string;
-  expires_at: string | null;
-  provider: "overpass";
-  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
-  destination: {
-    name: string;
-    external_id: string;
-    osm_type: string;
-    osm_id: string;
-    latitude: number;
-    longitude: number;
-    coordinate_system: "WGS84";
-    source_url: string;
-    map_url: string;
-  };
-  opening: {
-    state: string;
-    raw: string | null;
-    source_tags: Record<string, string>;
-    source: string;
-    observed_at: string;
-    claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
-    verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
-    verification_action: "OPEN_SOURCE_PAGE";
-  };
-  explore_state: "DRAFT_EXPLORE_ONLY";
-  shared_fields: string[];
-  withheld_fields: string[];
-  plan_version_id: string | null;
-  selected_place_id: string | null;
-}
-
-export interface BootstrapShortlistItem {
-  shortlist_id: string;
-  journey_id: string;
-  provider_key: "overpass";
-  external_id: string;
-  name: string;
-  category: string;
-  latitude: number;
-  longitude: number;
-  coordinate_system: "WGS84";
-  source_url: string;
-  source_provenance: string;
-  captured_at: string;
-  opening_hours: Record<string, unknown>;
-  opening_state: string;
-  price_state: "UNKNOWN" | string;
-  eta_state: "UNKNOWN" | string;
-  source_tags: Record<string, string>;
-  distance_m: number | null;
-  distance_basis: string | null;
-  status: "SAVED";
-  created_at: string;
-  updated_at: string;
-}
-
-export interface BootstrapShortlistResumeIntent {
-  shortlist_id: string;
-  journey_id: string;
-  name: string;
-  category: string;
-  latitude: number;
-  longitude: number;
-  coordinate_system: "WGS84";
-  source_url: string;
-  source_provenance: string;
-  captured_at: string;
-  selected_at: string;
-  status: "CHOSEN";
-}
-
-export interface BootstrapShortlistResponse {
-  journey_id: string;
-  limit: number;
-  items: BootstrapShortlistItem[];
-  resume: BootstrapShortlistResumeIntent | null;
-}
-
-export interface BootstrapShortlistPreviewResponse {
-  preview_id: string;
-  status: "PUBLIC_DESTINATION_READY";
-  journey_id: string;
-  shortlist_id: string;
-  authorization_basis: "SAVED_PUBLIC_IDENTITY";
-  release_purpose: "PIN" | "WALKING";
-  navigation_mode: "PUBLIC_PIN" | "WALKING_DIRECTIONS";
-  navigation_url: string | null;
-  destination: {
-    name: string;
-    external_id: string;
-    source_url: string;
-    latitude: number;
-    longitude: number;
-    coordinate_system: "WGS84";
-    map_url: string;
-  };
-  opening: {
-    state: string;
-    raw: string | null;
-    source_tags: Record<string, string>;
-    source: string;
-    observed_at: string;
-    claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
-    verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
-    verification_action: "OPEN_SOURCE_PAGE";
-  };
-  explore_state: "DRAFT_EXPLORE_ONLY";
-  shared_fields: string[];
-  withheld_fields: string[];
-  plan_version_id: string | null;
-  selected_place_id: string | null;
-}
-
-export interface BootstrapTwoStopWalkResponse {
-  preview_id: string;
-  status: "PUBLIC_TWO_STOP_WALK_READY";
-  journey_id: string;
-  authorization_basis: "TWO_SAVED_PUBLIC_IDENTITIES";
-  release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
-  navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
-  navigation_url: string;
-  first_stop: {
-    position: 1;
-    shortlist_id: string;
-    name: string;
-    category: string;
-    external_id: string;
-    source_url: string;
-    source_provenance: string;
-    latitude: number;
-    longitude: number;
-    coordinate_system: "WGS84";
-    opening_state: string;
-    price_state: "UNKNOWN";
-    route_eta_state: "UNKNOWN";
-    captured_at: string;
-  };
-  second_stop: {
-    position: 2;
-    shortlist_id: string;
-    name: string;
-    category: string;
-    external_id: string;
-    source_url: string;
-    source_provenance: string;
-    latitude: number;
-    longitude: number;
-    coordinate_system: "WGS84";
-    opening_state: string;
-    price_state: "UNKNOWN";
-    route_eta_state: "UNKNOWN";
-    captured_at: string;
-  };
-  route_time_state: "UNKNOWN";
-  explore_state: "DRAFT_EXPLORE_ONLY";
-  shared_fields: string[];
-  withheld_fields: string[];
-  plan_version_id: null;
-  selected_place_id: null;
-}
-
-export interface BootstrapTwoStopWalkabilityStop {
-  position: 1 | 2;
-  shortlist_id: string;
-  name: string;
-  category: string;
-  external_id: string;
-  source_url: string;
-  source_provenance: string;
-  latitude: number;
-  longitude: number;
-  coordinate_system: "WGS84";
-  opening_state: string;
-  price_state: "UNKNOWN";
-}
-
-export interface BootstrapTwoStopWalkabilityResponse {
-  preview_id: string;
-  status: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
-  route_state: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
-  journey_id: string;
-  authorization_basis: "TWO_SAVED_PUBLIC_IDENTITIES";
-  release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_WALKABILITY";
-  navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
-  navigation_url: string;
-  first_stop: BootstrapTwoStopWalkabilityStop;
-  second_stop: BootstrapTwoStopWalkabilityStop;
-  provider: string | null;
-  router_profile: "pedestrian";
-  provenance: string;
-  reason_code: string | null;
-  reason: string | null;
-  observed_at: string;
-  duration_min: number | null;
-  distance_m: number | null;
-  route_time_state: "PROVIDER_CAPTURED" | "UNKNOWN";
-  route_distance_state: "PROVIDER_CAPTURED" | "UNKNOWN";
-  route_caveats: string[];
-  shared_fields: string[];
-  withheld_fields: string[];
-  explore_state: "DRAFT_EXPLORE_ONLY";
-  plan_version_id: null;
-  selected_place_id: null;
-}
+export type BootstrapDiscoveryCandidate = components["schemas"]["BootstrapDiscoveryCandidate"];
+export type BootstrapDiscoveryResponse = components["schemas"]["BootstrapDiscoveryResponse"];
+export type BootstrapSelectionResponse = components["schemas"]["BootstrapSelectionResponse"];
+export type BootstrapCitySearchResult = components["schemas"]["BootstrapCitySearchResult"];
+export type BootstrapCitySearchResponse = components["schemas"]["BootstrapCitySearchResponse"];
+export type BootstrapMapPreviewResponse = components["schemas"]["BootstrapMapPreviewResponse"];
+export type BootstrapShortlistItem = components["schemas"]["BootstrapShortlistItem"];
+export type BootstrapShortlistResumeIntent = components["schemas"]["BootstrapShortlistResumeIntent"];
+export type BootstrapShortlistResponse = components["schemas"]["BootstrapShortlistResponse"];
+export type BootstrapShortlistDeleteResponse = components["schemas"]["BootstrapShortlistDeleteResponse"];
+export type BootstrapShortlistPreviewResponse = components["schemas"]["BootstrapShortlistPreviewResponse"];
+export type BootstrapTwoStopWalkResponse = components["schemas"]["BootstrapTwoStopWalkResponse"];
+export type BootstrapTwoStopWalkabilityStop = components["schemas"]["BootstrapTwoStopWalkStop"];
+export type BootstrapTwoStopWalkabilityResponse = components["schemas"]["BootstrapTwoStopWalkabilityResponse"];
 
 export interface AgentRunStep {
   id?: string;
@@ -2833,7 +2574,7 @@ export const cityNexusApi = {
 
   bootstrapCitySearch(
     journeyId: string,
-    input: { query: string; provider_consent: boolean; limit: number },
+    input: BootstrapCitySearchRequest,
   ): Promise<BootstrapCitySearchResponse> {
     return requestJson<BootstrapCitySearchResponse>(
       "/journeys/" + journeyId + "/bootstrap-city-search",
@@ -2847,18 +2588,7 @@ export const cityNexusApi = {
 
   bootstrapDiscovery(
     journeyId: string,
-    input: {
-      query: string;
-      radius_m: number;
-      limit: number;
-      source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
-      provider_consent: boolean;
-      latitude: number;
-      longitude: number;
-      coordinate_system: "WGS84";
-      accuracy_m?: number;
-      mode: "live";
-    },
+    input: BootstrapDiscoveryRequest,
   ): Promise<BootstrapDiscoveryResponse> {
     return requestJson<BootstrapDiscoveryResponse>(
       "/journeys/" + journeyId + "/bootstrap-discovery",
@@ -2887,14 +2617,7 @@ export const cityNexusApi = {
 
   previewBootstrapCandidate(
     journeyId: string,
-    input: {
-      receipt_id: string;
-      candidate_id: string;
-      public_map_consent: boolean;
-      latitude: number;
-      longitude: number;
-      coordinate_system: "WGS84";
-    },
+    input: BootstrapMapPreviewRequest,
   ): Promise<BootstrapMapPreviewResponse> {
     return requestJson<BootstrapMapPreviewResponse>(
       "/journeys/" + journeyId + "/bootstrap-discovery/preview",
@@ -2925,7 +2648,7 @@ export const cityNexusApi = {
 
   saveBootstrapShortlistItem(
     journeyId: string,
-    input: { receipt_id: string; candidate_id: string },
+    input: BootstrapShortlistSaveRequest,
   ): Promise<BootstrapShortlistItem> {
     return requestJson<BootstrapShortlistItem>(
       "/journeys/" + journeyId + "/bootstrap-shortlist",
@@ -2940,8 +2663,8 @@ export const cityNexusApi = {
   removeBootstrapShortlistItem(
     journeyId: string,
     shortlistId: string,
-  ): Promise<{ journey_id: string; shortlist_id: string; removed: boolean; place_id: null }> {
-    return requestJson(
+  ): Promise<BootstrapShortlistDeleteResponse> {
+    return requestJson<BootstrapShortlistDeleteResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist/" + shortlistId,
       { method: "DELETE", headers: travelerAuthHeaders() },
     );
@@ -2977,11 +2700,7 @@ export const cityNexusApi = {
 
   navigateBootstrapTwoStopWalk(
     journeyId: string,
-    input: {
-      first_shortlist_id: string;
-      second_shortlist_id: string;
-      public_map_consent: boolean;
-    },
+    input: BootstrapTwoStopWalkRequest,
   ): Promise<BootstrapTwoStopWalkResponse> {
     return requestJson<BootstrapTwoStopWalkResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist/two-stop-walk",
@@ -2995,11 +2714,7 @@ export const cityNexusApi = {
 
   checkBootstrapTwoStopWalkability(
     journeyId: string,
-    input: {
-      first_shortlist_id: string;
-      second_shortlist_id: string;
-      public_route_consent: boolean;
-    },
+    input: BootstrapTwoStopWalkabilityRequest,
   ): Promise<BootstrapTwoStopWalkabilityResponse> {
     return requestJson<BootstrapTwoStopWalkabilityResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist/two-stop-walkability",

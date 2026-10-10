@@ -11,6 +11,15 @@ from app.main import app
 
 
 CONTRACT = Path(__file__).resolve().parents[2] / "contracts" / "openapi.yaml"
+FRONTEND_API = Path(__file__).resolve().parents[2] / "frontend" / "src" / "api" / "citynexus.ts"
+FRONTEND_DISCOVERY_PANEL = (
+    Path(__file__).resolve().parents[2]
+    / "frontend"
+    / "src"
+    / "features"
+    / "discovery"
+    / "BootstrapDiscoveryPanel.tsx"
+)
 
 R97_R98_SCHEMAS = (
     "BootstrapDiscoveryCandidate",
@@ -209,3 +218,36 @@ def test_r97_r98_schema_semantics_match_runtime(openapi_documents):
         assert _semantic_schema(formal_schemas[schema_name]) == _semantic_schema(
             runtime_schemas[schema_name]
         ), schema_name
+
+
+def test_r97_r98_frontend_api_and_discovery_panel_use_generated_types():
+    api_source = FRONTEND_API.read_text(encoding="utf-8")
+    panel_source = FRONTEND_DISCOVERY_PANEL.read_text(encoding="utf-8")
+    assert 'import type { components } from "../generated/api";' in api_source
+    for schema_name in (
+        "BootstrapCitySearchRequest",
+        "BootstrapDiscoveryRequest",
+        "BootstrapMapPreviewRequest",
+        "BootstrapSelectRequest",
+        "BootstrapShortlistNavigationRequest",
+        "BootstrapShortlistPreviewRequest",
+        "BootstrapShortlistSaveRequest",
+        "BootstrapTwoStopWalkRequest",
+        "BootstrapTwoStopWalkabilityRequest",
+        "BootstrapDiscoveryCandidate",
+        "BootstrapDiscoveryResponse",
+        "BootstrapSelectionResponse",
+        "BootstrapCitySearchResult",
+        "BootstrapCitySearchResponse",
+        "BootstrapMapPreviewResponse",
+        "BootstrapShortlistItem",
+        "BootstrapShortlistResumeIntent",
+        "BootstrapShortlistResponse",
+        "BootstrapShortlistDeleteResponse",
+        "BootstrapShortlistPreviewResponse",
+        "BootstrapTwoStopWalkResponse",
+        "BootstrapTwoStopWalkabilityResponse",
+    ):
+        assert f'components["schemas"]["{schema_name}"]' in api_source, schema_name
+    assert "export interface Bootstrap" not in api_source
+    assert 'from "../../api/citynexus"' in panel_source

@@ -1126,7 +1126,9 @@ export function BootstrapDiscoveryPanel({
       }
       const publicMapUrl = pendingMapPreview.purpose === "WALKING"
         ? validatedPublicWalkingUrl(
-            "navigation_url" in released ? released.navigation_url : null,
+            "navigation_url" in released && typeof released.navigation_url === "string"
+              ? released.navigation_url
+              : null,
             pendingMapPreview.latitude,
             pendingMapPreview.longitude,
           )
