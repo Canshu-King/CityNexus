@@ -10,6 +10,7 @@ import {
   type BootstrapShortlistPreviewResponse,
   type BootstrapTwoStopWalkResponse,
   type BootstrapTwoStopWalkabilityResponse,
+  type BootstrapAdaptiveShortWalkResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
@@ -331,6 +332,10 @@ export function BootstrapDiscoveryPanel({
   const [twoStopWalkabilityConsent, setTwoStopWalkabilityConsent] = useState(false);
   const [twoStopWalkabilityBusy, setTwoStopWalkabilityBusy] = useState(false);
   const [twoStopWalkability, setTwoStopWalkability] = useState<BootstrapTwoStopWalkabilityResponse | null>(null);
+  const [adaptiveWalkBudget, setAdaptiveWalkBudget] = useState<number | null>(null);
+  const [adaptiveWalkConsent, setAdaptiveWalkConsent] = useState(false);
+  const [adaptiveWalkBusy, setAdaptiveWalkBusy] = useState(false);
+  const [adaptiveWalkComparison, setAdaptiveWalkComparison] = useState<BootstrapAdaptiveShortWalkResponse | null>(null);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
@@ -379,6 +384,10 @@ export function BootstrapDiscoveryPanel({
     setTwoStopWalkabilityConsent(false);
     setTwoStopWalkabilityBusy(false);
     setTwoStopWalkability(null);
+    setAdaptiveWalkBudget(null);
+    setAdaptiveWalkConsent(false);
+    setAdaptiveWalkBusy(false);
+    setAdaptiveWalkComparison(null);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -475,6 +484,10 @@ export function BootstrapDiscoveryPanel({
     setTwoStopWalkabilityConsent(false);
     setTwoStopWalkabilityBusy(false);
     setTwoStopWalkability(null);
+    setAdaptiveWalkBudget(null);
+    setAdaptiveWalkConsent(false);
+    setAdaptiveWalkBusy(false);
+    setAdaptiveWalkComparison(null);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -526,6 +539,10 @@ export function BootstrapDiscoveryPanel({
     setTwoStopWalkabilityConsent(false);
     setTwoStopWalkabilityBusy(false);
     setTwoStopWalkability(null);
+    setAdaptiveWalkBudget(null);
+    setAdaptiveWalkConsent(false);
+    setAdaptiveWalkBusy(false);
+    setAdaptiveWalkComparison(null);
     setMessage("Journey changed; choose a new public search area.");
   }, [journeyId, cityName]);
 
@@ -795,6 +812,10 @@ export function BootstrapDiscoveryPanel({
       setTwoStopWalkabilityConsent(false);
       setTwoStopWalkabilityBusy(false);
       setTwoStopWalkability(null);
+      setAdaptiveWalkBudget(null);
+      setAdaptiveWalkConsent(false);
+      setAdaptiveWalkBusy(false);
+      setAdaptiveWalkComparison(null);
     }
     setShortlistBusy(item.shortlist_id);
     setMessage(null);
@@ -821,10 +842,18 @@ export function BootstrapDiscoveryPanel({
     setTwoStopWalkabilityConsent(false);
     setTwoStopWalkabilityBusy(false);
     setTwoStopWalkability(null);
+    setAdaptiveWalkBudget(null);
+    setAdaptiveWalkConsent(false);
+    setAdaptiveWalkBusy(false);
+    setAdaptiveWalkComparison(null);
     setTwoStopOrder((current) => {
       const without = current.filter((id) => id !== shortlistId);
       if (position === 1) return [shortlistId, ...without].slice(0, 2);
-      return [...without, shortlistId].slice(-2);
+      // Replacing stop 2 must preserve the existing stop 1.  Slicing from
+      // the end would silently discard stop 1 when a complete pair already
+      // existed (the adaptive suggestion path exercises that transition).
+      const preservedFirst = current[0] === shortlistId ? current[1] : current[0];
+      return preservedFirst ? [preservedFirst, shortlistId] : [shortlistId];
     });
   };
 
@@ -836,6 +865,10 @@ export function BootstrapDiscoveryPanel({
     setTwoStopWalkabilityConsent(false);
     setTwoStopWalkabilityBusy(false);
     setTwoStopWalkability(null);
+    setAdaptiveWalkBudget(null);
+    setAdaptiveWalkConsent(false);
+    setAdaptiveWalkBusy(false);
+    setAdaptiveWalkComparison(null);
     setTwoStopOrder((current) => current.filter((id) => id !== shortlistId));
   };
 
@@ -912,6 +945,121 @@ export function BootstrapDiscoveryPanel({
     } finally {
       if (stillCurrent()) setTwoStopWalkabilityBusy(false);
     }
+  };
+
+  const checkAdaptiveShortWalk = async () => {
+    if (twoStopOrder.length !== 2 || twoStopOrder[0] === twoStopOrder[1]) {
+      setMessage("Choose exactly two different saved public places and set their order first.");
+      return;
+    }
+    if (adaptiveWalkBudget === null) {
+      setMessage("Choose a maximum walking time before comparing a second stop.");
+      return;
+    }
+    if (!adaptiveWalkConsent) {
+      setMessage("Confirm the separate release for the three public stop coordinates before comparing walking legs.");
+      return;
+    }
+    const first = shortlist.find((item) => item.shortlist_id === twoStopOrder[0]);
+    const currentSecond = shortlist.find((item) => item.shortlist_id === twoStopOrder[1]);
+    const alternativeSecond = shortlist.find((item) => !twoStopOrder.includes(item.shortlist_id));
+    if (!first || !currentSecond || !alternativeSecond) {
+      setTwoStopOrder([]);
+      setMessage("The saved stop comparison is stale. Choose a first stop, current second stop, and alternative again.");
+      return;
+    }
+    const fence = captureDiscoveryFence();
+    const releaseGeneration = twoStopReleaseGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && twoStopReleaseGeneration.current === releaseGeneration;
+    setAdaptiveWalkBusy(true);
+    setMessage(null);
+    setAdaptiveWalkComparison(null);
+    setTwoStopWalkability(null);
+    try {
+      const released: BootstrapAdaptiveShortWalkResponse = await cityNexusApi.checkBootstrapAdaptiveShortWalk(
+        journeyId,
+        {
+          first_shortlist_id: first.shortlist_id,
+          current_second_shortlist_id: currentSecond.shortlist_id,
+          alternative_second_shortlist_id: alternativeSecond.shortlist_id,
+          max_walk_minutes: adaptiveWalkBudget,
+          public_route_consent: true,
+        },
+      );
+      if (!stillCurrent()) return;
+      if (
+        released.authorization_basis !== "THREE_SAVED_PUBLIC_IDENTITIES" ||
+        released.navigation_mode !== "PUBLIC_POI_TO_PUBLIC_POI_WALKING" ||
+        released.first_stop.shortlist_id !== first.shortlist_id ||
+        released.current_second_stop.shortlist_id !== currentSecond.shortlist_id ||
+        released.alternative_second_stop.shortlist_id !== alternativeSecond.shortlist_id ||
+        released.max_walk_minutes !== adaptiveWalkBudget
+      ) {
+        throw new Error("The adaptive walking response did not match the chosen public stop comparison.");
+      }
+      const publicMapUrl = validatedPublicTwoStopWalkingUrl(released.navigation_url, first, currentSecond);
+      const alternativeMapUrl = validatedPublicTwoStopWalkingUrl(
+        released.alternative_navigation_url,
+        first,
+        alternativeSecond,
+      );
+      if (!publicMapUrl || !alternativeMapUrl) {
+        throw new Error("The adaptive walking fallback URLs did not match the saved public coordinates.");
+      }
+      for (const leg of [released.current_leg, released.alternative_leg]) {
+        if (leg.status === "ROUTE_VERIFIED") {
+          if (
+            leg.duration_min === null ||
+            leg.distance_m === null ||
+            !Number.isFinite(leg.duration_min) ||
+            !Number.isFinite(leg.distance_m) ||
+            leg.duration_min < 0 ||
+            leg.distance_m < 0 ||
+            leg.provenance === "UNVERIFIED"
+          ) {
+            throw new Error("The adaptive walking provider returned incomplete route evidence.");
+          }
+        } else if (leg.duration_min !== null || leg.distance_m !== null) {
+          throw new Error("An unverified adaptive walking response cannot contain a duration or distance.");
+        }
+      }
+      if (
+        released.recommendation_state === "WITHIN_MY_LEG_BUDGET" &&
+        released.suggested_second_shortlist_id !== null &&
+        released.suggested_second_shortlist_id !== alternativeSecond.shortlist_id
+      ) {
+        throw new Error("The adaptive walking suggestion did not match the available alternative.");
+      }
+      setAdaptiveWalkComparison(released);
+      if (released.route_state === "ROUTE_UNVERIFIED") setTwoStopFallbackUrl(publicMapUrl);
+      setAdaptiveWalkConsent(false);
+    } catch (error) {
+      if (stillCurrent()) {
+        setAdaptiveWalkComparison(null);
+        setMessage(error instanceof Error ? error.message : "Adaptive walking comparison could not be checked.");
+      }
+    } finally {
+      if (stillCurrent()) setAdaptiveWalkBusy(false);
+    }
+  };
+
+  const chooseAdaptiveAlternative = () => {
+    const suggestedId = adaptiveWalkComparison?.suggested_second_shortlist_id;
+    if (
+      !suggestedId ||
+      adaptiveWalkComparison?.recommendation_state !== "WITHIN_MY_LEG_BUDGET"
+    ) {
+      setMessage("No provider-backed short-walk alternative is ready to choose.");
+      return;
+    }
+    const alternative = shortlist.find((item) => item.shortlist_id === suggestedId);
+    if (!alternative) {
+      setMessage("The suggested public alternative is no longer saved.");
+      return;
+    }
+    setTwoStopPosition(alternative.shortlist_id, 2);
+    setMessage("The better second stop is selected in the private draft. Confirm fresh map consent and check the new leg again.");
   };
 
   const confirmTwoStopWalk = async () => {
@@ -1265,6 +1413,7 @@ export function BootstrapDiscoveryPanel({
   const orderedTwoStopItems = twoStopOrder
     .map((shortlistId) => shortlist.find((item) => item.shortlist_id === shortlistId) ?? null)
     .filter((item): item is BootstrapShortlistItem => item !== null);
+  const adaptiveAlternativeSecond = shortlist.find((item) => !twoStopOrder.includes(item.shortlist_id)) ?? null;
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -1980,6 +2129,111 @@ export function BootstrapDiscoveryPanel({
                   Open external walking directions
                 </a>
               </p>
+            ) : null}
+            {orderedTwoStopItems.length === 2 && adaptiveAlternativeSecond ? (
+              <div data-testid="bootstrap-adaptive-short-walk">
+                <h4>Find a better second stop for a short walk</h4>
+                <p>
+                  Compare the current second stop with one other saved public place using only the three public
+                  coordinates. This is an advisory draft check; it does not use your origin or GPS and does not
+                  change the plan, arrival, opening, safety, price, or booking state.
+                </p>
+                <label>
+                  Maximum walking time for this leg
+                  <select
+                    data-testid="bootstrap-adaptive-walk-budget"
+                    value={adaptiveWalkBudget === null ? "" : String(adaptiveWalkBudget)}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      setAdaptiveWalkBudget(value ? Number(value) : null);
+                      setAdaptiveWalkConsent(false);
+                      setAdaptiveWalkComparison(null);
+                    }}
+                  >
+                    <option value="">Choose a maximum</option>
+                    {[15, 20, 30, 45].map((minutes) => (
+                      <option key={minutes} value={minutes}>{minutes} minutes</option>
+                    ))}
+                  </select>
+                </label>
+                <p>
+                  Alternative candidate: <strong>{adaptiveAlternativeSecond.name}</strong>. The current second stop is
+                  <strong> {orderedTwoStopItems[1].name}</strong>.
+                </p>
+                <label>
+                  <input
+                    type="checkbox"
+                    data-testid="bootstrap-adaptive-walk-consent-checkbox"
+                    checked={adaptiveWalkConsent}
+                    onChange={(event) => setAdaptiveWalkConsent(event.target.checked)}
+                  />
+                  I agree to compare these three public stop coordinates now.
+                </label>
+                <button
+                  type="button"
+                  data-testid="bootstrap-adaptive-walk-check"
+                  disabled={adaptiveWalkBudget === null || !adaptiveWalkConsent || adaptiveWalkBusy || twoStopBusy}
+                  onClick={() => void checkAdaptiveShortWalk()}
+                >
+                  {adaptiveWalkBusy ? "Comparing…" : "Compare short-walk options"}
+                </button>
+                {adaptiveWalkComparison ? (
+                  <div data-testid="bootstrap-adaptive-walk-result" role="status">
+                    {adaptiveWalkComparison.route_state === "COMPARISON_VERIFIED" ? (
+                      <>
+                        <p>
+                          Current second stop: {adaptiveWalkComparison.current_leg.duration_min} min estimated · alternative: {adaptiveWalkComparison.alternative_leg.duration_min} min estimated · {adaptiveWalkComparison.recommendation_state}.
+                        </p>
+                        <p>
+                          Current evidence: {adaptiveWalkComparison.current_leg.provider} · {adaptiveWalkComparison.current_leg.provenance} · observed {adaptiveWalkComparison.current_leg.observed_at}. Alternative evidence: {adaptiveWalkComparison.alternative_leg.provider} · {adaptiveWalkComparison.alternative_leg.provenance} · observed {adaptiveWalkComparison.alternative_leg.observed_at}.
+                        </p>
+                        <ul>
+                          {[...adaptiveWalkComparison.current_leg.route_caveats, ...adaptiveWalkComparison.alternative_leg.route_caveats]
+                            .filter((caveat, index, caveats) => caveats.indexOf(caveat) === index)
+                            .map((caveat) => <li key={caveat}>{caveat}</li>)}
+                        </ul>
+                        <p>{adaptiveWalkComparison.recommendation_reason}</p>
+                        <p>
+                          This provider evidence is advisory. Safety, accessibility, opening, price, arrival, and a guaranteed ETA remain UNKNOWN; the Journey remains a draft and no plan or booking was created.
+                        </p>
+                        {adaptiveWalkComparison.suggested_second_shortlist_id ? (
+                          <button
+                            type="button"
+                            data-testid="bootstrap-adaptive-choose-alternative"
+                            onClick={chooseAdaptiveAlternative}
+                          >
+                            Choose this better second stop
+                          </button>
+                        ) : null}
+                      </>
+                    ) : (
+                      <>
+                        <p>
+                          ROUTE_UNVERIFIED: {adaptiveWalkComparison.current_leg.reason_code ?? "No current-leg route evidence"}; {adaptiveWalkComparison.alternative_leg.reason_code ?? "no alternative-leg route evidence"}. No duration or distance was invented.
+                        </p>
+                        <p>
+                          Current source: {adaptiveWalkComparison.current_leg.provider ?? "none"} · observed {adaptiveWalkComparison.current_leg.observed_at}; alternative source: {adaptiveWalkComparison.alternative_leg.provider ?? "none"} · observed {adaptiveWalkComparison.alternative_leg.observed_at}.
+                        </p>
+                        <ul>
+                          {[...adaptiveWalkComparison.current_leg.route_caveats, ...adaptiveWalkComparison.alternative_leg.route_caveats]
+                            .filter((caveat, index, caveats) => caveats.indexOf(caveat) === index)
+                            .map((caveat) => <li key={caveat}>{caveat}</li>)}
+                        </ul>
+                        <p>{adaptiveWalkComparison.recommendation_reason} Use either external public walking map below after a fresh consent.</p>
+                        <p>
+                          <a href={adaptiveWalkComparison.navigation_url} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-adaptive-current-fallback">
+                            Open current public walking map
+                          </a>{" "}
+                          <a href={adaptiveWalkComparison.alternative_navigation_url} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-adaptive-alternative-fallback">
+                            Open alternative public walking map
+                          </a>
+                        </p>
+                      </>
+                    )}
+                    <p>Comparison is private to this signed member and remains DRAFT_EXPLORE_ONLY.</p>
+                  </div>
+                ) : null}
+              </div>
             ) : null}
           </section>
         </section>

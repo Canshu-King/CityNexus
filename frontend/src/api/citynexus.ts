@@ -1963,6 +1963,45 @@ export interface BootstrapTwoStopWalkabilityResponse {
   selected_place_id: null;
 }
 
+export interface BootstrapAdaptiveShortWalkResponse {
+  preview_id: string;
+  status: "ADAPTIVE_WALK_READY" | "ADAPTIVE_WALK_UNVERIFIED";
+  route_state: "COMPARISON_VERIFIED" | "ROUTE_UNVERIFIED";
+  journey_id: string;
+  authorization_basis: "THREE_SAVED_PUBLIC_IDENTITIES";
+  release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_ADAPTIVE_WALK";
+  navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+  navigation_url: string;
+  alternative_navigation_url: string;
+  first_stop: BootstrapTwoStopWalkResponse["first_stop"];
+  current_second_stop: BootstrapTwoStopWalkResponse["second_stop"];
+  alternative_second_stop: BootstrapTwoStopWalkResponse["second_stop"];
+  max_walk_minutes: number;
+  current_leg: {
+    status: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
+    route_state: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
+    duration_min: number | null;
+    distance_m: number | null;
+    provider: string | null;
+    provenance: string;
+    reason_code: string | null;
+    reason: string | null;
+    observed_at: string;
+    route_time_state: "PROVIDER_CAPTURED" | "UNKNOWN";
+    route_distance_state: "PROVIDER_CAPTURED" | "UNKNOWN";
+    route_caveats: string[];
+  };
+  alternative_leg: BootstrapAdaptiveShortWalkResponse["current_leg"];
+  recommendation_state: "WITHIN_MY_LEG_BUDGET" | "LONGER_THAN_REQUESTED" | "ROUTE_UNVERIFIED";
+  suggested_second_shortlist_id: string | null;
+  recommendation_reason: string;
+  shared_fields: string[];
+  withheld_fields: string[];
+  explore_state: "DRAFT_EXPLORE_ONLY";
+  plan_version_id: null;
+  selected_place_id: null;
+}
+
 export interface AgentRunStep {
   id?: string;
   sequence_no: number;
@@ -3003,6 +3042,26 @@ export const cityNexusApi = {
   ): Promise<BootstrapTwoStopWalkabilityResponse> {
     return requestJson<BootstrapTwoStopWalkabilityResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist/two-stop-walkability",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  checkBootstrapAdaptiveShortWalk(
+    journeyId: string,
+    input: {
+      first_shortlist_id: string;
+      current_second_shortlist_id: string;
+      alternative_second_shortlist_id: string;
+      max_walk_minutes: number;
+      public_route_consent: boolean;
+    },
+  ): Promise<BootstrapAdaptiveShortWalkResponse> {
+    return requestJson<BootstrapAdaptiveShortWalkResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/adaptive-short-walk",
       {
         method: "POST",
         headers: travelerAuthHeaders(),
