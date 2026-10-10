@@ -25,6 +25,10 @@ import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from "./readDeadline";
 /* ORD-0557: the media-type fallbacks below read the traveller word this table already owns, so 未知
    lives in one place instead of being re-typed per screen.  The word itself is not rewritten. */
 import { categoryLabel } from "../i18n/travelerLabels";
+/* ORD-0557: the attribution titles below read the shared dictionary. This module is a plain function,
+   not a component, so it uses the non-hook lookup the dictionary exports -- same reason the label
+   accessor above is imported here. */
+import { dictionaryCopy } from "../i18n/LocaleContext";
 
 export type AttributionReason =
   | "JOURNEY_NOT_FOUND"
@@ -450,11 +454,12 @@ export function copyFor(
   const id = detail.journeyId ? `${detail.journeyId.slice(0, 8)}…` : "";
   const kickerOf = (name: keyof typeof KICKER_COPY) =>
     (zh ? KICKER_COPY[name].zh : KICKER_COPY[name].en);
+  const titleOf = (key: string) => dictionaryCopy(zh ? "zh-CN" : "en", key);
   switch (attribution.message_key) {
     case "failure.journeyNotFound":
       return {
         kicker: kickerOf("connectionFine"),
-        title: zh ? "这台服务器上没有这一趟行程了" : "This trip is not on this server",
+        title: titleOf("lib.failureAttribution.tripNotOnServer"),
         body: zh
           ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
           : `This device remembered trip ${id}, and the server answered plainly that it does not exist (http_status=${attribution.http_status}). This is not a network problem: the server just answered. Your other trips are untouched.`,
@@ -462,7 +467,7 @@ export function copyFor(
     case "failure.networkUnavailable":
       return {
         kicker: kickerOf("connection"),
-        title: zh ? "网络不可用" : "Network unavailable",
+        title: titleOf("lib.failureAttribution.networkUnavailable"),
         body: detail.hasCachedCopy
           ? zh
             ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。"
@@ -475,14 +480,14 @@ export function copyFor(
       return detail.hasCachedCopy
         ? {
             kicker: kickerOf("server"),
-            title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
+            title: titleOf("lib.failureAttribution.serviceUnavailable"),
             body: zh
               ? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
               : `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
             kicker: kickerOf("server"),
-            title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
+            title: titleOf("lib.failureAttribution.serverCouldNotRead"),
             body: zh
               ? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
               : `The server reported an error of its own (http_status=${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
@@ -515,7 +520,7 @@ export function copyFor(
     case "failure.rateLimited":
       return {
         kicker: kickerOf("rateLimited"),
-        title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
+        title: titleOf("lib.failureAttribution.slowDownRate"),
         body: zh
           ? `这一发被限流了（http_status=${attribution.http_status}）。服务器给了等待时间：约 ${Math.round(
               (attribution as { retry_after_ms?: number }).retry_after_ms ?? 0,
@@ -527,7 +532,7 @@ export function copyFor(
     case "failure.rateLimitedNoWait":
       return {
         kicker: kickerOf("rateLimited"),
-        title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
+        title: titleOf("lib.failureAttribution.slowDownRetry"),
         body: zh
           ? `这一发被限流了（http_status=${attribution.http_status}），这一次它没有说等多久。数据没有丢，稍后再按下面那个按钮。`
           : `This request was rate-limited (http_status=${attribution.http_status}) and no wait came with it this time. Nothing was lost - press the button below again shortly.`,
@@ -535,7 +540,7 @@ export function copyFor(
     case "failure.stateAlreadyMoved":
       return {
         kicker: kickerOf("alreadyDone"),
-        title: zh ? "这件事的状态已经变了，不是没读到" : "The state already moved - this was not a failed read",
+        title: titleOf("lib.failureAttribution.stateAlreadyMoved"),
         body: zh
           ? `服务器接了这发，回答的是「现在已经是这样了」（http_status=${attribution.http_status}）。所以这句不是失败：再按一次只会重新读一遍现在的样子。它给的名字在下面的归因详情里。`
           : `The server took this request and answered that it is already so (http_status=${attribution.http_status}). That is not a failure: asking again just re-reads the current state. Its own name for the condition is in the attribution detail below.`,
@@ -562,7 +567,7 @@ export function copyFor(
     case "failure.unauthorized":
       return {
         kicker: kickerOf("identity"),
-        title: zh ? "这一趟需要重新登录才能读" : "This trip needs a fresh sign-in",
+        title: titleOf("lib.failureAttribution.needsFreshSignIn"),
         body: zh
           ? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`
           : `The server refused this read (http_status=${attribution.http_status}). Your trip is still there once you sign in.`,
@@ -570,7 +575,7 @@ export function copyFor(
     case "failure.forbidden":
       return {
         kicker: kickerOf("permission"),
-        title: zh ? "这一步这台服务器不允许" : "This server will not allow this step",
+        title: titleOf("lib.failureAttribution.stepNotAllowed"),
         body: zh
           ? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
           : `The server knows who you are and still refused this step (http_status=${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
@@ -578,7 +583,7 @@ export function copyFor(
     default:
       return {
         kicker: kickerOf("read"),
-        title: zh ? "这一次没读到" : "This read failed",
+        title: titleOf("lib.failureAttribution.readFailed"),
         body: zh
           ? "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。"
           : "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",

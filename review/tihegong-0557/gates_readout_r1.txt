@@ -1,0 +1,135 @@
+ORD-0557 tiehegong batch one gate readouts -- every command below was re-run on the tip of review/铁盒工-0557-r1
+
+generation pins
+authoritative line taken at 14:35: 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+dictionary branch tip: 572c4dea271a3a83a2356d833962e2df6faf8020 (three keys, en 1331-1333, zh 2570-2572, accessor 2583)
+the superseded ORD-0555 pair: review/铁盒工-0555-dict-r1 2c2093749ca443744fbbd6bf3086699a490192dd, review/铁盒工-0555-r1 dedb69b6bcebcddf5a81cbdbedddcda8f5d5d99e
+draft source: D:\moodle\_cn10_fb557draft_1155.txt lines 149-151 (the three rows this batch ate)
+
+i18n gate, this branch
+command: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py
+exit code 0
+items=3 moved_tip_lines=[457, 465, 478] added_lines=[28, 29, 30, 31, 457, 462, 470, 483]
+  lib.failureAttribution.tripNotOnServer: tip:457 -> product:462, dict zh-CN:2570 en:1331
+  lib.failureAttribution.networkUnavailable: tip:465 -> product:470, dict zh-CN:2571 en:1332
+  lib.failureAttribution.serviceUnavailable: tip:478 -> product:483, dict zh-CN:2572 en:1333
+GREEN
+
+i18n gate, negative control (one expected dictionary byte shifted)
+command: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py --negative
+exit code 1, RED on the three en arms -- the gate is not a yes-machine
+
+typecheck, the one ORD-0560 accepts (whole src)
+cwd frontend, command: node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+exit code 0, zero bytes of stdout/stderr
+
+typecheck, scoped config (kept for comparison)
+cwd frontend, command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+exit code 0, zero bytes
+
+shared dictionary parity ruler, this branch
+command: python frontend/scripts/i18n_detail2_parity_r1.py
+exit code 1, en keys 1115, zh keys 1116, xor = me.asksBeforeProtectedChange
+
+shared dictionary parity ruler, at 996f1b7588580a14fbbdec5301a6e4a7b70c93e4 in a detached worktree
+command: python frontend/scripts/i18n_detail2_parity_r1.py
+exit code 1, en keys 1112, zh keys 1113, xor = the same me.asksBeforeProtectedChange
+three keys added per side, no orphan key introduced, the ruler's own source was not touched
+
+production build
+cwd frontend, command: node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir
+exit code 0, success line: precache 8 entries (2915.26 KiB)
+
+not run, and why
+frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts -- that gate watches keys handed to t(); this batch hands its keys to the non-hook dictionaryCopy instead, so its arm does not reach them, and running it would need the dev server plus a demo/reset-able preview database. No browser screen reading in this block; the byte-for-byte source arms above stand in for it and are named in the delivery block.
+
+batch two, keys four to six (dictionary branch tip 4081a22feb0402ee204e702b59f9b637fc917191)
+i18n gate: command python review/tihegong-0557/i18n_0557_failure_attribution_r1.py, exit code 0, items=6, GREEN
+gate readings, six lines: tip:457 -> product:462, tip:465 -> 470, tip:478 -> 483, tip:485 -> 490, tip:518 -> 523, tip:530 -> 535
+dictionary arms after batch two: en 1331-1336, zh 2573-2578, accessor 2589
+i18n gate: same command with --negative, exit code 1, RED on the six en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1118, zh keys 1119, xor = me.asksBeforeProtectedChange
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
+draft rows for this batch are the three lines right after the batch-one rows in the same source file, named in the line above the batch-one list
+
+batch three, keys seven to nine (dictionary branch tip ad1713a3bfc1653f93116abc5661d24b2f1ced8f)
+i18n gate: command python review/tihegong-0557/i18n_0557_failure_attribution_r1.py, exit code 0, items=9, GREEN
+gate readings for this batch: tip:538 -> product:543, tip:565 -> 570, tip:573 -> 578, dict en 1337-1339, dict zh 2582-2584
+i18n gate: same command with --negative, exit code 1, RED on the nine en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1121, zh keys 1122, xor = me.asksBeforeProtectedChange
+build, my own instrument mis-fired first: the same command run from the branch root instead of frontend exited 1 with Cannot find module .../wt_product/node_modules/vite/bin/vite.js -- a cwd mistake of mine, no product byte involved
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
+
+batch four, the last key (dictionary branch tip 1aa96180b346c01975ca74690ab0d404546bd4a2)
+i18n gate: command python review/tihegong-0557/i18n_0557_failure_attribution_r1.py, exit code 0, items=10, GREEN
+gate reading for this batch: tip:581 -> product:586, dict en 1340, dict zh 2586
+i18n gate: same command with --negative, exit code 1, RED on the ten en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1122, zh keys 1123, xor = me.asksBeforeProtectedChange
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
+
+send-back answer, read 15:0x on the same bytes (no product byte touched by this section)
+landing receipt of round 17, quoted verbatim from _batch_land_round17_144855.json: AUTO1 review/铁盒工-0557-r1 note "REF_UNRESOLVED rc=0 out= err=" | AUTO2 review/铁盒工-0557-dict-r1 note "RECUT_ABORT: fetch failed: ssh: connect to host ssh.github.com port 443: Connection timed out"
+ref lookup now, command: git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/铁盒工-0557-r1 -> e80ced1b014e69568a5376a9df3b3efd00e088bc (40 hex, rc 0)
+ref lookup now, command: git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/铁盒工-0557-dict-r1 -> 1aa96180b346c01975ca74690ab0d404546bd4a2 (40 hex, rc 0)
+same probe against a sibling CJK branch, command: git ls-remote origin refs/heads/review/起手工-0555-dict-r1 -> resolves too, so the 12:11 style CJK-name worry is not what bit this pair: the leg's probe died on the network and its own note prints an empty out= for that
+merge prediction (read only), command: git merge-tree --write-tree 996f1b7588580a14fbbdec5301a6e4a7b70c93e4 e80ced1b014e69568a5376a9df3b3efd00e088bc -> one tree oid b56b7fbf0a3d9251000965585da44e26768f1684, exit code 0, no conflicted file listed
+generation relation now: candidate ahead 11 behind 0 against that tip; files the candidate moves: 2 product files (frontend/src/i18n/LocaleContext.tsx, frontend/src/lib/failureAttribution.ts) and 2 lane instruments under review/tihegong-0557/
+self-sufficiency: the product branch's parent chain carries the dictionary tip, so landing it alone still brings the ten keys with the ten reads -- no intermediate state where a screen reads a key the dictionary lacks
+gates re-run on these bytes just now: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, ten lines, GREEN; node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit (cwd frontend) -> exit code 0, zero bytes
+the two titles no table lists, read on that tip: frontend/src/lib/failureAttribution.ts:550 and :557 are template-literal arms (${READ_DEADLINE_SECONDS}); the plural draft marks both rows ND (its own reason: the constant is twelve, it never lands on the singular), and taking them would need interpolation in the accessor -- out of this lane's radius, so untouched
+
+re-cut onto the 18:09 generation, per the commander's点名 block 号令者点名退回 · 产品枝与字典枝必须同代（先落字典）
+authoritative line, read with ls-remote: 4d69eb860d619538a40133e96a0f8819666fd11e
+dictionary branch merged that line in, conflict only in the two dictionary tails, both sides kept: 大柜工's nine simulation.* keys stay first, this lane's ten follow -- dict tip 4905c25f1fb9569c88da64c9973c6e0666884cd6 (behind 0 ahead 5)
+product branch merged that dictionary tip with no conflict at all -- product tip below this commit (behind 0 ahead 14 before it)
+gate repointed to the new generation: TIP constant now 4d69eb860d619538a40133e96a0f8819666fd11e
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN; ten reads unchanged at product 462, 470, 483, 490, 523, 535, 543, 570, 578, 586; ten keys at dict en 1368-1377 and zh 2651-2660
+i18n gate: same command with --negative -> exit code 1, RED on the ten en arms
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1158, zh keys 1159, xor = me.asksBeforeProtectedChange
+parity ruler at the tip in a detached worktree, same unmodified ruler -> exit code 1, en keys 1148, zh keys 1149, xor = the same single key; this lane nets ten keys per side, no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+
+re-cut onto the 23:0x generation (authoritative line b80bd95ac576612fe84515d8b1de047798117ea9, read by ls-remote)
+dictionary branch merged that line: one conflict, two dictionary tails; both sides kept -- 大柜工's two new simulation rows stay first, this lane's ten follow, nothing deleted -> tip fa0cb2984cc1d38c617c393f479f93d57a17cc3e (behind 0 ahead 7)
+product branch merged that dictionary tip with zero conflicts: 10 reads at product 462, 470, 483, 490, 523, 535, 543, 570, 578, 586 and 0 leftover title ternaries
+gate repointed to this generation: TIP constant now b80bd95ac576612fe84515d8b1de047798117ea9
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN; keys at dict en 1395-1404 and zh 2705-2714, accessor at 2725, accessor unchanged in shape
+i18n gate: same command with --negative -> exit code 1, RED on the ten en arms
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1183, zh keys 1184, xor = me.asksBeforeProtectedChange
+parity ruler at that tip in a detached worktree, same unmodified ruler -> exit code 1, en keys 1173, zh keys 1174, xor = the same single key: this lane nets ten keys per side and no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+
+correction evidence for the coverage table row naming this lane (号令者数给你 · 现尖缺的十三枚...):
+net delta of the dictionary branch against the tip, `git diff --numstat` -> 35 insertions and 0 deletions in frontend/src/i18n/LocaleContext.tsx, and the only key names it adds are the ten lib.failureAttribution.* (none of them simulation.*)
+simulation.* entry lines counted on both sides of that same diff: tip 22, branch 22 -- so this branch adds zero simulation keys; the table's 补得上 9 枚 row was read with the ruler pinned to a generation older than this branch, which is how a re-cut branch looks like it carries other lanes' keys
+
+why this pair kept missing the batch, read from the leg's own files: _batch_land_round12_232523.json holds five candidates (备城工-0566-r1, 快剪工-0557-r1, 起手工-0555-r1, 快剪工-0558-r1, 加闸工-0558-r1) and this lane is not among them; the round's own trim line at 23:16:23 prints 同线旧代让路=2 -- an older generation yields
+re-cut onto d54e431113f0f147bf750e31c621ca2c47bbaa0c (read by ls-remote at 23:4x): dictionary merge clean this time, no conflict, dict tip 7f87337131ff3241a4133e10124018292375706a (behind 0)
+product branch merged that dictionary tip, also clean: 10 reads at 462, 470, 483, 490, 523, 535, 543, 570, 578, 586 and 0 leftover title ternaries
+gate repointed: TIP constant now d54e431113f0f147bf750e31c621ca2c47bbaa0c; the ten tip-side ternaries still sit at 457, 465, 478, 485, 518, 530, 538, 565, 573, 581
+keys on the re-cut dictionary tip: en 1397-1406, zh 2709-2718, accessor 2729
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN
+i18n gate: same command with --negative -> exit code 1, RED on the ten en arms
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1185, zh keys 1186, xor = me.asksBeforeProtectedChange
+parity ruler at d54e431113f0f147bf750e31c621ca2c47bbaa0c, same unmodified ruler -> exit code 1, en keys 1175, zh keys 1176, xor = the same single key: ten added per side, no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+
+re-cut onto the 00:4x generation, fourth one tonight (the line moved 43 commits in fifty minutes; each re-cut buys queue-head position, nothing else changes)
+why the anchor-relocation idea in the previous block was wrong, read from the gate itself: preflight_and_land_r7.py:556 computes the intersection as FILE sets (line side vs candidate side since the merge base), not hunks -- so moving these ten keys elsewhere in LocaleContext.tsx cannot reduce the collision, and merging the tip is the only thing that drives intersection to zero
+dict tip after this merge: 5393917fb4ee8842061c08c7b4b198a96dc7b0a0, behind 0 ahead 9, merge clean with no conflict
+product merged it clean: 10 reads, 0 leftover title ternaries; the ten tip-side ternaries still at 457, 465, 478, 485, 518, 530, 538, 565, 573, 581
+gate repointed: TIP constant now 9e4699ee6af8849464a76d46440c849a62d09fb1
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN
+i18n gate: same command with --negative -> exit code 1
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch -> exit code 1, en keys 1227, zh keys 1228; at the tip -> exit code 1, en keys 1217, zh keys 1218; xor both generations = me.asksBeforeProtectedChange, so ten added per side and no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
+coordinates by name, not by line (the dictionary line numbers drifted again with this merge): ten key names lib.failureAttribution.tripNotOnServer, .networkUnavailable, .serviceUnavailable, .serverCouldNotRead, .slowDownRate, .slowDownRetry, .stateAlreadyMoved, .needsFreshSignIn, .stepNotAllowed, .readFailed -- read them with `git grep -n '"lib.failureAttribution.' <dict tip> -- frontend/src/i18n/LocaleContext.tsx`

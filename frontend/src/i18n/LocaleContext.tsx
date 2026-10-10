@@ -1440,6 +1440,19 @@ const en: Dict = {
   // ── ORD-0557 stage header, two remaining rows ──
   "simulation.basis": "Basis",
   "simulation.evidence": "Evidence",
+  /* ORD-0557: the attribution titles `lib/failureAttribution.ts` writes inline. Key names and English
+     arms are copied from the CN draft table verbatim; both arms are the bytes those screens already
+     showed, so the move cannot change what a traveller reads. */
+  "lib.failureAttribution.tripNotOnServer": "This trip is not on this server",
+  "lib.failureAttribution.networkUnavailable": "Network unavailable",
+  "lib.failureAttribution.serviceUnavailable": "The service is temporarily unavailable",
+  "lib.failureAttribution.serverCouldNotRead": "The server could not read your trip",
+  "lib.failureAttribution.slowDownRate": "The server asked us to slow down",
+  "lib.failureAttribution.slowDownRetry": "The server asked us to slow down",
+  "lib.failureAttribution.stateAlreadyMoved": "The state already moved - this was not a failed read",
+  "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
+  "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
+  "lib.failureAttribution.readFailed": "This read failed",
 };
 
 const zhCN: Dict = {
@@ -2788,9 +2801,31 @@ const zhCN: Dict = {
   // ── ORD-0557 stage header, two remaining rows ──
   "simulation.basis": "依据",
   "simulation.evidence": "证据",
+  /* ORD-0557：`lib/failureAttribution.ts` 里那些直接写在源码上的归因小标题。键名与英文臂逐字照 CN
+     草稿表抄；中文臂就是屏上此刻在显示的那串字，这是搬运不是改写。 */
+  "lib.failureAttribution.tripNotOnServer": "这台服务器上没有这一趟行程了",
+  "lib.failureAttribution.networkUnavailable": "网络不可用",
+  "lib.failureAttribution.serviceUnavailable": "服务暂时不可用",
+  "lib.failureAttribution.serverCouldNotRead": "服务器这次没能把行程读出来",
+  "lib.failureAttribution.slowDownRate": "服务器请我们慢一点",
+  "lib.failureAttribution.slowDownRetry": "服务器请我们慢一点",
+  "lib.failureAttribution.stateAlreadyMoved": "这件事的状态已经变了，不是没读到",
+  "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
+  "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
+  "lib.failureAttribution.readFailed": "这一次没读到",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/* ORD-0557: the lookup for copy that lives in a module function rather than a component.
+   `lib/failureAttribution.ts` builds its titles inside `copyFor(attribution, zh)`, whose call sites sit
+   on ten other screens (first one `app/V8Experience.tsx:1595`), so that function cannot call the
+   `useT()` hook without a signature change reaching into other lanes' files. Same fallback order as
+   `t()`: this locale, then English, then the key itself. No `{param}` substitution and no `{plural:}`
+   expansion -- a line needing either still goes through `t()`. */
+export function dictionaryCopy(locale: TripLocale, key: string): string {
+  return dictionaries[locale][key] ?? dictionaries.en[key] ?? key;
+}
 
 type LocaleState = {
   locale: TripLocale;

@@ -6,6 +6,7 @@
  * order forbids borrowing a dimension name onto our screen.
  */
 import { expandPluralMarkers } from "../../lib/plural";
+
 export const planRankingCopy = {
   en: {
     "rank.title": "Compare the plans this trip can choose from",
