@@ -1,0 +1,9 @@
+full order equal=False
+order equal after dropping my six=False
+first divergence at position 729: en=main.cityNexusRequestFailed zh=main.unnamedCommitmentServerGaveNoName
+rank of sceneClock.executionCursor: en pos 799 of 1146, zh pos 799 of 1146
+rank of sceneClock.journeyStart: en pos 800 of 1146, zh pos 800 of 1146
+rank of sceneClock.serverGaveNoBasis: en pos 801 of 1146, zh pos 801 of 1146
+rank of sceneClock.frozenEvidenceCarriesExpiry: en pos 802 of 1146, zh pos 802 of 1146
+rank of sceneClock.noFrozenEvidenceOnThisTrip: en pos 803 of 1146, zh pos 803 of 1146
+rank of sceneClock.noScenarioOnStage: en pos 804 of 1146, zh pos 804 of 1146
