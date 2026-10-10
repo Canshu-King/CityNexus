@@ -20,7 +20,7 @@ def test_r96_explicit_outing_intents_emit_bounded_overpass_categories():
         base_url="https://controlled.example/api",
     )
     try:
-        for query in ("museum/gallery", "park/garden", "cafe", "library"):
+        for query in ("museum/gallery", "park/garden", "cafe", "library", "gallery", "mobility"):
             candidates, attempts = provider.search_with_evidence(
                 query,
                 latitude=31.2304,
@@ -34,7 +34,7 @@ def test_r96_explicit_outing_intents_emit_bounded_overpass_categories():
     finally:
         provider.close()
 
-    assert len(queries) == 4
+    assert len(queries) == 6
     museum_query = queries[0]
     assert museum_query.startswith('[out:json][timeout:10];(')
     assert museum_query.count('nwr[') == 2
@@ -49,3 +49,20 @@ def test_r96_explicit_outing_intents_emit_bounded_overpass_categories():
     assert 'nwr["amenity"="library"]' in queries[3]
     assert '"amenity"~"cafe|coffee"' not in queries[0]
     assert '"amenity"~"cafe|coffee"' not in queries[1]
+    # The Overpass QL default result set is overwritten by each standalone
+    # selector. Merely containing two nwr filters is NOT a union: require one
+    # enclosing union block before the single output statement.
+    for index in (0, 4, 5):
+        assert queries[index].startswith("[out:json][timeout:10];(")
+        assert queries[index].endswith(");out center tags;")
+    assert queries[0].count("nwr[") == 2
+    assert queries[4].count("nwr[") == 2
+    assert queries[5].count("nwr[") == 3
+    assert 'nwr["tourism"="gallery"]' in queries[4]
+    assert 'nwr["amenity"="arts_centre"]' in queries[4]
+    assert 'nwr["railway"~"station|subway_entrance"]' in queries[5]
+    assert 'nwr["amenity"="bus_station"]' in queries[5]
+    assert 'nwr["highway"="bus_stop"]' in queries[5]
+    for index in (1, 2, 3):
+        assert queries[index].count("nwr[") == 1
+        assert queries[index].startswith("[out:json][timeout:10];nwr[")
