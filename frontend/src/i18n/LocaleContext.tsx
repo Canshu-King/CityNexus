@@ -139,6 +139,9 @@ const en: Dict = {
   "trial.cancel": "Back to current journey",
   "trial.newJourney": "Try another city",
   "trial.createdLiveHint": "Journey created. Open City Discovery to use live providers for this city.",
+  "entryLimits.fromMinUnit": "from {min} {unit}",
+  "entryLimits.required": "required",
+  "entryLimits.optional": "optional",
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
@@ -1414,6 +1417,9 @@ const zhCN: Dict = {
   "trial.cancel": "返回当前行程",
   "trial.newJourney": "试用其他城市",
   "trial.createdLiveHint": "行程已创建。进入“城市探索”后可使用该城市的实时数据源。",
+  "entryLimits.fromMinUnit": "{min} {unit}起",
+  "entryLimits.required": "必填",
+  "entryLimits.optional": "选填",
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",
   "shell.factsSynced": "行程事实已同步",
@@ -2501,6 +2507,25 @@ const zhCN: Dict = {
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/**
+ * ORD-0557: the dictionary door for copy assembled outside React. `entryLimits.ts` spells a declared
+ * bound into a label but has no component around it to call `useT()`, so it reads through here —
+ * same lookup, same fallback to English, same interpolation as `t` below. One dictionary, one reader.
+ */
+export function dictCopy(
+  chinese: boolean,
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  let value = dictionaries[chinese ? "zh-CN" : "en"][key];
+  if (!value) {
+    value = dictionaries.en[key] ?? key;
+  }
+  const counted = expandPluralMarkers(value, params);
+  if (!params) return counted;
+  return counted.replace(/\{(\w+)\}/g, (_, k: string) => String(params[k] ?? `{${k}}`));
+}
 
 type LocaleState = {
   locale: TripLocale;
