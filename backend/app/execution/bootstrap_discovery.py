@@ -2410,6 +2410,403 @@ def preview_bootstrap_two_stop_walkability(
     }
 
 
+def preview_bootstrap_adaptive_short_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    first_shortlist_id: UUID,
+    current_second_shortlist_id: UUID,
+    alternative_second_shortlist_id: UUID,
+    max_walk_minutes: int,
+    public_route_consent: bool,
+) -> dict[str, Any]:
+    """Compare one saved second stop with one saved alternative.
+
+    This is deliberately a draft-only, ephemeral comparison.  The routing
+    boundary receives only the three public WGS84 identities and the two
+    public-to-public pedestrian legs.  No route fact, plan, place, receipt, or
+    private location is written by this preview.
+    """
+
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "adaptive walking comparison requires a DRAFT Journey",
+        )
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "adaptive walking comparison requires no PlanVersion",
+        )
+    if not public_route_consent:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ADAPTIVE_WALK_CONSENT_REQUIRED",
+            "explicit consent to share the three public stop coordinates with the walking provider is required",
+            status_code=422,
+            details={
+                "shared": ["public_stop_one", "current_public_stop_two", "alternative_public_stop_two"],
+                "withheld": [
+                    "origin",
+                    "foreground_gps",
+                    "current_location",
+                    "query_center",
+                    "member_id",
+                    "traveler_id",
+                    "journey_id",
+                    "receipt_id",
+                    "private_intent",
+                    "arrival",
+                ],
+                "next_actions": [
+                    "CONFIRM_ADAPTIVE_SHORT_WALK_CONSENT",
+                    "CANCEL_ADAPTIVE_SHORT_WALK",
+                ],
+            },
+        )
+    if not isinstance(max_walk_minutes, int) or isinstance(max_walk_minutes, bool) or not 1 <= max_walk_minutes <= 180:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ADAPTIVE_WALK_BUDGET_INVALID",
+            "walking budget must be an integer between 1 and 180 minutes",
+            status_code=422,
+        )
+
+    requested_ids = [
+        str(first_shortlist_id),
+        str(current_second_shortlist_id),
+        str(alternative_second_shortlist_id),
+    ]
+    if len(set(requested_ids)) != 3:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ADAPTIVE_STOPS_DISTINCT_REQUIRED",
+            "choose three different saved public places",
+            status_code=422,
+        )
+    rows = session.scalars(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id.in_(requested_ids),
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    ).all()
+    by_id = {str(row.id): row for row in rows}
+    first = by_id.get(requested_ids[0])
+    current_second = by_id.get(requested_ids[1])
+    alternative_second = by_id.get(requested_ids[2])
+    if first is None or current_second is None or alternative_second is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_NOT_FOUND",
+            "all three saved public places must still exist",
+            status_code=404,
+        )
+    if any(
+        row.member_id != str(member.id) or row.traveler_id != str(traveler_id)
+        for row in (first, current_second, alternative_second)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH",
+            "all three saved public places must belong to the signed member",
+            status_code=403,
+        )
+    if len({str(row.external_id) for row in (first, current_second, alternative_second)}) != 3:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ADAPTIVE_STOPS_DISTINCT_REQUIRED",
+            "choose three different public OSM identities",
+            status_code=422,
+        )
+    for row in (first, current_second, alternative_second):
+        if str(row.coordinate_system).upper() != "WGS84":
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_COORDINATE_SYSTEM_UNSUPPORTED",
+                "all saved public places must use WGS84 coordinates",
+                status_code=422,
+            )
+        _finite_coordinate(float(row.latitude), float(row.longitude))
+
+    def stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[str, Any]:
+        try:
+            opening = json.loads(row.opening_hours_json or "{}") or {}
+        except (TypeError, ValueError):
+            opening = {}
+        return {
+            "position": position,
+            "shortlist_id": str(row.id),
+            "name": row.name,
+            "category": row.category,
+            "external_id": row.external_id,
+            "source_url": row.source_url,
+            "source_provenance": row.source_provenance,
+            "latitude": row.latitude,
+            "longitude": row.longitude,
+            "coordinate_system": row.coordinate_system,
+            "opening_state": str(opening.get("status") or "UNKNOWN").upper(),
+            "price_state": "UNKNOWN",
+            "captured_at": row.captured_at,
+        }
+
+    first_payload = stop_payload(first, 1)
+    current_payload = stop_payload(current_second, 2)
+    alternative_payload = stop_payload(alternative_second, 2)
+    shared_fields = [
+        "public_stop_one",
+        "current_public_stop_two",
+        "alternative_public_stop_two",
+        "coordinates",
+    ]
+    withheld_fields = [
+        "origin",
+        "foreground_gps",
+        "current_location",
+        "query_center",
+        "member_id",
+        "traveler_id",
+        "journey_id",
+        "receipt_id",
+        "private_intent",
+        "arrival",
+    ]
+    current_navigation_url = _public_two_stop_walking_url(
+        first.latitude,
+        first.longitude,
+        current_second.latitude,
+        current_second.longitude,
+    )
+    alternative_navigation_url = _public_two_stop_walking_url(
+        first.latitude,
+        first.longitude,
+        alternative_second.latitude,
+        alternative_second.longitude,
+    )
+
+    def unverified_leg(
+        reason_code: str,
+        reason: str,
+        *,
+        provider: str | None = None,
+        observed_at: str | None = None,
+    ) -> dict[str, Any]:
+        return {
+            "status": "ROUTE_UNVERIFIED",
+            "route_state": "ROUTE_UNVERIFIED",
+            "duration_min": None,
+            "distance_m": None,
+            "provider": provider,
+            "provenance": "UNVERIFIED",
+            "reason_code": reason_code,
+            "reason": reason,
+            "observed_at": observed_at or _iso(_now()),
+            "route_time_state": "UNKNOWN",
+            "route_distance_state": "UNKNOWN",
+            "route_caveats": [
+                "No provider-backed walking duration or distance is available.",
+                "External public walking directions remain available as a separate action.",
+            ],
+        }
+
+    def verified_leg(route: Any, provider: Any, observed_at: str) -> dict[str, Any] | None:
+        duration_min = int(route.duration_min)
+        distance_m = int(route.distance_m) if route.distance_m is not None else None
+        provenance = str(getattr(provider, "capture_provenance", "UNVERIFIED") or "UNVERIFIED").upper()
+        if duration_min < 0 or distance_m is None or distance_m < 0 or provenance == "UNVERIFIED":
+            return None
+        return {
+            "status": "ROUTE_VERIFIED",
+            "route_state": "ROUTE_VERIFIED",
+            "duration_min": duration_min,
+            "distance_m": distance_m,
+            "provider": str(provider.provider_key),
+            "provenance": provenance,
+            "reason_code": None,
+            "reason": None,
+            "observed_at": observed_at,
+            "route_time_state": "PROVIDER_CAPTURED",
+            "route_distance_state": "PROVIDER_CAPTURED",
+            "route_caveats": [
+                "This is advisory provider evidence, not proof of safety, accessibility, opening, arrival, or a guaranteed ETA.",
+                "Opening hours and price remain UNKNOWN from this route check.",
+            ],
+        }
+
+    provider_settings = ExternalProviderSettings()
+    base_url = provider_settings.router_base_url or settings.live_valhalla_url
+    router_name = str(provider_settings.router_name or "valhalla").strip().casefold()
+    profile = str(provider_settings.router_profile or "pedestrian").strip().casefold()
+    enabled = bool(base_url) and (
+        bool(provider_settings.real_mobility_enabled) or bool(settings.live_valhalla_url)
+    )
+    endpoint_reason: tuple[str, str] | None = None
+    if not enabled:
+        endpoint_reason = ("ROUTE_PROVIDER_DISABLED", "No authorized walking provider is configured.")
+    elif router_name not in {"valhalla", "valhalla-http"} or profile not in {"pedestrian", "walking", "walk"}:
+        endpoint_reason = (
+            "ROUTE_PROVIDER_UNSUPPORTED",
+            "The configured walking provider does not expose a supported pedestrian route adapter.",
+        )
+    else:
+        try:
+            parsed_router = urlparse(str(base_url))
+            host = (parsed_router.hostname or "").rstrip(".").casefold()
+            try:
+                loopback = ipaddress.ip_address(host).is_loopback
+            except ValueError:
+                loopback = host in {"localhost", "localhost.localdomain"} or host.endswith(".localhost")
+            approved_scheme = parsed_router.scheme.casefold() == "https" or (
+                parsed_router.scheme.casefold() == "http" and loopback
+            )
+            if (
+                not host
+                or not approved_scheme
+                or parsed_router.username is not None
+                or parsed_router.password is not None
+                or parsed_router.query
+                or parsed_router.fragment
+            ):
+                endpoint_reason = (
+                    "ROUTE_PROVIDER_ENDPOINT_UNTRUSTED",
+                    "The configured walking router needs HTTPS, or local loopback HTTP for a test emulator.",
+                )
+        except ValueError:
+            endpoint_reason = (
+                "ROUTE_PROVIDER_ENDPOINT_UNTRUSTED",
+                "The walking router address could not be validated.",
+            )
+
+    if endpoint_reason is not None:
+        current_leg = unverified_leg(*endpoint_reason, provider=router_name or None)
+        alternative_leg = unverified_leg(*endpoint_reason, provider=router_name or None)
+    else:
+        current_leg: dict[str, Any]
+        alternative_leg: dict[str, Any]
+        timeout = min(max(float(settings.real_city_timeout_seconds), 0.5), 10.0)
+        lookup = {
+            str(first.id): {"latitude": first.latitude, "longitude": first.longitude},
+            str(current_second.id): {
+                "latitude": current_second.latitude,
+                "longitude": current_second.longitude,
+            },
+            str(alternative_second.id): {
+                "latitude": alternative_second.latitude,
+                "longitude": alternative_second.longitude,
+            },
+        }
+        try:
+            with httpx.Client(
+                timeout=timeout,
+                trust_env=trust_environment_for_public_providers(),
+            ) as client:
+                provider = ValhallaHTTPMobilityProvider(
+                    client=client,
+                    base_url=str(base_url),
+                    place_lookup=lambda key: lookup[str(key)],
+                    costing="pedestrian",
+                    timeout_s=timeout,
+                    test_provider=settings.live_valhalla_test_provider,
+                )
+                try:
+                    current_route = provider.estimate(str(first.id), str(current_second.id))
+                    current_leg = verified_leg(provider=provider, route=current_route, observed_at=_iso(_now())) or unverified_leg(
+                        "ROUTE_RESPONSE_INVALID",
+                        "The configured walking provider returned incomplete or unclassified route evidence.",
+                        provider="valhalla-http",
+                    )
+                except (ValhallaProviderError, httpx.HTTPError, ValueError, TypeError, KeyError) as exc:
+                    current_leg = unverified_leg(
+                        "ROUTE_PROVIDER_UNAVAILABLE",
+                        f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
+                        provider="valhalla-http",
+                    )
+                try:
+                    alternative_route = provider.estimate(str(first.id), str(alternative_second.id))
+                    alternative_leg = verified_leg(provider=provider, route=alternative_route, observed_at=_iso(_now())) or unverified_leg(
+                        "ROUTE_RESPONSE_INVALID",
+                        "The configured walking provider returned incomplete or unclassified route evidence.",
+                        provider="valhalla-http",
+                    )
+                except (ValhallaProviderError, httpx.HTTPError, ValueError, TypeError, KeyError) as exc:
+                    alternative_leg = unverified_leg(
+                        "ROUTE_PROVIDER_UNAVAILABLE",
+                        f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
+                        provider="valhalla-http",
+                    )
+        except (ValhallaProviderError, httpx.HTTPError, ValueError, TypeError, KeyError) as exc:
+            current_leg = unverified_leg(
+                "ROUTE_PROVIDER_UNAVAILABLE",
+                f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
+                provider="valhalla-http",
+            )
+            alternative_leg = unverified_leg(
+                "ROUTE_PROVIDER_UNAVAILABLE",
+                f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
+                provider="valhalla-http",
+            )
+        except Exception as exc:  # external-provider boundary; keep draft exploration fail-closed
+            current_leg = unverified_leg(
+                "ROUTE_PROVIDER_UNAVAILABLE",
+                f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
+                provider="valhalla-http",
+            )
+            alternative_leg = unverified_leg(
+                "ROUTE_PROVIDER_UNAVAILABLE",
+                f"The configured walking provider did not return a usable route ({type(exc).__name__}).",
+                provider="valhalla-http",
+            )
+
+    current_verified = current_leg.get("status") == "ROUTE_VERIFIED"
+    alternative_verified = alternative_leg.get("status") == "ROUTE_VERIFIED"
+    suggested_id: str | None = None
+    if not current_verified or not alternative_verified:
+        recommendation_state = "ROUTE_UNVERIFIED"
+        recommendation_reason = "A provider-backed comparison is unavailable; no duration is inferred."
+    elif int(alternative_leg["duration_min"]) <= max_walk_minutes and int(alternative_leg["duration_min"]) < int(current_leg["duration_min"]):
+        recommendation_state = "WITHIN_MY_LEG_BUDGET"
+        suggested_id = str(alternative_second.id)
+        recommendation_reason = (
+            f"The alternative is {alternative_leg['duration_min']} min estimated vs "
+            f"{current_leg['duration_min']} min for the current second stop and fits your "
+            f"{max_walk_minutes}-min leg budget."
+        )
+    elif int(current_leg["duration_min"]) <= max_walk_minutes:
+        recommendation_state = "WITHIN_MY_LEG_BUDGET"
+        recommendation_reason = (
+            f"The current second stop is {current_leg['duration_min']} min estimated and fits "
+            f"your {max_walk_minutes}-min leg budget; no alternative is suggested."
+        )
+    else:
+        recommendation_state = "LONGER_THAN_REQUESTED"
+        recommendation_reason = (
+            f"Neither provider estimate fits your {max_walk_minutes}-min leg budget."
+        )
+
+    return {
+        "preview_id": str(uuid4()),
+        "status": "ADAPTIVE_WALK_READY" if current_verified and alternative_verified else "ADAPTIVE_WALK_UNVERIFIED",
+        "route_state": "COMPARISON_VERIFIED" if current_verified and alternative_verified else "ROUTE_UNVERIFIED",
+        "journey_id": journey.id,
+        "authorization_basis": "THREE_SAVED_PUBLIC_IDENTITIES",
+        "release_purpose": "PUBLIC_POI_TO_PUBLIC_POI_ADAPTIVE_WALK",
+        "navigation_mode": "PUBLIC_POI_TO_PUBLIC_POI_WALKING",
+        "navigation_url": current_navigation_url,
+        "alternative_navigation_url": alternative_navigation_url,
+        "first_stop": first_payload,
+        "current_second_stop": current_payload,
+        "alternative_second_stop": alternative_payload,
+        "max_walk_minutes": max_walk_minutes,
+        "current_leg": current_leg,
+        "alternative_leg": alternative_leg,
+        "recommendation_state": recommendation_state,
+        "suggested_second_shortlist_id": suggested_id,
+        "recommendation_reason": recommendation_reason,
+        "shared_fields": shared_fields,
+        "withheld_fields": withheld_fields,
+        "explore_state": "DRAFT_EXPLORE_ONLY",
+        "plan_version_id": None,
+        "selected_place_id": None,
+    }
+
+
 def select_bootstrap_candidate(
     session: Session,
     journey: Journey,
