@@ -196,7 +196,7 @@ export function PlanComparison({
 
               <dl>
                 <div>
-                  <dt>{zh ? "总花费" : "Total cost"}</dt>
+                  <dt>{t("planning.totalCost")}</dt>
                   <dd>
                     {allPricesKnown
                       ? money(costMinor, plan.total_cost?.currency ?? currency, zh)
@@ -210,12 +210,12 @@ export function PlanComparison({
                   </dd>
                 </div>
                 <div>
-                  <dt>{zh ? "活动数" : "Stops"}</dt>
+                  <dt>{t("planning.stops")}</dt>
                   <dd>{(plan.activities ?? []).length}</dd>
                 </div>
                 {walk != null && (
                   <div>
-                    <dt>{zh ? "步行" : "Walking"}</dt>
+                    <dt>{t("planning.walking")}</dt>
                     <dd>
                       {walk >= 60
                         ? zh
