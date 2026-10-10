@@ -1791,6 +1791,9 @@ export interface BootstrapShortlistPreviewResponse {
   journey_id: string;
   shortlist_id: string;
   authorization_basis: "SAVED_PUBLIC_IDENTITY";
+  release_purpose: "PIN" | "WALKING";
+  navigation_mode: "PUBLIC_PIN" | "WALKING_DIRECTIONS";
+  navigation_url: string | null;
   destination: {
     name: string;
     external_id: string;
@@ -2781,6 +2784,20 @@ export const cityNexusApi = {
   ): Promise<BootstrapShortlistPreviewResponse> {
     return requestJson<BootstrapShortlistPreviewResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist/" + shortlistId + "/preview",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ public_map_consent: true }),
+      },
+    );
+  },
+
+  navigateBootstrapShortlistItem(
+    journeyId: string,
+    shortlistId: string,
+  ): Promise<BootstrapShortlistPreviewResponse> {
+    return requestJson<BootstrapShortlistPreviewResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/" + shortlistId + "/navigate",
       {
         method: "POST",
         headers: travelerAuthHeaders(),

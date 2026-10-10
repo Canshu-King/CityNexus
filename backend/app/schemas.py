@@ -332,6 +332,12 @@ class BootstrapShortlistPreviewRequest(BaseModel):
     public_map_consent: bool = False
 
 
+class BootstrapShortlistNavigationRequest(BaseModel):
+    """Release a saved public destination for destination-only walking directions."""
+
+    public_map_consent: bool = False
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)

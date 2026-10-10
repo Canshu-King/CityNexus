@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from concurrent.futures import ThreadPoolExecutor
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
@@ -138,6 +139,12 @@ def test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expi
         assert owner_item["opening_state"] == "UNKNOWN"
         assert owner_item["price_state"] == "UNKNOWN"
         assert owner_item["eta_state"] == "UNKNOWN"
+        cross_member_release = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/{owner_item['shortlist_id']}/preview",
+            headers=viewer_headers,
+            json={"public_map_consent": True},
+        )
+        assert cross_member_release.status_code == 403, cross_member_release.text
         viewer_list_before = client.get(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=viewer_headers
         )
@@ -197,6 +204,18 @@ def test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expi
         assert saved_body["destination"]["map_url"] == (
             "https://www.openstreetmap.org/?mlat=39.1205000&mlon=117.2005000#map=18/39.1205000/117.2005000"
         )
+        navigation = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/{viewer_item['shortlist_id']}/navigate",
+            headers=viewer_headers,
+            json={"public_map_consent": True},
+        )
+        assert navigation.status_code == 200, navigation.text
+        navigation_body = navigation.json()
+        assert navigation_body["navigation_mode"] == "WALKING_DIRECTIONS"
+        assert navigation_body["navigation_url"] == (
+            "https://www.google.com/maps/dir/?api=1&destination=39.1205000%2C117.2005000&travelmode=walking"
+        )
+        assert "origin" not in navigation_body["navigation_url"]
 
         removed = client.delete(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/{viewer_item['shortlist_id']}",
@@ -211,6 +230,148 @@ def test_r90_shortlist_is_private_persistent_and_reauthorizes_after_receipt_expi
             assert session.scalar(select(func.count(PlanVersion.id)).where(PlanVersion.journey_id == journey_id)) == 0
             assert session.scalar(select(func.count(ProviderCall.id)).where(ProviderCall.operation == "bootstrap_city_discovery", ProviderCall.request_json.like(f"%{journey_id}%"))) == 2
             assert session.scalar(select(func.count(MemberDraftShortlistItem.id)).where(MemberDraftShortlistItem.journey_id == journey_id)) == 1
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+        object.__setattr__(settings, "real_city_enabled", previous_enabled)
+        object.__setattr__(settings, "real_city_mode", previous_mode)
+
+
+def test_r91_shortlist_limit_is_serialized_under_concurrent_saves(monkeypatch):
+    previous_secret = settings.traveler_auth_secret
+    previous_enabled = settings.real_city_enabled
+    previous_mode = settings.real_city_mode
+    object.__setattr__(settings, "traveler_auth_secret", TEST_SECRET + "-limit")
+    object.__setattr__(settings, "real_city_enabled", True)
+    object.__setattr__(settings, "real_city_mode", "live")
+
+    def fake_search(_self, query, **kwargs):
+        candidates = []
+        for index in range(1, 4):
+            osm_id = f"9100{index}"
+            candidates.append(
+                DiscoveryCandidate(
+                    provider_key="TEST_PROVIDER",
+                    external_id=f"overpass:node/{osm_id}",
+                    name=f"R91 bounded place {index}",
+                    category="gallery",
+                    latitude=39.1205 + index / 10000,
+                    longitude=117.2005 + index / 10000,
+                    tags=("gallery",),
+                    opening_hours={"status": "UNKNOWN"},
+                    metadata={"osm_id": f"node/{osm_id}", "tags": {"name": f"R91 bounded place {index}"}},
+                    distance_m=80.0 + index,
+                    cost_evidence={"status": "UNKNOWN", "source": "TEST_PROVIDER"},
+                )
+            )
+        return candidates, [{"endpoint": "TEST_PROVIDER", "answered": True, "http_status": 200, "elements": 3, "query_hint": str(query)}]
+
+    monkeypatch.setattr(
+        "app.execution.bootstrap_discovery.OverpassPOIProvider.search_with_evidence",
+        fake_search,
+    )
+    owner = _traveler("R91 limit owner")
+    journey_response = client.post(
+        "/api/v1/journeys",
+        json={
+            "traveler_id": owner["id"],
+            "title": "R91 bounded shortlist",
+            "city_code": f"CN-R91-{uuid4().hex[:8].upper()}",
+            "timezone": "Asia/Shanghai",
+            "start_at": "2026-10-13T10:00:00+08:00",
+            "end_at": "2026-10-14T18:00:00+08:00",
+            "budget": {"amount_minor": 10000, "currency": "CNY"},
+        },
+    )
+    assert journey_response.status_code == 201, journey_response.text
+    journey_id = journey_response.json()["id"]
+    headers = {"Authorization": f"Bearer {owner['access_token']}"}
+    try:
+        discovery = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-discovery",
+            headers=headers,
+            json={
+                "query": "gallery",
+                "radius_m": 2500,
+                "limit": 3,
+                "source_kind": "MANUAL_PUBLIC_CENTER",
+                "provider_consent": True,
+                "latitude": 39.12,
+                "longitude": 117.20,
+                "coordinate_system": "WGS84",
+                "mode": "live",
+            },
+        )
+        assert discovery.status_code == 200, discovery.text
+        body = discovery.json()
+        assert len(body["candidates"]) == 3
+        saved = []
+        for candidate in body["candidates"][:2]:
+            response = client.post(
+                f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+                headers=headers,
+                json={"receipt_id": body["receipt_id"], "candidate_id": candidate["candidate_id"]},
+            )
+            assert response.status_code == 200, response.text
+            saved.append(response.json())
+
+        # Add a fourth scoped candidate only for this bounded-concurrency fixture;
+        # the public endpoint itself still caps every discovery response at three.
+        with SessionLocal() as session:
+            source = session.get(RealPlaceCandidate, body["candidates"][0]["candidate_id"])
+            assert source is not None
+            evidence = json.loads(source.evidence_json)
+            extra_id = str(uuid4())
+            evidence["candidate_id"] = extra_id
+            evidence["osm_id"] = "91004"
+            evidence["source_url"] = "https://www.openstreetmap.org/node/91004"
+            session.add(
+                RealPlaceCandidate(
+                    id=extra_id,
+                    journey_id=journey_id,
+                    provider_key="overpass",
+                    external_id="overpass:node/91004",
+                    city_code=source.city_code,
+                    name="R91 bounded place 4",
+                    category="gallery",
+                    latitude=39.1210,
+                    longitude=117.2010,
+                    tags_json=source.tags_json,
+                    opening_hours_json=source.opening_hours_json,
+                    metadata_json=source.metadata_json,
+                    captured_at=source.captured_at,
+                    expires_at=source.expires_at,
+                    distance_m=84.0,
+                    evidence_json=json.dumps(evidence),
+                    materialized_place_id=None,
+                    status="BOOTSTRAP_PRIVATE",
+                )
+            )
+            session.commit()
+
+        candidate_ids = [body["candidates"][2]["candidate_id"], extra_id]
+
+        def save(candidate_id: str):
+            response = client.post(
+                f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+                headers=headers,
+                json={"receipt_id": body["receipt_id"], "candidate_id": candidate_id},
+            )
+            return response.status_code, response.text
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            outcomes = list(pool.map(save, candidate_ids))
+        assert sorted(status for status, _text in outcomes) == [200, 409], outcomes
+        assert sum("BOOTSTRAP_SHORTLIST_LIMIT" in text for _status, text in outcomes) == 1
+        with SessionLocal() as session:
+            assert session.scalar(
+                select(func.count(MemberDraftShortlistItem.id)).where(
+                    MemberDraftShortlistItem.journey_id == journey_id,
+                    MemberDraftShortlistItem.member_id == select(JourneyMember.id).where(
+                        JourneyMember.journey_id == journey_id,
+                        JourneyMember.traveler_id == owner["id"],
+                    ).scalar_subquery(),
+                )
+            ) == 3
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
         object.__setattr__(settings, "real_city_enabled", previous_enabled)

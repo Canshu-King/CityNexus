@@ -302,6 +302,15 @@ def _public_map_url(latitude: float, longitude: float) -> str:
     )
 
 
+def _public_walking_url(latitude: float, longitude: float) -> str:
+    """Build a destination-only walking URL; the map provider supplies any origin locally."""
+
+    return (
+        "https://www.google.com/maps/dir/?api=1&destination="
+        f"{float(latitude):.7f}%2C{float(longitude):.7f}&travelmode=walking"
+    )
+
+
 def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Read member-private scopes while retaining compatibility with R87 receipts."""
 
@@ -1107,6 +1116,23 @@ def save_bootstrap_shortlist_item(
     receipt_id: UUID,
     candidate_id: UUID,
 ) -> dict[str, Any]:
+    # A Journey-row write lock is the durable serialization point for the bounded
+    # three-item invariant.  It works on SQLite (the deployed local store) and is
+    # a row lock on engines that support SELECT/UPDATE locking semantics.  The
+    # auth lookup happens before this service call, so restart the transaction
+    # before taking the lock rather than upgrading a stale read transaction.
+    session.rollback()
+    locked = session.execute(
+        update(Journey)
+        .where(Journey.id == journey.id)
+        .values(updated_at=Journey.updated_at)
+    )
+    if locked.rowcount != 1:
+        raise BootstrapDiscoveryError("BOOTSTRAP_JOURNEY_NOT_FOUND", "Journey disappeared while saving the shortlist", status_code=404)
+    session.flush()
+    journey = session.get(Journey, journey.id)
+    if journey is None:
+        raise BootstrapDiscoveryError("BOOTSTRAP_JOURNEY_NOT_FOUND", "Journey disappeared while saving the shortlist", status_code=404)
     if str(journey.status).upper() != "DRAFT":
         raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "saving a shortlist item requires a DRAFT Journey")
     if journey.active_plan_version_id is not None or session.scalar(
@@ -1281,6 +1307,7 @@ def preview_bootstrap_shortlist_item(
     traveler_id: str,
     shortlist_id: UUID,
     public_map_consent: bool,
+    release_purpose: str = "PIN",
 ) -> dict[str, Any]:
     if str(journey.status).upper() != "DRAFT":
         raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "shortlist map preview requires a DRAFT Journey")
@@ -1294,6 +1321,12 @@ def preview_bootstrap_shortlist_item(
             "explicit per-release public map consent is required",
             status_code=422,
             details={"shared": ["public_destination"], "withheld": ["origin", "foreground_gps"], "next_actions": ["CONFIRM_PUBLIC_MAP_CONSENT", "CANCEL_MAP_PREVIEW"]},
+        )
+    if release_purpose not in {"PIN", "WALKING"}:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_RELEASE_PURPOSE_INVALID",
+            "saved destination release purpose is invalid",
+            status_code=422,
         )
     row = session.scalar(
         select(MemberDraftShortlistItem).where(
@@ -1319,6 +1352,9 @@ def preview_bootstrap_shortlist_item(
         "journey_id": journey.id,
         "shortlist_id": row.id,
         "authorization_basis": "SAVED_PUBLIC_IDENTITY",
+        "release_purpose": release_purpose,
+        "navigation_mode": "WALKING_DIRECTIONS" if release_purpose == "WALKING" else "PUBLIC_PIN",
+        "navigation_url": _public_walking_url(row.latitude, row.longitude) if release_purpose == "WALKING" else None,
         "destination": {
             "name": row.name,
             "external_id": row.external_id,

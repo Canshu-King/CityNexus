@@ -12,6 +12,7 @@ import { readTravelerBearer } from "../../lib/travelerSession";
 type SourceKind = "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
 type PendingMapPreview = {
   kind: "candidate" | "shortlist";
+  purpose: "PIN" | "WALKING";
   candidateId?: string;
   shortlistId?: string;
   receiptId?: string;
@@ -71,6 +72,40 @@ function validatedPublicMapUrl(value: string | undefined, expectedLatitude: numb
   }
 }
 
+function validatedPublicWalkingUrl(value: string | null | undefined, expectedLatitude: number, expectedLongitude: number): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    const keys = [...url.searchParams.keys()];
+    const destination = url.searchParams.get("destination")?.split(",") ?? [];
+    const latitude = Number(destination[0]);
+    const longitude = Number(destination[1]);
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== "www.google.com" ||
+      url.pathname !== "/maps/dir/" ||
+      url.port !== "" ||
+      url.username !== "" ||
+      url.password !== "" ||
+      keys.length !== 3 ||
+      keys.some((key) => !["api", "destination", "travelmode"].includes(key)) ||
+      url.searchParams.getAll("destination").length !== 1 ||
+      url.searchParams.get("api") !== "1" ||
+      url.searchParams.get("travelmode") !== "walking" ||
+      destination.length !== 2 ||
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude) ||
+      Math.abs(latitude - expectedLatitude) > 1e-6 ||
+      Math.abs(longitude - expectedLongitude) > 1e-6
+    ) {
+      return null;
+    }
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function BootstrapDiscoveryPanel({
   journeyId,
   cityCode,
@@ -97,6 +132,7 @@ export function BootstrapDiscoveryPanel({
   const [mapBusy, setMapBusy] = useState(false);
   const [exploreNotice, setExploreNotice] = useState<string | null>(null);
   const [mapFallbackUrl, setMapFallbackUrl] = useState<string | null>(null);
+  const [lastNavigationLaunched, setLastNavigationLaunched] = useState(false);
   const [shortlist, setShortlist] = useState<BootstrapShortlistItem[]>([]);
   const [shortlistLoading, setShortlistLoading] = useState(true);
   const [shortlistBusy, setShortlistBusy] = useState<string | null>(null);
@@ -170,6 +206,7 @@ export function BootstrapDiscoveryPanel({
       setMapConsent(false);
       setExploreNotice(null);
       setMapFallbackUrl(null);
+      setLastNavigationLaunched(false);
       if (next.status === "PROVIDER_UNAVAILABLE") {
         setMessage("The public provider is unavailable. Use a public map center and try again later.");
       } else if (next.status === "PROVIDER_DISABLED") {
@@ -250,9 +287,11 @@ export function BootstrapDiscoveryPanel({
     setMessage(null);
     setExploreNotice(null);
     setMapFallbackUrl(null);
+    setLastNavigationLaunched(false);
     setMapConsent(false);
     setPendingMapPreview({
       kind: "candidate",
+      purpose: "PIN",
       candidateId: candidate.candidate_id,
       receiptId: result.receipt_id,
       latitude: candidate.latitude,
@@ -264,9 +303,26 @@ export function BootstrapDiscoveryPanel({
     setMessage(null);
     setExploreNotice(null);
     setMapFallbackUrl(null);
+    setLastNavigationLaunched(false);
     setMapConsent(false);
     setPendingMapPreview({
       kind: "shortlist",
+      purpose: "PIN",
+      shortlistId: item.shortlist_id,
+      latitude: item.latitude,
+      longitude: item.longitude,
+    });
+  };
+
+  const beginShortlistNavigation = (item: BootstrapShortlistItem) => {
+    setMessage(null);
+    setExploreNotice(null);
+    setMapFallbackUrl(null);
+    setLastNavigationLaunched(false);
+    setMapConsent(false);
+    setPendingMapPreview({
+      kind: "shortlist",
+      purpose: "WALKING",
       shortlistId: item.shortlist_id,
       latitude: item.latitude,
       longitude: item.longitude,
@@ -327,12 +383,20 @@ export function BootstrapDiscoveryPanel({
             longitude: pendingMapPreview.longitude,
             coordinate_system: "WGS84",
           })
-        : await cityNexusApi.previewBootstrapShortlistItem(journeyId, pendingMapPreview.shortlistId!);
-      const publicMapUrl = validatedPublicMapUrl(
-        released.destination.map_url,
-        pendingMapPreview.latitude,
-        pendingMapPreview.longitude,
-      );
+        : pendingMapPreview.purpose === "WALKING"
+          ? await cityNexusApi.navigateBootstrapShortlistItem(journeyId, pendingMapPreview.shortlistId!)
+          : await cityNexusApi.previewBootstrapShortlistItem(journeyId, pendingMapPreview.shortlistId!);
+      const publicMapUrl = pendingMapPreview.purpose === "WALKING"
+        ? validatedPublicWalkingUrl(
+            "navigation_url" in released ? released.navigation_url : null,
+            pendingMapPreview.latitude,
+            pendingMapPreview.longitude,
+          )
+        : validatedPublicMapUrl(
+            released.destination.map_url,
+            pendingMapPreview.latitude,
+            pendingMapPreview.longitude,
+          );
       if (
         (pendingMapPreview.kind === "candidate" &&
           (!("receipt_id" in released) ||
@@ -344,6 +408,10 @@ export function BootstrapDiscoveryPanel({
             !("authorization_basis" in released) ||
             released.shortlist_id !== pendingMapPreview.shortlistId ||
             released.authorization_basis !== "SAVED_PUBLIC_IDENTITY")) ||
+        (pendingMapPreview.purpose === "WALKING" &&
+          (!("navigation_mode" in released) || released.navigation_mode !== "WALKING_DIRECTIONS")) ||
+        (pendingMapPreview.purpose === "PIN" && pendingMapPreview.kind === "shortlist" &&
+          (!("navigation_mode" in released) || released.navigation_mode !== "PUBLIC_PIN")) ||
         Math.abs(released.destination.latitude - pendingMapPreview.latitude) > 1e-6 ||
         Math.abs(released.destination.longitude - pendingMapPreview.longitude) > 1e-6 ||
         !publicMapUrl
@@ -365,11 +433,12 @@ export function BootstrapDiscoveryPanel({
       } else {
         setMapFallbackUrl(publicMapUrl);
       }
+      setLastNavigationLaunched(pendingMapPreview.purpose === "WALKING");
       setExploreNotice(
         (openedAutomatically
-          ? "Public destination opened. "
-          : "Your browser blocked the automatic tab. Use the authorized public map link below. ") +
-          "Explore first: no Place, PlanVersion, route, or Journey start was created. Opening is still " +
+          ? (pendingMapPreview.purpose === "WALKING" ? "Destination-only walking directions opened. " : "Public destination opened. ")
+          : "Your browser blocked the automatic tab. Use the authorized destination link below. ") +
+          "Explore first: no Place, PlanVersion, route ETA, arrival, booking, or Journey start was created. Opening is still " +
           (released.opening.verification_state === "EXTERNAL_NOT_ATTESTED" ? "EXTERNAL_NOT_ATTESTED." : "provider-grounded, not freshly rechecked."),
       );
       cancelMapPreview();
@@ -478,9 +547,23 @@ export function BootstrapDiscoveryPanel({
         </div>
         {message ? <p role="status">{message}</p> : null}
         {exploreNotice ? (
-          <p role="status" data-testid="bootstrap-explore-state">
-            {exploreNotice}
-          </p>
+          <>
+            <p role="status" data-testid="bootstrap-explore-state">
+              {exploreNotice}
+            </p>
+            {lastNavigationLaunched ? (
+              <button
+                type="button"
+                data-testid="bootstrap-back-to-board"
+                onClick={() => {
+                  setLastNavigationLaunched(false);
+                  document.querySelector('[data-testid="bootstrap-shortlist"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+              >
+                Back to exploration board
+              </button>
+            ) : null}
+          </>
         ) : null}
         {mapFallbackUrl ? (
           <p>
@@ -662,7 +745,15 @@ export function BootstrapDiscoveryPanel({
                   disabled={mapBusy || shortlistBusy !== null}
                   onClick={() => beginShortlistMapPreview(item)}
                 >
-                  Open this public destination
+                  Inspect public map
+                </button>
+                <button
+                  type="button"
+                  data-testid={`bootstrap-shortlist-go-${item.shortlist_id}`}
+                  disabled={mapBusy || shortlistBusy !== null}
+                  onClick={() => beginShortlistNavigation(item)}
+                >
+                  Go explore this public place
                 </button>
                 <button
                   type="button"
@@ -674,15 +765,23 @@ export function BootstrapDiscoveryPanel({
                 </button>
               </div>
               {pendingMapPreview?.shortlistId === item.shortlist_id && pendingMapPreview.kind === "shortlist" ? (
-                <div className="journey-membership-map-consent" data-testid={`bootstrap-shortlist-map-consent-${item.shortlist_id}`}>
+                <div
+                  className="journey-membership-map-consent"
+                  data-testid={pendingMapPreview.purpose === "WALKING"
+                    ? `bootstrap-shortlist-navigation-consent-${item.shortlist_id}`
+                    : `bootstrap-shortlist-map-consent-${item.shortlist_id}`}
+                >
                   <p>
-                    Fresh one-time consent: share only this saved public destination with OpenStreetMap. No receipt, origin,
-                    search center, or foreground GPS is reused or sent.
+                    {pendingMapPreview.purpose === "WALKING"
+                      ? "Fresh one-time consent: share only this saved public destination with a walking-directions provider. The provider receives no origin, query, receipt, or foreground GPS. Opening, cost, route duration, and arrival remain unknown."
+                      : "Fresh one-time consent: share only this saved public destination with OpenStreetMap. No receipt, origin, search center, or foreground GPS is reused or sent."}
                   </p>
                   <label>
                     <input
                       type="checkbox"
-                      data-testid="bootstrap-shortlist-map-consent-checkbox"
+                      data-testid={pendingMapPreview.purpose === "WALKING"
+                        ? "bootstrap-shortlist-navigation-consent-checkbox"
+                        : "bootstrap-shortlist-map-consent-checkbox"}
                       checked={mapConsent}
                       onChange={(event) => setMapConsent(event.target.checked)}
                     />
@@ -691,15 +790,19 @@ export function BootstrapDiscoveryPanel({
                   <div className="v8-actions">
                     <button
                       type="button"
-                      data-testid="bootstrap-shortlist-map-confirm"
+                      data-testid={pendingMapPreview.purpose === "WALKING"
+                        ? "bootstrap-shortlist-navigation-confirm"
+                        : "bootstrap-shortlist-map-confirm"}
                       disabled={!mapConsent || mapBusy}
                       onClick={() => void confirmMapPreview()}
                     >
-                      {mapBusy ? "Opening…" : "Open public map"}
+                      {mapBusy ? "Opening…" : pendingMapPreview.purpose === "WALKING" ? "Open walking directions" : "Open public map"}
                     </button>
                     <button
                       type="button"
-                      data-testid="bootstrap-shortlist-map-cancel"
+                      data-testid={pendingMapPreview.purpose === "WALKING"
+                        ? "bootstrap-shortlist-navigation-cancel"
+                        : "bootstrap-shortlist-map-cancel"}
                       disabled={mapBusy}
                       onClick={cancelMapPreview}
                     >

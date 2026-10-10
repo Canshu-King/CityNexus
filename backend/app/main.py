@@ -483,6 +483,7 @@ from app.schemas import (
     BootstrapMapPreviewRequest,
     BootstrapShortlistSaveRequest,
     BootstrapShortlistPreviewRequest,
+    BootstrapShortlistNavigationRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3608,6 +3609,39 @@ def preview_bootstrap_shortlist(
             traveler_id=principal.traveler_id,
             shortlist_id=shortlist_id,
             public_map_consent=payload.public_map_consent,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/navigate")
+def navigate_bootstrap_shortlist(
+    journey_id: UUID,
+    shortlist_id: UUID,
+    payload: BootstrapShortlistNavigationRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Release one saved public destination for destination-only walking directions."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            shortlist_id=shortlist_id,
+            public_map_consent=payload.public_map_consent,
+            release_purpose="WALKING",
         )
         session.commit()
         return result
