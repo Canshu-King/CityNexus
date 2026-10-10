@@ -19,7 +19,7 @@ async function createProviderFixtures() {
   const cityCalls: string[] = [];
   const overpassCalls: string[] = [];
   const routeCalls: Array<Record<string, unknown>> = [];
-  const routeState = { available: true };
+  const routeState = { available: true, delayMs: 0, completed: 0 };
   const cityServer = createServer((request, response) => {
     cityCalls.push(request.url ?? "");
     response.writeHead(200, { "content-type": "application/json" });
@@ -72,27 +72,33 @@ async function createProviderFixtures() {
       const raw = Buffer.concat(chunks).toString("utf8");
       const body = JSON.parse(raw || "{}") as Record<string, unknown>;
       routeCalls.push(body);
-      if (!routeState.available) {
-        response.writeHead(503, { "content-type": "application/json" });
-        response.end(JSON.stringify({ error: "controlled unavailable" }));
-        return;
-      }
-      response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify({
-        trip: {
-          summary: {
-            time: body.locations && Array.isArray(body.locations) &&
-              (body.locations as Array<{ lon?: number }>)[1]?.lon === 121.474
-              ? 2520
-              : 780,
-            length: body.locations && Array.isArray(body.locations) &&
-              (body.locations as Array<{ lon?: number }>)[1]?.lon === 121.474
-              ? 3.1
-              : 0.9,
+      const respond = () => {
+        if (!routeState.available) {
+          response.writeHead(503, { "content-type": "application/json" });
+          response.end(JSON.stringify({ error: "controlled unavailable" }));
+          routeState.completed += 1;
+          return;
+        }
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({
+          trip: {
+            summary: {
+              time: body.locations && Array.isArray(body.locations) &&
+                (body.locations as Array<{ lon?: number }>)[1]?.lon === 121.474
+                ? 2520
+                : 780,
+              length: body.locations && Array.isArray(body.locations) &&
+                (body.locations as Array<{ lon?: number }>)[1]?.lon === 121.474
+                ? 3.1
+                : 0.9,
+            },
+            legs: [{}],
           },
-          legs: [{}],
-        },
-      }));
+        }));
+        routeState.completed += 1;
+      };
+      if (routeState.delayMs > 0) setTimeout(respond, routeState.delayMs);
+      else respond();
     });
   });
   await Promise.all([
@@ -453,6 +459,24 @@ test("R99 adaptive short walk compares, chooses, and fails closed", async ({ pag
     await expect(ownerPanel.getByTestId("bootstrap-adaptive-walk-result")).toHaveCount(0);
     await expect(ownerPanel.getByTestId("bootstrap-two-stop-consent-checkbox")).not.toBeChecked();
     expect(provider.routeCalls).toHaveLength(6);
+
+    // An in-flight provider response belongs to the OLD walking budget.
+    // Changing that budget before HTTP returns must discard the old proposal.
+    provider.routeState.available = true;
+    provider.routeState.delayMs = 400;
+    const completedBefore = provider.routeState.completed;
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-budget").selectOption("20");
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-consent-checkbox").check();
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-check").click();
+    await expect.poll(() => provider.routeCalls.length).toBe(7);
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-budget").selectOption("45");
+    await expect(ownerPanel.getByTestId("bootstrap-adaptive-walk-consent-checkbox")).not.toBeChecked();
+    await expect.poll(() => provider.routeState.completed).toBe(completedBefore + 2);
+    await ownerPanel.waitFor({ state: "visible" });
+    await page.waitForTimeout(150);
+    await expect(ownerPanel.getByTestId("bootstrap-adaptive-walk-result")).toHaveCount(0);
+    provider.routeState.delayMs = 0;
+
     expect(readExploreOnlyCounts(journey.id, cityCode)).toEqual({
       place_count: 0,
       plan_count: 0,
