@@ -570,6 +570,9 @@ const en: Dict = {
   "agent.obsDuration": "duration",
   "agent.obsExecution": "execution",
   "agent.runtimeDetails": "Runtime details",
+  "agent.notFeasible": "Not feasible",
+  "agent.needsMoreInformation": "Needs more information",
+  "agent.assessed": "Assessed",
 
 
   // ── Discovery ──
@@ -1828,6 +1831,9 @@ const zhCN: Dict = {
   "agent.obsDuration": "耗时",
   "agent.obsExecution": "执行方式",
   "agent.runtimeDetails": "运行详情",
+  "agent.notFeasible": "不可行",
+  "agent.needsMoreInformation": "需要更多信息",
+  "agent.assessed": "已评估",
 
 
   // ── Discovery ──
