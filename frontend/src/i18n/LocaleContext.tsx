@@ -973,7 +973,6 @@ const en: Dict = {
   "mobility.noProvider": "No provider evidence",
   "mobility.letChoose": "Let CityNexus choose",
   "mobility.note": "Costs are shown only when captured from a provider. Unknown is not treated as zero.",
-  "simulation.notGiven": "not given",
 
   // ── Stay Explorer ──
   "stay.kicker": "Stay Explorer · captured evidence",
@@ -1463,6 +1462,7 @@ const en: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
   "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
   "lib.failureAttribution.readFailed": "This read failed",
+  "simulation.notGiven": "not given",
 };
 
 const zhCN: Dict = {
@@ -2378,7 +2378,6 @@ const zhCN: Dict = {
   "mobility.noProvider": "无供应商证据",
   "mobility.letChoose": "让 CityNexus 选择",
   "mobility.note": "费用仅在从供应商采集时显示。未知不被视为零。",
-  "simulation.notGiven": "服务器未给证据状态",
 
   // ── 住宿选择 ──
   "stay.kicker": "住宿选择 · 已采集证据",
@@ -2832,6 +2831,7 @@ const zhCN: Dict = {
   "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
   "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
   "lib.failureAttribution.readFailed": "这一次没读到",
+  "simulation.notGiven": "服务器未给证据状态",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
@@ -2933,11 +2933,4 @@ export function useLocale() {
 
 export function useT() {
   return useLocale().t;
-}
-
-/** For code outside React that composes both arms of a bilingual line at once (ORD-0557): `t` only
- *  ever returns the active locale, which would put English words into the `zh` arm. */
-export function localeText(locale: TripLocale, key: string): string {
-  const value = dictionaries[locale][key];
-  return value || dictionaries.en[key] || key;
 }
