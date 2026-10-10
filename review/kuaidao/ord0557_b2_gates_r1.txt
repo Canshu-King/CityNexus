@@ -1,0 +1,46 @@
+ORD-0557 lane kuaidao (快刀工) batch 2 -- PlanComparison inline bilingual, three rows -- 2026-10-10
+scope: frontend/src/features/planning/PlanComparison.tsx rows :108 :115 :124 (draft _cn10_bldraft_1155.txt)
+
+1 TIP AND BRANCHES (each sha read with the command printed next to it)
+  tip read: `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+    -> f68b6b55a216d685287b37c95459d3e1fad0b220, branches cut from here (worktree D:\moodle\_qoder_kuaidao_0557,
+    `git status --porcelain` empty before cutting)
+  dict branch   refs/heads/review/快刀工-0557-dict-r2  tip 4a3f42e662173272050f805f82975ac8ac9c0d06
+    one file only, frontend/src/i18n/LocaleContext.tsx, `git diff --numstat` 6 insertions 0 deletions
+    new arms en :40 :41 :42 / zh :1365 :1366 :1367, appended right after planning.startPlanning on both arms
+  product branch refs/heads/review/快刀工-0557-r2  code tip 5ee3679caa9db781fb2888f40497307e8b1b3e18, merge tip
+    f8a8579fbe0ba1e75e759ee8a85901c7b1e6da80 carrying the dict tip as second parent (no rebase of published
+    branches, force-push zero)
+
+2 GATES (cwd D:\moodle\_qoder_kuaidao_0557\frontend; node_modules is a junction to
+  D:\moodle\_qoder_integration_20260919\frontend\node_modules, not installed from this tree's lock)
+  `node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit`  -> rc 0, zero error lines
+  `node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit` (whole src) -> rc 0, zero error lines
+  `node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_kuaidao_0557b_dist --emptyOutDir` -> rc 0
+
+3 THE SHARED-STORE BLOCKER OTHER LANES REPORTED -- my own reading, it does not reproduce here
+  `ls -d node_modules/@dnd-kit/*/` -> accessibility/ core/ sortable/ utilities/ (four packages present)
+  the two tsc commands above ran rc 0 on this tree, so no TS2307 appeared at all. Reported by 路牌工甲 and
+  比价工 on their own stores; I did not install anything into the shared store.
+
+4 VERBATIM WORD CONTROL (before line on the tip vs the two dictionary arms on this branch)
+  driver: python D:/moodle/_qoder_kuaidao_0557_gate/verbatim_pc_r1.py review/快刀工-0557-r2 -> rc 0, VERDICT ALL_GREEN
+  row :108 key planning.planCannotBeChosen  en arm line 40 identical_to_before=True identical_to_draft=True
+                                            zh arm line 1365 identical_to_before=True
+  row :115 key planning.couldNotReachServer en arm line 41 identical_to_before=True identical_to_draft=True
+                                            zh arm line 1366 identical_to_before=True
+  row :124 key planning.chooseYourPlan      en arm line 42 identical_to_before=True identical_to_draft=True
+                                            zh arm line 1367 identical_to_before=True
+  negative control: adding one space to the en arm makes identical_to_before=False (the control can say red)
+  rows still inline on this branch: :199 :213 :218 :234 -- next batch, the order caps one batch at three rows
+
+5 SCREEN ASSERTION THAT ALREADY COVERS ROW :108 (read, not run -- see the block for why it was not run)
+  e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts:329 expects the painted zh sentence to contain
+  这个方案暂时不能采用。, and the arm sets localStorage citynexus.locale = zh-CN; the dictionary zh arm for
+  planning.planCannotBeChosen carries that same string byte for byte (control in section 4), so the assertion
+  matches on both generations. The stack that renders it (npm run dev plus a seeded journey and /api/v1/demo/*)
+  is shared with other live lanes, so I did not stand it up here.
+
+6 SAME SENTENCE ELSEWHERE, NOT TOUCHED
+  frontend/src/app/V8Experience.tsx:270 holds its own `Could not reach the server. Try again.` ternary --
+  different host file, on 短瓦工's row of the table, untouched by this branch.
