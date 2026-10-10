@@ -280,7 +280,7 @@ function renderFact(value: unknown, zh: boolean, t: (key: string) => string): st
   if (typeof value === "object") {
     const record = value as Record<string, unknown>;
     const name = record.name ?? record.location ?? record.title;
-    return name ? String(name) : zh ? "已记录" : "Recorded";
+    return name ? String(name) : t("inbox.recorded");
   }
   const text = String(value);
   const type = TYPE_LABELS[text.toUpperCase()];
