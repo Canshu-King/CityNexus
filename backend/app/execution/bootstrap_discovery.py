@@ -13,6 +13,7 @@ import math
 import re
 from datetime import datetime, timedelta, timezone
 from typing import Any
+from urllib.parse import urlparse
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
 from sqlalchemy import func, select, update
@@ -30,7 +31,12 @@ from app.db.models import (
     ProviderCall,
     RealPlaceCandidate,
 )
-from app.integrations.discovery.real_city import DiscoveryCandidate, OverpassPOIProvider
+from app.integrations.discovery.real_city import (
+    DiscoveryCandidate,
+    NominatimGeocoder,
+    OverpassPOIProvider,
+    PhotonCityGeocoder,
+)
 
 
 _OSM_EXTERNAL_ID = re.compile(r"^overpass:(node|way|relation)/([1-9][0-9]*)$")
@@ -137,6 +143,52 @@ def _attempts(value: Any) -> list[dict[str, Any]]:
     return result
 
 
+def _provider_provenance(attempts: list[dict[str, Any]], *, configured_url: str | None = None) -> str:
+    """Grade the provider that actually answered this request.
+
+    A local/explicit test boundary is never promoted to an OSM live claim just
+    because it returned HTTP 200.  Unknown endpoints remain unverified until an
+    operator can identify them; only configured public endpoints receive the
+    generic LIVE_PROVIDER grade.
+    """
+
+    answered = [item for item in attempts if item.get("answered")]
+    if not answered:
+        return "UNVERIFIED"
+    endpoint = str(answered[0].get("endpoint") or configured_url or "").strip()
+    if endpoint.upper() in {"TEST_PROVIDER", "TEST_PROVIDER_EMULATOR", "CONTROLLED_TEST_PROVIDER"}:
+        return "TEST_PROVIDER"
+    try:
+        parsed = urlparse(endpoint)
+        host = (parsed.hostname or "").lower()
+    except ValueError:
+        host = ""
+    # The authoritative browser suite binds its provider boundary to loopback;
+    # a loopback answer is useful evidence, but it is not a public OSM answer.
+    if host in {"127.0.0.1", "localhost", "::1"} or host.endswith(".local"):
+        return "TEST_PROVIDER"
+    if host in {
+        "overpass-api.de",
+        "overpass.kumi.systems",
+        "overpass.private.coffee",
+        "overpass.openstreetmap.fr",
+    }:
+        return "LIVE_PROVIDER"
+    return "UNVERIFIED"
+
+
+def _row_provider_provenance(row: RealPlaceCandidate) -> str:
+    evidence = json.loads(row.evidence_json or "{}")
+    metadata = json.loads(row.metadata_json or "{}")
+    for value in (
+        evidence.get("provider_provenance"),
+        metadata.get("provider_provenance") if isinstance(metadata, dict) else None,
+    ):
+        if value:
+            return str(value)
+    return "UNVERIFIED"
+
+
 def _candidate_payload(
     row: RealPlaceCandidate,
     *,
@@ -219,6 +271,7 @@ def _candidate_payload(
         ),
         "opening_verification_action": "OPEN_SOURCE_PAGE",
         "source_tags": source_tags,
+        "provider_provenance": _row_provider_provenance(row),
     }
 
 
@@ -230,12 +283,14 @@ def _provider_call(
     response: dict[str, Any],
     status: str,
     created_at: str,
+    provider_key: str = "overpass",
+    operation: str = "bootstrap_city_discovery",
 ) -> None:
     session.add(
         ProviderCall(
             id=str(uuid4()),
-            provider_key="overpass",
-            operation="bootstrap_city_discovery",
+            provider_key=provider_key,
+            operation=operation,
             request_json=_json(request),
             response_json=_json(response),
             status=status,
@@ -519,6 +574,7 @@ def _bootstrap_rate_limited(
     *,
     member_id: str,
     traveler_id: str,
+    operation: str = "bootstrap-discovery",
 ) -> bool:
     """Claim one provider attempt for this signed Journey/member/traveller scope.
 
@@ -528,7 +584,7 @@ def _bootstrap_rate_limited(
     concurrent tab cannot create a second external attempt inside the window.
     """
 
-    scope_key = f"bootstrap-discovery:{journey.id}:{member_id}:{traveler_id}"
+    scope_key = f"{operation}:{journey.id}:{member_id}:{traveler_id}"
     request_hash = hashlib.sha256(
         _json(
             {
@@ -546,7 +602,7 @@ def _bootstrap_rate_limited(
                 session.add(
                     IdempotencyKey(
                         key=scope_key,
-                        operation="bootstrap-discovery",
+                        operation=operation,
                         request_hash=request_hash,
                         response_status=None,
                         response_json=None,
@@ -579,7 +635,7 @@ def _bootstrap_rate_limited(
             IdempotencyKey.created_at == row.created_at,
         )
         .values(
-            operation="bootstrap-discovery",
+            operation=operation,
             request_hash=request_hash,
             created_at=_iso(now),
             expires_at=expires_at,
@@ -590,6 +646,353 @@ def _bootstrap_rate_limited(
         return True
     session.commit()
     return False
+
+
+def _city_result_payload(candidate: DiscoveryCandidate, *, provenance: str) -> dict[str, Any]:
+    """Return a geocoder lead that can move a camera, never a selected center."""
+
+    external_id = str(candidate.external_id or "")
+    provider, _, identity = external_id.partition(":")
+    osm_type, _, osm_id = identity.partition("/")
+    metadata = candidate.metadata if isinstance(candidate.metadata, dict) else {}
+    display_name = str(metadata.get("display_name") or candidate.name).strip()
+    return {
+        "result_id": external_id,
+        "name": str(candidate.name).strip(),
+        "display_name": display_name,
+        "provider": provider or candidate.provider_key,
+        "provider_provenance": provenance,
+        "osm_type": osm_type or None,
+        "osm_id": osm_id or None,
+        "source_url": (
+            f"https://www.openstreetmap.org/{osm_type}/{osm_id}"
+            if osm_type and osm_id
+            else None
+        ),
+        "latitude": float(candidate.latitude),
+        "longitude": float(candidate.longitude),
+        "coordinate_system": "WGS84",
+        "confidence": "CITY_CENTROID_UNCERTAIN",
+        "selection_state": "CAMERA_ONLY_TAP_REQUIRED",
+        "uncertainty": "A city result only positions the map; tap a public area to choose the discovery center.",
+    }
+
+
+_CITY_CACHE_PREFIX = "bootstrap-city-search-cache:"
+_CITY_RATE_KEY = "bootstrap-city-search-global-rate"
+
+
+def _city_search_cache_key(provider: str, query: str) -> str:
+    normalized = " ".join(query.casefold().split())
+    digest = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+    return f"{_CITY_CACHE_PREFIX}{provider}:{digest}"
+
+
+def _city_search_cache_get(
+    session: Session, *, provider: str, query: str, now: datetime
+) -> dict[str, Any] | None:
+    row = session.get(IdempotencyKey, _city_search_cache_key(provider, query))
+    if row is None or not row.response_json:
+        return None
+    try:
+        expires_at = datetime.fromisoformat(row.expires_at)
+        value = json.loads(row.response_json)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return None
+    if expires_at <= now or not isinstance(value, dict):
+        return None
+    return value
+
+
+def _city_search_cache_put(
+    session: Session,
+    *,
+    provider: str,
+    query: str,
+    value: dict[str, Any],
+    now: datetime,
+) -> None:
+    key = _city_search_cache_key(provider, query)
+    expires_at = now + timedelta(seconds=max(1, settings.city_search_cache_ttl_seconds))
+    row = session.get(IdempotencyKey, key)
+    if row is None:
+        session.add(
+            IdempotencyKey(
+                key=key,
+                operation="bootstrap-city-search-cache",
+                request_hash=hashlib.sha256(query.casefold().encode("utf-8")).hexdigest(),
+                response_status=200,
+                response_json=_json(value),
+                created_at=_iso(now),
+                expires_at=_iso(expires_at),
+                claim_token=None,
+                claim_deadline=None,
+            )
+        )
+        return
+    row.operation = "bootstrap-city-search-cache"
+    row.response_status = 200
+    row.response_json = _json(value)
+    row.created_at = _iso(now)
+    row.expires_at = _iso(expires_at)
+
+
+def _reserve_city_search_global_slot(session: Session, *, now: datetime) -> bool:
+    """Reserve the one-per-second public geocoder slot across all members/processes."""
+
+    key = _CITY_RATE_KEY
+    row = session.get(IdempotencyKey, key)
+    if row is not None:
+        try:
+            last = datetime.fromisoformat(row.created_at)
+        except (TypeError, ValueError):
+            last = now - timedelta(seconds=settings.city_search_global_min_interval_seconds)
+        if (now - last).total_seconds() < settings.city_search_global_min_interval_seconds:
+            return False
+        changed = session.execute(
+            update(IdempotencyKey)
+            .where(IdempotencyKey.key == key, IdempotencyKey.created_at == row.created_at)
+            .values(
+                operation="bootstrap-city-search-global-rate",
+                request_hash=str(uuid4()),
+                response_status=None,
+                response_json=None,
+                created_at=_iso(now),
+                expires_at=_iso(now + timedelta(seconds=3600)),
+            )
+        )
+        return changed.rowcount == 1
+    try:
+        with session.begin_nested():
+            session.add(
+                IdempotencyKey(
+                    key=key,
+                    operation="bootstrap-city-search-global-rate",
+                    request_hash=str(uuid4()),
+                    response_status=None,
+                    response_json=None,
+                    created_at=_iso(now),
+                    expires_at=_iso(now + timedelta(seconds=3600)),
+                    claim_token=None,
+                    claim_deadline=None,
+                )
+            )
+            session.flush()
+        return True
+    except IntegrityError:
+        return False
+
+
+def _city_search_config() -> tuple[str, str | None, str | None] | None:
+    """Return an explicitly approved provider, or None without touching the network."""
+
+    if not settings.city_search_enabled:
+        return None
+    provider = settings.city_search_provider
+    if provider not in {"nominatim", "photon"}:
+        return None
+    base_url = settings.city_search_base_url
+    if not base_url:
+        return None
+    parsed = urlparse(base_url)
+    host = (parsed.hostname or "").lower()
+    is_test = settings.city_search_test_provider or host in {"127.0.0.1", "localhost", "::1"}
+    if not is_test:
+        # A public endpoint must have a real identifying contact in the UA. The
+        # built-in localhost placeholder is intentionally not accepted.
+        agent = settings.city_search_user_agent
+        if not agent or ("mailto:" not in agent.lower() and "@" not in agent):
+            return None
+    return provider, base_url, settings.city_search_user_agent or None
+
+
+def search_bootstrap_city(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    query: str,
+    provider_consent: bool,
+    limit: int,
+) -> dict[str, Any]:
+    """Perform one explicit bounded city search for the R95 map camera."""
+
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "city search requires a DRAFT Journey")
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "city search requires no PlanVersion")
+    if not provider_consent:
+        raise BootstrapDiscoveryError(
+            "CITY_SEARCH_CONSENT_REQUIRED",
+            "explicit city-search provider consent is required before geocoding",
+            status_code=422,
+        )
+    query = str(query or "").strip()[:120]
+    if len(query) < 2:
+        raise BootstrapDiscoveryError("INVALID_CITY_QUERY", "city search needs at least two characters", status_code=422)
+    member_id = str(member.id)
+    traveler_id = str(traveler_id)
+    now = _now()
+    request = {
+        "journey_id": str(journey.id),
+        "query": query,
+        "limit": limit,
+        "operation": "bootstrap-city-search",
+        "member_id": member_id,
+        "traveler_id": traveler_id,
+        "provider_consent": True,
+    }
+    config = _city_search_config()
+    if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live" or config is None:
+        _provider_call(
+            session,
+            journey=journey,
+            request=request,
+            response={
+                "status": "GEOCODER_DISABLED",
+                "attempts": [],
+                "count": 0,
+                "reason": "operator_configuration_missing",
+            },
+            status="DEGRADED",
+            created_at=_iso(now),
+            provider_key="city-geocoder",
+            operation="bootstrap_city_search",
+        )
+        return {
+            "journey_id": journey.id,
+            "status": "GEOCODER_DISABLED",
+            "query": query,
+            "provider_attempts": [],
+            "results": [],
+            "provider_provenance": "UNVERIFIED",
+        }
+    provider_name, configured_url, configured_user_agent = config
+    cached = _city_search_cache_get(session, provider=provider_name, query=query, now=now)
+    if cached is not None:
+        return {
+            "journey_id": journey.id,
+            "status": str(cached.get("status") or "CITY_RESULTS"),
+            "query": query,
+            "provider_provenance": str(cached.get("provider_provenance") or "UNVERIFIED"),
+            "provider_attempts": [],
+            "cache_hit": True,
+            "results": list(cached.get("results") or []),
+        }
+    if _bootstrap_rate_limited(
+        session,
+        journey,
+        now,
+        member_id=member_id,
+        traveler_id=traveler_id,
+        operation="bootstrap-city-search",
+    ):
+        raise BootstrapDiscoveryError(
+            "CITY_SEARCH_RATE_LIMITED",
+            "please wait before asking the city provider again",
+            status_code=429,
+            details={"retry_after_seconds": _BOOTSTRAP_RATE_LIMIT_SECONDS, "provider_consent": True},
+        )
+    if not _reserve_city_search_global_slot(session, now=now):
+        _provider_call(
+            session,
+            journey=journey,
+            request={"query_hash": hashlib.sha256(query.casefold().encode("utf-8")).hexdigest(), "limit": limit},
+            response={"status": "GEOCODER_RATE_LIMITED", "attempts": [], "count": 0},
+            status="DEGRADED",
+            created_at=_iso(now),
+            provider_key="city-geocoder",
+            operation="bootstrap_city_search",
+        )
+        return {
+            "journey_id": journey.id,
+            "status": "GEOCODER_RATE_LIMITED",
+            "query": query,
+            "provider_provenance": "UNVERIFIED",
+            "provider_attempts": [],
+            "cache_hit": False,
+            "results": [],
+        }
+
+    geocoder: NominatimGeocoder | PhotonCityGeocoder
+    if provider_name == "nominatim":
+        geocoder = NominatimGeocoder(base_url=configured_url, user_agent=configured_user_agent)
+    else:
+        geocoder = PhotonCityGeocoder(base_url=configured_url, user_agent=configured_user_agent)
+    attempts: list[dict[str, Any]] = []
+    results: list[DiscoveryCandidate] = []
+    try:
+        endpoint = getattr(geocoder, "base_url", configured_url)
+        started = _now()
+        try:
+            # One explicit search only; this is never autocomplete and never a
+            # second fallback request to a different public service.
+            results = geocoder.search(query, city="", limit=limit)
+            attempts.append(
+                {
+                    "provider": provider_name,
+                    "endpoint": endpoint,
+                    "answered": True,
+                    "count": len(results),
+                    "elapsed_ms": round((_now() - started).total_seconds() * 1000, 1),
+                }
+            )
+        except Exception as exc:  # keep the public failure shape bounded and screen-safe
+            attempts.append(
+                {
+                    "provider": provider_name,
+                    "endpoint": endpoint,
+                    "answered": False,
+                    "count": 0,
+                    "error": type(exc).__name__,
+                }
+            )
+    finally:
+        geocoder.close()
+
+    selected = results[:limit]
+    provenance = "UNVERIFIED"
+    for attempt in attempts:
+        if attempt.get("answered"):
+            provenance = _provider_provenance([attempt], configured_url=str(attempt.get("endpoint") or ""))
+            break
+    status = "CITY_RESULTS" if selected else (
+        "GEOCODER_UNAVAILABLE" if attempts and not any(item.get("answered") for item in attempts) else "CITY_NO_RESULTS"
+    )
+    payload = {
+        "status": status,
+        "provider_provenance": provenance,
+        "results": [_city_result_payload(item, provenance=provenance) for item in selected],
+    }
+    _city_search_cache_put(
+        session,
+        provider=provider_name,
+        query=query,
+        value=payload,
+        now=now,
+    )
+    _provider_call(
+        session,
+        journey=journey,
+        request=request,
+        response={"status": status, "attempts": attempts, "count": len(selected), "provider_provenance": provenance},
+        status="SUCCESS" if selected or any(item.get("answered") for item in attempts) else "DEGRADED",
+        created_at=_iso(now),
+        provider_key="city-geocoder",
+        operation="bootstrap_city_search",
+    )
+    return {
+        "journey_id": journey.id,
+        "status": status,
+        "query": query,
+        "provider_provenance": provenance,
+        "provider_attempts": attempts,
+        "cache_hit": False,
+        "results": payload["results"],
+    }
 
 
 def discover_bootstrap_candidates(
@@ -679,12 +1082,13 @@ def discover_bootstrap_candidates(
             "expires_at": None,
             "source_kind": source_kind,
             "provider": "overpass",
-            "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+            "provider_provenance": "UNVERIFIED",
             "attempts": [],
             "candidates": [],
         }
 
     provider = OverpassPOIProvider()
+    configured_provider_url = provider.base_url
     attempts: list[dict[str, Any]] = []
     try:
         candidates, attempts = provider.search_with_evidence(
@@ -712,13 +1116,15 @@ def discover_bootstrap_candidates(
             "expires_at": None,
             "source_kind": source_kind,
             "provider": "overpass",
-            "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+            "provider_provenance": "UNVERIFIED",
             "attempts": attempts,
             "candidates": [],
             "failure_code": "PROVIDER_UNAVAILABLE",
         }
     finally:
         provider.close()
+
+    provider_provenance = _provider_provenance(attempts, configured_url=configured_provider_url)
 
     usable: list[DiscoveryCandidate] = []
     seen: set[str] = set()
@@ -807,7 +1213,8 @@ def discover_bootstrap_candidates(
                 ),
                 metadata_json=_json(
                     {
-                        "source": "LIVE_OPENSTREETMAP_OVERPASS",
+                        "source": provider_provenance,
+                        "provider_provenance": provider_provenance,
                         "cost_evidence": cost,
                         "public_access_gate": "NO_EXPLICIT_PRIVATE_ACCESS",
                         "osm_tags": tags,
@@ -844,6 +1251,7 @@ def discover_bootstrap_candidates(
                             }
                         ],
                         "provider_attempts": attempts,
+                        "provider_provenance": provider_provenance,
                         "candidate_id": row_id,
                         "osm_type": osm_type,
                         "osm_id": osm_id,
@@ -862,6 +1270,7 @@ def discover_bootstrap_candidates(
             "status": "LIVE_RESULTS" if usable else "LIVE_ZERO_RESULTS",
             "attempts": attempts,
             "count": len(usable),
+            "provider_provenance": provider_provenance,
         },
         status="SUCCESS",
         created_at=_iso(captured_at),
@@ -873,7 +1282,7 @@ def discover_bootstrap_candidates(
         "expires_at": _iso(expires_at),
         "source_kind": source_kind,
         "provider": "overpass",
-        "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+        "provider_provenance": provider_provenance,
         "attempts": attempts,
         "candidates": [
             _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
@@ -1057,7 +1466,7 @@ def preview_bootstrap_candidate(
         "candidate_id": row.id,
         "expires_at": row.expires_at,
         "provider": "overpass",
-        "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+        "provider_provenance": _row_provider_provenance(row),
         "destination": {
             "name": row.name,
             "external_id": row.external_id,
@@ -1244,7 +1653,7 @@ def save_bootstrap_shortlist_item(
         longitude=row.longitude,
         coordinate_system="WGS84",
         source_url=source_url,
-        source_provenance="LIVE_OPENSTREETMAP_OVERPASS",
+        source_provenance=_row_provider_provenance(row),
         captured_at=row.captured_at,
         opening_hours_json=_json(opening),
         cost_evidence_json=_json(cost),
@@ -1564,7 +1973,7 @@ def select_bootstrap_candidate(
             "selected_place_id": row.materialized_place_id,
             "plan_version_id": None,
             "journey_status": journey.status,
-            "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+            "provider_provenance": _row_provider_provenance(row),
         }
     other_selected = session.scalar(
         select(RealPlaceCandidate.id).where(
@@ -1620,7 +2029,7 @@ def select_bootstrap_candidate(
             metadata_json=_json(
                 {
                     "discovery_mode": "live",
-                    "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+                    "provider_provenance": _row_provider_provenance(row),
                     "cost_evidence": cost,
                     "price_known": str(cost.get("status") or "UNKNOWN").upper() in {"KNOWN", "VERIFIED_PROVIDER"},
                     "source_url": json.loads(row.evidence_json or "{}").get("source_url"),
@@ -1651,5 +2060,5 @@ def select_bootstrap_candidate(
         "selected_place_id": place.id,
         "plan_version_id": None,
         "journey_status": journey.status,
-        "provider_provenance": "LIVE_OPENSTREETMAP_OVERPASS",
+        "provider_provenance": _row_provider_provenance(row),
     }

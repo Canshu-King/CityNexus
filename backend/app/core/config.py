@@ -98,6 +98,22 @@ class Settings:
         "CITYNEXUS_REAL_CITY_REPLAY_SNAPSHOT", "data/replay/tianjin_v135_journey_snapshot.json"
     )
     nominatim_url: str = os.getenv("CITYNEXUS_NOMINATIM_URL", "https://nominatim.openstreetmap.org")
+    # R95 city-camera search is opt-in.  It is deliberately separate from the
+    # older live discovery switch so enabling Overpass cannot silently enable a
+    # general-purpose public geocoder.
+    city_search_enabled: bool = os.getenv("CITYNEXUS_CITY_SEARCH_ENABLED", "false").lower() == "true"
+    city_search_provider: str = os.getenv("CITYNEXUS_CITY_SEARCH_PROVIDER", "disabled").strip().lower()
+    city_search_base_url: str | None = os.getenv("CITYNEXUS_CITY_SEARCH_BASE_URL") or None
+    city_search_user_agent: str = os.getenv("CITYNEXUS_CITY_SEARCH_USER_AGENT", "").strip()
+    city_search_test_provider: bool = (
+        os.getenv("CITYNEXUS_CITY_SEARCH_TEST_PROVIDER", "false").lower() == "true"
+    )
+    city_search_cache_ttl_seconds: int = int(
+        os.getenv("CITYNEXUS_CITY_SEARCH_CACHE_TTL_SECONDS", "604800")
+    )
+    city_search_global_min_interval_seconds: float = float(
+        os.getenv("CITYNEXUS_CITY_SEARCH_GLOBAL_MIN_INTERVAL_SECONDS", "1.0")
+    )
     overpass_url: str = os.getenv("CITYNEXUS_OVERPASS_URL", "https://overpass-api.de/api")
     # Optional sourceful search for fact acquisition. Search results are leads only;
     # they never become authoritative opening or cost facts by themselves.

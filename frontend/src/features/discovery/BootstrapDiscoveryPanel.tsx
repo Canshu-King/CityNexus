@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   cityNexusApi,
+  type BootstrapCitySearchResult,
   type BootstrapDiscoveryCandidate,
   type BootstrapMapPreviewResponse,
   type BootstrapDiscoveryResponse,
@@ -197,11 +198,13 @@ function validatedPublicWalkingUrl(value: string | null | undefined, expectedLat
 export function BootstrapDiscoveryPanel({
   journeyId,
   cityCode,
+  cityName,
   onCompleted,
   onCancel,
 }: {
   journeyId: string;
   cityCode: string;
+  cityName?: string;
   onCompleted: (placeId: string) => Promise<void>;
   onCancel?: () => void;
 }) {
@@ -231,12 +234,19 @@ export function BootstrapDiscoveryPanel({
   const [mapDraftCenter, setMapDraftCenter] = useState<PublicCityCenter | null>(null);
   const [mapLink, setMapLink] = useState("");
   const [mapLinkMessage, setMapLinkMessage] = useState<string | null>(null);
+  const [citySearchConsent, setCitySearchConsent] = useState(false);
+  const [citySearchQuery, setCitySearchQuery] = useState(() => cityName?.trim() ?? "");
+  const [citySearchResults, setCitySearchResults] = useState<BootstrapCitySearchResult[]>([]);
+  const [citySearchBusy, setCitySearchBusy] = useState(false);
+  const [citySearchMessage, setCitySearchMessage] = useState<string | null>(null);
+  const [mapFocusCenter, setMapFocusCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
   const sourceKindRef = useRef<SourceKind>("MANUAL_PUBLIC_CENTER");
   const discoveryGeneration = useRef(0);
   const gpsRequestGeneration = useRef(0);
+  const citySearchGeneration = useRef(0);
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
@@ -245,6 +255,7 @@ export function BootstrapDiscoveryPanel({
   const invalidateDiscovery = () => {
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
+    citySearchGeneration.current += 1;
     try {
       pendingWindowRef.current?.close();
     } catch {
@@ -261,6 +272,10 @@ export function BootstrapDiscoveryPanel({
     setSelecting(null);
     setShortlistBusy(null);
     setMapBusy(false);
+    setCitySearchBusy(false);
+    setCitySearchResults([]);
+    setCitySearchMessage(null);
+    setMapFocusCenter(null);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -306,6 +321,7 @@ export function BootstrapDiscoveryPanel({
     identityGeneration.current += 1;
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
+    citySearchGeneration.current += 1;
     sourceKindRef.current = "MANUAL_PUBLIC_CENTER";
     try {
       pendingWindowRef.current?.close();
@@ -337,6 +353,12 @@ export function BootstrapDiscoveryPanel({
     setMapDraftCenter(null);
     setMapLink("");
     setMapLinkMessage(null);
+    setCitySearchConsent(false);
+    setCitySearchQuery(cityName?.trim() ?? "");
+    setCitySearchResults([]);
+    setCitySearchBusy(false);
+    setCitySearchMessage(null);
+    setMapFocusCenter(null);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -361,6 +383,7 @@ export function BootstrapDiscoveryPanel({
     sourceKindRef.current = "MANUAL_PUBLIC_CENTER";
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
+    citySearchGeneration.current += 1;
     setSourceKind("MANUAL_PUBLIC_CENTER");
     setLatitude("");
     setLongitude("");
@@ -372,8 +395,14 @@ export function BootstrapDiscoveryPanel({
     setMapDraftCenter(null);
     setMapLink("");
     setMapLinkMessage(null);
+    setCitySearchConsent(false);
+    setCitySearchQuery("");
+    setCitySearchResults([]);
+    setCitySearchBusy(false);
+    setCitySearchMessage(null);
+    setMapFocusCenter(null);
     setMessage("Journey changed; choose a new public search area.");
-  }, [journeyId]);
+  }, [journeyId, cityName]);
 
   useEffect(() => {
     let active = true;
@@ -460,6 +489,59 @@ export function BootstrapDiscoveryPanel({
       },
       { enableHighAccuracy: true, maximumAge: 60_000, timeout: 8_000 },
     );
+  };
+
+  const searchCity = async () => {
+    const cityQuery = citySearchQuery.trim();
+    if (!citySearchConsent) {
+      setCitySearchMessage("Confirm the separate city-search provider disclosure before searching.");
+      return;
+    }
+    if (cityQuery.length < 2) {
+      setCitySearchMessage("Enter at least two characters for the city or area.");
+      return;
+    }
+    const generation = ++citySearchGeneration.current;
+    const requestBearer = travelerBearer;
+    const requestIdentityGeneration = identityGeneration.current;
+    const requestJourneyId = journeyId;
+    setCitySearchBusy(true);
+    setCitySearchMessage(null);
+    setCitySearchResults([]);
+    try {
+      const response = await cityNexusApi.bootstrapCitySearch(journeyId, {
+        query: cityQuery,
+        provider_consent: true,
+        limit: 3,
+      });
+      const current =
+        citySearchGeneration.current === generation &&
+        identityGeneration.current === requestIdentityGeneration &&
+        readTravelerBearer() === requestBearer &&
+        journeyIdRef.current === requestJourneyId;
+      if (!current) return;
+      setCitySearchResults(response.results);
+      setCitySearchMessage(
+        response.results.length
+          ? "Choose one grounded result to move the camera, then tap the exact public area."
+          : response.status === "GEOCODER_DISABLED"
+            ? "City search is disabled here. Use the offline OpenStreetMap link or manual WGS84 fields."
+              : response.status === "GEOCODER_RATE_LIMITED"
+                ? "The configured city provider is rate-limited across the application. Wait and try once later, or use the offline OpenStreetMap link."
+                : "No grounded city result was returned. Use the offline OpenStreetMap link or manual WGS84 fields.",
+      );
+    } catch (error) {
+      if (
+        citySearchGeneration.current === generation &&
+        identityGeneration.current === requestIdentityGeneration &&
+        readTravelerBearer() === requestBearer &&
+        journeyIdRef.current === requestJourneyId
+      ) {
+        setCitySearchMessage(error instanceof Error ? error.message : "City search could not be completed.");
+      }
+    } finally {
+      if (citySearchGeneration.current === generation) setCitySearchBusy(false);
+    }
   };
 
   const search = async () => {
@@ -890,20 +972,95 @@ export function BootstrapDiscoveryPanel({
               CityNexus will use one pin as a public discovery center. It will not be treated as your location,
               presence, route origin, arrival, or a confirmed city relation. Map tiles are a separate provider release.
             </p>
+            <div className="public-city-search" data-testid="bootstrap-city-search">
+              <h3>Find my city (optional)</h3>
+              <p>
+                This makes one bounded request to the configured city-search provider. It can move the camera only;
+                it never chooses a center for you. No request is made on mount or while typing.
+              </p>
+              <label>
+                <input
+                  type="checkbox"
+                  data-testid="bootstrap-city-search-consent"
+                  checked={citySearchConsent}
+                  onChange={(event) => setCitySearchConsent(event.target.checked)}
+                />
+                I agree to ask the configured city-search provider once (source and uncertainty will be shown).
+              </label>
+              <div className="v8-form-grid">
+                <label>
+                  City or area name
+                  <input
+                    data-testid="bootstrap-city-search-query"
+                    value={citySearchQuery}
+                    onChange={(event) => {
+                      citySearchGeneration.current += 1;
+                      setCitySearchQuery(event.target.value);
+                      setCitySearchResults([]);
+                      setCitySearchMessage(null);
+                    }}
+                    maxLength={120}
+                    placeholder="Shanghai or Xujiahui"
+                  />
+                </label>
+                <div className="v8-actions">
+                  <button type="button" data-testid="bootstrap-city-search-submit" disabled={citySearchBusy} onClick={() => void searchCity()}>
+                    {citySearchBusy ? "Searching…" : "Find my city"}
+                  </button>
+                </div>
+              </div>
+              {citySearchMessage ? <p role="status" data-testid="bootstrap-city-search-message">{citySearchMessage}</p> : null}
+              {citySearchResults.length ? (
+                <ul data-testid="bootstrap-city-search-results">
+                  {citySearchResults.map((item, index) => (
+                    <li key={item.result_id}>
+                      <button
+                        type="button"
+                        data-testid={`bootstrap-city-result-${index}`}
+                        onClick={() => {
+                          setMapFocusCenter({ latitude: item.latitude, longitude: item.longitude });
+                          setMapDraftCenter(null);
+                          setMapTileConsent(false);
+                          setMessage("City result selected for camera positioning only. Tap the precise public area next.");
+                        }}
+                      >
+                        {item.name} · {item.display_name}
+                      </button>
+                      <small>
+                        source {item.provider} · {item.provider_provenance} · {item.confidence}; tap a public area to confirm
+                      </small>
+                      {safeHttpsSourceUrl(item.source_url ?? undefined) ? (
+                        <a
+                          href={safeHttpsSourceUrl(item.source_url ?? undefined)!}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-testid={`bootstrap-city-source-${index}`}
+                        >
+                          Inspect source
+                        </a>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
             <label>
               <input
                 type="checkbox"
                 data-testid="bootstrap-map-tile-consent"
                 checked={mapTileConsent}
+                disabled={!mapFocusCenter && !mapDraftCenter}
                 onChange={(event) => setMapTileConsent(event.target.checked)}
               />
               I agree to load OpenStreetMap tiles for this map picker (tiles.openstreetmap.org).
             </label>
-            {mapTileConsent ? (
-              <PublicCityAreaPicker selectedCenter={mapDraftCenter} onSelect={handlePublicMapTap} />
+            {mapTileConsent && (mapFocusCenter || mapDraftCenter) ? (
+              <PublicCityAreaPicker selectedCenter={mapDraftCenter} focusCenter={mapFocusCenter} onSelect={handlePublicMapTap} />
             ) : (
               <p role="status" data-testid="bootstrap-map-tile-not-loaded">
-                No map tiles will load until this separate disclosure is accepted. The strict link route below works without tiles.
+                {!mapFocusCenter && !mapDraftCenter
+                  ? "Choose a grounded city result or use the strict OpenStreetMap link below before loading tiles; the map never opens at 0,0."
+                  : "No map tiles will load until this separate disclosure is accepted. The strict link route below works without tiles."}
               </p>
             )}
             <label>
@@ -1116,7 +1273,7 @@ export function BootstrapDiscoveryPanel({
                 </p>
                 <div data-testid={`bootstrap-source-facts-${candidate.candidate_id}`}>
                   <p>
-                    Source identity: {candidate.opening_source ?? "OpenStreetMap/Overpass"} · {candidate.external_id} · observed {candidate.opening_observed_at ?? "unknown"}
+                    Source identity: {candidate.opening_source ?? "OpenStreetMap/Overpass"} · {candidate.external_id} · grade {candidate.provider_provenance} · observed {candidate.opening_observed_at ?? "unknown"}
                   </p>
                   <p>
                     Opening evidence: {candidate.opening_claim ?? "NO_OPENING_TAG"} · {candidate.opening_verification_state === "PROVIDER_GROUNDED" ? "provider-grounded, not freshly rechecked" : "EXTERNAL_NOT_ATTESTED"}

@@ -260,6 +260,7 @@ from app.execution.departure_activation import departure_activation_projection
 from app.execution.bootstrap_discovery import (
     BootstrapDiscoveryError,
     discover_bootstrap_candidates,
+    search_bootstrap_city,
     list_bootstrap_shortlist_items,
     remember_bootstrap_shortlist_item,
     remove_bootstrap_shortlist_item,
@@ -480,6 +481,7 @@ from app.schemas import (
     EventCreate,
     GeneratePlansRequest,
     BootstrapDiscoveryRequest,
+    BootstrapCitySearchRequest,
     BootstrapSelectRequest,
     BootstrapMapPreviewRequest,
     BootstrapShortlistSaveRequest,
@@ -3431,6 +3433,38 @@ def bootstrap_journey_discovery(
             latitude=payload.latitude,
             longitude=payload.longitude,
             accuracy_m=payload.accuracy_m,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-city-search")
+def search_bootstrap_journey_city(
+    journey_id: UUID,
+    payload: BootstrapCitySearchRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Search one explicitly named city to position the public map camera."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = search_bootstrap_city(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            query=payload.query,
+            provider_consent=payload.provider_consent,
+            limit=payload.limit,
         )
         session.commit()
         return result
