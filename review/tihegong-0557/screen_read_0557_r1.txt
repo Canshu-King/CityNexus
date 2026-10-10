@@ -1,0 +1,14 @@
+ORD-0557 screen reading, first real-browser pass for the ten landed titles
+run: authoritative mode, own ports and own throwaway database, AI off, nothing shared was touched
+provenance copied verbatim into review/tihegong-0557/e2e_provenance_thg0215.json
+command, cwd frontend: DEEPSEEK_API_KEY= CITYNEXUS_AI_ENABLED=false CITYNEXUS_E2E_AUTHORITATIVE=1 CITYNEXUS_E2E_PORT=4181 CITYNEXUS_BACKEND_PORT=8137 CITYNEXUS_PYTHON=D:/moodle/CityNexus/.venv/Scripts/python.exe CITYNEXUS_E2E_RUN_ID=thg0215 CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_tiehegong_0555/wt_tip/backend/_e2e_thg0215.db CITYNEXUS_EVIDENCE_DIR=D:/moodle/_qoder_tiehegong_0557_evidence node node_modules/@playwright/test/cli.js test e2e/qoder-stored-journey-link-is-an-entry.spec.ts --reporter=line
+tree under test: a detached checkout of the authoritative line f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c -- not this lane's branch
+outcome: 6 passed in 30.1s, playwright exit code 0, workers 1, retries 0
+
+rendered readings, copied out of the run's own evidence JSON (not from source):
+  ord0351-b-a-link-the-server-denies-says-so-by-name.json | visible_heading = 这台服务器上没有这一趟行程了
+      visible_body starts: 连接正常 这台服务器上没有这一趟行程了 这台设备还记得行程 f9aa1343…，但服务器明确回答它不存在（http_status=404）。这不是网络问题：服务器刚才答得出来。
+  ord0351-c-an-unanswered-link-is-never-blamed-on-the-server.json | visible_heading = 网络不可用
+      visible_body starts: 连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。 重试 归因详情
+
+still absent in this pass: the English arm was never rendered -- every case in this spec runs in the seeded Chinese locale, so the en reading needs a run whose context starts in en; and only two of the ten titles have a reachable screen state in this suite. The other eight stay covered by the character-for-character gate, the full typecheck and the build, not by a screen.
