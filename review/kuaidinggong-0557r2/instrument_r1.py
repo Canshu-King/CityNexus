@@ -2,7 +2,7 @@ import subprocess, io, json
 from pathlib import Path
 
 WT = "D:/moodle/_qoder_kuaidinggong_0557/wt2"
-TIP = "996f1b7588580a14fbbdec5301a6e4a7b70c93e4"
+TIP = "b4e3e049c851200a0ab0e421c335694fc607cda7"
 PROD = "review/快钉工-0557-r2"
 DICT = "review/快钉工-0557-dict-r2"
 FILE = "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
