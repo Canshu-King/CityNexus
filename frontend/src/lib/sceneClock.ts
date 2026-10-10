@@ -173,15 +173,15 @@ export function invalidateScene(client: QueryClient): void {
 }
 
 /** The server's words, mapped to what a traveller can act on.  Unknown stays unknown. */
-export function basisWord(basis: string | null, zh: boolean): string {
-  if (basis === "CURSOR") return zh ? "执行游标" : "the execution cursor";
-  if (basis === "JOURNEY_START") return zh ? "行程起点" : "the journey's start";
-  return zh ? "服务器没有说明依据" : "the server gave no basis";
+/* Not a component, so it cannot call `useLocale()`; the caller hands its reader down. */
+export function basisWord(basis: string | null, say: (key: string) => string): string {
+  if (basis === "CURSOR") return say("scene.theExecutionCursor");
+  if (basis === "JOURNEY_START") return say("scene.theJourneySStart");
+  return say("scene.theServerGaveNoBasis");
 }
 
-export function evidenceWord(state: string | null, zh: boolean): string {
-  if (state === "REFERENCED")
-    return zh ? "这批证据带冻结期" : "the frozen evidence carries an expiry";
+export function evidenceWord(state: string | null, zh: boolean, say: (key: string) => string): string {
+  if (state === "REFERENCED") return say("scene.theFrozenEvidenceCarriesAnExpiry");
   /* The state `924461e` added, and the one a naive reading gets wrong: sealed pairs exist and are
      used by a replan -- only the expiry is missing.  Showing this as "没有数据" tells a traveller
      the trip has no travel data when the server said it has 56 pairs. */
@@ -193,9 +193,8 @@ export function evidenceWord(state: string | null, zh: boolean): string {
     return zh
       ? "证据的引用对不上（服务器说有封存记录，但引用不一致）"
       : "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)";
-  if (state === "NO_FROZEN_EVIDENCE")
-    return zh ? "这趟没有冻结证据" : "no frozen evidence on this trip";
-  if (state === "NO_SCENARIO") return zh ? "台上没有场景" : "no scenario on stage";
+  if (state === "NO_FROZEN_EVIDENCE") return say("scene.noFrozenEvidenceOnThisTrip");
+  if (state === "NO_SCENARIO") return say("scene.noScenarioOnStage");
   return zh ? `服务器报的是 ${state}，我们不替它解释` : `the server reported ${state}; we do not interpret it`;
 }
 

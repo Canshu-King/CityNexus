@@ -838,12 +838,12 @@ export function SimulationPanel({
         <div>
           <dt>{zh ? "依据" : "Basis"}</dt>
           <dd data-testid="sim-basis">
-            {basisWord(scene.scene?.basis ?? null, zh)}
+            {basisWord(scene.scene?.basis ?? null, t)}
           </dd>
         </div>
         <div>
           <dt>{zh ? "证据" : "Evidence"}</dt>
-          <dd data-testid="sim-evidence">{`${evidenceWord(scene.scene?.evidenceState ?? null, zh)} · ${
+          <dd data-testid="sim-evidence">{`${evidenceWord(scene.scene?.evidenceState ?? null, zh, t)} · ${
             scene.scene?.evidenceExpiresAt
               ? sceneInstant(scene.scene.evidenceExpiresAt)
               : zh
