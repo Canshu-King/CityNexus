@@ -1912,6 +1912,35 @@ export interface BootstrapTwoStopWalkResponse {
   selected_place_id: null;
 }
 
+export interface BootstrapTwoStopWalkabilityResponse {
+  preview_id: string;
+  status: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
+  route_state: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
+  journey_id: string;
+  authorization_basis: "TWO_SAVED_PUBLIC_IDENTITIES";
+  release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_WALKABILITY";
+  navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+  navigation_url: string;
+  first_stop: BootstrapTwoStopWalkResponse["first_stop"];
+  second_stop: BootstrapTwoStopWalkResponse["second_stop"];
+  provider: string | null;
+  router_profile: string;
+  provenance: string;
+  reason_code: string | null;
+  reason: string | null;
+  observed_at: string;
+  duration_min: number | null;
+  distance_m: number | null;
+  route_time_state: "PROVIDER_CAPTURED" | "UNKNOWN";
+  route_distance_state: "PROVIDER_CAPTURED" | "UNKNOWN";
+  route_caveats: string[];
+  shared_fields: string[];
+  withheld_fields: string[];
+  explore_state: "DRAFT_EXPLORE_ONLY";
+  plan_version_id: null;
+  selected_place_id: null;
+}
+
 export interface AgentRunStep {
   id?: string;
   sequence_no: number;
@@ -2932,6 +2961,24 @@ export const cityNexusApi = {
   ): Promise<BootstrapTwoStopWalkResponse> {
     return requestJson<BootstrapTwoStopWalkResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist/two-stop-walk",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  checkBootstrapTwoStopWalkability(
+    journeyId: string,
+    input: {
+      first_shortlist_id: string;
+      second_shortlist_id: string;
+      public_route_consent: boolean;
+    },
+  ): Promise<BootstrapTwoStopWalkabilityResponse> {
+    return requestJson<BootstrapTwoStopWalkabilityResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/two-stop-walkability",
       {
         method: "POST",
         headers: travelerAuthHeaders(),
