@@ -376,6 +376,12 @@ test("R98 two-stop walkability, unavailable fallback, and destination-only resum
     );
     expect(provider.routeCalls).toHaveLength(2);
 
+    // Preparing the external map does not invalidate a valid provider result
+    // (or the honest unavailable state) for the unchanged public POI pair.
+    await ownerPanel.getByTestId("bootstrap-two-stop-open").click();
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-result")).toContainText("ROUTE_PROVIDER_UNAVAILABLE");
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-fallback")).toBeVisible();
+
     await ownerPanel.getByTestId("bootstrap-two-stop-consent-checkbox").check();
     const twoStopPopupPromise = page.waitForEvent("popup");
     await ownerPanel.getByTestId("bootstrap-two-stop-confirm").click();
