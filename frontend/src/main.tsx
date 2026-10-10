@@ -1425,7 +1425,7 @@ function LegacyApp() {
                 {impactResolution.provider_key ?? "deterministic"} ·{" "}
                 {impactResolution.selected_activity_id
                   ? (impactResolution.maturity_stage ?? t("main.validatedActivity"))
-                  : "no actionable target"}
+                  : t("main.noActionableTarget")}
               </p>
             )}
           </div>
@@ -1476,7 +1476,7 @@ function LegacyApp() {
               travelerTwin.learned_soft_preferences.map((item, index) => (
                 <span key={(item.dimension ?? "learned") + (item.direction ?? "") + index}>
                   {item.direction ?? item.dimension ?? "preference"} · strength {Math.round((item.strength ?? 0) * 100)}% ·
-                  evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? "unknown"} · {item.explanation ?? "outcome evidence"}
+                  evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? "unknown"} · {item.explanation ?? t("main.outcomeEvidence")}
                 </span>
               ))
             )}
@@ -1488,7 +1488,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.conflicts.map((item, index) => (
                 <span key={String(item.dimension ?? "conflict") + index}>
-                  {String(item.dimension ?? "preference")} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? "explicit wins")}
+                  {String(item.dimension ?? "preference")} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? t("main.explicitWins"))}
                 </span>
               ))
             )}
@@ -1546,13 +1546,13 @@ function LegacyApp() {
             )}
           </div>
           <p data-testid={testIds.currentActivity}>
-            Current: {current?.title ?? "not reported"}
+            Current: {current?.title ?? t("main.notReported")}
           </p>
-          <p>Next: {next?.title ?? "no upcoming activity"}</p>
+          <p>Next: {next?.title ?? t("main.noUpcomingActivity")}</p>
         </div>
         <aside className="evidence-card">
           <h2 data-testid={testIds.protectedCommitment}>
-            🔒 {c4Activity?.title ?? "No active C4"} ·{" "}
+            🔒 {c4Activity?.title ?? t("main.noActiveC4")} ·{" "}
             {c4Commitment ? formatTime(c4Commitment.policy.scheduled_start_at) : "—"} C4
           </h2>
           <p data-testid={testIds.nextCommitment}>
@@ -1561,7 +1561,7 @@ function LegacyApp() {
           <p data-testid={testIds.nextCommitmentBuffer}>
             Next commitment buffer ·{" "}
             {envelope?.next_commitment_buffer_min == null
-              ? "not available"
+              ? t("main.notAvailable")
               : envelope.next_commitment_buffer_min + " min"}
           </p>
           <p data-testid={testIds.budgetRemaining}>
@@ -1596,7 +1596,7 @@ function LegacyApp() {
               const title = commitmentRowTitle(plan, commitment);
               return (
                 <span key={commitment.id} data-testid="upcoming-commitment-row">
-                  {title || "未命名承诺 · 服务器没给名字"} ·{" "}
+                  {title || t("main.unnamedCommitmentServerGaveNoName")} ·{" "}
                   {formatTime(commitment.policy.scheduled_start_at)} · {commitment.level}
                 </span>
               );
@@ -1647,7 +1647,7 @@ function LegacyApp() {
           <h2>Replan comparison · persisted proposals</h2>
           <div data-testid={testIds.replanCandidate} className="candidate">
             {selectedProposal.diff.candidate_family} ·{" "}
-            {selectedProposal.hard_constraints_passed ? "verified feasible" : "not feasible"}
+            {selectedProposal.hard_constraints_passed ? t("main.verifiedFeasible") : t("main.notFeasible")}
           </div>
           <div data-testid={testIds.replanCandidateFamilies} className="candidate-families">
             {families.map((family) => (
@@ -1681,10 +1681,10 @@ function LegacyApp() {
           <p data-testid={testIds.replanEvidence}>
             Evidence · hard constraints{" "}
             {selectedProposal.hard_constraints_passed ? "pass" : "fail"} · C4{" "}
-            {selectedProposal.locked_commitments_preserved ? "preserved" : "not preserved"} ·{" "}
+            {selectedProposal.locked_commitments_preserved ? "preserved" : t("main.notPreserved")} ·{" "}
             {selectedProposal.diff.verified_evidence
-              ? "verified evidence attached"
-              : "evidence unavailable"}
+              ? t("main.verifiedEvidenceAttached")
+              : t("main.evidenceUnavailable")}
           </p>
           <p data-testid={testIds.replanDiff}>{proposalDiffText(selectedProposal, plan)}</p>
           <p data-testid={testIds.replanDeltas}>
