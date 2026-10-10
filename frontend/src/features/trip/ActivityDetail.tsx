@@ -290,7 +290,7 @@ export function ActivityDetail({
             {nearbyAreClose
               ? zh
                 ? `都在约 ${nearbyRadiusM} 米范围内，按直线距离排列。`
-                : `All within about ${nearbyRadiusM} m, ordered by straight-line distance.`
+                : `All within about ${nearbyRadiusM} ${englishCountNoun(nearbyRadiusM, "metre")}, ordered by straight-line distance.`
               : say("activity.otherStopsNote")}
           </p>
           <ul>
@@ -308,7 +308,7 @@ export function ActivityDetail({
                             : `${Math.round(metres)} ${englishCountNoun(Math.round(metres), "metre")}`
                           : zh
                             ? `${(metres / 1000).toFixed(1)} 公里`
-                            : `${(metres / 1000).toFixed(1)} km`}
+                            : `${(metres / 1000).toFixed(1)} ${englishCountNoun((metres / 1000).toFixed(1), "kilometre")}`}
                       </small>
                     )}
                   </button>
