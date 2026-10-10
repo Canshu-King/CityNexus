@@ -73,7 +73,7 @@ export function PlanComparison({
   currency: string;
   onSelected: () => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
@@ -104,15 +104,12 @@ export function PlanComparison({
            status, media type, byte count -- goes on screen beside our own wording, so the traveller
            can still tell "the server said no" from "the server never answered". */
         const { facts } = await readResponseFacts(response);
-        setError(
-          zh ? "这个方案暂时不能采用。" : "This plan could not be chosen.",
-          facts,
-        );
+        setError(t("planning.planCannotBeChosen"), facts);
         return;
       }
       onSelected();
     } catch {
-      setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+      setError(t("planning.couldNotReachServer"));
     } finally {
       setBusyId(null);
     }
@@ -121,7 +118,7 @@ export function PlanComparison({
   return (
     <section className="plan-cmp" data-testid="plan-comparison">
       <div className="plan-cmp-head">
-        <h2>{zh ? "选择你的方案" : "Choose your plan"}</h2>
+        <h2>{t("planning.chooseYourPlan")}</h2>
         <p>
           {zh
             ? `我们按这座城可核验的地点和你的预算，生成了 ${candidates.length} 个可选方案。`
