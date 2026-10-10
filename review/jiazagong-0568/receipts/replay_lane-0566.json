@@ -1,0 +1,821 @@
+{
+ "arm": "codes-on-screen-r3",
+ "ref": "refs/heads/review/备城工-0566-r1",
+ "base": "refs/heads/review/备城工-0566-r1~3",
+ "require_name": true,
+ "only_added": true,
+ "files_judged": 5,
+ "problems": [],
+ "informational": [
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 21,
+   "entry_line": 21,
+   "token": "traveler-twin",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import { TwinPanel } from \"../features/traveler-twin/TwinPanel\";"
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 129,
+   "entry_line": 129,
+   "token": "plan-ranking",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"plan-ranking\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 131,
+   "entry_line": 131,
+   "token": "plan-ranking",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"plan-ranking\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 145,
+   "entry_line": 145,
+   "token": "pending-set",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"pending-set\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 147,
+   "entry_line": 147,
+   "token": "pending-set",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"pending-set\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 160,
+   "entry_line": 160,
+   "token": "trip-studio",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v8-trip-studio\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 167,
+   "entry_line": 167,
+   "token": "stay-explorer",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v8-stay-explorer\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 182,
+   "entry_line": 182,
+   "token": "prep-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"prep-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 210,
+   "entry_line": 210,
+   "token": "poi-import",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"poi-import\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 212,
+   "entry_line": 212,
+   "token": "poi-import",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"poi-import\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 241,
+   "entry_line": 241,
+   "token": "collection-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"collection-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 251,
+   "entry_line": 251,
+   "token": "live-recovery",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"live-recovery\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 280,
+   "entry_line": 280,
+   "token": "maplibre-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v8-maplibre-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 285,
+   "entry_line": 285,
+   "token": "trips-activity-detail",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-activity-detail\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 287,
+   "entry_line": 287,
+   "token": "activity-detail",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"activity-detail\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 311,
+   "entry_line": 311,
+   "token": "trips-workspace",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-workspace\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 313,
+   "entry_line": 313,
+   "token": "trips-tabs",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"trips-tabs\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 320,
+   "entry_line": 320,
+   "token": "inbox-pending-queue",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"inbox-pending-queue\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 342,
+   "entry_line": 342,
+   "token": "runtime-status",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v17-runtime-status\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 362,
+   "entry_line": 362,
+   "token": "authoritative-page",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v12-authoritative-page\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 386,
+   "entry_line": 386,
+   "token": "journey-trash-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"journey-trash-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 401,
+   "entry_line": 401,
+   "token": "access-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"access-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 414,
+   "entry_line": 414,
+   "token": "footprint-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"footprint-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 436,
+   "entry_line": 436,
+   "token": "trips-poster-entry",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-poster-entry\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 437,
+   "entry_line": 437,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"trips-tab\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 438,
+   "entry_line": 438,
+   "token": "trip-poster-bar",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"trip-poster-bar\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 448,
+   "entry_line": 448,
+   "token": "trips-abort",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-abort\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 449,
+   "entry_line": 449,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"trips-tab\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 450,
+   "entry_line": 450,
+   "token": "journey-abort",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"journey-abort\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 457,
+   "entry_line": 457,
+   "token": "trips-itinerary",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-itinerary\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 458,
+   "entry_line": 458,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"trips-tab\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 459,
+   "entry_line": 459,
+   "token": "trip-itinerary",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"trip-itinerary\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 471,
+   "entry_line": 471,
+   "token": "trips-stay",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-stay\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 472,
+   "entry_line": 472,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"trips-tab\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 473,
+   "entry_line": 473,
+   "token": "hotels-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"hotels-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 478,
+   "entry_line": 478,
+   "token": "trips-bookings",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-bookings\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 479,
+   "entry_line": 479,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"trips-tab\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 480,
+   "entry_line": 480,
+   "token": "trips-commitments",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"trips-commitments\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 504,
+   "entry_line": 504,
+   "token": "trips-spend",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"trips-spend\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 505,
+   "entry_line": 505,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"trips-tab\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 506,
+   "entry_line": 506,
+   "token": "trips-spend",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"trips-spend\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 521,
+   "entry_line": 521,
+   "token": "auth-recovery-required",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-recovery-required\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 523,
+   "entry_line": 523,
+   "token": "recovery-required-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"recovery-required-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 537,
+   "entry_line": 537,
+   "token": "auth-no-plan",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-no-plan\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 544,
+   "entry_line": 544,
+   "token": "auth-plan-version-history",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-plan-version-history\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 546,
+   "entry_line": 546,
+   "token": "plan-version-history",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"plan-version-history\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 551,
+   "entry_line": 551,
+   "token": "auth-journey",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-journey\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 553,
+   "entry_line": 553,
+   "token": "authoritative-panel",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v12-authoritative-panel\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 566,
+   "entry_line": 566,
+   "token": "auth-trip-studio",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-trip-studio\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 568,
+   "entry_line": 568,
+   "token": "trip-studio",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v12-trip-studio\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 575,
+   "entry_line": 575,
+   "token": "auth-preventive",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-preventive\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 582,
+   "entry_line": 582,
+   "token": "auth-recovery-truth",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"auth-recovery-truth\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 584,
+   "entry_line": 584,
+   "token": "recovery-truth",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"v14-recovery-truth\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 611,
+   "entry_line": 611,
+   "token": "hub-pretrip-checklist",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"hub-pretrip-checklist\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 612,
+   "entry_line": 612,
+   "token": "hub-anchor",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "surface: \"hub-anchor\","
+  },
+  {
+   "file": "frontend/src/app/v8PanelRegistry.tsx",
+   "line": 613,
+   "entry_line": 613,
+   "token": "pretrip-checklist",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"pretrip-checklist\","
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "line": 254,
+   "entry_line": 249,
+   "token": "as-is",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "nCode}); there is no local copy for it, so it is shown as-is rather than explained away.`,"
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "line": 321,
+   "entry_line": 316,
+   "token": "as-is",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "e is ${String(job.outcome ?? \"—\")}; there is no local copy for it, so it is shown as-is.`,"
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "line": 569,
+   "entry_line": 569,
+   "token": "prep-job",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "className={`prep-job ${job.terminal ? \"terminal\" : \"running\"}`}"
+  },
+  {
+   "file": "frontend/src/features/estimation/estimationLadderCopy.ts",
+   "line": 54,
+   "entry_line": 54,
+   "token": "re-checked",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "to change the hotel or one leg's mode -- the same hard commitments are re-checked there.\","
+  },
+  {
+   "file": "frontend/src/features/estimation/estimationLadderCopy.ts",
+   "line": 56,
+   "entry_line": 56,
+   "token": "re-checked",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "nd change the hotel or one leg's mode -- the same hard commitments are re-checked there.\","
+  },
+  {
+   "file": "frontend/src/features/mobility/MobilitySheet.tsx",
+   "line": 16,
+   "entry_line": 16,
+   "token": "mode-option",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "etChoose\")}</button><p className=\"v8-sheet-note\">{t(\"mobility.note\")}</p></section></div>;"
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 113,
+   "entry_line": 113,
+   "token": "read-only",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"shell.offlineMsg\": \"Network unavailable · showing your read-only saved journey.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 205,
+   "entry_line": 205,
+   "token": "evidence-backed",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "e-backed journey with the stay, movement, luggage, and protected moments working as one.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 240,
+   "entry_line": 240,
+   "token": "weather-aware",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"hub.weatherAware\": \"weather-aware\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 290,
+   "entry_line": 290,
+   "token": "multi-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"studio.kicker\": \"Trip Studio · multi-day plan\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 324,
+   "entry_line": 324,
+   "token": "multi-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "ub\": \"Compose from the server Trip Studio to create the frozen multi-day execution path.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 331,
+   "entry_line": 331,
+   "token": "leave-by",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\": \"Current step, next protected moment, leave-by guidance, and one clear recovery path.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 477,
+   "entry_line": 477,
+   "token": "what-if",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "your trip is explained before it is applied, and your confirmed bookings stay protected.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 497,
+   "entry_line": 497,
+   "token": "what-if",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "aceholder\": \"Ask why, try a what-if, find a place, or report a disruption happening now…\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 569,
+   "entry_line": 569,
+   "token": "read-back",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "nt.aiRunUnreadable\": \"That read-back didn't answer, so we won't guess what was produced.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 571,
+   "entry_line": 571,
+   "token": "read-back",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"agent.aiRunNothingLanded\": \"The read-back says no plan was added.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 577,
+   "entry_line": 577,
+   "token": "read-back",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"agent.aiRunNoCurrentPlan\": \"The read-back found no plan in force at all.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 599,
+   "entry_line": 599,
+   "token": "server-known",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " the semantic direction, but only a server-known place can reach the authoritative plan.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 610,
+   "entry_line": 610,
+   "token": "provider-grounded",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " broader place request or a nearby arrival anchor; CityNexus kept the Journey unchanged.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 628,
+   "entry_line": 628,
+   "token": "fact-level",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"discovery.factFallback\": \"fact-level fallback\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 642,
+   "entry_line": 642,
+   "token": "provider-grounded",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"discovery.providerGrounded\": \"provider-grounded\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 653,
+   "entry_line": 653,
+   "token": "rain-friendly",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "indoor culture, low walking, and rain-friendly places near my protected Journey moments.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 689,
+   "entry_line": 689,
+   "token": "mid-run",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"discovery.thisPreparationWasLostMidRun\": \"This preparation was lost mid-run\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 787,
+   "entry_line": 787,
+   "token": "auto-apply",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"inbox.smartApplyFailed\": \"Couldn't auto-apply.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 808,
+   "entry_line": 808,
+   "token": "share-grant",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " share-grant door did not answer, so this screen will not guess what it would have said.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 938,
+   "entry_line": 938,
+   "token": "pre-authorized",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"intel.versionSuffix\": \"· pre-authorized transport envelope\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1054,
+   "entry_line": 1054,
+   "token": "in-app",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"push.unavailable\": \"Push capability unavailable · in-app records remain active.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1056,
+   "entry_line": 1056,
+   "token": "policy-bound",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"push.saved\": \"Web Push subscription saved; policy-bound delivery remains auditable.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1120,
+   "entry_line": 1120,
+   "token": "link-readable",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "readable row, {grant}, and that is the link handed over ({rows} {plural:row:rows} read).\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1140,
+   "entry_line": 1140,
+   "token": "re-syncing",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"recovery.staleTitle\": \"Trip evidence needs re-syncing\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1224,
+   "entry_line": 1224,
+   "token": "auto-accept",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"v14.autoAcceptOn\": \"envelope auto-accept enabled\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1267,
+   "entry_line": 1267,
+   "token": "journey-scoped",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "timate\": \"Per-stop estimates: the store keeps them, no journey-scoped read answers them.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1336,
+   "entry_line": 1336,
+   "token": "straight-line",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"detail.nearbyNoteClose\": \"All within about {n} m, ordered by straight-line distance.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1375,
+   "entry_line": 1375,
+   "token": "day-by-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here.\","
+  }
+ ]
+}
