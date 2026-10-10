@@ -2,14 +2,13 @@ import { createContext, useContext, useState, useCallback, useEffect, type React
 import { expandPluralMarkers } from "../lib/plural";
 import { domainBooks } from "./locales";
 
-
 export type TripLocale = "en" | "zh-CN";
 
 type Dict = Record<string, string>;
 
 // ORD-0572: both books are assembled from ./locales/*.ts, merged in lexicographic domain-file
-// order. Every key and every value below was moved byte for byte; nothing was retyped, renamed
-// or reworded, and the exported names, types, useT and dictionaryCopy are unchanged.
+// order. Every key and every value was moved byte for byte; nothing was retyped, renamed or
+// reworded, and the exported names, types, useT and dictionaryCopy are unchanged.
 const en: Dict = {};
 const zhCN: Dict = {};
 for (const book of domainBooks) {

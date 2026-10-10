@@ -2,8 +2,6 @@
 
 export const agent = {
   en: {
-  "me.asksBeforeProtectedChange":
-    "Anything affecting a confirmed booking or protected plan asks you first.",
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",

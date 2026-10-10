@@ -34,6 +34,8 @@ export const me = {
   "me.stayChooseInTrips": "Choose it in Trips · Stay",
   "me.bookingsProtected": "Protected bookings; they are never changed automatically.",
   "me.bookingsImport": "Import a ticket or confirmation in Trips · Bookings.",
+  "me.asksBeforeProtectedChange":
+    "Anything affecting a confirmed booking or protected plan asks you first.",
   },
   zh: {
   "me.autonomyAutonomous": "自动执行已开启",
