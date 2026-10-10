@@ -72,10 +72,19 @@ def check(name, ok, detail):
 
 
 def main():
-    tip = (git("ls-remote", "origin", REF).split() or [""])[0]
-    if len(tip) != 40:
+    live = (git("ls-remote", "origin", REF).split() or [""])[0]
+    if len(live) != 40:
         raise SystemExit("2 ls-remote gave no 40-character tip")
-    say("0 tip read live for this run: %s" % tip)
+    # Once the landing leg absorbs this branch, the live tip and the candidate are the same bytes and
+    # every before/after arm degenerates to a self-comparison.  Pin the generation the branch was cut
+    # from for those arms, and keep reading the live tip in the open.
+    tip = os.environ.get("CITYNEXUS_0557_BASE") or live
+    if not re.fullmatch(r"[0-9a-f]{40}", tip):
+        raise SystemExit("2 CITYNEXUS_0557_BASE must be a 40-hex commit")
+    say("0 live authoritative tip: %s" % live)
+    say("0b generation this arm compares against (pinned): %s" % tip)
+    say("0c file blob at live=%s at pinned=%s" % (
+        git("rev-parse", "%s:%s" % (live, TARGET)), git("rev-parse", "%s:%s" % (tip, TARGET))))
 
     src = read(TARGET)
     tip_src = git("show", "%s:%s" % (tip, TARGET))

@@ -42,6 +42,13 @@ function gitShow(rev) {
     { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 }
 
+function gitBlob(rev) {
+  try {
+    return execFileSync("git", ["-C", REPO, "rev-parse", `${rev}:${TARGET}`], { encoding: "utf8" }).trim();
+  } catch { return "<file absent at that revision>"; }
+}
+const candBlob = execFileSync("git", ["-C", REPO, "hash-object", TARGET], { encoding: "utf8" }).trim();
+
 async function bundle(name, contents) {
   const outfile = path.join(OUTDIR, `${name}.cjs`);
   fs.mkdirSync(OUTDIR, { recursive: true });
@@ -143,7 +150,11 @@ function diff(a, b) {
 
   const lines = [];
   const say = (s) => { lines.push(s); };
-  say(`0 tip read for this run: ${TIP}`);
+  const liveTip = execFileSync("git", ["-C", REPO, "ls-remote", "origin", REF], { encoding: "utf8" })
+    .split(/\s+/)[0];
+  say(`0 comparison generation (pinned for this run): ${TIP}`);
+  say(`0b live authoritative tip at run time: ${liveTip}`);
+  say(`0c file blob live=${gitBlob(liveTip)} pinned=${gitBlob(TIP)} candidate-on-disk=${candBlob}`);
   say(`1 cells rendered on both sides: ${Object.keys(baseCells).length}`);
   say(`2 candidate vs tip: cells moved = ${candMoved.length}`);
   for (const [name, before, after] of candMoved) say(`3 MOVED ${name}\n   was ${before}\n   now ${after}`);

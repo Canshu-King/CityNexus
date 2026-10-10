@@ -1,4 +1,4 @@
-0 state=cand tip=24a50a8aecf0a1fe4704400c687540d3e05d74fb bytes written sha=0f57b2e9b79a (candidate on disk before swap was 0f57b2e9b79a)
+0 state=cand base=24a50a8aecf0a1fe4704400c687540d3e05d74fb live_tip=bf057bb6f6eab117f030037c54ee0f515bd6a486 bytes written sha=0f57b2e9b79a (candidate on disk before swap was 0f57b2e9b79a)
 0b served module carries the cand marker, length 70884
 0c locale=zh-CN page fetched module len=70884 swController=false readKey=true brokenKey=false literal=false (matches state)
 1 state=cand locale=zh-CN screen text = 它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。

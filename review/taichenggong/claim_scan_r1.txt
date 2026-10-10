@@ -1,10 +1,15 @@
 0 roots: repo=D:\moodle\_qoder_taicheng_0557_20261010\wt ledger=D:\moodle\CITYNEXUS_AGENT_CONTROL.md inbox=D:\moodle\_qoder_ledger_inbox
-1 authoritative tip read now via ls-remote: 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+1 authoritative tip read now via ls-remote: bf057bb6f6eab117f030037c54ee0f515bd6a486
+1b generation this scan compares against (pinned): 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+1c file blob at live: a0c636f743c49fb2c00f0ab6572f66f11844feca
 2 target file blob on that tip: f6a1f10e20a71caa638710f70c671d73978325db
-3 commits on this machine's branch heads that touch the target and are not in the tip: 6
-4 commit=5e6e3d150a|10-10_01:51|ORD-0557: the two media-type fallbacks in failureAttribution.ts rea
+3 commits on this machine's branch heads that touch the target and are not in the tip: 7
+4 commit=553ca32a31|10-10_01:51|ORD-0557: the two media-type fallbacks in failureAttribution.ts rea
 5   numstat=[5	2	frontend/src/lib/failureAttribution.ts] blob=a0c636f743c4 -> produces bytes the tip does not have
 6   heads carrying it: <none>
+4 commit=5e6e3d150a|10-10_01:51|ORD-0557: the two media-type fallbacks in failureAttribution.ts rea
+5   numstat=[5	2	frontend/src/lib/failureAttribution.ts] blob=a0c636f743c4 -> produces bytes the tip does not have
+6   heads carrying it: review/备城工-0555-r1
 4 commit=f659c22550|10-10_09:35|i18n(ORD-0555): move the fourth inline bilingual title of failureAt
 5   numstat=[1	1	frontend/src/lib/failureAttribution.ts] blob=d6dd3072fc4e -> produces bytes the tip does not have
 6   heads carrying it: review/铁盒工-0555-r1
@@ -28,11 +33,10 @@
 9 ### 新车道·电工 自派清单取 `failureAttribution.ts`：十四枚小标题收进一张表，差分证明无一句屏文移动
 9 **新扫范围**：按号令者自派清单（账本 `### 号令者落地腿 自派清单 现尖内联双语前几名 无人认领者取之`，尖现读 `cf5915ea948579b4dc80aa57a299639b5440150e`）取第 4 名 `frontend/src/lib/failureAttribution.ts`。认领前按规矩查过账本有没有人点名：该文件名在账本命中两枚
 9 **下一轮要扫的新范围**：同文件还剩 `title` 十四处与 `body` 十四处（现读 `grep -c 'title: zh'` 与 `grep -c 'body: zh\|body: detail'` 各得十四，先前草稿写「十处」是印象数，已按现读改掉）。`title` 十四处全是单行内联对，如现读 `frontend/src/lib/failur
-10 inbox blocks naming the file or order 0557: 3
+10 inbox blocks naming the file or order 0557: 2
 11 pinggong_0935.md
-11 yufanggong_0946.md
 11 补栏工_0146.md
-12 remote review branches whose name carries order 0557: 19
+12 remote review branches whose name carries order 0557: 20
 13 大柜工-0557-dict-r1 -> same bytes as tip
 13 大柜工-0557-r1 -> same bytes as tip
 13 屏工-0557-dict-r1 -> same bytes as tip
@@ -47,6 +51,7 @@
 13 快锥工-0557-dict-r2 -> same bytes as tip
 13 快锥工-0557-r1 -> same bytes as tip
 13 快锥工-0557-r2 -> same bytes as tip
+13 撬板工-0557-r1 -> same bytes as tip
 13 补栏工-0557-r1 -> same bytes as tip
 13 预防工-0557-dict-r1 -> same bytes as tip
 13 预防工-0557-dict-r2 -> same bytes as tip

@@ -62,10 +62,15 @@ def main():
     live = (git("ls-remote", "origin", REF).split() or ["<no answer>"])[0]
     say("0 roots: repo=%s ledger=%s inbox=%s" % (REPO, LEDGER, INBOX))
     say("1 authoritative tip read now via ls-remote: %s" % live)
-    tip_blob = git("rev-parse", "%s:%s" % (live, TARGET))
+    base = os.environ.get("CITYNEXUS_0557_BASE") or live
+    if not re.fullmatch(r"[0-9a-f]{40}", base):
+        raise SystemExit("2 CITYNEXUS_0557_BASE must be a 40-hex commit")
+    say("1b generation this scan compares against (pinned): %s" % base)
+    say("1c file blob at live: %s" % git("rev-parse", "%s:%s" % (live, TARGET)))
+    tip_blob = git("rev-parse", "%s:%s" % (base, TARGET))
     say("2 target file blob on that tip: %s" % tip_blob)
 
-    carriers = git("rev-list", "--branches", "--not", live, "--", TARGET).split()
+    carriers = git("rev-list", "--branches", "--not", base, "--", TARGET).split()
     say("3 commits on this machine's branch heads that touch the target and are not in the tip: %d"
         % len(carriers))
     for sha in carriers:

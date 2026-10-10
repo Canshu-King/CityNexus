@@ -60,11 +60,22 @@ if (!candBytes.includes(MUTATE_FROM)) {
 const tipBytes = spawnSync("git", ["-C", REPO, "show", `${readTip()}:${TARGET_REL}`],
   { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }).stdout;
 function readTip() {
+  // Once this branch is on the line, "the live tip" and "my bytes" are the same thing and the before
+  // arm proves nothing; pin the generation the branch was cut from when the line has moved past it.
+  const pinned = process.env.CITYNEXUS_0557_BASE;
+  if (pinned) {
+    if (!/^[0-9a-f]{40}$/.test(pinned)) throw new Error("CITYNEXUS_0557_BASE must be a 40-hex commit");
+    return pinned;
+  }
   const out = spawnSync("git", ["-C", REPO, "ls-remote", "origin", REF], { encoding: "utf8" }).stdout;
   const tip = out.split(/\s+/)[0] ?? "";
   if (!/^[0-9a-f]{40}$/.test(tip)) throw new Error("cannot read the authoritative tip");
   return tip;
 }
+const LIVE_TIP = (() => {
+  const out = spawnSync("git", ["-C", REPO, "ls-remote", "origin", REF], { encoding: "utf8" }).stdout;
+  return out.split(/\s+/)[0] ?? "<no answer>";
+})();
 if (!tipBytes || tipBytes.length < 1000) throw new Error("could not read the tip bytes");
 // replaceAll, not replace: this file carries the same read twice (the cached arm and the no-copy arm),
 // and the first cut mutated only the first.  The screen painted the second, so the mutant looked blind
@@ -103,7 +114,8 @@ if (listening.length) {
 }
 
 writeFileSync(TARGET, bytesFor, "utf8");
-say(`0 state=${STATE} tip=${tip} bytes written sha=${sha(bytesFor)} (candidate on disk before swap was ${sha(candBytes)})`);
+say(`0 state=${STATE} base=${tip} live_tip=${LIVE_TIP} bytes written sha=${sha(bytesFor)} `
+  + `(candidate on disk before swap was ${sha(candBytes)})`);
 
 const vite = spawn(process.execPath, [path.join(FRONTEND, "node_modules", "vite", "bin", "vite.js"),
   "--host", "127.0.0.1", "--port", String(PORT), "--strictPort"], { cwd: FRONTEND, stdio: "ignore" });

@@ -1,4 +1,6 @@
-0 tip read for this run: 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+0 comparison generation (pinned for this run): 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+0b live authoritative tip at run time: bf057bb6f6eab117f030037c54ee0f515bd6a486
+0c file blob live=a0c636f743c49fb2c00f0ab6572f66f11844feca pinned=f6a1f10e20a71caa638710f70c671d73978325db candidate-on-disk=a0c636f743c49fb2c00f0ab6572f66f11844feca
 1 cells rendered on both sides: 588
 2 candidate vs tip: cells moved = 0
 4 counter-arm (leave the field unset instead) vs tip: cells moved = 4
