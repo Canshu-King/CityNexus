@@ -180,7 +180,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   },
   addedCount: {
     zh: "{n} 个地点已在 {day} ——这是从服务端读回来的结果。",
-    en: "{n} places are on {day} — read back from the server.",
+    en: "{n} {plural:place} are on {day} — read back from the server.",
   },
   adding: {
     zh: "正在加…",

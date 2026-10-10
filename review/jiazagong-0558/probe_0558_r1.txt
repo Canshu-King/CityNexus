@@ -1,0 +1,56 @@
+CASE days=1 | zh
+  BEFORE: 共 1 天。3 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  AFTER : 共 1 天。3 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  SAME_AS_BEFORE: true
+CASE days=1 | en
+  BEFORE: 1 days. none of the 3 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  AFTER : 1 day. none of the 3 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  SAME_AS_BEFORE: false
+CASE days=2 | zh
+  BEFORE: 共 2 天。3 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  AFTER : 共 2 天。3 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  SAME_AS_BEFORE: true
+CASE days=2 | en
+  BEFORE: 2 days. none of the 3 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  AFTER : 2 days. none of the 3 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  SAME_AS_BEFORE: true
+CASE noneWalked planned=1 | zh
+  BEFORE: 第 1 天 / 共 3 天。1 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  AFTER : 第 1 天 / 共 3 天。1 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  SAME_AS_BEFORE: true
+CASE noneWalked planned=1 | en
+  BEFORE: day 1 of 3. none of the 1 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  AFTER : day 1 of 3. none of the 1 stop is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  SAME_AS_BEFORE: false
+CASE noneWalked planned=2 | zh
+  BEFORE: 第 1 天 / 共 3 天。2 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  AFTER : 第 1 天 / 共 3 天。2 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。
+  SAME_AS_BEFORE: true
+CASE noneWalked planned=2 | en
+  BEFORE: day 1 of 3. none of the 2 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  AFTER : day 1 of 3. none of the 2 stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.
+  SAME_AS_BEFORE: true
+CASE done 1/1 | zh
+  BEFORE: 第 1 天 / 共 3 天。已完成 1/1 站。
+  AFTER : 第 1 天 / 共 3 天。已完成 1/1 站。
+  SAME_AS_BEFORE: true
+CASE done 1/1 | en
+  BEFORE: day 1 of 3. 1/1 stops completed.
+  AFTER : day 1 of 3. 1/1 stop completed.
+  SAME_AS_BEFORE: false
+CASE done 1/2 | zh
+  BEFORE: 第 1 天 / 共 3 天。已完成 1/2 站。
+  AFTER : 第 1 天 / 共 3 天。已完成 1/2 站。
+  SAME_AS_BEFORE: true
+CASE done 1/2 | en
+  BEFORE: day 1 of 3. 1/2 stops completed.
+  AFTER : day 1 of 3. 1/2 stops completed.
+  SAME_AS_BEFORE: true
+CASE done 1/3 with 2 skipped | zh
+  BEFORE: 第 1 天 / 共 3 天。已完成 1/3 站，另有 2 站被跳过或取消（不算走完）。
+  AFTER : 第 1 天 / 共 3 天。已完成 1/3 站，另有 2 站被跳过或取消（不算走完）。
+  SAME_AS_BEFORE: true
+CASE done 1/3 with 2 skipped | en
+  BEFORE: day 1 of 3. 1/3 stops completed, 2 more skipped or cancelled (not counted as walked).
+  AFTER : day 1 of 3. 1/3 stops completed, 2 more skipped or cancelled (not counted as walked).
+  SAME_AS_BEFORE: true
