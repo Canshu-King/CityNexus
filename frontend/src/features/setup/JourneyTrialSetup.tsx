@@ -462,11 +462,12 @@ function optionLabels(
   keys: readonly string[],
   table: readonly { key: string; zh: string; en: string }[],
   zh: boolean,
+  t: (key: string) => string,
 ): string {
   return keys
     .map((key) => {
       const entry = table.find((item) => item.key === key);
-      return entry ? (zh ? entry.zh : entry.en) : zh ? "待确认" : "to confirm";
+      return entry ? (zh ? entry.zh : entry.en) : t("trial.toConfirm");
     })
     .join("、");
 }
@@ -509,7 +510,7 @@ function ReviewEdit({
       className="trial-review-edit"
       data-testid={`review-edit-${row.name}`}
       data-target={row.target}
-      aria-label={(zh ? "改这一项：" : "Change ") + (zh ? row.zh : row.en)}
+      aria-label={(t("trial.changeThisAria")) + (zh ? row.zh : row.en)}
       onClick={() => onEdit(row.target)}
     >
       {t("setup.change2")}
@@ -877,13 +878,13 @@ export function JourneyTrialSetup({
   const missingStep1 = [
     draft.cityName.trim()
       ? null
-      : { label: zh ? "目的地" : "the destination", target: "trial-city" },
+      : { label: t("trial.navDestination"), target: "trial-city" },
     draft.arrivalLocation.trim()
       ? null
-      : { label: zh ? "抵达地点" : "where you arrive", target: "trial-arrival" },
+      : { label: t("trial.navArrival"), target: "trial-arrival" },
     draft.departureLocation.trim()
       ? null
-      : { label: zh ? "离开地点" : "where you leave", target: "trial-departure" },
+      : { label: t("trial.navDeparture"), target: "trial-departure" },
   ].filter(Boolean) as MissingField[];
   /* ORD-0066: step 2 can block too, and a blocked primary button that names the anchors on
      step 1 then falls silent one step later is the same defect moved down the wizard. */
@@ -967,7 +968,7 @@ export function JourneyTrialSetup({
           aria-label="Switch language"
           onClick={switchLocale}
         >
-          {zh ? "EN" : "中文"}
+          {t("nav.language")}
         </button>
       </div>
 
@@ -990,7 +991,7 @@ export function JourneyTrialSetup({
       {step === 1 && (
         <div className="v8-card trial-card" data-testid="trial-step1-body">
           <label className="trial-field">
-            <span>{zh ? "目的地" : "Destination"}</span>
+            <span>{t("trial.destination")}</span>
             <input
               data-testid="trial-city"
               value={draft.cityName}
@@ -1021,7 +1022,7 @@ export function JourneyTrialSetup({
           ) : null}
           {facts ? (
             <p className="trial-inferred" data-testid="trial-inferred">
-              {zh ? "已自动设置：" : "Auto-set: "}
+              {t("trial.autoSetPrefix")}
               {zh ? facts.labelZh : facts.labelEn} · {basisWords.currency} · {basisWords.zone}
             </p>
           ) : null}
@@ -1244,7 +1245,7 @@ export function JourneyTrialSetup({
                 if (node) node.open = true;
               }}
             >
-              {zh ? "高级设置" : "Advanced settings"}
+              {t("setup.advancedSettings")}
             </button>
           )}
         </div>
@@ -1379,7 +1380,7 @@ export function JourneyTrialSetup({
         <div className="v8-card trial-card" data-testid="trial-step3-body">
           <dl className="trial-review">
             <div>
-              <dt>{zh ? "目的地" : "Destination"}{reviewEdit("city")}</dt>
+              <dt>{t("trial.destination")}{reviewEdit("city")}</dt>
               <dd data-testid="review-city">{draft.cityName || "—"}</dd>
               {/* The step-1 caution has to be here too: this is the screen the traveller
                   confirms from, and an assumption shown only two steps back is gone. */}
@@ -1404,12 +1405,12 @@ export function JourneyTrialSetup({
               </dd>
             </div>
             <div>
-              <dt>{zh ? "离开" : "Departure"}{reviewEdit("departure")}</dt>
+              <dt>{t("trial.departureField")}{reviewEdit("departure")}</dt>
               <dd
                 data-testid="review-departure"
                 data-missing={draft.departureLocation.trim() ? undefined : "true"}
               >
-                {draft.departureLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {draft.departureLocation.trim() || (t("setup.notFilledInRequired"))}
                 {" · "}
                 {draft.endAt.replace("T", " ")}
               </dd>
@@ -1431,18 +1432,18 @@ export function JourneyTrialSetup({
             <div>
               <dt>{t("setup.pace2")}{reviewEdit("pace")}</dt>
               <dd data-testid="review-pace">
-                {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
+                {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh, t) || "—"}
                 {!touched.has("pace") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "兴趣" : "Interests"}{reviewEdit("interests")}</dt>
+              <dt>{t("setup.interests")}{reviewEdit("interests")}</dt>
               <dd data-testid="review-interests">
-                {optionLabels(draft.interests ?? [], INTEREST_OPTIONS, zh) || "—"}
+                {optionLabels(draft.interests ?? [], INTEREST_OPTIONS, zh, t) || "—"}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "特殊要求" : "Special requirements"}{reviewEdit("special")}</dt>
+              <dt>{t("setup.specialRequirements")}{reviewEdit("special")}</dt>
               <dd data-testid="review-special">{draft.specialRequirements || "—"}</dd>
             </div>
             <div>
@@ -1545,7 +1546,7 @@ export function JourneyTrialSetup({
               {/* ORD-0135 ③: the review step's rows already say 未填写 · 必填 for this field, and the
                   reason the blocked 确认创建 points at should be that same sentence rather than a
                   second phrasing of it. */}
-              {step === 3 ? (zh ? " 未填写 · 必填" : " not filled in · required") : ""}
+              {step === 3 ? (t("trial.notFilledRequired")) : ""}
             </span>
           ))}
         </p>
@@ -1629,7 +1630,7 @@ export function JourneyTrialSetup({
             disabled={busy}
             onClick={() => void onUseSealedDemo()}
           >
-            {zh ? "重试" : "Retry"}
+            {t("trial.retry")}
           </button>
         </div>
       )}
@@ -1686,7 +1687,7 @@ export function JourneyTrialSetup({
               setStep((current) => (current === 1 ? 2 : 3));
             }}
           >
-            {zh ? "下一步" : "Next"}
+            {t("trial.next")}
           </button>
         )}
         {step === 3 && (
