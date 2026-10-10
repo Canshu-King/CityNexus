@@ -1,0 +1,6 @@
+# real resolver, real table; control arm uses the base-commit literal bytes
+after template="{hard} of {total} {plural:leg:total} on this plan rest on evidence the gate accepts as hard; the rest are {quality}."
+total=1 before="1 of 1 legs on this plan rest on evidence the gate accepts as hard; the rest are soft." after="1 of 1 leg on this plan rest on evidence the gate accepts as hard; the rest are soft."
+total=2 before="2 of 2 legs on this plan rest on evidence the gate accepts as hard; the rest are soft." after="2 of 2 legs on this plan rest on evidence the gate accepts as hard; the rest are soft."
+total=0 before="0 of 0 legs on this plan rest on evidence the gate accepts as hard; the rest are soft." after="0 of 0 legs on this plan rest on evidence the gate accepts as hard; the rest are soft."
+total=56 before="56 of 56 legs on this plan rest on evidence the gate accepts as hard; the rest are soft." after="56 of 56 legs on this plan rest on evidence the gate accepts as hard; the rest are soft."
