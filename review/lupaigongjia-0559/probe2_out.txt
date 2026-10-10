@@ -1,0 +1,62 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+error_receipt_id=CNX-CGQVSGR4 code=REQUEST_ERROR status=502 route=GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771 trace_id=02ee95c6-5d7c-4ddc-9127-111092d28397
+error_receipt_id=CNX-KBDFQAXY code=REQUEST_ERROR status=502 route=POST /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/stop trace_id=74c61c25-e0e4-40c9-aacf-aeb779f6edf8
+[seed] event + impact ok
+
+## event-impact | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/events/7fe93e4b-7c75-4220-b4b0-f3b1de0af27f/impact -> http_status=200
+   {candidates=list(len=1, dict{activity_id}), created_at="2026-10-10T01:17:09.612776+00:00", event_id="7fe93e4b-7c75-4220-b4b0-f3b1de0af27f", failure_code=None, id="776639d9-2532-42c8-b97b-afd02b91aff4", independent_evidence_count=2, journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", maturity_stage="CORROBORATED", model_key="probe-model", primary_recovery_target_id=None, provider_key="probe-provider", reason_codes=list(len=1, "SINGLE_SOURCE"), rejected_activity_ids=list(len=0), secondary_risk_activity_ids=list(len=0), selected_activity_id=None, selected_corroboration_refs=list(len=1, "ref-1"), semantic_reason="probe reason", status="RESOLVED", uncertain=False, validated_activity_ids=list(len=0)}
+
+## event-impact-unknown-event | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/events/67a561ef-569f-43e3-b616-3c54a7b22ba8/impact -> http_status=404
+   {error={code="NOT_FOUND", details=None, error_receipt_id="CNX-DFFM3V8M", message="Event was not found on this Journey", message_key="resource.not_found", trace_id="6d53a095-e513-4d25-9f3b-eedf060905e9"}}
+
+## event-impact-no-assessment | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/events/4bd98cf9-9d30-41ee-99cd-ec9d4be4931a/impact -> http_status=404
+   {error={code="NOT_FOUND", details=None, error_receipt_id="CNX-ZSESM4RQ", message="Impact assessment has not been resolved", message_key="resource.not_found", trace_id="aa2de71b-6e51-4ffd-8350-787caa6462de"}}
+
+## autopilot-status-enrolled | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/guardian/autopilot/status -> http_status=200
+   {enabled=False, enrolled_journey_ids=list(len=1, "9041d006-65bf-40a5-8f46-cc3c6348d810"), enrollment={enabled=True, interval_seconds=45.0, journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", last_error=None, last_pulse_at="2026-10-10T01:17:09.612776+00:00", provider_mesh=dict{mesh}}, interval_seconds=60.0, journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", last_error=None, last_pulse_at=None, signal_provider="demo"}
+
+## authoritative-compose | POST /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/authoritative-compose -> http_status=422
+   {error={code="VALIDATION_ERROR", details=None, error_receipt_id="CNX-PJN3A6CC", message="V12_UNKNOWN_POI_COST:27759319-841c-4753-", message_key="request.invalid", trace_id="adf66620-6de3-41ad-9c18-1e6ccc3633a1"}}
+
+## authoritative-compose-one-place | POST /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/authoritative-compose -> http_status=422
+   {error={code="VALIDATION_ERROR", details=dict{errors}, error_receipt_id="CNX-PJN3A6CC", message="Request validation failed", message_key="request.invalid", trace_id="d666e950-4821-4b2f-9d6f-5323dbfab9fe"}}
+
+## hermes-run-detail | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771 -> http_status=200
+   {journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", last_event="run.completed", run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP", status="completed", steps=3, timeline_url="/api/v1/journeys/9041d006-65bf-40a5-8f46", updated_at="2026-10-10T01:17:09.612776+00:00"}
+
+## hermes-timeline | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/timeline -> http_status=200
+   {events=list(len=1, dict{duration_ms,event_id,event_type,friendly_label,policy_decision,raw_event_type,result_summary,run_id,sequence,source,status,timestamp,tool_name}), journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", observability={completion_status="completed", current_mission=None, current_tool=None, gateway_decision=None, guardian_decision=None, run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP", tool_count=0, total_duration_ms=0}, run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP"}
+
+## hermes-timeline-limit | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/timeline?limit=1 -> http_status=200
+   {events=list(len=1, dict{duration_ms,event_id,event_type,friendly_label,policy_decision,raw_event_type,result_summary,run_id,sequence,source,status,timestamp,tool_name}), journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", observability={completion_status="completed", current_mission=None, current_tool=None, gateway_decision=None, guardian_decision=None, run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP", tool_count=0, total_duration_ms=0}, run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP"}
+
+## hermes-stop | POST /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/stop -> http_status=200
+   {run_id="run-probe-f4bf9771", status="stopped", stopped_at="2026-10-10T01:17:09.612776+00:00"}
+
+## hermes-events-sse | GET .../events -> http_status=200
+   content_type=text/event-stream; charset=utf-8
+   cache_control=no-cache
+   body='event: run.started\ndata: {"duration_ms": null, "event_id": null, "event_type": "run.started", "friendly_label": "Hermes runtime", "policy_decision": null, "raw_event_type": "run.started", "result_summary": null, "run_id": "run-probe-f4bf9771", "sequence": null, "source": "HERMES_NATIVE", "status": "started", "timestamp": "2026-10-10T01:17:09.612776+00:00", "tool_name": null}\n\nevent: tool.started\ndata: {"duration_ms": 120, "event_id": null, "event_type": "tool.started", "friendly_label": "Hermes runtime", "policy_decision": null, "raw_event_type": "tool.started", "result_summary": null, "run_id'
+   audit native rows = 4 entity_ids = ['run-probe-f4bf9771']
+   after_json head = '{"event_type": "run.completed", "run_id": "run-probe-f4bf9771", "event_id": null, "sequence": null, "tool_name": null, "friendly_label": "Hermes runtime", "status": "completed", "timestamp": "2026-10-'
+
+## hermes-timeline-after-sse | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/timeline -> http_status=200
+   {events=list(len=4, dict{duration_ms,event_id,event_type,friendly_label,policy_decision,raw_event_type,result_summary,run_id,sequence,source,status,timestamp,tool_name}), journey_id="9041d006-65bf-40a5-8f46-cc3c6348d810", observability={completion_status="completed", current_mission=None, current_tool="probe.tool", gateway_decision=None, guardian_decision=None, run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP", tool_count=1, total_duration_ms=120.0}, run_id="run-probe-f4bf9771", runtime_identity="HERMES_NATIVE_MCP"}
+
+## hermes-run-detail-unconfigured | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771 -> http_status=500
+   {__text__="Internal Server Error"}
+
+## hermes-stop-unconfigured | POST /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/stop -> http_status=500
+   {__text__="Internal Server Error"}
+
+## hermes-events-unconfigured | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/events -> http_status=200
+   {__text__=""}
+
+## hermes-run-detail-upstream-503 | GET /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771 -> http_status=502
+   {error={code="REQUEST_ERROR", details=None, error_receipt_id="CNX-CGQVSGR4", message="native Hermes run status is unavailable", message_key="error.request_error", trace_id="02ee95c6-5d7c-4ddc-9127-111092d28397"}}
+
+## hermes-stop-upstream-503 | POST /api/v1/journeys/9041d006-65bf-40a5-8f46-cc3c6348d810/agent/hermes/runs/run-probe-f4bf9771/stop -> http_status=502
+   {error={code="REQUEST_ERROR", details=None, error_receipt_id="CNX-KBDFQAXY", message="native Hermes run stop is unavailable", message_key="error.request_error", trace_id="74c61c25-e0e4-40c9-aacf-aeb779f6edf8"}}
+
+[done] probe r2
