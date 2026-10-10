@@ -309,6 +309,13 @@ test("R97 one-tap intent outing, private save, and destination-only resume", asy
     await twoStopPopup.close();
     await expect(ownerPanel.getByTestId("bootstrap-two-stop-notice")).toContainText("Route time");
     await expect(ownerPanel.getByTestId("bootstrap-two-stop-notice")).toContainText("Journey was not started");
+    // Removing a stop after an authorized external handoff must invalidate
+    // the saved order/consent/manual URL fallback. No stale handoff survives.
+    await ownerPanel.getByTestId(`bootstrap-shortlist-remove-${shortlistIds[0]}`).click();
+    await expect(ownerPanel.getByTestId("bootstrap-shortlist")).toContainText("Saved 1 of 3");
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-state")).toContainText("Choose 1 more");
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-consent")).toHaveCount(0);
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-fallback")).toHaveCount(0);
     expect(readExploreOnlyCounts(journey.id, cityCode)).toEqual({
       place_count: 0,
       plan_count: 0,
