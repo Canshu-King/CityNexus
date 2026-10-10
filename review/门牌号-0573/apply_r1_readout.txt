@@ -1,0 +1,6 @@
+SITE 行 814 → planai.aiCredentialNotConfigured｜中文 55 字｜英文 166 字
+SITE 行 818 → planai.aiSwitchedOffByOperator｜中文 51 字｜英文 152 字
+SITE 行 826 → planai.aiStatusUnreadable｜中文 41 字｜英文 106 字
+DICT 臂 zh 插入 3 行，锚点字节数 46
+DICT 臂 en 插入 3 行，锚点字节数 83
+written comp=56070 dict=178977
