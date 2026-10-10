@@ -248,10 +248,10 @@ export function groupOfDestination(row: DestinationReading): DestinationGroup {
  * traveller's own words, the folded form of them and any operation token are *not* identities, so
  * none of them may stand in this slot (see `DestinationResolution` in `anywhere_capability.py`).
  */
-export function identityWords(row: DestinationReading, zh: boolean): string {
-  if (!row.answered) return zh ? "身份还没读到" : "identity not read yet";
-  if (row.canonical_destination_id) return zh ? "服务器给了身份" : "the server named it";
-  return zh ? "还没有身份" : "no identity yet";
+export function identityWords(row: DestinationReading, zh: boolean, t: (key: string) => string): string {
+  if (!row.answered) return t("setup.identityNotReadYet");
+  if (row.canonical_destination_id) return t("setup.theServerNamedIt");
+  return t("setup.noIdentityYet");
 }
 
 /** The three causes "this place is not here" can have, each said as itself.
@@ -266,13 +266,14 @@ export function identityWords(row: DestinationReading, zh: boolean): string {
 export function notFoundCauseWords(
   row: DestinationReading | null,
   zh: boolean,
+  t: (key: string) => string,
 ): { title: string; body: string } | null {
   if (!row || !row.answered) return null;
-  const spell = row.spelling || (zh ? "这个名字" : "this name");
+  const spell = row.spelling || t("setup.thisName");
 
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
     return {
-      title: zh ? "服务器认不出这个名字" : "The server cannot name this place",
+      title: t("setup.theServerCannotNameThisPlace"),
       body: zh
         ? `服务器说「${spell}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或在"看支持的目的地"里挑一个。`
         : `The server says nothing traceable names "${spell}" as a destination. This is not a network problem: the server just answered. Try another spelling, or pick one from the supported list.`,
@@ -282,7 +283,7 @@ export function notFoundCauseWords(
   if (row.reason_code === "PLACES_NO_COORDINATE") {
     const n = row.place_count ?? 0;
     return {
-      title: zh ? "这里有地点，但它们没有坐标" : "The places are here, but none has a coordinate",
+      title: t("setup.thePlacesAreHereButNoneHasACoordinate"),
       body: zh
         ? `服务器认得「${spell}」，目录里有 ${n} 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。`
         : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
@@ -293,7 +294,7 @@ export function notFoundCauseWords(
     const missing = (row.missing_categories ?? []).join(zh ? "、" : ", ");
     const count = row.missing_categories?.length ?? 0;
     return {
-      title: zh ? "这座城还没准备过" : "This destination has not been prepared",
+      title: t("setup.thisDestinationHasNotBeenPrepared"),
       body: zh
         ? `服务器认得「${spell}」，但还缺 ${count} 类事实（${missing}），所以现在直接规划会缺依据。可以先准备。`
         : `The server names "${spell}" but is short ${count} categories (${missing}), so planning now would lack evidence. You can prepare it first.`,
@@ -302,7 +303,7 @@ export function notFoundCauseWords(
 
   if ((row.place_count ?? 0) === 0 && row.canonical_destination_id) {
     return {
-      title: zh ? "这座城还没登记任何地点" : "No places are registered for this destination",
+      title: t("setup.noPlacesAreRegisteredForThisDestination"),
       body: zh
         ? `服务器认得「${spell}」，但目录里一条地点都没有——是还没登记，不是查不到这个名字。`
         : `The server names "${spell}" but the catalog holds no places: they are not registered yet, which is different from the name being unknown.`,
@@ -313,7 +314,7 @@ export function notFoundCauseWords(
 }
 
 /** What the server answered, said once in plain words and once in the route's own field values. */
-function verdictWords(row: DestinationReading, zh: boolean): string {
+function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => string): string {
   if (!row.answered) {
     return row.failure
       ? zh
@@ -324,7 +325,7 @@ function verdictWords(row: DestinationReading, zh: boolean): string {
         : "the server has not been asked yet";
   }
   if (row.capability === "READY") {
-    return zh ? "服务器说这座城现在就能规划" : "the server says this destination can be planned now";
+    return t("setup.theServerSaysThisDestinationCanBePlannedNow");
   }
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
     return zh
@@ -332,14 +333,14 @@ function verdictWords(row: DestinationReading, zh: boolean): string {
       : "nothing the server consults names this spelling; it would have to resolve it over the network";
   }
   if (row.capability === "UNKNOWN_RETRYABLE") {
-    return zh ? "问了，这一轮没人回答" : "it was asked, and nothing answered this round";
+    return t("setup.itWasAskedAndNothingAnsweredThisRound");
   }
   if (row.canonical_destination_id) {
     return zh
       ? `服务器认得它，目录里有 ${row.place_count ?? 0} 条，还缺 ${row.missing_categories.length} 类事实`
       : `the server names it, holds ${row.place_count ?? 0} rows and is short ${row.missing_categories.length} categories`;
   }
-  return zh ? "服务器给了别的判定" : "the server gave some other verdict";
+  return t("setup.theServerGaveSomeOtherVerdict");
 }
 
 const GROUP_HEAD: Record<DestinationGroup, [string, string, string]> = {
@@ -1000,7 +1001,7 @@ export function JourneyTrialSetup({
             />
           </label>
 
-          {!unrecognizedCity && notFoundCauseWords(typedReading, zh) ? (
+          {!unrecognizedCity && notFoundCauseWords(typedReading, zh, t) ? (
             /* Which of the three causes it is, said before the basis line rather than instead of it.
                Gated on `!unrecognizedCity` because the paragraph below already speaks for the
                "no local facts" case, and the first draft of this branch said the same thing a second
@@ -1014,8 +1015,8 @@ export function JourneyTrialSetup({
               role="status"
             >
               {zh
-                ? `${notFoundCauseWords(typedReading, zh)?.title}：${notFoundCauseWords(typedReading, zh)?.body}`
-                : `${notFoundCauseWords(typedReading, zh)?.title}: ${notFoundCauseWords(typedReading, zh)?.body}`}
+                ? `${notFoundCauseWords(typedReading, zh, t)?.title}：${notFoundCauseWords(typedReading, zh, t)?.body}`
+                : `${notFoundCauseWords(typedReading, zh, t)?.title}: ${notFoundCauseWords(typedReading, zh, t)?.body}`}
             </p>
           ) : null}
           {facts ? (
@@ -1096,9 +1097,9 @@ export function JourneyTrialSetup({
                             className="trial-supported-identity"
                             data-testid={`trial-supported-identity-${row.spelling}`}
                           >
-                            {identityWords(row, zh)}
+                            {identityWords(row, zh, t)}
                           </span>
-                          <span className="trial-supported-verdict">{verdictWords(row, zh)}</span>
+                          <span className="trial-supported-verdict">{verdictWords(row, zh, t)}</span>
                           <span
                             className="trial-supported-fields"
                             data-testid={`trial-supported-fields-${row.spelling}`}
