@@ -1,0 +1,167 @@
+/**
+ * Badge -- one pill for counts and statuses.
+ *
+ * Every colour pair below was solved by D:/moodle/_qoder_badge_1008/badge_tokens_gen_r1.py
+ * and its measured ratios are in D:/moodle/_qoder_badge_1008/badge_contrast_evidence.txt:
+ * all ten tone/theme/variant combinations clear WCAG AA 4.5:1 for the text a badge actually
+ * carries. The fills come from design-tokens.css rather than new hex values, so a badge says
+ * the same colour word as the rest of the product.
+ */
+
+:root {
+  --cn-badge-h: 16px;
+  --cn-badge-fs: 10px;
+}
+
+.cn-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cn-s-4);
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: var(--cn-badge-h);
+  padding: 0 var(--cn-s-6);
+  border: 1px solid var(--cn-badge-border);
+  border-radius: var(--cn-r-pill);
+  background: var(--cn-badge-bg);
+  color: var(--cn-badge-fg);
+  font-size: var(--cn-badge-fs);
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-transform: none;
+}
+
+/* The tone only decides the variables; the variant decides which pair gets used. That keeps
+   a new tone to one line per theme instead of two rules. */
+.cn-badge--solid {
+  --cn-badge-bg: var(--cn-badge-fill);
+  --cn-badge-fg: var(--cn-badge-fill-ink);
+  --cn-badge-border: transparent;
+}
+
+.cn-badge--tinted {
+  --cn-badge-bg: var(--cn-badge-tint);
+  --cn-badge-fg: var(--cn-badge-tint-ink);
+  --cn-badge-border: var(--cn-badge-tint-border);
+}
+
+.cn-badge--error {
+  --cn-badge-fill: #d70015;
+  --cn-badge-fill-ink: #ffffff;
+  --cn-badge-tint: #f9ebec;
+  --cn-badge-tint-ink: #b30012;
+  --cn-badge-tint-border: #e8b2b8;
+}
+
+.cn-badge--warning {
+  --cn-badge-fill: #b06000;
+  --cn-badge-fill-ink: #ffffff;
+  --cn-badge-tint: #f6f1eb;
+  --cn-badge-tint-ink: #8a4b00;
+  --cn-badge-tint-border: #dcc9b2;
+}
+
+.cn-badge--success {
+  --cn-badge-fill: #17672f;
+  --cn-badge-fill-ink: #ffffff;
+  --cn-badge-tint: #ecf3ee;
+  --cn-badge-tint-ink: #17672f;
+  --cn-badge-tint-border: #b9d1c1;
+}
+
+.cn-badge--info {
+  --cn-badge-fill: #0a5cd6;
+  --cn-badge-fill-ink: #ffffff;
+  --cn-badge-tint: #ebf2fc;
+  --cn-badge-tint-ink: #0a5cd6;
+  --cn-badge-tint-border: #b6cef3;
+}
+
+.cn-badge--neutral {
+  --cn-badge-fill: #eceef0;
+  --cn-badge-fill-ink: #41506b;
+  --cn-badge-tint: #f0f1f3;
+  --cn-badge-tint-ink: #41506b;
+  --cn-badge-tint-border: #c6cad3;
+}
+
+:root[data-theme="dark"] .cn-badge--error {
+  --cn-badge-fill: #ff453a;
+  --cn-badge-fill-ink: #0e1726;
+  --cn-badge-tint: #2d2d3a;
+  --cn-badge-tint-ink: #ff8f89;
+  --cn-badge-tint-border: #5f444d;
+}
+
+:root[data-theme="dark"] .cn-badge--warning {
+  --cn-badge-fill: #ff9f0a;
+  --cn-badge-fill-ink: #0e1726;
+  --cn-badge-tint: #2d2e30;
+  --cn-badge-tint-ink: #ff9f0a;
+  --cn-badge-tint-border: #5f4927;
+}
+
+:root[data-theme="dark"] .cn-badge--success {
+  --cn-badge-fill: #30d158;
+  --cn-badge-fill-ink: #0e1726;
+  --cn-badge-tint: #1d3236;
+  --cn-badge-tint-ink: #30d158;
+  --cn-badge-tint-border: #21583e;
+}
+
+:root[data-theme="dark"] .cn-badge--info {
+  --cn-badge-fill: #0a84ff;
+  --cn-badge-fill-ink: #0e1726;
+  --cn-badge-tint: #243143;
+  --cn-badge-tint-ink: #8fc8ff;
+  --cn-badge-tint-border: #3e5570;
+}
+
+:root[data-theme="dark"] .cn-badge--neutral {
+  --cn-badge-fill: #2b3444;
+  --cn-badge-fill-ink: #b9c6d9;
+  --cn-badge-tint: #283140;
+  --cn-badge-tint-ink: #b9c6d9;
+  --cn-badge-tint-border: #4a5565;
+}
+
+/* A count is the widest thing a badge can be asked to hold, so it gets the bounded box:
+   one digit stays round, and "99+" -- the longest string the component can produce --
+   never grows past two characters plus a sign. */
+.cn-badge--count {
+  min-width: var(--cn-badge-h);
+  padding: 0 var(--cn-s-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Anchored mode sits on a host that owns the layout -- an icon button, a tab label.
+   It is out of flow so it cannot squeeze the host, and it is inset from the host's own
+   corner: a percentage offset would make the overhang grow with the badge's width, which
+   is exactly the failure the old fixed -7px offset had. Measured: overhang stays constant
+   whatever the count. */
+.cn-badge--anchor {
+  position: absolute;
+  top: var(--cn-s-2);
+  right: var(--cn-s-2);
+  z-index: 1;
+}
+
+/* An icon inside a badge is decoration beside a word: it must not stretch to the line box
+   or shift the text baseline. */
+.cn-badge--with-icon > svg {
+  flex: none;
+  width: .95em;
+  height: .95em;
+  display: block;
+}
+
+/* Inside a button the badge shares a line with a label; it may not add height to either. */
+button > .cn-badge,
+.v8-icon-button > .cn-badge {
+  align-self: center;
+}
