@@ -72,7 +72,7 @@ const en: Dict = {
   "checkin.loading": "Reading the footprints…",
   "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
   "checkin.readFailed": "This screen could not read the footprints from the server.",
-  "checkin.empty": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
+  "checkin.empty": "No footprints yet. Open the itinerary and tap \"Check in\" on a stop.",
   "checkin.count": "This trip holds {count} footprints.",
   "checkin.targetGone": "That stop has left the plan",
   "checkin.noteAbsent": "no note was written",
@@ -922,7 +922,7 @@ const en: Dict = {
   "main.notPreserved": "not preserved",
   "main.verifiedEvidenceAttached": "verified evidence attached",
   "main.evidenceUnavailable": "evidence unavailable",
-  "main.unnamedCommitmentServerGaveNoName": "未命名承诺 · 服务器没给名字",
+  "main.unnamedCommitmentServerGaveNoName": "unnamed commitment · the server gave no name",
   "inbox.smartDecision": "Smart decision:",
   "inbox.applied": "Saved to your trip",
   "inbox.applySmart": "Apply smart decision",
@@ -1470,6 +1470,7 @@ const en: Dict = {
   "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
+  "simulation.notGiven": "not given",
 };
 
 const zhCN: Dict = {
@@ -2846,6 +2847,7 @@ const zhCN: Dict = {
   "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
   "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
   "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
+  "simulation.notGiven": "服务器未给证据状态",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
