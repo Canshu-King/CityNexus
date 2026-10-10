@@ -1,0 +1,48 @@
+file	line	arm	token	count_token	word_after	copula	verdict	suggested_fix	before_snippet	after_snippet
+frontend/src/app/V8Experience.tsx	3182	helper	englishCountNoun(disruptions.length, "change")	disruptions.length			NOTHING_AFTER	none	ons.length} ${englishCountNoun(disruptions.length, "change")}`	
+frontend/src/features/discovery/DestinationPreparationPanel.tsx	194	helper	englishCountNoun(missing.length, "category")	missing.length	missing		VERB_OR_WORD_AFTER_NOT_COPULA	none	ing.length} ${englishCountNoun(missing.length, "category")} missing (${missing.j	
+frontend/src/features/execution/LiveRecovery.tsx	348	helper	englishCountNoun(duplicateCount, "suggestion")	duplicateCount			NOTHING_AFTER	none	} identical ${englishCountNoun(duplicateCount, "suggestion")}.`}	
+frontend/src/features/poiimport/poiImportCopy.ts	14	marker	{plural:stem}				NOTHING_AFTER	none	s go through `{plural:stem}` (`lib/plural.ts`, ORD-0433)	
+frontend/src/features/poiimport/poiImportCopy.ts	159	marker	{plural:place}	n	are	are	COPULA_AFTER_COUNTED_NOUN	drop_copula	en: "{n} {plural:place} are now on {shelf} — read bac	en: "{n} {plural:place} now on {shelf} — read back from
+frontend/src/features/poiimport/poiImportCopy.ts	163	marker	{plural:place}	n	were	were	COPULA_AFTER_COUNTED_NOUN	drop_copula	en: "{n} {plural:place} were already on {shelf}, so n	en: "{n} {plural:place} already on {shelf}, so nothing w
+frontend/src/features/poiimport/poiImportCopy.ts	231	marker	{plural:character}	n			NOTHING_AFTER	none	en: "{n} {plural:character}",	
+frontend/src/features/poiimport/poiImportCopy.ts	235	marker	{plural:line:extracted}	extracted	read		VERB_OR_WORD_AFTER_NOT_COPULA	none	"{extracted} {plural:line:extracted} read · {resolved} matched · {	
+frontend/src/features/poiimport/poiImportCopy.ts	383	marker	{plural:matched place:total}	total	selected		VERB_OR_WORD_AFTER_NOT_COPULA	none	n} of {total} {plural:matched place:total} selected",	
+frontend/src/features/simulation/simulationAdapter.ts	165	helper	englishCountNoun(mobility.legs, "leg")	mobility.legs	have		VERB_OR_WORD_AFTER_NOT_COPULA	none	ility.legs} ${englishCountNoun(mobility.legs, "leg")} have`	
+frontend/src/i18n/LocaleContext.tsx	165	marker	{plural:traveler}	n			NOTHING_AFTER	none	velers": "{n} {plural:traveler}",	
+frontend/src/i18n/LocaleContext.tsx	248	marker	{plural:day}	n			NOTHING_AFTER	none	ayDays": "{n} {plural:day}",	
+frontend/src/i18n/LocaleContext.tsx	250	marker	{plural:day:days}	days			NOTHING_AFTER	none	ine": "{days} {plural:day:days} · {people} {plural:person:peo	
+frontend/src/i18n/LocaleContext.tsx	250	marker	{plural:person:people}	people			NOTHING_AFTER	none	s} · {people} {plural:person:people} · about {amount} per person p	
+frontend/src/i18n/LocaleContext.tsx	315	marker	{plural:item}	n	without		VERB_OR_WORD_AFTER_NOT_COPULA	none	verified: {n} {plural:item} without a verified provider p	
+frontend/src/i18n/LocaleContext.tsx	527	marker	{plural:protected commitment}	n			NOTHING_AFTER	none	dCount": "{n} {plural:protected commitment}",	
+frontend/src/i18n/LocaleContext.tsx	563	marker	{plural:day:days}	days			NOTHING_AFTER	none	t now: {days} {plural:day:days}, {activities} {plural:arrange	
+frontend/src/i18n/LocaleContext.tsx	563	marker	{plural:arrangement:activities}	activities			NOTHING_AFTER	none	{activities} {plural:arrangement:activities}.",	
+frontend/src/i18n/LocaleContext.tsx	565	marker	{plural:plan:landed}	landed			NOTHING_AFTER	none	uced {landed} {plural:plan:landed}: {activities} {plural:arrange	
+frontend/src/i18n/LocaleContext.tsx	565	marker	{plural:arrangement:activities}	activities	over		VERB_OR_WORD_AFTER_NOT_COPULA	none	{activities} {plural:arrangement:activities} over {days} {plural:day:days}	
+frontend/src/i18n/LocaleContext.tsx	565	marker	{plural:day:days}	days			NOTHING_AFTER	none	} over {days} {plural:day:days}.",	
+frontend/src/i18n/LocaleContext.tsx	570	marker	{plural:plan}	n	were	were	COPULA_AFTER_COUNTED_NOUN	drop_copula	ll there: {n} {plural:plan} were added.",	l there: {n} {plural:plan} added.",
+frontend/src/i18n/LocaleContext.tsx	617	marker	{plural:result}	n			NOTHING_AFTER	none	esults": "{n} {plural:result}",	
+frontend/src/i18n/LocaleContext.tsx	662	marker	{plural:protected commitment}	n	in		VERB_OR_WORD_AFTER_NOT_COPULA	none	ntNote": "{n} {plural:protected commitment} in this batch, not counted as	
+frontend/src/i18n/LocaleContext.tsx	664	marker	{plural:activity}	n	on		VERB_OR_WORD_AFTER_NOT_COPULA	none	e server: {n} {plural:activity} on {day}.",	
+frontend/src/i18n/LocaleContext.tsx	667	marker	{plural:place}	n			NOTHING_AFTER	none	of the picked {plural:place}.",	
+frontend/src/i18n/LocaleContext.tsx	700	marker	{plural:source}	n			NOTHING_AFTER	none	eTrail": "{n} {plural:source}",	
+frontend/src/i18n/LocaleContext.tsx	818	marker	{plural:protected fact}	n			NOTHING_AFTER	none	dFacts": "{n} {plural:protected fact}",	
+frontend/src/i18n/LocaleContext.tsx	998	marker	{plural:activity}	n	on		VERB_OR_WORD_AFTER_NOT_COPULA	none	ed": "All {n} {plural:activity} on this plan are protected an	
+frontend/src/i18n/LocaleContext.tsx	1006	marker	{plural:leg}	n	of		VERB_OR_WORD_AFTER_NOT_COPULA	none	lable for {n} {plural:leg} of the new order",	
+frontend/src/i18n/LocaleContext.tsx	1007	marker	{plural:refusal}	n	this		VERB_OR_WORD_AFTER_NOT_COPULA	none	"{n} further {plural:refusal} this screen cannot name — the	
+frontend/src/i18n/LocaleContext.tsx	1052	marker	{plural:activity}	n			NOTHING_AFTER	none	vities": "{n} {plural:activity}",	
+frontend/src/i18n/LocaleContext.tsx	1053	marker	{plural:protected anchor}	n			NOTHING_AFTER	none	nchors": "{n} {plural:protected anchor}",	
+frontend/src/i18n/LocaleContext.tsx	1063	marker	{plural:day:days}	days			NOTHING_AFTER	none	ity} · {days} {plural:day:days}",	
+frontend/src/i18n/LocaleContext.tsx	1065	marker	{plural:stop}	n			NOTHING_AFTER	none	yStops": "{n} {plural:stop}",	
+frontend/src/i18n/LocaleContext.tsx	1088	marker	{plural:row:rows}	rows	for		VERB_OR_WORD_AFTER_NOT_COPULA	none	s with {rows} {plural:row:rows} for this trip, and this link'	
+frontend/src/i18n/LocaleContext.tsx	1095	marker	{plural:row:rows}	rows	read		VERB_OR_WORD_AFTER_NOT_COPULA	none	over ({rows} {plural:row:rows} read).",	
+frontend/src/i18n/LocaleContext.tsx	1099	marker	{plural:leg}	n			NOTHING_AFTER	none	p.legs": "{n} {plural:leg}",	
+frontend/src/i18n/LocaleContext.tsx	1129	marker	{plural:refusal}	n	against		VERB_OR_WORD_AFTER_NOT_COPULA	none	er listed {n} {plural:refusal} against this plan; its own wo	
+frontend/src/i18n/LocaleContext.tsx	1155	marker	{plural:need}	n			NOTHING_AFTER	none	n": "{n} hard {plural:need}, explicit and never learned."	
+frontend/src/i18n/LocaleContext.tsx	1272	marker	{plural:day}	n			NOTHING_AFTER	none	yCount": "{n} {plural:day}",	
+frontend/src/i18n/LocaleContext.tsx	1280	marker	{plural:day:days}	days			NOTHING_AFTER	none	ity} · {days} {plural:day:days} · {stops} {plural:stop:stops}	
+frontend/src/i18n/LocaleContext.tsx	1280	marker	{plural:stop:stops}	stops			NOTHING_AFTER	none	ys} · {stops} {plural:stop:stops}, counted from what this link	
+frontend/src/lib/plural.ts	35	helper	englishCountNoun(count: unknown, singular: string)				NOTHING_AFTER	none	port function englishCountNoun(count: unknown, singular: string): string {	
+frontend/src/lib/plural.ts	49	marker	{plural:([A-Za-z][A-Za-z_ ]*)(?::([A-Za-z_]+))?\}				NOTHING_AFTER	none	ext.replace(/\{plural:([A-Za-z][A-Za-z_ ]*)(?::([A-Za-z_]+))?\}/g, (_m, stem: st	
+frontend/src/lib/plural.ts	50	helper	englishCountNoun(params?.[countKey ?? "n"], stem)				NOTHING_AFTER	none	englishCountNoun(params?.[countKey ?? "n"], stem),	
+frontend/src/lib/pretripChecklist.ts	77	helper	englishCountNoun(failures.length, "failure")	failures.length	on		VERB_OR_WORD_AFTER_NOT_COPULA	none	feasibility ${englishCountNoun(failures.length, "failure")} on this plan generat	
