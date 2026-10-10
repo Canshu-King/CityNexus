@@ -584,6 +584,9 @@ const en: Dict = {
   "agent.obsDuration": "duration",
   "agent.obsExecution": "execution",
   "agent.runtimeDetails": "Runtime details",
+  "agent.needsConfirmation": "Needs your confirmation",
+  "agent.streamReconnecting": "Reconnecting to runtime events",
+  "agent.streamUnparseable": "A runtime event could not be read",
 
 
   // ── Discovery ──
@@ -1890,6 +1893,9 @@ const zhCN: Dict = {
   "agent.obsDuration": "耗时",
   "agent.obsExecution": "执行方式",
   "agent.runtimeDetails": "运行详情",
+  "agent.needsConfirmation": "需要你确认",
+  "agent.streamReconnecting": "正在重新连接运行事件",
+  "agent.streamUnparseable": "运行事件暂时无法解析",
 
 
   // ── Discovery ──

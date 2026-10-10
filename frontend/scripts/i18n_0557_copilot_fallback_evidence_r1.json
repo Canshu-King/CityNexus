@@ -1,0 +1,44 @@
+{
+ "base_tip": "ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a",
+ "draft_source": "D:/moodle/_cn10_fb557draft_1155.txt",
+ "items": [
+  {
+   "key": "agent.streamUnparseable",
+   "base_line": 242,
+   "new_line": 242,
+   "zh": "运行事件暂时无法解析",
+   "en": "A runtime event could not be read",
+   "draft_row": "frontend/src/features/agent/CopilotDock.tsx:242 |           setStreamError(zh ? \"运行事件暂时无法解析\" : \"A runtime event could not be read\"); | agent.streamUnparseable | A runtime event could not be read | frontend/src/features/agent/CopilotDock.tsx:332",
+   "before": "setStreamError(zh ? \"运行事件暂时无法解析\" : \"A runtime event could not be read\");",
+   "after": "setStreamError(t(\"agent.streamUnparseable\"));",
+   "dict_en_line": 589,
+   "dict_zh_line": 1898
+  },
+  {
+   "key": "agent.streamReconnecting",
+   "base_line": 253,
+   "new_line": 253,
+   "zh": "正在重新连接运行事件",
+   "en": "Reconnecting to runtime events",
+   "draft_row": "frontend/src/features/agent/CopilotDock.tsx:253 |           setStreamError(zh ? \"正在重新连接运行事件\" : \"Reconnecting to runtime events\"); | agent.streamReconnecting | Reconnecting to runtime events | frontend/src/features/agent/CopilotDock.tsx:332",
+   "before": "setStreamError(zh ? \"正在重新连接运行事件\" : \"Reconnecting to runtime events\");",
+   "after": "setStreamError(t(\"agent.streamReconnecting\"));",
+   "dict_en_line": 588,
+   "dict_zh_line": 1897
+  },
+  {
+   "key": "agent.needsConfirmation",
+   "base_line": 458,
+   "new_line": 458,
+   "zh": "需要你确认",
+   "en": "Needs your confirmation",
+   "draft_row": "frontend/src/features/agent/CopilotDock.tsx:458 |           <b>{zh ? \"需要你确认\" : \"Needs your confirmation\"}</b> | agent.needsConfirmation | Needs your confirmation | frontend/src/features/agent/CopilotDock.tsx:421",
+   "before": "<b>{zh ? \"需要你确认\" : \"Needs your confirmation\"}</b>",
+   "after": "<b>{t(\"agent.needsConfirmation\")}</b>",
+   "dict_en_line": 587,
+   "dict_zh_line": 1896
+  }
+ ],
+ "inline_text_pairs_before": 25,
+ "inline_text_pairs_after": 22
+}

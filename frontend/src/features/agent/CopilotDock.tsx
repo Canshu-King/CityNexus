@@ -239,7 +239,7 @@ export function NativeMissionTimeline({
             source = null;
           }
         } catch {
-          setStreamError(zh ? "运行事件暂时无法解析" : "A runtime event could not be read");
+          setStreamError(t("agent.streamUnparseable"));
         }
       };
       source.addEventListener("message", handleEvent);
@@ -250,7 +250,7 @@ export function NativeMissionTimeline({
         source = null;
         attempts += 1;
         if (attempts <= 3) {
-          setStreamError(zh ? "正在重新连接运行事件" : "Reconnecting to runtime events");
+          setStreamError(t("agent.streamReconnecting"));
           retryTimer = window.setTimeout(connect, Math.min(5000, 500 * 2 ** (attempts - 1)));
         } else {
           setStreamError(zh ? "运行事件流不可用；已保留已收到的事件" : "Event stream unavailable; received events are preserved");
@@ -455,7 +455,7 @@ export function NativeMissionTimeline({
 
       {approvalEvent && (
         <div className="cn-copilot-approval" data-testid="native-hermes-approval">
-          <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
+          <b>{t("agent.needsConfirmation")}</b>
           <span>
             {zh
               ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
