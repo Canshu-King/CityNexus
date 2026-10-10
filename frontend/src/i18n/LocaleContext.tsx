@@ -1350,6 +1350,9 @@ const en: Dict = {
   "detail.pretripAria": "Pre-trip checklist",
   "detail.pretripKicker": "Before you go",
   "detail.pretripHeading": "The two things the server reports as outstanding",
+  /* ORD-0557 兜底行: the sentence this panel paints when the derivation returns nothing. It used to be
+     typed inside `lib/pretripChecklist.ts`; the Chinese side is the words already on the glass. */
+  "detail.pretripNeitherOpen": "Neither one is open on this generation.",
   "detail.basisPrefix": "Basis: ",
   "detail.anchorPrefix": "Anchor: ",
   "detail.measuredHttpLabel": "This device's reading: HTTP",
@@ -2653,6 +2656,9 @@ const zhCN: Dict = {
   "detail.pretripAria": "行前清单",
   "detail.pretripKicker": "行前清单",
   "detail.pretripHeading": "服务端报出的两类待办",
+  /* ORD-0557 兜底行：这一面在两类检查都没有可列时念的那一句，原先写死在 `lib/pretripChecklist.ts`，
+     这里就是屏上原本那几个字。 */
+  "detail.pretripNeitherOpen": "这一代都没有报出。",
   "detail.basisPrefix": "依据：",
   "detail.anchorPrefix": "锚点：",
   "detail.measuredHttpLabel": "这台设备看到的回读：HTTP",
