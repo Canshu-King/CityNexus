@@ -261,6 +261,7 @@ from app.execution.bootstrap_discovery import (
     BootstrapDiscoveryError,
     discover_bootstrap_candidates,
     list_bootstrap_shortlist_items,
+    remember_bootstrap_shortlist_item,
     remove_bootstrap_shortlist_item,
     preview_bootstrap_shortlist_item,
     preview_bootstrap_candidate,
@@ -3527,6 +3528,36 @@ def get_bootstrap_shortlist(
             traveler_id=principal.traveler_id,
         )
     except BootstrapDiscoveryError as exc:
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/resume")
+def remember_bootstrap_shortlist(
+    journey_id: UUID,
+    shortlist_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Remember the signed member's last explicit saved-place choice for UI resume."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = remember_bootstrap_shortlist_item(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            shortlist_id=shortlist_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
         raise _bootstrap_http_error(exc) from exc
 
 

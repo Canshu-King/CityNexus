@@ -1071,6 +1071,21 @@ CREATE TABLE IF NOT EXISTS member_draft_shortlist_items (
 CREATE INDEX IF NOT EXISTS idx_member_draft_shortlist_items_owner
     ON member_draft_shortlist_items(journey_id, member_id, traveler_id, updated_at);
 
+CREATE TABLE IF NOT EXISTS member_draft_resume_intents (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
+    selected_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, member_id, traveler_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_member_draft_resume_intents_owner
+    ON member_draft_resume_intents(journey_id, member_id, traveler_id, updated_at);
+
 CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
     arrival_anchor_json TEXT NOT NULL DEFAULT '{}',

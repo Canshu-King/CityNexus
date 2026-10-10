@@ -1779,10 +1779,26 @@ export interface BootstrapShortlistItem {
   updated_at: string;
 }
 
+export interface BootstrapShortlistResumeIntent {
+  shortlist_id: string;
+  journey_id: string;
+  name: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  coordinate_system: "WGS84";
+  source_url: string;
+  source_provenance: string;
+  captured_at: string;
+  selected_at: string;
+  status: "CHOSEN";
+}
+
 export interface BootstrapShortlistResponse {
   journey_id: string;
   limit: number;
   items: BootstrapShortlistItem[];
+  resume: BootstrapShortlistResumeIntent | null;
 }
 
 export interface BootstrapShortlistPreviewResponse {
@@ -2751,6 +2767,16 @@ export const cityNexusApi = {
     return requestJson<BootstrapShortlistResponse>(
       "/journeys/" + journeyId + "/bootstrap-shortlist",
       { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  rememberBootstrapShortlistItem(
+    journeyId: string,
+    shortlistId: string,
+  ): Promise<BootstrapShortlistResumeIntent> {
+    return requestJson<BootstrapShortlistResumeIntent>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/" + shortlistId + "/resume",
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 

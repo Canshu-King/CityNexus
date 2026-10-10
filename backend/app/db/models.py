@@ -1260,6 +1260,33 @@ class MemberDraftShortlistItem(Base):
     )
 
 
+class MemberDraftResumeIntent(Base):
+    """Private UI resume pointer for one member's saved draft destination."""
+
+    __tablename__ = "member_draft_resume_intents"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    shortlist_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
+    )
+    selected_at: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "member_id", "traveler_id"),
+        Index(
+            "idx_member_draft_resume_intents_owner",
+            "journey_id",
+            "member_id",
+            "traveler_id",
+            "updated_at",
+        ),
+    )
+
+
 class JourneyConstraint(Base):
     __tablename__ = "constraints"
     id: Mapped[str] = mapped_column(String, primary_key=True)

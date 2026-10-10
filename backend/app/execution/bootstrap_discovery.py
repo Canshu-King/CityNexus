@@ -23,6 +23,7 @@ from app.core.config import settings
 from app.db.models import (
     IdempotencyKey,
     Journey,
+    MemberDraftResumeIntent,
     MemberDraftShortlistItem,
     Place,
     PlanVersion,
@@ -277,6 +278,25 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
         "status": row.status,
         "created_at": row.created_at,
         "updated_at": row.updated_at,
+    }
+
+
+def _resume_payload(intent: MemberDraftResumeIntent, item: MemberDraftShortlistItem) -> dict[str, Any]:
+    """Return public identity only; ownership is enforced by the signed lookup."""
+
+    return {
+        "shortlist_id": item.id,
+        "journey_id": item.journey_id,
+        "name": item.name,
+        "category": item.category,
+        "latitude": item.latitude,
+        "longitude": item.longitude,
+        "coordinate_system": item.coordinate_system,
+        "source_url": item.source_url,
+        "source_provenance": item.source_provenance,
+        "captured_at": item.captured_at,
+        "selected_at": intent.selected_at,
+        "status": "CHOSEN",
     }
 
 
@@ -1119,9 +1139,9 @@ def save_bootstrap_shortlist_item(
     # A Journey-row write lock is the durable serialization point for the bounded
     # three-item invariant.  It works on SQLite (the deployed local store) and is
     # a row lock on engines that support SELECT/UPDATE locking semantics.  The
-    # auth lookup happens before this service call, so restart the transaction
-    # before taking the lock rather than upgrading a stale read transaction.
-    session.rollback()
+    # Keep the caller's transaction intact: the lock is an UPDATE and therefore
+    # upgrades the existing read transaction without discarding unrelated pending
+    # writes.  The endpoint commits the whole bounded operation atomically.
     locked = session.execute(
         update(Journey)
         .where(Journey.id == journey.id)
@@ -1263,11 +1283,93 @@ def list_bootstrap_shortlist_items(
         )
         .order_by(MemberDraftShortlistItem.created_at, MemberDraftShortlistItem.id)
     ).all()
+    resume = session.scalar(
+        select(MemberDraftResumeIntent).where(
+            MemberDraftResumeIntent.journey_id == journey.id,
+            MemberDraftResumeIntent.member_id == str(member.id),
+            MemberDraftResumeIntent.traveler_id == str(traveler_id),
+        )
+    )
+    resume_payload = None
+    if resume is not None:
+        resume_item = next((row for row in rows if row.id == resume.shortlist_id), None)
+        if resume_item is None:
+            # A removed or otherwise stale item must fail closed on the next
+            # signed read; no destination identity is leaked or reused.
+            resume_payload = None
+        else:
+            resume_payload = _resume_payload(resume, resume_item)
     return {
         "journey_id": journey.id,
         "limit": _MAX_SHORTLIST_ITEMS,
         "items": [_shortlist_payload(row) for row in rows],
+        "resume": resume_payload,
     }
+
+
+def remember_bootstrap_shortlist_item(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    shortlist_id: UUID,
+) -> dict[str, Any]:
+    """Persist one member-private UI choice, never a route or arrival fact."""
+
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "a resume intent is available only while the Journey is DRAFT",
+        )
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "a resume intent is unavailable after a PlanVersion exists",
+        )
+    item = session.scalar(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id == str(shortlist_id),
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    )
+    if item is None:
+        raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_NOT_FOUND", "shortlist item was not found", status_code=404)
+    if item.member_id != str(member.id) or item.traveler_id != str(traveler_id):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH",
+            "shortlist item belongs to another signed member",
+            status_code=403,
+        )
+    now = _iso(_now())
+    intent = session.scalar(
+        select(MemberDraftResumeIntent).where(
+            MemberDraftResumeIntent.journey_id == journey.id,
+            MemberDraftResumeIntent.member_id == str(member.id),
+            MemberDraftResumeIntent.traveler_id == str(traveler_id),
+        )
+    )
+    if intent is None:
+        intent = MemberDraftResumeIntent(
+            id=str(uuid4()),
+            journey_id=journey.id,
+            member_id=str(member.id),
+            traveler_id=str(traveler_id),
+            shortlist_id=item.id,
+            selected_at=now,
+            created_at=now,
+            updated_at=now,
+        )
+        session.add(intent)
+    else:
+        intent.shortlist_id = item.id
+        intent.selected_at = now
+        intent.updated_at = now
+    session.flush()
+    return _resume_payload(intent, item)
 
 
 def remove_bootstrap_shortlist_item(
@@ -1294,6 +1396,16 @@ def remove_bootstrap_shortlist_item(
         raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_NOT_FOUND", "shortlist item was not found", status_code=404)
     if row.member_id != str(member.id) or row.traveler_id != str(traveler_id):
         raise BootstrapDiscoveryError("BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH", "shortlist item belongs to another signed member", status_code=403)
+    resume = session.scalar(
+        select(MemberDraftResumeIntent).where(
+            MemberDraftResumeIntent.journey_id == journey.id,
+            MemberDraftResumeIntent.member_id == str(member.id),
+            MemberDraftResumeIntent.traveler_id == str(traveler_id),
+            MemberDraftResumeIntent.shortlist_id == row.id,
+        )
+    )
+    if resume is not None:
+        session.delete(resume)
     session.delete(row)
     session.flush()
     return {"journey_id": journey.id, "shortlist_id": str(shortlist_id), "removed": True, "place_id": None}

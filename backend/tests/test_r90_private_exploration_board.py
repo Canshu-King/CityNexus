@@ -10,7 +10,7 @@ from sqlalchemy import func, select
 
 import app.main as main_module
 from app.core.config import settings
-from app.db.models import JourneyMember, MemberDraftShortlistItem, PlanVersion, ProviderCall, RealPlaceCandidate
+from app.db.models import JourneyMember, MemberDraftResumeIntent, MemberDraftShortlistItem, PlanVersion, ProviderCall, RealPlaceCandidate
 from app.db.session import SessionLocal
 from app.integrations.discovery.real_city import DiscoveryCandidate
 
@@ -372,6 +372,161 @@ def test_r91_shortlist_limit_is_serialized_under_concurrent_saves(monkeypatch):
                     ).scalar_subquery(),
                 )
             ) == 3
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+        object.__setattr__(settings, "real_city_enabled", previous_enabled)
+        object.__setattr__(settings, "real_city_mode", previous_mode)
+
+
+def test_r92_resume_intent_is_member_private_and_clears_after_saved_place_removal(monkeypatch):
+    previous_secret = settings.traveler_auth_secret
+    previous_enabled = settings.real_city_enabled
+    previous_mode = settings.real_city_mode
+    object.__setattr__(settings, "traveler_auth_secret", TEST_SECRET + "-resume")
+    object.__setattr__(settings, "real_city_enabled", True)
+    object.__setattr__(settings, "real_city_mode", "live")
+
+    def fake_search(_self, query, **kwargs):
+        candidate = DiscoveryCandidate(
+            provider_key="TEST_PROVIDER",
+            external_id="overpass:node/92001",
+            name="R92 Resume Gallery",
+            category="gallery",
+            latitude=39.1215,
+            longitude=117.2015,
+            tags=("gallery", "real_city"),
+            opening_hours={"status": "UNKNOWN"},
+            metadata={
+                "osm_id": "node/92001",
+                "tags": {"name": "R92 Resume Gallery", "tourism": "gallery"},
+            },
+            distance_m=90.0,
+            cost_evidence={"status": "UNKNOWN", "source": "TEST_PROVIDER"},
+        )
+        return [candidate], [{"endpoint": "TEST_PROVIDER", "answered": True, "http_status": 200, "elements": 1, "query_hint": str(query)}]
+
+    monkeypatch.setattr(
+        "app.execution.bootstrap_discovery.OverpassPOIProvider.search_with_evidence",
+        fake_search,
+    )
+    owner = _traveler("R92 resume owner")
+    bystander = _traveler("R92 resume bystander")
+    journey_response = client.post(
+        "/api/v1/journeys",
+        json={
+            "traveler_id": owner["id"],
+            "title": "R92 private outing resume",
+            "city_code": f"CN-R92-{uuid4().hex[:8].upper()}",
+            "timezone": "Asia/Shanghai",
+            "start_at": "2026-10-13T10:00:00+08:00",
+            "end_at": "2026-10-14T18:00:00+08:00",
+            "budget": {"amount_minor": 10000, "currency": "CNY"},
+        },
+    )
+    assert journey_response.status_code == 201, journey_response.text
+    journey_id = journey_response.json()["id"]
+    owner_headers = {"Authorization": f"Bearer {owner['access_token']}"}
+    bystander_headers = {"Authorization": f"Bearer {bystander['access_token']}"}
+    try:
+        with SessionLocal() as session:
+            session.add(
+                JourneyMember(
+                    id=str(uuid4()),
+                    journey_id=journey_id,
+                    traveler_id=bystander["id"],
+                    role="COLLABORATOR",
+                    invited_by=owner["id"],
+                    expires_at=None,
+                    joined_at="2026-10-10T00:00:00+00:00",
+                    removed_at=None,
+                    preferences_json="{}",
+                    created_at="2026-10-10T00:00:00+00:00",
+                    updated_at="2026-10-10T00:00:00+00:00",
+                )
+            )
+            session.commit()
+
+        discovery = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-discovery",
+            headers=owner_headers,
+            json={
+                "query": "gallery",
+                "radius_m": 2500,
+                "limit": 3,
+                "source_kind": "MANUAL_PUBLIC_CENTER",
+                "provider_consent": True,
+                "latitude": 39.12,
+                "longitude": 117.20,
+                "coordinate_system": "WGS84",
+                "mode": "live",
+            },
+        )
+        assert discovery.status_code == 200, discovery.text
+        discovery_body = discovery.json()
+        candidate = discovery_body["candidates"][0]
+        saved = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+            headers=owner_headers,
+            json={"receipt_id": discovery_body["receipt_id"], "candidate_id": candidate["candidate_id"]},
+        )
+        assert saved.status_code == 200, saved.text
+        item = saved.json()
+
+        remember = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/{item['shortlist_id']}/resume",
+            headers=owner_headers,
+        )
+        assert remember.status_code == 200, remember.text
+        resume_body = remember.json()
+        assert resume_body["shortlist_id"] == item["shortlist_id"]
+        assert resume_body["name"] == item["name"]
+        assert resume_body["status"] == "CHOSEN"
+        assert "navigation_url" not in resume_body
+        assert "member_id" not in json.dumps(resume_body)
+        owner_board = client.get(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=owner_headers
+        )
+        assert owner_board.status_code == 200, owner_board.text
+        assert owner_board.json()["resume"]["shortlist_id"] == item["shortlist_id"]
+
+        bystander_board = client.get(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=bystander_headers
+        )
+        assert bystander_board.status_code == 200, bystander_board.text
+        assert bystander_board.json()["items"] == []
+        assert bystander_board.json()["resume"] is None
+        cross_member = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/{item['shortlist_id']}/resume",
+            headers=bystander_headers,
+        )
+        assert cross_member.status_code == 403, cross_member.text
+
+        removed = client.delete(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/{item['shortlist_id']}",
+            headers=owner_headers,
+        )
+        assert removed.status_code == 200, removed.text
+        owner_after_removal = client.get(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=owner_headers
+        )
+        assert owner_after_removal.status_code == 200, owner_after_removal.text
+        assert owner_after_removal.json()["items"] == []
+        assert owner_after_removal.json()["resume"] is None
+        with SessionLocal() as session:
+            assert session.scalar(
+                select(func.count(MemberDraftResumeIntent.id)).where(
+                    MemberDraftResumeIntent.journey_id == journey_id
+                )
+            ) == 0
+            assert session.scalar(
+                select(func.count(PlanVersion.id)).where(PlanVersion.journey_id == journey_id)
+            ) == 0
+            assert session.scalar(
+                select(func.count(ProviderCall.id)).where(
+                    ProviderCall.operation == "bootstrap_city_discovery",
+                    ProviderCall.request_json.like(f"%{journey_id}%"),
+                )
+            ) == 1
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
         object.__setattr__(settings, "real_city_enabled", previous_enabled)

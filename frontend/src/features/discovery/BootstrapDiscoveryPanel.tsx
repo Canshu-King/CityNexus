@@ -5,6 +5,7 @@ import {
   type BootstrapMapPreviewResponse,
   type BootstrapDiscoveryResponse,
   type BootstrapShortlistItem,
+  type BootstrapShortlistResumeIntent,
   type BootstrapShortlistPreviewResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer } from "../../lib/travelerSession";
@@ -136,25 +137,61 @@ export function BootstrapDiscoveryPanel({
   const [shortlist, setShortlist] = useState<BootstrapShortlistItem[]>([]);
   const [shortlistLoading, setShortlistLoading] = useState(true);
   const [shortlistBusy, setShortlistBusy] = useState<string | null>(null);
+  const [resumeIntent, setResumeIntent] = useState<BootstrapShortlistResumeIntent | null>(null);
   const travelerBearer = readTravelerBearer();
 
   useEffect(() => {
     let active = true;
     setShortlist([]);
+    setResumeIntent(null);
+    setPendingMapPreview(null);
+    setMapConsent(false);
+    setMapFallbackUrl(null);
+    setLastNavigationLaunched(false);
+    setExploreNotice(null);
     setShortlistLoading(true);
-    void cityNexusApi.getBootstrapShortlist(journeyId)
-      .then((saved) => {
-        if (active) setShortlist(saved.items);
-      })
-      .catch(() => {
+    const loadShortlist = async (initial = false) => {
+      if (initial) setShortlistLoading(true);
+      try {
+        const saved = await cityNexusApi.getBootstrapShortlist(journeyId);
+        if (!active) return;
+        const restorable = saved.resume && saved.items.some((item) => item.shortlist_id === saved.resume?.shortlist_id)
+          ? saved.resume
+          : null;
+        setShortlist(saved.items);
+        setResumeIntent(restorable);
+      } catch {
         // A draft without a signed member simply has no restorable board yet.
-        if (active) setShortlist([]);
-      })
-      .finally(() => {
-        if (active) setShortlistLoading(false);
-      });
+        if (active) {
+          setShortlist([]);
+          setResumeIntent(null);
+          setPendingMapPreview(null);
+          setMapConsent(false);
+          setMapFallbackUrl(null);
+          setLastNavigationLaunched(false);
+          setExploreNotice(null);
+        }
+      } finally {
+        if (active && initial) setShortlistLoading(false);
+      }
+    };
+    void loadShortlist(true);
+    const refreshOnReturn = () => {
+      if (readTravelerBearer() !== travelerBearer) {
+        setPendingMapPreview(null);
+        setMapConsent(false);
+        setMapFallbackUrl(null);
+        setLastNavigationLaunched(false);
+        setExploreNotice(null);
+      }
+      if (document.visibilityState === "visible") void loadShortlist(false);
+    };
+    document.addEventListener("visibilitychange", refreshOnReturn);
+    window.addEventListener("focus", refreshOnReturn);
     return () => {
       active = false;
+      document.removeEventListener("visibilitychange", refreshOnReturn);
+      window.removeEventListener("focus", refreshOnReturn);
     };
   }, [journeyId, travelerBearer]);
 
@@ -272,6 +309,7 @@ export function BootstrapDiscoveryPanel({
       await cityNexusApi.removeBootstrapShortlistItem(journeyId, item.shortlist_id);
       if (pendingMapPreview?.shortlistId === item.shortlist_id) cancelMapPreview();
       setShortlist((items) => items.filter((saved) => saved.shortlist_id !== item.shortlist_id));
+      if (resumeIntent?.shortlist_id === item.shortlist_id) setResumeIntent(null);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "That saved place could not be removed.");
     } finally {
@@ -299,34 +337,37 @@ export function BootstrapDiscoveryPanel({
     });
   };
 
-  const beginShortlistMapPreview = (item: BootstrapShortlistItem) => {
+  const rememberAndBeginShortlistPreview = async (
+    item: Pick<BootstrapShortlistItem, "shortlist_id" | "latitude" | "longitude"> | BootstrapShortlistResumeIntent,
+    purpose: "PIN" | "WALKING",
+  ) => {
     setMessage(null);
     setExploreNotice(null);
     setMapFallbackUrl(null);
     setLastNavigationLaunched(false);
     setMapConsent(false);
+    try {
+      const remembered = await cityNexusApi.rememberBootstrapShortlistItem(journeyId, item.shortlist_id);
+      setResumeIntent(remembered);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "This saved place could not be resumed.");
+      return;
+    }
     setPendingMapPreview({
       kind: "shortlist",
-      purpose: "PIN",
+      purpose,
       shortlistId: item.shortlist_id,
       latitude: item.latitude,
       longitude: item.longitude,
     });
   };
 
+  const beginShortlistMapPreview = (item: BootstrapShortlistItem) => {
+    void rememberAndBeginShortlistPreview(item, "PIN");
+  };
+
   const beginShortlistNavigation = (item: BootstrapShortlistItem) => {
-    setMessage(null);
-    setExploreNotice(null);
-    setMapFallbackUrl(null);
-    setLastNavigationLaunched(false);
-    setMapConsent(false);
-    setPendingMapPreview({
-      kind: "shortlist",
-      purpose: "WALKING",
-      shortlistId: item.shortlist_id,
-      latitude: item.latitude,
-      longitude: item.longitude,
-    });
+    void rememberAndBeginShortlistPreview(item, "WALKING");
   };
 
   const cancelMapPreview = () => {
@@ -461,6 +502,10 @@ export function BootstrapDiscoveryPanel({
     setExploreNotice("Continue exploring without committing: this draft has no Place or PlanVersion. Search another candidate when ready.");
   };
 
+  const scrollToShortlist = () => {
+    document.querySelector('[data-testid="bootstrap-shortlist"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const mapFallback =
     sourceKind === "MANUAL_PUBLIC_CENTER" && Number.isFinite(latitude) && Number.isFinite(longitude)
       ? `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`
@@ -497,6 +542,49 @@ export function BootstrapDiscoveryPanel({
             Use foreground GPS
           </button>
         </div>
+        {resumeIntent ? (
+          <section data-testid="bootstrap-resume" aria-labelledby="bootstrap-resume-title">
+            <h2 id="bootstrap-resume-title">Continue exploring</h2>
+            <p>
+              Last chosen public place: <strong>{resumeIntent.name}</strong>. This is a private draft resume
+              pointer, not a route, GPS trace, arrival, or visit record. Returning to CityNexus only means the
+              app was opened again; physical arrival remains unverified.
+            </p>
+            <p>
+              {safeHttpsSourceUrl(resumeIntent.source_url) ? (
+                <a href={safeHttpsSourceUrl(resumeIntent.source_url)!} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-resume-source">
+                  Inspect source for {resumeIntent.name}
+                </a>
+              ) : null}
+            </p>
+            <div className="v8-actions">
+              <button
+                type="button"
+                data-testid="bootstrap-resume-map"
+                disabled={mapBusy}
+                onClick={() => void rememberAndBeginShortlistPreview(resumeIntent, "PIN")}
+              >
+                Inspect public map again
+              </button>
+              <button
+                type="button"
+                data-testid="bootstrap-resume-walking"
+                disabled={mapBusy}
+                onClick={() => void rememberAndBeginShortlistPreview(resumeIntent, "WALKING")}
+              >
+                Open walking directions again
+              </button>
+              <button type="button" data-testid="bootstrap-resume-choose-another" onClick={scrollToShortlist}>
+                Choose another saved place
+              </button>
+              {onCancel ? (
+                <button type="button" data-testid="bootstrap-resume-back-to-journey" onClick={onCancel}>
+                  Back to Journey draft
+                </button>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
         <label>
           Public place query
           <input
