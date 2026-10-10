@@ -674,6 +674,16 @@ const en: Dict = {
   "discovery.preparedYouCanGoAndPlan": "Prepared -- you can go and plan",
   "discovery.alreadyCurrentNothingWasChanged": "Already current -- nothing was changed",
   "discovery.noTraceableSourceForThisDestination": "No traceable source for this destination",
+  "discovery.youStoppedThisPreparation": "You stopped this preparation",
+  "discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult": "The server recorded the stop and will not use this run's result.",
+  "discovery.theResolverFailedAtRuntime": "The resolver failed at runtime",
+  "discovery.thisPreparationWasLostMidRun": "This preparation was lost mid-run",
+  "discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute": "The server says the worker running it disappeared, so this attempt does not count. Starting again is the route.",
+  "discovery.preparation": "Preparation",
+  "discovery.prepareADestination": "Prepare a destination",
+  "discovery.firstWhetherThisCityCanBePlanned": "First, whether this city can be planned",
+  "discovery.eGTianjin": "e.g. Tianjin",
+  "discovery.askingTheServer": "Asking the server…",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -1934,6 +1944,16 @@ const zhCN: Dict = {
   "discovery.preparedYouCanGoAndPlan": "准备好了，可以去规划",
   "discovery.alreadyCurrentNothingWasChanged": "本来就是新的，没有改动",
   "discovery.noTraceableSourceForThisDestination": "这个目的地没有可追溯的来源",
+  "discovery.youStoppedThisPreparation": "你已经停止这次准备",
+  "discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult": "服务器记下了你的停止，它不再用这次的结果。",
+  "discovery.theResolverFailedAtRuntime": "解析这次运行失败了",
+  "discovery.thisPreparationWasLostMidRun": "这次准备中途丢了",
+  "discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute": "服务器说执行它的工作进程没了，这次不算数。可以再来一次。",
+  "discovery.preparation": "准备进度",
+  "discovery.prepareADestination": "准备目的地",
+  "discovery.firstWhetherThisCityCanBePlanned": "先看这座城能不能规划",
+  "discovery.eGTianjin": "例如：天津、贡山独龙族怒族自治县",
+  "discovery.askingTheServer": "正在问服务器…",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",

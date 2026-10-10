@@ -290,20 +290,20 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         };
       case "ABANDONED_BY_TRAVELLER":
         return {
-          title: zh ? "你已经停止这次准备" : "You stopped this preparation",
-          body: zh ? "服务器记下了你的停止，它不再用这次的结果。" : "The server recorded the stop and will not use this run's result.",
+          title: t("discovery.youStoppedThisPreparation"),
+          body: t("discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult"),
         };
       case "RESOLVER_RUNTIME_FAILURE":
         return {
-          title: zh ? "解析这次运行失败了" : "The resolver failed at runtime",
+          title: t("discovery.theResolverFailedAtRuntime"),
           body: zh
             ? "服务器说这是它那边的一次运行性失败（可以重试），不是「这个地方不存在」。"
             : "The server reports a runtime failure on its side (retryable), not that the place does not exist.",
         };
       case "WORKER_LOST":
         return {
-          title: zh ? "这次准备中途丢了" : "This preparation was lost mid-run",
-          body: zh ? "服务器说执行它的工作进程没了，这次不算数。可以再来一次。" : "The server says the worker running it disappeared, so this attempt does not count. Starting again is the route.",
+          title: t("discovery.thisPreparationWasLostMidRun"),
+          body: t("discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute"),
         };
       default:
         return {
@@ -358,7 +358,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         data-focus="stop-survey"
       >
         <p className="v8-kicker" data-testid="prep-survey-context">
-          {zh ? "准备进度" : "Preparation"} · {job.status}
+          {t("discovery.preparation")} · {job.status}
         </p>
         <PrepAbandonSurvey
           zh={zh}
@@ -383,8 +383,8 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     >
       <div className="v8-page-intro compact">
         <div>
-          <p className="v8-kicker">{zh ? "准备目的地" : "Prepare a destination"}</p>
-          <h1>{zh ? "先看这座城能不能规划" : "First, whether this city can be planned"}</h1>
+          <p className="v8-kicker">{t("discovery.prepareADestination")}</p>
+          <h1>{t("discovery.firstWhetherThisCityCanBePlanned")}</h1>
           <p className="v8-lede">
             {zh
               ? "输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。"
@@ -400,7 +400,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             data-testid="prep-query"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={zh ? "例如：天津、贡山独龙族怒族自治县" : "e.g. Tianjin"}
+            placeholder={t("discovery.eGTianjin")}
           />
         </label>
         <button
@@ -410,7 +410,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           disabled={checking || busy || query.trim().length === 0}
           onClick={() => void check()}
         >
-          {checking ? (zh ? "正在问服务器…" : "Asking the server…") : zh ? "看看能不能规划" : "Check this destination"}
+          {checking ? (t("discovery.askingTheServer")) : zh ? "看看能不能规划" : "Check this destination"}
         </button>
       </div>
 
