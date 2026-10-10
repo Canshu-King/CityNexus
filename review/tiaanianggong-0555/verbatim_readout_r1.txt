@@ -1,0 +1,14 @@
+ORD-0555 PlanWithAiSheet verbatim check, batches 1 and 2, run on product tip; each row: prod line, leftover before-snippet count, dict line each side, wording verdict
+planning.noPlanThisTimeTheDataIsShortNotYourWording        prod_line=178   leftover_before=0  dict_en=29     dict_zh=1332   wording=identical
+planning.stoppedBeforeVerification                         prod_line=210   leftover_before=0  dict_en=30     dict_zh=1333   wording=identical
+planning.thisOneSResultIsUnknownNotItDidNotHappen          prod_line=223   leftover_before=0  dict_en=31     dict_zh=1334   wording=identical
+planning.theServerCouldNotBeReached                        prod_line=232   leftover_before=0  dict_en=32     dict_zh=1335   wording=identical
+planning.theRequestWasRefused                              prod_line=241   leftover_before=0  dict_en=33     dict_zh=1336   wording=identical
+checked 5 entries | refused 0
+-- batch 2 --
+planning.theServerFailedToFinish                           prod_line=250   leftover_before=0  dict_en=24     dict_zh=1327   wording=identical
+planning.weCouldNotConfirmThisRun                          prod_line=270   leftover_before=0  dict_en=25     dict_zh=1328   wording=identical
+planning.noUsablePlansWereProduced                         prod_line=279   leftover_before=0  dict_en=26     dict_zh=1329   wording=identical
+planning.aIIsUnavailableRightNow                           prod_line=288   leftover_before=0  dict_en=27     dict_zh=1330   wording=identical
+planning.planning                                          prod_line=297   leftover_before=0  dict_en=28     dict_zh=1331   wording=identical
+checked 5 entries | refused 0
