@@ -53,3 +53,13 @@ typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfi
 parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1118, zh keys 1119, xor = me.asksBeforeProtectedChange
 build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
 draft rows for this batch are the three lines right after the batch-one rows in the same source file, named in the line above the batch-one list
+
+batch three, keys seven to nine (dictionary branch tip ad1713a3bfc1653f93116abc5661d24b2f1ced8f)
+i18n gate: command python review/tihegong-0557/i18n_0557_failure_attribution_r1.py, exit code 0, items=9, GREEN
+gate readings for this batch: tip:538 -> product:543, tip:565 -> 570, tip:573 -> 578, dict en 1337-1339, dict zh 2582-2584
+i18n gate: same command with --negative, exit code 1, RED on the nine en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1121, zh keys 1122, xor = me.asksBeforeProtectedChange
+build, my own instrument mis-fired first: the same command run from the branch root instead of frontend exited 1 with Cannot find module .../wt_product/node_modules/vite/bin/vite.js -- a cwd mistake of mine, no product byte involved
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0

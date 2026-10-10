@@ -540,7 +540,7 @@ export function copyFor(
     case "failure.stateAlreadyMoved":
       return {
         kicker: kickerOf("alreadyDone"),
-        title: zh ? "这件事的状态已经变了，不是没读到" : "The state already moved - this was not a failed read",
+        title: titleOf("lib.failureAttribution.stateAlreadyMoved"),
         body: zh
           ? `服务器接了这发，回答的是「现在已经是这样了」（http_status=${attribution.http_status}）。所以这句不是失败：再按一次只会重新读一遍现在的样子。它给的名字在下面的归因详情里。`
           : `The server took this request and answered that it is already so (http_status=${attribution.http_status}). That is not a failure: asking again just re-reads the current state. Its own name for the condition is in the attribution detail below.`,
@@ -567,7 +567,7 @@ export function copyFor(
     case "failure.unauthorized":
       return {
         kicker: kickerOf("identity"),
-        title: zh ? "这一趟需要重新登录才能读" : "This trip needs a fresh sign-in",
+        title: titleOf("lib.failureAttribution.needsFreshSignIn"),
         body: zh
           ? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`
           : `The server refused this read (http_status=${attribution.http_status}). Your trip is still there once you sign in.`,
@@ -575,7 +575,7 @@ export function copyFor(
     case "failure.forbidden":
       return {
         kicker: kickerOf("permission"),
-        title: zh ? "这一步这台服务器不允许" : "This server will not allow this step",
+        title: titleOf("lib.failureAttribution.stepNotAllowed"),
         body: zh
           ? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
           : `The server knows who you are and still refused this step (http_status=${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
