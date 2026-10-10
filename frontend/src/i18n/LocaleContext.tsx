@@ -914,6 +914,9 @@ const en: Dict = {
   "stay.reacquire": "Re-acquire stays for this city",
   "stay.chooseTitle": "Choose where to stay",
   "stay.arrivalFit": "Arrival / departure fit",
+  "stay.couldNotReachTheServerTryAgain": "Could not reach the server. Try again.",
+  "stay.lookAtAnotherCity": "Look at another city",
+  "stay.price": "Price",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2155,6 +2158,9 @@ const zhCN: Dict = {
   "stay.reacquire": "重新采集这家城市的住宿",
   "stay.chooseTitle": "选一家住的地方",
   "stay.arrivalFit": "到达/离开衔接",
+  "stay.couldNotReachTheServerTryAgain": "连不上服务器，请重试。",
+  "stay.lookAtAnotherCity": "换个城市看看",
+  "stay.price": "价格",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
