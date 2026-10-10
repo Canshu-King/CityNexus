@@ -1,0 +1,33 @@
+0 tip read live for this run: 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+A where the four strings this order names sit right now (read, not copied)
+  item1 content-type unknown     working-tree sites=1 [126]
+  item2 empty-body fallback      working-tree sites=1 [192]
+  item3+4 zh media-type fallback working-tree sites=0 []
+OK   A1 the tip really carried both zh fallbacks :: hardcoded zh fallback on the tip at lines [497, 506]
+B the pair that moved
+OK   B1 two reads of the existing key are in place :: reads at lines [500, 509]
+OK   B2 no hardcoded zh fallback left in this file :: still-hardcoded lines []
+OK   B2b the CATEGORY_LABELS row the order points at is found :: CATEGORY_LABELS declared at [76], UNKNOWN rows at [72, 78, 88, 139, 168]
+OK   B3 the key resolves to the very word that was removed :: frontend/src/i18n/travelerLabels.ts:78 zh arm '未知' en arm 'Unknown'
+OK   D1 both arms exist for the key this branch reads :: row at frontend/src/i18n/travelerLabels.ts:78 carries zh and en
+  other UNKNOWN rows in the same table file: [72, 88, 139, 168]
+OK   B4 this branch added no dictionary key :: merge-base=24a50a8aecf0; dictionary files changed by this branch: none
+  files this branch changes: []
+C the pair that stayed, and the reason, read off the tree
+OK   C1 the error is built where no locale exists :: frontend/src/lib/failureAttribution.ts:125 constructor(status: number, contentType: string | null, bodyKind: "html" | "not_json" | "empty") {
+  frontend/src/lib/failureAttribution.ts:182 export function classifyReadFailure(error: unknown, server?: ServerErrorShape | null): Attribution {
+OK   C2 localizing at the production site means changing other files :: 26 call sites of classifyReadFailure across 11 other files
+  caller frontend/src/app/V8Experience.tsx:880
+  caller frontend/src/app/V8Experience.tsx:925
+  caller frontend/src/app/V8Experience.tsx:1120
+  caller frontend/src/app/V8Experience.tsx:2672
+  caller frontend/src/features/access/AccessPanel.tsx:203
+  files carrying callers: ['frontend/src/app/V8Experience.tsx', 'frontend/src/features/access/AccessPanel.tsx', 'frontend/src/features/agent/AgentComposer.tsx', 'frontend/src/features/agent/CopilotDock.tsx', 'frontend/src/features/inbox/JourneyInboxWorkbench.tsx', 'frontend/src/features/pending/PendingSetPanel.tsx', 'frontend/src/features/planning/aiGenerationRun.ts', 'frontend/src/features/recovery/RecoveryRequiredPanel.tsx', 'frontend/src/features/setup/JourneyTrialSetup.tsx', 'frontend/src/features/shared/sharedJourneyDoors.ts', 'frontend/src/features/trash/JourneyTrashPanel.tsx']
+OK   C3 this module holds no locale channel of its own :: locale globals read in this file: []
+  (localStorage does appear here, at [5, 404, 405], and only for the journey reference keys - not for a locale)
+  who reads the persisted locale anywhere in the frontend: nobody outside LocaleContext
+  the dotted dictionary is only reachable through context: frontend/src/i18n/LocaleContext.tsx lines [2590, 2596]
+  the field the second string writes is read at: copy arms [500, 509], telemetry [172], another screen [365, 367]
+OK   C4 the first string's only consumer declares the prop and never renders it :: frontend/src/features/setup/JourneyTrialSetup.tsx mentions: [(592, 'sealedDemoDetail?: { message: string; name: string } | null;')]
+  standing rule that an error's own prose stays off the screen: ['frontend/src/app/V8Experience.tsx:253 * and `error.message` is not a safe stand-in for "our own words"', 'frontend/src/app/V8Experience.tsx:924 own prose, and this branch used to print the raw error message a', 'frontend/src/app/V8Experience.tsx:1104 /* ORD-0273-TEXT: the user sentence comes from an i18n key -- th', 'frontend/src/app/V8Experience.tsx:1105 MIME/content-type and error shapes) must not reach the main copy']
+VERDICT PASS all arms green

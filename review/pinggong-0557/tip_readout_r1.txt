@@ -1,0 +1,70 @@
+_fbkeys draft line | needle | hits in main.tsx at tip | file:line
+tip_local=7ce836f9afafe9e763527cba828719b414b18db8 tip_remote=7ce836f9afafe9e763527cba828719b414b18db8 main.tsx_lines=1880 LocaleContext_lines=2568
+draft:170 | CityNexus request failed | hits=170 | first=main.tsx:170
+      L170| ? "CityNexus request failed"
+draft:171 | CityNexus request refused (HTTP | hits=171 | first=main.tsx:171
+      L171| : `CityNexus request refused (HTTP ${status})`,
+draft:566 | Persisted operation update | hits=566 | first=main.tsx:566
+      L566| summary: payload.summary ?? "Persisted operation update",
+draft:1111 | general recovery | hits=1111 | first=main.tsx:1111
+      L1111| <span>Objectives · {mission.objective_codes.join(" · ") || "general recovery"}</span>
+draft:1154 | Activate a standing mission once | hits=1154 | first=main.tsx:1154
+      L1154| "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message."}
+draft:1218 | No dominant failure mode | hits=1218 | first=main.tsx:1218
+      L1218| {resilience?.dominant_failure_modes.join(" · ") || "No dominant failure mode"}
+draft:1415 | not evaluated | hits=1415 | first=main.tsx:1415
+      L1415| Server decision · {serverDecision ?? "not evaluated"}
+draft:1423 | validated Activity | hits=1423 | first=main.tsx:1423
+      L1423| ? (impactResolution.maturity_stage ?? "validated Activity")
+draft:1424 | no actionable target | hits=1424 | first=main.tsx:1424
+      L1424| : "no actionable target"}
+draft:1475 | outcome evidence | hits=1475 | first=main.tsx:1475
+      L1475| evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? "unknown"} · {item.explanation ?? "outcome evidence"}
+draft:1487 | explicit wins | hits=1487 | first=main.tsx:1487
+      L1487| {String(item.dimension ?? "preference")} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? "
+draft:1545 | not reported | hits=1545 | first=main.tsx:1545
+      L1545| Current: {current?.title ?? "not reported"}
+draft:1547 | no upcoming activity | hits=1547 | first=main.tsx:1547
+      L1547| <p>Next: {next?.title ?? "no upcoming activity"}</p>
+draft:1551 | No active C4 | hits=1551 | first=main.tsx:1551
+      L1551| 🔒 {c4Activity?.title ?? "No active C4"} ·{" "}
+draft:1560 | not available | hits=1560,1576 | first=main.tsx:1560
+      L1560| ? "not available"
+      L1576| : "not available"}
+draft:1595 | 未命名承诺 | hits=1595 | first=main.tsx:1595
+      L1595| {title || "未命名承诺 · 服务器没给名字"} ·{" "}
+draft:1646 | verified feasible | hits=1646 | first=main.tsx:1646
+      L1646| {selectedProposal.hard_constraints_passed ? "verified feasible" : "not feasible"}
+draft:1646 | not feasible | hits=1646 | first=main.tsx:1646
+      L1646| {selectedProposal.hard_constraints_passed ? "verified feasible" : "not feasible"}
+draft:1680 | not preserved | hits=1680 | first=main.tsx:1680
+      L1680| {selectedProposal.locked_commitments_preserved ? "preserved" : "not preserved"} ·{" "}
+draft:1682 | verified evidence attached | hits=1682 | first=main.tsx:1682
+      L1682| ? "verified evidence attached"
+draft:1683 | evidence unavailable | hits=1683 | first=main.tsx:1683
+      L1683| : "evidence unavailable"}
+ANCHORS shell.reservationReviewFields in LocaleContext.tsx:
+      L834| "shell.reservationReviewFields": "This cannot become a commitment yet - the server is still missing {fields}. It is in \"Confirmations waiting on you\
+      L2070| "shell.reservationReviewFields": "这条还不能成为承诺：服务器说还缺 {fields}。它已经在下面「等你审核的确认单」里，补完缺的就点「确认并保护」。",
+useT / LocaleProvider import lines in main.tsx:
+      L40| import { LocaleProvider } from "./i18n/LocaleContext";
+      L1766| <LocaleProvider>
+      L1768| </LocaleProvider>
+errorNote module-scope:
+      L160| function errorNote(error: unknown): ErrorNote {
+      L324| setError(errorNote(loadError));
+      L325| actor.send({ type: "FAIL", message: errorNote(loadError).note });
+      L400| setError(errorNote(twinError));
+      L626| setError(errorNote(commandError));
+      L646| setError(errorNote(guardianError));
+      L670| setError(errorNote(autopilotError));
+      L686| setError(errorNote(fixtureError));
+      L726| setError(errorNote(predictiveError));
+      L778| setError(errorNote(guardianError));
+      L860| setError(errorNote(policyError));
+      L907| setError(errorNote(runError));
+      L908| actor.send({ type: "FAIL", message: errorNote(runError).note });
+      L959| setError(errorNote(acceptError));
+      L960| actor.send({ type: "FAIL", message: errorNote(acceptError).note });
+      L981| setError(errorNote(rejectError));
+      L982| actor.send({ type: "FAIL", message: errorNote(rejectError).note });
