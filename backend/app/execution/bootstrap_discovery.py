@@ -1507,7 +1507,7 @@ def preview_bootstrap_candidate(
         "candidate_id": row.id,
         "expires_at": row.expires_at,
         "provider": "overpass",
-        "provider_provenance": _row_provider_provenance(row),
+        "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
         "destination": {
             "name": row.name,
             "external_id": row.external_id,
@@ -1694,7 +1694,7 @@ def save_bootstrap_shortlist_item(
         longitude=row.longitude,
         coordinate_system="WGS84",
         source_url=source_url,
-        source_provenance=_row_provider_provenance(row),
+        source_provenance=_row_provider_provenance(row, scope=scope),
         captured_at=row.captured_at,
         opening_hours_json=_json(opening),
         cost_evidence_json=_json(cost),
@@ -2102,5 +2102,5 @@ def select_bootstrap_candidate(
         "selected_place_id": place.id,
         "plan_version_id": None,
         "journey_status": journey.status,
-        "provider_provenance": _row_provider_provenance(row),
+        "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
     }
