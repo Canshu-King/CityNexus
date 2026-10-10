@@ -776,6 +776,7 @@ export function BootstrapDiscoveryPanel({
       pendingWindowRef.current = null;
       setTwoStopOrder((ids) => ids.filter((id) => id !== item.shortlist_id));
       setTwoStopConsent(false);
+      setTwoStopBusy(false);
       setTwoStopFallbackUrl(null);
       setTwoStopNotice(null);
     }
