@@ -248,9 +248,9 @@ export function fieldLabel(key: string, zh: boolean): string {
   return key.replaceAll("_", " ");
 }
 
-function decisionLabel(value: string, zh: boolean): string {
+function decisionLabel(value: string, zh: boolean, t: (key: string) => string): string {
   const entry = DECISION_LABELS[String(value).toUpperCase()];
-  return entry ? (zh ? entry.zh : entry.en) : zh ? "已处理" : "Handled";
+  return entry ? (zh ? entry.zh : entry.en) : t("inbox.handled");
 }
 
 function timeLabel(value: unknown, zh: boolean): string {
@@ -267,20 +267,20 @@ function timeLabel(value: unknown, zh: boolean): string {
   return stamp;
 }
 
-function moneyLabel(minor: unknown, currency: unknown, zh: boolean): string {
+function moneyLabel(minor: unknown, currency: unknown, zh: boolean, t: (key: string) => string): string {
   const value = Number(minor);
-  if (!Number.isFinite(value)) return zh ? "金额待确认" : "Amount to confirm";
+  if (!Number.isFinite(value)) return t("inbox.amountToConfirm");
   const major = Math.round(value / 100);
   const code = String(currency || "CNY");
   return zh ? `${code} ${major.toLocaleString("zh-CN")}` : `${code} ${major.toLocaleString("en-GB")}`;
 }
 
-function renderFact(value: unknown, zh: boolean): string {
+function renderFact(value: unknown, zh: boolean, t: (key: string) => string): string {
   if (value === null || value === undefined || value === "") return zh ? "待确认" : "To confirm";
   if (typeof value === "object") {
     const record = value as Record<string, unknown>;
     const name = record.name ?? record.location ?? record.title;
-    return name ? String(name) : zh ? "已记录" : "Recorded";
+    return name ? String(name) : t("inbox.recorded");
   }
   const text = String(value);
   const type = TYPE_LABELS[text.toUpperCase()];
@@ -993,7 +993,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               .map((field) => (
                 <div key={field.key}>
                   <dt>{zh ? field.zh : field.en}</dt>
-                  <dd>{renderFact(draft.extracted[field.key], zh)}</dd>
+                  <dd>{renderFact(draft.extracted[field.key], zh, t)}</dd>
                 </div>
               ))}
           </dl>
@@ -1003,8 +1003,8 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
                   .map((field) => fieldLabel(field, zh))
                   .join("、")}`
               : zh
-                ? `已核对：${decisionLabel(decision, zh)} · ${targetLabel}`
-                : `Checked: ${decisionLabel(decision, zh)} · ${targetLabel}`}
+                ? `已核对：${decisionLabel(decision, zh, t)} · ${targetLabel}`
+                : `Checked: ${decisionLabel(decision, zh, t)} · ${targetLabel}`}
           </p>
           <button data-testid="v13-2-smart-apply" type="button" onClick={() => void smartApply()} disabled={busy || !canSmartApply}>
             {draft.status === "CONFIRMED" ? t("inbox.applied") : canSmartApply ? t("inbox.applySmart") : t("inbox.reviewRequired")}
