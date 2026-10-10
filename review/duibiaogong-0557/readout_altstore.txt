@@ -1,0 +1,50 @@
+stage = altstore
+tree = D:/moodle/_qoder_duibiaogong_0555
+tree_head = 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+dirty_files = 3
+python = D:\moodle\CityNexus\.venv\Scripts\python.exe
+
+### arm: the two strings moved without being rewritten
+  tip line 407 read from `git show 996f1b758:frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` rc=0
+  tip text = '{locale.startsWith("zh") ? "技术详情" : "Technical detail"}'
+  en side identical=True  tip='Technical detail'  dict='Technical detail'
+  zh side identical=True  tip='技术详情'  dict='技术详情'
+  negative_control trailing_space -> arm red = True
+  negative_control restored       -> arm green = True
+  VERDICT = VERBATIM_MOVE_PROVED
+
+### gate 1 i18n parity (shared ruler)
+cwd = D:/moodle/_qoder_duibiaogong_0555
+cmd = D:\moodle\CityNexus\.venv\Scripts\python.exe frontend\scripts\i18n_detail2_parity_r1.py
+started_local = 14:44:02
+exit_code = 1
+nonempty_lines = 6
+tail:
+    en keys: 1113 zh keys: 1114
+    Traceback (most recent call last):
+      File "D:\moodle\_qoder_duibiaogong_0555\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+        assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+               ^^^^^^^^^^^^^^^^^^
+    AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+### gate 2 typecheck (package.json line 8 shape)
+cwd = D:/moodle/_qoder_duibiaogong_0555/frontend
+cmd = node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+started_local = 14:44:17
+exit_code = 0
+nonempty_lines = 0
+tail:
+
+### gate 3 production build
+cwd = D:/moodle/_qoder_duibiaogong_0555/frontend
+cmd = node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_duibiaogong_0557_dist --emptyOutDir
+started_local = 14:44:34
+exit_code = 0
+nonempty_lines = 23
+tail:
+      ../../_qoder_duibiaogong_0557_dist/workbox-6923124b.js
+    [33m
+    (!) Some chunks are larger than 500 kB after minification. Consider:
+    - Using dynamic import() to code-split the application
+    - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+    - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m

@@ -679,6 +679,7 @@ const en: Dict = {
   "discovery.preparedYouCanGoAndPlan": "Prepared -- you can go and plan",
   "discovery.alreadyCurrentNothingWasChanged": "Already current -- nothing was changed",
   "discovery.noTraceableSourceForThisDestination": "No traceable source for this destination",
+  "discovery.technicalDetail": "Technical detail",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -1955,6 +1956,7 @@ const zhCN: Dict = {
   "discovery.preparedYouCanGoAndPlan": "准备好了，可以去规划",
   "discovery.alreadyCurrentNothingWasChanged": "本来就是新的，没有改动",
   "discovery.noTraceableSourceForThisDestination": "这个目的地没有可追溯的来源",
+  "discovery.technicalDetail": "技术详情",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
