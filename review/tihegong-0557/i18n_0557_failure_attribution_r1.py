@@ -30,7 +30,10 @@ TIP = "996f1b7588580a14fbbdec5301a6e4a7b70c93e4"  # the line this branch was cut
 # (tip line number, draft key name) -- names copied from _cn10_fb557draft_1155.txt, lines read off TIP.
 ITEMS = [(457, "lib.failureAttribution.tripNotOnServer"),
          (465, "lib.failureAttribution.networkUnavailable"),
-         (478, "lib.failureAttribution.serviceUnavailable")]
+         (478, "lib.failureAttribution.serviceUnavailable"),
+         (485, "lib.failureAttribution.serverCouldNotRead"),
+         (518, "lib.failureAttribution.slowDownRate"),
+         (530, "lib.failureAttribution.slowDownRetry")]
 
 TERNARY = re.compile(r'^title: zh \? "(?P<zh>[^"]*)" : "(?P<en>[^"]*)",$')
 READS = re.compile(r'^title: titleOf\("(?P<key>[^"]*)"\),$')

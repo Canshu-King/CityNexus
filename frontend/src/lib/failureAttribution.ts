@@ -487,7 +487,7 @@ export function copyFor(
           }
         : {
             kicker: kickerOf("server"),
-            title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
+            title: titleOf("lib.failureAttribution.serverCouldNotRead"),
             body: zh
               ? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
               : `The server reported an error of its own (http_status=${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
@@ -520,7 +520,7 @@ export function copyFor(
     case "failure.rateLimited":
       return {
         kicker: kickerOf("rateLimited"),
-        title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
+        title: titleOf("lib.failureAttribution.slowDownRate"),
         body: zh
           ? `这一发被限流了（http_status=${attribution.http_status}）。服务器给了等待时间：约 ${Math.round(
               (attribution as { retry_after_ms?: number }).retry_after_ms ?? 0,
@@ -532,7 +532,7 @@ export function copyFor(
     case "failure.rateLimitedNoWait":
       return {
         kicker: kickerOf("rateLimited"),
-        title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
+        title: titleOf("lib.failureAttribution.slowDownRetry"),
         body: zh
           ? `这一发被限流了（http_status=${attribution.http_status}），这一次它没有说等多久。数据没有丢，稍后再按下面那个按钮。`
           : `This request was rate-limited (http_status=${attribution.http_status}) and no wait came with it this time. Nothing was lost - press the button below again shortly.`,

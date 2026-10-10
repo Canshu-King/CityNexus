@@ -42,3 +42,14 @@ exit code 0, success line: precache 8 entries (2915.26 KiB)
 
 not run, and why
 frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts -- that gate watches keys handed to t(); this batch hands its keys to the non-hook dictionaryCopy instead, so its arm does not reach them, and running it would need the dev server plus a demo/reset-able preview database. No browser screen reading in this block; the byte-for-byte source arms above stand in for it and are named in the delivery block.
+
+batch two, keys four to six (dictionary branch tip 4081a22feb0402ee204e702b59f9b637fc917191)
+i18n gate: command python review/tihegong-0557/i18n_0557_failure_attribution_r1.py, exit code 0, items=6, GREEN
+gate readings, six lines: tip:457 -> product:462, tip:465 -> 470, tip:478 -> 483, tip:485 -> 490, tip:518 -> 523, tip:530 -> 535
+dictionary arms after batch two: en 1331-1336, zh 2573-2578, accessor 2589
+i18n gate: same command with --negative, exit code 1, RED on the six en arms
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit, exit code 0, zero bytes
+typecheck: cwd frontend, command node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit, exit code 0, zero bytes
+parity ruler: command python frontend/scripts/i18n_detail2_parity_r1.py, exit code 1, en keys 1118, zh keys 1119, xor = me.asksBeforeProtectedChange
+build: cwd frontend, command node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir, exit code 0
+draft rows for this batch are the three lines right after the batch-one rows in the same source file, named in the line above the batch-one list
