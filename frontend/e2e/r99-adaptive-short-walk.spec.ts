@@ -430,9 +430,29 @@ test("R99 adaptive short walk compares, chooses, and fails closed", async ({ pag
     await expect(unavailableResult).not.toContainText("42 min");
     await expect(unavailableResult).not.toContainText("13 min");
     await expect(ownerPanel.getByTestId("bootstrap-adaptive-choose-alternative")).toHaveCount(0);
-    await expect(ownerPanel.getByTestId("bootstrap-adaptive-current-fallback")).toBeVisible();
-    await expect(ownerPanel.getByTestId("bootstrap-adaptive-alternative-fallback")).toBeVisible();
+    // The ROUTE_UNVERIFIED branch must not smuggle coordinates to Google:
+    // consent to Valhalla did not authorize a second external recipient.
+    const keepCurrent = ownerPanel.getByTestId("bootstrap-adaptive-current-fallback");
+    const chooseAlternate = ownerPanel.getByTestId("bootstrap-adaptive-alternative-fallback");
+    await expect(keepCurrent).toHaveAttribute("type", "button");
+    await expect(chooseAlternate).toHaveAttribute("type", "button");
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-fallback")).toHaveCount(0);
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-consent-checkbox")).not.toBeChecked();
     expect(provider.routeCalls).toHaveLength(4);
+
+    // Changing a walking budget revokes the old comparison until a new
+    // deliberate provider authorization; no stale 42/13 suggestion persists.
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-budget").selectOption("30");
+    await expect(unavailableResult).toHaveCount(0);
+    await expect(ownerPanel.getByTestId("bootstrap-adaptive-walk-consent-checkbox")).not.toBeChecked();
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-consent-checkbox").check();
+    await ownerPanel.getByTestId("bootstrap-adaptive-walk-check").click();
+    await expect(ownerPanel.getByTestId("bootstrap-adaptive-current-fallback")).toBeVisible();
+    await ownerPanel.getByTestId("bootstrap-adaptive-alternative-fallback").click();
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-order")).toContainText("R99 Shanghai Park");
+    await expect(ownerPanel.getByTestId("bootstrap-adaptive-walk-result")).toHaveCount(0);
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-consent-checkbox")).not.toBeChecked();
+    expect(provider.routeCalls).toHaveLength(6);
     expect(readExploreOnlyCounts(journey.id, cityCode)).toEqual({
       place_count: 0,
       plan_count: 0,
