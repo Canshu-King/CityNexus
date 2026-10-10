@@ -1,0 +1,14 @@
+access.title | PANEL | 字典=Members and access | 屏上=MEMBERS AND ACCESS
+access.sub | PANEL | 字典=Who can change this trip, what each visibility level means, and which of that this server can answer today. | 屏上=Who can change this trip, what each visibility level means, and which of that this server can answer today.
+access.pickLabel | PANEL | 字典=Choose a trip | 屏上=Choose a trip
+面板 innerText 前 240 字：MEMBERS AND ACCESS
+
+Who can change this trip, what each visibility level means, and which of that this server can answer today.
+
+Order of this list
+
+This screen asked the server for: Recently updated.
+
+Creation order
+Recently updated
+Depart
