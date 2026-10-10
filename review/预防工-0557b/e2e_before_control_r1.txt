@@ -1,0 +1,68 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4633 backend=:8153 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557b-r13.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [45184]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8153 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:50458 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50469 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=yfg0557b-r13 frontend=:4633 -> backend=:8153 ai=disabled db=_e2e_yfg0557b-r13.db
+
+Running 3 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4633 backend=:8153 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557b-r13.db ai=disabled reuseExistingServer=false
+
+[1/3] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:50470 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:50472 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:50470 - "POST /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50472 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50470 - "POST /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/stay-options/4f2d22bb-420a-4362-8860-b839bb7c44c3/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=8b6f2269-c694-4122-997e-9bb35a5ac052 options=4 chosen=4f2d22bb-420a-4362-8860-b839bb7c44c3 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:60277 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60278 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61477 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61476 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61479 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60279 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62541 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62545 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62549 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61478 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53652 - "GET /api/v1/journeys/8b6f2269-c694-4122-997e-9bb35a5ac052/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62551 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62543 - "GET /api/v1/travelers/be970aa6-9ae9-4951-8917-27e5eb862de4/agent-policy HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4633 backend=:8153 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfg0557b-r13.db ai=disabled reuseExistingServer=false
+
+[2/3] [chromium] › e2e\qoder-yufanggong-0557b-trial-placeholder-r1.spec.ts:36:3 › the zh-CN trial form keeps its own placeholder words
+[WebServer] INFO:     127.0.0.1:55118 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[3/3] [chromium] › e2e\qoder-yufanggong-0557b-trial-placeholder-r1.spec.ts:36:3 › the en trial form keeps its own placeholder words
+[WebServer] INFO:     127.0.0.1:57571 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+  3 passed (13.1s)
