@@ -175,7 +175,7 @@ export function statusCopy(
     const code = s.slice("BLOCKED:".length);
     const known = BLOCKED_BY_CODE[code];
     return {
-      title: zh ? "这次排不出方案：数据不够，不是你说的不对" : "No plan this time: the data is short, not your wording",
+      title: t("planning.noPlanThisTimeTheDataIsShortNotYourWording"),
       body: known
         ? zh
           ? `${known.zh}（服务器给的原因编号：${code}）`
@@ -207,7 +207,7 @@ export function statusCopy(
   }
   if (s === "CANCELLED_AFTER_SEND") {
     return {
-      title: zh ? "已中止后续核对" : "Stopped before verification",
+      title: t("planning.stoppedBeforeVerification"),
       body: zh
         ? "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
         : "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
@@ -220,7 +220,7 @@ export function statusCopy(
        the same key because the server never took a key here.  「已取消」/「没有发生」/「再点一次」 are the
        counter-examples this branch exists to refuse. */
     return {
-      title: zh ? "这一笔的结果未知（不是没发生）" : "This one's result is unknown (not: it did not happen)",
+      title: t("planning.thisOneSResultIsUnknownNotItDidNotHappen"),
       body: zh
         ? "这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。"
         : "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
@@ -229,7 +229,7 @@ export function statusCopy(
   }
   if (s === "NETWORK") {
     return {
-      title: zh ? "连不上服务端" : "The server could not be reached",
+      title: t("planning.theServerCouldNotBeReached"),
       body: zh
         ? "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
         : "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
@@ -238,7 +238,7 @@ export function statusCopy(
   }
   if (s === "HTTP_422") {
     return {
-      title: zh ? "这个要求被明确拒绝" : "The request was refused",
+      title: t("planning.theRequestWasRefused"),
       body: zh
         ? "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。"
         : "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
