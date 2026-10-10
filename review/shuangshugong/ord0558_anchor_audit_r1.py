@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-BLOCK = Path(r"D:/moodle/_qoder_ledger_inbox/双数工_0258.md")
+BLOCK = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(r"D:/moodle/_qoder_ledger_inbox/双数工_0258.md")
 ROOTS = [Path(r"D:/moodle/_qoder_shuangshugong_0558"), Path(r"D:/moodle")]
 
 text = BLOCK.read_text(encoding="utf-8")
