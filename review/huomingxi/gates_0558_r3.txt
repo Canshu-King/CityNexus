@@ -1,0 +1,63 @@
+ORD-0558 lane 活明细 — r3 gate readouts (poiImportCopy.ts:183 plus three ActivityDetail.tsx rows)
+candidate branch review/活明细-0558-r3, based on 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+(the authoritative mirror branch tip, ls-remote read twice; parent 1d638a48b0b858e6f134a94cfac5c508840c2b53).
+Draft followed: _cn12_pl558draft2_1208.txt (PLURAL-DRAFT2), rows 6/14/15/17 — the commander's rule is to
+copy the draft's two columns rather than invent names, so every rewritten string below is the draft's.
+Toolchain: node v24.14.0, typescript 5.9.3, vite 7.3.6, esbuild — via a junction of
+D:/moodle/_qoder_integration_20260919/frontend/node_modules into wt/frontend/node_modules.
+Worktree: D:/moodle/_qoder_huomingxi_0558/wt (isolated; the main tree's uncommitted face untouched).
+
+[1] product face against the current authoritative tip
+  cmd: git diff --numstat 996f1b7588580a14fbbdec5301a6e4a7b70c93e4 HEAD
+    "1       1       frontend/src/features/poiimport/poiImportCopy.ts"
+    "4       3       frontend/src/features/trip/ActivityDetail.tsx"
+  (the four added lines in ActivityDetail are three rewritten arms plus one import at line 10)
+
+[2] typecheck
+  cwd: wt/frontend
+  cmd: D:\moodle\_qoder_integration_20260919\frontend\node_modules\.bin\tsc.cmd -p tsconfig.check.json --noEmit
+  exit: 0
+  stdout: 0 lines
+
+[3] build
+  cwd: wt/frontend
+  cmd: npm run build
+  exit: 0
+  key lines: "2038 modules transformed." / "built in 12.61s"
+
+[4] ActivityDetail two-state readings — real bytes, real ruler
+  cmd: node review/huomingxi/activity_ab_r1.mjs   exit: 0   -> activity_ab_r1.txt
+  method: tip line bytes vs branch line bytes, each recorded template asserted as a verbatim substring
+  of its line, then evaluated with lib/plural.ts transpiled from the tip's own bytes
+  (plural.ts blob at the tip = aefcc082623f11b473d75020dae37787c4fcb6e8).
+    :150/:151  "1 min"  -> "1 minute"     and  "2 min" -> "2 minutes"   ("45 min" -> "45 minutes")
+    :186/:187  "1 min"  -> "1 minute"     and  "2 min" -> "2 minutes"
+    :294/:295  "1 m"    -> "1 metre"      and  "2 m"  -> "2 metres"     ("850 m" -> "850 metres")
+  the compact >=60 arm stays byte-identical (tip:147 == branch:148), and every Chinese arm is on its own
+  untouched line.
+
+[5] poiImportCopy addedCount — real module A/B on the current tip
+  cmd: node review/huomingxi/poi_ab_r2.mjs   exit: 0   -> poi_copy_ab_r2.txt
+  method: tip bytes and branch bytes each bundled with the repo's esbuild over the real import graph,
+  then the exported poiImportCopy() is called per key for count=1 and count=2 in both locales.
+    count=1 en tip    "1 places are on Day 2 — read back from the server."
+    count=1 en branch "1 place are on Day 2 — read back from the server."
+    count=2 en identical; zh_pairs_identical=8/8, en_pairs_changed=1/8.
+  Named residual, measured not assumed: the noun now agrees, the copula still does not
+  ("1 place are"). That is exactly the draft's own scope note — "动词 are 与 is 的分叉不在 helper 出口内"
+  (_cn12_pl558draft2_1208.txt:6) — so this lane copied the draft instead of inventing a fourth shape,
+  and reports the leftover for the commander to rule on separately.
+  The marker form is the file's own: frontend/src/features/poiimport/poiImportCopy.ts:159 and
+  frontend/src/features/poiimport/poiImportCopy.ts:163 already carry {plural:place}.
+
+[6] rows this lane did NOT take this round, with the reason
+  frontend/src/features/trip/ActivityDetail.tsx:279 and frontend/src/features/trip/ActivityDetail.tsx:297
+  are the fourth and fifth draft rows of that file. The order caps a round at three sites, and row :297
+  additionally carries a measured trap: the arm renders toFixed(1), so a flat 1000 m reads "1.0", and the
+  draft's count expression englishCountNoun(metres / 1000 < 1 ? 2 : Math.round(metres / 1000), "kilometre")
+  (_cn12_pl558draft2_1208.txt:18) returns "1.0 kilometre" for exactly 1000 m — singular after a decimal,
+  which English does not do ("1.0 kilometres"). Left for a ruling rather than shipped half.
+
+[7] not run this round, named on purpose
+  No browser/e2e pass; the readings above come from the tip's and the branch's own bytes (template
+  evaluation for ActivityDetail, the exported function for poiImportCopy). Live render on request.
