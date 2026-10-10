@@ -222,6 +222,23 @@ test("kuaidinggong-inbox-unnamed-fact-screen-walk — 无名事实那行两语�
     .evaluateAll((nodes) => nodes.filter((n) => /到达|destination|to/i.test(n.name + " " + (n.getAttribute("aria-label") ?? "") + " " + (n.placeholder ?? ""))).length);
   out.anchor_role_control = await page.getByTestId("v13-2-anchor-role").count();
 
+  /* Arm D: the row has to be *rendered*, not merely present in the DOM -- measure its own box, and
+     take an element screenshot so a human can read the same line I am quoting. */
+  out.row_boxes = await page.$$eval('[data-testid="v10-inbox-draft"] dl > div', (nodes) =>
+    nodes.map((n) => {
+      const dd = n.querySelector("dd");
+      if (!dd) return null;
+      const r = dd.getBoundingClientRect();
+      return {
+        text: (dd.textContent ?? "").trim().slice(0, 16),
+        width: Math.round(r.width),
+        height: Math.round(r.height),
+        inViewport: r.top >= 0 && r.bottom <= window.innerHeight,
+      };
+    }).filter(Boolean),
+  );
+  await page.getByTestId("v10-inbox-draft").screenshot({ path: evidencePath("panel-after-language-flip.png") });
+
   writeFileSync(
     evidencePath("kuaidinggong-inbox-unnamed-origin-readout.json"),
     JSON.stringify(out, null, 2) + "\n",
