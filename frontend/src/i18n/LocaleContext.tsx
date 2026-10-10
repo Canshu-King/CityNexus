@@ -917,6 +917,10 @@ const en: Dict = {
   "stay.couldNotReachTheServerTryAgain": "Could not reach the server. Try again.",
   "stay.lookAtAnotherCity": "Look at another city",
   "stay.price": "Price",
+  "stay.walking": "Walking",
+  "stay.refundable": "Refundable",
+  "stay.choosing": "Choosing…",
+  "stay.chooseThisStay": "Choose this stay",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2161,6 +2165,10 @@ const zhCN: Dict = {
   "stay.couldNotReachTheServerTryAgain": "连不上服务器，请重试。",
   "stay.lookAtAnotherCity": "换个城市看看",
   "stay.price": "价格",
+  "stay.walking": "步行",
+  "stay.refundable": "可取消",
+  "stay.choosing": "选择中…",
+  "stay.chooseThisStay": "选择这家住宿",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
