@@ -1,0 +1,9 @@
+cmd: git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+read_at_local_clock: 2026-10-10 09:11:19
+7ce836f9afafe9e763527cba828719b414b18db8	refs/heads/mirror/integration-frontend-apple-pass1
+second_read:
+7ce836f9afafe9e763527cba828719b414b18db8	refs/heads/mirror/integration-frontend-apple-pass1
+cat_file_t:
+commit
+worktree:
+D:/moodle/_qoder_dagui_0557                           7ce836f9a [review/大柜工-0557-r1]

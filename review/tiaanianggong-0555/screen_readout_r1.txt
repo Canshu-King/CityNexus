@@ -1,0 +1,29 @@
+ORD-0555 提案工 · 屏幕两语读数（真面板真路由，非夹具文案）
+规格：frontend/e2e/qoder-tiaanianggong-0555-screen-words.spec.ts:104 那一族（六臂），断言在 :108，逐字判据取的是搬运前那代（7ce836f9afafe9e763527cba828719b414b18db8）屏上原句
+状态来源：三臂的 force 形制照抄既有规格 frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts:127（一枚 abort、一枚带服务器原句的 422、一枚非 JSON 的 5xx），语言由 localStorage 的 citynexus.locale 定（同件 :47 那形制）
+
+一、正跑（六臂全绿，七格含一枚 real-seed 前置）
+
+命令原样：CNX_LANE_ROOT=D:/moodle/_qoder_tiaanianggong_0555 D:/moodle/CityNexus/.venv/Scripts/python.exe review/run_spec.py e2e/qoder-tiaanianggong-0555-screen-words.spec.ts 4514
+退出码 0，跑批日志 review/run-run595681.log，provenance 那行「run=run595681 frontend=:4514 -> backend=:8514 ai=disabled db=_run595681.db」
+屏上现读（painted == want，逐字符相等）：
+- planning.theServerCouldNotBeReached ｜zh 屏上「连不上服务端」｜en 屏上「The server could not be reached」
+- planning.theRequestWasRefused ｜zh 屏上「这个要求被明确拒绝」｜en 屏上「The request was refused」
+- planning.theServerFailedToFinish ｜zh 屏上「服务端处理失败」｜en 屏上「The server failed to finish」
+证据件（未入库，evidence/ 被 .gitignore 覆盖）：review/evidence/ord0555_screen_words_readings.json，六臂逐枚带 locale、data-result-status、painted title 与整卡正文长度
+
+二、反控（证明这六臂真在读字典，不是把句子抄在规格里）
+
+命令原样：CNX_LANE_ROOT=D:/moodle/_qoder_tiaanianggong_0555 D:/moodle/CityNexus/.venv/Scripts/python.exe review/run_spec.py e2e/qoder-tiaanianggong-0555-screen-words.spec.ts 4516
+变异：只把一枚读取点 frontend/src/features/planning/PlanWithAiSheet.tsx:241 的键名换成字典里不存在的那枚（planning.notARealKey），其余一字未动
+退出码 1，读数「2 failed，5 passed」，跑批日志 review/run-run595734.log
+两条红话原文（逐字）：
+- e2e/qoder-tiaanianggong-0555-screen-words.spec.ts :: HTTP_422-zh-CN — painted title is "planning.notARealKey", not "这个要求被明确拒绝"
+- e2e/qoder-tiaanianggong-0555-screen-words.spec.ts :: HTTP_422-en — painted title is "planning.notARealKey", not "The request was refused"
+红只落在那一枚键的臂上，其余四臂仍绿；跑完即 `git checkout -- frontend/src/features/planning/PlanWithAiSheet.tsx` 复位，复位后该处 `t("planning.theRequestWasRefused")` 现读命中 1 处、`git status --porcelain` 只剩本规格这一枚未入库新件。
+
+三、这屏读到什么程度（说清缺席的半边）
+
+- 十五句里做到屏读的是上面三句，两语各一枚，共六枚读数；判据是「与搬运前那代屏上原句逐字符相等」。
+- 其余十二句没做到屏读，成因逐枚点名：正在规划／正在处理你的需求那两枚只在 RUNNING 那一瞬上屏，这一趟跑批把请求直接 force 成终态；BLOCKED 那枚要服务器回原因编号；已中止后续核对与这一笔的结果未知那两枚要真在飞行中把请求掐掉；没有生成可行方案与 AI 暂时不可用那两枚要另一族状态出口（既有规格 frontend/e2e/qoder-ai-sheet-blocked.spec.ts 走的是 NO_PLANS_PRODUCED 那条路，我在本枝跑通过它，4 passed，但它断言的不是这十二句的逐字）；换一座有数据的城市／照原话再试一次／规划中…那三枚是按钮标签，要 copy.action 与 busy 同时成立。
+- 未动的既有规格我一趟重放过两枚作回归：frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts 六格全绿（exit 0），frontend/e2e/qoder-ai-sheet-blocked.spec.ts 四格全绿（exit 0），都在本枝那一代上跑，命令同上面那两行只换规格名与端口。
