@@ -12,6 +12,8 @@
  * 422 - not a new claim invented at display time.
  */
 
+import { dictCopy } from "../i18n/LocaleContext";
+
 export const PARTY_SIZE_MIN = 1;
 /** `party_size: int = Field(default=1, ge=1, le=20)` in `backend/app/schemas.py`. */
 export const PARTY_SIZE_MAX = 20;
@@ -95,13 +97,14 @@ export function entryFieldName(key: EntryFieldKey, zh?: boolean | string | null)
 /** The range a control will take, spelled the way each language spells a unit after a number. */
 export function entryFieldRange(key: EntryFieldKey, zh?: boolean | string | null): string {
   const field = ENTRY_FIELDS[key];
-  if (wantsChinese(zh)) {
+  const chinese = wantsChinese(zh);
+  if (chinese) {
     return field.max === null
-      ? `${field.min} ${field.unitZh}起`
+      ? dictCopy(chinese, "entryLimits.fromMinUnit", { min: field.min, unit: field.unitZh })
       : `${field.min}-${field.max} ${field.unitZh}`;
   }
   return field.max === null
-    ? `from ${field.min} ${field.unitEn}`
+    ? dictCopy(chinese, "entryLimits.fromMinUnit", { min: field.min, unit: field.unitEn })
     : `${field.min}-${field.max} ${field.unitEn}`;
 }
 
@@ -117,9 +120,10 @@ export function entryFieldLabel(key: EntryFieldKey, zh?: boolean | string | null
  */
 export function entryFieldSuffix(key: EntryFieldKey, zh?: boolean | string | null): string {
   const field = ENTRY_FIELDS[key];
-  const required = wantsChinese(zh)
-    ? field.required ? "必填" : "选填"
-    : field.required ? "required" : "optional";
+  const chinese = wantsChinese(zh);
+  const required = field.required
+    ? dictCopy(chinese, "entryLimits.required")
+    : dictCopy(chinese, "entryLimits.optional");
   return `（${required} · ${entryFieldRange(key, zh)}）`;
 }
 
