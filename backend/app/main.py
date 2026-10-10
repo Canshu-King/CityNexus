@@ -283,6 +283,7 @@ from app.execution.bootstrap_discovery import (
     preview_bootstrap_shortlist_item,
     preview_bootstrap_two_stop_walk,
     preview_bootstrap_two_stop_walkability,
+    preview_bootstrap_adaptive_short_walk,
     preview_bootstrap_candidate,
     save_bootstrap_shortlist_item,
     select_bootstrap_candidate,
@@ -518,6 +519,7 @@ from app.schemas import (
     BootstrapTwoStopWalkResponse,
     BootstrapTwoStopWalkabilityRequest,
     BootstrapTwoStopWalkabilityResponse,
+    BootstrapAdaptiveShortWalkRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3984,6 +3986,38 @@ def check_bootstrap_two_stop_walkability(
         # The route preview is intentionally ephemeral.  There is no model
         # mutation to commit, so the returned evidence cannot become a plan.
         return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/adaptive-short-walk")
+def check_bootstrap_adaptive_short_walk(
+    journey_id: UUID,
+    payload: BootstrapAdaptiveShortWalkRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Compare a saved second stop with one explicit public alternative."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        return preview_bootstrap_adaptive_short_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            first_shortlist_id=payload.first_shortlist_id,
+            current_second_shortlist_id=payload.current_second_shortlist_id,
+            alternative_second_shortlist_id=payload.alternative_second_shortlist_id,
+            max_walk_minutes=payload.max_walk_minutes,
+            public_route_consent=payload.public_route_consent,
+        )
     except BootstrapDiscoveryError as exc:
         session.rollback()
         raise _bootstrap_http_error(exc) from exc

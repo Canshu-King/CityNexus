@@ -711,6 +711,16 @@ class BootstrapTwoStopWalkabilityResponse(BaseModel):
     selected_place_id: None
 
 
+class BootstrapAdaptiveShortWalkRequest(BaseModel):
+    """Compare the current and one alternative second stop for a short-walk preference."""
+
+    first_shortlist_id: UUID
+    current_second_shortlist_id: UUID
+    alternative_second_shortlist_id: UUID
+    max_walk_minutes: int = Field(ge=1, le=180)
+    public_route_consent: bool = False
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)
