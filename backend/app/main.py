@@ -168,6 +168,7 @@ from app.db.models import (
     JourneyOutcomeEvent,
     JourneyTripContext,
     JourneyLaunchContext,
+    MemberDraftPocketWalk,
     MemberLiveMomentScoutReceipt,
     RouteAcquisitionOperation,
     LocationObservation,
@@ -268,6 +269,8 @@ from app.execution.bootstrap_discovery import (
     preview_bootstrap_two_stop_walk,
     preview_bootstrap_two_stop_walkability,
     preview_bootstrap_adaptive_short_walk,
+    save_bootstrap_pocket_walk,
+    clear_bootstrap_pocket_walk,
     preview_bootstrap_candidate,
     save_bootstrap_shortlist_item,
     select_bootstrap_candidate,
@@ -493,6 +496,7 @@ from app.schemas import (
     BootstrapTwoStopWalkRequest,
     BootstrapTwoStopWalkabilityRequest,
     BootstrapAdaptiveShortWalkRequest,
+    BootstrapPocketWalkSaveRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3630,6 +3634,34 @@ def save_bootstrap_shortlist(
         raise _bootstrap_http_error(exc) from exc
 
 
+@app.delete("/api/v1/journeys/{journey_id}/bootstrap-shortlist/pocket-walk")
+def clear_bootstrap_pocket_walk_intent(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Clear only this signed member's private Pocket Walk selection."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = clear_bootstrap_pocket_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
 @app.delete("/api/v1/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}")
 def delete_bootstrap_shortlist(
     journey_id: UUID,
@@ -3813,6 +3845,38 @@ def check_bootstrap_adaptive_short_walk(
             max_walk_minutes=payload.max_walk_minutes,
             public_route_consent=payload.public_route_consent,
         )
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/pocket-walk")
+def save_bootstrap_pocket_walk_intent(
+    journey_id: UUID,
+    payload: BootstrapPocketWalkSaveRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Save two ordered public shortlist identities for this signed member."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = save_bootstrap_pocket_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            first_shortlist_id=payload.first_shortlist_id,
+            second_shortlist_id=payload.second_shortlist_id,
+            max_walk_minutes=payload.max_walk_minutes,
+        )
+        session.commit()
+        return result
     except BootstrapDiscoveryError as exc:
         session.rollback()
         raise _bootstrap_http_error(exc) from exc
