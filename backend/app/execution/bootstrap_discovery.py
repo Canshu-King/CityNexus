@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import ipaddress
 import math
 import re
 import httpx
@@ -2300,6 +2301,38 @@ def preview_bootstrap_two_stop_walkability(
             "The configured walking provider does not expose a supported pedestrian route adapter.",
             provider=router_name or None,
         )
+    # A remote plaintext router must not receive even the two public stops
+    # under a LIVE_PROVIDER_CAPTURE label. Local loopback emulators may use
+    # HTTP, but their adapter evidence grade is TEST_PROVIDER_EMULATOR.
+    try:
+        parsed_router = urlparse(str(base_url))
+        host = (parsed_router.hostname or "").rstrip(".").casefold()
+        try:
+            loopback = ipaddress.ip_address(host).is_loopback
+        except ValueError:
+            loopback = host in {"localhost", "localhost.localdomain"} or host.endswith(".localhost")
+        approved_scheme = parsed_router.scheme.casefold() == "https" or (
+            parsed_router.scheme.casefold() == "http" and loopback
+        )
+        if (
+            not host
+            or not approved_scheme
+            or parsed_router.username is not None
+            or parsed_router.password is not None
+            or parsed_router.query
+            or parsed_router.fragment
+        ):
+            return unverified(
+                "ROUTE_PROVIDER_ENDPOINT_UNTRUSTED",
+                "The configured walking router needs HTTPS, or local loopback HTTP for a test emulator.",
+                provider=router_name,
+            )
+    except ValueError:
+        return unverified(
+            "ROUTE_PROVIDER_ENDPOINT_UNTRUSTED",
+            "The walking router address could not be validated.",
+            provider=router_name,
+        )
 
     try:
         timeout = min(max(float(settings.real_city_timeout_seconds), 0.5), 10.0)
@@ -2319,6 +2352,9 @@ def preview_bootstrap_two_stop_walkability(
                 test_provider=settings.live_valhalla_test_provider,
             )
             route = provider.estimate(str(first.id), str(second.id))
+        # This is the actual response capture timestamp, not when the
+        # request started (the router could have taken several seconds).
+        observed_at = _iso(_now())
     except (ValhallaProviderError, httpx.HTTPError, ValueError, TypeError) as exc:
         return unverified(
             "ROUTE_PROVIDER_UNAVAILABLE",
