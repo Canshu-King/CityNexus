@@ -1,4 +1,4 @@
-0 tip read for this run: cea62adc3350936f3ed17508585263b4af520e6c
+0 tip read for this run: 24a50a8aecf0a1fe4704400c687540d3e05d74fb
 1 cells rendered on both sides: 588
 2 candidate vs tip: cells moved = 0
 4 counter-arm (leave the field unset instead) vs tip: cells moved = 4
