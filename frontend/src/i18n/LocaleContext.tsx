@@ -1308,16 +1308,12 @@ const en: Dict = {
   "detail.askCopilot": "Ask Copilot",
   "detail.nearbyStops": "Other stops nearby",
   "detail.otherTripStops": "Other stops on this trip",
-  "detail.nearbyNoteClose": "All within about {n} m, ordered by straight-line distance.",
-  "detail.nearbyNoteFar": "These are other stops on the same trip; they are not necessarily within walking distance.",
   "detail.metres": "{n} m",
   "detail.kilometres": "{n} km",
   "detail.confirmedProtected": "Confirmed · protected",
   "detail.viewDetails": "View details",
   "detail.detailsChevron": "Details ›",
-  "detail.weekIndex": "Week {n}",
   "detail.dayStops": "{n} stops",
-  "detail.progressDayTotal": "{n} days.",
   "detail.pretripAria": "Pre-trip checklist",
   "detail.pretripKicker": "Before you go",
   "detail.pretripHeading": "The two things the server reports as outstanding",
@@ -1336,8 +1332,8 @@ const en: Dict = {
   // ── Itinerary list: empty state & status headers ──
   /* I18N_细节补齐 (slice 2): the itinerary screen's empty state and its day-strip status headers each
      carried their own inline `zh ? "..." : "..."` arm, so neither half was reachable by a key lookup.
-     Both halves move here. The interpolated arms (week index, per-day stop count) already live under
-     `detail.weekIndex` / `detail.dayStops`; this section is only the sentence arms. Values are the
+     Both halves move here. The interpolated per-day stop count lives under `detail.dayStops`;
+     this section is only the sentence arms. Values are the
      strings the screen was already showing, not new copy. */
   "itinerary.importPrompt": "Import places for this trip",
   "itinerary.planWithAiNeedsPlaces": "Plan my trip with AI (needs places first)",
@@ -2572,16 +2568,12 @@ const zhCN: Dict = {
   "detail.askCopilot": "问问 Copilot",
   "detail.nearbyStops": "附近的其他停靠点",
   "detail.otherTripStops": "这趟行程的其他停靠点",
-  "detail.nearbyNoteClose": "都在约 {n} 米范围内，按直线距离排列。",
-  "detail.nearbyNoteFar": "这些是同一行程的其他停靠点，不一定是步行可达的邻近地点。",
   "detail.metres": "{n} 米",
   "detail.kilometres": "{n} 公里",
   "detail.confirmedProtected": "已确认 · 受保护",
   "detail.viewDetails": "查看详情",
   "detail.detailsChevron": "详情 ›",
-  "detail.weekIndex": "第 {n} 周",
   "detail.dayStops": "{n} 项",
-  "detail.progressDayTotal": "共 {n} 天。",
   "detail.pretripAria": "行前清单",
   "detail.pretripKicker": "行前清单",
   "detail.pretripHeading": "服务端报出的两类待办",
@@ -2599,8 +2591,7 @@ const zhCN: Dict = {
 
   // ── 行程列表：空态与状态头 ──
   /* I18N_细节补齐（第二片）：行程屏的空态和它那些逐日状态头，各自把中文写在 `zh ? "..." : "..."` 的分支
-     里，两边都查不到键。两端都搬进字典。插值的分支（周序号、每天站点数）已经在 `detail.weekIndex` /
-     `detail.dayStops`，这一段只收句子分支。值仍是这些屏本来就在显示的那句，不是新写的文案。 */
+     里，两边都查不到键。两端都搬进字典。插值的分支（每天站点数）已经在 `detail.dayStops`，这一段只收句子分支。值仍是这些屏本来就在显示的那句，不是新写的文案。 */
   "itinerary.importPrompt": "去导入这趟的地点",
   "itinerary.planWithAiNeedsPlaces": "AI 帮我规划（要先有地点）",
   "itinerary.planWithAi": "AI 帮我规划",
