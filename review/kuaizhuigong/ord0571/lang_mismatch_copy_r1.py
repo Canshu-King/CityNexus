@@ -18,7 +18,7 @@ RULER = "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_dict_lang_mismatch
 TREE = "D:/moodle/_qoder_kuaizhuigong_0557"
 DICT = "frontend/src/i18n/LocaleContext.tsx"
 TIP = "27dbf11d62d072959f3fa7308f68a7b82151ce0a"
-LINE_TIP = "6f457321a3b651f193dbe96a424b876285159643"
+LINE_TIP = "4af8af72fed972ddc96c17fd72b7acd704cb9d80"
 BRANCH = "HEAD"
 MY_KEYS = [
     "main.cityNexusRequestFailed", "main.cityNexusRequestRefusedHttp",
