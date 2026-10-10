@@ -1,0 +1,18 @@
+1. line_tip_now f6e936c8e85e3d349f132a2034487962583e6333
+2. my_first_base_tip 7ce836f9afafe9e763527cba828719b414b18db8
+3. commits_the_line_moved_since_my_base 72
+4. line_changed_this_panel_file 0
+5. read_points_still_on_those_lines_at_the_new_tip [(185, '{prediction?.status ?? t("recovery.statusUnavailable")}'), (196, '.join(", ") || t("recovery.noDominantMode")}'), (228, ': t("recovery.noneOnThisJourney")}'), (234, '{run.evidence?.policy?.decision ?? run.evidence?.inference?.controller ?? t("recovery.guardianEnvelope")}')]
+6. panel_literals_still_there_on_the_line [(196, '.join(", ") || "no dominant mode"}'), (228, ': "none on this journey"}')]
+7. product_branch_head 71b1caba8b6a471f5289fe4f784bc360b0ed243f
+8. dict_branch_head e288adc71a65499739122c6a31d28c1db2e63eac
+9. product_carries_dict_tip_is_ancestor_rc 0
+10. product_carries_line_tip_is_ancestor_rc 0
+11. dict_carries_line_tip_is_ancestor_rc 0
+12. keys_on_dict_branch recovery.noDominantMode en=[(345, '"recovery.noDominantMode": "no dominant mode",')] zh=[(1637, '"recovery.noDominantMode": "no dominant mode",')] occurrences_after_merge_into_product=2
+13. value_still_the_screen_word recovery.noDominantMode True
+14. keys_on_dict_branch recovery.noneOnThisJourney en=[(346, '"recovery.noneOnThisJourney": "none on this journey",')] zh=[(1638, '"recovery.noneOnThisJourney": "none on this journey",')] occurrences_after_merge_into_product=2
+15. value_still_the_screen_word recovery.noneOnThisJourney True
+16. files_touched_by_product_branch_vs_line ['frontend/src/features/recovery/V14PreventivePanel.tsx', 'frontend/src/i18n/LocaleContext.tsx', 'review/kuaidinggong-0557/gates_readout_r1.txt', 'review/kuaidinggong-0557/screen_evidence_r1.py', 'review/kuaidinggong-0557/screen_text_readout_r1.txt']
+17. files_touched_by_dict_branch_vs_line ['frontend/src/i18n/LocaleContext.tsx']
+18. gate_readings_see review/kuaidinggong-0557/gates_readout_r2.txt
