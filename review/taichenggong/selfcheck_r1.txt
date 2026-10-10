@@ -1,0 +1,6 @@
+$ python block_selfcheck_r1.py --text <that block>
+rc=0
+claims checked 27 | exempt {"LINE_REF": 9, "HTTP_STATUS": 4, "PORT": 1, "IDENTIFIER_PART": 1} | overall Q43_GATE_GREEN | findings 0 []
+
+PASS -- safe to drop into the ledger inbox.
+Reminder: the filename must be <lane>_<HHMM>.md or the apply leg will skip it.
