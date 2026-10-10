@@ -1,0 +1,15 @@
+cmd = for each proposed key: git cat-file blob <rev>:frontend/src/i18n/LocaleContext.tsx | grep -c "\"<key>\""
+tip_rev_at_write_time = 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+branch_rev = 762d910fd2e277fbf91aa406bbef8b9fc6683d41
+taken_local = 14:34
+
+key                                                  tip_hits branch_hits
+scene.theExecutionCursor                             0 2
+scene.theJourneySStart                               0 2
+scene.theServerGaveNoBasis                           0 2
+scene.theFrozenEvidenceCarriesAnExpiry               0 2
+scene.noFrozenEvidenceOnThisTrip                     0 2
+scene.noScenarioOnStage                              0 2
+
+scene_prefix_family_hits_at_tip = 0
+scene_prefix_family_hits_on_branch = 12
