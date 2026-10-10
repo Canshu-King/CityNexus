@@ -285,11 +285,12 @@ test("R100 Pocket Walk persists two public stops, authorizes each map separately
     // Race regression: the backend completes an authorized A save, but the
     // browser response is deliberately delayed until this SAME tab switches
     // to B. The old A card must never repopulate B's private React state.
-    let releaseOwnerResponse: (() => void) | null = null;
+    const ownerResponseGate = { release: () => {} };
     const heldOwnerResponse = new Promise<void>((resolve) => {
-      releaseOwnerResponse = resolve;
+      ownerResponseGate.release = resolve;
     });
     let ownerSaveCaptured = 0;
+    let ownerResponseDelivered = 0;
     await page.route(`**/api/v1/journeys/${journey.id}/bootstrap-shortlist/pocket-walk`, async (route) => {
       if (route.request().method() !== "POST") {
         await route.continue();
@@ -299,6 +300,7 @@ test("R100 Pocket Walk persists two public stops, authorizes each map separately
       ownerSaveCaptured += 1;
       await heldOwnerResponse;
       await route.fulfill({ response: realBackendResponse });
+      ownerResponseDelivered += 1;
     });
     await reloadedPanel.getByTestId("bootstrap-pocket-walk-save").click();
     await expect.poll(() => ownerSaveCaptured).toBe(1);
@@ -308,7 +310,9 @@ test("R100 Pocket Walk persists two public stops, authorizes each map separately
     }, collaborator.access_token);
     await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-empty")).toBeVisible();
     await expect(reloadedPanel.getByTestId("bootstrap-shortlist")).toContainText("Saved 0 of 3");
-    releaseOwnerResponse?.();
+    ownerResponseGate.release();
+    await expect.poll(() => ownerResponseDelivered).toBe(1);
+    await page.waitForTimeout(100);
     await expect(reloadedPanel.getByTestId("bootstrap-pocket-walk-card")).toHaveCount(0);
     await expect(reloadedPanel).not.toContainText(/R100 Shanghai (Museum|Gallery|Park)/);
     await page.unroute(`**/api/v1/journeys/${journey.id}/bootstrap-shortlist/pocket-walk`);
