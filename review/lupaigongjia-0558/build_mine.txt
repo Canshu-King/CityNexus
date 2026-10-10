@@ -1,0 +1,27 @@
+
+> build
+> vite build
+
+[36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 131 modules transformed.
+[31m✗[39m Build failed in 1.02s
+[31merror during build:
+[31m[vite-plugin-pwa:build] [plugin vite-plugin-pwa:build] There was an error during the build:
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_lupaigongjia_0558/frontend/src/features/studio/SortableActivityList.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+Additionally, handling the error in the 'buildEnd' hook caused the following error:
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_lupaigongjia_0558/frontend/src/features/studio/SortableActivityList.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`[31m
+    at getRollupError (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/rollup/dist/es/shared/parseAst.js:317:41)
+    at file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23759:39
+    at async catchUnfinishedHookActions (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23215:16)
+    at async rollupInternal (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5)
+    at async buildEnvironment (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12)
+    at async Object.build (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19)
+    at async Object.buildApp (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153)
+    at async CAC.<anonymous> (file:///D:/moodle/_qoder_lupaigongjia_0558/frontend/node_modules/vite/dist/node/cli.js:629:3)[39m
