@@ -684,6 +684,15 @@ const en: Dict = {
   "discovery.firstWhetherThisCityCanBePlanned": "First, whether this city can be planned",
   "discovery.eGTianjin": "e.g. Tianjin",
   "discovery.askingTheServer": "Asking the server…",
+  "discovery.serverVerdict": "Server verdict",
+  "discovery.theServerSaysTheseAllMatchPickOne": "The server says these all match -- pick one",
+  "discovery.goAndPlan": "Go and plan",
+  "discovery.tryingAgain": "Trying again…",
+  "discovery.starting": "Starting…",
+  "discovery.chooseAnotherDestination": "Choose another destination",
+  "discovery.preparation2": "Preparation",
+  "discovery.goAndPlan2": "Go and plan",
+  "discovery.checkAgain": "Check again",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -1962,6 +1971,15 @@ const zhCN: Dict = {
   "discovery.firstWhetherThisCityCanBePlanned": "先看这座城能不能规划",
   "discovery.eGTianjin": "例如：天津、贡山独龙族怒族自治县",
   "discovery.askingTheServer": "正在问服务器…",
+  "discovery.serverVerdict": "服务器判定",
+  "discovery.theServerSaysTheseAllMatchPickOne": "服务器说这些都对得上，请挑一个",
+  "discovery.goAndPlan": "去规划",
+  "discovery.tryingAgain": "正在重试…",
+  "discovery.starting": "正在开始…",
+  "discovery.chooseAnotherDestination": "换一个目的地",
+  "discovery.preparation2": "准备进度",
+  "discovery.goAndPlan2": "去规划",
+  "discovery.checkAgain": "重新判定",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",

@@ -423,7 +423,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       {capability && (
         <div className="prep-verdict" data-testid="prep-verdict" data-capability={verdict}>
           <span className="v8-kicker">
-            {zh ? "服务器判定" : "Server verdict"} · {verdict}
+            {t("discovery.serverVerdict")} · {verdict}
           </span>
           <h2 data-testid="prep-verdict-title">{verdictCopy().title}</h2>
           <p data-testid="prep-verdict-body">{verdictCopy().body}</p>
@@ -453,7 +453,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
           {candidates.length > 0 && (
             <div className="prep-candidates" data-testid="prep-candidates">
-              <b>{zh ? "服务器说这些都对得上，请挑一个" : "The server says these all match -- pick one"}</b>
+              <b>{t("discovery.theServerSaysTheseAllMatchPickOne")}</b>
               <ul>
                 {candidates.map((candidate, index) => (
                   <li key={String(candidate.id ?? index)}>
@@ -478,7 +478,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 onClick={() => onOpenPlan?.()}
                 disabled={!onOpenPlan}
               >
-                {zh ? "去规划" : "Go and plan"}
+                {t("discovery.goAndPlan")}
               </button>
             ) : action === "RETRY_LATER" ? (
               <button
@@ -488,7 +488,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={checking || !retryable}
                 onClick={() => void check()}
               >
-                {checking ? (zh ? "正在重试…" : "Trying again…") : zh ? "稍后重试" : "Try again later"}
+                {checking ? (t("discovery.tryingAgain")) : zh ? "稍后重试" : "Try again later"}
               </button>
             ) : action === "START_HYDRATION" ? (
               <button
@@ -498,7 +498,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={busy || Boolean(job && !job.terminal)}
                 onClick={() => void prepare()}
               >
-                {busy ? (zh ? "正在开始…" : "Starting…") : zh ? "开始准备" : "Prepare this destination"}
+                {busy ? (t("discovery.starting")) : zh ? "开始准备" : "Prepare this destination"}
               </button>
             ) : null}
             {/* CHOOSE_ANOTHER_DESTINATION names no primary action of its own: the server's advice for
@@ -516,7 +516,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 setActionError(null);
               }}
             >
-              {zh ? "换一个目的地" : "Choose another destination"}
+              {t("discovery.chooseAnotherDestination")}
             </button>
           </div>
         </div>
@@ -533,7 +533,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           data-elapsed-ms={Math.round(job.elapsed_ms)}
           role="status"
         >
-          <span className="v8-kicker">{zh ? "准备进度" : "Preparation"} · {job.status}</span>
+          <span className="v8-kicker">{t("discovery.preparation2")} · {job.status}</span>
           <h3 data-testid="prep-job-title">{jobCopy().title}</h3>
           <p data-testid="prep-job-body">{jobCopy().body}</p>
           {serverSentence && (
@@ -571,7 +571,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 data-testid="prep-go-plan"
                 onClick={() => onOpenPlan()}
               >
-                {zh ? "去规划" : "Go and plan"}
+                {t("discovery.goAndPlan2")}
               </button>
             )}
             {job.terminal && (
@@ -582,7 +582,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
                 disabled={busy || checking}
                 onClick={() => void check()}
               >
-                {zh ? "重新判定" : "Check again"}
+                {t("discovery.checkAgain")}
               </button>
             )}
           </div>
