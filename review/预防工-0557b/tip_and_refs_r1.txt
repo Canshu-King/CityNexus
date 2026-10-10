@@ -1,0 +1,49 @@
+# ORD-0557 预防工 · 取尖 / 枝 / blob 读数（每条都是那一刻现读的命令输出）
+
+1) git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+24a50a8aecf0a1fe4704400c687540d3e05d74fb	refs/heads/mirror/integration-frontend-apple-pass1
+
+2) git ls-remote origin（本车道两枝，推后回读）
+3258e6f6e7b6e319a479486ad4c640a42f7b944f	refs/heads/review/预防工-0557-dict-r2
+5b725ed5e77960626c90e9fab559bd47a449c590	refs/heads/review/预防工-0557-r2
+
+3) 本地枝尖（与上一格逐字相同才叫推上去）
+prod=5b725ed5e77960626c90e9fab559bd47a449c590
+dict=3258e6f6e7b6e319a479486ad4c640a42f7b944f
+
+4) blob 对拍（改前＝上面那枚尖，改后＝本车道枝）
+form before  9fa2995d2d165017810460c12f681fbf7d66b529
+form after   1c66ea49565bb59a4546d8afd034bc2c839f58ce
+dict before  3d68bfd296eb40a824030ac6d8c48553e80e6196
+dict after   4b0fbd613225ebc3b04ce98961a8bfa0b1b01357
+
+5) 两枝各自 cat-file -t（回 commit 才算真在库上）
+5b725ed5e77960626c90e9fab559bd47a449c590 commit
+3258e6f6e7b6e319a479486ad4c640a42f7b944f commit
+
+6) 我这侧改动清单（git diff --name-only 枝 vs 现尖）
+-- product 枝 --
+frontend/e2e/qoder-yufanggong-0557b-trial-placeholder-r1.spec.ts
+frontend/scripts/i18n_0557_trial_place_arm_r1.py
+frontend/src/features/setup/JourneyTrialSetup.tsx
+"review/\351\242\204\351\230\262\345\267\245-0557b/arm_GREEN_both_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/arm_GREEN_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/arm_NEGATIVE_control_dict_absent_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/arm_NEGATIVE_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/build_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/build_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/e2e_after_PASS_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/e2e_after_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/e2e_before_control_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/placeholder_en_r1.png"
+"review/\351\242\204\351\230\262\345\267\245-0557b/placeholder_zh-CN_r1.png"
+"review/\351\242\204\351\230\262\345\267\245-0557b/readings_AFTER_moved_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/readings_AFTER_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/readings_BEFORE_base_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/screen_text_reverse_control_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/standing_i18n_rulers_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/standing_parity_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/typecheck_on_merged_tip_r1.txt"
+"review/\351\242\204\351\230\262\345\267\245-0557b/typecheck_r1.txt"
+-- dict 枝 --
+frontend/src/i18n/LocaleContext.tsx
