@@ -1,0 +1,23 @@
+1 ORD-0558 加闸工 读数件（单复数 journeyProgress.ts 三处，命令与读数全部现读）
+2 现取尖命令原样：git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+3 起手状态命令原样：grep -c englishCountNoun frontend/src/features/progress/journeyProgress.ts 回 0（该文件此刻没挂尺），锚 frontend/src/features/progress/journeyProgress.ts:25
+4 尺与签名：frontend/src/lib/plural.ts:35 -> export function englishCountNoun(count: unknown, singular: string): string
+5 草稿出处：D:\moodle\_cn8_plural_fix_0126.txt 第 96 行给 :86 的改后整行、第 99 行给 :95、第 102 行给 :100，三处同属 档 A，我逐字节照抄，仪表 apply_0558_r1.py 的断言是「现读那一行必须逐字等于草稿原文列、且改后整行确实带尺」，任一条不合就 ABORT 不落笔
+6 改动 3 处加 import 1 行，改前坐标 frontend/src/features/progress/journeyProgress.ts:86 与 :95 与 :100，import 插在 :25 之后落在 :26，改后坐标因插入一行整体后移一格（仪表回读 87 与 96 与 101）
+7 改前第 87 行 -> parts.push(zh ? `共 ${p.day_total} 天。` : `${p.day_total} days.`);
+8 改后第 87 行 -> parts.push(zh ? `共 ${p.day_total} 天。` : `${p.day_total} ${englishCountNoun(p.day_total, "day")}.`);
+9 改前第 96 行 -> : `none of the ${p.planned_total} stops is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.`);
+10 改后第 96 行 -> : `none of the ${p.planned_total} ${englishCountNoun(p.planned_total, "stop")} is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.`);
+11 改前第 101 行 -> : `${p.completed_count}/${p.planned_total} stops completed`
+12 改后第 101 行 -> : `${p.completed_count}/${p.planned_total} ${englishCountNoun(p.planned_total, "stop")} completed`
+13 两语读数怎么来的：esbuild 打包同一枚函数两代（现尖那份字节与改后那份字节，两枚模块同目录、相对 import 一致），node 真跑，命令原样 node_modules/.bin/esbuild _probe_0558_r1.ts --bundle --platform=node --format=cjs --outfile=../probe_out.cjs 退出码 0，再 node ../probe_out.cjs 退出码 0
+14 计数取 1 与 2 与 3，zh 与 en 各一枚，共 14 条读数（7 个 payload 乘 2 语），全文见 probe_0558_r1.txt
+15 zh 面 7 条逐字节相同（zh 不随数变形，草稿把中文那三支标成不算缺陷），命中的 SAME_AS_BEFORE=true 计数 7 条
+16 en 面改变 3 条，全是计数为 1 那一档：1 days -> 1 day（payload day_total=1）、none of the 1 stops -> none of the 1 stop（payload planned_total=1）、1/1 stops completed -> 1/1 stop completed（payload completed=1 planned=1）
+17 en 面计数 2 与 3 那 4 条逐字节未变：2 days. 仍在，none of the 2 stops 仍在，1/2 stops completed 仍在，1/3 stops completed 与 2 more skipped 仍在
+18 闸（我自己加宽的那把）：cwd frontend，命令原样 npm run typecheck，改后那一代退出码 2，error TS 3 条，全部在 frontend/src/features/studio/SortableActivityList.tsx:10、:17、:18 那三行 @dnd-kit import，本文件不在任何一条红里
+19 A/B 对照臂：把同一副本里那一枚文件整文件覆回现尖字节再跑同一条尺，退出码 2、error TS 3 条，两份清单逐字节相同（diff 回空），所以这 3 条红在我动手之前就在现尖上，不是我这一枚字节带来的
+20 那 3 条红的成因：共享 store 里没有 @dnd-kit 这枚目录，命令原样 ls -d D:\moodle\CityNexus\frontend\node_modules\@dnd-kit 回不存在，而 frontend/package.json:16 声明了 "@dnd-kit/core": "^6.1.0"，frontend/package.json:17 声明了 "@dnd-kit/sortable": "^8.0.0"
+21 我没有擅自动那枚共享 store：十几扇车道共用 D:\moodle\CityNexus\frontend\node_modules，往里装包是改现有可用资源，等号令者点甲乙丙（量名词那块第 404 行给的那三选项），我这边只逐枚列坐标
+22 副本与环境：git archive 现尖 frontend 到 D:\moodle\_qoder_jiazagong_0558，node_modules 走 junction 指现有那份，探针与临时模块已删，删后 src 下 .ts/.tsx 清单与现尖逐字相同（两枚 156 行清单 diff 回空）
+23 e2e 那一腿我缺席：该文件的规格 frontend/e2e/qoder-ord0438-progress-contract.spec.ts 我没有跑（要起 dev 前后端与库），但我读了它的断言，逐字写死这三串英文的那条 0 处，最宽的一条是 frontend/e2e/qoder-ord0438-progress-contract.spec.ts:242 的正则 /server|walked|stops|chosen/i，改后仍命中

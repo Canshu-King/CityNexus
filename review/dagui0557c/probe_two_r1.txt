@@ -1,0 +1,15 @@
+$ esbuild + node probe_two_bundle_r1.cjs  [this branch: the two keys are in the dictionary]
+rc=0 ok=4 fail=0
+OK   locale=en key=simulation.basis value="Basis"
+OK   locale=en key=simulation.evidence value="Evidence"
+OK   locale=zh-CN key=simulation.basis value="依据"
+OK   locale=zh-CN key=simulation.evidence value="证据"
+probe_fail=0 cases=4
+$ esbuild + node probe_two_bundle_r1.cjs  [control: the base generation 8f41ae8219, without them]
+rc=7 ok=0 fail=4
+FAIL locale=en key=simulation.basis value="simulation.basis"
+FAIL locale=en key=simulation.evidence value="simulation.evidence"
+FAIL locale=zh-CN key=simulation.basis value="simulation.basis"
+FAIL locale=zh-CN key=simulation.evidence value="simulation.evidence"
+probe_fail=4 cases=4
+verdict=PROVEN mine_rc=0 base_rc=7 restored=1

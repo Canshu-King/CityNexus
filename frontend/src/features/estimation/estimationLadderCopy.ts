@@ -1,3 +1,5 @@
+import { expandPluralMarkers } from "../../lib/plural";
+
 /**
  * ORD-0455 -- the wording of the four estimation rungs.
  *
@@ -49,7 +51,7 @@ export const estimationLadderCopy = {
     "ladder.verify.binding":
       "Non-refundable -- check the final price and the cancellation terms with the provider before you book.",
     "ladder.remedy.switch":
-      "To get a number you can compare: switch to another of the {n} candidates on this screen, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
+      "To get a number you can compare: switch to another of the {n} {plural:candidate} on this screen, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
     "ladder.remedy.recompute":
       "To get a number you can compare: open {door} and change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
     "ladder.remedy.absent":
@@ -92,5 +94,5 @@ export function ladderCopyFor(locale: string, key: LadderCopyKey): string {
 }
 
 export function fillLadder(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
 }

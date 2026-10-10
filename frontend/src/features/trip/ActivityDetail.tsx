@@ -7,6 +7,7 @@
  */
 
 import { useLocale } from "../../i18n/LocaleContext";
+import { englishCountNoun } from "../../lib/plural";
 import { categoryLabel, roleLabel } from "../../i18n/travelerLabels";
 import {
   activityDetailCopyLookup,
@@ -147,7 +148,7 @@ export function ActivityDetail({
           : `${Math.floor(duration / 60)}h${duration % 60 ? ` ${duration % 60}m` : ""}`
         : zh
           ? `${duration} 分钟`
-          : `${duration} min`;
+          : `${duration} ${englishCountNoun(duration, "minute")}`;
 
   return (
     <section className="v8-page activity-detail" data-testid="activity-detail">
@@ -183,7 +184,7 @@ export function ActivityDetail({
             <dd>
               {zh
                 ? `${activity.travel_from_prev_min} 分钟`
-                : `${activity.travel_from_prev_min} min`}
+                : `${activity.travel_from_prev_min} ${englishCountNoun(activity.travel_from_prev_min, "minute")}`}
             </dd>
           </div>
         )}
@@ -304,7 +305,7 @@ export function ActivityDetail({
                         {metres < 1000
                           ? zh
                             ? `${Math.round(metres)} 米`
-                            : `${Math.round(metres)} m`
+                            : `${Math.round(metres)} ${englishCountNoun(Math.round(metres), "metre")}`
                           : zh
                             ? `${(metres / 1000).toFixed(1)} 公里`
                             : `${(metres / 1000).toFixed(1)} km`}

@@ -1,0 +1,27 @@
+# i18n equivalent gate for ORD-0557 main.tsx (judgement mirrors LocaleContext.tsx:2538)
+en_block_keys=1133 zh_block_keys=1134 main_keys_called=21
+en object spans LocaleContext.tsx:8..1347, zh object spans LocaleContext.tsx:1350..2601
+line 170 | key main.cityNexusRequestFailed | en_equal=True zh_equal=True | PASS
+line 171 | key main.cityNexusRequestRefusedHttp | en_equal=True zh_equal=True | PASS
+line 566 | key main.persistedOperationUpdate | en_equal=True zh_equal=True | PASS
+line 1111 | key main.generalRecovery | en_equal=True zh_equal=True | PASS
+line 1154 | key main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | en_equal=True zh_equal=True | PASS
+line 1218 | key main.noDominantFailureMode | en_equal=True zh_equal=True | PASS
+line 1415 | key main.notEvaluated | en_equal=True zh_equal=True | PASS
+line 1423 | key main.validatedActivity | en_equal=True zh_equal=True | PASS
+line 1424 | key main.noActionableTarget | en_equal=True zh_equal=True | PASS
+line 1475 | key main.outcomeEvidence | en_equal=True zh_equal=True | PASS
+line 1487 | key main.explicitWins | en_equal=True zh_equal=True | PASS
+line 1545 | key main.notReported | en_equal=True zh_equal=True | PASS
+line 1547 | key main.noUpcomingActivity | en_equal=True zh_equal=True | PASS
+line 1551 | key main.noActiveC4 | en_equal=True zh_equal=True | PASS
+line 1560 | key main.notAvailable | en_equal=True zh_equal=True | PASS
+line 1595 | key main.unnamedCommitmentServerGaveNoName | en_equal=True zh_equal=True | PASS
+line 1646 | key main.verifiedFeasible | en_equal=True zh_equal=True | PASS
+line 1646 | key main.notFeasible | en_equal=True zh_equal=True | PASS
+line 1680 | key main.notPreserved | en_equal=True zh_equal=True | PASS
+line 1682 | key main.verifiedEvidenceAttached | en_equal=True zh_equal=True | PASS
+line 1683 | key main.evidenceUnavailable | en_equal=True zh_equal=True | PASS
+CALLED_BUT_ABSENT_IN_DICT=none
+defined_in_en=21 defined_in_zh=21 of 21 blessed keys (both sides required by the dispatch)
+PASS=21 FAIL=0 PENDING=0 TOTAL=21
