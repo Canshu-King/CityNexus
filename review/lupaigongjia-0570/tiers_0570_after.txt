@@ -1,0 +1,176 @@
+== cnx_copy_tiers_r1  i18n=frontend/src/i18n/LocaleContext.tsx  baseline=LocaleContext_tip_ae2d.tsx  e2e=none  src=frontend/src
+  [MET      ] REGISTER_PARITY          1236 bilingual keys: 1236 agree, 0 clash
+          detail: none
+  [MET      ] NO_GROWTH                0 values changed; zh gained chars: 0, en over +8: 0
+          detail: every Chinese rewrite is the same length or shorter
+  [MET      ] ASSERTIONS_STILL_HIT     0 keys edited against 0 e2e text assertions; 0 would lose their target
+          detail: every assertion that hit these values still hits the new ones
+  [MET      ] REMAINDER_REPORT         en hard words 8->8 | zh hard words 4->4 (not gated)
+          detail: left visible on purpose: green here does not mean the file is finished
+  [MET      ] DICTIONARY_COVERAGE_REPORT 1 key row(s) written with the value on the next line, invisible to the four dictionary claims (en 1, zhCN 0)
+          detail: not gated on purpose: a green REGISTER_PARITY below is not a claim about these keys. First five: me.asksBeforeProtectedChange@490
+  [VIOLATION] LADDER_TIER④_EMPTY_ACTION 66 read key(s) in this tier's population, 54 miss the shape (9 unread row(s) counted out, they belong to RENDERED)
+          detail: population and matcher are printed by --ladder; a miss is listed by key and line. First three: ["agent.aiRunStoppedBeforeSend:2007 '请求还没发出去，服务器那边没有这一笔。' / 'Nothing had been sent, so the server holds no part of this.' (empty state with no action in the line and no action sibling)", "bookings.noStaySub:1856 '这趟行程目前还没有可选的住宿。' / 'No stay option is available for this trip yet.' (empty state with no action in the line and no action sibling)", "bookings.realtimeNoStatus:1845 '暂无实时状态' / 'No live status' (empty state with no action in the line and no action sibling)"]
+  [VIOLATION] LADDER_TIER⑥_ESTIMATE_PREFIX 10 read key(s) in this tier's population, 3 miss the shape (2 unread row(s) counted out, they belong to RENDERED)
+          detail: population and matcher are printed by --ladder; a miss is listed by key and line. First three: ["trial.rangeFrom:1606 '{min} {unit}起' / 'from {min} {unit}' (states a computed quantity with no Est/约/预估 marker)", "v14.impactFallback:2643 '这次影响由 {provider} 解读 · {model}。' / 'Impact interpreted by {provider} · {model}.' (states a computed quantity with no Est/约/预估 marker)", "v14.routeDelta:2629 '路线时长变化 {n} 分钟' / '{n} min route delta' (states a computed quantity with no Est/约/预估 marker)"]
+  [VIOLATION] HARDCODED_FALLBACK       157 files scanned: tier A (language branch in the slot) 2, tier B (bare literal) 80, excluded as machine tokens 206; inline bilingual pairs anywhere = 490 (denominator only -- most are legitimate inline pairs, NOT a defect count)
+          detail: shape of the 82 hit(s) by slot: other=52, jsx-or-expr=10, data-attr=7, telemetry-string=5, js-value=4, react-key=3, state-write=1. This breakdown removes nothing -- it is a triage hint, and 'data-attr' here means the ?? sits inside a data-* attribute on this line, which a text ruler cannot prove never renders. Detail: A frontend\src\features\setup\JourneyTrialSetup.tsx:295 '、' || A frontend\src\features\setup\JourneyTrialSetup.tsx:295 ', ' || B frontend\src\app\V8Experience.tsx:266 'unknown'
+  [VIOLATION] RENDER_TIERS             82 hits over 157 files by render tier: tier 1 (proven render slot, no language branch guarding it) 6, tier 2 (this face cannot settle it) 73, tier 3 (text proves it cannot reach a screen -- key={}) 3
+          detail: tier 1 is the actionable set and is gated; tier 2 stays listed because calling it safe would be the lie -- data-* in particular is never asserted unable to render. Tier 1: ["frontend\\src\\features\\planning\\PlanWithAiSheet.tsx:1091 'not_stated'", "frontend\\src\\features\\setup\\JourneyTrialSetup.tsx:1111 'not-asked'", "frontend\\src\\main.tsx:1425 'unknown'", "frontend\\src\\main.tsx:1468 'preference'", "frontend\\src\\main.tsx:1479 'preference'", "frontend\\src\\main.tsx:1492 'preference'"]
+  [MET      ] RENDERED                 1237 distinct key names (1237 readable by the single-line parser; 1 rows carry their value on the next line and 0 of those keys are reachable only through the wrapped scan) against 156 non-dictionary files (1 dictionary files skipped); zero-use 160, of which 14 sit under a concatenated prefix ['nav.'] and are covered dynamically; keys introduced or reworded by this run: 3, gated offenders: 0
+          detail: stock zero-use rows are harmless bytes, not a runtime defect, so they are listed and not gated; a key THIS run touched that nothing asks for is churn, so it is gated. Gated: none. Stock, not gated (first 8 of 146): ['agent.authorityBoundary', 'agent.cost', 'agent.defaultMission', 'agent.handlePlan', 'agent.mission', 'agent.stayMobility', 'agent.staySummary', 'bookings.importKicker']. Use sites of touched keys: pending.loading=2 frontend\src\features\pending\pendingSetCopy.ts:165; pending.sub=2 frontend\src\features\pending\pendingSetCopy.ts:165; pending.title=3 frontend\src\features\pending\pendingSetCopy.ts:165
+  -- RENDERED per-key listing (denominator = 156 non-dictionary files, 1 dictionary files skipped) --
+     keys this run introduced or reworded: 3
+       pending.loading                    uses=2   frontend\src\features\pending\pendingSetCopy.ts:165, frontend\src\features\pending\PendingSetPanel.tsx:268
+       pending.sub                        uses=2   frontend\src\features\pending\pendingSetCopy.ts:165, frontend\src\features\pending\PendingSetPanel.tsx:263
+       pending.title                      uses=3   frontend\src\features\pending\pendingSetCopy.ts:165, frontend\src\features\pending\PendingSetPanel.tsx:260, frontend\src\features\pending\PendingSetPanel.tsx:262
+     zero-use keys not covered by a dynamic prefix: 146
+       agent.authorityBoundary
+       agent.cost
+       agent.defaultMission
+       agent.handlePlan
+       agent.mission
+       agent.stayMobility
+       agent.staySummary
+       bookings.importKicker
+       bookings.protectedC4
+       checkin.count
+       checkin.empty
+       checkin.loading
+       checkin.noJourney
+       checkin.noteAbsent
+       checkin.readFailed
+       checkin.retry
+       checkin.scope
+       checkin.targetGone
+       detail.activityType
+       detail.askCopilot
+       detail.backToItinerary
+       detail.category
+       detail.dayStops
+       detail.duration
+       detail.hoursNoData
+       detail.kilometres
+       detail.location
+       detail.metres
+       detail.nearbyNoteClose
+       detail.nearbyNoteFar
+       detail.nearbyStops
+       detail.noCoordinates
+       detail.openingHours
+       detail.otherTripStops
+       detail.progressDayTotal
+       detail.showOnMap
+       detail.travelFromPrev
+       detail.weekIndex
+       discovery.costUnknown
+       discovery.deepseek
+       discovery.liveProvider
+       discovery.providerGrounded
+       discovery.results
+       discovery.sealedReal
+       discovery.sealedReplayReady
+       discovery.sourceCaptured
+       exec.markArrived
+       exec.markCompleted
+       exec.markEnRoute
+       exec.notStarted
+       fmt.minSlack
+       fmt.minWalk
+       fmt.priceUnavailable
+       hub.detGate
+       hub.deviceTime
+       hub.lede
+       hub.planHealth
+       hub.planningReady
+       hub.protectedMargin
+       hub.review
+       hub.stayBudget
+       hub.title
+       hub.verifiedTarget
+       hub.viewPlan
+       hub.weatherAware
+       inbox.confirmFailed
+       inbox.correctionsFailed
+       inbox.imageFailed
+       inbox.readError
+       inbox.smartApplyFailed
+       inbox.smartDecision
+       inbox.textFailed
+       intel.cpsat
+       itinerary.dayByDay
+       itinerary.emptyNoPlan
+       itinerary.emptyPlanNoDays
+       itinerary.emptyReadingPlaces
+       itinerary.lengthUnknown
+       itinerary.planWithAiNeedsPlaces
+       live.saved
+       me.currentMode
+       me.enableTransport
+       me.envelopeEnabled
+       me.kicker
+       me.lede
+       me.pauseConfirm
+       me.preAuthorized
+       me.reversibleAllowed
+       me.title
+       me.travelersAdults
+       me.tripContext
+       me.version
+       poiImport.favoriteNotWired
+       poiImport.newJourney
+       poiImport.newJourneyNotWired
+       poiImport.readBackError
+       shell.missionActivated
+       shell.missionCaptured
+       shell.offlineMsg
+       stay.nightly
+       stay.priceUnavailable
+       studio.gate.FROZEN_EVIDENCE_INTEGRITY_MISMATCH
+       studio.gate.FROZEN_ROUTE_EVIDENCE_MISSING
+       studio.gate.INVALID_FROZEN_EVIDENCE_EXPIRY
+       studio.gate.MOBILITY_DATA_UNAVAILABLE
+       studio.gate.PROTECTED_ACTIVITY_REORDER
+       studio.gate.STALE_FROZEN_EVIDENCE
+       trial.arrival
+       trial.budget
+       trial.city
+       trial.create
+       trial.createdLiveHint
+       trial.departure
+       trial.end
+       trial.lede
+       trial.liveNote
+       trial.liveTitle
+       trial.party
+       trial.start
+       trial.title
+       twin.cap.AVOID_STAIRS
+       twin.cap.INDOOR_PREFERRED
+       twin.cap.INFANT_NAP_WINDOW
+       twin.cap.LARGE_LUGGAGE
+       twin.cap.MAX_CONTINUOUS_WALKING_MIN
+       twin.cap.MAX_DAILY_WALKING_M
+       twin.cap.MAX_WALKING_PER_LEG_M
+       twin.cap.MIDDAY_REST_WINDOW
+       twin.cap.QUIET_ENVIRONMENT
+       twin.cap.REST_EVERY_MIN
+       twin.cap.SENSORY_LOW_STIMULATION
+       twin.cap.SLOW_PACE
+       twin.cap.STEP_FREE_REQUIRED
+       twin.cap.STROLLER
+       twin.cap.TOILET_BREAK_EVERY_MIN
+       twin.dim.culture
+       twin.dim.local_food
+       twin.dim.relaxed
+       twin.dim.walking_minutes_max
+       twin.dim.waterfront
+       twin.sev.HARD
+       twin.sev.SOFT
+       twin.sev.STRONG
+       v14.mode.ADVISORY
+       v14.mode.ASSISTED
+       v14.mode.AUTONOMOUS
+     zero-use keys under a concatenated prefix (dynamic, so not a defect): 14
+       prefix nav.       covers 14  key(s), built at frontend\src\app\V8Experience.tsx:1988, frontend\src\app\V8Experience.tsx:1991, frontend\src\app\V8Experience.tsx:2042, frontend\src\app\V8Experience.tsx:2264
+exit=1
