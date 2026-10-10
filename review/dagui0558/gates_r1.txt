@@ -1,0 +1,8 @@
+branch review/大柜工-0558-r1 on base 73e723d04d (one row, en_only, no dictionary change)
+$ node_modules/.bin/tsc -p tsconfig.check.json --noEmit
+typecheck_rc=0
+$ node_modules/.bin/tsc -p tsconfig.typecheck.json --noEmit
+full_typecheck_rc=0
+$ node_modules/.bin/vite build
+  dist/workbox-6923124b.js
+build_rc=0

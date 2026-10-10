@@ -1,0 +1,27 @@
+TIP=73e723d04d20df33dec68952884d7000f71ef941
+$ esbuild + node probe_plural_bundle_r1.cjs  [after: this branch]
+rc=0
+en  count=1 text="Read back from the server: this city now has 1 place that can go into a trip."
+en  count=2 text="Read back from the server: this city now has 2 places that can go into a trip."
+en  count=5 text="Read back from the server: this city now has 5 places that can go into a trip."
+en  count=0 text="Read back from the server: we hold no places for this city yet."
+en  count=null text="We could not read how many places this city has from the server just now."
+zh  count=1 text="服务器回读：这座城我们现在有 1 个地点，可以排进行程。"
+zh  count=2 text="服务器回读：这座城我们现在有 2 个地点，可以排进行程。"
+zh  count=5 text="服务器回读：这座城我们现在有 5 个地点，可以排进行程。"
+zh  count=0 text="服务器回读：这座城我们现在一个地点都还没有。"
+zh  count=null text="这座城有多少地点，我们刚才没能从服务器读到。"
+$ esbuild + node probe_plural_bundle_r1.cjs  [before: 73e723d04d]
+rc=0
+en  count=1 text="Read back from the server: this city now has 1 places that can go into a trip."
+en  count=2 text="Read back from the server: this city now has 2 places that can go into a trip."
+en  count=5 text="Read back from the server: this city now has 5 places that can go into a trip."
+en  count=0 text="Read back from the server: we hold no places for this city yet."
+en  count=null text="We could not read how many places this city has from the server just now."
+zh  count=1 text="服务器回读：这座城我们现在有 1 个地点，可以排进行程。"
+zh  count=2 text="服务器回读：这座城我们现在有 2 个地点，可以排进行程。"
+zh  count=5 text="服务器回读：这座城我们现在有 5 个地点，可以排进行程。"
+zh  count=0 text="服务器回读：这座城我们现在一个地点都还没有。"
+zh  count=null text="这座城有多少地点，我们刚才没能从服务器读到。"
+check_en_one_fixed=1 check_en_two_still_plural=1 check_before_was_wrong=1 zh_arms_identical=1
+verdict=PROVEN

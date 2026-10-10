@@ -15,6 +15,7 @@
  *    evidence panel's job under 技术详情, not the copy's.
  */
 
+import { englishCountNoun } from "../../lib/plural";
 export type CatalogueReadback = {
   /** `server` only when the door answered with a readable list; `unreadable` is a real state. */
   source: "server" | "unreadable";
@@ -75,5 +76,5 @@ export function catalogueCountSentence(
   }
   return zh
     ? `服务器回读：这座城我们现在有 ${count} 个地点，可以排进行程。`
-    : `Read back from the server: this city now has ${count} places that can go into a trip.`;
+    : `Read back from the server: this city now has ${count} ${englishCountNoun(count, "place")} that can go into a trip.`;
 }
