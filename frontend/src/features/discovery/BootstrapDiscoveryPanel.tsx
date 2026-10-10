@@ -1876,10 +1876,11 @@ export function BootstrapDiscoveryPanel({
               disabled={twoStopBusy || orderedTwoStopItems.length !== 2}
               onClick={() => {
                 setTwoStopConsent(false);
-                setTwoStopFallbackUrl(null);
                 setTwoStopNotice(null);
                 setTwoStopWalkabilityConsent(false);
-                setTwoStopWalkability(null);
+                // The saved pair has not changed. Preserve the latest
+                // provider-backed estimate or honest unavailable fallback
+                // while the traveler decides whether to open external maps.
               }}
             >
               Prepare public-to-public walking leg
