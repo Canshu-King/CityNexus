@@ -1,0 +1,2 @@
+en range 9..1356 rows whose value line the strict kv regex misses: 1
+LocaleContext.tsx:471|   "me.asksBeforeProtectedChange":

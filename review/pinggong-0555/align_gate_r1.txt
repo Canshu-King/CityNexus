@@ -1,0 +1,8 @@
+# alignment gate for ORD-0555 batch 1 (predicate mirrors LocaleContext's own t/dictionaryCopy)
+en_keys=1143 zh_keys=1143 equal=True
+rows_before_on_tip=[177, 178, 179]
+line 177 | key sceneClock.executionCursor | zh_equal=True en_equal=True | PASS
+line 178 | key sceneClock.journeyStart | zh_equal=True en_equal=True | PASS
+line 179 | key sceneClock.serverGaveNoBasis | zh_equal=True en_equal=True | PASS
+keys_missing_on_either_side=none
+PASS=3 FAIL=0
