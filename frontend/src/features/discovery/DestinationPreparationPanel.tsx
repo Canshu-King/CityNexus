@@ -37,17 +37,25 @@ type Props = {
   journeyId?: string | null;
   /** Hand the traveller on to planning once the destination is ready. */
   onOpenPlan?: () => void;
+  /** ORD-0566: `PREPARE_PLACES` says the place rows themselves need work, so the advice is a door. */
+  onOpenPreparePlaces?: () => void;
   initialQuery?: string;
 };
 
 /** The server's structural verdicts.  Anything unrecognised is shown as itself, not guessed at. */
 const CAPABILITY_READY = "READY";
 
-export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuery = "" }: Props) {
+export function DestinationPreparationPanel({
+  journeyId,
+  onOpenPlan,
+  onOpenPreparePlaces,
+  initialQuery = "",
+}: Props) {
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
 
+  const queryRef = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState(initialQuery);
   const [capability, setCapability] = useState<DestinationCapability | null>(null);
   const [capabilityError, setCapabilityError] = useState<string | null>(null);
@@ -315,6 +323,19 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     }
   };
 
+  /* ORD-0566: the server's own advice for a destination it cannot name.  The cell below this one has
+     always offered the reset; what was missing is that when the server *recommends* it, the screen
+     treated that advice as having no action at all.  Focusing the field is the part that makes the
+     click a route rather than a repaint: the traveller lands on an empty query with the cursor in it. */
+  const chooseAnotherDestination = () => {
+    stopPolling();
+    setCapability(null);
+    setJob(null);
+    setQuery("");
+    setActionError(null);
+    queryRef.current?.focus();
+  };
+
   /* ORD-0440 second half: this cell used to print `job.error.message`, i.e. whatever sentence the
      server happened to answer with. The refusal is still said - by the token the server owns
      (`code` / `reason_code` / `message_key`), which chooses a sentence written here. The prose itself
@@ -397,6 +418,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         <label>
           <span>{t("discovery.destination")}</span>
           <input
+            ref={queryRef}
             data-testid="prep-query"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -500,10 +522,30 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
               >
                 {busy ? (t("discovery.starting")) : zh ? "开始准备" : "Prepare this destination"}
               </button>
+            ) : action === "CHOOSE_ANOTHER_DESTINATION" ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="prep-choose-another-primary"
+                onClick={chooseAnotherDestination}
+              >
+                {t("discovery.pickAnotherDestination")}
+              </button>
+            ) : action === "PREPARE_PLACES" ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="prep-prepare-places"
+                onClick={() => onOpenPreparePlaces?.()}
+                disabled={!onOpenPreparePlaces}
+              >
+                {t("discovery.preparePlaces")}
+              </button>
             ) : null}
-            {/* CHOOSE_ANOTHER_DESTINATION names no primary action of its own: the server's advice for
-                a destination it cannot name is to pick a different one, which is the button below.
-                Named explicitly so no future action string silently inherits "prepare this". */}
+            {/* The outline exit below stays for every verdict, including CHOOSE_ANOTHER_DESTINATION:
+                the server's advice for a destination it cannot name now has its own arm (ORD-0566),
+                and this row remains the always-available way out.  Named so no future action string
+                silently inherits "prepare this". */}
             <button
               type="button"
               className="v8-outline-button"

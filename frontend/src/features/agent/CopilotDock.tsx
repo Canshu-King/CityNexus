@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import type { V8Data } from "../../app/v8Types";
+import { Badge } from "../../components/Badge";
 import {
   cityNexusApi,
   type AgentMissionPlan,
@@ -445,10 +446,10 @@ export function NativeMissionTimeline({
         </span>
         <div className="cn-protected-badges">
           {(run.protected_commitments ?? []).map((commitment, index) => (
-            <span key={String(commitment.id ?? index)}>{zh ? "受保护承诺" : "Protected commitment"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</span>
+            <Badge key={String(commitment.id ?? index)} tone="success" variant="tinted">{zh ? "受保护承诺" : "Protected commitment"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</Badge>
           ))}
           {!run.protected_commitments?.length && run.mission_plan?.protected_activity_ids.map((id) => (
-            <span key={id}>{zh ? "受保护活动" : "Protected activity"} · {id.slice(0, 8)}</span>
+            <Badge key={id} tone="success" variant="tinted">{zh ? "受保护活动" : "Protected activity"} · {id.slice(0, 8)}</Badge>
           ))}
         </div>
       </div>
