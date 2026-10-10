@@ -109,3 +109,15 @@ build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle
 correction evidence for the coverage table row naming this lane (号令者数给你 · 现尖缺的十三枚...):
 net delta of the dictionary branch against the tip, `git diff --numstat` -> 35 insertions and 0 deletions in frontend/src/i18n/LocaleContext.tsx, and the only key names it adds are the ten lib.failureAttribution.* (none of them simulation.*)
 simulation.* entry lines counted on both sides of that same diff: tip 22, branch 22 -- so this branch adds zero simulation keys; the table's 补得上 9 枚 row was read with the ruler pinned to a generation older than this branch, which is how a re-cut branch looks like it carries other lanes' keys
+
+why this pair kept missing the batch, read from the leg's own files: _batch_land_round12_232523.json holds five candidates (备城工-0566-r1, 快剪工-0557-r1, 起手工-0555-r1, 快剪工-0558-r1, 加闸工-0558-r1) and this lane is not among them; the round's own trim line at 23:16:23 prints 同线旧代让路=2 -- an older generation yields
+re-cut onto d54e431113f0f147bf750e31c621ca2c47bbaa0c (read by ls-remote at 23:4x): dictionary merge clean this time, no conflict, dict tip 7f87337131ff3241a4133e10124018292375706a (behind 0)
+product branch merged that dictionary tip, also clean: 10 reads at 462, 470, 483, 490, 523, 535, 543, 570, 578, 586 and 0 leftover title ternaries
+gate repointed: TIP constant now d54e431113f0f147bf750e31c621ca2c47bbaa0c; the ten tip-side ternaries still sit at 457, 465, 478, 485, 518, 530, 538, 565, 573, 581
+keys on the re-cut dictionary tip: en 1397-1406, zh 2709-2718, accessor 2729
+i18n gate: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py -> exit code 0, items=10, GREEN
+i18n gate: same command with --negative -> exit code 1, RED on the ten en arms
+typecheck: cwd frontend, node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit code 0, zero bytes
+parity ruler on this branch: python frontend/scripts/i18n_detail2_parity_r1.py -> exit code 1, en keys 1185, zh keys 1186, xor = me.asksBeforeProtectedChange
+parity ruler at d54e431113f0f147bf750e31c621ca2c47bbaa0c, same unmodified ruler -> exit code 1, en keys 1175, zh keys 1176, xor = the same single key: ten added per side, no orphan
+build: cwd frontend, node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir -> exit code 0
