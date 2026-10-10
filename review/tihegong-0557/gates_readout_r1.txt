@@ -1,0 +1,44 @@
+ORD-0557 tiehegong batch one gate readouts -- every command below was re-run on the tip of review/铁盒工-0557-r1
+
+generation pins
+authoritative line taken at 14:35: 996f1b7588580a14fbbdec5301a6e4a7b70c93e4
+dictionary branch tip: 572c4dea271a3a83a2356d833962e2df6faf8020 (three keys, en 1331-1333, zh 2570-2572, accessor 2583)
+the superseded ORD-0555 pair: review/铁盒工-0555-dict-r1 2c2093749ca443744fbbd6bf3086699a490192dd, review/铁盒工-0555-r1 dedb69b6bcebcddf5a81cbdbedddcda8f5d5d99e
+draft source: D:\moodle\_cn10_fb557draft_1155.txt lines 149-151 (the three rows this batch ate)
+
+i18n gate, this branch
+command: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py
+exit code 0
+items=3 moved_tip_lines=[457, 465, 478] added_lines=[28, 29, 30, 31, 457, 462, 470, 483]
+  lib.failureAttribution.tripNotOnServer: tip:457 -> product:462, dict zh-CN:2570 en:1331
+  lib.failureAttribution.networkUnavailable: tip:465 -> product:470, dict zh-CN:2571 en:1332
+  lib.failureAttribution.serviceUnavailable: tip:478 -> product:483, dict zh-CN:2572 en:1333
+GREEN
+
+i18n gate, negative control (one expected dictionary byte shifted)
+command: python review/tihegong-0557/i18n_0557_failure_attribution_r1.py --negative
+exit code 1, RED on the three en arms -- the gate is not a yes-machine
+
+typecheck, the one ORD-0560 accepts (whole src)
+cwd frontend, command: node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+exit code 0, zero bytes of stdout/stderr
+
+typecheck, scoped config (kept for comparison)
+cwd frontend, command: node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit
+exit code 0, zero bytes
+
+shared dictionary parity ruler, this branch
+command: python frontend/scripts/i18n_detail2_parity_r1.py
+exit code 1, en keys 1115, zh keys 1116, xor = me.asksBeforeProtectedChange
+
+shared dictionary parity ruler, at 996f1b7588580a14fbbdec5301a6e4a7b70c93e4 in a detached worktree
+command: python frontend/scripts/i18n_detail2_parity_r1.py
+exit code 1, en keys 1112, zh keys 1113, xor = the same me.asksBeforeProtectedChange
+three keys added per side, no orphan key introduced, the ruler's own source was not touched
+
+production build
+cwd frontend, command: node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_tiehegong_0557_dist --emptyOutDir
+exit code 0, success line: precache 8 entries (2915.26 KiB)
+
+not run, and why
+frontend/e2e/qoder-0533-dictionary-keys-on-screen-r1.spec.ts -- that gate watches keys handed to t(); this batch hands its keys to the non-hook dictionaryCopy instead, so its arm does not reach them, and running it would need the dev server plus a demo/reset-able preview database. No browser screen reading in this block; the byte-for-byte source arms above stand in for it and are named in the delivery block.
