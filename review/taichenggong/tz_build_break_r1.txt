@@ -1,0 +1,15 @@
+CMD=node node_modules/vite/bin/vite.js build  (run in frontend/, on this branch's bytes)
+VITE_EXIT=1
+the build's own words, verbatim:
+[31m✗[39m Build failed in 637ms
+[31merror during build:
+[31m[vite-plugin-pwa:build] [plugin vite-plugin-pwa:build] There was an error during the build:
+  [vite]: Rollup failed to resolve import "@dnd-kit/core" from "D:/moodle/_qoder_taicheng_0557_20261010/wt/frontend/src/features/studio/SortableActivityList.tsx".
+This is most likely unintended because it can break your application at runtime.
+--- the same package is absent from the shared dependency tree this worktree junctions to:
+ls: cannot access '/d/moodle/_qoder_taicheng_0557_20261010/wt/frontend/node_modules/@dnd-kit': No such file or directory
+ls: cannot access '/d/moodle/CityNexus/frontend/node_modules/@dnd-kit': No such file or directory
+--- and the file that imports it is not this lane's:
+10:} from "@dnd-kit/core";
+17:} from "@dnd-kit/sortable";
+18:import { CSS } from "@dnd-kit/utilities";

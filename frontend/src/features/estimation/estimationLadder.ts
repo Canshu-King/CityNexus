@@ -27,6 +27,8 @@
  * the copy module answers "in what words".
  */
 
+import { ladderCopyFor, type LadderCopyKey } from "./estimationLadderCopy";
+
 export const ESTIMATION_TIERS = ["method", "pre_warning", "post_verify", "remedy"] as const;
 export type EstimationTier = (typeof ESTIMATION_TIERS)[number];
 
@@ -166,10 +168,15 @@ export function estimationLadder(reading: EstimateReading): EstimationLadder {
 
   // ③ 事后核对 -- owed precisely when the figure looks usable enough that someone will act on it.
   if (shown) {
+    // ORD-0557: these two tokens are dictionary-backed now. Identical bytes in both locales, and
+    // this module has no locale of its own -- only the host panel reads one.
+    const triggerKey: string = facts.binding
+      ? "estimation.amountNonRefundable"
+      : "estimation.amountRefundable";
     rungs.push({
       tier: "post_verify",
       key: facts.binding ? "ladder.verify.binding" : "ladder.verify.open",
-      trigger: facts.binding ? "amount,non_refundable" : "amount,refundable",
+      trigger: ladderCopyFor("en", triggerKey as LadderCopyKey),
       vars,
     });
   }

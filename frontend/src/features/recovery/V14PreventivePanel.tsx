@@ -193,7 +193,7 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
             {(prediction?.dominant_failure_modes ?? [])
               .map((mode) => mode.label ?? mode.place_id ?? "?")
               .slice(0, 2)
-              .join(", ") || "no dominant mode"}
+              .join(", ") || t("recovery.noDominantMode")}
           </small>
         </article>
       </div>
@@ -225,7 +225,7 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
               ? `${protectedPlaces.length} preserved: ${protectedPlaces
                   .map((item) => item.place_id ?? item.id)
                   .join(", ")}`
-              : "none on this journey"}
+              : t("recovery.noneOnThisJourney")}
           </b>
         </div>
         <div>

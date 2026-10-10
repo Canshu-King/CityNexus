@@ -1,0 +1,16 @@
+$ python scripts/i18n_detail2_parity_r1.py   [this branch]
+rc=1
+en keys: 1148 zh keys: 1149
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_dagui_0562\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
+$ python scripts/i18n_detail2_parity_r1.py   [the authoritative tip's dictionary]
+rc=1
+en keys: 1139 zh keys: 1140
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_dagui_0562\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+
