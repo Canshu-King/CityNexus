@@ -34,12 +34,12 @@ function feasibilityLabel(value: string | null | undefined, zh: boolean, t: (key
     return t("hub.feasible");
   }
   if (key === "INFEASIBLE" || key === "FAIL" || key === "FAILED") {
-    return zh ? "不可行" : "Not feasible";
+    return t("agent.notFeasible");
   }
   if (key.includes("UNKNOWN") || key.includes("NEEDS") || key === "") {
-    return zh ? "需要更多信息" : "Needs more information";
+    return t("agent.needsMoreInformation");
   }
-  return zh ? "已评估" : "Assessed";
+  return t("agent.assessed");
 }
 
 export function AgentComposer({
