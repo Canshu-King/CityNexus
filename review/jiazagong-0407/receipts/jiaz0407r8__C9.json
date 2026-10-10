@@ -1,0 +1,36 @@
+{
+ "run_id": "jiaz0407r8",
+ "arm": "C9",
+ "spec": "e2e/qoder-ord0407-empty-state-actions.spec.ts",
+ "per_cell": {
+  "spend-empty": {
+   "route": "trips",
+   "actions_inside": 0,
+   "names": []
+  },
+  "spend-no-lines": {
+   "route": "trips",
+   "actions_inside": 0,
+   "names": []
+  },
+  "twin-no-capability": {
+   "route": "twin",
+   "actions_inside": 0,
+   "names": []
+  },
+  "inbox-queue-empty": {
+   "route": "bookings",
+   "actions_inside": 0,
+   "names": []
+  }
+ },
+ "cells_without_own_action": [
+  "spend-empty=0",
+  "spend-no-lines=0",
+  "twin-no-capability=0",
+  "inbox-queue-empty=0"
+ ],
+ "nodeid": "D:\\moodle\\_qoder_jiazagong_0407\\wt2\\frontend\\e2e\\qoder-ord0407-empty-state-actions.spec.ts:825 > C9 every census cell owns at least one action inside its own notice (red by design until ORD-0407 slice 2 lands)",
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0407-empty-state-actions.spec.ts :: C9 — cells whose own notice offers no action, so the sentence names a remedy with no door: spend-empty=0, spend-no-lines=0, twin-no-capability=0, inbox-queue-empty=0 \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 6\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"spend-empty=0\",\u001b[39m \u001b[31m+ \"spend-no-lines=0\",\u001b[39m \u001b[31m+ \"twin-no-capability=0\",\u001b[39m \u001b[31m+ \"inbox-queue-empty=0\",\u001b[39m \u001b[31m+ ]\u001b[39m"
+}
