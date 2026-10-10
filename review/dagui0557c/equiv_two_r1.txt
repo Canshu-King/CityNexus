@@ -1,0 +1,12 @@
+TIP=a6e2cdbff94e2bce463fde61e3bc363792b75e45
+== A. the row before and after, both re-read from objects ==
+OK   line=839 before=<dt>{zh ? "依据" : "Basis"}</dt> after=<dt>{t("simulation.basis")}</dt> zh_value=依据 en_value=Basis
+OK   line=845 before=<dt>{zh ? "证据" : "Evidence"}</dt> after=<dt>{t("simulation.evidence")}</dt> zh_value=证据 en_value=Evidence
+== B. whole-file counts (the shape that was being moved) ==
+inline_zh_ternary_form: tip=2 mine=0
+call_sites_simulation: tip=17 mine=19
+keys_in_dictionary: tip=18 mine=22
+two_literals_still_inline_in_mine=0
+== C. changed files against the tip ==
+frontend/src/features/simulation/SimulationPanel.tsx | frontend/src/i18n/LocaleContext.tsx | review/dagui0557c/apply_two_r1.py | review/dagui0557c/apply_two_r1.txt | review/dagui0557c/cmdr_arm_r1.txt | review/dagui0557c/gates_after_merge_r1.txt | review/dagui0557c/gates_r1.txt | review/dagui0557c/probe_two_r1.jsx | review/dagui0557c/probe_two_r1.txt | review/dagui0557c/run_two_r1.py | review/dagui0557c/tip.txt | review/dagui0557c/tip_live.txt
+VERDICT=all_equal

@@ -1,0 +1,11 @@
+after merging a6e2cffd9f into the branch
+$ node_modules/.bin/tsc -p tsconfig.check.json --noEmit
+typecheck_rc=0
+$ node_modules/.bin/tsc -p tsconfig.typecheck.json --noEmit
+full_typecheck_rc=0
+$ node_modules/.bin/vite build
+  dist/workbox-6923124b.js
+build_rc=0
+$ python scripts/i18n_detail2_parity_r1.py
+en keys: 1173 zh keys: 1174
+Traceback (most recent call last):

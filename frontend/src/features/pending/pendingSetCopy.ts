@@ -16,13 +16,14 @@
  *    the screen says that plainly instead of showing a button for it (ORD-0385).
  *  - Chinese is the shorter arm on purpose: no filler like 哦/哟, and one clause per fact.
  */
+import { expandPluralMarkers } from "../../lib/plural";
 export const pendingSetCopy = {
   en: {
     "pending.title": "Not on a day yet",
     "pending.sub":
       "Places this server says belong to this trip, in no day of it yet.",
     "pending.loading": "Reading the pending set…",
-    "pending.count": "{n} places not on a day",
+    "pending.count": "{n} {plural:place} not on a day",
     "pending.shown": "{m} of {n} shown",
     "pending.noDay": "no day of this trip holds it",
     "pending.capturedOn": "captured on {day}",
@@ -71,15 +72,15 @@ export const pendingSetCopy = {
     "pending.action": "Put on a day",
     "pending.busy": "Placing them…",
     "pending.batchLine":
-      "This batch carries the {planned} places your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.",
+      "This batch carries the {planned} {plural:place:planned} your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.",
     "pending.blocked.NOTHING_PICKED": "Tick at least one place first.",
     "pending.blocked.PICK_HAS_NO_PLACE_ROW":
       "One ticked place has no place row on this server, so it cannot be placed on a day.",
     "pending.blocked.SET_TOO_SMALL":
       "The batch has fewer than 2 places, and the planner's door needs 2.",
-    "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} places, which is the server's bound.",
+    "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} {plural:place:max}, which is the server's bound.",
     "pending.receipt":
-      "The server placed {n} of them on {days}. This is candidate version {version}, {stops} stops in it.",
+      "The server placed {n} of them on {days}. This is candidate version {version}, {stops} {plural:stop:stops} in it.",
     "pending.receiptNoDay": "no day was given",
     "pending.missing": "Not placed: {names}.",
     "pending.notSelected": "Nothing you are running has changed yet.",
@@ -176,5 +177,5 @@ export function pendingCopy(locale: string, key: PendingSetCopyKey): string {
 
 /** `{n}` and `{day}` come from a read, never from a number this file knows. */
 export function fillPending(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
 }

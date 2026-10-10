@@ -737,6 +737,7 @@ export function PlanWithAiSheet({
         <label className="plan-ai-field">
           <span className="v8-sr-only">{t("planai.tripRequest")}</span>
           <textarea
+            data-autofocus
             data-testid="plan-ai-input"
             rows={5}
             value={text}

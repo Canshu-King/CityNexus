@@ -161,7 +161,7 @@ export function StayExplorer({
     <div className="v8-stay-layout">
       <div className="v8-stay-list">{data.options.slice(0, 4).map((item) => <article data-testid="stay-offer-card" className={item.id === data.selected_option_id ? "v8-stay-card selected" : "v8-stay-card"} key={item.id} onClick={() => onSelect(item.id)} onKeyDown={(event) => { if (event.key === "Enter") onSelect(item.id); }} role="button" tabIndex={0}>
         <div className="v8-hotel-thumb large"><Icon name="bed" /><span>{cityLabel}</span></div>
-        <div className="v8-stay-card-body"><div className="v8-stay-card-title"><div><span className="v8-rank">0{item.rank}</span><h3>{item.stay.property_name}</h3></div>{item.id === data.selected_option_id && <span className="v8-selected-label">{t("stay.selected")}</span>}</div><p>{roomLabel(item.stay.room_type, zh, t)} · {data.trip.party_size} {t("stay.travelers")} · {item.stay.refundable ? t("stay.freeCancel") : t("stay.nonRefundable")}</p><div className="v8-stay-price">{pricePair(item.stay_total_minor, item.stay.nightly_amount_minor, item.stay.currency, locale, zh)}</div><div className="v8-stay-impact"><span>{t("stay.journeyImpact")}</span><b>{item.walking_min} {zh ? "分钟步行" : "min walk"}</b><b>{item.protected_margin_min} {zh ? "分钟余量" : "min slack"}</b><em>{modeLabel(item.leg_modes[0], zh)}</em></div></div>
+        <div className="v8-stay-card-body"><div className="v8-stay-card-title"><div><span className="v8-rank">0{item.rank}</span><h3>{item.stay.property_name}</h3></div>{item.id === data.selected_option_id && <span className="v8-selected-label">{t("stay.selected")}</span>}</div><p>{roomLabel(item.stay.room_type, zh, t)} · {data.trip.party_size} {t("stay.travelers")} · {item.stay.refundable ? t("stay.freeCancel") : t("stay.nonRefundable")}</p><div className="v8-stay-price">{pricePair(item.stay_total_minor, item.stay.nightly_amount_minor, item.stay.currency, locale, zh, t)}</div><div className="v8-stay-impact"><span>{t("stay.journeyImpact")}</span><b>{item.walking_min} {zh ? "分钟步行" : "min walk"}</b><b>{item.protected_margin_min} {zh ? "分钟余量" : "min slack"}</b><em>{modeLabel(item.leg_modes[0], zh)}</em></div></div>
       </article>)}</div>
       <div className="v8-stay-detail"><MapPanel data={data} option={selected} /><div className="v8-detail-panel"><div><span>{t("stay.rateEvidence")}</span><b>{selected?.stay.property_name}</b></div><dl>
             <div>
@@ -274,13 +274,14 @@ function pricePair(
   currency: string | undefined,
   locale: string,
   zh: boolean,
+  t: (key: string) => string,
 ) {
   const known = (nightlyMinor ?? 0) > 0 || (totalMinor ?? 0) > 0;
   if (!known) {
     return (
       <strong data-testid="stay-price-unknown">
         {zh ? "价格未知" : "Price unavailable"}
-        <small>{zh ? "（供应商未提供房价）" : " (no provider rate)"}</small>
+        {t("stay.noProviderRate")}
       </strong>
     );
   }
@@ -288,9 +289,9 @@ function pricePair(
     <strong data-testid="stay-price-known">
       {money(totalMinor, currency, locale)}
       <small>
-        {zh ? " 合计 · " : " total · "}
+        {t("stay.totalInfix")}
         {money(nightlyMinor, currency, locale)}
-        {zh ? " / 晚" : " / night"}
+        {t("stay.perNightSuffix")}
       </small>
     </strong>
   );

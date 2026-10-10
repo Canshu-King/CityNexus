@@ -1,0 +1,10 @@
+MUT available_modes word list  rc=1 failed=1 test_mobility_door_answers_the_projection_field_by_field
+MUT choose_for_me flag         rc=1 failed=1 test_mobility_door_answers_the_projection_field_by_field
+MUT transit duration_min       rc=1 failed=1 test_mobility_door_answers_the_projection_field_by_field
+MUT fact key set               rc=1 failed=1 test_mobility_door_answers_the_projection_field_by_field
+MUT modes ordering             rc=1 failed=1 test_mobility_door_answers_the_projection_field_by_field
+MUT empty-trip modes list      rc=1 failed=1 test_mobility_door_for_a_trip_without_facts_still_names_the_modes_it_could_compare
+MUT isolation: stored id list  rc=1 failed=1 test_mobility_door_keeps_one_trip_facts_out_of_another
+MUT 404 envelope code          rc=1 failed=1 test_mobility_door_names_the_trip_it_could_not_find
+CONTROLS 8 of 8 mutations turned the suite red
+SOURCE_RESTORED True

@@ -1,0 +1,36 @@
+A0 tip re-read at run time d89cfea25214b4bbb4e886dca765b096237362f1	refs/heads/mirror/integration-frontend-apple-pass1
+A1 tip used 81856e9c49938b17ecf9c2e2045656faaf0c9a51 cat-file -t=commit
+B1 dictionary exports on the tip: 4
+B2 4:export type TripLocale = "en" | "zh-CN";
+B2 2804:export function LocaleProvider({ children }: { children: ReactNode }) {
+B2 2850:export function useLocale() {
+B2 2856:export function useT() {
+C1 localeText present in the tip dictionary file: zero (rc=1 means zero hits)
+C2 files in frontend/src importing or defining localeText at the tip: 0
+D1 describeFailure sites at the tip: 11
+D2 19:import { describeFailure } from "../src/features/simulation/simulationAdapter";
+D2 196:  const one = describeFailure(mobility([{ evidence_state: "STALE" }])).en;
+D2 197:  const two = describeFailure(mobility([{ evidence_state: "STALE" }, { evidence_state: "MISSING" }])).en;
+D2 198:  const none = describeFailure(mobility([])).en;
+D2 18:  describeFailure,
+D2 358:        ? { transient: true, ...describeFailure(journeyRead.error) }
+D2 366:            ? { transient: true, ...describeFailure(servicesRead.error) }
+D2 374:                ? { transient: true, ...describeFailure(bookableRead.error) }
+D2 755:      const named = describeFailure(error);
+D2 145:export function describeFailure(error: unknown): NamedFailure {
+D2 238:  return describeFailure(error);
+E1 is describeFailure a React component? starts with capital: True | signature line: export function describeFailure(error: unknown): NamedFailure {
+E2 hook or dictionary imports in that file: 0
+F1 refs examined=1971 driver snapshots skipped=638 live lane branches touching SimulationPanel.tsx=24
+F2 10-10 14:41 | 比价工-0557-r1
+F2 10-10 14:39 | 对表工-0555-r1
+F2 10-10 11:42 | 比价工-0555-r2
+F2 10-09 23:30 | wenangong-0501-r1
+F2 10-06 22:30 | a68b0631-ord0507-clock-attribution-r12
+F2 10-06 20:54 | a68b0631-ord0507-clock-attribution-r11
+F2 10-06 19:40 | a68b0631-ord0507-clock-attribution-r10
+F2 10-06 18:41 | a68b0631-ord0507-clock-attribution-r9
+F2 10-06 18:35 | a68b0631-comment-anchor-drift-r7
+F2 10-06 17:15 | a68b0631-ord0507-clock-attribution-r8
+F2 10-06 16:47 | a68b0631-comment-anchor-drift-r6
+F2 10-05 20:48 | a68b0631-comment-anchor-drift-r5

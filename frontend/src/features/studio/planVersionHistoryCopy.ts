@@ -1,3 +1,5 @@
+import { expandPluralMarkers } from "../../lib/plural";
+
 /**
  * ORD-0386: copy for the plan-version history screen.
  *
@@ -31,8 +33,8 @@ export const planVersionHistoryCopy = {
     "history.parent": "from version",
     "history.noParent": "no parent version",
     "history.createdMissing": "no write time recorded",
-    "history.retention": "No retention limit is applied: this trip currently holds {n} versions and all of them are listed here. Nothing is dropped as newer versions are written.",
-    "history.count": "{n} versions listed",
+    "history.retention": "No retention limit is applied: this trip currently holds {n} {plural:version} and all of them are listed here. Nothing is dropped as newer versions are written.",
+    "history.count": "{n} {plural:version} listed",
     "history.noRestore": "There is no revert here on purpose. Going back to an older version would replace the plan you are travelling on, so it is not offered as a tap on a list.",
     "history.empty": "This trip has no plan version yet.",
     "history.loading": "Reading the version list…",
@@ -77,5 +79,5 @@ export function historyCopy(locale: string, key: PlanVersionCopyKey): string {
 /** `{n}` is the only placeholder these strings carry, and the count always comes from the same
  *  read that produced the list -- never from a number this file knows. */
 export function fillHistory(template: string, params: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
 }
