@@ -1385,6 +1385,10 @@ const en: Dict = {
   "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "The server answered with {listed} proposals, {open} still open; \"Accept the proposal\" below now points at {id}. Accepting is what changes the plan.",
   "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "The server produced proposals, but none of the {listed} it now lists is open, so \"Accept the proposal\" will refuse and say why on its own line.",
   "simulation.thisActionIsUnavailableRightNow": "This action is unavailable right now: {reason}",
+
+  // ── ORD-0557 stage header, two remaining rows ──
+  "simulation.basis": "Basis",
+  "simulation.evidence": "Evidence",
   /* ORD-0557: the attribution titles `lib/failureAttribution.ts` writes inline. Key names and English
      arms are copied from the CN draft table verbatim; both arms are the bytes those screens already
      showed, so the move cannot change what a traveller reads. */
@@ -2692,6 +2696,10 @@ const zhCN: Dict = {
   "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "服务器回了 {listed} 份方案，其中 {open} 份还开着；下面「接受方案」那一行现在拿的是 {id}。接受才会换计划。",
   "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "服务器回了方案，但它现在列出的 {listed} 份里没有还开着的那一份，所以「接受方案」这一行会说不给按——理由在它自己那行。",
   "simulation.thisActionIsUnavailableRightNow": "这个动作现在做不了：{reason}",
+
+  // ── ORD-0557 stage header, two remaining rows ──
+  "simulation.basis": "依据",
+  "simulation.evidence": "证据",
   /* ORD-0557：`lib/failureAttribution.ts` 里那些直接写在源码上的归因小标题。键名与英文臂逐字照 CN
      草稿表抄；中文臂就是屏上此刻在显示的那串字，这是搬运不是改写。 */
   "lib.failureAttribution.tripNotOnServer": "这台服务器上没有这一趟行程了",

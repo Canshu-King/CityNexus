@@ -7,6 +7,7 @@ import {
   type TripStudioPreview,
 } from "../../api/v12Authoritative";
 import { ImpactPreview } from "../execution/V12StatePrimitives";
+import { Badge } from "../../components/Badge";
 import { SortableActivityList } from "./SortableActivityList";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
 import { useLocale, useT } from "../../i18n/LocaleContext";
@@ -113,7 +114,7 @@ export function V12TripStudioPanel({ journeyId, plan, onAccepted }: Props) {
           <h2>{t("studio.v12Title")}</h2>
           <p className="v8-muted">{t("studio.v12Sub")}</p>
         </div>
-        <span className="v12-evidence-badge"><WandSparkles size={14} /> {plan.mobility_snapshot_id ? t("studio.sameEvidence") : t("studio.evidencePending")}</span>
+        <Badge tone="info" variant="tinted" leadingIcon={<WandSparkles size={14} />}>{plan.mobility_snapshot_id ? t("studio.sameEvidence") : t("studio.evidencePending")}</Badge>
       </header>
       <div className="v12-studio-meta">
         <span>{t("fmt.activities", { n: plan.activities.length })}</span>

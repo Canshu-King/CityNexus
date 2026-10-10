@@ -265,7 +265,20 @@ export function ActivityDetail({
         </button>
       </div>
 
-      {nearby.length > 0 && (
+      {nearby.length === 0 ? (
+        <section className="activity-nearby" data-testid="activity-nearby-empty">
+          <h2>{say("activity.nearbyStops")}</h2>
+          <p className="v8-muted" data-testid="activity-no-other-stops">{say("activity.noOtherStops")}</p>
+          <button
+            type="button"
+            className="v8-outline-button"
+            data-testid="activity-no-other-back"
+            onClick={onBack}
+          >
+            {say("activity.backToItinerary")}
+          </button>
+        </section>
+      ) : (
         <section className="activity-nearby" data-testid="activity-nearby">
           <h2>
             {nearbyAreClose
