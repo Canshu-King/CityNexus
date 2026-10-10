@@ -1,4 +1,5 @@
 import { CityNexusApiError } from "../../api/citynexus";
+import { localeText } from "../../i18n/LocaleContext";
 import { englishCountNoun } from "../../lib/plural";
 
 /**
@@ -153,7 +154,9 @@ export function describeFailure(error: unknown): NamedFailure {
   }
   const mobility = mobilityRefusal(error);
   if (mobility) {
-    const states = mobility.states.length ? mobility.states.join("、") : "服务器未给证据状态";
+    const states = mobility.states.length
+      ? mobility.states.join("、")
+      : localeText("zh-CN", "simulation.notGiven");
     const legs = mobility.legs > 0 ? ` ${mobility.legs} 段` : "";
     /* The sentence used to be `these` + a noun with no number + `have`, so it said "these leg have facts"
        for every count and named no leg at all in the zero case. The clause now carries the count and
@@ -168,7 +171,7 @@ export function describeFailure(error: unknown): NamedFailure {
       code,
       status,
       zh: `重算这一版需要能当作硬依据的路线证据。服务器说这些路程${legs}的证据在档，但达不到可硬用的标准（它给的码：MOBILITY_DATA_UNAVAILABLE，证据状态 ${states}）。所以它没有算出任何替代方案，你现在的方案没有变化——这一步要接上真实的路线数据源才会通。`,
-      en: `Recomputing this plan needs route evidence that can be treated as a hard basis. The server says ${legsClause} facts on file that do not meet that bar (its code: MOBILITY_DATA_UNAVAILABLE, evidence state ${mobility.states.join(", ") || "not given"}). It produced no alternative, and your current plan is unchanged -- this step needs a real routing data source connected.`,
+      en: `Recomputing this plan needs route evidence that can be treated as a hard basis. The server says ${legsClause} facts on file that do not meet that bar (its code: MOBILITY_DATA_UNAVAILABLE, evidence state ${mobility.states.join(", ") || localeText("en", "simulation.notGiven")}). It produced no alternative, and your current plan is unchanged -- this step needs a real routing data source connected.`,
     };
   }
   if (code.startsWith("INVALID_ACTIVITY_TRANSITION")) {
