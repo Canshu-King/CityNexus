@@ -1,0 +1,123 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+
+[store] JourneyRoleCapability rows present = 10
+
+## acl/roles | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/acl/roles -> http_status=200
+   list(len=3, {capabilities=list(len=3, "JOURNEY_READ"), role="ADMIN", scope_message_key="member.scope.admin"})
+
+## member-role-limits | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/member-role-limits -> http_status=200
+   {admin_count_in_force=0, max_administrators=2, roles=list(len=3, "OWNER")}
+
+## multiday | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/multiday -> http_status=200
+   {active_plan=None, journey={active_plan_version_id=None, budget=dict{amount_minor,currency}, city_code="CN-XIAMEN", end_at="2027-04-30T01:15:51.611155+00:00", id="43027a54-279f-4dd4-a25d-87e1a668d0ac", start_at="2027-04-28T01:15:51.611155+00:00", status="PLANNED", temporal_shape=dict{day_count,max_days,min_days,night_count,semantics,window_status}, timezone="Asia/Shanghai", timezone_honoured=True, title="\u6cbf\u6d77\u4e00\u5468 plain", traveler_id="aa3953d8-f139-477e-abe0-49b114b43517", used_timezone="Asia/Shanghai"}, mobility_facts=list(len=0), offers=list(len=0), options=list(len=0), provider_mesh={accommodation=dict{captured,live}, mobility=dict{amap,ride_hail,transit_realtime,valhalla}}, selected_option_id=None, traveler_twin={authority="soft_planning_input_only", capability_summary=dict{hard,items,soft,strong,unknown_accessibility_is_not_accessible}, explicit_capabilities=list(len=0), explicit_dimensions=list(len=0), learned_soft_dimensions=list(len=0)}, trip={arrival_anchor=dict{at,latitude,location,longitude,reservation_id}, baggage=dict{luggage_drop_required,present,size_class}, budget_reference=dict{amount_minor,available,currency,day_count,floor_comparable,floor_currency,floor_minor,party_size,per_day_minor,per_person_per_day_minor,reason}, departure_anchor=dict{at,latitude,location,longitude,reservation_id}, occupancy=dict{adults}, party_size=1, stay_budget=dict{amo
+
+## inbox-empty | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/inbox -> http_status=200
+   {drafts=list(len=0), journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac"}
+
+## guardian-autopilot-status-naked | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/guardian/autopilot/status -> http_status=200
+   {enabled=False, enrolled_journey_ids=list(len=0), enrollment=None, interval_seconds=60.0, journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", last_error=None, last_pulse_at=None, signal_provider="demo"}
+
+## guardian-resilience | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/guardian/resilience -> http_status=200
+   {activity_risks=list(len=0), captured_at="2026-10-10T01:15:51.746180+00:00", commitment_buffers=list(len=0), components={commitment_slack=60, cost_headroom_minor=120000, forecast_risk=0, mobility_sensitivity=0, recovery_optionality=0, route_geography_exposure=0, single_point_of_failure=10, weather_exposure=0}, dominant_failure_modes=list(len=1, "SINGLE_POINT_OF_FAILURE"), evidence_provenance=list(len=0), expires_at="2026-10-10T01:30:51.746180+00:00", fingerprint="9f2facc27c73ab3e000afbec5cfaf33062be09d4ac274e79", id="a4b64013-ba95-4bb3-8854-d5148f2aac58", journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", preventive_recommendation={action="CONTINUE_MONITORING", reason="No predictive provider forecast currently exceed", reversible=True, risk_reduction_meaningful=False, target_activity_id=None, threshold=65}, risk_score=12, score=12, status="STABLE"}
+
+## guardian-resilience-refresh-replay | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/guardian/resilience/refresh -> http_status=200
+   {counterfactuals=list(len=6, dict{answered,c4_preserved,cost_delta_minor,created_at,evidence,feasible,id,journey_id,parameters,plan_changes,scenario_key,scenario_type,schedule_drift_min,snapshot_id}), discovery=None, snapshot={activity_risks=list(len=0), captured_at="2026-10-10T01:15:51.746180+00:00", commitment_buffers=list(len=0), components=dict{commitment_slack,cost_headroom_minor,forecast_risk,mobility_sensitivity,recovery_optionality,route_geography_exposure,single_point_of_failure,weather_exposure}, dominant_failure_modes=list(len=1, "SINGLE_POINT_OF_FAILURE"), evidence_provenance=list(len=0), expires_at="2026-10-10T01:30:51.746180+00:00", fingerprint="9f2facc27c73ab3e000afbec5cfaf33062be09d4ac274e79", id="a4b64013-ba95-4bb3-8854-d5148f2aac58", journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", preventive_recommendation=dict{action,reason,reversible,risk_reduction_meaningful,target_activity_id,threshold}, risk_score=12, score=12, status="STABLE"}}
+
+## guardian-signal-fixture | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/guardian/signal-fixture -> http_status=200
+   {journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", payload={affected_lines=list(len=1, "BRT-1"), cause="probe"}, provider_key="city-signal-fixture", revision=1, state="DISRUPTED", updated_at="2026-10-10T01:15:51.790580+00:00"}
+
+## capabilities-PUT | PUT /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/capabilities -> http_status=200
+   {capabilities=list(len=1, dict{active,class,code,confirmed,confirmed_at,created_at,explicit,id,journey_id,params,provenance,scope,severity,source,traveler_id,updated_at}), journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", summary={hard=list(len=0), items=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), soft=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), strong=list(len=0), unknown_accessibility_is_not_accessible=True}, traveler_twin={capability_summary=dict{hard,items,soft,strong,unknown_accessibility_is_not_accessible}, confidence=0.0, conflicts=list(len=0), evidence_count=0, explicit_capabilities=list(len=0), explicit_preferences=list(len=0), learned_soft_preferences=list(len=0), provenance=dict{evidence_ids,source,updated_at}, traveler_id="aa3953d8-f139-477e-abe0-49b114b43517", updated_at="2026-10-10T01:15:51.819690+00:00"}}
+
+## capabilities-confirm | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/capabilities/confirm -> http_status=200
+   {active_plan_feasibility=None, capabilities=list(len=2, dict{active,class,code,confirmed,confirmed_at,created_at,explicit,id,journey_id,params,provenance,scope,severity,source,traveler_id,updated_at}), journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", recovery=None, summary={hard=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), items=list(len=2, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), soft=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), strong=list(len=0), unknown_accessibility_is_not_accessible=True}, traveler_twin={capability_summary=dict{hard,items,soft,strong,unknown_accessibility_is_not_accessible}, confidence=0.0, conflicts=list(len=0), evidence_count=0, explicit_capabilities=list(len=0), explicit_preferences=list(len=0), learned_soft_preferences=list(len=0), provenance=dict{evidence_ids,source,updated_at}, traveler_id="aa3953d8-f139-477e-abe0-49b114b43517", updated_at="2026-10-10T01:15:51.835217+00:00"}}
+
+## journey-not-found-control | GET /api/v1/journeys/5b6a927d-7755-45d7-b1aa-068fde48a14e/multiday -> http_status=404
+   {error={code="NOT_FOUND", details=None, error_receipt_id="CNX-67GB49VR", message="Journey 5b6a927d-7755-45d7-b1aa-068fde48a14e was", message_key="resource.not_found", trace_id="07a6423d-4c7f-4110-86f7-7e0ebec730f3"}}
+
+## validation-control-PUT-capabilities | PUT /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/capabilities -> http_status=422
+   {error={code="VALIDATION_ERROR", details=dict{errors}, error_receipt_id="CNX-S7XSWYME", message="Request validation failed", message_key="request.invalid", trace_id="a8f8db2c-acf8-4786-80b7-948120988394"}}
+
+## inbox-with-draft | GET /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/inbox -> http_status=200
+   {drafts=list(len=1, dict{artifact_type,confirmed_at,created_at,extracted,extraction_mode,id,interpretation,journey_id,smart_intake,status,unresolved_fields}), journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac"}
+
+## members-self-exit | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/members/self-exit -> http_status=200
+   {created_at="2026-10-10T01:15:51.611155+00:00", expires_at=None, id="28320a80-673d-49c7-9052-f47dcbdf750d", invited_by="aa3953d8-f139-477e-abe0-49b114b43517", joined_at="2026-10-10T01:15:51.611155+00:00", journey_id="43027a54-279f-4dd4-a25d-87e1a668d0ac", member_state="MEMBER_WITHDRAWN", removed_at="2026-10-10T01:15:51.872619+00:00", role="COLLABORATOR", traveler_id="dacc2554-763f-496a-bc2c-6b52b38dd914", updated_at="2026-10-10T01:15:51.872619+00:00"}
+
+## members-self-exit-twice | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/members/self-exit -> http_status=409
+   {error={code="CONFLICT", details=dict{member_id,removed_at}, error_receipt_id="CNX-J54TSKCH", message="This membership was already withdrawn; leaving a", message_key="request.conflict", reason_code="MEMBER_ALREADY_WITHDRAWN", trace_id="587afc7f-58fa-4486-b80a-3bcb44eda711"}}
+
+## members-self-exit-owner | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/members/self-exit -> http_status=404
+   {error={code="NOT_FOUND", details=dict{field,journey_id}, error_receipt_id="CNX-YQCCQ4PS", message="That traveller holds no membership row on this j", message_key="resource.not_found", reason_code="MEMBER_SELF_EXIT_NOT_A_MEMBER", trace_id="a9a7da9c-9a1c-471e-9588-d56cffe0925c"}}
+
+## members-self-exit-stranger | POST /api/v1/journeys/43027a54-279f-4dd4-a25d-87e1a668d0ac/members/self-exit -> http_status=404
+   {error={code="NOT_FOUND", details=dict{field,journey_id}, error_receipt_id="CNX-YQCCQ4PS", message="That traveller holds no membership row on this j", message_key="resource.not_found", reason_code="MEMBER_SELF_EXIT_NOT_A_MEMBER", trace_id="d4da6155-15b9-4ed7-a6b5-f43b3864d49c"}}
+Traceback (most recent call last):
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: CHECK constraint failed: event_type IN ('TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY','SERVICE_UNAVAILABLE','USER_CHANGE','OTHER')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\moodle\_lupaigongjia_0559_probe\probe_calls_r1.py", line 154, in <module>
+    s.commit()
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2035, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1316, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1290, in _prepare_impl
+    self.session.flush()
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 465, in execute
+    rec.execute(self)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 641, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 94, in save_obj
+    _emit_insert_statements(
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1049, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1421, in execute
+    return meth(
+           ^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: event_type IN ('TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY','SERVICE_UNAVAILABLE','USER_CHANGE','OTHER')
+[SQL: INSERT INTO events (id, journey_id, provider_key, provenance, event_type, severity, status, affected_activity_id, occurred_at, detected_at, resolved_at, payload_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('12390a4b-d35c-4bd4-845a-e127cddbc746', '43027a54-279f-4dd4-a25d-87e1a668d0ac', 'probe-provider', 'SIMULATED', 'SERVICE_DISRUPTION', 'HIGH', 'ACTIVE', None, '2026-10-10T01:15:51.611155+00:00', '2026-10-10T01:15:51.611155+00:00', None, '{}', '2026-10-10T01:15:51.611155+00:00')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)

@@ -1,0 +1,3 @@
+=== BEFORE (tip source) ===
+{"localeKey":"en","cardCount":4,"feasibilityLabels":["Feasible","Not feasible","Needs more information","Assessed"]}
+{"localeKey":"zh-CN","cardCount":4,"feasibilityLabels":["可行","不可行","需要更多信息","已评估"]}
