@@ -1,0 +1,280 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4642 backend=:8162 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r2.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [36112]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8162 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:61411 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61425 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=yfginbox-r2 frontend=:4642 -> backend=:8162 ai=disabled db=_e2e_yfginbox-r2.db
+
+Running 3 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4642 backend=:8162 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r2.db ai=disabled reuseExistingServer=false
+
+[1/3] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:61430 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:61431 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:61430 - "POST /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61431 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61430 - "POST /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/stay-options/8187c923-f130-4e12-9c18-2b9b26e508ac/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=f18581c9-683d-4759-a8e6-c7afb18b3d11 options=4 chosen=8187c923-f130-4e12-9c18-2b9b26e508ac (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:64910 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64912 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64914 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59626 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65528 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54750 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53767 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54752 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65531 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/experience HTTP/1.1" 500 Internal Server Error
+
+[WebServer] ERROR:    Exception in ASGI application
+[WebServer] Traceback (most recent call last):
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+[WebServer]     self.dialect.do_execute(
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+[WebServer]     cursor.execute(statement, parameters)
+[WebServer] sqlite3.OperationalError: database is locked
+[WebServer] 
+[WebServer] The above exception was the direct cause of the following exception:
+[WebServer] 
+[WebServer] Traceback (most recent call last):
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+[WebServer]     result = await app(  # type: ignore[func-returns-value]
+[WebServer]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+[WebServer]     return await self.app(scope, receive, send)
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+[WebServer]     await super().__call__(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\applications.py", line 96, in __call__
+[WebServer]     await self.middleware_stack(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+[WebServer]     raise exc
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+[WebServer]     await self.app(scope, receive, _send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+[WebServer]     response = await self.dispatch_func(request, call_next)
+[WebServer]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\main.py", line 773, in write_budget_per_request
+[WebServer]     return await call_next(request)
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+[WebServer]     raise app_exc from app_exc.__cause__ or app_exc.__context__
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+[WebServer]     await self.app(scope, receive_or_disconnect, send_no_error)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+[WebServer]     response = await self.dispatch_func(request, call_next)
+[WebServer]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\main.py", line 753, in error_receipt_per_request
+[WebServer]     return await call_next(request)
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+[WebServer]     raise app_exc from app_exc.__cause__ or app_exc.__context__
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+[WebServer]     await self.app(scope, receive_or_disconnect, send_no_error)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+[WebServer]     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 59, in wrapped_app
+[WebServer]     response = await handler(conn, exc)  # type: ignore[arg-type]
+[WebServer]                ^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\main.py", line 794, in write_contention_answer
+[WebServer]     raise exc
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+[WebServer]     await app(scope, receive, sender)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+[WebServer]     await self.app(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+[WebServer]     await self.middleware_stack(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+[WebServer]     await route.handle(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 1281, in handle
+[WebServer]     await super().handle(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\routing.py", line 280, in handle
+[WebServer]     await self.app(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+[WebServer]     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 59, in wrapped_app
+[WebServer]     response = await handler(conn, exc)  # type: ignore[arg-type]
+[WebServer]                ^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\main.py", line 794, in write_contention_answer
+[WebServer]     raise exc
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+[WebServer]     await app(scope, receive, sender)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+[WebServer]     response = await f(request)
+[WebServer]                ^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+[WebServer]     raw_response = await run_endpoint_function(
+[WebServer]                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+[WebServer]     return await run_in_threadpool(dependant.call, **values)
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+[WebServer]     return await anyio.to_thread.run_sync(func)
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+[WebServer]     return await get_async_backend().run_sync_in_worker_thread(
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+[WebServer]     return await future
+[WebServer]            ^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+[WebServer]     result = context.run(func, *args)
+[WebServer]              ^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\main.py", line 5486, in get_journey_experience
+[WebServer]     payload = experience_payload(session, journey)
+[WebServer]               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\stay_mobility.py", line 1841, in experience_payload
+[WebServer]     preference_items = planning_preference_items(session, journey.traveler_id, journey.id)
+[WebServer]                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\execution\traveler_twin.py", line 382, in planning_preference_items
+[WebServer]     snapshot = refresh_snapshot(session, traveler_id)
+[WebServer]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\_qoder_yufanggong_0557\backend\app\execution\traveler_twin.py", line 241, in refresh_snapshot
+[WebServer]     session.flush()
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+[WebServer]     self._flush(objects)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+[WebServer]     with util.safe_reraise():
+[WebServer]          ^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+[WebServer]     raise exc_value.with_traceback(exc_tb)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+[WebServer]     flush_context.execute()
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 465, in execute
+[WebServer]     rec.execute(self)
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 641, in execute
+[WebServer]     util.preloaded.orm_persistence.save_obj(
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 86, in save_obj
+[WebServer]     _emit_update_statements(
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 913, in _emit_update_statements
+[WebServer]     c = connection.execute(
+[WebServer]         ^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1421, in execute
+[WebServer]     return meth(
+[WebServer]            ^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+[WebServer]     return connection._execute_clauseelement(
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1643, in _execute_clauseelement
+[WebServer]     ret = self._execute_context(
+[WebServer]           ^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+[WebServer]     return self._exec_single_context(
+[WebServer]            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+[WebServer]     self._handle_dbapi_exception(
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2365, in _handle_dbapi_exception
+[WebServer]     raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+[WebServer]     self.dialect.do_execute(
+[WebServer]   File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+[WebServer]     cursor.execute(statement, parameters)
+[WebServer] sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE traveler_twin_snapshots SET provenance_json=?, updated_at=? WHERE traveler_twin_snapshots.traveler_id = ?]
+[WebServer] [parameters: ('{"evidence_ids": [], "source": "journey_outcome_events", "updated_at": "2026-10-10T06:49:59.238391+00:00"}', '2026-10-10T06:49:59.238391+00:00', 'd265ab5e-12a7-4584-a828-4d84e5bbe848')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+[WebServer] INFO:     127.0.0.1:63780 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54751 - "GET /api/v1/travelers/d265ab5e-12a7-4584-a828-4d84e5bbe848/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64913 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50236 - "GET /api/v1/journeys/f18581c9-683d-4759-a8e6-c7afb18b3d11/experience HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4642 backend=:8162 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r2.db ai=disabled reuseExistingServer=false
+
+[2/3] [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › zh-CN: an empty slot on a hand-made confirmation reads the dictionary words
+[WebServer] INFO:     127.0.0.1:52405 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:52405 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:52405 - "POST /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52405 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52405 - "POST /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/stay-options/0d3e70b1-e265-4e19-a311-8eb431146864/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60942 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60944 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60947 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/inbox HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60946 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/memory HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60948 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61749 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61750 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60949 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61751 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61748 - "GET /api/v1/travelers/9ed13a5a-20dc-4357-9ad5-9fc1f05a04dc/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51407 - "POST /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/inbox/import HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:50733 - "GET /api/v1/journeys/022ab058-ceb0-46e8-9b51-8c1ed113b5b3/inbox HTTP/1.1" 200 OK
+
+[3/3] [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › en: an empty slot on a hand-made confirmation reads the dictionary words
+[WebServer] INFO:     127.0.0.1:50734 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:50734 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:50734 - "POST /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50734 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50734 - "POST /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/stay-options/bab64f34-fd8f-4c20-b0be-3be8b8c21ff3/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50708 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50709 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50711 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/inbox HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50710 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/memory HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50712 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52881 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52880 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52882 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50713 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52879 - "GET /api/v1/travelers/d1d35137-499c-4b9b-9232-1b458c8f0ee6/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64490 - "POST /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/inbox/import HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63459 - "GET /api/v1/journeys/6a8b01c9-9baf-4a48-b51a-8091b08a6bb6/inbox HTTP/1.1" 200 OK
+
+  3 passed (49.6s)

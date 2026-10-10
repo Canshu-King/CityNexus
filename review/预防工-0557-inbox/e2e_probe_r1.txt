@@ -1,0 +1,175 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4641 backend=:8161 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [46204]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8161 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:58261 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58269 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=yfginbox-r1 frontend=:4641 -> backend=:8161 ai=disabled db=_e2e_yfginbox-r1.db
+
+Running 3 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4641 backend=:8161 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r1.db ai=disabled reuseExistingServer=false
+
+[1/3] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:55445 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55446 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55445 - "POST /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55446 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55445 - "POST /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/stay-options/36b1e823-6b87-4386-9771-67dc940f5bf3/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=b7995b4a-ec8c-4add-a974-26b9fe4fc193 options=4 chosen=36b1e823-6b87-4386-9771-67dc940f5bf3 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:62920 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62921 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52377 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52379 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51967 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62922 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53618 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53620 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53621 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52378 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53619 - "GET /api/v1/travelers/895d0c68-b9aa-4752-b3c9-fbdaf59eb1c6/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51502 - "GET /api/v1/journeys/b7995b4a-ec8c-4add-a974-26b9fe4fc193/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61018 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4641 backend=:8161 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r1.db ai=disabled reuseExistingServer=false
+
+[2/3] [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › zh-CN: an empty slot on a hand-made confirmation reads the dictionary words
+[WebServer] INFO:     127.0.0.1:58836 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:58836 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:58836 - "POST /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58836 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58836 - "POST /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/stay-options/0b4bf07f-43ea-4670-baf2-889e23d79304/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56601 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56603 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56607 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/inbox HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56606 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/memory HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56608 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56609 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50065 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50062 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50061 - "GET /api/v1/travelers/2c7ea6fc-5d8e-44d3-b553-ae4ce3119f7a/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50066 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62559 - "POST /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/inbox/import HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:51483 - "GET /api/v1/journeys/e9908b4a-e218-43aa-bd40-bc4ea3c05959/inbox HTTP/1.1" 200 OK
+
+  1) [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › zh-CN: an empty slot on a hand-made confirmation reads the dictionary words 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "待确认"
+    Received string:    "火车 | 天津之眼 夜景票 | CNY | 手动录入 | STRUCTURED_JSON | NEEDS_REVIEW | DETERMINISTIC | UNKNOWN | UNKNOWN | manual-entry"
+
+      76 |     expect(verdictText.length).toBeGreaterThan(0);
+      77 |     if (rendered.length) {
+    > 78 |       expect(rendered.join(" | ")).toContain(locale === "zh-CN" ? "待确认" : "To confirm");
+         |                                    ^
+      79 |       note(`[${locale}] arm 279 reached on the glass: ${JSON.stringify(locale === "zh-CN" ? "待确认" : "To confirm")}`);
+      80 |     } else {
+      81 |       note(`[${locale}] arm 279 NOT on the glass -- the server echoed no empty slot back`);
+        at D:\moodle\_qoder_yufanggong_0557\frontend\e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:78:36
+
+    Error Context: test-results\qoder-yufanggong-0557-inbo-e2dee--reads-the-dictionary-words-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4641 backend=:8161 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r1.db ai=disabled reuseExistingServer=false
+
+[3/3] [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › en: an empty slot on a hand-made confirmation reads the dictionary words
+[WebServer] INFO:     127.0.0.1:51487 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:51487 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:51487 - "POST /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51487 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51487 - "POST /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/stay-options/febf5b04-69fd-43b7-b0b0-ec1f74acd8e7/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60057 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60058 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60060 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/inbox HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60059 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/memory HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60061 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52894 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52893 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60062 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52892 - "GET /api/v1/travelers/0caa22ac-68e9-4428-b9bf-f8ed2523515f/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52895 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50528 - "POST /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/inbox/import HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63919 - "GET /api/v1/journeys/0ce97716-b86a-406f-815f-1673dbf6dfaf/inbox HTTP/1.1" 200 OK
+
+  2) [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › en: an empty slot on a hand-made confirmation reads the dictionary words 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "To confirm"
+    Received string:    "Rail | 天津之眼 夜景票 | CNY | Entered by hand | STRUCTURED_JSON | NEEDS_REVIEW | DETERMINISTIC | UNKNOWN | UNKNOWN | manual-entry"
+
+      76 |     expect(verdictText.length).toBeGreaterThan(0);
+      77 |     if (rendered.length) {
+    > 78 |       expect(rendered.join(" | ")).toContain(locale === "zh-CN" ? "待确认" : "To confirm");
+         |                                    ^
+      79 |       note(`[${locale}] arm 279 reached on the glass: ${JSON.stringify(locale === "zh-CN" ? "待确认" : "To confirm")}`);
+      80 |     } else {
+      81 |       note(`[${locale}] arm 279 NOT on the glass -- the server echoed no empty slot back`);
+        at D:\moodle\_qoder_yufanggong_0557\frontend\e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:78:36
+
+    Error Context: test-results\qoder-yufanggong-0557-inbo-2e32b--reads-the-dictionary-words-chromium\error-context.md
+
+
+  2 failed
+    [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › zh-CN: an empty slot on a hand-made confirmation reads the dictionary words 
+    [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › en: an empty slot on a hand-made confirmation reads the dictionary words 
+  1 passed (39.7s)

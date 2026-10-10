@@ -1,0 +1,132 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4643 backend=:8163 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r3.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [45288]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8163 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:56540 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56550 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=yfginbox-r3 frontend=:4643 -> backend=:8163 ai=disabled db=_e2e_yfginbox-r3.db
+
+Running 3 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4643 backend=:8163 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r3.db ai=disabled reuseExistingServer=false
+
+[1/3] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:55832 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55833 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55832 - "POST /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55833 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55832 - "POST /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/stay-options/4f16eb2b-4831-40ec-a4e9-e1b6a926720f/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=f00bdb77-9ce3-4a56-ac9a-37544c797879 options=4 chosen=4f16eb2b-4831-40ec-a4e9-e1b6a926720f (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:57477 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57479 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50435 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50436 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50434 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57480 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49176 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49179 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49178 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50437 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49177 - "GET /api/v1/travelers/4c806ed0-6097-4eba-83d3-57bb2cf388f6/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58587 - "GET /api/v1/journeys/f00bdb77-9ce3-4a56-ac9a-37544c797879/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49180 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4643 backend=:8163 db=sqlite:///D:/moodle/_qoder_yufanggong_0557/backend/_e2e_yfginbox-r3.db ai=disabled reuseExistingServer=false
+
+[2/3] [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › zh-CN: an empty slot on a hand-made confirmation reads the dictionary words
+[WebServer] INFO:     127.0.0.1:54204 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:54204 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:54204 - "POST /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54204 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54204 - "POST /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/stay-options/94c36863-e841-43cc-b9f3-ec642af77626/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49685 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49690 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49692 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/inbox HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49691 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/memory HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49693 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62373 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62372 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49694 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62371 - "GET /api/v1/travelers/01c2a91d-96a0-4eca-b10d-0bb2d04cfcf0/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62374 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64647 - "POST /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/inbox/import HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63300 - "GET /api/v1/journeys/d2bc7b06-6acd-4eee-b19b-2140c45707a1/inbox HTTP/1.1" 200 OK
+
+[3/3] [chromium] › e2e\qoder-yufanggong-0557-inbox-labels-r1.spec.ts:32:3 › en: an empty slot on a hand-made confirmation reads the dictionary words
+[WebServer] INFO:     127.0.0.1:63303 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63303 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:63303 - "POST /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63303 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63303 - "POST /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/stay-options/43b2a1d7-2f23-4af5-a676-1c06c94a2cd9/select HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53223 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53224 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53226 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/inbox HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53225 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/memory HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53228 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61864 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53227 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61863 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61862 - "GET /api/v1/travelers/e6918d4f-baf3-4a68-b16c-79ec513f62c5/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61865 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63339 - "POST /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/inbox/import HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:61730 - "GET /api/v1/journeys/f4232812-f606-4f39-97de-e54bcf273606/inbox HTTP/1.1" 200 OK
+
+  3 passed (1.2m)

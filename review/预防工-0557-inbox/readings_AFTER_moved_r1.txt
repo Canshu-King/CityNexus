@@ -1,0 +1,14 @@
+[zh-CN] disclosures_opened=0
+[zh-CN] 核对行 textContent = "已核对：需要你补充信息 · 未绑定的语义目标"
+[zh-CN] dl dd readings (15 slots) = ["火车","天津之眼 夜景票","TN-REF-001","天津站","天津之眼","10月11日 09:30","10月11日 10:10","CNY","手动录入","STRUCTURED_JSON","READY_FOR_CONFIRMATION","DETERMINISTIC","UNKNOWN","UNKNOWN","manual-entry"]
+[zh-CN] arm 279/258 reachability: dl slots=15 empty_slots=0 (the server answered every slot with a token, so renderFact never saw "")
+[zh-CN] arm 253 reachability: handled fallback on glass=false; the line reads "已核对：需要你补充信息 · 未绑定的语义目标"
+[zh-CN] verdict_and_slots = ["已核对：需要你补充信息 · 未绑定的语义目标","火车","天津之眼 夜景票","TN-REF-001","天津站","天津之眼","10月11日 09:30","10月11日 10:10","CNY","手动录入","STRUCTURED_JSON","READY_FOR_CONFIRMATION","DETERMINISTIC","UNKNOWN","UNKNOWN","manual-entry"]
+[zh-CN] screenshot = review/预防工-0557-inbox/inbox_zh-CN_r1.png
+[en] disclosures_opened=0
+[en] 核对行 textContent = "Checked: Needs a few more details · Unbound semantic target"
+[en] dl dd readings (15 slots) = ["Rail","天津之眼 夜景票","TN-REF-001","天津站","天津之眼","11 Oct, 09:30","11 Oct, 10:10","CNY","Entered by hand","STRUCTURED_JSON","READY_FOR_CONFIRMATION","DETERMINISTIC","UNKNOWN","UNKNOWN","manual-entry"]
+[en] arm 279/258 reachability: dl slots=15 empty_slots=0 (the server answered every slot with a token, so renderFact never saw "")
+[en] arm 253 reachability: handled fallback on glass=false; the line reads "Checked: Needs a few more details · Unbound semantic target"
+[en] verdict_and_slots = ["Checked: Needs a few more details · Unbound semantic target","Rail","天津之眼 夜景票","TN-REF-001","天津站","天津之眼","11 Oct, 09:30","11 Oct, 10:10","CNY","Entered by hand","STRUCTURED_JSON","READY_FOR_CONFIRMATION","DETERMINISTIC","UNKNOWN","UNKNOWN","manual-entry"]
+[en] screenshot = review/预防工-0557-inbox/inbox_en_r1.png
