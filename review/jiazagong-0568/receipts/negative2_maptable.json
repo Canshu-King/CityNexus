@@ -1,0 +1,20 @@
+{
+ "arm": "codes-on-screen-r3",
+ "ref": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "base": "f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c",
+ "require_name": true,
+ "only_added": false,
+ "files_judged": 1,
+ "problems": [],
+ "informational": [
+  {
+   "file": "ctrl/prepFailureCopy.ts",
+   "line": 65,
+   "entry_line": 65,
+   "token": "mid-run",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " preparation died mid-run, so its result was never written. Starting again is the route.\","
+  }
+ ]
+}
