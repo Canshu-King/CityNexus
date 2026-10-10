@@ -395,7 +395,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
       <div className="prep-form">
         <label>
-          <span>{zh ? "目的地" : "Destination"}</span>
+          <span>{t("discovery.destination")}</span>
           <input
             data-testid="prep-query"
             value={query}
