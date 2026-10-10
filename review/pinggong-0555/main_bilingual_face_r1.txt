@@ -1,0 +1,7 @@
+# real-character test of the 3 rows the byte-range ruler counted in frontend/src/main.tsx at 65897e97a139c59279041fabe1d7413a5a9d537f
+byte-range hits counted by the dispatch ruler: [1098, 1420, 1639]
+row frontend/src/main.tsx:1098 | branch_before_colon='Agent is working…' | contains_real_hanzi=False
+row frontend/src/main.tsx:1420 | branch_before_colon=' · confirmation required' | contains_real_hanzi=False
+row frontend/src/main.tsx:1639 | branch_before_colon=' · C4' | contains_real_hanzi=False
+rows_with_real_hanzi_branch=0 out of 3 counted
+draft judgement for this file (zero takeable rows) is at _cn10_bldraft_1155.txt:212

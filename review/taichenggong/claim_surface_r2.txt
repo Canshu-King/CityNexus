@@ -1,0 +1,76 @@
+0 ledger lines read: 14844
+1 table headings found by their own words: 6 of 6
+2 单复数      CITYNEXUS_AGENT_CONTROL.md:2 :: ### 门牌号 · ORD-0558 开工认领 · 自取「单复数 56 行」那张里 pendingSetCopy.ts 那三处（第四处留作下一批），并把 ORD-0559 那六条的撞车摊在明处
+2 兜底行      CITYNEXUS_AGENT_CONTROL.md:479 :: ### 预防工 开工自证 · 取「内联双语兜底行施工表（接〇五五七）」里收件箱那枚，五处两批
+2 缺键       CITYNEXUS_AGENT_CONTROL.md:1123 :: ### 号令者派单 · 代码里调、字典里没有的键（用户会看到裸键名）
+2 空态缺动作    CITYNEXUS_AGENT_CONTROL.md:1169 :: ### 号令者派单 · 空态缺动作收口（接〇四〇七那张表的方向）
+2 时区口径     CITYNEXUS_AGENT_CONTROL.md:1208 :: ### 号令者派单 · 时区口径收口（接〇五五三那张还欠着的面）
+2 大表       CITYNEXUS_AGENT_CONTROL.md:1236 :: ### 号令者派单 · 内联双语「照抄就能交」施工表（大表，接〇五五七）
+3 distinct product files named in the ledger: 105
+4 files named inside the six tables: 36
+5 frontend/src/app/V8Experience.tsx                          tables=时区口径/大表 claim_lines=12 CITYNEXUS_AGENT_CONTROL.md:1289(写进交块者); CITYNEXUS_AGENT_CONTROL.md:4869(?)
+5 frontend/src/components/CnxSelect.tsx                      tables=空态缺动作 claim_lines=0 
+5 frontend/src/components/JourneyMap.tsx                     tables=空态缺动作 claim_lines=1 CITYNEXUS_AGENT_CONTROL.md:9963(?)
+5 frontend/src/features/agent/CopilotDock.tsx                tables=空态缺动作/大表 claim_lines=9 CITYNEXUS_AGENT_CONTROL.md:3869(花名键盘工); CITYNEXUS_AGENT_CONTROL.md:6786(?)
+5 frontend/src/features/checkin/checkinCopy.ts               tables=时区口径 claim_lines=2 CITYNEXUS_AGENT_CONTROL.md:1295(写进交块者); CITYNEXUS_AGENT_CONTROL.md:5400(仍等号令者)
+5 frontend/src/features/checkin/footprintCopy.ts             tables=时区口径 claim_lines=0 
+5 frontend/src/features/checkin/footprintRead.ts             tables=时区口径 claim_lines=0 
+5 frontend/src/features/collections/CollectInto.tsx          tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/collections/CollectionPanel.tsx      tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/discovery/DestinationPreparationPanel.tsx tables=大表 claim_lines=15 CITYNEXUS_AGENT_CONTROL.md:1338(备城工); CITYNEXUS_AGENT_CONTROL.md:1526(备城工)
+5 frontend/src/features/discovery/RealCityDiscoveryPanel.tsx tables=空态缺动作/大表 claim_lines=7 CITYNEXUS_AGENT_CONTROL.md:418(承接号令者); CITYNEXUS_AGENT_CONTROL.md:1257(写进交块者)
+5 frontend/src/features/execution/LiveRecovery.tsx           tables=空态缺动作/大表 claim_lines=9 CITYNEXUS_AGENT_CONTROL.md:1402(号令者); CITYNEXUS_AGENT_CONTROL.md:3941(双数工)
+5 frontend/src/features/execution/V10LiveExecutionPanel.tsx  tables=时区口径 claim_lines=0 
+5 frontend/src/features/inbox/JourneyInboxWorkbench.tsx      tables=兜底行/空态缺动作/时区口径/大表 claim_lines=4 CITYNEXUS_AGENT_CONTROL.md:487(写进交块者); CITYNEXUS_AGENT_CONTROL.md:1256(写进交块者)
+5 frontend/src/features/pending/pendingSetCopy.ts            tables=单复数 claim_lines=3 CITYNEXUS_AGENT_CONTROL.md:11(写进交块者); CITYNEXUS_AGENT_CONTROL.md:252(?)
+5 frontend/src/features/planning/PlanComparison.tsx          tables=空态缺动作/大表 claim_lines=1 CITYNEXUS_AGENT_CONTROL.md:9695(都空才动手)
+5 frontend/src/features/planning/PlanRankingPanel.tsx        tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/poiimport/PoiImportPanel.tsx         tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/progress/journeyProgress.ts          tables=单复数 claim_lines=7 CITYNEXUS_AGENT_CONTROL.md:22(已由加闸工); CITYNEXUS_AGENT_CONTROL.md:368(加闸工)
+5 frontend/src/features/setup/JourneyTrialSetup.tsx          tables=兜底行/大表 claim_lines=7 CITYNEXUS_AGENT_CONTROL.md:481(预防工); CITYNEXUS_AGENT_CONTROL.md:5948(?)
+5 frontend/src/features/shared/SharedJourneyPanel.tsx        tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/simulation/SimulationPanel.tsx       tables=缺键/大表 claim_lines=5 CITYNEXUS_AGENT_CONTROL.md:252(?); CITYNEXUS_AGENT_CONTROL.md:1112(写进交块者)
+5 frontend/src/features/stay/HotelsPanel.tsx                 tables=大表 claim_lines=5 CITYNEXUS_AGENT_CONTROL.md:2916(花名旅馆工); CITYNEXUS_AGENT_CONTROL.md:5833(仍等号令者)
+5 frontend/src/features/stay/StayExplorer.tsx                tables=时区口径/大表 claim_lines=2 CITYNEXUS_AGENT_CONTROL.md:1593(住宿工); CITYNEXUS_AGENT_CONTROL.md:6852(?)
+5 frontend/src/features/studio/PlanVersionHistoryPanel.tsx   tables=空态缺动作 claim_lines=1 CITYNEXUS_AGENT_CONTROL.md:1297(写进交块者)
+5 frontend/src/features/trash/JourneyTrashPanel.tsx          tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/traveler-twin/TwinPanel.tsx          tables=空态缺动作 claim_lines=0 
+5 frontend/src/features/trip/ActivityDetail.tsx              tables=单复数 claim_lines=6 CITYNEXUS_AGENT_CONTROL.md:21(?); CITYNEXUS_AGENT_CONTROL.md:252(?)
+5 frontend/src/features/trip/SpendPanel.tsx                  tables=空态缺动作 claim_lines=0 
+5 frontend/src/i18n/LocaleContext.tsx                        tables=缺键 claim_lines=4 CITYNEXUS_AGENT_CONTROL.md:1298(写进交块者); CITYNEXUS_AGENT_CONTROL.md:11397(的读者)
+5 frontend/src/lib/failureAttribution.ts                     tables=大表 claim_lines=4 CITYNEXUS_AGENT_CONTROL.md:837(抬秤工); CITYNEXUS_AGENT_CONTROL.md:9696(留给号令者)
+5 frontend/src/lib/formatWhen.ts                             tables=时区口径 claim_lines=5 CITYNEXUS_AGENT_CONTROL.md:1299(写进交块者); CITYNEXUS_AGENT_CONTROL.md:3662(?)
+5 frontend/src/lib/plural.ts                                 tables=单复数 claim_lines=0 
+5 frontend/src/lib/sceneClock.ts                             tables=大表 claim_lines=4 CITYNEXUS_AGENT_CONTROL.md:583(?); CITYNEXUS_AGENT_CONTROL.md:1254(写进交块者)
+5 frontend/src/lib/v8Formatting.ts                           tables=时区口径 claim_lines=0 
+5 frontend/src/main.tsx                                      tables=缺键/空态缺动作/时区口径/大表 claim_lines=8 CITYNEXUS_AGENT_CONTROL.md:1258(写进交块者); CITYNEXUS_AGENT_CONTROL.md:1404(?)
+6 claimable by that count (zero claim lines): 14
+7 FREE frontend/src/components/CnxSelect.tsx                   in 空态缺动作
+7 FREE frontend/src/features/checkin/footprintCopy.ts          in 时区口径
+7 FREE frontend/src/features/checkin/footprintRead.ts          in 时区口径
+7 FREE frontend/src/features/collections/CollectInto.tsx       in 空态缺动作
+7 FREE frontend/src/features/collections/CollectionPanel.tsx   in 空态缺动作
+7 FREE frontend/src/features/execution/V10LiveExecutionPanel.tsx in 时区口径
+7 FREE frontend/src/features/planning/PlanRankingPanel.tsx     in 空态缺动作
+7 FREE frontend/src/features/poiimport/PoiImportPanel.tsx      in 空态缺动作
+7 FREE frontend/src/features/shared/SharedJourneyPanel.tsx     in 空态缺动作
+7 FREE frontend/src/features/trash/JourneyTrashPanel.tsx       in 空态缺动作
+7 FREE frontend/src/features/traveler-twin/TwinPanel.tsx       in 空态缺动作
+7 FREE frontend/src/features/trip/SpendPanel.tsx               in 空态缺动作
+7 FREE frontend/src/lib/plural.ts                              in 单复数
+7 FREE frontend/src/lib/v8Formatting.ts                        in 时区口径
+8 files named in archived inbox receipts: 149
+9 frontend/src/components/CnxSelect.tsx                   already named in receipts: select_1535.md.inserted_153928
+9 frontend/src/features/checkin/footprintCopy.ts          already named in receipts: 0afdb49b_0135.md.inserted_013703
+9 frontend/src/features/checkin/footprintRead.ts          already named in receipts: bac10f40_1835.md.inserted_183651
+9 frontend/src/features/collections/CollectInto.tsx       already named in receipts: cmdr_2307.md.inserted_230740
+9 frontend/src/features/collections/CollectionPanel.tsx   already named in receipts: newlane_0637.md.inserted_071653
+9 frontend/src/features/execution/V10LiveExecutionPanel.tsx already named in receipts: a68b0631_1402.md.inserted_140629
+9 frontend/src/features/planning/PlanRankingPanel.tsx     already named in receipts: 1ba48dbf_0056.md.inserted_010959
+9 frontend/src/features/poiimport/PoiImportPanel.tsx      already named in receipts: 1ba48dbf_1827.md.inserted_182723
+9 frontend/src/features/shared/SharedJourneyPanel.tsx     already named in receipts: 1ba48dbf_1553.md.inserted_160301
+9 frontend/src/features/trash/JourneyTrashPanel.tsx       already named in receipts: 6a150e1e_0009.md.inserted_001152
+9 frontend/src/features/traveler-twin/TwinPanel.tsx       already named in receipts: a68b0631_2255.md.inserted_225704
+9 frontend/src/features/trip/SpendPanel.tsx               already named in receipts: 1ba48dbf_1734.md.superseded_by_1ba48dbf_1817.md
+9 frontend/src/lib/plural.ts                              already named in receipts: cff87c64_0031.md.inserted_003233
+9 frontend/src/lib/v8Formatting.ts                        already named in receipts: 0afdb49b_0346.md.inserted_034714
