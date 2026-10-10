@@ -1,0 +1,22 @@
+[normal arm: this branch as committed] rc=0
+  VERDICT PASS
+  TIP d89cfea25214b4bbb4e886dca765b096237362f1
+  CAND c55e8918b2325decf668d7f266889a4ebfefe164
+  FILES_IN_VIEW 1
+  TIP_MISSING 4
+  CALLED_IN_VIEW 0
+  NEW_MISSING 0
+negative commit rc=0  head=9c8d243800
+[negative arm: throwaway branch carrying the missing key] rc=4
+  VERDICT REFUSE
+  TIP d89cfea25214b4bbb4e886dca765b096237362f1
+  CAND 9c8d243800bca085eff7922c5c68e44a71204b87
+  FILES_IN_VIEW 2
+  TIP_MISSING 4
+  CALLED_IN_VIEW 1
+  NEW_MISSING 1
+  NEW_MISSING_KEY zzzNegativeArm.KeyNobodyAdded
+  NEW_MISSING_FILE frontend/src/__negarm_probe_r1.ts
+throwaway_still_present=0
+delivery_branch_head=c55e8918b2 dirty_lines=5 negfile_on_disk=0
+verdict=PROVEN_two_arms

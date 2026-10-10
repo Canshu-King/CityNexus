@@ -1,0 +1,10 @@
+real englishCountNoun from the shipped lib (not re-implemented): {"1": "place", "2": "places", "5": "places", "0": "places"}
+before line read from d89cfea25214b4bbb4e886dca765b096237362f1: text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+after line read from the branch: text: `GET /places?city_code=${cityCode} -> ${knownIds.size} ${englishCountNoun(knownIds.size, "place")}`,
+only_the_noun_channel_changed=1
+size=1 before_shows=es?city_code=TUT -> 1 places`, after_shows=ces?city_code=TUT -> 1 place`, want=1 place`, ok=1
+size=2 before_shows=es?city_code=TUT -> 2 places`, after_shows=es?city_code=TUT -> 2 places`, want=2 places`, ok=1
+size=5 before_shows=es?city_code=TUT -> 5 places`, after_shows=es?city_code=TUT -> 5 places`, want=5 places`, ok=1
+size=0 before_shows=es?city_code=TUT -> 0 places`, after_shows=es?city_code=TUT -> 0 places`, want=0 places`, ok=1
+verdict=PROVEN
+note=the enclosing beginAiRun needs a fetch and store harness; that full-chain run was NOT done here
