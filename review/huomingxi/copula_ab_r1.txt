@@ -1,0 +1,47 @@
+tip=73e723d04d20df33dec68952884d7000f71ef941
+branch_worktree=D:/moodle/_qoder_huomingxi_0558/wt
+method=esbuild bundle of tip bytes vs branch bytes, then the exported poiImportCopy() is called
+
+key=collectedCount
+  n=0 en tip   "0 places are now on Old Town — read back from the same list door."
+  n=0 en branch "0 places now on Old Town — read back from the same list door." same=false
+  n=0 zh tip   "0 枚已收在「Old Town」——这句是从同一扇读门重读回来的。"
+  n=0 zh branch "0 枚已收在「Old Town」——这句是从同一扇读门重读回来的。" same=true
+  n=1 en tip   "1 place are now on Old Town — read back from the same list door."
+  n=1 en branch "1 place now on Old Town — read back from the same list door." same=false
+  n=1 zh tip   "1 枚已收在「Old Town」——这句是从同一扇读门重读回来的。"
+  n=1 zh branch "1 枚已收在「Old Town」——这句是从同一扇读门重读回来的。" same=true
+  n=2 en tip   "2 places are now on Old Town — read back from the same list door."
+  n=2 en branch "2 places now on Old Town — read back from the same list door." same=false
+  n=2 zh tip   "2 枚已收在「Old Town」——这句是从同一扇读门重读回来的。"
+  n=2 zh branch "2 枚已收在「Old Town」——这句是从同一扇读门重读回来的。" same=true
+
+key=collectAlready
+  n=0 en tip   "0 places were already on Old Town, so nothing was written twice."
+  n=0 en branch "0 places already on Old Town, so nothing was written twice." same=false
+  n=0 zh tip   "0 枚本来就在「Old Town」上，没有重复写入。"
+  n=0 zh branch "0 枚本来就在「Old Town」上，没有重复写入。" same=true
+  n=1 en tip   "1 place were already on Old Town, so nothing was written twice."
+  n=1 en branch "1 place already on Old Town, so nothing was written twice." same=false
+  n=1 zh tip   "1 枚本来就在「Old Town」上，没有重复写入。"
+  n=1 zh branch "1 枚本来就在「Old Town」上，没有重复写入。" same=true
+  n=2 en tip   "2 places were already on Old Town, so nothing was written twice."
+  n=2 en branch "2 places already on Old Town, so nothing was written twice." same=false
+  n=2 zh tip   "2 枚本来就在「Old Town」上，没有重复写入。"
+  n=2 zh branch "2 枚本来就在「Old Town」上，没有重复写入。" same=true
+
+key=addedCount
+  n=0 en tip   "0 places are on Day 2 — read back from the server."
+  n=0 en branch "0 places on Day 2 — read back from the server." same=false
+  n=0 zh tip   "0 个地点已在 Day 2 ——这是从服务端读回来的结果。"
+  n=0 zh branch "0 个地点已在 Day 2 ——这是从服务端读回来的结果。" same=true
+  n=1 en tip   "1 place are on Day 2 — read back from the server."
+  n=1 en branch "1 place on Day 2 — read back from the server." same=false
+  n=1 zh tip   "1 个地点已在 Day 2 ——这是从服务端读回来的结果。"
+  n=1 zh branch "1 个地点已在 Day 2 ——这是从服务端读回来的结果。" same=true
+  n=2 en tip   "2 places are on Day 2 — read back from the server."
+  n=2 en branch "2 places on Day 2 — read back from the server." same=false
+  n=2 zh tip   "2 个地点已在 Day 2 ——这是从服务端读回来的结果。"
+  n=2 zh branch "2 个地点已在 Day 2 ——这是从服务端读回来的结果。" same=true
+
+SUMMARY zh_pairs_identical=9/9 en_pairs_changed=9/9
