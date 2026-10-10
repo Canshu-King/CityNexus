@@ -1,10 +1,12 @@
 # alignment gate over all six takeable rows of sceneClock (batch 1 + batch 2)
-en_keys=1146 zh_keys=1146 equal=True
+en_keys=1148 zh_keys=1148 equal=True
 key order identical on both sides=True
-key sceneClock.executionCursor | was_on_base sceneClock.ts:177 | en_equal=True LocaleContext.tsx:937 | zh_equal=True LocaleContext.tsx:2237 | PASS
-key sceneClock.journeyStart | was_on_base sceneClock.ts:178 | en_equal=True LocaleContext.tsx:938 | zh_equal=True LocaleContext.tsx:2238 | PASS
-key sceneClock.serverGaveNoBasis | was_on_base sceneClock.ts:179 | en_equal=True LocaleContext.tsx:939 | zh_equal=True LocaleContext.tsx:2239 | PASS
-key sceneClock.frozenEvidenceCarriesExpiry | was_on_base sceneClock.ts:184 | en_equal=True LocaleContext.tsx:940 | zh_equal=True LocaleContext.tsx:2240 | PASS
-key sceneClock.noFrozenEvidenceOnThisTrip | was_on_base sceneClock.ts:197 | en_equal=True LocaleContext.tsx:941 | zh_equal=True LocaleContext.tsx:2241 | PASS
-key sceneClock.noScenarioOnStage | was_on_base sceneClock.ts:198 | en_equal=True LocaleContext.tsx:942 | zh_equal=True LocaleContext.tsx:2242 | PASS
-PASS=6 FAIL=0 rows=6
+key sceneClock.executionCursor | was_on_base sceneClock.ts:177 | en_equal=True LocaleContext.tsx:937 | zh_equal=True LocaleContext.tsx:2239 | PASS
+key sceneClock.journeyStart | was_on_base sceneClock.ts:178 | en_equal=True LocaleContext.tsx:938 | zh_equal=True LocaleContext.tsx:2240 | PASS
+key sceneClock.serverGaveNoBasis | was_on_base sceneClock.ts:179 | en_equal=True LocaleContext.tsx:939 | zh_equal=True LocaleContext.tsx:2241 | PASS
+key sceneClock.frozenEvidenceCarriesExpiry | was_on_base sceneClock.ts:184 | en_equal=True LocaleContext.tsx:940 | zh_equal=True LocaleContext.tsx:2242 | PASS
+key sceneClock.noFrozenEvidenceOnThisTrip | was_on_base sceneClock.ts:197 | en_equal=True LocaleContext.tsx:941 | zh_equal=True LocaleContext.tsx:2243 | PASS
+key sceneClock.noScenarioOnStage | was_on_base sceneClock.ts:198 | en_equal=True LocaleContext.tsx:942 | zh_equal=True LocaleContext.tsx:2244 | PASS
+key sceneClock.sealedTravelDataHasNoExpiry | was_on_base sceneClock.ts:190 | en_equal=True LocaleContext.tsx:943 | zh_equal=True LocaleContext.tsx:2245 | PASS
+key sceneClock.evidenceReferenceDoesNotLineUp | was_on_base sceneClock.ts:194 | en_equal=True LocaleContext.tsx:944 | zh_equal=True LocaleContext.tsx:2246 | PASS
+PASS=8 FAIL=0 rows=8

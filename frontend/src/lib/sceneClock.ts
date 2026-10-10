@@ -189,13 +189,9 @@ export function evidenceWord(state: string | null, zh: boolean): string {
      used by a replan -- only the expiry is missing.  Showing this as "没有数据" tells a traveller
      the trip has no travel data when the server said it has 56 pairs. */
   if (state === "FROZEN_WITHOUT_TTL")
-    return zh
-      ? "这趟的出行数据是封存的，没有到期时间"
-      : "this trip's travel data is sealed, with no expiry";
+    return copy("sceneClock.sealedTravelDataHasNoExpiry");
   if (state === "EVIDENCE_REFERENCE_INCONSISTENT")
-    return zh
-      ? "证据的引用对不上（服务器说有封存记录，但引用不一致）"
-      : "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)";
+    return copy("sceneClock.evidenceReferenceDoesNotLineUp");
   if (state === "NO_FROZEN_EVIDENCE")
     return copy("sceneClock.noFrozenEvidenceOnThisTrip");
   if (state === "NO_SCENARIO") return copy("sceneClock.noScenarioOnStage");
