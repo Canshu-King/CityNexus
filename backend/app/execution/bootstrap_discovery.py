@@ -403,6 +403,23 @@ def _public_walking_url(latitude: float, longitude: float) -> str:
     )
 
 
+def _public_two_stop_walking_url(
+    first_latitude: float,
+    first_longitude: float,
+    second_latitude: float,
+    second_longitude: float,
+) -> str:
+    """Build a public-to-public walking URL without a traveller origin."""
+
+    return (
+        "https://www.google.com/maps/dir/?api=1&origin="
+        f"{float(first_latitude):.7f}%2C{float(first_longitude):.7f}"
+        "&destination="
+        f"{float(second_latitude):.7f}%2C{float(second_longitude):.7f}"
+        "&travelmode=walking"
+    )
+
+
 def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
     """Read member-private scopes while retaining compatibility with R87 receipts."""
 
@@ -1939,6 +1956,152 @@ def preview_bootstrap_shortlist_item(
         "explore_state": "DRAFT_EXPLORE_ONLY",
         "shared_fields": ["public_destination", "osm_id", "source_url"],
         "withheld_fields": ["origin", "foreground_gps", "query_center", "member_id", "traveler_id", "receipt_id"],
+        "plan_version_id": None,
+        "selected_place_id": None,
+    }
+
+
+def preview_bootstrap_two_stop_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    first_shortlist_id: UUID,
+    second_shortlist_id: UUID,
+    public_map_consent: bool,
+) -> dict[str, Any]:
+    """Release one explicitly ordered public-to-public walking leg.
+
+    This is an ephemeral explore action.  Both saved identities are checked in
+    the current signed member scope and the Journey remains a DRAFT with no
+    materialized Place, PlanVersion, arrival, or route-time fact.
+    """
+
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "a two-stop walk requires a DRAFT Journey",
+        )
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "a two-stop walk requires no PlanVersion",
+        )
+    if not public_map_consent:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_TWO_STOP_CONSENT_REQUIRED",
+            "explicit consent to share both public stop coordinates is required",
+            status_code=422,
+            details={
+                "shared": ["public_stop_one", "public_stop_two"],
+                "withheld": [
+                    "origin",
+                    "foreground_gps",
+                    "query_center",
+                    "member_id",
+                    "traveler_id",
+                    "receipt_id",
+                    "route_eta",
+                ],
+                "next_actions": ["CONFIRM_TWO_STOP_PUBLIC_MAP_CONSENT", "CANCEL_TWO_STOP_WALK"],
+            },
+        )
+    if str(first_shortlist_id) == str(second_shortlist_id):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_TWO_STOP_DISTINCT_REQUIRED",
+            "choose two different saved public places",
+            status_code=422,
+        )
+    rows = session.scalars(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id.in_([str(first_shortlist_id), str(second_shortlist_id)]),
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    ).all()
+    by_id = {str(row.id): row for row in rows}
+    first = by_id.get(str(first_shortlist_id))
+    second = by_id.get(str(second_shortlist_id))
+    if first is None or second is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_NOT_FOUND",
+            "both saved public places must still exist",
+            status_code=404,
+        )
+    if any(
+        row.member_id != str(member.id) or row.traveler_id != str(traveler_id)
+        for row in (first, second)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_MEMBER_MISMATCH",
+            "both saved public places must belong to the signed member",
+            status_code=403,
+        )
+    if first.external_id == second.external_id:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_TWO_STOP_DISTINCT_REQUIRED",
+            "choose two different public OSM identities",
+            status_code=422,
+        )
+    _finite_coordinate(float(first.latitude), float(first.longitude))
+    _finite_coordinate(float(second.latitude), float(second.longitude))
+
+    def stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[str, Any]:
+        return {
+            "position": position,
+            "shortlist_id": row.id,
+            "name": row.name,
+            "category": row.category,
+            "external_id": row.external_id,
+            "source_url": row.source_url,
+            "source_provenance": row.source_provenance,
+            "latitude": row.latitude,
+            "longitude": row.longitude,
+            "coordinate_system": row.coordinate_system,
+            "opening_state": str(
+                (json.loads(row.opening_hours_json or "{}") or {}).get("status") or "UNKNOWN"
+            ).upper(),
+            "price_state": "UNKNOWN",
+            "route_eta_state": "UNKNOWN",
+            "captured_at": row.captured_at,
+        }
+
+    return {
+        "preview_id": str(uuid4()),
+        "status": "PUBLIC_TWO_STOP_WALK_READY",
+        "journey_id": journey.id,
+        "authorization_basis": "TWO_SAVED_PUBLIC_IDENTITIES",
+        "release_purpose": "PUBLIC_POI_TO_PUBLIC_POI_WALKING",
+        "navigation_mode": "PUBLIC_POI_TO_PUBLIC_POI_WALKING",
+        "navigation_url": _public_two_stop_walking_url(
+            first.latitude,
+            first.longitude,
+            second.latitude,
+            second.longitude,
+        ),
+        "first_stop": stop_payload(first, 1),
+        "second_stop": stop_payload(second, 2),
+        "route_time_state": "UNKNOWN",
+        "explore_state": "DRAFT_EXPLORE_ONLY",
+        "shared_fields": [
+            "public_stop_one",
+            "public_stop_two",
+            "coordinates",
+            "osm_ids",
+            "source_urls",
+        ],
+        "withheld_fields": [
+            "foreground_gps",
+            "current_location",
+            "member_id",
+            "traveler_id",
+            "receipt_id",
+            "query_center",
+            "route_eta",
+        ],
         "plan_version_id": None,
         "selected_place_id": None,
     }
