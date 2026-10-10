@@ -937,6 +937,9 @@ const en: Dict = {
   "sceneClock.executionCursor": "the execution cursor",
   "sceneClock.journeyStart": "the journey's start",
   "sceneClock.serverGaveNoBasis": "the server gave no basis",
+  "sceneClock.frozenEvidenceCarriesExpiry": "the frozen evidence carries an expiry",
+  "sceneClock.noFrozenEvidenceOnThisTrip": "no frozen evidence on this trip",
+  "sceneClock.noScenarioOnStage": "no scenario on stage",
 
   // ── Stay Explorer ──
   "stay.kicker": "Stay Explorer · captured evidence",
@@ -2234,6 +2237,9 @@ const zhCN: Dict = {
   "sceneClock.executionCursor": "执行游标",
   "sceneClock.journeyStart": "行程起点",
   "sceneClock.serverGaveNoBasis": "服务器没有说明依据",
+  "sceneClock.frozenEvidenceCarriesExpiry": "这批证据带冻结期",
+  "sceneClock.noFrozenEvidenceOnThisTrip": "这趟没有冻结证据",
+  "sceneClock.noScenarioOnStage": "台上没有场景",
 
   // ── 住宿选择 ──
   "stay.kicker": "住宿选择 · 已采集证据",
