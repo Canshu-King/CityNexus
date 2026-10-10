@@ -1,0 +1,31 @@
+{
+ "tip": "d54e431113f0f147bf750e31c621ca2c47bbaa0c",
+ "declared": 175,
+ "response_asserted": 171,
+ "assert_not_on_response": 1,
+ "call_only": 1,
+ "none": 2,
+ "gap_total": 4,
+ "test_files_read": 251,
+ "cn_rows_parsed": 175,
+ "cn_row_line_matches_current_tip": 175,
+ "tsv": "D:/moodle/_qoder_yanlugong_0559b/review/\u9a8c\u8def\u5de5-0559b/ROUTE_STUB_GAP_r1.tsv",
+ "gap_by_first_segment": [
+  [
+   "agent",
+   1
+  ],
+  [
+   "catalog-hydrations",
+   1
+  ],
+  [
+   "city-services",
+   1
+  ],
+  [
+   "transactions",
+   1
+  ]
+ ]
+}

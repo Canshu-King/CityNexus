@@ -737,6 +737,7 @@ export function PlanWithAiSheet({
         <label className="plan-ai-field">
           <span className="v8-sr-only">{t("planai.tripRequest")}</span>
           <textarea
+            data-autofocus
             data-testid="plan-ai-input"
             rows={5}
             value={text}
@@ -1180,7 +1181,7 @@ export function PlanWithAiSheet({
             aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}
             onClick={() => submit()}
           >
-            {busy ? t("planning.planning2") : zh ? "开始规划" : "Plan my trip"}
+            {busy ? t("planning.planning2") : t("planning.startPlanning")}
           </button>
         </div>
       </section>

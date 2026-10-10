@@ -1,0 +1,19 @@
+[normal arm: this branch as committed] rc=0
+  VERDICT NO_FRONTEND_FILES
+  TIP d89cfea25214b4bbb4e886dca765b096237362f1
+  CAND review/大柜工-0558-r2
+  FILES_IN_VIEW 0
+  TIP_MISSING 4
+  CALLED_IN_VIEW 0
+  NEW_MISSING 0
+[negative arm: branch carrying a t() key no dictionary side has] rc=0
+  VERDICT NO_FRONTEND_FILES
+  TIP d89cfea25214b4bbb4e886dca765b096237362f1
+  CAND review/大柜工-0558-r2
+  FILES_IN_VIEW 0
+  TIP_MISSING 4
+  CALLED_IN_VIEW 0
+  NEW_MISSING 0
+throwaway branch deleted rc=0 out=Deleted branch review/dagui-negarm-throwaway-r1 (was 7bc4ddf5d4).
+throwaway_still_present=0
+verdict=CHECK

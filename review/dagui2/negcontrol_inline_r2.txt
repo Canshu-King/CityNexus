@@ -1,0 +1,3 @@
+NEG2b string assigned to a number tsc_rc=2 error_lines=3 first=src/features/simulation/SimulationPanel.tsx(783,16): error TS1382: Unexpected token. Did you mean `{'>'}` or `
+restored_same_bytes=1
+verdict=PROVEN

@@ -1,0 +1,17 @@
+$ D:\moodle\_qoder_dagui_557b\frontend\node_modules\.bin\esbuild.cmd __probe_inline_tmp_r1.jsx --bundle --platform=node --format=cjs --outfile=D:\moodle\_qoder_dagui_557b\review\dagui2\probe_inline_bundle_r1.cjs --jsx=automatic
+rc=0
+
+  ..\review\dagui2\probe_inline_bundle_r1.cjs  1.5mb
+
+Done in 26ms
+
+$ node D:\moodle\_qoder_dagui_557b\review\dagui2\probe_inline_bundle_r1.cjs
+rc=0
+OK   locale=en key=simulation.closeStage value="Close the stage"
+OK   locale=en key=simulation.onStage value="On stage"
+OK   locale=en key=simulation.sceneWindow value="Scene window"
+OK   locale=zh-CN key=simulation.closeStage value="收起舞台"
+OK   locale=zh-CN key=simulation.onStage value="台上行程"
+OK   locale=zh-CN key=simulation.sceneWindow value="场景窗口"
+probe_fail=0
+
