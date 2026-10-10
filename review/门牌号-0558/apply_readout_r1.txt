@@ -1,0 +1,16 @@
+target_bytes=11317 has_cr=False
+OK 草稿行 109｜名词 places｜档 B｜侧 en_only
+  改前 25:     "pending.count": "{n} places not on a day",
+  改后 25:     "pending.count": "{n} {plural:place} not on a day",
+OK 草稿行 110｜名词 places｜档 B｜侧 en_only
+  改前 74:       "This batch carries the {planned} places your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.",
+  改后 74:       "This batch carries the {planned} {plural:place:planned} your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.",
+OK 草稿行 111｜名词 places｜档 B｜侧 en_only
+  改前 80:     "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} places, which is the server's bound.",
+  改后 80:     "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} {plural:place:max}, which is the server's bound.",
+OK 配套 resolver（草稿第 4 节）
+  改前 179:   return template.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+  改后 179:   return expandPluralMarkers(template, params).replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`));
+OK 配套 import
+  插入 19: import { expandPluralMarkers } from "../../lib/plural";
+written_bytes=11438
