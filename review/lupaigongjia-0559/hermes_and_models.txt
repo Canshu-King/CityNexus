@@ -1,0 +1,181 @@
+== HermesNativeClient [('backend/app/integrations/hermes/native_client.py', 34)]
+== CapabilityInput [('backend/app/schemas.py', 51)]
+== CitySignalFixtureRequest [('backend/app/schemas.py', 178)]
+== AuthoritativeComposeRequest [('backend/app/schemas.py', 718)]
+== ResilienceRefreshRequest [('backend/app/schemas.py', 183)]
+== JourneyMemberSelfExit [('backend/app/schemas.py', 1130)]
+== JourneyRoleRule [('backend/app/schemas.py', 1108)]
+== MemberRoleLimits [('backend/app/schemas.py', 1135)]
+== JourneyMember [('backend/app/schemas.py', 1094), ('backend/app/db/models.py', 1277)]
+
+##### HermesNativeClient @ backend/app/integrations/hermes/native_client.py:34
+34	class HermesNativeClient:
+35	    """Use only the configured loopback Hermes API; never expose its bearer key."""
+36	
+37	    def __init__(self, *, client: httpx.Client | None = None):
+38	        base_url = getattr(settings, "hermes_native_api_url", None)
+39	        if not base_url or not getattr(settings, "hermes_api_server_key", None):
+40	            raise ValueError("native Hermes API is not configured")
+41	        self.base_url = base_url.rstrip("/")
+42	        self._client = client or httpx.Client(timeout=settings.impact_timeout_seconds)
+43	        self._owns_client = client is None
+44	
+45	    def _headers(self) -> dict[str, str]:
+46	        return {"Authorization": f"Bearer {getattr(settings, 'hermes_api_server_key', '')}"}
+47	
+48	    def capabilities(self) -> HermesCapabilities:
+49	        try:
+50	            response = self._client.get(f"{self.base_url}/v1/capabilities", headers=self._headers())
+51	            response.raise_for_status()
+52	            payload = response.json()
+53	        except (httpx.HTTPError, ValueError):
+54	            return HermesCapabilities(False, False, False, False, {})
+55	        endpoints = payload.get("endpoints") if isinstance(payload, dict) else {}
+56	        features = payload.get("features") if isinstance(payload, dict) else {}
+57	        supports_runs = bool(features.get("run_submission")) or "runs" in features
+58	        supports_events = bool(features.get("run_events_sse")) or bool(
+59	            isinstance(endpoints, dict)
+60	            and isinstance(endpoints.get("run_events"), dict)
+61	        )
+62	        supports_approval = bool(features.get("run_approval")) or bool(features.get("run_approval_response")) or bool(
+63	            isinstance(endpoints, dict)
+64	            and isinstance(endpoints.get("run_approval"), dict)
+65	        )
+66	        supports_stop = bool(features.get("run_stop")) or bool(
+67	            isinstance(endpoints, dict) and isinstance(endpoints.get("run_stop"), dict)
+68	        )
+69	        return HermesCapabilities(True, supports_runs, supports_events, supports_approval, payload, supports_stop)
+70	
+71	    def create_run(
+72	        self,
+73	        *,
+74	        mission_id: str,
+75	        journey_id: str,
+76	        input_text: str,
+77	        instructions: str,
+78	        autonomy: str,
+
+##### CapabilityInput @ backend/app/schemas.py:51
+51	class CapabilityInput(BaseModel):
+52	    """Validated explicit capability input (JSON uses ``class``)."""
+53	
+54	    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+55	
+56	    code: str = Field(min_length=2, max_length=64)
+57	    capability_class: str = Field(default="SOFT_PREFERENCE", alias="class")
+58	    severity: Literal["HARD", "STRONG", "SOFT"] = "SOFT"
+59	    params: dict[str, Any] = Field(default_factory=dict)
+60	    scope: Literal["TRAVELER", "JOURNEY"] = "TRAVELER"
+61	    source: str = Field(default="USER_CONFIRMED", min_length=1, max_length=64)
+62	    provenance: str = Field(default="USER_STATED", min_length=1, max_length=120)
+63	    explicit: bool = True
+64	    confirmed: bool = False
+65	    active: bool = True
+66	
+67	    @model_validator(mode="after")
+68	    def _refuse_rules_the_product_cannot_hold_to(self) -> "CapabilityInput":
+69	        """Two checks, in order, on the request body - before any row can exist.
+70	
+71	        This is deliberately the model rather than the route handlers: `CapabilityInput` is the body
+72	        type of all four capability write routes (`main.py` `PUT /travelers/{id}/capabilities`,
+73	        `POST /travelers/{id}/capabilities/confirm`, the two journey twins) plus the shared
+74	        `_capability_input_rows` helper, and it is neither constructed internally nor used as a
+75	        response model - so one validator here covers every door a client can knock on, with no edit
+76	        to `main.py` (that file is another lane's write domain).  A pydantic failure becomes FastAPI's
+77	        existing 422, so the session is never touched.
+78	
+79	        The two refusals keep distinct `type` values on purpose (`main.py`'s handler derives
+80	        `message_key` from `type`, never from the English message), and the rules themselves come from
+81	        `capabilities.py` so this schema cannot grow its own opinion about what is executable.
+82	        `STRONG` is checked like `SOFT`: only `HARD` items reach the feasibility gate.
+83	        """
+84	
+85	        refusal = capability_write_refusal(self.code, self.severity)
+86	        if refusal == "UNKNOWN_RULE_CODE":
+87	            raise PydanticCustomError(
+88	                "unknown_rule_code",
+89	                "UNKNOWN_RULE_CODE: {code} is not a capability rule this product understands",
+90	                {"code": str(self.code), "severity": str(self.severity)},
+91	            )
+92	        if refusal == "HARD_RULE_NOT_EXECUTABLE":
+93	            raise PydanticCustomError(
+94	                "hard_rule_not_executable",
+95	                "HARD_RULE_NOT_EXECUTABLE: {code} is a preference, so HARD cannot be enforced "
+
+##### CitySignalFixtureRequest @ backend/app/schemas.py:178
+178	class CitySignalFixtureRequest(BaseModel):
+179	    state: Literal["NORMAL", "DISRUPTED", "OUTAGE", "RISK_FORECAST"]
+180	    payload: dict[str, Any] = Field(default_factory=dict)
+181	
+182	
+183	class ResilienceRefreshRequest(BaseModel):
+
+##### AuthoritativeComposeRequest @ backend/app/schemas.py:718
+718	class AuthoritativeComposeRequest(BaseModel):
+719	    """User-selected bounded input for the V12 multi-day planner."""
+720	
+721	    place_ids: list[str] = Field(min_length=2, max_length=12)
+722	    candidate_count: int = Field(default=3, ge=1, le=5)
+723	    stay_offer_id: UUID | None = None
+724	    reservation_id: UUID | None = None
+725	
+726	
+727	class TripStudioPreviewRequest(BaseModel):
+
+##### ResilienceRefreshRequest @ backend/app/schemas.py:183
+183	class ResilienceRefreshRequest(BaseModel):
+184	    mode: Literal["replay", "captured_replay", "live"] = "replay"
+185	
+186	
+187	class RealCityDiscoveryRequest(BaseModel):
+
+##### JourneyMemberSelfExit @ backend/app/schemas.py:1130
+1130	class JourneyMemberSelfExit(BaseModel):
+1131	    model_config = ConfigDict(extra="forbid")
+1132	    traveler_id: UUID
+1133	
+1134	
+1135	class MemberRoleLimits(BaseModel):
+
+##### JourneyRoleRule @ backend/app/schemas.py:1108
+1108	class JourneyRoleRule(BaseModel):
+1109	    """One role, the capabilities the server holds for it, and the key that states its scope."""
+1110	
+1111	    role: MemberRole
+1112	    capabilities: list[JourneyCapability]
+1113	    scope_message_key: str
+1114	
+1115	
+1116	# --- ORD-0503: the two member write doors, and the one read door that carries the cap ----------
+
+##### MemberRoleLimits @ backend/app/schemas.py:1135
+1135	class MemberRoleLimits(BaseModel):
+1136	    """The cap this server enforces, answered by the server rather than typed on a screen.
+1137	
+1138	    `max_administrators` is the same module constant the role door compares against, and
+1139	    `contracts/openapi.yaml` names it a third time as `x-citynexus-max-administrators-per-journey`;
+1140	    `tests/test_qoder_ord0503_member_doors.py` fails if those two spellings ever disagree, so the
+1141	    roster line on the screen cannot quietly diverge from what the door refuses on.
+1142	    """
+1143	
+1144	    max_administrators: int = Field(ge=1)
+1145	    admin_count_in_force: int = Field(ge=0)
+1146	    roles: list[MemberRole]
+1147	# --- ORD-0437: the POI text/link import channel ---------------------------------------------
+
+##### JourneyMember @ backend/app/schemas.py:1094
+1094	class JourneyMember(BaseModel):
+1095	    id: str
+1096	    journey_id: str
+1097	    traveler_id: str
+1098	    role: MemberRole
+1099	    invited_by: str
+1100	    expires_at: str | None
+1101	    joined_at: str | None
+1102	    removed_at: str | None
+1103	    created_at: str
+1104	    updated_at: str
+1105	    member_state: MemberState
+1106	
+1107	
+1108	class JourneyRoleRule(BaseModel):
