@@ -305,6 +305,14 @@ class BootstrapDiscoveryRequest(BaseModel):
     mode: Literal["live"] = "live"
 
 
+class BootstrapCitySearchRequest(BaseModel):
+    """One explicit, bounded city lookup before a traveler taps a public area."""
+
+    query: str = Field(min_length=2, max_length=120)
+    provider_consent: bool = False
+    limit: int = Field(default=3, ge=1, le=3)
+
+
 class BootstrapSelectRequest(BaseModel):
     receipt_id: UUID
     candidate_id: UUID

@@ -1694,6 +1694,7 @@ export interface BootstrapDiscoveryCandidate {
   opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
   opening_verification_action: "OPEN_SOURCE_PAGE";
   source_tags: Record<string, string>;
+  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
 }
 
 export interface BootstrapDiscoveryResponse {
@@ -1703,7 +1704,7 @@ export interface BootstrapDiscoveryResponse {
   expires_at: string | null;
   source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
   provider: "overpass";
-  provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   attempts: Array<Record<string, unknown>>;
   candidates: BootstrapDiscoveryCandidate[];
   failure_code?: string;
@@ -1714,7 +1715,34 @@ export interface BootstrapSelectionResponse {
   selected_place_id: string;
   plan_version_id: string | null;
   journey_status: string;
-  provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+}
+
+export interface BootstrapCitySearchResult {
+  result_id: string;
+  name: string;
+  display_name: string;
+  provider: string;
+  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  osm_type: string | null;
+  osm_id: string | null;
+  source_url: string | null;
+  latitude: number;
+  longitude: number;
+  coordinate_system: "WGS84";
+  confidence: "CITY_CENTROID_UNCERTAIN";
+  selection_state: "CAMERA_ONLY_TAP_REQUIRED";
+  uncertainty: string;
+}
+
+export interface BootstrapCitySearchResponse {
+  journey_id: string;
+  status: "CITY_RESULTS" | "CITY_NO_RESULTS" | "GEOCODER_DISABLED" | "GEOCODER_UNAVAILABLE" | "GEOCODER_RATE_LIMITED";
+  query: string;
+  provider_provenance?: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  provider_attempts: Array<Record<string, unknown>>;
+  cache_hit?: boolean;
+  results: BootstrapCitySearchResult[];
 }
 
 export interface BootstrapMapPreviewResponse {
@@ -1725,7 +1753,7 @@ export interface BootstrapMapPreviewResponse {
   candidate_id: string;
   expires_at: string | null;
   provider: "overpass";
-  provider_provenance: "LIVE_OPENSTREETMAP_OVERPASS";
+  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   destination: {
     name: string;
     external_id: string;
@@ -2700,6 +2728,20 @@ export const cityNexusApi = {
       method: "POST",
       body: JSON.stringify({ query, mode, limit: 8, radius_m: 2500 }),
     });
+  },
+
+  bootstrapCitySearch(
+    journeyId: string,
+    input: { query: string; provider_consent: boolean; limit: number },
+  ): Promise<BootstrapCitySearchResponse> {
+    return requestJson<BootstrapCitySearchResponse>(
+      "/journeys/" + journeyId + "/bootstrap-city-search",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
   },
 
   bootstrapDiscovery(

@@ -619,6 +619,7 @@ export function V8Experience() {
   const [bootstrapJourney, setBootstrapJourney] = useState<{
     id: string;
     cityCode: string;
+    cityName?: string;
   } | null>(null);
   const [bootstrapPlan, setBootstrapPlan] = useState<{
     journeyId: string;
@@ -1208,7 +1209,7 @@ export function V8Experience() {
         // stay search and plan generation would otherwise manufacture a dead end.
         setCreatePhase("experience");
         setSetupOpen(false);
-        setBootstrapJourney({ id: journey.id, cityCode });
+        setBootstrapJourney({ id: journey.id, cityCode, cityName });
         try {
           await load(journey.id);
         } catch {
@@ -1649,6 +1650,7 @@ export function V8Experience() {
       <BootstrapDiscoveryPanel
         journeyId={bootstrapJourney.id}
         cityCode={bootstrapJourney.cityCode}
+        cityName={bootstrapJourney.cityName}
         onCompleted={completeBootstrap}
         onCancel={() => {
           setBootstrapJourney(null);

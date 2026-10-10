@@ -10,9 +10,11 @@ export type PublicCityCenter = {
 
 export function PublicCityAreaPicker({
   selectedCenter,
+  focusCenter,
   onSelect,
 }: {
   selectedCenter: PublicCityCenter | null;
+  focusCenter?: { latitude: number; longitude: number } | null;
   onSelect: (center: PublicCityCenter) => void;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -32,7 +34,9 @@ export function PublicCityAreaPicker({
       if (disposed || !hostRef.current) return;
       const center: [number, number] = selectedCenter
         ? [selectedCenter.longitude, selectedCenter.latitude]
-        : [0, 0];
+        : focusCenter
+          ? [focusCenter.longitude, focusCenter.latitude]
+          : [0, 0];
       const mapInstance = new maplibregl.Map({
         container: hostRef.current,
         style: {
@@ -51,7 +55,7 @@ export function PublicCityAreaPicker({
           ],
         },
         center,
-        zoom: selectedCenter ? 13 : 1.5,
+        zoom: selectedCenter || focusCenter ? 11 : 1.5,
         attributionControl: false,
         interactive: true,
         dragRotate: false,
@@ -120,11 +124,16 @@ export function PublicCityAreaPicker({
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !selectedCenter) return;
-    const center: [number, number] = [selectedCenter.longitude, selectedCenter.latitude];
-    map.easeTo({ center, zoom: Math.max(map.getZoom(), 13), duration: 0 });
-    if (markerRef.current) markerRef.current.setLngLat(center);
-  }, [selectedCenter?.latitude, selectedCenter?.longitude]);
+    if (!map) return;
+    const center = selectedCenter
+      ? [selectedCenter.longitude, selectedCenter.latitude] as [number, number]
+      : focusCenter
+        ? [focusCenter.longitude, focusCenter.latitude] as [number, number]
+        : null;
+    if (!center) return;
+    map.easeTo({ center, zoom: Math.max(map.getZoom(), selectedCenter ? 13 : 11), duration: 0 });
+    if (selectedCenter && markerRef.current) markerRef.current.setLngLat(center);
+  }, [selectedCenter?.latitude, selectedCenter?.longitude, focusCenter?.latitude, focusCenter?.longitude]);
 
   return (
     <div className="public-city-area-picker" data-testid="bootstrap-public-map" aria-label="Choose public search area">

@@ -754,7 +754,13 @@ class NominatimGeocoder:
 
     provider_key = "nominatim"
 
-    def __init__(self, *, client: httpx.Client | None = None, base_url: str | None = None):
+    def __init__(
+        self,
+        *,
+        client: httpx.Client | None = None,
+        base_url: str | None = None,
+        user_agent: str | None = None,
+    ):
         # Public-provider network policy (docs/NETWORK_POLICY.md): honour the
         # environment/proxy configuration by default so a Mihomo setup works,
         # and let the operator pin DIRECT or ENV_PROXY explicitly.
@@ -763,19 +769,20 @@ class NominatimGeocoder:
             trust_env=trust_environment_for_public_providers(),
         )
         self.base_url = (base_url or settings.nominatim_url).rstrip("/")
+        self.user_agent = user_agent or "CityNexus/7.0 (+https://citynexus.local/real-city)"
         self._owned_client = client is None
 
     def search(self, query: str, *, city: str, limit: int) -> list[DiscoveryCandidate]:
         response = self.client.get(
             f"{self.base_url}/search",
             params={
-                "q": f"{query}, {city}",
+                "q": ", ".join(part.strip() for part in (query, city) if part.strip()),
                 "format": "jsonv2",
                 "limit": min(limit, 10),
                 "addressdetails": 1,
                 "extratags": 1,
             },
-            headers={"User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"},
+            headers={"User-Agent": self.user_agent},
         )
         response.raise_for_status()
         rows = response.json()
@@ -825,7 +832,13 @@ class PhotonCityGeocoder:
 
     provider_key = "photon"
 
-    def __init__(self, *, client: httpx.Client | None = None, base_url: str | None = None):
+    def __init__(
+        self,
+        *,
+        client: httpx.Client | None = None,
+        base_url: str | None = None,
+        user_agent: str | None = None,
+    ):
         self.client = client or httpx.Client(
             timeout=settings.real_city_timeout_seconds,
             trust_env=trust_environment_for_public_providers(),
@@ -833,13 +846,17 @@ class PhotonCityGeocoder:
         self.base_url = (
             base_url or ExternalProviderSettings().photon_base_url
         ).rstrip("/")
+        self.user_agent = user_agent or "CityNexus/7.0 (+https://citynexus.local/real-city)"
         self._owned_client = client is None
 
     def search(self, query: str, *, city: str, limit: int) -> list[DiscoveryCandidate]:
         response = self.client.get(
             f"{self.base_url}/api/",
-            params={"q": f"{query}, {city}", "limit": min(limit, 10)},
-            headers={"User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"},
+            params={
+                "q": ", ".join(part.strip() for part in (query, city) if part.strip()),
+                "limit": min(limit, 10),
+            },
+            headers={"User-Agent": self.user_agent},
         )
         response.raise_for_status()
         features = (response.json() or {}).get("features") or []
