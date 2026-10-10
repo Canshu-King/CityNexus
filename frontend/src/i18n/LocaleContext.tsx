@@ -337,6 +337,12 @@ const en: Dict = {
      `zh ? … : …` branch inside LiveRecovery -- which is what let a Chinese screen be handed
      English when the server returned no body. */
   "live.acceptFailed": "Couldn't accept this change.",
+  /* ORD-0557 transport, not a rewrite: these three were printed by LiveRecovery's own
+     `zh ? … : …` literals inside setMessage; each English value is the exact word that
+     was already on screen, so an English screen cannot move. */
+  "live.tripUpdated": "Your trip has been updated.",
+  "live.serverUnreachable": "Could not reach the server. Try again.",
+  "live.remindLaterOk": "Okay, we will remind you later.",
   /* ORD-0370 tier 1: the recovery panels' own placeholder lines. Each English value
      is the exact word the panel printed before the key existed, so an English screen
      cannot move; only the Chinese screen stops reading English. */
@@ -1629,6 +1635,9 @@ const zhCN: Dict = {
   "live.unresolvedStep": "执行位置无法确认",
   "live.unresolvedStepHint": "已保存的位置指向当前方案中不再存在的步骤，没能如实显示当前或下一步。",
   "live.acceptFailed": "没能接受这个调整。",
+  "live.tripUpdated": "已按新安排更新你的行程。",
+  "live.serverUnreachable": "连不上服务器，请重试。",
+  "live.remindLaterOk": "好的，稍后再提醒你。",
   "recovery.statusUnavailable": "暂无状态",
   "recovery.guardianEnvelope": "守护授权",
   // ORD-0557 transport, not a rewrite: V14PreventivePanel prints these two
