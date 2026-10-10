@@ -1,0 +1,19 @@
+shared store audit -- read-only probe, nothing installed or deleted
+
+this lane's frontend/node_modules resolves to: D:\moodle\CityNexus\frontend\node_modules
+
+package                shared(CityNexus)    cmdr_ref             integration_20260919
+@babel/core            MISSING              present              present             
+@dnd-kit/core          MISSING              present              present             
+@dnd-kit/sortable      MISSING              present              present             
+@dnd-kit/utilities     MISSING              present              present             
+@vitejs/plugin-react   present              present              present             
+typescript             present              present              present             
+vite                   present              present              present             
+@playwright/test       present              present              present             
+
+shared(CityNexus) entry_count=392
+cmdr_ref entry_count=399
+integration_20260919 entry_count=399
+
+packages this lane's gates need but the shared store does not hold: @babel/core, @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities
