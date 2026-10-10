@@ -858,6 +858,9 @@ const en: Dict = {
   "inbox.rawPayment": "payment status",
   "inbox.rawProvider": "source key",
   "inbox.rawKind": "record kind",
+  "inbox.handled": "Handled",
+  "inbox.amountToConfirm": "Amount to confirm",
+  "inbox.recorded": "Recorded",
 
   // ── Intelligence: Control Tower ──
   "intel.kicker": "Intelligence · Control Tower",
@@ -2104,6 +2107,9 @@ const zhCN: Dict = {
   "inbox.rawPayment": "支付状态",
   "inbox.rawProvider": "来源标识",
   "inbox.rawKind": "记录类型",
+  "inbox.handled": "已处理",
+  "inbox.amountToConfirm": "金额待确认",
+  "inbox.recorded": "已记录",
 
   // ── 智能守护 ──
   "intel.kicker": "智能守护 · 控制塔",
