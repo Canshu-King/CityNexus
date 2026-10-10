@@ -1,0 +1,44 @@
+run_id=run661248 port=4588/8588 target=e2e/qoder-bulangong-0557-entry-limit-words-r1.spec.ts e2e/qoder-bulangong-0557fb-receipt-label-r1.spec.ts e2e/qoder-bulangong-0557-pretrip-empty-r1.spec.ts e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts
+
+Running 30 tests using 1 worker
+
+[qoder-real-seed] journey=2d7c1df4-7895-4497-a4a4-c12ee8efd37a options=4 chosen=4fb2c731-05ee-4d45-bbd5-8c215d95dabb (Haihe Riverside Hotel)
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok  1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (49.3s)
+  ok  2 [chromium] › e2e\qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts:51:1 › A1 no LocaleContext line-number citation is left under e2e (118ms)
+  ok  3 [chromium] › e2e\qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts:66:1 › A2 every label the replacements cite resolves and says what they claim (2ms)
+{"node":"the-three-former-citations-now-name-their-subject","line_number_citations_left_pointing_at_other_specs":0,"files":3}
+  ok  4 [chromium] › e2e\qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts:98:1 › A3 the three former citations now name their subject instead of a line (2ms)
+  ok  5 [chromium] › e2e\qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts:146:1 › A4 no shipped source cites the dictionary by line number (62ms)
+  ok  6 [chromium] › e2e\qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts:159:1 › A5 the product-source anchors resolve to what their comments now claim (2ms)
+  ok  7 [chromium] › e2e\qoder-bulangong-0557-entry-limit-words-r1.spec.ts:179:1 › S1 中文那屏逐字没动 (2.3s)
+  ok  8 [chromium] › e2e\qoder-bulangong-0557-entry-limit-words-r1.spec.ts:197:1 › S2 英文那屏逐字没动 (9.9s)
+  ok  9 [chromium] › e2e\qoder-bulangong-0557-entry-limit-words-r1.spec.ts:215:1 › S5 屏上没有残余的占位符，也没有键名漏出来 (1.9s)
+  ok 10 [chromium] › e2e\qoder-bulangong-0557-entry-limit-words-r1.spec.ts:230:1 › S6 控件的边界没动，步骤还走得下去 (1.2s)
+  ok 11 [chromium] › e2e\qoder-bulangong-0557-entry-limit-words-r1.spec.ts:258:1 › S3 字典两侧的字节就是改前源码里那几个字 (260ms)
+  ok 12 [chromium] › e2e\qoder-bulangong-0557-entry-limit-words-r1.spec.ts:280:1 › S4 写死的串确实从模块里走了 (5ms)
+  ok 13 [chromium] › e2e\qoder-bulangong-0557-pretrip-empty-r1.spec.ts:119:3 › E1 zh 屏：空态那一句逐字没动，且仍挂在它自己的标题下 (1.7s)
+  ok 14 [chromium] › e2e\qoder-bulangong-0557-pretrip-empty-r1.spec.ts:119:3 › E2 en 屏：空态那一句逐字没动，且仍挂在它自己的标题下 (1.2s)
+  ok 15 [chromium] › e2e\qoder-bulangong-0557-pretrip-empty-r1.spec.ts:139:1 › E3 那一句旁边的动作还活着，并且说自己去哪里 (1.2s)
+  ok 16 [chromium] › e2e\qoder-bulangong-0557-pretrip-empty-r1.spec.ts:156:1 › E4 字典两侧的字节就是改前源码里那两句 (61ms)
+  ok 17 [chromium] › e2e\qoder-bulangong-0557-pretrip-empty-r1.spec.ts:174:1 › E5 写死的两句确实从模块里走了 (1ms)
+  ok 18 [chromium] › e2e\qoder-bulangong-0557fb-receipt-label-r1.spec.ts:192:3 › R1 zh 屏：服务器没给回执号那一格逐字没动 (1.2s)
+  ok 19 [chromium] › e2e\qoder-bulangong-0557fb-receipt-label-r1.spec.ts:206:3 › R2 zh 屏：真给了形状合规的回执号那一格逐字没动 (1.3s)
+  ok 20 [chromium] › e2e\qoder-bulangong-0557fb-receipt-label-r1.spec.ts:192:3 › R3 en 屏：服务器没给回执号那一格逐字没动 (1.2s)
+  ok 21 [chromium] › e2e\qoder-bulangong-0557fb-receipt-label-r1.spec.ts:206:3 › R4 en 屏：真给了形状合规的回执号那一格逐字没动 (1.2s)
+  ok 22 [chromium] › e2e\qoder-bulangong-0557fb-receipt-label-r1.spec.ts:221:1 › R5 字典两侧的字节就是改前源码里那几个字 (72ms)
+  ok 23 [chromium] › e2e\qoder-bulangong-0557fb-receipt-label-r1.spec.ts:241:1 › R6 写死的串确实从模块里走了 (9ms)
+  ok 24 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1 › ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label (1.6s)
+  ok 25 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1 › ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label (1.4s)
+  ok 26 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1 › ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading (1.5s)
+  ok 27 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1 › ord0280-B2 GET /places refused with a detail sentence quotes the server (1.4s)
+  ok 28 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1 › ord0280-C1 plans/generate refused with NO sentence is not the server's reason (1.6s)
+  ok 29 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1 › ord0280-C2 plans/generate refused with a message quotes it exactly (2.0s)
+  ok 30 [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1 › ord0280-D the <2-places count this screen measured is a device statement too (2.4s)
+
+  30 passed (2.0m)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4588 backend=:8588 db=sqlite:///D:/moodle/_qoder_bulangong_0557/review/evidence/_run661248.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run661248 frontend=:4588 -> backend=:8588 ai=disabled db=_run661248.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4588 backend=:8588 db=sqlite:///D:/moodle/_qoder_bulangong_0557/review/evidence/_run661248.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4588 backend=:8588 db=sqlite:///D:/moodle/_qoder_bulangong_0557/review/evidence/_run661248.db ai=disabled reuseExistingServer=false
+exit=0 log=D:/moodle/_qoder_bulangong_0557/review/run-run661248.log

@@ -1,0 +1,6 @@
+# scan for inline bilingual pairs on the tip, BOTH shapes, real-character test (tip 6f457321a3b651f193dbe96a424b876285159643)
+frontend/src/lib/sceneClock.ts -> 4 left [('one-line', 223), ('one-line', 227), ('split-line', 223), ('split-line', 227)]
+frontend/src/main.tsx -> 0 left none
+frontend/src/features/planning/planRankingCopy.ts -> 0 left none
+frontend/src/features/planning/aiGenerationRun.ts -> 0 left none
+frontend/src/features/trash/journeyTrashCopy.ts -> 0 left none

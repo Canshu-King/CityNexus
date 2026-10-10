@@ -1,10 +1,10 @@
-# ROUTE-STUB-GAP tip=d54e431113f0f147bf750e31c621ca2c47bbaa0c declared=175 response_asserted=171 assert_not_on_response=1 call_only=1 none=2 test_files=251
+# ROUTE-STUB-GAP tip=f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c declared=175 response_asserted=175 assert_not_on_response=0 call_only=0 none=0 test_files=253
 # declared_coordinate	METHOD	PATH	STATE	TEST_EVIDENCE
 backend/app/main.py:882	GET	/health	RESPONSE_ASSERTED	backend/tests/test_agent_runtime_gate.py:0#test_agt20_citynexus_survives_without_hermes_and_agt23_request_stays_presented#response_assert
 backend/app/main.py:907	GET	/agent/tools	RESPONSE_ASSERTED	backend/tests/test_agent_authority_v2_actions.py:0#test_v2_catalog_exposes_typed_actions_without_changing_v1#response_assert
 backend/app/main.py:912	GET	/agent/tools/v2	RESPONSE_ASSERTED	backend/tests/test_agent_authority_v2_actions.py:0#test_v2_catalog_exposes_typed_actions_without_changing_v1#response_assert
 backend/app/main.py:917	GET	/agent/runtime-status	RESPONSE_ASSERTED	backend/tests/test_qoder_ord0387_ai_state_contract_sync.py:8#test_the_route_answers_from_settings_alone_and_never_dials_out#response_assert
-backend/app/main.py:922	GET	/agent/hermes/capabilities	NONE	NONE
+backend/app/main.py:922	GET	/agent/hermes/capabilities	RESPONSE_ASSERTED	backend/tests/test_route_gap_验路工_0559_r1.py:3#test_route_gap_hermes_capabilities_configured_shape#response_assert
 backend/app/main.py:929	GET	/agent/hermes/runs/{run_id}	RESPONSE_ASSERTED	backend/tests/test_route_gap_lupaigongjia_0559_r1.py:52#test_hermes_doors_all_require_a_journey_that_exists#response_assert
 backend/app/main.py:1072	GET	/agent/hermes/runs/{run_id}/events	RESPONSE_ASSERTED	backend/tests/test_route_gap_lupaigongjia_0559_r1.py:0#test_hermes_doors_all_require_a_journey_that_exists#response_assert
 backend/app/main.py:1081	GET	/journeys/{journey_id}/agent/hermes/runs/{run_id}	RESPONSE_ASSERTED	backend/tests/test_route_gap_lupaigongjia_0559_r1.py:52#test_hermes_doors_all_require_a_journey_that_exists#response_assert
@@ -85,7 +85,7 @@ backend/app/main.py:5533	POST	/journeys/{journey_id}/stays/offers/capture	RESPON
 backend/app/main.py:5568	GET	/destinations/capability	RESPONSE_ASSERTED	backend/tests/test_qoder_anywhere_capability_from_store.py:3#_capability#response_assert
 backend/app/main.py:5582	POST	/catalog-hydrations	RESPONSE_ASSERTED	backend/tests/test_qoder_anywhere_gates.py:40#test_g2_an_existing_journey_becomes_plannable_without_being_recreated#response_assert
 backend/app/main.py:5615	GET	/catalog-hydrations/{operation_id}	RESPONSE_ASSERTED	backend/tests/test_qoder_anywhere_gates.py:0#test_g2_an_existing_journey_becomes_plannable_without_being_recreated#response_assert
-backend/app/main.py:5629	POST	/catalog-hydrations/{operation_id}/abandon	CALL_ONLY	backend/tests/test_qoder_anywhere_contract_parity.py:46#<module>#reference_only
+backend/app/main.py:5629	POST	/catalog-hydrations/{operation_id}/abandon	RESPONSE_ASSERTED	backend/tests/test_route_gap_验路工_0559_r2.py:6#test_hydration_abandon_of_a_settled_job_keeps_its_own_words#response_assert
 backend/app/main.py:5643	POST	/journeys/{journey_id}/stay-generations	RESPONSE_ASSERTED	backend/tests/test_qoder_stay_generation_operations.py:0#_submit#response_assert
 backend/app/main.py:5686	GET	/journeys/{journey_id}/stay-generations	RESPONSE_ASSERTED	backend/tests/test_qoder_stay_generation_operations.py:0#_submit#response_assert
 backend/app/main.py:5698	GET	/journeys/{journey_id}/stay-generations/{operation_id}	RESPONSE_ASSERTED	backend/tests/test_qoder_stay_generation_operations.py:0#_abandon#response_assert
@@ -130,7 +130,7 @@ backend/app/main.py:7214	GET	/journeys/{journey_id}/constraints	RESPONSE_ASSERTE
 backend/app/main.py:7225	POST	/journeys/{journey_id}/constraints	RESPONSE_ASSERTED	backend/tests/test_qoder_ord0219_write_side_rule_guard.py:4#test_1a_an_unknown_rule_code_is_refused_before_it_can_be_stored#response_assert
 backend/app/main.py:7298	DELETE	/journeys/{journey_id}/constraints/{constraint_id}	RESPONSE_ASSERTED	backend/tests/test_wp01_wp03.py:0#test_material_wp01_wp03_mutations_emit_audit_records#response_assert
 backend/app/main.py:7338	GET	/places	RESPONSE_ASSERTED	backend/tests/test_qoder_anywhere_gates.py:0#test_g7_a_destination_with_no_hand_authored_file_still_gets_an_answer#response_assert
-backend/app/main.py:7365	GET	/city-services	ASSERT_NOT_ON_RESPONSE	backend/tests/test_contract.py:0#test_cnx_c_001_openapi_parses_and_wp01_wp03_routes_exist#assert_other
+backend/app/main.py:7365	GET	/city-services	RESPONSE_ASSERTED	backend/tests/test_route_gap_验路工_0559_r2.py:3#test_city_services_items_carry_the_five_catalog_fields#response_assert
 backend/app/main.py:7379	POST	/journeys/{journey_id}/plans/generate	RESPONSE_ASSERTED	backend/tests/stateful/test_journey_truth_state_machine.py:0#_op_generate_plan#response_assert
 backend/app/main.py:7738	POST	/journeys/{journey_id}/plans/authoritative-compose	RESPONSE_ASSERTED	backend/tests/test_v12_authoritative_trip_execution.py:0#test_v12_authoritative_compose_same_evidence_execute_studio_and_edge#response_assert
 backend/app/main.py:7739	POST	/journeys/{journey_id}/authoritative-compose	RESPONSE_ASSERTED	backend/tests/test_route_gap_lupaigongjia_0559_r1.py:51#test_authoritative_compose_answers_the_candidate_plans_it_froze#response_assert
@@ -169,9 +169,9 @@ backend/app/main.py:13582	POST	/replans/{proposal_id}/reject	RESPONSE_ASSERTED	b
 backend/app/main.py:14182	POST	/journeys/{journey_id}/copilot/messages	RESPONSE_ASSERTED	backend/tests/test_v15_copilot.py:0#test_v15_copilot_reports_fallback_mode_without_deepseek_configuration#response_assert
 backend/app/main.py:14379	GET	/city-services/{service_id}/booking-slots	RESPONSE_ASSERTED	backend/tests/test_wp04_endpoints.py:0#test_wp04_golden_booking_capture_replay_and_canonical_policy#response_assert
 backend/app/main.py:14417	POST	/journeys/{journey_id}/bookings	RESPONSE_ASSERTED	backend/tests/stateful/test_journey_truth_state_machine.py:0#_op_book_cruise#response_assert
-backend/app/main.py:14449	GET	/bookings/{booking_id}	RESPONSE_ASSERTED	backend/tests/test_wp04_endpoints.py:0#test_wp04_unpaid_cancel_and_sensitive_payment_input_are_safe#response_assert
+backend/app/main.py:14449	GET	/bookings/{booking_id}	RESPONSE_ASSERTED	backend/tests/test_route_gap_验路工_0559_r2.py:4#test_booking_door_names_the_id_it_could_not_find#response_assert
 backend/app/main.py:14457	POST	/bookings/{booking_id}/cancel	RESPONSE_ASSERTED	backend/tests/test_wp04_endpoints.py:0#test_wp04_unpaid_cancel_and_sensitive_payment_input_are_safe#response_assert
 backend/app/main.py:14484	POST	/journeys/{journey_id}/orders	RESPONSE_ASSERTED	backend/tests/test_wp04_endpoints.py:0#test_wp04_order_server_pricing_and_order_payment_target#response_assert
 backend/app/main.py:14521	POST	/journeys/{journey_id}/transactions	RESPONSE_ASSERTED	backend/tests/stateful/test_journey_truth_state_machine.py:0#_op_capture#response_assert
-backend/app/main.py:14569	GET	/transactions/{transaction_id}	NONE	NONE
+backend/app/main.py:14569	GET	/transactions/{transaction_id}	RESPONSE_ASSERTED	backend/tests/test_route_gap_验路工_0559_r2.py:4#test_transaction_door_names_the_id_it_could_not_find#response_assert
 backend/app/main.py:14577	GET	/commitments/{commitment_id}	RESPONSE_ASSERTED	backend/tests/test_wp04_endpoints.py:0#test_wp04_golden_booking_capture_replay_and_canonical_policy#response_assert
