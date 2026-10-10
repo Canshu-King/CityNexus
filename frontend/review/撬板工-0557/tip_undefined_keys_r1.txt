@@ -1,0 +1,3 @@
+新尖 2039df0430c5b310fa24874f2f2e7aa8fd3b5816 现读：main.tsx 调用 main.* 键 20 枚（去重）
+字典 en 侧定义 main.* 0 枚｜zhCN 侧定义 0 枚
+两侧都没定义的调用 20 枚，逐枚：main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage, main.cityNexusRequestFailed, main.evidenceUnavailable, main.explicitWins, main.generalRecovery, main.noActionableTarget, main.noActiveC4, main.noDominantFailureMode, main.noUpcomingActivity, main.notAvailable, main.notEvaluated, main.notFeasible, main.notPreserved, main.notReported, main.outcomeEvidence, main.persistedOperationUpdate, main.unnamedCommitmentServerGaveNoName, main.validatedActivity, main.verifiedEvidenceAttached, main.verifiedFeasible
