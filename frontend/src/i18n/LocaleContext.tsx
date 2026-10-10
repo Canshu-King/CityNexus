@@ -1324,6 +1324,13 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+
+  /* ORD-0557: the attribution titles `lib/failureAttribution.ts` writes inline. Key names and English
+     arms are copied from the CN draft table verbatim; both arms are the bytes those screens already
+     showed, so the move cannot change what a traveller reads. */
+  "lib.failureAttribution.tripNotOnServer": "This trip is not on this server",
+  "lib.failureAttribution.networkUnavailable": "Network unavailable",
+  "lib.failureAttribution.serviceUnavailable": "The service is temporarily unavailable",
 };
 
 const zhCN: Dict = {
@@ -2557,9 +2564,25 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+
+  /* ORD-0557：`lib/failureAttribution.ts` 里那些直接写在源码上的归因小标题。键名与英文臂逐字照 CN
+     草稿表抄；中文臂就是屏上此刻在显示的那串字，这是搬运不是改写。 */
+  "lib.failureAttribution.tripNotOnServer": "这台服务器上没有这一趟行程了",
+  "lib.failureAttribution.networkUnavailable": "网络不可用",
+  "lib.failureAttribution.serviceUnavailable": "服务暂时不可用",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/* ORD-0557: the lookup for copy that lives in a module function rather than a component.
+   `lib/failureAttribution.ts` builds its titles inside `copyFor(attribution, zh)`, whose call sites sit
+   on ten other screens (first one `app/V8Experience.tsx:1595`), so that function cannot call the
+   `useT()` hook without a signature change reaching into other lanes' files. Same fallback order as
+   `t()`: this locale, then English, then the key itself. No `{param}` substitution and no `{plural:}`
+   expansion -- a line needing either still goes through `t()`. */
+export function dictionaryCopy(locale: TripLocale, key: string): string {
+  return dictionaries[locale][key] ?? dictionaries.en[key] ?? key;
+}
 
 type LocaleState = {
   locale: TripLocale;
