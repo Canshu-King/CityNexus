@@ -21,7 +21,7 @@ CFG = "_kd0557r3_tsconfig_two_files.json"
 def git(*a):
     p = subprocess.run(["git", "-C", WT] + list(a), capture_output=True)
     assert p.returncode == 0, str(list(a)) + p.stderr.decode("utf-8", "replace")
-    return p.stdout.decode("utf-8").strip()
+    return p.stdout.decode("utf-8").replace(chr(13), "").strip()
 
 
 def rc_anc(h, tip):
@@ -38,7 +38,9 @@ def at(lines, needle):
 
 def shell(cmd):
     p = subprocess.run(cmd, shell=True, cwd=WT, capture_output=True)
-    return p.returncode, p.stdout.decode("utf-8", "replace"), p.stderr.decode("utf-8", "replace")
+    out = p.stdout.decode("utf-8", "replace").replace(chr(13), "")
+    err = p.stderr.decode("utf-8", "replace").replace(chr(13), "")
+    return p.returncode, out, err
 
 
 def errs(text):

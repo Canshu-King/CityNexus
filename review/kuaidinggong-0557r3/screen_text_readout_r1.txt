@@ -1,7 +1,7 @@
 1. base_tip ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a
-2. product_head a1621c76eabf0c0cb5b852a84ab8b29126802915
+2. product_head e5323c85fa492bc68150305f5dde055a34436dce
 3. dict_head 9da5ce1ef8f55298ea838f5b86938110ec024e41
-4. ls-remote_now c5f905132d95c497649031e27b16cc3f61b04276	refs/heads/review/快钉工-0557-dict-r3 | c9369546445ff6a32c78db323f7c440d1b4336a6	refs/heads/review/快钉工-0557-r3
+4. ls-remote_now 9da5ce1ef8f55298ea838f5b86938110ec024e41	refs/heads/review/快钉工-0557-dict-r3 | e5323c85fa492bc68150305f5dde055a34436dce	refs/heads/review/快钉工-0557-r3
 5. key_already_in_base_dictionary 0
 6. base_literal_line [(283, 'return name ? String(name) : zh ? "已记录" : "Recorded";')]
 7. dict_sides inbox.recorded en=[(849, '"inbox.recorded": "Recorded",')] zh=[(2144, '"inbox.recorded": "已记录",')]
