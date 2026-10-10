@@ -1308,12 +1308,13 @@ const en: Dict = {
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
 
   // ── Failure attribution titles (ORD-0555) ──
-  /* The three titles `lib/failureAttribution.ts` shows when the server's answer is missing, the
-     network is down, or the service is failing on itself. These values are the bytes those screens
-     were already showing -- a move, not a rewrite. */
+  /* The four titles `lib/failureAttribution.ts` shows when the server's answer is missing, the
+     network is down, the service is failing on itself, or it read the trip and could not bring it
+     back. These values are the bytes those screens were already showing -- a move, not a rewrite. */
   "failure.thisTripIsNotOnThisServer": "This trip is not on this server",
   "failure.networkUnavailable": "Network unavailable",
   "failure.theServiceIsTemporarilyUnavailable": "The service is temporarily unavailable",
+  "failure.theServerCouldNotReadYourTrip": "The server could not read your trip",
 };
 
 const zhCN: Dict = {
@@ -2528,11 +2529,12 @@ const zhCN: Dict = {
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
 
   // ── 故障归因小标题（ORD-0555）──
-  /* `lib/failureAttribution.ts` 在「行程不在这台服务器上」「网络不可用」「服务暂时不可用」三种回答下
-     显示的那三句小标题。值就是屏上原本在显示的那串字，这是搬运不是改写。 */
+  /* `lib/failureAttribution.ts` 在「行程不在这台服务器上」「网络不可用」「服务暂时不可用」「服务器这次
+     没能把行程读出来」四种回答下显示的那四句小标题。值就是屏上原本在显示的那串字，这是搬运不是改写。 */
   "failure.thisTripIsNotOnThisServer": "这台服务器上没有这一趟行程了",
   "failure.networkUnavailable": "网络不可用",
   "failure.theServiceIsTemporarilyUnavailable": "服务暂时不可用",
+  "failure.theServerCouldNotReadYourTrip": "服务器这次没能把行程读出来",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
