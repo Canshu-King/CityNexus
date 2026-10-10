@@ -5,3 +5,6 @@ main_pkglock_bytes=382812
 main_top_level_entries=400
 D_free_GB=12.78
 my_worktree_KB=263787
+my_lane_artifacts_KB=309
+my_lane_artifact_files=59
+my_lane_screenshots=14
