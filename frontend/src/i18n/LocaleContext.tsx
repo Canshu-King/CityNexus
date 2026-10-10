@@ -1471,6 +1471,8 @@ const en: Dict = {
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
   "simulation.notGiven": "not given",
+  "setup.stepFailedStaySearchOnly": "This step did not complete — the trip was created, but the stay search did not.",
+  "setup.stillNeeded": "Still needed: ",
 };
 
 const zhCN: Dict = {
@@ -2848,6 +2850,8 @@ const zhCN: Dict = {
   "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
   "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
   "simulation.notGiven": "服务器未给证据状态",
+  "setup.stepFailedStaySearchOnly": "这一步没有成功——行程已创建，但住宿搜索没有完成。",
+  "setup.stillNeeded": "还需要填写：",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
