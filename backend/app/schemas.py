@@ -346,6 +346,14 @@ class BootstrapShortlistNavigationRequest(BaseModel):
     public_map_consent: bool = False
 
 
+class BootstrapTwoStopWalkRequest(BaseModel):
+    """Release a walking leg between two explicitly ordered saved public stops."""
+
+    first_shortlist_id: UUID
+    second_shortlist_id: UUID
+    public_map_consent: bool = False
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)

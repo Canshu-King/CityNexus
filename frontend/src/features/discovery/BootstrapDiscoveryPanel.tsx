@@ -8,6 +8,7 @@ import {
   type BootstrapShortlistItem,
   type BootstrapShortlistResumeIntent,
   type BootstrapShortlistPreviewResponse,
+  type BootstrapTwoStopWalkResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
@@ -223,6 +224,53 @@ function validatedPublicWalkingUrl(value: string | null | undefined, expectedLat
   }
 }
 
+function validatedPublicTwoStopWalkingUrl(
+  value: string | null | undefined,
+  first: Pick<BootstrapShortlistItem, "latitude" | "longitude">,
+  second: Pick<BootstrapShortlistItem, "latitude" | "longitude">,
+): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    const keys = [...url.searchParams.keys()];
+    const parsePair = (raw: string | null) => {
+      const pair = raw?.split(",") ?? [];
+      return { latitude: Number(pair[0]), longitude: Number(pair[1]), length: pair.length };
+    };
+    const origin = parsePair(url.searchParams.get("origin"));
+    const destination = parsePair(url.searchParams.get("destination"));
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== "www.google.com" ||
+      url.pathname !== "/maps/dir/" ||
+      url.port !== "" ||
+      url.username !== "" ||
+      url.password !== "" ||
+      keys.length !== 4 ||
+      keys.some((key) => !["api", "origin", "destination", "travelmode"].includes(key)) ||
+      url.searchParams.getAll("origin").length !== 1 ||
+      url.searchParams.getAll("destination").length !== 1 ||
+      url.searchParams.get("api") !== "1" ||
+      url.searchParams.get("travelmode") !== "walking" ||
+      origin.length !== 2 ||
+      destination.length !== 2 ||
+      !Number.isFinite(origin.latitude) ||
+      !Number.isFinite(origin.longitude) ||
+      !Number.isFinite(destination.latitude) ||
+      !Number.isFinite(destination.longitude) ||
+      Math.abs(origin.latitude - first.latitude) > 1e-6 ||
+      Math.abs(origin.longitude - first.longitude) > 1e-6 ||
+      Math.abs(destination.latitude - second.latitude) > 1e-6 ||
+      Math.abs(destination.longitude - second.longitude) > 1e-6
+    ) {
+      return null;
+    }
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function BootstrapDiscoveryPanel({
   journeyId,
   cityCode,
@@ -268,6 +316,11 @@ export function BootstrapDiscoveryPanel({
   const [citySearchBusy, setCitySearchBusy] = useState(false);
   const [citySearchMessage, setCitySearchMessage] = useState<string | null>(null);
   const [mapFocusCenter, setMapFocusCenter] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [twoStopOrder, setTwoStopOrder] = useState<string[]>([]);
+  const [twoStopConsent, setTwoStopConsent] = useState(false);
+  const [twoStopBusy, setTwoStopBusy] = useState(false);
+  const [twoStopNotice, setTwoStopNotice] = useState<string | null>(null);
+  const [twoStopFallbackUrl, setTwoStopFallbackUrl] = useState<string | null>(null);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
@@ -307,6 +360,11 @@ export function BootstrapDiscoveryPanel({
     setCitySearchResults([]);
     setCitySearchMessage(null);
     setMapFocusCenter(null);
+    setTwoStopOrder([]);
+    setTwoStopConsent(false);
+    setTwoStopBusy(false);
+    setTwoStopNotice(null);
+    setTwoStopFallbackUrl(null);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -395,6 +453,11 @@ export function BootstrapDiscoveryPanel({
     setCitySearchBusy(false);
     setCitySearchMessage(null);
     setMapFocusCenter(null);
+    setTwoStopOrder([]);
+    setTwoStopConsent(false);
+    setTwoStopBusy(false);
+    setTwoStopNotice(null);
+    setTwoStopFallbackUrl(null);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -438,6 +501,11 @@ export function BootstrapDiscoveryPanel({
     setCitySearchBusy(false);
     setCitySearchMessage(null);
     setMapFocusCenter(null);
+    setTwoStopOrder([]);
+    setTwoStopConsent(false);
+    setTwoStopBusy(false);
+    setTwoStopNotice(null);
+    setTwoStopFallbackUrl(null);
     setMessage("Journey changed; choose a new public search area.");
   }, [journeyId, cityName]);
 
@@ -710,6 +778,98 @@ export function BootstrapDiscoveryPanel({
     }
   };
 
+  const setTwoStopPosition = (shortlistId: string, position: 1 | 2) => {
+    setTwoStopNotice(null);
+    setTwoStopFallbackUrl(null);
+    setTwoStopConsent(false);
+    setTwoStopOrder((current) => {
+      const without = current.filter((id) => id !== shortlistId);
+      if (position === 1) return [shortlistId, ...without].slice(0, 2);
+      return [...without, shortlistId].slice(-2);
+    });
+  };
+
+  const clearTwoStopPosition = (shortlistId: string) => {
+    setTwoStopNotice(null);
+    setTwoStopFallbackUrl(null);
+    setTwoStopConsent(false);
+    setTwoStopOrder((current) => current.filter((id) => id !== shortlistId));
+  };
+
+  const confirmTwoStopWalk = async () => {
+    if (twoStopOrder.length !== 2 || twoStopOrder[0] === twoStopOrder[1]) {
+      setMessage("Choose exactly two different saved public places and set their order first.");
+      return;
+    }
+    if (!twoStopConsent) {
+      setMessage("Confirm the separate release for both public stop coordinates before opening walking directions.");
+      return;
+    }
+    const first = shortlist.find((item) => item.shortlist_id === twoStopOrder[0]);
+    const second = shortlist.find((item) => item.shortlist_id === twoStopOrder[1]);
+    if (!first || !second) {
+      setTwoStopOrder([]);
+      setMessage("The saved order is stale. Choose two saved places again.");
+      return;
+    }
+    const fence = captureDiscoveryFence();
+    setTwoStopBusy(true);
+    setMessage(null);
+    setTwoStopNotice(null);
+    setTwoStopFallbackUrl(null);
+    const pendingWindow = window.open("about:blank", "_blank");
+    pendingWindowRef.current = pendingWindow;
+    try {
+      if (pendingWindow) pendingWindow.opener = null;
+    } catch {
+      // The opener relationship is advisory; the release validation is authoritative.
+    }
+    try {
+      const released: BootstrapTwoStopWalkResponse = await cityNexusApi.navigateBootstrapTwoStopWalk(journeyId, {
+        first_shortlist_id: first.shortlist_id,
+        second_shortlist_id: second.shortlist_id,
+        public_map_consent: true,
+      });
+      if (!isCurrentDiscovery(fence)) {
+        try { pendingWindow?.close(); } catch { /* browser reclaimed it */ }
+        return;
+      }
+      if (
+        released.authorization_basis !== "TWO_SAVED_PUBLIC_IDENTITIES" ||
+        released.navigation_mode !== "PUBLIC_POI_TO_PUBLIC_POI_WALKING" ||
+        released.first_stop.shortlist_id !== first.shortlist_id ||
+        released.second_stop.shortlist_id !== second.shortlist_id
+      ) {
+        throw new Error("The two-stop release did not match the chosen public stop order.");
+      }
+      const publicMapUrl = validatedPublicTwoStopWalkingUrl(released.navigation_url, first, second);
+      if (!publicMapUrl) {
+        throw new Error("The authorized two-stop walking URL did not match both saved public coordinates.");
+      }
+      if (pendingWindow && !pendingWindow.closed) {
+        try {
+          pendingWindow.location.replace(publicMapUrl);
+        } catch {
+          setTwoStopFallbackUrl(publicMapUrl);
+        }
+      } else {
+        setTwoStopFallbackUrl(publicMapUrl);
+      }
+      setTwoStopNotice("Public-to-public walking directions opened. Route time, opening, price, arrival, and feasibility remain UNKNOWN; this draft Journey was not started.");
+      setTwoStopConsent(false);
+    } catch (error) {
+      try { pendingWindow?.close(); } catch { /* browser reclaimed it */ }
+      if (isCurrentDiscovery(fence)) {
+        setTwoStopNotice(null);
+        setTwoStopFallbackUrl(null);
+        setMessage(error instanceof Error ? error.message : "The two-stop walking release was cancelled.");
+      }
+    } finally {
+      if (pendingWindowRef.current === pendingWindow) pendingWindowRef.current = null;
+      if (isCurrentDiscovery(fence)) setTwoStopBusy(false);
+    }
+  };
+
   const beginMapPreview = (candidate: BootstrapDiscoveryCandidate) => {
     if (!result?.receipt_id) {
       setMessage("Search again before opening a public map preview.");
@@ -974,6 +1134,9 @@ export function BootstrapDiscoveryPanel({
     sourceKind === "MANUAL_PUBLIC_CENTER" && parsedLatitude !== null && parsedLongitude !== null
       ? `https://www.openstreetmap.org/?mlat=${encodeURIComponent(parsedLatitude)}&mlon=${encodeURIComponent(parsedLongitude)}#map=16/${encodeURIComponent(parsedLatitude)}/${encodeURIComponent(parsedLongitude)}`
       : null;
+  const orderedTwoStopItems = twoStopOrder
+    .map((shortlistId) => shortlist.find((item) => item.shortlist_id === shortlistId) ?? null)
+    .filter((item): item is BootstrapShortlistItem => item !== null);
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -1466,6 +1629,22 @@ export function BootstrapDiscoveryPanel({
               <div className="v8-actions">
                 <button
                   type="button"
+                  data-testid={`bootstrap-two-stop-first-${item.shortlist_id}`}
+                  disabled={twoStopBusy || shortlistBusy !== null}
+                  onClick={() => setTwoStopPosition(item.shortlist_id, 1)}
+                >
+                  Set as stop 1
+                </button>
+                <button
+                  type="button"
+                  data-testid={`bootstrap-two-stop-second-${item.shortlist_id}`}
+                  disabled={twoStopBusy || shortlistBusy !== null}
+                  onClick={() => setTwoStopPosition(item.shortlist_id, 2)}
+                >
+                  Set as stop 2
+                </button>
+                <button
+                  type="button"
                   data-testid={`bootstrap-shortlist-map-${item.shortlist_id}`}
                   disabled={mapBusy || shortlistBusy !== null}
                   onClick={() => beginShortlistMapPreview(item)}
@@ -1489,6 +1668,14 @@ export function BootstrapDiscoveryPanel({
                   {shortlistBusy === item.shortlist_id ? "Removing…" : "Remove"}
                 </button>
               </div>
+              {twoStopOrder.includes(item.shortlist_id) ? (
+                <p data-testid={`bootstrap-two-stop-selected-${item.shortlist_id}`}>
+                  Selected as stop {twoStopOrder.indexOf(item.shortlist_id) + 1}.{" "}
+                  <button type="button" onClick={() => clearTwoStopPosition(item.shortlist_id)} disabled={twoStopBusy}>
+                    Remove from two-stop order
+                  </button>
+                </p>
+              ) : null}
               {pendingMapPreview?.shortlistId === item.shortlist_id && pendingMapPreview.kind === "shortlist" ? (
                 <div
                   className="journey-membership-map-consent"
@@ -1538,6 +1725,83 @@ export function BootstrapDiscoveryPanel({
               ) : null}
             </article>
           ))}
+          <section data-testid="bootstrap-two-stop-walk" aria-labelledby="bootstrap-two-stop-title">
+            <h3 id="bootstrap-two-stop-title">Build a two-stop city walk</h3>
+            <p>
+              Choose and order exactly two saved public places. Stop 1 is the destination for the first leg;
+              the separate release below shares only the two public POI coordinates for a walking map.
+              No foreground location, arrival, route ETA, booking, or Journey start is inferred.
+            </p>
+            <ol data-testid="bootstrap-two-stop-order">
+              {orderedTwoStopItems.length ? orderedTwoStopItems.map((item, index) => (
+                <li key={item.shortlist_id}>{index + 1}. {item.name}</li>
+              )) : <li>Choose stop 1 and stop 2 from the saved places above.</li>}
+            </ol>
+            <p data-testid="bootstrap-two-stop-state">
+              {orderedTwoStopItems.length === 2
+                ? "Two distinct public stops are ready for your explicit walking release."
+                : `Choose ${2 - orderedTwoStopItems.length} more saved public place${2 - orderedTwoStopItems.length === 1 ? "" : "s"}.`}
+            </p>
+            <button
+              type="button"
+              data-testid="bootstrap-two-stop-open"
+              disabled={twoStopBusy || orderedTwoStopItems.length !== 2}
+              onClick={() => {
+                setTwoStopConsent(false);
+                setTwoStopFallbackUrl(null);
+                setTwoStopNotice(null);
+              }}
+            >
+              Prepare public-to-public walking leg
+            </button>
+            {orderedTwoStopItems.length === 2 ? (
+              <div className="journey-membership-map-consent" data-testid="bootstrap-two-stop-consent">
+                <p>
+                  Fresh one-time consent: send only public stop 1 and public stop 2 to the external walking map.
+                  Your current location, foreground GPS, member identity, receipt, query center, and private intent stay withheld.
+                </p>
+                <label>
+                  <input
+                    type="checkbox"
+                    data-testid="bootstrap-two-stop-consent-checkbox"
+                    checked={twoStopConsent}
+                    onChange={(event) => setTwoStopConsent(event.target.checked)}
+                  />
+                  I agree to share these two public stop coordinates now.
+                </label>
+                <div className="v8-actions">
+                  <button
+                    type="button"
+                    data-testid="bootstrap-two-stop-confirm"
+                    disabled={!twoStopConsent || twoStopBusy}
+                    onClick={() => void confirmTwoStopWalk()}
+                  >
+                    {twoStopBusy ? "Opening…" : "Open walking leg to stop 2"}
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="bootstrap-two-stop-cancel"
+                    disabled={twoStopBusy}
+                    onClick={() => {
+                      setTwoStopConsent(false);
+                      setTwoStopNotice(null);
+                      setTwoStopFallbackUrl(null);
+                    }}
+                  >
+                    Cancel release
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {twoStopNotice ? <p role="status" data-testid="bootstrap-two-stop-notice">{twoStopNotice}</p> : null}
+            {twoStopFallbackUrl ? (
+              <p>
+                <a href={twoStopFallbackUrl} target="_blank" rel="noopener noreferrer" data-testid="bootstrap-two-stop-fallback">
+                  Open authorized two-stop walking leg
+                </a>
+              </p>
+            ) : null}
+          </section>
         </section>
       </section>
     </main>

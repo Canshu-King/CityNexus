@@ -265,6 +265,7 @@ from app.execution.bootstrap_discovery import (
     remember_bootstrap_shortlist_item,
     remove_bootstrap_shortlist_item,
     preview_bootstrap_shortlist_item,
+    preview_bootstrap_two_stop_walk,
     preview_bootstrap_candidate,
     save_bootstrap_shortlist_item,
     select_bootstrap_candidate,
@@ -487,6 +488,7 @@ from app.schemas import (
     BootstrapShortlistSaveRequest,
     BootstrapShortlistPreviewRequest,
     BootstrapShortlistNavigationRequest,
+    BootstrapTwoStopWalkRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3707,6 +3709,38 @@ def navigate_bootstrap_shortlist(
             shortlist_id=shortlist_id,
             public_map_consent=payload.public_map_consent,
             release_purpose="WALKING",
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/two-stop-walk")
+def navigate_bootstrap_two_stop_walk(
+    journey_id: UUID,
+    payload: BootstrapTwoStopWalkRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Release one signed public-POI-to-public-POI walking leg."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = preview_bootstrap_two_stop_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            first_shortlist_id=payload.first_shortlist_id,
+            second_shortlist_id=payload.second_shortlist_id,
+            public_map_consent=payload.public_map_consent,
         )
         session.commit()
         return result

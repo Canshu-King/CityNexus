@@ -1864,6 +1864,54 @@ export interface BootstrapShortlistPreviewResponse {
   selected_place_id: string | null;
 }
 
+export interface BootstrapTwoStopWalkResponse {
+  preview_id: string;
+  status: "PUBLIC_TWO_STOP_WALK_READY";
+  journey_id: string;
+  authorization_basis: "TWO_SAVED_PUBLIC_IDENTITIES";
+  release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+  navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+  navigation_url: string;
+  first_stop: {
+    position: 1;
+    shortlist_id: string;
+    name: string;
+    category: string;
+    external_id: string;
+    source_url: string;
+    source_provenance: string;
+    latitude: number;
+    longitude: number;
+    coordinate_system: "WGS84";
+    opening_state: string;
+    price_state: "UNKNOWN";
+    route_eta_state: "UNKNOWN";
+    captured_at: string;
+  };
+  second_stop: {
+    position: 2;
+    shortlist_id: string;
+    name: string;
+    category: string;
+    external_id: string;
+    source_url: string;
+    source_provenance: string;
+    latitude: number;
+    longitude: number;
+    coordinate_system: "WGS84";
+    opening_state: string;
+    price_state: "UNKNOWN";
+    route_eta_state: "UNKNOWN";
+    captured_at: string;
+  };
+  route_time_state: "UNKNOWN";
+  explore_state: "DRAFT_EXPLORE_ONLY";
+  shared_fields: string[];
+  withheld_fields: string[];
+  plan_version_id: null;
+  selected_place_id: null;
+}
+
 export interface AgentRunStep {
   id?: string;
   sequence_no: number;
@@ -2870,6 +2918,24 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify({ public_map_consent: true }),
+      },
+    );
+  },
+
+  navigateBootstrapTwoStopWalk(
+    journeyId: string,
+    input: {
+      first_shortlist_id: string;
+      second_shortlist_id: string;
+      public_map_consent: boolean;
+    },
+  ): Promise<BootstrapTwoStopWalkResponse> {
+    return requestJson<BootstrapTwoStopWalkResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/two-stop-walk",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
       },
     );
   },
