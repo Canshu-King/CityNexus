@@ -1,0 +1,44 @@
+ORD-0557 lane kuaidao (快刀工) batch 3 -- PlanComparison stat labels, three rows -- 2026-10-10 17:06 (local clock read with `date +%H%M`)
+scope: frontend/src/features/planning/PlanComparison.tsx rows :199 :213 :218
+
+1 TIP AND BRANCHES (each sha read with the command printed next to it)
+  tip read: `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+    -> ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a, both branches cut from that generation, worktree clean first
+  re-read when the gates finished: the same command returned the same sha, so no merge-up was needed and the
+  gate numbers below were taken on the very generation that would land
+  dict branch    refs/heads/review/快刀工-0557-dict-r3   code tip 0148013389f2f96c64875956ec2c407853ed5b04
+    one file only, frontend/src/i18n/LocaleContext.tsx, `git diff --numstat` 6 insertions 0 deletions
+    new arms en :43 :44 :45 / zh :1394 :1395 :1396, appended after the planning family this lane landed earlier
+  product branch refs/heads/review/快刀工-0557-r3        code tip 898b124728..., merge tip 355fe0ad46...
+    whose second parent is the dict code tip, so the dictionary half is an ancestor of the product half
+
+2 GATES (cwd D:\moodle\_qoder_kuaidao_0557\frontend, node_modules junction to the sibling tree's store)
+  `node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit`  -> rc 0, zero bytes
+  `node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit` (whole src) -> rc 0, zero bytes
+  `node node_modules/vite/bin/vite.js build --outDir D:/moodle/_qoder_kuaidao_0557c_dist --emptyOutDir` -> rc 0
+
+3 VERBATIM WORD CONTROL (before line on ee8b9c6b vs the two dictionary arms on this branch)
+  driver: python D:/moodle/_qoder_kuaidao_0557_gate/verbatim_pc_r2.py ee8b9c6b HEAD 199=planning.totalCost
+  213=planning.stops 218=planning.walking -> rc 0, VERDICT ALL_GREEN
+  row :199 planning.totalCost  en arm 43 identical=True  zh arm 1394 identical=True
+  row :213 planning.stops      en arm 44 identical=True  zh arm 1395 identical=True
+  row :218 planning.walking    en arm 45 identical=True  zh arm 1396 identical=True
+  negative control: an en arm padded with one more dot reports identical=False -- the control can say red
+  rows still inline on this branch: :234 (亮点： / "Highlights: " with the trailing space) -- one row, next batch
+
+4 WHY THIS BATCH USES planning.stops AND NOT the big-draft's planning.stopCount (the two drafts disagree)
+  missing-key table row for :216 says planning.stops -- CITYNEXUS_AGENT_CONTROL.md:7784
+  fallback-line draft row for :216 says planning.stops  -- _cn10_fb557draft_1155.txt:72
+  inline-bilingual big draft row for :216 says planning.stopCount -- _cn10_bldraft_1155.txt:180
+  two sources against one, and the earlier unlanded candidate review/比价工-0555-r1 also wrote planning.stops,
+  so this lane took the majority name. Rows :202 and :221 are named identically by every source.
+
+5 PREVIOUS BATCH IS ON THE LINE (measured on ee8b9c6b, not remembered)
+  dictionary arms: en :40 :41 :42 and zh :1388 :1389 :1390 for planning.planCannotBeChosen,
+  planning.couldNotReachServer, planning.chooseYourPlan
+  the file went from four inline ternaries to one: `git show ee8b9c6b...:PlanComparison.tsx | grep -n 'zh ? "'`
+  listed :199 :213 :218 :234 before this batch
+  note for the commander: the missing-key table still names :108 and :115 as
+  planning.thisPlanCouldNotBeChosen / planning.couldNotReachTheServerTryAgain
+  (CITYNEXUS_AGENT_CONTROL.md:7780 and CITYNEXUS_AGENT_CONTROL.md:7781). Those two names are absent from the
+  dictionary on the line (grep -c -> 0 each) because the landed generation carries the big-draft names.
