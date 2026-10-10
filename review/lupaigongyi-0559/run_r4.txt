@@ -1,0 +1,46 @@
+..................................F....                                  [100%]
+================================== FAILURES ===================================
+__ test_accept_reorder_lands_a_successor_plan_and_moves_the_journey_pointer ___
+
+    def test_accept_reorder_lands_a_successor_plan_and_moves_the_journey_pointer():
+        studio = _studio("accept")
+        journey_id = studio["journey_id"]
+        preview = client.post(PREVIEW_PATH.format(j=journey_id),
+                              json={"activity_ids": studio["swapped"]}).json()
+        assert preview["can_accept"] is True
+        answer = client.post(ACCEPT_PATH.format(j=journey_id),
+                             json={"activity_ids": studio["swapped"],
+                                   "preview_id": preview["preview_id"]})
+        assert answer.status_code == 201, answer.text
+        body = answer.json()
+        assert set(body) == {"plan", "preview_id", "impact", "deterministic_gate", "frozen_evidence_id"}
+        assert body["preview_id"] == preview["preview_id"]
+        assert body["impact"]["changed"] is True
+        assert body["deterministic_gate"]["status"] == "PASSED"
+        assert body["frozen_evidence_id"]
+        plan = body["plan"]
+        assert {"id", "status", "version_no", "activities", "journey_id"} <= set(plan)
+        assert plan["id"] != studio["base_plan_id"]
+        assert plan["status"] == "SELECTED"
+        assert plan["version_no"] == studio["version_no"] + 1
+>       assert [item["id"] for item in plan["activities"]] == studio["swapped"]
+E       AssertionError: assert ['ee68a3cf-00...8dffaaf', ...] == ['4727304f-b3...9e8853d', ...]
+E         
+E         At index 0 diff: 'ee68a3cf-0089-4a12-a544-92ccc3b120dc' != '4727304f-b3f2-4361-8d5b-fe0d67a3f1c4'
+E         Use -v to get more diff
+
+tests\test_route_gap_lupaigongyi_0559_r1.py:762: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_route_gap_lupaigongyi_0559_r1.py::test_accept_reorder_lands_a_successor_plan_and_moves_the_journey_pointer
+1 failed, 38 passed, 2 warnings in 12.36s
+PYTEST_RC=1
