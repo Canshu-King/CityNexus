@@ -1,0 +1,277 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.shuangshugong-0558.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_shuangshugong_0558\\frontend\\playwright.shuangshugong-0558.config.ts",
+    "rootDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/test-results/qoder-shuangshugong-0558",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_shuangshugong_0558/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-shuangshugong-0558-live-dedup-plural-r1\\.spec\\.ts$/"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\moodle\\_qoder_shuangshugong_0558\\review\\shuangshugong\\ord0558_readouts\\run_this_lane\\playwright_r1.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 5188",
+      "cwd": ".",
+      "url": "http://127.0.0.1:5188",
+      "reuseExistingServer": false,
+      "timeout": 180000,
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "env": {
+        "CITYNEXUS_BACKEND_PORT": "4199"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+      "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "ORD-0558 LiveRecovery merged-suggestions line, both count states",
+          "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+          "line": 310,
+          "column": 6,
+          "specs": [
+            {
+              "title": "S0probe: the counted noun on the English arm reaches the ruler, and the arms are adjacent",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:50:57.371Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-bc873d7892fb3edc0344",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 311,
+              "column": 3
+            },
+            {
+              "title": "E1en_one",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2041,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:50:57.397Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-66c524477323f64e7a6d",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            },
+            {
+              "title": "E2en_two",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 880,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:50:59.530Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-869cb5a9d7e984650190",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            },
+            {
+              "title": "Z1zh_one",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 970,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:00.417Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-2db6ed189b344c3a13be",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            },
+            {
+              "title": "Z2zh_two",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 958,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-09T17:51:01.395Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "eeec9a6e91d32e83aa2d-c75a82d2cf677e681ade",
+              "file": "qoder-shuangshugong-0558-live-dedup-plural-r1.spec.ts",
+              "line": 325,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-09T17:50:56.151Z",
+    "duration": 7173.247,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

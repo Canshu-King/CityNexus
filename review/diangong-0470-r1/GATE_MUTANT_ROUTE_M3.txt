@@ -1,0 +1,4 @@
+M3 mutant = the same door's destination changed from import to discover, run_id=dg0470m3
+  10 failed
+  1 passed (6.4m)
+10

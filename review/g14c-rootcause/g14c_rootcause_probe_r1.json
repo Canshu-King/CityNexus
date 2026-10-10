@@ -1,0 +1,86 @@
+{
+ "arm_keys": [
+  "status",
+  "error_type",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ],
+ "arm_keys_from_source": [
+  "status",
+  "error_type",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ],
+ "arm_key_loop_line": "for key in (\"status\", \"error_type\", \"supported_modes\", \"route_provenance\", \"time_basis\"):",
+ "product_sites_per_key": {
+  "status": [
+   "app\\agent\\approval.py",
+   "app\\agent\\autorun.py",
+   "app\\agent\\gateway.py",
+   "app\\agent\\guardian.py",
+   "app\\agent\\mission.py",
+   "app\\agent\\mission_plan.py",
+   "app\\agent\\predictive.py",
+   "app\\agent\\runtime.py",
+   "app\\agent\\runtime_events.py",
+   "app\\anywhere_capability.py",
+   "app\\capabilities.py",
+   "app\\catalog_hydration_operations.py",
+   "app\\commerce\\service_impl.py",
+   "app\\commerce\\service_reference.py",
+   "app\\db\\session.py",
+   "app\\integrations\\ai\\copilot_contract.py",
+   "app\\integrations\\ai\\responses.py",
+   "app\\integrations\\china\\amap.py",
+   "app\\integrations\\context\\weather_ingestion.py",
+   "app\\integrations\\discovery\\orchestration.py",
+   "app\\integrations\\discovery\\real_city.py",
+   "app\\integrations\\hermes\\native_client.py",
+   "app\\integrations\\inbox\\ics_parser.py",
+   "app\\integrations\\inbox\\semantic_intake.py",
+   "app\\integrations\\mobility\\runtime.py",
+   "app\\integrations\\mobility\\valhalla_http.py",
+   "app\\integrations\\mock\\commerce_providers.py",
+   "app\\intelligence\\impact_resolver.py",
+   "app\\main.py",
+   "app\\observability\\tracing.py",
+   "app\\operations\\v9.py",
+   "app\\planning\\anchor_schedule.py",
+   "app\\planning\\authoritative_v12.py",
+   "app\\replanning\\feasibility.py",
+   "app\\replanning\\mock_replan_engine.py",
+   "app\\replanning\\protected_commitments.py",
+   "app\\stay_generation_operations.py",
+   "app\\stay_mobility.py"
+  ],
+  "error_type": [
+   "app\\integrations\\mobility\\runtime.py"
+  ],
+  "supported_modes": [
+   "app\\integrations\\mobility\\runtime.py"
+  ],
+  "route_provenance": [
+   "app\\integrations\\mobility\\runtime.py",
+   "app\\main.py",
+   "app\\planning\\authoritative_v12.py",
+   "app\\replanning\\provider_snapshots.py"
+  ],
+  "time_basis": [
+   "app\\integrations\\mobility\\runtime.py",
+   "app\\integrations\\mobility\\snapshot_capture.py",
+   "app\\main.py",
+   "app\\planning\\authoritative_v12.py",
+   "app\\replanning\\provider_snapshots.py"
+  ]
+ },
+ "absent_keys": [],
+ "present_keys": [
+  "status",
+  "error_type",
+  "supported_modes",
+  "route_provenance",
+  "time_basis"
+ ]
+}

@@ -1,0 +1,10 @@
+shape sweep re-run against the line's own generation, generated at 2026-10-09 19:00
+checked-out head: 0b3c98c1b2aab15613485093d93212a319d7f846 (detached), run_id=dg0470line1
+authoritative mode: front=:4670 back=:4671 db=sqlite:///./_dg0470line1.db ai=disabled reuseExistingServer=False workers=1 retries=0
+playwright summary lines from this run:
+Running 38 tests using 1 worker
+38 passed (1.0m)
+arms: this lane's shape sweep 30 + the previous ORD-0470 walkthrough 7 + real-seed 1 = 38
+layers: phone shapes take the >=44px touch floor, wide shapes take the 30px compact fine-pointer
+  floor stated by Amendment F-2; drawer row reads 44 px on the phone shapes after the landed rule
+  (it read 41 px before it), the hub door reads 31 px above the 680px breakpoint against 30 px.

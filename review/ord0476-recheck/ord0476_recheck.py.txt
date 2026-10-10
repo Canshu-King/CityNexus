@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*-
+"""更正上一格：ORD-0476 那枚到底落没落（上一格我查错了文件，判成"部分落"）。
+
+上一格的口径错在：只查了 FootprintPanel.tsx，而打卡那几枚标记（stop-checkin-notice /
+cn-stop-checkin / stampThisStop / stopNotice）在 TipItinerary.tsx 里。于是把已落的载荷
+报成了部分落——**一个查错文件造出来的假红**。
+
+这一枚按"逐标记 × 逐文件 × 枝↔尖"重查，判据是同一枚标记在枝上与尖上各出现几次。
+只读 git；不推枝、不改枝、不动产品字节。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+BRANCH = "ord0476-footprint-screen-r1"
+# ORD-0476 这一族自己的载荷指纹（上一格定的，这一枚逐个现查）
+MARKERS = ["stop-checkin-notice", "cn-stop-checkin", "stampThisStop", "stopNotice",
+           "stop-checkin", "FootprintPanel", "activity.stamp"]
+BAD: list[str] = []
+
+
+def g(*a, t=900):
+    p = subprocess.run(["git", *a], cwd=WT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return (p.stdout or "").strip()
+
+
+def run(cmd, t=900):
+    p = subprocess.run(cmd, cwd=WT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return p.returncode, (p.stdout or ""), (p.stderr or "")
+
+
+run(["git", "fetch", "-q", "origin", "+refs/heads/review/1ba48dbf-*:refs/remotes/origin/review/1ba48dbf-*"])
+run(["git", "fetch", "-q", "origin", MIRROR])
+tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+ref = "origin/review/1ba48dbf-" + BRANCH
+if len(g("rev-parse", "--verify", "-q", ref)) != 40:
+    print("REFUSED: 枝取不到 " + ref)
+    sys.exit(1)
+
+SCAN = ("frontend/src", "backend/app")
+
+
+def files_at(rev):
+    return [x for x in g("ls-tree", "-r", "--name-only", rev, "--", *SCAN).splitlines() if x.strip()]
+
+
+def blob(rev, path):
+    b = g("rev-parse", "--verify", "-q", "%s:%s" % (rev, path))
+    if len(b) != 40:
+        return None
+    return run(["git", "cat-file", "blob", b], 600)[1]
+
+
+rows = []
+for m in MARKERS:
+    where, n_branch, n_tip = [], 0, 0
+    for f in files_at(ref):
+        body = blob(ref, f)
+        if body and m in body:
+            n_branch += body.count(m)
+            where.append(f)
+    for f in files_at(tip):
+        body = blob(tip, f)
+        if body and m in body:
+            n_tip += body.count(m)
+    rows.append({"marker": m, "branch_hits": n_branch, "tip_hits": n_tip,
+                 "on_tip": n_tip > 0, "branch_files": where[:3]})
+
+missing = [r["marker"] for r in rows if not r["on_tip"]]
+for r in rows:
+    print("  {m:<22} 枝 {b:>3} 处 / 尖 {t:>3} 处 ⇒ {v}".format(
+        m=r["marker"], b=r["branch_hits"], t=r["tip_hits"],
+        v="在尖上" if r["on_tip"] else "尖上没有"))
+print("现尖=%s  枝=%s" % (tip, BRANCH))
+print("尖上没有的标记：%s" % (missing or "零枚"))
+out = {"tip": tip, "branch": BRANCH, "rows": rows, "missing_on_tip": missing,
+       "verdict": "已落" if not missing else "部分落"}
+p = os.path.join(ART, "ord0476_recheck_%s.json" % time.strftime("%H%M"))
+io.open(p, "w", encoding="utf-8", newline="\n").write(json.dumps(out, ensure_ascii=False, indent=1) + "\n")
+print("ARTIFACT " + p)
+print("判语：" + out["verdict"])
+if missing:
+    print("NOTE: 仍有标记不在尖上，这一枚是真部分落")

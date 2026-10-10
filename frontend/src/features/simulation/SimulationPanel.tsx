@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "../../i18n/LocaleContext";
+import { categoryLabel } from "../../i18n/travelerLabels";
 import { cityNexusApi } from "../../api/citynexus";
 import { formatMinorMoney } from "../../lib/money";
 import { useAuthoritativeTwin } from "../../api/v12Authoritative";
@@ -101,7 +102,7 @@ export function SimulationPanel({
       own trap. */
   onClose?: (() => void) | null;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const client = useQueryClient();
   const scene = useDemoScene();
@@ -218,7 +219,7 @@ export function SimulationPanel({
              is now the normal state after 重置/准备舞台.  Saying "没有可推进的一步" alone sends the
              teacher looking for a broken button; the step exists and has a name. */
           {
-            zh: `这趟还没有开始执行（服务器说行程状态是 ${scene.scene?.journeyStatus ?? "未知"}）。先按上面「开始执行」，才会有可推进的游标。`,
+            zh: `这趟还没有开始执行（服务器说行程状态是 ${scene.scene?.journeyStatus ?? categoryLabel("UNKNOWN", zh)}）。先按上面「开始执行」，才会有可推进的游标。`,
             en: `This journey is not executing yet (the server says ${scene.scene?.journeyStatus ?? "unknown"}). Press "Put the journey into execution" above; that is what gives a step to advance.`,
           }
         : {
@@ -382,8 +383,8 @@ export function SimulationPanel({
             en: `The server says none of this journey's ${openActivities.length} open activities carries an orderable service type in this city's catalogue, so there is nothing to build a hard commitment on. To change the journey, use "Request a replan" below.`,
           }
         : {
-            zh: `服务器说这趟有 ${bookableRead.data.withOrderableService} 个活动带着可下单的服务类型，但逐个按它自己的时间问时段时，一个都没给${bookableRead.data.unreadable ? `（另有 ${bookableRead.data.unreadable} 次没读到，那不是"没有时段"）` : ""}，所以现在建不了硬承诺。`,
-            en: `The server says ${bookableRead.data.withOrderableService} of this journey's activities carry an orderable service type, but asked for each one's own window it returned no slot at all${bookableRead.data.unreadable ? ` (${bookableRead.data.unreadable} reads did not answer, which is not the same as "no slot")` : ""}, so there is nothing to book right now.`,
+            zh: `服务器说这趟有 ${bookableRead.data.withOrderableService} 个活动带着可下单的服务类型，但逐个按它自己的时间问时段时，一个都没给${bookableRead.data.unreadable ? t("simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot", { n: bookableRead.data.unreadable }) : ""}，所以现在建不了硬承诺。`,
+            en: `The server says ${bookableRead.data.withOrderableService} of this journey's activities carry an orderable service type, but asked for each one's own window it returned no slot at all${bookableRead.data.unreadable ? t("simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot", { n: bookableRead.data.unreadable }) : ""}, so there is nothing to book right now.`,
           }
       : null;
 
@@ -437,12 +438,12 @@ export function SimulationPanel({
         }
         if (refused) {
           return {
-            zh: `服务器重新播了场景（行程 ${shortId(result.journey_id)}），但推进到可执行状态被挡在「${refused.step}」（${refused.refused}）：这趟现在的状态是 ${advance.journeyStatus ?? "未知"}。`,
+            zh: `服务器重新播了场景（行程 ${shortId(result.journey_id)}），但推进到可执行状态被挡在「${refused.step}」（${refused.refused}）：这趟现在的状态是 ${advance.journeyStatus ?? categoryLabel("UNKNOWN", zh)}。`,
             en: `The server re-seeded (journey ${shortId(result.journey_id)}) but the advance was refused at "${refused.step}" (${refused.refused}): the trip is now ${advance.journeyStatus ?? "unknown"}.`,
           };
         }
         return {
-          zh: `服务器重新播了场景并走完真实流水线：行程 ${shortId(result.journey_id)} · 状态 ${advance.journeyStatus ?? "未知"} · 计划 ${shortId(advance.selectedPlanVersionId)} · 用时 ${advance.totalMs ?? 0}ms。`,
+          zh: `服务器重新播了场景并走完真实流水线：行程 ${shortId(result.journey_id)} · 状态 ${advance.journeyStatus ?? categoryLabel("UNKNOWN", zh)} · 计划 ${shortId(advance.selectedPlanVersionId)} · 用时 ${advance.totalMs ?? 0}ms。`,
           en: `The server re-seeded and ran the real pipeline: journey ${shortId(result.journey_id)} · status ${advance.journeyStatus ?? "unknown"} · plan ${shortId(advance.selectedPlanVersionId)} · ${advance.totalMs ?? 0}ms.`,
         };
       },
@@ -467,8 +468,8 @@ export function SimulationPanel({
         return {
           refused,
           zh: refused
-            ? `服务器拒绝了这一步（具名 ${report.code}），行程状态仍是 ${report.journeyStatus ?? "未知"}。`
-            : `服务器已把计划放上舞台：状态 ${report.journeyStatus ?? "未知"} · 计划 ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}。`,
+            ? `服务器拒绝了这一步（具名 ${report.code}），行程状态仍是 ${report.journeyStatus ?? categoryLabel("UNKNOWN", zh)}。`
+            : `服务器已把计划放上舞台：状态 ${report.journeyStatus ?? categoryLabel("UNKNOWN", zh)} · 计划 ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}。`,
           en: refused
             ? `The server refused this step (code ${report.code}); the journey is still ${report.journeyStatus ?? "unknown"}.`
             : `The server put a plan on the stage: status ${report.journeyStatus ?? "unknown"} · plan ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}.`,
@@ -538,8 +539,8 @@ export function SimulationPanel({
         return {
           refused,
           zh: refused
-            ? `服务器拒绝了这一步（具名 ${report.code}），行程状态仍是 ${report.journeyStatus ?? "未知"}。`
-            : `服务器说这趟开始执行了：状态 ${report.journeyStatus ?? "未知"} · 用时 ${report.advance?.totalMs ?? 0}ms。游标在哪一站，由它下面那行说。`,
+            ? `服务器拒绝了这一步（具名 ${report.code}），行程状态仍是 ${report.journeyStatus ?? categoryLabel("UNKNOWN", zh)}。`
+            : `服务器说这趟开始执行了：状态 ${report.journeyStatus ?? categoryLabel("UNKNOWN", zh)} · 用时 ${report.advance?.totalMs ?? 0}ms。游标在哪一站，由它下面那行说。`,
           en: refused
             ? `The server refused this step (code ${report.code}); the journey is still ${report.journeyStatus ?? "unknown"}.`
             : `The server put the journey into execution: status ${report.journeyStatus ?? "unknown"} · ${report.advance?.totalMs ?? 0}ms. Where the cursor sits is its line to say, not mine.`,
@@ -624,11 +625,11 @@ export function SimulationPanel({
         );
         return {
           zh: open.length
-            ? `服务器回了 ${listed.length} 份方案，其中 ${open.length} 份还开着；下面「接受方案」那一行现在拿的是 ${shortId(open[0].id)}。接受才会换计划。`
-            : `服务器回了方案，但它现在列出的 ${listed.length} 份里没有还开着的那一份，所以「接受方案」这一行会说不给按——理由在它自己那行。`,
+            ? t("simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan", { listed: listed.length, open: open.length, id: shortId(open[0].id) })
+            : t("simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine", { listed: listed.length }),
           en: open.length
-            ? `The server answered with ${listed.length} proposals, ${open.length} still open; "Accept the proposal" below now points at ${shortId(open[0].id)}. Accepting is what changes the plan.`
-            : `The server produced proposals, but none of the ${listed.length} it now lists is open, so "Accept the proposal" will refuse and say why on its own line.`,
+            ? t("simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan", { listed: listed.length, open: open.length, id: shortId(open[0].id) })
+            : t("simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine", { listed: listed.length }),
         };
       },
     },
@@ -698,8 +699,8 @@ export function SimulationPanel({
           "OUTAGE",
         );
         return {
-          zh: `服务器把信号夹具设为 OUTAGE${fixture?.state ? `（现值 ${fixture.state}）` : ""}。这只影响这台演示舞台，不是真实世界变了。`,
-          en: `The server set the signal fixture to OUTAGE${fixture?.state ? ` (now ${fixture.state})` : ""}. This moves the stage only, not the real world.`,
+          zh: `服务器把信号夹具设为 OUTAGE${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}。这只影响这台演示舞台，不是真实世界变了。`,
+          en: `The server set the signal fixture to OUTAGE${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}. This moves the stage only, not the real world.`,
         };
       },
     },
@@ -714,8 +715,8 @@ export function SimulationPanel({
           "NORMAL",
         );
         return {
-          zh: `服务器把信号夹具设回 NORMAL${fixture?.state ? `（现值 ${fixture.state}）` : ""}。`,
-          en: `The server returned the fixture to NORMAL${fixture?.state ? ` (now ${fixture.state})` : ""}.`,
+          zh: `服务器把信号夹具设回 NORMAL${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}。`,
+          en: `The server returned the fixture to NORMAL${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}.`,
         };
       },
     },
@@ -731,11 +732,11 @@ export function SimulationPanel({
         transient: Boolean(row.blocked?.transient) || Boolean(running),
         sceneStamp: scene.updatedAt,
         zh: row.blocked
-          ? `这个动作现在做不了：${row.blocked.zh}`
-          : "上一个动作还没回来，先等它。",
+          ? t("simulation.thisActionIsUnavailableRightNow", { reason: row.blocked.zh })
+          : t("simulation.thePreviousActionHasNotReturnedYet"),
         en: row.blocked
-          ? `This action is unavailable right now: ${row.blocked.en}`
-          : "The previous action has not returned yet.",
+          ? t("simulation.thisActionIsUnavailableRightNow", { reason: row.blocked.en })
+          : t("simulation.thePreviousActionHasNotReturnedYet"),
       });
       return;
     }
@@ -779,7 +780,7 @@ export function SimulationPanel({
           data-testid="sim-close"
           onClick={onClose}
         >
-          {zh ? "收起舞台" : "Close the stage"}
+          {t("simulation.closeStage")}
         </button>
       )}
       <p
@@ -795,7 +796,7 @@ export function SimulationPanel({
             : "Reading the stage state from the server…")}
         {scene.phase === "unavailable" &&
           (zh
-            ? `场景状态没读到：${scene.reason ?? "未知"}。`
+            ? `场景状态没读到：${scene.reason ?? categoryLabel("UNKNOWN", zh)}。`
             : `The stage state could not be read: ${scene.reason ?? "unknown"}.`)}
         {scene.phase === "ready" &&
           scene.scene?.demoMode &&
@@ -821,17 +822,17 @@ export function SimulationPanel({
           data-testid="sim-retry"
           onClick={scene.refresh}
         >
-          {zh ? "再读一次" : "Read it again"}
+          {t("shared.refresh")}
         </button>
       )}
 
       <dl className="cn-sim-facts" data-testid="sim-scene-facts">
         <div>
-          <dt>{zh ? "台上行程" : "On stage"}</dt>
+          <dt>{t("simulation.onStage")}</dt>
           <dd data-testid="sim-journey">{`${shortId(scene.scene?.journeyId ?? null)} · ${scene.scene?.journeyStatus ?? "—"}`}</dd>
         </div>
         <div>
-          <dt>{zh ? "场景窗口" : "Scene window"}</dt>
+          <dt>{t("simulation.sceneWindow")}</dt>
           <dd data-testid="sim-window">{`${sceneInstant(scene.scene?.sceneStartAt ?? null)} → ${sceneInstant(scene.scene?.sceneEndAt ?? null)}`}</dd>
         </div>
         <div>
@@ -1074,7 +1075,7 @@ export function SimulationEntry({
         : "Reading the stage state from the server…"
       : scene.phase === "unavailable"
         ? zh
-          ? `场景状态没读到：${scene.reason ?? "未知"}`
+          ? `场景状态没读到：${scene.reason ?? categoryLabel("UNKNOWN", zh)}`
           : `The stage state could not be read: ${scene.reason ?? "unknown"}`
         : scene.scene?.demoMode
           ? zh

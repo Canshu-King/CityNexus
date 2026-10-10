@@ -1,0 +1,58 @@
+......................F....                                              [100%]
+================================== FAILURES ===================================
+__ test_provider_mesh_discover_reports_the_sealed_replay_and_its_candidates ___
+
+    def test_provider_mesh_discover_reports_the_sealed_replay_and_its_candidates():
+        journey_id, _ = _journey("mesh-discover", "CN-TIANJIN")
+        answer = client.post(MESH_PATH.format(j=journey_id), json={})
+        assert answer.status_code == 200, answer.text
+        body = answer.json()
+        assert set(body) == {"journey_id", "city_code", "city_context", "mode", "captured_at",
+                            "expires_at", "provider_status", "provider_evidence", "provenance",
+                            "runtime_provenance", "candidates"}
+        assert body["journey_id"] == journey_id
+        assert body["city_code"] == "CN-TIANJIN"
+        assert body["city_context"] == "CN-TIANJIN"
+        assert body["mode"] == "captured_replay"
+        assert body["provenance"] == "SEALED_LIVE_CAPTURE"
+        assert body["runtime_provenance"] == "SEALED_REAL_REPLAY"
+        captured_at = datetime.fromisoformat(body["captured_at"])
+        expires_at = datetime.fromisoformat(body["expires_at"])
+        assert (expires_at - captured_at).total_seconds() == settings.real_city_cache_ttl_seconds
+        status = body["provider_status"]
+        assert status["nominatim"] == "REPLAY_NOT_CALLED"
+        assert status["overpass"] == "REPLAY_NOT_CALLED"
+        assert status["openstreetmap_replay"] == "SEALED_REAL_REPLAY"
+        assert set(status["anchor"]) == {"latitude", "longitude", "display_name", "provider"}
+        assert status["anchor"]["provider"] == "nominatim"
+        assert status["anchor"]["display_name"] == "天津市, 中国"
+        assert status["snapshot_anchor"] == status["anchor"]
+        assert body["provider_evidence"]["snapshot_schema"] == "citynexus.real-city.snapshot.v135"
+        assert body["candidates"], body
+        candidate = body["candidates"][0]
+>       assert set(candidate) == {"provider_key", "external_id", "name", "category", "latitude",
+                                 "longitude", "tags", "opening_hours", "metadata", "distance_m",
+                                 "cost_evidence"}
+E       AssertionError: assert {'category', ...d', 'id', ...} == {'category', ...ngitude', ...}
+E         
+E         Extra items in the left set:
+E         'materialized_place_id'
+E         'coordinate_system'
+E         'source_coordinate_system'
+E         'id'
+E         Use -v to get more diff
+
+tests\test_route_gap_lupaigongyi_0559_r1.py:508: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_route_gap_lupaigongyi_0559_r1.py::test_provider_mesh_discover_reports_the_sealed_replay_and_its_candidates
+1 failed, 26 passed, 2 warnings in 9.15s

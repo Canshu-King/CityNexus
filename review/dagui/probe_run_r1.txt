@@ -1,0 +1,23 @@
+$ D:\moodle\_qoder_dagui_0557\frontend\node_modules\.bin\esbuild.cmd __probe_tmp_r1.jsx --bundle --platform=node --format=cjs --outfile=D:\moodle\_qoder_dagui_0557\review\dagui\probe_bundle_r1.cjs --jsx=automatic
+rc=0
+
+  ..\review\dagui\probe_bundle_r1.cjs  1.5mb
+
+Done in 26ms
+
+$ node D:\moodle\_qoder_dagui_0557\review\dagui\probe_bundle_r1.cjs
+rc=0
+OK   locale=en key=simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot value=" (3 reads did not answer, which is not the same as \"no slot\")"
+OK   locale=en key=simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan value="The server answered with 5 proposals, 2 still open; \"Accept the proposal\" below now points at abcd1234. Accepting is what changes the plan."
+OK   locale=en key=simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine value="The server produced proposals, but none of the 5 it now lists is open, so \"Accept the proposal\" will refuse and say why on its own line."
+OK   locale=en key=simulation.now value=" (now OUTAGE)"
+OK   locale=en key=simulation.thisActionIsUnavailableRightNow value="This action is unavailable right now: REASON_TOKEN"
+OK   locale=en key=simulation.thePreviousActionHasNotReturnedYet value="The previous action has not returned yet."
+OK   locale=zh-CN key=simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot value="（另有 3 次没读到，那不是\"没有时段\"）"
+OK   locale=zh-CN key=simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan value="服务器回了 5 份方案，其中 2 份还开着；下面「接受方案」那一行现在拿的是 abcd1234。接受才会换计划。"
+OK   locale=zh-CN key=simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine value="服务器回了方案，但它现在列出的 5 份里没有还开着的那一份，所以「接受方案」这一行会说不给按——理由在它自己那行。"
+OK   locale=zh-CN key=simulation.now value="（现值 OUTAGE）"
+OK   locale=zh-CN key=simulation.thisActionIsUnavailableRightNow value="这个动作现在做不了：REASON_TOKEN"
+OK   locale=zh-CN key=simulation.thePreviousActionHasNotReturnedYet value="上一个动作还没回来，先等它。"
+probe_fail=0
+

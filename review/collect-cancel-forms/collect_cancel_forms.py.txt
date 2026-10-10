@@ -1,0 +1,108 @@
+# -*- coding: utf-8 -*-
+"""收藏那栋楼第三格：把"取消收藏"三种形制的代价各量一遍，交号令者点单。
+
+三种形制与它们各自的代价（全部现读 models.py / main.py 量，不是猜的）：
+- 硬删（直接删 collection_items 那行）：无 schema 改，一行代码；但撤了就没了，找不回。
+- 软删（加 deleted_at 列 + 一扇 undelete 门）：能找回，代价是要给 collection_items 加列
+  （现在这枚表只有 id/folder_id/place_id/note/added_at 五列，**没有 deleted_at**），
+  并且要照行程那半的形制配一扇 409 诚实的 undelete。
+- 移出队列（加一个位置列 / 状态列）：三列里最重，代价最大。
+
+对照的现成形制：行程那半已经有 `POST /journeys/{id}/undelete`（没删时回 409
+JOURNEY_NOT_DELETED）与 `GET /recycle-bin/journeys`——收藏那半要补，就是照这一副骨架。
+
+只读 git（cat-file 读列与门）；产品字节零改动。
+"""
+from __future__ import annotations
+
+import io
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+ART = r"D:\moodle\_qoder_anchor_rulers_20261002"
+WT = r"D:\moodle\_qoder_newlane_ord0444_20260929\wt2"
+MIRROR = "refs/heads/mirror/integration-frontend-apple-pass1"
+BAD: list[str] = []
+
+
+def g(*a, t=900):
+    p = subprocess.run(["git", *a], cwd=WT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=t)
+    return (p.stdout or "").strip()
+
+
+tip = g("ls-remote", "--refs", "origin", MIRROR).split("\t")[0]
+if len(tip) != 40:
+    print("REFUSED: 现尖没读到")
+    sys.exit(1)
+g("fetch", "-q", "origin", MIRROR)
+
+
+def blob(rev, path):
+    b = g("rev-parse", "--verify", "-q", "%s:%s" % (rev, path))
+    if len(b) != 40:
+        return None
+    return g("cat-file", "blob", b)
+
+
+models = blob(tip, "backend/app/db/models.py")
+main = blob(tip, "backend/app/main.py")
+if not models or not main:
+    print("REFUSED: 取不到 models/main")
+    sys.exit(1)
+
+
+def cols(name):
+    seg = models[models.index("class %s(" % name):]
+    seg = seg[:seg.index("class ", 10)] if "class " in seg[10:] else seg
+    return [l.split(":")[0].strip() for l in seg.splitlines() if ": Mapped" in l][:8]
+
+
+ci = cols("CollectionItem")
+cf = cols("CollectionFolder")
+# 行程那半的现成两扇门（精确按路径串，不在整文件里做 in）
+journey_doors = {
+    "undelete": '"api/v1/journeys/{journey_id}/undelete"'.replace("api/", "/api/") in main,
+    "recycle_bin": '"/api/v1/recycle-bin/journeys"' in main,
+}
+collection_doors = [m for m in re.findall(r'"/api/v1/collections[^"]*"', main)]
+collection_methods = re.findall(r'@app\.(get|post|put|patch|delete)\(\s*\n?\s*"(/api/v1/collections[^"]*)"', main)
+# journeys 表有 deleted_at 吗（对照）
+jm = models[models.index("class Journey("):]
+jm = jm[:jm.index("class ", 10)] if "class " in jm[10:] else jm
+journey_cols = [l.split(":")[0].strip() for l in jm.splitlines() if ": Mapped" in l]
+has_deleted_at = "deleted_at" in journey_cols
+
+opts = [
+    {"form": "硬删（直接删那一行）",
+     "schema_change": "无（collection_items 现列 " + "、".join(ci) + "，不需要动）",
+     "code_shape": "一扇 DELETE，删完就没了",
+     "recoverable": "撤了找不回——与行程那半的回收站形制不一致",
+     "cost": "最小"},
+    {"form": "软删（加 deleted_at 列 + 一扇 undelete）",
+     "schema_change": "要给 collection_items 加 deleted_at（现表五列没有这一列）",
+     "code_shape": "照行程那半：删时写 deleted_at、undelete 时清它、没删时回 409 诚实的名",
+     "recoverable": "找得回，与行程那半同一副骨架",
+     "cost": "中（要迁移加列 + 两扇门）"},
+    {"form": "移出队列（加位置/状态列）",
+     "schema_change": "要给 collection_items 加一个位置或状态列",
+     "code_shape": "收藏可排序、可重排，撤了是移位不是删",
+     "recoverable": "撤得回，但要维护顺序",
+     "cost": "最重（列 + 排序腿 + 两扇门）"},
+]
+out = {"tip": tip,
+       "collection_items_columns": ci, "collection_folders_columns": cf,
+       "journeys_has_deleted_at": has_deleted_at,
+       "journey_half_doors": journey_doors,
+       "collection_paths_in_main": sorted(set(collection_doors)),
+       "collection_methods": sorted(set("%s %s" % m for m in collection_methods)),
+       "options": opts}
+p = os.path.join(ART, "collect_cancel_forms_%s.json" % time.strftime("%H%M"))
+io.open(p, "w", encoding="utf-8", newline="\n").write(json.dumps(out, ensure_ascii=False, indent=1) + "\n")
+print(json.dumps(out, ensure_ascii=False, indent=1))
+print("ARTIFACT", p)

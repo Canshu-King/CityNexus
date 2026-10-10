@@ -1,0 +1,27 @@
+{
+ "run_id": "dwg0553e",
+ "spec": "frontend/e2e/qoder-duanwagong-0553-batch-row-stub-r1.spec.ts",
+ "arm": "Sen",
+ "locale": "en",
+ "device_zone": "Asia/Shanghai",
+ "instants_held": [
+  "2026-10-10T15:30:00+08:00",
+  "2026-10-10T02:00:00+00:00"
+ ],
+ "cells_on_screen": [
+  "10 Oct, 15:30",
+  "10 Oct, 10:00"
+ ],
+ "expected_from_instants": [
+  "10 Oct, 15:30",
+  "10 Oct, 10:00"
+ ],
+ "row_texts": [
+  "10 Oct, 15:30 stub row 0 11111111-1111-4111-8111-000000000000",
+  "10 Oct, 10:00 stub row 1 11111111-1111-4111-8111-000000000001"
+ ],
+ "old_slice_would_have_printed": [
+  "2026-10-10 15:30",
+  "2026-10-10 02:00"
+ ]
+}

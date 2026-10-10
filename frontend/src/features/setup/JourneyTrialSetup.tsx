@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { roleLabel } from "../../i18n/travelerLabels";
 import { cityNexusApi, type DestinationCapability } from "../../api/citynexus";
 import { classifyReadFailure } from "../../lib/failureAttribution";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
@@ -251,6 +252,64 @@ export function identityWords(row: DestinationReading, zh: boolean): string {
   if (!row.answered) return zh ? "身份还没读到" : "identity not read yet";
   if (row.canonical_destination_id) return zh ? "服务器给了身份" : "the server named it";
   return zh ? "还没有身份" : "no identity yet";
+}
+
+/** The three causes "this place is not here" can have, each said as itself.
+ *
+ *  Written as a separate function rather than folded into `verdictWords`, because that one speaks about a
+ *  DESTINATION and this one speaks about the CATALOG under it.  The three are the building's whole point:
+ *  "never registered", "no canonical identity", and "registered but with no coordinate" all used to reach
+ *  the traveller as the same empty list, and a traveller who cannot tell them apart cannot act on any of
+ *  them.  Each branch says which one it is, carries what the server actually said, and names a next step;
+ *  a cause with no step returns null so the screen says the fact and stops, rather than inventing advice.
+ */
+export function notFoundCauseWords(
+  row: DestinationReading | null,
+  zh: boolean,
+): { title: string; body: string } | null {
+  if (!row || !row.answered) return null;
+  const spell = row.spelling || (zh ? "这个名字" : "this name");
+
+  if (row.reason_code === "NO_CANONICAL_IDENTITY") {
+    return {
+      title: zh ? "服务器认不出这个名字" : "The server cannot name this place",
+      body: zh
+        ? `服务器说「${spell}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或在"看支持的目的地"里挑一个。`
+        : `The server says nothing traceable names "${spell}" as a destination. This is not a network problem: the server just answered. Try another spelling, or pick one from the supported list.`,
+    };
+  }
+
+  if (row.reason_code === "PLACES_NO_COORDINATE") {
+    const n = row.place_count ?? 0;
+    return {
+      title: zh ? "这里有地点，但它们没有坐标" : "The places are here, but none has a coordinate",
+      body: zh
+        ? `服务器认得「${spell}」，目录里有 ${n} 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。`
+        : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
+    };
+  }
+
+  if (row.reason_code === "COVERAGE_INCOMPLETE" || (row.missing_categories?.length ?? 0) > 0) {
+    const missing = (row.missing_categories ?? []).join(zh ? "、" : ", ");
+    const count = row.missing_categories?.length ?? 0;
+    return {
+      title: zh ? "这座城还没准备过" : "This destination has not been prepared",
+      body: zh
+        ? `服务器认得「${spell}」，但还缺 ${count} 类事实（${missing}），所以现在直接规划会缺依据。可以先准备。`
+        : `The server names "${spell}" but is short ${count} categories (${missing}), so planning now would lack evidence. You can prepare it first.`,
+    };
+  }
+
+  if ((row.place_count ?? 0) === 0 && row.canonical_destination_id) {
+    return {
+      title: zh ? "这座城还没登记任何地点" : "No places are registered for this destination",
+      body: zh
+        ? `服务器认得「${spell}」，但目录里一条地点都没有——是还没登记，不是查不到这个名字。`
+        : `The server names "${spell}" but the catalog holds no places: they are not registered yet, which is different from the name being unknown.`,
+    };
+  }
+
+  return null;
 }
 
 /** What the server answered, said once in plain words and once in the route's own field values. */
@@ -724,6 +783,38 @@ export function JourneyTrialSetup({
   );
   const [roomsTouched, setRoomsTouched] = useState(false);
 
+  /* The destination field asked the LOCAL vocabulary and nothing else, so every sentence under it was a
+     statement about this device's table -- which is why a server that answered "six categories are still
+     missing" could not be seen here, and the traveller saw a confident "Auto-set" instead.  This reads
+     the one name currently typed, once per settled spelling, and keeps the server's own reason beside
+     the local facts so the sentence can name WHICH of the three causes it is rather than "nothing here".
+     It never blocks the field: a read in flight leaves the previous sentence standing, and a read that
+     fails leaves no sentence at all (the local "Auto-set" line is still true about the basis). */
+  const [typedReading, setTypedReading] = useState<DestinationReading | null>(null);
+  const typedReadSeq = useRef(0);
+  const typedName = draft.cityName.trim();
+  useEffect(() => {
+    if (!typedName) {
+      setTypedReading(null);
+      return;
+    }
+    const seq = ++typedReadSeq.current;
+    let live = true;
+    void cityNexusApi
+      .getDestinationCapability(typedName)
+      .then((answer) => {
+        if (!live || seq !== typedReadSeq.current) return;
+        setTypedReading(readFromCapability(typedName, answer));
+      })
+      .catch((reason: unknown) => {
+        if (!live || seq !== typedReadSeq.current) return;
+        setTypedReading(noAnswerYet(typedName, classifyReadFailure(reason).reason));
+      });
+    return () => {
+      live = false;
+    };
+  }, [typedName]);
+
   useEffect(() => {
     writeStoredTrial(step, draft);
   }, [step, draft]);
@@ -907,6 +998,24 @@ export function JourneyTrialSetup({
             />
           </label>
 
+          {!unrecognizedCity && notFoundCauseWords(typedReading, zh) ? (
+            /* Which of the three causes it is, said before the basis line rather than instead of it.
+               Gated on `!unrecognizedCity` because the paragraph below already speaks for the
+               "no local facts" case, and the first draft of this branch said the same thing a second
+               time in different words -- two sentences for one fact reads as two facts.  This branch
+               exists for the causes that paragraph cannot see: the server answered, the destination
+               resolved, and the reason is about the CATALOG rather than about the name. */
+            <p
+              className="trial-city-warning"
+              data-testid="trial-not-found-cause"
+              id="trial-not-found-cause"
+              role="status"
+            >
+              {zh
+                ? `${notFoundCauseWords(typedReading, zh)?.title}：${notFoundCauseWords(typedReading, zh)?.body}`
+                : `${notFoundCauseWords(typedReading, zh)?.title}: ${notFoundCauseWords(typedReading, zh)?.body}`}
+            </p>
+          ) : null}
           {facts ? (
             <p className="trial-inferred" data-testid="trial-inferred">
               {zh ? "已自动设置：" : "Auto-set: "}
@@ -1280,7 +1389,7 @@ export function JourneyTrialSetup({
               )}
             </div>
             <div>
-              <dt>{zh ? "抵达" : "Arrival"}{reviewEdit("arrival")}</dt>
+              <dt>{roleLabel("ARRIVAL", zh)}{reviewEdit("arrival")}</dt>
               {/* A bare "—" read as an acceptable blank, and the API rejects it. Say so here. */}
               <dd
                 data-testid="review-arrival"
@@ -1369,7 +1478,7 @@ export function JourneyTrialSetup({
               this device measured plus the server's own number. */}
           <details className="trial-technical" data-testid="create-technical-details">
             <summary data-testid="create-technical-toggle">
-              {zh ? "技术详情" : "Technical detail"}
+              {t("hub.continuationTechnicalDetail")}
             </summary>
             {createFacts ? (
               <RawFactsPanel
@@ -1483,7 +1592,7 @@ export function JourneyTrialSetup({
               data-testid="trial-stop-waiting"
               onClick={onStopWaiting}
             >
-              {zh ? "停止等待" : "Stop waiting"}
+              {t("agent.aiRunStop")}
             </button>
           )}
           <p className="trial-wait-hint">

@@ -1,0 +1,25 @@
+{
+ "tip": "e9b231b876c777bc592923bc41d8c397a577e691",
+ "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+ "blob": "aa0c8f546f53cd13d347fcd0c45785ef78c1ba29",
+ "predicate": "const unrecognizedCity = draft.cityName.trim().length > 0 && !facts;",
+ "predicate_line": 764,
+ "predicate_call_sites": [
+  905,
+  916,
+  1274
+ ],
+ "call_site_count": 3,
+ "autoset_line": 912,
+ "honest_line": 928,
+ "gap_lines": 16,
+ "autoset_guard": "<p className=\"trial-inferred\" data-testid=\"trial-inferred\">",
+ "honest_guard": "{zh ? facts.labelZh : facts.labelEn} · {basisWords.currency}",
+ "flattened_shape_predicate": "COVERAGE_INCOMPLETE means the server named the destination and reported missing categories, so the draft carries facts; the honest paragraph's predicate is 'there are no facts', which is false here, so this shape never reaches it",
+ "can_reach_honest_paragraph": false,
+ "existing_wording_line": 280,
+ "existing_wording_zh": "? `服务器认得它，目录里有 ${row.place_count ?? 0} 条，还缺 ${row.missing_categories.length} 类事实`",
+ "verdict_words_fn_line": 257,
+ "wording_exists_in_same_file": true,
+ "product_bytes_needed": false
+}

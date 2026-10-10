@@ -50,6 +50,10 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
   const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const [options, setOptions] = useState<StayOption[] | null>(null);
+  /* The empty state has to offer a real re-acquisition, not the promise of one.
+     This counter is in the effect's dependencies, so bumping it re-runs the whole
+     capture / generate / read leg. */
+  const [attempt, setAttempt] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
   const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
     text: null,
@@ -95,7 +99,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
     return () => {
       cancelled = true;
     };
-  }, [journeyId]);
+  }, [journeyId, attempt]);
 
   const select = async (optionId: string) => {
     setBusy(optionId);
@@ -139,7 +143,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
   if (options === null) {
     return (
       <section className="v8-page" data-testid="hotels-panel">
-        <p className="v8-muted">{zh ? "正在获取住宿…" : "Loading stays…"}</p>
+        <p className="v8-muted">{t("stay.loading")}</p>
       </section>
     );
   }
@@ -150,13 +154,41 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
         <div className="v8-page-intro compact">
           <div>
             <p className="v8-kicker">{t("hub.stayLabel")}</p>
-            <h1>{zh ? "暂时没有可比较的住宿" : "No stays to compare yet"}</h1>
+            <h1>{t("stay.noneToCompare")}</h1>
             <p className="v8-lede">
               {zh
-                ? "这个城市还没有拿到可用的住宿数据。换个城市或稍后再试——我们不会编造酒店。"
-                : "No provider-backed accommodation is available for this city yet. Try again later — we will not invent hotels."}
+                ? "这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。"
+                : "No provider-backed accommodation is available for this city yet. Re-run the acquisition, or look at another city — we will not invent hotels."}
             </p>
           </div>
+        </div>
+        {/* The copy used to promise 「稍后再试」 with nothing behind it.  This is the leg that
+            actually re-runs the acquisition: the counter is in the effect's dependencies, so the
+            click re-issues capture, generate and the read-back.  Reuses the hub's existing action
+            row class so an empty stay tab cannot introduce a fifth button layout into the sheet. */}
+        <div className="hub-stay-empty-actions" data-testid="hotels-empty-actions">
+          <button
+            type="button"
+            className="v8-primary-button"
+            onClick={() => {
+              setError(null);
+              setAttempt((current) => current + 1);
+            }}
+            data-testid="hotels-empty-retry-btn"
+          >
+            {t("stay.reacquire")}
+          </button>
+          <button
+            type="button"
+            className="v8-outline-button"
+            onClick={() => {
+              window.history.pushState({}, "", "/v8/hub");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
+            data-testid="hotels-empty-explore-btn"
+          >
+            {zh ? "换个城市看看" : "Look at another city"}
+          </button>
         </div>
       </section>
     );
@@ -167,7 +199,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("hub.stayLabel")}</p>
-          <h1>{zh ? "选一家住的地方" : "Choose where to stay"}</h1>
+          <h1>{t("stay.chooseTitle")}</h1>
           <p className="v8-lede">
             {zh
               ? `按与行程的关系排序的 ${options.length} 家住宿。价格未知时我们如实说明。`
@@ -192,7 +224,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 <b data-testid="hotel-name">{stay.property_name}</b>
                 {isChosen && (
                   <Badge tone="success" variant="tinted" testId="hotel-chosen">
-                    {zh ? "已选择" : "Selected"}
+                    {t("stay.selected")}
                   </Badge>
                 )}
               </header>
@@ -212,7 +244,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                   <dd>{option.walking_min}{zh ? " 分钟" : " min"}</dd>
                 </div>
                 <div>
-                  <dt>{zh ? "到达/离开衔接" : "Arrival / departure fit"}</dt>
+                  <dt>{t("stay.arrivalFit")}</dt>
                   <dd>{option.arrival_fit}% / {option.departure_fit}%</dd>
                 </div>
                 <div>

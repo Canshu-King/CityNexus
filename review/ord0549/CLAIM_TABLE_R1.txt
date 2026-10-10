@@ -1,0 +1,70 @@
+ORD-0549 claim table.
+tip=b461897465b07a4d5e8d99e618f59034652f81f2
+ledger_lines_at_this_run=7823
+A cell still inline in code is not necessarily free: this carries what the ledger itself says owns it.
+
+inline_left absorbed  file
+
+          1        0  frontend/src/app/V8Experience.tsx
+            ledger:643 | **下一轮要扫的新范围**：① 请落地腿点的裁语（我不自行删枝）：远端我名下现存十枚 `refs/heads/review/jiazigong-*`，其中 `hub-empty-r1`、`trips-tabs-r1`、`simulated-commitment-r1`、`stay-label-r1` 的产品面**已在线内**（键名与我的不同），`advanced-fold-r1`、`runtime-details-r
+              ref refs/heads/review/jiazigong-* -> GLOB matched=12 first=refs/heads/review/jiazigong-i18n-advanced-fold-r1
+            ledger:2654 | - 取这枚之前我先退了两处原打算做的：`frontend/src/app/V8Experience.tsx` 的「高级：结构化数据」已有架子工枝 `refs/heads/review/jiazigong-i18n-advanced-fold-r1` 在占、「高级详情」已有 `refs/heads/review/laneE9-i18n-advanced-detail-r1` 与 `-r2` 在占，那枚文件已是多认领热文
+              ref refs/heads/review/jiazigong-i18n-advanced-fold-r1 -> e8f3b28154c7370b82df824ddfdd54502566c54f	refs/heads/review/jiazigong-i18n-adva
+              ref refs/heads/review/laneE9-i18n-advanced-detail-r1 -> ac8aa9fcea75ece63e2de381b43e26f6ea34fbc6	refs/heads/review/laneE9-i18n-advance
+              ref refs/heads/review/yougong-i18n-advanced-structured-r3 -> 6caaffbf95c78d6f21ef6b5d813efe42155c546f	refs/heads/review/yougong-i18n-advanc
+            ledger:2674 | - 清单里仍无人点名、且是组件形状（有 hook、不必改签名）的候选，按名次取 `frontend/src/features/trip/ActivityDetail.tsx`（清单 `:354`，十一处）与 `frontend/src/features/planning/PlanComparison.tsx`（清单 `:357`，七处）；取之前先 `git ls-remote --refs origin` 数有没有新
+
+          1        0  frontend/src/components/RawFactsPanel.tsx
+            ledger:109 | 另一枚候选 `frontend/src/components/RawFactsPanel.tsx` 账本已写明有主，我没碰，出处 CITYNEXUS_AGENT_CONTROL.md:1685。
+            ledger:205 | **我挑的是 `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`（表里 1 枚）**，理由现读：表里其余候选要么在飞有主（`SimulationPanel.tsx` 在最新落地分母里命中三枚），要么形状是**模块层**——`lib/errorReceipt.ts` 与 `components/RawFactsPanel.tsx` 现读 hook 零处，
+            ledger:1939 | | RawFactsPanel.tsx | 一 | 零 | 一 | 有主（`frontend/src/components/RawFactsPanel.tsx:39` 与他道 `PlanWithAiSheet.tsx:1038` 逐字同串，账本已判「最可能该共享一枚键」，单独取即两道动同文件） |
+
+          0        1  frontend/src/features/agent/AgentComposer.tsx
+            ledger:59 | 认领 `frontend/src/features/agent/AgentComposer.tsx` 整枚。认领前按规矩逐名在账本现数命中：
+            ledger:106 | 认领的是 `frontend/src/features/agent/AgentComposer.tsx` 这一整枚文件，表里给它的是 1 枚可换键，出处 CITYNEXUS_AGENT_CONTROL.md:122。
+
+          5        0  frontend/src/features/checklist/PretripChecklistPanel.tsx
+            ledger:1938 | | PretripChecklistPanel.tsx | 一 | 零 | 一 | 有主（被他道写进「下一轮要扫的新范围」，点名五处） |
+
+          1        0  frontend/src/features/discovery/DestinationPreparationPanel.tsx
+            ledger:1132 | | DestinationPreparationPanel.tsx | 30 | 3 | 27 | `CITYNEXUS_AGENT_CONTROL.md:684` | 不取，同上 |
+            ledger:2333 | 勘误一枚（我的错，不当没发生）：我给文案工-0501 首派的 DestinationPreparationPanel.tsx 是未核账的断言。刚才数账本对该文件命中三十二行，其中一处原话写明该屏与 CopilotDock 都归另两扇前端车道。我当场给那扇会话发了换面消息：先自己逐名核认领，只取账本命中为零的面；十二名全有主时把核对表当交付退回，不许造缺口。
+            ledger:5568 | **新扫范围**：本文件已扫尽，按「往外扩一层」跨出。起于现尖 `95da0f272e870a566070dbaf5219411d6232460e`，对 `frontend/src` 全树按 `zh ? "` 形状出按文件排序的前十五名清单，再逐名查账本是否已有人认领（按文件名在账本里现数命中）。头几名 `frontend/src/features/setup/JourneyTrialSetup.tsx`（四十七处）
+
+          5        0  frontend/src/features/planning/PlanWithAiSheet.tsx
+            ledger:643 | **下一轮要扫的新范围**：① 请落地腿点的裁语（我不自行删枝）：远端我名下现存十枚 `refs/heads/review/jiazigong-*`，其中 `hub-empty-r1`、`trips-tabs-r1`、`simulated-commitment-r1`、`stay-label-r1` 的产品面**已在线内**（键名与我的不同），`advanced-fold-r1`、`runtime-details-r
+              ref refs/heads/review/jiazigong-* -> GLOB matched=12 first=refs/heads/review/jiazigong-i18n-advanced-fold-r1
+            ledger:1136 | | PlanWithAiSheet.tsx | 53 | 3 | 50 | `CITYNEXUS_AGENT_CONTROL.md:19` | 不取 |
+            ledger:1939 | | RawFactsPanel.tsx | 一 | 零 | 一 | 有主（`frontend/src/components/RawFactsPanel.tsx:39` 与他道 `PlanWithAiSheet.tsx:1038` 逐字同串，账本已判「最可能该共享一枚键」，单独取即两道动同文件） |
+
+          0        1  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+            ledger:205 | **我挑的是 `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`（表里 1 枚）**，理由现读：表里其余候选要么在飞有主（`SimulationPanel.tsx` 在最新落地分母里命中三枚），要么形状是**模块层**——`lib/errorReceipt.ts` 与 `components/RawFactsPanel.tsx` 现读 hook 零处，
+            ledger:5587 | **下一轮要扫的新范围**：`frontend/src/app/V8Experience.tsx` 的单行形状本车道已扫尽（剩一处 `frontend/src/app/V8Experience.tsx:4565` 归柜工，两处语言码不修），故下格跨出该文件：`frontend/src/features/stay/HotelsPanel.tsx:151` 与 `frontend/src/features/stay/Ho
+
+          3        0  frontend/src/features/setup/JourneyTrialSetup.tsx
+            ledger:1137 | | JourneyTrialSetup.tsx | 68 | 3 | 65 | `CITYNEXUS_AGENT_CONTROL.md:512` | 不取 |
+            ledger:5568 | **新扫范围**：本文件已扫尽，按「往外扩一层」跨出。起于现尖 `95da0f272e870a566070dbaf5219411d6232460e`，对 `frontend/src` 全树按 `zh ? "` 形状出按文件排序的前十五名清单，再逐名查账本是否已有人认领（按文件名在账本里现数命中）。头几名 `frontend/src/features/setup/JourneyTrialSetup.tsx`（四十七处）
+            ledger:5587 | **下一轮要扫的新范围**：`frontend/src/app/V8Experience.tsx` 的单行形状本车道已扫尽（剩一处 `frontend/src/app/V8Experience.tsx:4565` 归柜工，两处语言码不修），故下格跨出该文件：`frontend/src/features/stay/HotelsPanel.tsx:151` 与 `frontend/src/features/stay/Ho
+
+          1        0  frontend/src/features/simulation/SimulationPanel.tsx
+            ledger:205 | **我挑的是 `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`（表里 1 枚）**，理由现读：表里其余候选要么在飞有主（`SimulationPanel.tsx` 在最新落地分母里命中三枚），要么形状是**模块层**——`lib/errorReceipt.ts` 与 `components/RawFactsPanel.tsx` 现读 hook 零处，
+            ledger:1138 | | SimulationPanel.tsx | 7 | 2 | 5 | `CITYNEXUS_AGENT_CONTROL.md:3210` | 不取，我只换了它两处取词参数 |
+            ledger:4859 | **一、两笔读数并列摊开，不挑一边说**。单里那句是「尺对 `frontend/src` 实测命中 27 处」并自带前提：「该次测量的树代次为 `refs/heads/integration/frontend-apple-pass1`，早于现尖，车道认领后必须在现尖重跑一遍再动工」。本车道照做，现尖重跑读数：`cells_total` 为六、`modules_in_graph` 为一百四十九、`verdict` 为 
+
+          0        1  frontend/src/features/stay/HotelsPanel.tsx
+            ledger:643 | **下一轮要扫的新范围**：① 请落地腿点的裁语（我不自行删枝）：远端我名下现存十枚 `refs/heads/review/jiazigong-*`，其中 `hub-empty-r1`、`trips-tabs-r1`、`simulated-commitment-r1`、`stay-label-r1` 的产品面**已在线内**（键名与我的不同），`advanced-fold-r1`、`runtime-details-r
+              ref refs/heads/review/jiazigong-* -> GLOB matched=12 first=refs/heads/review/jiazigong-i18n-advanced-fold-r1
+            ledger:1139 | | HotelsPanel.tsx | 59 | 3 | 55 | `CITYNEXUS_AGENT_CONTROL.md:159` | 不取 |
+            ledger:1598 | **核对表（本块的分母，全部现读，不沿用旧表）**：用仓内正量具 `frontend/scripts/i18n_detail2_audit_r1.py:62` 的 `TERN` 在基准尖上现跑，其分母打印在 `frontend/scripts/i18n_detail2_audit_r1.py:105` 与 `frontend/scripts/i18n_detail2_audit_r1.py:106`，输出候选用户可见
+
+          1        0  frontend/src/features/stay/StayExplorer.tsx
+            ledger:1140 | | StayExplorer.tsx | 34 | 3 | 31 | `CITYNEXUS_AGENT_CONTROL.md:123` | 不取 |
+
+          2        0  frontend/src/features/trip/ActivityDetail.tsx
+            ledger:2526 | 取的格：frontend/src/features/trip/ActivityDetail.tsx。
+            ledger:2674 | - 清单里仍无人点名、且是组件形状（有 hook、不必改签名）的候选，按名次取 `frontend/src/features/trip/ActivityDetail.tsx`（清单 `:354`，十一处）与 `frontend/src/features/planning/PlanComparison.tsx`（清单 `:357`，七处）；取之前先 `git ls-remote --refs origin` 数有没有新
+            ledger:4859 | **一、两笔读数并列摊开，不挑一边说**。单里那句是「尺对 `frontend/src` 实测命中 27 处」并自带前提：「该次测量的树代次为 `refs/heads/integration/frontend-apple-pass1`，早于现尖，车道认领后必须在现尖重跑一遍再动工」。本车道照做，现尖重跑读数：`cells_total` 为六、`modules_in_graph` 为一百四十九、`verdict` 为 
+
+          2        0  frontend/src/lib/errorReceipt.ts
+            ledger:205 | **我挑的是 `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`（表里 1 枚）**，理由现读：表里其余候选要么在飞有主（`SimulationPanel.tsx` 在最新落地分母里命中三枚），要么形状是**模块层**——`lib/errorReceipt.ts` 与 `components/RawFactsPanel.tsx` 现读 hook 零处，
+            ledger:1413 | ### 号令者 ORD-0546 开单即收窄：errorReceipt.ts 其实有枝在飞，其余面才派新单

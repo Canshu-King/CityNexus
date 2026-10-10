@@ -1,0 +1,10 @@
+the格 this lane claimed first and then yielded, in the open
+order table row: frontend/src/features/agent/AgentComposer.tsx, one ternary, key hub.feasible
+lane progress claimed the whole file first: ledger block progress_2307.md (inserted as _processed/progress_2307.md.inserted_231006)
+this lane had written the identical byte on its own branch and reverted it before pushing (git checkout -- on that file);
+no byte of this lane's is in that file. proof read from the line as it now stands:
+landing commit: d980242a1|2026-10-09 23:06:28 +0800|lane-progress|i18n(ORD-0549): the feasibility badge reads hub.feasible instead of an inline pair
+line 34 at that commit:     return t("hub.feasible");
+what this lane kept as evidence: the A4 arm that pinned 'their line still stands' was DELETED from
+  frontend/e2e/qoder-diangong-0470-0549-r1.spec.ts, because a gate of mine must not hold another lane's
+  landed state as its precondition -- it went red exactly when their byte landed, which is the proof.

@@ -1,0 +1,30 @@
+{"locale":"zh-CN","shape":"phone-390x844","door":"drawer-row","label_matches_dictionary":true,"hit_own":true,"width":271,"height":44,"min_px":44,"landed":true,"painted_title":"从文本导入地点"}
+{"locale":"zh-CN","shape":"phone-390x844","door":"hub-pending-empty","hit_own":true,"width":64,"height":44,"min_px":44,"landed":true}
+{"locale":"zh-CN","shape":"phone-390x844","door":"deep-link","landed":true,"width":54,"height":44,"min_px":44}
+{"locale":"zh-CN","shape":"phone-360x640","door":"drawer-row","label_matches_dictionary":true,"hit_own":true,"width":271,"height":44,"min_px":44,"landed":true,"painted_title":"从文本导入地点"}
+{"locale":"zh-CN","shape":"phone-360x640","door":"hub-pending-empty","hit_own":true,"width":64,"height":44,"min_px":44,"landed":true}
+{"locale":"zh-CN","shape":"phone-360x640","door":"deep-link","landed":true,"width":54,"height":44,"min_px":44}
+{"locale":"zh-CN","shape":"landscape-844x390","door":"sidebar-row","label_matches_dictionary":true,"hit_own":true,"width":172,"height":44,"min_px":30,"landed":true,"painted_title":"从文本导入地点"}
+{"locale":"zh-CN","shape":"landscape-844x390","door":"hub-pending-empty","hit_own":true,"width":64,"height":31,"min_px":30,"landed":true}
+{"locale":"zh-CN","shape":"landscape-844x390","door":"deep-link","landed":true,"width":54,"height":44,"min_px":30}
+{"locale":"zh-CN","shape":"tablet-768x1024","door":"sidebar-row","label_matches_dictionary":true,"hit_own":true,"width":172,"height":44,"min_px":30,"landed":true,"painted_title":"从文本导入地点"}
+{"locale":"zh-CN","shape":"tablet-768x1024","door":"hub-pending-empty","hit_own":true,"width":64,"height":31,"min_px":30,"landed":true}
+{"locale":"zh-CN","shape":"tablet-768x1024","door":"deep-link","landed":true,"width":54,"height":44,"min_px":30}
+{"locale":"zh-CN","shape":"desktop-1280x800","door":"sidebar-row","label_matches_dictionary":true,"hit_own":true,"width":219,"height":44,"min_px":30,"landed":true,"painted_title":"从文本导入地点"}
+{"locale":"zh-CN","shape":"desktop-1280x800","door":"hub-pending-empty","hit_own":true,"width":64,"height":31,"min_px":30,"landed":true}
+{"locale":"zh-CN","shape":"desktop-1280x800","door":"deep-link","landed":true,"width":54,"height":44,"min_px":30}
+{"locale":"en-GB","shape":"phone-390x844","door":"drawer-row","label_matches_dictionary":true,"hit_own":true,"width":271,"height":44,"min_px":44,"landed":true,"painted_title":"Import places from text"}
+{"locale":"en-GB","shape":"phone-390x844","door":"hub-pending-empty","hit_own":true,"width":96,"height":44,"min_px":44,"landed":true}
+{"locale":"en-GB","shape":"phone-390x844","door":"deep-link","landed":true,"width":79,"height":44,"min_px":44}
+{"locale":"en-GB","shape":"phone-360x640","door":"drawer-row","label_matches_dictionary":true,"hit_own":true,"width":271,"height":44,"min_px":44,"landed":true,"painted_title":"Import places from text"}
+{"locale":"en-GB","shape":"phone-360x640","door":"hub-pending-empty","hit_own":true,"width":96,"height":44,"min_px":44,"landed":true}
+{"locale":"en-GB","shape":"phone-360x640","door":"deep-link","landed":true,"width":79,"height":44,"min_px":44}
+{"locale":"en-GB","shape":"landscape-844x390","door":"sidebar-row","label_matches_dictionary":true,"hit_own":true,"width":172,"height":44,"min_px":30,"landed":true,"painted_title":"Import places from text"}
+{"locale":"en-GB","shape":"landscape-844x390","door":"hub-pending-empty","hit_own":true,"width":96,"height":31,"min_px":30,"landed":true}
+{"locale":"en-GB","shape":"landscape-844x390","door":"deep-link","landed":true,"width":79,"height":44,"min_px":30}
+{"locale":"en-GB","shape":"tablet-768x1024","door":"sidebar-row","label_matches_dictionary":true,"hit_own":true,"width":172,"height":44,"min_px":30,"landed":true,"painted_title":"Import places from text"}
+{"locale":"en-GB","shape":"tablet-768x1024","door":"hub-pending-empty","hit_own":true,"width":96,"height":31,"min_px":30,"landed":true}
+{"locale":"en-GB","shape":"tablet-768x1024","door":"deep-link","landed":true,"width":79,"height":44,"min_px":30}
+{"locale":"en-GB","shape":"desktop-1280x800","door":"sidebar-row","label_matches_dictionary":true,"hit_own":true,"width":219,"height":44,"min_px":30,"landed":true,"painted_title":"Import places from text"}
+{"locale":"en-GB","shape":"desktop-1280x800","door":"hub-pending-empty","hit_own":true,"width":96,"height":31,"min_px":30,"landed":true}
+{"locale":"en-GB","shape":"desktop-1280x800","door":"deep-link","landed":true,"width":79,"height":44,"min_px":30}

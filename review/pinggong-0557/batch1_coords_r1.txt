@@ -1,0 +1,36 @@
+# batch1 coordinates, read at branch tip c7834cd45dff31def8939b9d83deacbac640007e (parent ce27c3f0a5e5ab259836a7289030242d1f690211)
+key main.cityNexusRequestFailed
+   routed_at main.tsx:173   dict_line LocaleContext.tsx:840
+   body L173| ? t("main.cityNexusRequestFailed")
+   dict L840| "main.cityNexusRequestFailed": "CityNexus request failed",
+key main.cityNexusRequestRefusedHttp
+   routed_at main.tsx:174   dict_line LocaleContext.tsx:841
+   body L174| : t("main.cityNexusRequestRefusedHttp", { status }),
+   dict L841| "main.cityNexusRequestRefusedHttp": "CityNexus request refused (HTTP {status})",
+key main.persistedOperationUpdate
+   routed_at main.tsx:570   dict_line LocaleContext.tsx:842
+   body L570| summary: payload.summary ?? t("main.persistedOperationUpdate"),
+   dict L842| "main.persistedOperationUpdate": "Persisted operation update",
+key main.generalRecovery
+   routed_at main.tsx:1115   dict_line LocaleContext.tsx:843
+   body L1115| <span>Objectives · {mission.objective_codes.join(" · ") || t("main.generalRecovery")}</span>
+   dict L843| "main.generalRecovery": "general recovery",
+key main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage
+   routed_at main.tsx:1158   dict_line LocaleContext.tsx:844
+   body L1158| t("main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage")}
+   dict L844| "main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage": "Activate a standing mission once; subsequent city signals can launch rec
+key main.noDominantFailureMode
+   routed_at main.tsx:1222   dict_line LocaleContext.tsx:845
+   body L1222| {resilience?.dominant_failure_modes.join(" · ") || t("main.noDominantFailureMode")}
+   dict L845| "main.noDominantFailureMode": "No dominant failure mode",
+key main.notEvaluated
+   routed_at main.tsx:1419   dict_line LocaleContext.tsx:846
+   body L1419| Server decision · {serverDecision ?? t("main.notEvaluated")}
+   dict L846| "main.notEvaluated": "not evaluated",
+key main.validatedActivity
+   routed_at main.tsx:1427   dict_line LocaleContext.tsx:847
+   body L1427| ? (impactResolution.maturity_stage ?? t("main.validatedActivity"))
+   dict L847| "main.validatedActivity": "validated Activity",
+en object first key line / zh object first key line:
+   LocaleContext.tsx:8 is 'const en: Dict = {'
+   LocaleContext.tsx:1326 is 'const zhCN: Dict = {'

@@ -8,6 +8,10 @@
 
 import { useLocale } from "../../i18n/LocaleContext";
 import { categoryLabel, roleLabel } from "../../i18n/travelerLabels";
+import {
+  activityDetailCopyLookup,
+  type ActivityDetailCopyKey,
+} from "./activityDetailCopy";
 import { activityCoordinate } from "../../components/v8/MapPanel";
 import type { ActivityCoordinate } from "../../app/v8Types";
 
@@ -91,8 +95,9 @@ export function ActivityDetail({
   nearby: ActivityLike[];
   onOpenNearby: (id: string) => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
+  const say = (key: ActivityDetailCopyKey) => activityDetailCopyLookup(locale, key);
   const meta = activity.metadata ?? {};
 
   // Truthfulness: only call other stops "nearby" when they are actually
@@ -147,7 +152,7 @@ export function ActivityDetail({
   return (
     <section className="v8-page activity-detail" data-testid="activity-detail">
       <button type="button" className="activity-back" data-testid="activity-back" onClick={onBack}>
-        ← {zh ? "返回行程" : "Back to itinerary"}
+        ← {say("activity.backToItinerary")}
       </button>
 
       <div className="v8-page-intro compact">
@@ -159,12 +164,8 @@ export function ActivityDetail({
           <h1 data-testid="activity-title">{activity.title}</h1>
           <p className="v8-lede">
             {activity.protected
-              ? zh
-                ? "这是已确认的安排，不会因为其他调整被移动。"
-                : "This is a confirmed booking and will not be moved by other changes."
-              : zh
-                ? "这是你行程中的一个停靠点。"
-                : "This is one stop on your itinerary."}
+              ? say("activity.stopConfirmed")
+              : say("activity.stopOpen")}
           </p>
         </div>
       </div>
@@ -172,13 +173,13 @@ export function ActivityDetail({
       <dl className="trial-review activity-facts">
         {durationText && (
           <div>
-            <dt>{zh ? "停留时长" : "Duration"}</dt>
+            <dt>{say("activity.factDuration")}</dt>
             <dd data-testid="activity-duration">{durationText}</dd>
           </div>
         )}
         {activity.travel_from_prev_min != null && activity.travel_from_prev_min > 0 && (
           <div>
-            <dt>{zh ? "从上一站出发" : "Travel from previous stop"}</dt>
+            <dt>{say("activity.factTravelFromPrev")}</dt>
             <dd>
               {zh
                 ? `${activity.travel_from_prev_min} 分钟`
@@ -187,14 +188,12 @@ export function ActivityDetail({
           </div>
         )}
         <div>
-          <dt>{zh ? "费用" : "Cost"}</dt>
+          <dt>{say("activity.factCost")}</dt>
           <dd data-testid="activity-cost" data-cost-status={
             knownFree ? "KNOWN_FREE" : knownPaid ? "KNOWN_PAID" : "UNKNOWN"
           }>
             {knownFree
-              ? zh
-                ? "免费"
-                : "Free"
+              ? say("activity.costFree")
               : knownPaid
                 ? `${cost?.currency ?? ""} ${Math.round(amountMinor / 100)}`
                 : zh
@@ -203,7 +202,7 @@ export function ActivityDetail({
           </dd>
         </div>
         <div>
-          <dt>{zh ? "营业时间" : "Opening hours"}</dt>
+          <dt>{say("activity.factHours")}</dt>
           {/* ORD-0345 shape call: this value is the place record's own `opening_hours.raw` -- supplier
               content the traveller is asking for, not a rejection's sentence. It stays, but it is no
               longer unattributed: the line names whose words they are, and Q70 anchors the element with
@@ -214,7 +213,7 @@ export function ActivityDetail({
             {...(openingKnown && opening?.raw ? { "data-cnx-field": "opening_hours.raw" } : {})}
           >
             {openingKnown
-              ? `${opening?.raw || (zh ? "已提供" : "Provided")}${opening?.raw ? (zh ? " · 供应商原文" : " · provider's own text") : ""}`
+              ? `${opening?.raw || t("detail.hoursProvided")}${opening?.raw ? t("detail.hoursProviderText") : ""}`
               : zh
                 ? "暂无数据"
                 : "Not available"}
@@ -222,28 +221,26 @@ export function ActivityDetail({
         </div>
         {meta.category && (
           <div>
-            <dt>{zh ? "类型" : "Category"}</dt>
+            <dt>{say("activity.factCategory")}</dt>
             <dd data-testid="activity-category">{categoryLabel(meta.category, zh)}</dd>
           </div>
         )}
         {(activity.kind || activity.type || meta.role) && (
           <div>
-            <dt>{zh ? "活动类型" : "Activity type"}</dt>
+            <dt>{say("activity.factKind")}</dt>
             <dd data-testid="activity-kind">
               {roleLabel(activity.kind || activity.type || meta.role, zh)}
             </dd>
           </div>
         )}
         <div>
-          <dt>{zh ? "位置" : "Location"}</dt>
+          <dt>{say("activity.factLocation")}</dt>
           <dd data-testid="activity-location">
             {hasCoords
               ? `${origin.latitude.toFixed(4)}, ${origin.longitude.toFixed(4)}${
                   origin.coordinate_system ? ` ${origin.coordinate_system}` : ""
                 }`
-              : zh
-                ? "暂无坐标"
-                : "No coordinates"}
+              : say("activity.noCoords")}
           </dd>
         </div>
       </dl>
@@ -256,7 +253,7 @@ export function ActivityDetail({
           onClick={onShowOnMap}
           disabled={!hasCoords}
         >
-          {zh ? "在地图上查看" : "Show on map"}
+          {say("activity.showOnMap")}
         </button>
         <button
           type="button"
@@ -264,7 +261,7 @@ export function ActivityDetail({
           data-testid="activity-ask"
           onClick={onAskCopilot}
         >
-          {zh ? "问问 Copilot" : "Ask Copilot"}
+          {say("activity.askCopilot")}
         </button>
       </div>
 
@@ -272,21 +269,15 @@ export function ActivityDetail({
         <section className="activity-nearby" data-testid="activity-nearby">
           <h2>
             {nearbyAreClose
-              ? zh
-                ? "附近的其他停靠点"
-                : "Other stops nearby"
-              : zh
-                ? "这趟行程的其他停靠点"
-                : "Other stops on this trip"}
+              ? say("activity.nearbyStops")
+              : say("activity.otherStops")}
           </h2>
           <p className="v8-muted" data-testid="activity-nearby-note">
             {nearbyAreClose
               ? zh
                 ? `都在约 ${nearbyRadiusM} 米范围内，按直线距离排列。`
                 : `All within about ${nearbyRadiusM} m, ordered by straight-line distance.`
-              : zh
-                ? "这些是同一行程的其他停靠点，不一定是步行可达的邻近地点。"
-                : "These are other stops on the same trip; they are not necessarily within walking distance."}
+              : say("activity.otherStopsNote")}
           </p>
           <ul>
             {nearbyOrdered.slice(0, 5).map((item) => {

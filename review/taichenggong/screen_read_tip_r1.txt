@@ -1,0 +1,11 @@
+0 state=tip tip=24a50a8aecf0a1fe4704400c687540d3e05d74fb bytes written sha=9e4097cc7e27 (candidate on disk before swap was 0f57b2e9b79a)
+0b served module carries the tip marker, length 70307
+0c locale=zh-CN page fetched module len=70307 swController=false readKey=false brokenKey=false literal=true (matches state)
+1 state=tip locale=zh-CN screen text = 它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。
+2   screenshot=review/taichenggong/screenshots/tip_zh-CN.png view block=服务器 服务器答了 http_status=200，可带回来的不是这一屏能用的数据 它确实回了话（http_status=200，content_type=未知），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么
+3   page errors: none
+0c locale=en page fetched module len=70307 swController=false readKey=false brokenKey=false literal=true (matches state)
+1 state=tip locale=en screen text = It did reply (http_status=200, content_type=unknown) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.
+2   screenshot=review/taichenggong/screenshots/tip_en.png view block=THE ORIGIN The origin answered http_status=200, but not with data this screen can use It did reply (http_status=200, con
+3   page errors: none
+4 restored candidate bytes: sha=0f57b2e9b79a expected=0f57b2e9b79a match=true

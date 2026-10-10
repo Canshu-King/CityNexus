@@ -22,6 +22,9 @@
  */
 
 import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from "./readDeadline";
+/* ORD-0557: the media-type fallbacks below read the traveller word this table already owns, so 未知
+   lives in one place instead of being re-typed per screen.  The word itself is not rewritten. */
+import { categoryLabel } from "../i18n/travelerLabels";
 
 export type AttributionReason =
   | "JOURNEY_NOT_FOUND"
@@ -409,6 +412,27 @@ export function clearJourneyReferences(): string[] {
   return cleared;
 }
 
+/* ORD-0470 follow-up: the screen's small label, all fourteen call sites, one place.
+ *
+ * These rows are keyed by what the label is *for*, not by how it reads. Two of them answer the same
+ * Chinese word 服务器 with two different English words -- `server` says "Server" (the service failed
+ * on itself) and `origin` says "The origin" (it answered, but not with a journey response). Merging
+ * them because the Chinese matches would silently rewrite one screen's English, which is the one
+ * change a copy table is supposed to make impossible. So they stay two rows, each with both arms.
+ */
+const KICKER_COPY = {
+  connectionFine: { zh: "连接正常", en: "Connection is fine" },
+  connection: { zh: "连接", en: "Connection" },
+  server: { zh: "服务器", en: "Server" },
+  origin: { zh: "服务器", en: "The origin" },
+  rateLimited: { zh: "问得太快", en: "Asked too quickly" },
+  alreadyDone: { zh: "已经办过了", en: "Already done" },
+  noReply: { zh: "没有回音", en: "No reply" },
+  identity: { zh: "身份", en: "Identity" },
+  permission: { zh: "权限", en: "Permission" },
+  read: { zh: "读取", en: "Read" },
+} as const;
+
 /**
  * The four consumers, derived from the one classification.  Keeping them in this file is the point:
  * screen copy, announcement, recovery action and telemetry cannot drift apart if they are functions
@@ -424,10 +448,12 @@ export function copyFor(
   body: string;
 } {
   const id = detail.journeyId ? `${detail.journeyId.slice(0, 8)}…` : "";
+  const kickerOf = (name: keyof typeof KICKER_COPY) =>
+    (zh ? KICKER_COPY[name].zh : KICKER_COPY[name].en);
   switch (attribution.message_key) {
     case "failure.journeyNotFound":
       return {
-        kicker: zh ? "连接正常" : "Connection is fine",
+        kicker: kickerOf("connectionFine"),
         title: zh ? "这台服务器上没有这一趟行程了" : "This trip is not on this server",
         body: zh
           ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
@@ -435,7 +461,7 @@ export function copyFor(
       };
     case "failure.networkUnavailable":
       return {
-        kicker: zh ? "连接" : "Connection",
+        kicker: kickerOf("connection"),
         title: zh ? "网络不可用" : "Network unavailable",
         body: detail.hasCachedCopy
           ? zh
@@ -448,14 +474,14 @@ export function copyFor(
     case "failure.serverError":
       return detail.hasCachedCopy
         ? {
-            kicker: zh ? "服务器" : "Server",
+            kicker: kickerOf("server"),
             title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
             body: zh
               ? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
               : `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
-            kicker: zh ? "服务器" : "Server",
+            kicker: kickerOf("server"),
             title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
             body: zh
               ? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
@@ -466,21 +492,21 @@ export function copyFor(
     case "failure.originInvalidResponse":
       return detail.hasCachedCopy
         ? {
-            kicker: zh ? "服务器" : "The origin",
+            kicker: kickerOf("origin"),
             title: zh
               ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
               : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
               : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
-            kicker: zh ? "服务器" : "The origin",
+            kicker: kickerOf("origin"),
             title: zh
               ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
               : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
+              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
               : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
     /* ORD-0457: a refusal to be asked again so soon is not a failed read, and the wait is only ever
@@ -488,7 +514,7 @@ export function copyFor(
        refusal to act. */
     case "failure.rateLimited":
       return {
-        kicker: zh ? "问得太快" : "Asked too quickly",
+        kicker: kickerOf("rateLimited"),
         title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
         body: zh
           ? `这一发被限流了（http_status=${attribution.http_status}）。服务器给了等待时间：约 ${Math.round(
@@ -500,7 +526,7 @@ export function copyFor(
       };
     case "failure.rateLimitedNoWait":
       return {
-        kicker: zh ? "问得太快" : "Asked too quickly",
+        kicker: kickerOf("rateLimited"),
         title: zh ? "服务器请我们慢一点" : "The server asked us to slow down",
         body: zh
           ? `这一发被限流了（http_status=${attribution.http_status}），这一次它没有说等多久。数据没有丢，稍后再按下面那个按钮。`
@@ -508,7 +534,7 @@ export function copyFor(
       };
     case "failure.stateAlreadyMoved":
       return {
-        kicker: zh ? "已经办过了" : "Already done",
+        kicker: kickerOf("alreadyDone"),
         title: zh ? "这件事的状态已经变了，不是没读到" : "The state already moved - this was not a failed read",
         body: zh
           ? `服务器接了这发，回答的是「现在已经是这样了」（http_status=${attribution.http_status}）。所以这句不是失败：再按一次只会重新读一遍现在的样子。它给的名字在下面的归因详情里。`
@@ -520,14 +546,14 @@ export function copyFor(
     case "failure.noAnswer":
       return detail.hasCachedCopy
         ? {
-            kicker: zh ? "没有回音" : "No reply",
+            kicker: kickerOf("noReply"),
             title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
             body: zh
               ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。`
               : `This read reached its deadline with no answer at all: the server neither refused nor agreed, it simply said nothing. Your trip has not been lost — this device holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
-            kicker: zh ? "没有回音" : "No reply",
+            kicker: kickerOf("noReply"),
             title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
             body: zh
               ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。`
@@ -535,7 +561,7 @@ export function copyFor(
           };
     case "failure.unauthorized":
       return {
-        kicker: zh ? "身份" : "Identity",
+        kicker: kickerOf("identity"),
         title: zh ? "这一趟需要重新登录才能读" : "This trip needs a fresh sign-in",
         body: zh
           ? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`
@@ -543,7 +569,7 @@ export function copyFor(
       };
     case "failure.forbidden":
       return {
-        kicker: zh ? "权限" : "Permission",
+        kicker: kickerOf("permission"),
         title: zh ? "这一步这台服务器不允许" : "This server will not allow this step",
         body: zh
           ? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
@@ -551,7 +577,7 @@ export function copyFor(
       };
     default:
       return {
-        kicker: zh ? "读取" : "Read",
+        kicker: kickerOf("read"),
         title: zh ? "这一次没读到" : "This read failed",
         body: zh
           ? "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。"

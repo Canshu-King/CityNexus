@@ -4,6 +4,7 @@ import { transitionActivity, type PlanVersion } from "../../api/v12Authoritative
 import { Badge } from "../../components/Badge";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { executionStateLabel } from "../../lib/displayVocabulary";
+import { formatWhen } from "../../lib/formatWhen";
 
 export type ExecutionState =
   | "NOT_STARTED"
@@ -116,7 +117,15 @@ export function V12AuthoritativeJourneyPanel({
           <span className="v12-state-kicker"><MapPin size={12} /> {t("exec.next")}</span>
           <strong>{next?.title ?? t("exec.noNextStep")}</strong>
           <span className="v12-state-value">{label(next?.status, t, locale)}</span>
-          {next?.start_at && <small>{new Date(next.start_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</small>}
+          {next?.start_at && <small>
+            {/* ORD-0553: this used to render `new Date(start_at).toLocaleTimeString([], {...})` with no
+                timeZone, so the instant was computed in the device's zone while nothing on this card
+                names a zone for it to agree with -- the kicker above reads "next step", not a region.
+                The Props above carry the plan's activities but never the journey's timezone, so the
+                only zone this call site can name honestly is the traveller's own device zone, which is
+                what `formatWhen` renders, in the traveller's language. */}
+            {formatWhen(next.start_at, { zh: locale.startsWith("zh"), pending: t("inbox.timePending") })}
+          </small>}
         </article>
       </div>
       <div className="v12-activity-rail" aria-label={t("exec.railLabel")}>

@@ -1,0 +1,14 @@
+PASS collapse_animates
+PASS collapse_toggle_exists
+PASS icons_stay_square_when_collapsed
+PASS collapsed_rail_has_no_overflow
+PASS drawer_styled_now
+PASS drawer_open_animates
+PASS drawer_close_animates
+PASS drawer_unmounts_after_close
+PASS background_locked_while_open
+PASS sidebar_pinned_on_short_viewport
+PASS sidebar_scrolls_internally
+PASS last_nav_reachable
+PASS reduced_motion_disables_transition
+SIDEBAR_MEASURE_DONE out=_sidebar_measure_after.json

@@ -1,0 +1,61 @@
+[WebServer] 
+[WebServer] > dev
+[WebServer] > vite --host 127.0.0.1 --port 5188
+[WebServer] 
+[WebServer] 
+[WebServer]   VITE v7.3.6  ready in 275 ms
+[WebServer] 
+[WebServer]   ➜  Local:   http://127.0.0.1:5188/
+
+Running 9 tests using 1 worker
+
+[live-map] branch=honest-empty-state height=97px
+  ok 1 e2e\qoder-live-structure.spec.ts:224:3 › Qoder Live structure order (Phase 2) › sections stack Current -> Map -> Disruption -> Replan (bounding rect) (1.7s)
+  ok 2 e2e\qoder-live-structure.spec.ts:302:3 › Qoder Live accepted transition (Phase 3) › accepting a proposal surfaces the confirmation before the open warning collapses (991ms)
+  ok 3 e2e\qoder-live-structure.spec.ts:367:3 › Qoder Live state-coverage matrix (Phase 1) › L0 NORMAL: current/next real, no disruption, no Accept CTA (628ms)
+  ok 4 e2e\qoder-live-structure.spec.ts:374:3 › Qoder Live state-coverage matrix (Phase 1) › L1 UNRESOLVED: disruption shown, no proposal, no Accept CTA, safe notice (639ms)
+  ok 5 e2e\qoder-live-structure.spec.ts:382:3 › Qoder Live state-coverage matrix (Phase 1) › L2 PROPOSAL_READY: one real differing proposal, exactly one Accept CTA (531ms)
+  ok 6 e2e\qoder-live-structure.spec.ts:396:3 › Qoder Live state-coverage matrix (Phase 1) › L3 ACCEPTED: Accept CTA gone, handled confirmation shown (547ms)
+  ok 7 e2e\qoder-live-structure.spec.ts:412:3 › Qoder Live state-coverage matrix (Phase 1) › L4 MOBILITY_UNAVAILABLE-safe: rejected proposal offers no fake Accept CTA (527ms)
+  x  8 e2e\qoder-live-structure.spec.ts:435:3 › Qoder Live dark replan-state audit (Phase 4) › L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations (551ms)
+[live-map] L0 branch=honest-empty-state height=97px
+[live-map] L1 branch=honest-empty-state height=97px
+[live-map] L2 branch=honest-empty-state height=97px
+  ok 9 e2e\qoder-live-structure.spec.ts:503:3 › Qoder Live map height + first screen (Phase 4) › map is 240 normal and 200-216 when a decision is active; disruption reaches the fold (3.9s)
+
+
+  1) e2e\qoder-live-structure.spec.ts:435:3 › Qoder Live dark replan-state audit (Phase 4) › L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations 
+
+    Error: L1 dark
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   "unclassified-control [data-testid=\"v8-mobile-menu\"] \"菜单\"",
+    +   "unclassified-control [data-testid=\"topbar-avatar\"] \"XI\"",
+    +   "unclassified-control [data-testid=\"live-update-location\"] \"更新位置\"",
+    +   "unclassified-control [data-testid=\"live-report-rain\"] \"报告降雨\"",
+    +   "unclassified-control [data-testid=\"nav-hub\"] \"\"",
+    +   "unclassified-control [data-testid=\"nav-trips\"] \"\"",
+    +   "unclassified-control [data-testid=\"nav-agent\"] \"\"",
+    +   "unclassified-control [data-testid=\"nav-me\"] \"\"",
+    + ]
+
+      440 |     await expect(page.getByTestId("live-disruption")).toBeVisible();
+      441 |     let scan = await scanContrast(page);
+    > 442 |     expect(scan.rows.map((v) => `${v.kind} ${v.selector} "${v.text}"`), "L1 dark").toEqual([]);
+          |                                                                                    ^
+      443 |
+      444 |     const proposal: Proposal = {
+      445 |       id: "r-p1",
+        at D:\moodle\_qoder_shuangshugong_0558\frontend\e2e\qoder-live-structure.spec.ts:442:84
+
+    Error Context: test-results\qoder-shuangshugong-0558\qoder-live-structure-Qoder-1420b-no-dark-contrast-violations\error-context.md
+
+  1 failed
+    e2e\qoder-live-structure.spec.ts:435:3 › Qoder Live dark replan-state audit (Phase 4) › L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations 
+  8 passed (13.0s)

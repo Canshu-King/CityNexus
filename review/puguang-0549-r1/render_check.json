@@ -1,0 +1,28 @@
+{
+ "key": "shared.refresh",
+ "dictionary_arms": [
+  {
+   "line": 1181,
+   "value": "Read it again"
+  },
+  {
+   "line": 2379,
+   "value": "再读一次"
+  }
+ ],
+ "product_line_now_keyed": [
+  {
+   "line": 824,
+   "text": "{t(\"shared.refresh\")}"
+  }
+ ],
+ "checked_against": {
+  "zh": "再读一次",
+  "en": "Read it again"
+ },
+ "zh_arm_line": 2379,
+ "en_arm_line": 1181,
+ "problems": [],
+ "claim_kind": "pattern_determined",
+ "claimed_result": "PROVEN rendered text cannot change"
+}

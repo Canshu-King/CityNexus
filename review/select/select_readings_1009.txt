@@ -1,0 +1,40 @@
+Select lane readings. Every number below is read out of the two JSON dumps
+the ruler writes; nothing here is typed by hand.
+ruler: review/select/select_measure_r1.mjs
+before dump base: the authoritative tip as read before any change
+after dump base: c35a6ad432e6d61665b7e8473553149d4b042780
+
+PRODUCT DROPDOWNS  height in CSS pixels, viewport 390x844 and 1280x900
+mobile 390x844 | invite visibility | before=44 | after=44
+mobile 390x844 | inbox manual type | before=44 | after=44
+mobile 390x844 | anchor role | not reached | not reached
+mobile 390x844 | evidence mode | before=19 | after=44
+mobile 390x844 | legacy autonomy | not reached | not reached
+mobile 390x844 | legacy agent mode | not reached | not reached
+desktop 1280x900 | invite visibility | before=37 | after=37
+desktop 1280x900 | inbox manual type | before=44 | after=44
+desktop 1280x900 | anchor role | not reached | not reached
+desktop 1280x900 | evidence mode | before=19 | after=31
+desktop 1280x900 | legacy autonomy | not reached | not reached
+desktop 1280x900 | legacy agent mode | not reached | not reached
+
+LONG ARM, mounted in the Storybook story at 320 options
+mobile | filter_ms=42 | painted_after_filter=30 | count=54 / 320 | max_nodes_live=60
+mobile | panel_position=fixed | flush_with_viewport_bottom=True | rows_under_44px=0
+mobile | no_match_count=0 / 320 | no_match_list_marks_empty=true
+mobile | keyboard_rows_marked_active=1
+desktop | filter_ms=36 | painted_after_filter=30 | count=54 / 320 | max_nodes_live=60
+desktop | panel_position=absolute | flush_with_viewport_bottom=False | rows_under_44px=0
+desktop | no_match_count=0 / 320 | no_match_list_marks_empty=true
+desktop | keyboard_rows_marked_active=1
+
+NOT REACHED IN THIS ENVIRONMENT
+v13-2-anchor-role | the draft detail never rendered it; selects_on_page stayed at one
+agent-autonomy and agent-mode | /legacy answers Journey connection unavailable, body_chars=142
+
+ANCHOR ROLE, re-measured after the reach step in the ruler was fixed
+The first pass reported this control as not reached; that was the ruler swallowing a
+strict-mode click error on a multi-match door, not the product hiding the control.
+
+mobile anchor role | before=19 (min_height 0px) | after=44 (min_height 44px) | options=4
+desktop anchor role | before=19 (min_height 0px) | after=37 (min_height 30px) | options=4

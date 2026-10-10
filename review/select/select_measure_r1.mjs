@@ -52,7 +52,11 @@ const PRODUCT_TARGETS = [
     route: "/v8/bookings",
     testid: "v13-2-anchor-role",
     name: "anchor role",
-    reach: ["inbox-pending-row", "inbox-pending-title"],
+    // The row itself is a div and its title is a <b>; neither opens the draft. The
+    // door is this button, which calls setDraft -- an earlier revision clicked the two
+    // non-controls and reported the control as unreachable, which was the ruler's
+    // failure read as the product's.
+    reach: ["inbox-open-review"],
   },
   { route: "/v8/discover", testid: "(discovery evidence mode)", name: "evidence mode" },
   { route: "/legacy", testid: "agent-autonomy", name: "legacy autonomy" },
@@ -251,14 +255,22 @@ for (const [vpName, viewport] of Object.entries(VIEWPORTS)) {
       await page.waitForTimeout(900);
       seenRoutes.set(target.route, response ? response.status() : 0);
     }
+    const reachErrors = [];
     for (const testId of target.reach || []) {
-      await page
-        .locator(`[data-testid="${testId}"]`)
-        .click({ timeout: 5000 })
-        .catch(() => {});
+      // .first() because the queue holds one such door per draft; a bare click() on a
+      // multi-match throws a strict-mode violation, and the .catch(() => {}) that used
+      // to sit here swallowed it -- which is how "I never opened the door" got reported
+      // as "the product has no control here". A swallowed reach failure is now a finding.
+      const door = page.locator(`[data-testid="${testId}"]`).first();
+      try {
+        await door.click({ timeout: 5000 });
+      } catch (error) {
+        reachErrors.push(`${testId}: ${String(error).slice(0, 70)}`);
+      }
       await page.waitForTimeout(250);
     }
     let measured = await measureControl(page, target.testid);
+    if (reachErrors.length) measured.reach_failed = reachErrors;
     if (!measured.found) {
       // A negative gets an inventory, not a bare "not found".
       measured = {

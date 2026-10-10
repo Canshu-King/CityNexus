@@ -1,0 +1,21 @@
+{
+ "defect": "plan preview mixes English into a Chinese day-list",
+ "screen": "方案概览 candidate preview, read at 390px",
+ "example_line": " 每一天，紧密相连。 对比住宿 → 以下只是其中一个候选方案的预览，你还没有采用它。 第 1 天 星期四 北京站 · Check in · Beijing South Courtyard · Temple of Heaven · Overnight · Beijing South Courtyard 骑行 抵达锚点 第 2 天 星期五 National Mu",
+ "english_tokens_on_screen": [
+  "Beijing South Courtyard",
+  "Check in",
+  "Check out",
+  "National Museum of China",
+  "Overnight",
+  "Temple of Heaven"
+ ],
+ "frontend_source": {
+  "SortableActivityList_label_fallback": "features/studio/SortableActivityList.tsx:55 (labels?.[activity] ?? activity)",
+  "V8Experience_caller_without_labels": "app/V8Experience.tsx:3392 (no labels prop)",
+  "V8Experience_raw_join": "app/V8Experience.tsx:3286 ({day.activities.join(\" · \")})",
+  "V12_panel_passes_labels": "features/studio/V12TripStudioPanel.tsx:123 (labels={labels})"
+ },
+ "root_cause_hypothesis": "stop titles come from backend plan.activities[].title; some are English (POI layer), some Chinese (user input) -- a backend vocabulary gap, not a missing frontend word map. The mode tokens Check in/Check out/Overnight are activity types the frontend word tables already own (OVERNIGHT.zh=过夜) but this day-card path does not map them.",
+ "not_yet_fixed": "read-only localization found in the walk; product fix to follow"
+}

@@ -1,0 +1,72 @@
+{
+ "tip": "ff7f62011821240835572bf4effe2e139ee2bada",
+ "branch": "ord0476-footprint-screen-r1",
+ "rows": [
+  {
+   "marker": "stop-checkin-notice",
+   "branch_hits": 1,
+   "tip_hits": 1,
+   "on_tip": true,
+   "branch_files": [
+    "frontend/src/features/trip/TripItinerary.tsx"
+   ]
+  },
+  {
+   "marker": "cn-stop-checkin",
+   "branch_hits": 8,
+   "tip_hits": 8,
+   "on_tip": true,
+   "branch_files": [
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/trip/TripItinerary.tsx"
+   ]
+  },
+  {
+   "marker": "stampThisStop",
+   "branch_hits": 2,
+   "tip_hits": 2,
+   "on_tip": true,
+   "branch_files": [
+    "frontend/src/features/trip/TripItinerary.tsx"
+   ]
+  },
+  {
+   "marker": "stopNotice",
+   "branch_hits": 3,
+   "tip_hits": 3,
+   "on_tip": true,
+   "branch_files": [
+    "frontend/src/features/trip/TripItinerary.tsx"
+   ]
+  },
+  {
+   "marker": "stop-checkin",
+   "branch_hits": 10,
+   "tip_hits": 10,
+   "on_tip": true,
+   "branch_files": [
+    "frontend/src/features/checkin/footprint.css",
+    "frontend/src/features/trip/TripItinerary.tsx"
+   ]
+  },
+  {
+   "marker": "FootprintPanel",
+   "branch_hits": 4,
+   "tip_hits": 5,
+   "on_tip": true,
+   "branch_files": [
+    "frontend/src/app/v8PanelRegistry.tsx",
+    "frontend/src/features/checkin/FootprintPanel.tsx"
+   ]
+  },
+  {
+   "marker": "activity.stamp",
+   "branch_hits": 0,
+   "tip_hits": 1,
+   "on_tip": true,
+   "branch_files": []
+  }
+ ],
+ "missing_on_tip": [],
+ "verdict": "已落"
+}

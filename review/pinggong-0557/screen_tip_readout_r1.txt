@@ -1,0 +1,5 @@
+# authoritative tip 24a50a8aecf0a1fe4704400c687540d3e05d74fb served on 4591, /legacy, backend absent
+locale=en | has_original_bytes=false | has_keyname=true | png=../review/pinggong-0557/screen_tip_en_r1.png bytes=15327
+   innerText="CITYNEXUS · DETERMINISTIC JOURNEY MODE /  / Journey connection unavailable /  / ERROR · main.cityNexusRequestRefusedHttp /  / Retry backend connection"
+locale=zh-CN | has_original_bytes=false | has_keyname=true | png=../review/pinggong-0557/screen_tip_zh-CN_r1.png bytes=15327
+   innerText="CITYNEXUS · DETERMINISTIC JOURNEY MODE /  / Journey connection unavailable /  / ERROR · main.cityNexusRequestRefusedHttp /  / Retry backend connection"

@@ -1,0 +1,13 @@
+ORD-0395 ruling three -- negative controls on the named 422 register.
+### N1 register a status the door does not add
+    result: 1 failed, 4 deselected in 5.48s    restored_clean=True
+    reason: D:\moodle\_qoder_lane_heyuegong_20261009\wt\backend\tests\test_contract.py:113: AssertionError: /api/v1/demo/reset post: the served document adds ['422'] but the register says ['41
+### N2 register a wildcard path alongside the real one
+    result: 1 failed, 4 deselected in 3.34s    restored_clean=True
+    reason: D:\moodle\_qoder_lane_heyuegong_20261009\wt\backend\tests\test_contract.py:103: AssertionError: an exception must name one path: /api/v1/*
+### N3 register nothing for the door
+    result: 1 failed, 4 deselected in 2.98s    restored_clean=True
+    reason: D:\moodle\_qoder_lane_heyuegong_20261009\wt\backend\tests\test_contract.py:104: AssertionError: /api/v1/demo/reset post registers nothing
+### N4 delete the whole registration
+    result: 1 failed, 4 deselected in 3.25s    restored_clean=True
+    reason: D:\moodle\_qoder_lane_heyuegong_20261009\wt\backend\tests\test_contract.py:95: AssertionError: the door the ruling named has to stay registered; an empty register would otherwise l

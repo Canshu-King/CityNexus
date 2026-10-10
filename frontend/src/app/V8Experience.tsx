@@ -669,6 +669,15 @@ export function V8Experience() {
   const [artifactImportedAt, setArtifactImportedAt] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  /* The drawer now animates out, so closing is two-phase: `navClosing` keeps the node
+     mounted long enough to play, and a timer finishes the job if `animationend` never
+     arrives (reduced motion, or the tab hidden mid-animation). ORD-0480's arms wait a
+     second before counting nodes, so the extra frames stay inside their budget. */
+  const [navClosing, setNavClosing] = useState(false);
+  const navCloseTimer = useRef<number | null>(null);
+  const [collapsed, setCollapsed] = useState(
+    () => localStorage.getItem("citynexus.v8.sidebar_collapsed") === "1",
+  );
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [offline, setOffline] = useState<OfflineJourney | null>(null);
@@ -949,16 +958,66 @@ export function V8Experience() {
      Installed once here because every overlay that owns a footer needs the same numbers. */
   useEffect(() => installVisualViewportVars(), []);
 
+  const finishNavClose = useCallback(() => {
+    if (navCloseTimer.current !== null) {
+      window.clearTimeout(navCloseTimer.current);
+      navCloseTimer.current = null;
+    }
+    setNavClosing(false);
+    setNavOpen(false);
+  }, []);
+
+  const closeNav = useCallback(() => {
+    if (!navOpen) return;
+    setNavClosing(true);
+    if (navCloseTimer.current !== null) window.clearTimeout(navCloseTimer.current);
+    navCloseTimer.current = window.setTimeout(finishNavClose, 260);
+  }, [navOpen, finishNavClose]);
+
+  useEffect(() => {
+    return () => {
+      if (navCloseTimer.current !== null) window.clearTimeout(navCloseTimer.current);
+    };
+  }, []);
+
+  /* Measured before this effect existed: with the drawer open, twelve consecutive
+     Tab presses all landed outside it (the first one reached the topbar language
+     button under the scrim), because nothing took focus into the panel and the
+     page behind it stayed fully focusable. `inert` on the main column makes the
+     keyboard and screen-reader order match what the scrim already says visually.
+     The cleanup is load-bearing: a leaked inert would lock the whole page behind
+     a drawer that is no longer there. */
+  useEffect(() => {
+    if (!navOpen) return;
+    const main = document.querySelector<HTMLElement>(".v8-main");
+    if (!main) return;
+    main.inert = true;
+    if (!navClosing) {
+      document
+        .querySelector<HTMLElement>("#v8-nav-drawer [data-testid='v8-drawer-close']")
+        ?.focus();
+    }
+    return () => {
+      main.inert = false;
+    };
+  }, [navOpen, navClosing]);
+
+  const toggleCollapsed = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    localStorage.setItem("citynexus.v8.sidebar_collapsed", next ? "1" : "0");
+  };
+
   useEffect(() => {
     if (!navOpen && !alertsOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      setNavOpen(false);
+      closeNav();
       setAlertsOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [navOpen, alertsOpen]);
+  }, [navOpen, alertsOpen, closeNav]);
 
   // `selected` is what to preview: the traveller's own choice, or the best
   // candidate so the screens are never empty.  `chosenOption` is what the
@@ -1002,7 +1061,7 @@ export function V8Experience() {
       /* Read back what was just written rather than assuming `value` is what the address became: this is
          the one place that decides both halves, and a second guess about the address is a second truth. */
       setAddress(addressFromPath());
-      setNavOpen(false);
+      closeNav();
       setAlertsOpen(false);
     });
   };
@@ -1904,7 +1963,7 @@ export function V8Experience() {
 
   return (
     <div className="v8-product-shell">
-      <aside className="v8-sidebar">
+      <aside className="v8-sidebar" data-collapsed={collapsed ? "true" : "false"}>
         <div className="v8-brand">
           <div className="v8-brand-mark">CN</div>
           <div>
@@ -1926,6 +1985,7 @@ export function V8Experience() {
                 className={route === item.key ? "active" : ""}
                 data-contrast-role={route === item.key ? "state" : undefined}
                 onClick={() => navigate(item.key)}
+                title={collapsed ? t("nav." + item.key) : undefined}
               >
                 <Icon name={item.icon} />
                 <span>{t("nav." + item.key)}</span>
@@ -1934,6 +1994,18 @@ export function V8Experience() {
             </div>
           ))}
         </nav>
+        <button
+          type="button"
+          className="v8-sidebar-toggle"
+          data-testid="sidebar-collapse"
+          aria-label={collapsed ? t("shell.expandNav") : t("shell.collapseNav")}
+          aria-expanded={!collapsed}
+          title={collapsed ? t("shell.expandNav") : t("shell.collapseNav")}
+          onClick={toggleCollapsed}
+        >
+          <Icon name="arrow" />
+          <span>{collapsed ? t("shell.expandNav") : t("shell.collapseNav")}</span>
+        </button>
         <div className="v8-sidebar-bottom">
           <div className="v8-sync">
             <span className="status-dot" />
@@ -2195,22 +2267,35 @@ export function V8Experience() {
           </button>
         ))}
       </nav>
-      {navOpen && (
+      {(navOpen || navClosing) && (
         <>
           <button
             type="button"
             className="v8-drawer-backdrop"
+            data-state={navClosing ? "closing" : "open"}
             aria-label={t("shell.closeNav")}
-            onClick={() => setNavOpen(false)}
+            onClick={closeNav}
           />
-          <nav id="v8-nav-drawer" aria-label="Product navigation" data-testid="v8-nav-drawer">
+          <nav
+            id="v8-nav-drawer"
+            aria-label="Product navigation"
+            data-testid="v8-nav-drawer"
+            data-state={navClosing ? "closing" : "open"}
+            onAnimationEnd={(event) => {
+              /* Only the exit animation may unmount the drawer; the entry
+                 animation ends on this same node. */
+              if (event.target === event.currentTarget && navClosing) {
+                finishNavClose();
+              }
+            }}
+          >
             <div className="v8-nav-drawer-head">
               <span className="v8-kicker">{t("shell.allRoutes")}</span>
               <button
                 type="button"
                 className="v8-quiet-button"
                 data-testid="v8-drawer-close"
-                onClick={() => setNavOpen(false)}
+                onClick={closeNav}
               >
                 {t("shell.close")}
               </button>
@@ -4608,7 +4693,7 @@ function Bookings({
           </p>
           <details className="v8-advanced" data-testid="bookings-advanced">
             <summary>
-              {zh ? "高级：结构化数据" : "Advanced: structured data"}
+              {t("bookings.advancedStructuredData")}
             </summary>
             <label htmlFor="reservation-json">
               {t("bookings.reservationJson")}
@@ -4824,20 +4909,12 @@ function Me({
         <article className="v8-me-card">
           <span className="v8-kicker">{t("my.stay")}</span>
           <strong>
-            {stay
-              ? stay.stay.property_name
-              : zh
-                ? "还没有选定"
-                : "Not chosen yet"}
+            {stay ? stay.stay.property_name : t("me.stayNotChosen")}
           </strong>
           <p>
             {stay
-              ? zh
-                ? "已确认的住宿"
-                : "Confirmed stay"
-              : zh
-                ? "在「行程 · 住宿」里挑选"
-                : "Choose it in Trips · Stay"}
+              ? t("me.stayConfirmed")
+              : t("me.stayChooseInTrips")}
           </p>
         </article>
 
@@ -4856,12 +4933,8 @@ function Me({
           </strong>
           <p>
             {bookings.length
-              ? zh
-                ? "受保护的预订，不会被自动改动。"
-                : "Protected bookings; they are never changed automatically."
-              : zh
-                ? "在「行程 · 预订」里导入你的票或确认单。"
-                : "Import a ticket or confirmation in Trips · Bookings."}
+              ? t("me.bookingsProtected")
+              : t("me.bookingsImport")}
           </p>
         </article>
 
@@ -4871,9 +4944,7 @@ function Me({
           </span>
           <strong>{freedomLabel(policy?.mode)}</strong>
           <p>
-            {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。"
-              : "Anything affecting a confirmed booking or protected plan asks you first."}
+            {t("me.asksBeforeProtectedChange")}
           </p>
           <label className="me-mode-row">
             <span>{t("me.allowAutomaticChanges")}</span>

@@ -1,0 +1,14 @@
+before generation, read from the tip object da846e54e73b839c9882dc45a18ed73c93c26bc5 (not from this lane's working tree)
+target: frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+line 192, verbatim:
+                    {zh ? "技术详情" : "Technical detail"}
+the two strings that ternary paints, taken out of that line:
+zh=技术详情
+en=Technical detail
+the dictionary cell named by the order, one per book:
+line 257:   "hub.continuationTechnicalDetail": "Technical detail",
+line 1509:   "hub.continuationTechnicalDetail": "技术详情",
+zh book starts at line 1284, so the cell above it is the en book's and the one below is the zh book's
+ternaries standing in this file at the tip: 1 at lines 192
+the格 this lane yields to lane progress (its claim is in the ledger, block progress_2307.md):
+frontend/src/features/agent/AgentComposer.tsx lines 34 still carry 'zh ? "可行" : "Feasible"' at the tip

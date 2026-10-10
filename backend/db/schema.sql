@@ -181,8 +181,16 @@ CREATE TABLE IF NOT EXISTS places (
     city_code TEXT NOT NULL,
     name TEXT NOT NULL,
     category TEXT NOT NULL,
-    latitude REAL NOT NULL,
-    longitude REAL NOT NULL,
+    -- The third "why is it not found" cause, made representable.  A provider CAN hand back an
+    -- identity for a place and no usable point for it -- a relation whose geometry upstream never
+    -- resolved, or a bare node the address service refused to geocode.  With NOT NULL here such a
+    -- row could not be stored at all, so the only options were to drop the place or to invent a
+    -- coordinate, and either way the screen had nothing truthful to say about why a searched place
+    -- "was not found".  Nullable lets the row carry the identity AND declare the gap;
+    -- catalog_coordinate_status() in anywhere_capability.py is what the API reads, so this becomes
+    -- a nameable state rather than an absence.
+    latitude REAL,
+    longitude REAL,
     opening_hours_json TEXT NOT NULL DEFAULT '{}',
     tags_json TEXT NOT NULL DEFAULT '[]',
     metadata_json TEXT NOT NULL DEFAULT '{}',

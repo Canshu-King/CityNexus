@@ -128,6 +128,11 @@
   --cn-s-48: 48px;
   --cn-gutter: 20px;
 
+  /* Card padding takes two tiers, not one: a content card reads at 20, a dense list row reads at 16.
+     The values between them (13, 14, 18/15, 22, 27) were per-file choices rather than decisions. */
+  --cn-card-pad: var(--cn-s-20);
+  --cn-card-pad-compact: var(--cn-s-16);
+
   /* Radii: one numeric ladder, and the semantic names alias into it. ORD-0459 step 2 moved every
      component rule onto this table, so a radius that is not one of these values cannot be written
      without adding a tier first. Snap rule used for the migration: nearest tier, ties to the larger
@@ -289,16 +294,128 @@
 .v8-page h1, .v8-hero-title { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
 .v8-page h2, .v8-section-title { font-size: var(--cn-fs-title); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.015em; }
 
-/* Unify card material: solid content, restrained depth (no atmosphere floating). */
+/* Unify card material: solid content, restrained depth (no atmosphere floating), one corner.
+   The list is what the shell actually paints, walked screen by screen on the live app rather than
+   guessed from file names. A row whose selected state IS a ring is excluded -- `.v8-stay-card.selected`
+   and `.hotel-card.chosen` carry `box-shadow` as their only chosen-mark, and overpainting it here
+   would delete that signal. */
 .v8-page .v8-card,
 .v8-page .replan-card,
 .v8-page .evidence-card,
-.v8-page .map-card {
-  background: var(--cn-surface);
-  border: 1px solid var(--cn-hairline);
+.v8-page .map-card,
+.v8-page .timeline-card,
+.v8-page .agent-card,
+.v8-page .guardian-card,
+.v8-page .hotel-card:not(.chosen),
+.v8-page .plan-cmp-card,
+.v8-page .v8-day-card,
+.v8-page .v8-stay-card:not(.selected),
+.v8-page .v8-booking-card,
+.v8-page .v8-me-card,
+.v8-page .v8-twin-card,
+.v8-page .v8-boundary-card,
+.v8-page .v8-detail-panel,
+.v8-page .v8-day-detail,
+.v8-page .v8-next-card,
+.v8-page .v8-comparison,
+.v8-page .v8-studio-aside,
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-runtime-card,
+.v8-page .v8-map-panel,
+.v8-page .v8-agent-composer-card,
+.v8-page .v8-intel-facts > div,
+.v8-page .v10-execution-panel,
+.v8-page .v12-authoritative-panel,
+.v8-page .v12-state-card,
+.v8-page .v12-commitment-card,
+.v8-page .v12-impact-card,
+.v8-page .v12-risk-banner,
+.v8-page .v13-2-memory-panel {
   border-radius: var(--cn-r-card);
   box-shadow: var(--cn-shadow-card);
 }
+
+/* The chosen rows keep their ring, but a chosen card is still a card: its corner joins the ladder.
+   Declaring only the radius here leaves their `box-shadow` ring untouched in `styles.css`. */
+.v8-page .v8-stay-card.selected,
+.v8-page .hotel-card.chosen { border-radius: var(--cn-r-card); }
+
+.v8-page .v8-card,
+.v8-page .replan-card,
+.v8-page .evidence-card,
+.v8-page .map-card,
+.v8-page .v13-2-memory-panel {
+  background: var(--cn-surface);
+  border: 1px solid var(--cn-hairline);
+}
+
+/* Two padding tiers. A dense list row keeps the tighter one so a list of stays does not grow a
+   second line per card; everything that holds prose reads at the wider one. */
+.v8-page .v8-day-card,
+.v8-page .v8-stay-card,
+.v8-page .v8-me-card,
+.v8-page .v8-runtime-card,
+.v8-page .hotel-card,
+.v8-page .plan-cmp-card,
+.v8-page .v12-commitment-card,
+.v8-page .v12-impact-card,
+.v8-page .v12-risk-banner { padding: var(--cn-card-pad-compact); }
+
+.v8-page .v8-card,
+.v8-page .replan-card,
+.v8-page .evidence-card,
+.v8-page .map-card,
+.v8-page .timeline-card,
+.v8-page .guardian-card,
+.v8-page .v8-booking-card,
+.v8-page .v8-detail-panel,
+.v8-page .v8-day-detail,
+.v8-page .v8-next-card,
+.v8-page .v8-comparison,
+.v8-page .v8-studio-aside,
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-twin-card,
+.v8-page .v8-boundary-card,
+.v8-page .v8-intel-facts > div,
+.v8-page .v12-state-card,
+.v8-page .v12-authoritative-panel,
+.v8-page .v13-2-memory-panel { padding: var(--cn-card-pad); }
+
+/* The two dark cards: a light-shadow token painted on #172945 reads as nothing, so they carry the
+   raised tier instead of the shared one rather than losing their depth to the unification. */
+.v8-page .v8-agent-composer-card,
+.v8-page .agent-card { padding: var(--cn-s-24); box-shadow: var(--cn-shadow-raised); }
+
+/* Feature panels mounted straight on the shell (abort / pretrip / pending / ranking / hero strip)
+   never passed the contract above, because that one is anchored on `.v8-page` and these screens do
+   not sit inside it. Their corners already take `--cn-r-card` and their borders already take
+   `--cn-hairline` -- only the depth was missing, so that is the single property added here. Padding
+   is left exactly as each panel chose it. Found by detecting boxes from their painted shape rather
+   than their class name: none of these names contain "card", so a name-based sweep missed them. */
+.v8-product-shell .cn-pretrip,
+.v8-product-shell .cn-pending,
+.v8-product-shell .cn-abort,
+.v8-product-shell .plan-ranking,
+.v8-product-shell .cn-hero-strip { box-shadow: var(--cn-shadow-card); }
+
+/* Two more content panels the name-based sweep missed, found by the shape sweep: the map screen's
+   facts block and a trip-stop row. Both are the same kind of object as panels already on the
+   contract -- `v8-map-facts` carries `padding: 22px`, `--v8-line` and `--cn-surface` exactly like
+   `.v8-detail-panel`, and `.trip-stop` is a clickable list row like `.v8-stay-card` -- yet both
+   still held their corner at the twelve tier. They join the card corner and the shared depth; their
+   padding stays what each screen chose, since that is content fitting, not material. */
+.v8-page .v8-map-facts,
+.v8-page .trip-stop:not(.current) {
+  border-radius: var(--cn-r-card);
+  box-shadow: var(--cn-shadow-card);
+}
+
+/* `.trip-stop.current` paints its own inset ring at styles.css:1198 -- that ring is how the live
+   stop is marked, and this contract loads after it, so taking the shadow there would erase the
+   state. It joins the corner only. */
+.v8-page .trip-stop.current { border-radius: var(--cn-r-card); }
 
 /* --- Motion: transform/opacity only, GPU-friendly, capped, reduced-motion aware --- */
 
@@ -723,6 +840,16 @@
     background: var(--cn-accent) !important;
     color: var(--cn-canvas) !important;
   }
+  :root[data-theme="dark"] .v8-page .v8-stay-impact em,
+  :root[data-theme="dark"] .v8-page .v8-day-detail-title > span {
+    /* The same defect the rule above was written for, on the two chips that were left out of
+       it: measured under dark they still carried accent text on the hardcoded #eff1ff fill at
+       3.25:1 and 3.22:1.  Only fill and label follow .mode-mark here; size, radius and padding
+       are untouched.  .v8-hotel-thumb has the same reading but it is a 49px and 142px thumbnail,
+       so filling it is a visual decision rather than a chip fix and is handed up unmade. */
+    background: var(--cn-accent) !important;
+    color: var(--cn-canvas) !important;
+  }
 
   /* 5. Hardcoded grey-blue body text that fell below AA on the dark canvas. */
   :root[data-theme="dark"] .v8-product-shell .v8-lede, :root[data-theme="dark"] .v8-product-shell .v8-muted, :root[data-theme="dark"] .v8-product-shell .v8-live-now p, :root[data-theme="dark"] .v8-product-shell .v8-live-now > strong, :root[data-theme="dark"] .v8-product-shell .v8-mode-chooser span, :root[data-theme="dark"] .v8-product-shell .v8-mode-chips button, :root[data-theme="dark"] .v8-product-shell .v8-next-card p, :root[data-theme="dark"] .v8-product-shell .v8-eta span, :root[data-theme="dark"] .v8-product-shell .v9-evidence-summary > small {
@@ -869,10 +996,15 @@
    mode chips were legacy hardcoded greys/blues that the light theme had never
    been checked against.
    --------------------------------------------------------------------------- */
+/* .v8-aside-heading button is added to this list because it is the same family of text consumer
+   and was left out: measured on the live screen it still took --v8-indigo (#0a66ff) while every
+   button beside it on the same screen read --cn-accent-text (#0a5cd6), so the screen carried two
+   blues at once. */
 .v8-kicker,
 .v8-text-button,
 .v8-quiet-button,
-.v8-compare-button {
+.v8-compare-button,
+.v8-aside-heading button {
   color: var(--cn-accent-text);
 }
 .v8-brand span,
