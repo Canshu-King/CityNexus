@@ -1,0 +1,17 @@
+A1 branch review/kuaijiangong-copula-ruler-r1 head 57f7cfa12dd5d09f5a3bd38a69b95df5dc59e4b2
+A2 ls-remote readback 57f7cfa12dd5d09f5a3bd38a69b95df5dc59e4b2	refs/heads/review/kuaijiangong-copula-ruler-r1
+A3 tip used for the scan ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a
+A4 files in this branch relative to the tip: 4
+A5 review/kuaijiangong/copula_ruler/copula_fix_targets_r1.tsv
+A5 review/kuaijiangong/copula_ruler/copula_ruler_evidence_r1.txt
+A5 review/kuaijiangong/copula_ruler/copula_ruler_r1.py
+A5 review/kuaijiangong/copula_ruler/copula_surface_r1.tsv
+A6 files NOT under review/ (product bytes touched) = 0
+A7 tsv lines in the branch = 48 (header + 47 rows), copula rows = 3
+A8 fix sheet lines = 4 (header + 3 rows)
+A9 selftest in the evidence file: SELFTEST OK cases=7
+B1 自报一枚我犯的错：另一段脚本把 git 的 cwd 指到了主树 D:\moodle\CityNexus，于是把别人暂存的字节提交到了 review/boli-party-occupancy-scope-r1（那笔提交 4 枚文件，含一枚产品文件 backend/app/core/temporal.py）。
+B2 复原：在同一枚主树里 `git reset --soft cca117cf1a9c98aba8bd1edda325232e773503c0`（只退枝尖，索引与工作树不动）。现读枝尖 = cca117cf1a9c98aba8bd1edda325232e773503c0
+B3 复原后主树暂存清单（回到我动手前那四枚）：backend/app/core/temporal.py, review/jiazigong/i18n_import_booking_arm_r1.py, review/mugong-i18n-continuation-technical-r2/continuation_technical_arm_r2.py, review/yougong/i18n_server_reason_label_arm_r1.py
+B4 那枚枝在远端本就不存在，所以零推送：ls-remote 回读为空 = yes
+B5 我那把尺自己的枝（review/kuaijiangong-copula-ruler-r1）字节不受影响，仍只含 review/ 下四枚件，见 A4 到 A6。
