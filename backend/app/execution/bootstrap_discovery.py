@@ -184,7 +184,15 @@ def _provider_provenance(attempts: list[dict[str, Any]], *, configured_url: str 
     return "UNVERIFIED"
 
 
-def _row_provider_provenance(row: RealPlaceCandidate) -> str:
+def _row_provider_provenance(
+    row: RealPlaceCandidate, *, scope: dict[str, Any] | None = None
+) -> str:
+    # One public OSM identity can be independently discovered by a LIVE member
+    # and a controlled TEST member. Their request grades must not be shared.
+    if scope is not None:
+        scoped_grade = scope.get("provider_provenance")
+        if scoped_grade in {"LIVE_PROVIDER", "TEST_PROVIDER", "UNVERIFIED"}:
+            return str(scoped_grade)
     evidence = json.loads(row.evidence_json or "{}")
     metadata = json.loads(row.metadata_json or "{}")
     for value in (
@@ -229,9 +237,11 @@ def _candidate_payload(
     osm_id = str(evidence.get("osm_id") or "")
     source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
     scope_distance = None
+    viewer_scope = None
     if member_id is not None and traveler_id is not None:
         for scope in _bootstrap_scope_entries(evidence):
             if scope["member_id"] == str(member_id) and scope["traveler_id"] == str(traveler_id):
+                viewer_scope = scope
                 scope_distance = scope.get("distance_m")
                 break
     if scope_distance is None and len(_bootstrap_scope_entries(evidence)) <= 1:
@@ -278,7 +288,7 @@ def _candidate_payload(
         ),
         "opening_verification_action": "OPEN_SOURCE_PAGE",
         "source_tags": source_tags,
-        "provider_provenance": _row_provider_provenance(row),
+        "provider_provenance": _row_provider_provenance(row, scope=viewer_scope),
     }
 
 
@@ -414,6 +424,7 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         "source_kind": str(raw.get("source_kind") or ""),
                         "distance_m": raw.get("distance_m"),
                         "expires_at": str(raw.get("expires_at") or "") or None,
+                        "provider_provenance": raw.get("provider_provenance"),
                     }
                 )
     if scopes:
@@ -430,6 +441,7 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 "source_kind": str(evidence.get("source_kind") or ""),
                 "distance_m": None,
                 "expires_at": None,
+                "provider_provenance": evidence.get("provider_provenance"),
             }
         ]
     return []
@@ -1211,6 +1223,7 @@ def discover_bootstrap_candidates(
                         "receipt_id": receipt_id,
                         "source_kind": source_kind,
                         "expires_at": _iso(expires_at),
+                        "provider_provenance": provider_provenance,
                         "distance_m": (
                             float(candidate.distance_m)
                             if persisted_distance and candidate.distance_m is not None
@@ -1270,6 +1283,7 @@ def discover_bootstrap_candidates(
                                 "receipt_id": receipt_id,
                                 "source_kind": source_kind,
                                 "expires_at": _iso(expires_at),
+                                "provider_provenance": provider_provenance,
                                 "distance_m": (
                                     float(candidate.distance_m)
                                     if persisted_distance and candidate.distance_m is not None
@@ -2000,7 +2014,7 @@ def select_bootstrap_candidate(
             "selected_place_id": row.materialized_place_id,
             "plan_version_id": None,
             "journey_status": journey.status,
-            "provider_provenance": _row_provider_provenance(row),
+            "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
         }
     other_selected = session.scalar(
         select(RealPlaceCandidate.id).where(
@@ -2056,7 +2070,8 @@ def select_bootstrap_candidate(
             metadata_json=_json(
                 {
                     "discovery_mode": "live",
-                    "provider_provenance": _row_provider_provenance(row),
+                    "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
+                    "origin_provider_provenance": _row_provider_provenance(row),
                     "cost_evidence": cost,
                     "price_known": str(cost.get("status") or "UNKNOWN").upper() in {"KNOWN", "VERIFIED_PROVIDER"},
                     "source_url": json.loads(row.evidence_json or "{}").get("source_url"),
