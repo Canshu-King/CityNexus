@@ -1,0 +1,25 @@
+1. authoritative_tip40 7ce836f9afafe9e763527cba828719b414b18db8
+2. product_branch review/快钉工-0557-r1 tip40 b4edc8c78ece89d5e49f3e71ace926f4f0b423e6
+3. dict_branch review/快钉工-0557-dict-r1 tip40 154c76b388ac63d6ee96d577f5ab5e0a2310b853
+4. local_only_merge_prediction_for_landing tmp/kuaidinggong-0557-combined tip40 9516aa6de2d4a6de0cfbaf3f381453483e9d1ad7
+5. ls-remote_origin_readback 154c76b388ac63d6ee96d577f5ab5e0a2310b853	refs/heads/review/快钉工-0557-dict-r1 | b4edc8c78ece89d5e49f3e71ace926f4f0b423e6	refs/heads/review/快钉工-0557-r1
+6. product_file_numstat 2	2	frontend/src/features/recovery/V14PreventivePanel.tsx
+7. dict_file_numstat 7	0	frontend/src/i18n/LocaleContext.tsx
+8. files_touched product_dict_each [4, 1]
+9. before_panel_line no dominant mode -> [(196, '.join(", ") || "no dominant mode"}')]
+10. after_panel_line recovery.noDominantMode -> [(196, '.join(", ") || t("recovery.noDominantMode")}')]
+11. en_side recovery.noDominantMode at [(327, '"recovery.noDominantMode": "no dominant mode",')]
+12. zh_side recovery.noDominantMode at [(1593, '"recovery.noDominantMode": "no dominant mode",')]
+13. equality recovery.noDominantMode tip_literal_present=True en_value_matches=True zh_value_matches=True verdict=SCREEN_TEXT_IDENTICAL
+14. before_panel_line none on this journey -> [(228, ': "none on this journey"}')]
+15. after_panel_line recovery.noneOnThisJourney -> [(228, ': t("recovery.noneOnThisJourney")}')]
+16. en_side recovery.noneOnThisJourney at [(328, '"recovery.noneOnThisJourney": "none on this journey",')]
+17. zh_side recovery.noneOnThisJourney at [(1594, '"recovery.noneOnThisJourney": "none on this journey",')]
+18. equality recovery.noneOnThisJourney tip_literal_present=True en_value_matches=True zh_value_matches=True verdict=SCREEN_TEXT_IDENTICAL
+19. dict_diff_deletes_existing_line 0
+20. panel_locale_conditionals 0
+21. e2e_lines_asserting_the_two_testids [(402, 'await expect(page.getByTestId("v14-preventive-evidence")).toContainText("ORTOOLS_CP_SAT_V2");'), (412, 'await expect(page.getByTestId("v14-preventive-protected")).toContainText("place-river-cruise");')]
+22. files_under_src_holding_the_two_literals_in_this_checkout ['frontend/src/i18n/LocaleContext.tsx']
+23. key_names_absent_in_tip_dictionary occurrences 0
+24. evidence_measured_on_checkout_state tmp/kuaidinggong-0557-combined
+25. gate_readings_see review/kuaidinggong-0557/gates_readout_r1.txt

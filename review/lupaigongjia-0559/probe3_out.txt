@@ -1,0 +1,51 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+
+## compose-with-cost | POST /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/authoritative-compose -> http_status=422
+   {error={code="VALIDATION_ERROR", details=None, error_receipt_id="CNX-A8XRS6EH", message="V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW:39fc0471-1a16-4878-872", message_key="request.invalid", trace_id="6410948e-62c2-42dd-bb76-85efb927827f"}}
+
+## compose-free-known | POST /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/authoritative-compose -> http_status=422
+   {error={code="VALIDATION_ERROR", details=None, error_receipt_id="CNX-A8XRS6EH", message="V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW:39fc0471-1a16-4878-872", message_key="request.invalid", trace_id="605cc41c-73a5-4bfc-85f1-49a8e2619a56"}}
+
+## refresh-mode-live | POST /api/v1/journeys/747bd9a3-8d75-4643-8c92-cdf429ca6e05/guardian/resilience/refresh -> http_status=200
+   {counterfactuals=list(len=6, {answered=True, c4_preserved=False, cost_delta_minor=0, created_at="2026-10-10T01:18:48.147774+00:00", evidence=dict{activity_count,bounded,domain_truth_mutated,engine,expected_failure_risk,expected_switching_cost_minor,premise,premise_holds,preventive_value,problem_fingerprint,protected_anchor_count,schedule_disruption_penalty_min,solver_kind,solver_status,uncertainty}, feasible=False, id="84fb7b76-d59a-4138-84f5-5a91b3513400", journey_id="747bd9a3-8d75-4643-8c92-cdf429ca6e05", parameters=dict{precipitation_severity_band,rain_earlier_min,uncertainty_label}, plan_changes=list(len=0), scenario_key="rain_earlier", scenario_type="WEATHER_SHIFT", schedule_drift_min=0, snapshot_id="b07c8b76-f064-439d-a6ad-506ed39258a2"}), discovery={candidates=list(len=0), captured_at="2026-10-10T01:18:48.137772+00:00", city_code="CN-XIAMEN", city_context="CN-XIAMEN", expires_at="2026-10-10T01:33:48.137772+00:00", journey_id="747bd9a3-8d75-4643-8c92-cdf429ca6e05", mode="live-unavailable", provenance="LIVE_PROVIDER", provider_evidence={capture_anchor=None, mobility=None, snapshot_schema=None, weather=None}, provider_status={anchor=None, anchor_credit_kept=False, anchor_legs=list(len=0), attempts=list(len=0), counts_as_supply=False, failure_stage=None, fallback_geocode="NOT_REACHED", fallback_reason="REAL_CITY_DISABLED", nominatim="UNAVAILABLE", overpass="UNAVAILABLE", wrong_city_replay_blocked=True}, runtime_provenance="LIVE_PROVIDER"}, snapshot={activity_risks=list(len=0), captured_at="2026-10-10T01:18:48.144774+00:00", commitment_buffers=list(len=0), components={com
+
+## refresh-mode-bogus | POST /api/v1/journeys/747bd9a3-8d75-4643-8c92-cdf429ca6e05/guardian/resilience/refresh -> http_status=422
+   {error={code="VALIDATION_ERROR", details={errors=list(len=1, dict{loc,message_key,msg,type})}, error_receipt_id="CNX-CDVCAX27", message="Request validation failed", message_key="request.invalid", trace_id="f0779928-686a-44cf-9c86-c9c9032b0600"}}
+
+## capabilities-PUT-on-active | PUT /api/v1/journeys/850425fe-e64d-4df5-bd46-f89b65db6491/capabilities -> http_status=200
+   {capabilities=list(len=1, {active=True, class="CARE_REQUIREMENT", code="MAX_WALKING_PER_LEG_M", confirmed=True, confirmed_at="2026-10-10T01:18:48.160256+00:00", created_at="2026-10-10T01:18:48.160256+00:00", explicit=True, id="2e09a7d4-1b69-4cd2-82c7-bd9f8ddfcbe9", journey_id="850425fe-e64d-4df5-bd46-f89b65db6491", params=dict{meters}, provenance="USER_STATED", scope="JOURNEY", severity="SOFT", source="USER_CONFIRMED", traveler_id="0abb4a3f-5561-4c9a-bd42-d441ca621baa", updated_at="2026-10-10T01:18:48.160256+00:00"}), journey_id="850425fe-e64d-4df5-bd46-f89b65db6491", summary={hard=list(len=0), items=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), soft=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), strong=list(len=0), unknown_accessibility_is_not_accessible=True}, traveler_twin={capability_summary={hard=list(len=0), items=list(len=0), soft=list(len=0), strong=list(len=0), unknown_accessibility_is_not_accessible=True}, confidence=0.0, conflicts=list(len=0), evidence_count=0, explicit_capabilities=list(len=0), explicit_preferences=list(len=0), learned_soft_preferences=list(len=0), provenance={evidence_ids=list(len=0), source="journey_outcome_events", updated_at="2026-10-10T01:18:48.162257+00:00"}, traveler_id="0abb4a3f-5561-4c9a-bd42-d441ca621baa", updated_at="2026-10-10T01:18:48.162257+00:00"}}
+
+## capabilities-confirm-hard-on-active | POST /api/v1/journeys/850425fe-e64d-4df5-bd46-f89b65db6491/capabilities/confirm -> http_status=200
+   {active_plan_feasibility={failures=list(len=0), passed=None, state="NO_ACTIVE_PLAN"}, capabilities=list(len=2, {active=True, class="CARE_REQUIREMENT", code="MAX_WALKING_PER_LEG_M", confirmed=True, confirmed_at="2026-10-10T01:18:48.160256+00:00", created_at="2026-10-10T01:18:48.160256+00:00", explicit=True, id="2e09a7d4-1b69-4cd2-82c7-bd9f8ddfcbe9", journey_id="850425fe-e64d-4df5-bd46-f89b65db6491", params=dict{meters}, provenance="USER_STATED", scope="JOURNEY", severity="SOFT", source="USER_CONFIRMED", traveler_id="0abb4a3f-5561-4c9a-bd42-d441ca621baa", updated_at="2026-10-10T01:18:48.160256+00:00"}), journey_id="850425fe-e64d-4df5-bd46-f89b65db6491", recovery=None, summary={hard=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), items=list(len=2, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), soft=list(len=1, dict{active,class,code,confirmed,explicit,params,provenance,scope,severity,source}), strong=list(len=0), unknown_accessibility_is_not_accessible=True}, traveler_twin={capability_summary={hard=list(len=0), items=list(len=0), soft=list(len=0), strong=list(len=0), unknown_accessibility_is_not_accessible=True}, confidence=0.0, conflicts=list(len=0), evidence_count=0, explicit_capabilities=list(len=0), explicit_preferences=list(len=0), learned_soft_preferences=list(len=0), provenance={evidence_ids=list(len=0), source="journey_outcome_events", updated_at="2026-10-10T01:18:48.169478+00:00"}, traveler_id="0abb4a3f-5561-4c9a-bd42-d441ca621baa", updated_at="2026-10-10T01:18:48.169478+00:00"}}
+
+## capabilities-PUT-hard-without-confirm | PUT /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/capabilities -> http_status=409
+   {error={code="CONFLICT", details=None, error_receipt_id="CNX-HE65AQVK", message="hard capability needs require /confirm", message_key="request.conflict", trace_id="e0ee8931-646c-4ca0-85d1-8e4b50671dd5"}}
+
+## capabilities-confirm-unknown-code | POST /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/capabilities/confirm -> http_status=422
+   {error={code="VALIDATION_ERROR", details={errors=list(len=1, dict{loc,message_key,msg,type})}, error_receipt_id="CNX-ZE5Y29RJ", message="Request validation failed", message_key="request.invalid", trace_id="09c1d2de-7a47-43d6-a64a-1bd81f4d50a3"}}
+
+## self-exit-owner | POST /api/v1/journeys/5ea201e9-9b94-468c-8c1f-b7bd93288e7f/members/self-exit -> http_status=409
+   {error={code="CONFLICT", details={journey_id="5ea201e9-9b94-468c-8c1f-b7bd93288e7f", member_id="afc8da8a-23f3-4839-ae70-6851fce007b2"}, error_receipt_id="CNX-MXT346ES", message="The owner of a journey cannot leave it through this door whi", message_key="request.conflict", reason_code="MEMBER_OWNER_CANNOT_LEAVE", trace_id="75487b44-0ce6-4137-96a9-f912027b3a85"}}
+
+## fixture-bogus-state | POST /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/guardian/signal-fixture -> http_status=422
+   {error={code="VALIDATION_ERROR", details={errors=list(len=1, dict{loc,message_key,msg,type})}, error_receipt_id="CNX-GZAETYF4", message="Request validation failed", message_key="request.invalid", trace_id="e2f46cba-d61c-4e78-880f-228e6a3948c6"}}
+
+## fixture-twice | POST /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/guardian/signal-fixture -> http_status=200
+   {journey_id="8592f3ad-88cf-4241-8855-e508c74d1f35", payload={note="second"}, provider_key="city-signal-fixture", revision=1, state="OUTAGE", updated_at="2026-10-10T01:18:48.194113+00:00"}
+
+## timeline-limit-zero | GET /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/agent/hermes/runs/run-probe3/timeline?limit=0 -> http_status=422
+   {error={code="VALIDATION_ERROR", details={errors=list(len=1, dict{loc,message_key,msg,type})}, error_receipt_id="CNX-JY84PRQ9", message="Request validation failed", message_key="request.invalid", trace_id="ff1127a5-e80f-445b-9434-9343e2188d04"}}
+
+## timeline-unknown-journey | GET /api/v1/journeys/aaa9af24-02c2-43c7-8b5f-07ee685752ed/agent/hermes/runs/run-probe3/timeline -> http_status=404
+   {error={code="NOT_FOUND", details=None, error_receipt_id="CNX-3H745TZD", message="Journey aaa9af24-02c2-43c7-8b5f-07ee685752ed was not found", message_key="resource.not_found", trace_id="9f34a047-c73d-4183-955d-018b68d9c931"}}
+
+## acl-roles | GET /api/v1/journeys/8592f3ad-88cf-4241-8855-e508c74d1f35/acl/roles -> http_status=200
+   list(len=3, {capabilities=list(len=3, "JOURNEY_READ"), role="ADMIN", scope_message_key="member.scope.admin"})
+
+[store] role capability rows = 10
+[store] by role = {'ADMIN': 3, 'COLLABORATOR': 2, 'OWNER': 5}
+[store] scope_message_key set = ['member.scope.admin', 'member.scope.collaborator', 'member.scope.owner']
+[store] capability vocabulary = ['JOURNEY_READ', 'JOURNEY_UPDATE', 'MEMBER_MANAGE', 'PLACE_EDIT', 'SHARE_GRANT_MANAGE']
+
+[done] probe r3

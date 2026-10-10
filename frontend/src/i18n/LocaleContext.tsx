@@ -229,6 +229,9 @@ const en: Dict = {
   "hub.detGate": "already checked",
   "hub.planHealth": "Plan health",
   "hub.feasible": "Feasible",
+  "hub.infeasible": "Not feasible",
+  "hub.needsMoreInfo": "Needs more information",
+  "hub.assessed": "Assessed",
   "hub.review": "Review",
   "hub.weatherAware": "weather-aware",
   "hub.arrival": "Arrival",
@@ -339,6 +342,8 @@ const en: Dict = {
      cannot move; only the Chinese screen stops reading English. */
   "recovery.statusUnavailable": "unavailable",
   "recovery.guardianEnvelope": "guardian envelope",
+  "recovery.noDominantMode": "no dominant mode",
+  "recovery.noneOnThisJourney": "none on this journey",
   "recovery.changedFromActivity": "Current activity",
   "recovery.changedToActivity": "recovered activity",
   "live.nothingDue": "Nothing is due right now",
@@ -925,6 +930,14 @@ const en: Dict = {
   "stay.reacquire": "Re-acquire stays for this city",
   "stay.chooseTitle": "Choose where to stay",
   "stay.arrivalFit": "Arrival / departure fit",
+  "stay.noStayCandidatesYet": "No stay candidates yet",
+  "stay.candidatesRankedThisRun": "Candidates ranked this run",
+  "stay.staysThisServerReturned": "Stays this server returned",
+  "stay.travelers": "travelers",
+  "stay.roomTypeUnknown": "Room type unknown",
+  "stay.cancellationTermsUnknown": "Cancellation terms unknown",
+  "stay.freeCancellationBeforeArrival": "Free cancellation before arrival",
+  "stay.noProviderEvidence": "No provider evidence",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -1520,6 +1533,9 @@ const zhCN: Dict = {
   "hub.detGate": "已核对",
   "hub.planHealth": "方案健康度",
   "hub.feasible": "可行",
+  "hub.infeasible": "不可行",
+  "hub.needsMoreInfo": "需要更多信息",
+  "hub.assessed": "已评估",
   "hub.review": "待审核",
   "hub.weatherAware": "天气感知",
   "hub.arrival": "到达",
@@ -1616,6 +1632,11 @@ const zhCN: Dict = {
   "live.acceptFailed": "没能接受这个调整。",
   "recovery.statusUnavailable": "暂无状态",
   "recovery.guardianEnvelope": "守护授权",
+  // ORD-0557 transport, not a rewrite: V14PreventivePanel prints these two
+  // fallbacks as English literals in both locales, so the zh value is the exact
+  // word already on screen. Wording is a separate order.
+  "recovery.noDominantMode": "no dominant mode",
+  "recovery.noneOnThisJourney": "none on this journey",
   "recovery.changedFromActivity": "当前活动",
   "recovery.changedToActivity": "恢复的活动",
   "live.nothingDue": "现在没有待进行的步骤",
@@ -2177,6 +2198,14 @@ const zhCN: Dict = {
   "stay.reacquire": "重新采集这家城市的住宿",
   "stay.chooseTitle": "选一家住的地方",
   "stay.arrivalFit": "到达/离开衔接",
+  "stay.noStayCandidatesYet": "还没有可用的住宿候选",
+  "stay.candidatesRankedThisRun": "这一轮排定的候选数",
+  "stay.staysThisServerReturned": "这台服务器交回的住宿数",
+  "stay.travelers": "位旅客",
+  "stay.roomTypeUnknown": "房型未知",
+  "stay.cancellationTermsUnknown": "退改政策未知",
+  "stay.freeCancellationBeforeArrival": "入住前可免费取消",
+  "stay.noProviderEvidence": "暂无供应商证据",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",

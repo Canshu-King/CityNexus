@@ -1,0 +1,566 @@
+
+##### HTTPException handler / error envelope @ backend/app/main.py:661-730
+661	@app.exception_handler(RequestValidationError)
+662	async def validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
+663	    safe_errors = []
+664	    for item in exc.errors():
+665	        payload = {
+666	            "loc": list(item.get("loc", ())),
+667	            "msg": item.get("msg"),
+668	            "type": item.get("type"),
+669	        }
+670	        # `loc` decides *which field* to mark and `message_key`/`type` decide *what to say*;
+671	        # the two are separate on purpose, because matching on `msg` was how a reworded
+672	        # pydantic string used to turn a form back into an untranslatable block.
+673	        payload["message_key"] = validation_message_key(payload)
+674	        safe_errors.append(payload)
+675	    return error(
+676	        "VALIDATION_ERROR",
+677	        "Request validation failed",
+678	        status=422,
+679	        details={"errors": safe_errors},
+680	        message_key="request.invalid",
+681	    )
+682	
+683	
+684	@app.exception_handler(HTTPException)
+685	async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
+686	    detail = exc.detail if isinstance(exc.detail, str) else str(exc.detail)
+687	    code = {404: "NOT_FOUND", 409: "CONFLICT", 422: "VALIDATION_ERROR"}.get(
+688	        exc.status_code, "REQUEST_ERROR"
+689	    )
+690	    return error(
+691	        code,
+692	        detail,
+693	        status=exc.status_code,
+694	        # ORD-0101: a raise site that knows *which* condition refused may attach the name and
+695	        # the counts without rewriting `message`. Both are read as optional attributes, so
+696	        # every existing `raise HTTPException(...)` renders exactly as it did before.
+697	        reason_code=getattr(exc, "reason_code", None),
+698	        details=getattr(exc, "error_details", None),
+699	        message_key=getattr(exc, "message_key", None)
+700	        or HTTP_MESSAGE_KEYS.get(exc.status_code, f"error.{code.lower()}"),
+701	    )
+702	
+703	
+704	# The journey window is one authority (`app/core/temporal.py`) and every public entry that
+705	# needs it gets here, so the conversion from "domain rule" to "HTTP answer" happens once
+706	# rather than at each door - and each door keeps the same code and the same numbers.
+707	# Before this, a nine-day trip reached the deepest call and came back as
+708	# `500` + `ValueError: V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9`; on a phone that reads as a
+709	# frozen button, and it left an unusable Journey behind (ORD-0033).  A ValueError that is
+710	# not one of these named rejections is still a bug, so it is re-raised and keeps its 500:
+711	# this handler must never launder an unexpected failure into a 4xx.
+712	TEMPORAL_REJECTIONS = {
+713	    "V13_JOURNEY_DAYS_OUT_OF_BOUNDS": (
+714	        f"The trip is longer than the supported journey window of {MAX_JOURNEY_DAYS} days. "
+715	        f"Shorten the dates and try again."
+716	    ),
+717	    "V13_INVALID_ANCHOR_WINDOW": "The departure must be after the arrival.",
+718	}
+719	
+720	# A screen looks up this key; the English string above stays what a log reads and what an
+721	# unknown key falls back to.  A test pins that these two maps share exactly one domain, so a
+722	# new named rejection cannot reach a client without a key of its own.
+723	TEMPORAL_MESSAGE_KEYS = {
+724	    "V13_JOURNEY_DAYS_OUT_OF_BOUNDS": "journey.days_out_of_bounds",
+725	    "V13_INVALID_ANCHOR_WINDOW": "journey.anchor_order",
+726	}
+727	
+728	
+729	@app.exception_handler(WriteDeadlineExceeded)
+730	def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONResponse:
+
+##### _native_event_stream @ backend/app/main.py:1035-1080
+1035	def _native_event_stream(run_id: str, journey_id: str | None = None):
+1036	    client = HermesNativeClient()
+1037	    try:
+1038	        try:
+1039	            for item in client.iter_events(run_id):
+1040	                normalized = normalize_hermes_event(item, run_id=run_id)
+1041	                if normalized is None:
+1042	                    continue
+1043	                _persist_native_event(normalized, journey_id=journey_id)
+1044	                yield (
+1045	                    f"event: {normalized['event_type']}\n"
+1046	                    f"data: {json.dumps(normalized, ensure_ascii=False, sort_keys=True)}\n\n"
+1047	                )
+1048	        except (httpx.HTTPError, ValueError):
+1049	            # Keep the client-facing contract intact when the upstream stream
+1050	            # disappears.  This is an honest runtime failure (not a synthetic
+1051	            # progress step) and contains only a stable error code.
+1052	            failed = normalize_hermes_event(
+1053	                {
+1054	                    "event_type": "run.failed",
+1055	                    "run_id": run_id,
+1056	                    "source": "HERMES_NATIVE",
+1057	                    "status": "failed",
+1058	                    "result": {"error": "runtime_event_stream_unavailable"},
+1059	                },
+1060	                run_id=run_id,
+1061	            )
+1062	            if failed is not None:
+1063	                _persist_native_event(failed, journey_id=journey_id)
+1064	                yield (
+1065	                    f"event: {failed['event_type']}\n"
+1066	                    f"data: {json.dumps(failed, ensure_ascii=False, sort_keys=True)}\n\n"
+1067	                )
+1068	    finally:
+1069	        client.close()
+1070	
+1071	
+1072	@app.get("/api/v1/agent/hermes/runs/{run_id}/events")
+1073	def stream_native_hermes_events(run_id: str) -> StreamingResponse:
+1074	    return StreamingResponse(
+1075	        _native_event_stream(run_id),
+1076	        media_type="text/event-stream",
+1077	        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+1078	    )
+1079	
+1080	
+
+##### _persist_native_event @ backend/app/main.py:940-960
+940	def _persist_native_event(event: dict[str, Any], *, journey_id: str | None = None) -> None:
+941	    """Persist a compact native event so reconnects can recover run history."""
+942	    run_id = str(event.get("run_id") or "")
+943	    if not run_id:
+944	        return
+945	    with SessionLocal() as event_session:
+946	        existing = event_session.scalars(
+947	            select(AuditLog)
+948	            .where(
+949	                AuditLog.action == "agent.native_hermes.event",
+950	                AuditLog.entity_id == run_id,
+951	            )
+952	            .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+953	            .limit(50)
+954	        ).all()
+955	        signature = json.dumps(event, ensure_ascii=False, sort_keys=True, default=str)
+956	        if any(
+957	            json.dumps(json.loads(row.after_json or "{}"), ensure_ascii=False, sort_keys=True, default=str)
+958	            == signature
+959	            for row in existing
+960	            if row.after_json
+
+##### _draft_payload @ backend/app/main.py:6271-6300
+6271	def _draft_payload(item: ExternalReservationDraft) -> dict[str, Any]:
+6272	    extracted = json.loads(item.extracted_json or "{}")
+6273	    return {
+6274	        "id": item.id,
+6275	        "journey_id": item.journey_id,
+6276	        "artifact_type": item.artifact_type,
+6277	        "extracted": extracted,
+6278	        "interpretation": {
+6279	            "anchor_role": extracted.get("anchor_role"),
+6280	            "anchor_role_confidence": extracted.get("anchor_role_confidence"),
+6281	            "semantic_target": extracted.get("semantic_target"),
+6282	            "payment_status": extracted.get("payment_status"),
+6283	            "reasoning_summary": extracted.get("reasoning_summary"),
+6284	        },
+6285	        "smart_intake": extracted.get("smart_intake", {}),
+6286	        "unresolved_fields": json.loads(item.unresolved_fields_json or "[]"),
+6287	        "extraction_mode": item.extraction_mode,
+6288	        "status": item.status,
+6289	        "created_at": item.created_at,
+6290	        "confirmed_at": item.confirmed_at,
+6291	    }
+6292	
+6293	
+6294	def _reservation_payload(item: TransportReservation) -> dict[str, Any]:
+6295	    return {
+6296	        "id": item.id,
+6297	        "journey_id": item.journey_id,
+6298	        "draft_id": item.draft_id,
+6299	        "reservation_type": item.reservation_type,
+6300	        "provider_key": item.provider_key,
+
+##### impact_payload @ backend/app/intelligence/impact_resolver.py:492-525
+492	def impact_payload(row: ImpactAssessment) -> dict[str, Any]:
+493	    return {
+494	        "id": row.id,
+495	        "event_id": row.event_id,
+496	        "journey_id": row.journey_id,
+497	        "provider_key": row.provider_key,
+498	        "model_key": row.model_key,
+499	        "status": row.status,
+500	        "maturity_stage": row.maturity_stage,
+501	        "selected_corroboration_refs": json.loads(row.selected_corroboration_refs_json or "[]"),
+502	        "independent_evidence_count": int(row.independent_evidence_count or 0),
+503	        "uncertain": bool(row.uncertain),
+504	        "selected_activity_id": row.selected_activity_id,
+505	        "primary_recovery_target_id": row.primary_recovery_target_id,
+506	        "secondary_risk_activity_ids": json.loads(row.secondary_risk_activity_ids_json or "[]"),
+507	        "candidates": json.loads(row.candidates_json or "[]"),
+508	        "validated_activity_ids": json.loads(row.validated_activity_ids_json or "[]"),
+509	        "rejected_activity_ids": json.loads(row.rejected_activity_ids_json or "[]"),
+510	        "reason_codes": json.loads(row.reason_codes_json or "[]"),
+511	        "semantic_reason": row.semantic_reason,
+512	        "failure_code": row.failure_code,
+513	        "created_at": row.created_at,
+514	    }
+
+##### snapshot_payload @ backend/app/agent/predictive.py:132-158
+132	def snapshot_payload(snapshot: JourneyResilienceSnapshot | None) -> dict[str, Any] | None:
+133	    if snapshot is None:
+134	        return None
+135	    return {
+136	        "id": snapshot.id,
+137	        "journey_id": snapshot.journey_id,
+138	        "score": snapshot.score,
+139	        "risk_score": snapshot.score,
+140	        "status": snapshot.status,
+141	        "captured_at": snapshot.captured_at,
+142	        "expires_at": snapshot.expires_at,
+143	        "components": _load(snapshot.components_json, {}),
+144	        "activity_risks": _load(snapshot.activity_risks_json, []),
+145	        "commitment_buffers": _load(snapshot.commitment_buffers_json, []),
+146	        "dominant_failure_modes": _load(snapshot.failure_modes_json, []),
+147	        "preventive_recommendation": _load(snapshot.recommendation_json, {}),
+148	        "evidence_provenance": _load(snapshot.provenance_json, []),
+149	        "fingerprint": snapshot.fingerprint,
+150	    }
+151	
+152	
+153	def latest_snapshot(session: Session, journey_id: str) -> JourneyResilienceSnapshot | None:
+154	    latest = session.scalar(
+155	        select(JourneyResilienceSnapshot)
+156	        .where(JourneyResilienceSnapshot.journey_id == journey_id)
+157	        .order_by(JourneyResilienceSnapshot.captured_at.desc(), JourneyResilienceSnapshot.id.desc())
+158	    )
+
+##### counterfactual_payload @ backend/app/agent/predictive.py:665-692
+665	def counterfactual_payload(row: CounterfactualSimulation) -> dict[str, Any]:
+666	    evidence = _load(row.evidence_json, {})
+667	    # A row written by an older build has no `premise_holds`.  Absence is not a claim that the
+668	    # premise held, so a legacy row keeps the old shape rather than being back-filled into a
+669	    # verdict this build cannot support; only rows this build wrote get the triple.
+670	    premise_holds = evidence.get("premise_holds") if isinstance(evidence, dict) else None
+671	    if premise_holds is False:
+672	        return {
+673	            "id": row.id,
+674	            "journey_id": row.journey_id,
+675	            "snapshot_id": row.snapshot_id,
+676	            "scenario_key": row.scenario_key,
+677	            "scenario_type": row.scenario_type,
+678	            "parameters": _load(row.parameters_json, {}),
+679	            "answered": False,
+680	            "feasible": None,
+681	            "c4_preserved": None,
+682	            "cost_delta_minor": None,
+683	            "schedule_drift_min": None,
+684	            "plan_changes": None,
+685	            "evidence": evidence,
+686	            "created_at": row.created_at,
+687	        }
+688	    return {
+689	        "id": row.id,
+690	        "journey_id": row.journey_id,
+691	        "snapshot_id": row.snapshot_id,
+692	        "scenario_key": row.scenario_key,
+
+##### set_fixture_state + fixture_payload @ backend/app/agent/signal_pipeline.py:122-172
+122	def set_fixture_state(
+123	    session: Session,
+124	    journey: Journey,
+125	    *,
+126	    state: str,
+127	    payload: dict[str, Any] | None = None,
+128	) -> CitySignalFixture:
+129	    normalized = str(state).upper()
+130	    if normalized not in FIXTURE_STATES:
+131	        raise ValueError(f"unsupported city signal fixture state: {state}")
+132	    row = ensure_fixture(session, journey.id)
+133	    row.state = normalized
+134	    row.revision = int(row.revision) + 1
+135	    row.payload_json = _json(payload or {})
+136	    row.updated_at = _now()
+137	    record_audit(
+138	        session,
+139	        action="city.signal.fixture.updated",
+140	        entity_type="CitySignalFixture",
+141	        entity_id=journey.id,
+142	        journey_id=journey.id,
+143	        after={
+144	            "provider_key": row.provider_key,
+145	            "state": row.state,
+146	            "revision": row.revision,
+147	            "payload": json.loads(row.payload_json),
+148	        },
+149	        actor_type="USER",
+150	        actor_id=journey.traveler_id,
+151	    )
+152	    session.flush()
+153	    return row
+154	
+155	
+156	def fixture_payload(row: CitySignalFixture) -> dict[str, Any]:
+157	    try:
+158	        payload = json.loads(row.payload_json or "{}")
+159	    except json.JSONDecodeError:
+160	        payload = {}
+161	    return {
+162	        "journey_id": row.journey_id,
+163	        "provider_key": row.provider_key,
+164	        "state": row.state,
+165	        "revision": row.revision,
+166	        "payload": payload,
+167	        "updated_at": row.updated_at,
+168	    }
+169	
+170	
+171	def _active_activities(session: Session, journey: Journey) -> list[Activity]:
+172	    if not journey.active_plan_version_id:
+
+##### autorun_status @ backend/app/agent/autorun.py:604-625
+604	def autorun_status() -> dict[str, Any]:
+605	    thread = _worker_thread
+606	    try:
+607	        with SessionLocal() as session:
+608	            enrolled = enrolled_journey_ids(session)
+609	    except SQLAlchemyError:
+610	        enrolled = []
+611	    return {
+612	        "enabled": bool(thread is not None and thread.is_alive()),
+613	        "interval_seconds": _worker_interval_seconds,
+614	        "signal_provider": settings.guardian_signal_provider,
+615	        "enrolled_journey_ids": enrolled,
+616	        "last_pulse_at": _last_pulse_at,
+617	        "last_error": _last_error,
+618	    }
+619	
+620	
+621	if settings.guardian_autorun:
+622	    start_autorun()
+
+##### capability_payload @ backend/app/execution/traveler_twin.py:160-190
+160	def capability_payload(session: Session, traveler_id: str, journey_id: str | None = None) -> list[dict[str, Any]]:
+161	    return [capability_row_payload(row) for row in active_capability_rows(session, traveler_id, journey_id)]
+162	
+163	
+164	def capability_constraint_items(
+165	    session: Session, traveler_id: str, journey_id: str | None = None
+166	) -> list[dict[str, Any]]:
+167	    return capability_constraints(capability_payload(session, traveler_id, journey_id))
+168	
+169	
+170	def refresh_snapshot(session: Session, traveler_id: str) -> TravelerTwinSnapshot:
+171	    explicit = _explicit_items(session, traveler_id)
+172	    evidence = _active_evidence(session, traveler_id)
+173	    grouped: dict[tuple[str, str], list[TravelerPreferenceEvidence]] = defaultdict(list)
+174	    for item in evidence:
+175	        grouped[(item.preference_dimension, item.direction)].append(item)
+176	    learned: list[dict[str, Any]] = []
+177	    for (dimension, direction), items in sorted(grouped.items()):
+178	        count = sum(max(1, int(item.evidence_count)) for item in items)
+179	        strength = min(1.0, round(0.18 * count + 0.04 * max(0, count - 1), 3))
+180	        confidence = min(0.95, round(0.25 + 0.15 * max(0, count - 1), 3))
+181	        learned.append(
+182	            {
+183	                "dimension": dimension,
+184	                "direction": direction,
+185	                "strength": strength,
+186	                "confidence": confidence,
+187	                "evidence_count": count,
+188	                "source": "LEARNED_SOFT",
+189	                "explanation": items[-1].explanation,
+190	                "evidence_ids": [item.id for item in items],
+
+##### summarize_capabilities @ backend/app/capabilities.py:979-1000
+979	def summarize_capabilities(capabilities: Iterable[Mapping[str, Any]] | None) -> dict[str, Any]:
+980	    items = [dict(item) for item in canonicalize_capabilities(capabilities)]
+981	    return {
+982	        "items": items,
+983	        "hard": [item for item in items if item.get("severity") == "HARD"],
+984	        "strong": [item for item in items if item.get("severity") == "STRONG"],
+985	        "soft": [item for item in items if item.get("severity") == "SOFT"],
+986	        "unknown_accessibility_is_not_accessible": True,
+987	    }
+988	
+989	
+990	def accessibility_state(value: Any) -> str:
+991	    """Normalize provider/frozen accessibility metadata without inference."""
+992	
+993	    if not isinstance(value, Mapping):
+994	        return "ACCESSIBILITY_UNVERIFIED"
+995	    status = str(value.get("evidence_status") or value.get("status") or "").upper()
+996	    if status in ACCESSIBILITY_STATES:
+997	        return status
+998	    if status in {"VERIFIED", "KNOWN_ACCESSIBLE", "ACCESSIBLE", "TRUE"}:
+999	        return "ACCESSIBILITY_VERIFIED"
+1000	    if status in {"CONFLICT", "KNOWN_INACCESSIBLE", "INACCESSIBLE", "FALSE", "STAIRS"}:
+
+##### experience_payload @ backend/app/stay_mobility.py:1838-1895
+1838	def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
+1839	    context = _context(session, journey)
+1840	    operations = _operations_context(session, journey)
+1841	    preference_items = planning_preference_items(session, journey.traveler_id, journey.id)
+1842	    traveler_snapshot = refresh_snapshot(session, journey.traveler_id)
+1843	    traveler_twin = snapshot_payload(traveler_snapshot)
+1844	    offers = session.scalars(
+1845	        select(AccommodationOfferSnapshot)
+1846	        .where(AccommodationOfferSnapshot.journey_id == journey.id)
+1847	        .order_by(AccommodationOfferSnapshot.total_amount_minor)
+1848	    ).all()
+1849	    options = session.scalars(
+1850	        select(StayJourneyOption)
+1851	        .where(StayJourneyOption.journey_id == journey.id)
+1852	        .order_by(StayJourneyOption.rank)
+1853	    ).all()
+1854	    facts = session.scalars(
+1855	        select(MobilityFact)
+1856	        .where(MobilityFact.journey_id == journey.id)
+1857	        .order_by(MobilityFact.from_key, MobilityFact.to_key, MobilityFact.mode)
+1858	    ).all()
+1859	    selected = next((item for item in options if item.status == "SELECTED"), None)
+1860	    # One trip shape, computed here and consumed everywhere: the day count that prices a
+1861	    # stay, the day count in the headline, and the reference allowance are the same number
+1862	    # or they are nothing (ORD-0063 found a screen doing its own `round(hours/24)+1`, which
+1863	    # called a 12-hour same-day trip "2 Ìì" and then divided the budget by that).
+1864	    shape, window_status = journey_projection_window(context, journey)
+1865	    budget_reference = derive_budget_reference(
+1866	        day_count=shape.day_count if shape is not None else None,
+1867	        budget_amount_minor=journey.budget_amount_minor,
+1868	        budget_currency=journey.budget_currency,
+1869	        party_size=context.party_size,
+1870	    )
+1871	    zone = journey_zone(journey)
+1872	    used_timezone, timezone_honoured = execution_clock.zone_usage(journey.timezone)
+1873	    return {
+1874	        "journey": {
+1875	            "id": journey.id,
+1876	            "traveler_id": journey.traveler_id,
+1877	            "title": journey.title,
+1878	            "city_code": journey.city_code,
+1879	            "timezone": journey.timezone,
+1880	            # The window columns are bare local wall-clock; a screen reading them as instants would
+1881	            # have to place them itself, and a zone nothing can be placed in is a reading it cannot
+1882	            # check.  So the window is placed here, where the zone is known, and the pair says which
+1883	            # zone was used -- the same answer the trip payload and the two model contexts give.
+1884	            "used_timezone": used_timezone,
+1885	            "timezone_honoured": timezone_honoured,
+1886	            "start_at": parse_dt_in_journey_zone(journey.start_at, zone),
+1887	            "end_at": parse_dt_in_journey_zone(journey.end_at, zone),
+1888	            "status": journey.status,
+1889	            "active_plan_version_id": journey.active_plan_version_id,
+1890	            "budget": {
+1891	                "amount_minor": journey.budget_amount_minor,
+1892	                "currency": journey.budget_currency,
+1893	            },
+1894	            "temporal_shape": {
+1895	                "day_count": shape.day_count if shape is not None else None,
+
+##### plan_schema @ backend/app/services.py:753-790
+753	def plan_schema(
+754	    session: Session,
+755	    item: PlanVersion,
+756	    *,
+757	    current_plan_version_id: str | None | object = _CURRENT_UNRESOLVED,
+758	) -> PlanSchema:
+759	    """Project one PlanVersion onto the public contract.
+760	
+761	    `is_current` answers "is this the plan the journey runs" from the journey's own
+762	    `active_plan_version_id` pointer - the single statement of that fact in this system.
+763	    A caller that already loaded the Journey passes the value in (the list endpoint, so the
+764	    projection costs no query); `current_plan_version_id=None` is a *known* answer - no
+765	    pointer, therefore nothing is current - which is why "not supplied" needs its own
+766	    sentinel rather than a falsy default.
+767	    """
+768	
+769	    activities = session.scalars(
+770	        select(Activity).where(Activity.plan_version_id == item.id).order_by(Activity.sequence_no)
+771	    ).all()
+772	    # Activity Detail needs real Place coordinates and opening hours, so the
+773	    # Place rows are resolved once here rather than per activity.
+774	    place_ids = {str(a.place_id) for a in activities if a.place_id}
+775	    places_by_id: dict[str, Place] = {}
+776	    if place_ids:
+777	        places_by_id = {
+778	            place.id: place
+779	            for place in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()
+780	        }
+781	    breakdown = _plan_score_breakdown(item)
+782	    # Stale/recompose-required projection: an expired or evidence-less plan is
+783	    # flagged so the API and UI never present it as a current recommendation.
+784	    stale, stale_reason = _plan_staleness(item)
+785	    if current_plan_version_id is _CURRENT_UNRESOLVED:
+786	        owner = session.get(Journey, item.journey_id)
+787	        current_plan_version_id = owner.active_plan_version_id if owner is not None else None
+788	    return PlanSchema(
+789	        id=item.id,
+790	        journey_id=item.journey_id,
+
+##### _member_payload @ backend/app/main.py:5011-5035
+5011	def _member_payload(member: JourneyMemberModel) -> JourneyMember:
+5012	    return JourneyMember(
+5013	        id=member.id,
+5014	        journey_id=member.journey_id,
+5015	        traveler_id=member.traveler_id,
+5016	        role=member.role,
+5017	        invited_by=member.invited_by,
+5018	        expires_at=member.expires_at,
+5019	        joined_at=member.joined_at,
+5020	        removed_at=member.removed_at,
+5021	        created_at=member.created_at,
+5022	        updated_at=member.updated_at,
+5023	        member_state=_member_state(member, datetime.now(timezone.utc)),
+5024	    )
+5025	
+5026	
+5027	def _member_expiry(raw: str | None) -> str | None:
+5028	    """Same rule as a grant: an instant with no offset is a guess about whose clock, so refuse it."""
+5029	    if raw is None:
+5030	        return None
+5031	    value = raw.strip()
+5032	    if not value:
+5033	        return None
+5034	    try:
+5035	        parsed = datetime.fromisoformat(value)
+
+##### _capability_input_rows @ backend/app/main.py:2634-2680
+2634	def _capability_input_rows(
+2635	    payload: list[CapabilityInput],
+2636	    *,
+2637	    scope: str,
+2638	    journey_id: str | None = None,
+2639	    require_confirmation: bool = False,
+2640	) -> tuple[dict[str, Any], ...]:
+2641	    """Validate API capability inputs without making provider claims."""
+2642	
+2643	    raw = [item.model_dump(by_alias=True, exclude_none=True) for item in payload]
+2644	    for item in raw:
+2645	        item["scope"] = scope
+2646	        if journey_id is not None:
+2647	            item["journey_id"] = journey_id
+2648	        if require_confirmation and str(item.get("severity", "SOFT")).upper() == "HARD":
+2649	            # Reaching this endpoint is the explicit confirmation gesture;
+2650	            # callers need not duplicate a second boolean in the payload.
+2651	            item["confirmed"] = True
+2652	    canonical = canonicalize_capabilities(
+2653	        raw,
+2654	        source="USER_CONFIRMED" if require_confirmation else "USER_STATED",
+2655	        provenance="USER_CONFIRMED" if require_confirmation else "USER_STATED",
+2656	        scope=scope,
+2657	        explicit=True,
+2658	        confirmed=require_confirmation,
+2659	    )
+2660	    if len(canonical) != len(raw):
+2661	        raise HTTPException(status_code=422, detail="one or more capability codes are unsupported")
+2662	    if any(str(item.get("scope")) != scope for item in canonical):
+2663	        raise HTTPException(status_code=422, detail="capability scope does not match this endpoint")
+2664	    if journey_id is not None:
+2665	        for item in canonical:
+2666	            item["journey_id"] = journey_id
+2667	    return canonical
+2668	
+2669	
+2670	def _replace_capability_rows(
+2671	    session: Session,
+2672	    *,
+2673	    traveler_id: str,
+2674	    capabilities: tuple[dict[str, Any], ...],
+2675	    scope: str,
+2676	    journey_id: str | None = None,
+2677	    actor_id: str | None = None,
+2678	    replace_missing: bool = True,
+2679	) -> list[dict[str, Any]]:
+2680	    """Upsert capability facts; optionally deactivate omitted active rows."""
