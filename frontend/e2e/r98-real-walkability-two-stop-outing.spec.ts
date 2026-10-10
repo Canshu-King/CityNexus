@@ -370,10 +370,12 @@ test("R98 two-stop walkability, unavailable fallback, and destination-only resum
     await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-result")).toContainText("Cannot verify walkability now");
     await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-result")).toContainText("ROUTE_PROVIDER_UNAVAILABLE");
     await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-result")).not.toContainText("18 min");
-    await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-fallback")).toHaveAttribute(
-      "href",
-      /google\.com\/maps\/dir\/.*travelmode=walking/,
+    // Router consent is not Google Maps consent. The fallback is guidance,
+    // never a direct link until the separate signed map release below.
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-walkability-fallback")).toContainText(
+      "separate external-map consent",
     );
+    await expect(ownerPanel.getByTestId("bootstrap-two-stop-fallback")).toHaveCount(0);
     expect(provider.routeCalls).toHaveLength(2);
 
     // Preparing the external map does not invalidate a valid provider result
