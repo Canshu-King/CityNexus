@@ -1,11 +1,22 @@
-# push readback, read live after the push (command on the next line, answer verbatim below it)
 $ git ls-remote origin refs/heads/review/抬秤工-0557-r1
-9177c633a95f527a7c204a75c1e57a4c91be8fc5	refs/heads/review/抬秤工-0557-r1
+b07014729d38d49b0c108c28844d7749447ecac2	refs/heads/review/抬秤工-0557-r1
 $ git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
-24a50a8aecf0a1fe4704400c687540d3e05d74fb	refs/heads/mirror/integration-frontend-apple-pass1
-$ git rev-parse HEAD  (local branch tip, must equal the first readback)
-9177c633a95f527a7c204a75c1e57a4c91be8fc5
-$ git rev-parse HEAD~3  (parent of the first commit on this branch = the tip it was cut from)
-24a50a8aecf0a1fe4704400c687540d3e05d74fb
-$ git diff --numstat <that tip> HEAD -- frontend/src/lib/failureAttribution.ts
+f6e936c8e85e3d349f132a2034487962583e6333	refs/heads/mirror/integration-frontend-apple-pass1
+$ git rev-parse HEAD  (local branch tip)
+b07014729d38d49b0c108c28844d7749447ecac2
+$ git rev-parse --abbrev-ref HEAD  (branch name)
+review/抬秤工-0557-r1
+$ is the pinned generation an ancestor of this branch?  git merge-base --is-ancestor 24a50a8aecf0a1fe4704400c687540d3e05d74fb HEAD
+rc=0 (zero means yes)
+$ git rev-parse 24a50a8aecf0:frontend/src/lib/failureAttribution.ts  (the bytes BEFORE this lane's edit)
+f6a1f10e20a71caa638710f70c671d73978325db
+$ git rev-parse HEAD:frontend/src/lib/failureAttribution.ts  (the bytes ON THIS BRANCH)
+a0c636f743c49fb2c00f0ab6572f66f11844feca
+$ git cat-file -t for each of the two blobs above
+blob / blob
+$ git diff --numstat 24a50a8aecf0a1fe4704400c687540d3e05d74fb HEAD -- frontend/src/lib/failureAttribution.ts
 5	2	frontend/src/lib/failureAttribution.ts
+$ does the live tip already carry this branch's bytes for the file?
+live tip f6e936c8e85e3d349f132a2034487962583e6333 blob a0c636f743c49fb2c00f0ab6572f66f11844feca ; branch blob a0c636f743c49fb2c00f0ab6572f66f11844feca ; equal=True
+
+VERDICT PASS (empty answers: 0)
