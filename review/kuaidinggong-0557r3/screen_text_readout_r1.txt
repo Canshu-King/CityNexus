@@ -1,23 +1,17 @@
-1. 1. base_tip 26136afacf9e0c951bf4911f4d219161e07c4746
-2. 2. product_head 930a2fce7cf676a3c017642d84e9126a94e4bfad
-3. 3. dict_head c5f905132d95c497649031e27b16cc3f61b04276
-4. 4. ls-remote_now c5f905132d95c497649031e27b16cc3f61b04276	refs/heads/review/快钉工-0557-dict-r3 | 930a2fce7cf676a3c017642d84e9126a94e4bfad	refs/heads/review/快钉工-0557-r3
-5. 5. key_already_in_base_dictionary 0
-6. 6. base_literal_line [(283, 'return name ? String(name) : zh ? "已记录" : "Recorded";')]
-7. 7. dict_sides inbox.recorded en=[(846, '"inbox.recorded": "Recorded",')] zh=[(2117, '"inbox.recorded": "已记录",')]
-8. 8. ev_values ['Recorded', '已记录']
-9. 9. numstat_product 1	1	frontend/src/features/inbox/JourneyInboxWorkbench.tsx
-10. 10. numstat_dict 2	0	frontend/src/i18n/LocaleContext.tsx
-11. 11. files_product_vs_base ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx', 'frontend/src/i18n/LocaleContext.tsx', 'review/kuaidinggong-0557r3/gates_readout_r1.txt', 'review/kuaidinggong-0557r3/instrument_r1.py', 'review/kuaidinggong-0557r3/screen_text_readout_r1.txt', 'review/kuaidinggong-0557r3/tsconfig.two_files.json']
-12. 12. files_dict_vs_base ['frontend/src/i18n/LocaleContext.tsx']
-13. 13. product_carries_dict_rc 0
-14. 14. moneyLabel_scan_hits 1
-15. 15. moneyLabel_definitions ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx:270:function moneyLabel(minor: unknown, currency: unknown, zh: boolean): string {']
-16. 16. moneyLabel_call_sites 0
-17. 17. gate_readings_see _kd0557r3_gates_r1.txt
-18. published_product_head 930a2fce7cf676a3c017642d84e9126a94e4bfad
-19. published_dict_head c5f905132d95c497649031e27b16cc3f61b04276
-20. ls-remote_now c5f905132d95c497649031e27b16cc3f61b04276	refs/heads/review/快钉工-0557-dict-r3 | 930a2fce7cf676a3c017642d84e9126a94e4bfad	refs/heads/review/快钉工-0557-r3
-21. base_is_parent_of_published_rc 0
-22. published_product_on_live_tip_rc 1
-23. live_tip_at_verify 9beaa1a7b258f458657e15f9dd924c59f4abf7e2
+1. base_tip ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a
+2. product_head a1621c76eabf0c0cb5b852a84ab8b29126802915
+3. dict_head 9da5ce1ef8f55298ea838f5b86938110ec024e41
+4. ls-remote_now c5f905132d95c497649031e27b16cc3f61b04276	refs/heads/review/快钉工-0557-dict-r3 | c9369546445ff6a32c78db323f7c440d1b4336a6	refs/heads/review/快钉工-0557-r3
+5. key_already_in_base_dictionary 0
+6. base_literal_line [(283, 'return name ? String(name) : zh ? "已记录" : "Recorded";')]
+7. dict_sides inbox.recorded en=[(849, '"inbox.recorded": "Recorded",')] zh=[(2144, '"inbox.recorded": "已记录",')]
+8. ev_values ['Recorded', '已记录']
+9. numstat_product 1	1	frontend/src/features/inbox/JourneyInboxWorkbench.tsx
+10. numstat_dict 2	0	frontend/src/i18n/LocaleContext.tsx
+11. files_product_vs_base ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx', 'frontend/src/i18n/LocaleContext.tsx', 'review/kuaidinggong-0557r3/gates_readout_r1.txt', 'review/kuaidinggong-0557r3/instrument_r1.py', 'review/kuaidinggong-0557r3/screen_text_readout_r1.txt', 'review/kuaidinggong-0557r3/tsconfig.two_files.json']
+12. files_dict_vs_base ['frontend/src/i18n/LocaleContext.tsx']
+13. product_carries_dict_rc 0
+14. moneyLabel_scan_hits 1
+15. moneyLabel_definitions ['frontend/src/features/inbox/JourneyInboxWorkbench.tsx:270:function moneyLabel(minor: unknown, currency: unknown, zh: boolean): string {']
+16. moneyLabel_call_sites 0
+17. gate_readings_see _kd0557r3_gates_r1.txt
