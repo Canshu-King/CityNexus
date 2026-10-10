@@ -1165,6 +1165,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/missions/{mission_id}/clarification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Apply one server-derived human-value answer and create a bounded child mission. */
+        post: operations["answerJourneyClarification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/missions/{mission_id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Resume a server-created clarification child through the configured Agent runtime. */
+        post: operations["resumeJourneyMission"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/guardian/mission": {
         parameters: {
             query?: never;
@@ -2829,6 +2869,1722 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/guardian/pulse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Guardian Pulse Now
+         * @description Run exactly one live sensing -> Guardian evaluation cycle now.
+         */
+        post: operations["run_guardian_pulse_now_api_v1_journeys__journey_id__guardian_pulse_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/guardian/pulse/latest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Latest Guardian Pulse */
+        get: operations["get_latest_guardian_pulse_api_v1_journeys__journey_id__guardian_pulse_latest_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Journey Operator
+         * @description Put one active Journey under the standing mission + Guardian watch.
+         */
+        post: operations["start_journey_operator_api_v1_journeys__journey_id__operator_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Stop Journey Operator */
+        post: operations["stop_journey_operator_api_v1_journeys__journey_id__operator_stop_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Journey Operator */
+        get: operations["get_journey_operator_api_v1_journeys__journey_id__operator_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/intents/{intent_id}/clarification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Answer Operator Intent Clarification
+         * @description Resolve a persisted bounded question on the same JourneyIntent lineage.
+         */
+        post: operations["answer_operator_intent_clarification_api_v1_journeys__journey_id__operator_intents__intent_id__clarification_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/approvals/{approval_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reject Journey Operator Change
+         * @description Reject the exact pending recovery without changing the active plan.
+         */
+        post: operations["reject_journey_operator_change_api_v1_journeys__journey_id__operator_approvals__approval_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/guardian/readiness": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Guardian Departure Readiness */
+        get: operations["get_guardian_departure_readiness_api_v1_journeys__journey_id__guardian_readiness_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/departure-activation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Departure Activation */
+        get: operations["get_departure_activation_api_v1_journeys__journey_id__departure_activation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/guardian/readiness/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh Guardian Departure Readiness */
+        post: operations["refresh_guardian_departure_readiness_api_v1_journeys__journey_id__guardian_readiness_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/launch-setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Launch Setup */
+        get: operations["get_launch_setup_api_v1_journeys__journey_id__launch_setup_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/launch-origin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Set Launch Origin */
+        post: operations["set_launch_origin_api_v1_journeys__journey_id__launch_origin_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/routes/acquire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Acquire Route Session
+         * @description Acquire exactly one server-resolved grounded-origin -> target edge.
+         */
+        post: operations["acquire_route_session_api_v1_journeys__journey_id__routes_acquire_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/in-transit/reroute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Acquire In Transit Reroute
+         * @description Acquire a fresh route from one current-leg location sample, without plan mutation.
+         */
+        post: operations["acquire_in_transit_reroute_api_v1_journeys__journey_id__in_transit_reroute_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/routes/operations/{operation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read Route Session
+         * @description Read one route operation without contacting a provider.
+         */
+        get: operations["read_route_session_api_v1_journeys__journey_id__routes_operations__operation_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/real-city/bootstrap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Bootstrap Journey Discovery
+         * @description Find public candidates for a signed, empty DRAFT Journey without creating a plan.
+         */
+        post: operations["bootstrap_journey_discovery_api_v1_journeys__journey_id__real_city_bootstrap_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-discovery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Bootstrap Journey Discovery
+         * @description Find public candidates for a signed, empty DRAFT Journey without creating a plan.
+         */
+        post: operations["bootstrap_journey_discovery_api_v1_journeys__journey_id__bootstrap_discovery_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-city-search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Search Bootstrap Journey City
+         * @description Search one explicitly named city to position the public map camera.
+         */
+        post: operations["search_bootstrap_journey_city_api_v1_journeys__journey_id__bootstrap_city_search_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/real-city/bootstrap/select": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Select Bootstrap Journey Candidate
+         * @description Materialize exactly the selected bootstrap candidate into one public Place.
+         */
+        post: operations["select_bootstrap_journey_candidate_api_v1_journeys__journey_id__real_city_bootstrap_select_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-discovery/select": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Select Bootstrap Journey Candidate
+         * @description Materialize exactly the selected bootstrap candidate into one public Place.
+         */
+        post: operations["select_bootstrap_journey_candidate_api_v1_journeys__journey_id__bootstrap_discovery_select_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/real-city/bootstrap/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Bootstrap Journey Candidate
+         * @description Open one public OSM destination without materializing a Place or plan.
+         */
+        post: operations["preview_bootstrap_journey_candidate_api_v1_journeys__journey_id__real_city_bootstrap_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-discovery/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Bootstrap Journey Candidate
+         * @description Open one public OSM destination without materializing a Place or plan.
+         */
+        post: operations["preview_bootstrap_journey_candidate_api_v1_journeys__journey_id__bootstrap_discovery_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Bootstrap Shortlist
+         * @description Return only the signed member's public-only draft shortlist.
+         */
+        get: operations["get_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist_get"];
+        put?: never;
+        /** Save Bootstrap Shortlist */
+        post: operations["save_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remember Bootstrap Shortlist
+         * @description Remember the signed member's last explicit saved-place choice for UI resume.
+         */
+        post: operations["remember_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Bootstrap Shortlist */
+        delete: operations["delete_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview Bootstrap Shortlist */
+        post: operations["preview_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist/{shortlist_id}/navigate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Navigate Bootstrap Shortlist
+         * @description Release one saved public destination for destination-only walking directions.
+         */
+        post: operations["navigate_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__navigate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist/two-stop-walk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Navigate Bootstrap Two Stop Walk
+         * @description Release one signed public-POI-to-public-POI walking leg.
+         */
+        post: operations["navigate_bootstrap_two_stop_walk_api_v1_journeys__journey_id__bootstrap_shortlist_two_stop_walk_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/bootstrap-shortlist/two-stop-walkability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check Bootstrap Two Stop Walkability
+         * @description Check one signed, provider-backed public-to-public walking leg.
+         */
+        post: operations["check_bootstrap_two_stop_walkability_api_v1_journeys__journey_id__bootstrap_shortlist_two_stop_walkability_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/context-watch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Journey Context Watch
+         * @description Refresh exact active-plan venue facts and classify their live context.
+         *
+         *     This server-owned watch never starts an Agent itself.  A qualified conflict
+         *     is persisted as a SYSTEM_DERIVED Event; the existing Agent command path may
+         *     then decide whether recovery is needed under current authority.
+         */
+        post: operations["run_journey_context_watch_api_v1_journeys__journey_id__context_watch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/approvals/{approval_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve Agent Action */
+        post: operations["approve_agent_action_api_v1_journeys__journey_id__operator_approvals__approval_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/missions/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Pending Journey Missions
+         * @description Project durable human/Agent waits into one traveler-facing read model.
+         */
+        get: operations["pending_journey_missions_api_v1_journeys__journey_id__missions_pending_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/missions/{mission_id}/collective-clarification/{member_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Answer Collective Clarification
+         * @description Record one member answer, identity-bound when traveler auth is configured.
+         *
+         *     The member id remains in the URL for compatibility, but in strict R28 mode
+         *     it is never authority: a signed traveler principal is resolved server-side
+         *     and must map to this exact in-force JourneyMember.
+         */
+        post: operations["answer_collective_clarification_api_v1_journeys__journey_id__missions__mission_id__collective_clarification__member_id__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/membership-invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Journey Membership Invitations */
+        get: operations["list_journey_membership_invitations_api_v1_journeys__journey_id__membership_invitations_get"];
+        put?: never;
+        /** Create Journey Membership Invitation */
+        post: operations["create_journey_membership_invitation_api_v1_journeys__journey_id__membership_invitations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/me/journey-membership-invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Journey Membership Invitations */
+        get: operations["list_my_journey_membership_invitations_api_v1_travelers_me_journey_membership_invitations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journey-membership-invitations/{invitation_id}/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Respond To Journey Membership Invitation */
+        post: operations["respond_to_journey_membership_invitation_api_v1_journey_membership_invitations__invitation_id__respond_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/membership-invitations/{invitation_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke Journey Membership Invitation */
+        post: operations["revoke_journey_membership_invitation_api_v1_journeys__journey_id__membership_invitations__invitation_id__revoke_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/members/{member_id}/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace Journey Member Preferences
+         * @description Store explicit preference context for this member in this Journey only.
+         */
+        put: operations["replace_journey_member_preferences_api_v1_journeys__journey_id__members__member_id__preferences_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/inbox/intake": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Intake Journey Change
+         * @description Ground a traveller supplied booking update against an exact reservation reference.
+         */
+        post: operations["intake_journey_change_api_v1_journeys__journey_id__operator_inbox_intake_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/inbox/{item_id}/bind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Bind Journey Inbox Item */
+        post: operations["bind_journey_inbox_item_api_v1_journeys__journey_id__operator_inbox__item_id__bind_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/reality/provider-replay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Reservation Time Provider Replay
+         * @description Ingest an explicitly captured provider replay. This route never asserts live status.
+         */
+        post: operations["add_reservation_time_provider_replay_api_v1_journeys__journey_id__operator_reality_provider_replay_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/operator/reality-conflicts/{conflict_id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resolve Journey Reality Conflict */
+        post: operations["resolve_journey_reality_conflict_api_v1_journeys__journey_id__operator_reality_conflicts__conflict_id__resolve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/group-presence/route": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Guide Authenticated Member To Rendezvous
+         * @description Route only this authenticated member's fresh location to a server-derived group stop.
+         */
+        post: operations["guide_authenticated_member_to_rendezvous_api_v1_journeys__journey_id__group_presence_route_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-member-signals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Share Rendezvous Member Signal
+         * @description Share an explicit, short-lived self-report for the server-derived shared stop.
+         */
+        post: operations["share_rendezvous_member_signal_api_v1_journeys__journey_id__rendezvous_member_signals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-member-signals/{signal_id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Withdraw Rendezvous Member Signal
+         * @description Withdraw only the signed member's own signal; old viewers retain prior knowledge.
+         */
+        post: operations["withdraw_rendezvous_member_signal_api_v1_journeys__journey_id__rendezvous_member_signals__signal_id__withdraw_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-member-signals/{signal_id}/acknowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Acknowledge Rendezvous Help Request
+         * @description Record one signed companion acknowledgement for the exact active help request.
+         */
+        post: operations["acknowledge_rendezvous_help_request_api_v1_journeys__journey_id__rendezvous_member_signals__signal_id__acknowledge_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rendezvous Buddy Handoff Candidates
+         * @description Return a bounded public-place shortlist only to the signed helper.
+         */
+        get: operations["rendezvous_buddy_handoff_candidates_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current Rendezvous Buddy Handoffs
+         * @description List only valid handoffs involving the signed current viewer; never the whole group.
+         */
+        get: operations["current_rendezvous_buddy_handoffs_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_current_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Offer Rendezvous Buddy Handoff
+         * @description Offer one server-suggested public Place to the exact signed help requester.
+         */
+        post: operations["offer_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Respond Rendezvous Buddy Handoff */
+        post: operations["respond_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__respond_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/location": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Capture Private Buddy Handoff Route Location
+         * @description Save one explicit foreground sample for this caller's accepted handoff route only.
+         */
+        post: operations["capture_private_buddy_handoff_route_location_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_location_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Rendezvous Buddy Handoff */
+        post: operations["cancel_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke Rendezvous Buddy Handoff */
+        post: operations["revoke_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__revoke_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Offer Rendezvous Buddy Execution Window
+         * @description The signed helper may separately offer a bounded window for a legacy accepted handoff.
+         */
+        post: operations["offer_rendezvous_buddy_execution_window_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution_window_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution-window/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept Rendezvous Buddy Execution Window
+         * @description The requester separately accepts a helper's finite execution window.
+         */
+        post: operations["accept_rendezvous_buddy_execution_window_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution_window_accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/execution/{execution_id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report Rendezvous Buddy Execution
+         * @description Record one authenticated member's explicit self-report for this exact execution.
+         */
+        post: operations["report_rendezvous_buddy_execution_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution__execution_id__report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current Private Buddy Handoff Route
+         * @description Read only the signed viewer's current outbound and safe-return route evidence.
+         */
+        get: operations["current_private_buddy_handoff_route_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_current_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/rendezvous-buddy-handoffs/{handoff_id}/route": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Acquire Private Buddy Handoff Route
+         * @description Acquire the caller's private route to handoff and return to shared stop.
+         */
+        post: operations["acquire_private_buddy_handoff_route_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Member Side Quest
+         * @description Create or replace only the signed-in member's private stop for an active R63 split.
+         */
+        post: operations["create_member_side_quest_api_v1_journeys__journey_id__member_side_quests_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitation-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview Member Place Invitation */
+        get: operations["preview_member_place_invitation_api_v1_journeys__journey_id__member_side_quests__side_quest_id__place_invitation_preview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/place-invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Member Place Invitation */
+        post: operations["create_member_place_invitation_api_v1_journeys__journey_id__member_side_quests__side_quest_id__place_invitations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Withdraw Member Place Invitation */
+        post: operations["withdraw_member_place_invitation_api_v1_journeys__journey_id__member_place_invitations__invitation_id__withdraw_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview Member Place Group Share */
+        get: operations["preview_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_preview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm Member Place Group Share */
+        post: operations["confirm_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/group-share/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Withdraw Member Place Group Share */
+        post: operations["withdraw_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_withdraw_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/feasibility-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview Member Place Invitation Feasibility */
+        post: operations["preview_member_place_invitation_feasibility_api_v1_journeys__journey_id__member_place_invitations__invitation_id__feasibility_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Respond To Member Place Invitation */
+        post: operations["respond_to_member_place_invitation_api_v1_journeys__journey_id__member_place_invitations__invitation_id__respond_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update Member Place Invitation Progress Route
+         * @description Share or withdraw only the signed-in inviter's or accepted member's own report.
+         */
+        post: operations["update_member_place_invitation_progress_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__progress_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Offer Shared Stop Coplanning Grant Route */
+        post: operations["offer_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Respond Shared Stop Coplanning Grant Route */
+        post: operations["respond_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants__grant_id__respond_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/co-planning-grants/{grant_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke Shared Stop Coplanning Grant Route */
+        post: operations["revoke_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants__grant_id__revoke_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-invitations/{invitation_id}/promotions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Member Place Promotion Route */
+        post: operations["create_member_place_promotion_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__promotions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-promotions/{promotion_id}/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Respond To Member Place Promotion Route */
+        post: operations["respond_to_member_place_promotion_route_api_v1_journeys__journey_id__member_place_promotions__promotion_id__respond_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-place-promotions/{promotion_id}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Apply Member Place Promotion Route */
+        post: operations["apply_member_place_promotion_route_api_v1_journeys__journey_id__member_place_promotions__promotion_id__apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/moment-scout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Scout Member Moment
+         * @description Return a private shortlist grounded in the signed-in member's one-time location.
+         */
+        post: operations["scout_member_moment_api_v1_journeys__journey_id__moment_scout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/moment-scout/select": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Select Member Moment Scout Candidate
+         * @description Revalidate the private scout context before creating the existing R64 side quest.
+         */
+        post: operations["select_member_moment_scout_candidate_api_v1_journeys__journey_id__moment_scout_select_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/moment-scout/live": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Scout Live Member Moment
+         * @description Run one external nearby search after explicit signed-member consent.
+         */
+        post: operations["scout_live_member_moment_api_v1_journeys__journey_id__moment_scout_live_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/moment-scout/live/select": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Select Live Member Moment Scout Candidate
+         * @description Consume the owner's short-lived receipt and enter the existing R63/R64 flow.
+         */
+        post: operations["select_live_member_moment_scout_candidate_api_v1_journeys__journey_id__moment_scout_live_select_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Member Side Quest */
+        post: operations["start_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/arrive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Arrive Member Side Quest */
+        post: operations["arrive_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__arrive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete Member Side Quest */
+        post: operations["complete_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__complete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Member Side Quest */
+        post: operations["cancel_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/fit-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Member Side Quest
+         * @description Return owner-only advisory timing without persisting route keys or geometry.
+         */
+        post: operations["preview_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__fit_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/navigate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Navigate To Member Side Quest
+         * @description Capture a private, member-bound outbound route without a Journey-wide route record.
+         */
+        post: operations["navigate_to_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__navigate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/navigation-targets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Member Side Quest Navigation Target
+         * @description Resolve an exact current map pin for the signed-in member only.
+         */
+        get: operations["get_member_side_quest_navigation_target_api_v1_journeys__journey_id__member_side_quests__side_quest_id__navigation_targets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/head-back": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Member Side Quest Head Back
+         * @description Persist a voluntary return report before requesting any fresh location.
+         */
+        post: operations["start_member_side_quest_head_back_api_v1_journeys__journey_id__member_side_quests__side_quest_id__head_back_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/member-side-quests/{side_quest_id}/meetup-report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report Member Side Quest Meetup Arrival
+         * @description Let the split owner report arrival and request an explicit peer acknowledgment.
+         */
+        post: operations["report_member_side_quest_meetup_arrival_api_v1_journeys__journey_id__member_side_quests__side_quest_id__meetup_report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/meetup-handshakes/{handshake_id}/acknowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Acknowledge Member Meetup Arrival
+         * @description A different current member explicitly acknowledges the owner's report.
+         */
+        post: operations["acknowledge_member_meetup_arrival_api_v1_journeys__journey_id__meetup_handshakes__handshake_id__acknowledge_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/meetup-handshakes/{handshake_id}/not-yet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Decline Member Meetup Arrival
+         * @description A different current member can report that they cannot confirm the meetup yet.
+         */
+        post: operations["decline_member_meetup_arrival_api_v1_journeys__journey_id__meetup_handshakes__handshake_id__not_yet_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/group-recovery/adjust": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request Group Recovery Plan
+         * @description Start one authenticated, PLAN_ONLY Hermes run for the current group-risk incident.
+         */
+        post: operations["request_group_recovery_plan_api_v1_journeys__journey_id__group_recovery_adjust_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/group-recovery/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Apply Group Recovery
+         * @description Apply exactly the current server-selected recovery with signed member authority.
+         */
+        post: operations["apply_group_recovery_api_v1_journeys__journey_id__group_recovery_apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3031,7 +4787,17 @@ export interface components {
             reason_code: string;
             user_summary: string;
             recommended_action: string;
+        } & {
             [key: string]: unknown;
+        };
+        ClarificationAnswer: {
+            clarification_id: string;
+            option_key: string;
+            /**
+             * @default THIS_JOURNEY
+             * @enum {string}
+             */
+            scope: "THIS_JOURNEY" | "REMEMBER_FOR_FUTURE_TRIPS";
         };
         AgentRunResponse: {
             /** Format: uuid */
@@ -3388,12 +5154,8 @@ export interface components {
             provider_key: string;
             coordinate_system: string;
             source_coordinate_system: string | null;
-            opening_hours: {
-                [key: string]: unknown;
-            };
-            cost_evidence: {
-                [key: string]: unknown;
-            };
+            opening_hours: Record<string, never>;
+            cost_evidence: Record<string, never>;
         };
         CollectionFolderCreate: {
             name: string;
@@ -3965,6 +5727,1702 @@ export interface components {
             recommendations?: {
                 [key: string]: unknown;
             }[];
+        };
+        /**
+         * BootstrapCitySearchRequest
+         * @description One explicit, bounded city lookup before a traveler taps a public area.
+         */
+        BootstrapCitySearchRequest: {
+            /** Query */
+            query: string;
+            /**
+             * Provider Consent
+             * @default false
+             */
+            provider_consent: boolean;
+            /**
+             * Limit
+             * @default 3
+             */
+            limit: number;
+        };
+        /**
+         * BootstrapDiscoveryRequest
+         * @description Pre-plan discovery for a new Journey with no materialized catalogue.
+         */
+        BootstrapDiscoveryRequest: {
+            /**
+             * Query
+             * @default cafe
+             */
+            query: string;
+            /**
+             * Radius M
+             * @default 2500
+             */
+            radius_m: number;
+            /**
+             * Limit
+             * @default 3
+             */
+            limit: number;
+            /**
+             * Source Kind
+             * @enum {string}
+             */
+            source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
+            /**
+             * Provider Consent
+             * @default false
+             */
+            provider_consent: boolean;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @default WGS84
+             * @constant
+             */
+            coordinate_system: "WGS84";
+            /** Accuracy M */
+            accuracy_m?: number | null;
+            /**
+             * Mode
+             * @default live
+             * @constant
+             */
+            mode: "live";
+        };
+        /**
+         * BootstrapMapPreviewRequest
+         * @description Release one selected public destination to an external map.
+         */
+        BootstrapMapPreviewRequest: {
+            /**
+             * Receipt Id
+             * Format: uuid
+             */
+            receipt_id: string;
+            /**
+             * Candidate Id
+             * Format: uuid
+             */
+            candidate_id: string;
+            /**
+             * Public Map Consent
+             * @default false
+             */
+            public_map_consent: boolean;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @default WGS84
+             * @constant
+             */
+            coordinate_system: "WGS84";
+        };
+        /** BootstrapSelectRequest */
+        BootstrapSelectRequest: {
+            /**
+             * Receipt Id
+             * Format: uuid
+             */
+            receipt_id: string;
+            /**
+             * Candidate Id
+             * Format: uuid
+             */
+            candidate_id: string;
+        };
+        /**
+         * BootstrapShortlistNavigationRequest
+         * @description Release a saved public destination for destination-only walking directions.
+         */
+        BootstrapShortlistNavigationRequest: {
+            /**
+             * Public Map Consent
+             * @default false
+             */
+            public_map_consent: boolean;
+        };
+        /**
+         * BootstrapShortlistPreviewRequest
+         * @description Release a saved public destination using fresh per-click consent.
+         */
+        BootstrapShortlistPreviewRequest: {
+            /**
+             * Public Map Consent
+             * @default false
+             */
+            public_map_consent: boolean;
+        };
+        /** BootstrapShortlistSaveRequest */
+        BootstrapShortlistSaveRequest: {
+            /**
+             * Receipt Id
+             * Format: uuid
+             */
+            receipt_id: string;
+            /**
+             * Candidate Id
+             * Format: uuid
+             */
+            candidate_id: string;
+        };
+        /**
+         * BootstrapTwoStopWalkRequest
+         * @description Release a walking leg between two explicitly ordered saved public stops.
+         */
+        BootstrapTwoStopWalkRequest: {
+            /**
+             * First Shortlist Id
+             * Format: uuid
+             */
+            first_shortlist_id: string;
+            /**
+             * Second Shortlist Id
+             * Format: uuid
+             */
+            second_shortlist_id: string;
+            /** Public Map Consent */
+            public_map_consent: boolean;
+        };
+        /** BootstrapTwoStopWalkResponseStop */
+        BootstrapTwoStopWalkResponseStop: {
+            /**
+             * Position
+             * @enum {integer}
+             */
+            position: 1 | 2;
+            /**
+             * Shortlist Id
+             * Format: uuid
+             */
+            shortlist_id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** External Id */
+            external_id: string;
+            /** Source Url */
+            source_url: string;
+            /** Source Provenance */
+            source_provenance: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @enum {string}
+             */
+            coordinate_system: "WGS84";
+            /** Opening State */
+            opening_state: string;
+            /**
+             * Price State
+             * @enum {string}
+             */
+            price_state: "UNKNOWN";
+            /**
+             * Route Eta State
+             * @enum {string}
+             */
+            route_eta_state: "UNKNOWN";
+            /**
+             * Captured At
+             * Format: date-time
+             */
+            captured_at: string;
+        };
+        /** BootstrapTwoStopWalkResponse */
+        BootstrapTwoStopWalkResponse: {
+            /**
+             * Preview Id
+             * Format: uuid
+             */
+            preview_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "PUBLIC_TWO_STOP_WALK_READY";
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Authorization Basis
+             * @enum {string}
+             */
+            authorization_basis: "TWO_SAVED_PUBLIC_IDENTITIES";
+            /**
+             * Release Purpose
+             * @enum {string}
+             */
+            release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+            /**
+             * Navigation Mode
+             * @enum {string}
+             */
+            navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+            /** Navigation Url */
+            navigation_url: string;
+            first_stop: components["schemas"]["BootstrapTwoStopWalkResponseStop"];
+            second_stop: components["schemas"]["BootstrapTwoStopWalkResponseStop"];
+            /**
+             * Route Time State
+             * @enum {string}
+             */
+            route_time_state: "UNKNOWN";
+            /**
+             * Explore State
+             * @enum {string}
+             */
+            explore_state: "DRAFT_EXPLORE_ONLY";
+            /** Shared Fields */
+            shared_fields: string[];
+            /** Withheld Fields */
+            withheld_fields: string[];
+            /** Plan Version Id */
+            plan_version_id: null;
+            /** Selected Place Id */
+            selected_place_id: null;
+        };
+        /**
+         * BootstrapTwoStopWalkabilityRequest
+         * @description Check provider-backed walking evidence for two saved public stops.
+         */
+        BootstrapTwoStopWalkabilityRequest: {
+            /**
+             * First Shortlist Id
+             * Format: uuid
+             */
+            first_shortlist_id: string;
+            /**
+             * Second Shortlist Id
+             * Format: uuid
+             */
+            second_shortlist_id: string;
+            /** Public Route Consent */
+            public_route_consent: boolean;
+        };
+        /** BootstrapTwoStopWalkStop */
+        BootstrapTwoStopWalkStop: {
+            /**
+             * Position
+             * @enum {integer}
+             */
+            position: 1 | 2;
+            /**
+             * Shortlist Id
+             * Format: uuid
+             */
+            shortlist_id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** External Id */
+            external_id: string;
+            /** Source Url */
+            source_url: string;
+            /** Source Provenance */
+            source_provenance: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /**
+             * Coordinate System
+             * @enum {string}
+             */
+            coordinate_system: "WGS84";
+            /** Opening State */
+            opening_state: string;
+            /**
+             * Price State
+             * @enum {string}
+             */
+            price_state: "UNKNOWN";
+        };
+        /** BootstrapTwoStopWalkabilityResponse */
+        BootstrapTwoStopWalkabilityResponse: {
+            /**
+             * Preview Id
+             * Format: uuid
+             */
+            preview_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
+            /**
+             * Route State
+             * @enum {string}
+             */
+            route_state: "ROUTE_VERIFIED" | "ROUTE_UNVERIFIED";
+            /**
+             * Journey Id
+             * Format: uuid
+             */
+            journey_id: string;
+            /**
+             * Authorization Basis
+             * @enum {string}
+             */
+            authorization_basis: "TWO_SAVED_PUBLIC_IDENTITIES";
+            /**
+             * Release Purpose
+             * @enum {string}
+             */
+            release_purpose: "PUBLIC_POI_TO_PUBLIC_POI_WALKABILITY";
+            /**
+             * Navigation Mode
+             * @enum {string}
+             */
+            navigation_mode: "PUBLIC_POI_TO_PUBLIC_POI_WALKING";
+            /** Navigation Url */
+            navigation_url: string;
+            first_stop: components["schemas"]["BootstrapTwoStopWalkStop"];
+            second_stop: components["schemas"]["BootstrapTwoStopWalkStop"];
+            /** Provider */
+            provider: string | null;
+            /**
+             * Router Profile
+             * @enum {string}
+             */
+            router_profile: "pedestrian";
+            /** Provenance */
+            provenance: string;
+            /** Reason Code */
+            reason_code: string | null;
+            /** Reason */
+            reason: string | null;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /** Duration Min */
+            duration_min: number | null;
+            /** Distance M */
+            distance_m: number | null;
+            /**
+             * Route Time State
+             * @enum {string}
+             */
+            route_time_state: "PROVIDER_CAPTURED" | "UNKNOWN";
+            /**
+             * Route Distance State
+             * @enum {string}
+             */
+            route_distance_state: "PROVIDER_CAPTURED" | "UNKNOWN";
+            /** Route Caveats */
+            route_caveats: string[];
+            /** Shared Fields */
+            shared_fields: string[];
+            /** Withheld Fields */
+            withheld_fields: string[];
+            /**
+             * Explore State
+             * @enum {string}
+             */
+            explore_state: "DRAFT_EXPLORE_ONLY";
+            /** Plan Version Id */
+            plan_version_id: null;
+            /** Selected Place Id */
+            selected_place_id: null;
+        };
+        /**
+         * CapabilityInput
+         * @description Validated explicit capability input (JSON uses ``class``).
+         */
+        CapabilityInput: {
+            /** Code */
+            code: string;
+            /**
+             * Class
+             * @default SOFT_PREFERENCE
+             */
+            class: string;
+            /**
+             * Severity
+             * @default SOFT
+             * @enum {string}
+             */
+            severity: "HARD" | "STRONG" | "SOFT";
+            /** Params */
+            params?: {
+                [key: string]: unknown;
+            };
+            /**
+             * Scope
+             * @default TRAVELER
+             * @enum {string}
+             */
+            scope: "TRAVELER" | "JOURNEY";
+            /**
+             * Source
+             * @default USER_CONFIRMED
+             */
+            source: string;
+            /**
+             * Provenance
+             * @default USER_STATED
+             */
+            provenance: string;
+            /**
+             * Explicit
+             * @default true
+             */
+            explicit: boolean;
+            /**
+             * Confirmed
+             * @default false
+             */
+            confirmed: boolean;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+        };
+        /**
+         * CatalogHydrationRequest
+         * @description Ask the backend to prepare one destination's catalog (ORD-0095-1 §6).
+         *
+         *     `query` is what the traveller typed, not an internal code: the whole point of the operation
+         *     is that a person can ask about a place they can name.  `journey_id` is optional because the
+         *     job belongs to the *destination* - two travellers preparing the same county under the same
+         *     policy share one job, and the fingerprint says why they did.
+         */
+        CatalogHydrationRequest: {
+            /** Query */
+            query: string;
+            /** Journey Id */
+            journey_id?: string | null;
+            /** Requested Categories */
+            requested_categories?: string[] | null;
+        };
+        /** CitySignalFixtureRequest */
+        CitySignalFixtureRequest: {
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "NORMAL" | "DISRUPTED" | "OUTAGE" | "RISK_FORECAST";
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            };
+        };
+        /** CollectiveClarificationAnswer */
+        CollectiveClarificationAnswer: {
+            /** Clarification Id */
+            clarification_id: string;
+            /**
+             * Proposal Id
+             * Format: uuid
+             */
+            proposal_id: string;
+        };
+        /** EdgeActionRequest */
+        EdgeActionRequest: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "ACKNOWLEDGE" | "NEXT" | "REJECT_PROPOSAL" | "SOS";
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            };
+        };
+        /** EdgeDeviceCreateRequest */
+        EdgeDeviceCreateRequest: {
+            /**
+             * Display Name
+             * @default Trip companion
+             */
+            display_name: string;
+        };
+        /** EdgeObservationRequest */
+        EdgeObservationRequest: {
+            /**
+             * Observation Type
+             * @enum {string}
+             */
+            observation_type: "RAIN" | "SOS" | "TEMP" | "ACK";
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            };
+            /** Option Id */
+            option_id?: string | null;
+        };
+        /**
+         * ExecutionTruthAttestation
+         * @description Optional evidence class for one execution-state transition.
+         *
+         *     Omitting the body intentionally means SIMULATED_STATE_TRANSITION.  Stronger
+         *     labels require evidence and are checked server-side; callers cannot promote
+         *     an HTTP state-machine exercise into physical presence by choosing a string.
+         */
+        ExecutionTruthAttestation: {
+            /**
+             * Truth Kind
+             * @default SIMULATED_STATE_TRANSITION
+             * @enum {string}
+             */
+            truth_kind: "SIMULATED_STATE_TRANSITION" | "OPERATOR_CONFIRMED_EXECUTION" | "DEVICE_LOCATION_VERIFIED_EXECUTION";
+            /**
+             * Operator Confirmed
+             * @default false
+             */
+            operator_confirmed: boolean;
+            /** Location Observation Id */
+            location_observation_id?: string | null;
+        };
+        /**
+         * FactAcquisitionRequest
+         * @description Acquire source-linked facts for existing provider Places.
+         */
+        FactAcquisitionRequest: {
+            /** Place Ids */
+            place_ids?: string[] | null;
+            /** Source Bindings */
+            source_bindings?: {
+                [key: string]: components["schemas"]["FactSourceBindingRequest"];
+            } | null;
+        };
+        /**
+         * FactSourceBindingRequest
+         * @description Bind an operator-confirmed official page to one existing provider Place.
+         */
+        FactSourceBindingRequest: {
+            /** Source Url */
+            source_url: string;
+            /**
+             * Source Class
+             * @default OFFICIAL_WEB
+             * @enum {string}
+             */
+            source_class: "OFFICIAL_WEB" | "OFFICIAL_OPERATOR" | "OFFICIAL_TICKETING" | "MUNICIPAL_AUTHORITY";
+        };
+        /** GeneratePlansRequest */
+        GeneratePlansRequest: {
+            /** Planning Mode */
+            planning_mode?: ("balanced" | "budget" | "explore" | "strict_schedule") | null;
+            /**
+             * Candidate Count
+             * @default 3
+             */
+            candidate_count: number;
+            /** Place Ids */
+            place_ids?: string[] | null;
+            /**
+             * Allow Single Place
+             * @default false
+             */
+            allow_single_place: boolean;
+            /**
+             * Allow Unknown Cost
+             * @default false
+             */
+            allow_unknown_cost: boolean;
+            /** Mission Id */
+            mission_id?: string | null;
+        };
+        /**
+         * GroupPresenceRouteRequest
+         * @description Request one member-specific route from a fresh, server-bound location sample.
+         */
+        GroupPresenceRouteRequest: {
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+            /**
+             * Requested Mode
+             * @default WALK
+             * @enum {string}
+             */
+            requested_mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+        };
+        /**
+         * GroupRecoveryApplyRequest
+         * @description Spend the server-selected collective recovery; callers choose no proposal.
+         */
+        GroupRecoveryApplyRequest: Record<string, never>;
+        /**
+         * GroupRecoveryRequest
+         * @description Ask the existing Journey Agent to prepare one bounded group recovery proposal.
+         */
+        GroupRecoveryRequest: Record<string, never>;
+        /** GuardianAutopilotStart */
+        GuardianAutopilotStart: {
+            /** Interval Seconds */
+            interval_seconds?: number | null;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * InTransitRerouteRequest
+         * @description Reroute from one server-stored current location sample to the exact active stop.
+         */
+        InTransitRerouteRequest: {
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+        };
+        /** JourneyAnchor */
+        JourneyAnchor: {
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Location */
+            location: string;
+            /** Place Id */
+            place_id?: string | null;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** JourneyMemberPreferenceUpdate */
+        JourneyMemberPreferenceUpdate: {
+            /** Preferences */
+            preferences?: components["schemas"]["PreferenceInput"][];
+        };
+        /** JourneyMembershipInvitationCreate */
+        JourneyMembershipInvitationCreate: {
+            /**
+             * Target Traveler Id
+             * Format: uuid
+             */
+            target_traveler_id: string;
+        };
+        /** JourneyMembershipInvitationDecision */
+        JourneyMembershipInvitationDecision: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "ACCEPT" | "DECLINE";
+        };
+        /** JourneyMembershipInvitationInboxItem */
+        JourneyMembershipInvitationInboxItem: {
+            /** Invitation Id */
+            invitation_id: string;
+            /** Inviter Display Name */
+            inviter_display_name: string;
+            /** Journey Title */
+            journey_title: string;
+            /** City Code */
+            city_code: string;
+            /** Approximate Start Date */
+            approximate_start_date: string;
+            /**
+             * Proposed Role
+             * @constant
+             */
+            proposed_role: "COLLABORATOR";
+            /** Expires At */
+            expires_at: string;
+            /**
+             * State
+             * @constant
+             */
+            state: "OFFERED";
+        };
+        /**
+         * JourneyOperatorStartRequest
+         * @description Plain-language one-click activation for the Journey Operator.
+         */
+        JourneyOperatorStartRequest: {
+            /**
+             * Objective
+             * @default Take care of this trip. Protect confirmed commitments, keep changes reasonable, and ask me before important changes.
+             */
+            objective: string;
+            /**
+             * Requested Autonomy
+             * @default EXECUTE_WITHIN_BOUNDS
+             * @enum {string}
+             */
+            requested_autonomy: "PLAN_ONLY" | "EXECUTE_WITHIN_BOUNDS";
+            /** Interval Seconds */
+            interval_seconds?: number | null;
+        };
+        /**
+         * JourneyRendezvousSignalCreateRequest
+         * @description The client may confirm the displayed target, but never choose a destination.
+         */
+        JourneyRendezvousSignalCreateRequest: {
+            /**
+             * Signal Kind
+             * @enum {string}
+             */
+            signal_kind: "HEADING_TO_RENDEZVOUS" | "NEEDS_COORDINATION";
+            /**
+             * Expected Active Plan Version Id
+             * Format: uuid
+             */
+            expected_active_plan_version_id: string;
+            /** Expected Current Activity Id */
+            expected_current_activity_id?: string | null;
+            /**
+             * Expected Rendezvous Activity Id
+             * Format: uuid
+             */
+            expected_rendezvous_activity_id: string;
+            /** Expected Public Place Id */
+            expected_public_place_id: string;
+            /** Expected Audience Sha256 */
+            expected_audience_sha256: string;
+        };
+        /**
+         * LaunchOriginRequest
+         * @description Explicit planned-origin confirmation; coordinates and authority are server-owned.
+         */
+        LaunchOriginRequest: {
+            /**
+             * Source Kind
+             * @enum {string}
+             */
+            source_kind: "PLACE" | "SELECTED_STAY" | "ARRIVAL_ANCHOR";
+            /** Place Id */
+            place_id?: string | null;
+        };
+        /**
+         * LiveMomentScoutRequest
+         * @description One bounded external lookup, called only after explicit location-transfer consent.
+         */
+        LiveMomentScoutRequest: {
+            /**
+             * Consent External Location
+             * @constant
+             */
+            consent_external_location: true;
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+            /**
+             * Budget Minutes
+             * @default 30
+             * @enum {integer}
+             */
+            budget_minutes: 15 | 30 | 45;
+            /**
+             * Interest
+             * @default ANYTHING
+             * @enum {string}
+             */
+            interest: "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
+            /**
+             * Radius M
+             * @default 1200
+             */
+            radius_m: number;
+        };
+        /**
+         * LiveMomentScoutSelectRequest
+         * @description Select a server-held live result and confirm its exact shared rendezvous.
+         */
+        LiveMomentScoutSelectRequest: {
+            /**
+             * Receipt Id
+             * Format: uuid
+             */
+            receipt_id: string;
+            /**
+             * Candidate Id
+             * Format: uuid
+             */
+            candidate_id: string;
+            /**
+             * Confirm Return To Rendezvous
+             * @constant
+             */
+            confirm_return_to_rendezvous: true;
+        };
+        /** LocationObservationRequest */
+        LocationObservationRequest: {
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /** Accuracy M */
+            accuracy_m: number;
+            /**
+             * Captured At
+             * Format: date-time
+             */
+            captured_at: string;
+        };
+        /** LuggageContextRequest */
+        LuggageContextRequest: {
+            /**
+             * Baggage Present
+             * @default true
+             */
+            baggage_present: boolean;
+            /**
+             * Baggage Size Class
+             * @default MEDIUM
+             * @enum {string}
+             */
+            baggage_size_class: "NONE" | "CABIN" | "MEDIUM" | "HEAVY";
+            /**
+             * Luggage Drop Required
+             * @default true
+             */
+            luggage_drop_required: boolean;
+        };
+        /**
+         * MemberPlaceGroupShareConsentRequest
+         * @description Explicit confirmation of a frozen whole-Journey Place audience preview.
+         */
+        MemberPlaceGroupShareConsentRequest: {
+            /**
+             * Confirm Full Journey Place Sharing
+             * @constant
+             */
+            confirm_full_journey_place_sharing: true;
+            /** Audience Snapshot */
+            audience_snapshot: string;
+            /** Plan Snapshot */
+            plan_snapshot: string;
+            /** Source Snapshot */
+            source_snapshot: string;
+        };
+        /**
+         * MemberPlaceInvitationCreateRequest
+         * @description The owner must explicitly confirm disclosure of one exact public Place.
+         */
+        MemberPlaceInvitationCreateRequest: {
+            /**
+             * Confirm Public Place Sharing
+             * @constant
+             */
+            confirm_public_place_sharing: true;
+            /** Audience Snapshot */
+            audience_snapshot: string;
+        };
+        /**
+         * MemberPlaceInvitationDecisionRequest
+         * @description An addressed companion must make an explicit accept/decline decision.
+         */
+        MemberPlaceInvitationDecisionRequest: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "ACCEPT" | "DECLINE";
+            /** Confirm Exact Public Place */
+            confirm_exact_public_place?: true | null;
+            /** Feasibility Token */
+            feasibility_token?: string | null;
+            /** Acknowledge Feasibility Unknown */
+            acknowledge_feasibility_unknown?: true | null;
+            /** Acknowledge Feasibility Risk */
+            acknowledge_feasibility_risk?: true | null;
+        };
+        /**
+         * MemberPlaceInvitationFeasibilityPreviewRequest
+         * @description One explicitly consented, recipient-only route feasibility request.
+         */
+        MemberPlaceInvitationFeasibilityPreviewRequest: {
+            /**
+             * Consent Route Provider
+             * @constant
+             */
+            consent_route_provider: true;
+            /** Location Observation Id */
+            location_observation_id?: string | null;
+            /**
+             * Dwell Minutes
+             * @default 20
+             * @enum {integer}
+             */
+            dwell_minutes: 10 | 20 | 30;
+            /**
+             * Requested Mode
+             * @default WALK
+             * @enum {string}
+             */
+            requested_mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+        };
+        /**
+         * MemberPlaceInvitationProgressRequest
+         * @description An invitation participant explicitly shares or withdraws one coarse status.
+         */
+        MemberPlaceInvitationProgressRequest: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "SHARE_ARRIVAL" | "WITHDRAW_ARRIVAL" | "SHARE_HEADING_BACK" | "WITHDRAW_HEADING_BACK";
+            /** Share Audience Token */
+            share_audience_token?: string | null;
+        };
+        /**
+         * MemberPlacePromotionCreateRequest
+         * @description One deliberate request to propose an invited Place as a shared stop.
+         */
+        MemberPlacePromotionCreateRequest: {
+            /**
+             * Dwell Minutes
+             * @enum {integer}
+             */
+            dwell_minutes: 10 | 20 | 30;
+        };
+        /**
+         * MemberPlacePromotionDecisionRequest
+         * @description One current Journey member's independent decision on a shared-stop proposal.
+         */
+        MemberPlacePromotionDecisionRequest: {
+            /** Clarification Id */
+            clarification_id: string;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "APPROVE" | "DECLINE";
+        };
+        /**
+         * MemberSideQuestCreateRequest
+         * @description Create or replace the authenticated member's private side-quest destination.
+         */
+        MemberSideQuestCreateRequest: {
+            /** Destination Text */
+            destination_text?: string | null;
+            /** Place Id */
+            place_id?: string | null;
+        };
+        /**
+         * MemberSideQuestFitPreviewRequest
+         * @description One-time owner-only detour fit check; current location is optional for UNKNOWN.
+         */
+        MemberSideQuestFitPreviewRequest: {
+            /** Location Observation Id */
+            location_observation_id?: string | null;
+            /**
+             * Dwell Minutes
+             * @default 20
+             * @enum {integer}
+             */
+            dwell_minutes: 10 | 20 | 30;
+            /**
+             * Requested Mode
+             * @default WALK
+             * @enum {string}
+             */
+            requested_mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+        };
+        /**
+         * MemberSideQuestNavigateRequest
+         * @description Route only the authenticated member from a fresh one-time location to their stop.
+         */
+        MemberSideQuestNavigateRequest: {
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+            /**
+             * Requested Mode
+             * @default WALK
+             * @enum {string}
+             */
+            requested_mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+        };
+        /** MobilityModeRequest */
+        MobilityModeRequest: {
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+        };
+        /**
+         * MomentScoutRequest
+         * @description One-time owner-only discovery request; location is always server-bound.
+         */
+        MomentScoutRequest: {
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+            /**
+             * Budget Minutes
+             * @default 30
+             * @enum {integer}
+             */
+            budget_minutes: 15 | 30 | 45;
+            /**
+             * Interest
+             * @default ANYTHING
+             * @enum {string}
+             */
+            interest: "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
+        };
+        /**
+         * MomentScoutSelectRequest
+         * @description Explicitly confirm one candidate from a fresh private Moment Scout result.
+         */
+        MomentScoutSelectRequest: {
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+            /**
+             * Budget Minutes
+             * @default 30
+             * @enum {integer}
+             */
+            budget_minutes: 15 | 30 | 45;
+            /**
+             * Interest
+             * @default ANYTHING
+             * @enum {string}
+             */
+            interest: "ANYTHING" | "COFFEE_FOOD" | "CULTURE" | "NATURE";
+            /** Place Id */
+            place_id: string;
+            /** Scout Context */
+            scout_context: string;
+        };
+        /**
+         * OrderItem
+         * @description Server-priced order line returned after catalog authority is applied.
+         */
+        OrderItem: {
+            /** Sku */
+            sku: string;
+            /** Quantity */
+            quantity: number;
+            /** Unit Amount Minor */
+            unit_amount_minor: number;
+            /** Line Total Minor */
+            line_total_minor: number;
+        };
+        /** OrderItemInput */
+        OrderItemInput: {
+            /** Sku */
+            sku: string;
+            /** Quantity */
+            quantity: number;
+        };
+        /** OutcomeEventCreate */
+        OutcomeEventCreate: {
+            /**
+             * Event Type
+             * @enum {string}
+             */
+            event_type: "ACTIVITY_STARTED" | "ACTIVITY_COMPLETED" | "ACTIVITY_SKIPPED" | "MANUAL_OVERRIDE" | "AGENT_PROPOSED" | "USER_ACCEPTED" | "USER_REJECTED";
+            /** Occurred At Actual */
+            occurred_at_actual?: string | null;
+            /** Activity Id */
+            activity_id?: string | null;
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            };
+            /**
+             * Actor Type
+             * @default USER
+             */
+            actor_type: string;
+            /** Related Proposal Id */
+            related_proposal_id?: string | null;
+            /** Related Agent Run Id */
+            related_agent_run_id?: string | null;
+        };
+        /** PoiImportAddRequest */
+        PoiImportAddRequest: {
+            /** Place Ids */
+            place_ids: string[];
+            /** Day */
+            day?: string | null;
+        };
+        /** PoiImportAddResponse */
+        PoiImportAddResponse: {
+            /** Journey Id */
+            journey_id: string;
+            /** Plan Version Id */
+            plan_version_id: string;
+            /** Day */
+            day: string;
+            /**
+             * Day Source
+             * @enum {string}
+             */
+            day_source: "TRAVELLER_CHOSEN" | "JOURNEY_FIRST_DAY";
+            /** Added */
+            added: components["schemas"]["PoiImportAddedActivity"][];
+            /** Already Present */
+            already_present?: string[];
+            /** Readback Path */
+            readback_path: string;
+        };
+        /** PoiImportAddedActivity */
+        PoiImportAddedActivity: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Place Id */
+            place_id: string;
+            /** Sequence No */
+            sequence_no: number;
+            /** Start At */
+            start_at: string;
+            /** End At */
+            end_at: string;
+        };
+        /** PoiImportItem */
+        PoiImportItem: {
+            /** Title */
+            title: string;
+            /** Note */
+            note?: string | null;
+            /** Char Count */
+            char_count: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "RESOLVED" | "AMBIGUOUS" | "UNRESOLVED";
+            /** Place Id */
+            place_id?: string | null;
+            /** Place Name */
+            place_name?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Longitude */
+            longitude?: number | null;
+            /** Coordinate System */
+            coordinate_system?: string | null;
+            /** Matches */
+            matches?: string[];
+            /**
+             * Addable
+             * @default false
+             */
+            addable: boolean;
+        };
+        /** PoiImportParseRequest */
+        PoiImportParseRequest: {
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /** PoiImportParseResponse */
+        PoiImportParseResponse: {
+            /**
+             * Source Channel
+             * @constant
+             */
+            source_channel: "LOCAL_TEXT_PARSER";
+            /** Forms */
+            forms: string[];
+            /** Unsupported Forms */
+            unsupported_forms: string[];
+            /** Link Hosts */
+            link_hosts: string[];
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /** Items */
+            items: components["schemas"]["PoiImportItem"][];
+            /** Char Count */
+            char_count: number;
+        };
+        /** PushSubscriptionRequest */
+        PushSubscriptionRequest: {
+            /** Endpoint */
+            endpoint: string;
+            /** Keys */
+            keys?: {
+                [key: string]: string;
+            };
+        };
+        /** RealCityDiscoveryRequest */
+        RealCityDiscoveryRequest: {
+            /**
+             * Query
+             * @default indoor cafe
+             */
+            query: string;
+            /**
+             * Radius M
+             * @default 2500
+             */
+            radius_m: number;
+            /**
+             * Limit
+             * @default 8
+             */
+            limit: number;
+            /**
+             * Mode
+             * @default captured_replay
+             * @enum {string}
+             */
+            mode: "replay" | "captured_replay" | "live";
+        };
+        /** RealCityIntelligenceRequest */
+        RealCityIntelligenceRequest: {
+            /** Goal */
+            goal: string;
+            /**
+             * Radius M
+             * @default 3000
+             */
+            radius_m: number;
+            /**
+             * Limit
+             * @default 8
+             */
+            limit: number;
+            /**
+             * Mode
+             * @default captured_replay
+             * @enum {string}
+             */
+            mode: "replay" | "captured_replay" | "live";
+            /**
+             * Candidate Count
+             * @default 2
+             */
+            candidate_count: number;
+            /**
+             * Require Fully Grounded
+             * @default false
+             */
+            require_fully_grounded: boolean;
+        };
+        /** RendezvousBuddyExecutionReceiptRequest */
+        RendezvousBuddyExecutionReceiptRequest: {
+            /**
+             * Receipt Kind
+             * @enum {string}
+             */
+            receipt_kind: "BUDDY_MET_ACK" | "CANNOT_MEET" | "CANCEL_PARTICIPATION";
+        };
+        /** RendezvousBuddyExecutionWindowRequest */
+        RendezvousBuddyExecutionWindowRequest: {
+            /**
+             * Execution Window Minutes
+             * @enum {integer}
+             */
+            execution_window_minutes: 30 | 60 | 90;
+        };
+        /** RendezvousBuddyHandoffDecisionRequest */
+        RendezvousBuddyHandoffDecisionRequest: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "ACCEPT" | "DECLINE";
+        };
+        /**
+         * RendezvousBuddyHandoffOfferRequest
+         * @description An authorized helper selects only a server-suggested public Place.
+         */
+        RendezvousBuddyHandoffOfferRequest: {
+            /**
+             * Help Signal Id
+             * Format: uuid
+             */
+            help_signal_id: string;
+            /**
+             * Expected Active Plan Version Id
+             * Format: uuid
+             */
+            expected_active_plan_version_id: string;
+            /** Expected Current Activity Id */
+            expected_current_activity_id?: string | null;
+            /**
+             * Expected Rendezvous Activity Id
+             * Format: uuid
+             */
+            expected_rendezvous_activity_id: string;
+            /** Expected Original Public Place Id */
+            expected_original_public_place_id: string;
+            /** Expected Audience Sha256 */
+            expected_audience_sha256: string;
+            /** Handoff Place Id */
+            handoff_place_id: string;
+            /** Execution Window Minutes */
+            execution_window_minutes?: (30 | 60 | 90) | null;
+        };
+        /**
+         * RendezvousBuddyPrivateRouteRequest
+         * @description One private route to an accepted R79 place after a separate disclosure action.
+         */
+        RendezvousBuddyPrivateRouteRequest: {
+            /**
+             * Location Observation Id
+             * Format: uuid
+             */
+            location_observation_id: string;
+            /**
+             * Requested Mode
+             * @default WALK
+             * @constant
+             */
+            requested_mode: "WALK";
+            /**
+             * External Provider Disclosure Confirmed
+             * @default false
+             */
+            external_provider_disclosure_confirmed: boolean;
+        };
+        /** ReplanGenerateRequest */
+        ReplanGenerateRequest: {
+            /**
+             * Trigger Event Id
+             * Format: uuid
+             */
+            trigger_event_id: string;
+            /**
+             * Candidate Count
+             * @default 3
+             */
+            candidate_count: number;
+            /** Solver Mode */
+            solver_mode?: ("deterministic" | "ortools" | "auto" | "v2") | null;
+            /** Protected Activity Ids */
+            protected_activity_ids?: string[];
+            /** Place Ids */
+            place_ids?: string[] | null;
+            /** Promotion Id */
+            promotion_id?: string | null;
+            /** Promotion Invitation Id */
+            promotion_invitation_id?: string | null;
+            /** Promotion Dwell Minutes */
+            promotion_dwell_minutes?: (10 | 20 | 30) | null;
+        };
+        /** ReservationDraftPatchRequest */
+        ReservationDraftPatchRequest: {
+            /** Reservation Type */
+            reservation_type?: string | null;
+            /** Confirmation Ref */
+            confirmation_ref?: string | null;
+            /** Origin */
+            origin?: {
+                [key: string]: unknown;
+            } | null;
+            /** Destination */
+            destination?: {
+                [key: string]: unknown;
+            } | null;
+            /** Scheduled Departure At */
+            scheduled_departure_at?: string | null;
+            /** Scheduled Arrival At */
+            scheduled_arrival_at?: string | null;
+            /** Price Amount Minor */
+            price_amount_minor?: number | null;
+            /** Currency */
+            currency?: string | null;
+            /** Anchor Role */
+            anchor_role?: ("ARRIVAL" | "DEPARTURE" | "MID_TRIP" | "UNKNOWN") | null;
+            /** Semantic Node Key */
+            semantic_node_key?: string | null;
+            /** Semantic Target */
+            semantic_target?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /** ReservationImportRequest */
+        ReservationImportRequest: {
+            /**
+             * Artifact Type
+             * @enum {string}
+             */
+            artifact_type: "STRUCTURED_JSON" | "ICS" | "TEXT";
+            /** Payload */
+            payload: {
+                [key: string]: unknown;
+            };
+        };
+        /** ReservationTextExtractionRequest */
+        ReservationTextExtractionRequest: {
+            /** Text */
+            text: string;
+        };
+        /** ReservationVisionRequest */
+        ReservationVisionRequest: {
+            /** Image Url */
+            image_url: string;
+            /**
+             * Hint
+             * @default booking confirmation
+             */
+            hint: string;
+        };
+        /** ResilienceRefreshRequest */
+        ResilienceRefreshRequest: {
+            /**
+             * Mode
+             * @default replay
+             * @enum {string}
+             */
+            mode: "replay" | "captured_replay" | "live";
+        };
+        /**
+         * RouteAcquireRequest
+         * @description Request exactly one server-resolved route edge; no client coordinates.
+         */
+        RouteAcquireRequest: {
+            /** Target Activity Id */
+            target_activity_id?: string | null;
+            /**
+             * Requested Mode
+             * @default WALK
+             * @enum {string}
+             */
+            requested_mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+        };
+        /** ScheduleChangeRequest */
+        ScheduleChangeRequest: {
+            /**
+             * Estimated Arrival At
+             * Format: date-time
+             */
+            estimated_arrival_at: string;
+            /**
+             * Status
+             * @default DELAYED
+             * @enum {string}
+             */
+            status: "DELAYED" | "CANCELLED" | "RESCHEDULED";
+            /**
+             * Provider Key
+             * @default captured-transit-status
+             */
+            provider_key: string;
+            /**
+             * Captured At
+             * Format: date-time
+             */
+            captured_at: string;
+            /** Service Alert */
+            service_alert?: string | null;
+        };
+        /**
+         * SharedStopCoPlanningGrantCreateRequest
+         * @description Offer one named Journey collaborator bounded authority for one public Place.
+         */
+        SharedStopCoPlanningGrantCreateRequest: {
+            /** Grantee Member Id */
+            grantee_member_id: string;
+        };
+        /** SharedStopCoPlanningGrantDecisionRequest */
+        SharedStopCoPlanningGrantDecisionRequest: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "ACCEPT" | "DECLINE";
+        };
+        /** StayAutopilotRecoveryRequest */
+        StayAutopilotRecoveryRequest: {
+            /**
+             * State
+             * @default RAIN
+             * @enum {string}
+             */
+            state: "RAIN" | "SEVERE_RAIN" | "TRANSIT_DISRUPTION";
+        };
+        /** StayModeChangeRequest */
+        StayModeChangeRequest: {
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "WALK" | "BICYCLE" | "TRANSIT" | "AUTO" | "RIDE_HAIL";
+            /** From Key */
+            from_key?: string | null;
+            /** To Key */
+            to_key?: string | null;
+        };
+        /** StayPlanGenerateRequest */
+        StayPlanGenerateRequest: {
+            /**
+             * Query
+             * @default stay-aware journey
+             */
+            query: string;
+            /**
+             * Weather State
+             * @default NORMAL
+             * @enum {string}
+             */
+            weather_state: "NORMAL" | "RAIN" | "SEVERE_RAIN" | "TRANSIT_DISRUPTION";
+            /**
+             * Candidate Count
+             * @default 4
+             */
+            candidate_count: number;
+            /**
+             * Sort
+             * @default BEST_FOR_JOURNEY
+             * @enum {string}
+             */
+            sort: "BEST_FOR_JOURNEY" | "CHEAPEST" | "LEAST_TRAVEL" | "MOST_FLEXIBLE";
+        };
+        /**
+         * TravelerRecycleBinJourney
+         * @description One binned trip, answered from one traveller's seat (ORD-0531).
+         *
+         *     The two extra names are the whole point of this shape.  A bin row used to say only "this is in
+         *     the bin", which left a screen to decide whether it may offer 找回 by comparing ids it was never
+         *     given a rule about -- the same mistake ORD-0239 names for every other derived state on this
+         *     product.  So the server says it:
+         *
+         *     * `ownership` -- whose trip this is, relative to the traveller named in the path.  The column
+         *       already exists (`journeys.traveler_id`); no new column was needed to know it, so none was
+         *       invented.  `NOT_STATED` is reserved for a row the store cannot attribute, and a screen must
+         *       treat it as no authority rather than as a missing value to guess at.
+         *     * `recovery` -- whether this traveller may take the trip back, and if not, in which of the three
+         *       ways not.  It is decided from `journey_role_capabilities`, read through the same helper the
+         *       member doors use, so narrowing that table narrows this answer the same instant.
+         *
+         *     A refused row still appears: an owner who shared a trip must be able to see that it is there and
+         *     read why it is not theirs to restore.  What may not happen is a row that looks restorable.
+         */
+        TravelerRecycleBinJourney: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Traveler Id
+             * Format: uuid
+             */
+            traveler_id: string;
+            /** Title */
+            title: string;
+            /** City Code */
+            city_code: string;
+            /** Timezone */
+            timezone: string;
+            /**
+             * Start At
+             * Format: date-time
+             */
+            start_at: string;
+            /**
+             * End At
+             * Format: date-time
+             */
+            end_at: string;
+            /**
+             * Timezone Honoured
+             * @default true
+             */
+            timezone_honoured: boolean;
+            budget: components["schemas"]["Money"];
+            /**
+             * Planning Mode
+             * @default balanced
+             * @enum {string}
+             */
+            planning_mode: "balanced" | "budget" | "explore" | "strict_schedule";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "DRAFT" | "PLANNED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+            /** Active Plan Version Id */
+            active_plan_version_id?: string | null;
+            /** Current Activity Id */
+            current_activity_id?: string | null;
+            /** Aborted At */
+            aborted_at?: string | null;
+            /** Abort Reason */
+            abort_reason?: string | null;
+            live_view: components["schemas"]["JourneyLiveView"];
+            /**
+             * Deleted At
+             * Format: date-time
+             */
+            deleted_at: string;
+            /**
+             * Bin State
+             * @constant
+             */
+            bin_state: "IN_RECYCLE_BIN";
+            /**
+             * Ownership
+             * @enum {string}
+             */
+            ownership: "OWNED_BY_THIS_TRAVELER" | "OWNED_BY_ANOTHER_TRAVELER" | "NOT_STATED";
+            /** Member Role */
+            member_role?: ("OWNER" | "ADMIN" | "COLLABORATOR") | null;
+            /**
+             * Recovery
+             * @enum {string}
+             */
+            recovery: "RECOVERY_ALLOWED" | "RECOVERY_REFUSED_NOT_OWNER" | "RECOVERY_REFUSED_ROLE_CANNOT_RESTORE" | "RECOVERY_REFUSED_NO_SEAT";
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
+        /** WeatherDisruptionRequest */
+        WeatherDisruptionRequest: {
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "NORMAL" | "RAIN" | "SEVERE_RAIN" | "TRANSIT_DISRUPTION";
+        };
+        /** WebResearchRequest */
+        WebResearchRequest: {
+            /** Query */
+            query: string;
+            /**
+             * Source Class
+             * @default OPEN_WEB
+             * @enum {string}
+             */
+            source_class: "OFFICIAL_NOTICE" | "OPERATOR_NOTICE" | "OPEN_WEB";
         };
     };
     responses: {
@@ -6270,6 +9728,64 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    answerJourneyClarification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClarificationAnswer"];
+            };
+        };
+        responses: {
+            /** @description Answered parent mission and resumable child mission */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["ValidationError"];
+        };
+    };
+    resumeJourneyMission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Persisted child mission and AgentRun result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["ValidationError"];
+        };
+    };
     putGuardianMission: {
         parameters: {
             query?: never;
@@ -7155,6 +10671,43 @@ export interface operations {
             };
         };
     };
+    acquireJourneyPlaceFacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    place_ids?: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Source-linked opening and cost facts for existing provider Places */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Provider acquisition unavailable */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     runRealCityIntelligence: {
         parameters: {
             query?: never;
@@ -7249,42 +10802,6 @@ export interface operations {
                 content?: never;
             };
             422: components["responses"]["ValidationError"];
-        };
-    };
-    acquireJourneyPlaceFacts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                journey_id: components["parameters"]["JourneyId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    place_ids?: string[];
-                };
-            };
-        };
-        responses: {
-            /** @description Source-linked opening and cost facts for existing provider Places */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     streamJourneyOperations: {
@@ -8687,6 +12204,3170 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    run_guardian_pulse_now_api_v1_journeys__journey_id__guardian_pulse_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_latest_guardian_pulse_api_v1_journeys__journey_id__guardian_pulse_latest_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_journey_operator_api_v1_journeys__journey_id__operator_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["JourneyOperatorStartRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stop_journey_operator_api_v1_journeys__journey_id__operator_stop_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_journey_operator_api_v1_journeys__journey_id__operator_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    answer_operator_intent_clarification_api_v1_journeys__journey_id__operator_intents__intent_id__clarification_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                intent_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_journey_operator_change_api_v1_journeys__journey_id__operator_approvals__approval_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                approval_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_guardian_departure_readiness_api_v1_journeys__journey_id__guardian_readiness_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_departure_activation_api_v1_journeys__journey_id__departure_activation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_guardian_departure_readiness_api_v1_journeys__journey_id__guardian_readiness_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_launch_setup_api_v1_journeys__journey_id__launch_setup_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_launch_origin_api_v1_journeys__journey_id__launch_origin_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LaunchOriginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    acquire_route_session_api_v1_journeys__journey_id__routes_acquire_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RouteAcquireRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    acquire_in_transit_reroute_api_v1_journeys__journey_id__in_transit_reroute_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InTransitRerouteRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_route_session_api_v1_journeys__journey_id__routes_operations__operation_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                operation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bootstrap_journey_discovery_api_v1_journeys__journey_id__real_city_bootstrap_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapDiscoveryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bootstrap_journey_discovery_api_v1_journeys__journey_id__bootstrap_discovery_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapDiscoveryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_bootstrap_journey_city_api_v1_journeys__journey_id__bootstrap_city_search_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapCitySearchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    select_bootstrap_journey_candidate_api_v1_journeys__journey_id__real_city_bootstrap_select_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapSelectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    select_bootstrap_journey_candidate_api_v1_journeys__journey_id__bootstrap_discovery_select_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapSelectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_bootstrap_journey_candidate_api_v1_journeys__journey_id__real_city_bootstrap_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapMapPreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_bootstrap_journey_candidate_api_v1_journeys__journey_id__bootstrap_discovery_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapMapPreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapShortlistSaveRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remember_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__resume_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                shortlist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                shortlist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                shortlist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapShortlistPreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    navigate_bootstrap_shortlist_api_v1_journeys__journey_id__bootstrap_shortlist__shortlist_id__navigate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                shortlist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapShortlistNavigationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    navigate_bootstrap_two_stop_walk_api_v1_journeys__journey_id__bootstrap_shortlist_two_stop_walk_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapTwoStopWalkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BootstrapTwoStopWalkResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    check_bootstrap_two_stop_walkability_api_v1_journeys__journey_id__bootstrap_shortlist_two_stop_walkability_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BootstrapTwoStopWalkabilityRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BootstrapTwoStopWalkabilityResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    run_journey_context_watch_api_v1_journeys__journey_id__context_watch_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_agent_action_api_v1_journeys__journey_id__operator_approvals__approval_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                approval_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AgentApprovalRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pending_journey_missions_api_v1_journeys__journey_id__missions_pending_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    answer_collective_clarification_api_v1_journeys__journey_id__missions__mission_id__collective_clarification__member_id__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                mission_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectiveClarificationAnswer"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_journey_membership_invitations_api_v1_journeys__journey_id__membership_invitations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_journey_membership_invitation_api_v1_journeys__journey_id__membership_invitations_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMembershipInvitationCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_journey_membership_invitations_api_v1_travelers_me_journey_membership_invitations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyMembershipInvitationInboxItem"][];
+                };
+            };
+        };
+    };
+    respond_to_journey_membership_invitation_api_v1_journey_membership_invitations__invitation_id__respond_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMembershipInvitationDecision"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_journey_membership_invitation_api_v1_journeys__journey_id__membership_invitations__invitation_id__revoke_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    replace_journey_member_preferences_api_v1_journeys__journey_id__members__member_id__preferences_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyMemberPreferenceUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    intake_journey_change_api_v1_journeys__journey_id__operator_inbox_intake_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bind_journey_inbox_item_api_v1_journeys__journey_id__operator_inbox__item_id__bind_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_reservation_time_provider_replay_api_v1_journeys__journey_id__operator_reality_provider_replay_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolve_journey_reality_conflict_api_v1_journeys__journey_id__operator_reality_conflicts__conflict_id__resolve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                conflict_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    guide_authenticated_member_to_rendezvous_api_v1_journeys__journey_id__group_presence_route_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GroupPresenceRouteRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    share_rendezvous_member_signal_api_v1_journeys__journey_id__rendezvous_member_signals_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyRendezvousSignalCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    withdraw_rendezvous_member_signal_api_v1_journeys__journey_id__rendezvous_member_signals__signal_id__withdraw_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                signal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    acknowledge_rendezvous_help_request_api_v1_journeys__journey_id__rendezvous_member_signals__signal_id__acknowledge_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                signal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rendezvous_buddy_handoff_candidates_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_candidates_get: {
+        parameters: {
+            query: {
+                signal_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    current_rendezvous_buddy_handoffs_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_current_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    offer_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RendezvousBuddyHandoffOfferRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    respond_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__respond_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RendezvousBuddyHandoffDecisionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    capture_private_buddy_handoff_route_location_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_location_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LocationObservationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_rendezvous_buddy_handoff_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__revoke_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    offer_rendezvous_buddy_execution_window_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution_window_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RendezvousBuddyExecutionWindowRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    accept_rendezvous_buddy_execution_window_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution_window_accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_rendezvous_buddy_execution_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__execution__execution_id__report_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+                handoff_id: string;
+                execution_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RendezvousBuddyExecutionReceiptRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    current_private_buddy_handoff_route_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_current_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    acquire_private_buddy_handoff_route_api_v1_journeys__journey_id__rendezvous_buddy_handoffs__handoff_id__route_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handoff_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RendezvousBuddyPrivateRouteRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_member_side_quest_api_v1_journeys__journey_id__member_side_quests_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberSideQuestCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_member_place_invitation_api_v1_journeys__journey_id__member_side_quests__side_quest_id__place_invitation_preview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_member_place_invitation_api_v1_journeys__journey_id__member_side_quests__side_quest_id__place_invitations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlaceInvitationCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    withdraw_member_place_invitation_api_v1_journeys__journey_id__member_place_invitations__invitation_id__withdraw_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_preview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_confirm_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlaceGroupShareConsentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    withdraw_member_place_group_share_api_v1_journeys__journey_id__member_place_invitations__invitation_id__group_share_withdraw_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_member_place_invitation_feasibility_api_v1_journeys__journey_id__member_place_invitations__invitation_id__feasibility_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlaceInvitationFeasibilityPreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    respond_to_member_place_invitation_api_v1_journeys__journey_id__member_place_invitations__invitation_id__respond_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlaceInvitationDecisionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_member_place_invitation_progress_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__progress_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlaceInvitationProgressRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    offer_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SharedStopCoPlanningGrantCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    respond_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants__grant_id__respond_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+                grant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SharedStopCoPlanningGrantDecisionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_shared_stop_coplanning_grant_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__co_planning_grants__grant_id__revoke_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                invitation_id: string;
+                grant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_member_place_promotion_route_api_v1_journeys__journey_id__member_place_invitations__invitation_id__promotions_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+                invitation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlacePromotionCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    respond_to_member_place_promotion_route_api_v1_journeys__journey_id__member_place_promotions__promotion_id__respond_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                promotion_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlacePromotionDecisionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    apply_member_place_promotion_route_api_v1_journeys__journey_id__member_place_promotions__promotion_id__apply_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+                promotion_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scout_member_moment_api_v1_journeys__journey_id__moment_scout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MomentScoutRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    select_member_moment_scout_candidate_api_v1_journeys__journey_id__moment_scout_select_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MomentScoutSelectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scout_live_member_moment_api_v1_journeys__journey_id__moment_scout_live_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LiveMomentScoutRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    select_live_member_moment_scout_candidate_api_v1_journeys__journey_id__moment_scout_live_select_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LiveMomentScoutSelectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    arrive_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__arrive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    complete_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__complete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__fit_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberSideQuestFitPreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    navigate_to_member_side_quest_api_v1_journeys__journey_id__member_side_quests__side_quest_id__navigate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberSideQuestNavigateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_member_side_quest_navigation_target_api_v1_journeys__journey_id__member_side_quests__side_quest_id__navigation_targets_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_member_side_quest_head_back_api_v1_journeys__journey_id__member_side_quests__side_quest_id__head_back_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_member_side_quest_meetup_arrival_api_v1_journeys__journey_id__member_side_quests__side_quest_id__meetup_report_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                side_quest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    acknowledge_member_meetup_arrival_api_v1_journeys__journey_id__meetup_handshakes__handshake_id__acknowledge_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handshake_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decline_member_meetup_arrival_api_v1_journeys__journey_id__meetup_handshakes__handshake_id__not_yet_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                handshake_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    request_group_recovery_plan_api_v1_journeys__journey_id__group_recovery_adjust_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GroupRecoveryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    apply_group_recovery_api_v1_journeys__journey_id__group_recovery_apply_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GroupRecoveryApplyRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
