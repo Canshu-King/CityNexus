@@ -172,11 +172,36 @@ export function invalidateScene(client: QueryClient): void {
   void client.invalidateQueries({ queryKey: SCENE_QUERY_KEY });
 }
 
+/**
+ * ORD-0557 -- the three basis words, lifted VERBATIM out of the `zh ? … : …` ternaries
+ * that used to sit in `basisWord`. Both arms are written side by side so the lift into
+ * `LocaleContext.tsx` is one pass by file, and the text must stay byte-identical: this
+ * is a move, not a rewrite.
+ *
+ * They live here rather than in `LocaleContext.tsx` for two reasons this file cannot
+ * route around: that sheet exports no plain reader a lib module can call (only
+ * `useLocale` / `useT`), and `basisWord`'s single caller sits in
+ * `features/simulation/SimulationPanel.tsx`, a file this order assigns to another lane.
+ * Same shape as `i18n/mapPanelCopy.ts`, which was built for the same reason.
+ */
+export type SceneCopyKey = "basisCursor" | "basisJourneyStart" | "basisUnknown";
+
+const BASIS_COPY: Record<SceneCopyKey, { zh: string; en: string }> = {
+  basisCursor: { zh: "执行游标", en: "the execution cursor" },
+  basisJourneyStart: { zh: "行程起点", en: "the journey's start" },
+  basisUnknown: { zh: "服务器没有说明依据", en: "the server gave no basis" },
+};
+
+export function sceneCopy(zh: boolean, key: SceneCopyKey): string {
+  const arms = BASIS_COPY[key];
+  return zh ? arms.zh : arms.en;
+}
+
 /** The server's words, mapped to what a traveller can act on.  Unknown stays unknown. */
 export function basisWord(basis: string | null, zh: boolean): string {
-  if (basis === "CURSOR") return zh ? "执行游标" : "the execution cursor";
-  if (basis === "JOURNEY_START") return zh ? "行程起点" : "the journey's start";
-  return zh ? "服务器没有说明依据" : "the server gave no basis";
+  if (basis === "CURSOR") return sceneCopy(zh, "basisCursor");
+  if (basis === "JOURNEY_START") return sceneCopy(zh, "basisJourneyStart");
+  return sceneCopy(zh, "basisUnknown");
 }
 
 export function evidenceWord(state: string | null, zh: boolean): string {
