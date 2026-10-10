@@ -1,0 +1,6 @@
+tsc_rc=0
+precache  8 entries (2914.34 KiB)
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+build_rc=0

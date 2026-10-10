@@ -1,0 +1,12 @@
+# ORD-0555 i18n arm  (tip bf057bb6f6eab117f030037c54ee0f515bd6a486, branch tip fa9f209eea0b755fd2ab06eea7a0e152b8d66c03)
+keys called by this file :: 48
+keys missing on either side :: 0 []
+keys added by this branch, both sides :: {"hub.infeasible": true, "hub.needsMoreInfo": true, "hub.assessed": true}
+inline zh-ternaries left in this file :: 0
+en block starts :: frontend/src/i18n/LocaleContext.tsx:8
+zh block starts :: frontend/src/i18n/LocaleContext.tsx:1327
+added key | en line | zh line | text unchanged vs the inline string it replaces
+hub.infeasible | frontend/src/i18n/LocaleContext.tsx:232 | frontend/src/i18n/LocaleContext.tsx:1533 | en_same=True zh_same=True
+hub.needsMoreInfo | frontend/src/i18n/LocaleContext.tsx:233 | frontend/src/i18n/LocaleContext.tsx:1534 | en_same=True zh_same=True
+hub.assessed | frontend/src/i18n/LocaleContext.tsx:234 | frontend/src/i18n/LocaleContext.tsx:1535 | en_same=True zh_same=True
+verdict :: PASS

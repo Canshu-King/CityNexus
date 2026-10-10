@@ -1,0 +1,11 @@
+1 ORD-0560 加闸工 读数件 r3（push 之后现读的枝关系；本件记录的是它落下之前那一代 4ad694f6 的值）
+2 权威线现读命令原样：git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> 24a50a8aecf0a1fe4704400c687540d3e05d74fb
+3 本枝回验命令原样：git ls-remote origin "refs/heads/review/加闸工-0560-r1" -> 4ad694f6dee0521eb7745a2641843fc793870b3a，与本树 git rev-parse refs/heads/review/加闸工-0560-r1 逐字相同
+4 领先命令原样：git rev-list --count 24a50a8aecf0a1fe4704400c687540d3e05d74fb..4ad694f6dee0521eb7745a2641843fc793870b3a 回 4
+5 落后命令原样：git rev-list --count 4ad694f6dee0521eb7745a2641843fc793870b3a..24a50a8aecf0a1fe4704400c687540d3e05d74fb 回 0
+6 那 4 笔的构成，命令原样：git log --format=%s 24a50a8aecf0a1fe4704400c687540d3e05d74fb..4ad694f6dee0521eb7745a2641843fc793870b3a | grep -c ORD-0560 回 4，逐笔是 改动一笔、读数件 r1 一笔、merge 一笔、读数件 r2 一笔
+7 本枝树相对现尖差 3 枚路径，命令原样：git diff --name-only 24a50a8aecf0a1fe4704400c687540d3e05d74fb 4ad694f6dee0521eb7745a2641843fc793870b3a 回 frontend/package.json、review/jiazagong-0560/readout_r1.txt、review/jiazagong-0560/readout_r2.txt
+8 本读数件 r3 落下后，第 4 行与第 6 行的值各加 1 笔、第 7 行的清单多一枚 readout_r3.txt，枝尖换成含本件那一枚（读数件不钉自己的枝尖）；复算只要把第 4 行的 4ad694f6 换成 ls-remote 现读那枚
+9 push 是 fast-forward，命令原样 git push origin refs/heads/review/加闸工-0560-r1 那行回显 "2e166cac5b..4ad694f6de"，远端从 2e166cac5b270ccb37ced1a074c5fc93824e4faa 前移到 4ad694f6dee0521eb7745a2641843fc793870b3a，force-push 0 次
+10 主工作树零触碰，命令原样 git -C D:\moodle\CityNexus status --porcelain 现读 11 行，与开工时同一批他人未提交改动，本车道临时文件已全部撤走
+11 那枚被弃用的中间枝尖 d54513dd1c5e716b2baa3f80b91c852e825b6f01 挂在本树 refs/local/jiazagong-0560-measured-gen 上供比对，未删除、未推送
