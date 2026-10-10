@@ -41,7 +41,10 @@ const say = (l) => { rows.push(l); console.log(l); };
 
 function run(cmd, args) {
   const p = spawnSync(cmd, args, { cwd: FRONTEND, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
-  return { rc: p.returncode, out: (p.stdout ?? "") + (p.stderr ?? "") };
+  /* spawnSync answers on .status, not .returncode: reading the wrong field made both exit codes
+     undefined, which is how a gate that never ran can look like a gate that passed. */
+  if (p.error) return { rc: null, out: String(p.error.message) };
+  return { rc: p.status, out: (p.stdout ?? "") + (p.stderr ?? "") };
 }
 /* Only file-level diagnostics: the module-not-found lines that name a source file. */
 function errors(text) {

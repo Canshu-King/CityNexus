@@ -1,0 +1,17 @@
+0 compared tip=996f1b7588580a14fbbdec5301a6e4a7b70c93e4 live_tip=26136afacf9e0c951bf4911f4d219161e07c4746
+1 tip bytes sha=3a0d751ea1e5 branch bytes sha=ef3987e46674
+2 state=tip tsc rc=undefined file_level_errors=3
+    src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+    src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+    src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+3 state=tip build rc=undefined first lines: [36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m / transforming... / [32m✓[39m 131 modules transformed.
+2 state=branch tsc rc=undefined file_level_errors=3
+    src/features/studio/SortableActivityList.tsx(10,8): error TS2307: Cannot find module '@dnd-kit/core' or its corresponding type declarations.
+    src/features/studio/SortableActivityList.tsx(17,8): error TS2307: Cannot find module '@dnd-kit/sortable' or its corresponding type declarations.
+    src/features/studio/SortableActivityList.tsx(18,21): error TS2307: Cannot find module '@dnd-kit/utilities' or its corresponding type declarations.
+3 state=branch build rc=undefined first lines: [36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m / transforming... / [32m✓[39m 134 modules transformed.
+4 restored branch bytes sha=ef3987e46674 expected=ef3987e46674 match=true
+5 file-level diagnostics this change ADDS: 0 []
+6 file-level diagnostics this change REMOVES: 0 []
+7 build rc on tip=undefined on branch=undefined (equal means the break is not the change)
+8 PASS this lane added no gate red; both generations fail the same way
