@@ -683,6 +683,26 @@ const en: Dict = {
   "discovery.preparedYouCanGoAndPlan": "Prepared -- you can go and plan",
   "discovery.alreadyCurrentNothingWasChanged": "Already current -- nothing was changed",
   "discovery.noTraceableSourceForThisDestination": "No traceable source for this destination",
+  "discovery.youStoppedThisPreparation": "You stopped this preparation",
+  "discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult": "The server recorded the stop and will not use this run's result.",
+  "discovery.theResolverFailedAtRuntime": "The resolver failed at runtime",
+  "discovery.thisPreparationWasLostMidRun": "This preparation was lost mid-run",
+  "discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute": "The server says the worker running it disappeared, so this attempt does not count. Starting again is the route.",
+  "discovery.preparation": "Preparation",
+  "discovery.prepareADestination": "Prepare a destination",
+  "discovery.firstWhetherThisCityCanBePlanned": "First, whether this city can be planned",
+  "discovery.eGTianjin": "e.g. Tianjin",
+  "discovery.askingTheServer": "Asking the server…",
+  "discovery.serverVerdict": "Server verdict",
+  "discovery.theServerSaysTheseAllMatchPickOne": "The server says these all match -- pick one",
+  "discovery.goAndPlan": "Go and plan",
+  "discovery.tryingAgain": "Trying again…",
+  "discovery.starting": "Starting…",
+  "discovery.chooseAnotherDestination": "Choose another destination",
+  "discovery.preparation2": "Preparation",
+  "discovery.goAndPlan2": "Go and plan",
+  "discovery.checkAgain": "Check again",
+  "discovery.destination": "Destination",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -1351,6 +1371,17 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+
+  // ── ORD-0562 bare-key clearance, SimulationPanel stage (nine keys) ──
+  "simulation.closeStage": "Close the stage",
+  "simulation.now": " (now {state})",
+  "simulation.onStage": "On stage",
+  "simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot": " ({n} reads did not answer, which is not the same as \"no slot\")",
+  "simulation.sceneWindow": "Scene window",
+  "simulation.thePreviousActionHasNotReturnedYet": "The previous action has not returned yet.",
+  "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "The server answered with {listed} proposals, {open} still open; \"Accept the proposal\" below now points at {id}. Accepting is what changes the plan.",
+  "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "The server produced proposals, but none of the {listed} it now lists is open, so \"Accept the proposal\" will refuse and say why on its own line.",
+  "simulation.thisActionIsUnavailableRightNow": "This action is unavailable right now: {reason}",
 };
 
 const zhCN: Dict = {
@@ -1986,6 +2017,26 @@ const zhCN: Dict = {
   "discovery.preparedYouCanGoAndPlan": "准备好了，可以去规划",
   "discovery.alreadyCurrentNothingWasChanged": "本来就是新的，没有改动",
   "discovery.noTraceableSourceForThisDestination": "这个目的地没有可追溯的来源",
+  "discovery.youStoppedThisPreparation": "你已经停止这次准备",
+  "discovery.theServerRecordedTheStopAndWillNotUseThisRunSResult": "服务器记下了你的停止，它不再用这次的结果。",
+  "discovery.theResolverFailedAtRuntime": "解析这次运行失败了",
+  "discovery.thisPreparationWasLostMidRun": "这次准备中途丢了",
+  "discovery.theServerSaysTheWorkerRunningItDisappearedSoThisAttemptDoesNotCountStartingAgainIsTheRoute": "服务器说执行它的工作进程没了，这次不算数。可以再来一次。",
+  "discovery.preparation": "准备进度",
+  "discovery.prepareADestination": "准备目的地",
+  "discovery.firstWhetherThisCityCanBePlanned": "先看这座城能不能规划",
+  "discovery.eGTianjin": "例如：天津、贡山独龙族怒族自治县",
+  "discovery.askingTheServer": "正在问服务器…",
+  "discovery.serverVerdict": "服务器判定",
+  "discovery.theServerSaysTheseAllMatchPickOne": "服务器说这些都对得上，请挑一个",
+  "discovery.goAndPlan": "去规划",
+  "discovery.tryingAgain": "正在重试…",
+  "discovery.starting": "正在开始…",
+  "discovery.chooseAnotherDestination": "换一个目的地",
+  "discovery.preparation2": "准备进度",
+  "discovery.goAndPlan2": "去规划",
+  "discovery.checkAgain": "重新判定",
+  "discovery.destination": "目的地",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
@@ -2611,6 +2662,17 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+
+  // ── ORD-0562 bare-key clearance, SimulationPanel stage (nine keys) ──
+  "simulation.closeStage": "收起舞台",
+  "simulation.now": "（现值 {state}）",
+  "simulation.onStage": "台上行程",
+  "simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot": "（另有 {n} 次没读到，那不是\"没有时段\"）",
+  "simulation.sceneWindow": "场景窗口",
+  "simulation.thePreviousActionHasNotReturnedYet": "上一个动作还没回来，先等它。",
+  "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "服务器回了 {listed} 份方案，其中 {open} 份还开着；下面「接受方案」那一行现在拿的是 {id}。接受才会换计划。",
+  "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "服务器回了方案，但它现在列出的 {listed} 份里没有还开着的那一份，所以「接受方案」这一行会说不给按——理由在它自己那行。",
+  "simulation.thisActionIsUnavailableRightNow": "这个动作现在做不了：{reason}",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
