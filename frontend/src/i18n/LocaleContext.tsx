@@ -342,6 +342,8 @@ const en: Dict = {
      cannot move; only the Chinese screen stops reading English. */
   "recovery.statusUnavailable": "unavailable",
   "recovery.guardianEnvelope": "guardian envelope",
+  "recovery.noDominantMode": "no dominant mode",
+  "recovery.noneOnThisJourney": "none on this journey",
   "recovery.changedFromActivity": "Current activity",
   "recovery.changedToActivity": "recovered activity",
   "live.nothingDue": "Nothing is due right now",
@@ -1629,6 +1631,11 @@ const zhCN: Dict = {
   "live.acceptFailed": "没能接受这个调整。",
   "recovery.statusUnavailable": "暂无状态",
   "recovery.guardianEnvelope": "守护授权",
+  // ORD-0557 transport, not a rewrite: V14PreventivePanel prints these two
+  // fallbacks as English literals in both locales, so the zh value is the exact
+  // word already on screen. Wording is a separate order.
+  "recovery.noDominantMode": "no dominant mode",
+  "recovery.noneOnThisJourney": "none on this journey",
   "recovery.changedFromActivity": "当前活动",
   "recovery.changedToActivity": "恢复的活动",
   "live.nothingDue": "现在没有待进行的步骤",
