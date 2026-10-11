@@ -1,0 +1,5 @@
+# parity gate: live tip vs the merged state of my two branches (same command, run twice)
+AT_TIP en keys: 1245 zh keys: 1246
+AT_TIP_BREAK     assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+AT_DICT_BRANCH en keys: 1248 zh keys: 1249
+AT_DICT_BREAK     assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))

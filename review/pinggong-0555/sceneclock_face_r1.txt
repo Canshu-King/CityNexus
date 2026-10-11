@@ -1,0 +1,9 @@
+# sceneClock face, re-measured per the broadcast ruler's predicate (two literals, exactly one side CJK)
+tip=ee8b9c6bb299aac76d8ab969b84f7dfa5c3a173a file_lines=212
+hits=6
+frontend/src/lib/sceneClock.ts:177 | branch_a='执行游标' | branch_b='the execution cursor' | cjk_side=zh
+frontend/src/lib/sceneClock.ts:178 | branch_a='行程起点' | branch_b="the journey's start" | cjk_side=zh
+frontend/src/lib/sceneClock.ts:179 | branch_a='服务器没有说明依据' | branch_b='the server gave no basis' | cjk_side=zh
+frontend/src/lib/sceneClock.ts:184 | branch_a='这批证据带冻结期' | branch_b='the frozen evidence carries an expiry' | cjk_side=zh
+frontend/src/lib/sceneClock.ts:197 | branch_a='这趟没有冻结证据' | branch_b='no frozen evidence on this trip' | cjk_side=zh
+frontend/src/lib/sceneClock.ts:198 | branch_a='台上没有场景' | branch_b='no scenario on stage' | cjk_side=zh
