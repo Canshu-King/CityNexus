@@ -438,11 +438,11 @@ export function NativeMissionTimeline({
       )}
 
       <div className="cn-native-proposal">
-        <b>{zh ? "建议与受保护安排" : "Suggestions & protected plans"}</b>
+        <b>{t("copilot.proposal.sectionTitle")}</b>
         <span>
           {proposalEvent
-            ? zh ? "已经生成建议，展开高级详情可以看到过程。" : "A suggestion is ready; open advanced detail to see how it was produced."
-            : zh ? "还没有需要你决定的改动。" : "There is nothing for you to decide yet."}
+            ? t("copilot.proposal.ready")
+            : t("copilot.proposal.nothingToDecide")}
         </span>
         <div className="cn-protected-badges">
           {(run.protected_commitments ?? []).map((commitment, index) => (

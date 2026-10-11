@@ -1519,6 +1519,9 @@ const en: Dict = {
   "copilot.stream.parseError": "A runtime event could not be read",
   "copilot.stream.reconnecting": "Reconnecting to runtime events",
   "copilot.stream.unavailable": "Event stream unavailable; received events are preserved",
+  "copilot.proposal.sectionTitle": "Suggestions & protected plans",
+  "copilot.proposal.ready": "A suggestion is ready; open advanced detail to see how it was produced.",
+  "copilot.proposal.nothingToDecide": "There is nothing for you to decide yet.",
 };
 
 const zhCN: Dict = {
@@ -2944,6 +2947,9 @@ const zhCN: Dict = {
   "copilot.stream.parseError": "运行事件暂时无法解析",
   "copilot.stream.reconnecting": "正在重新连接运行事件",
   "copilot.stream.unavailable": "运行事件流不可用；已保留已收到的事件",
+  "copilot.proposal.sectionTitle": "建议与受保护安排",
+  "copilot.proposal.ready": "已经生成建议，展开高级详情可以看到过程。",
+  "copilot.proposal.nothingToDecide": "还没有需要你决定的改动。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
