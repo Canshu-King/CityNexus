@@ -19,3 +19,5 @@
 [17] 下一批清单（真行号，枝上现读）：LiveRecovery.tsx 的 A 臂还剩十三处，档一在组件内（`t` 现读 :109 可用）：frontend/src/features/execution/LiveRecovery.tsx:309、:339、:374、:377、:411、:412、:421、:456；档二在模块级函数 humanReplanReason 里（该函数 :70 起、:96 收）拿不到 hook，得走 dictionaryCopy：:74、:79、:84、:89、:94
 [18] 批一与批二在现尖上的状态（现读该文件里 t(...) 命中数）：批一三枚键命中三处（已落），批二三枚键命中零处（未落）；我这枝已含批二两枚提交，落地腿可直接吃
 [19] 我没推权威线，force 零次；账本零直写，本块走收件口
+[20] 枝推上去之后（现读 ls-remote 回 796f9f07766b37c00d3b9c213b2300fffb568f20，与本地逐字相同）再把两把尺喂这枚最终枝尖：逐字节尺 review/验路工-0576/byte_proof_r4_final.txt:1 = PROVEN keys_checked=3 keys_reading_t_in_candidate=3、退出码零；普查尺同一枚枝尖 A 臂二百零七处、总数七百三十三处，与上面 [13] 那代一致
+[21] 本格所有行号是在 review/验路工-0576-r2 那一代现读的；尖每动一代这些数就旧一拍，动手前请重取
