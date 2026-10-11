@@ -1851,6 +1851,72 @@ def lookup_bootstrap_shared_walk(
     }
 
 
+def save_bootstrap_shared_walk_pocket_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    receipt_id: UUID,
+    first_candidate_id: UUID,
+    second_candidate_id: UUID,
+    max_walk_minutes: int | None,
+) -> dict[str, Any]:
+    """Save a recipient-owned two-stop outing from one fresh exact lookup.
+
+    The two shortlist writes and the Pocket Walk write share the endpoint
+    transaction.  Each candidate is still checked against the signed member's
+    exact lookup receipt, so this is a convenience boundary rather than a new
+    source of authority.
+    """
+
+    if first_candidate_id == second_candidate_id:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_STOPS_NOT_DISTINCT",
+            "a shared Pocket Walk requires two different verified public places",
+            status_code=422,
+        )
+    first = save_bootstrap_shortlist_item(
+        session,
+        journey,
+        member=member,
+        traveler_id=traveler_id,
+        receipt_id=receipt_id,
+        candidate_id=first_candidate_id,
+    )
+    second = save_bootstrap_shortlist_item(
+        session,
+        journey,
+        member=member,
+        traveler_id=traveler_id,
+        receipt_id=receipt_id,
+        candidate_id=second_candidate_id,
+    )
+    pocket = save_bootstrap_pocket_walk(
+        session,
+        journey,
+        member=member,
+        traveler_id=traveler_id,
+        first_shortlist_id=UUID(str(first["shortlist_id"])),
+        second_shortlist_id=UUID(str(second["shortlist_id"])),
+        max_walk_minutes=max_walk_minutes,
+    )
+    rows = session.scalars(
+        select(MemberDraftShortlistItem)
+        .where(
+            MemberDraftShortlistItem.journey_id == journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+        .order_by(MemberDraftShortlistItem.created_at, MemberDraftShortlistItem.id)
+    ).all()
+    return {
+        "pocket_walk": pocket,
+        "items": [_shortlist_payload(row) for row in rows],
+    }
+
+
 def preview_bootstrap_candidate(
     session: Session,
     journey: Journey,
