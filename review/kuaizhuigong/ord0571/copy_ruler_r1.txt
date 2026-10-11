@@ -1,0 +1,39 @@
+SPAN constants = ruler lines 8-27
+SPAN line_no = ruler lines 35-36
+SPAN judge = ruler lines 57-76
+SPAN counters = ruler lines 100-104
+AT_TIP 27dbf11d62d0 EN_KEYS 1237 | ZH_KEYS 1237 | ZH_NO_CJK 36 | ZH_ENG_SENTENCE 21 | ZH_ENG_SINGLE_WORD 4 | EN_CJK 2
+  STILL_ENGLISH_SENTENCE main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | frontend/src/i18n/LocaleContext.tsx:2319 | 值 Activate a standing mission once; subsequent city signal
+  STILL_ENGLISH_SENTENCE main.cityNexusRequestFailed | frontend/src/i18n/LocaleContext.tsx:2315 | 值 CityNexus request failed
+  STILL_ENGLISH_SENTENCE main.cityNexusRequestRefusedHttp | frontend/src/i18n/LocaleContext.tsx:2316 | 值 CityNexus request refused (HTTP {status})
+  STILL_ENGLISH_SENTENCE main.evidenceUnavailable | frontend/src/i18n/LocaleContext.tsx:2334 | 值 evidence unavailable
+  STILL_ENGLISH_SENTENCE main.explicitWins | frontend/src/i18n/LocaleContext.tsx:2325 | 值 explicit wins
+  STILL_ENGLISH_SENTENCE main.generalRecovery | frontend/src/i18n/LocaleContext.tsx:2318 | 值 general recovery
+  STILL_ENGLISH_SENTENCE main.noActionableTarget | frontend/src/i18n/LocaleContext.tsx:2323 | 值 no actionable target
+  STILL_ENGLISH_SENTENCE main.noDominantFailureMode | frontend/src/i18n/LocaleContext.tsx:2320 | 值 No dominant failure mode
+  STILL_ENGLISH_SENTENCE main.noUpcomingActivity | frontend/src/i18n/LocaleContext.tsx:2327 | 值 no upcoming activity
+  STILL_ENGLISH_SENTENCE main.notAvailable | frontend/src/i18n/LocaleContext.tsx:2329 | 值 not available
+  STILL_ENGLISH_SENTENCE main.notEvaluated | frontend/src/i18n/LocaleContext.tsx:2321 | 值 not evaluated
+  STILL_ENGLISH_SENTENCE main.notFeasible | frontend/src/i18n/LocaleContext.tsx:2331 | 值 not feasible
+  STILL_ENGLISH_SENTENCE main.notPreserved | frontend/src/i18n/LocaleContext.tsx:2332 | 值 not preserved
+  STILL_ENGLISH_SENTENCE main.notReported | frontend/src/i18n/LocaleContext.tsx:2326 | 值 not reported
+  STILL_ENGLISH_SENTENCE main.outcomeEvidence | frontend/src/i18n/LocaleContext.tsx:2324 | 值 outcome evidence
+  STILL_ENGLISH_SENTENCE main.persistedOperationUpdate | frontend/src/i18n/LocaleContext.tsx:2317 | 值 Persisted operation update
+  STILL_ENGLISH_SENTENCE main.validatedActivity | frontend/src/i18n/LocaleContext.tsx:2322 | 值 validated Activity
+  STILL_ENGLISH_SENTENCE main.verifiedEvidenceAttached | frontend/src/i18n/LocaleContext.tsx:2333 | 值 verified evidence attached
+  STILL_ENGLISH_SENTENCE main.verifiedFeasible | frontend/src/i18n/LocaleContext.tsx:2330 | 值 verified feasible
+  STILL_ENGLISH_SENTENCE recovery.noDominantMode | frontend/src/i18n/LocaleContext.tsx:1800 | 值 no dominant mode
+  STILL_ENGLISH_SENTENCE recovery.noneOnThisJourney | frontend/src/i18n/LocaleContext.tsx:1801 | 值 none on this journey
+  STILL_ENGLISH_ONE_WORD intel.cpsat | frontend/src/i18n/LocaleContext.tsx:2364 | 值 CP-SAT
+  STILL_ENGLISH_ONE_WORD main.noActiveC4 | frontend/src/i18n/LocaleContext.tsx:2328 | 值 No active C4
+  STILL_ENGLISH_ONE_WORD spend.dayHeading | frontend/src/i18n/LocaleContext.tsx:2660 | 值 {label}
+  STILL_ENGLISH_ONE_WORD spend.groupHeading | frontend/src/i18n/LocaleContext.tsx:2655 | 值 {currency}
+AT_BRANCH EN_KEYS 1237 | ZH_KEYS 1237 | ZH_NO_CJK 14 | ZH_ENG_SENTENCE 0 | ZH_ENG_SINGLE_WORD 3 | EN_CJK 2
+  STILL_ENGLISH_ONE_WORD intel.cpsat | frontend/src/i18n/LocaleContext.tsx:2364 | 值 CP-SAT
+  STILL_ENGLISH_ONE_WORD spend.dayHeading | frontend/src/i18n/LocaleContext.tsx:2660 | 值 {label}
+  STILL_ENGLISH_ONE_WORD spend.groupHeading | frontend/src/i18n/LocaleContext.tsx:2655 | 值 {currency}
+rows_in_order=22 checked=22
+ZH_ENG_SENTENCE tip=21 branch=0
+ZH_ENG_SINGLE_WORD tip=4 branch=3
+VERDICT=PASS calibrated on the tip; branch clears the 22; placeholders intact; no key added or dropped
+COPY_RC=0

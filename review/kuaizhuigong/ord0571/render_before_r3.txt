@@ -1,0 +1,45 @@
+zh | main.cityNexusRequestFailed | CityNexus request failed
+en | main.cityNexusRequestFailed | CityNexus request failed
+zh | main.cityNexusRequestRefusedHttp | CityNexus request refused (HTTP {status})
+en | main.cityNexusRequestRefusedHttp | CityNexus request refused (HTTP {status})
+zh | main.persistedOperationUpdate | Persisted operation update
+en | main.persistedOperationUpdate | Persisted operation update
+zh | main.generalRecovery | general recovery
+en | main.generalRecovery | general recovery
+zh | main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.
+en | main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.
+zh | main.noDominantFailureMode | No dominant failure mode
+en | main.noDominantFailureMode | No dominant failure mode
+zh | main.notEvaluated | not evaluated
+en | main.notEvaluated | not evaluated
+zh | main.validatedActivity | validated Activity
+en | main.validatedActivity | validated Activity
+zh | main.noActionableTarget | no actionable target
+en | main.noActionableTarget | no actionable target
+zh | main.outcomeEvidence | outcome evidence
+en | main.outcomeEvidence | outcome evidence
+zh | main.explicitWins | explicit wins
+en | main.explicitWins | explicit wins
+zh | main.notReported | not reported
+en | main.notReported | not reported
+zh | main.noUpcomingActivity | no upcoming activity
+en | main.noUpcomingActivity | no upcoming activity
+zh | main.noActiveC4 | No active C4
+en | main.noActiveC4 | No active C4
+zh | main.notAvailable | not available
+en | main.notAvailable | not available
+zh | main.verifiedFeasible | verified feasible
+en | main.verifiedFeasible | verified feasible
+zh | main.notFeasible | not feasible
+en | main.notFeasible | not feasible
+zh | main.notPreserved | not preserved
+en | main.notPreserved | not preserved
+zh | main.verifiedEvidenceAttached | verified evidence attached
+en | main.verifiedEvidenceAttached | verified evidence attached
+zh | main.evidenceUnavailable | evidence unavailable
+en | main.evidenceUnavailable | evidence unavailable
+zh | recovery.noDominantMode | no dominant mode
+en | recovery.noDominantMode | no dominant mode
+zh | recovery.noneOnThisJourney | none on this journey
+en | recovery.noneOnThisJourney | none on this journey
+PROBE_BEFORE_RC=0
