@@ -1,0 +1,61 @@
+# 草稿复核 tip=f219dfef4ddc5addcdeb73e65cfac95f4ae7ab1c 模块=frontend/src/features/pending/pendingSetCopy.ts 草稿行=59
+MIGRATED pending.title | 草稿 pendingSetCopy.ts:101 | 本轮已搬进字典两侧，模块里两臂都删了（现尖 frontend/src/features/pending/pendingSetCopy.ts 已无此行）
+MIGRATED pending.sub | 草稿 pendingSetCopy.ts:102 | 本轮已搬进字典两侧，模块里两臂都删了（现尖 frontend/src/features/pending/pendingSetCopy.ts 已无此行）
+MIGRATED pending.loading | 草稿 pendingSetCopy.ts:103 | 本轮已搬进字典两侧，模块里两臂都删了（现尖 frontend/src/features/pending/pendingSetCopy.ts 已无此行）
+DIFF     pending.count | 现尖 zh:98 en:23 | 模块 en 臂='{n} {plural:place} not on a day' | 草稿建议='{n} places not on a day'
+MATCH    pending.shown | 现尖 zh:99 en:24 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.noDay | 现尖 zh:100 en:25 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.capturedOn | 现尖 zh:101 en:26 | 建议英文与模块 en 臂逐字相同
+DIFF     pending.deleteDayRule | 现尖 zh:102 en:28 | 模块 en 臂='This is where a place goes when no day of the trip holds it any more: it is not deleted, it stays listed here.' | 草稿建议='When no day holds a place any more it is not deleted; it stays listed here.'
+MATCH    pending.noPlaceDoor | 现尖 zh:103 en:30 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filter | 现尖 zh:104 en:31 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filter.all | 现尖 zh:105 en:32 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filter.allSub | 现尖 zh:106 en:33 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filter.reset | 现尖 zh:107 en:34 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filter.done | 现尖 zh:108 en:35 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filter.sheetTitle | 现尖 zh:109 en:36 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.rowCategoryMissing | 现尖 zh:110 en:37 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.noPlan | 现尖 zh:111 en:39 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.empty | 现尖 zh:112 en:40 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.filterEmpty | 现尖 zh:113 en:41 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.empty.next | 现尖 zh:115 en:43 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.empty.action | 现尖 zh:116 en:44 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.empty.import | 现尖 zh:119 en:47 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.reread | 现尖 zh:120 en:48 | 建议英文与模块 en 臂逐字相同
+DIFF     pending.candidatesAbsent | 现尖 zh:122 en:50 | 模块 en 臂='This server answered the list of places captured for this trip without a list in it, so this screen has no set to show.' | 草稿建议='This server answered the list of captured places without a list in it, so this screen has no set to show.'
+DIFF     pending.setUnknown | 现尖 zh:123 en:52 | 模块 en 臂='The list of places captured for this trip has not been read, so this screen shows no number yet. Nothing about your trip changed.' | 草稿建议='The captured-place list has not been read, so this screen shows no number yet. Nothing about your trip changed.'
+DIFF     pending.placesAbsent | 现尖 zh:124 en:54 | 模块 en 臂='This server did not answer the place list, so no row can be filtered by category; all rows are still listed under All.' | 草稿建议='This server did not answer the place list, so no row can be filtered by category; all rows stay listed under All.'
+MATCH    pending.details | 现尖 zh:125 en:55 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.reads | 现尖 zh:126 en:56 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.activities | 现尖 zh:127 en:57 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.candidates | 现尖 zh:128 en:58 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.placesRows | 现尖 zh:129 en:59 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.notAnswered | 现尖 zh:130 en:60 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.placed | 现尖 zh:131 en:61 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.candidatesPlaced | 现尖 zh:132 en:62 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.stateMissing | 现尖 zh:133 en:63 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.tickOn | 现尖 zh:136 en:66 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.tickOff | 现尖 zh:137 en:67 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.selected | 现尖 zh:138 en:68 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.action | 现尖 zh:139 en:69 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.busy | 现尖 zh:140 en:70 | 建议英文与模块 en 臂逐字相同
+DIFF     pending.batchLine | 现尖 zh:141 en:72 | 模块 en 臂='This batch carries the {planned} {plural:place:planned} your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.' | 草稿建议='This batch carries the {planned} places your chosen plan already holds plus the {picked} you ticked, so nothing planned gets dropped.'
+CASEMANGLE pending.blocked.nothing_picked | 草稿 pendingSetCopy.ts:148 | 模块里真有这枚键，是 pending.blocked.NOTHING_PICKED（现尖 zh:142 en:73）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+CASEMANGLE pending.blocked.pick_has_no_place_row | 草稿 pendingSetCopy.ts:149 | 模块里真有这枚键，是 pending.blocked.PICK_HAS_NO_PLACE_ROW（现尖 zh:143 en:75）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+CASEMANGLE pending.blocked.set_too_small | 草稿 pendingSetCopy.ts:150 | 模块里真有这枚键，是 pending.blocked.SET_TOO_SMALL（现尖 zh:144 en:77）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+CASEMANGLE pending.blocked.set_too_large | 草稿 pendingSetCopy.ts:151 | 模块里真有这枚键，是 pending.blocked.SET_TOO_LARGE（现尖 zh:145 en:78）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+DIFF     pending.receipt | 现尖 zh:146 en:80 | 模块 en 臂='The server placed {n} of them on {days}. This is candidate version {version}, {stops} {plural:stop:stops} in it.' | 草稿建议='The server placed {n} of them on {days}. This is candidate version {version}, with {stops} places in it.'
+MATCH    pending.receiptNoDay | 现尖 zh:147 en:81 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.missing | 现尖 zh:148 en:82 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.notSelected | 现尖 zh:149 en:83 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.adopt | 现尖 zh:150 en:84 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.adoptWarn | 现尖 zh:151 en:85 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.adopted | 现尖 zh:152 en:86 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.viewDays | 现尖 zh:153 en:87 | 建议英文与模块 en 臂逐字相同
+CASEMANGLE pending.refuse.window | 草稿 pendingSetCopy.ts:160 | 模块里真有这枚键，是 pending.refuse.WINDOW（现尖 zh:154 en:89）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+CASEMANGLE pending.refuse.commitment | 草稿 pendingSetCopy.ts:161 | 模块里真有这枚键，是 pending.refuse.COMMITMENT（现尖 zh:155 en:91）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+CASEMANGLE pending.refuse.no_plan | 草稿 pendingSetCopy.ts:162 | 模块里真有这枚键，是 pending.refuse.NO_PLAN（现尖 zh:156 en:92）—— 照草稿键名落笔会新建一枚撞不上取词点的键
+MATCH    pending.refuse.other | 现尖 zh:157 en:93 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.noToken | 现尖 zh:158 en:94 | 建议英文与模块 en 臂逐字相同
+MATCH    pending.adoptRefused | 现尖 zh:159 en:95 | 建议英文与模块 en 臂逐字相同
+# 合计：MATCH 42、DIFF 7、CASEMANGLE 7、NOTFOUND 0（zh 缺 0 / en 缺 0）、已搬 3

@@ -35,6 +35,7 @@ import {
   isKeylessWriteDeadlineMissed,
   keylessWriteUnknownReading,
 } from "../../lib/keylessWriteDeadline";
+import { englishCountNoun } from "../../lib/plural";
 
 /**
  * ORD-0369: who actually wrote `reasoning_summary`.
@@ -624,7 +625,7 @@ export async function beginAiRun(args: {
           return settle({
             status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
             failureReason: {
-              text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+              text: `GET /places?city_code=${cityCode} -> ${knownIds.size} ${englishCountNoun(knownIds.size, "place")}`,
               from: "device",
             },
             summary: null,

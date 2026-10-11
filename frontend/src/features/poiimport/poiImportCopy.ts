@@ -156,11 +156,11 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
      paint an English noun on the Chinese glass. */
   collectedCount: {
     zh: "{n} 枚已收在「{shelf}」——这句是从同一扇读门重读回来的。",
-    en: "{n} {plural:place} are now on {shelf} — read back from the same list door.",
+    en: "{n} {plural:place} now on {shelf} — read back from the same list door.",
   },
   collectAlready: {
     zh: "{n} 枚本来就在「{shelf}」上，没有重复写入。",
-    en: "{n} {plural:place} were already on {shelf}, so nothing was written twice.",
+    en: "{n} {plural:place} already on {shelf}, so nothing was written twice.",
   },
   collectNothingConfirmed: {
     zh: "写入应答了，但架子上读不回这一枚。在它读回来之前，这里不说“已收在”。",
@@ -180,7 +180,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   },
   addedCount: {
     zh: "{n} 个地点已在 {day} ——这是从服务端读回来的结果。",
-    en: "{n} places are on {day} — read back from the server.",
+    en: "{n} {plural:place} on {day} — read back from the server.",
   },
   adding: {
     zh: "正在加…",

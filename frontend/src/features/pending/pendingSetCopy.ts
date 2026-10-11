@@ -17,12 +17,9 @@
  *  - Chinese is the shorter arm on purpose: no filler like 哦/哟, and one clause per fact.
  */
 import { expandPluralMarkers } from "../../lib/plural";
+import { dictionaryCopy, type TripLocale } from "../../i18n/LocaleContext";
 export const pendingSetCopy = {
   en: {
-    "pending.title": "Not on a day yet",
-    "pending.sub":
-      "Places this server says belong to this trip, in no day of it yet.",
-    "pending.loading": "Reading the pending set…",
     "pending.count": "{n} {plural:place} not on a day",
     "pending.shown": "{m} of {n} shown",
     "pending.noDay": "no day of this trip holds it",
@@ -98,9 +95,6 @@ export const pendingSetCopy = {
     "pending.adoptRefused": "That version could not be adopted. The one you were running stays.",
   },
   "zh-CN": {
-    "pending.title": "待规划",
-    "pending.sub": "这台服务器说这些地点属于这一程，还没排在任何一天。",
-    "pending.loading": "正在读待规划集合…",
     "pending.count": "{n} 个地点没有排在某一天",
     "pending.shown": "筛出 {m} / 共 {n}",
     "pending.noDay": "这一程没有任何一天排它",
@@ -166,13 +160,22 @@ export const pendingSetCopy = {
   },
 } as const;
 
-export type PendingSetCopyKey = keyof (typeof pendingSetCopy)["zh-CN"];
+/** ORD-0570: these three now live in the shared dictionary on both sides.  The names stay part of
+ *  this module's key type so one screen keeps taking one accessor for all of its copy. */
+export type PendingMigratedCopyKey = "pending.title" | "pending.sub" | "pending.loading";
+export type PendingSetCopyKey =
+  | keyof (typeof pendingSetCopy)["zh-CN"]
+  | PendingMigratedCopyKey;
 
 /** Same fallback rule as the other lane copy modules: a key missing in one language must never
- *  reach the traveller as a raw key. */
+ *  reach the traveller as a raw key.  The shared dictionary is asked first; it answers with the key
+ *  itself when a key is absent, and that answer is read as "not there" rather than as copy. */
 export function pendingCopy(locale: string, key: PendingSetCopyKey): string {
-  const table = pendingSetCopy[locale.startsWith("zh") ? "zh-CN" : "en"];
-  return table[key] ?? pendingSetCopy.en[key] ?? key;
+  const trip: TripLocale = locale.startsWith("zh") ? "zh-CN" : "en";
+  const shared = dictionaryCopy(trip, key);
+  if (shared !== key) return shared;
+  const table = pendingSetCopy[trip] as Record<string, string>;
+  return table[key] ?? (pendingSetCopy.en as Record<string, string>)[key] ?? key;
 }
 
 /** `{n}` and `{day}` come from a read, never from a number this file knows. */

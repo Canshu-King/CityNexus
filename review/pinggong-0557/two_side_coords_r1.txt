@@ -1,0 +1,23 @@
+# both-side coordinates for the 21 main.* keys, read at dict branch d148351c
+key main.cityNexusRequestFailed | en LocaleContext.tsx:855 | zh LocaleContext.tsx:2144 | value_bytes_equal=True
+key main.cityNexusRequestRefusedHttp | en LocaleContext.tsx:856 | zh LocaleContext.tsx:2145 | value_bytes_equal=True
+key main.persistedOperationUpdate | en LocaleContext.tsx:857 | zh LocaleContext.tsx:2146 | value_bytes_equal=True
+key main.generalRecovery | en LocaleContext.tsx:858 | zh LocaleContext.tsx:2147 | value_bytes_equal=True
+key main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | en LocaleContext.tsx:859 | zh LocaleContext.tsx:2148 | value_bytes_equal=True
+key main.noDominantFailureMode | en LocaleContext.tsx:860 | zh LocaleContext.tsx:2149 | value_bytes_equal=True
+key main.notEvaluated | en LocaleContext.tsx:861 | zh LocaleContext.tsx:2150 | value_bytes_equal=True
+key main.validatedActivity | en LocaleContext.tsx:862 | zh LocaleContext.tsx:2151 | value_bytes_equal=True
+key main.noActionableTarget | en LocaleContext.tsx:863 | zh LocaleContext.tsx:2152 | value_bytes_equal=True
+key main.outcomeEvidence | en LocaleContext.tsx:864 | zh LocaleContext.tsx:2153 | value_bytes_equal=True
+key main.explicitWins | en LocaleContext.tsx:865 | zh LocaleContext.tsx:2154 | value_bytes_equal=True
+key main.notReported | en LocaleContext.tsx:866 | zh LocaleContext.tsx:2155 | value_bytes_equal=True
+key main.noUpcomingActivity | en LocaleContext.tsx:867 | zh LocaleContext.tsx:2156 | value_bytes_equal=True
+key main.noActiveC4 | en LocaleContext.tsx:868 | zh LocaleContext.tsx:2157 | value_bytes_equal=True
+key main.notAvailable | en LocaleContext.tsx:869 | zh LocaleContext.tsx:2158 | value_bytes_equal=True
+key main.verifiedFeasible | en LocaleContext.tsx:870 | zh LocaleContext.tsx:2159 | value_bytes_equal=True
+key main.notFeasible | en LocaleContext.tsx:871 | zh LocaleContext.tsx:2160 | value_bytes_equal=True
+key main.notPreserved | en LocaleContext.tsx:872 | zh LocaleContext.tsx:2161 | value_bytes_equal=True
+key main.verifiedEvidenceAttached | en LocaleContext.tsx:873 | zh LocaleContext.tsx:2162 | value_bytes_equal=True
+key main.evidenceUnavailable | en LocaleContext.tsx:874 | zh LocaleContext.tsx:2163 | value_bytes_equal=True
+key main.unnamedCommitmentServerGaveNoName | en LocaleContext.tsx:875 | zh LocaleContext.tsx:2143 | value_bytes_equal=True
+en_rows=21 zh_rows=21

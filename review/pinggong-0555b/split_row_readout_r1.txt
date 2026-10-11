@@ -1,0 +1,8 @@
+# base literals vs real-function output, four arms
+FROZEN_WITHOUT_TTL key=evidenceSealedWithoutExpiry zh_equal=True en_equal=True PASS
+EVIDENCE_REFERENCE_INCONSISTENT key=evidenceReferenceMismatch zh_equal=True en_equal=True PASS
+PASS=2 FAIL=0
+FROZEN_WITHOUT_TTL locale=zh-CN text="这趟的出行数据是封存的，没有到期时间"
+FROZEN_WITHOUT_TTL locale=en text="this trip's travel data is sealed, with no expiry"
+EVIDENCE_REFERENCE_INCONSISTENT locale=zh-CN text="证据的引用对不上（服务器说有封存记录，但引用不一致）"
+EVIDENCE_REFERENCE_INCONSISTENT locale=en text="the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)"

@@ -1,0 +1,10 @@
+en | placeCount=null（门没答） | We could not read how many places this city has from the server just now.
+zh-CN | placeCount=null（门没答） | 这座城有多少地点，我们刚才没能从服务器读到。
+en | placeCount=0 | Read back from the server: we hold no places for this city yet.
+zh-CN | placeCount=0 | 服务器回读：这座城我们现在一个地点都还没有。
+en | placeCount=1 | Read back from the server: this city now has 1 places that can go into a trip.
+zh-CN | placeCount=1 | 服务器回读：这座城我们现在有 1 个地点，可以排进行程。
+en | placeCount=2 | Read back from the server: this city now has 2 places that can go into a trip.
+zh-CN | placeCount=2 | 服务器回读：这座城我们现在有 2 个地点，可以排进行程。
+en | placeCount=3 | Read back from the server: this city now has 3 places that can go into a trip.
+zh-CN | placeCount=3 | 服务器回读：这座城我们现在有 3 个地点，可以排进行程。

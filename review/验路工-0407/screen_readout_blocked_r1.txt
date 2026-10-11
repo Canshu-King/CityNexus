@@ -1,0 +1,97 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4901 backend=:4902 db=sqlite:///D:/moodle/_qoder_yanlugong_0407/frontend/_e2e_ylg0407r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [41652]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:4902 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:49751 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] 14:58:05 [vite] (client) Pre-transform error: Cannot find package '@babel/core' imported from D:\moodle\CityNexus\frontend\node_modules\@vitejs\plugin-react\dist\index.js
+[WebServer]   Plugin: vite:react-babel
+[WebServer]   File: D:/moodle/_qoder_yanlugong_0407/frontend/src/main.tsx
+[WebServer] INFO:     127.0.0.1:49761 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ylg0407r1 frontend=:4901 -> backend=:4902 ai=disabled db=_e2e_ylg0407r1.db
+
+Running 2 tests using 1 worker
+
+[WebServer] (!) Failed to run dependency scan. Skipping dependency pre-bundling. Error: The following dependencies are imported but could not be resolved:
+[WebServer] 
+[WebServer]   @dnd-kit/core (imported by D:/moodle/_qoder_yanlugong_0407/frontend/src/features/studio/SortableActivityList.tsx)
+[WebServer]   @dnd-kit/sortable (imported by D:/moodle/_qoder_yanlugong_0407/frontend/src/features/studio/SortableActivityList.tsx)
+[WebServer]   @dnd-kit/utilities (imported by D:/moodle/_qoder_yanlugong_0407/frontend/src/features/studio/SortableActivityList.tsx)
+[WebServer] 
+[WebServer] Are they installed?
+[WebServer]     at file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:31983:33
+[WebServer]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[WebServer]     at async file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:34191:15
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4901 backend=:4902 db=sqlite:///D:/moodle/_qoder_yanlugong_0407/frontend/_e2e_ylg0407r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:57967 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:57969 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:57967 - "POST /api/v1/journeys/f93d8640-7636-4bfe-b5b2-c4d420aa7824/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57969 - "GET /api/v1/journeys/f93d8640-7636-4bfe-b5b2-c4d420aa7824/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57967 - "POST /api/v1/journeys/f93d8640-7636-4bfe-b5b2-c4d420aa7824/stay-options/d27babaf-368a-4764-9ed1-92858e9f7e15/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=f93d8640-7636-4bfe-b5b2-c4d420aa7824 options=4 chosen=d27babaf-368a-4764-9ed1-92858e9f7e15 (Haihe Riverside Hotel)
+[WebServer] 14:58:07 [vite] (client) Pre-transform error: Cannot find package '@babel/core' imported from D:\moodle\CityNexus\frontend\node_modules\@vitejs\plugin-react\dist\index.js
+[WebServer]   Plugin: vite:react-babel
+[WebServer]   File: D:/moodle/_qoder_yanlugong_0407/frontend/src/main.tsx
+[WebServer] 14:58:07 [vite] Internal server error: Cannot find package '@babel/core' imported from D:\moodle\CityNexus\frontend\node_modules\@vitejs\plugin-react\dist\index.js
+[WebServer]   Plugin: vite:react-babel
+[WebServer]   File: D:/moodle/_qoder_yanlugong_0407/frontend/src/main.tsx
+[WebServer]       at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+[WebServer]       at packageResolve (node:internal/modules/esm/resolve:768:81)
+[WebServer]       at moduleResolve (node:internal/modules/esm/resolve:859:18)
+[WebServer]       at defaultResolve (node:internal/modules/esm/resolve:991:11)
+[WebServer]       at #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+[WebServer]       at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+[WebServer]       at ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+[WebServer]       at #resolve (node:internal/modules/esm/loader:701:17)
+[WebServer]       at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+[WebServer]       at onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+[qoder-real-seed] trialWizard=false live-journey-current=false
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.4s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4901 backend=:4902 db=sqlite:///D:/moodle/_qoder_yanlugong_0407/frontend/_e2e_ylg0407r1.db ai=disabled reuseExistingServer=false
+[WebServer] 14:58:12 [vite] (client) Pre-transform error: Cannot find package '@babel/core' imported from D:\moodle\CityNexus\frontend\node_modules\@vitejs\plugin-react\dist\index.js
+[WebServer]   Plugin: vite:react-babel
+[WebServer]   File: D:/moodle/_qoder_yanlugong_0407/frontend/src/main.tsx
+[WebServer] 14:58:12 [vite] Internal server error: Cannot find package '@babel/core' imported from D:\moodle\CityNexus\frontend\node_modules\@vitejs\plugin-react\dist\index.js
+[WebServer]   Plugin: vite:react-babel
+[WebServer]   File: D:/moodle/_qoder_yanlugong_0407/frontend/src/main.tsx
+[WebServer]       at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+[WebServer]       at packageResolve (node:internal/modules/esm/resolve:768:81)
+[WebServer]       at moduleResolve (node:internal/modules/esm/resolve:859:18)
+[WebServer]       at defaultResolve (node:internal/modules/esm/resolve:991:11)
+[WebServer]       at #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+[WebServer]       at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+[WebServer]       at ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+[WebServer]       at #resolve (node:internal/modules/esm/loader:701:17)
+[WebServer]       at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+[WebServer]       at onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+  x  2 [chromium] › e2e\qoder-yanlugong-0407-shared-empty-arm.spec.ts:47:1 › the zero-stop arm speaks, and offers the action this file already owns (10.2s)
+
+
+  1) [chromium] › e2e\qoder-yanlugong-0407-shared-empty-arm.spec.ts:47:1 › the zero-stop arm speaks, and offers the action this file already owns 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('shared-plan-empty')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('shared-plan-empty') with timeout 10000ms
+      - waiting for getByTestId('shared-plan-empty')
+
+
+      55 |
+      56 |   const notice = page.getByTestId("shared-plan-empty");
+    > 57 |   await expect(notice).toBeVisible();
+         |                        ^
+      58 |   await expect(page.getByTestId("shared-plan-line")).toBeVisible();
+      59 |
+      60 |   const refresh = page.getByTestId("shared-refresh");
+        at D:\moodle\_qoder_yanlugong_0407\frontend\e2e\qoder-yanlugong-0407-shared-empty-arm.spec.ts:57:24
+
+    Error Context: test-results\qoder-yanlugong-0407-share-d78ba-tion-this-file-already-owns-chromium\error-context.md
+
+  1 failed
+    [chromium] › e2e\qoder-yanlugong-0407-shared-empty-arm.spec.ts:47:1 › the zero-stop arm speaks, and offers the action this file already owns 
+  1 passed (24.0s)

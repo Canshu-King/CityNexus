@@ -189,6 +189,10 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         <DestinationPreparationPanel
           journeyId={s.data.journey.id}
           onOpenPlan={() => s.navigate("authoritative")}
+          /* ORD-0566: `PREPARE_PLACES` is the server saying the place rows themselves need work, so
+             the arm opens the same route the drawer already uses -- the shell's own navigate, no
+             second navigation mechanism. */
+          onOpenPreparePlaces={() => s.navigate("import")}
           initialQuery={s.data.journey.city_code ?? ""}
         />
         <RealCityDiscoveryPanel

@@ -1,0 +1,28 @@
+tip=d89cfea25214b4bbb4e886dca765b096237362f1
+branch_worktree=D:/moodle/_qoder_huomingxi_0558/wt
+file=frontend/src/features/trip/ActivityDetail.tsx
+plural_ts_blob_at_tip=aefcc082623f11b473d75020dae37787c4fcb6e8
+tip_lines=323 branch_lines=324
+
+site tip:150 holds=true verbatim=": `${duration} min`;"
+site branch:151 holds=true verbatim=": `${duration} ${englishCountNoun(duration, \"minute\")}`;"
+  n=0 tip="0 min" branch="0 minutes"
+  n=1 tip="1 min" branch="1 minute"
+  n=2 tip="2 min" branch="2 minutes"
+  n=45 tip="45 min" branch="45 minutes"
+
+site tip:186 holds=true verbatim=": `${activity.travel_from_prev_min} min`}"
+site branch:187 holds=true verbatim=": `${activity.travel_from_prev_min} ${englishCountNoun(activity.travel_from_prev_min, \"minute\")}`}"
+  n=0 tip="0 min" branch="0 minutes"
+  n=1 tip="1 min" branch="1 minute"
+  n=2 tip="2 min" branch="2 minutes"
+
+site tip:307 holds=true verbatim=": `${Math.round(metres)} m`"
+site branch:308 holds=true verbatim=": `${Math.round(metres)} ${englishCountNoun(Math.round(metres), \"metre\")}`"
+  n=0 tip="0 m" branch="0 metres"
+  n=1 tip="1 m" branch="1 metre"
+  n=2 tip="2 m" branch="2 metres"
+  n=850 tip="850 m" branch="850 metres"
+
+compact_arm tip:147=": `${Math.floor(duration / 60)}h${duration % 60 ? ` ${duration % 60}m` : \"\"}`"
+compact_arm branch:148=": `${Math.floor(duration / 60)}h${duration % 60 ? ` ${duration % 60}m` : \"\"}`" identical=true

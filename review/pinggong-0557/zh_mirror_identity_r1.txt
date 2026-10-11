@@ -1,0 +1,2 @@
+# byte-identity between the two sides for the 21 main.* keys (branch d148351c, read now)
+keys_en=21 keys_zh=21 byte_identical=21 differing=0
