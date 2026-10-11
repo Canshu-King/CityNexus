@@ -48,6 +48,10 @@ from app.integrations.provider_config import (
     ExternalProviderSettings,
     trust_environment_for_public_providers,
 )
+from app.execution.shared_walk import (
+    SharedWalkParseError,
+    validate_shared_walk_objects,
+)
 
 
 _OSM_EXTERNAL_ID = re.compile(r"^overpass:(node|way|relation)/([1-9][0-9]*)$")
@@ -1438,6 +1442,262 @@ def discover_bootstrap_candidates(
                 ).order_by(RealPlaceCandidate.captured_at, RealPlaceCandidate.id)
             ).all()
             if _candidate_scope_matches(row, member_id=member_id, traveler_id=traveler_id)
+        ],
+    }
+
+
+def lookup_bootstrap_shared_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    objects: list[dict[str, object]],
+    provider_consent: bool,
+) -> dict[str, Any]:
+    """Verify two public OSM identities for a recipient's own draft Journey.
+
+    The provider sees only the exact public object IDs.  The fresh member scope
+    below then flows through the existing shortlist and Pocket Walk gates; no
+    sender row, receipt, token or Journey authority is copied.
+    """
+
+    if str(journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "shared walk lookup requires a DRAFT Journey")
+    if journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "shared walk lookup requires no PlanVersion")
+    if not provider_consent:
+        raise BootstrapDiscoveryError(
+            "SHARED_WALK_CONSENT_REQUIRED",
+            "explicit exact-object provider consent is required before lookup",
+            status_code=422,
+        )
+    try:
+        normalized = validate_shared_walk_objects(objects)
+    except SharedWalkParseError as exc:
+        raise BootstrapDiscoveryError(exc.code, str(exc), status_code=422) from exc
+    member_id = str(member.id)
+    traveler_id = str(traveler_id)
+    captured_at = _now()
+    expires_at = captured_at + timedelta(seconds=settings.real_city_cache_ttl_seconds)
+    requested = [(item.osm_type, item.osm_id) for item in normalized]
+    request = {
+        "operation": "bootstrap_shared_walk_exact_lookup",
+        "object_count": len(requested),
+        "objects": [{"osm_type": kind, "osm_id": identifier} for kind, identifier in requested],
+        "provider_consent": True,
+    }
+    if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live":
+        _provider_call(
+            session,
+            journey=journey,
+            request=request,
+            response={"status": "LOOKUP_BLOCKED", "reason": "PROVIDER_DISABLED", "attempts": [], "count": 0},
+            status="DISABLED",
+            created_at=_iso(captured_at),
+        )
+        return {
+            "journey_id": journey.id,
+            "status": "LOOKUP_BLOCKED",
+            "lookup_state": "LOOKUP_BLOCKED",
+            "failure_code": "PROVIDER_DISABLED",
+            "receipt_id": None,
+            "expires_at": None,
+            "provider": "overpass",
+            "provider_provenance": "UNVERIFIED",
+            "attempts": [],
+            "candidates": [],
+            "verified_count": 0,
+        }
+
+    provider = OverpassPOIProvider()
+    configured_provider_url = provider.base_url
+    attempts: list[dict[str, Any]] = []
+    try:
+        candidates, attempts = provider.lookup_exact_with_evidence(requested, max_attempts=1)
+    except Exception as exc:
+        attempts = _attempts(getattr(exc, "provider_attempts", []))
+        _provider_call(
+            session,
+            journey=journey,
+            request=request,
+            response={"status": "LOOKUP_BLOCKED", "reason": "PROVIDER_UNAVAILABLE", "attempts": attempts, "count": 0},
+            status="UNAVAILABLE",
+            created_at=_iso(captured_at),
+        )
+        return {
+            "journey_id": journey.id,
+            "status": "LOOKUP_BLOCKED",
+            "lookup_state": "LOOKUP_BLOCKED",
+            "failure_code": "PROVIDER_UNAVAILABLE",
+            "receipt_id": None,
+            "expires_at": None,
+            "provider": "overpass",
+            "provider_provenance": "UNVERIFIED",
+            "attempts": attempts,
+            "candidates": [],
+            "verified_count": 0,
+        }
+    finally:
+        provider.close()
+
+    provider_provenance = _provider_provenance(attempts, configured_url=configured_provider_url)
+    requested_external = {f"overpass:{kind}/{identifier}" for kind, identifier in requested}
+    by_external: dict[str, DiscoveryCandidate] = {}
+    for candidate in candidates:
+        if candidate.external_id not in requested_external or not _public_candidate(candidate, radius_m=5000):
+            continue
+        by_external.setdefault(candidate.external_id, candidate)
+    usable = [by_external[f"overpass:{item.osm_type}/{item.osm_id}"] for item in normalized if f"overpass:{item.osm_type}/{item.osm_id}" in by_external]
+
+    receipt_id = str(uuid4())
+    private_rows = session.scalars(
+        select(RealPlaceCandidate).where(
+            RealPlaceCandidate.journey_id == journey.id,
+            RealPlaceCandidate.materialized_place_id.is_(None),
+            RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
+        )
+    ).all()
+    for private_row in private_rows:
+        if _candidate_scope_matches(private_row, member_id=member_id, traveler_id=traveler_id):
+            if not _drop_candidate_scope(private_row, member_id=member_id, traveler_id=traveler_id):
+                session.delete(private_row)
+    session.flush()
+    for candidate in usable:
+        osm = _osm_identity(candidate)
+        if osm is None:
+            continue
+        osm_type, osm_id = osm
+        existing_candidate = session.scalar(
+            select(RealPlaceCandidate).where(
+                RealPlaceCandidate.journey_id == journey.id,
+                RealPlaceCandidate.provider_key == "overpass",
+                RealPlaceCandidate.external_id == candidate.external_id,
+            )
+        )
+        if existing_candidate is not None:
+            if existing_candidate.status == "BOOTSTRAP_PRIVATE":
+                _replace_candidate_scope(
+                    session,
+                    journey_id=journey.id,
+                    external_id=candidate.external_id,
+                    member_id=member_id,
+                    traveler_id=traveler_id,
+                    scope={
+                        "member_id": member_id,
+                        "traveler_id": traveler_id,
+                        "receipt_id": receipt_id,
+                        "source_kind": "SHARED_PUBLIC_REFERENCE",
+                        "expires_at": _iso(expires_at),
+                        "provider_provenance": provider_provenance,
+                        "distance_m": None,
+                    },
+                )
+            continue
+        tags = _candidate_tags(candidate)
+        cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
+        cost.setdefault("status", "UNKNOWN")
+        row_id = str(uuid4())
+        session.add(
+            RealPlaceCandidate(
+                id=row_id,
+                journey_id=journey.id,
+                provider_key="overpass",
+                external_id=candidate.external_id,
+                city_code=journey.city_code,
+                name=str(tags.get("name") or candidate.name).strip(),
+                category=str(candidate.category or "public_place"),
+                latitude=float(candidate.latitude),
+                longitude=float(candidate.longitude),
+                tags_json=_json(list(candidate.tags)),
+                opening_hours_json=_json(dict(candidate.opening_hours or {"status": "UNKNOWN"})),
+                metadata_json=_json(
+                    {
+                        "source": provider_provenance,
+                        "provider_provenance": provider_provenance,
+                        "cost_evidence": cost,
+                        "public_access_gate": "NO_EXPLICIT_PRIVATE_ACCESS",
+                        "osm_tags": tags,
+                        "shared_reference": "UNVERIFIED_SHARED_REFERENCE_BEFORE_LOOKUP",
+                    }
+                ),
+                captured_at=_iso(captured_at),
+                expires_at=_iso(expires_at),
+                distance_m=None,
+                evidence_json=_json(
+                    {
+                        "bootstrap": True,
+                        "receipt_id": receipt_id,
+                        "member_id": member_id,
+                        "traveler_id": traveler_id,
+                        "source_kind": "SHARED_PUBLIC_REFERENCE",
+                        "bootstrap_scopes": [
+                            {
+                                "member_id": member_id,
+                                "traveler_id": traveler_id,
+                                "receipt_id": receipt_id,
+                                "source_kind": "SHARED_PUBLIC_REFERENCE",
+                                "expires_at": _iso(expires_at),
+                                "provider_provenance": provider_provenance,
+                                "distance_m": None,
+                            }
+                        ],
+                        "provider_attempts": attempts,
+                        "provider_provenance": provider_provenance,
+                        "candidate_id": row_id,
+                        "osm_type": osm_type,
+                        "osm_id": osm_id,
+                        "source_url": f"https://www.openstreetmap.org/{osm_type}/{osm_id}",
+                    }
+                ),
+                materialized_place_id=None,
+                status="BOOTSTRAP_PRIVATE",
+            )
+        )
+    _provider_call(
+        session,
+        journey=journey,
+        request=request,
+        response={
+            "status": "SHARED_LOOKUP_RESULTS" if usable else "SHARED_LOOKUP_NO_MATCH",
+            "attempts": attempts,
+            "count": len(usable),
+            "requested_count": len(normalized),
+            "provider_provenance": provider_provenance,
+        },
+        status="SUCCESS",
+        created_at=_iso(captured_at),
+    )
+    rows = session.scalars(
+        select(RealPlaceCandidate).where(
+            RealPlaceCandidate.journey_id == journey.id,
+            RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
+        ).order_by(RealPlaceCandidate.captured_at, RealPlaceCandidate.id)
+    ).all()
+    return {
+        "journey_id": journey.id,
+        "status": "SHARED_LOOKUP_RESULTS" if usable else "SHARED_LOOKUP_NO_MATCH",
+        "lookup_state": (
+            "VERIFIED_PUBLIC_IDENTITIES"
+            if len(usable) == len(normalized)
+            else "PARTIAL_PUBLIC_IDENTITIES"
+            if usable
+            else "LOOKUP_BLOCKED"
+        ),
+        "failure_code": None if usable else "NO_VERIFIED_MATCH",
+        "receipt_id": receipt_id if usable else None,
+        "expires_at": _iso(expires_at) if usable else None,
+        "provider": "overpass",
+        "provider_provenance": provider_provenance,
+        "attempts": attempts,
+        "verified_count": len(usable),
+        "candidates": [
+            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
+            for row in rows
+            if _candidate_scope_matches(row, member_id=member_id, traveler_id=traveler_id)
+            and row.external_id in {candidate.external_id for candidate in usable}
         ],
     }
 
