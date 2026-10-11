@@ -1894,6 +1894,11 @@ export interface BootstrapSharedWalkPocketWalkSaveResponse {
   items: BootstrapShortlistItem[];
 }
 
+export interface BootstrapDiscoveryPocketWalkSaveResponse {
+  pocket_walk: BootstrapPocketWalkResponse;
+  items: BootstrapShortlistItem[];
+}
+
 export interface BootstrapShortlistResponse {
   journey_id: string;
   limit: number;
@@ -2968,6 +2973,25 @@ export const cityNexusApi = {
   ): Promise<BootstrapSharedWalkPocketWalkSaveResponse> {
     return requestJson<BootstrapSharedWalkPocketWalkSaveResponse>(
       "/journeys/" + journeyId + "/bootstrap-shared-walk/pocket-walk",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  saveBootstrapDiscoveryPocketWalk(
+    journeyId: string,
+    input: {
+      receipt_id: string;
+      first_candidate_id: string;
+      second_candidate_id: string;
+      max_walk_minutes: number | null;
+    },
+  ): Promise<BootstrapDiscoveryPocketWalkSaveResponse> {
+    return requestJson<BootstrapDiscoveryPocketWalkSaveResponse>(
+      "/journeys/" + journeyId + "/bootstrap-discovery/pocket-walk",
       {
         method: "POST",
         headers: travelerAuthHeaders(),

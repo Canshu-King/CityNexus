@@ -277,6 +277,7 @@ from app.execution.bootstrap_discovery import (
     select_bootstrap_candidate,
     lookup_bootstrap_shared_walk,
     save_bootstrap_shared_walk_pocket_walk,
+    save_bootstrap_discovery_pocket_walk,
 )
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
@@ -502,6 +503,7 @@ from app.schemas import (
     BootstrapPocketWalkSaveRequest,
     BootstrapSharedWalkLookupRequest,
     BootstrapSharedWalkPocketWalkSaveRequest,
+    BootstrapDiscoveryPocketWalkSaveRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3551,6 +3553,39 @@ def save_bootstrap_shared_walk_pocket_walk_route(
     )
     try:
         result = save_bootstrap_shared_walk_pocket_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            first_candidate_id=payload.first_candidate_id,
+            second_candidate_id=payload.second_candidate_id,
+            max_walk_minutes=payload.max_walk_minutes,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/pocket-walk")
+def save_bootstrap_discovery_pocket_walk_route(
+    journey_id: UUID,
+    payload: BootstrapDiscoveryPocketWalkSaveRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Atomically save two current manual-center discoveries privately."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = save_bootstrap_discovery_pocket_walk(
             session,
             journey,
             member=member,
