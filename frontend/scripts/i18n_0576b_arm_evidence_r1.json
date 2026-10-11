@@ -1,0 +1,248 @@
+{
+ "base": "d2f06bee22f0e051208a9e208b3c7f55622d7487",
+ "coordinates": [
+  {
+   "key": "progress.none.scheduled",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 77,
+   "before_en_line": 78,
+   "after_line": 76,
+   "dict_en_line": 1498,
+   "dict_zh_line": 2917,
+   "mode": "plain",
+   "reuse": false
+  },
+  {
+   "key": "progress.day.total.blank",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 84,
+   "before_en_line": 85,
+   "after_line": 81,
+   "dict_en_line": 1499,
+   "dict_zh_line": 2918,
+   "mode": "plain",
+   "reuse": false
+  },
+  {
+   "key": "progress.day.total.only",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 87,
+   "before_en_line": 87,
+   "after_line": 83,
+   "dict_en_line": 1500,
+   "dict_zh_line": 2919,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "progress.day.of.total",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 90,
+   "before_en_line": 91,
+   "after_line": 85,
+   "dict_en_line": 1501,
+   "dict_zh_line": 2920,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "progress.stop.none.walked",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 95,
+   "before_en_line": 96,
+   "after_line": 88,
+   "dict_en_line": 1502,
+   "dict_zh_line": 2921,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "progress.stop.completed",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 99,
+   "before_en_line": 101,
+   "after_line": 90,
+   "dict_en_line": 1503,
+   "dict_zh_line": 2922,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "progress.stop.skipped.clause",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 100,
+   "before_en_line": 102,
+   "after_line": 91,
+   "dict_en_line": 1504,
+   "dict_zh_line": 2923,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "progress.day.gap.no.cursor",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 112,
+   "before_en_line": 113,
+   "after_line": 100,
+   "dict_en_line": 1505,
+   "dict_zh_line": 2924,
+   "mode": "plain",
+   "reuse": false
+  },
+  {
+   "key": "progress.day.gap.stale.cursor",
+   "file": "frontend/src/features/progress/journeyProgress.ts",
+   "before_zh_line": 115,
+   "before_en_line": 116,
+   "after_line": 100,
+   "dict_en_line": 1506,
+   "dict_zh_line": 2925,
+   "mode": "plain",
+   "reuse": false
+  },
+  {
+   "key": "detail.duration.hours.minutes",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 147,
+   "before_en_line": 148,
+   "after_line": 146,
+   "dict_en_line": 1507,
+   "dict_zh_line": 2926,
+   "mode": "both",
+   "reuse": false
+  },
+  {
+   "key": "detail.duration.hours.only",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 147,
+   "before_en_line": 148,
+   "after_line": 147,
+   "dict_en_line": 1508,
+   "dict_zh_line": 2927,
+   "mode": "both",
+   "reuse": false
+  },
+  {
+   "key": "detail.duration.minutes",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 150,
+   "before_en_line": 151,
+   "after_line": 148,
+   "dict_en_line": 1509,
+   "dict_zh_line": 2928,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "detail.travel.prev.minutes",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 186,
+   "before_en_line": 187,
+   "after_line": 182,
+   "dict_en_line": 1510,
+   "dict_zh_line": 2929,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "detail.cost.unknown",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 201,
+   "before_en_line": 202,
+   "after_line": 195,
+   "dict_en_line": 1511,
+   "dict_zh_line": 2930,
+   "mode": "plain",
+   "reuse": false
+  },
+  {
+   "key": "detail.hoursNoData",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 219,
+   "before_en_line": 220,
+   "after_line": 211,
+   "dict_en_line": 1362,
+   "dict_zh_line": 2787,
+   "mode": "plain",
+   "reuse": true
+  },
+  {
+   "key": "detail.nearby.radius.note",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 292,
+   "before_en_line": 293,
+   "after_line": 282,
+   "dict_en_line": 1512,
+   "dict_zh_line": 2931,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "detail.distance.metres",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 307,
+   "before_en_line": 308,
+   "after_line": 295,
+   "dict_en_line": 1513,
+   "dict_zh_line": 2932,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "detail.distance.kilometres",
+   "file": "frontend/src/features/trip/ActivityDetail.tsx",
+   "before_zh_line": 310,
+   "before_en_line": 311,
+   "after_line": 296,
+   "dict_en_line": 1514,
+   "dict_zh_line": 2933,
+   "mode": "tpl",
+   "reuse": false
+  },
+  {
+   "key": "stay.outcome.unnamed",
+   "file": "frontend/src/features/stay/stayGenerationDoor.ts",
+   "before_zh_line": 48,
+   "before_en_line": 49,
+   "after_line": 49,
+   "dict_en_line": 1515,
+   "dict_zh_line": 2934,
+   "mode": "plain",
+   "reuse": false
+  }
+ ],
+ "cjk_census": {
+  "journey": [
+   9,
+   0
+  ],
+  "detail": [
+   8,
+   0
+  ],
+  "stay": [
+   6,
+   5
+  ]
+ },
+ "mark_census": {
+  "journey": [
+   [
+    100
+   ],
+   [
+    91
+   ]
+  ],
+  "detail": [
+   [],
+   []
+  ],
+  "stay": [
+   [],
+   []
+  ]
+ },
+ "green": 159,
+ "red": []
+}
