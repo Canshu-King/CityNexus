@@ -113,3 +113,68 @@ def test_r106_consent_and_gps_gates_precede_provider(monkeypatch):
         )
     assert gps.value.code == "PUBLIC_CENTER_REQUIRED"
     provider.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    ("resolved_ip", "expected_reason"),
+    [
+        ("10.20.30.40", "PROVIDER_PRIVATE_ADDRESS"),
+        ("127.0.0.1", "PROVIDER_PRIVATE_ADDRESS"),
+        ("169.254.169.254", "PROVIDER_PRIVATE_ADDRESS"),
+        ("2001:db8::1", "PROVIDER_PRIVATE_ADDRESS"),
+    ],
+)
+def test_r106_friend_exact_lookup_rejects_nonpublic_dns_before_provider(
+    monkeypatch, resolved_ip: str, expected_reason: str
+):
+    """Exact shared-object lookups must not bypass the city search DNS gate."""
+
+    names = ("real_city_enabled", "real_city_mode", "overpass_url", "city_search_test_provider")
+    previous = {name: getattr(settings, name) for name in names}
+    provider = MagicMock()
+    try:
+        _set("real_city_enabled", True)
+        _set("real_city_mode", "live")
+        _set("city_search_test_provider", False)
+        _set("overpass_url", "https://overpass-api.de/api")
+        monkeypatch.setattr(
+            discovery.socket,
+            "getaddrinfo",
+            lambda *args, **kwargs: [(2, 1, 6, "", (resolved_ip, 443))],
+        )
+        monkeypatch.setattr(discovery, "OverpassPOIProvider", provider)
+        session = MagicMock()
+        session.scalar.return_value = None
+        journey = SimpleNamespace(
+            id="journey-r106-exact",
+            status="DRAFT",
+            active_plan_version_id=None,
+            city_code="Shanghai",
+        )
+        result = discovery.lookup_bootstrap_shared_walk(
+            session,
+            journey,
+            member=SimpleNamespace(id="member-r106"),
+            traveler_id="traveler-r106",
+            objects=[
+                {
+                    "osm_type": "node",
+                    "osm_id": "106001",
+                    "source_url": "https://www.openstreetmap.org/node/106001",
+                },
+                {
+                    "osm_type": "way",
+                    "osm_id": "106002",
+                    "source_url": "https://www.openstreetmap.org/way/106002",
+                },
+            ],
+            provider_consent=True,
+        )
+        assert result["status"] == "LOOKUP_BLOCKED"
+        assert result["failure_code"] == expected_reason
+        assert result["verified_count"] == 0
+        assert result["provider_provenance"] == "UNVERIFIED"
+        provider.assert_not_called()
+    finally:
+        for name, value in previous.items():
+            _set(name, value)
