@@ -1001,12 +1001,21 @@ export function BootstrapDiscoveryPanel({
     if (selected.length !== 2) return null;
     const sources = selected.map((candidate) => safeOsmSourceUrl(candidate.source_url));
     if (sources.some((source) => !source)) return null;
+    // Free-text OSM names/categories are not trusted share metadata. A
+    // newline/embedded URL could inject extra links or private-looking facts.
+    const safeText = (value: string) => value
+      .replace(/[\\r\\n\\t\\u0000-\\u001f\\u007f<>]/g, " ")
+      .replace(/https?:\\/\\/\\S+/gi, "[link omitted]")
+      .replace(/\\s+/g, " ")
+      .trim()
+      .slice(0, 140);
+    if (selected.some((candidate) => !safeText(candidate.name))) return null;
     const sample = selected.some((candidate) => candidate.provider_provenance !== "LIVE_PROVIDER");
     return [
       "CityNexus public two-place city discovery",
       ...(sample ? ["sample/unverified location - not real-world verified"] : []),
       ...selected.flatMap((candidate, index) => [
-        `${index + 1}. ${candidate.name} (${candidate.category})`,
+        `${index + 1}. ${safeText(candidate.name)} (${safeText(candidate.category)})`,
         `   OSM source: ${sources[index]}`,
         `   Source: ${candidate.provider_provenance}; captured ${candidate.opening_observed_at}`,
       ]),
