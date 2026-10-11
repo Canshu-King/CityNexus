@@ -345,25 +345,26 @@ function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => 
 }
 
 const GROUP_HEAD: Record<DestinationGroup, [string, string, string, string]> = {
-  /* [中文标题, English title, server field names, dictionary key for the rule sentence].  ORD-0573 加附:
+  /* [中文标题, English title, 决定这一组的服务器字段名, 给旅客看的依据句在字典里的键].  ORD-0573 加附:
      slot 3 is published as a data-* attribute only, because a machine code must not sit in the text node a
-     traveller reads, while the field names must stay checkable against the row. */
+     traveller reads.  It names fields, never verdict values: the values a row actually carries are published
+     per row as data-capability / data-reason-code, which is where a reader checks the rule against the row. */
   supported: [
     "已支持：服务器认得它，而且目录里有东西",
     "Supported: the server names it and holds material",
-    "READY / canonical_destination_id / place_count",
+    "capability / canonical_destination_id / place_count",
     "setup.groupRuleSupported",
   ],
   needs_lookup: [
     "需联网才能解析：服务器现在认不出这个名字",
     "Needs a network lookup: nothing the server consults names it",
-    "NO_CANONICAL_IDENTITY",
+    "reason_code",
     "setup.groupRuleNeedsLookup",
   ],
   unknown: [
     "未知或无数据：这一轮拿不出可规划的判定",
     "Unknown or empty: no plannable verdict came back this round",
-    "HYDRATABLE / UNKNOWN_RETRYABLE / not_answered",
+    "capability / answered",
     "setup.groupRuleUnknown",
   ],
 };
