@@ -1,0 +1,8 @@
+CMD git diff --numstat 061339c0c61e5e0535bc5e003bf3358f3c011e85^ 061339c0c61e5e0535bc5e003bf3358f3c011e85 -- frontend/src
+3	3	frontend/src/features/agent/CopilotDock.tsx
+6	0	frontend/src/i18n/LocaleContext.tsx
+CMD git rev-list --left-right --count 8890f22fe37af40d2919db352be47043b1ea6162...061339c0c61e5e0535bc5e003bf3358f3c011e85
+0	12
+CMD git merge-base --is-ancestor 8890f22fe37af40d2919db352be47043b1ea6162 061339c0c61e5e0535bc5e003bf3358f3c011e85
+ANCESTOR_RC=0
+bare=commit int=commit

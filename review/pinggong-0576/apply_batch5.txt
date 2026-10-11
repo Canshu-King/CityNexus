@@ -1,0 +1,9 @@
+APPLIED gen 49e2f657a9cb family copilot.action 两枚 + copilot.approval 一枚（最严那一档：一轮不超三处） rows 3 keys 3
+PRODUCT_BLOB 0dc43e60b8494b0a713b0c36b60e67e123678cf3
+DICT_BLOB f37fbd0c84ac3886796cdba4642faa96a67801cb
+  KEY copilot.action.stopping en=1525 zh=2956
+  KEY copilot.action.stoppedViaCitynexus en=1526 zh=2957
+  KEY copilot.approval.modifyReview en=1527 zh=2958
+  CALL copilot.action.stopping at lines [358] (改前 358-358)
+  CALL copilot.action.stoppedViaCitynexus at lines [362] (改前 362-362)
+  CALL copilot.approval.modifyReview at lines [466] (改前 466-466)
