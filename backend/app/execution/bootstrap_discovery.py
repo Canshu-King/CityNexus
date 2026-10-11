@@ -1433,8 +1433,12 @@ def discover_bootstrap_candidates(
         select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
     ):
         raise BootstrapDiscoveryError("BOOTSTRAP_PLAN_ALREADY_EXISTS", "bootstrap discovery requires no PlanVersion")
-    if source_kind not in {"FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"}:
-        raise BootstrapDiscoveryError("INVALID_SOURCE_KIND", "source_kind is invalid", status_code=422)
+    if source_kind != "MANUAL_PUBLIC_CENTER":
+        raise BootstrapDiscoveryError(
+            "PUBLIC_CENTER_REQUIRED",
+            "public discovery requires an explicitly selected public map center, not foreground GPS",
+            status_code=422,
+        )
     if not provider_consent:
         raise BootstrapDiscoveryError(
             "PROVIDER_CONSENT_REQUIRED",
