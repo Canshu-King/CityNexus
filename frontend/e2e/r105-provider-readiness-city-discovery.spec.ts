@@ -148,6 +148,11 @@ test("R105 signed A/B readiness gates public city discovery and preserves truthf
     expect(provider.overpassCalls).toHaveLength(0);
     await senderPanel.getByTestId("bootstrap-latitude").fill("31.2304");
     const cityLabel = senderPanel.getByTestId("bootstrap-city-label-confirm");
+    // Editing an already selected public center revokes the previous city
+    // confirmation and provider release consent, even after a valid repair.
+    await expect(cityLabel).not.toBeChecked();
+    await expect(senderPanel.getByTestId("bootstrap-provider-consent")).not.toBeChecked();
+    await cityLabel.check();
     await expect(cityLabel).toBeChecked();
     await cityLabel.uncheck();
     await expect(readiness.getByTestId("bootstrap-discovery-readiness-reason")).toContainText("USER_PUBLIC_AREA_REQUIRED");
@@ -155,6 +160,7 @@ test("R105 signed A/B readiness gates public city discovery and preserves truthf
     await senderPanel.getByTestId("bootstrap-provider-consent").check();
     await expect(readiness.getByTestId("bootstrap-discovery-readiness-reason")).toContainText("READY");
     await senderPanel.getByTestId("bootstrap-search").click();
+    await expect(senderPanel.getByTestId("bootstrap-provider-consent")).not.toBeChecked();
     await expect(senderPanel.getByTestId("bootstrap-discovery-outcome")).toContainText("FOUND_2+");
     await expect(senderPanel.getByTestId("bootstrap-results")).toContainText("R105 Shanghai Museum");
     expect(provider.overpassCalls).toHaveLength(1);
