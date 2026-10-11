@@ -364,6 +364,14 @@ export function BootstrapDiscoveryPanel({
   const [sharedWalkLookupConsent, setSharedWalkLookupConsent] = useState(false);
   const [sharedWalkLookupBusy, setSharedWalkLookupBusy] = useState(false);
   const [sharedWalkMessage, setSharedWalkMessage] = useState<string | null>(null);
+  const [candidateShareOrder, setCandidateShareOrder] = useState<string[]>([]);
+  const [candidateShareConsent, setCandidateShareConsent] = useState(false);
+  const [candidateShareBusy, setCandidateShareBusy] = useState(false);
+  const [candidateShareMessage, setCandidateShareMessage] = useState<string | null>(null);
+  const [sharedWalkSaveOrder, setSharedWalkSaveOrder] = useState<string[]>([]);
+  const [sharedWalkSaveConsent, setSharedWalkSaveConsent] = useState(false);
+  const [sharedWalkSaveBusy, setSharedWalkSaveBusy] = useState(false);
+  const [sharedWalkPocketBudget, setSharedWalkPocketBudget] = useState<number | null>(null);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
@@ -431,6 +439,14 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkLookupConsent(false);
     setSharedWalkLookupBusy(false);
     setSharedWalkMessage(null);
+    setCandidateShareOrder([]);
+    setCandidateShareConsent(false);
+    setCandidateShareBusy(false);
+    setCandidateShareMessage(null);
+    setSharedWalkSaveOrder([]);
+    setSharedWalkSaveConsent(false);
+    setSharedWalkSaveBusy(false);
+    setSharedWalkPocketBudget(null);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -547,6 +563,14 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkLookupConsent(false);
     setSharedWalkLookupBusy(false);
     setSharedWalkMessage(null);
+    setCandidateShareOrder([]);
+    setCandidateShareConsent(false);
+    setCandidateShareBusy(false);
+    setCandidateShareMessage(null);
+    setSharedWalkSaveOrder([]);
+    setSharedWalkSaveConsent(false);
+    setSharedWalkSaveBusy(false);
+    setSharedWalkPocketBudget(null);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -618,6 +642,14 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkLookupConsent(false);
     setSharedWalkLookupBusy(false);
     setSharedWalkMessage(null);
+    setCandidateShareOrder([]);
+    setCandidateShareConsent(false);
+    setCandidateShareBusy(false);
+    setCandidateShareMessage(null);
+    setSharedWalkSaveOrder([]);
+    setSharedWalkSaveConsent(false);
+    setSharedWalkSaveBusy(false);
+    setSharedWalkPocketBudget(null);
     setMessage("Journey changed; choose a new public search area.");
   }, [journeyId, cityName]);
 
@@ -781,6 +813,9 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkParse(parsed);
     setSharedWalkLookup(null);
     setSharedWalkLookupConsent(false);
+    setSharedWalkSaveOrder([]);
+    setSharedWalkSaveConsent(false);
+    setSharedWalkPocketBudget(null);
     setSharedWalkMessage(parsed.ok ? "Preview only: these two public OSM identities are still unverified." : parsed.message);
   };
 
@@ -809,6 +844,9 @@ export function BootstrapDiscoveryPanel({
       if (!stillCurrent()) return;
       setSharedWalkLookup(response);
       setSharedWalkLookupConsent(false);
+      setSharedWalkSaveOrder([]);
+      setSharedWalkSaveConsent(false);
+      setSharedWalkPocketBudget(null);
       setSharedWalkMessage(
         response.status === "LOOKUP_BLOCKED"
           ? "LOOKUP_BLOCKED: the exact public lookup did not answer. The source-only preview remains; no coordinates or save-ready places were invented."
@@ -820,6 +858,63 @@ export function BootstrapDiscoveryPanel({
       if (stillCurrent()) setSharedWalkMessage(error instanceof Error ? error.message : "The exact public lookup could not be completed.");
     } finally {
       if (stillCurrent()) setSharedWalkLookupBusy(false);
+    }
+  };
+
+  const setSharedWalkSavePosition = (candidateId: string, position: 1 | 2) => {
+    setSharedWalkSaveConsent(false);
+    setSharedWalkSaveOrder((current) => {
+      const without = current.filter((id) => id !== candidateId);
+      if (position === 1) return [candidateId, ...without].slice(0, 2);
+      const first = current[0] === candidateId ? current[1] : current[0];
+      return first ? [first, candidateId] : [candidateId];
+    });
+  };
+
+  const saveSharedWalkAsPocketWalk = async () => {
+    if (!sharedWalkLookup?.receipt_id || sharedWalkLookup.verified_count !== 2) {
+      setSharedWalkMessage("Both public identities must be freshly verified before saving a two-stop outing.");
+      return;
+    }
+    if (sharedWalkSaveOrder.length !== 2 || sharedWalkSaveOrder[0] === sharedWalkSaveOrder[1]) {
+      setSharedWalkMessage("Choose the shared places as stop 1 and stop 2 first.");
+      return;
+    }
+    if (!sharedWalkSaveConsent) {
+      setSharedWalkMessage("Confirm that these freshly verified public places should become your private two-stop outing.");
+      return;
+    }
+    const fence = captureDiscoveryFence();
+    const requestGeneration = sharedWalkRequestGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && sharedWalkRequestGeneration.current === requestGeneration;
+    setSharedWalkSaveBusy(true);
+    setSharedWalkMessage(null);
+    try {
+      const saved = await cityNexusApi.saveBootstrapSharedWalkPocketWalk(journeyId, {
+        receipt_id: sharedWalkLookup.receipt_id,
+        first_candidate_id: sharedWalkSaveOrder[0],
+        second_candidate_id: sharedWalkSaveOrder[1],
+        max_walk_minutes: sharedWalkPocketBudget,
+      });
+      if (!stillCurrent()) return;
+      setShortlist(saved.items);
+      setPocketWalk(saved.pocket_walk);
+      setPocketWalkBudget(saved.pocket_walk.max_walk_minutes);
+      setTwoStopOrder([
+        saved.pocket_walk.first_stop.shortlist_id,
+        saved.pocket_walk.second_stop.shortlist_id,
+      ]);
+      setPocketShareConsent(false);
+      setPocketShareMapLink(false);
+      setSharedWalkSaveConsent(false);
+      setSharedWalkMessage("Saved as your private two-stop outing. Map links still require separate consent.");
+    } catch (error) {
+      if (stillCurrent()) {
+        setSharedWalkMessage(error instanceof Error ? error.message : "Your private two-stop outing could not be saved.");
+      }
+    } finally {
+      if (stillCurrent()) setSharedWalkSaveBusy(false);
     }
   };
 
@@ -858,6 +953,9 @@ export function BootstrapDiscoveryPanel({
       });
       if (!isCurrentDiscovery(fence)) return;
       setResult(next);
+      setCandidateShareOrder([]);
+      setCandidateShareConsent(false);
+      setCandidateShareMessage(null);
       setPendingMapPreview(null);
       setMapConsent(false);
       setExploreNotice(null);
@@ -876,6 +974,70 @@ export function BootstrapDiscoveryPanel({
       }
     } finally {
       if (isCurrentDiscovery(fence)) setBusy(false);
+    }
+  };
+
+  const setCandidateSharePosition = (candidateId: string, position: 1 | 2) => {
+    setCandidateShareMessage(null);
+    setCandidateShareConsent(false);
+    setCandidateShareOrder((current) => {
+      const without = current.filter((id) => id !== candidateId);
+      if (position === 1) return [candidateId, ...without].slice(0, 2);
+      const first = current[0] === candidateId ? current[1] : current[0];
+      return first ? [first, candidateId] : [candidateId];
+    });
+  };
+
+  const candidateShareText = () => {
+    if (!result || candidateShareOrder.length !== 2 || candidateShareOrder[0] === candidateShareOrder[1]) return null;
+    const selected = candidateShareOrder
+      .map((candidateId) => result.candidates.find((candidate) => candidate.candidate_id === candidateId) ?? null)
+      .filter((candidate): candidate is BootstrapDiscoveryCandidate => candidate !== null);
+    if (selected.length !== 2) return null;
+    const sources = selected.map((candidate) => safeOsmSourceUrl(candidate.source_url));
+    if (sources.some((source) => !source)) return null;
+    const sample = selected.some((candidate) => candidate.provider_provenance !== "LIVE_PROVIDER");
+    return [
+      "CityNexus public two-place city discovery",
+      ...(sample ? ["sample/unverified location - not real-world verified"] : []),
+      ...selected.flatMap((candidate, index) => [
+        `${index + 1}. ${candidate.name} (${candidate.category})`,
+        `   OSM source: ${sources[index]}`,
+        `   Source: ${candidate.provider_provenance}; captured ${candidate.opening_observed_at}`,
+      ]),
+      "Opening, cost, accessibility, arrival, and guaranteed ETA remain unknown.",
+    ].join("\n");
+  };
+
+  const shareSelectedCandidates = async () => {
+    if (!candidateShareConsent) {
+      setCandidateShareMessage("Confirm the public-only preview before sending or copying these two places.");
+      return;
+    }
+    const text = candidateShareText();
+    if (!text) {
+      setCandidateShareMessage("Choose two candidates with trusted OpenStreetMap source links first.");
+      return;
+    }
+    setCandidateShareBusy(true);
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({ title: "CityNexus public city discovery", text });
+        setCandidateShareMessage("Public-only two-place share sent. No private Journey or member data was included.");
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        setCandidateShareMessage("Public-only two-place share copied. No private Journey or member data was included.");
+      } else {
+        throw new Error("This browser does not provide a share sheet or clipboard.");
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        setCandidateShareMessage("Share cancelled; nothing was sent.");
+      } else {
+        setCandidateShareMessage(error instanceof Error ? error.message : "The public-only share was not completed.");
+      }
+    } finally {
+      setCandidateShareBusy(false);
     }
   };
 
@@ -1732,6 +1894,7 @@ export function BootstrapDiscoveryPanel({
     pocketWalk.second_stop.shortlist_id === twoStopOrder[1],
   );
   const pocketSharePreview = pocketShareText();
+  const candidateSharePreview = candidateShareText();
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -1973,6 +2136,9 @@ export function BootstrapDiscoveryPanel({
                 setSharedWalkParse(null);
                 setSharedWalkLookup(null);
                 setSharedWalkLookupConsent(false);
+                setSharedWalkSaveOrder([]);
+                setSharedWalkSaveConsent(false);
+                setSharedWalkPocketBudget(null);
                 setSharedWalkMessage(null);
               }}
               rows={6}
@@ -1992,6 +2158,9 @@ export function BootstrapDiscoveryPanel({
                 setSharedWalkParse(null);
                 setSharedWalkLookup(null);
                 setSharedWalkLookupConsent(false);
+                setSharedWalkSaveOrder([]);
+                setSharedWalkSaveConsent(false);
+                setSharedWalkPocketBudget(null);
                 setSharedWalkMessage("Import cancelled; no provider request was made.");
               }}
               disabled={sharedWalkLookupBusy}
@@ -2039,6 +2208,72 @@ export function BootstrapDiscoveryPanel({
           {sharedWalkLookup && sharedWalkLookup.status !== "LOOKUP_BLOCKED" ? (
             <div data-testid="bootstrap-shared-walk-results">
               <h3>Fresh recipient-side public evidence</h3>
+              {sharedWalkLookup.verified_count === 2 ? (
+                <section data-testid="bootstrap-shared-walk-save-panel" aria-labelledby="bootstrap-shared-walk-save-title">
+                  <h4 id="bootstrap-shared-walk-save-title">Save this as MY two-stop outing</h4>
+                  <p>
+                    Choose the order, then use one explicit save action. This creates only your private shortlist entries and Pocket Walk;
+                    it does not create a Place, PlanVersion, arrival, booking, or payment.
+                  </p>
+                  <ol data-testid="bootstrap-shared-walk-save-order">
+                    {sharedWalkSaveOrder.map((candidateId, index) => {
+                      const selected = sharedWalkLookup.candidates.find((candidate) => candidate.candidate_id === candidateId);
+                      return selected ? <li key={candidateId}>{index + 1}. {selected.name}</li> : null;
+                    })}
+                  </ol>
+                  <div className="v8-actions">
+                    {sharedWalkLookup.candidates.map((candidate) => (
+                      <span key={candidate.candidate_id}>
+                        <button
+                          type="button"
+                          data-testid={`bootstrap-shared-walk-first-${candidate.candidate_id}`}
+                          onClick={() => setSharedWalkSavePosition(candidate.candidate_id, 1)}
+                          disabled={sharedWalkSaveBusy}
+                        >
+                          Set {candidate.name} as stop 1
+                        </button>
+                        <button
+                          type="button"
+                          data-testid={`bootstrap-shared-walk-second-${candidate.candidate_id}`}
+                          onClick={() => setSharedWalkSavePosition(candidate.candidate_id, 2)}
+                          disabled={sharedWalkSaveBusy}
+                        >
+                          Set as stop 2
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <label>
+                    Optional walking budget
+                    <select
+                      data-testid="bootstrap-shared-walk-pocket-budget"
+                      value={sharedWalkPocketBudget ?? ""}
+                      onChange={(event) => setSharedWalkPocketBudget(event.target.value ? Number(event.target.value) : null)}
+                      disabled={sharedWalkSaveBusy}
+                    >
+                      <option value="">No budget declared</option>
+                      {[15, 20, 30, 45].map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}
+                    </select>
+                  </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      data-testid="bootstrap-shared-walk-save-consent"
+                      checked={sharedWalkSaveConsent}
+                      onChange={(event) => setSharedWalkSaveConsent(event.target.checked)}
+                    />
+                    I agree to save these freshly verified public places as my private two-stop outing.
+                  </label>
+                  <button
+                    type="button"
+                    data-testid="bootstrap-shared-walk-save-pocket"
+                    disabled={sharedWalkSaveBusy || sharedWalkSaveOrder.length !== 2 || !sharedWalkSaveConsent || !sharedWalkLookup.receipt_id}
+                    onClick={() => void saveSharedWalkAsPocketWalk()}
+                  >
+                    {sharedWalkSaveBusy ? "Saving your outing…" : "Save this as MY two-stop outing"}
+                  </button>
+                </section>
+              ) : null}
               {sharedWalkLookup.candidates.map((candidate) => {
                 const source = safeOsmSourceUrl(candidate.source_url);
                 const alreadySaved = shortlist.some((item) => item.external_id === candidate.external_id);
@@ -2177,7 +2412,66 @@ export function BootstrapDiscoveryPanel({
           </p>
         ) : null}
         {result?.candidates?.length ? (
-          <div data-testid="bootstrap-results">
+          <>
+            {result.candidates.length >= 2 ? (
+              <section data-testid="bootstrap-discovery-share" aria-labelledby="bootstrap-discovery-share-title">
+                <h2 id="bootstrap-discovery-share-title">Send two public places to a friend</h2>
+                <p>
+                  Select two source-linked results and share their public identities. You do not need to save a Pocket Walk first;
+                  only the names, public OSM links, source grade, and observation time are included.
+                </p>
+                <ol data-testid="bootstrap-discovery-share-order">
+                  {candidateShareOrder.map((candidateId, index) => {
+                    const selected = result.candidates.find((candidate) => candidate.candidate_id === candidateId);
+                    return selected ? <li key={candidateId}>{index + 1}. {selected.name}</li> : null;
+                  })}
+                </ol>
+                <div className="v8-actions">
+                  {result.candidates.slice(0, 3).map((candidate) => (
+                    <span key={candidate.candidate_id}>
+                      <button
+                        type="button"
+                        data-testid={`bootstrap-share-first-${candidate.candidate_id}`}
+                        onClick={() => setCandidateSharePosition(candidate.candidate_id, 1)}
+                        disabled={candidateShareBusy}
+                      >
+                        Set {candidate.name} as share stop 1
+                      </button>
+                      <button
+                        type="button"
+                        data-testid={`bootstrap-share-second-${candidate.candidate_id}`}
+                        onClick={() => setCandidateSharePosition(candidate.candidate_id, 2)}
+                        disabled={candidateShareBusy}
+                      >
+                        Set as share stop 2
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <pre data-testid="bootstrap-discovery-share-preview">
+                  {candidateSharePreview ?? "Choose two public candidates to preview the share."}
+                </pre>
+                <label>
+                  <input
+                    type="checkbox"
+                    data-testid="bootstrap-discovery-share-consent"
+                    checked={candidateShareConsent}
+                    onChange={(event) => setCandidateShareConsent(event.target.checked)}
+                  />
+                  I agree to share only these two public place identities and their source evidence.
+                </label>
+                <button
+                  type="button"
+                  data-testid="bootstrap-discovery-share"
+                  disabled={!candidateSharePreview || !candidateShareConsent || candidateShareBusy}
+                  onClick={() => void shareSelectedCandidates()}
+                >
+                  {candidateShareBusy ? "Preparing share…" : "Share these two public places"}
+                </button>
+                {candidateShareMessage ? <p role="status" data-testid="bootstrap-discovery-share-message">{candidateShareMessage}</p> : null}
+              </section>
+            ) : null}
+            <div data-testid="bootstrap-results">
             <h2>Source-linked public candidates</h2>
             {result.candidates.slice(0, 3).map((candidate) => (
               <article key={candidate.candidate_id} data-testid={`bootstrap-candidate-${candidate.candidate_id}`}>
@@ -2307,7 +2601,8 @@ export function BootstrapDiscoveryPanel({
                 </button>
               </article>
             ))}
-          </div>
+            </div>
+          </>
         ) : null}
         <section data-testid="bootstrap-shortlist">
           <h2>Your private draft shortlist</h2>
