@@ -187,3 +187,59 @@ def test_r102_python_parser_matches_browser_canonical_url_boundary() -> None:
 def test_r102_parser_rejects_encoded_separators_and_query_fragment(payload: str) -> None:
     with pytest.raises(SharedWalkParseError):
         parse_shared_walk_text(payload)
+
+
+def test_r102_native_selection_reads_member_scope_not_first_shared_row(monkeypatch):
+    """A later member must not materialize another member's old coordinates."""
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from app.execution.bootstrap_discovery import BootstrapDiscoveryError, select_bootstrap_candidate
+    from uuid import UUID
+
+    # A row with A's normalized opening looks eligible, but B's independent
+    # observation is UNKNOWN; B's selection must stop before any Place write.
+    row = RealPlaceCandidate(
+        id="00000000-0000-4000-8000-000000000102",
+        journey_id="journey-102",
+        provider_key="overpass",
+        external_id="overpass:node/102001",
+        city_code="CN-SHANGHAI",
+        name="A stale public name",
+        category="museum",
+        latitude=31.20,
+        longitude=121.40,
+        tags_json='["museum"]',
+        opening_hours_json='{"status":"NORMALIZED_VALID"}',
+        metadata_json='{"cost_evidence":{"status":"UNKNOWN"}}',
+        captured_at="2026-10-11T00:00:00+00:00",
+        expires_at="2099-01-01T00:00:00+00:00",
+        evidence_json=json.dumps({
+            "bootstrap": True, "osm_type": "node", "osm_id": "102001",
+            "bootstrap_scopes": [{
+                "member_id": "B", "traveler_id": "traveler-B",
+                "receipt_id": "00000000-0000-4000-8000-000000000202",
+                "expires_at": "2099-01-01T00:00:00+00:00",
+                "provider_provenance": "TEST_PROVIDER",
+                "observed_name": "B current public name",
+                "observed_category": "gallery",
+                "latitude": 31.30, "longitude": 121.50,
+                "opening_hours": {"status":"UNKNOWN"},
+                "captured_at": "2026-10-11T01:00:00+00:00",
+                "public_access_state":"PUBLIC_ACCESS_UNVERIFIED",
+            }]
+        }),
+        materialized_place_id=None, status="BOOTSTRAP_PRIVATE",
+    )
+    session = MagicMock()
+    session.scalar.side_effect = [None, row]
+    journey = SimpleNamespace(id=row.journey_id, status="DRAFT", active_plan_version_id=None)
+    with pytest.raises(BootstrapDiscoveryError) as error:
+        select_bootstrap_candidate(
+            session, journey,
+            member=SimpleNamespace(id="B"), traveler_id="traveler-B",
+            receipt_id=UUID("00000000-0000-4000-8000-000000000202"),
+            candidate_id=UUID(row.id),
+        )
+    assert error.value.code == "BOOTSTRAP_OPENING_UNVERIFIED"
+    assert not session.add.called
+    assert not session.flush.called
