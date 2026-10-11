@@ -275,6 +275,7 @@ from app.execution.bootstrap_discovery import (
     save_bootstrap_shortlist_item,
     select_bootstrap_candidate,
     lookup_bootstrap_shared_walk,
+    save_bootstrap_shared_walk_pocket_walk,
 )
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
@@ -499,6 +500,7 @@ from app.schemas import (
     BootstrapAdaptiveShortWalkRequest,
     BootstrapPocketWalkSaveRequest,
     BootstrapSharedWalkLookupRequest,
+    BootstrapSharedWalkPocketWalkSaveRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3508,6 +3510,39 @@ def lookup_bootstrap_shared_walk_route(
             traveler_id=principal.traveler_id,
             objects=[item.model_dump() for item in payload.objects],
             provider_consent=payload.provider_consent,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shared-walk/pocket-walk")
+def save_bootstrap_shared_walk_pocket_walk_route(
+    journey_id: UUID,
+    payload: BootstrapSharedWalkPocketWalkSaveRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Atomically save two recipient-verified identities and their private Pocket Walk."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = save_bootstrap_shared_walk_pocket_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id,
+            first_candidate_id=payload.first_candidate_id,
+            second_candidate_id=payload.second_candidate_id,
+            max_walk_minutes=payload.max_walk_minutes,
         )
         session.commit()
         return result
