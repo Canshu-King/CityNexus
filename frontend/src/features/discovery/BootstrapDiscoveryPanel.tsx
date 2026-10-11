@@ -13,6 +13,7 @@ import {
   type BootstrapTwoStopWalkabilityResponse,
   type BootstrapAdaptiveShortWalkResponse,
   type BootstrapPocketWalkResponse,
+  type BootstrapPocketWalkGoResponse,
   type BootstrapSharedWalkLookupResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
@@ -363,6 +364,8 @@ export function BootstrapDiscoveryPanel({
   const [pocketWalkBudget, setPocketWalkBudget] = useState<number | null>(null);
   const [pocketWalkBusy, setPocketWalkBusy] = useState(false);
   const [pocketWalkMessage, setPocketWalkMessage] = useState<string | null>(null);
+  const [pocketGoBusy, setPocketGoBusy] = useState(false);
+  const [pocketGoMessage, setPocketGoMessage] = useState<string | null>(null);
   const [pocketShareConsent, setPocketShareConsent] = useState(false);
   const [pocketShareMapLink, setPocketShareMapLink] = useState(false);
   const [sharedWalkText, setSharedWalkText] = useState("");
@@ -394,6 +397,7 @@ export function BootstrapDiscoveryPanel({
   const twoStopReleaseGeneration = useRef(0);
   const adaptiveRequestGeneration = useRef(0);
   const pocketRequestGeneration = useRef(0);
+  const pocketGoRequestGeneration = useRef(0);
   const pocketClearPromiseRef = useRef<Promise<void> | null>(null);
   const sharedWalkRequestGeneration = useRef(0);
   const discoveryWalkRequestGeneration = useRef(0);
@@ -522,6 +526,7 @@ export function BootstrapDiscoveryPanel({
     citySearchGeneration.current += 1;
     // Invalidate pending A Pocket Walk mutations before any B state renders.
     pocketRequestGeneration.current += 1;
+    pocketGoRequestGeneration.current += 1;
     sharedWalkRequestGeneration.current += 1;
     discoveryWalkRequestGeneration.current += 1;
     pocketClearPromiseRef.current = null;
@@ -581,6 +586,8 @@ export function BootstrapDiscoveryPanel({
     setPocketWalkBudget(null);
     setPocketWalkBusy(false);
     setPocketWalkMessage(null);
+    setPocketGoBusy(false);
+    setPocketGoMessage(null);
     setPocketShareConsent(false);
     setPocketShareMapLink(false);
     setSharedWalkText("");
@@ -631,6 +638,7 @@ export function BootstrapDiscoveryPanel({
     discoveryWalkRequestGeneration.current += 1;
     // Prior Journey requests must never rehydrate the new Journey's card.
     pocketRequestGeneration.current += 1;
+    pocketGoRequestGeneration.current += 1;
     pocketClearPromiseRef.current = null;
     setSourceKind("MANUAL_PUBLIC_CENTER");
     setOutingIntent(null);
@@ -666,6 +674,8 @@ export function BootstrapDiscoveryPanel({
     setPocketWalkBudget(null);
     setPocketWalkBusy(false);
     setPocketWalkMessage(null);
+    setPocketGoBusy(false);
+    setPocketGoMessage(null);
     setPocketShareConsent(false);
     setPocketShareMapLink(false);
     setSharedWalkText("");
@@ -947,6 +957,9 @@ export function BootstrapDiscoveryPanel({
       if (!stillCurrent()) return;
       setShortlist(saved.items);
       setPocketWalk(saved.pocket_walk);
+      pocketGoRequestGeneration.current += 1;
+      setPocketGoBusy(false);
+      setPocketGoMessage(null);
       setPocketWalkBudget(saved.pocket_walk.max_walk_minutes);
       setTwoStopOrder([
         saved.pocket_walk.first_stop.shortlist_id,
@@ -1500,10 +1513,13 @@ export function BootstrapDiscoveryPanel({
     if (pocketClearPromiseRef.current) await pocketClearPromiseRef.current;
     if (!isCurrentDiscovery(fence)) return;
     const requestGeneration = ++pocketRequestGeneration.current;
+    pocketGoRequestGeneration.current += 1;
     const stillCurrent = () =>
       isCurrentDiscovery(fence) && pocketRequestGeneration.current === requestGeneration;
     const hadSavedPocket = pocketWalk !== null;
     setPocketWalk(null);
+    setPocketGoBusy(false);
+    setPocketGoMessage(null);
     setPocketShareConsent(false);
     setPocketShareMapLink(false);
     setPocketWalkMessage(null);
@@ -1541,6 +1557,7 @@ export function BootstrapDiscoveryPanel({
     if (pocketClearPromiseRef.current) await pocketClearPromiseRef.current;
     if (!isCurrentDiscovery(fence)) return;
     const requestGeneration = ++pocketRequestGeneration.current;
+    pocketGoRequestGeneration.current += 1;
     const stillCurrent = () =>
       isCurrentDiscovery(fence) && pocketRequestGeneration.current === requestGeneration;
     setPocketWalkBusy(true);
@@ -1553,6 +1570,8 @@ export function BootstrapDiscoveryPanel({
       });
       if (!stillCurrent()) return;
       setPocketWalk(saved);
+      setPocketGoBusy(false);
+      setPocketGoMessage(null);
       setPocketWalkBudget(saved.max_walk_minutes);
       setPocketShareConsent(false);
       setPocketShareMapLink(false);
@@ -1565,6 +1584,78 @@ export function BootstrapDiscoveryPanel({
       if (stillCurrent()) setPocketWalkBusy(false);
     }
   };
+
+  const transitionPocketWalkGo = async (
+    action: "START" | "REPORT_FIRST_DONE" | "START_SECOND" | "HEAD_TO_SECOND" | "REPORT_WALK_DONE" | "PAUSE" | "RESUME" | "UNDO",
+  ) => {
+    const currentPocket = pocketWalk;
+    if (!currentPocket || pocketGoBusy) return;
+    const currentProgress = currentPocket.go_progress;
+    const fence = captureDiscoveryFence();
+    const requestIdentityGeneration = identityGeneration.current;
+    const requestGeneration = ++pocketGoRequestGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) &&
+      isCurrentIdentity(fence.bearer, requestIdentityGeneration) &&
+      journeyIdRef.current === journeyId &&
+      pocketGoRequestGeneration.current === requestGeneration &&
+      pocketWalk?.pocket_walk_id === currentPocket.pocket_walk_id &&
+      pocketWalk?.revision === currentPocket.revision;
+    setPocketGoBusy(true);
+    setPocketGoMessage(null);
+    try {
+      const updated: BootstrapPocketWalkGoResponse = await cityNexusApi.transitionBootstrapPocketWalkGo(journeyId, {
+        action,
+        expected_revision: currentProgress.progress_revision,
+        pocket_walk_revision: currentPocket.revision,
+        idempotency_key: crypto.randomUUID(),
+      });
+      if (!stillCurrent()) return;
+      if (
+        updated.journey_id !== journeyId ||
+        updated.pocket_walk.pocket_walk_id !== currentPocket.pocket_walk_id ||
+        updated.pocket_walk.revision !== currentPocket.revision ||
+        updated.go_progress.progress_class !== "USER_REPORTED_PROGRESS" ||
+        updated.go_progress.physical_arrival_state !== "NOT_PHYSICAL_ARRIVAL_PROVEN"
+      ) {
+        throw new Error("The server returned progress for a different walk; reload before continuing.");
+      }
+      setPocketWalk(updated.pocket_walk);
+      setPocketGoMessage("Saved on this signed member's server record. This is your self-report; physical arrival is not verified.");
+    } catch (error) {
+      if (!stillCurrent()) return;
+      setPocketGoMessage(error instanceof Error ? error.message : "GO MODE progress could not be saved.");
+      try {
+        const refreshed = await cityNexusApi.getBootstrapShortlist(journeyId);
+        if (!stillCurrent()) return;
+        const nextPocket = refreshed.pocket_walk;
+        if (!nextPocket || nextPocket.pocket_walk_id !== currentPocket.pocket_walk_id) {
+          setPocketWalk(nextPocket);
+          setPocketGoMessage("The saved walk changed. The latest server state is shown; review it before continuing.");
+        } else {
+          setPocketWalk(nextPocket);
+          setPocketGoMessage("Another tab changed GO MODE. The latest server progress has been restored.");
+        }
+      } catch {
+        // Keep the last server-verified state visible and retain the error.
+      }
+    } finally {
+      if (stillCurrent()) setPocketGoBusy(false);
+    }
+  };
+
+  const pocketGoState = pocketWalk?.go_progress.state ?? "NOT_STARTED";
+  const pocketGoNextAction = (() => {
+    if (pocketGoState === "NOT_STARTED") return "Start your walk when you are ready.";
+    if (pocketGoState === "HEADING_TO_FIRST") return `Explore ${pocketWalk?.first_stop.name ?? "stop 1"}, then report it finished if you choose.`;
+    if (pocketGoState === "FIRST_STOP_DONE_SELF_REPORTED") return `Continue to ${pocketWalk?.second_stop.name ?? "stop 2"} when you are ready.`;
+    if (pocketGoState === "HEADING_TO_SECOND") return "Explore stop 2, then report the walk finished if you choose.";
+    if (pocketGoState === "WALK_DONE_SELF_REPORTED") return "Your self-reported walk is complete. You can undo the latest report.";
+    if (pocketGoState === "PAUSED") return "Your walk is paused. Resume when you choose.";
+    return "Choose the next safe action.";
+  })();
+
+  const savedPocketStop = (shortlistId: string) => shortlist.find((item) => item.shortlist_id === shortlistId) ?? null;
 
   const pocketShareText = () => {
     if (!pocketWalk) return null;
@@ -3379,6 +3470,69 @@ export function BootstrapDiscoveryPanel({
                     Back to full exploration
                   </button>
                 </div>
+                <section data-testid="bootstrap-pocket-go-mode" aria-labelledby="bootstrap-pocket-go-mode-title">
+                  <h4 id="bootstrap-pocket-go-mode-title">GO MODE · take this walk</h4>
+                  <p>
+                    This is a server-saved companion for your two-stop intention. Every progress action is an explicit
+                    <strong> USER_REPORTED_PROGRESS</strong> self-report; opening a map never advances it and physical arrival is not verified.
+                  </p>
+                  <ol data-testid="bootstrap-pocket-go-stops">
+                    {[pocketWalk.first_stop, pocketWalk.second_stop].map((stop) => {
+                      const source = safeOsmSourceUrl(stop.source_url);
+                      const saved = savedPocketStop(stop.shortlist_id);
+                      return (
+                        <li key={stop.shortlist_id}>
+                          <strong>{stop.position}. {stop.name}</strong> · source grade {stop.source_provenance} · observed {stop.captured_at} · opening {saved?.opening_state ?? "UNKNOWN"} · price {saved?.price_state ?? "UNKNOWN"} · access {saved?.public_access_state ?? "UNKNOWN"} · ETA UNKNOWN
+                          {source ? <> · <a href={source} target="_blank" rel="noopener noreferrer">OSM source</a></> : null}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                  <p data-testid="bootstrap-pocket-go-state">
+                    Progress: <strong>{pocketGoState}</strong> · {pocketWalk.go_progress.evidence_class} · {pocketWalk.go_progress.physical_arrival_state}
+                  </p>
+                  <p data-testid="bootstrap-pocket-go-next">Next safe action: {pocketGoNextAction}</p>
+                  <p data-testid="bootstrap-pocket-go-stale-label">{pocketWalk.go_progress.stale_label}{pocketWalk.go_progress.updated_at ? ` Last saved ${pocketWalk.go_progress.updated_at}.` : " No progress has been reported yet."}</p>
+                  <div className="v8-actions">
+                    {pocketGoState === "NOT_STARTED" ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-start" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("START")}>
+                        {pocketGoBusy ? "Starting…" : "Start my walk"}
+                      </button>
+                    ) : null}
+                    {pocketGoState === "HEADING_TO_FIRST" ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-report-first" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("REPORT_FIRST_DONE")}>
+                        I finished exploring stop 1
+                      </button>
+                    ) : null}
+                    {pocketGoState === "FIRST_STOP_DONE_SELF_REPORTED" ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-start-second" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("START_SECOND")}>
+                        Head to stop 2
+                      </button>
+                    ) : null}
+                    {pocketGoState === "HEADING_TO_SECOND" ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-report-done" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("REPORT_WALK_DONE")}>
+                        I finished my walk
+                      </button>
+                    ) : null}
+                    {pocketGoState === "PAUSED" ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-resume" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("RESUME")}>
+                        Resume walk
+                      </button>
+                    ) : null}
+                    {pocketGoState !== "NOT_STARTED" && pocketGoState !== "WALK_DONE_SELF_REPORTED" && pocketGoState !== "PAUSED" ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-pause" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("PAUSE")}>
+                        Pause
+                      </button>
+                    ) : null}
+                    {pocketWalk.go_progress.can_undo ? (
+                      <button type="button" data-testid="bootstrap-pocket-go-undo" disabled={pocketGoBusy} onClick={() => void transitionPocketWalkGo("UNDO")}>
+                        Undo latest self-report
+                      </button>
+                    ) : null}
+                  </div>
+                  {pocketGoMessage ? <p role="status" data-testid="bootstrap-pocket-go-message">{pocketGoMessage}</p> : null}
+                  <p>Map navigation stays separate: use the controls above, and report progress here only after you choose to do so.</p>
+                </section>
                 <h4>Share public walk</h4>
                 <p>
                   Review this exact public-only text before sending or copying it. It contains no member, traveler, Journey,
