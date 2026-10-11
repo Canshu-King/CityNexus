@@ -18,6 +18,8 @@ onto this work branch before the R104 acceptance run:
 - `05735a149e` — reject an ordinary discovery receipt attempting to authorize a
   friend's atomic Pocket Walk.
 
+Acceptance test and result-report commit: `f39ab0ef6b8335fe03a0017d2bbdba7ac8a9dcd8`.
+
 ## Controlled signed A/B evidence
 
 Run: `r104-two-place-20261012-g`
