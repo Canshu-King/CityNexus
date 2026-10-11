@@ -1,0 +1,17 @@
+APPLIED file frontend/src/features/agent/CopilotDock.tsx tip ad6a96bf6039 rows 7 keys 6
+PRODUCT_BLOB 3ecb5aabe9f935a1efcbfe532702b0413cc4c50f
+DICT_BLOB e747b4b955eb223def56ab8bc529d5de76f05e3d
+EN_BLOCK 8..1493  ZH_BLOCK 1496..2890
+  copilot.mission.workingOnRequest	def_lines [1488, 2885]
+  copilot.mission.ranAgainstFacts	def_lines [1489, 2886]
+  copilot.mission.checkingFacts	def_lines [1490, 2887]
+  copilot.mission.viewSafePlan	def_lines [1491, 2888]
+  copilot.mission.needsAuthority	def_lines [1492, 2889]
+  copilot.mission.stop	def_lines [1493, 2890]
+  after 394	<b>{t("copilot.mission.workingOnRequest")}</b>
+  after 397	? t("copilot.mission.ranAgainstFacts")
+  after 398	: t("copilot.mission.checkingFacts")}
+  after 407	{t("copilot.mission.checkingFacts")}
+  after 428	<summary>{t("copilot.mission.viewSafePlan")}</summary>
+  after 433	{step.requires_authority && <small>{t("copilot.mission.needsAuthority")}</small>}
+  after 478	{active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{t("copilot.mission.s
