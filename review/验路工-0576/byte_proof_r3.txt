@@ -1,0 +1,5 @@
+PROVEN
+keys_checked=3 keys_reading_t_in_candidate=3
+SIDES live.adjustTodayOnly -> 374:Adjust today only 1829:仅调整今天
+SIDES live.remindMeLater -> 375:Remind me later 1830:稍后提醒
+SIDES live.nothingToDecide -> 376:There is nothing for you to decide right now. 1831:当前没有需要你决定的调整。

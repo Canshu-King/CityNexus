@@ -1,0 +1,16 @@
+sha=67bb07473cb939d440c4e9a480e622c43586da44 files=31 totals={'A': 207, 'B_same_line': 359, 'B_over_lines': 167}
+FILE frontend/src/features/execution/LiveRecovery.tsx rows=20 arm_A=13 arm_B=7
+  A frontend/src/features/execution/LiveRecovery.tsx:77 | ? "暂时无法获取这段路线的可靠通行时间，因此没有自动修改你的行程。你可以稍后重试，或手动选择替代地点。"       
+  A frontend/src/features/execution/LiveRecovery.tsx:82 | ? "附近没有可以替换这处行程的合适地点。"       : "No suitable replacement plac
+  A frontend/src/features/execution/LiveRecovery.tsx:87 | ? "没能确定这次变化影响的是哪一段行程。"       : "We could not tell which stop
+  A frontend/src/features/execution/LiveRecovery.tsx:92 | ? "这一段属于你已确认不能动的安排，需要你手动处理。"       : "This stop is part of a
+  A frontend/src/features/execution/LiveRecovery.tsx:97 | ? "暂时无法自动调整这段行程，请稍后重试或手动处理。"     : "We couldn't adjust this 
+  A frontend/src/features/execution/LiveRecovery.tsx:314 | ? "服务器摘要：这台设备还没读到"                 : "Server summary: not re
+  A frontend/src/features/execution/LiveRecovery.tsx:345 | ? "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。"             : "Seen, stil
+  A frontend/src/features/execution/LiveRecovery.tsx:380 | ? "已确认的预订和到达/离开时间保持不变。"                     : "Confirmed boo
+  A frontend/src/features/execution/LiveRecovery.tsx:383 | ? "注意：部分已确认内容会受影响。"                     : "Note: some confir
+  A frontend/src/features/execution/LiveRecovery.tsx:417 | ? "应用中…" : "Applying…"
+  A frontend/src/features/execution/LiveRecovery.tsx:418 | ? "接受新方案" : "Accept new plan"
+  A frontend/src/features/execution/LiveRecovery.tsx:427 | ? "只调整今天：已记录，今天的安排会优先。" : "Adjust today only: noted."
+  A frontend/src/features/execution/LiveRecovery.tsx:463 | ? "刚才的行程变化已经处理好，已确认的预订保持不变。"             : "The earlier disr
+files_matched=1

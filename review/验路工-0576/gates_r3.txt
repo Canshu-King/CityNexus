@@ -1,0 +1,20 @@
+验路工 · 0576 批二 r3 复尺（把现尖并进枝之后再量一遍）
+[1] worktree=/d/moodle/_qoder_yanlugong_0576_r2 branch=review/验路工-0576-r2 干净改动条数=0
+[2] 现尖（ls-remote 现取）=ad6a96bf60396b5bc1a8a8bb32b6f45697529337 refs/heads/mirror/integration-frontend-apple-pass1
+[3] 并尖前：枝里不含现尖（git merge-base --is-ancestor 判否），故按常例 merge 不 rebase（枝已发布）
+[4] merge 预测只读尺 git merge-tree --write-tree 回 rc=0 且冲突文件名 0 条 → 真 merge 同判：rc=0，无冲突
+[5] merge 提交=67bb07473cb939d440c4e9a480e622c43586da44；带进来的产品文件 2 个：frontend/src/app/V8Experience.tsx、frontend/src/i18n/LocaleContext.tsx（+20 行 / -8 行）
+[6] 我这三枚键在并尖后仍各只有一份定义、两侧齐全（LocaleContext.tsx 里每键命中 2 处）：
+    live.adjustTodayOnly en :374 zh :1829 ｜ live.remindMeLater en :375 zh :1830 ｜ live.nothingToDecide en :376 zh :1831
+[7] 组件侧读数（LiveRecovery.tsx 现读）：:425 t("live.adjustTodayOnly") ／ :434 t("live.remindMeLater") ／ :449 t("live.nothingToDecide")
+[8] 全量类型检查 npx tsc -p tsconfig.typecheck.json --noEmit → 退出码 0，错误条数 0，见 review/验路工-0576/typecheck_full_r3.txt:1
+[9] 上屏码闸 codes_on_screen_gate_r4.py --only-added --require-name --refuse（ref=67bb0747 base=ad6a96bf）→ 退出码 0
+[10] 该闸判定行：review/验路工-0576/gate_r4_candidate_r3.txt:1 = files_judged=2 refuse=0 info=29 corpus=1254
+[11] 逐字节对账 review/验路工-0576/byte_proof_r3.txt:1 = PROVEN，keys_checked=3 keys_reading_t_in_candidate=3
+[12] 负对照（同一把尺只喂现尖，不给我的枝）review/验路工-0576/byte_proof_r3_negative.txt:15 = NEG_RC=1，FAIL 行数 10 → 尺不是空转
+[13] 内联双语普查（同一把尺两个臂，逐字面量只认三元式与对象对）：
+     现尖 review/验路工-0576/census_r2_base_ad6a96bf60.json:5 = A 210 处（总数在 :4 那段）
+     我的枝 review/验路工-0576/census_r2_head_67bb07473c.json:5 = A 207 处
+     差 = 3 处，正好等于批二搬走的三条字面量；B 两臂 359/167 处 未动
+[14] 下一批待办清单（现尖同代读数，不是我记的）：LiveRecovery.tsx 还剩 A 臂 13 处，逐行坐标见 review/验路工-0576/rest_liverecovery_r3.txt:3 起（:2 该行给 arm_A=13）
+[15] 取清单的尺 review/验路工-0576/rest_list_r3.py 读的是普查产物本身；对不上文件名即 rc=3 拒答，不回报空表

@@ -1,0 +1,15 @@
+FAILED
+keys_checked=3 keys_reading_t_in_candidate=0
+SIDES live.adjustTodayOnly -> 
+SIDES live.remindMeLater -> 
+SIDES live.nothingToDecide -> 
+FAIL live.adjustTodayOnly: candidate still renders the inline pair
+FAIL live.adjustTodayOnly: candidate does not read the key
+FAIL live.adjustTodayOnly: expected the key on both dictionary sides, found 0
+FAIL live.remindMeLater: candidate still renders the inline pair
+FAIL live.remindMeLater: candidate does not read the key
+FAIL live.remindMeLater: expected the key on both dictionary sides, found 0
+FAIL live.nothingToDecide: candidate still renders the inline pair
+FAIL live.nothingToDecide: candidate does not read the key
+FAIL live.nothingToDecide: expected the key on both dictionary sides, found 0
+NEG_RC=1
