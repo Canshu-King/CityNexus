@@ -1,0 +1,11 @@
+ORD-0576 批一 加闸工 读数件 r2：号令者两把尺与形制闸的改前改后对照（都在本枝与现尖两代各跑一遍）
+对齐尺跑本枝：命令原样 python live_checks/_cmdr_dict_copy_lang_check_r1.py（我把它的 REPO 指到自己那棵工作树、LINE 指到本枝名，读的是 push 之后的枝；原样输出在 review/jiazagong-0576/lang_check_branch.txt，第 1 行是枝尖、第 4 行是 ONE_SIDED、第 5 行是 EN_SIDE_HAS_CJK），EN_KEYS 1250 与 ZH_KEYS 1250 与 BOTH 1250、ONE_SIDED 0、EN_SIDE_HAS_CJK 0、SAME_TEXT 13、DRIFT 0、PLACEHOLDER_KEYS 136、ZH_SIDE_LATIN_ONLY 11（他标的那档只是提示）
+SAME_TEXT 那 13 枚逐枚是 agent.* / discovery.* / exec.* / intel.* / mobile.* / nav.* / shell.* / spend.* 那几枚专名与占位符，本枝八枚键一枚都不在里头，新键 itinerary.stopDisrupted 两侧异文（Affected 与 受影响）
+形制闸改前（现尖那代字典 + 现尖那代 frontend/src）：1248 bilingual keys: 1248 agree, 0 clash
+形制闸改后（本枝那代）：1249 bilingual keys: 1249 agree, 0 clash
+NO_GROWTH 改前 0 values changed; zh gained chars: 0, en over +8: 0 / 改后 0 values changed; zh gained chars: 0, en over +8: 0（两侧同值：我这轮只加键、不改任何已有值）
+RENDERED 改前 1249 distinct key names (1249 readable by the single-line parser; 1 rows carry their value on the next line and 0 of tho / 改后 1250 distinct key names (1250 readable by the single-line parser; 1 rows carry their value on the next line and 0 of tho
+LADDER_TIER④_EMPTY_ACTION 改前 66 read key(s) in this tier's population, 54 miss the shape (9 unread row(s) counted out, they b / 改后 67 read key(s) in this tier's population, 54 miss the shape (8 unread row(s) counted out, they b —— 群体多一枚（就是我那枚新键），miss 数不动（54 对 54），那 54 枚是线自带的、不是我带来的
+LADDER_TIER⑥_ESTIMATE_PREFIX 改前 10 read key(s) in this tier's population, 3 miss the shape (2 unread row(s) counted out, they be / 改后 10 read key(s) in this tier's population, 3 miss the shape (2 unread row(s) counted out, they be（逐字同数，线自带）
+HARDCODED_FALLBACK 改前 tierA=2 tierB=80 / 改后 tierA=2 tierB=80（按文件计数：这枚文件还剩五处模板对，所以文件仍在名单里、数不变，下一轮吃完才该动）
+复算两条命令原样：python tools/cnx_copy_tiers_r1.py --i18n <字典> --baseline <基线字典> --src <那代 frontend/src>；python live_checks/_cmdr_dict_copy_lang_check_r1.py
