@@ -2194,6 +2194,199 @@ def save_bootstrap_shared_walk_pocket_walk(
     }
 
 
+def save_bootstrap_discovery_pocket_walk(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    receipt_id: UUID,
+    first_candidate_id: UUID,
+    second_candidate_id: UUID,
+    max_walk_minutes: int | None,
+) -> dict[str, Any]:
+    """Atomically turn two current manual-center discoveries into a private walk.
+
+    This endpoint is deliberately separate from the friend-import path.  The
+    requested receipt must contain both candidates under the same signed member
+    and traveler scope, and only ``MANUAL_PUBLIC_CENTER`` observations qualify.
+    All candidate and quota checks happen before either shortlist row is created;
+    the route transaction then commits both rows and the Pocket Walk together.
+    """
+
+    if first_candidate_id == second_candidate_id:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_DISCOVERY_POCKET_STOPS_NOT_DISTINCT",
+            "a discovery Pocket Walk requires two different public places",
+            status_code=422,
+        )
+    if max_walk_minutes is not None and not 1 <= int(max_walk_minutes) <= 180:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_BUDGET_INVALID",
+            "the optional walking budget must be between 1 and 180 minutes",
+            status_code=422,
+        )
+
+    # Serialize the bounded three-item invariant before checking the quota.
+    locked = session.execute(
+        update(Journey)
+        .where(Journey.id == journey.id)
+        .values(updated_at=Journey.updated_at)
+    )
+    if locked.rowcount != 1:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_JOURNEY_NOT_FOUND",
+            "Journey disappeared while saving the discovery Pocket Walk",
+            status_code=404,
+        )
+    session.flush()
+    locked_journey = session.get(Journey, journey.id)
+    if locked_journey is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_JOURNEY_NOT_FOUND",
+            "Journey disappeared while saving the discovery Pocket Walk",
+            status_code=404,
+        )
+    if str(locked_journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "a discovery Pocket Walk can be saved only for a DRAFT Journey",
+        )
+    if locked_journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == locked_journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "a discovery Pocket Walk can be saved only before a PlanVersion exists",
+        )
+
+    candidate_rows = session.scalars(
+        select(RealPlaceCandidate).where(
+            RealPlaceCandidate.id.in_([str(first_candidate_id), str(second_candidate_id)]),
+            RealPlaceCandidate.journey_id == locked_journey.id,
+            RealPlaceCandidate.provider_key == "overpass",
+        )
+    ).all()
+    by_id = {str(row.id): row for row in candidate_rows}
+    ordered_rows: list[tuple[RealPlaceCandidate, dict[str, Any]]] = []
+    seen_external_ids: set[str] = set()
+    for candidate_id in (first_candidate_id, second_candidate_id):
+        row = by_id.get(str(candidate_id))
+        if row is None:
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_CANDIDATE_NOT_FOUND",
+                "both discovery stops must belong to this Journey",
+                status_code=404,
+            )
+        if row.status != "BOOTSTRAP_PRIVATE" or row.materialized_place_id is not None:
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_CANDIDATE_UNAVAILABLE",
+                "both discovery stops must remain private, unmaterialized candidates",
+                status_code=409,
+            )
+        scope = _bootstrap_scope_for_request(
+            row, member=member, traveler_id=traveler_id, receipt_id=receipt_id
+        )
+        if scope.get("source_kind") != "MANUAL_PUBLIC_CENTER":
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_DISCOVERY_MANUAL_CENTER_REQUIRED",
+                "a personal discovery Pocket Walk requires the current manual public-center receipt",
+                status_code=403,
+            )
+        observation = _scope_observation(row, scope)
+        if observation["public_access_state"] == "RESTRICTED":
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_DISCOVERY_RESTRICTED_PLACE",
+                "restricted public access cannot be saved as a personal Pocket Walk stop",
+                status_code=422,
+            )
+        osm = _osm_identity(
+            DiscoveryCandidate(
+                provider_key=row.provider_key,
+                external_id=row.external_id,
+                name=observation["name"],
+                category=observation["category"],
+                latitude=observation["latitude"],
+                longitude=observation["longitude"],
+                tags=(),
+                opening_hours={},
+                metadata={},
+            )
+        )
+        if osm is None:
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_IDENTITY_INVALID",
+                "both discovery stops must have valid OSM identities",
+                status_code=422,
+            )
+        if row.external_id in seen_external_ids:
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_DISCOVERY_POCKET_STOPS_NOT_DISTINCT",
+                "a discovery Pocket Walk requires two different OSM identities",
+                status_code=422,
+            )
+        seen_external_ids.add(row.external_id)
+        ordered_rows.append((row, scope))
+
+    existing_rows = session.scalars(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.journey_id == locked_journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    ).all()
+    existing_external_ids = {row.external_id for row in existing_rows}
+    new_count = sum(1 for row, _scope in ordered_rows if row.external_id not in existing_external_ids)
+    if len(existing_rows) + new_count > _MAX_SHORTLIST_ITEMS:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_SHORTLIST_LIMIT",
+            "a draft shortlist can contain at most three public places",
+            status_code=409,
+            details={"limit": _MAX_SHORTLIST_ITEMS, "next_actions": ["REMOVE_A_PLACE", "CHOOSE_ANOTHER_CANDIDATE"]},
+        )
+
+    first = save_bootstrap_shortlist_item(
+        session,
+        locked_journey,
+        member=member,
+        traveler_id=traveler_id,
+        receipt_id=receipt_id,
+        candidate_id=first_candidate_id,
+    )
+    second = save_bootstrap_shortlist_item(
+        session,
+        locked_journey,
+        member=member,
+        traveler_id=traveler_id,
+        receipt_id=receipt_id,
+        candidate_id=second_candidate_id,
+    )
+    pocket = save_bootstrap_pocket_walk(
+        session,
+        locked_journey,
+        member=member,
+        traveler_id=traveler_id,
+        first_shortlist_id=UUID(str(first["shortlist_id"])),
+        second_shortlist_id=UUID(str(second["shortlist_id"])),
+        max_walk_minutes=max_walk_minutes,
+    )
+    rows = session.scalars(
+        select(MemberDraftShortlistItem)
+        .where(
+            MemberDraftShortlistItem.journey_id == locked_journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+        .order_by(MemberDraftShortlistItem.created_at, MemberDraftShortlistItem.id)
+    ).all()
+    return {
+        "pocket_walk": pocket,
+        "items": [_shortlist_payload(row) for row in rows],
+    }
+
+
 def preview_bootstrap_candidate(
     session: Session,
     journey: Journey,
