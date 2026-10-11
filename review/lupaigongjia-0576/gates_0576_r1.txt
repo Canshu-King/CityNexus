@@ -1,0 +1,8 @@
+ORD-0576 闸退出码（逐条现记，命令原样见交块第四节）
+tsc_full_exit=0 tsc_error_lines=0   命令 node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit （带探针件时那一次）
+tsc_final_exit=0 tsc_error_lines=0  同一条命令，删掉 frontend/src/__verify0576 探针件后在终树复跑
+build_exit=0                        命令 npm run build
+parity_script_exit=1                命令 python frontend/scripts/i18n_detail2_parity_r1.py（红在既存那枚 me.asksBeforeProtectedChange，尖上同红）
+dict_key_arm_exit=0                 命令 _cmdr_dict_key_arm_r1.py --repo D:/moodle/CityNexus --tip 8a44ea61aeb81d999a17913a18828b725ea463f2 --cand 21f65a318f80cd59f0e0c543b787f34d1b43cdf4
+ls_remote_tip=8a44ea61aeb81d999a17913a18828b725ea463f2
+ls_remote_cand=21f65a318f80cd59f0e0c543b787f34d1b43cdf4
