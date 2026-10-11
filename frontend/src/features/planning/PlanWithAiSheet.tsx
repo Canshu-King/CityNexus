@@ -191,27 +191,21 @@ export function statusCopy(
   if (s === "COMPLETED" || s === "SUCCEEDED") {
     return {
       title: zh ? `已生成 ${planCount} 个可选方案` : `${planCount} ${englishCountNoun(planCount, "candidate plan")} ready`,
-      body: zh
-        ? "去“今天”对比这几个方案，选一个再继续。"
-        : "Compare them on Today, then choose one to continue.",
+      body: t("plan.plansReadyBody"),
       tone: "ok",
     };
   }
   if (s === "CANCELLED") {
     return {
       title: t("bookings.realtimeCancelled"),
-      body: zh
-        ? "请求已中止，你的行程没有被改动。可以改个说法再来一次。"
-        : "The request was aborted. Your trip is untouched — rephrase and try again.",
+      body: t("plan.cancelledBody"),
       tone: "neutral",
     };
   }
   if (s === "CANCELLED_AFTER_SEND") {
     return {
       title: t("planning.stoppedBeforeVerification"),
-      body: zh
-        ? "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
-        : "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
+      body: t("plan.cancelledAfterSendBody"),
       tone: "warn",
     };
   }
@@ -222,36 +216,28 @@ export function statusCopy(
        counter-examples this branch exists to refuse. */
     return {
       title: t("planning.thisOneSResultIsUnknownNotItDidNotHappen"),
-      body: zh
-        ? "这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。"
-        : "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
+      body: t("plan.keylessWriteDeadlineBody"),
       tone: "warn",
     };
   }
   if (s === "NETWORK") {
     return {
       title: t("planning.theServerCouldNotBeReached"),
-      body: zh
-        ? "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
-        : "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
+      body: t("plan.unreachableBody"),
       tone: "warn",
     };
   }
   if (s === "HTTP_422") {
     return {
       title: t("planning.theRequestWasRefused"),
-      body: zh
-        ? "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。"
-        : "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
+      body: t("plan.refusedRequestBody"),
       tone: "warn",
     };
   }
   if (s.startsWith("HTTP_5")) {
     return {
       title: t("planning.theServerFailedToFinish"),
-      body: zh
-        ? "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。"
-        : "The server errored out — not your request. Your trip is unchanged; retry later and keep the technical detail if it repeats.",
+      body: t("plan.serverErroredBody"),
       tone: "warn",
     };
   }
@@ -260,9 +246,7 @@ export function statusCopy(
       title: zh
         ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
         : `AI did not take part — ${planCount} ${englishCountNoun(planCount, "option")} still assembled`,
-      body: zh
-        ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
-        : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
+      body: t("plan.plansWithoutAiBody"),
       tone: "warn",
     };
   }
