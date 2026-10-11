@@ -134,7 +134,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       setChosen(optionId);
       onSelected?.();
     } catch {
-      setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+      setError(t("planning.couldNotReachServer"));
     } finally {
       setBusy(null);
     }
@@ -187,7 +187,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             }}
             data-testid="hotels-empty-explore-btn"
           >
-            {zh ? "换个城市看看" : "Look at another city"}
+            {t("stay.lookAtAnotherCity")}
           </button>
         </div>
       </section>
@@ -230,7 +230,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
               </header>
               <dl>
                 <div>
-                  <dt>{zh ? "价格" : "Price"}</dt>
+                  <dt>{t("stay.price")}</dt>
                   <dd data-testid="hotel-price">
                     {priceKnown
                       ? `${stay.currency} ${Math.round(stay.nightly_amount_minor / 100)} / ${zh ? "晚" : "night"}`
@@ -240,7 +240,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                   </dd>
                 </div>
                 <div>
-                  <dt>{zh ? "步行" : "Walking"}</dt>
+                  <dt>{t("stay.walking")}</dt>
                   <dd>{option.walking_min}{zh ? " 分钟" : " min"}</dd>
                 </div>
                 <div>

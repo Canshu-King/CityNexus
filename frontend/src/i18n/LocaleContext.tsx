@@ -1011,6 +1011,9 @@ const en: Dict = {
   "stay.noProviderRate": " (no provider rate)",
   "stay.totalInfix": " total · ",
   "stay.perNightSuffix": " / night",
+  "stay.lookAtAnotherCity": "Look at another city",
+  "stay.price": "Price",
+  "stay.walking": "Walking",
 
   // ── Studio: Sortable Activity List ──
   "studio.protectedLabel": "protected",
@@ -2429,6 +2432,9 @@ const zhCN: Dict = {
   "stay.noProviderRate": "（供应商未提供房价）",
   "stay.totalInfix": " 合计 · ",
   "stay.perNightSuffix": " / 晚",
+  "stay.lookAtAnotherCity": "换个城市看看",
+  "stay.price": "价格",
+  "stay.walking": "步行",
 
   // ── 工作台：可排序活动列表 ──
   "studio.protectedLabel": "受保护",
