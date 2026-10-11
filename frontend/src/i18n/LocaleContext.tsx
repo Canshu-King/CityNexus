@@ -1479,6 +1479,9 @@ const en: Dict = {
   "setup.groupRuleSupported": "What decides this group: the server recognizes this name and its catalog holds rows for it.",
   "setup.groupRuleNeedsLookup": "What decides this group: nothing the server consults names this spelling, so it has no canonical identity and would have to be resolved over the network.",
   "setup.groupRuleUnknown": "What decides this group: no plannable verdict came back this round — the catalog holds nothing for it yet, it was asked and nothing answered, or nothing was read at all.",
+  "setup.noVerdictReadThisRound": "no server verdict was read this round (a failed read is not the server saying it does not know)",
+  "setup.serverNotAskedYet": "the server has not been asked yet",
+  "setup.nameNotInServerVocabulary": "nothing the server consults names this spelling; it would have to resolve it over the network",
 };
 
 const zhCN: Dict = {
@@ -2864,6 +2867,9 @@ const zhCN: Dict = {
   "setup.groupRuleSupported": "这一组看的是：服务器认得这个名字（有正式身份），目录里也有它的行。",
   "setup.groupRuleNeedsLookup": "这一组看的是：服务器问过的词表和目录里都没有这个名字，也就是还没有正式身份，要联网解析才有答案。",
   "setup.groupRuleUnknown": "这一组看的是：这一轮拿不出可规划的判定——目录里暂时没有它的行、问过但没人回答，或者这一轮根本没读到。",
+  "setup.noVerdictReadThisRound": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+  "setup.serverNotAskedYet": "还没问过服务器",
+  "setup.nameNotInServerVocabulary": "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
