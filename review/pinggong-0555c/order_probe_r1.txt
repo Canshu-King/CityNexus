@@ -1,0 +1,4 @@
+# order probe across the two sides, tip vs branch
+tip: en=21 zh=21 same set=True same ORDER=False
+branch: en=21 zh=21 same set=True same ORDER=True
+branch multiset of (key,value) rows equals tip's on both sides: en=True zh=True
