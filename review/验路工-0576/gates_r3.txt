@@ -1,20 +1,21 @@
-验路工 · 0576 批二 r3 复尺（把现尖并进枝之后再量一遍）
+验路工 · 0576 批二 r3 复尺（把现尖并进枝之后再量一遍，另抓出一把尺的行号病）
 [1] worktree=/d/moodle/_qoder_yanlugong_0576_r2 branch=review/验路工-0576-r2 干净改动条数=0
 [2] 现尖（ls-remote 现取）=ad6a96bf60396b5bc1a8a8bb32b6f45697529337 refs/heads/mirror/integration-frontend-apple-pass1
-[3] 并尖前：枝里不含现尖（git merge-base --is-ancestor 判否），故按常例 merge 不 rebase（枝已发布）
-[4] merge 预测只读尺 git merge-tree --write-tree 回 rc=0 且冲突文件名 0 条 → 真 merge 同判：rc=0，无冲突
-[5] merge 提交=67bb07473cb939d440c4e9a480e622c43586da44；带进来的产品文件 2 个：frontend/src/app/V8Experience.tsx、frontend/src/i18n/LocaleContext.tsx（+20 行 / -8 行）
-[6] 我这三枚键在并尖后仍各只有一份定义、两侧齐全（LocaleContext.tsx 里每键命中 2 处）：
+[3] 并尖前：枝里不含现尖（git merge-base --is-ancestor 判否），枝已发布故 merge 不 rebase
+[4] merge 预测只读尺 git merge-tree --write-tree 回 rc=0 且冲突文件名零条 → 真 merge 同判：rc=0，无冲突
+[5] merge 提交=67bb07473cb939d440c4e9a480e622c43586da44；带进来的产品文件两个：frontend/src/app/V8Experience.tsx、frontend/src/i18n/LocaleContext.tsx（+20 行 / -8 行）
+[6] 我这三枚键在并尖后仍各只有一份定义、两侧齐全（LocaleContext.tsx 里每键命中两处）：
     live.adjustTodayOnly en :374 zh :1829 ｜ live.remindMeLater en :375 zh :1830 ｜ live.nothingToDecide en :376 zh :1831
-[7] 组件侧读数（LiveRecovery.tsx 现读）：:425 t("live.adjustTodayOnly") ／ :434 t("live.remindMeLater") ／ :449 t("live.nothingToDecide")
+[7] 组件侧读数（LiveRecovery.tsx 现读）：:425 t("live.adjustTodayOnly") ／ :434 t("live.remindMeLater") ／ :449 t("live.nothingToDecide")；`t` 的作用域在 :109
 [8] 全量类型检查 npx tsc -p tsconfig.typecheck.json --noEmit → 退出码 0，错误条数 0，见 review/验路工-0576/typecheck_full_r3.txt:1
-[9] 上屏码闸 codes_on_screen_gate_r4.py --only-added --require-name --refuse（ref=67bb0747 base=ad6a96bf）→ 退出码 0
+[9] 上屏码闸 codes_on_screen_gate_r4.py --only-added --require-name --refuse（ref=merge 提交 base=现尖）→ 退出码 0
 [10] 该闸判定行：review/验路工-0576/gate_r4_candidate_r3.txt:1 = files_judged=2 refuse=0 info=29 corpus=1254
 [11] 逐字节对账 review/验路工-0576/byte_proof_r3.txt:1 = PROVEN，keys_checked=3 keys_reading_t_in_candidate=3
-[12] 负对照（同一把尺只喂现尖，不给我的枝）review/验路工-0576/byte_proof_r3_negative.txt:15 = NEG_RC=1，FAIL 行数 10 → 尺不是空转
-[13] 内联双语普查（同一把尺两个臂，逐字面量只认三元式与对象对）：
-     现尖 review/验路工-0576/census_r2_base_ad6a96bf60.json:5 = A 210 处（总数在 :4 那段）
-     我的枝 review/验路工-0576/census_r2_head_67bb07473c.json:5 = A 207 处
-     差 = 3 处，正好等于批二搬走的三条字面量；B 两臂 359/167 处 未动
-[14] 下一批待办清单（现尖同代读数，不是我记的）：LiveRecovery.tsx 还剩 A 臂 13 处，逐行坐标见 review/验路工-0576/rest_liverecovery_r3.txt:3 起（:2 该行给 arm_A=13）
-[15] 取清单的尺 review/验路工-0576/rest_list_r3.py 读的是普查产物本身；对不上文件名即 rc=3 拒答，不回报空表
+[12] 负对照（同一把尺只喂现尖、不给我的枝）review/验路工-0576/byte_proof_r3_negative.txt:15 = NEG_RC=1，FAIL 十处 → 尺不是空转
+[13] 内联双语普查 r2 两代：现尖 A 臂二百一十处（review/验路工-0576/census_r2_base_ad6a96bf60.json:5）、我的枝 A 臂二百零七处（review/验路工-0576/census_r2_head_67bb07473c.json:5）；差的三处正是批二那三句，B 两臂三百五十九处与一百六十七处未动
+[14] 普查尺的行号病（实测成因，不是我猜的）：review/验路工-0576/census_line_drift_probe_r3.txt:13 那行 = rows=12 H1_matches=0 H2_matches=12，:14 给出结论——它报的行号比文件真行号大，每大一处对应文件里其上一枚 `/*` 块注释起始符；成因在尺自身：live_checks/bilingual_pair_census_r2.py:63 掩码块注释时多 append 了一个换行，而注释内部原有换行也留着
+[15] 逐枚对照（尺报的行 / 文件真行）在 review/验路工-0576/census_line_drift_probe_r3.txt:1 起，十二行偏移逐行等于其上的块注释起始符个数，另一种猜测（反斜杠转义被解成换行）在同样十二行上全为零、已排除
+[16] 把该病反解回来的尺：review/验路工-0576/rest_list_r4.py:1；产出 review/验路工-0576/rest_liverecovery_r4.txt:3 起十三枚坐标全部 blob 现读通过，末行 unresolved=0，退出码零
+[17] 下一批清单（真行号，枝上现读）：LiveRecovery.tsx 的 A 臂还剩十三处，档一在组件内（`t` 现读 :109 可用）：frontend/src/features/execution/LiveRecovery.tsx:309、:339、:374、:377、:411、:412、:421、:456；档二在模块级函数 humanReplanReason 里（该函数 :70 起、:96 收）拿不到 hook，得走 dictionaryCopy：:74、:79、:84、:89、:94
+[18] 批一与批二在现尖上的状态（现读该文件里 t(...) 命中数）：批一三枚键命中三处（已落），批二三枚键命中零处（未落）；我这枝已含批二两枚提交，落地腿可直接吃
+[19] 我没推权威线，force 零次；账本零直写，本块走收件口

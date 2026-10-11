@@ -1,0 +1,15 @@
+census=77 real=74 delta=3 | H1_escapes=0 H2_block_openers=3 | 暂时无法获取这段路线的可靠通行时
+census=82 real=79 delta=3 | H1_escapes=0 H2_block_openers=3 | 附近没有可以替换这处行程
+census=87 real=84 delta=3 | H1_escapes=0 H2_block_openers=3 | 没能确定这次变化影响
+census=92 real=89 delta=3 | H1_escapes=0 H2_block_openers=3 | 这一段属于你已确认不能动
+census=97 real=94 delta=3 | H1_escapes=0 H2_block_openers=3 | 暂时无法自动调整这段行程
+census=314 real=309 delta=5 | H1_escapes=0 H2_block_openers=5 | 服务器摘要：这台设备还没读到
+census=345 real=339 delta=6 | H1_escapes=0 H2_block_openers=6 | 已知晓，仍待处理
+census=380 real=374 delta=6 | H1_escapes=0 H2_block_openers=6 | 已确认的预订和到达
+census=383 real=377 delta=6 | H1_escapes=0 H2_block_openers=6 | 注意：部分已确认内容会受影响
+census=417 real=411 delta=6 | H1_escapes=0 H2_block_openers=6 | 应用中…
+census=427 real=421 delta=6 | H1_escapes=0 H2_block_openers=6 | 只调整今天：已记录
+census=463 real=456 delta=7 | H1_escapes=0 H2_block_openers=7 | 刚才的行程变化已经处理好
+rows=12 H1_matches=0 H2_matches=12
+MEASURED cause: strip_comments adds one newline per `/*` opener, so the ruler's arm-A line number equals the real line plus the block-comment openers above it
+USE census artifacts for counts only; take coordinates from the blob itself
