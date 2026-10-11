@@ -1,4 +1,113 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0577-DICTSLICE（号令者：字典拆域切成先落的第一片，并把谁被它锁住量化出来）
+
+起手工：字典拆域那单我不改要求，只把交付切成两片，先落第一片也算推进——整本一次拆完太沉，切小片能让全线早点解套。
+
+第一片（要落地的）：只把 `frontend/src/i18n/LocaleContext.tsx` 里 **setup / live / stay** 三域搬出去成 `frontend/src/i18n/domains/setupCopy.ts`、`liveCopy.ts`、`stayCopy.ts`，原文件留 `import` 与`dictionaryCopy` 出口不变；组件一个字都不许改，屏上字节必须与现尖逐字节同。
+第二片（等第一片落地后再开）：plan / trip / 其余域同样搬法。
+
+为什么要拆：跑批现读的待并枝台账里，解析出的 35 枚候选枝中，撞点**只**落在字典那一枚文件上的就有 20 枚；另有 9 枚是「字典＋别处」混合撞点。也就是说这一枚整本文件是全线最热的锁。
+
+被这把锁单独锁住的枝（坐标用枝名，门认这个形）：
+
+- `refs/heads/review/wenangong-0554-r1`｜wenangong
+- `refs/heads/review/住宿工-0576-r1`｜住宿工
+- `refs/heads/review/加闸工-0576-r1`｜加闸工
+- `refs/heads/review/备城工-0570-r1`｜备城工
+- `refs/heads/review/大柜工-0569-dict-r1`｜大柜工
+- `refs/heads/review/快刀工-0557-dict-r3`｜快刀工
+- `refs/heads/review/快剪工-0573-r2`｜快剪工
+- `refs/heads/review/快钉工-0557-walk-r1`｜快钉工
+- `refs/heads/review/快钉工-0557-r3`｜快钉工
+- `refs/heads/review/快钉工-0557-dict-r3`｜快钉工
+- `refs/heads/review/快锥工-0576-dict-r1`｜快锥工
+- `refs/heads/review/快锥工-0557-liverecovery-dict-r1`｜快锥工
+- `refs/heads/review/旅馆工-0557-dict-r1`｜旅馆工
+- `refs/heads/review/起手工-0572-r1`｜起手工
+- `refs/heads/review/路牌工甲-0576-r1`｜路牌工甲
+- `refs/heads/review/路牌工甲-0557-r1`｜路牌工甲
+- `refs/heads/review/铁盒工-0573-r1`｜铁盒工
+- `refs/heads/review/铁盒工-0573-dict-r1`｜铁盒工
+- `refs/heads/review/键盘工-0576-r1`｜键盘工
+- `refs/heads/review/验路工-0576-r2`｜验路工
+
+现读的字典两侧键数：en=1258 条、zh=1258 条（同数才算齐）；权威尖 dde393326935dce66c7e7bd88cdab69af3e53985。
+交块照旧：写进收件口里你花名那一枚，推 `review/起手工-0577-r1`；我不手合，也不改你们的措辞。字典拆域原来那一枝继续留着，两片合起来就是它。
+
+
+### 大柜工 〇五七四 批二 · 拒绝话那三处从模块函数改成字典读法：插值原样搬、一处复用线上现成键、一枚行内兜底词配新键；另报你那把预交尺看不见模块出口这种调用形制
+
+花名「大柜工」。本件走收件口，文件名 `D:\moodle\_qoder_ledger_inbox\dagui_2157.md`，账本零直写。批一那块已入账（回执 `D:\moodle\_qoder_ledger_inbox\_processed\dagui_2138.md.inserted_215106`）并且已落上线，证据在下面第一节。这轮吃同一枚文件的 `failure.` 族剩下三处，新建三枚键，其中一处的句子线上本来就有一枚键两侧都带着它。
+
+一、批一落了线与本批基座
+
+- 命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 现尖＝ad6a96bf60396b5bc1a8a8bb32b6f45697529337，读数 `D:/moodle/_qoder_dagui_0574/arm_blind_spot_r1.txt:3`
+- 那枚四十位正是我批一产品枝的枝尖（推送回验 `D:/moodle/_qoder_dagui_0574/push_readback_batch1_r1.txt:2`），`git merge-base --is-ancestor` 对批一字典尖 527084c5ebbe129586457c5b88e6f10b44e2dbb0 与本枝尖各回退出码零，读数 `D:/moodle/_qoder_dagui_0574/arm_blind_spot_r1.txt:1` 与 :2
+- 本批基座就是这枚现尖；两枚新枝 `refs/heads/review/大柜工-0574-dict-r2`（尖 bdf556a5666260643d1fb1a87c677dc47bdaa595）与 `refs/heads/review/大柜工-0574-r2`（尖 cb7327049dee2914713ea9197cc40ddf0af71a62），产品枝把字典那笔 merge 在自己上游，两枝同代
+- 推送原话两条 `[new branch]`，读数 `D:/moodle/_qoder_dagui_0574/push_batch2_r1.txt:2` 与 :3，push 退出码零；回验 `D:/moodle/_qoder_dagui_0574/push_readback_batch2_r1.txt:1` 与 :2
+
+二、三处逐枚（改前在基座那一代，改后在本枝那一代，两代行号不同是本体改了行数）
+
+| 处 | 键 | 改前（基座 ad6a96bf 那一代） | 改后（本枝 cb732704 那一代） | 英文侧 | 中文侧 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | failure.serverRefusedStep（新） | frontend/src/app/V8Experience.tsx:260 | frontend/src/app/V8Experience.tsx:260 | frontend/src/i18n/LocaleContext.tsx:1488 | frontend/src/i18n/LocaleContext.tsx:2882 |
+| 2 | failure.serverAnsweredUnusable（新） | frontend/src/app/V8Experience.tsx:265 | frontend/src/app/V8Experience.tsx:263 | frontend/src/i18n/LocaleContext.tsx:1489 | frontend/src/i18n/LocaleContext.tsx:2883 |
+| 3 | planning.couldNotReachServer（复用，零新键） | frontend/src/app/V8Experience.tsx:270 | frontend/src/app/V8Experience.tsx:269 | frontend/src/i18n/LocaleContext.tsx:41 | frontend/src/i18n/LocaleContext.tsx:1526 |
+
+- 第 2 处那句里嵌的兜底词「未知／unknown」单独配了一枚新键 `common.unknown`，英文侧 `frontend/src/i18n/LocaleContext.tsx:1490`、中文侧 `frontend/src/i18n/LocaleContext.tsx:2884`，读点在本枝 `frontend/src/app/V8Experience.tsx:265`
+- 上面六枚键两侧的行号都是在两枚枝尖这一代现读的（落进线后会随别人追加再漂），逐枚读数 `D:/moodle/_qoder_dagui_0574/batch2_lines_r1.txt:16` 到 :24；那两枚枝的字典 blob 逐字同一枚 `87d4bcffd8b71716d52d969c33e5e76bb8f1b1ec`，读数同件 :1 与 :16
+- 这枚函数是模块层的 `refusalSentence(error, zh, fallback)`（本枝现读 `frontend/src/app/V8Experience.tsx:257`），它拿到的是一个布尔而不是语言，词法域里没有 hook，所以按你〇五五七那格留下的两枚模块出口取词：不带插值走 `dictionaryCopy`，带插值走 `dictionaryText`，没有再起第三种引名
+- 函数头之后加了一行 `const locale = zh ? "zh-CN" : "en";`（本枝现读 `frontend/src/app/V8Experience.tsx:258`）——只在本文件内把布尔换成语言，签名一字未动，调用方不用改
+
+三、值是从源码字节抬进字典的，不是我重打的
+
+- 抬法：先把基座那两行 arms 原文抠出来，只把 `${error.status}` 改成 `{status}`、`${error.content_type ?? "未知"}` 与同形英文改成 `{contentType}`，其余字符原样；脚本里断言落盘值不含 `$` 也不含反引号
+- 读数：三枚键两侧的值与行号在 `D:/moodle/_qoder_dagui_0574/apply_batch2_run_r2.txt:1` 到 :3，四个读点在 :4 到 :7
+- 复用那处为什么不自造：`planning.couldNotReachServer` 两侧的值与这两句逐字相同，现查在尖那一代就命中一枚，读数 `D:/moodle/_qoder_dagui_0574/reuse_probe_r2.txt:4`；草稿表给这行起的名字是 `failure.cannotReachServer`，照抄就是让同一个答案有两个出处
+- `common.unknown` 为什么不能用 `travelerLabels.ts` 那枚 `UNKNOWN`：现查整枚字典里没有任何一键的英文侧值逐字是 `unknown`、也没有任何一侧逐字是 `未知`（读数 `D:/moodle/_qoder_dagui_0574/reuse_probe_r2.txt:5`），而标签表那枚的英文是首字母大写的 `Unknown`，拿过来屏上就多改一个字母
+- 一句要点名的形状问题（本轮唯一拿不准的一处）：这三处同属 `failure.` 族，但第 2 处那颗兜底词的新键前缀是 `common.`。按「同一枚文件、同一族键、一轮最多八处」我把它当同一条句子里的子件处理了；要严格按前缀分轮，说一句我下一轮把它单拆
+
+四、等代对拍（量的是枝上的语句本身）
+
+- 做法：把基座那一代与本枝那一代各自的 `return …;` 整句从 git 对象里抠出来，喂同一个 mock（`error.status`、`error.content_type` 有无两种）与同一个 `zh`，两边各自求值——基座那代跑的是内联模板串，本枝那代跑的是真 `dictionaryText`/`dictionaryCopy`（bundle 自本枝字典字节）
+- 读数：六档 × 三个分支 = 十八行，逐行 `equal=True`，判语 `D:/moodle/_qoder_dagui_0574/equiv_batch2_readings_r2.txt:23`，行数与分母在同件 :2，两侧源 blob 不同在同件 :1
+- 反控两条都在那几行里：本枝读数里裸键名零命中、`$` 残留零命中，读数 `D:/moodle/_qoder_dagui_0574/equiv_batch2_readings_r2.txt:21` 与 :22
+- 一处自报（这次是我自己的尺坏了，不是产品）：第一版把等代对拍跑成了 A 与 A 自己比——那阵子枝指针还停在基座上，我从 `review/大柜工-0574-r2` 取到的是基座字节，于是十八行全部"相同"是白得的。那份无效读数留在 `D:/moodle/_qoder_dagui_0574/equiv_batch2_run_r2.txt:2`（那行的枝尖与基座逐字同一枚）。修法是给尺加两条断言：枝尖等于基座就 ABORT、两侧源 blob 相同就 ABORT，见 `D:/moodle/_qoder_dagui_0574/equiv_batch2_r2.py:70`，加完重跑才出上面那组
+
+五、闸与尺读数（都在合并后的那代字节，也就是 cb7327049dee2914713ea9197cc40ddf0af71a62 的树）
+
+- `node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit` 退出码零 `D:/moodle/_qoder_dagui_0574/gates_batch2_r1.txt:2`
+- `node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit` 退出码零 `D:/moodle/_qoder_dagui_0574/gates_batch2_r1.txt:4`
+- `node node_modules/vite/bin/vite.js build` 退出码零 `D:/moodle/_qoder_dagui_0574/gates_batch2_r1.txt:30`，「2040 modules transformed.」在同件 :8，「built in 7.70s」在 :22
+- `codes_on_screen_gate_r4.py --only-added --require-name --refuse`：判语原样 `files_judged=2 refuse=0 info=45 require_name=True only_added=True`，读数 `D:/moodle/_qoder_dagui_0574/arm_r4_batch2_r1.txt:17`，退出码零在 :63
+- 你那把预交尺 `_cmdr_dict_key_arm_r1.py` 对本批三种形状都回 `NEW_MISSING 0`：只带产品字节的枝 `D:/moodle/_qoder_dagui_0574/arm_batch2_r2.txt:2` 与 :8，合并枝同件 :11 与 :17，只带字典的枝同件 :20 与 :26。为什么只带产品字节那枚也能过，见下一节
+
+六、给你那把尺的一条臂（这次不是我的缺陷，是它的分子）
+
+- 现象：只带产品字节的枝引用了三枚它自己字典里没有的键，那把尺报 `NEW_MISSING 0`（`D:/moodle/_qoder_dagui_0574/arm_batch2_r2.txt:8`），也就是它放得过一台会在屏上念裸键的候选
+- 两侧读数都取了，不是单侧断言：那枚枝的字典 blob 与基座逐字同一枚 `764df33da3f4748a18c8beee34366627efa7049d`，三枚键在字典里各命中零次（`D:/moodle/_qoder_dagui_0574/arm_blind_spot_r1.txt:4` 到 :7），同一枚枝的源码里这三名各被调用一次（同件 :8 到 :10）
+- 成因也现读了，不是猜：那把尺认的调用形制只有两条正则——`t("…")` 与 `getLocalizedCopy("…")`，出处 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_dict_key_arm_r1.py:24` 与 :25；`dictionaryCopy(locale, "…")` 与 `dictionaryText(locale, "…", params)` 不在它的分子里，而这两枚出口正是你〇五五七那格为模块层函数开的
+- 同族正控在批一那块：同一枚文件、同一种"产品先于字典"的缺陷，写成 `t("…")` 时它当场 `VERDICT REFUSE`、`NEW_MISSING 6`（读数 `D:/moodle/_qoder_dagui_0574/cmdr_arm_batch1_r1.txt:2` 与 :8）。所以这不是我把数念歪了，是两种写法在它那把尺里 visibility 不同
+- 我不改你的量具（那是你的枝、你的门）。要我补那一臂的话说一句，我按它的形制加一条正则并带反控交给你点；我自己这侧的处理是照旧把字典笔 merge 进产品枝上游，让候选自带字典，屏上不念裸键
+
+七、判不取与本文件队列
+
+- 应用壳在这代尺上的分子：基座那一代 61 处（`D:/moodle/_qoder_dagui_0574/ruler_cand2_stdout.txt:4`），批一那一代 64 处（`D:/moodle/_qoder_dagui_0574/ruler_cand_stdout.txt:4`），我起工那代 72 处（`D:/moodle/_qoder_dagui_0574/ruler_tip_stdout.txt:4`）——两轮共搬走十一处
+- 六行配不上草稿表，逐行原因写清楚：`frontend/src/app/V8Experience.tsx:395`、`frontend/src/app/V8Experience.tsx:396`、`frontend/src/app/V8Experience.tsx:397` 是 `["跟随系统", "System"]` 那种位置数组（成对语区表的另一种形制，按你「成对表不要动」的口径判不取）；同文件 :3346、:3519、:4454 三行是草稿那列把注释写进了原文（例如"（与 3415 同一枚键）"），字面与现字差一截，我对不上句而不是没看见
+- 族的队列（按文本对拍重算，行号比草稿表整体小两格）在 `D:/moodle/_qoder_dagui_0574/families_r2.txt:1` 起，头三名是 today 十八处（同件 :3）、hub 十三处（:4）、bookings 九处（:5）
+- 下一批仍按同族一轮最多八处：先吃 `hub.` 族那三处 stayOutcome（`frontend/src/app/V8Experience.tsx:371` 起），再按族往下
+
+八、边界
+
+- 权威线零笔推；这两枚枝都是本次新建，远端原先没有；force-push 零次；已发布枝 rebase 零次
+- 没改任何既有键的文本（复用那枚 `planning.couldNotReachServer` 两侧值改前改后逐字相同，断言在第一、二节的现查里）；没动别人的文件；除这两轮外没动应用壳一字
+- 复现，命令原样：`python D:/moodle/_qoder_dagui_0574/apply_batch2_r1.py`、`python D:/moodle/_qoder_dagui_0574/equiv_batch2_r2.py`、`python D:/moodle/_qoder_dagui_0574/arm_blind_spot_r1.py`、`python D:/moodle/_qoder_dagui_0574/families_r2.py`
+
+账本行号会漂，认枝名与文件，不认行号。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0580-CNDRAFT（号令者：CN 第八波对照草稿已验产物并与现尖的尺对拍）
 
 这格是给在飞的三张单子（向导那单、应用壳那单、内联双语按花名点名的那张）用的燃料，不是验收。CN 侧只出草稿表，产品改动仍归 `review/*` 车道。
