@@ -119,6 +119,96 @@ def _candidate_tags(candidate: DiscoveryCandidate) -> dict[str, Any]:
     return dict(tags) if isinstance(tags, dict) else {}
 
 
+def _candidate_coordinates(candidate: DiscoveryCandidate) -> tuple[float, float] | None:
+    """Return finite WGS84 coordinates, or reject the provider row safely.
+
+    Provider payloads are untrusted even after the HTTP adapter parsed JSON.  In
+    particular, ``float('nan')`` and ``float('inf')`` are valid Python values but
+    must never reach the database, a receipt, or a public map URL.
+    """
+
+    try:
+        latitude = float(candidate.latitude)
+        longitude = float(candidate.longitude)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if not math.isfinite(latitude) or not math.isfinite(longitude):
+        return None
+    if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
+        return None
+    return latitude, longitude
+
+
+def _public_access_state(tags: dict[str, Any]) -> str:
+    """Classify explicit access signals without turning OSM tags into permission."""
+
+    for key in ("access", "access:conditional", "entrance", "membership", "visibility"):
+        value = str(tags.get(key) or "").strip().casefold()
+        if not value:
+            continue
+        if any(re.search(rf"\b{re.escape(token)}\b", value) for token in _PRIVATE_ACCESS):
+            return "RESTRICTED"
+    public_value = str(tags.get("public") or "").strip().casefold()
+    if public_value in {"no", "false", "0"}:
+        return "RESTRICTED"
+    access = str(tags.get("access") or "").strip().casefold()
+    indoor = str(tags.get("indoor") or "").strip().casefold()
+    if access == "indoor-only" or indoor in {"only", "indoor-only"}:
+        return "INDOOR_ACCESS_UNVERIFIED"
+    return "PUBLIC_ACCESS_UNVERIFIED"
+
+
+def _candidate_scope_observation(
+    candidate: DiscoveryCandidate,
+    *,
+    captured_at: str,
+    provider_provenance: str,
+    expires_at: str,
+    source_kind: str,
+) -> dict[str, Any]:
+    """Capture the public observation that belongs to one member scope."""
+
+    coordinates = _candidate_coordinates(candidate)
+    if coordinates is None:
+        raise BootstrapDiscoveryError(
+            "INVALID_PUBLIC_CANDIDATE",
+            "the public provider returned invalid WGS84 coordinates",
+            status_code=422,
+        )
+    latitude, longitude = coordinates
+    tags = _candidate_tags(candidate)
+    name = str(tags.get("name") or candidate.name or "").strip()
+    if not name:
+        raise BootstrapDiscoveryError(
+            "INVALID_PUBLIC_CANDIDATE",
+            "the public provider returned a place without a name",
+            status_code=422,
+        )
+    opening = dict(candidate.opening_hours or {"status": "UNKNOWN"})
+    cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
+    cost.setdefault("status", "UNKNOWN")
+    osm = _osm_identity(candidate)
+    source_url = (
+        f"https://www.openstreetmap.org/{osm[0]}/{osm[1]}" if osm is not None else None
+    )
+    return {
+        "source_kind": source_kind,
+        "expires_at": expires_at,
+        "provider_provenance": provider_provenance,
+        "distance_m": None,
+        "observed_name": name,
+        "observed_category": str(candidate.category or "public_place"),
+        "latitude": latitude,
+        "longitude": longitude,
+        "captured_at": captured_at,
+        "opening_hours": opening,
+        "cost_evidence": cost,
+        "osm_tags": tags,
+        "public_access_state": _public_access_state(tags),
+        "source_url": source_url,
+    }
+
+
 def _public_candidate(candidate: DiscoveryCandidate, *, radius_m: int) -> bool:
     if _osm_identity(candidate) is None:
         return False
@@ -126,16 +216,17 @@ def _public_candidate(candidate: DiscoveryCandidate, *, radius_m: int) -> bool:
     name = str(tags.get("name") or candidate.name or "").strip()
     if not name or name.casefold().startswith("osm "):
         return False
-    if not math.isfinite(float(candidate.latitude)) or not math.isfinite(float(candidate.longitude)):
+    if _candidate_coordinates(candidate) is None:
         return False
-    if not -90 <= float(candidate.latitude) <= 90 or not -180 <= float(candidate.longitude) <= 180:
-        return False
-    if candidate.distance_m is not None and float(candidate.distance_m) > radius_m:
-        return False
-    for key in ("access", "access:conditional", "entrance", "membership"):
-        value = str(tags.get(key) or "").strip().casefold()
-        if value in _PRIVATE_ACCESS:
+    if candidate.distance_m is not None:
+        try:
+            distance = float(candidate.distance_m)
+        except (TypeError, ValueError, OverflowError):
             return False
+        if not math.isfinite(distance) or distance < 0 or distance > radius_m:
+            return False
+    if _public_access_state(tags) == "RESTRICTED":
+        return False
     return True
 
 
@@ -208,6 +299,10 @@ def _row_provider_provenance(
         scoped_grade = scope.get("provider_provenance")
         if scoped_grade in {"LIVE_PROVIDER", "TEST_PROVIDER", "UNVERIFIED"}:
             return str(scoped_grade)
+        # A scope without its own grade is not allowed to inherit the shared
+        # row's observation.  Legacy rows remain readable, but are explicitly
+        # unverified until that member receives a fresh provider observation.
+        return "UNVERIFIED"
     evidence = json.loads(row.evidence_json or "{}")
     metadata = json.loads(row.metadata_json or "{}")
     for value in (
@@ -219,6 +314,79 @@ def _row_provider_provenance(
     return "UNVERIFIED"
 
 
+def _scope_observation(row: RealPlaceCandidate, scope: dict[str, Any] | None) -> dict[str, Any]:
+    """Project the observation belonging to the viewer's private scope.
+
+    A RealPlaceCandidate row is shared by public OSM identity.  Its first
+    observation must not become the authority for a later member, so newer
+    scopes carry their own name, coordinates, tags and observation time.
+    """
+
+    row_metadata = json.loads(row.metadata_json or "{}")
+    if not isinstance(row_metadata, dict):
+        row_metadata = {}
+    row_tags = row_metadata.get("osm_tags") or row_metadata.get("tags") or {}
+    if not isinstance(row_tags, dict):
+        row_tags = {}
+    row_opening = json.loads(row.opening_hours_json or "{}")
+    if not isinstance(row_opening, dict):
+        row_opening = {"status": "UNKNOWN"}
+    row_cost = row_metadata.get("cost_evidence")
+    if not isinstance(row_cost, dict):
+        row_cost = {"status": "UNKNOWN"}
+
+    candidate_scope = scope if isinstance(scope, dict) else {}
+    name = str(candidate_scope.get("observed_name") or row.name or "").strip()
+    category = str(candidate_scope.get("observed_category") or row.category or "public_place")
+    raw_latitude = candidate_scope.get("latitude")
+    raw_longitude = candidate_scope.get("longitude")
+    try:
+        latitude = float(row.latitude if raw_latitude is None else raw_latitude)
+        longitude = float(row.longitude if raw_longitude is None else raw_longitude)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise BootstrapDiscoveryError(
+            "INVALID_PUBLIC_CANDIDATE",
+            "the saved public observation has invalid WGS84 coordinates",
+            status_code=422,
+        ) from exc
+    if not math.isfinite(latitude) or not math.isfinite(longitude):
+        raise BootstrapDiscoveryError(
+            "INVALID_PUBLIC_CANDIDATE",
+            "the saved public observation has non-finite WGS84 coordinates",
+            status_code=422,
+        )
+    if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
+        raise BootstrapDiscoveryError(
+            "INVALID_PUBLIC_CANDIDATE",
+            "the saved public observation has out-of-range WGS84 coordinates",
+            status_code=422,
+        )
+    opening = candidate_scope.get("opening_hours")
+    if not isinstance(opening, dict):
+        opening = row_opening
+    cost = candidate_scope.get("cost_evidence")
+    if not isinstance(cost, dict):
+        cost = row_cost
+    tags = candidate_scope.get("osm_tags")
+    if not isinstance(tags, dict):
+        tags = row_tags
+    return {
+        "name": name,
+        "category": category,
+        "latitude": latitude,
+        "longitude": longitude,
+        "captured_at": str(candidate_scope.get("captured_at") or row.captured_at),
+        "opening_hours": dict(opening),
+        "cost_evidence": dict(cost),
+        "osm_tags": dict(tags),
+        "public_access_state": str(
+            candidate_scope.get("public_access_state")
+            or _public_access_state(dict(tags))
+        ),
+        "source_url": str(candidate_scope.get("source_url") or "") or None,
+    }
+
+
 def _candidate_payload(
     row: RealPlaceCandidate,
     *,
@@ -226,17 +394,21 @@ def _candidate_payload(
     traveler_id: str | None = None,
 ) -> dict[str, Any]:
     evidence = json.loads(row.evidence_json or "{}")
-    opening = json.loads(row.opening_hours_json or "{}")
-    if not isinstance(opening, dict):
-        opening = {"status": "UNKNOWN"}
-    metadata = json.loads(row.metadata_json or "{}")
-    if not isinstance(metadata, dict):
-        metadata = {}
-    osm_tags = metadata.get("osm_tags") or metadata.get("tags") or {}
-    if not isinstance(osm_tags, dict):
-        osm_tags = {}
+    kind = str(evidence.get("osm_type") or "node")
+    osm_id = str(evidence.get("osm_id") or "")
+    source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
+    scope_distance = None
+    viewer_scope = None
+    viewer_scope_entries = _bootstrap_scope_entries(evidence)
+    if member_id is not None and traveler_id is not None:
+        for scope in viewer_scope_entries:
+            if scope["member_id"] == str(member_id) and scope["traveler_id"] == str(traveler_id):
+                viewer_scope = scope
+                scope_distance = scope.get("distance_m")
+                break
+    observation = _scope_observation(row, viewer_scope)
     source_tags = {
-        key: str(osm_tags[key])
+        key: str(observation["osm_tags"][key])
         for key in (
             "opening_hours",
             "website",
@@ -245,32 +417,22 @@ def _candidate_payload(
             "contact:phone",
             "email",
         )
-        if osm_tags.get(key) not in (None, "")
+        if observation["osm_tags"].get(key) not in (None, "")
     }
+    opening = observation["opening_hours"]
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
-    kind = str(evidence.get("osm_type") or "node")
-    osm_id = str(evidence.get("osm_id") or "")
-    source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
-    scope_distance = None
-    viewer_scope = None
-    if member_id is not None and traveler_id is not None:
-        for scope in _bootstrap_scope_entries(evidence):
-            if scope["member_id"] == str(member_id) and scope["traveler_id"] == str(traveler_id):
-                viewer_scope = scope
-                scope_distance = scope.get("distance_m")
-                break
-    if scope_distance is None and len(_bootstrap_scope_entries(evidence)) <= 1:
+    if scope_distance is None and len(viewer_scope_entries) <= 1:
         scope_distance = row.distance_m
     return {
         "candidate_id": row.id,
-        "name": row.name,
-        "category": row.category,
+        "name": observation["name"],
+        "category": observation["category"],
         "external_id": row.external_id,
         "osm_type": kind,
         "osm_id": osm_id,
         "source_url": source_url,
-        "latitude": row.latitude,
-        "longitude": row.longitude,
+        "latitude": observation["latitude"],
+        "longitude": observation["longitude"],
         "coordinate_system": "WGS84",
         "distance_m": scope_distance,
         "opening_state": opening_status,
@@ -289,7 +451,7 @@ def _candidate_payload(
         "eta_state": "UNKNOWN",
         "tags": json.loads(row.tags_json or "[]"),
         "opening_hours": opening,
-        "opening_observed_at": row.captured_at,
+        "opening_observed_at": observation["captured_at"],
         "opening_source": "OpenStreetMap/Overpass",
         "opening_claim": (
             "OSM_TAG_CLAIM"
@@ -303,6 +465,7 @@ def _candidate_payload(
         ),
         "opening_verification_action": "OPEN_SOURCE_PAGE",
         "source_tags": source_tags,
+        "public_access_state": observation["public_access_state"],
         "provider_provenance": _row_provider_provenance(row, scope=viewer_scope),
     }
 
@@ -342,6 +505,7 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
     source_tags = json.loads(row.source_tags_json or "{}")
     if not isinstance(source_tags, dict):
         source_tags = {}
+    public_access_state = str(source_tags.pop("_public_access_state", "UNKNOWN"))
     return {
         "shortlist_id": row.id,
         "journey_id": row.journey_id,
@@ -360,6 +524,7 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
         "price_state": str(cost.get("status") or "UNKNOWN").upper(),
         "eta_state": "UNKNOWN",
         "source_tags": source_tags,
+        "public_access_state": public_access_state,
         "distance_m": row.distance_m,
         "distance_basis": row.distance_basis,
         "status": row.status,
@@ -399,6 +564,7 @@ def _pocket_stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[s
         "source_provenance": item["source_provenance"],
         "captured_at": item["captured_at"],
         "coordinate_system": item["coordinate_system"],
+        "public_access_state": item["public_access_state"],
         "opening_state": item["opening_state"],
         "price_state": item["price_state"],
         "route_eta_state": "UNKNOWN",
@@ -463,20 +629,6 @@ def _load_member_pocket_walk(
     return _pocket_walk_payload(row, {str(item.id): item for item in items})
 
 
-def _public_tags_for_candidate(row: RealPlaceCandidate) -> dict[str, str]:
-    metadata = json.loads(row.metadata_json or "{}")
-    if not isinstance(metadata, dict):
-        metadata = {}
-    tags = metadata.get("osm_tags") or metadata.get("tags") or {}
-    if not isinstance(tags, dict):
-        return {}
-    return {
-        key: str(tags[key])[:512]
-        for key in ("opening_hours",)
-        if tags.get(key) not in (None, "")
-    }
-
-
 def _public_map_url(latitude: float, longitude: float) -> str:
     return (
         "https://www.openstreetmap.org/?mlat="
@@ -533,6 +685,16 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         "distance_m": raw.get("distance_m"),
                         "expires_at": str(raw.get("expires_at") or "") or None,
                         "provider_provenance": raw.get("provider_provenance"),
+                        "observed_name": raw.get("observed_name"),
+                        "observed_category": raw.get("observed_category"),
+                        "latitude": raw.get("latitude"),
+                        "longitude": raw.get("longitude"),
+                        "captured_at": raw.get("captured_at"),
+                        "opening_hours": raw.get("opening_hours"),
+                        "cost_evidence": raw.get("cost_evidence"),
+                        "osm_tags": raw.get("osm_tags"),
+                        "public_access_state": raw.get("public_access_state"),
+                        "source_url": raw.get("source_url"),
                     }
                 )
     if scopes:
@@ -550,6 +712,16 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 "distance_m": None,
                 "expires_at": None,
                 "provider_provenance": evidence.get("provider_provenance"),
+                "observed_name": evidence.get("observed_name"),
+                "observed_category": evidence.get("observed_category"),
+                "latitude": evidence.get("latitude"),
+                "longitude": evidence.get("longitude"),
+                "captured_at": evidence.get("captured_at"),
+                "opening_hours": evidence.get("opening_hours"),
+                "cost_evidence": evidence.get("cost_evidence"),
+                "osm_tags": evidence.get("osm_tags"),
+                "public_access_state": evidence.get("public_access_state"),
+                "source_url": evidence.get("source_url"),
             }
         ]
     return []
@@ -1306,6 +1478,24 @@ def discover_bootstrap_candidates(
         if osm is None:
             continue
         osm_type, osm_id = osm
+        observation = _candidate_scope_observation(
+            candidate,
+            captured_at=_iso(captured_at),
+            provider_provenance=provider_provenance,
+            expires_at=_iso(expires_at),
+            source_kind=source_kind,
+        )
+        observation["distance_m"] = (
+            float(candidate.distance_m)
+            if persisted_distance and candidate.distance_m is not None
+            else None
+        )
+        scope = {
+            "member_id": member_id,
+            "traveler_id": traveler_id,
+            "receipt_id": receipt_id,
+            **observation,
+        }
         existing_candidate = session.scalar(
             select(RealPlaceCandidate).where(
                 RealPlaceCandidate.journey_id == journey.id,
@@ -1325,24 +1515,9 @@ def discover_bootstrap_candidates(
                     external_id=candidate.external_id,
                     member_id=member_id,
                     traveler_id=traveler_id,
-                    scope={
-                        "member_id": member_id,
-                        "traveler_id": traveler_id,
-                        "receipt_id": receipt_id,
-                        "source_kind": source_kind,
-                        "expires_at": _iso(expires_at),
-                        "provider_provenance": provider_provenance,
-                        "distance_m": (
-                            float(candidate.distance_m)
-                            if persisted_distance and candidate.distance_m is not None
-                            else None
-                        ),
-                    },
+                    scope=scope,
                 )
             continue
-        tags = _candidate_tags(candidate)
-        cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
-        cost.setdefault("status", "UNKNOWN")
         row_id = str(uuid4())
         session.add(
             RealPlaceCandidate(
@@ -1351,31 +1526,27 @@ def discover_bootstrap_candidates(
                 provider_key="overpass",
                 external_id=candidate.external_id,
                 city_code=journey.city_code,
-                name=str(tags.get("name") or candidate.name).strip(),
-                category=str(candidate.category or "service"),
-                latitude=float(candidate.latitude),
-                longitude=float(candidate.longitude),
+                name=observation["observed_name"],
+                category=observation["observed_category"],
+                latitude=observation["latitude"],
+                longitude=observation["longitude"],
                 tags_json=_json(list(candidate.tags)),
-                opening_hours_json=_json(
-                    dict(candidate.opening_hours or {"status": "UNKNOWN"})
-                ),
+                opening_hours_json=_json(observation["opening_hours"]),
                 metadata_json=_json(
                     {
                         "source": provider_provenance,
                         "provider_provenance": provider_provenance,
-                        "cost_evidence": cost,
-                        "public_access_gate": "NO_EXPLICIT_PRIVATE_ACCESS",
-                        "osm_tags": tags,
+                        "cost_evidence": observation["cost_evidence"],
+                        "public_access_gate": observation["public_access_state"],
+                        "osm_tags": observation["osm_tags"],
                     }
                 ),
-                captured_at=_iso(captured_at),
+                captured_at=observation["captured_at"],
                 expires_at=_iso(expires_at),
                 # A foreground fix is a transient provider input.  Do not persist
                 # a distance that could be used to infer that private fix later.
                 distance_m=(
-                    float(candidate.distance_m)
-                    if persisted_distance and candidate.distance_m is not None
-                    else None
+                    observation["distance_m"]
                 ),
                 evidence_json=_json(
                     {
@@ -1384,21 +1555,7 @@ def discover_bootstrap_candidates(
                         "member_id": member_id,
                         "traveler_id": traveler_id,
                         "source_kind": source_kind,
-                        "bootstrap_scopes": [
-                            {
-                                "member_id": member_id,
-                                "traveler_id": traveler_id,
-                                "receipt_id": receipt_id,
-                                "source_kind": source_kind,
-                                "expires_at": _iso(expires_at),
-                                "provider_provenance": provider_provenance,
-                                "distance_m": (
-                                    float(candidate.distance_m)
-                                    if persisted_distance and candidate.distance_m is not None
-                                    else None
-                                ),
-                            }
-                        ],
+                        "bootstrap_scopes": [scope],
                         "provider_attempts": attempts,
                         "provider_provenance": provider_provenance,
                         "candidate_id": row_id,
@@ -1570,6 +1727,19 @@ def lookup_bootstrap_shared_walk(
         if osm is None:
             continue
         osm_type, osm_id = osm
+        observation = _candidate_scope_observation(
+            candidate,
+            captured_at=_iso(captured_at),
+            provider_provenance=provider_provenance,
+            expires_at=_iso(expires_at),
+            source_kind="SHARED_PUBLIC_REFERENCE",
+        )
+        scope = {
+            "member_id": member_id,
+            "traveler_id": traveler_id,
+            "receipt_id": receipt_id,
+            **observation,
+        }
         existing_candidate = session.scalar(
             select(RealPlaceCandidate).where(
                 RealPlaceCandidate.journey_id == journey.id,
@@ -1585,20 +1755,9 @@ def lookup_bootstrap_shared_walk(
                     external_id=candidate.external_id,
                     member_id=member_id,
                     traveler_id=traveler_id,
-                    scope={
-                        "member_id": member_id,
-                        "traveler_id": traveler_id,
-                        "receipt_id": receipt_id,
-                        "source_kind": "SHARED_PUBLIC_REFERENCE",
-                        "expires_at": _iso(expires_at),
-                        "provider_provenance": provider_provenance,
-                        "distance_m": None,
-                    },
+                    scope=scope,
                 )
             continue
-        tags = _candidate_tags(candidate)
-        cost = dict(candidate.cost_evidence or {"status": "UNKNOWN"})
-        cost.setdefault("status", "UNKNOWN")
         row_id = str(uuid4())
         session.add(
             RealPlaceCandidate(
@@ -1607,23 +1766,23 @@ def lookup_bootstrap_shared_walk(
                 provider_key="overpass",
                 external_id=candidate.external_id,
                 city_code=journey.city_code,
-                name=str(tags.get("name") or candidate.name).strip(),
-                category=str(candidate.category or "public_place"),
-                latitude=float(candidate.latitude),
-                longitude=float(candidate.longitude),
+                name=observation["observed_name"],
+                category=observation["observed_category"],
+                latitude=observation["latitude"],
+                longitude=observation["longitude"],
                 tags_json=_json(list(candidate.tags)),
-                opening_hours_json=_json(dict(candidate.opening_hours or {"status": "UNKNOWN"})),
+                opening_hours_json=_json(observation["opening_hours"]),
                 metadata_json=_json(
                     {
                         "source": provider_provenance,
                         "provider_provenance": provider_provenance,
-                        "cost_evidence": cost,
-                        "public_access_gate": "NO_EXPLICIT_PRIVATE_ACCESS",
-                        "osm_tags": tags,
+                        "cost_evidence": observation["cost_evidence"],
+                        "public_access_gate": observation["public_access_state"],
+                        "osm_tags": observation["osm_tags"],
                         "shared_reference": "UNVERIFIED_SHARED_REFERENCE_BEFORE_LOOKUP",
                     }
                 ),
-                captured_at=_iso(captured_at),
+                captured_at=observation["captured_at"],
                 expires_at=_iso(expires_at),
                 distance_m=None,
                 evidence_json=_json(
@@ -1633,17 +1792,7 @@ def lookup_bootstrap_shared_walk(
                         "member_id": member_id,
                         "traveler_id": traveler_id,
                         "source_kind": "SHARED_PUBLIC_REFERENCE",
-                        "bootstrap_scopes": [
-                            {
-                                "member_id": member_id,
-                                "traveler_id": traveler_id,
-                                "receipt_id": receipt_id,
-                                "source_kind": "SHARED_PUBLIC_REFERENCE",
-                                "expires_at": _iso(expires_at),
-                                "provider_provenance": provider_provenance,
-                                "distance_m": None,
-                            }
-                        ],
+                        "bootstrap_scopes": [scope],
                         "provider_attempts": attempts,
                         "provider_provenance": provider_provenance,
                         "candidate_id": row_id,
@@ -1778,6 +1927,7 @@ def preview_bootstrap_candidate(
             "candidate belongs to another signed member",
             status_code=403,
         )
+    observation = _scope_observation(row, matching_scope)
     if row.status != "BOOTSTRAP_PRIVATE" or row.materialized_place_id is not None:
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_CANDIDATE_UNAVAILABLE",
@@ -1803,8 +1953,8 @@ def preview_bootstrap_candidate(
                 status_code=410,
                 details={"next_actions": ["SEARCH_AGAIN", "CANCEL_MAP_PREVIEW"]},
             )
-    if not math.isclose(float(latitude), float(row.latitude), abs_tol=1e-6) or not math.isclose(
-        float(longitude), float(row.longitude), abs_tol=1e-6
+    if not math.isclose(float(latitude), observation["latitude"], abs_tol=1e-6) or not math.isclose(
+        float(longitude), observation["longitude"], abs_tol=1e-6
     ):
         raise BootstrapDiscoveryError(
             "BOOTSTRAP_MAP_PREVIEW_COORDINATE_MISMATCH",
@@ -1819,10 +1969,10 @@ def preview_bootstrap_candidate(
         DiscoveryCandidate(
             provider_key=row.provider_key,
             external_id=row.external_id,
-            name=row.name,
-            category=row.category,
-            latitude=row.latitude,
-            longitude=row.longitude,
+            name=observation["name"],
+            category=observation["category"],
+            latitude=observation["latitude"],
+            longitude=observation["longitude"],
             tags=(),
             opening_hours={},
             metadata={},
@@ -1838,15 +1988,10 @@ def preview_bootstrap_candidate(
     source_url = f"https://www.openstreetmap.org/{osm_type}/{osm_id}"
     map_url = (
         "https://www.openstreetmap.org/?mlat="
-        f"{float(row.latitude):.7f}&mlon={float(row.longitude):.7f}"
-        f"#map=18/{float(row.latitude):.7f}/{float(row.longitude):.7f}"
+        f"{observation['latitude']:.7f}&mlon={observation['longitude']:.7f}"
+        f"#map=18/{observation['latitude']:.7f}/{observation['longitude']:.7f}"
     )
-    metadata = json.loads(row.metadata_json or "{}")
-    if not isinstance(metadata, dict):
-        metadata = {}
-    osm_tags = metadata.get("osm_tags") or metadata.get("tags") or {}
-    if not isinstance(osm_tags, dict):
-        osm_tags = {}
+    osm_tags = observation["osm_tags"]
     source_tags = {
         key: str(osm_tags[key])
         for key in (
@@ -1859,9 +2004,7 @@ def preview_bootstrap_candidate(
         )
         if osm_tags.get(key) not in (None, "")
     }
-    opening = json.loads(row.opening_hours_json or "{}")
-    if not isinstance(opening, dict):
-        opening = {"status": "UNKNOWN"}
+    opening = observation["opening_hours"]
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
     return {
         "preview_id": str(uuid4()),
@@ -1869,26 +2012,27 @@ def preview_bootstrap_candidate(
         "journey_id": journey.id,
         "receipt_id": str(receipt_id),
         "candidate_id": row.id,
-        "expires_at": row.expires_at,
+        "expires_at": matching_scope.get("expires_at") or row.expires_at,
         "provider": "overpass",
         "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
         "destination": {
-            "name": row.name,
+            "name": observation["name"],
             "external_id": row.external_id,
             "osm_type": osm_type,
             "osm_id": osm_id,
-            "latitude": row.latitude,
-            "longitude": row.longitude,
+            "latitude": observation["latitude"],
+            "longitude": observation["longitude"],
             "coordinate_system": "WGS84",
             "source_url": source_url,
             "map_url": map_url,
+            "public_access_state": observation["public_access_state"],
         },
         "opening": {
             "state": opening_status,
             "raw": opening.get("raw") or source_tags.get("opening_hours"),
             "source_tags": source_tags,
             "source": "OpenStreetMap/Overpass",
-            "observed_at": row.captured_at,
+            "observed_at": observation["captured_at"],
             "claim": "OSM_TAG_CLAIM" if source_tags.get("opening_hours") else "NO_OPENING_TAG",
             "verification_state": (
                 "PROVIDER_GROUNDED"
@@ -2019,15 +2163,16 @@ def save_bootstrap_shortlist_item(
         )
     now = _iso(_now())
     evidence = json.loads(row.evidence_json or "{}")
-    source_url = str(evidence.get("source_url") or "")
+    observation = _scope_observation(row, scope)
+    source_url = str(observation.get("source_url") or evidence.get("source_url") or "")
     osm = _osm_identity(
         DiscoveryCandidate(
             provider_key=row.provider_key,
             external_id=row.external_id,
-            name=row.name,
-            category=row.category,
-            latitude=row.latitude,
-            longitude=row.longitude,
+            name=observation["name"],
+            category=observation["category"],
+            latitude=observation["latitude"],
+            longitude=observation["longitude"],
             tags=(),
             opening_hours={},
             metadata={},
@@ -2036,13 +2181,21 @@ def save_bootstrap_shortlist_item(
     if osm is None:
         raise BootstrapDiscoveryError("BOOTSTRAP_IDENTITY_INVALID", "candidate OSM identity is invalid", status_code=422)
     source_url = source_url or f"https://www.openstreetmap.org/{osm[0]}/{osm[1]}"
-    metadata = json.loads(row.metadata_json or "{}")
-    cost = metadata.get("cost_evidence") if isinstance(metadata, dict) else None
-    if not isinstance(cost, dict):
-        cost = {"status": "UNKNOWN"}
-    opening = json.loads(row.opening_hours_json or "{}")
-    if not isinstance(opening, dict):
-        opening = {"status": "UNKNOWN"}
+    cost = observation["cost_evidence"]
+    opening = observation["opening_hours"]
+    source_tags = {
+        key: str(observation["osm_tags"][key])
+        for key in (
+            "opening_hours",
+            "website",
+            "contact:website",
+            "phone",
+            "contact:phone",
+            "email",
+        )
+        if observation["osm_tags"].get(key) not in (None, "")
+    }
+    source_tags["_public_access_state"] = observation["public_access_state"]
     source_kind = str(scope.get("source_kind") or "")
     distance_m = scope.get("distance_m") if source_kind == "MANUAL_PUBLIC_CENTER" else None
     item = MemberDraftShortlistItem(
@@ -2052,17 +2205,17 @@ def save_bootstrap_shortlist_item(
         traveler_id=str(traveler_id),
         provider_key="overpass",
         external_id=row.external_id,
-        name=row.name,
-        category=row.category,
-        latitude=row.latitude,
-        longitude=row.longitude,
+        name=observation["name"],
+        category=observation["category"],
+        latitude=observation["latitude"],
+        longitude=observation["longitude"],
         coordinate_system="WGS84",
         source_url=source_url,
         source_provenance=_row_provider_provenance(row, scope=scope),
-        captured_at=row.captured_at,
+        captured_at=observation["captured_at"],
         opening_hours_json=_json(opening),
         cost_evidence_json=_json(cost),
-        source_tags_json=_json(_public_tags_for_candidate(row)),
+        source_tags_json=_json(source_tags),
         distance_m=float(distance_m) if distance_m is not None else None,
         distance_basis=source_kind if distance_m is not None else None,
         status="SAVED",
@@ -2418,6 +2571,7 @@ def preview_bootstrap_shortlist_item(
     source_tags = json.loads(row.source_tags_json or "{}")
     if not isinstance(source_tags, dict):
         source_tags = {}
+    public_access_state = str(source_tags.pop("_public_access_state", "UNKNOWN"))
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
     return {
         "preview_id": str(uuid4()),
@@ -2436,6 +2590,7 @@ def preview_bootstrap_shortlist_item(
             "longitude": row.longitude,
             "coordinate_system": "WGS84",
             "map_url": _public_map_url(row.latitude, row.longitude),
+            "public_access_state": public_access_state,
         },
         "opening": {
             "state": opening_status,

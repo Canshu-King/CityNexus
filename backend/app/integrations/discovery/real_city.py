@@ -1103,6 +1103,10 @@ class OverpassPOIProvider:
                 lon = float(center["lon"])
             except (KeyError, TypeError, ValueError):
                 continue
+            if not math.isfinite(lat) or not math.isfinite(lon):
+                continue
+            if not -90 <= lat <= 90 or not -180 <= lon <= 180:
+                continue
             category = str(
                 tags_data.get("tourism")
                 or tags_data.get("amenity")
@@ -1224,6 +1228,10 @@ class OverpassPOIProvider:
                 lat = float(center["lat"])
                 lon = float(center["lon"])
             except (KeyError, TypeError, ValueError):
+                continue
+            if not math.isfinite(lat) or not math.isfinite(lon):
+                continue
+            if not -90 <= lat <= 90 or not -180 <= lon <= 180:
                 continue
             category = str(
                 tags_data.get("tourism")

@@ -1694,6 +1694,7 @@ export interface BootstrapDiscoveryCandidate {
   opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
   opening_verification_action: "OPEN_SOURCE_PAGE";
   source_tags: Record<string, string>;
+  public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
 }
 
@@ -1784,6 +1785,7 @@ export interface BootstrapMapPreviewResponse {
     coordinate_system: "WGS84";
     source_url: string;
     map_url: string;
+    public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   };
   opening: {
     state: string;
@@ -1820,6 +1822,7 @@ export interface BootstrapShortlistItem {
   price_state: "UNKNOWN" | string;
   eta_state: "UNKNOWN" | string;
   source_tags: Record<string, string>;
+  public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   distance_m: number | null;
   distance_basis: string | null;
   status: "SAVED";
@@ -1896,6 +1899,7 @@ export interface BootstrapShortlistPreviewResponse {
     longitude: number;
     coordinate_system: "WGS84";
     map_url: string;
+    public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   };
   opening: {
     state: string;
@@ -1933,6 +1937,7 @@ export interface BootstrapTwoStopWalkResponse {
     latitude: number;
     longitude: number;
     coordinate_system: "WGS84";
+    public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
     opening_state: string;
     price_state: "UNKNOWN";
     route_eta_state: "UNKNOWN";
@@ -1949,6 +1954,7 @@ export interface BootstrapTwoStopWalkResponse {
     latitude: number;
     longitude: number;
     coordinate_system: "WGS84";
+    public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
     opening_state: string;
     price_state: "UNKNOWN";
     route_eta_state: "UNKNOWN";

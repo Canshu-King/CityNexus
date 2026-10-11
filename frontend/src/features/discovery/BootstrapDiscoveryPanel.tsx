@@ -2045,7 +2045,12 @@ export function BootstrapDiscoveryPanel({
                 return (
                   <article key={candidate.candidate_id} data-testid={`bootstrap-shared-walk-candidate-${candidate.candidate_id}`}>
                     <h4>{candidate.name}</h4>
-                    <p>{candidate.category} · public coordinates freshly returned · opening and price remain UNKNOWN</p>
+                    <p>
+                      {candidate.category} · public coordinates freshly returned ·{" "}
+                      {candidate.public_access_state === "INDOOR_ACCESS_UNVERIFIED"
+                        ? "indoor-only access; public visitability is unverified"
+                        : "public visitability is not independently verified"} · opening and price remain UNKNOWN
+                    </p>
                     <p>Source grade: {candidate.provider_provenance} · observed {candidate.opening_observed_at}</p>
                     {source ? <a href={source} target="_blank" rel="noopener noreferrer">Open public OSM source</a> : null}
                     <button
@@ -2315,7 +2320,9 @@ export function BootstrapDiscoveryPanel({
             <article key={item.shortlist_id} data-testid={`bootstrap-shortlist-item-${item.shortlist_id}`}>
               <h3>{item.name}</h3>
               <p>
-                {item.category} · opening {item.opening_state || "UNKNOWN"} · price {item.price_state || "UNKNOWN"} · route ETA {item.eta_state || "UNKNOWN"}
+                {item.category} · {item.public_access_state === "INDOOR_ACCESS_UNVERIFIED"
+                  ? "indoor-only access; public visitability unverified"
+                  : "public visitability unverified"} · opening {item.opening_state || "UNKNOWN"} · price {item.price_state || "UNKNOWN"} · route ETA {item.eta_state || "UNKNOWN"}
               </p>
               <p>
                 Source: {item.source_provenance} · captured {item.captured_at}
