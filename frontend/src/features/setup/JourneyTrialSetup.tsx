@@ -318,20 +318,14 @@ export function notFoundCauseWords(
 function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => string): string {
   if (!row.answered) {
     return row.failure
-      ? zh
-        ? "这一轮没读到服务器的判定（读不到不等于服务器说不知道）"
-        : "no server verdict was read this round (a failed read is not the server saying it does not know)"
-      : zh
-        ? "还没问过服务器"
-        : "the server has not been asked yet";
+      ? t("setup.noVerdictReadThisRound")
+      : t("setup.serverNotAskedYet");
   }
   if (row.capability === "READY") {
     return t("setup.theServerSaysThisDestinationCanBePlannedNow");
   }
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
-    return zh
-      ? "服务器的词表和目录里都没有这个名字，要它联网解析才有答案"
-      : "nothing the server consults names this spelling; it would have to resolve it over the network";
+    return t("setup.nameNotInServerVocabulary");
   }
   if (row.capability === "UNKNOWN_RETRYABLE") {
     return t("setup.itWasAskedAndNothingAnsweredThisRound");
