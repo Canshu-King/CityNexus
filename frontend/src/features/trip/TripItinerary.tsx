@@ -290,12 +290,8 @@ export function TripItinerary({
     const emptyCatalogue = catalogue !== null && catalogue.source === "server" && catalogue.placeCount === 0;
     const importCopy = t("itinerary.importPrompt");
     const planCopy = emptyCatalogue
-      ? zh
-        ? "AI 帮我规划（要先有地点）"
-        : "Plan my trip with AI (needs places first)"
-      : zh
-        ? "AI 帮我规划"
-        : "Plan my trip with AI";
+      ? t("itinerary.planWithAiNeedsPlaces")
+      : t("itinerary.planWithAi");
     return (
       <section className="v8-page" data-testid="trip-itinerary-empty">
         <div className="v8-page-intro compact">
@@ -304,18 +300,12 @@ export function TripItinerary({
             <h1>{t("itinerary.emptyTitle")}</h1>
             <p className="v8-lede" data-testid="trip-itinerary-empty-why">
               {plan
-                ? zh
-                  ? "这一版方案里还没有站点被排在某一天上。补上站点，这一屏就按天把它们列出来。"
-                  : "No stop in this plan sits on a day yet. Add stops and this screen lists them day by day."
-                : zh
-                  ? "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。"
-                  : "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here."}
+                ? t("itinerary.emptyPlanNoDays")
+                : t("itinerary.emptyNoPlan")}
             </p>
             <p className="v8-lede" data-testid="trip-itinerary-empty-catalogue">
               {catalogueAsking
-                ? zh
-                  ? "正在向服务器回读这座城有多少地点…"
-                  : "Reading back from the server how many places this city holds…"
+                ? t("itinerary.emptyReadingPlaces")
                 : catalogueCountSentence(catalogue, zh)}
             </p>
           </div>
@@ -382,17 +372,13 @@ export function TripItinerary({
           <p className="v8-kicker">{t("nav.trips")}</p>
           <h1 data-testid="trip-day-total">
             {progress.day_total === null
-              ? zh
-                ? "天数未知"
-                : "length unknown"
+              ? t("itinerary.lengthUnknown")
               : zh
                 ? `${progress.day_total} 天行程`
                 : `${progress.day_total}-day itinerary`}
           </h1>
           <p className="v8-lede">
-            {zh
-              ? "逐日安排。已确认的预订会被标记为受保护。"
-              : "Day by day. Confirmed bookings are marked as protected."}
+            {t("itinerary.dayByDay")}
           </p>
           <p className="v8-lede" data-testid="trip-progress-contract">
             {progressContractCopy(progress, zh)}
@@ -511,9 +497,7 @@ export function TripItinerary({
                         <span className="trip-stop-disrupted">
                           {disruption
                             ? disruptionLabel(disruption.type, zh)
-                            : zh
-                              ? "受影响"
-                              : "Affected"}
+                            : t("itinerary.stopDisrupted")}
                         </span>
                       )}
                       {isCurrent && (

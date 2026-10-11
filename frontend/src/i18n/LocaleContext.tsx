@@ -1404,6 +1404,7 @@ const en: Dict = {
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
+  "itinerary.stopDisrupted": "Affected",
 
   // ── Trip-creation wizard: spoken labels, buttons and status lines ──
   /* ORD-0555 (lane 起手工): the wizard held these strings in `zh ? "..." : "..."` arms, so
@@ -2791,6 +2792,7 @@ const zhCN: Dict = {
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
+  "itinerary.stopDisrupted": "受影响",
 
   // ── 行程创建向导：口语标签、按钮与状态行 ──
   /* ORD-0555（车道 起手工）：向导里这些串写在 `zh ? "..." : "..."` 的分支上，两边都查不到键。
