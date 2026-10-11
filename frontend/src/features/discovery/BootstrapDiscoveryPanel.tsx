@@ -809,6 +809,9 @@ export function BootstrapDiscoveryPanel({
   };
 
   const previewSharedWalk = () => {
+    sharedWalkRequestGeneration.current += 1;
+    setSharedWalkLookupBusy(false);
+    setSharedWalkSaveBusy(false);
     const parsed = parseSharedWalkText(sharedWalkText);
     setSharedWalkParse(parsed);
     setSharedWalkLookup(null);
@@ -862,6 +865,8 @@ export function BootstrapDiscoveryPanel({
   };
 
   const setSharedWalkSavePosition = (candidateId: string, position: 1 | 2) => {
+    sharedWalkRequestGeneration.current += 1;
+    setSharedWalkSaveBusy(false);
     setSharedWalkSaveConsent(false);
     setSharedWalkSaveOrder((current) => {
       const without = current.filter((id) => id !== candidateId);
@@ -2132,6 +2137,9 @@ export function BootstrapDiscoveryPanel({
               aria-label="Public walk text"
               value={sharedWalkText}
               onChange={(event) => {
+                sharedWalkRequestGeneration.current += 1;
+                setSharedWalkLookupBusy(false);
+                setSharedWalkSaveBusy(false);
                 setSharedWalkText(event.target.value);
                 setSharedWalkParse(null);
                 setSharedWalkLookup(null);
@@ -2248,7 +2256,12 @@ export function BootstrapDiscoveryPanel({
                     <select
                       data-testid="bootstrap-shared-walk-pocket-budget"
                       value={sharedWalkPocketBudget ?? ""}
-                      onChange={(event) => setSharedWalkPocketBudget(event.target.value ? Number(event.target.value) : null)}
+                      onChange={(event) => {
+                        sharedWalkRequestGeneration.current += 1;
+                        setSharedWalkSaveBusy(false);
+                        setSharedWalkSaveConsent(false);
+                        setSharedWalkPocketBudget(event.target.value ? Number(event.target.value) : null);
+                      }}
                       disabled={sharedWalkSaveBusy}
                     >
                       <option value="">No budget declared</option>
