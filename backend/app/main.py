@@ -278,6 +278,8 @@ from app.execution.bootstrap_discovery import (
     lookup_bootstrap_shared_walk,
     save_bootstrap_shared_walk_pocket_walk,
     save_bootstrap_discovery_pocket_walk,
+    get_bootstrap_pocket_walk_go,
+    transition_bootstrap_pocket_walk_go,
 )
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
@@ -501,6 +503,7 @@ from app.schemas import (
     BootstrapTwoStopWalkabilityRequest,
     BootstrapAdaptiveShortWalkRequest,
     BootstrapPocketWalkSaveRequest,
+    BootstrapPocketWalkGoTransitionRequest,
     BootstrapSharedWalkLookupRequest,
     BootstrapSharedWalkPocketWalkSaveRequest,
     BootstrapDiscoveryPocketWalkSaveRequest,
@@ -3993,6 +3996,64 @@ def save_bootstrap_pocket_walk_intent(
             first_shortlist_id=payload.first_shortlist_id,
             second_shortlist_id=payload.second_shortlist_id,
             max_walk_minutes=payload.max_walk_minutes,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.get("/api/v1/journeys/{journey_id}/bootstrap-shortlist/pocket-walk/go")
+def get_bootstrap_pocket_walk_go_mode(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Read this signed member's latest server-verified self-reported progress."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        return get_bootstrap_pocket_walk_go(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+        )
+    except BootstrapDiscoveryError as exc:
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shortlist/pocket-walk/go")
+def transition_bootstrap_pocket_walk_go_mode(
+    journey_id: UUID,
+    payload: BootstrapPocketWalkGoTransitionRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Persist one conditional GO MODE self-report without creating arrival facts."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = transition_bootstrap_pocket_walk_go(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            action=payload.action,
+            expected_revision=payload.expected_revision,
+            pocket_walk_revision=payload.pocket_walk_revision,
+            idempotency_key=payload.idempotency_key,
         )
         session.commit()
         return result
