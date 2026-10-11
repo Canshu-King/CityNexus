@@ -1,0 +1,7 @@
+# structural assertions on the merged state (component from the product branch, dictionary from the dict branch)
+dollar_signs_in_my_three_keys=0
+keys_per_side=6
+chinese_literals_left_in_component=0
+dictionary_calls_in_component=5
+# parity gate:
+en keys: 1248 zh keys: 1249
