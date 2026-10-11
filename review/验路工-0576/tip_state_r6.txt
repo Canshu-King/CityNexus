@@ -1,0 +1,7 @@
+验路工 · 0576 落地状态回读（写块之后尖又动了两拍，这一格是那一拍的现读）
+[1] 现尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 8890f22fe37af40d2919db352be47043b1ea6162
+[2] 批三那枚产品提交 ad551988b20039ac3d5e966cfc169e2102a93f3f 在这一代现尖上判「已落」：命令原样 `git merge-base --is-ancestor` 回是；同判据下批二那枚 57aa9e7d7f6a26400fd45196bc3512e9a5840dd4 判「未落」
+[3] 用值面复核同一件事（不靠提交图）：现尖那枚 `frontend/src/features/execution/LiveRecovery.tsx` 里批三三枚键的 `t(...)` 命中三处、批二三枚键的 `t(...)` 命中零处
+[4] 普查尺 r2 在这一代现尖：全树 A 臂一百九十八处、总数七百二十四处，见 review/验路工-0576/census_text_tip_8890f22fe3.txt:1；该枚文件的机读段在 review/验路工-0576/census_r2_tip_8890f22fe3.json:5（全树 A）
+[5] 同一件产物里本枚文件自己：A 臂十三处、B 臂七处，两代对照写在 review/验路工-0576/tip_vs_branch_r6.txt:2（现尖那代）与 review/验路工-0576/tip_vs_branch_r6.txt:3（我这枝那代），相等判语在 review/验路工-0576/tip_vs_branch_r6.txt:4，与 review/验路工-0576/rest_liverecovery_r5.txt:2 那行同数——也就是说批三落地后，权威线上这枚文件的余面就是我枝上那份清单，批二那三枚仍在其中
+[6] 我这枝没动过别人字节，也没推权威线；这一拍之后批二那枝我会照例把现尖并进去再重跑四把尺，数只在落笔那一刻成立
