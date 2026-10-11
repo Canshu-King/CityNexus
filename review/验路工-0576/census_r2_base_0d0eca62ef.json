@@ -1,0 +1,3815 @@
+{
+ "sha": "0d0eca62ef8b7345bff48f6a30b1bf628e8124e0",
+ "files_with_inline_pairs": 32,
+ "totals": {
+  "A": 222,
+  "B_same_line": 359,
+  "B_over_lines": 167
+ },
+ "per_file": {
+  "frontend/src/app/V8Experience.tsx": [
+   [
+    279,
+    "A",
+    "? \"连不上服务器，请重试。\"       : \"Could not reach the server. Try aga"
+   ],
+   [
+    388,
+    "A",
+    "? \"提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。\"         : \"T"
+   ],
+   [
+    392,
+    "A",
+    "? \"有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。\"         : \"There were"
+   ],
+   [
+    396,
+    "A",
+    "? \"这趟行程不过夜，所以没有住宿可搜。\"         : \"This trip has no overnight "
+   ],
+   [
+    400,
+    "A",
+    "? \"行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。\""
+   ],
+   [
+    513,
+    "A",
+    "? \" · 本设备时间\" : \" · this device's time\""
+   ],
+   [
+    1143,
+    "A",
+    "? \"这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。\"               "
+   ],
+   [
+    1146,
+    "A",
+    "? \"服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。\"               "
+   ],
+   [
+    1373,
+    "A",
+    "? \"行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。\"             : \"Trip created."
+   ],
+   [
+    1678,
+    "A",
+    "? \"选一趟行程\" : \"Choose a trip\""
+   ],
+   [
+    1687,
+    "A",
+    "? \"重新登录\" : \"Sign in again\""
+   ],
+   [
+    1699,
+    "A",
+    "? \"等一会儿再问一次\" : \"Wait, then ask again\""
+   ],
+   [
+    1709,
+    "A",
+    "? \"看它现在是什么状态\" : \"Look at what it is now\""
+   ],
+   [
+    1719,
+    "A",
+    "? \"看已保存的只读副本\" : \"Read the saved copy\""
+   ],
+   [
+    1727,
+    "A",
+    "? \"重试\" : \"Try again\""
+   ],
+   [
+    1775,
+    "A",
+    "? \"重试\" : \"Try again\""
+   ],
+   [
+    1783,
+    "A",
+    "? \"归因详情\" : \"Attribution detail\""
+   ],
+   [
+    2668,
+    "A",
+    "? \"这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。\"           : \"This is "
+   ],
+   [
+    2978,
+    "A",
+    "? \"服务器不会中途汇报进度，这里只有真实等待时间。第一次搜索一个城市可能要一两分钟。\"                "
+   ],
+   [
+    2992,
+    "A",
+    "? \"住宿搜索失败了，行程本身还在。\"                   : \"The stay search fai"
+   ],
+   [
+    3019,
+    "A",
+    "? \"这次没找到可推荐的住宿\"                   : \"No stay options came ba"
+   ],
+   [
+    3247,
+    "A",
+    "? \"AI 帮我规划\" : \"Plan my trip with AI\""
+   ],
+   [
+    3317,
+    "A",
+    "? \"已处理\"                   : \"Handled\""
+   ],
+   [
+    3325,
+    "A",
+    "? \"这个行程还没有可信的坐标\"                     : \"This trip has no tru"
+   ],
+   [
+    3328,
+    "A",
+    "? \"一切正常\"                     : \"All clear\""
+   ],
+   [
+    3336,
+    "A",
+    "? \"打开「实时行程」查看并处理这些变化。\"                 : \"Open Live to revie"
+   ],
+   [
+    3339,
+    "A",
+    "? \"刚才的变化已经处理好。\"                 : \"The earlier change has be"
+   ],
+   [
+    3378,
+    "A",
+    "? \"还没有安排\"                   : \"Nothing scheduled\""
+   ],
+   [
+    3396,
+    "A",
+    "? \"这一趟到下一站就结束了\"                         : \"This trip ends at"
+   ],
+   [
+    3438,
+    "A",
+    "? \"执行游标\"                       : \"execution cursor\""
+   ],
+   [
+    3441,
+    "A",
+    "? \"行程起点\"                       : \"journey start\""
+   ],
+   [
+    3453,
+    "A",
+    "? \"。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读\"                       "
+   ],
+   [
+    3458,
+    "A",
+    "? \" · 现在/接下来由服务器的执行投影给出\"                     : \" · now/next "
+   ],
+   [
+    3462,
+    "A",
+    "? \" · 服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标\"                       :"
+   ],
+   [
+    3465,
+    "A",
+    "? \" · 服务器的执行投影还没到，这一屏没有按游标定位\"                       : \" · th"
+   ],
+   [
+    3473,
+    "A",
+    "? \"还在读服务器场景，这一屏用的是这台设备自己的时间\"                   : \"The scenar"
+   ],
+   [
+    3480,
+    "A",
+    "? \"台上没有场景，这一屏用的是这台设备自己的时间\"                 : \"There is no sc"
+   ],
+   [
+    3503,
+    "A",
+    "? \"还没有选定\"                 : \"Not chosen yet\""
+   ],
+   [
+    3547,
+    "A",
+    "? \"选定方案后，这里会显示每天的安排。\"               : \"Choose a plan and the"
+   ],
+   [
+    3649,
+    "A",
+    "? \"以下只是候选方案的预览，你还没有采用它。\"                 : \"This is a previe"
+   ],
+   [
+    4603,
+    "A",
+    "? \"服务器没有给这项承诺的时间窗\"                     : \"The server gave no"
+   ],
+   [
+    4646,
+    "A",
+    "? \"时间已锁定\"                   : \"Schedule fixed\""
+   ],
+   [
+    4649,
+    "A",
+    "? \"时间可调\"                   : \"Schedule flexible\""
+   ],
+   [
+    4707,
+    "A",
+    "? \"这段内容不是有效的预订数据。请检查格式，或改用上面的粘贴/手动方式。\"             : \"That i"
+   ],
+   [
+    4710,
+    "A",
+    "? \"这里只接受结构化数据。普通文字请用「粘贴确认单」或「手动录入」。\"             : \"Only str"
+   ],
+   [
+    4826,
+    "A",
+    "? \"待确认 · 服务器未确认\"                     : \"Pending · the server"
+   ],
+   [
+    4830,
+    "A",
+    "? \"已确认 · 受保护\"                       : \"Confirmed · protected"
+   ],
+   [
+    4833,
+    "A",
+    "? \"已确认 · 未成承诺\"                       : \"Confirmed · no commi"
+   ],
+   [
+    4851,
+    "A",
+    "? \"结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。\"            "
+   ],
+   [
+    5052,
+    "A",
+    "? \"这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。\"               : \"The fact"
+   ],
+   [
+    5094,
+    "A",
+    "? \"还没有\"                 : \"None yet\""
+   ],
+   [
+    5129,
+    "A",
+    "? \"高级详情\" : \"Advanced detail\""
+   ],
+   [
+    5181,
+    "A",
+    "? \"收起\"                   : \"Hide\""
+   ],
+   [
+    5184,
+    "A",
+    "? \"查看策略详情\"                   : \"View policy detail\""
+   ],
+   [
+    2456,
+    "B_same_line",
+    "zh: \"行程\", en: \"Itinerary\""
+   ],
+   [
+    2457,
+    "B_same_line",
+    "zh: \"住宿\", en: \"Stay\""
+   ],
+   [
+    2458,
+    "B_same_line",
+    "zh: \"预订\", en: \"Bookings\""
+   ],
+   [
+    2459,
+    "B_same_line",
+    "zh: \"花费\", en: \"Spend\""
+   ],
+   [
+    4475,
+    "B_same_line",
+    "zh: \"航班\", en: \"Flight\""
+   ],
+   [
+    4476,
+    "B_same_line",
+    "zh: \"火车\", en: \"Rail\""
+   ],
+   [
+    4479,
+    "B_same_line",
+    "zh: \"火车\", en: \"Train\""
+   ],
+   [
+    4480,
+    "B_same_line",
+    "zh: \"大巴\", en: \"Coach\""
+   ],
+   [
+    4481,
+    "B_same_line",
+    "zh: \"轮渡\", en: \"Ferry\""
+   ],
+   [
+    4482,
+    "B_same_line",
+    "zh: \"住宿\", en: \"Hotel\""
+   ],
+   [
+    4483,
+    "B_same_line",
+    "zh: \"门票\", en: \"Ticket\""
+   ],
+   [
+    4484,
+    "B_same_line",
+    "zh: \"预订\", en: \"Reservation\""
+   ],
+   [
+    4489,
+    "B_same_line",
+    "zh: \"其他预订\", en: \"Other booking\""
+   ],
+   [
+    5218,
+    "B_same_line",
+    "zh: \"婴儿车通行\", en: \"stroller access\""
+   ],
+   [
+    5219,
+    "B_same_line",
+    "zh: \"大件行李\", en: \"large luggage\""
+   ],
+   [
+    5231,
+    "B_same_line",
+    "zh: \"步行\", en: \"Walk\""
+   ],
+   [
+    5232,
+    "B_same_line",
+    "zh: \"骑行\", en: \"Cycle\""
+   ],
+   [
+    5233,
+    "B_same_line",
+    "zh: \"公交地铁\", en: \"Transit\""
+   ],
+   [
+    5234,
+    "B_same_line",
+    "zh: \"驾车\", en: \"Drive\""
+   ],
+   [
+    5235,
+    "B_same_line",
+    "zh: \"网约车\", en: \"Ride-hail\""
+   ],
+   [
+    5256,
+    "B_same_line",
+    "zh: \"抵达\", en: \"Arrival\""
+   ],
+   [
+    5257,
+    "B_same_line",
+    "zh: \"离开\", en: \"Departure\""
+   ],
+   [
+    5258,
+    "B_same_line",
+    "zh: \"住宿\", en: \"Stay\""
+   ],
+   [
+    5259,
+    "B_same_line",
+    "zh: \"入住\", en: \"Check-in\""
+   ],
+   [
+    5260,
+    "B_same_line",
+    "zh: \"退房\", en: \"Check-out\""
+   ],
+   [
+    5261,
+    "B_same_line",
+    "zh: \"锚点\", en: \"Anchor\""
+   ],
+   [
+    5296,
+    "B_same_line",
+    "zh: \"厦门\", en: \"Xiamen\""
+   ],
+   [
+    5297,
+    "B_same_line",
+    "zh: \"北京\", en: \"Beijing\""
+   ],
+   [
+    5298,
+    "B_same_line",
+    "zh: \"上海\", en: \"Shanghai\""
+   ],
+   [
+    5299,
+    "B_same_line",
+    "zh: \"天津\", en: \"Tianjin\""
+   ],
+   [
+    5300,
+    "B_same_line",
+    "zh: \"福州\", en: \"Fuzhou\""
+   ],
+   [
+    5301,
+    "B_same_line",
+    "zh: \"广州\", en: \"Guangzhou\""
+   ],
+   [
+    5302,
+    "B_same_line",
+    "zh: \"深圳\", en: \"Shenzhen\""
+   ],
+   [
+    5303,
+    "B_same_line",
+    "zh: \"成都\", en: \"Chengdu\""
+   ],
+   [
+    5304,
+    "B_same_line",
+    "zh: \"杭州\", en: \"Hangzhou\""
+   ],
+   [
+    5305,
+    "B_same_line",
+    "zh: \"东京\", en: \"Tokyo\""
+   ],
+   [
+    5306,
+    "B_same_line",
+    "zh: \"新加坡\", en: \"Singapore\""
+   ]
+  ],
+  "frontend/src/features/agent/CopilotDock.tsx": [
+   [
+    243,
+    "A",
+    "? \"运行事件暂时无法解析\" : \"A runtime event could not be read\""
+   ],
+   [
+    254,
+    "A",
+    "? \"正在重新连接运行事件\" : \"Reconnecting to runtime events\""
+   ],
+   [
+    257,
+    "A",
+    "? \"运行事件流不可用；已保留已收到的事件\" : \"Event stream unavailable; received"
+   ],
+   [
+    360,
+    "A",
+    "? \"正在停止…\" : \"Stopping…\""
+   ],
+   [
+    364,
+    "A",
+    "? \"已通过 CityNexus 停止\" : \"Stopped through CityNexus\""
+   ],
+   [
+    374,
+    "A",
+    "? \"离线时不能确认方案\" : \"Approval is disabled while offline\""
+   ],
+   [
+    378,
+    "A",
+    "? \"缺少 CityNexus approval_id，需打开恢复中心审核\" : \"CityNexus approval"
+   ],
+   [
+    381,
+    "A",
+    "? \"正在记录 CityNexus 确认…\" : \"Recording CityNexus approval…\""
+   ],
+   [
+    384,
+    "A",
+    "? \"确认已记录；仍需由 CityNexus 执行授权\" : \"Approval recorded; CityNexus"
+   ],
+   [
+    396,
+    "A",
+    "? \"正在为你处理\" : \"Working on your request\""
+   ],
+   [
+    399,
+    "A",
+    "? \"已按你的行程事实执行\" : \"Ran against your journey facts\""
+   ],
+   [
+    400,
+    "A",
+    "? \"正在核对你的行程事实…\" : \"Checking your journey facts…\""
+   ],
+   [
+    409,
+    "A",
+    "? \"正在核对你的行程事实…\" : \"Checking your journey facts…\""
+   ],
+   [
+    430,
+    "A",
+    "? \"查看安全任务计划\" : \"View safe mission plan\""
+   ],
+   [
+    435,
+    "A",
+    "? \"CityNexus 授权\" : \"CityNexus authority\""
+   ],
+   [
+    443,
+    "A",
+    "? \"建议与受保护安排\" : \"Suggestions & protected plans\""
+   ],
+   [
+    446,
+    "A",
+    "? \"已经生成建议，展开高级详情可以看到过程。\" : \"A suggestion is ready; open adva"
+   ],
+   [
+    447,
+    "A",
+    "? \"还没有需要你决定的改动。\" : \"There is nothing for you to decide yet.\""
+   ],
+   [
+    451,
+    "A",
+    "? \"受保护承诺\" : \"Protected commitment\""
+   ],
+   [
+    454,
+    "A",
+    "? \"受保护活动\" : \"Protected activity\""
+   ],
+   [
+    461,
+    "A",
+    "? \"需要你确认\" : \"Needs your confirmation\""
+   ],
+   [
+    464,
+    "A",
+    "? \"任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。\"               : \"An"
+   ],
+   [
+    468,
+    "A",
+    "? \"批准\" : \"Approve\""
+   ],
+   [
+    469,
+    "A",
+    "? \"拒绝\" : \"Reject\""
+   ],
+   [
+    470,
+    "A",
+    "? \"修改 / 审核\" : \"Modify / Review\""
+   ],
+   [
+    480,
+    "A",
+    "? \"停止任务\" : \"Stop mission\""
+   ],
+   [
+    895,
+    "A",
+    "? \"回答只依据已核验的行程事实，不会自己改动你的安排。\"                   : \"Answers u"
+   ],
+   [
+    902,
+    "A",
+    "? \"问我为什么这样安排、试算变化，或报告已经确认的中断。\" : \"Ask why, preview a change,"
+   ],
+   [
+    905,
+    "A",
+    "? \"你\" : \"You\""
+   ],
+   [
+    38,
+    "B_same_line",
+    "en: \"Understanding request\", zh: \"理解请求\""
+   ],
+   [
+    39,
+    "B_same_line",
+    "en: \"Steps prepared\", zh: \"已准备好步骤\""
+   ],
+   [
+    40,
+    "B_same_line",
+    "en: \"Started working\", zh: \"开始处理\""
+   ],
+   [
+    41,
+    "B_same_line",
+    "en: \"Checked against your trip rules\", zh: \"已按你的行程规则核对\""
+   ],
+   [
+    42,
+    "B_same_line",
+    "en: \"Checked your protected plans\", zh: \"已核对你的受保护安排\""
+   ],
+   [
+    43,
+    "B_same_line",
+    "en: \"Proposal created\", zh: \"方案已生成\""
+   ],
+   [
+    44,
+    "B_same_line",
+    "en: \"Waiting for approval\", zh: \"等待确认\""
+   ],
+   [
+    45,
+    "B_same_line",
+    "en: \"Finished\", zh: \"已处理完成\""
+   ],
+   [
+    46,
+    "B_same_line",
+    "en: \"Could not finish\", zh: \"暂时无法完成\""
+   ],
+   [
+    47,
+    "B_same_line",
+    "en: \"Stopped\", zh: \"已停止\""
+   ],
+   [
+    51,
+    "B_same_line",
+    "en: \"Inspect current Journey\", zh: \"检查当前行程\""
+   ],
+   [
+    52,
+    "B_same_line",
+    "en: \"Check my trip facts\", zh: \"核对我的行程事实\""
+   ],
+   [
+    53,
+    "B_same_line",
+    "en: \"Inspect proposals and commitments\", zh: \"检查方案和受保护承诺\""
+   ],
+   [
+    54,
+    "B_same_line",
+    "en: \"Search candidate places and services\", zh: \"搜索候选地点和服务\""
+   ],
+   [
+    55,
+    "B_same_line",
+    "en: \"Ask for a revised plan\", zh: \"请求调整方案\""
+   ],
+   [
+    56,
+    "B_same_line",
+    "en: \"Accept replan\", zh: \"接受重规划\""
+   ],
+   [
+    57,
+    "B_same_line",
+    "en: \"Replace activity\", zh: \"替换活动\""
+   ],
+   [
+    58,
+    "B_same_line",
+    "en: \"Reschedule activity\", zh: \"调整活动时间\""
+   ],
+   [
+    59,
+    "B_same_line",
+    "en: \"Create booking\", zh: \"创建预订\""
+   ],
+   [
+    60,
+    "B_same_line",
+    "en: \"Cancel refundable booking\", zh: \"取消可退款预订\""
+   ],
+   [
+    61,
+    "B_same_line",
+    "en: \"Request commitment change\", zh: \"请求修改受保护承诺\""
+   ],
+   [
+    504,
+    "B_same_line",
+    "zh: \"解释当前安排\", en: \"Explains your plan\""
+   ],
+   [
+    505,
+    "B_same_line",
+    "zh: \"试算变化\", en: \"Previews a change\""
+   ],
+   [
+    506,
+    "B_same_line",
+    "zh: \"核对信息\", en: \"Checks a claim\""
+   ],
+   [
+    507,
+    "B_same_line",
+    "zh: \"查找地点\", en: \"Finds places\""
+   ],
+   [
+    508,
+    "B_same_line",
+    "zh: \"偏好更新\", en: \"Preference update\""
+   ],
+   [
+    509,
+    "B_same_line",
+    "zh: \"报告中断\", en: \"Reports a disruption\""
+   ],
+   [
+    510,
+    "B_same_line",
+    "zh: \"重新规划\", en: \"Replan request\""
+   ],
+   [
+    511,
+    "B_same_line",
+    "zh: \"个人求助\", en: \"Personal help\""
+   ],
+   [
+    512,
+    "B_same_line",
+    "zh: \"其他问题\", en: \"Other\""
+   ],
+   [
+    516,
+    "B_same_line",
+    "zh: \"已核验\", en: \"Verified\""
+   ],
+   [
+    517,
+    "B_same_line",
+    "zh: \"部分核验\", en: \"Partly verified\""
+   ],
+   [
+    518,
+    "B_same_line",
+    "zh: \"未核验\", en: \"Unverified\""
+   ],
+   [
+    519,
+    "B_same_line",
+    "zh: \"暂时无法核验\", en: \"Could not verify\""
+   ],
+   [
+    520,
+    "B_same_line",
+    "zh: \"暂不支持核验\", en: \"Verification unavailable\""
+   ],
+   [
+    524,
+    "B_same_line",
+    "zh: \"查看可选调整\", en: \"See possible changes\""
+   ],
+   [
+    525,
+    "B_same_line",
+    "zh: \"更新我的偏好\", en: \"Update my preferences\""
+   ],
+   [
+    526,
+    "B_same_line",
+    "zh: \"查看安排理由\", en: \"See why\""
+   ],
+   [
+    527,
+    "B_same_line",
+    "zh: \"搜索更多地点\", en: \"Search more places\""
+   ],
+   [
+    528,
+    "B_same_line",
+    "zh: \"查看来源\", en: \"See sources\""
+   ],
+   [
+    529,
+    "B_same_line",
+    "zh: \"确认受影响安排\", en: \"Confirm what is affected\""
+   ],
+   [
+    537,
+    "B_same_line",
+    "zh: \"正在处理\", en: \"Working\""
+   ],
+   [
+    538,
+    "B_same_line",
+    "zh: \"已开始\", en: \"Started\""
+   ],
+   [
+    539,
+    "B_same_line",
+    "zh: \"等待中\", en: \"Waiting\""
+   ],
+   [
+    540,
+    "B_same_line",
+    "zh: \"已完成\", en: \"Done\""
+   ],
+   [
+    541,
+    "B_same_line",
+    "zh: \"已完成\", en: \"Done\""
+   ],
+   [
+    542,
+    "B_same_line",
+    "zh: \"暂时无法完成\", en: \"Could not finish\""
+   ],
+   [
+    543,
+    "B_same_line",
+    "zh: \"服务暂时不可用\", en: \"Service unavailable\""
+   ],
+   [
+    544,
+    "B_same_line",
+    "zh: \"已停止\", en: \"Stopped\""
+   ],
+   [
+    545,
+    "B_same_line",
+    "zh: \"已取消\", en: \"Cancelled\""
+   ],
+   [
+    546,
+    "B_same_line",
+    "zh: \"等待你确认\", en: \"Needs your confirmation\""
+   ]
+  ],
+  "frontend/src/features/checkin/checkinCopy.ts": [
+   [
+    46,
+    "B_over_lines",
+    "zh: \"这一站已经打过卡了（服务器记的是 {moment}），这次没有再盖一枚，行程里还是原来那一枚。\",     e"
+   ],
+   [
+    50,
+    "B_over_lines",
+    "zh: \"这一站已经打过卡了，这次没有再盖一枚；那一枚的时间这次没有随答案回来。\",     en: \"This sto"
+   ],
+   [
+    54,
+    "B_over_lines",
+    "zh: \"这一站已经不在服务器上了，所以这枚打卡没有落下。请回行程列表重新打开这趟。\",     en: \"That s"
+   ],
+   [
+    58,
+    "B_over_lines",
+    "zh: \"这一站不属于这趟行程，所以这枚打卡没有落下。请在这一趟自己的行程里打卡。\",     en: \"That st"
+   ],
+   [
+    62,
+    "B_over_lines",
+    "zh: \"那个地点我们这边没有档案，所以这枚打卡没有落下。\",     en: \"We have no record o"
+   ],
+   [
+    71,
+    "B_over_lines",
+    "zh: \"这枚打卡没有说要记在哪一站，所以没有落下。请在某一站上按「{button}」。\",     en: \"This"
+   ],
+   [
+    75,
+    "B_over_lines",
+    "zh: \"这枚打卡同时指向一站和一个地点，只能记一个，所以没有落下。\",     en: \"This stamp nam"
+   ],
+   [
+    79,
+    "B_over_lines",
+    "zh: \"这趟行程在回收站里，先把它找回来才谈得上打卡或读足迹。\",     en: \"This trip is in "
+   ],
+   [
+    83,
+    "B_over_lines",
+    "zh: \"这台服务器上没有这趟行程，所以这一屏的打卡没有落下。\",     en: \"This server has n"
+   ],
+   [
+    87,
+    "B_over_lines",
+    "zh: \"这一问没有到达服务器，所以这里不能说打卡有没有落下。\",     en: \"This request neve"
+   ],
+   [
+    91,
+    "B_over_lines",
+    "zh: \"服务器收了这枚打卡但给了一个这里说不上名的答复（{status}），所以这一屏按没有打卡处理。\",     e"
+   ]
+  ],
+  "frontend/src/features/checkin/footprintCopy.ts": [
+   [
+    47,
+    "B_over_lines",
+    "zh: \"这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。\",     en: \"Every row he"
+   ],
+   [
+    54,
+    "B_over_lines",
+    "zh: \"日期按这趟行程自己的时区（{zone}）分，不按这台设备的钟。\",              en: \"Day"
+   ],
+   [
+    56,
+    "B_over_lines",
+    "zh: \"这趟行程没有给出自己的时区，所以下面的日期是这台设备的钟。\",                    en: "
+   ],
+   [
+    58,
+    "B_same_line",
+    "zh: \"时刻\", en: \"time\""
+   ],
+   [
+    59,
+    "B_same_line",
+    "zh: \"地点\", en: \"place\""
+   ],
+   [
+    60,
+    "B_same_line",
+    "zh: \"备注\", en: \"note\""
+   ],
+   [
+    61,
+    "B_same_line",
+    "zh: \"没写备注\", en: \"no note was written\""
+   ],
+   [
+    65,
+    "B_same_line",
+    "zh: \"那一站已经不在计划里\", en: \"that stop has left the plan\""
+   ],
+   [
+    66,
+    "B_same_line",
+    "zh: \"来源\", en: \"from\""
+   ],
+   [
+    69,
+    "B_same_line",
+    "zh: \"网页端打的\", en: \"stamped from the web\""
+   ],
+   [
+    70,
+    "B_same_line",
+    "zh: \"来源这一格服务器没给名字\", en: \"the server gave no name for the sou"
+   ],
+   [
+    71,
+    "B_over_lines",
+    "zh: \"还没有足迹。打开行程，在一站上按「打卡」。\",            en: \"No footprints y"
+   ],
+   [
+    74,
+    "B_over_lines",
+    "zh: \"这一屏只列你自己按出来的那几枚印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一"
+   ],
+   [
+    77,
+    "B_same_line",
+    "zh: \"打开行程去打卡\", en: \"Go check in on a stop\""
+   ],
+   [
+    81,
+    "B_over_lines",
+    "zh: \"服务器答了，但这次没有把足迹交出来。\",              en: \"The server answe"
+   ],
+   [
+    83,
+    "B_over_lines",
+    "zh: \"这一屏没问到服务器，所以这里既没说有事，也没说没事。\",                  en: \"This"
+   ],
+   [
+    85,
+    "B_over_lines",
+    "zh: \"现在没有打开的行程，所以没向服务器问任何东西。\",                en: \"No trip i"
+   ],
+   [
+    87,
+    "B_same_line",
+    "zh: \"正在读足迹…\", en: \"Reading the footprints…\""
+   ],
+   [
+    88,
+    "B_same_line",
+    "zh: \"重读一次\", en: \"Read again\""
+   ],
+   [
+    89,
+    "B_same_line",
+    "zh: \"这次行程共有 {count} 枚足迹。\", en: \"This trip holds {count} {plu"
+   ],
+   [
+    90,
+    "B_same_line",
+    "zh: \"分成 {count} 天。\", en: \"Across {count} {plural:day:count}."
+   ]
+  ],
+  "frontend/src/features/checklist/PretripChecklistPanel.tsx": [
+   [
+    59,
+    "A",
+    "? \"这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及等待你决定的恢复方案。完成状态由服务端事实自己消失，不"
+   ]
+  ],
+  "frontend/src/features/collections/collectionCopy.ts": [
+   [
+    21,
+    "B_over_lines",
+    "zh: \"我的收藏\",     en: \"My collections\""
+   ],
+   [
+    25,
+    "B_over_lines",
+    "zh: \"这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。\",     en: \"Each shelf carri"
+   ],
+   [
+    29,
+    "B_over_lines",
+    "zh: \"架子\",     en: \"Shelf\""
+   ],
+   [
+    33,
+    "B_over_lines",
+    "zh: \"枚地点\",     en: \"places\""
+   ],
+   [
+    37,
+    "B_over_lines",
+    "zh: \"还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。\",     en: \"Nothing co"
+   ],
+   [
+    45,
+    "B_over_lines",
+    "zh: \"这一枚架子上还没有放地点。\",     en: \"No places are on this shelf ye"
+   ],
+   [
+    49,
+    "B_over_lines",
+    "zh: \"正在读架子…\",     en: \"Reading the shelves…\""
+   ],
+   [
+    53,
+    "B_over_lines",
+    "zh: \"重读一次\",     en: \"Read again\""
+   ],
+   [
+    57,
+    "B_over_lines",
+    "zh: \"没写备注\",     en: \"no note written\""
+   ],
+   [
+    67,
+    "B_over_lines",
+    "zh: \"收藏到…\",     en: \"Collect into…\""
+   ],
+   [
+    71,
+    "B_over_lines",
+    "zh: \"收到哪个架子\",     en: \"Which shelf should hold it\""
+   ],
+   [
+    75,
+    "B_over_lines",
+    "zh: \"正在列你的架子…\",     en: \"Listing your shelves…\""
+   ],
+   [
+    79,
+    "B_over_lines",
+    "zh: \"先不收\",     en: \"Not now\""
+   ],
+   [
+    83,
+    "B_over_lines",
+    "zh: \"这位旅客名下还没有架子，所以这一枚没地方放。\",     en: \"This traveller holds "
+   ],
+   [
+    87,
+    "B_over_lines",
+    "zh: \"这一枚已经在这个架子上。\",     en: \"This place is already on that s"
+   ],
+   [
+    91,
+    "B_over_lines",
+    "zh: \"那个架子已经不在了，这一枚没有写进去。\",     en: \"That shelf is gone, so n"
+   ],
+   [
+    95,
+    "B_over_lines",
+    "zh: \"这一站对应的地点不在这台服务器里，所以没放进去。\",     en: \"The place behind th"
+   ],
+   [
+    99,
+    "B_over_lines",
+    "zh: \"这一屏没能把这一枚写进架子。上面这句是屏自己判断的状态，不是服务器给的理由。\",     en: \"This "
+   ],
+   [
+    103,
+    "B_over_lines",
+    "zh: \"这台设备没连上服务器，所以这一枚没有写出去。\",     en: \"This device could not"
+   ],
+   [
+    107,
+    "B_over_lines",
+    "zh: \"已收在\",     en: \"Collected into\""
+   ],
+   [
+    111,
+    "B_over_lines",
+    "zh: \"服务器上的架子里没有这一枚\",     en: \"no shelf on the server carries"
+   ],
+   [
+    115,
+    "B_over_lines",
+    "zh: \"这台设备没连上服务器，所以列不出架子。\",     en: \"This device could not re"
+   ],
+   [
+    119,
+    "B_over_lines",
+    "zh: \"这一行没有对应的地点身份，所以这里不给收藏入口。\",     en: \"This row carries no"
+   ],
+   [
+    123,
+    "B_over_lines",
+    "zh: \"还没有旅客身份，所以没问服务器：收藏的读门要一个 traveler_id。\",     en: \"No tra"
+   ],
+   [
+    131,
+    "B_over_lines",
+    "zh: \"这一屏没能从服务器读到架子。上面这句话是屏自己判断的状态，不是服务器给的理由。\",   en: \"This f"
+   ],
+   [
+    136,
+    "B_over_lines",
+    "zh: \"还没有旅客身份，所以没问服务器：收藏的读门要一个 traveler_id。\",   en: \"No trave"
+   ]
+  ],
+  "frontend/src/features/discovery/DestinationPreparationPanel.tsx": [
+   [
+    204,
+    "A",
+    "? \"服务器说这座城需要的事实都在，而且是新的，可以直接规划。\"             : \"The server s"
+   ],
+   [
+    218,
+    "A",
+    "? \"服务器说需要的事实都在，但已经不新了。直接规划会用到过季的资料，建议先刷新。\"             : \"Th"
+   ],
+   [
+    279,
+    "A",
+    "? \"这件事已经在准备了\"             : \"This is already being prepared\""
+   ],
+   [
+    282,
+    "A",
+    "? \"正在准备这个目的地\"             : \"Preparing this destination\""
+   ],
+   [
+    294,
+    "A",
+    "? \"服务器说这座城需要的事实已经落库。现在规划会用到它们。\"             : \"The server sa"
+   ],
+   [
+    301,
+    "A",
+    "? \"服务器说这份资料已经是新的，所以这次准备什么也没做。这不是失败。\"             : \"The serv"
+   ],
+   [
+    308,
+    "A",
+    "? \"服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目"
+   ],
+   [
+    320,
+    "A",
+    "? \"服务器说这是它那边的一次运行性失败（可以重试），不是「这个地方不存在」。\"             : \"The "
+   ],
+   [
+    427,
+    "A",
+    "? \"输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。\"   "
+   ],
+   [
+    451,
+    "A",
+    "? \"看看能不能规划\" : \"Check this destination\""
+   ],
+   [
+    532,
+    "A",
+    "? \"稍后重试\" : \"Try again later\""
+   ],
+   [
+    542,
+    "A",
+    "? \"开始准备\" : \"Prepare this destination\""
+   ]
+  ],
+  "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx": [
+   [
+    424,
+    "A",
+    "? \"技术详情\" : \"Technical detail\""
+   ]
+  ],
+  "frontend/src/features/execution/LiveRecovery.tsx": [
+   [
+    77,
+    "A",
+    "? \"暂时无法获取这段路线的可靠通行时间，因此没有自动修改你的行程。你可以稍后重试，或手动选择替代地点。\"       "
+   ],
+   [
+    82,
+    "A",
+    "? \"附近没有可以替换这处行程的合适地点。\"       : \"No suitable replacement plac"
+   ],
+   [
+    87,
+    "A",
+    "? \"没能确定这次变化影响的是哪一段行程。\"       : \"We could not tell which stop"
+   ],
+   [
+    92,
+    "A",
+    "? \"这一段属于你已确认不能动的安排，需要你手动处理。\"       : \"This stop is part of a"
+   ],
+   [
+    97,
+    "A",
+    "? \"暂时无法自动调整这段行程，请稍后重试或手动处理。\"     : \"We couldn't adjust this "
+   ],
+   [
+    280,
+    "A",
+    "? \"正在进行\" : \"In progress\""
+   ],
+   [
+    281,
+    "A",
+    "? \"现在的行程\" : \"Your trip right now\""
+   ],
+   [
+    303,
+    "A",
+    "? \"发生了什么\" : \"What happened\""
+   ],
+   [
+    314,
+    "A",
+    "? \"服务器摘要：这台设备还没读到\"                 : \"Server summary: not re"
+   ],
+   [
+    345,
+    "A",
+    "? \"已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。\"             : \"Seen, stil"
+   ],
+   [
+    380,
+    "A",
+    "? \"已确认的预订和到达/离开时间保持不变。\"                     : \"Confirmed boo"
+   ],
+   [
+    383,
+    "A",
+    "? \"注意：部分已确认内容会受影响。\"                     : \"Note: some confir"
+   ],
+   [
+    417,
+    "A",
+    "? \"应用中…\" : \"Applying…\""
+   ],
+   [
+    418,
+    "A",
+    "? \"接受新方案\" : \"Accept new plan\""
+   ],
+   [
+    427,
+    "A",
+    "? \"只调整今天：已记录，今天的安排会优先。\" : \"Adjust today only: noted.\""
+   ],
+   [
+    431,
+    "A",
+    "? \"仅调整今天\" : \"Adjust today only\""
+   ],
+   [
+    440,
+    "A",
+    "? \"稍后提醒\" : \"Remind me later\""
+   ],
+   [
+    456,
+    "A",
+    "? \"当前没有需要你决定的调整。\" : \"There is nothing for you to decide righ"
+   ],
+   [
+    463,
+    "A",
+    "? \"刚才的行程变化已经处理好，已确认的预订保持不变。\"             : \"The earlier disr"
+   ],
+   [
+    54,
+    "B_same_line",
+    "zh: \"有一处地点临时关闭\", en: \"A stop is temporarily closed\""
+   ],
+   [
+    55,
+    "B_same_line",
+    "zh: \"天气影响行程\", en: \"Weather is affecting the trip\""
+   ],
+   [
+    56,
+    "B_same_line",
+    "zh: \"路上拥堵\", en: \"Traffic is delayed\""
+   ],
+   [
+    57,
+    "B_same_line",
+    "zh: \"行程时间有变化\", en: \"The schedule has shifted\""
+   ],
+   [
+    58,
+    "B_same_line",
+    "zh: \"某项服务不可用\", en: \"A service is unavailable\""
+   ],
+   [
+    59,
+    "B_same_line",
+    "zh: \"你更新了行程需求\", en: \"You changed a trip requirement\""
+   ],
+   [
+    60,
+    "B_same_line",
+    "zh: \"行程有新情况\", en: \"Something changed\""
+   ]
+  ],
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": [
+   [
+    278,
+    "A",
+    "? \"金额待确认\" : \"Amount to confirm\""
+   ],
+   [
+    289,
+    "A",
+    "? \"已记录\" : \"Recorded\""
+   ],
+   [
+    190,
+    "B_same_line",
+    "zh: \"预订类型\", en: \"Booking type\""
+   ],
+   [
+    191,
+    "B_same_line",
+    "zh: \"名称\", en: \"Name\""
+   ],
+   [
+    192,
+    "B_same_line",
+    "zh: \"订单号\", en: \"Reference\""
+   ],
+   [
+    193,
+    "B_same_line",
+    "zh: \"出发地\", en: \"From\""
+   ],
+   [
+    194,
+    "B_same_line",
+    "zh: \"到达地\", en: \"To\""
+   ],
+   [
+    195,
+    "B_same_line",
+    "zh: \"出发时间\", en: \"Departure\""
+   ],
+   [
+    196,
+    "B_same_line",
+    "zh: \"到达时间\", en: \"Arrival\""
+   ],
+   [
+    197,
+    "B_same_line",
+    "zh: \"金额\", en: \"Amount\""
+   ],
+   [
+    198,
+    "B_same_line",
+    "zh: \"币种\", en: \"Currency\""
+   ],
+   [
+    199,
+    "B_same_line",
+    "zh: \"来源\", en: \"Source\""
+   ],
+   [
+    207,
+    "B_same_line",
+    "zh: \"航班\", en: \"Flight\""
+   ],
+   [
+    208,
+    "B_same_line",
+    "zh: \"火车\", en: \"Rail\""
+   ],
+   [
+    209,
+    "B_same_line",
+    "zh: \"大巴\", en: \"Coach\""
+   ],
+   [
+    210,
+    "B_same_line",
+    "zh: \"轮渡\", en: \"Ferry\""
+   ],
+   [
+    211,
+    "B_same_line",
+    "zh: \"住宿\", en: \"Hotel\""
+   ],
+   [
+    212,
+    "B_same_line",
+    "zh: \"门票\", en: \"Ticket\""
+   ],
+   [
+    213,
+    "B_same_line",
+    "zh: \"预订\", en: \"Reservation\""
+   ],
+   [
+    217,
+    "B_same_line",
+    "zh: \"可以自动加入行程\", en: \"Ready to add to your trip\""
+   ],
+   [
+    218,
+    "B_same_line",
+    "zh: \"加入时会提醒你\", en: \"Will be added with a notice\""
+   ],
+   [
+    219,
+    "B_same_line",
+    "zh: \"需要你先确认\", en: \"Needs your confirmation\""
+   ],
+   [
+    220,
+    "B_same_line",
+    "zh: \"需要你补充信息\", en: \"Needs a few more details\""
+   ],
+   [
+    221,
+    "B_same_line",
+    "zh: \"已加入行程\", en: \"Added to your trip\""
+   ]
+  ],
+  "frontend/src/features/planning/PlanComparison.tsx": [
+   [
+    171,
+    "A",
+    "? \"花费未知\"               : \"Cost unknown\""
+   ],
+   [
+    175,
+    "A",
+    "? \"预算内\"                 : \"Within budget\""
+   ],
+   [
+    179,
+    "A",
+    "? \"接近预算上限\"                   : \"Near your limit\""
+   ],
+   [
+    204,
+    "A",
+    "? \"总花费\" : \"Total cost\""
+   ],
+   [
+    213,
+    "A",
+    "? \"暂无价格\"                           : \"Price unknown\""
+   ],
+   [
+    218,
+    "A",
+    "? \"活动数\" : \"Stops\""
+   ],
+   [
+    223,
+    "A",
+    "? \"步行\" : \"Walking\""
+   ],
+   [
+    239,
+    "A",
+    "? \"亮点：\" : \"Highlights: \""
+   ],
+   [
+    261,
+    "A",
+    "? \"采用中…\"                     : \"Choosing…\""
+   ],
+   [
+    264,
+    "A",
+    "? \"采用这个方案\"                     : \"Choose this plan\""
+   ]
+  ],
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": [
+   [
+    205,
+    "A",
+    "? \"去“今天”对比这几个方案，选一个再继续。\"         : \"Compare them on Today, t"
+   ],
+   [
+    214,
+    "A",
+    "? \"请求已中止，你的行程没有被改动。可以改个说法再来一次。\"         : \"The request was a"
+   ],
+   [
+    223,
+    "A",
+    "? \"请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。\"         : \"The reques"
+   ],
+   [
+    237,
+    "A",
+    "? \"这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不"
+   ],
+   [
+    246,
+    "A",
+    "? \"网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\"         : \"Nei"
+   ],
+   [
+    255,
+    "A",
+    "? \"服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\"         : \"T"
+   ],
+   [
+    264,
+    "A",
+    "? \"这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\"         :"
+   ],
+   [
+    275,
+    "A",
+    "? \"这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里"
+   ],
+   [
+    284,
+    "A",
+    "? \"无法确认本次是否生成了新方案，请重试或刷新页面。\"         : \"We could not confirm"
+   ],
+   [
+    293,
+    "A",
+    "? \"服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动"
+   ],
+   [
+    302,
+    "A",
+    "? \"规划助手这次没能连上。你的行程没有被改动，可以稍后重试。\"         : \"The planning ass"
+   ],
+   [
+    317,
+    "A",
+    "? \"这次没能生成方案。你的行程没有被改动，可以重试或换个说法。\"       : \"We could not prod"
+   ],
+   [
+    739,
+    "A",
+    "? \"正在处理\"       : \"Working\""
+   ],
+   [
+    772,
+    "A",
+    "? \"用你自己的话描述这趟旅行，越具体越好。\"                 : \"Describe the trip"
+   ],
+   [
+    859,
+    "A",
+    "? \"这台服务配了一个 AI 凭据。这里只说明\\\"配了\\\"，没有验证过它能用；这一句不代表你下一次提交会成功。\"    "
+   ],
+   [
+    863,
+    "A",
+    "? \"这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。\" "
+   ],
+   [
+    867,
+    "A",
+    "? \"这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。\"     "
+   ],
+   [
+    871,
+    "A",
+    "? \"模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。\"       "
+   ],
+   [
+    875,
+    "A",
+    "? \"读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。\"               "
+   ],
+   [
+    896,
+    "A",
+    "? \"后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。\"                 : \"T"
+   ],
+   [
+    1098,
+    "A",
+    "? \"服务器给出的原因\"                           : \"Reason the server "
+   ],
+   [
+    1101,
+    "A",
+    "? \"这台设备自己的读数（服务器没给句子）\"                           : \"This dev"
+   ],
+   [
+    1156,
+    "A",
+    "? \"服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）\"                      "
+   ],
+   [
+    1159,
+    "A",
+    "? \"模型原始输出（未翻译，不代表本界面的结论）\"                           : \"Model"
+   ],
+   [
+    67,
+    "B_over_lines",
+    "zh: \"用你自己的话说：这趟想怎么玩、想吃什么、哪儿一定要去。\",   en: \"In your own words:"
+   ],
+   [
+    76,
+    "B_over_lines",
+    "zh: \"还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。\",   en: \"W"
+   ],
+   [
+    130,
+    "B_over_lines",
+    "zh: \"这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。\",     en: \"We hold "
+   ],
+   [
+    135,
+    "B_over_lines",
+    "zh: \"这座城我们手上的地点太少，配不平一天的行程。\",     en: \"We have too few place"
+   ],
+   [
+    140,
+    "B_over_lines",
+    "zh: \"要排的地点不在我们的目录里，所以排不出行程。\",     en: \"The places this was a"
+   ],
+   [
+    145,
+    "B_over_lines",
+    "zh: \"地点有了，但费用我们没能核实，所以没有给出带价格的方案。\",     en: \"The places were"
+   ],
+   [
+    150,
+    "B_over_lines",
+    "zh: \"这些地点的开放时间和你这趟的日期对不上。\",     en: \"These places' opening h"
+   ],
+   [
+    155,
+    "B_over_lines",
+    "zh: \"这趟的出行数据缺了一段（站与站之间的时间没读到），所以没排出来。\",     en: \"Part of thi"
+   ]
+  ],
+  "frontend/src/features/planning/aiGenerationRun.ts": [
+   [
+    75,
+    "B_same_line",
+    "zh: \"读取已有方案作为基线\", en: \"Reading existing plans as a baseline\""
+   ],
+   [
+    76,
+    "B_same_line",
+    "zh: \"发出请求，等待模型返回\", en: \"Request sent, waiting for the model\""
+   ],
+   [
+    77,
+    "B_same_line",
+    "zh: \"核对本次是否真的产出了新方案\", en: \"Checking whether this run produce"
+   ],
+   [
+    80,
+    "B_over_lines",
+    "zh: \"改用已发现的城市地点重新排一版\",     en: \"Re-planning from the places "
+   ]
+  ],
+  "frontend/src/features/planning/catalogueReadback.ts": [
+   [
+    79,
+    "A",
+    "? \"服务器回读：这座城我们现在一个地点都还没有。\"       : \"Read back from the serve"
+   ]
+  ],
+  "frontend/src/features/poiimport/poiImportCopy.ts": [
+   [
+    106,
+    "B_over_lines",
+    "zh: \"三个去处只能选一个：选了哪一个，就只照那一个写。\",     en: \"One destination at "
+   ],
+   [
+    113,
+    "B_over_lines",
+    "zh: \"全选可加的行\",     en: \"Select every selectable row\""
+   ],
+   [
+    117,
+    "B_over_lines",
+    "zh: \"已全选——点一下取消全部\",     en: \"All selected — tap to clear eve"
+   ],
+   [
+    121,
+    "B_over_lines",
+    "zh: \"只存不排\",     en: \"Keep them without a day\""
+   ],
+   [
+    137,
+    "B_over_lines",
+    "zh: \"这一项选上了，但它没有可写的门：上面那句就是它的全部回答，这一屏什么都没写。\",     en: \"This "
+   ],
+   [
+    141,
+    "B_over_lines",
+    "zh: \"你选的日子：{day}\",     en: \"The day you chose: {day}\""
+   ],
+   [
+    145,
+    "B_over_lines",
+    "zh: \"没有填日子，就落在计划的第一天：{day}\",     en: \"No day typed, so this "
+   ],
+   [
+    149,
+    "B_over_lines",
+    "zh: \"现在还没有日子可落——先选一个日子。\",     en: \"There is no day to land o"
+   ],
+   [
+    153,
+    "B_over_lines",
+    "zh: \"存进这个架子\",     en: \"Collect these into that shelf\""
+   ],
+   [
+    157,
+    "B_over_lines",
+    "zh: \"正在存…\",     en: \"Collecting…\""
+   ],
+   [
+    166,
+    "B_over_lines",
+    "zh: \"{n} 枚已收在「{shelf}」——这句是从同一扇读门重读回来的。\",     en: \"{n} {plur"
+   ],
+   [
+    170,
+    "B_over_lines",
+    "zh: \"{n} 枚本来就在「{shelf}」上，没有重复写入。\",     en: \"{n} {plural:plac"
+   ],
+   [
+    174,
+    "B_over_lines",
+    "zh: \"写入应答了，但架子上读不回这一枚。在它读回来之前，这里不说“已收在”。\",     en: \"The writ"
+   ],
+   [
+    183,
+    "B_over_lines",
+    "zh: \"本地解析，不打开链接\",     en: \"Local parse, no links opened\""
+   ],
+   [
+    187,
+    "B_over_lines",
+    "zh: \"加进计划\",     en: \"Add to plan\""
+   ],
+   [
+    191,
+    "B_over_lines",
+    "zh: \"{n} 个地点已在 {day} ——这是从服务端读回来的结果。\",     en: \"{n} {plural:"
+   ],
+   [
+    195,
+    "B_over_lines",
+    "zh: \"正在加…\",     en: \"Adding…\""
+   ],
+   [
+    199,
+    "B_over_lines",
+    "zh: \"{n} 个本来就在那一天，没有重复添加。\",     en: \"{n} were already on tha"
+   ],
+   [
+    203,
+    "B_over_lines",
+    "zh: \"会落到哪一天\",     en: \"Day it would land on\""
+   ],
+   [
+    207,
+    "B_over_lines",
+    "zh: \"不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。\",     en: \"Leaving the "
+   ],
+   [
+    211,
+    "B_over_lines",
+    "zh: \"还没有日子——请选一个\",     en: \"no day yet — choose one\""
+   ],
+   [
+    215,
+    "B_over_lines",
+    "zh: \"不抓取任何内容\",     en: \"Nothing is fetched\""
+   ],
+   [
+    219,
+    "B_over_lines",
+    "zh: \"识别只跑本部署自己的文本规则和我们已有的地点行。\",     en: \"Extraction runs on "
+   ],
+   [
+    227,
+    "B_over_lines",
+    "zh: \"通道\",     en: \"Channel\""
+   ],
+   [
+    231,
+    "B_over_lines",
+    "zh: \"本地解析器；不接第三方读取服务。\",     en: \"Local parser; no third-part"
+   ],
+   [
+    235,
+    "B_over_lines",
+    "zh: \"本机文字解析\",     en: \"Text parsed on this device\""
+   ],
+   [
+    239,
+    "B_over_lines",
+    "zh: \"{n} 字\",     en: \"{n} {plural:character}\""
+   ],
+   [
+    243,
+    "B_over_lines",
+    "zh: \"读出 {extracted} 行 · 对上 {resolved} 个 · {ambiguous} 个要你选 ·"
+   ],
+   [
+    247,
+    "B_over_lines",
+    "zh: \"落点日子\",     en: \"Landing day\""
+   ],
+   [
+    256,
+    "B_over_lines",
+    "zh: \"清空重写\",     en: \"Clear and write again\""
+   ],
+   [
+    260,
+    "B_over_lines",
+    "zh: \"去城市探索\",     en: \"Open City Discovery\""
+   ],
+   [
+    264,
+    "B_over_lines",
+    "zh: \"这段文字里没有可拆的条目。请一行写一个地点，或者把笔记正文贴进来而不是链接。\",     en: \"Nothi"
+   ],
+   [
+    268,
+    "B_over_lines",
+    "zh: \"这个方案还没有自己的日子，请写下要放到哪一天。\",     en: \"This plan has no day"
+   ],
+   [
+    272,
+    "B_over_lines",
+    "zh: \"这台服务器上已经没有这趟行程了。请从今日页重新选一次。\",     en: \"That journey is "
+   ],
+   [
+    276,
+    "B_over_lines",
+    "zh: \"还没有选定哪个方案是计划，所以没有可以放进去的那一天。\",     en: \"Nothing is chose"
+   ],
+   [
+    280,
+    "B_over_lines",
+    "zh: \"服务器这一问没有回答。什么都没改动。\",     en: \"The server did not answer"
+   ],
+   [
+    284,
+    "B_over_lines",
+    "zh: \"那一条是日程节点或属于别的城市，不能当作要去的地点。\",     en: \"That entry is a s"
+   ],
+   [
+    288,
+    "B_over_lines",
+    "zh: \"其中一个地点已不在我们的清单里，请重新识别一次文字。\",     en: \"One of the places"
+   ],
+   [
+    292,
+    "B_over_lines",
+    "zh: \"服务器拒绝了，但没给出我们认得的理由。什么都没改动。\",     en: \"The server refuse"
+   ],
+   [
+    296,
+    "B_over_lines",
+    "zh: \"去处\",     en: \"Where they go\""
+   ],
+   [
+    300,
+    "B_over_lines",
+    "zh: \"存到收藏\",     en: \"Save to favourites\""
+   ],
+   [
+    304,
+    "B_over_lines",
+    "zh: \"你的文字\",     en: \"Your text\""
+   ],
+   [
+    308,
+    "B_over_lines",
+    "zh: \"把你已经写下的东西贴进来\",     en: \"Paste what you already wrote\""
+   ],
+   [
+    312,
+    "B_over_lines",
+    "zh: \"贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。\",     "
+   ],
+   [
+    316,
+    "B_over_lines",
+    "zh: \"这段文字没读出来。你写的还在原地，可以再试一次。\",     en: \"The text could not "
+   ],
+   [
+    320,
+    "B_over_lines",
+    "zh: \"正在把每一行和这座城市我们已持有的地点对照。\",     en: \"Matching each line ag"
+   ],
+   [
+    324,
+    "B_over_lines",
+    "zh: \"截图识别\",     en: \"Recognise a screenshot\""
+   ],
+   [
+    328,
+    "B_over_lines",
+    "zh: \"文本或链接识别\",     en: \"Recognise text or links\""
+   ],
+   [
+    332,
+    "B_over_lines",
+    "zh: \"今天支持文本与链接；截图也列出来，让缺口有名字。\",     en: \"Text or links today"
+   ],
+   [
+    336,
+    "B_over_lines",
+    "zh: \"两条入口\",     en: \"Two ways in\""
+   ],
+   [
+    340,
+    "B_over_lines",
+    "zh: \"至少写两个字再识别。\",     en: \"Write at least a couple of charac"
+   ],
+   [
+    344,
+    "B_over_lines",
+    "zh: \"没有状态\",     en: \"no status\""
+   ],
+   [
+    348,
+    "B_over_lines",
+    "zh: \"打开计划\",     en: \"Open the plan\""
+   ],
+   [
+    352,
+    "B_over_lines",
+    "zh: \"识别\",     en: \"Recognise\""
+   ],
+   [
+    356,
+    "B_over_lines",
+    "zh: \"正在读…\",     en: \"Reading…\""
+   ],
+   [
+    360,
+    "B_over_lines",
+    "zh: \"没能读出来\",     en: \"Could not read it\""
+   ],
+   [
+    364,
+    "B_over_lines",
+    "zh: \"正在读你的文字\",     en: \"Reading your text\""
+   ],
+   [
+    368,
+    "B_over_lines",
+    "zh: \"已读出\",     en: \"Read\""
+   ],
+   [
+    372,
+    "B_over_lines",
+    "zh: \"一行一个地点，或者整段笔记；链接可以混在里面。\",     en: \"One place per line, "
+   ],
+   [
+    376,
+    "B_over_lines",
+    "zh: \"写入应答了，但计划没有把那条记录交回来。在它交回来之前，这里不说“已加入”。\",     en: \"The w"
+   ],
+   [
+    380,
+    "B_over_lines",
+    "zh: \"重试\",     en: \"Try again\""
+   ],
+   [
+    384,
+    "B_over_lines",
+    "zh: \"这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。\", "
+   ],
+   [
+    388,
+    "B_over_lines",
+    "zh: \"这一版没有截图识别。请改贴文字——这个形态是具名不支持，不是悄悄没有。\",     en: \"Screensh"
+   ],
+   [
+    392,
+    "B_over_lines",
+    "zh: \"已选 {n} / 可加 {total}\",     en: \"{n} of {total} {plural:m"
+   ],
+   [
+    396,
+    "B_over_lines",
+    "zh: \"技术细节\",     en: \"Technical details\""
+   ],
+   [
+    400,
+    "B_over_lines",
+    "zh: \"从文本导入地点\",     en: \"Import places from text\""
+   ],
+   [
+    404,
+    "B_over_lines",
+    "zh: \"看到链接但没有打开：{hosts}\",     en: \"Links seen but not opened:"
+   ],
+   [
+    408,
+    "B_over_lines",
+    "zh: \"未读取的形态\",     en: \"Forms not read\""
+   ],
+   [
+    412,
+    "B_over_lines",
+    "zh: \"这里的链接一律不抓取；请把笔记正文贴进来。\",     en: \"Links are never fetche"
+   ],
+   [
+    416,
+    "B_over_lines",
+    "zh: \"这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。\",     e"
+   ]
+  ],
+  "frontend/src/features/progress/journeyProgress.ts": [
+   [
+    79,
+    "A",
+    "? \"还没排定任何一站：选定方案之后，这里才写第几天、共几天、走完几处。\"       : \"No stop is sc"
+   ],
+   [
+    86,
+    "A",
+    "? \"服务端没给出整天数（这一趟的起止排不出序），天数留空。\"       : \"The server gives no"
+   ],
+   [
+    115,
+    "A",
+    "? \"服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出现。\"       : \"The "
+   ],
+   [
+    118,
+    "A",
+    "? \"服务端给的当前位置不在这一代的任一站上（方案换过一代），所以「第几天」留空。\"       : \"The serv"
+   ]
+  ],
+  "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": [
+   [
+    108,
+    "A",
+    "? \"这步接受没有得到可确认的答复，结果未知。\"             : \"This acceptance got "
+   ]
+  ],
+  "frontend/src/features/setup/JourneyTrialSetup.tsx": [
+   [
+    339,
+    "A",
+    "? \"这一轮没读到服务器的判定（读不到不等于服务器说不知道）\"         : \"no server verdict"
+   ],
+   [
+    342,
+    "A",
+    "? \"还没问过服务器\"         : \"the server has not been asked yet\""
+   ],
+   [
+    350,
+    "A",
+    "? \"服务器的词表和目录里都没有这个名字，要它联网解析才有答案\"       : \"nothing the server"
+   ],
+   [
+    1029,
+    "A",
+    "? \"三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\"               : \"Thr"
+   ],
+   [
+    1450,
+    "A",
+    "? \"例如：我妈妈坐轮椅；每天走路不超过 3000 米\"                   : \"e.g. my mo"
+   ],
+   [
+    1555,
+    "A",
+    "? \"这一步没有成功，行程还没有创建。\"                 : \"This step did not co"
+   ],
+   [
+    1582,
+    "A",
+    "? \"这一屏没有量到可陈列的回读字段，因此也没有可复述的编号。\"                   : \"This s"
+   ],
+   [
+    1675,
+    "A",
+    "? \"第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\"      "
+   ],
+   [
+    1690,
+    "A",
+    "? \"停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\"               : \"Stopp"
+   ],
+   [
+    465,
+    "B_same_line",
+    "zh: \"轻松\", en: \"Relaxed\""
+   ],
+   [
+    466,
+    "B_same_line",
+    "zh: \"适中\", en: \"Balanced\""
+   ],
+   [
+    467,
+    "B_same_line",
+    "zh: \"紧凑\", en: \"Packed\""
+   ],
+   [
+    471,
+    "B_same_line",
+    "zh: \"美食\", en: \"Food\""
+   ],
+   [
+    472,
+    "B_same_line",
+    "zh: \"自然\", en: \"Nature\""
+   ],
+   [
+    473,
+    "B_same_line",
+    "zh: \"人文\", en: \"Culture\""
+   ],
+   [
+    474,
+    "B_same_line",
+    "zh: \"海边\", en: \"Seaside\""
+   ],
+   [
+    475,
+    "B_same_line",
+    "zh: \"购物\", en: \"Shopping\""
+   ],
+   [
+    476,
+    "B_same_line",
+    "zh: \"亲子\", en: \"Family\""
+   ],
+   [
+    559,
+    "B_same_line",
+    "zh: \"目的地\", en: \"Destination\""
+   ],
+   [
+    560,
+    "B_same_line",
+    "zh: \"抵达\", en: \"Arrival\""
+   ],
+   [
+    561,
+    "B_same_line",
+    "zh: \"离开\", en: \"Departure\""
+   ],
+   [
+    562,
+    "B_same_line",
+    "zh: \"人数 / 房间\", en: \"Travellers / rooms\""
+   ],
+   [
+    563,
+    "B_same_line",
+    "zh: \"总预算 / 住宿\", en: \"Total / stay budget\""
+   ],
+   [
+    564,
+    "B_same_line",
+    "zh: \"节奏\", en: \"Pace\""
+   ],
+   [
+    565,
+    "B_same_line",
+    "zh: \"兴趣\", en: \"Interests\""
+   ],
+   [
+    566,
+    "B_same_line",
+    "zh: \"特殊要求\", en: \"Special requirements\""
+   ],
+   [
+    570,
+    "B_same_line",
+    "zh: \"自动设置\", en: \"Auto-set\""
+   ]
+  ],
+  "frontend/src/features/simulation/SimulationPanel.tsx": [
+   [
+    823,
+    "A",
+    "? \"正在读服务器上的场景状态…\"             : \"Reading the stage state fro"
+   ],
+   [
+    837,
+    "A",
+    "? \"这台部署没有开模拟舞台，下面的动作不会被执行\"             : \"This deployment ha"
+   ],
+   [
+    879,
+    "A",
+    "? \"没有到期时间\"                 : \"no expiry\""
+   ],
+   [
+    974,
+    "A",
+    "? \"界面没有替服务器圆场：这一步没有发生，行程保持原样。\"             : \"Nothing is smo"
+   ],
+   [
+    1113,
+    "A",
+    "? \"正在读服务器上的场景状态…\"         : \"Reading the stage state from th"
+   ],
+   [
+    1124,
+    "A",
+    "? \"这台部署没有开模拟舞台\"             : \"this deployment has no simula"
+   ],
+   [
+    220,
+    "B_over_lines",
+    "zh: \"台上没有场景：服务器回的是 NO_SCENARIO。先在产品里建一趟行程，或按下面的重置播一个演示场景。\", "
+   ],
+   [
+    227,
+    "B_over_lines",
+    "zh: \"服务器游标还在读，读完才知道有没有可推进的活动。\",         en: \"The server curs"
+   ],
+   [
+    241,
+    "B_over_lines",
+    "zh: \"服务器说这趟在执行中，但游标是空的（没有任何活动在进行），所以这一步没有可推进的位置。\",          "
+   ],
+   [
+    250,
+    "B_over_lines",
+    "zh: \"这趟还没有 ACTIVE 计划（服务器没返回计划版本），重规划需要它。\",             en: \""
+   ],
+   [
+    271,
+    "B_over_lines",
+    "zh: \"还在读这份计划里当前活动的状态。\",           en: \"The current activity'"
+   ],
+   [
+    276,
+    "B_over_lines",
+    "zh: \"服务器给的当前活动不在这份计划的清单里，所以没有可执行的下一步。\",             en: \"The"
+   ],
+   [
+    374,
+    "B_over_lines",
+    "zh: \"还在读这趟行程属于哪座城。\",           en: \"The journey's city is st"
+   ],
+   [
+    382,
+    "B_over_lines",
+    "zh: \"还在读这座城的服务目录（哪些地点挂着可下单的服务）。\",               en: \"The cit"
+   ],
+   [
+    390,
+    "B_over_lines",
+    "zh: \"目录里有带着可下单服务的活动，正在逐个按它自己的时间问服务器那一段有没有时段。\",              "
+   ],
+   [
+    414,
+    "B_over_lines",
+    "zh: \"重置到场景起点\",       en: \"Re-seed the scenario\""
+   ],
+   [
+    424,
+    "B_over_lines",
+    "zh: \"这一步会删掉整库（52 张表），现在还要服务器自己的环境变量里的令牌；浏览器拿不到它，也不该拿到。所以这里不给"
+   ],
+   [
+    477,
+    "B_over_lines",
+    "zh: \"准备舞台（生成并选定计划）\",       en: \"Put a plan on the stage\""
+   ],
+   [
+    484,
+    "B_over_lines",
+    "zh: \"服务器说这趟已经在执行中，不需要再准备一次。\",               en: \"The server "
+   ],
+   [
+    521,
+    "B_over_lines",
+    "zh: \"服务器给的这份计划里没有可下单的活动，所以这里没有可建承诺的东西。\",               en: \""
+   ],
+   [
+    544,
+    "B_over_lines",
+    "zh: \"开始执行（真实 /start）\",       en: \"Put the journey into execu"
+   ],
+   [
+    551,
+    "B_over_lines",
+    "zh: \"服务器说这趟已经在执行中，不需要再开始一次。\",               en: \"The server "
+   ],
+   [
+    556,
+    "B_over_lines",
+    "zh: \"舞台上还没有计划（服务器回的 plan_version_id 是空的）。先按上面「准备舞台」，才有可开始的东西"
+   ],
+   [
+    599,
+    "B_over_lines",
+    "zh: \"触发一次中断\",       en: \"Raise a disruption\""
+   ],
+   [
+    617,
+    "B_over_lines",
+    "zh: \"请求重规划\",       en: \"Ask for a replan\""
+   ],
+   [
+    626,
+    "B_over_lines",
+    "zh: \"重规划要由一个中断触发（服务器要求 trigger_event_id）。先按上面「触发一次中断」。\",    "
+   ],
+   [
+    678,
+    "B_over_lines",
+    "zh: \"服务器还没有给出方案（它回的列表是空的），所以这里没有可接受的东西。\",               en: "
+   ],
+   [
+    704,
+    "B_over_lines",
+    "zh: \"服务器还没有给出方案（它回的列表是空的），所以这里没有可拒绝的东西。\",               en: "
+   ],
+   [
+    720,
+    "B_over_lines",
+    "zh: \"提供方降级\",       en: \"Degrade the provider\""
+   ],
+   [
+    736,
+    "B_over_lines",
+    "zh: \"提供方恢复\",       en: \"Restore the provider\""
+   ],
+   [
+    905,
+    "B_over_lines",
+    "zh: \"上一个动作还没回来。\",                   en: \"The previous action"
+   ]
+  ],
+  "frontend/src/features/simulation/simulationAdapter.ts": [
+   [
+    336,
+    "B_same_line",
+    "zh: \"出发\", en: \"depart\""
+   ],
+   [
+    337,
+    "B_same_line",
+    "zh: \"出发\", en: \"depart\""
+   ],
+   [
+    338,
+    "B_same_line",
+    "zh: \"到达\", en: \"arrive\""
+   ],
+   [
+    339,
+    "B_same_line",
+    "zh: \"开始这项活动\", en: \"begin\""
+   ],
+   [
+    340,
+    "B_same_line",
+    "zh: \"完成这项活动\", en: \"complete\""
+   ]
+  ],
+  "frontend/src/features/stay/HotelsPanel.tsx": [
+   [
+    131,
+    "A",
+    "? \"这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。\"            "
+   ],
+   [
+    134,
+    "A",
+    "? \"暂时无法选择这家住宿。\"               : \"Could not choose this stay."
+   ],
+   [
+    143,
+    "A",
+    "? \"连不上服务器，请重试。\" : \"Could not reach the server. Try again.\""
+   ],
+   [
+    166,
+    "A",
+    "? \"这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。\"            "
+   ],
+   [
+    197,
+    "A",
+    "? \"换个城市看看\" : \"Look at another city\""
+   ],
+   [
+    240,
+    "A",
+    "? \"价格\" : \"Price\""
+   ],
+   [
+    243,
+    "A",
+    "? \"晚\" : \"night\""
+   ],
+   [
+    245,
+    "A",
+    "? \"暂无价格\"                         : \"Price unavailable\""
+   ],
+   [
+    250,
+    "A",
+    "? \"步行\" : \"Walking\""
+   ],
+   [
+    251,
+    "A",
+    "? \" 分钟\" : \" min\""
+   ],
+   [
+    258,
+    "A",
+    "? \"退改\" : \"Cancellation\""
+   ],
+   [
+    259,
+    "A",
+    "? \"可取消\" : \"Refundable\""
+   ],
+   [
+    259,
+    "A",
+    "? \"不可取消\" : \"Non-refundable\""
+   ],
+   [
+    263,
+    "A",
+    "? \"推荐理由：\" : \"Why: \""
+   ],
+   [
+    269,
+    "A",
+    "? \"与当前硬约束存在冲突，仅供参考。\"                     : \"Conflicts with c"
+   ],
+   [
+    280,
+    "A",
+    "? \"已选择这家\" : \"Selected\""
+   ],
+   [
+    282,
+    "A",
+    "? \"选择中…\" : \"Choosing…\""
+   ],
+   [
+    283,
+    "A",
+    "? \"选择这家住宿\" : \"Choose this stay\""
+   ]
+  ],
+  "frontend/src/features/stay/StayExplorer.tsx": [
+   [
+    83,
+    "A",
+    "? \"我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。\"\r         "
+   ],
+   [
+    99,
+    "A",
+    "? \"正在向这台服务器要住宿候选…\"\r                 : \"Asking this server fo"
+   ],
+   [
+    102,
+    "A",
+    "? \"向这台服务器要一次住宿候选\"\r                 : \"Ask this server for st"
+   ],
+   [
+    112,
+    "A",
+    "? \"这一次请求没有拿到可读的回话，所以这里没有一个关于原因的说法。\"\r                     : \""
+   ],
+   [
+    131,
+    "A",
+    "? \"这一轮服务器答完了，但这一屏没有从外层拿到重新读取的能力，所以卡片不会出现在这里——这一句是本屏自己报的缺，不是服"
+   ],
+   [
+    171,
+    "A",
+    "? \"分钟步行\" : \"min walk\""
+   ],
+   [
+    171,
+    "A",
+    "? \"分钟余量\" : \"min slack\""
+   ],
+   [
+    293,
+    "A",
+    "? \"价格未知\" : \"Price unavailable\""
+   ],
+   [
+    345,
+    "A",
+    "? \" · 本设备时间\" : \" · this device's time\""
+   ],
+   [
+    362,
+    "A",
+    "? \"价格未知（供应商未提供房价）\"\r       : \"Price unknown (no provider rate"
+   ],
+   [
+    373,
+    "A",
+    "? \"不可取消\" : \"Non-refundable\""
+   ],
+   [
+    465,
+    "A",
+    "? \"这台服务器没有交回「这条行程是否声明过住宿预算」这一格，所以这里不提预算。\"\r       : \"This ser"
+   ],
+   [
+    470,
+    "A",
+    "? \"这条行程没有声明住宿预算，所以这里没有一条预算界线可比。\"\r       : \"No lodging budget"
+   ],
+   [
+    477,
+    "A",
+    "? \"这条行程声明过住宿预算，但这台服务器没有交回那个数额。\"\r       : \"This trip declared"
+   ]
+  ],
+  "frontend/src/features/stay/stayGenerationDoor.ts": [
+   [
+    50,
+    "A",
+    "? \"这台服务器报回一个这一屏还没有对应词形的结果名，所以我不替它编一句解释。\"       : \"This serve"
+   ]
+  ],
+  "frontend/src/features/trip/ActivityDetail.tsx": [
+   [
+    206,
+    "A",
+    "? \"暂无价格\"                   : \"Price unavailable\""
+   ],
+   [
+    225,
+    "A",
+    "? \"暂无数据\"                 : \"Not available\""
+   ]
+  ],
+  "frontend/src/features/trip/TripItinerary.tsx": [
+   [
+    306,
+    "A",
+    "? \"AI 帮我规划（要先有地点）\"         : \"Plan my trip with AI (needs pl"
+   ],
+   [
+    309,
+    "A",
+    "? \"AI 帮我规划\"         : \"Plan my trip with AI\""
+   ],
+   [
+    320,
+    "A",
+    "? \"这一版方案里还没有站点被排在某一天上。补上站点，这一屏就按天把它们列出来。\"                   "
+   ],
+   [
+    323,
+    "A",
+    "? \"这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。\"                 "
+   ],
+   [
+    329,
+    "A",
+    "? \"正在向服务器回读这座城有多少地点…\"                   : \"Reading back from"
+   ],
+   [
+    399,
+    "A",
+    "? \"天数未知\"                 : \"length unknown\""
+   ],
+   [
+    407,
+    "A",
+    "? \"逐日安排。已确认的预订会被标记为受保护。\"               : \"Day by day. Confir"
+   ],
+   [
+    529,
+    "A",
+    "? \"受影响\"                               : \"Affected\""
+   ]
+  ],
+  "frontend/src/i18n/mapPanelCopy.ts": [
+   [
+    61,
+    "B_over_lines",
+    "zh: \"尚未获取地图位置\",\r             en: \"No map location yet\""
+   ],
+   [
+    89,
+    "B_over_lines",
+    "zh: \"这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。\",\r      "
+   ],
+   [
+    91,
+    "B_over_lines",
+    "zh: \"底图未加载，显示的是路线示意。\",\r             en: \"Basemap did not loa"
+   ],
+   [
+    93,
+    "B_over_lines",
+    "zh: \"单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\",\r             en: \"One "
+   ],
+   [
+    95,
+    "B_over_lines",
+    "zh: \"底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\""
+   ],
+   [
+    97,
+    "B_over_lines",
+    "zh: \"底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tiles.openfreemap.org\","
+   ],
+   [
+    103,
+    "B_same_line",
+    "zh: \"这一天去的地点\", en: \"Stops on this day\""
+   ],
+   [
+    104,
+    "B_same_line",
+    "zh: \"在地图上定位 %s\", en: \"Locate %s on the map\""
+   ],
+   [
+    108,
+    "B_same_line",
+    "zh: \"回到行程视野\", en: \"Fit to my journey\""
+   ],
+   [
+    109,
+    "B_same_line",
+    "zh: \"视野正落在这段行程上\", en: \"The view is on your journey\""
+   ],
+   [
+    110,
+    "B_same_line",
+    "zh: \"已移出行程视野，点按回到全程\", en: \"Moved off the journey — tap to fi"
+   ],
+   [
+    111,
+    "B_same_line",
+    "zh: \"已选中\", en: \"Selected\""
+   ],
+   [
+    119,
+    "B_same_line",
+    "zh: \"查看全部 %s 个地点\", en: \"Show all %s places\""
+   ],
+   [
+    120,
+    "B_same_line",
+    "zh: \"收起清单\", en: \"Collapse list\""
+   ],
+   [
+    121,
+    "B_same_line",
+    "zh: \"展开或收起地点清单\", en: \"Expand or collapse the stop list\""
+   ],
+   [
+    122,
+    "B_same_line",
+    "zh: \"另有 %s 个站点这次没有位置，地图就不列它们\", en: \"%s stops have no positio"
+   ],
+   [
+    134,
+    "B_over_lines",
+    "zh: \"这台服务器这次交回 %s 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。\""
+   ],
+   [
+    138,
+    "B_over_lines",
+    "zh: \"这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。\",\r     en: \"This serv"
+   ],
+   [
+    142,
+    "B_over_lines",
+    "zh: \"服务器这次没收下这个读取请求，所以图上不区分到过的站与没到过的站。\",\r     en: \"The serve"
+   ],
+   [
+    146,
+    "B_over_lines",
+    "zh: \"这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。\",\r     en: "
+   ],
+   [
+    149,
+    "B_same_line",
+    "zh: \"正在向服务器问这一趟的足迹…\", en: \"Asking the server for this trip's"
+   ],
+   [
+    151,
+    "B_over_lines",
+    "zh: \"这一屏没有打开的行程，所以没向服务器问过足迹。\",\r     en: \"No trip is open on "
+   ],
+   [
+    154,
+    "B_same_line",
+    "zh: \"到站日期 %s\", en: \"Day stamped %s\""
+   ],
+   [
+    160,
+    "B_same_line",
+    "zh: \"只看打过\", en: \"Stamped only\""
+   ],
+   [
+    161,
+    "B_same_line",
+    "zh: \"看全部站\", en: \"Show every stop\""
+   ]
+  ],
+  "frontend/src/i18n/travelerLabels.ts": [
+   [
+    266,
+    "A",
+    "? \"行程有新情况\" : \"Something changed\""
+   ],
+   [
+    22,
+    "B_same_line",
+    "zh: \"抵达\", en: \"Arrival\""
+   ],
+   [
+    23,
+    "B_same_line",
+    "zh: \"出发\", en: \"Departure\""
+   ],
+   [
+    24,
+    "B_same_line",
+    "zh: \"离开\", en: \"Leave\""
+   ],
+   [
+    25,
+    "B_same_line",
+    "zh: \"入住\", en: \"Check-in\""
+   ],
+   [
+    26,
+    "B_same_line",
+    "zh: \"退房\", en: \"Check-out\""
+   ],
+   [
+    27,
+    "B_same_line",
+    "zh: \"住宿\", en: \"Stay\""
+   ],
+   [
+    28,
+    "B_same_line",
+    "zh: \"过夜\", en: \"Overnight\""
+   ],
+   [
+    29,
+    "B_same_line",
+    "zh: \"寄存行李\", en: \"Luggage drop\""
+   ],
+   [
+    30,
+    "B_same_line",
+    "zh: \"活动\", en: \"Activity\""
+   ],
+   [
+    31,
+    "B_same_line",
+    "zh: \"游览\", en: \"Visit\""
+   ],
+   [
+    32,
+    "B_same_line",
+    "zh: \"交通\", en: \"Transit\""
+   ],
+   [
+    33,
+    "B_same_line",
+    "zh: \"交通\", en: \"Transport\""
+   ],
+   [
+    34,
+    "B_same_line",
+    "zh: \"预订\", en: \"Booking\""
+   ],
+   [
+    35,
+    "B_same_line",
+    "zh: \"中途\", en: \"Mid-trip\""
+   ],
+   [
+    36,
+    "B_same_line",
+    "zh: \"博物馆\", en: \"Museum\""
+   ],
+   [
+    37,
+    "B_same_line",
+    "zh: \"美食\", en: \"Food\""
+   ],
+   [
+    38,
+    "B_same_line",
+    "zh: \"住宿\", en: \"Hotel\""
+   ],
+   [
+    39,
+    "B_same_line",
+    "zh: \"景点\", en: \"Attraction\""
+   ],
+   [
+    40,
+    "B_same_line",
+    "zh: \"景点\", en: \"Sight\""
+   ],
+   [
+    41,
+    "B_same_line",
+    "zh: \"公园\", en: \"Park\""
+   ],
+   [
+    42,
+    "B_same_line",
+    "zh: \"园林\", en: \"Garden\""
+   ],
+   [
+    43,
+    "B_same_line",
+    "zh: \"咖啡馆\", en: \"Café\""
+   ],
+   [
+    44,
+    "B_same_line",
+    "zh: \"咖啡馆\", en: \"Café\""
+   ],
+   [
+    45,
+    "B_same_line",
+    "zh: \"餐厅\", en: \"Restaurant\""
+   ],
+   [
+    46,
+    "B_same_line",
+    "zh: \"美术馆\", en: \"Gallery\""
+   ],
+   [
+    47,
+    "B_same_line",
+    "zh: \"艺术中心\", en: \"Arts centre\""
+   ],
+   [
+    48,
+    "B_same_line",
+    "zh: \"图书馆\", en: \"Library\""
+   ],
+   [
+    49,
+    "B_same_line",
+    "zh: \"剧院\", en: \"Theatre\""
+   ],
+   [
+    50,
+    "B_same_line",
+    "zh: \"剧院\", en: \"Theatre\""
+   ],
+   [
+    51,
+    "B_same_line",
+    "zh: \"电影院\", en: \"Cinema\""
+   ],
+   [
+    52,
+    "B_same_line",
+    "zh: \"历史街区\", en: \"Heritage\""
+   ],
+   [
+    53,
+    "B_same_line",
+    "zh: \"观景点\", en: \"Viewpoint\""
+   ],
+   [
+    54,
+    "B_same_line",
+    "zh: \"购物\", en: \"Shopping\""
+   ],
+   [
+    55,
+    "B_same_line",
+    "zh: \"市场\", en: \"Market\""
+   ],
+   [
+    56,
+    "B_same_line",
+    "zh: \"酒吧\", en: \"Bar\""
+   ],
+   [
+    57,
+    "B_same_line",
+    "zh: \"酒馆\", en: \"Pub\""
+   ],
+   [
+    58,
+    "B_same_line",
+    "zh: \"海滩\", en: \"Beach\""
+   ],
+   [
+    59,
+    "B_same_line",
+    "zh: \"寺庙\", en: \"Temple\""
+   ],
+   [
+    60,
+    "B_same_line",
+    "zh: \"教堂\", en: \"Church\""
+   ],
+   [
+    61,
+    "B_same_line",
+    "zh: \"纪念地\", en: \"Monument\""
+   ],
+   [
+    62,
+    "B_same_line",
+    "zh: \"广场\", en: \"Square\""
+   ],
+   [
+    63,
+    "B_same_line",
+    "zh: \"体育场\", en: \"Stadium\""
+   ],
+   [
+    64,
+    "B_same_line",
+    "zh: \"动物园\", en: \"Zoo\""
+   ],
+   [
+    65,
+    "B_same_line",
+    "zh: \"水族馆\", en: \"Aquarium\""
+   ],
+   [
+    66,
+    "B_same_line",
+    "zh: \"水疗\", en: \"Spa\""
+   ],
+   [
+    67,
+    "B_same_line",
+    "zh: \"服务\", en: \"Service\""
+   ],
+   [
+    68,
+    "B_same_line",
+    "zh: \"体验\", en: \"Experience\""
+   ],
+   [
+    69,
+    "B_same_line",
+    "zh: \"早餐\", en: \"Breakfast\""
+   ],
+   [
+    70,
+    "B_same_line",
+    "zh: \"午餐\", en: \"Lunch\""
+   ],
+   [
+    71,
+    "B_same_line",
+    "zh: \"晚餐\", en: \"Dinner\""
+   ],
+   [
+    72,
+    "B_same_line",
+    "zh: \"用餐\", en: \"Meal\""
+   ],
+   [
+    73,
+    "B_same_line",
+    "zh: \"未确定\", en: \"Not set\""
+   ],
+   [
+    74,
+    "B_same_line",
+    "zh: \"其他\", en: \"Other\""
+   ],
+   [
+    79,
+    "B_same_line",
+    "zh: \"未知\", en: \"Unknown\""
+   ],
+   [
+    83,
+    "B_same_line",
+    "zh: \"已确认\", en: \"Confirmed\""
+   ],
+   [
+    84,
+    "B_same_line",
+    "zh: \"计划中\", en: \"Planned\""
+   ],
+   [
+    85,
+    "B_same_line",
+    "zh: \"已取消\", en: \"Cancelled\""
+   ],
+   [
+    86,
+    "B_same_line",
+    "zh: \"已取消\", en: \"Cancelled\""
+   ],
+   [
+    87,
+    "B_same_line",
+    "zh: \"已完成\", en: \"Completed\""
+   ],
+   [
+    88,
+    "B_same_line",
+    "zh: \"已跳过\", en: \"Skipped\""
+   ],
+   [
+    89,
+    "B_same_line",
+    "zh: \"未知\", en: \"Unknown\""
+   ],
+   [
+    90,
+    "B_same_line",
+    "zh: \"暂无实时状态\", en: \"No live status\""
+   ],
+   [
+    91,
+    "B_same_line",
+    "zh: \"待处理\", en: \"Pending\""
+   ],
+   [
+    92,
+    "B_same_line",
+    "zh: \"已请求\", en: \"Requested\""
+   ],
+   [
+    93,
+    "B_same_line",
+    "zh: \"已建议\", en: \"Proposed\""
+   ],
+   [
+    94,
+    "B_same_line",
+    "zh: \"已批准\", en: \"Approved\""
+   ],
+   [
+    95,
+    "B_same_line",
+    "zh: \"已拒绝\", en: \"Rejected\""
+   ],
+   [
+    96,
+    "B_same_line",
+    "zh: \"已应用\", en: \"Applied\""
+   ],
+   [
+    97,
+    "B_same_line",
+    "zh: \"草稿\", en: \"Draft\""
+   ],
+   [
+    98,
+    "B_same_line",
+    "zh: \"已就绪\", en: \"Ready\""
+   ],
+   [
+    99,
+    "B_same_line",
+    "zh: \"待确认\", en: \"Ready to confirm\""
+   ],
+   [
+    100,
+    "B_same_line",
+    "zh: \"需审核\", en: \"Needs review\""
+   ],
+   [
+    101,
+    "B_same_line",
+    "zh: \"未开始\", en: \"Not started\""
+   ],
+   [
+    102,
+    "B_same_line",
+    "zh: \"进行中\", en: \"In progress\""
+   ],
+   [
+    103,
+    "B_same_line",
+    "zh: \"在路上\", en: \"On the way\""
+   ],
+   [
+    104,
+    "B_same_line",
+    "zh: \"已抵达\", en: \"Arrived\""
+   ],
+   [
+    105,
+    "B_same_line",
+    "zh: \"进行中\", en: \"Active\""
+   ],
+   [
+    106,
+    "B_same_line",
+    "zh: \"失败\", en: \"Failed\""
+   ],
+   [
+    107,
+    "B_same_line",
+    "zh: \"出错\", en: \"Error\""
+   ],
+   [
+    108,
+    "B_same_line",
+    "zh: \"已停止\", en: \"Stopped\""
+   ],
+   [
+    109,
+    "B_same_line",
+    "zh: \"已过期\", en: \"Expired\""
+   ],
+   [
+    110,
+    "B_same_line",
+    "zh: \"延误\", en: \"Delayed\""
+   ],
+   [
+    111,
+    "B_same_line",
+    "zh: \"已改期\", en: \"Rescheduled\""
+   ],
+   [
+    112,
+    "B_same_line",
+    "zh: \"受保护\", en: \"Protected\""
+   ],
+   [
+    113,
+    "B_same_line",
+    "zh: \"候选\", en: \"Candidate\""
+   ],
+   [
+    114,
+    "B_same_line",
+    "zh: \"已支付\", en: \"Paid\""
+   ],
+   [
+    115,
+    "B_same_line",
+    "zh: \"未支付\", en: \"Not paid\""
+   ],
+   [
+    116,
+    "B_same_line",
+    "zh: \"部分支付\", en: \"Partly paid\""
+   ],
+   [
+    117,
+    "B_same_line",
+    "zh: \"已退款\", en: \"Refunded\""
+   ],
+   [
+    118,
+    "B_same_line",
+    "zh: \"免费\", en: \"Free\""
+   ],
+   [
+    122,
+    "B_same_line",
+    "zh: \"结构化数据\", en: \"Structured data\""
+   ],
+   [
+    123,
+    "B_same_line",
+    "zh: \"文本\", en: \"Text\""
+   ],
+   [
+    124,
+    "B_same_line",
+    "zh: \"日历\", en: \"Calendar\""
+   ],
+   [
+    125,
+    "B_same_line",
+    "zh: \"截图\", en: \"Screenshot\""
+   ],
+   [
+    129,
+    "B_same_line",
+    "zh: \"本机解析\", en: \"Read on device\""
+   ],
+   [
+    130,
+    "B_same_line",
+    "zh: \"智能解析\", en: \"Smart reading\""
+   ],
+   [
+    131,
+    "B_same_line",
+    "zh: \"图片识别\", en: \"Image reading\""
+   ],
+   [
+    132,
+    "B_same_line",
+    "zh: \"手动录入\", en: \"Entered by hand\""
+   ],
+   [
+    136,
+    "B_same_line",
+    "zh: \"已支付\", en: \"Paid\""
+   ],
+   [
+    137,
+    "B_same_line",
+    "zh: \"未支付\", en: \"Not paid\""
+   ],
+   [
+    138,
+    "B_same_line",
+    "zh: \"部分支付\", en: \"Partly paid\""
+   ],
+   [
+    139,
+    "B_same_line",
+    "zh: \"已退款\", en: \"Refunded\""
+   ],
+   [
+    140,
+    "B_same_line",
+    "zh: \"未知\", en: \"Unknown\""
+   ],
+   [
+    144,
+    "B_same_line",
+    "zh: \"手动录入\", en: \"Entered by hand\""
+   ],
+   [
+    145,
+    "B_same_line",
+    "zh: \"粘贴的确认单\", en: \"Pasted confirmation\""
+   ],
+   [
+    146,
+    "B_same_line",
+    "zh: \"地图数据\", en: \"Map data\""
+   ],
+   [
+    147,
+    "B_same_line",
+    "zh: \"导入\", en: \"Imported\""
+   ],
+   [
+    148,
+    "B_same_line",
+    "zh: \"日历导入\", en: \"Calendar import\""
+   ],
+   [
+    149,
+    "B_same_line",
+    "zh: \"用户确认的车票\", en: \"Confirmed rail ticket\""
+   ],
+   [
+    153,
+    "B_same_line",
+    "zh: \"可以自动加入行程\", en: \"Ready to add to your trip\""
+   ],
+   [
+    154,
+    "B_same_line",
+    "zh: \"加入时会提醒你\", en: \"Added with a notice\""
+   ],
+   [
+    155,
+    "B_same_line",
+    "zh: \"需要你先确认\", en: \"Needs your confirmation\""
+   ],
+   [
+    156,
+    "B_same_line",
+    "zh: \"需要你补充信息\", en: \"Needs a few more details\""
+   ],
+   [
+    157,
+    "B_same_line",
+    "zh: \"已加入行程\", en: \"Added to your trip\""
+   ],
+   [
+    158,
+    "B_same_line",
+    "zh: \"已暂停\", en: \"Paused\""
+   ],
+   [
+    162,
+    "B_same_line",
+    "zh: \"地点临时关闭\", en: \"Place temporarily closed\""
+   ],
+   [
+    163,
+    "B_same_line",
+    "zh: \"天气影响\", en: \"Weather affected\""
+   ],
+   [
+    164,
+    "B_same_line",
+    "zh: \"路上拥堵\", en: \"Traffic delay\""
+   ],
+   [
+    165,
+    "B_same_line",
+    "zh: \"行程时间变化\", en: \"Schedule changed\""
+   ],
+   [
+    166,
+    "B_same_line",
+    "zh: \"服务不可用\", en: \"Service unavailable\""
+   ],
+   [
+    167,
+    "B_same_line",
+    "zh: \"你更新了需求\", en: \"You changed a requirement\""
+   ],
+   [
+    168,
+    "B_same_line",
+    "zh: \"行程有新情况\", en: \"Something changed\""
+   ],
+   [
+    169,
+    "B_same_line",
+    "zh: \"行程有新情况\", en: \"Something changed\""
+   ]
+  ],
+  "frontend/src/lib/displayVocabulary.ts": [
+   [
+    193,
+    "A",
+    "? \"这台服务器没写值\" : \"this server wrote no value\""
+   ],
+   [
+    228,
+    "A",
+    "? \"这台服务器写的读取状态不在这张表里\"     : \"the read status this server wro"
+   ],
+   [
+    37,
+    "B_same_line",
+    "zh: \"未配置\", en: \"Not configured\""
+   ],
+   [
+    41,
+    "B_same_line",
+    "zh: \"建议\", en: \"Advisory\""
+   ],
+   [
+    42,
+    "B_same_line",
+    "zh: \"协助\", en: \"Assisted\""
+   ],
+   [
+    43,
+    "B_same_line",
+    "zh: \"自主\", en: \"Autonomous\""
+   ],
+   [
+    55,
+    "B_same_line",
+    "zh: \"计划中\", en: \"Planned\""
+   ],
+   [
+    56,
+    "B_same_line",
+    "zh: \"可以开始了\", en: \"Ready to start\""
+   ],
+   [
+    57,
+    "B_same_line",
+    "zh: \"已取消\", en: \"Cancelled\""
+   ],
+   [
+    61,
+    "B_same_line",
+    "zh: \"首次生成\", en: \"First generation\""
+   ],
+   [
+    62,
+    "B_same_line",
+    "zh: \"来自一次重规划\", en: \"From a replan\""
+   ],
+   [
+    63,
+    "B_same_line",
+    "zh: \"来自一次人工改动\", en: \"From a manual change\""
+   ],
+   [
+    82,
+    "B_same_line",
+    "zh: \"读出来了，等你过目\", en: \"read out, waiting for you to check it\""
+   ],
+   [
+    83,
+    "B_same_line",
+    "zh: \"这台服务器没接读取服务\", en: \"this server has no reader connected\""
+   ],
+   [
+    85,
+    "B_over_lines",
+    "zh: \"外部服务这次没给回话，这条没读出来\",     en: \"the outside service did no"
+   ],
+   [
+    94,
+    "B_same_line",
+    "zh: \"数据源降级\", en: \"Provider degraded\""
+   ],
+   [
+    95,
+    "B_same_line",
+    "zh: \"有重大变动没处理\", en: \"Major disruption open\""
+   ],
+   [
+    96,
+    "B_same_line",
+    "zh: \"有严重变动没处理\", en: \"Critical disruption open\""
+   ],
+   [
+    100,
+    "B_same_line",
+    "zh: \"上海时间\", en: \"Shanghai time\""
+   ],
+   [
+    101,
+    "B_same_line",
+    "zh: \"新加坡时间\", en: \"Singapore time\""
+   ],
+   [
+    102,
+    "B_same_line",
+    "zh: \"东京时间\", en: \"Tokyo time\""
+   ],
+   [
+    103,
+    "B_same_line",
+    "zh: \"协调世界时\", en: \"Coordinated universal time\""
+   ],
+   [
+    106,
+    "B_same_line",
+    "zh: \"方案版本\", en: \"Plan version\""
+   ],
+   [
+    117,
+    "B_same_line",
+    "zh: \"预订\", en: \"Booking\""
+   ],
+   [
+    118,
+    "B_same_line",
+    "zh: \"订单\", en: \"Order\""
+   ],
+   [
+    119,
+    "B_same_line",
+    "zh: \"付款\", en: \"Payment\""
+   ],
+   [
+    120,
+    "B_same_line",
+    "zh: \"预约\", en: \"Appointment\""
+   ],
+   [
+    121,
+    "B_same_line",
+    "zh: \"其他凭据\", en: \"Other evidence\""
+   ],
+   [
+    125,
+    "B_same_line",
+    "zh: \"可灵活改动\", en: \"Flexible\""
+   ],
+   [
+    126,
+    "B_same_line",
+    "zh: \"倾向保留\", en: \"Preferred\""
+   ],
+   [
+    127,
+    "B_same_line",
+    "zh: \"已预留\", en: \"Reserved\""
+   ],
+   [
+    128,
+    "B_same_line",
+    "zh: \"有保证\", en: \"Guaranteed\""
+   ],
+   [
+    129,
+    "B_same_line",
+    "zh: \"受保护锚点\", en: \"Protected anchor\""
+   ],
+   [
+    133,
+    "B_same_line",
+    "zh: \"生效中\", en: \"Active\""
+   ],
+   [
+    134,
+    "B_same_line",
+    "zh: \"已确认\", en: \"Confirmed\""
+   ],
+   [
+    135,
+    "B_same_line",
+    "zh: \"待确认\", en: \"Awaiting confirmation\""
+   ],
+   [
+    136,
+    "B_same_line",
+    "zh: \"已排入计划\", en: \"Planned\""
+   ],
+   [
+    141,
+    "B_same_line",
+    "zh: \"已取消\", en: \"Cancelled\""
+   ],
+   [
+    142,
+    "B_same_line",
+    "zh: \"已取消\", en: \"Cancelled\""
+   ],
+   [
+    150,
+    "B_same_line",
+    "zh: \"演示城市\", en: \"Demo city\""
+   ],
+   [
+    161,
+    "B_same_line",
+    "zh: \"一次采回来的报价回放\", en: \"a captured replay of a provider quote"
+   ],
+   [
+    162,
+    "B_same_line",
+    "zh: \"这台服务器说没有可用来源\", en: \"the server says no source is availa"
+   ],
+   [
+    163,
+    "B_same_line",
+    "zh: \"演示夹具造的数，不是供应商给的\", en: \"a demo fixture value, not a prov"
+   ],
+   [
+    167,
+    "B_over_lines",
+    "zh: \"上游那句摘要的原文不在这一屏\",   en: \"The upstream summary's own word"
+   ],
+   [
+    176,
+    "B_same_line",
+    "zh: \"冻结快照里写明的一条\", en: \"a value written out in the frozen sna"
+   ],
+   [
+    177,
+    "B_same_line",
+    "zh: \"供应商这次真给的一条\", en: \"a value a provider actually returned\""
+   ],
+   [
+    178,
+    "B_same_line",
+    "zh: \"合成默认值，不是供应商给的\", en: \"a synthetic default, not a provide"
+   ]
+  ],
+  "frontend/src/lib/entryLimits.ts": [
+   [
+    54,
+    "B_over_lines",
+    "zh: \"旅行人数\",\r     en: \"Travellers\""
+   ],
+   [
+    64,
+    "B_over_lines",
+    "zh: \"房间数\",\r     en: \"Rooms\""
+   ],
+   [
+    74,
+    "B_over_lines",
+    "zh: \"总预算\",\r     en: \"Total budget\""
+   ],
+   [
+    84,
+    "B_over_lines",
+    "zh: \"住宿预算\",\r     en: \"Lodging budget\""
+   ]
+  ],
+  "frontend/src/lib/failureAttribution.ts": [
+   [
+    513,
+    "A",
+    "? \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络"
+   ],
+   [
+    516,
+    "A",
+    "? \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容"
+   ],
+   [
+    631,
+    "A",
+    "? \"服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。\"           : \"The server a"
+   ],
+   [
+    467,
+    "B_same_line",
+    "zh: \"连接正常\", en: \"Connection is fine\""
+   ],
+   [
+    468,
+    "B_same_line",
+    "zh: \"连接\", en: \"Connection\""
+   ],
+   [
+    469,
+    "B_same_line",
+    "zh: \"服务器\", en: \"Server\""
+   ],
+   [
+    470,
+    "B_same_line",
+    "zh: \"服务器\", en: \"The origin\""
+   ],
+   [
+    471,
+    "B_same_line",
+    "zh: \"问得太快\", en: \"Asked too quickly\""
+   ],
+   [
+    472,
+    "B_same_line",
+    "zh: \"已经办过了\", en: \"Already done\""
+   ],
+   [
+    473,
+    "B_same_line",
+    "zh: \"没有回音\", en: \"No reply\""
+   ],
+   [
+    474,
+    "B_same_line",
+    "zh: \"身份\", en: \"Identity\""
+   ],
+   [
+    475,
+    "B_same_line",
+    "zh: \"权限\", en: \"Permission\""
+   ],
+   [
+    476,
+    "B_same_line",
+    "zh: \"读取\", en: \"Read\""
+   ]
+  ],
+  "frontend/src/lib/pretripChecklist.ts": [
+   [
+    83,
+    "B_same_line",
+    "zh: \"方案有未处理的可行性失败\", en: \"The plan has open feasibility failu"
+   ],
+   [
+    92,
+    "B_same_line",
+    "zh: \"去看方案\", en: \"Review the plan\""
+   ],
+   [
+    99,
+    "B_same_line",
+    "zh: \"恢复方案等你决定\", en: \"A recovery is waiting on your decision\""
+   ],
+   [
+    101,
+    "B_over_lines",
+    "zh: \"服务端把这一趟标为需要用户决定（`requires_user_decision` 为真），在你决定之前方案不会"
+   ],
+   [
+    106,
+    "B_same_line",
+    "zh: \"去看恢复选项\", en: \"See the recovery options\""
+   ],
+   [
+    141,
+    "B_same_line",
+    "zh: \"去看这一代方案\", en: \"Review this plan generation\""
+   ]
+  ],
+  "frontend/src/lib/sceneClock.ts": [
+   [
+    204,
+    "B_same_line",
+    "zh: \"执行游标\", en: \"the execution cursor\""
+   ],
+   [
+    205,
+    "B_same_line",
+    "zh: \"行程起点\", en: \"the journey's start\""
+   ],
+   [
+    206,
+    "B_same_line",
+    "zh: \"服务器没有说明依据\", en: \"the server gave no basis\""
+   ],
+   [
+    207,
+    "B_same_line",
+    "zh: \"这批证据带冻结期\", en: \"the frozen evidence carries an expiry\""
+   ],
+   [
+    208,
+    "B_same_line",
+    "zh: \"这趟没有冻结证据\", en: \"no frozen evidence on this trip\""
+   ],
+   [
+    209,
+    "B_same_line",
+    "zh: \"台上没有场景\", en: \"no scenario on stage\""
+   ],
+   [
+    210,
+    "B_same_line",
+    "zh: \"这趟的出行数据是封存的，没有到期时间\", en: \"this trip's travel data is se"
+   ],
+   [
+    211,
+    "B_same_line",
+    "zh: \"证据的引用对不上（服务器说有封存记录，但引用不一致）\", en: \"the evidence referenc"
+   ]
+  ]
+ }
+}
