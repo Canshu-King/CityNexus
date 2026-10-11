@@ -1,0 +1,537 @@
+# -*- coding: utf-8 -*-
+"""ORD-0568 landing arm r4 (commander hotfix on 加闸工's r3): refuse internal code
+names that reach the traveller's eyes.
+
+What it defends.  The commander's screen probe (`live_checks/_cmdr_screen_code_probe_r1.py:46`) fails a
+served page when a rendered sentence contains an uppercase code -- he measured CODES_ON_SCREEN 3 on the
+trial wizard (`_screen_probe_r1.txt:3`: HYDRATABLE, NO_CANONICAL_IDENTITY, UNKNOWN_RETRYABLE).  A
+landing gate cannot render every candidate, so this arm judges the same class statically.
+
+Two axes, both learned the hard way inside this order:
+
+  position -- a string is judged only where it becomes a word the traveller reads: a value inside a
+  `[中文, 英文]` pair or any array literal, the right side of `"key": "value"`, a ternary arm, an
+  assigned or returned sentence, a template literal's own text, and JSX text between tags.  Object and
+  array KEYS, the argument of a lookup call (`roleLabel("ARRIVAL", zh)`, `t("live.x")`), comparisons
+  (`=== "X"`), `case "X":` labels, type unions, JSX attributes and comments are names handed to the
+  machine and are never judged.
+
+  use-site -- an evidence TABLE column is not automatically a word.  r3 refused every code inside an
+  array literal, which rejected `review/快剪工-0573-r1` (door receipt _batch_land_round1_194446.json, 2026-10-11 19:44)
+  for a row whose third element is bound to `data-server-fields` while the fourth, the dictionary key,
+  is what the component renders.  r4 walks the collection's uses: a column is evidence only when every
+  `NAME[...][index]` in the file sits inside a `data-*` attribute value.  A plain prop (`title=`), text
+  between tags, a computed index or a bare table reference keep the refusal, and the exempted row stays
+  visible as class `info_evidence_attr` -- exclusions are reported, not silently dropped.
+
+  name -- a token is refused only when something actually names with it: the server quotes it as a
+  value under `backend/` or `contracts/`, or the judged file itself uses it in a non-rendered position.
+  Without this axis the replay raised 90 refusals of deliberate all-caps UI copy ("NOTIFICATIONS",
+  "POLICY", "TRAVEL"); one false rejection makes a gate undeliverable, which is what the order says.
+
+Kebab slugs (`not-asked`) are reported as information and never refused, because the probe reports them
+without failing and hyphenated English would otherwise turn a sentence into a red.
+
+Arm shape follows the landing door: default is report-only, `--refuse` turns a refusal-class problem
+into exit code 9, and every finding carries file / line / entry line / token / who names it / the source
+line, so the outbox receipt can quote the reason instead of leaving one bare verdict word.
+"""
+
+import argparse
+import io
+import json
+import re
+import subprocess
+import sys
+
+CODE_TOKEN = re.compile(r"\b[A-Z][A-Z0-9_]{5,}\b")
+SLUG_TOKEN = re.compile(r"\b[a-z][a-z]+-[a-z]+(?:-[a-z]+)*\b")
+ENTRY_RE = re.compile(r"^\s*[A-Za-z_$][A-Za-z0-9_$]*\s*:\s*[\[{(]?\s*$")
+QUOTED_ANY = re.compile(r"[\"']([A-Z][A-Z0-9_]{4,})[\"']")
+NAME_POSITIONS = ("key", "comparison_or_case", "type_union", "call_argument",
+                  "jsx_attribute", "type_position", "module_path")
+
+REPO = "."
+_CORPUS = {}
+
+
+def _git(args):
+    return subprocess.run(["git", "-C", REPO] + list(args), capture_output=True)
+
+
+def git_show(ref, path):
+    out = _git(["show", "%s:%s" % (ref, path)])
+    if out.returncode:
+        return None
+    return out.stdout.decode("utf-8", "replace")
+
+
+def machine_names(ref):
+    """Tokens the server quotes as values -- the vocabulary a traveller must never be shown."""
+    key = (REPO, ref)
+    if key not in _CORPUS:
+        out = _git(["grep", "-h", "-o", "-E", r"[\"'][A-Z][A-Z0-9_]{4,}[\"']", ref, "--", "backend/", "contracts/"])
+        names = set()
+        for line in out.stdout.decode("utf-8", "replace").splitlines():
+            m = QUOTED_ANY.search(line.strip())
+            if m:
+                names.add(m.group(1))
+        _CORPUS[key] = names
+    return _CORPUS[key]
+
+
+def mask_comments(src):
+    """Blank comments and escape pairs, keeping every offset and newline."""
+    chars = list(src)
+    i, n = 0, len(src)
+    state, quote = None, ""
+    while i < n:
+        c = src[i]
+        nxt = src[i + 1] if i + 1 < n else ""
+        if state is None:
+            if c == "/" and nxt == "/":
+                chars[i] = chars[i + 1] = " "
+                state = "line"
+                i += 2
+                continue
+            if c == "/" and nxt == "*":
+                chars[i] = chars[i + 1] = " "
+                state = "block"
+                i += 2
+                continue
+            if c in "\"'`":
+                state, quote = "str", c
+            i += 1
+            continue
+        if state == "line":
+            if c == "\n":
+                state = None
+            else:
+                chars[i] = " "
+            i += 1
+            continue
+        if state == "block":
+            if c == "*" and nxt == "/":
+                chars[i] = chars[i + 1] = " "
+                state = None
+                i += 2
+                continue
+            if c != "\n":
+                chars[i] = " "
+            i += 1
+            continue
+        if state == "str":
+            if c == "\\":
+                if i + 1 < n and src[i + 1] != "\n":
+                    chars[i + 1] = " "
+                i += 2
+                continue
+            if c == quote:
+                state = None
+            i += 1
+            continue
+    return "".join(chars)
+
+
+def literal_spans(masked):
+    """Every string or template literal in comment-free source."""
+    i, n = 0, len(masked)
+    while i < n:
+        c = masked[i]
+        if c in "\"'`":
+            quote = c
+            j = i + 1
+            while j < n:
+                if masked[j] == "\\":
+                    j += 2
+                    continue
+                if masked[j] == quote:
+                    break
+                if masked[j] == "\n" and quote != "`":
+                    break
+                j += 1
+            yield (i, j + 1, masked[i + 1 : j], "template" if quote == "`" else "string")
+            i = j + 1
+            continue
+        i += 1
+
+
+def jsx_text_spans(masked):
+    """Text between tags, e.g. `<dt>ARRIVED_LATE</dt>` -- words with no quote around them."""
+    for m in re.finditer(r">([^<>{}\n]{1,200})<", masked):
+        if m.group(1).strip():
+            yield (m.start(1), m.end(1), m.group(1), "jsx_text")
+
+
+def nearest_opener(masked, start):
+    depth = {"(": 0, "[": 0, "{": 0}
+    for j in range(start - 1, -1, -1):
+        c = masked[j]
+        if c == ")":
+            depth["("] += 1
+        elif c == "]":
+            depth["["] += 1
+        elif c == "}":
+            depth["{"] += 1
+        elif c in depth:
+            if depth[c] > 0:
+                depth[c] -= 1
+            else:
+                return c, j
+    return (None, -1)
+
+
+def classify_position(masked, start, end):
+    raw_before = masked[:start]
+    before = raw_before.rstrip()
+    after = masked[end:].lstrip()
+    prev_char = before[-1] if before else ""
+    next_char = after[0] if after else ""
+
+    if next_char.startswith(":"):
+        return "key"
+    if re.search(r"(===|!==|==|!=|\bcase)$", before):
+        return "comparison_or_case"
+    if prev_char == "|" or next_char.startswith("|"):
+        return "type_union"
+    if raw_before.endswith("=") and re.search(r"[A-Za-z0-9_$-]$", raw_before[:-1]):
+        return "jsx_attribute"
+    opener, op_pos = nearest_opener(masked, start)
+    if opener == "(":
+        head = masked[:op_pos].rstrip()
+        if re.search(r"[A-Za-z_$][A-Za-z0-9_$]*$", head):
+            return "call_argument"
+        if re.search(r"\bfrom$", head):
+            return "module_path"
+        return "grouping"
+    if re.search(r"\btype\s+\w+\s*=$", before):
+        return "type_position"
+    return "rendered"
+
+
+def struct_view(masked):
+    """Comment-free source with every string and template *body* blanked, offsets intact.
+
+    Position rules need the quotes; the enclosing-literal walk must not let a bracket written
+    inside a sentence (`"READY / canonical[0]"`) masquerade as code structure.
+    """
+    chars = list(masked)
+    for start, end, body, kind in literal_spans(masked):
+        for k in range(start + 1, max(start + 1, end - 1)):
+            if not masked[k].isspace():
+                chars[k] = " "
+    return "".join(chars)
+
+
+DECL_RE = re.compile(r"\b(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)[^;]*?=")
+ATTR_BEFORE = re.compile(r"([A-Za-z0-9_$\-]+)\s*=\s*\{\s*$")
+DECL_BEFORE = re.compile(r"\b(?:const|let|var)\s+$")
+
+
+def enclosing_array_element(struct, start):
+    """(collection name, element index) when the literal at `start` is a direct array element.
+
+    An object value (`"key": "CODE"`) deliberately returns no collection: a dictionary entry is
+    spoken words, and only the array columns of an evidence table get the use-site test below.
+    """
+    depth, commas, i, arr = 0, 0, start - 1, -1
+    while i >= 0:
+        c = struct[i]
+        if c in "]}":
+            depth += 1
+        elif c == "[":
+            if depth == 0:
+                arr = i
+                break
+            depth -= 1
+        elif c == "{":
+            if depth == 0:
+                return (None, None)
+            depth -= 1
+        elif c == "," and depth == 0:
+            commas += 1
+        i -= 1
+    if arr < 0:
+        return (None, None)
+    name = None
+    for m in DECL_RE.finditer(struct, 0, arr):
+        name = m.group(1)
+    if not name:
+        return (None, None)
+    return (name, commas)
+
+
+def column_reaches_words(struct, name, index):
+    """False only when every `name[...][index]` in this file is bound to a `data-*` attribute.
+
+    A `data-*` value is never read as a word -- the project's own assertion rule says testers read
+    rendered text, not attributes.  Anything else (a plain prop like `title=`, text between tags,
+    a bare table reference, a computed column) can reach the traveller, so the refusal stands.
+    """
+    ours = False
+    for m in re.finditer(r"\b%s\b" % re.escape(name), struct):
+        before = struct[:m.start()]
+        if DECL_BEFORE.search(before):
+            continue
+        j, chain = m.end(), []
+        while True:
+            while j < len(struct) and struct[j].isspace():
+                j += 1
+            if j < len(struct) and struct[j] == "[":
+                k = struct.find("]", j)
+                if k < 0:
+                    break
+                chain.append(struct[j + 1:k].strip())
+                j = k + 1
+            else:
+                break
+        if not chain:
+            return True
+        if not re.fullmatch(r"[0-9]+", chain[-1]):
+            return True
+        if int(chain[-1]) != index:
+            continue
+        a = ATTR_BEFORE.search(before)
+        if not a or not a.group(1).startswith("data-"):
+            return True
+        ours = True
+    return not ours
+
+
+def entry_line_of(lines, idx):
+    for k in range(idx, max(idx - 8, -1), -1):
+        if k < 0:
+            break
+        if ENTRY_RE.match(lines[k]):
+            return k + 1
+    return idx + 1
+
+
+def judge(path, text, allowed=None, only_lines=None):
+    masked = mask_comments(text)
+    lines = masked.split("\n")
+    raw_lines = text.split("\n")
+    line_starts = []
+    pos = 0
+    for ln in lines:
+        line_starts.append(pos)
+        pos += len(ln) + 1
+
+    def line_of(offset):
+        lo, hi = 0, len(line_starts) - 1
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            if line_starts[mid] <= offset:
+                lo = mid
+            else:
+                hi = mid - 1
+        return lo
+
+    units = list(literal_spans(masked)) + list(jsx_text_spans(masked))
+    struct = struct_view(masked)
+    local_names = set()
+    for start, end, body, kind in units:
+        if kind == "jsx_text":
+            continue
+        if classify_position(masked, start, end) in NAME_POSITIONS:
+            local_names.update(CODE_TOKEN.findall(body))
+
+    findings = []
+    for start, end, body, kind in units:
+        idx = line_of(start)
+        position = "jsx_text" if kind == "jsx_text" else classify_position(masked, start, end)
+        if position != "rendered" and kind != "jsx_text":
+            continue
+        codes = sorted(set(CODE_TOKEN.findall(body)))
+        if only_lines is not None:
+            codes = [c for c in codes if (idx + 1) in only_lines]
+        if allowed is not None:
+            codes = [c for c in codes if c in allowed or c in local_names]
+        slugs = sorted(set(SLUG_TOKEN.findall(body)))
+        cls = "refuse"
+        if position == "rendered" and kind != "jsx_text":
+            cname, cidx = enclosing_array_element(struct, start)
+            if cname is not None and not column_reaches_words(struct, cname, cidx):
+                cls = "info_evidence_attr"
+        for tok in codes:
+            if allowed is not None and tok in allowed:
+                named = "server_corpus"
+            elif tok in local_names:
+                named = "this_file_names_it"
+            else:
+                named = "unqualified"
+            findings.append({
+                "file": path,
+                "line": idx + 1,
+                "entry_line": entry_line_of(lines, idx),
+                "token": tok,
+                "position": position,
+                "named_by": named,
+                "class": cls,
+                "text": (raw_lines[idx] if idx < len(raw_lines) else "").strip()[-90:],
+            })
+        if slugs and not codes:
+            findings.append({
+                "file": path,
+                "line": idx + 1,
+                "entry_line": entry_line_of(lines, idx),
+                "token": ",".join(slugs[:6]),
+                "position": position,
+                "class": "info_slug_only",
+                "text": (raw_lines[idx] if idx < len(raw_lines) else "").strip()[-90:],
+            })
+    return findings
+
+
+def added_lines(base, ref):
+    files = {}
+    diff = _git(["diff", "-U0", "%s...%s" % (base, ref), "--", "frontend/"]).stdout.decode("utf-8", "replace").split("\n")
+    cur = None
+    for line in diff:
+        if line.startswith("+++ b/"):
+            cur = line[6:].strip()
+            files.setdefault(cur, set())
+        elif line.startswith("@@") and cur:
+            m = re.search(r"\+(\d+)(?:,(\d+))?", line)
+            if m:
+                start = int(m.group(1))
+                count = int(m.group(2) or 1)
+                for n in range(start, start + max(count, 1)):
+                    files[cur].add(n)
+    return files
+
+
+def collect(opts, base):
+    if opts.path:
+        return [(opts.path, io.open(opts.path, encoding="utf-8", errors="replace").read())]
+    if opts.files:
+        paths = [p for p in opts.files.split(",") if p]
+    else:
+        paths = _git(["diff", "--name-only", "%s...%s" % (base, opts.ref), "--", "frontend/"]).stdout.decode("utf-8", "replace").splitlines()
+    if not opts.path and not opts.include_nonproduct:
+        # a spec fixture is data handed to the server, not a word a traveller reads -- the replay
+        # showed judging frontend/e2e/** is a false rejection, so the shipped face is frontend/src/**
+        paths = [p for p in paths if p.startswith("frontend/src/")]
+    items = []
+    for p in paths:
+        if p.endswith(".tsx") or p.endswith(".ts"):
+            body = git_show(opts.ref, p)
+            if body is not None:
+                items.append((p, body))
+    return items
+
+
+def selftest():
+    """31 assertions, each naming the position class, the naming axis or the use-site arm it protects."""
+    NL = chr(10)
+    cases = [
+        ("pair value is spoken words", 'const G = { a: ["已支持", "Supported", "NO_CANONICAL_IDENTITY"] };\n', ["NO_CANONICAL_IDENTITY"], None, None),
+        ("dictionary value on the en side", 'const D = {"x.zh": "标题", "x.en": "READY_NOT_PRESENT title"};\n', ["READY_NOT_PRESENT"], None, None),
+        ("ternary arm", 'return zh ? "没有" : "UNKNOWN_RETRYABLE here";\n', ["UNKNOWN_RETRYABLE"], None, None),
+        ("template literal", 'return `verdict ${row.code} HYDRATABLE needed`;\n', ["HYDRATABLE"], None, None),
+        ("JSX text between tags", 'return (<dt>ARRIVED_LATE</dt>);\n', ["ARRIVED_LATE"], None, None),
+        ("assigned sentence", 'const note = "PROVIDER_UNREACHABLE 这一次没答上";\n', ["PROVIDER_UNREACHABLE"], None, None),
+        ("comparison is not a word", 'if (row.reason_code === "NO_CANONICAL_IDENTITY") return "needs";\n', [], None, None),
+        ("case label is not a word", 'switch (k) { case "DESTINATION_AMBIGUOUS": return 1; }\n', [], None, None),
+        ("object key is not a word", 'const M = { "DESTINATION_RESOLVER_UNAVAILABLE": "来源没答上" };\n', [], None, None),
+        ("t() key argument is a name", 'return t("live.no_canonical_identity");\n', [], None, None),
+        ("lookup call argument is a name", 'return roleLabel("ARRIVAL_STATION", zh);\n', [], None, None),
+        ("JSX attribute is not a word", 'return (<b data-testid="NO_CANONICAL_IDENTITY">x</b>);\n', [], None, None),
+        ("type union is not a word", 'type Kind = "READY_STATE" | "UNKNOWN_RETRYABLE";\n', [], None, None),
+        ("line comment is not judged", "const x = 1; // NO_CANONICAL_IDENTITY is the server's\n", [], None, None),
+        ("block comment is not judged", '/* HYDRATABLE and UNKNOWN_RETRYABLE are codes */\nconst y = 2;\n', [], None, None),
+        ("code inside a commented block", '/*\nconst z = "PROVIDER_UNREACHABLE";\n*/\nconst w = 1;\n', [], None, None),
+        ("short caps is below the threshold", 'const a = ["READY", "TODO"];\n', [], None, None),
+        ("lowercase slug never refuses", 'const b = ["not-asked", "trial-city"];\n', [], None, None),
+        ("empty file", '', [], None, None),
+        ("plain English sentence", 'const c = ["the server names it and holds material"];\n', [], None, None),
+        ("Chinese only", 'const d = ["这台服务器认不出这个名字"];\n', [], None, None),
+        ("name axis: token nobody names is display copy", 'const e = ["NOTIFICATIONS"];\n', [], {"NOT_A_TOKEN"}, None),
+        ("name axis: token the server quotes is refused", 'const f = ["NO_SCENARIO"];\n', ["NO_SCENARIO"], {"NO_SCENARIO"}, None),
+        ("name axis: this file names it elsewhere", 'if (s === "STAGE_LIVE") return null;\nconst t = ["状态 STAGE_LIVE 在台上"];\n', ["STAGE_LIVE"], set(), None),
+        ("only-added: a line the lane did not write is left alone", 'const g = ["NO_CANONICAL_IDENTITY"];\nconst h = ["UNKNOWN_RETRYABLE"];\n', ["UNKNOWN_RETRYABLE"], {"NO_CANONICAL_IDENTITY", "UNKNOWN_RETRYABLE"}, {2}),
+        ("only-added with an empty set judges nothing", 'const i = ["NO_CANONICAL_IDENTITY"];\n', [], {"NO_CANONICAL_IDENTITY"}, set()),
+        ("use-site arm: column bound only to a data attribute is evidence",
+         'const H = { a: ["已支持", "Supported", "NO_CANONICAL_IDENTITY", "setup.k"] };' + NL
+         + 'return (<b data-server-fields={H[group][2]}>{t(H[group][3])}</b>);' + NL,
+         [], None, None),
+        ("use-site arm: the same column bound to title= is a word",
+         'const H2 = { a: ["已支持", "Supported", "NO_CANONICAL_IDENTITY", "setup.k"] };' + NL
+         + 'return (<b title={H2[group][2]}>{t(H2[group][3])}</b>);' + NL,
+         ["NO_CANONICAL_IDENTITY"], None, None),
+        ("use-site arm: a column that also sits between tags is a word",
+         'const H3 = { a: ["已支持", "Supported", "NO_CANONICAL_IDENTITY", "setup.k"] };' + NL
+         + 'return (<b><i>{H3[group][2]}</i></b>);' + NL,
+         ["NO_CANONICAL_IDENTITY"], None, None),
+        ("use-site arm: a bare table handed around forbids the exemption",
+         'const H4 = { a: ["Supported", "NO_CANONICAL_IDENTITY"] };' + NL
+         + 'return (<b data-x={H4[group][1]}>{render(H4)}</b>);' + NL,
+         ["NO_CANONICAL_IDENTITY"], None, None),
+        ("use-site arm: a computed column index forbids the exemption",
+         'const H5 = { a: ["Supported", "NO_CANONICAL_IDENTITY"] };' + NL
+         + 'const n = 1;' + NL
+         + 'return (<b data-x={H5[group][n]}></b>);' + NL,
+         ["NO_CANONICAL_IDENTITY"], None, None),
+    ]
+    bad = []
+    for label, src_text, expected, allowed, only in cases:
+        got = sorted({f["token"] for f in judge("selftest.tsx", src_text, allowed, only) if f["class"] == "refuse"})
+        if got != sorted(expected):
+            bad.append("%s: expected %s got %s" % (label, sorted(expected) or "[]", got or "[]"))
+    return len(cases), bad
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--repo", default=".")
+    ap.add_argument("--ref", default="HEAD")
+    ap.add_argument("--base", default="")
+    ap.add_argument("--path", default="")
+    ap.add_argument("--files", default="")
+    ap.add_argument("--require-name", action="store_true", help="refuse only tokens the server or this file names with")
+    ap.add_argument("--only-added", action="store_true", help="judge only the lines the candidate wrote")
+    ap.add_argument("--include-nonproduct", action="store_true", help="also judge frontend/e2e/** and other non-shipped paths")
+    ap.add_argument("--refuse", action="store_true", help="exit 9 when a refusal-class problem exists")
+    ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--json", default="")
+    opts = ap.parse_args()
+
+    global REPO
+    REPO = opts.repo
+
+    if opts.selftest:
+        total, bad = selftest()
+        print("SELFTEST assertions=%d failures=%d" % (total, len(bad)))
+        for line in bad:
+            print("  FAIL " + line)
+        return 1 if bad else 0
+
+    base = opts.base or _git(["rev-parse", "origin/mirror/integration-frontend-apple-pass1"]).stdout.decode().strip()
+    items = collect(opts, base)
+    allowed = machine_names(opts.ref) if opts.require_name else None
+    added = added_lines(base, opts.ref) if opts.only_added else {}
+    findings = []
+    for path, body in items:
+        findings.extend(judge(path, body, allowed, added.get(path)))
+    refuses = [f for f in findings if f["class"] == "refuse"]
+    infos = [f for f in findings if f["class"] != "refuse"]
+
+    sys.stdout.buffer.write(("arm codes-on-screen r4 | ref=%s base=%s files_judged=%d refuse=%d info=%d require_name=%s only_added=%s corpus=%d\n" % (
+        opts.ref, base[:10], len(items), len(refuses), len(infos), opts.require_name, opts.only_added,
+        len(allowed) if allowed is not None else -1)).encode("utf-8", "replace"))
+    for f in refuses:
+        sys.stdout.buffer.write(("REFUSE %s:%s (entry :%s) token=%s named_by=%s in %s | %s\n" % (
+            f["file"], f["line"], f["entry_line"], f["token"], f["named_by"], f["position"], f["text"])).encode("utf-8", "replace"))
+    for f in infos:
+        sys.stdout.buffer.write(("INFO   %s:%s slug=%s\n" % (f["file"], f["line"], f["token"])).encode("utf-8", "replace"))
+    if opts.json:
+        io.open(opts.json, "w", encoding="utf-8", newline="").write(json.dumps(
+            {"arm": "codes-on-screen-r4", "ref": opts.ref, "base": base, "require_name": opts.require_name,
+             "only_added": opts.only_added, "files_judged": len(items), "problems": refuses,
+             "informational": infos}, ensure_ascii=False, indent=1))
+    return 9 if (opts.refuse and refuses) else 0
+
+
+if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    raise SystemExit(main())
