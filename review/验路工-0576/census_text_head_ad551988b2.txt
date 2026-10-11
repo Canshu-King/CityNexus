@@ -1,0 +1,15 @@
+sha=ad551988b2 files_with_inline_pairs=31 total=730 | arm_A_ternary=204 arm_B_same_line=359 arm_B_over_lines=167
+the shape the old ruler could not see: B_over_lines=167, B_total=526, so a ternary-only census reports 204 of 730
+   frontend/src/i18n/travelerLabels.ts                                      A=1 B_same_line=123
+   frontend/src/app/V8Experience.tsx                                        A=46 B_same_line=37
+   frontend/src/features/agent/CopilotDock.tsx                              A=29 B_same_line=51
+   frontend/src/features/poiimport/poiImportCopy.ts                         B_over_lines=70
+   frontend/src/lib/displayVocabulary.ts                                    A=2 B_over_lines=2 B_same_line=43
+   frontend/src/features/simulation/SimulationPanel.tsx                     A=6 B_over_lines=25
+   frontend/src/features/planning/PlanWithAiSheet.tsx                       A=21 B_over_lines=8
+   frontend/src/features/setup/JourneyTrialSetup.tsx                        A=9 B_same_line=18
+   frontend/src/features/collections/collectionCopy.ts                      B_over_lines=26
+   frontend/src/i18n/mapPanelCopy.ts                                        B_over_lines=11 B_same_line=14
+   frontend/src/features/inbox/JourneyInboxWorkbench.tsx                    A=2 B_same_line=22
+   frontend/src/features/checkin/footprintCopy.ts                           B_over_lines=8 B_same_line=13
+json=bilingual_census_r2_ad551988b2.json

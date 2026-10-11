@@ -399,6 +399,9 @@ const en: Dict = {
   "live.durationPending": "duration pending",
   "live.tripUpdated": "Your trip has been updated.",
   "live.remindLaterOk": "Okay, we will remind you later.",
+  "live.acknowledgedStillOpen": "Seen, still open: you have seen these changes but have not chosen a new arrangement yet.",
+  "live.confirmedUnchanged": "Confirmed bookings and your arrival/departure stay unchanged.",
+  "live.confirmedAffected": "Note: some confirmed items are affected.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -1865,6 +1868,9 @@ const zhCN: Dict = {
   "live.durationPending": "时长待定",
   "live.tripUpdated": "已按新安排更新你的行程。",
   "live.remindLaterOk": "好的，稍后再提醒你。",
+  "live.acknowledgedStillOpen": "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。",
+  "live.confirmedUnchanged": "已确认的预订和到达/离开时间保持不变。",
+  "live.confirmedAffected": "注意：部分已确认内容会受影响。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
