@@ -810,15 +810,15 @@ export function PlanWithAiSheet({
                 ? "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。"
                 : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
             {aiState === "not_configured" &&
-              (t("planai.aiCredentialNotConfigured"))}
+              (t("plan.aiNotConfiguredNote"))}
             {aiState === "disabled_by_ops" &&
-              (t("planai.aiSwitchedOffByOperator"))}
+              (t("plan.aiDisabledByOpsNote"))}
             {aiState === "provider_refused" &&
               (zh
                 ? "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。"
                 : "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.")}
             {aiState === "unknown" &&
-              (t("planai.aiStatusUnreadable"))}
+              (t("plan.aiStateUnknownNote"))}
           </p>
         )}
 

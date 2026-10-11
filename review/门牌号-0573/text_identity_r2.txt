@@ -1,0 +1,9 @@
+bundle_rc=0
+run_rc=0
+plan.aiNotConfiguredNote ZH 长度 原55 现55 逐字节相同
+plan.aiNotConfiguredNote EN 长度 原166 现166 逐字节相同
+plan.aiDisabledByOpsNote ZH 长度 原51 现51 逐字节相同
+plan.aiDisabledByOpsNote EN 长度 原152 现152 逐字节相同
+plan.aiStateUnknownNote ZH 长度 原41 现41 逐字节相同
+plan.aiStateUnknownNote EN 长度 原106 现106 逐字节相同
+VERDICT 两语三枚逐字节全同（不等 0 枚）
