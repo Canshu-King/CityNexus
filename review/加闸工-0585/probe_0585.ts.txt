@@ -1,0 +1,49 @@
+// ORD-0585 byte proof probe.  The same body was dropped into BOTH generations' frontend root
+// (tip export and candidate export) with only the `tag` string differing, so each run imported that
+// generation's own product files by relative path: ./src/api/citynexus,
+// ./src/features/simulation/simulationAdapter, ./src/i18n/LocaleContext.
+// It bundles with esbuild (--platform=node --format=cjs) and runs under node; readings land in
+// probe_base_out.json (tip generation) and probe_wt_out.json (candidate generation).
+import { CityNexusApiError } from "./src/api/citynexus";
+import { describeFailure } from "./src/features/simulation/simulationAdapter";
+import { dictionaryCopy, dictionaryText } from "./src/i18n/LocaleContext";
+
+const out: Record<string, unknown> = { tag: "base", cases: {}, keys: {} };
+
+function busy(retryAfterMs: unknown, code: string) {
+  const body = {
+    error: { code, message_key: "generation.store_busy", details: { retry_after_ms: retryAfterMs } },
+  };
+  return new CityNexusApiError(503, body, code);
+}
+
+const CODES = ["generation.store_busy", "GENERATION_STORE_BUSY"];
+const MS: Array<[string, unknown]> = [
+  ["absent", undefined],
+  ["null", null],
+  ["zero", 0],
+  ["neg", -500],
+  ["1234", 1234],
+  ["1299.4", 1299.4],
+];
+for (const code of CODES) {
+  for (const [name, ms] of MS) {
+    const f = describeFailure(busy(ms, code));
+    (out.cases as Record<string, unknown>)[code + "|" + name] = { zh: f.zh, en: f.en };
+  }
+}
+
+const KEYS = ["simulation.retryWaitNotGiven", "simulation.retryRightNow", "simulation.retryInMs"];
+for (const k of KEYS) {
+  (out.keys as Record<string, unknown>)[k] = {
+    en: dictionaryCopy("en", k),
+    zh: dictionaryCopy("zh-CN", k),
+    enFilled: dictionaryText("en", k, { ms: 1299 }),
+    zhFilled: dictionaryText("zh-CN", k, { ms: 1299 }),
+    missingOnEn: dictionaryCopy("en", k) === k,
+    missingOnZh: dictionaryCopy("zh-CN", k) === k,
+  };
+}
+// A key neither side carries reads back as its own name -- that is the control, not a defect claim.
+out.control = { absentKeyReadsBackAsName: dictionaryCopy("zh-CN", "simulation.notARealKey") };
+console.log(JSON.stringify(out));

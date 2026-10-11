@@ -1,0 +1,38 @@
+TIP 8890f22fe37af40d2919db352be47043b1ea6162
+CJK_FILES_CANDIDATE 88
+FILES_WITH_VISIBLE_CJK 24
+VISIBLE_HITS 389（已扣成对表值）
+COPY_TABLE_ARMS 829（zh/en 同表成对，本就是字典形状，不算内联）
+ONLY_TABLE frontend/src/components/ProductErrorBoundary.tsx 成对 6 条 / 该文件汉字 6 条
+ONLY_TABLE frontend/src/features/abort/journeyAbortCopy.ts 成对 22 条 / 该文件汉字 22 条
+ONLY_TABLE frontend/src/features/access/accessCopy.ts 成对 154 条 / 该文件汉字 154 条
+ONLY_TABLE frontend/src/features/checkin/checkinCopy.ts 成对 11 条 / 该文件汉字 11 条
+ONLY_TABLE frontend/src/features/checkin/footprintCopy.ts 成对 21 条 / 该文件汉字 21 条
+ONLY_TABLE frontend/src/features/collections/collectionCopy.ts 成对 26 条 / 该文件汉字 26 条
+ONLY_TABLE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx 成对 1 条 / 该文件汉字 1 条
+ONLY_TABLE frontend/src/features/discovery/prepAbandonSurveyCopy.ts 成对 14 条 / 该文件汉字 14 条
+FILE_ROWS 列出 24 枚 / 逐枚加总 389 条 / 尺报分母 389 条
+FILE  76 frontend/src/features/setup/JourneyTrialSetup.tsx 首落点 frontend/src/features/setup/JourneyTrialSetup.tsx:113 「厦门」
+FILE  53 frontend/src/app/V8Experience.tsx 首落点 frontend/src/app/V8Experience.tsx:388 「跟随系统」
+FILE  36 frontend/src/features/agent/CopilotDock.tsx 首落点 frontend/src/features/agent/CopilotDock.tsx:243 「运行事件暂时无法解析」
+FILE  32 frontend/src/features/stay/StayExplorer.tsx 首落点 frontend/src/features/stay/StayExplorer.tsx:79 「我们还没有拿到真实住宿数据，所以不会给你看一张假的价」
+FILE  25 frontend/src/features/planning/PlanWithAiSheet.tsx 首落点 frontend/src/features/planning/PlanWithAiSheet.tsx:182 「${known.zh}（服务器给的原因编号：${co」
+FILE  22 frontend/src/features/discovery/DestinationPreparationPanel.tsx 首落点 frontend/src/features/discovery/DestinationPreparationPanel.tsx:194 「服务器说这座城需要的事实都在，而且是新的，可以直接规」
+FILE  20 frontend/src/features/stay/HotelsPanel.tsx 首落点 frontend/src/features/stay/HotelsPanel.tsx:125 「这家住宿的入住/退房时间和你已确认的行程冲突，无法在」
+FILE  19 frontend/src/lib/failureAttribution.ts 首落点 frontend/src/lib/failureAttribution.ts:464 「这台设备还记得行程 ${id}，但服务器明确回答它不」
+FILE  18 frontend/src/features/planning/PlanComparison.tsx 首落点 frontend/src/features/planning/PlanComparison.tsx:125 「我们按这座城可核验的地点和你的预算，生成了 ${ca」
+FILE  18 frontend/src/features/execution/LiveRecovery.tsx 首落点 frontend/src/features/execution/LiveRecovery.tsx:74 「暂时无法获取这段路线的可靠通行时间，因此没有自动修改」
+FILE  14 frontend/src/features/simulation/SimulationPanel.tsx 首落点 frontend/src/features/simulation/SimulationPanel.tsx:795 「正在读服务器上的场景状态…」
+FILE  13 frontend/src/features/trip/TripItinerary.tsx 首落点 frontend/src/features/trip/TripItinerary.tsx:294 「AI 帮我规划（要先有地点）」
+FILE   9 frontend/src/features/progress/journeyProgress.ts 首落点 frontend/src/features/progress/journeyProgress.ts:77 「还没排定任何一站：选定方案之后，这里才写第几天、共几」
+FILE   8 frontend/src/features/trip/ActivityDetail.tsx 首落点 frontend/src/features/trip/ActivityDetail.tsx:147 「${Math.floor(duration / 60」
+FILE   6 frontend/src/features/stay/stayGenerationDoor.ts 首落点 frontend/src/features/stay/stayGenerationDoor.ts:25 「这一次拿到了可以选的住宿候选。」
+FILE   4 frontend/src/main.tsx 首落点 frontend/src/main.tsx:57 「下午海河沿线有交通管制，我不想淋雨，游船和晚餐别动，」
+FILE   3 frontend/src/lib/writeDeadline.ts 首落点 frontend/src/lib/writeDeadline.ts:84 「这台设备等到 ${seconds} 秒就停了」
+FILE   3 frontend/src/lib/keylessWriteDeadline.ts 首落点 frontend/src/lib/keylessWriteDeadline.ts:62 「${method} ${path} -- 这台设备等」
+FILE   3 frontend/src/features/simulation/simulationAdapter.ts 首落点 frontend/src/features/simulation/simulationAdapter.ts:122 「（服务器没说要等多久）」
+FILE   3 frontend/src/features/inbox/JourneyInboxWorkbench.tsx 首落点 frontend/src/features/inbox/JourneyInboxWorkbench.tsx:272 「金额待确认」
+FILE   1 frontend/src/lib/sceneClock.ts 首落点 frontend/src/lib/sceneClock.ts:231 「服务器报的是 ${state}，我们不替它解释」
+FILE   1 frontend/src/features/recovery/V14RecoveryTruthPanel.tsx 首落点 frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:107 「这步接受没有得到可确认的答复，结果未知。」
+FILE   1 frontend/src/features/checklist/PretripChecklistPanel.tsx 首落点 frontend/src/features/checklist/PretripChecklistPanel.tsx:56 「这里只列契约写明依据的两类检查：这一代方案的可行性失」
+FILE   1 frontend/src/features/checkin/footprintRead.ts 首落点 frontend/src/features/checkin/footprintRead.ts:65 「${Number(month)}月${Number(」

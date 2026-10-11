@@ -1,0 +1,81 @@
+CASES base=12 cand=12 same_keys=True
+ZH arm: identical 12 / different 0
+EN arm: identical 0 / different 12
+EN arm carrying Chinese before the move: 12 of 12 cases
+EN arm carrying Chinese after  the move: 0 of 12 cases
+ZH arm carrying no Chinese after the move: 0
+
+-- one line per case, both arms, both generations --
+CASE GENERATION_STORE_BUSY|1234
+   zh base 上一次的生成还占着存储（约 1234 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（约 1234 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（约 1234 毫秒后再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (try again in about 1234 ms). Wait for it and try again -- this step was blocked, not refused.
+CASE GENERATION_STORE_BUSY|1299.4
+   zh base 上一次的生成还占着存储（约 1299 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（约 1299 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（约 1299 毫秒后再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (try again in about 1299 ms). Wait for it and try again -- this step was blocked, not refused.
+CASE GENERATION_STORE_BUSY|absent
+   zh base 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（服务器没说要等多久）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (the server did not say how long to wait). Wait for it and try again -- this step was blocked, not refused.
+CASE GENERATION_STORE_BUSY|neg
+   zh base 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（现在就可以再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (you can try again right now). Wait for it and try again -- this step was blocked, not refused.
+CASE GENERATION_STORE_BUSY|null
+   zh base 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（服务器没说要等多久）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (the server did not say how long to wait). Wait for it and try again -- this step was blocked, not refused.
+CASE GENERATION_STORE_BUSY|zero
+   zh base 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（现在就可以再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (you can try again right now). Wait for it and try again -- this step was blocked, not refused.
+CASE generation.store_busy|1234
+   zh base 上一次的生成还占着存储（约 1234 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（约 1234 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（约 1234 毫秒后再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (try again in about 1234 ms). Wait for it and try again -- this step was blocked, not refused.
+CASE generation.store_busy|1299.4
+   zh base 上一次的生成还占着存储（约 1299 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（约 1299 毫秒后再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（约 1299 毫秒后再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (try again in about 1299 ms). Wait for it and try again -- this step was blocked, not refused.
+CASE generation.store_busy|absent
+   zh base 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（服务器没说要等多久）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (the server did not say how long to wait). Wait for it and try again -- this step was blocked, not refused.
+CASE generation.store_busy|neg
+   zh base 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（现在就可以再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (you can try again right now). Wait for it and try again -- this step was blocked, not refused.
+CASE generation.store_busy|null
+   zh base 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（服务器没说要等多久）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（服务器没说要等多久）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (the server did not say how long to wait). Wait for it and try again -- this step was blocked, not refused.
+CASE generation.store_busy|zero
+   zh base 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   zh cand 上一次的生成还占着存储（现在就可以再试）。等它跑完再试，这一步没有失败，只是被挡住了。
+   en base The previous generation still holds the store（现在就可以再试）. Wait for it and try again -- this step was blocked, not refused.
+   en cand The previous generation still holds the store (you can try again right now). Wait for it and try again -- this step was blocked, not refused.
+
+-- the three keys read straight off the candidate dictionary --
+KEY simulation.retryInMs | en ' (try again in about {ms} ms)' | zh '（约 {ms} 毫秒后再试）' | en_filled ' (try again in about 1299 ms)' | zh_filled '（约 1299 毫秒后再试）' | missing_en=False missing_zh=False
+KEY simulation.retryRightNow | en ' (you can try again right now)' | zh '（现在就可以再试）' | en_filled ' (you can try again right now)' | zh_filled '（现在就可以再试）' | missing_en=False missing_zh=False
+KEY simulation.retryWaitNotGiven | en ' (the server did not say how long to wait)' | zh '（服务器没说要等多久）' | en_filled ' (the server did not say how long to wait)' | zh_filled '（服务器没说要等多久）' | missing_en=False missing_zh=False
+
+-- control: a key neither side carries --
+CONTROL 'simulation.notARealKey'
+
+-- base generation had no such keys, so it must read them back as their own name --
+BASE_KEY simulation.retryInMs | missing_en=True missing_zh=True | reads 'simulation.retryInMs'
+BASE_KEY simulation.retryRightNow | missing_en=True missing_zh=True | reads 'simulation.retryRightNow'
+BASE_KEY simulation.retryWaitNotGiven | missing_en=True missing_zh=True | reads 'simulation.retryWaitNotGiven'

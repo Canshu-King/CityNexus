@@ -1,0 +1,31 @@
+== retryHint 调用点（候选枝现读）==
+9979ed4ffc421894e11e7e5b9b29b99d2105b99a:frontend/src/features/simulation/simulationAdapter.ts:119:function retryHint(error: unknown, locale: TripLocale): string {
+9979ed4ffc421894e11e7e5b9b29b99d2105b99a:frontend/src/features/simulation/simulationAdapter.ts:153:    const zhExtra = busy ? retryHint(error, "zh-CN") : fields;
+9979ed4ffc421894e11e7e5b9b29b99d2105b99a:frontend/src/features/simulation/simulationAdapter.ts:154:    const enExtra = busy ? retryHint(error, "en") : fields;
+9979ed4ffc421894e11e7e5b9b29b99d2105b99a:frontend/src/i18n/LocaleContext.tsx:1484:     English arm used to receive the same Chinese sentence because retryHint() had no language of
+
+== 消费两臂的落点（现尖）==
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/SimulationPanel.tsx:18:  describeFailure,
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/SimulationPanel.tsx:358:        ? { transient: true, ...describeFailure(journeyRead.error) }
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/SimulationPanel.tsx:366:            ? { transient: true, ...describeFailure(servicesRead.error) }
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/SimulationPanel.tsx:374:                ? { transient: true, ...describeFailure(bookableRead.error) }
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/SimulationPanel.tsx:755:      const named = describeFailure(error);
+
+== 有没有 spec 断言这三串 / 整句（现尖，全 frontend）==
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/simulationAdapter.ts:83:    zh: (_s, extra) => `上一次的生成还占着存储${extra}。等它跑完再试，这一步没有失败，只是被挡住了。`,
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/simulationAdapter.ts:85:      `The previous generation still holds the store${extra}. Wait for it and try again -- this step was blocked, not refused.`,
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/simulationAdapter.ts:88:    zh: (_s, extra) => `上一次的生成还占着存储${extra}。等它跑完再试，这一步没有失败，只是被挡住了。`,
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/simulationAdapter.ts:90:      `The previous generation still holds the store${extra}. Wait for it and try again -- this step was blocked, not refused.`,
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/simulationAdapter.ts:122:  if (ms === null) return "（服务器没说要等多久）";
+8890f22fe37af40d2919db352be47043b1ea6162:frontend/src/features/simulation/simulationAdapter.ts:123:  return ms <= 0 ? "（现在就可以再试）" : `（约 ${Math.round(ms)} 毫秒后再试）`;
+(空 = 无)
+
+== 字典锚行是否活着（候选枝现读）==
+     1	  "simulation.notGiven": "not given",
+     2	  "simulation.retryWaitNotGiven": " (the server did not say how long to wait)",
+     3	  "simulation.retryRightNow": " (you can try again right now)",
+     4	  "simulation.retryInMs": " (try again in about {ms} ms)",
+     5	  "simulation.notGiven": "服务器未给证据状态",
+     6	  "simulation.retryWaitNotGiven": "（服务器没说要等多久）",
+     7	  "simulation.retryRightNow": "（现在就可以再试）",
+     8	  "simulation.retryInMs": "（约 {ms} 毫秒后再试）",
