@@ -466,6 +466,8 @@ export function BootstrapDiscoveryPanel({
     journeyIdRef.current === fence.journeyId &&
     sourceKindRef.current === fence.sourceKind;
   const chooseSearchSource = (next: SourceKind, clearCenter: boolean) => {
+    setProviderConsent(false);
+    setCityLabelConfirmed(false);
     sourceKindRef.current = next;
     invalidateDiscovery();
     setSourceKind(next);
@@ -478,6 +480,7 @@ export function BootstrapDiscoveryPanel({
     }
   };
   const chooseOutingIntent = (next: OutingIntent) => {
+    setProviderConsent(false);
     invalidateDiscovery();
     setOutingIntent(next);
     setMessage(null);
@@ -995,6 +998,7 @@ export function BootstrapDiscoveryPanel({
     const requestLongitude = parsedLongitude;
     const requestAccuracy = accuracy;
     setBusy(true);
+    setProviderConsent(false);
     setMessage(null);
     setResult(null);
     try {
