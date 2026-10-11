@@ -3490,9 +3490,23 @@ def select_bootstrap_candidate(
                 raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate expired", status_code=410)
         except ValueError:
             raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate expiry is invalid", status_code=410)
-    opening = json.loads(row.opening_hours_json or "{}")
-    opening_state = str(opening.get("status") or "UNKNOWN").upper() if isinstance(opening, dict) else "UNKNOWN"
-    source_url = str(evidence.get("source_url") or "") or None
+    observation = _scope_observation(row, matching_scope)
+    opening = observation["opening_hours"]
+    opening_state = str(opening.get("status") or "UNKNOWN").upper()
+    source_url = observation["source_url"] or str(evidence.get("source_url") or "") or None
+    if observation["public_access_state"] == "RESTRICTED":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ACCESS_RESTRICTED",
+            "the current member's public observation indicates restricted access",
+            status_code=422,
+        )
+    # Indoor-only public presence is not a confirmed accessible native plan.
+    if observation["public_access_state"] == "INDOOR_ACCESS_UNVERIFIED":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_ACCESS_UNVERIFIED",
+            "the current member's indoor-only public access is not independently verified",
+            status_code=422,
+        )
     if opening_state not in _BOOTSTRAP_GROUNDED_OPENING:
         code = "BOOTSTRAP_PLACE_CLOSED" if opening_state == "CLOSED" else "BOOTSTRAP_OPENING_UNVERIFIED"
         message = (
@@ -3552,23 +3566,20 @@ def select_bootstrap_candidate(
         raise BootstrapDiscoveryError("BOOTSTRAP_IDENTITY_CONFLICT", "OSM identity belongs to another city")
     place = existing
     if place is None:
-        metadata = json.loads(row.metadata_json or "{}")
-        cost = metadata.get("cost_evidence") or {"status": "UNKNOWN", "amount_minor": None}
-        opening_hours = json.loads(row.opening_hours_json or "{}")
-        if not isinstance(opening_hours, dict):
-            opening_hours = {"status": "UNKNOWN"}
+        cost = dict(observation["cost_evidence"])
+        opening_hours = dict(observation["opening_hours"])
         opening_hours.setdefault("status", "UNKNOWN")
         place = Place(
             id=str(uuid5(NAMESPACE_URL, f"citynexus:bootstrap:{row.provider_key}:{row.external_id}")),
             provider_key="overpass",
             external_id=row.external_id,
             city_code=journey.city_code,
-            name=row.name,
-            category=row.category,
-            latitude=row.latitude,
-            longitude=row.longitude,
+            name=observation["name"],
+            category=observation["category"],
+            latitude=observation["latitude"],
+            longitude=observation["longitude"],
             opening_hours_json=_json(opening_hours),
-            tags_json=row.tags_json,
+            tags_json=_json(sorted(set(str(k) for k in observation["osm_tags"].keys()))),
             metadata_json=_json(
                 {
                     "discovery_mode": "live",
@@ -3576,7 +3587,9 @@ def select_bootstrap_candidate(
                     "origin_provider_provenance": _row_provider_provenance(row),
                     "cost_evidence": cost,
                     "price_known": str(cost.get("status") or "UNKNOWN").upper() in {"KNOWN", "VERIFIED_PROVIDER"},
-                    "source_url": json.loads(row.evidence_json or "{}").get("source_url"),
+                    "source_url": source_url,
+                    "selected_member_observed_at": observation["captured_at"],
+                    "public_access_state": observation["public_access_state"],
                 }
             ),
             updated_at=_iso(_now()),
