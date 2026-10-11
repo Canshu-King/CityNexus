@@ -1,0 +1,15 @@
+// ORD-0576 批一 加闸工 逐字节对拍的探针原件（跑完已从 frontend/ 删掉，这是副本）
+// 跑法：node_modules/.bin/esbuild 本文件 --bundle --platform=node --format=cjs --outfile=../probe_out.cjs && node ../probe_out.cjs
+import { dictionaryCopy } from "./src/i18n/LocaleContext";
+
+const KEYS = [
+  "itinerary.planWithAiNeedsPlaces", "itinerary.planWithAi", "itinerary.emptyPlanNoDays",
+  "itinerary.emptyNoPlan", "itinerary.emptyReadingPlaces", "itinerary.lengthUnknown",
+  "itinerary.dayByDay", "itinerary.stopDisrupted",
+];
+
+const out: Record<string, { zh: string; en: string }> = {};
+for (const k of KEYS) {
+  out[k] = { zh: dictionaryCopy("zh-CN", k), en: dictionaryCopy("en", k) };
+}
+process.stdout.write(JSON.stringify(out));

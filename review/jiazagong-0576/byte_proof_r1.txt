@@ -1,0 +1,11 @@
+ORD-0576 批一 加闸工 逐字节对拍（现尖那八对原文 vs 字典真出口 dictionaryCopy 解析值）
+1 OK   zh 同文 (tip :294) en 同文 (tip :295)
+2 OK   zh 同文 (tip :297) en 同文 (tip :298)
+3 OK   zh 同文 (tip :308) en 同文 (tip :309)
+4 OK   zh 同文 (tip :311) en 同文 (tip :312)
+5 OK   zh 同文 (tip :317) en 同文 (tip :318)
+6 OK   zh 同文 (tip :386) en 同文 (tip :387)
+7 OK   zh 同文 (tip :394) en 同文 (tip :395)
+8 OK   zh 同文 (tip :515) en 同文 (tip :516)
+合计 8 处：逐字节同文 8 处，异文 0 处
+跑法：node_modules/.bin/esbuild 探针 --bundle --platform=node --format=cjs 后 node 真跑 dictionaryCopy(locale,key)，探针取自 frontend/src/i18n/LocaleContext.tsx:2879

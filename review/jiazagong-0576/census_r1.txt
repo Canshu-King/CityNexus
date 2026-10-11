@@ -1,0 +1,5 @@
+ORD-0576 批一 加闸工 普查尺读数（尺本体在权威线上：live_checks/bilingual_pair_census_r2.py）
+改前那代（现尖 ee2ff40530…）该文件内联双语对 8 处：三元式 8、对象同行 0、对象跨行 0
+改后本枝那代该文件内联双语对 0 处
+剩下 5 处是反引号模板对，这把尺的字面量语法（沿用 live_checks/_bilingual_count_r1.py:13）不收反引号，所以数不到它们；本枝没擅自改尺
+复算：python live_checks/bilingual_pair_census_r2.py <尖> --json，或对单文件按 apply 脚本里那两条函数直接调
