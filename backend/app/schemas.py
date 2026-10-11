@@ -380,6 +380,25 @@ class BootstrapPocketWalkSaveRequest(BaseModel):
     max_walk_minutes: int | None = Field(default=None, ge=1, le=180)
 
 
+class BootstrapSharedWalkObjectRequest(BaseModel):
+    """One public OSM identity parsed from an untrusted friend share."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    osm_type: Literal["node", "way", "relation"]
+    osm_id: str = Field(pattern=r"^[1-9][0-9]*$", max_length=32)
+    source_url: str = Field(min_length=1, max_length=240)
+
+
+class BootstrapSharedWalkLookupRequest(BaseModel):
+    """Exact two-object lookup after an explicit recipient consent."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    objects: list[BootstrapSharedWalkObjectRequest] = Field(min_length=2, max_length=2)
+    provider_consent: bool = False
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)
