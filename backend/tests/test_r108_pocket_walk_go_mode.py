@@ -386,3 +386,58 @@ def test_r108_identical_two_stop_save_does_not_erase_go_progress() -> None:
             ) is not None
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_r108_go_status_get_does_not_issue_journey_update() -> None:
+    """Refreshing GO status is a read, not a SQLite write-lock acquisition."""
+    from sqlalchemy import event
+    from app.db.session import engine
+
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", "r108-read-only-go-secret-0123456789")
+    client = TestClient(main_module.app)
+    try:
+        global _RECEIPT
+        owner, _collaborator, journey_id, member_id = _context(client)
+        headers = {"Authorization": f"Bearer {owner['access_token']}"}
+        _RECEIPT = str(uuid4())
+        first = _candidate(
+            journey_id=journey_id,
+            member_id=member_id,
+            traveler_id=owner["id"],
+            receipt_id=_RECEIPT,
+            osm_id=108061,
+        )
+        second = _candidate(
+            journey_id=journey_id,
+            member_id=member_id,
+            traveler_id=owner["id"],
+            receipt_id=_RECEIPT,
+            osm_id=108062,
+            latitude=31.2314,
+            longitude=121.4747,
+        )
+        saved = _save_walk(client, journey_id, headers, first, second)
+        assert saved["pocket_walk"]["go_progress"]["state"] == "NOT_STARTED"
+
+        journey_updates: list[str] = []
+
+        def record_sql(_conn, _cursor, statement, _parameters, _context, _many):
+            if statement.lstrip().upper().startswith("UPDATE JOURNEYS "):
+                journey_updates.append(statement)
+
+        event.listen(engine, "before_cursor_execute", record_sql)
+        try:
+            status = client.get(
+                f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/pocket-walk/go",
+                headers=headers,
+            )
+        finally:
+            event.remove(engine, "before_cursor_execute", record_sql)
+
+        assert status.status_code == 200, status.text
+        assert status.json()["go_progress"]["state"] == "NOT_STARTED"
+        assert status.json()["go_progress"]["physical_arrival_state"] == "NOT_PHYSICAL_ARRIVAL_PROVEN"
+        assert journey_updates == [], "a GO status GET must never acquire a Journey write lock"
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
