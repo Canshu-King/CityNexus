@@ -1497,6 +1497,14 @@ const en: Dict = {
   "copilot.mission.viewSafePlan": "View safe mission plan",
   "copilot.mission.needsAuthority": "CityNexus authority",
   "copilot.mission.stop": "Stop mission",
+  "copilot.approval.offlineBlocked": "Approval is disabled while offline",
+  "copilot.approval.idMissing": "CityNexus approval_id is not available; review in Recovery",
+  "copilot.approval.recording": "Recording CityNexus approval…",
+  "copilot.approval.recorded": "Approval recorded; CityNexus still owns execution authorization",
+  "copilot.approval.needsConfirmation": "Needs your confirmation",
+  "copilot.approval.explainer": "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically.",
+  "copilot.approval.approve": "Approve",
+  "copilot.approval.reject": "Reject",
 };
 
 const zhCN: Dict = {
@@ -2900,6 +2908,14 @@ const zhCN: Dict = {
   "copilot.mission.viewSafePlan": "查看安全任务计划",
   "copilot.mission.needsAuthority": "CityNexus 授权",
   "copilot.mission.stop": "停止任务",
+  "copilot.approval.offlineBlocked": "离线时不能确认方案",
+  "copilot.approval.idMissing": "缺少 CityNexus approval_id，需打开恢复中心审核",
+  "copilot.approval.recording": "正在记录 CityNexus 确认…",
+  "copilot.approval.recorded": "确认已记录；仍需由 CityNexus 执行授权",
+  "copilot.approval.needsConfirmation": "需要你确认",
+  "copilot.approval.explainer": "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。",
+  "copilot.approval.approve": "批准",
+  "copilot.approval.reject": "拒绝",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

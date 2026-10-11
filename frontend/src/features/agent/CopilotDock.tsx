@@ -369,17 +369,17 @@ export function NativeMissionTimeline({
 
   const approve = async () => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
-      setActionState(zh ? "离线时不能确认方案" : "Approval is disabled while offline");
+      setActionState(t("copilot.approval.offlineBlocked"));
       return;
     }
     if (!approvalEvent?.approval_id) {
-      setActionState(zh ? "缺少 CityNexus approval_id，需打开恢复中心审核" : "CityNexus approval_id is not available; review in Recovery");
+      setActionState(t("copilot.approval.idMissing"));
       return;
     }
-    setActionState(zh ? "正在记录 CityNexus 确认…" : "Recording CityNexus approval…");
+    setActionState(t("copilot.approval.recording"));
     try {
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
-      setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
+      setActionState(t("copilot.approval.recorded"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -456,15 +456,13 @@ export function NativeMissionTimeline({
 
       {approvalEvent && (
         <div className="cn-copilot-approval" data-testid="native-hermes-approval">
-          <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
+          <b>{t("copilot.approval.needsConfirmation")}</b>
           <span>
-            {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
-              : "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically."}
+            {t("copilot.approval.explainer")}
           </span>
           <div>
-            <button type="button" className="v8-primary" onClick={() => void approve()}>{zh ? "批准" : "Approve"}</button>
-            <button type="button" className="v8-secondary" onClick={() => void stop()}>{zh ? "拒绝" : "Reject"}</button>
+            <button type="button" className="v8-primary" onClick={() => void approve()}>{t("copilot.approval.approve")}</button>
+            <button type="button" className="v8-secondary" onClick={() => void stop()}>{t("copilot.approval.reject")}</button>
             <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{zh ? "修改 / 审核" : "Modify / Review"}</button>
           </div>
         </div>
