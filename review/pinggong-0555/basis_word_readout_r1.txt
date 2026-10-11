@@ -1,0 +1,9 @@
+# real-module, real-dictionary readings for basisWord's three rows, both locales
+basis=CURSOR locale=zh-CN text="执行游标" bytes=12
+basis=CURSOR locale=en text="the execution cursor" bytes=20
+basis=JOURNEY_START locale=zh-CN text="行程起点" bytes=12
+basis=JOURNEY_START locale=en text="the journey's start" bytes=19
+basis=null locale=zh-CN text="服务器没有说明依据" bytes=27
+basis=null locale=en text="the server gave no basis" bytes=24
+accessor en executionCursor="the execution cursor"
+accessor zh executionCursor="执行游标"
