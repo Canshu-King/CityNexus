@@ -1,0 +1,6 @@
+CAND d1b2ac668966 FILE frontend/src/features/agent/CopilotDock.tsx
+OLD_ASSERT_substring_lines 3 lines [53, 61, 485]
+NEW_ASSERT_ternary_hits 0
+  SUBSTR_LINE 53	list_replans: { en: "Inspect proposals and commitments", zh: "检查方案和受保护承诺" },
+  SUBSTR_LINE 61	request_commitment_change: { en: "Request commitment change", zh: "请求修改受保护承诺" },
+  SUBSTR_LINE 485	"Inspect protected commitments": "检查受保护承诺",

@@ -5,8 +5,13 @@
   3) 新键两侧同序追加在 en 与 zh-CN 尾部，插入点断言不在未闭合 /* 里、键名断言不重复；
   4) 落盘后回读：该族硬编码中文残留零枚、每枚键两侧各一枚、并现读报出改后行号。"""
 import json
+import re
 import subprocess
 import sys
+
+CJK = re.compile(r"[\u3400-\u9fff]")
+LIT = r"(\"(?:[^\"\\\n]|\\.)*\"|'(?:[^'\\\n]|\\.)*')"
+TERN = re.compile(r"\?\s*" + LIT + r"\s*:\s*" + LIT, re.S)
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 SPEC = json.load(open(sys.argv[1], encoding="utf-8"))
@@ -87,8 +92,12 @@ for row in sorted(rows, key=lambda r: -r["start"]):
     new_prod = new_prod[:row["start"]] + 't("%s")' % row["key"] + new_prod[row["start"] + len(row["ternary"]):]
 
 for row in rows:
-    if prod.count(row["zh"]) and row["zh"] in new_prod:
-        die("hardcoded zh of %s still present after edit" % row["key"])
+    still = [m.group(0) for m in TERN.finditer(new_prod)
+             if bool(CJK.search(m.group(1))) != bool(CJK.search(m.group(2)))
+             and (m.group(1)[1:-1] == row["zh"] or m.group(2)[1:-1] == row["zh"])]
+    if still:
+        die("the ternary carrying %s is still in the file after edit: %r"
+            % (row["key"], still[0][:70]))
 for key in keys:
     want = sum(1 for row in rows if row["key"] == key)
     got = new_prod.count('t("%s")' % key)
