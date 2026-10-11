@@ -1004,9 +1004,9 @@ export function BootstrapDiscoveryPanel({
     // Free-text OSM names/categories are not trusted share metadata. A
     // newline/embedded URL could inject extra links or private-looking facts.
     const safeText = (value: string) => value
-      .replace(/[\\r\\n\\t\\u0000-\\u001f\\u007f<>]/g, " ")
-      .replace(/https?:\\/\\/\\S+/gi, "[link omitted]")
-      .replace(/\\s+/g, " ")
+      .replace(/[\r\n\t\u0000-\u001f\u007f<>]/g, " ")
+      .replace(/https?:\/\/\S+/gi, "[link omitted]")
+      .replace(/\s+/g, " ")
       .trim()
       .slice(0, 140);
     if (selected.some((candidate) => !safeText(candidate.name))) return null;
