@@ -767,6 +767,7 @@ class NominatimGeocoder:
         self.client = client or httpx.Client(
             timeout=settings.real_city_timeout_seconds,
             trust_env=trust_environment_for_public_providers(),
+            follow_redirects=False,
         )
         self.base_url = (base_url or settings.nominatim_url).rstrip("/")
         self.user_agent = user_agent or "CityNexus/7.0 (+https://citynexus.local/real-city)"
@@ -842,6 +843,7 @@ class PhotonCityGeocoder:
         self.client = client or httpx.Client(
             timeout=settings.real_city_timeout_seconds,
             trust_env=trust_environment_for_public_providers(),
+            follow_redirects=False,
         )
         self.base_url = (
             base_url or ExternalProviderSettings().photon_base_url
@@ -926,6 +928,7 @@ class OverpassPOIProvider:
         self.client = client or httpx.Client(
             timeout=settings.real_city_timeout_seconds,
             trust_env=trust_environment_for_public_providers(),
+            follow_redirects=False,
         )
         self.base_url = (base_url or settings.overpass_url).rstrip("/")
         self._owned_client = client is None

@@ -12,6 +12,7 @@ import hashlib
 import ipaddress
 import math
 import re
+import socket
 import httpx
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -105,6 +106,7 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
         "expected_recipient": "OpenStreetMap/Overpass public map data service",
         "external_request_allowed": False,
         "test_only": False,
+        "capability_state": "LIVE_BLOCKED",
     }
     if not settings.real_city_enabled:
         return {
@@ -112,6 +114,7 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
             "status": "BLOCKED",
             "reason_code": "PROVIDER_DISABLED",
             "provider_grade": "UNVERIFIED",
+            "capability_state": "LIVE_BLOCKED",
         }
     if str(settings.real_city_mode).lower() != "live":
         return {
@@ -119,6 +122,7 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
             "status": "BLOCKED",
             "reason_code": "LIVE_MODE_REQUIRED",
             "provider_grade": "UNVERIFIED",
+            "capability_state": "LIVE_BLOCKED",
         }
     try:
         parsed = urlparse(str(settings.overpass_url or "").strip())
@@ -134,6 +138,7 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
             "status": "BLOCKED",
             "reason_code": "ENDPOINT_NOT_APPROVED",
             "provider_grade": "UNVERIFIED",
+            "capability_state": "LIVE_BLOCKED",
         }
     try:
         is_loopback = host in _BOOTSTRAP_LOOPBACK_HOSTS or ipaddress.ip_address(host).is_loopback
@@ -154,6 +159,7 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
             "status": "READY",
             "reason_code": "READY",
             "provider_grade": "TEST_PROVIDER",
+            "capability_state": "TEST_CAPABLE",
             "expected_recipient": "Controlled test provider; no public request is claimed",
             "test_only": True,
         }
@@ -168,7 +174,10 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
             **base,
             "status": "READY",
             "reason_code": "READY",
-            "provider_grade": "LIVE_PROVIDER",
+            # Configuration can authorize one future live request. It is not
+            # evidence that a public provider has answered yet.
+            "provider_grade": "LIVE_CAPABLE",
+            "capability_state": "LIVE_CAPABLE",
             "external_request_allowed": True,
         }
     return {
@@ -176,7 +185,43 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
         "status": "BLOCKED",
         "reason_code": "ENDPOINT_NOT_APPROVED",
         "provider_grade": "UNVERIFIED",
+        "capability_state": "LIVE_BLOCKED",
     }
+
+
+def _bootstrap_live_endpoint_block_reason() -> str | None:
+    """Reject an approved public hostname that resolves to a private address.
+
+    Readiness stays a pure configuration projection. DNS is checked only after
+    the signed user request has passed the consent and manual-center gates, so
+    a readiness GET cannot cause provider or resolver traffic.
+    """
+
+    try:
+        parsed = urlparse(str(settings.overpass_url or "").strip())
+        host = (parsed.hostname or "").lower().rstrip(".")
+        port = parsed.port or 443
+    except (TypeError, ValueError):
+        return "ENDPOINT_NOT_APPROVED"
+    if parsed.scheme.lower() != "https" or host not in _BOOTSTRAP_OVERPASS_HOSTS:
+        return "ENDPOINT_NOT_APPROVED"
+    try:
+        infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    except OSError:
+        return "PROVIDER_DNS_UNAVAILABLE"
+    addresses = {
+        str(info[4][0])
+        for info in infos
+        if len(info) > 4 and isinstance(info[4], tuple) and info[4]
+    }
+    if not addresses:
+        return "PROVIDER_DNS_UNAVAILABLE"
+    try:
+        if any(not ipaddress.ip_address(address).is_global for address in addresses):
+            return "PROVIDER_PRIVATE_ADDRESS"
+    except ValueError:
+        return "PROVIDER_DNS_UNAVAILABLE"
+    return None
 
 
 def _now() -> datetime:
@@ -1487,6 +1532,39 @@ def discover_bootstrap_candidates(
             "status": "PROVIDER_DISABLED",
             "result_state": "DISABLED",
             "failure_code": readiness["reason_code"],
+            "readiness": readiness,
+            "receipt_id": None,
+            "expires_at": None,
+            "source_kind": source_kind,
+            "provider": "overpass",
+            "provider_provenance": "UNVERIFIED",
+            "attempts": [],
+            "candidates": [],
+        }
+    endpoint_block_reason = None
+    if not readiness.get("test_only"):
+        endpoint_block_reason = _bootstrap_live_endpoint_block_reason()
+    if endpoint_block_reason is not None:
+        blocked_status = "PROVIDER_UNAVAILABLE" if endpoint_block_reason == "PROVIDER_DNS_UNAVAILABLE" else "PROVIDER_DISABLED"
+        audit_status = "UNAVAILABLE" if blocked_status == "PROVIDER_UNAVAILABLE" else "DISABLED"
+        _provider_call(
+            session,
+            journey=journey,
+            request=request,
+            response={
+                "status": blocked_status,
+                "reason_code": endpoint_block_reason,
+                "attempts": [],
+                "count": 0,
+            },
+            status=audit_status,
+            created_at=_iso(captured_at),
+        )
+        return {
+            "journey_id": journey.id,
+            "status": blocked_status,
+            "result_state": "UNAVAILABLE" if blocked_status == "PROVIDER_UNAVAILABLE" else "DISABLED",
+            "failure_code": endpoint_block_reason,
             "readiness": readiness,
             "receipt_id": None,
             "expires_at": None,

@@ -1720,7 +1720,8 @@ export interface BootstrapDiscoveryReadinessResponse {
   expected_recipient: string;
   status: "READY" | "BLOCKED";
   reason_code: "PROVIDER_DISABLED" | "LIVE_MODE_REQUIRED" | "ENDPOINT_NOT_APPROVED" | "READY" | string;
-  provider_grade: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  provider_grade: "LIVE_CAPABLE" | "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  capability_state: "LIVE_CAPABLE" | "TEST_CAPABLE" | "LIVE_BLOCKED" | string;
   external_request_allowed: boolean;
   test_only: boolean;
 }

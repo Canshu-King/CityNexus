@@ -315,7 +315,9 @@ export function BootstrapDiscoveryPanel({
   const [longitude, setLongitude] = useState("");
   const [accuracy, setAccuracy] = useState<number | undefined>();
   const [providerConsent, setProviderConsent] = useState(false);
-  const [cityLabelConfirmed, setCityLabelConfirmed] = useState(() => Boolean(cityName?.trim() || cityCode.trim()));
+  // A city code supplied by the Journey is only a label hint. The traveler
+  // must explicitly confirm it for each one-use public discovery consent.
+  const [cityLabelConfirmed, setCityLabelConfirmed] = useState(false);
   const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
   const [readinessBusy, setReadinessBusy] = useState(false);
   const [readinessMessage, setReadinessMessage] = useState<string | null>(null);
@@ -531,7 +533,7 @@ export function BootstrapDiscoveryPanel({
     setBusy(false);
     setMapBusy(false);
     setProviderConsent(false);
-    setCityLabelConfirmed(Boolean(cityName?.trim() || cityCode.trim()));
+    setCityLabelConfirmed(false);
     setReadiness(null);
     setReadinessMessage(null);
     setSourceKind("MANUAL_PUBLIC_CENTER");
@@ -661,7 +663,7 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkSaveConsent(false);
     setSharedWalkSaveBusy(false);
     setSharedWalkPocketBudget(null);
-    setCityLabelConfirmed(Boolean(cityName?.trim() || cityCode.trim()));
+    setCityLabelConfirmed(false);
     setReadiness(null);
     setReadinessMessage(null);
     setMessage("Journey changed; choose a new public search area.");
@@ -768,38 +770,6 @@ export function BootstrapDiscoveryPanel({
     };
   }, [journeyId, travelerBearer]);
 
-  const useForegroundGps = () => {
-    chooseSearchSource("FOREGROUND_GPS", true);
-    const gpsRequest = ++gpsRequestGeneration.current;
-    const requestBearer = travelerBearer;
-    const requestIdentityGeneration = identityGeneration.current;
-    const requestJourneyId = journeyId;
-    setMessage(null);
-    if (!navigator.geolocation) {
-      setMessage("Foreground location is unavailable. Choose a public map center instead.");
-      return;
-    }
-    const stillCurrent = () =>
-      gpsRequestGeneration.current === gpsRequest &&
-      identityGeneration.current === requestIdentityGeneration &&
-      readTravelerBearer() === requestBearer &&
-      journeyIdRef.current === requestJourneyId &&
-      sourceKindRef.current === "FOREGROUND_GPS";
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        if (!stillCurrent()) return;
-        setLatitude(String(position.coords.latitude));
-        setLongitude(String(position.coords.longitude));
-        setAccuracy(position.coords.accuracy > 0 ? position.coords.accuracy : undefined);
-        setMessage("Location is held for this search only; it is not saved as presence or a route origin.");
-      },
-      () => {
-        if (stillCurrent()) setMessage("Foreground location was not granted. Choose a public map center instead.");
-      },
-      { enableHighAccuracy: true, maximumAge: 60_000, timeout: 8_000 },
-    );
-  };
-
   const searchCity = async () => {
     const cityQuery = citySearchQuery.trim();
     if (!citySearchConsent) {
@@ -814,6 +784,9 @@ export function BootstrapDiscoveryPanel({
     const requestBearer = travelerBearer;
     const requestIdentityGeneration = identityGeneration.current;
     const requestJourneyId = journeyId;
+    // City search disclosure is one-use too: launching this external request
+    // consumes the checkbox, so a later query must obtain fresh consent.
+    setCitySearchConsent(false);
     setCitySearchBusy(true);
     setCitySearchMessage(null);
     setCitySearchResults([]);
@@ -1980,7 +1953,7 @@ export function BootstrapDiscoveryPanel({
             ? "USER_CATEGORY_REQUIRED"
             : !providerConsent
               ? "CONSENT_REQUIRED"
-              : "READY";
+              : `READY / ${readiness.capability_state ?? readiness.provider_grade ?? "UNVERIFIED"}`;
   const searchReady = Boolean(
     !busy &&
     !readinessBusy &&
@@ -2026,6 +1999,12 @@ export function BootstrapDiscoveryPanel({
                 ? `UNAVAILABLE: ${readinessMessage}`
                 : `${effectiveReadinessReason}: ${readiness?.provider_grade ?? "UNVERIFIED"}`}
           </p>
+          {readiness?.status === "READY" ? (
+            <p data-testid="bootstrap-discovery-capability">
+              Configuration capability is <strong>{readiness.capability_state ?? "UNVERIFIED"}</strong>.
+              This is not live venue evidence; only a completed provider response may be labeled LIVE_PROVIDER.
+            </p>
+          ) : null}
           {readiness?.test_only ? <p>Controlled test endpoint only. Any returned evidence remains TEST_PROVIDER.</p> : null}
         </section>
         <div className="v8-actions">
@@ -2036,14 +2015,6 @@ export function BootstrapDiscoveryPanel({
             onClick={openPublicAreaPicker}
           >
             Choose public area on map
-          </button>
-          <button
-            type="button"
-            data-testid="bootstrap-source-gps"
-            aria-pressed={sourceKind === "FOREGROUND_GPS"}
-            onClick={useForegroundGps}
-          >
-            Use foreground GPS
           </button>
         </div>
         {mapPickerOpen ? (
@@ -2077,6 +2048,7 @@ export function BootstrapDiscoveryPanel({
                     onChange={(event) => {
                       citySearchGeneration.current += 1;
                       setCitySearchQuery(event.target.value);
+                      setCitySearchConsent(false);
                       setCitySearchResults([]);
                       setCitySearchMessage(null);
                     }}
@@ -2185,14 +2157,13 @@ export function BootstrapDiscoveryPanel({
               {accuracy != null ? ` · accuracy ${Math.round(accuracy)}m` : ""}
             </p>
             <p>
-              {sourceKind === "FOREGROUND_GPS"
-                ? "Foreground GPS is held for this search only; it is not saved as presence or a route origin."
-                : "This is a user-selected public search center. City relation is unsupported until separately verified; it is not a route origin, presence claim, or proof of arrival."} Provider disclosure remains separate from this selection.
+              This is a user-selected public search center. City relation is unsupported until separately verified;
+              it is not a route origin, presence claim, or proof of arrival. Provider disclosure remains separate from this selection.
             </p>
           </div>
         ) : (
           <p data-testid="bootstrap-center-required">
-            Choose a public map center or deliberately allow foreground GPS before searching. No provider request will be made yet.
+            Choose a public map center before searching. No provider request will be made yet.
           </p>
         )}
         <label data-testid="bootstrap-city-label-confirmation">
@@ -2202,6 +2173,7 @@ export function BootstrapDiscoveryPanel({
             checked={cityLabelConfirmed}
             onChange={(event) => {
               invalidateDiscovery();
+              setProviderConsent(false);
               setCityLabelConfirmed(event.target.checked);
             }}
           />
