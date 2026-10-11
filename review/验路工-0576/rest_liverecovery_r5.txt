@@ -1,0 +1,16 @@
+artifact_sha=ad551988b20039ac3d5e966cfc169e2102a93f3f files=31 totals={'A': 204, 'B_same_line': 359, 'B_over_lines': 167}
+FILE frontend/src/features/execution/LiveRecovery.tsx rows=20 arm_A=13 arm_B=7
+  real=74 census=77 frontend/src/features/execution/LiveRecovery.tsx:74 | ? "暂时无法获取这段路线的可靠通行时间，因此没有自动修改你的行程。你可以稍后重试，或手动选择替代地点。"     
+  real=79 census=82 frontend/src/features/execution/LiveRecovery.tsx:79 | ? "附近没有可以替换这处行程的合适地点。"       : "No suitable replacement pl
+  real=84 census=87 frontend/src/features/execution/LiveRecovery.tsx:84 | ? "没能确定这次变化影响的是哪一段行程。"       : "We could not tell which st
+  real=89 census=92 frontend/src/features/execution/LiveRecovery.tsx:89 | ? "这一段属于你已确认不能动的安排，需要你手动处理。"       : "This stop is part of
+  real=94 census=97 frontend/src/features/execution/LiveRecovery.tsx:94 | ? "暂时无法自动调整这段行程，请稍后重试或手动处理。"     : "We couldn't adjust thi
+  real=309 census=314 frontend/src/features/execution/LiveRecovery.tsx:309 | ? "服务器摘要：这台设备还没读到"                 : "Server summary: not 
+  real=405 census=411 frontend/src/features/execution/LiveRecovery.tsx:405 | ? "应用中…" : "Applying…"
+  real=406 census=412 frontend/src/features/execution/LiveRecovery.tsx:406 | ? "接受新方案" : "Accept new plan"
+  real=415 census=421 frontend/src/features/execution/LiveRecovery.tsx:415 | ? "只调整今天：已记录，今天的安排会优先。" : "Adjust today only: noted."
+  real=419 census=425 frontend/src/features/execution/LiveRecovery.tsx:419 | ? "仅调整今天" : "Adjust today only"
+  real=428 census=434 frontend/src/features/execution/LiveRecovery.tsx:428 | ? "稍后提醒" : "Remind me later"
+  real=443 census=450 frontend/src/features/execution/LiveRecovery.tsx:443 | ? "当前没有需要你决定的调整。" : "There is nothing for you to decide ri
+  real=450 census=457 frontend/src/features/execution/LiveRecovery.tsx:450 | ? "刚才的行程变化已经处理好，已确认的预订保持不变。"             : "The earlier di
+unresolved=0

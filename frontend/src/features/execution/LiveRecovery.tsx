@@ -335,9 +335,7 @@ export function LiveRecovery({
           branch unreachable (V2-T3). */}
       {acknowledgedOnly.length > 0 && (
         <p className="v8-muted" data-testid="live-acknowledged">
-          {zh
-            ? "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。"
-            : "Seen, still open: you have seen these changes but have not chosen a new arrangement yet."}
+          {t("live.acknowledgedStillOpen")}
         </p>
       )}
 
@@ -370,12 +368,8 @@ export function LiveRecovery({
               )}
               <p className="live-unchanged" data-testid="live-unchanged">
                 {proposal.locked_commitments_preserved
-                  ? zh
-                    ? "已确认的预订和到达/离开时间保持不变。"
-                    : "Confirmed bookings and your arrival/departure stay unchanged."
-                  : zh
-                    ? "注意：部分已确认内容会受影响。"
-                    : "Note: some confirmed items are affected."}
+                  ? t("live.confirmedUnchanged")
+                  : t("live.confirmedAffected")}
               </p>
               {(removed.length > 0 || added.length > 0 || moved.length > 0) && (
                 <dl className="live-diff" data-testid="live-diff">
