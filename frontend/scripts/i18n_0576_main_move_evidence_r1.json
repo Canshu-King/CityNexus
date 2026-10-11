@@ -1,0 +1,61 @@
+{
+ "base_tip": "ee2ff4053048c80bfa082aa54518fca50419af89",
+ "family": "main.",
+ "items": [
+  {
+   "kind": "option label",
+   "key": "main.modeAdvisory",
+   "base_line": 1297,
+   "new_line": 1295,
+   "zh": "建议模式 · always ask",
+   "en": "建议模式 · always ask",
+   "geometry": "标签、文字、闭括号在同一行；改后该行只剩 {t(键)}",
+   "before": "<option value=\"ADVISORY\">建议模式 · always ask</option>",
+   "after": "              <option value=\"ADVISORY\">{t(\"main.modeAdvisory\")}</option>",
+   "dict_en_line": 932,
+   "dict_zh_line": 2357
+  },
+  {
+   "kind": "option label",
+   "key": "main.modeAssisted",
+   "base_line": 1298,
+   "new_line": 1296,
+   "zh": "协助模式 · bounded auto-accept",
+   "en": "协助模式 · bounded auto-accept",
+   "geometry": "标签、文字、闭括号在同一行；改后该行只剩 {t(键)}",
+   "before": "<option value=\"ASSISTED\">协助模式 · bounded auto-accept</option>",
+   "after": "              <option value=\"ASSISTED\">{t(\"main.modeAssisted\")}</option>",
+   "dict_en_line": 931,
+   "dict_zh_line": 2356
+  },
+  {
+   "kind": "option label",
+   "key": "main.modeAutonomous",
+   "base_line": 1299,
+   "new_line": 1297,
+   "zh": "自主模式 · policy-gated",
+   "en": "自主模式 · policy-gated",
+   "geometry": "标签、文字、闭括号在同一行；改后该行只剩 {t(键)}",
+   "before": "<option value=\"AUTONOMOUS\">自主模式 · policy-gated</option>",
+   "after": "              <option value=\"AUTONOMOUS\">{t(\"main.modeAutonomous\")}</option>",
+   "dict_en_line": 930,
+   "dict_zh_line": 2355
+  },
+  {
+   "kind": "prefilled command",
+   "key": "main.demoAgentCommand",
+   "base_line": 192,
+   "new_line": 190,
+   "zh": "下午海河沿线有交通管制，我不想淋雨，游船和晚餐别动，最多多花50元。你自己重新安排。",
+   "en": "下午海河沿线有交通管制，我不想淋雨，游船和晚餐别动，最多多花50元。你自己重新安排。",
+   "geometry": "原来是模块级常量两行（名一行、字一行）加一处 useState；常量整块删掉，只剩 useState 读键",
+   "before": "const [agentCommand, setAgentCommand] = useState(defaultAgentCommand);",
+   "after": "const [agentCommand, setAgentCommand] = useState(t(\"main.demoAgentCommand\"));",
+   "const_removed": "frontend/src/main.tsx:56-57",
+   "dict_en_line": 929,
+   "dict_zh_line": 2354
+  }
+ ],
+ "cjk_lines_before": 4,
+ "cjk_lines_after": 0
+}
