@@ -1,0 +1,6 @@
+SIDES live.acknowledgedStillOpen -> 402:Seen, still open: you have seen these ch 1860:已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。
+SIDES live.confirmedUnchanged -> 403:Confirmed bookings and your arrival/depa 1861:已确认的预订和到达/离开时间保持不变。
+SIDES live.confirmedAffected -> 404:Note: some confirmed items are affected. 1862:注意：部分已确认内容会受影响。
+keys_checked=3 keys_reading_t_in_candidate=3
+PROVEN
+PROOF_RC=0
