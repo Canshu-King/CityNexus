@@ -1871,6 +1871,42 @@ def lookup_bootstrap_shared_walk(
             "verified_count": 0,
         }
 
+    # The friend-share exact-object route is an independent outbound path.
+    # Apply the SAME private/non-global DNS gate as ordinary city discovery,
+    # after explicit signed-user consent but before creating any provider.
+    # This is a preflight: it does not pin DNS at connection time.
+    endpoint_block_reason = None
+    if not readiness.get("test_only"):
+        endpoint_block_reason = _bootstrap_live_endpoint_block_reason()
+    if endpoint_block_reason is not None:
+        _provider_call(
+            session,
+            journey=journey,
+            request=request,
+            response={
+                "status": "LOOKUP_BLOCKED",
+                "reason": endpoint_block_reason,
+                "attempts": [],
+                "count": 0,
+            },
+            status="UNAVAILABLE" if endpoint_block_reason == "PROVIDER_DNS_UNAVAILABLE" else "DISABLED",
+            created_at=_iso(captured_at),
+        )
+        return {
+            "journey_id": journey.id,
+            "status": "LOOKUP_BLOCKED",
+            "lookup_state": "LOOKUP_BLOCKED",
+            "failure_code": endpoint_block_reason,
+            "receipt_id": None,
+            "expires_at": None,
+            "provider": "overpass",
+            "provider_provenance": "UNVERIFIED",
+            "readiness": readiness,
+            "attempts": [],
+            "candidates": [],
+            "verified_count": 0,
+        }
+
     provider = OverpassPOIProvider()
     configured_provider_url = provider.base_url
     attempts: list[dict[str, Any]] = []
