@@ -310,5 +310,47 @@ def test_r107_manual_discovery_to_private_pocket_walk_is_atomic_and_source_bound
                     MemberDraftShortlistItem.traveler_id == owner["id"],
                 )
             ) is None
+        # The first OSM identity is already privately saved. A later public
+        # discovery for this SAME member and identity must refresh its
+        # observation, not leave an old destination in the Pocket Walk.
+        refreshed_receipt_id = str(uuid4())
+        with SessionLocal() as session:
+            for candidate_id in (first_id, second_id):
+                row = session.get(RealPlaceCandidate, candidate_id)
+                assert row is not None
+                evidence = json.loads(row.evidence_json)
+                scope = evidence["bootstrap_scopes"][0]
+                scope["receipt_id"] = refreshed_receipt_id
+                scope["captured_at"] = "2026-10-14T08:00:00+00:00"
+                if candidate_id == first_id:
+                    scope["observed_name"] = "R107 updated public museum"
+                    scope["latitude"] = 31.2504
+                    scope["longitude"] = 121.4937
+                row.evidence_json = json.dumps(evidence)
+            session.commit()
+        refreshed = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-discovery/pocket-walk",
+            headers=owner_headers,
+            json={
+                "receipt_id": refreshed_receipt_id,
+                "first_candidate_id": first_id,
+                "second_candidate_id": second_id,
+                "max_walk_minutes": 30,
+            },
+        )
+        assert refreshed.status_code == 200, refreshed.text
+        refreshed_body = refreshed.json()
+        assert refreshed_body["pocket_walk"]["first_stop"]["name"] == "R107 updated public museum"
+        assert refreshed_body["pocket_walk"]["first_stop"]["source_provenance"] == "TEST_PROVIDER"
+        assert refreshed_body["pocket_walk"]["max_walk_minutes"] == 30
+        refreshed_first = next(item for item in refreshed_body["items"] if item["external_id"] == "overpass:node/107001")
+        assert refreshed_first["latitude"] == 31.2504
+        assert refreshed_first["longitude"] == 121.4937
+        assert refreshed_first["captured_at"] == "2026-10-14T08:00:00+00:00"
+        assert _owner_count(journey_id, owner["id"]) == 2
+        collaborator_read = client.get(f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=collaborator_headers)
+        assert collaborator_read.status_code == 200
+        assert collaborator_read.json()["items"] == []
+
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
