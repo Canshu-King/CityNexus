@@ -1094,6 +1094,7 @@ CREATE TABLE IF NOT EXISTS member_draft_pocket_walks (
     first_shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
     second_shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
     max_walk_minutes INTEGER CHECK (max_walk_minutes IS NULL OR (max_walk_minutes >= 1 AND max_walk_minutes <= 180)),
+    revision INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     UNIQUE(journey_id, member_id, traveler_id),
@@ -1102,6 +1103,31 @@ CREATE TABLE IF NOT EXISTS member_draft_pocket_walks (
 
 CREATE INDEX IF NOT EXISTS idx_member_draft_pocket_walk_owner
     ON member_draft_pocket_walks(journey_id, member_id, traveler_id, updated_at);
+
+CREATE TABLE IF NOT EXISTS member_draft_pocket_walk_progress (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    member_id TEXT NOT NULL REFERENCES journey_members(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    pocket_walk_id TEXT NOT NULL REFERENCES member_draft_pocket_walks(id) ON DELETE CASCADE,
+    first_shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
+    second_shortlist_id TEXT NOT NULL REFERENCES member_draft_shortlist_items(id) ON DELETE CASCADE,
+    pocket_walk_revision INTEGER NOT NULL DEFAULT 1,
+    state TEXT NOT NULL DEFAULT 'NOT_STARTED'
+        CHECK (state IN ('NOT_STARTED', 'HEADING_TO_FIRST', 'FIRST_STOP_DONE_SELF_REPORTED',
+                         'HEADING_TO_SECOND', 'WALK_DONE_SELF_REPORTED', 'PAUSED')),
+    paused_from_state TEXT,
+    progress_revision INTEGER NOT NULL DEFAULT 0,
+    progress_class TEXT NOT NULL DEFAULT 'USER_REPORTED_PROGRESS'
+        CHECK (progress_class = 'USER_REPORTED_PROGRESS'),
+    last_operation_id TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(journey_id, member_id, traveler_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_member_draft_pocket_walk_progress_owner
+    ON member_draft_pocket_walk_progress(journey_id, member_id, traveler_id, updated_at);
 
 CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,

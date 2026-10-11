@@ -380,6 +380,26 @@ class BootstrapPocketWalkSaveRequest(BaseModel):
     max_walk_minutes: int | None = Field(default=None, ge=1, le=180)
 
 
+class BootstrapPocketWalkGoTransitionRequest(BaseModel):
+    """One revision-bound user self-report for the private Pocket Walk GO MODE."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal[
+        "START",
+        "REPORT_FIRST_DONE",
+        "START_SECOND",
+        "HEAD_TO_SECOND",
+        "REPORT_WALK_DONE",
+        "PAUSE",
+        "RESUME",
+        "UNDO",
+    ]
+    expected_revision: int = Field(ge=0)
+    pocket_walk_revision: int = Field(ge=1)
+    idempotency_key: UUID
+
+
 class BootstrapSharedWalkObjectRequest(BaseModel):
     """One public OSM identity parsed from an untrusted friend share."""
 
