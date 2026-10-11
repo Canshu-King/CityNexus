@@ -1473,6 +1473,9 @@ const en: Dict = {
   "simulation.notGiven": "not given",
   "setup.stepFailedStaySearchOnly": "This step did not complete — the trip was created, but the stay search did not.",
   "setup.stillNeeded": "Still needed: ",
+  "setup.groupRuleSupported": "What decides this group: the server recognizes this name and its catalog holds rows for it.",
+  "setup.groupRuleNeedsLookup": "What decides this group: nothing the server consults names this spelling, so it has no canonical identity and would have to be resolved over the network.",
+  "setup.groupRuleUnknown": "What decides this group: no plannable verdict came back this round — the catalog holds nothing for it yet, it was asked and nothing answered, or nothing was read at all.",
 };
 
 const zhCN: Dict = {
@@ -2852,6 +2855,9 @@ const zhCN: Dict = {
   "simulation.notGiven": "服务器未给证据状态",
   "setup.stepFailedStaySearchOnly": "这一步没有成功——行程已创建，但住宿搜索没有完成。",
   "setup.stillNeeded": "还需要填写：",
+  "setup.groupRuleSupported": "这一组看的是：服务器认得这个名字（有正式身份），目录里也有它的行。",
+  "setup.groupRuleNeedsLookup": "这一组看的是：服务器问过的词表和目录里都没有这个名字，也就是还没有正式身份，要联网解析才有答案。",
+  "setup.groupRuleUnknown": "这一组看的是：这一轮拿不出可规划的判定——目录里暂时没有它的行、问过但没人回答，或者这一轮根本没读到。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
