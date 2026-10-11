@@ -50,7 +50,8 @@ def test_r105_provider_readiness_is_nonsecret_and_strict():
         _set("overpass_url", "https://overpass-api.de/api")
         live = bootstrap_discovery_readiness()
         assert live["status"] == "READY"
-        assert live["provider_grade"] == "LIVE_PROVIDER"
+        assert live["provider_grade"] == "LIVE_CAPABLE"
+        assert live["capability_state"] == "LIVE_CAPABLE"
         assert live["external_request_allowed"] is True
         assert live["test_only"] is False
     finally:
