@@ -28,6 +28,7 @@ from app.db.models import (
     IdempotencyKey,
     Journey,
     MemberDraftPocketWalk,
+    MemberDraftPocketWalkProgress,
     MemberDraftResumeIntent,
     MemberDraftShortlistItem,
     Place,
@@ -717,6 +718,7 @@ def _pocket_stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[s
 def _pocket_walk_payload(
     row: MemberDraftPocketWalk | None,
     items: dict[str, MemberDraftShortlistItem],
+    go_progress: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     if row is None:
         return None
@@ -726,6 +728,8 @@ def _pocket_walk_payload(
         return None
     return {
         "status": "POCKET_WALK_SAVED",
+        "pocket_walk_id": row.id,
+        "revision": int(row.revision or 1),
         "journey_id": row.journey_id,
         "first_stop": _pocket_stop_payload(first, 1),
         "second_stop": _pocket_stop_payload(second, 2),
@@ -751,6 +755,7 @@ def _pocket_walk_payload(
         ],
         "plan_version_id": None,
         "selected_place_id": None,
+        "go_progress": go_progress or _go_progress_payload(None, row),
     }
 
 
@@ -769,7 +774,18 @@ def _load_member_pocket_walk(
             MemberDraftPocketWalk.traveler_id == str(traveler_id),
         )
     )
-    return _pocket_walk_payload(row, {str(item.id): item for item in items})
+    progress = None
+    if row is not None:
+        progress_row = session.scalar(
+            select(MemberDraftPocketWalkProgress).where(
+                MemberDraftPocketWalkProgress.journey_id == journey.id,
+                MemberDraftPocketWalkProgress.member_id == str(member.id),
+                MemberDraftPocketWalkProgress.traveler_id == str(traveler_id),
+                MemberDraftPocketWalkProgress.pocket_walk_id == row.id,
+            )
+        )
+        progress = _go_progress_payload(progress_row, row)
+    return _pocket_walk_payload(row, {str(item.id): item for item in items}, progress)
 
 
 def _public_map_url(latitude: float, longitude: float) -> str:
@@ -2337,6 +2353,21 @@ def save_bootstrap_discovery_pocket_walk(
         )
     ).all()
     existing_external_ids = {row.external_id for row in existing_rows}
+    existing_pocket = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == locked_journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    existing_pocket_identity = (
+        str(existing_pocket.first_shortlist_id),
+        str(existing_pocket.second_shortlist_id),
+        existing_pocket.max_walk_minutes,
+    ) if existing_pocket is not None else None
+    refreshed_existing = any(
+        row.external_id in existing_external_ids for row, _scope in ordered_rows
+    )
     new_count = sum(1 for row, _scope in ordered_rows if row.external_id not in existing_external_ids)
     if len(existing_rows) + new_count > _MAX_SHORTLIST_ITEMS:
         raise BootstrapDiscoveryError(
@@ -2383,6 +2414,32 @@ def save_bootstrap_discovery_pocket_walk(
         )
         .order_by(MemberDraftShortlistItem.created_at, MemberDraftShortlistItem.id)
     ).all()
+    same_pocket_identity = bool(
+        existing_pocket_identity is not None
+        and existing_pocket_identity[0] == str(first["shortlist_id"])
+        and existing_pocket_identity[1] == str(second["shortlist_id"])
+        and existing_pocket_identity[2]
+        == (int(max_walk_minutes) if max_walk_minutes is not None else None)
+    )
+    if refreshed_existing and same_pocket_identity:
+        refreshed_pocket = session.scalar(
+            select(MemberDraftPocketWalk).where(
+                MemberDraftPocketWalk.journey_id == locked_journey.id,
+                MemberDraftPocketWalk.member_id == str(member.id),
+                MemberDraftPocketWalk.traveler_id == str(traveler_id),
+            )
+        )
+        if refreshed_pocket is not None:
+            refreshed_pocket.revision = int(refreshed_pocket.revision or 1) + 1
+            session.query(MemberDraftPocketWalkProgress).filter(
+                MemberDraftPocketWalkProgress.pocket_walk_id == refreshed_pocket.id,
+            ).delete(synchronize_session=False)
+            refreshed_pocket.updated_at = _iso(_now())
+            session.flush()
+            pocket = _pocket_walk_payload(
+                refreshed_pocket,
+                {str(row.id): row for row in rows},
+            ) or {}
     return {
         "pocket_walk": pocket,
         "items": [_shortlist_payload(row) for row in rows],
@@ -2685,11 +2742,9 @@ def save_bootstrap_shortlist_item(
     )
     if existing is not None:
         if refresh_existing:
-            # The traveler explicitly chose this *current* scoped discovery,
-            # but the OSM identity might already be on their private shortlist.
-            # Keep its stable ID/Pocket Walk references while replacing an old
-            # name/position/provider grade with THIS member's fresh observation.
-            # Never copy the shared RealPlaceCandidate's first-member fields.
+            # Native discovery is an explicit choice of the current signed
+            # receipt. Refresh only this member's stable snapshot and never
+            # copy another member's observation into it.
             observation = _scope_observation(row, scope)
             osm = _osm_identity(
                 DiscoveryCandidate(
@@ -2699,7 +2754,9 @@ def save_bootstrap_shortlist_item(
                     category=observation["category"],
                     latitude=observation["latitude"],
                     longitude=observation["longitude"],
-                    tags=(), opening_hours={}, metadata={},
+                    tags=(),
+                    opening_hours={},
+                    metadata={},
                 )
             )
             if osm is None:
@@ -2725,7 +2782,14 @@ def save_bootstrap_shortlist_item(
                 )
             source_tags = {
                 key: str(observation["osm_tags"][key])
-                for key in ("opening_hours", "website", "contact:website", "phone", "contact:phone", "email")
+                for key in (
+                    "opening_hours",
+                    "website",
+                    "contact:website",
+                    "phone",
+                    "contact:phone",
+                    "email",
+                )
                 if observation["osm_tags"].get(key) not in (None, "")
             }
             source_tags["_public_access_state"] = observation["public_access_state"]
@@ -2971,14 +3035,25 @@ def save_bootstrap_pocket_walk(
             first_shortlist_id=first_id,
             second_shortlist_id=second_id,
             max_walk_minutes=int(max_walk_minutes) if max_walk_minutes is not None else None,
+            revision=1,
             created_at=now,
             updated_at=now,
         )
         session.add(pocket)
     else:
+        changed = (
+            str(pocket.first_shortlist_id) != first_id
+            or str(pocket.second_shortlist_id) != second_id
+            or pocket.max_walk_minutes != (int(max_walk_minutes) if max_walk_minutes is not None else None)
+        )
         pocket.first_shortlist_id = first_id
         pocket.second_shortlist_id = second_id
         pocket.max_walk_minutes = int(max_walk_minutes) if max_walk_minutes is not None else None
+        if changed:
+            pocket.revision = int(pocket.revision or 1) + 1
+            session.query(MemberDraftPocketWalkProgress).filter(
+                MemberDraftPocketWalkProgress.pocket_walk_id == pocket.id,
+            ).delete(synchronize_session=False)
         pocket.updated_at = now
     session.flush()
     return _pocket_walk_payload(pocket, by_id) or {}
@@ -3001,6 +3076,9 @@ def clear_bootstrap_pocket_walk(
         )
     )
     if row is not None:
+        session.query(MemberDraftPocketWalkProgress).filter(
+            MemberDraftPocketWalkProgress.pocket_walk_id == row.id,
+        ).delete(synchronize_session=False)
         session.delete(row)
         session.flush()
     return {
@@ -3008,6 +3086,353 @@ def clear_bootstrap_pocket_walk(
         "cleared": row is not None,
         "pocket_walk": None,
     }
+
+
+_GO_PROGRESS_STATES = frozenset(
+    {
+        "NOT_STARTED",
+        "HEADING_TO_FIRST",
+        "FIRST_STOP_DONE_SELF_REPORTED",
+        "HEADING_TO_SECOND",
+        "WALK_DONE_SELF_REPORTED",
+        "PAUSED",
+    }
+)
+_GO_ACTIONS = frozenset(
+    {
+        "START",
+        "REPORT_FIRST_DONE",
+        "START_SECOND",
+        "HEAD_TO_SECOND",
+        "REPORT_WALK_DONE",
+        "PAUSE",
+        "RESUME",
+        "UNDO",
+    }
+)
+_GO_USER_REPORTED = "USER_REPORTED_PROGRESS"
+
+
+def _go_progress_payload(
+    row: MemberDraftPocketWalkProgress | None,
+    pocket: MemberDraftPocketWalk,
+) -> dict[str, Any]:
+    """Project only the server-verified self-report, never physical arrival."""
+
+    if row is None:
+        state = "NOT_STARTED"
+        progress_revision = 0
+        paused_from_state = None
+        updated_at = None
+        can_undo = False
+    else:
+        state = str(row.state)
+        progress_revision = int(row.progress_revision or 0)
+        paused_from_state = row.paused_from_state
+        updated_at = row.updated_at
+        can_undo = state in {
+            "FIRST_STOP_DONE_SELF_REPORTED",
+            "WALK_DONE_SELF_REPORTED",
+        } or (state == "PAUSED" and paused_from_state in {
+            "FIRST_STOP_DONE_SELF_REPORTED",
+            "WALK_DONE_SELF_REPORTED",
+        })
+    return {
+        "state": state,
+        "progress_class": _GO_USER_REPORTED,
+        "evidence_class": "GO_MODE_USER_REPORTED_PROVEN",
+        "physical_arrival_state": "NOT_PHYSICAL_ARRIVAL_PROVEN",
+        "progress_revision": progress_revision,
+        "revision": progress_revision,
+        "pocket_walk_revision": int(pocket.revision or 1),
+        "pocket_walk_id": pocket.id,
+        "first_shortlist_id": pocket.first_shortlist_id,
+        "second_shortlist_id": pocket.second_shortlist_id,
+        "paused_from_state": paused_from_state,
+        "can_undo": can_undo,
+        "updated_at": updated_at,
+        "stale_label": "Last server-verified self-report; physical arrival is not proven.",
+    }
+
+
+def _go_context(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+) -> tuple[Journey, MemberDraftPocketWalk, list[MemberDraftShortlistItem]]:
+    """Lock and validate the exact private draft Pocket Walk for GO MODE."""
+
+    locked = session.execute(
+        update(Journey)
+        .where(Journey.id == journey.id)
+        .values(updated_at=Journey.updated_at)
+    )
+    if locked.rowcount != 1:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_JOURNEY_NOT_FOUND",
+            "Journey disappeared while reading Pocket Walk GO MODE",
+            status_code=404,
+        )
+    session.flush()
+    locked_journey = session.get(Journey, journey.id)
+    if locked_journey is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_JOURNEY_NOT_FOUND",
+            "Journey disappeared while reading Pocket Walk GO MODE",
+            status_code=404,
+        )
+    if str(locked_journey.status).upper() != "DRAFT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REQUIRES_DRAFT",
+            "Pocket Walk GO MODE is available only for a DRAFT Journey",
+        )
+    if locked_journey.active_plan_version_id is not None or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == locked_journey.id).limit(1)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_PLAN_ALREADY_EXISTS",
+            "Pocket Walk GO MODE is unavailable after a PlanVersion exists",
+        )
+    pocket = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == locked_journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    if pocket is None:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_WALK_NOT_FOUND",
+            "save a private two-stop Pocket Walk before starting GO MODE",
+            status_code=404,
+        )
+    items = session.scalars(
+        select(MemberDraftShortlistItem).where(
+            MemberDraftShortlistItem.id.in_([pocket.first_shortlist_id, pocket.second_shortlist_id]),
+            MemberDraftShortlistItem.journey_id == locked_journey.id,
+            MemberDraftShortlistItem.member_id == str(member.id),
+            MemberDraftShortlistItem.traveler_id == str(traveler_id),
+            MemberDraftShortlistItem.status == "SAVED",
+        )
+    ).all()
+    if len(items) != 2 or {str(item.id) for item in items} != {
+        str(pocket.first_shortlist_id), str(pocket.second_shortlist_id)
+    }:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_WALK_STALE",
+            "the saved two-stop Pocket Walk changed; reload and choose the two stops again",
+            status_code=409,
+            details={"next_actions": ["RELOAD_POCKET_WALK", "CHOOSE_TWO_STOPS_AGAIN"]},
+        )
+    return locked_journey, pocket, items
+
+
+def _go_response(
+    session: Session,
+    journey: Journey,
+    pocket: MemberDraftPocketWalk,
+    items: list[MemberDraftShortlistItem],
+    progress: MemberDraftPocketWalkProgress | None,
+) -> dict[str, Any]:
+    return {
+        "journey_id": journey.id,
+        "pocket_walk": _pocket_walk_payload(
+            pocket,
+            {str(item.id): item for item in items},
+            _go_progress_payload(progress, pocket),
+        ),
+        "go_progress": _go_progress_payload(progress, pocket),
+    }
+
+
+def get_bootstrap_pocket_walk_go(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+) -> dict[str, Any]:
+    """Return the last server-verified self-report for this exact Pocket Walk."""
+
+    locked_journey, pocket, items = _go_context(
+        session,
+        journey,
+        member=member,
+        traveler_id=traveler_id,
+    )
+    progress = session.scalar(
+        select(MemberDraftPocketWalkProgress).where(
+            MemberDraftPocketWalkProgress.journey_id == locked_journey.id,
+            MemberDraftPocketWalkProgress.member_id == str(member.id),
+            MemberDraftPocketWalkProgress.traveler_id == str(traveler_id),
+            MemberDraftPocketWalkProgress.pocket_walk_id == pocket.id,
+        )
+    )
+    return _go_response(session, locked_journey, pocket, items, progress)
+
+
+def transition_bootstrap_pocket_walk_go(
+    session: Session,
+    journey: Journey,
+    *,
+    member: Any,
+    traveler_id: str,
+    action: str,
+    expected_revision: int,
+    pocket_walk_revision: int,
+    idempotency_key: UUID,
+) -> dict[str, Any]:
+    """Apply one atomic, conditional self-reported GO MODE transition."""
+
+    normalized_action = str(action).upper()
+    if normalized_action not in _GO_ACTIONS:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_GO_ACTION_INVALID",
+            "unsupported Pocket Walk GO MODE action",
+            status_code=422,
+        )
+    if expected_revision < 0:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_GO_REVISION_INVALID",
+            "expected progress revision must be non-negative",
+            status_code=422,
+        )
+    locked_journey, pocket, items = _go_context(
+        session,
+        journey,
+        member=member,
+        traveler_id=traveler_id,
+    )
+    if int(pocket.revision or 1) != int(pocket_walk_revision):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_WALK_STALE",
+            "this Pocket Walk was re-saved; reload before changing GO MODE",
+            status_code=409,
+            details={"current_pocket_walk_revision": int(pocket.revision or 1)},
+        )
+    progress = session.scalar(
+        select(MemberDraftPocketWalkProgress).where(
+            MemberDraftPocketWalkProgress.journey_id == locked_journey.id,
+            MemberDraftPocketWalkProgress.member_id == str(member.id),
+            MemberDraftPocketWalkProgress.traveler_id == str(traveler_id),
+            MemberDraftPocketWalkProgress.pocket_walk_id == pocket.id,
+        )
+    )
+    operation_id = str(idempotency_key)
+    if progress is not None and progress.last_operation_id == operation_id:
+        return _go_response(session, locked_journey, pocket, items, progress)
+    if progress is None:
+        if expected_revision != 0:
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_GO_REVISION_CONFLICT",
+                "GO MODE has not started; reload the latest progress before retrying",
+                status_code=409,
+                details={"current_progress_revision": 0},
+            )
+        progress = MemberDraftPocketWalkProgress(
+            id=str(uuid4()),
+            journey_id=locked_journey.id,
+            member_id=str(member.id),
+            traveler_id=str(traveler_id),
+            pocket_walk_id=pocket.id,
+            first_shortlist_id=pocket.first_shortlist_id,
+            second_shortlist_id=pocket.second_shortlist_id,
+            pocket_walk_revision=int(pocket.revision or 1),
+            state="NOT_STARTED",
+            paused_from_state=None,
+            progress_revision=0,
+            progress_class=_GO_USER_REPORTED,
+            last_operation_id=None,
+            created_at=_iso(_now()),
+            updated_at=_iso(_now()),
+        )
+        session.add(progress)
+        session.flush()
+    if progress.pocket_walk_revision != int(pocket.revision or 1) or (
+        str(progress.first_shortlist_id) != str(pocket.first_shortlist_id)
+        or str(progress.second_shortlist_id) != str(pocket.second_shortlist_id)
+    ):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_POCKET_WALK_STALE",
+            "GO MODE is bound to an older ordered Pocket Walk; reload before retrying",
+            status_code=409,
+            details={"current_pocket_walk_revision": int(pocket.revision or 1)},
+        )
+    if int(progress.progress_revision or 0) != expected_revision:
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_GO_REVISION_CONFLICT",
+            "GO MODE changed in another tab; reload the latest server progress",
+            status_code=409,
+            details={"current_progress_revision": int(progress.progress_revision or 0)},
+        )
+
+    current = str(progress.state)
+    next_state: str | None = None
+    next_paused_from: str | None = None
+    if normalized_action == "START":
+        if current == "NOT_STARTED":
+            next_state = "HEADING_TO_FIRST"
+        elif current == "HEADING_TO_FIRST":
+            next_state = current  # safe duplicate without a second advance
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_TRANSITION_INVALID", "start is available only before heading to stop 1", status_code=409)
+    elif normalized_action == "REPORT_FIRST_DONE":
+        if current == "HEADING_TO_FIRST":
+            next_state = "FIRST_STOP_DONE_SELF_REPORTED"
+        elif current == "FIRST_STOP_DONE_SELF_REPORTED":
+            next_state = current
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_TRANSITION_INVALID", "report stop 1 only after starting the walk", status_code=409)
+    elif normalized_action in {"START_SECOND", "HEAD_TO_SECOND"}:
+        if current == "FIRST_STOP_DONE_SELF_REPORTED":
+            next_state = "HEADING_TO_SECOND"
+        elif current == "HEADING_TO_SECOND":
+            next_state = current
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_TRANSITION_INVALID", "head to stop 2 only after a self-reported stop 1", status_code=409)
+    elif normalized_action == "REPORT_WALK_DONE":
+        if current == "HEADING_TO_SECOND":
+            next_state = "WALK_DONE_SELF_REPORTED"
+        elif current == "WALK_DONE_SELF_REPORTED":
+            next_state = current
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_TRANSITION_INVALID", "report the walk only after heading to stop 2", status_code=409)
+    elif normalized_action == "PAUSE":
+        if current == "PAUSED":
+            next_state = current
+            next_paused_from = progress.paused_from_state
+        elif current in {"HEADING_TO_FIRST", "FIRST_STOP_DONE_SELF_REPORTED", "HEADING_TO_SECOND"}:
+            next_state = "PAUSED"
+            next_paused_from = current
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_TRANSITION_INVALID", "pause is available only while the walk is active", status_code=409)
+    elif normalized_action == "RESUME":
+        if current == "PAUSED":
+            next_state = progress.paused_from_state or "HEADING_TO_FIRST"
+            next_paused_from = None
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_TRANSITION_INVALID", "resume is available only after pausing", status_code=409)
+    elif normalized_action == "UNDO":
+        undo_from = progress.paused_from_state if current == "PAUSED" else current
+        if undo_from == "FIRST_STOP_DONE_SELF_REPORTED":
+            next_state = "HEADING_TO_FIRST"
+        elif undo_from == "WALK_DONE_SELF_REPORTED":
+            next_state = "HEADING_TO_SECOND"
+        else:
+            raise BootstrapDiscoveryError("BOOTSTRAP_GO_UNDO_UNAVAILABLE", "there is no latest self-report to undo", status_code=409)
+        next_paused_from = None
+
+    assert next_state is not None
+    if next_state != current or next_paused_from != progress.paused_from_state:
+        progress.state = next_state
+        progress.paused_from_state = next_paused_from
+        progress.progress_revision = int(progress.progress_revision or 0) + 1
+    progress.last_operation_id = operation_id
+    progress.updated_at = _iso(_now())
+    session.flush()
+    return _go_response(session, locked_journey, pocket, items, progress)
 
 
 def remember_bootstrap_shortlist_item(
@@ -3119,6 +3544,9 @@ def remove_bootstrap_shortlist_item(
         )
     )
     if pocket is not None:
+        session.query(MemberDraftPocketWalkProgress).filter(
+            MemberDraftPocketWalkProgress.pocket_walk_id == pocket.id,
+        ).delete(synchronize_session=False)
         session.delete(pocket)
     session.delete(row)
     session.flush()
