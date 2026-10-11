@@ -1,4 +1,32 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0574 派单｜把应用壳 V8Experience 的内联中文整片搬进字典（花名「大柜工」一枚枝）
+
+花名「号令者」（会话 qoder:494abfd7）。傍晚软件重启把全队停了三个半钟头，我这侧的扫描也崩过（已修，见「复工点名」那格）。这格是重启后的第一张新单，收件人是花名「大柜工」，理由是你最熟这枚字典。
+
+一、现读分母（一次测量，动手前自己再取一次尖）
+
+- 尖 `afee2d2aacac`：`_cmdr_inline_literal_cjk_r2.py` 现读真内联汉字共 424 条，散在 25 枚文件里，锚 frontend/src/i18n/LocaleContext.tsx:8
+- 其中 `frontend/src/app/V8Experience.tsx` 一枚占 72 条，是全仓最大的一块，首落点 frontend/src/app/V8Experience.tsx:260
+- 这枚文件此刻没有任何在飞的 review 枝改它（我逐枚 diff 过 0572、0573、0570、0571 那几枚，命中零枚），所以派给你不撞别人，锚 frontend/src/i18n/LocaleContext.tsx:8
+- 我这把尺先前把成对语区表也算进内联面，虚高到 1253 条；已改成整文件判语区表并单列扣减条数，锚 frontend/src/i18n/LocaleContext.tsx:1472
+
+二、CN 已出的草稿表（直接照着落，不必从零想键名）
+
+- 表在 `E:\cn_0575\_cn_0575_0626.txt`，共 72 行，六列制表符分隔：文件、行号、现中文、建议键名、建议英文、中文值；最后一行 COVERAGE 72，与我的尺同数，锚 frontend/src/app/V8Experience.tsx:260
+- 第一枚是 `failure.serverRefusedStep`，行号 260，锚 frontend/src/app/V8Experience.tsx:260
+- 草稿只是地图：键名与措辞你定；值一旦与屏上现字不同，以代码里的原文为准，锚 frontend/src/app/V8Experience.tsx:260
+
+三、交付形状与边界
+
+- 只改这一枚文件加字典两侧：字典新键一律走 ORD-0572 拆完之后的目录（若你动手时拆分已上线），否则仍写回 LocaleContext.tsx，别两边下注，锚 frontend/src/i18n/LocaleContext.tsx:1472
+- 占位符原样搬：`${error.status}`、`{n}`、`{city}` 这类名字两侧必须同一套，先读 en 侧那一行再写，锚 frontend/src/app/V8Experience.tsx:260
+- 屏上文案一字不改：搬完用同一枚夹具在两代上对拍 DOM 文本，我这侧用 `_cmdr_screen_lang_probe_r1.py --dist <你那代>` 复核，锚 frontend/src/app/V8Experience.tsx:260
+- 一轮不超过三处拿不准的措辞，剩下写进交块等裁；已发布枝禁 rebase，解撞车请把现尖 merge 进自己的枝，锚 frontend/src/i18n/LocaleContext.tsx:8
+- 交枝 `review/大柜工-0574-r1`，交块写回 `_qoder_ledger_inbox/<花名>_<HHMM>.md`（首行 `### 花名｜ORD-0574｜一句话`，读数同行挂坐标），锚 frontend/src/i18n/LocaleContext.tsx:1472
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 复工点名｜线停了三个半钟头是我的扫描崩了；已修，现读逐枚报谁差多少
 
 花名「号令者」（会话 qoder:494abfd7）。傍晚软件重启把全队动作打断，另外我这侧的扫描连崩六拍，两件事叠在一起，权威尖从下午到傍晚没动。这格先把账认了，再把要做的活逐枚点名。
