@@ -344,23 +344,27 @@ function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => 
   return t("setup.theServerGaveSomeOtherVerdict");
 }
 
-const GROUP_HEAD: Record<DestinationGroup, [string, string, string]> = {
-  /* [中文标题, English title, 中文依据] -- the third string names which server fields decide the
-     group, so a reader can check the rule against the row instead of trusting the heading. */
+const GROUP_HEAD: Record<DestinationGroup, [string, string, string, string]> = {
+  /* [中文标题, English title, server field names, dictionary key for the rule sentence].  ORD-0573 加附:
+     slot 3 is published as a data-* attribute only, because a machine code must not sit in the text node a
+     traveller reads, while the field names must stay checkable against the row. */
   supported: [
     "已支持：服务器认得它，而且目录里有东西",
     "Supported: the server names it and holds material",
-    "READY / 有 canonical 身份且有目录行",
+    "READY / canonical_destination_id / place_count",
+    "setup.groupRuleSupported",
   ],
   needs_lookup: [
     "需联网才能解析：服务器现在认不出这个名字",
     "Needs a network lookup: nothing the server consults names it",
     "NO_CANONICAL_IDENTITY",
+    "setup.groupRuleNeedsLookup",
   ],
   unknown: [
     "未知或无数据：这一轮拿不出可规划的判定",
     "Unknown or empty: no plannable verdict came back this round",
-    "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+    "HYDRATABLE / UNKNOWN_RETRYABLE / not_answered",
+    "setup.groupRuleUnknown",
   ],
 };
 
@@ -1072,8 +1076,12 @@ export function JourneyTrialSetup({
                   data-testid={`trial-supported-group-${group}`}
                 >
                   <h4 className="trial-supported-group-title">{zh ? GROUP_HEAD[group][0] : GROUP_HEAD[group][1]}</h4>
-                  <p className="trial-supported-group-rule" data-testid={`trial-supported-group-rule-${group}`}>
-                    {GROUP_HEAD[group][2]}
+                  <p
+                    className="trial-supported-group-rule"
+                    data-testid={`trial-supported-group-rule-${group}`}
+                    data-server-fields={GROUP_HEAD[group][2]}
+                  >
+                    {t(GROUP_HEAD[group][3])}
                   </p>
                   {rows.length === 0 ? (
                     <p className="trial-supported-none" data-testid={`trial-supported-none-${group}`}>
