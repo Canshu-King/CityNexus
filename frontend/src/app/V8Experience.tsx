@@ -365,23 +365,16 @@ type StaySearchState = "idle" | "searching" | "found" | "empty" | "failed";
  * forbids, in the same shape as a made-up progress step.
  */
 function stayOutcomeLine(outcome: string | null, zh: boolean): string {
+  const locale = zh ? "zh-CN" : "en";
   switch (outcome) {
     case "NO_OFFERS_FROM_PROVIDER":
-      return zh
-        ? "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。"
-        : "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.";
+      return dictionaryCopy(locale, "hub.stayOutcomeNoOffers");
     case "ALL_CANDIDATES_REJECTED":
-      return zh
-        ? "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。"
-        : "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).";
+      return dictionaryCopy(locale, "hub.stayOutcomeAllRejected");
     case "NOT_APPLICABLE_ZERO_NIGHTS":
-      return zh
-        ? "这趟行程不过夜，所以没有住宿可搜。"
-        : "This trip has no overnight stay, so there is nothing to search for.";
+      return dictionaryCopy(locale, "hub.stayOutcomeZeroNights");
     default:
-      return zh
-        ? "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。"
-        : "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.";
+      return dictionaryCopy(locale, "hub.stayOutcomeUnknown");
   }
 }
 
@@ -2539,10 +2532,8 @@ function budgetMoney(
    character for character -- so changing the copy means editing that gate in the same commit.  The
    English arm is pinned too because it was measured on screen: `resolveLocale` falls through to
    `navigator.language`, so a non-Chinese browser renders English by default. */
-const TIGHT_CAVEAT_ZH =
-  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
-const TIGHT_CAVEAT_EN =
-  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.";
+const TIGHT_CAVEAT_ZH = dictionaryCopy("zh-CN", "hub.budgetTightCaveat");
+const TIGHT_CAVEAT_EN = dictionaryCopy("en", "hub.budgetTightCaveat");
 
 function budgetAdvisory(
   reference: V8Data["trip"]["budget_reference"],
@@ -2576,16 +2567,10 @@ function budgetAdvisory(
     tight,
     text: t("hub.budgetLine", { days, people, amount }),
     hint: tight
-      ? zh
-        ? TIGHT_CAVEAT_ZH
-        : TIGHT_CAVEAT_EN
+      ? t("hub.budgetTightCaveat")
       : reference.floor_comparable
-        ? zh
-          ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
-          : "This is your own budget averaged out, not a final cost. Real prices come from providers."
-        : zh
-          ? `这是按你的预算平均下来的参考值（以 ${currency} 计），不是最终花费；真实价格以供应商为准。`
-          : `This is your own budget averaged out, in ${currency}, not a final cost. Real prices come from providers.`,
+        ? t("hub.budgetReferenceHint")
+        : t("hub.budgetReferenceHintCurrency", { currency }),
   };
 }
 
@@ -2854,11 +2839,7 @@ function Hub({
           {/* Today answers the traveller's four questions within one viewport:
               where am I going, when, what is next, and what needs attention. */}
           <h1 data-testid="today-heading">
-            {cityLabel
-              ? zh
-                ? `${cityLabel}之旅`
-                : `Trip to ${cityLabel}`
-              : data.journey.title}
+            {cityLabel ? t("hub.tripToCity", { cityLabel }) : data.journey.title}
           </h1>
           {staySearch === "searching" && (
             <div
