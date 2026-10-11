@@ -957,9 +957,7 @@ export function JourneyTrialSetup({
           <p className="v8-kicker">{t("trial.kicker")}</p>
           <h1>{t("setup.createATrip")}</h1>
           <p className="v8-lede">
-            {zh
-              ? "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
-              : "Three steps. Pick a destination, tell us how you like to travel, and let CityNexus handle the rest."}
+            {t("prep.introLede")}
           </p>
         </div>
         <button
@@ -1473,9 +1471,7 @@ export function JourneyTrialSetup({
           <strong>
             {journeyCreated
               ? t("setup.stepFailedStaySearchOnly")
-              : zh
-                ? "这一步没有成功，行程还没有创建。"
-                : "This step did not complete — no journey was created."}
+              : t("prep.createStepFailedHeadline")}
           </strong>
           {message ? <span>{message}</span> : null}
           {/* ORD-0353: the phone gate counted zero <details> blocks on this failure, which left the
@@ -1498,9 +1494,7 @@ export function JourneyTrialSetup({
                  same reading as "no answer arrived", and naming a contract field with a value this
                  screen did not measure is the invention Q68 forbids. */
               <span className="trial-technical-none" data-testid="create-technical-none">
-                {zh
-                  ? "这一屏没有量到可陈列的回读字段，因此也没有可复述的编号。"
-                  : "This screen measured no displayable answer fields, so there is no number to recite either."}
+                {t("prep.noMeasuredFieldsNote")}
               </span>
             )}
           </details>
