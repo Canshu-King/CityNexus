@@ -422,7 +422,7 @@ export function LiveRecovery({
                     )
                   }
                 >
-                  {zh ? "仅调整今天" : "Adjust today only"}
+                  {t("live.adjustTodayOnly")}
                 </button>
                 <button
                   type="button"
@@ -431,7 +431,7 @@ export function LiveRecovery({
                   disabled={busy !== null}
                   onClick={defer}
                 >
-                  {zh ? "稍后提醒" : "Remind me later"}
+                  {t("live.remindMeLater")}
                 </button>
               </div>
             </article>
@@ -446,7 +446,7 @@ export function LiveRecovery({
            not "no way forward on this screen". e2e/qoder-ord0407-empty-state-actions.spec.ts judges
            both halves; if this sentence ever gains a button, that cell goes red on purpose. */
         <p className="v8-muted" data-testid="live-no-proposal">
-          {zh ? "当前没有需要你决定的调整。" : "There is nothing for you to decide right now."}
+          {t("live.nothingToDecide")}
         </p>
       )}
 
