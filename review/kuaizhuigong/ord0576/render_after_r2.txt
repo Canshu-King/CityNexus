@@ -1,0 +1,19 @@
+unreadable_503 | zh | 这座城有多少地点，我们刚才没能从服务器读到。
+unreadable_503 | en | We could not read how many places this city has from the server just now.
+no_readback | zh | 这座城有多少地点，我们刚才没能从服务器读到。
+no_readback | en | We could not read how many places this city has from the server just now.
+zero | zh | 服务器回读：这座城我们现在一个地点都还没有。
+zero | en | Read back from the server: we hold no places for this city yet.
+count_1 | zh | 服务器回读：这座城我们现在有 1 个地点，可以排进行程。
+count_1 | en | Read back from the server: this city now has 1 place that can go into a trip.
+count_2 | zh | 服务器回读：这座城我们现在有 2 个地点，可以排进行程。
+count_2 | en | Read back from the server: this city now has 2 places that can go into a trip.
+count_8 | zh | 服务器回读：这座城我们现在有 8 个地点，可以排进行程。
+count_8 | en | Read back from the server: this city now has 8 places that can go into a trip.
+count_11 | zh | 服务器回读：这座城我们现在有 11 个地点，可以排进行程。
+count_11 | en | Read back from the server: this city now has 11 places that can go into a trip.
+count_20 | zh | 服务器回读：这座城我们现在有 20 个地点，可以排进行程。
+count_20 | en | Read back from the server: this city now has 20 places that can go into a trip.
+count_101 | zh | 服务器回读：这座城我们现在有 101 个地点，可以排进行程。
+count_101 | en | Read back from the server: this city now has 101 places that can go into a trip.
+AFTER_RC=0

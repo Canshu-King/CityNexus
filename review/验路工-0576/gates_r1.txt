@@ -1,0 +1,35 @@
+ORD-0576 batch one - gate and proof readouts, verbatim, one command per line block
+candidate product commit  b2a7f93717  (branch head after the evidence commit: 47929424535b4988c0eaa3d13aa8b58088e81530)
+base / authoritative tip   0d0eca62ef8b7345bff48f6a30b1bf628e8124e0
+
+[1] full typecheck gate
+command  node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit   (cwd frontend)
+exit     0
+output   empty - zero "error TS" lines, so this file has no line to quote; the raw redirect is kept beside it as typecheck_full_r1.txt (zero bytes)
+
+[2] codes-on-screen gate r4 (the one landed in CMDR-RULING-0575-R4LANDED)
+command  python live_checks/codes_on_screen_gate_r4.py --repo . --ref HEAD --base 0d0eca62ef8b7345bff48f6a30b1bf628e8124e0 --only-added --require-name --refuse
+exit     0
+summary  arm codes-on-screen r4 | ref=HEAD base=0d0eca62ef files_judged=2 refuse=0 info=29 require_name=True only_added=True corpus=1254
+full log gate_r4_candidate.txt
+
+[3] byte proof: dictionary values must equal the removed literals, character for character
+command  python review/验路工-0576/byte_proof_r1.py b2a7f93717
+exit     0
+output   PROVEN / keys_checked=3 keys_reading_t_in_candidate=3
+sides    live.inProgress -> 371:In progress 1817:正在进行 ; live.tripRightNow -> 372:Your trip right now 1818:现在的行程 ; live.whatHappened -> 373:What happened 1819:发生了什么
+full log byte_proof_r1.txt
+
+[4] negative control on that same proof: hand it the base commit as if it were a candidate
+command  python review/验路工-0576/byte_proof_r1.py 0d0eca62ef8b7345bff48f6a30b1bf628e8124e0
+output   FAILED / keys_checked=3 keys_reading_t_in_candidate=0 - the proof does bite, it is not decoration
+
+[5] the line's own census, both sides of my commit (bilingual_pair_census_r2.py, arms A + B)
+base     sha=0d0eca62ef files_with_inline_pairs=32 total=748 | arm_A_ternary=222 arm_B_same_line=359 arm_B_over_lines=167
+head     sha=b2a7f93717 files_with_inline_pairs=32 total=745 | arm_A_ternary=219 arm_B_same_line=359 arm_B_over_lines=167
+per file LiveRecovery.tsx rows 26 at base and 23 at head; the three that left are exactly the three ternaries of this batch
+note     this census counts every pair shape, including the {zh, en} copy tables the order says to leave alone, so its per-file number for this file (26) is not the order's number for it (24 条 visible); the difference is 口径, not a missing delivery
+
+[6] what this batch did not touch, and why
+- the 成对语区表 rows in both files (e.g. JourneyInboxWorkbench 的 184 到 215 行) are already dictionary-shaped - the order names them as off-limits
+- LiveRecovery still keeps the ternaries this batch did not reach; the file's remaining visible inline rows are listed in the delivery block

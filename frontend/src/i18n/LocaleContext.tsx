@@ -371,6 +371,9 @@ const en: Dict = {
   "recovery.changedFromActivity": "Current activity",
   "recovery.changedToActivity": "recovered activity",
   "live.nothingDue": "Nothing is due right now",
+  "live.inProgress": "In progress",
+  "live.tripRightNow": "Your trip right now",
+  "live.whatHappened": "What happened",
   "live.nextLeg": "NEXT · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "NEXT · Select a plan to calculate the next leg",
   "live.awaitingPlanUpper": "AWAITING PLAN",
@@ -1476,6 +1479,15 @@ const en: Dict = {
   "simulation.notGiven": "not given",
   "setup.stepFailedStaySearchOnly": "This step did not complete — the trip was created, but the stay search did not.",
   "setup.stillNeeded": "Still needed: ",
+  "setup.groupRuleSupported": "What decides this group: the server recognizes this name and its catalog holds rows for it.",
+  "setup.groupRuleNeedsLookup": "What decides this group: nothing the server consults names this spelling, so it has no canonical identity and would have to be resolved over the network.",
+  "setup.groupRuleUnknown": "What decides this group: no plannable verdict came back this round — the catalog holds nothing for it yet, it was asked and nothing answered, or nothing was read at all.",
+  "failure.chooseTrip": "Choose a trip",
+  "failure.signInAgain": "Sign in again",
+  "failure.retryLater": "Wait, then ask again",
+  "failure.viewCurrentState": "Look at what it is now",
+  "failure.readSavedCopy": "Read the saved copy",
+  "failure.attributionDetail": "Attribution detail",
 };
 
 const zhCN: Dict = {
@@ -1814,6 +1826,9 @@ const zhCN: Dict = {
   "recovery.changedFromActivity": "当前活动",
   "recovery.changedToActivity": "恢复的活动",
   "live.nothingDue": "现在没有待进行的步骤",
+  "live.inProgress": "正在进行",
+  "live.tripRightNow": "现在的行程",
+  "live.whatHappened": "发生了什么",
   "live.nextLeg": "下一步 · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "下一步 · 选择方案以计算下一段路程",
   "live.awaitingPlanUpper": "等待方案",
@@ -2858,6 +2873,15 @@ const zhCN: Dict = {
   "simulation.notGiven": "服务器未给证据状态",
   "setup.stepFailedStaySearchOnly": "这一步没有成功——行程已创建，但住宿搜索没有完成。",
   "setup.stillNeeded": "还需要填写：",
+  "setup.groupRuleSupported": "这一组看的是：服务器认得这个名字（有正式身份），目录里也有它的行。",
+  "setup.groupRuleNeedsLookup": "这一组看的是：服务器问过的词表和目录里都没有这个名字，也就是还没有正式身份，要联网解析才有答案。",
+  "setup.groupRuleUnknown": "这一组看的是：这一轮拿不出可规划的判定——目录里暂时没有它的行、问过但没人回答，或者这一轮根本没读到。",
+  "failure.chooseTrip": "选一趟行程",
+  "failure.signInAgain": "重新登录",
+  "failure.retryLater": "等一会儿再问一次",
+  "failure.viewCurrentState": "看它现在是什么状态",
+  "failure.readSavedCopy": "看已保存的只读副本",
+  "failure.attributionDetail": "归因详情",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
