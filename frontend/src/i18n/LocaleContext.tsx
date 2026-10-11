@@ -1488,6 +1488,9 @@ const en: Dict = {
   "failure.viewCurrentState": "Look at what it is now",
   "failure.readSavedCopy": "Read the saved copy",
   "failure.attributionDetail": "Attribution detail",
+  "prep.introLede": "Three steps. Pick a destination, tell us how you like to travel, and let CityNexus handle the rest.",
+  "prep.createStepFailedHeadline": "This step did not complete — no journey was created.",
+  "prep.noMeasuredFieldsNote": "This screen measured no displayable answer fields, so there is no number to recite either.",
 };
 
 const zhCN: Dict = {
@@ -2882,6 +2885,9 @@ const zhCN: Dict = {
   "failure.viewCurrentState": "看它现在是什么状态",
   "failure.readSavedCopy": "看已保存的只读副本",
   "failure.attributionDetail": "归因详情",
+  "prep.introLede": "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+  "prep.createStepFailedHeadline": "这一步没有成功，行程还没有创建。",
+  "prep.noMeasuredFieldsNote": "这一屏没有量到可陈列的回读字段，因此也没有可复述的编号。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
