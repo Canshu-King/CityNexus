@@ -1485,6 +1485,9 @@ const en: Dict = {
   "failure.viewCurrentState": "Look at what it is now",
   "failure.readSavedCopy": "Read the saved copy",
   "failure.attributionDetail": "Attribution detail",
+  "failure.serverRefusedStep": "The server refused this step (HTTP {status}). Your trip is unchanged; check the details and try again.",
+  "failure.serverAnsweredUnusable": "The server answered HTTP {status}, but not with data this screen can use (Content-Type: {contentType}).",
+  "common.unknown": "unknown",
 };
 
 const zhCN: Dict = {
@@ -2876,6 +2879,9 @@ const zhCN: Dict = {
   "failure.viewCurrentState": "看它现在是什么状态",
   "failure.readSavedCopy": "看已保存的只读副本",
   "failure.attributionDetail": "归因详情",
+  "failure.serverRefusedStep": "服务器拒绝了这一步（HTTP {status}）。你的行程没有因此改变，可以检查后重试。",
+  "failure.serverAnsweredUnusable": "服务器答了 HTTP {status}，可带回来的不是这一屏能用的数据（Content-Type: {contentType}）。",
+  "common.unknown": "未知",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
