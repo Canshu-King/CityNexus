@@ -1,0 +1,50 @@
+ORD-0576 batch two - gate, proof and screen-readout, verbatim
+base / authoritative tip   69810d1896af51a22129e21d886f30aaae227a3c   (this already contains batch one)
+candidate commit           57aa9e7d7f6a26400fd45196bc3512e9a5840dd4
+
+[1] full typecheck gate
+command  node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit   (cwd frontend)
+exit     0
+output   zero "error TS" lines
+
+[2] codes-on-screen gate r4
+command  python live_checks/codes_on_screen_gate_r4.py --repo . --ref 57aa9e7d7f... --base 69810d1896... --only-added --require-name --refuse
+exit     0
+summary  arm codes-on-screen r4 | files_judged=2 refuse=0 info=29 require_name=True only_added=True corpus=1254
+
+[3] byte proof for this batch (review/验路工-0576/byte_proof_r2.py)
+command  python review/验路工-0576/byte_proof_r2.py 57aa9e7d7f6a26400fd45196bc3512e9a5840dd4
+exit     0
+output   PROVEN / keys_checked=3 keys_reading_t_in_candidate=3
+sides    live.adjustTodayOnly -> 374:Adjust today only 1823:仅调整今天
+sides    live.remindMeLater -> 375:Remind me later 1824:稍后提醒
+sides    live.nothingToDecide -> 376:There is nothing for you to decide right now. 1825:当前没有需要你决定的调整。
+
+[4] negative control on that same proof: the base commit fed in as if it were a candidate
+command  python review/验路工-0576/byte_proof_r2.py 69810d1896af51a22129e21d886f30aaae227a3c
+output   FAILED / keys_checked=3 keys_reading_t_in_candidate=0 - the proof bites
+
+[5] the line's own census, both sides of this commit (bilingual_pair_census_r2.py)
+base     sha=69810d1896 files_with_inline_pairs=31 total=744 | arm_A_ternary=218 arm_B_same_line=359 arm_B_over_lines=167
+head     sha=57aa9e7d7f files_with_inline_pairs=31 total=741 | arm_A_ternary=215 arm_B_same_line=359 arm_B_over_lines=167
+delta    three A-arm ternaries left the file, exactly this batch's three; full json in this directory
+
+[6] the shipped ORD-0407 screen spec, run on my commit and on the base
+my commit  node node_modules/@playwright/test/cli.js test e2e/qoder-ord0407-empty-state-actions.spec.ts --reporter=list
+           exit 1, "8 passed", red set = C6 (:502) and C9 (:825)
+           C1 (:217) - the arm that asserts the live-no-proposal cell still reads
+           "当前没有需要你决定的调整" - is green, so the keyed sentence renders identically
+base commit, same command, same spec
+           exit 1, "4 passed", red set = C1, C2, C3, C6 (and C9 by its own name)
+           so nothing turned red because of this batch: the base run is redder
+instrument note (why the two runs are not a clean before/after pair): the spec writes into the
+           working tree (reports/ord0407/** and readFileSync of a baseline pinned to tip 890b7cfc
+           at frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:505), so order of runs leaks
+           into the result; C9's own title says it is red by design until ORD-0407 slice 2 lands.
+           I used it only for the C1 text claim, and I removed the reports/ord0407 files my two
+           runs created rather than leaving them dirty.
+
+[7] not touched by this batch
+- the two button arms that live on one ternary across lines 411 and 412, and the message string at
+  line 421, are still inline in this file and stay mine to take in a later batch
+- every { zh, en } copy table, which the order names as off-limits
