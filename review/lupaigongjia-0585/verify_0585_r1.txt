@@ -1,0 +1,10 @@
+ORD-0585 单键两臂对拍：现尖 a368e12313 原字面 vs 本树字典（dictionaryCopy 真跑）
+
+zh IDENTICAL  bytes_orig=60 bytes_dict=60
+en IDENTICAL  bytes_orig=65 bytes_dict=65
+
+字典取回值逐字：
+  zh=这步接受没有得到可确认的答复，结果未知。
+  en=This acceptance got no confirmable answer; the result is unknown.
+
+合计：两臂比对，不同 0 臂

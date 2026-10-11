@@ -103,9 +103,7 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
       setMessage(
         isWriteDeadlineMissed(error)
           ? `${writeDeadlineCopy(false).title} ${writeDeadlineCopy(false).body}`
-          : zh
-            ? "这步接受没有得到可确认的答复，结果未知。"
-            : "This acceptance got no confirmable answer; the result is unknown.",
+          : t("recovery.acceptanceUnanswered"),
       );
     } finally {
       setBusy(false);

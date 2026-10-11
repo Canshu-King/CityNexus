@@ -1491,6 +1491,7 @@ const en: Dict = {
   "failure.viewCurrentState": "Look at what it is now",
   "failure.readSavedCopy": "Read the saved copy",
   "failure.attributionDetail": "Attribution detail",
+  "recovery.acceptanceUnanswered": "This acceptance got no confirmable answer; the result is unknown.",
 };
 
 const zhCN: Dict = {
@@ -2888,6 +2889,7 @@ const zhCN: Dict = {
   "failure.viewCurrentState": "看它现在是什么状态",
   "failure.readSavedCopy": "看已保存的只读副本",
   "failure.attributionDetail": "归因详情",
+  "recovery.acceptanceUnanswered": "这步接受没有得到可确认的答复，结果未知。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

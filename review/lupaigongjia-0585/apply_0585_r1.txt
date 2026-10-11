@@ -1,0 +1,6 @@
+ORD-0585 apply readout
+
+REPLACE recovery.acceptanceUnanswered in V14RecoveryTruthPanel.tsx at line 106 (bytes_old=175 bytes_new=48)
+改后组件行号=106
+字典 en 行号=1494 zh 行号=2892
+zh_bytes=60 en_bytes=65

@@ -1,0 +1,5 @@
+ORD-0585 闸退出码（逐条现记，命令原样见交块）
+tsc_exit=0 tsc_error_lines=0        命令 node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit （删掉 frontend/src/__verify0585 探针件后在终树跑）
+build_exit=0                        命令 npm run build ；尾读 precache 8 entries (2964.79 KiB)
+parity_script_exit=1                命令 python frontend/scripts/i18n_detail2_parity_r1.py（红在既存那枚 me.asksBeforeProtectedChange，尖上同红）
+ls_remote_tip=a368e12313b505d444c871cb79375339f72a6c5c

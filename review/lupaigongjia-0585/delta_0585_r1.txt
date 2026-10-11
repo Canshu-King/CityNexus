@@ -1,0 +1,10 @@
+ORD-0585 delta  尖 a368e12313 vs 本树
+
+字典键数：尖 en=1260 zh=1261 ；本树 en=1261 zh=1262
+本树新增 en=1 zh=1，删除 en=0 zh=0
+新增键名：recovery.acceptanceUnanswered
+尖上对称差=['me.asksBeforeProtectedChange'] ；本树对称差=['me.asksBeforeProtectedChange']
+
+frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+  带汉字的可见行：尖=1 本树=0（差 -1）
+  同形成对（zh ? 「中」 : 「英」）：尖=1 本树=0（差 -1）
