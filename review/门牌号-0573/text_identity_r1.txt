@@ -1,0 +1,9 @@
+bundle_rc=0
+run_rc=0
+planai.aiCredentialNotConfigured ZH 长度 原55 现55 逐字节相同
+planai.aiCredentialNotConfigured EN 长度 原166 现166 逐字节相同
+planai.aiSwitchedOffByOperator ZH 长度 原51 现51 逐字节相同
+planai.aiSwitchedOffByOperator EN 长度 原152 现152 逐字节相同
+planai.aiStatusUnreadable ZH 长度 原41 现41 逐字节相同
+planai.aiStatusUnreadable EN 长度 原106 现106 逐字节相同
+VERDICT 两语三枚逐字节全同（不等 0 枚）

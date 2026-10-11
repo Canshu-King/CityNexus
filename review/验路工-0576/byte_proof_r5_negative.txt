@@ -1,0 +1,15 @@
+FAIL live.acknowledgedStillOpen zh: the candidate still renders the inline literal
+FAIL live.acknowledgedStillOpen en: the candidate still renders the inline literal
+FAIL live.acknowledgedStillOpen: the candidate does not read the key
+FAIL live.acknowledgedStillOpen: expected the key on both dictionary sides, found 0
+FAIL live.confirmedUnchanged zh: the candidate still renders the inline literal
+FAIL live.confirmedUnchanged en: the candidate still renders the inline literal
+FAIL live.confirmedUnchanged: the candidate does not read the key
+FAIL live.confirmedUnchanged: expected the key on both dictionary sides, found 0
+FAIL live.confirmedAffected zh: the candidate still renders the inline literal
+FAIL live.confirmedAffected en: the candidate still renders the inline literal
+FAIL live.confirmedAffected: the candidate does not read the key
+FAIL live.confirmedAffected: expected the key on both dictionary sides, found 0
+keys_checked=3 keys_reading_t_in_candidate=0
+FAILED
+NEG_RC=1

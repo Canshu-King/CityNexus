@@ -21,6 +21,9 @@ const en: Dict = {
   "nav.import": "Import places",
   "planai.tripRequest": "Trip request",
   "planai.importPlacesCta": "Paste your own places and import them into this trip",
+  "plan.aiNotConfiguredNote": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.",
+  "plan.aiDisabledByOpsNote": "The AI switch on this server is switched off. That is an operator setting, not something you did. It names the switch, not the cause of any one failure.",
+  "plan.aiStateUnknownNote": "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.",
   "planning.workingOnYourRequest": "Working on your request.",
   "planning.couldNotFinishPlanning": "Could not finish planning",
   "planning.tryACityWeHaveDataFor": "Try a city we have data for",
@@ -399,6 +402,9 @@ const en: Dict = {
   "live.durationPending": "duration pending",
   "live.tripUpdated": "Your trip has been updated.",
   "live.remindLaterOk": "Okay, we will remind you later.",
+  "live.acknowledgedStillOpen": "Seen, still open: you have seen these changes but have not chosen a new arrangement yet.",
+  "live.confirmedUnchanged": "Confirmed bookings and your arrival/departure stay unchanged.",
+  "live.confirmedAffected": "Note: some confirmed items are affected.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -1488,6 +1494,17 @@ const en: Dict = {
   "failure.viewCurrentState": "Look at what it is now",
   "failure.readSavedCopy": "Read the saved copy",
   "failure.attributionDetail": "Attribution detail",
+  "failure.serverRefusedStep": "The server refused this step (HTTP {status}). Your trip is unchanged; check the details and try again.",
+  "failure.serverAnsweredUnusable": "The server answered HTTP {status}, but not with data this screen can use (Content-Type: {contentType}).",
+  "common.unknown": "unknown",
+  "hub.stayOutcomeNoOffers": "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.",
+  "hub.stayOutcomeAllRejected": "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).",
+  "hub.stayOutcomeZeroNights": "This trip has no overnight stay, so there is nothing to search for.",
+  "hub.stayOutcomeUnknown": "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.",
+  "hub.budgetTightCaveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.",
+  "hub.budgetReferenceHint": "This is your own budget averaged out, not a final cost. Real prices come from providers.",
+  "hub.budgetReferenceHintCurrency": "This is your own budget averaged out, in {currency}, not a final cost. Real prices come from providers.",
+  "hub.tripToCity": "Trip to {cityLabel}",
 };
 
 const zhCN: Dict = {
@@ -1506,6 +1523,9 @@ const zhCN: Dict = {
   "nav.import": "导入地点",
   "planai.tripRequest": "旅行需求",
   "planai.importPlacesCta": "粘贴你自己的地点，导入这趟行程",
+  "plan.aiNotConfiguredNote": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。",
+  "plan.aiDisabledByOpsNote": "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。",
+  "plan.aiStateUnknownNote": "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。",
   "planning.workingOnYourRequest": "正在处理你的需求。",
   "planning.couldNotFinishPlanning": "暂时无法完成规划",
   "planning.tryACityWeHaveDataFor": "换一座有数据的城市",
@@ -1854,6 +1874,9 @@ const zhCN: Dict = {
   "live.durationPending": "时长待定",
   "live.tripUpdated": "已按新安排更新你的行程。",
   "live.remindLaterOk": "好的，稍后再提醒你。",
+  "live.acknowledgedStillOpen": "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。",
+  "live.confirmedUnchanged": "已确认的预订和到达/离开时间保持不变。",
+  "live.confirmedAffected": "注意：部分已确认内容会受影响。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
@@ -2882,6 +2905,17 @@ const zhCN: Dict = {
   "failure.viewCurrentState": "看它现在是什么状态",
   "failure.readSavedCopy": "看已保存的只读副本",
   "failure.attributionDetail": "归因详情",
+  "failure.serverRefusedStep": "服务器拒绝了这一步（HTTP {status}）。你的行程没有因此改变，可以检查后重试。",
+  "failure.serverAnsweredUnusable": "服务器答了 HTTP {status}，可带回来的不是这一屏能用的数据（Content-Type: {contentType}）。",
+  "common.unknown": "未知",
+  "hub.stayOutcomeNoOffers": "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。",
+  "hub.stayOutcomeAllRejected": "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。",
+  "hub.stayOutcomeZeroNights": "这趟行程不过夜，所以没有住宿可搜。",
+  "hub.stayOutcomeUnknown": "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。",
+  "hub.budgetTightCaveat": "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。",
+  "hub.budgetReferenceHint": "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。",
+  "hub.budgetReferenceHintCurrency": "这是按你的预算平均下来的参考值（以 {currency} 计），不是最终花费；真实价格以供应商为准。",
+  "hub.tripToCity": "{cityLabel}之旅",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

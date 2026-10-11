@@ -1,0 +1,9 @@
+# 门牌号 ORD-0573 改名核件（在已提交的那代字节上回读，不是改前草稿）
+命令原样：在本树读两枚文件并按键名计数（字典按两臂各计一次、组件按 t( 调用计一次）
+新名 plan.aiNotConfiguredNote 字典臂 2 枚 组件调用 1 枚 OK
+新名 plan.aiDisabledByOpsNote 字典臂 2 枚 组件调用 1 枚 OK
+新名 plan.aiStateUnknownNote 字典臂 2 枚 组件调用 1 枚 OK
+旧名 planai.aiCredentialNotConfigured 残留 字典 0 组件 0 已清
+旧名 planai.aiSwitchedOffByOperator 残留 字典 0 组件 0 已清
+旧名 planai.aiStatusUnreadable 残留 字典 0 组件 0 已清
+VERDICT 三枚新名各两臂一枚调用、三枚旧名零残留
