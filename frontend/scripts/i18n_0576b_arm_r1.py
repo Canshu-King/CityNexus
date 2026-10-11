@@ -20,7 +20,7 @@ import subprocess
 import sys
 
 TREE = r"D:/moodle/_qoder_jianpanggong_0555"
-BASE = "d2f06bee22f0e051208a9e208b3c7f55622d7487"
+BASE = "8890f22fe37af40d2919db352be47043b1ea6162"
 FILES = {
     "journey": "frontend/src/features/progress/journeyProgress.ts",
     "detail": "frontend/src/features/trip/ActivityDetail.tsx",
