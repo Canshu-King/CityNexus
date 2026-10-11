@@ -391,11 +391,11 @@ export function NativeMissionTimeline({
     <section className={`cn-native-mission ${compact ? "compact" : ""}`} data-testid="native-hermes-timeline">
       <header className="cn-native-mission-head">
         <div>
-          <b>{zh ? "正在为你处理" : "Working on your request"}</b>
+          <b>{t("copilot.mission.workingOnRequest")}</b>
           <small>
             {executed
-              ? zh ? "已按你的行程事实执行" : "Ran against your journey facts"
-              : zh ? "正在核对你的行程事实…" : "Checking your journey facts…"}
+              ? t("copilot.mission.ranAgainstFacts")
+              : t("copilot.mission.checkingFacts")}
           </small>
         </div>
       </header>
@@ -404,7 +404,7 @@ export function NativeMissionTimeline({
         <AgentRunRail steps={steps} />
       ) : (
         <p className="cn-native-empty">
-          {zh ? "正在核对你的行程事实…" : "Checking your journey facts…"}
+          {t("copilot.mission.checkingFacts")}
         </p>
       )}
 
@@ -425,12 +425,12 @@ export function NativeMissionTimeline({
 
       {run.mission_plan && (
         <details className="cn-native-plan">
-          <summary>{zh ? "查看安全任务计划" : "View safe mission plan"}</summary>
+          <summary>{t("copilot.mission.viewSafePlan")}</summary>
           <ol>
             {run.mission_plan.steps.map((step) => (
               <li key={step.id}>
                 <span>{zh ? localizePlanStep(step.operation) : step.operation}</span>
-                {step.requires_authority && <small>{zh ? "CityNexus 授权" : "CityNexus authority"}</small>}
+                {step.requires_authority && <small>{t("copilot.mission.needsAuthority")}</small>}
               </li>
             ))}
           </ol>
@@ -475,7 +475,7 @@ export function NativeMissionTimeline({
            data-attribution={actionFacts ?? ""}>{actionState}</p>
       )}
       {streamError && <p className="cn-copilot-stream-state" role="status">{streamError}</p>}
-      {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{zh ? "停止任务" : "Stop mission"}</button>}
+      {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{t("copilot.mission.stop")}</button>}
     </section>
   );
 }

@@ -1485,6 +1485,12 @@ const en: Dict = {
   "failure.viewCurrentState": "Look at what it is now",
   "failure.readSavedCopy": "Read the saved copy",
   "failure.attributionDetail": "Attribution detail",
+  "copilot.mission.workingOnRequest": "Working on your request",
+  "copilot.mission.ranAgainstFacts": "Ran against your journey facts",
+  "copilot.mission.checkingFacts": "Checking your journey facts…",
+  "copilot.mission.viewSafePlan": "View safe mission plan",
+  "copilot.mission.needsAuthority": "CityNexus authority",
+  "copilot.mission.stop": "Stop mission",
 };
 
 const zhCN: Dict = {
@@ -2876,6 +2882,12 @@ const zhCN: Dict = {
   "failure.viewCurrentState": "看它现在是什么状态",
   "failure.readSavedCopy": "看已保存的只读副本",
   "failure.attributionDetail": "归因详情",
+  "copilot.mission.workingOnRequest": "正在为你处理",
+  "copilot.mission.ranAgainstFacts": "已按你的行程事实执行",
+  "copilot.mission.checkingFacts": "正在核对你的行程事实…",
+  "copilot.mission.viewSafePlan": "查看安全任务计划",
+  "copilot.mission.needsAuthority": "CityNexus 授权",
+  "copilot.mission.stop": "停止任务",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
