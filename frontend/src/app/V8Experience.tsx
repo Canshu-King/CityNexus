@@ -99,7 +99,7 @@ import {
   saveOfflineJourneyVerified,
   type OfflineJourney,
 } from "../lib/offlineJourney";
-import { useT, useLocale } from "../i18n/LocaleContext";
+import { dictionaryCopy, dictionaryText, useT, useLocale } from "../i18n/LocaleContext";
 import { englishCountNoun } from "../lib/plural";
 import {
   currencyExponent,
@@ -255,20 +255,18 @@ class V8Rejection extends Error {
  * what that string carries, and since Q64=1 that includes whatever the server's body happened to say.
  */
 function refusalSentence(error: unknown, zh: boolean, fallback: string): string {
+  const locale = zh ? "zh-CN" : "en";
   if (error instanceof V8Rejection) {
-    return zh
-      ? `服务器拒绝了这一步（HTTP ${error.status}）。你的行程没有因此改变，可以检查后重试。`
-      : `The server refused this step (HTTP ${error.status}). Your trip is unchanged; check the details and try again.`;
+    return dictionaryText(locale, "failure.serverRefusedStep", { status: error.status });
   }
   if (isOriginResponseUnusable(error)) {
-    return zh
-      ? `服务器答了 HTTP ${error.status}，可带回来的不是这一屏能用的数据（Content-Type: ${error.content_type ?? "未知"}）。`
-      : `The server answered HTTP ${error.status}, but not with data this screen can use (Content-Type: ${error.content_type ?? "unknown"}).`;
+    return dictionaryText(locale, "failure.serverAnsweredUnusable", {
+      status: error.status,
+      contentType: error.content_type ?? dictionaryCopy(locale, "common.unknown"),
+    });
   }
   if (isReadDeadlineMissed(error) || error instanceof TypeError) {
-    return zh
-      ? "连不上服务器，请重试。"
-      : "Could not reach the server. Try again.";
+    return dictionaryCopy(locale, "planning.couldNotReachServer");
   }
   return fallback;
 }
