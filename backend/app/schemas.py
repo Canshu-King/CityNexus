@@ -410,6 +410,17 @@ class BootstrapSharedWalkPocketWalkSaveRequest(BaseModel):
     max_walk_minutes: int | None = Field(default=None, ge=1, le=180)
 
 
+class BootstrapDiscoveryPocketWalkSaveRequest(BaseModel):
+    """Save two current manual-center discoveries as this member's Pocket Walk."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    receipt_id: UUID
+    first_candidate_id: UUID
+    second_candidate_id: UUID
+    max_walk_minutes: int | None = Field(default=None, ge=1, le=180)
+
+
 class RealCityIntelligenceRequest(BaseModel):
     goal: str = Field(min_length=3, max_length=1000)
     radius_m: int = Field(default=3000, ge=100, le=5000)
