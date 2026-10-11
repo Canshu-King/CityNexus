@@ -1506,6 +1506,17 @@ const en: Dict = {
   "failure.viewCurrentState": "Look at what it is now",
   "failure.readSavedCopy": "Read the saved copy",
   "failure.attributionDetail": "Attribution detail",
+  "failure.serverRefusedStep": "The server refused this step (HTTP {status}). Your trip is unchanged; check the details and try again.",
+  "failure.serverAnsweredUnusable": "The server answered HTTP {status}, but not with data this screen can use (Content-Type: {contentType}).",
+  "common.unknown": "unknown",
+  "hub.stayOutcomeNoOffers": "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.",
+  "hub.stayOutcomeAllRejected": "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).",
+  "hub.stayOutcomeZeroNights": "This trip has no overnight stay, so there is nothing to search for.",
+  "hub.stayOutcomeUnknown": "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.",
+  "hub.budgetTightCaveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.",
+  "hub.budgetReferenceHint": "This is your own budget averaged out, not a final cost. Real prices come from providers.",
+  "hub.budgetReferenceHintCurrency": "This is your own budget averaged out, in {currency}, not a final cost. Real prices come from providers.",
+  "hub.tripToCity": "Trip to {cityLabel}",
 };
 
 const zhCN: Dict = {
@@ -2918,6 +2929,17 @@ const zhCN: Dict = {
   "failure.viewCurrentState": "看它现在是什么状态",
   "failure.readSavedCopy": "看已保存的只读副本",
   "failure.attributionDetail": "归因详情",
+  "failure.serverRefusedStep": "服务器拒绝了这一步（HTTP {status}）。你的行程没有因此改变，可以检查后重试。",
+  "failure.serverAnsweredUnusable": "服务器答了 HTTP {status}，可带回来的不是这一屏能用的数据（Content-Type: {contentType}）。",
+  "common.unknown": "未知",
+  "hub.stayOutcomeNoOffers": "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。",
+  "hub.stayOutcomeAllRejected": "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。",
+  "hub.stayOutcomeZeroNights": "这趟行程不过夜，所以没有住宿可搜。",
+  "hub.stayOutcomeUnknown": "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。",
+  "hub.budgetTightCaveat": "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。",
+  "hub.budgetReferenceHint": "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。",
+  "hub.budgetReferenceHintCurrency": "这是按你的预算平均下来的参考值（以 {currency} 计），不是最终花费；真实价格以供应商为准。",
+  "hub.tripToCity": "{cityLabel}之旅",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
