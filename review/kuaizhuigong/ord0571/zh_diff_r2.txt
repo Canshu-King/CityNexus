@@ -1,0 +1,46 @@
+1,22c1,22
+< zh | main.cityNexusRequestFailed | CityNexus request failed
+< zh | main.cityNexusRequestRefusedHttp | CityNexus request refused (HTTP {status})
+< zh | main.persistedOperationUpdate | Persisted operation update
+< zh | main.generalRecovery | general recovery
+< zh | main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.
+< zh | main.noDominantFailureMode | No dominant failure mode
+< zh | main.notEvaluated | not evaluated
+< zh | main.validatedActivity | validated Activity
+< zh | main.noActionableTarget | no actionable target
+< zh | main.outcomeEvidence | outcome evidence
+< zh | main.explicitWins | explicit wins
+< zh | main.notReported | not reported
+< zh | main.noUpcomingActivity | no upcoming activity
+< zh | main.noActiveC4 | No active C4
+< zh | main.notAvailable | not available
+< zh | main.verifiedFeasible | verified feasible
+< zh | main.notFeasible | not feasible
+< zh | main.notPreserved | not preserved
+< zh | main.verifiedEvidenceAttached | verified evidence attached
+< zh | main.evidenceUnavailable | evidence unavailable
+< zh | recovery.noDominantMode | no dominant mode
+< zh | recovery.noneOnThisJourney | none on this journey
+---
+> zh | main.cityNexusRequestFailed | CityNexus 请求失败
+> zh | main.cityNexusRequestRefusedHttp | CityNexus 请求被拒绝（HTTP {status}）
+> zh | main.persistedOperationUpdate | 已持久化的操作更新
+> zh | main.generalRecovery | 通用恢复
+> zh | main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | 激活一次常驻任务；之后的城市信号无需新的聊天消息即可发起恢复。
+> zh | main.noDominantFailureMode | 没有主导的失败模式
+> zh | main.notEvaluated | 未评估
+> zh | main.validatedActivity | 通过校验的活动
+> zh | main.noActionableTarget | 没有可行动的目标
+> zh | main.outcomeEvidence | 结果证据
+> zh | main.explicitWins | 显式胜出项
+> zh | main.notReported | 未上报
+> zh | main.noUpcomingActivity | 接下来没有活动
+> zh | main.noActiveC4 | 当前没有生效的 C4
+> zh | main.notAvailable | 不可用
+> zh | main.verifiedFeasible | 已验证可行
+> zh | main.notFeasible | 不可行
+> zh | main.notPreserved | 未被保留
+> zh | main.verifiedEvidenceAttached | 已附带已验证证据
+> zh | main.evidenceUnavailable | 证据不可用
+> zh | recovery.noDominantMode | 没有主导模式
+> zh | recovery.noneOnThisJourney | 这趟行程上没有
