@@ -1,5 +1,4 @@
 import { useQuery, type QueryClient } from "@tanstack/react-query";
-import { dictionaryCopy } from "../i18n/LocaleContext";
 
 /**
  * ORD-0059 (a) -- the one place the frontend learns "what time is it for this journey", and it
@@ -219,7 +218,6 @@ export function basisWord(basis: string | null, zh: boolean): string {
 }
 
 export function evidenceWord(state: string | null, zh: boolean): string {
-  const copy = (key: string) => dictionaryCopy(zh ? "zh-CN" : "en", key);
   if (state === "REFERENCED")
     return sceneCopy(zh, "evidenceReferenced");
   /* The state `924461e` added, and the one a naive reading gets wrong: sealed pairs exist and are

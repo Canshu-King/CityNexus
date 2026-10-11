@@ -10,4 +10,3 @@ key sceneClock.noScenarioOnStage | was_on_base sceneClock.ts:198 | en_equal=True
 key sceneClock.sealedTravelDataHasNoExpiry | was_on_base sceneClock.ts:190 | en_equal=True LocaleContext.tsx:963 | zh_equal=True LocaleContext.tsx:2296 | PASS
 key sceneClock.evidenceReferenceDoesNotLineUp | was_on_base sceneClock.ts:194 | en_equal=True LocaleContext.tsx:964 | zh_equal=True LocaleContext.tsx:2297 | PASS
 PASS=8 FAIL=0 rows=8
-GATE_EXIT=0
