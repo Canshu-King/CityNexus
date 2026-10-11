@@ -72,3 +72,33 @@ def test_r105_provider_readiness_rejects_loopback_without_test_boundary():
     finally:
         for name, value in previous.items():
             _set(name, value)
+
+
+def test_r105_signed_public_discovery_rejects_gps_before_provider(monkeypatch):
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+
+    import pytest
+    from app.execution.bootstrap_discovery import BootstrapDiscoveryError, discover_bootstrap_candidates
+
+    session = MagicMock()
+    journey = SimpleNamespace(id="journey-r105", status="DRAFT", active_plan_version_id=None)
+    session.scalar.return_value = None
+    with pytest.raises(BootstrapDiscoveryError) as exc:
+        discover_bootstrap_candidates(
+            session,
+            journey,
+            member=SimpleNamespace(id="member-r105"),
+            traveler_id="traveler-r105",
+            query="art history",
+            radius_m=2500,
+            limit=3,
+            source_kind="FOREGROUND_GPS",
+            provider_consent=True,
+            latitude=31.2304,
+            longitude=121.4737,
+            accuracy_m=15,
+        )
+    assert exc.value.code == "PUBLIC_CENTER_REQUIRED"
+    session.add.assert_not_called()
+    session.flush.assert_not_called()
