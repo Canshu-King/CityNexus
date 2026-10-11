@@ -129,6 +129,8 @@ test("R105 signed A/B readiness gates public city discovery and preserves truthf
     const senderPanel = senderPage.getByTestId("bootstrap-discovery");
     const readiness = senderPanel.getByTestId("bootstrap-discovery-readiness");
     await expect(readiness).toContainText("TEST_PROVIDER");
+    await expect(readiness.getByTestId("bootstrap-discovery-capability")).toContainText("TEST_CAPABLE");
+    await expect(senderPanel.getByTestId("bootstrap-source-gps")).toHaveCount(0);
     expect(provider.overpassCalls).toHaveLength(0);
     await senderPanel.getByTestId("bootstrap-source-manual").click();
     await senderPanel.getByTestId("bootstrap-city-search-query").fill("Shanghai");
@@ -136,6 +138,7 @@ test("R105 signed A/B readiness gates public city discovery and preserves truthf
     await senderPanel.getByTestId("bootstrap-city-search-consent").check();
     await senderPanel.getByTestId("bootstrap-city-search-submit").click();
     await expect(senderPanel.getByTestId("bootstrap-city-search-results")).toContainText("Shanghai, China");
+    await expect(senderPanel.getByTestId("bootstrap-city-search-consent")).not.toBeChecked();
     expect(provider.cityCalls).toHaveLength(1);
     await senderPanel.getByTestId("bootstrap-city-result-0").click();
     await chooseMapLink(senderPanel);
@@ -156,6 +159,10 @@ test("R105 signed A/B readiness gates public city discovery and preserves truthf
     await expect(cityLabel).toBeChecked();
     await cityLabel.uncheck();
     await expect(readiness.getByTestId("bootstrap-discovery-readiness-reason")).toContainText("USER_PUBLIC_AREA_REQUIRED");
+    await cityLabel.check();
+    await senderPanel.getByTestId("bootstrap-provider-consent").check();
+    await cityLabel.uncheck();
+    await expect(senderPanel.getByTestId("bootstrap-provider-consent")).not.toBeChecked();
     await cityLabel.check();
     await senderPanel.getByTestId("bootstrap-provider-consent").check();
     await expect(readiness.getByTestId("bootstrap-discovery-readiness-reason")).toContainText("READY");
