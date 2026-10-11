@@ -1302,6 +1302,9 @@ class MemberDraftPocketWalk(Base):
         ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
     )
     max_walk_minutes: Mapped[int | None] = mapped_column(nullable=True)
+    # R108 uses this as the conditional version of the exact ordered pair.  It
+    # advances whenever a saved pair or one of its source snapshots changes.
+    revision: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
 
@@ -1317,6 +1320,60 @@ class MemberDraftPocketWalk(Base):
         ),
         Index(
             "idx_member_draft_pocket_walk_owner",
+            "journey_id",
+            "member_id",
+            "traveler_id",
+            "updated_at",
+        ),
+    )
+
+
+class MemberDraftPocketWalkProgress(Base):
+    """Server-owned, member-private self-reported GO MODE progress.
+
+    This row deliberately carries no GPS, provider, arrival, Journey execution,
+    or plan facts.  The shortlist identities and pocket revision bind the
+    self-report to the exact two-stop intention the traveler reviewed.
+    """
+
+    __tablename__ = "member_draft_pocket_walk_progress"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    member_id: Mapped[str] = mapped_column(ForeignKey("journey_members.id", ondelete="CASCADE"))
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    pocket_walk_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_pocket_walks.id", ondelete="CASCADE")
+    )
+    first_shortlist_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
+    )
+    second_shortlist_id: Mapped[str] = mapped_column(
+        ForeignKey("member_draft_shortlist_items.id", ondelete="CASCADE")
+    )
+    pocket_walk_revision: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
+    state: Mapped[str] = mapped_column(String, default="NOT_STARTED", server_default="NOT_STARTED")
+    paused_from_state: Mapped[str | None] = mapped_column(String, nullable=True)
+    progress_revision: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    progress_class: Mapped[str] = mapped_column(
+        String, default="USER_REPORTED_PROGRESS", server_default="USER_REPORTED_PROGRESS"
+    )
+    last_operation_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "member_id", "traveler_id"),
+        CheckConstraint(
+            "state IN ('NOT_STARTED', 'HEADING_TO_FIRST', 'FIRST_STOP_DONE_SELF_REPORTED', "
+            "'HEADING_TO_SECOND', 'WALK_DONE_SELF_REPORTED', 'PAUSED')",
+            name="ck_member_draft_pocket_walk_progress_state",
+        ),
+        CheckConstraint(
+            "progress_class = 'USER_REPORTED_PROGRESS'",
+            name="ck_member_draft_pocket_walk_progress_class",
+        ),
+        Index(
+            "idx_member_draft_pocket_walk_progress_owner",
             "journey_id",
             "member_id",
             "traveler_id",
