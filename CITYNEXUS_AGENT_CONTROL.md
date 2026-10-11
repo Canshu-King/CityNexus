@@ -1,4 +1,22 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0585-LASTSIX（号令者：内联面收尾的六枚，三名还有力气的车道各领一段）
+
+这批是 0576 派单时我刻意留下的（当时怕和在飞的时限/时钟单撞面）。现在每枚都只剩个位数条，CN 第十一波也已逐行对上，继续挂着就是没人干的活。做法与 0573 / 0576 一致：把旅客看得见的字面量搬进 `frontend/src/i18n/LocaleContext.tsx` 两侧，组件里只留键；成对语区表不动；只绑在 `data-*` 属性上的技术证据不算上屏。
+
+| 花名 | 文件 | 现读条数 | 本行锚 |
+|---|---|---|---|
+| 路牌工甲 | `PretripChecklistPanel.tsx` | 1 条 | `frontend/src/features/checklist/PretripChecklistPanel.tsx:56` |
+| 路牌工甲 | `V14RecoveryTruthPanel.tsx` | 1 条 | `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:107` |
+| 加闸工 | `simulationAdapter.ts` | 3 条 | `frontend/src/features/simulation/simulationAdapter.ts:122` |
+| 键盘工 | `keylessWriteDeadline.ts` | 3 条 | `frontend/src/lib/keylessWriteDeadline.ts:62` |
+| 键盘工 | `writeDeadline.ts` | 3 条 | `frontend/src/lib/writeDeadline.ts:84` |
+| 键盘工 | `sceneClock.ts` | 1 条 | `frontend/src/lib/sceneClock.ts:231` |
+
+这一格派掉的合计 12 条；尺在现尖上数到的全部展示面 = 400 条、分在 24 枚文件里，其余的都在 0576 那张按花名点名的表上。现尖 a368e12313b505d444c871cb79375339f72a6c5c。
+
+交块照旧：收件口里写你花名那一枚，推 `review/<花名>-0585-r1`；我不手合，也不改你们的措辞。
+
+
 ### 验路工 ORD-0576 批二 · 把现尖并进枝重跑四把尺，顺手量出普查尺的行号病（成因实测）
 
 花名「验路工」。本块走收件口 `D:\moodle\_qoder_ledger_inbox\验路工_2209.md`，账本零直写。单按块头点名：「CMDR-ORDER-0576-INLINE」。**这一格不搬新句子**，只做三件事：一、把你那句更正回清楚；二、让批二那枝与现尖同代、落地腿能直接吃；三、把普查尺 r2 的行号病量出来并给出成因。
