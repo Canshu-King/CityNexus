@@ -2353,6 +2353,21 @@ def save_bootstrap_discovery_pocket_walk(
         )
     ).all()
     existing_external_ids = {row.external_id for row in existing_rows}
+    # Freeze the current member-private *source* fields before refreshing the
+    # in-session ORM rows. updated_at is deliberately excluded: repeating an
+    # identical save must not erase a traveler’s in-progress GO MODE.
+    source_keys = (
+        "name", "category", "latitude", "longitude", "coordinate_system",
+        "source_url", "source_provenance", "captured_at", "opening_hours",
+        "price_state", "source_tags", "public_access_state",
+        "distance_m", "distance_basis",
+    )
+    previous_snapshots = {
+        row.external_id: {
+            key: _shortlist_payload(row)[key] for key in source_keys
+        }
+        for row in existing_rows
+    }
     existing_pocket = session.scalar(
         select(MemberDraftPocketWalk).where(
             MemberDraftPocketWalk.journey_id == locked_journey.id,
@@ -2365,9 +2380,6 @@ def save_bootstrap_discovery_pocket_walk(
         str(existing_pocket.second_shortlist_id),
         existing_pocket.max_walk_minutes,
     ) if existing_pocket is not None else None
-    refreshed_existing = any(
-        row.external_id in existing_external_ids for row, _scope in ordered_rows
-    )
     new_count = sum(1 for row, _scope in ordered_rows if row.external_id not in existing_external_ids)
     if len(existing_rows) + new_count > _MAX_SHORTLIST_ITEMS:
         raise BootstrapDiscoveryError(
@@ -2421,7 +2433,19 @@ def save_bootstrap_discovery_pocket_walk(
         and existing_pocket_identity[2]
         == (int(max_walk_minutes) if max_walk_minutes is not None else None)
     )
-    if refreshed_existing and same_pocket_identity:
+    # This route can be retried after a successful response. Only an actual
+    # change to either saved public observation (including its captured time)
+    # invalidates the self-report bound to this Pocket Walk. A byte-equivalent
+    # repeated save of the same pair/budget leaves progress untouched.
+    source_snapshot_changed = any(
+        item.external_id in previous_snapshots
+        and any(
+            previous_snapshots[item.external_id][key] != _shortlist_payload(item)[key]
+            for key in source_keys
+        )
+        for item in rows
+    )
+    if source_snapshot_changed and same_pocket_identity:
         refreshed_pocket = session.scalar(
             select(MemberDraftPocketWalk).where(
                 MemberDraftPocketWalk.journey_id == locked_journey.id,
