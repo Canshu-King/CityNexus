@@ -2353,6 +2353,7 @@ def save_bootstrap_discovery_pocket_walk(
         traveler_id=traveler_id,
         receipt_id=receipt_id,
         candidate_id=first_candidate_id,
+        refresh_existing=True,
     )
     second = save_bootstrap_shortlist_item(
         session,
@@ -2361,6 +2362,7 @@ def save_bootstrap_discovery_pocket_walk(
         traveler_id=traveler_id,
         receipt_id=receipt_id,
         candidate_id=second_candidate_id,
+        refresh_existing=True,
     )
     pocket = save_bootstrap_pocket_walk(
         session,
@@ -2629,6 +2631,7 @@ def save_bootstrap_shortlist_item(
     traveler_id: str,
     receipt_id: UUID,
     candidate_id: UUID,
+    refresh_existing: bool = False,
 ) -> dict[str, Any]:
     # A Journey-row write lock is the durable serialization point for the bounded
     # three-item invariant.  It works on SQLite (the deployed local store) and is
@@ -2681,6 +2684,67 @@ def save_bootstrap_shortlist_item(
         )
     )
     if existing is not None:
+        if refresh_existing:
+            # The traveler explicitly chose this *current* scoped discovery,
+            # but the OSM identity might already be on their private shortlist.
+            # Keep its stable ID/Pocket Walk references while replacing an old
+            # name/position/provider grade with THIS member's fresh observation.
+            # Never copy the shared RealPlaceCandidate's first-member fields.
+            observation = _scope_observation(row, scope)
+            osm = _osm_identity(
+                DiscoveryCandidate(
+                    provider_key=row.provider_key,
+                    external_id=row.external_id,
+                    name=observation["name"],
+                    category=observation["category"],
+                    latitude=observation["latitude"],
+                    longitude=observation["longitude"],
+                    tags=(), opening_hours={}, metadata={},
+                )
+            )
+            if osm is None:
+                raise BootstrapDiscoveryError(
+                    "BOOTSTRAP_IDENTITY_INVALID",
+                    "the current public observation has no valid OSM identity",
+                    status_code=422,
+                )
+            try:
+                observed_at = datetime.fromisoformat(str(observation["captured_at"])).astimezone(timezone.utc)
+                saved_at = datetime.fromisoformat(str(existing.captured_at)).astimezone(timezone.utc)
+            except (ValueError, TypeError) as exc:
+                raise BootstrapDiscoveryError(
+                    "BOOTSTRAP_OBSERVATION_TIME_INVALID",
+                    "a saved public observation has an invalid time",
+                    status_code=422,
+                ) from exc
+            if observed_at < saved_at:
+                raise BootstrapDiscoveryError(
+                    "BOOTSTRAP_DISCOVERY_OLDER_THAN_SAVED",
+                    "this result predates your saved public place; choose a newer discovery",
+                    status_code=409,
+                )
+            source_tags = {
+                key: str(observation["osm_tags"][key])
+                for key in ("opening_hours", "website", "contact:website", "phone", "contact:phone", "email")
+                if observation["osm_tags"].get(key) not in (None, "")
+            }
+            source_tags["_public_access_state"] = observation["public_access_state"]
+            source_kind = str(scope.get("source_kind") or "")
+            distance = scope.get("distance_m") if source_kind == "MANUAL_PUBLIC_CENTER" else None
+            existing.name = observation["name"]
+            existing.category = observation["category"]
+            existing.latitude = observation["latitude"]
+            existing.longitude = observation["longitude"]
+            existing.source_url = f"https://www.openstreetmap.org/{osm[0]}/{osm[1]}"
+            existing.source_provenance = _row_provider_provenance(row, scope=scope)
+            existing.captured_at = observation["captured_at"]
+            existing.opening_hours_json = _json(observation["opening_hours"])
+            existing.cost_evidence_json = _json(observation["cost_evidence"])
+            existing.source_tags_json = _json(source_tags)
+            existing.distance_m = float(distance) if distance is not None else None
+            existing.distance_basis = source_kind if distance is not None else None
+            existing.updated_at = _iso(_now())
+            session.flush()
         return _shortlist_payload(existing)
     saved_count = session.scalar(
         select(func.count(MemberDraftShortlistItem.id)).where(
