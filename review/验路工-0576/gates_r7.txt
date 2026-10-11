@@ -1,0 +1,13 @@
+验路工 · 0576 批二 r7 复尺（把最新现尖并进枝之后重跑，四把尺同代）
+[1] 现尖现取：`git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 8890f22fe37af40d2919db352be47043b1ea6162
+[2] 并尖前枝里不含现尖（`git merge-base --is-ancestor` 判否），枝已发布故 merge 不 rebase；只读预测 `git merge-tree --write-tree` 回 rc=0（一段输出），真 merge 同判 rc=0、冲突零枚
+[3] merge 提交 a0cae40ddf1d28d017db73eeadf24bf6e1fc1a98；批二那枚产品提交 57aa9e7d7f6a26400fd45196bc3512e9a5840dd4 仍在链上
+[4] 并进来的是别人两批（含我已落地的批三自身）：本枝现在同时带批二三枚键与批三三枚键，六枚键逐枚现读字典两侧各一（`live.adjustTodayOnly`、`live.remindMeLater`、`live.nothingToDecide` 二处、`live.acknowledgedStillOpen`、`live.confirmedUnchanged`、`live.confirmedAffected` 二处）
+[5] 组件侧现读（行号已随尖前移）：`frontend/src/features/execution/LiveRecovery.tsx:419`、`frontend/src/features/execution/LiveRecovery.tsx:428`、`frontend/src/features/execution/LiveRecovery.tsx:443`
+[6] 字典两侧现读：英文 `frontend/src/i18n/LocaleContext.tsx:377`、`frontend/src/i18n/LocaleContext.tsx:378`、`frontend/src/i18n/LocaleContext.tsx:379`；中文 `frontend/src/i18n/LocaleContext.tsx:1849`、`frontend/src/i18n/LocaleContext.tsx:1850`、`frontend/src/i18n/LocaleContext.tsx:1851`
+[7] 全量类型闸 `npx tsc -p tsconfig.typecheck.json --noEmit` 退出码零、`error TS` 零条：review/验路工-0576/typecheck_full_r7.txt:1
+[8] 上屏码闸 r4（ref=merge 提交、base=现尖）退出码零，判语原样 `files_judged=2 refuse=0 info=29 corpus=1254` 在 review/验路工-0576/gate_r4_candidate_r7.txt:1
+[9] 逐字节尺 r7（同一形制、基准换成现尖；脚本 review/验路工-0576/byte_proof_r7.py:1）：`PROVEN` 在 review/验路工-0576/byte_proof_r7.txt:5，`keys_checked=3 keys_reading_t_in_candidate=3` 在 `:4`，退出码零在 `:6`，两侧行号与值逐枚在 `:1`、`:2`、`:3`（中文那枚仍带全角句号）
+[10] 反控：同一把尺只喂现尖 = `FAILED`（review/验路工-0576/byte_proof_r7_negative.txt:14），退出码一（`review/验路工-0576/byte_proof_r7_negative.txt:15`）
+[11] 普查尺 r2：现尖 A 臂一百九十八处、总数七百二十四处（review/验路工-0576/census_text_tip_8890f22fe3.txt:1，机读段 review/验路工-0576/census_r2_tip_8890f22fe3.json:5）→ 本枝 A 臂一百九十五处、总数七百二十一处（review/验路工-0576/census_text_head_a0cae40ddf.txt:1，机读段 review/验路工-0576/census_r2_head_a0cae40ddf.json:5），差的三处正是批二那三句；B 两臂三百五十九处与一百六十七处两代未动
+[12] 结论：枝与线同代、四把尺同代全绿、可被落地腿直接吃；我没推权威线，force 零次

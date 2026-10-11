@@ -1,0 +1,15 @@
+FAIL live.adjustTodayOnly zh: candidate still renders the inline literal
+FAIL live.adjustTodayOnly en: candidate still renders the inline literal
+FAIL live.adjustTodayOnly: candidate does not read the key
+FAIL live.adjustTodayOnly: expected the key on both dictionary sides, found 0
+FAIL live.remindMeLater zh: candidate still renders the inline literal
+FAIL live.remindMeLater en: candidate still renders the inline literal
+FAIL live.remindMeLater: candidate does not read the key
+FAIL live.remindMeLater: expected the key on both dictionary sides, found 0
+FAIL live.nothingToDecide zh: candidate still renders the inline literal
+FAIL live.nothingToDecide en: candidate still renders the inline literal
+FAIL live.nothingToDecide: candidate does not read the key
+FAIL live.nothingToDecide: expected the key on both dictionary sides, found 0
+keys_checked=3 keys_reading_t_in_candidate=0
+FAILED
+NEG_RC=1
