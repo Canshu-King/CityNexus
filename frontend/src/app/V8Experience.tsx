@@ -1613,7 +1613,7 @@ export function V8Experience() {
       action === "choose-journey"
         ? {
             testId: "failure-choose-journey",
-            label: locale.startsWith("zh") ? "选一趟行程" : "Choose a trip",
+            label: t("failure.chooseTrip"),
             run: () => {
               setFailure(null);
               setSetupOpen(true);
@@ -1622,7 +1622,7 @@ export function V8Experience() {
         : action === "sign-in"
           ? {
               testId: "failure-sign-in",
-              label: locale.startsWith("zh") ? "重新登录" : "Sign in again",
+              label: t("failure.signInAgain"),
               run: () => {
                 setFailure(null);
                 window.location.reload();
@@ -1633,7 +1633,7 @@ export function V8Experience() {
                reloads - "later" is a recommendation about timing, not a refusal to act. */
             ? {
                 testId: "failure-retry-later",
-                label: locale.startsWith("zh") ? "等一会儿再问一次" : "Wait, then ask again",
+                label: t("failure.retryLater"),
                 run: () => {
                   setFailure(null);
                   setBusy(true);
@@ -1643,7 +1643,7 @@ export function V8Experience() {
             : action === "view-current-state"
               ? {
                   testId: "failure-view-current-state",
-                  label: locale.startsWith("zh") ? "看它现在是什么状态" : "Look at what it is now",
+                  label: t("failure.viewCurrentState"),
                   run: () => {
                     setFailure(null);
                     setBusy(true);
@@ -1653,7 +1653,7 @@ export function V8Experience() {
               : action === "read-only-cached"
             ? {
                 testId: "failure-read-cached",
-                label: locale.startsWith("zh") ? "看已保存的只读副本" : "Read the saved copy",
+                label: t("failure.readSavedCopy"),
                 run: () => {
                   setFailure(null);
                   setShowCachedCopy(true);
@@ -1661,7 +1661,7 @@ export function V8Experience() {
               }
             : {
                 testId: "failure-retry",
-                label: locale.startsWith("zh") ? "重试" : "Try again",
+                label: t("offline.retry"),
                 run: () => {
                   setFailure(null);
                   setBusy(true);
@@ -1709,14 +1709,14 @@ export function V8Experience() {
                 window.location.reload();
               }}
             >
-              {locale.startsWith("zh") ? "重试" : "Try again"}
+              {t("offline.retry")}
             </button>
           )}
         </div>
         {/* The record the classifier actually produced, kept on screen for the same reason telemetry
             keeps it: a false cause has to be discoverable without a screenshot. */}
         <details className="v8-advanced" data-testid="failure-attribution">
-          <summary>{locale.startsWith("zh") ? "归因详情" : "Attribution detail"}</summary>
+          <summary>{t("failure.attributionDetail")}</summary>
           <code data-testid="failure-attribution-line">{failure.attribution.telemetry}</code>
         </details>
       </section>

@@ -1482,6 +1482,12 @@ const en: Dict = {
   "setup.noVerdictReadThisRound": "no server verdict was read this round (a failed read is not the server saying it does not know)",
   "setup.serverNotAskedYet": "the server has not been asked yet",
   "setup.nameNotInServerVocabulary": "nothing the server consults names this spelling; it would have to resolve it over the network",
+  "failure.chooseTrip": "Choose a trip",
+  "failure.signInAgain": "Sign in again",
+  "failure.retryLater": "Wait, then ask again",
+  "failure.viewCurrentState": "Look at what it is now",
+  "failure.readSavedCopy": "Read the saved copy",
+  "failure.attributionDetail": "Attribution detail",
 };
 
 const zhCN: Dict = {
@@ -2870,6 +2876,12 @@ const zhCN: Dict = {
   "setup.noVerdictReadThisRound": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
   "setup.serverNotAskedYet": "还没问过服务器",
   "setup.nameNotInServerVocabulary": "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+  "failure.chooseTrip": "选一趟行程",
+  "failure.signInAgain": "重新登录",
+  "failure.retryLater": "等一会儿再问一次",
+  "failure.viewCurrentState": "看它现在是什么状态",
+  "failure.readSavedCopy": "看已保存的只读副本",
+  "failure.attributionDetail": "归因详情",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
