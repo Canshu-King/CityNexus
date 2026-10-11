@@ -1,0 +1,8 @@
+# 只读预测：我那两枝并在一处的后果（命令原样 git -C D:\moodle\CityNexus merge-tree --write-tree --name-only refs/heads/review/路牌工甲-0576-r1 refs/heads/review/路牌工甲-0585-r1）
+rc=1
+0854224b05cf7fc38cebe6604987025804865276
+frontend/src/i18n/LocaleContext.tsx
+Auto-merging frontend/src/i18n/LocaleContext.tsx
+CONFLICT (content): Merge conflict in frontend/src/i18n/LocaleContext.tsx
+0576_tip=03d3dbd183155f2bb579055a8a76cebddd97676b
+0585_tip=579ae000527af820865a8b1092d6b69ec4e2203b
