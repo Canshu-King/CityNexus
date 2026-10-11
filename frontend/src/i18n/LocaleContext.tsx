@@ -1480,6 +1480,12 @@ const en: Dict = {
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
   "simulation.notGiven": "not given",
+  /* ORD-0585: the store-busy wait hint. The Chinese screen already read these three bytes; the
+     English arm used to receive the same Chinese sentence because retryHint() had no language of
+     its own, so the English arms are the new half and the Chinese arms are a verbatim move. */
+  "simulation.retryWaitNotGiven": " (the server did not say how long to wait)",
+  "simulation.retryRightNow": " (you can try again right now)",
+  "simulation.retryInMs": " (try again in about {ms} ms)",
   "setup.stepFailedStaySearchOnly": "This step did not complete — the trip was created, but the stay search did not.",
   "setup.stillNeeded": "Still needed: ",
   "setup.groupRuleSupported": "What decides this group: the server recognizes this name and its catalog holds rows for it.",
@@ -2888,6 +2894,9 @@ const zhCN: Dict = {
   "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
   "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
   "simulation.notGiven": "服务器未给证据状态",
+  "simulation.retryWaitNotGiven": "（服务器没说要等多久）",
+  "simulation.retryRightNow": "（现在就可以再试）",
+  "simulation.retryInMs": "（约 {ms} 毫秒后再试）",
   "setup.stepFailedStaySearchOnly": "这一步没有成功——行程已创建，但住宿搜索没有完成。",
   "setup.stillNeeded": "还需要填写：",
   "setup.groupRuleSupported": "这一组看的是：服务器认得这个名字（有正式身份），目录里也有它的行。",
