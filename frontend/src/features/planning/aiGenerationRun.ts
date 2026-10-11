@@ -30,7 +30,6 @@
 import { useSyncExternalStore } from "react";
 import { markPendingContinuation } from "../../api/journeyContinuation";
 import { classifyReadFailure, type Attribution } from "../../lib/failureAttribution";
-import { englishCountNoun } from "../../lib/plural";
 import {
   fetchWithKeylessWriteDeadline,
   isKeylessWriteDeadlineMissed,
