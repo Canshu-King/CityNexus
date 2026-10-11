@@ -15,7 +15,7 @@
  *    evidence panel's job under 技术详情, not the copy's.
  */
 
-import { englishCountNoun } from "../../lib/plural";
+import { dictionaryCopy, dictionaryText } from "../../i18n/LocaleContext";
 export type CatalogueReadback = {
   /** `server` only when the door answered with a readable list; `unreadable` is a real state. */
   source: "server" | "unreadable";
@@ -25,9 +25,8 @@ export type CatalogueReadback = {
   httpStatus: number | null;
 };
 
-export const UNREADABLE_SENTENCE_ZH = "这座城有多少地点，我们刚才没能从服务器读到。";
-export const UNREADABLE_SENTENCE_EN =
-  "We could not read how many places this city has from the server just now.";
+export const UNREADABLE_SENTENCE_ZH = dictionaryCopy("zh-CN", "catalog.count.unreadable");
+export const UNREADABLE_SENTENCE_EN = dictionaryCopy("en", "catalog.count.unreadable");
 
 export async function readCityCatalogue(
   cityCode: string | undefined,
@@ -70,11 +69,7 @@ export function catalogueCountSentence(
   }
   const count = readback.placeCount;
   if (count === 0) {
-    return zh
-      ? "服务器回读：这座城我们现在一个地点都还没有。"
-      : "Read back from the server: we hold no places for this city yet.";
+    return dictionaryCopy(zh ? "zh-CN" : "en", "catalog.count.zero");
   }
-  return zh
-    ? `服务器回读：这座城我们现在有 ${count} 个地点，可以排进行程。`
-    : `Read back from the server: this city now has ${count} ${englishCountNoun(count, "place")} that can go into a trip.`;
+  return dictionaryText(zh ? "zh-CN" : "en", "catalog.count.some", { count });
 }

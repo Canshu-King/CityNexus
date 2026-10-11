@@ -21,6 +21,9 @@ const en: Dict = {
   "nav.import": "Import places",
   "planai.tripRequest": "Trip request",
   "planai.importPlacesCta": "Paste your own places and import them into this trip",
+  "plan.aiNotConfiguredNote": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.",
+  "plan.aiDisabledByOpsNote": "The AI switch on this server is switched off. That is an operator setting, not something you did. It names the switch, not the cause of any one failure.",
+  "plan.aiStateUnknownNote": "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.",
   "planning.workingOnYourRequest": "Working on your request.",
   "planning.couldNotFinishPlanning": "Could not finish planning",
   "planning.tryACityWeHaveDataFor": "Try a city we have data for",
@@ -396,6 +399,9 @@ const en: Dict = {
   "live.durationPending": "duration pending",
   "live.tripUpdated": "Your trip has been updated.",
   "live.remindLaterOk": "Okay, we will remind you later.",
+  "live.acknowledgedStillOpen": "Seen, still open: you have seen these changes but have not chosen a new arrangement yet.",
+  "live.confirmedUnchanged": "Confirmed bookings and your arrival/departure stay unchanged.",
+  "live.confirmedAffected": "Note: some confirmed items are affected.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -1483,6 +1489,12 @@ const en: Dict = {
   "setup.groupRuleSupported": "What decides this group: the server recognizes this name and its catalog holds rows for it.",
   "setup.groupRuleNeedsLookup": "What decides this group: nothing the server consults names this spelling, so it has no canonical identity and would have to be resolved over the network.",
   "setup.groupRuleUnknown": "What decides this group: no plannable verdict came back this round — the catalog holds nothing for it yet, it was asked and nothing answered, or nothing was read at all.",
+  "failure.chooseTrip": "Choose a trip",
+  "failure.signInAgain": "Sign in again",
+  "failure.retryLater": "Wait, then ask again",
+  "failure.viewCurrentState": "Look at what it is now",
+  "failure.readSavedCopy": "Read the saved copy",
+  "failure.attributionDetail": "Attribution detail",
 };
 
 const zhCN: Dict = {
@@ -1501,6 +1513,9 @@ const zhCN: Dict = {
   "nav.import": "导入地点",
   "planai.tripRequest": "旅行需求",
   "planai.importPlacesCta": "粘贴你自己的地点，导入这趟行程",
+  "plan.aiNotConfiguredNote": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。",
+  "plan.aiDisabledByOpsNote": "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。",
+  "plan.aiStateUnknownNote": "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。",
   "planning.workingOnYourRequest": "正在处理你的需求。",
   "planning.couldNotFinishPlanning": "暂时无法完成规划",
   "planning.tryACityWeHaveDataFor": "换一座有数据的城市",
@@ -1846,6 +1861,9 @@ const zhCN: Dict = {
   "live.durationPending": "时长待定",
   "live.tripUpdated": "已按新安排更新你的行程。",
   "live.remindLaterOk": "好的，稍后再提醒你。",
+  "live.acknowledgedStillOpen": "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。",
+  "live.confirmedUnchanged": "已确认的预订和到达/离开时间保持不变。",
+  "live.confirmedAffected": "注意：部分已确认内容会受影响。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
@@ -2872,6 +2890,12 @@ const zhCN: Dict = {
   "setup.groupRuleSupported": "这一组看的是：服务器认得这个名字（有正式身份），目录里也有它的行。",
   "setup.groupRuleNeedsLookup": "这一组看的是：服务器问过的词表和目录里都没有这个名字，也就是还没有正式身份，要联网解析才有答案。",
   "setup.groupRuleUnknown": "这一组看的是：这一轮拿不出可规划的判定——目录里暂时没有它的行、问过但没人回答，或者这一轮根本没读到。",
+  "failure.chooseTrip": "选一趟行程",
+  "failure.signInAgain": "重新登录",
+  "failure.retryLater": "等一会儿再问一次",
+  "failure.viewCurrentState": "看它现在是什么状态",
+  "failure.readSavedCopy": "看已保存的只读副本",
+  "failure.attributionDetail": "归因详情",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

@@ -1,0 +1,16 @@
+ORDER tip->r2->r3
+  live.adjustTodayOnly sides=2 uses=1
+  live.remindMeLater sides=2 uses=1
+  live.nothingToDecide sides=2 uses=1
+  live.acknowledgedStillOpen sides=2 uses=1
+  live.confirmedUnchanged sides=2 uses=1
+  live.confirmedAffected sides=2 uses=1
+ORDER tip->(r2+r3)
+  live.adjustTodayOnly sides=2 uses=1
+  live.remindMeLater sides=2 uses=1
+  live.nothingToDecide sides=2 uses=1
+  live.acknowledgedStillOpen sides=2 uses=1
+  live.confirmedUnchanged sides=2 uses=1
+  live.confirmedAffected sides=2 uses=1
+keys=12 wrong=0
+BOTH_ORDERS_CLEAN merge-tree rc=0 for every leg and all six keys keep two sides plus one read
