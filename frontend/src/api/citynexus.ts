@@ -1877,6 +1877,8 @@ export interface BootstrapPocketWalkStop {
 
 export interface BootstrapPocketWalkResponse {
   status: "POCKET_WALK_SAVED";
+  pocket_walk_id: string;
+  revision: number;
   journey_id: string;
   first_stop: BootstrapPocketWalkStop;
   second_stop: BootstrapPocketWalkStop;
@@ -1887,6 +1889,38 @@ export interface BootstrapPocketWalkResponse {
   withheld_fields: string[];
   plan_version_id: null;
   selected_place_id: null;
+  go_progress: BootstrapPocketWalkGoProgress;
+}
+
+export type BootstrapPocketWalkGoState =
+  | "NOT_STARTED"
+  | "HEADING_TO_FIRST"
+  | "FIRST_STOP_DONE_SELF_REPORTED"
+  | "HEADING_TO_SECOND"
+  | "WALK_DONE_SELF_REPORTED"
+  | "PAUSED";
+
+export interface BootstrapPocketWalkGoProgress {
+  state: BootstrapPocketWalkGoState;
+  progress_class: "USER_REPORTED_PROGRESS";
+  evidence_class: "GO_MODE_USER_REPORTED_PROVEN";
+  physical_arrival_state: "NOT_PHYSICAL_ARRIVAL_PROVEN";
+  progress_revision: number;
+  revision: number;
+  pocket_walk_revision: number;
+  pocket_walk_id: string;
+  first_shortlist_id: string;
+  second_shortlist_id: string;
+  paused_from_state: BootstrapPocketWalkGoState | null;
+  can_undo: boolean;
+  updated_at: string | null;
+  stale_label: string;
+}
+
+export interface BootstrapPocketWalkGoResponse {
+  journey_id: string;
+  pocket_walk: BootstrapPocketWalkResponse;
+  go_progress: BootstrapPocketWalkGoProgress;
 }
 
 export interface BootstrapSharedWalkPocketWalkSaveResponse {
@@ -3208,6 +3242,32 @@ export const cityNexusApi = {
     return requestJson(
       "/journeys/" + journeyId + "/bootstrap-shortlist/pocket-walk",
       { method: "DELETE", headers: travelerAuthHeaders() },
+    );
+  },
+
+  getBootstrapPocketWalkGo(journeyId: string): Promise<BootstrapPocketWalkGoResponse> {
+    return requestJson<BootstrapPocketWalkGoResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/pocket-walk/go",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  transitionBootstrapPocketWalkGo(
+    journeyId: string,
+    input: {
+      action: "START" | "REPORT_FIRST_DONE" | "START_SECOND" | "HEAD_TO_SECOND" | "REPORT_WALK_DONE" | "PAUSE" | "RESUME" | "UNDO";
+      expected_revision: number;
+      pocket_walk_revision: number;
+      idempotency_key: string;
+    },
+  ): Promise<BootstrapPocketWalkGoResponse> {
+    return requestJson<BootstrapPocketWalkGoResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shortlist/pocket-walk/go",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
     );
   },
 
