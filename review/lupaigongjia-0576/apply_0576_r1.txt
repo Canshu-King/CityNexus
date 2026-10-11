@@ -1,0 +1,22 @@
+ORD-0576 apply readout
+
+REPLACE discovery.checkThisDestination in DestinationPreparationPanel.tsx at line 435 (bytes_old=103 bytes_new=83)
+REPLACE discovery.retryLater in DestinationPreparationPanel.tsx at line 513 (bytes_old=83 bytes_new=69)
+REPLACE discovery.prepareThisDestination in DestinationPreparationPanel.tsx at line 523 (bytes_old=85 bytes_new=74)
+REPLACE detail.pretripScopeNote in PretripChecklistPanel.tsx at line 55 (bytes_old=612 bytes_new=43)
+
+字典插入：en 侧 4 行、zh 侧 4 行，各插在本块末尾
+KEY discovery.checkThisDestination
+  zh_bytes=21 zh=看看能不能规划
+  en_bytes=22 en=Check this destination
+KEY discovery.retryLater
+  zh_bytes=12 zh=稍后重试
+  en_bytes=15 en=Try again later
+KEY discovery.prepareThisDestination
+  zh_bytes=12 zh=开始准备
+  en_bytes=24 en=Prepare this destination
+KEY detail.pretripScopeNote
+  zh_bytes=252 zh=这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及等待你决定的恢复方案。完成状态由服务端事实自己消失，不需要你打勾；没跑过的检查不会被打勾，也不会出现在这里。
+  en_bytes=305 en=Only the two checks whose fields the contract declares live here: feasibility failures on this plan generation, and a recovery awaiting your decision. Items disappear when the server's fact changes -- nothing is ticked by hand, and a check that was not run is never shown as passed and never shown at all.
+
+改后行号 PANEL=[435, 513, 523] CHECK=55 DICT_en_first=1479 DICT_zh_first=2865

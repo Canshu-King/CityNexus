@@ -1,0 +1,16 @@
+ORD-0576 四臂对拍：现尖 8a44ea61ae 的原字面 vs 本树字典（走 dictionaryCopy 真跑）
+
+discovery.checkThisDestination (DestinationPreparationPanel.tsx)
+  zh IDENTICAL  bytes_orig=21 bytes_dict=21
+  en IDENTICAL  bytes_orig=22 bytes_dict=22
+discovery.retryLater (DestinationPreparationPanel.tsx)
+  zh IDENTICAL  bytes_orig=12 bytes_dict=12
+  en IDENTICAL  bytes_orig=15 bytes_dict=15
+discovery.prepareThisDestination (DestinationPreparationPanel.tsx)
+  zh IDENTICAL  bytes_orig=12 bytes_dict=12
+  en IDENTICAL  bytes_orig=24 bytes_dict=24
+detail.pretripScopeNote (PretripChecklistPanel.tsx)
+  zh IDENTICAL  bytes_orig=252 bytes_dict=252
+  en IDENTICAL  bytes_orig=305 bytes_dict=305
+
+合计：八臂比对，不同 0 臂

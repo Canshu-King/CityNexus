@@ -52,9 +52,7 @@ export function PretripChecklistPanel({ sources, onNavigate }: Props) {
             action. Measured at 390x844: 325 px (zh) / 440 px (en) -> 143 px / 207 px. */}
         {items.length > 0 && (
           <p className="cn-pretrip-note">
-            {zh
-              ? "这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及等待你决定的恢复方案。完成状态由服务端事实自己消失，不需要你打勾；没跑过的检查不会被打勾，也不会出现在这里。"
-              : "Only the two checks whose fields the contract declares live here: feasibility failures on this plan generation, and a recovery awaiting your decision. Items disappear when the server's fact changes -- nothing is ticked by hand, and a check that was not run is never shown as passed and never shown at all."}
+            {t("detail.pretripScopeNote")}
           </p>
         )}
       </div>

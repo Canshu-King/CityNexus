@@ -1,0 +1,12 @@
+字典键数：尖 en=1245 zh=1246 ；本树 en=1249 zh=1250
+本树新增 en=4 zh=4，删除 en=0 zh=0
+新增键名：detail.pretripScopeNote, discovery.checkThisDestination, discovery.prepareThisDestination, discovery.retryLater
+两侧对称差：['me.asksBeforeProtectedChange']
+尖上对称差：['me.asksBeforeProtectedChange']
+
+frontend/src/features/discovery/DestinationPreparationPanel.tsx
+  带汉字的可见行：尖=22 本树=19（差 -3）
+  同形成对（zh ? 「中」 : 「英」）：尖=12 本树=9（差 -3）
+frontend/src/features/checklist/PretripChecklistPanel.tsx
+  带汉字的可见行：尖=1 本树=0（差 -1）
+  同形成对（zh ? 「中」 : 「英」）：尖=1 本树=0（差 -1）

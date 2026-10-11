@@ -432,7 +432,7 @@ export function DestinationPreparationPanel({
           disabled={checking || busy || query.trim().length === 0}
           onClick={() => void check()}
         >
-          {checking ? (t("discovery.askingTheServer")) : zh ? "看看能不能规划" : "Check this destination"}
+          {checking ? (t("discovery.askingTheServer")) : t("discovery.checkThisDestination")}
         </button>
       </div>
 
@@ -510,7 +510,7 @@ export function DestinationPreparationPanel({
                 disabled={checking || !retryable}
                 onClick={() => void check()}
               >
-                {checking ? (t("discovery.tryingAgain")) : zh ? "稍后重试" : "Try again later"}
+                {checking ? (t("discovery.tryingAgain")) : t("discovery.retryLater")}
               </button>
             ) : action === "START_HYDRATION" ? (
               <button
@@ -520,7 +520,7 @@ export function DestinationPreparationPanel({
                 disabled={busy || Boolean(job && !job.terminal)}
                 onClick={() => void prepare()}
               >
-                {busy ? (t("discovery.starting")) : zh ? "开始准备" : "Prepare this destination"}
+                {busy ? (t("discovery.starting")) : t("discovery.prepareThisDestination")}
               </button>
             ) : action === "CHOOSE_ANOTHER_DESTINATION" ? (
               <button
