@@ -1,0 +1,54 @@
+ORD-0558 lane 活明细 — r6 gate readouts (the last two ActivityDetail arms: the radius note and the km arm)
+candidate branch review/活明细-0558-r6, parent 26c8b9791f3559f2f0985bc79325da238c79d6d5
+(the authoritative tip, ls-remote read again just before this cut; the same value as the parent,
+and both arms were still open on the line at that read).
+Draft rows being copied: _cn12_pl558draft2_1208.txt:16 (radius note) and _cn12_pl558draft2_1208.txt:18 (km arm).
+Toolchain: node v24.14.0, typescript 5.9.3, vite 7.3.6 — junction of
+D:/moodle/_qoder_integration_20260919/frontend/node_modules into wt/frontend/node_modules.
+
+[1] product face against the authoritative tip
+  cmd: git diff --numstat 26c8b9791f3559f2f0985bc79325da238c79d6d5 HEAD
+  one file, two English arms rewritten in place; no new import needed (the import landed with r5 at
+  frontend/src/features/trip/ActivityDetail.tsx:10); the Chinese arms at
+  frontend/src/features/trip/ActivityDetail.tsx:292 and frontend/src/features/trip/ActivityDetail.tsx:310
+  are untouched; dictionary, contract and backend faces untouched.
+
+[2] site A — the nearby-list note
+  before frontend/src/features/trip/ActivityDetail.tsx:293  "All within about 1500 m, ordered by straight-line distance."
+  after  frontend/src/features/trip/ActivityDetail.tsx:293  "All within about 1500 metres, ordered by straight-line distance."
+  measured: activity_ab_r3.txt:8 (and the singular/plural pair the helper would produce at :9).
+  Reported honestly: the radius is a literal — activity_ab_r3.txt:3 reads `const nearbyRadiusM = 1500;`
+  at frontend/src/features/trip/ActivityDetail.tsx:107 — so the number never reaches 1 on this screen and
+  this row has no singular path today. The reason it is taken is vocabulary: the arm landed with r5 at
+  frontend/src/features/trip/ActivityDetail.tsx:308 now prints "850 metres" on the same screen, and the
+  note above it would still say "1500 m".
+
+[3] site B — a stop further than a kilometre away, and one deliberate deviation from the draft
+  before frontend/src/features/trip/ActivityDetail.tsx:311  "1.0 km" / "2.4 km"
+  after  frontend/src/features/trip/ActivityDetail.tsx:311  "1.0 kilometres" / "2.4 kilometres"
+  The draft's own expression is kept in the readout instead of retyped (activity_ab_r3.txt:16). Copied
+  verbatim it yields "1.0 kilometre" at exactly 1000 m — measured in the same run:
+    metres=1000  tip="1.0 km"   branch="1.0 kilometres"   if_draft_copied="1.0 kilometre"   (activity_ab_r3.txt:18)
+    metres=2400  tip="2.4 km"   branch="2.4 kilometres"   if_draft_copied="2.4 kilometres"  (activity_ab_r3.txt:20)
+  Difference in one row out of four probes, and only there: the draft hands the helper
+  `metres / 1000 < 1 ? 2 : Math.round(metres / 1000)`, which turns the displayed "1.0" into the integer 1,
+  while frontend/src/lib/plural.ts:19 only reads "1" (a string "1.0" is not one). This lane hands the
+  helper the string that actually goes on screen, so a decimal keeps the plural English requires.
+  Same helper, same wording, one argument changed. If the commander prefers the draft's arithmetic,
+  it is a one-line revert of frontend/src/features/trip/ActivityDetail.tsx:311.
+
+[4] typecheck
+  cwd: wt/frontend
+  cmd: D:\moodle\_qoder_integration_20260919\frontend\node_modules\.bin\tsc.cmd -p tsconfig.check.json --noEmit
+  exit: 0
+  stdout: 0 lines
+
+[5] build
+  cwd: wt/frontend
+  cmd: npm run build
+  exit: 0
+  key lines: "2040 modules transformed." / "built in 8.34s"
+
+[6] not run this round, named on purpose
+  No browser/e2e pass: the readings above are the tip's and the branch's own template bytes evaluated
+  against lib/plural.ts transpiled from the tip. A live render is on request.

@@ -36,6 +36,7 @@ import {
   isKeylessWriteDeadlineMissed,
   keylessWriteUnknownReading,
 } from "../../lib/keylessWriteDeadline";
+import { englishCountNoun } from "../../lib/plural";
 
 /**
  * ORD-0369: who actually wrote `reasoning_summary`.

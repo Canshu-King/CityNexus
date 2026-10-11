@@ -1,0 +1,20 @@
+{
+ "arm": "codes-on-screen-r3",
+ "ref": "refs/heads/review/快剪工-0558-r1",
+ "base": "refs/heads/review/快剪工-0558-r1~3",
+ "require_name": true,
+ "only_added": true,
+ "files_judged": 1,
+ "problems": [],
+ "informational": [
+  {
+   "file": "frontend/src/features/poiimport/poiImportCopy.ts",
+   "line": 223,
+   "entry_line": 221,
+   "token": "third-party",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "en: \"Local parser; no third-party reading service.\","
+  }
+ ]
+}

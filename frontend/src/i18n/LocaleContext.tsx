@@ -72,7 +72,7 @@ const en: Dict = {
   "checkin.loading": "Reading the footprints…",
   "checkin.noJourney": "No trip is open, so nothing was asked of the server.",
   "checkin.readFailed": "This screen could not read the footprints from the server.",
-  "checkin.empty": "No footprints yet. Open the itinerary and tap 打卡 on a stop.",
+  "checkin.empty": "No footprints yet. Open the itinerary and tap \"Check in\" on a stop.",
   "checkin.count": "This trip holds {count} footprints.",
   "checkin.targetGone": "That stop has left the plan",
   "checkin.noteAbsent": "no note was written",
@@ -153,6 +153,12 @@ const en: Dict = {
   "trial.currency": "Currency",
   "trial.party": "Travelers",
   "trial.rooms": "Rooms (suggested)",
+  /* ORD-0557: the tail the entry form invents when it has to say, on its own, whether a field blocks
+     the review step and what an open-ended lower bound means. `lib/entryLimits.ts` carried this pair
+     inline; the copy here is the words that were already on the glass, unchanged. */
+  "trial.fieldRequired": "required",
+  "trial.fieldOptional": "optional",
+  "trial.rangeFrom": "from {min} {unit}",
   "trial.create": "Create journey",
   "trial.creating": "Creating…",
   "trial.cancel": "Back to current journey",
@@ -385,6 +391,8 @@ const en: Dict = {
   "live.compare": "Compare",
   "live.providerFacts": "Provider facts · unknown costs never become zero",
   "live.durationPending": "duration pending",
+  "live.tripUpdated": "Your trip has been updated.",
+  "live.remindLaterOk": "Okay, we will remind you later.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -716,6 +724,9 @@ const en: Dict = {
   "discovery.destination": "Destination",
   "discovery.preparePlaces": "Prepare places",
   "discovery.pickAnotherDestination": "Pick another destination",
+  "pending.title": "Not on a day yet",
+  "pending.sub": "Places this server says belong to this trip, in no day of it yet.",
+  "pending.loading": "Reading the pending set…",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -911,7 +922,7 @@ const en: Dict = {
   "main.notPreserved": "not preserved",
   "main.verifiedEvidenceAttached": "verified evidence attached",
   "main.evidenceUnavailable": "evidence unavailable",
-  "main.unnamedCommitmentServerGaveNoName": "未命名承诺 · 服务器没给名字",
+  "main.unnamedCommitmentServerGaveNoName": "unnamed commitment · the server gave no name",
   "inbox.smartDecision": "Smart decision:",
   "inbox.applied": "Saved to your trip",
   "inbox.applySmart": "Apply smart decision",
@@ -1357,6 +1368,9 @@ const en: Dict = {
   "detail.pretripAria": "Pre-trip checklist",
   "detail.pretripKicker": "Before you go",
   "detail.pretripHeading": "The two things the server reports as outstanding",
+  /* ORD-0557 兜底行: the sentence this panel paints when the derivation returns nothing. It used to be
+     typed inside `lib/pretripChecklist.ts`; the Chinese side is the words already on the glass. */
+  "detail.pretripNeitherOpen": "Neither one is open on this generation.",
   "detail.basisPrefix": "Basis: ",
   "detail.anchorPrefix": "Anchor: ",
   "detail.measuredHttpLabel": "This device's reading: HTTP",
@@ -1440,6 +1454,25 @@ const en: Dict = {
   // ── ORD-0557 stage header, two remaining rows ──
   "simulation.basis": "Basis",
   "simulation.evidence": "Evidence",
+  /* ORD-0557: the attribution titles `lib/failureAttribution.ts` writes inline. Key names and English
+     arms are copied from the CN draft table verbatim; both arms are the bytes those screens already
+     showed, so the move cannot change what a traveller reads. */
+  "lib.failureAttribution.tripNotOnServer": "This trip is not on this server",
+  "lib.failureAttribution.networkUnavailable": "Network unavailable",
+  "lib.failureAttribution.serviceUnavailable": "The service is temporarily unavailable",
+  "lib.failureAttribution.serverCouldNotRead": "The server could not read your trip",
+  "lib.failureAttribution.slowDownRate": "The server asked us to slow down",
+  "lib.failureAttribution.slowDownRetry": "The server asked us to slow down",
+  "lib.failureAttribution.stateAlreadyMoved": "The state already moved - this was not a failed read",
+  "lib.failureAttribution.needsFreshSignIn": "This trip needs a fresh sign-in",
+  "lib.failureAttribution.stepNotAllowed": "This server will not allow this step",
+  "lib.failureAttribution.readFailed": "This read failed",
+  "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
+  "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
+  "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
+  "simulation.notGiven": "not given",
+  "setup.stepFailedStaySearchOnly": "This step did not complete — the trip was created, but the stay search did not.",
+  "setup.stillNeeded": "Still needed: ",
 };
 
 const zhCN: Dict = {
@@ -1572,6 +1605,11 @@ const zhCN: Dict = {
   "trial.currency": "货币",
   "trial.party": "出行人数",
   "trial.rooms": "房间数（建议值，可调整）",
+  /* ORD-0557：入口表自己补的那截尾巴——这一格挡不挡审核、只有下限的区间怎么说。
+     原先写死在 `lib/entryLimits.ts`，这里的中文就是屏上原本那几个字。 */
+  "trial.fieldRequired": "必填",
+  "trial.fieldOptional": "选填",
+  "trial.rangeFrom": "{min} {unit}起",
   "trial.create": "创建行程",
   "trial.creating": "正在创建…",
   "trial.cancel": "返回当前行程",
@@ -1765,8 +1803,8 @@ const zhCN: Dict = {
   // ORD-0557 transport, not a rewrite: V14PreventivePanel prints these two
   // fallbacks as English literals in both locales, so the zh value is the exact
   // word already on screen. Wording is a separate order.
-  "recovery.noDominantMode": "no dominant mode",
-  "recovery.noneOnThisJourney": "none on this journey",
+  "recovery.noDominantMode": "没有主导模式",
+  "recovery.noneOnThisJourney": "这趟行程上没有",
   "recovery.changedFromActivity": "当前活动",
   "recovery.changedToActivity": "恢复的活动",
   "live.nothingDue": "现在没有待进行的步骤",
@@ -1793,6 +1831,8 @@ const zhCN: Dict = {
   "live.compare": "对比",
   "live.providerFacts": "供应商事实 · 未知费用不会被视为零",
   "live.durationPending": "时长待定",
+  "live.tripUpdated": "已按新安排更新你的行程。",
+  "live.remindLaterOk": "好的，稍后再提醒你。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
@@ -2108,6 +2148,9 @@ const zhCN: Dict = {
   "discovery.destination": "目的地",
   "discovery.preparePlaces": "准备地点",
   "discovery.pickAnotherDestination": "另选一个目的地",
+  "pending.title": "待规划",
+  "pending.sub": "这台服务器说这些地点属于这一程，还没排在任何一天。",
+  "pending.loading": "正在读待规划集合…",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
@@ -2275,26 +2318,26 @@ const zhCN: Dict = {
   "inbox.technicalDetail": "技术详情",
   "shell.reservationReviewFields": "这条还不能成为承诺：服务器说还缺 {fields}。它已经在下面「等你审核的确认单」里，补完缺的就点「确认并保护」。",
   "main.unnamedCommitmentServerGaveNoName": "未命名承诺 · 服务器没给名字",
-  "main.cityNexusRequestFailed": "CityNexus request failed",
-  "main.cityNexusRequestRefusedHttp": "CityNexus request refused (HTTP {status})",
-  "main.persistedOperationUpdate": "Persisted operation update",
-  "main.generalRecovery": "general recovery",
-  "main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage": "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.",
-  "main.noDominantFailureMode": "No dominant failure mode",
-  "main.notEvaluated": "not evaluated",
-  "main.validatedActivity": "validated Activity",
-  "main.noActionableTarget": "no actionable target",
-  "main.outcomeEvidence": "outcome evidence",
-  "main.explicitWins": "explicit wins",
-  "main.notReported": "not reported",
-  "main.noUpcomingActivity": "no upcoming activity",
-  "main.noActiveC4": "No active C4",
-  "main.notAvailable": "not available",
-  "main.verifiedFeasible": "verified feasible",
-  "main.notFeasible": "not feasible",
-  "main.notPreserved": "not preserved",
-  "main.verifiedEvidenceAttached": "verified evidence attached",
-  "main.evidenceUnavailable": "evidence unavailable",
+  "main.cityNexusRequestFailed": "CityNexus 请求失败",
+  "main.cityNexusRequestRefusedHttp": "CityNexus 请求被拒绝（HTTP {status}）",
+  "main.persistedOperationUpdate": "已持久化的操作更新",
+  "main.generalRecovery": "通用恢复",
+  "main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage": "激活一次常驻任务；之后的城市信号无需新的聊天消息即可发起恢复。",
+  "main.noDominantFailureMode": "没有主导的失败模式",
+  "main.notEvaluated": "未评估",
+  "main.validatedActivity": "通过校验的活动",
+  "main.noActionableTarget": "没有可行动的目标",
+  "main.outcomeEvidence": "结果证据",
+  "main.explicitWins": "显式胜出项",
+  "main.notReported": "未上报",
+  "main.noUpcomingActivity": "接下来没有活动",
+  "main.noActiveC4": "当前没有生效的 C4",
+  "main.notAvailable": "不可用",
+  "main.verifiedFeasible": "已验证可行",
+  "main.notFeasible": "不可行",
+  "main.notPreserved": "未被保留",
+  "main.verifiedEvidenceAttached": "已附带已验证证据",
+  "main.evidenceUnavailable": "证据不可用",
   "inbox.smartDecision": "智能决策：",
   "inbox.applied": "已应用到行程记忆",
   "inbox.applySmart": "应用智能决策",
@@ -2710,6 +2753,9 @@ const zhCN: Dict = {
   "detail.pretripAria": "行前清单",
   "detail.pretripKicker": "行前清单",
   "detail.pretripHeading": "服务端报出的两类待办",
+  /* ORD-0557 兜底行：这一面在两类检查都没有可列时念的那一句，原先写死在 `lib/pretripChecklist.ts`，
+     这里就是屏上原本那几个字。 */
+  "detail.pretripNeitherOpen": "这一代都没有报出。",
   "detail.basisPrefix": "依据：",
   "detail.anchorPrefix": "锚点：",
   "detail.measuredHttpLabel": "这台设备看到的回读：HTTP",
@@ -2788,9 +2834,61 @@ const zhCN: Dict = {
   // ── ORD-0557 stage header, two remaining rows ──
   "simulation.basis": "依据",
   "simulation.evidence": "证据",
+  /* ORD-0557：`lib/failureAttribution.ts` 里那些直接写在源码上的归因小标题。键名与英文臂逐字照 CN
+     草稿表抄；中文臂就是屏上此刻在显示的那串字，这是搬运不是改写。 */
+  "lib.failureAttribution.tripNotOnServer": "这台服务器上没有这一趟行程了",
+  "lib.failureAttribution.networkUnavailable": "网络不可用",
+  "lib.failureAttribution.serviceUnavailable": "服务暂时不可用",
+  "lib.failureAttribution.serverCouldNotRead": "服务器这次没能把行程读出来",
+  "lib.failureAttribution.slowDownRate": "服务器请我们慢一点",
+  "lib.failureAttribution.slowDownRetry": "服务器请我们慢一点",
+  "lib.failureAttribution.stateAlreadyMoved": "这件事的状态已经变了，不是没读到",
+  "lib.failureAttribution.needsFreshSignIn": "这一趟需要重新登录才能读",
+  "lib.failureAttribution.stepNotAllowed": "这一步这台服务器不允许",
+  "lib.failureAttribution.readFailed": "这一次没读到",
+  "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
+  "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
+  "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
+  "simulation.notGiven": "服务器未给证据状态",
+  "setup.stepFailedStaySearchOnly": "这一步没有成功——行程已创建，但住宿搜索没有完成。",
+  "setup.stillNeeded": "还需要填写：",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
+
+/* ORD-0557: the lookup for copy that lives in a module function rather than a component.
+   `lib/failureAttribution.ts` builds its titles inside `copyFor(attribution, zh)`, whose call sites sit
+   on ten other screens (first one `app/V8Experience.tsx:1595`), so that function cannot call the
+   `useT()` hook without a signature change reaching into other lanes' files. Same fallback order as
+   `t()`: this locale, then English, then the key itself. No `{param}` substitution and no `{plural:}`
+   expansion -- a line needing either still goes through `t()`. */
+export function dictionaryCopy(locale: TripLocale, key: string): string {
+  return dictionaries[locale][key] ?? dictionaries.en[key] ?? key;
+}
+
+/**
+ * ORD-0557: the same lookup for a caller that also has values to drop into the sentence.
+ *
+ * `lib/entryLimits.ts`, `lib/errorReceipt.ts` and `lib/pretripChecklist.ts` are plain functions handed
+ * their language by the caller, so they cannot call a hook; and `trial.rangeFrom` carries `{min}` and
+ * `{unit}` holes, which `dictionaryCopy` deliberately does not fill. The fallback order is not written
+ * twice -- this sits on top of `dictionaryCopy` and adds only the plural marker and the substitution
+ * that `t()` itself applies.
+ *
+ * `t()` is left alone on purpose: its body is pinned by a shipped gate
+ * (`e2e/qoder-a68b0631-label-anchors-not-line-numbers-r1.spec.ts`, arm A5), which greps the two
+ * dictionary arms out of that callback itself, so folding the three together reddens another lane's
+ * gate. Whoever can move that gate should move all three bodies in one step.
+ */
+export function dictionaryText(
+  locale: TripLocale,
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  const counted = expandPluralMarkers(dictionaryCopy(locale, key), params);
+  if (!params) return counted;
+  return counted.replace(/\{(\w+)\}/g, (_, k: string) => String(params[k] ?? `{${k}}`));
+}
 
 type LocaleState = {
   locale: TripLocale;

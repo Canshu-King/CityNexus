@@ -7,6 +7,7 @@ import { RawFactsPanel } from "../../components/RawFactsPanel";
 import type { RawFacts } from "../../lib/rawFacts";
 import { useElapsedSeconds } from "../../lib/waitClock";
 import { ENTRY_FIELDS, entryFieldBounds, entryFieldLabel, entryFieldName, entryFieldSuffix } from "../../lib/entryLimits";
+import { englishCountNoun } from "../../lib/plural";
 
 /**
  * ORD-0036 (d) -- where the wizard's state lives.
@@ -286,7 +287,7 @@ export function notFoundCauseWords(
       title: t("setup.thePlacesAreHereButNoneHasACoordinate"),
       body: zh
         ? `服务器认得「${spell}」，目录里有 ${n} 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。`
-        : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
+        : `The server names "${spell}" and the catalog holds ${n} ${englishCountNoun(n, "place")}, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
     };
   }
 
@@ -297,7 +298,7 @@ export function notFoundCauseWords(
       title: t("setup.thisDestinationHasNotBeenPrepared"),
       body: zh
         ? `服务器认得「${spell}」，但还缺 ${count} 类事实（${missing}），所以现在直接规划会缺依据。可以先准备。`
-        : `The server names "${spell}" but is short ${count} categories (${missing}), so planning now would lack evidence. You can prepare it first.`,
+        : `The server names "${spell}" but is short ${count} ${englishCountNoun(count, "category")} (${missing}), so planning now would lack evidence. You can prepare it first.`,
     };
   }
 
@@ -338,7 +339,7 @@ function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => 
   if (row.canonical_destination_id) {
     return zh
       ? `服务器认得它，目录里有 ${row.place_count ?? 0} 条，还缺 ${row.missing_categories.length} 类事实`
-      : `the server names it, holds ${row.place_count ?? 0} rows and is short ${row.missing_categories.length} categories`;
+      : `the server names it, holds ${row.place_count ?? 0} ${englishCountNoun(row.place_count ?? 0, "row")} and is short ${row.missing_categories.length} ${englishCountNoun(row.missing_categories.length, "category")}`;
   }
   return t("setup.theServerGaveSomeOtherVerdict");
 }
@@ -1468,9 +1469,7 @@ export function JourneyTrialSetup({
         <div className="trial-create-error" data-testid="trial-create-error" role="alert">
           <strong>
             {journeyCreated
-              ? zh
-                ? "这一步没有成功——行程已创建，但住宿搜索没有完成。"
-                : "This step did not complete — the trip was created, but the stay search did not."
+              ? t("setup.stepFailedStaySearchOnly")
               : zh
                 ? "这一步没有成功，行程还没有创建。"
                 : "This step did not complete — no journey was created."}
@@ -1527,9 +1526,7 @@ export function JourneyTrialSetup({
               rather than as its own row, because a row of buttons pushed this wizard's sticky CTA
               under the fixed simulation ball (measured by the mobile gate at 360x800: 33px). */}
           {missingNow.length
-            ? zh
-              ? "还需要填写："
-              : "Still needed: "
+            ? t("setup.stillNeeded")
             : ""}
           {missingNow.map((field, index) => (
             <span key={field.target}>
