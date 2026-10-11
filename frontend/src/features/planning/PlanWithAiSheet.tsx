@@ -723,9 +723,7 @@ export function PlanWithAiSheet({
           <div>
             <b id="plan-ai-title">{t("itinerary.planWithAi")}</b>
             <small>
-              {zh
-                ? "用你自己的话描述这趟旅行，越具体越好。"
-                : "Describe the trip in your own words — the more specific the better."}
+              {t("plan.describeTripHint")}
             </small>
           </div>
           <button type="button" className="plan-ai-close" aria-label={t("shell.close")} onClick={leave}>
@@ -806,17 +804,13 @@ export function PlanWithAiSheet({
             data-ai-state={aiState}
           >
             {aiState === "configured_unverified" &&
-              (zh
-                ? "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。"
-                : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
+              (t("plan.aiConfiguredUnverifiedNote"))}
             {aiState === "not_configured" &&
               (t("plan.aiNotConfiguredNote"))}
             {aiState === "disabled_by_ops" &&
               (t("plan.aiDisabledByOpsNote"))}
             {aiState === "provider_refused" &&
-              (zh
-                ? "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。"
-                : "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.")}
+              (t("plan.aiProviderRefusedNote"))}
             {aiState === "unknown" &&
               (t("plan.aiStateUnknownNote"))}
           </p>
