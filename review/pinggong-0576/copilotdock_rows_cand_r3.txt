@@ -1,0 +1,12 @@
+TIP 8d02703d12ea FILE frontend/src/features/agent/CopilotDock.tsx TOTAL 11
+358	358	? "正在停止…" : "Stopping…"
+362	362	? "已通过 CityNexus 停止" : "Stopped through CityNexus"
+441	441	? "建议与受保护安排" : "Suggestions & protected plans"
+444	444	? "已经生成建议，展开高级详情可以看到过程。" : "A suggestion is ready; open advanced detail to see how it was produced."
+445	445	? "还没有需要你决定的改动。" : "There is nothing for you to decide yet."
+449	449	? "受保护承诺" : "Protected commitment"
+452	452	? "受保护活动" : "Protected activity"
+466	466	? "修改 / 审核" : "Modify / Review"
+879	880	? "回答只依据已核验的行程事实，不会自己改动你的安排。"\n                  : "Answers use verified journey facts only and never change your plan."
+886	886	? "问我为什么这样安排、试算变化，或报告已经确认的中断。" : "Ask why, preview a change, or report a confirmed disruption."
+889	889	? "你" : "You"
