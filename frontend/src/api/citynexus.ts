@@ -1745,6 +1745,26 @@ export interface BootstrapCitySearchResponse {
   results: BootstrapCitySearchResult[];
 }
 
+export interface BootstrapSharedWalkObject {
+  osm_type: "node" | "way" | "relation";
+  osm_id: string;
+  source_url: string;
+}
+
+export interface BootstrapSharedWalkLookupResponse {
+  journey_id: string;
+  status: "SHARED_LOOKUP_RESULTS" | "SHARED_LOOKUP_NO_MATCH" | "LOOKUP_BLOCKED";
+  lookup_state: "VERIFIED_PUBLIC_IDENTITIES" | "PARTIAL_PUBLIC_IDENTITIES" | "LOOKUP_BLOCKED";
+  failure_code: string | null;
+  receipt_id: string | null;
+  expires_at: string | null;
+  provider: "overpass";
+  provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  attempts: Array<Record<string, unknown>>;
+  verified_count: number;
+  candidates: BootstrapDiscoveryCandidate[];
+}
+
 export interface BootstrapMapPreviewResponse {
   preview_id: string;
   status: "PUBLIC_DESTINATION_READY";
@@ -2882,6 +2902,20 @@ export const cityNexusApi = {
   ): Promise<BootstrapCitySearchResponse> {
     return requestJson<BootstrapCitySearchResponse>(
       "/journeys/" + journeyId + "/bootstrap-city-search",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+      },
+    );
+  },
+
+  lookupBootstrapSharedWalk(
+    journeyId: string,
+    input: { objects: BootstrapSharedWalkObject[]; provider_consent: boolean },
+  ): Promise<BootstrapSharedWalkLookupResponse> {
+    return requestJson<BootstrapSharedWalkLookupResponse>(
+      "/journeys/" + journeyId + "/bootstrap-shared-walk/lookup",
       {
         method: "POST",
         headers: travelerAuthHeaders(),

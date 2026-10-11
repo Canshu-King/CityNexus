@@ -1136,6 +1136,124 @@ class OverpassPOIProvider:
             )
         return candidates, attempts
 
+    def lookup_exact_with_evidence(
+        self,
+        objects: list[tuple[str, str]],
+        *,
+        max_attempts: int = 1,
+    ) -> tuple[list[DiscoveryCandidate], list[dict[str, Any]]]:
+        """Look up a bounded set of exact public OSM objects in one union query.
+
+        R101 deliberately does not accept a center, category, bearer or Journey
+        value here.  The only request body is the two already validated public
+        identities, and the default is one controlled provider attempt.
+        """
+
+        if len(objects) != 2 or max_attempts != 1:
+            raise ValueError("exact shared-walk lookup requires exactly two objects and one attempt")
+        normalized = []
+        seen: set[tuple[str, str]] = set()
+        for osm_type, osm_id in objects:
+            kind = str(osm_type).strip().lower()
+            identifier = str(osm_id).strip()
+            if kind not in {"node", "way", "relation"} or not re.fullmatch(r"[1-9][0-9]*", identifier):
+                raise ValueError("invalid exact OSM identity")
+            key = (kind, identifier)
+            if key in seen:
+                raise ValueError("duplicate exact OSM identity")
+            seen.add(key)
+            normalized.append(key)
+        # Overpass requires one explicit union block; two sequential statements
+        # followed by `out` would expose only the final object in some mirrors.
+        statements = "".join(f"{kind}({identifier});" for kind, identifier in normalized)
+        query_text = f"[out:json][timeout:10];({statements});out center tags;"
+        endpoint = f"{self.base_url}/interpreter"
+        started = time.monotonic()
+        attempts: list[dict[str, Any]] = []
+        elements: list[dict[str, Any]] = []
+        try:
+            response = self.client.post(
+                endpoint,
+                data={"data": query_text},
+                headers={"User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"},
+            )
+            status = response.status_code
+            response.raise_for_status()
+            payload = response.json()
+            elements = payload.get("elements", []) if isinstance(payload, dict) else []
+            if not isinstance(elements, list):
+                raise ValueError("exact Overpass response elements must be a list")
+            attempts.append(
+                {
+                    "endpoint": endpoint,
+                    "answered": True,
+                    "http_status": status,
+                    "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                    "elements": len(elements),
+                    "requested_objects": len(normalized),
+                }
+            )
+        except (httpx.HTTPError, ValueError, TypeError) as exc:
+            attempts.append(
+                {
+                    "endpoint": endpoint,
+                    "answered": False,
+                    "http_status": getattr(getattr(exc, "response", None), "status_code", None),
+                    "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                    "error": f"{type(exc).__name__}: {str(exc)[:160]}",
+                    "requested_objects": len(normalized),
+                }
+            )
+            exc.provider_attempts = attempts  # type: ignore[attr-defined]
+            raise
+
+        requested = set(normalized)
+        candidates: list[DiscoveryCandidate] = []
+        for row in elements:
+            if not isinstance(row, dict):
+                continue
+            kind = str(row.get("type") or "").lower()
+            identifier = str(row.get("id") or "")
+            if (kind, identifier) not in requested:
+                continue
+            tags_data = row.get("tags") or {}
+            if not isinstance(tags_data, dict):
+                tags_data = {}
+            center = row.get("center") or row
+            try:
+                lat = float(center["lat"])
+                lon = float(center["lon"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            category = str(
+                tags_data.get("tourism")
+                or tags_data.get("amenity")
+                or tags_data.get("leisure")
+                or tags_data.get("shop")
+                or "public_place"
+            )
+            name = str(tags_data.get("name") or "").strip()
+            if not name:
+                continue
+            candidates.append(
+                DiscoveryCandidate(
+                    provider_key=self.provider_key,
+                    external_id=_external_id(self.provider_key, f"{kind}/{identifier}"),
+                    name=name,
+                    category=category,
+                    latitude=lat,
+                    longitude=lon,
+                    tags=tuple(sorted({category, "real_city", "shared_public_reference"})),
+                    opening_hours=normalize_opening_hours(tags_data.get("opening_hours")),
+                    metadata={"osm_id": f"{kind}/{identifier}", "tags": tags_data},
+                    distance_m=None,
+                    cost_evidence=cost_evidence_from_tags(tags_data, source="overpass"),
+                )
+            )
+            if len(candidates) >= len(normalized):
+                break
+        return candidates, attempts
+
     def close(self) -> None:
         if self._owned_client:
             self.client.close()

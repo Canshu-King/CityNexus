@@ -274,6 +274,7 @@ from app.execution.bootstrap_discovery import (
     preview_bootstrap_candidate,
     save_bootstrap_shortlist_item,
     select_bootstrap_candidate,
+    lookup_bootstrap_shared_walk,
 )
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
@@ -497,6 +498,7 @@ from app.schemas import (
     BootstrapTwoStopWalkabilityRequest,
     BootstrapAdaptiveShortWalkRequest,
     BootstrapPocketWalkSaveRequest,
+    BootstrapSharedWalkLookupRequest,
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     FactAcquisitionRequest,
@@ -3475,6 +3477,37 @@ def search_bootstrap_journey_city(
             query=payload.query,
             provider_consent=payload.provider_consent,
             limit=payload.limit,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-shared-walk/lookup")
+def lookup_bootstrap_shared_walk_route(
+    journey_id: UUID,
+    payload: BootstrapSharedWalkLookupRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Verify two pasted public OSM identities for this signed recipient only."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey.id)
+    )
+    try:
+        result = lookup_bootstrap_shared_walk(
+            session,
+            journey,
+            member=member,
+            traveler_id=principal.traveler_id,
+            objects=[item.model_dump() for item in payload.objects],
+            provider_consent=payload.provider_consent,
         )
         session.commit()
         return result
