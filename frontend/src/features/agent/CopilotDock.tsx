@@ -355,11 +355,11 @@ export function NativeMissionTimeline({
 
   const stop = async () => {
     if (!active) return;
-    setActionState(zh ? "正在停止…" : "Stopping…");
+    setActionState(t("copilot.action.stopping"));
     try {
       await cityNexusApi.stopNativeHermesRun(data.journey.id, run.run_id);
       setRunState("stopped");
-      setActionState(zh ? "已通过 CityNexus 停止" : "Stopped through CityNexus");
+      setActionState(t("copilot.action.stoppedViaCitynexus"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -463,7 +463,7 @@ export function NativeMissionTimeline({
           <div>
             <button type="button" className="v8-primary" onClick={() => void approve()}>{t("copilot.approval.approve")}</button>
             <button type="button" className="v8-secondary" onClick={() => void stop()}>{t("copilot.approval.reject")}</button>
-            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{zh ? "修改 / 审核" : "Modify / Review"}</button>
+            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{t("copilot.approval.modifyReview")}</button>
           </div>
         </div>
       )}

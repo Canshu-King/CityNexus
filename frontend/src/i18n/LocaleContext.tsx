@@ -1522,6 +1522,9 @@ const en: Dict = {
   "copilot.proposal.sectionTitle": "Suggestions & protected plans",
   "copilot.proposal.ready": "A suggestion is ready; open advanced detail to see how it was produced.",
   "copilot.proposal.nothingToDecide": "There is nothing for you to decide yet.",
+  "copilot.action.stopping": "Stopping…",
+  "copilot.action.stoppedViaCitynexus": "Stopped through CityNexus",
+  "copilot.approval.modifyReview": "Modify / Review",
 };
 
 const zhCN: Dict = {
@@ -2950,6 +2953,9 @@ const zhCN: Dict = {
   "copilot.proposal.sectionTitle": "建议与受保护安排",
   "copilot.proposal.ready": "已经生成建议，展开高级详情可以看到过程。",
   "copilot.proposal.nothingToDecide": "还没有需要你决定的改动。",
+  "copilot.action.stopping": "正在停止…",
+  "copilot.action.stoppedViaCitynexus": "已通过 CityNexus 停止",
+  "copilot.approval.modifyReview": "修改 / 审核",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
