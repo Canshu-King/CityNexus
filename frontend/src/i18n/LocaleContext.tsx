@@ -978,14 +978,6 @@ const en: Dict = {
   "mobility.noProvider": "No provider evidence",
   "mobility.letChoose": "Let CityNexus choose",
   "mobility.note": "Costs are shown only when captured from a provider. Unknown is not treated as zero.",
-  "sceneClock.executionCursor": "the execution cursor",
-  "sceneClock.journeyStart": "the journey's start",
-  "sceneClock.serverGaveNoBasis": "the server gave no basis",
-  "sceneClock.frozenEvidenceCarriesExpiry": "the frozen evidence carries an expiry",
-  "sceneClock.noFrozenEvidenceOnThisTrip": "no frozen evidence on this trip",
-  "sceneClock.noScenarioOnStage": "no scenario on stage",
-  "sceneClock.sealedTravelDataHasNoExpiry": "this trip's travel data is sealed, with no expiry",
-  "sceneClock.evidenceReferenceDoesNotLineUp": "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)",
 
   // ── Stay Explorer ──
   "stay.kicker": "Stay Explorer · captured evidence",
@@ -2401,14 +2393,6 @@ const zhCN: Dict = {
   "mobility.noProvider": "无供应商证据",
   "mobility.letChoose": "让 CityNexus 选择",
   "mobility.note": "费用仅在从供应商采集时显示。未知不被视为零。",
-  "sceneClock.executionCursor": "执行游标",
-  "sceneClock.journeyStart": "行程起点",
-  "sceneClock.serverGaveNoBasis": "服务器没有说明依据",
-  "sceneClock.frozenEvidenceCarriesExpiry": "这批证据带冻结期",
-  "sceneClock.noFrozenEvidenceOnThisTrip": "这趟没有冻结证据",
-  "sceneClock.noScenarioOnStage": "台上没有场景",
-  "sceneClock.sealedTravelDataHasNoExpiry": "这趟的出行数据是封存的，没有到期时间",
-  "sceneClock.evidenceReferenceDoesNotLineUp": "证据的引用对不上（服务器说有封存记录，但引用不一致）",
 
   // ── 住宿选择 ──
   "stay.kicker": "住宿选择 · 已采集证据",
