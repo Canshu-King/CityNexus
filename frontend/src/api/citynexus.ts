@@ -1701,6 +1701,7 @@ export interface BootstrapDiscoveryCandidate {
 export interface BootstrapDiscoveryResponse {
   journey_id: string;
   status: "LIVE_RESULTS" | "LIVE_ZERO_RESULTS" | "PROVIDER_DISABLED" | "PROVIDER_UNAVAILABLE" | "RATE_LIMITED";
+  result_state?: "FOUND_2+" | "PARTIAL_1" | "ZERO" | "UNAVAILABLE" | "DISABLED";
   receipt_id: string | null;
   expires_at: string | null;
   source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
@@ -1709,6 +1710,19 @@ export interface BootstrapDiscoveryResponse {
   attempts: Array<Record<string, unknown>>;
   candidates: BootstrapDiscoveryCandidate[];
   failure_code?: string;
+  readiness?: BootstrapDiscoveryReadinessResponse;
+}
+
+export interface BootstrapDiscoveryReadinessResponse {
+  journey_id?: string;
+  provider: "overpass";
+  provider_name: string;
+  expected_recipient: string;
+  status: "READY" | "BLOCKED";
+  reason_code: "PROVIDER_DISABLED" | "LIVE_MODE_REQUIRED" | "ENDPOINT_NOT_APPROVED" | "READY" | string;
+  provider_grade: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  external_request_allowed: boolean;
+  test_only: boolean;
 }
 
 export interface BootstrapSelectionResponse {
@@ -2918,6 +2932,13 @@ export const cityNexusApi = {
         headers: travelerAuthHeaders(),
         body: JSON.stringify(input),
       },
+    );
+  },
+
+  getBootstrapDiscoveryReadiness(journeyId: string): Promise<BootstrapDiscoveryReadinessResponse> {
+    return requestJson<BootstrapDiscoveryReadinessResponse>(
+      "/journeys/" + journeyId + "/bootstrap-discovery/readiness",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 
