@@ -2368,6 +2368,9 @@ def save_bootstrap_discovery_pocket_walk(
         }
         for row in existing_rows
     }
+    previous_cost_evidence = {
+        row.external_id: row.cost_evidence_json for row in existing_rows
+    }
     existing_pocket = session.scalar(
         select(MemberDraftPocketWalk).where(
             MemberDraftPocketWalk.journey_id == locked_journey.id,
@@ -2439,9 +2442,12 @@ def save_bootstrap_discovery_pocket_walk(
     # repeated save of the same pair/budget leaves progress untouched.
     source_snapshot_changed = any(
         item.external_id in previous_snapshots
-        and any(
-            previous_snapshots[item.external_id][key] != _shortlist_payload(item)[key]
-            for key in source_keys
+        and (
+            any(
+                previous_snapshots[item.external_id][key] != _shortlist_payload(item)[key]
+                for key in source_keys
+            )
+            or previous_cost_evidence[item.external_id] != item.cost_evidence_json
         )
         for item in rows
     )
