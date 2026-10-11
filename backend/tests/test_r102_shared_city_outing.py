@@ -243,3 +243,48 @@ def test_r102_native_selection_reads_member_scope_not_first_shared_row(monkeypat
     assert error.value.code == "BOOTSTRAP_OPENING_UNVERIFIED"
     assert not session.add.called
     assert not session.flush.called
+
+
+def test_r103_atomic_friend_import_requires_exact_member_receipt_before_writes() -> None:
+    """Ordinary discovery candidates cannot be laundered into friend-import authority."""
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from uuid import UUID
+
+    from app.execution.bootstrap_discovery import (
+        BootstrapDiscoveryError,
+        save_bootstrap_shared_walk_pocket_walk,
+    )
+
+    candidate_id = "00000000-0000-4000-8000-000000001031"
+    receipt_id = "00000000-0000-4000-8000-000000001032"
+    first = SimpleNamespace(
+        id=candidate_id, journey_id="r103-journey", provider_key="overpass",
+        status="BOOTSTRAP_PRIVATE",
+        evidence_json=json.dumps({
+            "bootstrap": True,
+            "bootstrap_scopes": [{
+                "member_id": "owner", "traveler_id": "owner-traveler",
+                "receipt_id": receipt_id,
+                "source_kind": "MANUAL_PUBLIC_CENTER",
+                "expires_at": "2099-01-01T00:00:00+00:00",
+            }],
+        }),
+    )
+    session = MagicMock()
+    session.scalar.return_value = first
+    with pytest.raises(BootstrapDiscoveryError) as error:
+        save_bootstrap_shared_walk_pocket_walk(
+            session,
+            SimpleNamespace(id="r103-journey", status="DRAFT", active_plan_version_id=None),
+            member=SimpleNamespace(id="owner"),
+            traveler_id="owner-traveler",
+            receipt_id=UUID(receipt_id),
+            first_candidate_id=UUID(candidate_id),
+            second_candidate_id=UUID("00000000-0000-4000-8000-000000001033"),
+            max_walk_minutes=None,
+        )
+    assert error.value.code == "SHARED_WALK_EXACT_RECEIPT_REQUIRED"
+    session.execute.assert_not_called()
+    session.flush.assert_not_called()
+    session.add.assert_not_called()
