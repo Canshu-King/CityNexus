@@ -313,3 +313,76 @@ def test_r108_new_receipt_refreshes_same_osm_snapshot_once_and_resets_go() -> No
             ) is None
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_r108_identical_two_stop_save_does_not_erase_go_progress() -> None:
+    """A repeated identical confirmed save is not an authorized replan."""
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", "r108-identical-save-secret-0123456789")
+    client = TestClient(main_module.app)
+    try:
+        global _RECEIPT
+        owner, collaborator, journey_id, member_id = _context(client)
+        owner_headers = {"Authorization": f"Bearer {owner['access_token']}"}
+        _RECEIPT = str(uuid4())
+        first = _candidate(
+            journey_id=journey_id,
+            member_id=member_id,
+            traveler_id=owner["id"],
+            receipt_id=_RECEIPT,
+            osm_id=108041,
+        )
+        second = _candidate(
+            journey_id=journey_id,
+            member_id=member_id,
+            traveler_id=owner["id"],
+            receipt_id=_RECEIPT,
+            osm_id=108042,
+            latitude=31.2314,
+            longitude=121.4747,
+        )
+        first_save = _save_walk(client, journey_id, owner_headers, first, second)
+        revision = first_save["pocket_walk"]["revision"]
+        walk_id = first_save["pocket_walk"]["pocket_walk_id"]
+        start = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist/pocket-walk/go",
+            headers=owner_headers,
+            json={
+                "action": "START",
+                "expected_revision": 0,
+                "pocket_walk_revision": revision,
+                "idempotency_key": str(uuid4()),
+            },
+        )
+        assert start.status_code == 200, start.text
+        assert start.json()["go_progress"]["state"] == "HEADING_TO_FIRST"
+        assert start.json()["go_progress"]["revision"] == 1
+
+        repeated = _save_walk(client, journey_id, owner_headers, first, second)
+        assert repeated["pocket_walk"]["revision"] == revision
+        assert repeated["pocket_walk"]["pocket_walk_id"] == walk_id
+        assert repeated["pocket_walk"]["go_progress"]["state"] == "HEADING_TO_FIRST"
+        assert repeated["pocket_walk"]["go_progress"]["revision"] == 1
+        assert len(repeated["items"]) == 2
+
+        server = client.get(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+            headers=owner_headers,
+        )
+        assert server.status_code == 200, server.text
+        assert server.json()["pocket_walk"]["go_progress"]["state"] == "HEADING_TO_FIRST"
+        collaborator_state = client.get(
+            f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",
+            headers={"Authorization": f"Bearer {collaborator['access_token']}"},
+        )
+        assert collaborator_state.status_code == 200, collaborator_state.text
+        assert collaborator_state.json()["pocket_walk"] is None
+        with SessionLocal() as session:
+            assert session.scalar(
+                select(MemberDraftPocketWalkProgress).where(
+                    MemberDraftPocketWalkProgress.journey_id == journey_id,
+                    MemberDraftPocketWalkProgress.traveler_id == owner["id"],
+                )
+            ) is not None
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
