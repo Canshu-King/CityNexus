@@ -1469,9 +1469,7 @@ export function JourneyTrialSetup({
         <div className="trial-create-error" data-testid="trial-create-error" role="alert">
           <strong>
             {journeyCreated
-              ? zh
-                ? "这一步没有成功——行程已创建，但住宿搜索没有完成。"
-                : "This step did not complete — the trip was created, but the stay search did not."
+              ? t("setup.stepFailedStaySearchOnly")
               : zh
                 ? "这一步没有成功，行程还没有创建。"
                 : "This step did not complete — no journey was created."}
@@ -1528,9 +1526,7 @@ export function JourneyTrialSetup({
               rather than as its own row, because a row of buttons pushed this wizard's sticky CTA
               under the fixed simulation ball (measured by the mobile gate at 360x800: 33px). */}
           {missingNow.length
-            ? zh
-              ? "还需要填写："
-              : "Still needed: "
+            ? t("setup.stillNeeded")
             : ""}
           {missingNow.map((field, index) => (
             <span key={field.target}>

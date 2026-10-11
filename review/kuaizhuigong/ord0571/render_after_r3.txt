@@ -1,0 +1,45 @@
+zh | main.cityNexusRequestFailed | CityNexus 请求失败
+en | main.cityNexusRequestFailed | CityNexus request failed
+zh | main.cityNexusRequestRefusedHttp | CityNexus 请求被拒绝（HTTP {status}）
+en | main.cityNexusRequestRefusedHttp | CityNexus request refused (HTTP {status})
+zh | main.persistedOperationUpdate | 已持久化的操作更新
+en | main.persistedOperationUpdate | Persisted operation update
+zh | main.generalRecovery | 通用恢复
+en | main.generalRecovery | general recovery
+zh | main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | 激活一次常驻任务；之后的城市信号无需新的聊天消息即可发起恢复。
+en | main.activateAStandingMissionOnceSubsequentCitySignalsCanLaunchRecoveryWithoutANewChatMessage | Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.
+zh | main.noDominantFailureMode | 没有主导的失败模式
+en | main.noDominantFailureMode | No dominant failure mode
+zh | main.notEvaluated | 未评估
+en | main.notEvaluated | not evaluated
+zh | main.validatedActivity | 通过校验的活动
+en | main.validatedActivity | validated Activity
+zh | main.noActionableTarget | 没有可行动的目标
+en | main.noActionableTarget | no actionable target
+zh | main.outcomeEvidence | 结果证据
+en | main.outcomeEvidence | outcome evidence
+zh | main.explicitWins | 显式胜出项
+en | main.explicitWins | explicit wins
+zh | main.notReported | 未上报
+en | main.notReported | not reported
+zh | main.noUpcomingActivity | 接下来没有活动
+en | main.noUpcomingActivity | no upcoming activity
+zh | main.noActiveC4 | 当前没有生效的 C4
+en | main.noActiveC4 | No active C4
+zh | main.notAvailable | 不可用
+en | main.notAvailable | not available
+zh | main.verifiedFeasible | 已验证可行
+en | main.verifiedFeasible | verified feasible
+zh | main.notFeasible | 不可行
+en | main.notFeasible | not feasible
+zh | main.notPreserved | 未被保留
+en | main.notPreserved | not preserved
+zh | main.verifiedEvidenceAttached | 已附带已验证证据
+en | main.verifiedEvidenceAttached | verified evidence attached
+zh | main.evidenceUnavailable | 证据不可用
+en | main.evidenceUnavailable | evidence unavailable
+zh | recovery.noDominantMode | 没有主导模式
+en | recovery.noDominantMode | no dominant mode
+zh | recovery.noneOnThisJourney | 这趟行程上没有
+en | recovery.noneOnThisJourney | none on this journey
+PROBE_AFTER_RC=0

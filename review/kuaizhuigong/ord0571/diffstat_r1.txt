@@ -1,0 +1,9 @@
+# ORD-0571 kuaizhuigong: net change of this branch against the line, read by git at the moment of delivery
+cmd = git diff --numstat 6f457321a3b651f193dbe96a424b876285159643 HEAD -- frontend/src/i18n/LocaleContext.tsx
+22	22	frontend/src/i18n/LocaleContext.tsx
+cmd = git show --numstat --format=%H HEAD~1  (the translation commit)
+fc86a69bc6e9f357f3e48630adce535f23fb744f
+
+106	0	review/kuaizhuigong/ord0571/apply_zh_values_r1.py
+29	0	review/kuaizhuigong/ord0571/build_r1.txt
+line_counts line=5
