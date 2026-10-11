@@ -2866,7 +2866,7 @@ const zhCN: Dict = {
   "setup.groupRuleUnknown": "这一组看的是：这一轮拿不出可规划的判定——目录里暂时没有它的行、问过但没人回答，或者这一轮根本没读到。",
   "catalog.count.unreadable": "这座城有多少地点，我们刚才没能从服务器读到。",
   "catalog.count.zero": "服务器回读：这座城我们现在一个地点都还没有。",
-  "catalog.count.some": "服务器回读：这座城我们现在有 ${count} 个地点，可以排进行程。",
+  "catalog.count.some": "服务器回读：这座城我们现在有 {count} 个地点，可以排进行程。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
