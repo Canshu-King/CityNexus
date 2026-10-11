@@ -7,6 +7,7 @@ import { RawFactsPanel } from "../../components/RawFactsPanel";
 import type { RawFacts } from "../../lib/rawFacts";
 import { useElapsedSeconds } from "../../lib/waitClock";
 import { ENTRY_FIELDS, entryFieldBounds, entryFieldLabel, entryFieldName, entryFieldSuffix } from "../../lib/entryLimits";
+import { englishCountNoun } from "../../lib/plural";
 
 /**
  * ORD-0036 (d) -- where the wizard's state lives.
@@ -248,10 +249,10 @@ export function groupOfDestination(row: DestinationReading): DestinationGroup {
  * traveller's own words, the folded form of them and any operation token are *not* identities, so
  * none of them may stand in this slot (see `DestinationResolution` in `anywhere_capability.py`).
  */
-export function identityWords(row: DestinationReading, zh: boolean): string {
-  if (!row.answered) return zh ? "身份还没读到" : "identity not read yet";
-  if (row.canonical_destination_id) return zh ? "服务器给了身份" : "the server named it";
-  return zh ? "还没有身份" : "no identity yet";
+export function identityWords(row: DestinationReading, zh: boolean, t: (key: string) => string): string {
+  if (!row.answered) return t("setup.identityNotReadYet");
+  if (row.canonical_destination_id) return t("setup.theServerNamedIt");
+  return t("setup.noIdentityYet");
 }
 
 /** The three causes "this place is not here" can have, each said as itself.
@@ -266,13 +267,14 @@ export function identityWords(row: DestinationReading, zh: boolean): string {
 export function notFoundCauseWords(
   row: DestinationReading | null,
   zh: boolean,
+  t: (key: string) => string,
 ): { title: string; body: string } | null {
   if (!row || !row.answered) return null;
-  const spell = row.spelling || (zh ? "这个名字" : "this name");
+  const spell = row.spelling || t("setup.thisName");
 
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
     return {
-      title: zh ? "服务器认不出这个名字" : "The server cannot name this place",
+      title: t("setup.theServerCannotNameThisPlace"),
       body: zh
         ? `服务器说「${spell}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或在"看支持的目的地"里挑一个。`
         : `The server says nothing traceable names "${spell}" as a destination. This is not a network problem: the server just answered. Try another spelling, or pick one from the supported list.`,
@@ -282,10 +284,10 @@ export function notFoundCauseWords(
   if (row.reason_code === "PLACES_NO_COORDINATE") {
     const n = row.place_count ?? 0;
     return {
-      title: zh ? "这里有地点，但它们没有坐标" : "The places are here, but none has a coordinate",
+      title: t("setup.thePlacesAreHereButNoneHasACoordinate"),
       body: zh
         ? `服务器认得「${spell}」，目录里有 ${n} 条地点，但这些地点没有可用坐标，所以排不出路线、也放不到图上——不是没登记，是登记了而缺坐标。可以先补这些地点的坐标，再规划。`
-        : `The server names "${spell}" and the catalog holds ${n} places, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
+        : `The server names "${spell}" and the catalog holds ${n} ${englishCountNoun(n, "place")}, but none of them has a usable coordinate, so nothing can be routed or plotted — they are registered, not missing. Their coordinates can be filled in first, and then planning can use them.`,
     };
   }
 
@@ -293,16 +295,16 @@ export function notFoundCauseWords(
     const missing = (row.missing_categories ?? []).join(zh ? "、" : ", ");
     const count = row.missing_categories?.length ?? 0;
     return {
-      title: zh ? "这座城还没准备过" : "This destination has not been prepared",
+      title: t("setup.thisDestinationHasNotBeenPrepared"),
       body: zh
         ? `服务器认得「${spell}」，但还缺 ${count} 类事实（${missing}），所以现在直接规划会缺依据。可以先准备。`
-        : `The server names "${spell}" but is short ${count} categories (${missing}), so planning now would lack evidence. You can prepare it first.`,
+        : `The server names "${spell}" but is short ${count} ${englishCountNoun(count, "category")} (${missing}), so planning now would lack evidence. You can prepare it first.`,
     };
   }
 
   if ((row.place_count ?? 0) === 0 && row.canonical_destination_id) {
     return {
-      title: zh ? "这座城还没登记任何地点" : "No places are registered for this destination",
+      title: t("setup.noPlacesAreRegisteredForThisDestination"),
       body: zh
         ? `服务器认得「${spell}」，但目录里一条地点都没有——是还没登记，不是查不到这个名字。`
         : `The server names "${spell}" but the catalog holds no places: they are not registered yet, which is different from the name being unknown.`,
@@ -313,7 +315,7 @@ export function notFoundCauseWords(
 }
 
 /** What the server answered, said once in plain words and once in the route's own field values. */
-function verdictWords(row: DestinationReading, zh: boolean): string {
+function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => string): string {
   if (!row.answered) {
     return row.failure
       ? zh
@@ -324,7 +326,7 @@ function verdictWords(row: DestinationReading, zh: boolean): string {
         : "the server has not been asked yet";
   }
   if (row.capability === "READY") {
-    return zh ? "服务器说这座城现在就能规划" : "the server says this destination can be planned now";
+    return t("setup.theServerSaysThisDestinationCanBePlannedNow");
   }
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
     return zh
@@ -332,14 +334,14 @@ function verdictWords(row: DestinationReading, zh: boolean): string {
       : "nothing the server consults names this spelling; it would have to resolve it over the network";
   }
   if (row.capability === "UNKNOWN_RETRYABLE") {
-    return zh ? "问了，这一轮没人回答" : "it was asked, and nothing answered this round";
+    return t("setup.itWasAskedAndNothingAnsweredThisRound");
   }
   if (row.canonical_destination_id) {
     return zh
       ? `服务器认得它，目录里有 ${row.place_count ?? 0} 条，还缺 ${row.missing_categories.length} 类事实`
-      : `the server names it, holds ${row.place_count ?? 0} rows and is short ${row.missing_categories.length} categories`;
+      : `the server names it, holds ${row.place_count ?? 0} ${englishCountNoun(row.place_count ?? 0, "row")} and is short ${row.missing_categories.length} ${englishCountNoun(row.missing_categories.length, "category")}`;
   }
-  return zh ? "服务器给了别的判定" : "the server gave some other verdict";
+  return t("setup.theServerGaveSomeOtherVerdict");
 }
 
 const GROUP_HEAD: Record<DestinationGroup, [string, string, string]> = {
@@ -461,11 +463,12 @@ function optionLabels(
   keys: readonly string[],
   table: readonly { key: string; zh: string; en: string }[],
   zh: boolean,
+  t: (key: string) => string,
 ): string {
   return keys
     .map((key) => {
       const entry = table.find((item) => item.key === key);
-      return entry ? (zh ? entry.zh : entry.en) : zh ? "待确认" : "to confirm";
+      return entry ? (zh ? entry.zh : entry.en) : t("trial.toConfirm");
     })
     .join("、");
 }
@@ -501,16 +504,17 @@ function ReviewEdit({
   zh: boolean;
   onEdit: (target: string) => void;
 }) {
+  const t = useT();
   return (
     <button
       type="button"
       className="trial-review-edit"
       data-testid={`review-edit-${row.name}`}
       data-target={row.target}
-      aria-label={(zh ? "改这一项：" : "Change ") + (zh ? row.zh : row.en)}
+      aria-label={(t("trial.changeThisAria")) + (zh ? row.zh : row.en)}
       onClick={() => onEdit(row.target)}
     >
-      {zh ? "改这一项" : "Change"}
+      {t("setup.change2")}
     </button>
   );
 }
@@ -545,10 +549,11 @@ const REVIEW_ROWS: ReviewTarget[] = [
  * vocabularies.  This marker is the third state: chosen, unanswered (「—」), and filled in for you.
  */
 function DefaultMark({ zh }: { zh: boolean }) {
+  const t = useT();
   return (
     <span className="trial-default-mark" data-testid="review-default-mark">
       {" "}
-      · {zh ? "我们替你填的" : "we filled this in for you"}
+      · {t("setup.weFilledThisInForYou")}
     </span>
   );
 }
@@ -874,13 +879,13 @@ export function JourneyTrialSetup({
   const missingStep1 = [
     draft.cityName.trim()
       ? null
-      : { label: zh ? "目的地" : "the destination", target: "trial-city" },
+      : { label: t("trial.navDestination"), target: "trial-city" },
     draft.arrivalLocation.trim()
       ? null
-      : { label: zh ? "抵达地点" : "where you arrive", target: "trial-arrival" },
+      : { label: t("trial.navArrival"), target: "trial-arrival" },
     draft.departureLocation.trim()
       ? null
-      : { label: zh ? "离开地点" : "where you leave", target: "trial-departure" },
+      : { label: t("trial.navDeparture"), target: "trial-departure" },
   ].filter(Boolean) as MissingField[];
   /* ORD-0066: step 2 can block too, and a blocked primary button that names the anchors on
      step 1 then falls silent one step later is the same defect moved down the wizard. */
@@ -951,7 +956,7 @@ export function JourneyTrialSetup({
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("trial.kicker")}</p>
-          <h1>{zh ? "新建行程" : "Create a trip"}</h1>
+          <h1>{t("setup.createATrip")}</h1>
           <p className="v8-lede">
             {zh
               ? "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
@@ -964,7 +969,7 @@ export function JourneyTrialSetup({
           aria-label="Switch language"
           onClick={switchLocale}
         >
-          {zh ? "EN" : "中文"}
+          {t("nav.language")}
         </button>
       </div>
 
@@ -987,18 +992,18 @@ export function JourneyTrialSetup({
       {step === 1 && (
         <div className="v8-card trial-card" data-testid="trial-step1-body">
           <label className="trial-field">
-            <span>{zh ? "目的地" : "Destination"}</span>
+            <span>{t("trial.destination")}</span>
             <input
               data-testid="trial-city"
               value={draft.cityName}
               onChange={(event) => applyCity(event.target.value)}
-              placeholder={zh ? "例如：天津、东京、新加坡" : "e.g. Tianjin, Tokyo, Singapore"}
+              placeholder={t("setup.eGTianjinTokyoSingapore")}
               aria-describedby={unrecognizedCity ? "trial-city-warning" : undefined}
               autoFocus
             />
           </label>
 
-          {!unrecognizedCity && notFoundCauseWords(typedReading, zh) ? (
+          {!unrecognizedCity && notFoundCauseWords(typedReading, zh, t) ? (
             /* Which of the three causes it is, said before the basis line rather than instead of it.
                Gated on `!unrecognizedCity` because the paragraph below already speaks for the
                "no local facts" case, and the first draft of this branch said the same thing a second
@@ -1012,13 +1017,13 @@ export function JourneyTrialSetup({
               role="status"
             >
               {zh
-                ? `${notFoundCauseWords(typedReading, zh)?.title}：${notFoundCauseWords(typedReading, zh)?.body}`
-                : `${notFoundCauseWords(typedReading, zh)?.title}: ${notFoundCauseWords(typedReading, zh)?.body}`}
+                ? `${notFoundCauseWords(typedReading, zh, t)?.title}：${notFoundCauseWords(typedReading, zh, t)?.body}`
+                : `${notFoundCauseWords(typedReading, zh, t)?.title}: ${notFoundCauseWords(typedReading, zh, t)?.body}`}
             </p>
           ) : null}
           {facts ? (
             <p className="trial-inferred" data-testid="trial-inferred">
-              {zh ? "已自动设置：" : "Auto-set: "}
+              {t("trial.autoSetPrefix")}
               {zh ? facts.labelZh : facts.labelEn} · {basisWords.currency} · {basisWords.zone}
             </p>
           ) : null}
@@ -1054,7 +1059,7 @@ export function JourneyTrialSetup({
                 "supported destinations", which is what a traveller read as a promise.  The body now
                 groups the same names by what `GET /destinations/capability` answered for each one. */}
             <summary data-testid="trial-supported-toggle">
-              {zh ? "看支持的目的地" : "See supported destinations"}
+              {t("setup.seeSupportedDestinations")}
             </summary>
             {DESTINATION_GROUPS.map((group) => {
               const rows = (zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en)
@@ -1072,7 +1077,7 @@ export function JourneyTrialSetup({
                   </p>
                   {rows.length === 0 ? (
                     <p className="trial-supported-none" data-testid={`trial-supported-none-${group}`}>
-                      {zh ? "这一轮没有名字落在这一组。" : "No name landed in this group this round."}
+                      {t("setup.noNameLandedInThisGroupThisRound")}
                     </p>
                   ) : (
                     <ul className="trial-supported-list">
@@ -1094,9 +1099,9 @@ export function JourneyTrialSetup({
                             className="trial-supported-identity"
                             data-testid={`trial-supported-identity-${row.spelling}`}
                           >
-                            {identityWords(row, zh)}
+                            {identityWords(row, zh, t)}
                           </span>
-                          <span className="trial-supported-verdict">{verdictWords(row, zh)}</span>
+                          <span className="trial-supported-verdict">{verdictWords(row, zh, t)}</span>
                           <span
                             className="trial-supported-fields"
                             data-testid={`trial-supported-fields-${row.spelling}`}
@@ -1174,7 +1179,7 @@ export function JourneyTrialSetup({
           </label>
           <div className="trial-row">
             <label className="trial-field">
-              <span>{zh ? "抵达时间" : "Arrival time"}</span>
+              <span>{t("setup.arrivalTime")}</span>
               <input
                 data-testid="trial-start"
                 type="datetime-local"
@@ -1183,7 +1188,7 @@ export function JourneyTrialSetup({
               />
             </label>
             <label className="trial-field">
-              <span>{zh ? "离开时间" : "Departure time"}</span>
+              <span>{t("setup.departureTime")}</span>
               <input
                 data-testid="trial-end"
                 type="datetime-local"
@@ -1198,7 +1203,7 @@ export function JourneyTrialSetup({
             open={advanced}
             onToggle={(event) => setAdvanced((event.target as HTMLDetailsElement).open)}
           >
-            <summary>{zh ? "高级设置" : "Advanced settings"}</summary>
+            <summary>{t("setup.advancedSettings")}</summary>
             <div className="trial-row">
               <label className="trial-field">
                 <span>{t("trial.country")}</span>
@@ -1241,7 +1246,7 @@ export function JourneyTrialSetup({
                 if (node) node.open = true;
               }}
             >
-              {zh ? "高级设置" : "Advanced settings"}
+              {t("setup.advancedSettings")}
             </button>
           )}
         </div>
@@ -1306,7 +1311,7 @@ export function JourneyTrialSetup({
           </div>
 
           <fieldset className="trial-fieldset" data-testid="trial-pace-fieldset" tabIndex={-1}>
-            <legend>{zh ? "旅行节奏" : "Pace"}</legend>
+            <legend>{t("setup.pace")}</legend>
             <div className="trial-chips">
               {PACE_OPTIONS.map((option) => (
                 <button
@@ -1328,7 +1333,7 @@ export function JourneyTrialSetup({
           </fieldset>
 
           <fieldset className="trial-fieldset" data-testid="trial-interests-fieldset" tabIndex={-1}>
-            <legend>{zh ? "兴趣" : "Interests"}</legend>
+            <legend>{t("setup.interests")}</legend>
             <div className="trial-chips">
               {INTEREST_OPTIONS.map((option) => {
                 const selected = (draft.interests ?? []).includes(option.key);
@@ -1356,7 +1361,7 @@ export function JourneyTrialSetup({
           </fieldset>
 
           <label className="trial-field">
-            <span>{zh ? "特殊要求" : "Special requirements"}</span>
+            <span>{t("setup.specialRequirements")}</span>
             <textarea
               data-testid="trial-special"
               rows={3}
@@ -1376,7 +1381,7 @@ export function JourneyTrialSetup({
         <div className="v8-card trial-card" data-testid="trial-step3-body">
           <dl className="trial-review">
             <div>
-              <dt>{zh ? "目的地" : "Destination"}{reviewEdit("city")}</dt>
+              <dt>{t("trial.destination")}{reviewEdit("city")}</dt>
               <dd data-testid="review-city">{draft.cityName || "—"}</dd>
               {/* The step-1 caution has to be here too: this is the screen the traveller
                   confirms from, and an assumption shown only two steps back is gone. */}
@@ -1395,55 +1400,55 @@ export function JourneyTrialSetup({
                 data-testid="review-arrival"
                 data-missing={draft.arrivalLocation.trim() ? undefined : "true"}
               >
-                {draft.arrivalLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {draft.arrivalLocation.trim() || t("setup.notFilledInRequired")}
                 {" · "}
                 {draft.startAt.replace("T", " ")}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "离开" : "Departure"}{reviewEdit("departure")}</dt>
+              <dt>{t("trial.departureField")}{reviewEdit("departure")}</dt>
               <dd
                 data-testid="review-departure"
                 data-missing={draft.departureLocation.trim() ? undefined : "true"}
               >
-                {draft.departureLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {draft.departureLocation.trim() || (t("setup.notFilledInRequired"))}
                 {" · "}
                 {draft.endAt.replace("T", " ")}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "人数 / 房间" : "Travellers / rooms"}{reviewEdit("party")}</dt>
+              <dt>{t("setup.travellersRooms")}{reviewEdit("party")}</dt>
               <dd data-testid="review-party">
                 {draft.partySize} · {draft.rooms}
                 {!touched.has("partySize") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "总预算 / 住宿" : "Total / stay budget"}{reviewEdit("budget")}</dt>
+              <dt>{t("setup.totalStayBudget")}{reviewEdit("budget")}</dt>
               <dd data-testid="review-budget">
                 {draft.currency} {draft.budgetMajor} / {draft.stayBudgetMajor}
                 {(!touched.has("budgetMajor") || !touched.has("stayBudgetMajor")) && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "节奏" : "Pace"}{reviewEdit("pace")}</dt>
+              <dt>{t("setup.pace2")}{reviewEdit("pace")}</dt>
               <dd data-testid="review-pace">
-                {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
+                {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh, t) || "—"}
                 {!touched.has("pace") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "兴趣" : "Interests"}{reviewEdit("interests")}</dt>
+              <dt>{t("setup.interests")}{reviewEdit("interests")}</dt>
               <dd data-testid="review-interests">
-                {optionLabels(draft.interests ?? [], INTEREST_OPTIONS, zh) || "—"}
+                {optionLabels(draft.interests ?? [], INTEREST_OPTIONS, zh, t) || "—"}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "特殊要求" : "Special requirements"}{reviewEdit("special")}</dt>
+              <dt>{t("setup.specialRequirements")}{reviewEdit("special")}</dt>
               <dd data-testid="review-special">{draft.specialRequirements || "—"}</dd>
             </div>
             <div>
-              <dt>{zh ? "自动设置" : "Auto-set"}{reviewEdit("auto-set")}</dt>
+              <dt>{t("setup.autoSet2")}{reviewEdit("auto-set")}</dt>
               <dd>
                 {draft.countryCode} · {draft.currency} · {draft.timezone}
               </dd>
@@ -1464,9 +1469,7 @@ export function JourneyTrialSetup({
         <div className="trial-create-error" data-testid="trial-create-error" role="alert">
           <strong>
             {journeyCreated
-              ? zh
-                ? "这一步没有成功——行程已创建，但住宿搜索没有完成。"
-                : "This step did not complete — the trip was created, but the stay search did not."
+              ? t("setup.stepFailedStaySearchOnly")
               : zh
                 ? "这一步没有成功，行程还没有创建。"
                 : "This step did not complete — no journey was created."}
@@ -1504,7 +1507,7 @@ export function JourneyTrialSetup({
         /* Giving up on the wait is not a failure and not a cancel: the request this screen
            stopped is described by what actually happened to it. */
         <div className="trial-wait-outcome" data-testid="trial-wait-outcome" role="status">
-          <strong>{zh ? "已停止等待" : "Stopped waiting"}</strong>
+          <strong>{t("setup.stoppedWaiting")}</strong>
           <span>{message}</span>
         </div>
       )}
@@ -1523,9 +1526,7 @@ export function JourneyTrialSetup({
               rather than as its own row, because a row of buttons pushed this wizard's sticky CTA
               under the fixed simulation ball (measured by the mobile gate at 360x800: 33px). */}
           {missingNow.length
-            ? zh
-              ? "还需要填写："
-              : "Still needed: "
+            ? t("setup.stillNeeded")
             : ""}
           {missingNow.map((field, index) => (
             <span key={field.target}>
@@ -1542,7 +1543,7 @@ export function JourneyTrialSetup({
               {/* ORD-0135 ③: the review step's rows already say 未填写 · 必填 for this field, and the
                   reason the blocked 确认创建 points at should be that same sentence rather than a
                   second phrasing of it. */}
-              {step === 3 ? (zh ? " 未填写 · 必填" : " not filled in · required") : ""}
+              {step === 3 ? (t("trial.notFilledRequired")) : ""}
             </span>
           ))}
         </p>
@@ -1626,7 +1627,7 @@ export function JourneyTrialSetup({
             disabled={busy}
             onClick={() => void onUseSealedDemo()}
           >
-            {zh ? "重试" : "Retry"}
+            {t("trial.retry")}
           </button>
         </div>
       )}
@@ -1659,7 +1660,7 @@ export function JourneyTrialSetup({
             disabled={busy}
             onClick={() => setStep((current) => (current === 3 ? 2 : 1))}
           >
-            {zh ? "返回" : "Back"}
+            {t("setup.back")}
           </button>
         )}
         {step < 3 && (
@@ -1683,7 +1684,7 @@ export function JourneyTrialSetup({
               setStep((current) => (current === 1 ? 2 : 3));
             }}
           >
-            {zh ? "下一步" : "Next"}
+            {t("trial.next")}
           </button>
         )}
         {step === 3 && (
@@ -1707,7 +1708,7 @@ export function JourneyTrialSetup({
               void submit();
             }}
           >
-            {busy ? t("trial.creating") : zh ? "确认创建" : "Create trip"}
+            {busy ? t("trial.creating") : t("setup.createTrip")}
           </button>
         )}
       </div>

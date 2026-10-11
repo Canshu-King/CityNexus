@@ -41,6 +41,7 @@ import {
   watchRun,
   type Aftermath,
 } from "./aiGenerationRun";
+import { englishCountNoun } from "../../lib/plural";
 
 /* ORD-0250: this floor used to be a bare `8` inside submit() while the button next to it refused
    silently -- so an empty box looked like a button that did nothing.  Named once, read by the
@@ -189,7 +190,7 @@ export function statusCopy(
   }
   if (s === "COMPLETED" || s === "SUCCEEDED") {
     return {
-      title: zh ? `已生成 ${planCount} 个可选方案` : `${planCount} candidate plans are ready`,
+      title: zh ? `已生成 ${planCount} 个可选方案` : `${planCount} ${englishCountNoun(planCount, "candidate plan")} ready`,
       body: zh
         ? "去“今天”对比这几个方案，选一个再继续。"
         : "Compare them on Today, then choose one to continue.",
@@ -258,7 +259,7 @@ export function statusCopy(
     return {
       title: zh
         ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
-        : `AI did not take part — ${planCount} options were still assembled`,
+        : `AI did not take part — ${planCount} ${englishCountNoun(planCount, "option")} still assembled`,
       body: zh
         ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
         : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
@@ -737,6 +738,7 @@ export function PlanWithAiSheet({
         <label className="plan-ai-field">
           <span className="v8-sr-only">{t("planai.tripRequest")}</span>
           <textarea
+            data-autofocus
             data-testid="plan-ai-input"
             rows={5}
             value={text}

@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { createActor } from "xstate";
+import { Badge } from "./components/Badge";
 import { citynexusQueryClient } from "./lib/queryClient";
 import { formatMinorMoney } from "./lib/money";
 import { hasNonIdempotentRequestInFlight, onNonIdempotentRequestsQuiet } from "./lib/inFlightWrites";
@@ -1106,9 +1107,9 @@ function LegacyApp() {
                 <p className="card-kicker">Persisted mission · {mission.id.slice(0, 8)}</p>
                 <h3>{agentRun.status} · {agentRun.provider_key}/{agentRun.model_key}</h3>
               </div>
-              <span className={agentRun.status === "COMPLETED" ? "run-badge run-complete" : "run-badge"}>
+              <Badge tone={agentRun.status === "COMPLETED" ? "success" : "warning"} variant="tinted">
                 {mission.status}
-              </span>
+              </Badge>
             </div>
             <p className="mission-text">“{mission.user_text}”</p>
             <div className="mission-metrics">

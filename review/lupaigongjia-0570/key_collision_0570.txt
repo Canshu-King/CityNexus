@@ -1,0 +1,12 @@
+# ORD-0570 键名撞车现查：尖 ae2d96198bb346af5712810ddad3013928e62aa4 的字典里有没有这三枚键名
+cmd: git -C D:/moodle/CityNexus grep -c '"pending.title"' ae2d96198bb346af5712810ddad3013928e62aa4 -- frontend/src/i18n/LocaleContext.tsx
+  rc=1 out=<无输出>
+cmd: git -C D:/moodle/CityNexus grep -c '"pending.sub"' ae2d96198bb346af5712810ddad3013928e62aa4 -- frontend/src/i18n/LocaleContext.tsx
+  rc=1 out=<无输出>
+cmd: git -C D:/moodle/CityNexus grep -c '"pending.loading"' ae2d96198bb346af5712810ddad3013928e62aa4 -- frontend/src/i18n/LocaleContext.tsx
+  rc=1 out=<无输出>
+
+# 同一把尺在改动后的枝尖上（应当各命中一行）
+  pending.title -> 9064cba5acb8362e2e55a4ca8188180560add078:frontend/src/i18n/LocaleContext.tsx:2
+  pending.sub -> 9064cba5acb8362e2e55a4ca8188180560add078:frontend/src/i18n/LocaleContext.tsx:2
+  pending.loading -> 9064cba5acb8362e2e55a4ca8188180560add078:frontend/src/i18n/LocaleContext.tsx:2

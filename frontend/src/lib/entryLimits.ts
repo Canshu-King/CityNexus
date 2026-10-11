@@ -10,7 +10,15 @@
  * So both the label and the control are produced from these entries. `required` here means the
  * review step blocks on it (`missingStep1/2/3`), which is the same predicate the API rejects with a
  * 422 - not a new claim invented at display time.
+ *
+ * ORD-0557 moved the two words this file used to invent for itself - the required/optional tag and
+ * the way a lower bound with no upper bound is phrased - into the traveller dictionaries, under
+ * `trial.fieldRequired`, `trial.fieldOptional` and `trial.rangeFrom`. The facts stay here; only the
+ * wording is looked up, and it is looked up per language rather than chosen by a ternary in this
+ * module.
  */
+
+import { dictionaryText } from "../i18n/LocaleContext";
 
 export const PARTY_SIZE_MIN = 1;
 /** `party_size: int = Field(default=1, ge=1, le=20)` in `backend/app/schemas.py`. */
@@ -95,13 +103,16 @@ export function entryFieldName(key: EntryFieldKey, zh?: boolean | string | null)
 /** The range a control will take, spelled the way each language spells a unit after a number. */
 export function entryFieldRange(key: EntryFieldKey, zh?: boolean | string | null): string {
   const field = ENTRY_FIELDS[key];
+  /* Only the open-ended arm reads a key: it is the phrase this file made up for itself (ORD-0557).
+     The bounded arm still spells `min-max` here, because it was not on that order's table and a key
+     invented unsolicited would be a second copy of a wording nobody has decided yet. */
   if (wantsChinese(zh)) {
     return field.max === null
-      ? `${field.min} ${field.unitZh}起`
+      ? dictionaryText("zh-CN", "trial.rangeFrom", { min: field.min, unit: field.unitZh })
       : `${field.min}-${field.max} ${field.unitZh}`;
   }
   return field.max === null
-    ? `from ${field.min} ${field.unitEn}`
+    ? dictionaryText("en", "trial.rangeFrom", { min: field.min, unit: field.unitEn })
     : `${field.min}-${field.max} ${field.unitEn}`;
 }
 
@@ -117,9 +128,12 @@ export function entryFieldLabel(key: EntryFieldKey, zh?: boolean | string | null
  */
 export function entryFieldSuffix(key: EntryFieldKey, zh?: boolean | string | null): string {
   const field = ENTRY_FIELDS[key];
-  const required = wantsChinese(zh)
-    ? field.required ? "必填" : "选填"
-    : field.required ? "required" : "optional";
+  /* Which word, in which language, is the dictionaries' business (ORD-0557); which fact it names --
+     that the review step blocks on this field -- stays the boolean above. */
+  const required = dictionaryText(
+    wantsChinese(zh) ? "zh-CN" : "en",
+    field.required ? "trial.fieldRequired" : "trial.fieldOptional",
+  );
   return `（${required} · ${entryFieldRange(key, zh)}）`;
 }
 

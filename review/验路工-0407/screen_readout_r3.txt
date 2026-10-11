@@ -1,0 +1,38 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4921 backend=:4922 db=sqlite:///D:/moodle/_qoder_yanlugong_0407/frontend/_e2e_ylg0407r3.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [40284]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:4922 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:60544 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60551 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ylg0407r3 frontend=:4921 -> backend=:4922 ai=disabled db=_e2e_ylg0407r3.db
+
+Running 2 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4921 backend=:4922 db=sqlite:///D:/moodle/_qoder_yanlugong_0407/frontend/_e2e_ylg0407r3.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:60552 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:60553 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:60552 - "POST /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60553 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60552 - "POST /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/stay-options/23d9d461-5e9e-4cdc-9a54-f265d11824ff/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=e3d7bc75-0d49-4f67-8b34-b421d718c0e6 options=4 chosen=23d9d461-5e9e-4cdc-9a54-f265d11824ff (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:54618 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54619 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54164 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54163 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55645 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54162 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61408 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61405 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54165 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61407 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61406 - "GET /api/v1/travelers/e7cb89ce-7cbe-4235-a848-c2318f471ed8/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61962 - "GET /api/v1/journeys/e3d7bc75-0d49-4f67-8b34-b421d718c0e6/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61409 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.3s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4921 backend=:4922 db=sqlite:///D:/moodle/_qoder_yanlugong_0407/frontend/_e2e_ylg0407r3.db ai=disabled reuseExistingServer=false
+ORD0407_EMPTY_ARM_READING {"locales":["unset","zh-CN"],"reads":{"unset":"The read succeeded and this plan has no stops || The server named a plan for this trip and sent none back inside it, so there is nothing to group into days and nothing to mark on a map. This is the trip's own state, not this page failing to load. || Read it again","zh-CN":"读取成功了，而这一版方案里没有一站 || 服务器为这趟行程点明了一版方案，但那版方案里没有送来任何一站，所以既没有可分组的天，也没有可标在图上的位置。这是这趟行程自己的状态，不是这一页没有加载出来。 || 再读一次"}}
+  ok 2 [chromium] › e2e\qoder-yanlugong-0407-shared-empty-arm.spec.ts:47:1 › the zero-stop arm speaks, and offers the action this file already owns (2.3s)
+
+  2 passed (15.1s)

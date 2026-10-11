@@ -1,0 +1,7 @@
+en keys: 1236 zh keys: 1237
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_lupaigongjia_0570\frontend\scripts\i18n_detail2_parity_r1.py", line 26, in <module>
+    assert set(en) == set(zh), ("PARITY BREAK", sorted(set(en) ^ set(zh)))
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+parity_exit=1

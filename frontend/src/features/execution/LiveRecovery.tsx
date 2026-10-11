@@ -258,7 +258,7 @@ export function LiveRecovery({
         const copy = writeDeadlineCopy(zh);
         setMessage(`${copy.title}｜${copy.body}`);
       } else {
-        setMessage(t("live.serverUnreachable"));
+        setMessage(t("planning.couldNotReachServer"));
       }
     } finally {
       setBusy(null);

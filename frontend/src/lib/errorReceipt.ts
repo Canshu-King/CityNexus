@@ -16,6 +16,9 @@
  * `lib/failureAttribution.ts` is neither imported nor modified here.
  */
 
+/* ORD-0557 兜底行: the two labels below are read from the traveller dictionaries, not typed here. */
+import { dictionaryText } from "../i18n/LocaleContext";
+
 export const RECEIPT_FIELD = "error_receipt_id" as const;
 /** Crockford-style body: no I/L/O/U/0/1, so the same reading cannot produce two spellings. */
 export const RECEIPT_ALPHABET = "23456789ABCDEFGHJKMNPQRSTVWXYZ";
@@ -65,9 +68,16 @@ export function readErrorReceipt(input: unknown): ReceiptView {
 /**
  * The label a mount may print next to the value. Kept here so a component cannot quietly widen it:
  * it names the server as the source only when the server really was.
+ *
+ * ORD-0557 兜底行: these two words are not new. `detail.receiptLabel` and `detail.receiptLabelAbsent`
+ * already hold them in both languages, and `components/CnxMeasuredFacts.tsx` already reads them --
+ * this helper was the second copy, so the mount behind it painted a dictionary word that no
+ * dictionary read produced. `dictionaryText` rather than `useT()` because this is a plain function
+ * handed its language by the caller.
  */
 export function receiptLabel(present: boolean, zh: boolean): string {
-  return present
-    ? zh ? "服务器回执号" : "server receipt"
-    : zh ? "服务器未给回执号" : "no server receipt";
+  return dictionaryText(
+    zh ? "zh-CN" : "en",
+    present ? "detail.receiptLabel" : "detail.receiptLabelAbsent",
+  );
 }

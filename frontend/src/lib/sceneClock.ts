@@ -172,30 +172,62 @@ export function invalidateScene(client: QueryClient): void {
   void client.invalidateQueries({ queryKey: SCENE_QUERY_KEY });
 }
 
+/**
+ * ORD-0557 -- the three basis words, lifted VERBATIM out of the `zh ? … : …` ternaries
+ * that used to sit in `basisWord`. Both arms are written side by side so the lift into
+ * `LocaleContext.tsx` is one pass by file, and the text must stay byte-identical: this
+ * is a move, not a rewrite.
+ *
+ * They live here rather than in `LocaleContext.tsx` for two reasons this file cannot
+ * route around: that sheet exports no plain reader a lib module can call (only
+ * `useLocale` / `useT`), and `basisWord`'s single caller sits in
+ * `features/simulation/SimulationPanel.tsx`, a file this order assigns to another lane.
+ * Same shape as `i18n/mapPanelCopy.ts`, which was built for the same reason.
+ */
+export type SceneCopyKey =
+  | "basisCursor"
+  | "basisJourneyStart"
+  | "basisUnknown"
+  | "evidenceReferenced"
+  | "evidenceNoFrozen"
+  | "evidenceNoScenario"
+  | "evidenceSealedWithoutExpiry"
+  | "evidenceReferenceMismatch";
+
+const SCENE_COPY: Record<SceneCopyKey, { zh: string; en: string }> = {
+  basisCursor: { zh: "执行游标", en: "the execution cursor" },
+  basisJourneyStart: { zh: "行程起点", en: "the journey's start" },
+  basisUnknown: { zh: "服务器没有说明依据", en: "the server gave no basis" },
+  evidenceReferenced: { zh: "这批证据带冻结期", en: "the frozen evidence carries an expiry" },
+  evidenceNoFrozen: { zh: "这趟没有冻结证据", en: "no frozen evidence on this trip" },
+  evidenceNoScenario: { zh: "台上没有场景", en: "no scenario on stage" },
+  evidenceSealedWithoutExpiry: { zh: "这趟的出行数据是封存的，没有到期时间", en: "this trip's travel data is sealed, with no expiry" },
+  evidenceReferenceMismatch: { zh: "证据的引用对不上（服务器说有封存记录，但引用不一致）", en: "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)" },
+};
+
+export function sceneCopy(zh: boolean, key: SceneCopyKey): string {
+  const arms = SCENE_COPY[key];
+  return zh ? arms.zh : arms.en;
+}
+
 /** The server's words, mapped to what a traveller can act on.  Unknown stays unknown. */
 export function basisWord(basis: string | null, zh: boolean): string {
-  if (basis === "CURSOR") return zh ? "执行游标" : "the execution cursor";
-  if (basis === "JOURNEY_START") return zh ? "行程起点" : "the journey's start";
-  return zh ? "服务器没有说明依据" : "the server gave no basis";
+  if (basis === "CURSOR") return sceneCopy(zh, "basisCursor");
+  if (basis === "JOURNEY_START") return sceneCopy(zh, "basisJourneyStart");
+  return sceneCopy(zh, "basisUnknown");
 }
 
 export function evidenceWord(state: string | null, zh: boolean): string {
   if (state === "REFERENCED")
-    return zh ? "这批证据带冻结期" : "the frozen evidence carries an expiry";
+    return sceneCopy(zh, "evidenceReferenced");
   /* The state `924461e` added, and the one a naive reading gets wrong: sealed pairs exist and are
      used by a replan -- only the expiry is missing.  Showing this as "没有数据" tells a traveller
      the trip has no travel data when the server said it has 56 pairs. */
-  if (state === "FROZEN_WITHOUT_TTL")
-    return zh
-      ? "这趟的出行数据是封存的，没有到期时间"
-      : "this trip's travel data is sealed, with no expiry";
-  if (state === "EVIDENCE_REFERENCE_INCONSISTENT")
-    return zh
-      ? "证据的引用对不上（服务器说有封存记录，但引用不一致）"
-      : "the evidence reference does not line up (sealed rows exist, but the reference is inconsistent)";
+  if (state === "FROZEN_WITHOUT_TTL") return sceneCopy(zh, "evidenceSealedWithoutExpiry");
+  if (state === "EVIDENCE_REFERENCE_INCONSISTENT") return sceneCopy(zh, "evidenceReferenceMismatch");
   if (state === "NO_FROZEN_EVIDENCE")
-    return zh ? "这趟没有冻结证据" : "no frozen evidence on this trip";
-  if (state === "NO_SCENARIO") return zh ? "台上没有场景" : "no scenario on stage";
+    return sceneCopy(zh, "evidenceNoFrozen");
+  if (state === "NO_SCENARIO") return sceneCopy(zh, "evidenceNoScenario");
   return zh ? `服务器报的是 ${state}，我们不替它解释` : `the server reported ${state}; we do not interpret it`;
 }
 

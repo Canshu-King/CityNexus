@@ -1,0 +1,60 @@
+{
+ "run_id": "jiaz0407r8",
+ "arm": "C8",
+ "spec": "e2e/qoder-ord0407-empty-state-actions.spec.ts",
+ "rule": "in-cell counts visible controls that are descendants of the cell's own notice block; whole-screen counts every visible control on the page, split by nav shell",
+ "cells": {
+  "spend-empty": {
+   "route": "trips",
+   "cell_root": "div -> div.v8-notice",
+   "cell_text": "现在还没有可加的花费 这台设备读到的两份回答里，没有任何一项带金额的既成事实（有 0 项存在但没价）。这不是一个等于零的合计。",
+   "actions_inside": 0,
+   "actions_inside_names": [],
+   "actions_on_screen": 16,
+   "actions_on_screen_outside_nav": 7,
+   "actions_in_nav": 9,
+   "reached_by": "tab:花费"
+  },
+  "spend-no-lines": {
+   "route": "trips",
+   "cell_root": "p -> section.",
+   "cell_text": "这台服务器对这趟行程一条花费项都没有答出来。",
+   "actions_inside": 0,
+   "actions_inside_names": [],
+   "actions_on_screen": 16,
+   "actions_on_screen_outside_nav": 7,
+   "actions_in_nav": 9,
+   "reached_by": "tab:花费"
+  },
+  "twin-no-capability": {
+   "route": "twin",
+   "cell_root": "p -> article.v8-twin-card",
+   "cell_text": "没有记录到明确的能力事实。",
+   "actions_inside": 0,
+   "actions_inside_names": [],
+   "actions_on_screen": 10,
+   "actions_on_screen_outside_nav": 5,
+   "actions_in_nav": 5,
+   "reached_by": "route"
+  },
+  "inbox-queue-empty": {
+   "route": "bookings",
+   "cell_root": "p -> section.v13-2-queue",
+   "cell_text": "这里没有等你审核的确认单。",
+   "actions_inside": 0,
+   "actions_inside_names": [],
+   "actions_on_screen": 20,
+   "actions_on_screen_outside_nav": 15,
+   "actions_in_nav": 5,
+   "reached_by": "route"
+  }
+ },
+ "cells_with_zero_inside": [
+  "spend-empty",
+  "spend-no-lines",
+  "twin-no-capability",
+  "inbox-queue-empty"
+ ],
+ "nodeid": "D:\\moodle\\_qoder_jiazagong_0407\\wt2\\frontend\\e2e\\qoder-ord0407-empty-state-actions.spec.ts:785 > C8 each census cell reports two numbers -- actions inside its own notice and actions on the screen",
+ "test_status": "passed"
+}
