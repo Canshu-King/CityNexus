@@ -1525,6 +1525,9 @@ const en: Dict = {
   "copilot.action.stopping": "Stopping…",
   "copilot.action.stoppedViaCitynexus": "Stopped through CityNexus",
   "copilot.approval.modifyReview": "Modify / Review",
+  "copilot.badge.protectedCommitment": "Protected commitment",
+  "copilot.badge.protectedActivity": "Protected activity",
+  "copilot.panel.factsOnlyPromise": "Answers use verified journey facts only and never change your plan.",
 };
 
 const zhCN: Dict = {
@@ -2956,6 +2959,9 @@ const zhCN: Dict = {
   "copilot.action.stopping": "正在停止…",
   "copilot.action.stoppedViaCitynexus": "已通过 CityNexus 停止",
   "copilot.approval.modifyReview": "修改 / 审核",
+  "copilot.badge.protectedCommitment": "受保护承诺",
+  "copilot.badge.protectedActivity": "受保护活动",
+  "copilot.panel.factsOnlyPromise": "回答只依据已核验的行程事实，不会自己改动你的安排。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

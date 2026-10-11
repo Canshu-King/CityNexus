@@ -446,10 +446,10 @@ export function NativeMissionTimeline({
         </span>
         <div className="cn-protected-badges">
           {(run.protected_commitments ?? []).map((commitment, index) => (
-            <Badge key={String(commitment.id ?? index)} tone="success" variant="tinted">{zh ? "受保护承诺" : "Protected commitment"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</Badge>
+            <Badge key={String(commitment.id ?? index)} tone="success" variant="tinted">{t("copilot.badge.protectedCommitment")}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</Badge>
           ))}
           {!run.protected_commitments?.length && run.mission_plan?.protected_activity_ids.map((id) => (
-            <Badge key={id} tone="success" variant="tinted">{zh ? "受保护活动" : "Protected activity"} · {id.slice(0, 8)}</Badge>
+            <Badge key={id} tone="success" variant="tinted">{t("copilot.badge.protectedActivity")} · {id.slice(0, 8)}</Badge>
           ))}
         </div>
       </div>
@@ -875,9 +875,7 @@ export function CopilotDock({
             <div>
               <b>{t("agent.citynexus")}</b>
               <small>
-                {locale === "zh-CN"
-                  ? "回答只依据已核验的行程事实，不会自己改动你的安排。"
-                  : "Answers use verified journey facts only and never change your plan."}
+                {t("copilot.panel.factsOnlyPromise")}
               </small>
             </div>
             <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>
