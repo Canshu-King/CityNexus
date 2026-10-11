@@ -1876,6 +1876,43 @@ def save_bootstrap_shared_walk_pocket_walk(
             "a shared Pocket Walk requires two different verified public places",
             status_code=422,
         )
+    # A generic discovery receipt is not authority to import a friend's
+    # exact-object shared walk. Both objects must be in this member's current
+    # exact-lookup receipt before any shortlist mutation begins.
+    for candidate_id in (first_candidate_id, second_candidate_id):
+        candidate = session.scalar(
+            select(RealPlaceCandidate).where(
+                RealPlaceCandidate.id == str(candidate_id),
+                RealPlaceCandidate.journey_id == journey.id,
+                RealPlaceCandidate.provider_key == "overpass",
+                RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
+            )
+        )
+        if candidate is None:
+            raise BootstrapDiscoveryError(
+                "SHARED_WALK_CANDIDATE_NOT_FOUND",
+                "both saved stops must come from this signed exact-object lookup",
+                status_code=403,
+            )
+        scope = _matching_candidate_scope(
+            json.loads(candidate.evidence_json or "{}"),
+            member_id=str(member.id),
+            traveler_id=str(traveler_id),
+            receipt_id=str(receipt_id),
+        )
+        if scope is None or scope.get("source_kind") != "SHARED_PUBLIC_REFERENCE":
+            raise BootstrapDiscoveryError(
+                "SHARED_WALK_EXACT_RECEIPT_REQUIRED",
+                "an ordinary discovery receipt cannot authorize shared-walk import",
+                status_code=403,
+            )
+        if _scope_expired(scope):
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_RECEIPT_EXPIRED",
+                "the exact-object lookup receipt has expired",
+                status_code=410,
+            )
+
     first = save_bootstrap_shortlist_item(
         session,
         journey,
