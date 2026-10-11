@@ -375,6 +375,11 @@ export function BootstrapDiscoveryPanel({
   const [candidateShareConsent, setCandidateShareConsent] = useState(false);
   const [candidateShareBusy, setCandidateShareBusy] = useState(false);
   const [candidateShareMessage, setCandidateShareMessage] = useState<string | null>(null);
+  const [discoveryWalkOrder, setDiscoveryWalkOrder] = useState<string[]>([]);
+  const [discoveryWalkConsent, setDiscoveryWalkConsent] = useState(false);
+  const [discoveryWalkBudget, setDiscoveryWalkBudget] = useState<number | null>(null);
+  const [discoveryWalkBusy, setDiscoveryWalkBusy] = useState(false);
+  const [discoveryWalkMessage, setDiscoveryWalkMessage] = useState<string | null>(null);
   const [sharedWalkSaveOrder, setSharedWalkSaveOrder] = useState<string[]>([]);
   const [sharedWalkSaveConsent, setSharedWalkSaveConsent] = useState(false);
   const [sharedWalkSaveBusy, setSharedWalkSaveBusy] = useState(false);
@@ -391,6 +396,7 @@ export function BootstrapDiscoveryPanel({
   const pocketRequestGeneration = useRef(0);
   const pocketClearPromiseRef = useRef<Promise<void> | null>(null);
   const sharedWalkRequestGeneration = useRef(0);
+  const discoveryWalkRequestGeneration = useRef(0);
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
@@ -404,6 +410,7 @@ export function BootstrapDiscoveryPanel({
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
     sharedWalkRequestGeneration.current += 1;
+    discoveryWalkRequestGeneration.current += 1;
     try {
       pendingWindowRef.current?.close();
     } catch {
@@ -450,6 +457,11 @@ export function BootstrapDiscoveryPanel({
     setCandidateShareConsent(false);
     setCandidateShareBusy(false);
     setCandidateShareMessage(null);
+    setDiscoveryWalkOrder([]);
+    setDiscoveryWalkConsent(false);
+    setDiscoveryWalkBudget(null);
+    setDiscoveryWalkBusy(false);
+    setDiscoveryWalkMessage(null);
     setSharedWalkSaveOrder([]);
     setSharedWalkSaveConsent(false);
     setSharedWalkSaveBusy(false);
@@ -511,6 +523,7 @@ export function BootstrapDiscoveryPanel({
     // Invalidate pending A Pocket Walk mutations before any B state renders.
     pocketRequestGeneration.current += 1;
     sharedWalkRequestGeneration.current += 1;
+    discoveryWalkRequestGeneration.current += 1;
     pocketClearPromiseRef.current = null;
     sourceKindRef.current = "MANUAL_PUBLIC_CENTER";
     try {
@@ -580,6 +593,11 @@ export function BootstrapDiscoveryPanel({
     setCandidateShareConsent(false);
     setCandidateShareBusy(false);
     setCandidateShareMessage(null);
+    setDiscoveryWalkOrder([]);
+    setDiscoveryWalkConsent(false);
+    setDiscoveryWalkBudget(null);
+    setDiscoveryWalkBusy(false);
+    setDiscoveryWalkMessage(null);
     setSharedWalkSaveOrder([]);
     setSharedWalkSaveConsent(false);
     setSharedWalkSaveBusy(false);
@@ -610,6 +628,7 @@ export function BootstrapDiscoveryPanel({
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
     sharedWalkRequestGeneration.current += 1;
+    discoveryWalkRequestGeneration.current += 1;
     // Prior Journey requests must never rehydrate the new Journey's card.
     pocketRequestGeneration.current += 1;
     pocketClearPromiseRef.current = null;
@@ -659,6 +678,11 @@ export function BootstrapDiscoveryPanel({
     setCandidateShareConsent(false);
     setCandidateShareBusy(false);
     setCandidateShareMessage(null);
+    setDiscoveryWalkOrder([]);
+    setDiscoveryWalkConsent(false);
+    setDiscoveryWalkBudget(null);
+    setDiscoveryWalkBusy(false);
+    setDiscoveryWalkMessage(null);
     setSharedWalkSaveOrder([]);
     setSharedWalkSaveConsent(false);
     setSharedWalkSaveBusy(false);
@@ -992,6 +1016,10 @@ export function BootstrapDiscoveryPanel({
       setCandidateShareOrder([]);
       setCandidateShareConsent(false);
       setCandidateShareMessage(null);
+      setDiscoveryWalkOrder([]);
+      setDiscoveryWalkConsent(false);
+      setDiscoveryWalkBudget(null);
+      setDiscoveryWalkMessage(null);
       setPendingMapPreview(null);
       setMapConsent(false);
       setExploreNotice(null);
@@ -1022,6 +1050,71 @@ export function BootstrapDiscoveryPanel({
       const first = current[0] === candidateId ? current[1] : current[0];
       return first ? [first, candidateId] : [candidateId];
     });
+  };
+
+  const setDiscoveryWalkPosition = (candidateId: string, position: 1 | 2) => {
+    setDiscoveryWalkMessage(null);
+    setDiscoveryWalkConsent(false);
+    setDiscoveryWalkOrder((current) => {
+      const without = current.filter((id) => id !== candidateId);
+      if (position === 1) return [candidateId, ...without].slice(0, 2);
+      const first = current[0] === candidateId ? current[1] : current[0];
+      return first ? [first, candidateId] : [candidateId];
+    });
+  };
+
+  const saveDiscoveryPocketWalk = async () => {
+    if (!result || result.source_kind !== "MANUAL_PUBLIC_CENTER" || result.status !== "LIVE_RESULTS" || !result.receipt_id) {
+      setDiscoveryWalkMessage("A current manual-center discovery receipt with two results is required.");
+      return;
+    }
+    if (discoveryWalkOrder.length !== 2 || discoveryWalkOrder[0] === discoveryWalkOrder[1]) {
+      setDiscoveryWalkMessage("Choose and order exactly two current public discoveries first.");
+      return;
+    }
+    const selected = discoveryWalkOrder
+      .map((candidateId) => result.candidates.find((candidate) => candidate.candidate_id === candidateId) ?? null)
+      .filter((candidate): candidate is BootstrapDiscoveryCandidate => candidate !== null);
+    if (selected.length !== 2 || selected.some((candidate) => !safeOsmSourceUrl(candidate.source_url) || candidate.public_access_state === "RESTRICTED")) {
+      setDiscoveryWalkMessage("Both selected discoveries need trusted OSM source links and non-restricted public access.");
+      return;
+    }
+    if (!discoveryWalkConsent) {
+      setDiscoveryWalkMessage("Review the two source-linked places and confirm the private Pocket Walk save.");
+      return;
+    }
+    const fence = captureDiscoveryFence();
+    const requestGeneration = ++discoveryWalkRequestGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && discoveryWalkRequestGeneration.current === requestGeneration;
+    setDiscoveryWalkBusy(true);
+    setDiscoveryWalkMessage(null);
+    try {
+      const saved = await cityNexusApi.saveBootstrapDiscoveryPocketWalk(journeyId, {
+        receipt_id: result.receipt_id,
+        first_candidate_id: selected[0].candidate_id,
+        second_candidate_id: selected[1].candidate_id,
+        max_walk_minutes: discoveryWalkBudget,
+      });
+      if (!stillCurrent()) return;
+      const firstStop = saved.pocket_walk?.first_stop;
+      const secondStop = saved.pocket_walk?.second_stop;
+      if (!firstStop || !secondStop || firstStop.external_id !== selected[0].external_id || secondStop.external_id !== selected[1].external_id) {
+        throw new Error("The saved Pocket Walk did not preserve the selected discovery order.");
+      }
+      setShortlist(saved.items);
+      setPocketWalk(saved.pocket_walk);
+      setPocketWalkBudget(saved.pocket_walk.max_walk_minutes);
+      setTwoStopOrder([firstStop.shortlist_id, secondStop.shortlist_id]);
+      setDiscoveryWalkConsent(false);
+      setDiscoveryWalkMessage("Your two source-linked public discoveries are saved as a private Pocket Walk. Map links still require fresh consent.");
+    } catch (error) {
+      if (stillCurrent()) {
+        setDiscoveryWalkMessage(error instanceof Error ? error.message : "The discovery Pocket Walk could not be saved.");
+      }
+    } finally {
+      if (stillCurrent()) setDiscoveryWalkBusy(false);
+    }
   };
 
   const candidateShareText = () => {
@@ -1940,6 +2033,16 @@ export function BootstrapDiscoveryPanel({
   );
   const pocketSharePreview = pocketShareText();
   const candidateSharePreview = candidateShareText();
+  const discoveryWalkSelected = discoveryWalkOrder
+    .map((candidateId) => result?.candidates.find((candidate) => candidate.candidate_id === candidateId) ?? null)
+    .filter((candidate): candidate is BootstrapDiscoveryCandidate => candidate !== null);
+  const discoveryWalkReady = Boolean(
+    result &&
+    result.status === "LIVE_RESULTS" &&
+    result.source_kind === "MANUAL_PUBLIC_CENTER" &&
+    result.receipt_id &&
+    result.candidates.length >= 2,
+  );
   const publicCityLabel = cityName?.trim() || cityCode.trim() || "the selected city";
   const effectiveReadinessReason = readinessMessage
     ? "UNAVAILABLE"
@@ -2533,6 +2636,97 @@ export function BootstrapDiscoveryPanel({
         ) : null}
         {result?.candidates?.length ? (
           <>
+            {result.candidates.length >= 2 ? (
+              <section data-testid="bootstrap-discovery-pocket-walk" aria-labelledby="bootstrap-discovery-pocket-walk-title">
+                <h2 id="bootstrap-discovery-pocket-walk-title">Make these discoveries my private Pocket Walk</h2>
+                <p>
+                  Choose two current results from this signed manual public-center receipt and set their order. The save creates two private shortlist identities and one ordered Pocket Walk in one transaction; the source, observation time, opening, price, access, and walking ETA remain visible with their stated uncertainty.
+                </p>
+                <ol data-testid="bootstrap-discovery-pocket-walk-order">
+                  {discoveryWalkSelected.map((candidate, index) => (
+                    <li key={candidate.candidate_id}>
+                      {index + 1}. {candidate.name} · {candidate.provider_provenance} · observed {candidate.opening_observed_at}
+                    </li>
+                  ))}
+                </ol>
+                <div className="v8-actions">
+                  {result.candidates.slice(0, 3).map((candidate) => (
+                    <span key={candidate.candidate_id}>
+                      <button
+                        type="button"
+                        data-testid={`bootstrap-discovery-pocket-first-${candidate.candidate_id}`}
+                        onClick={() => setDiscoveryWalkPosition(candidate.candidate_id, 1)}
+                        disabled={!discoveryWalkReady || discoveryWalkBusy}
+                      >
+                        Set {candidate.name} as my stop 1
+                      </button>
+                      <button
+                        type="button"
+                        data-testid={`bootstrap-discovery-pocket-second-${candidate.candidate_id}`}
+                        onClick={() => setDiscoveryWalkPosition(candidate.candidate_id, 2)}
+                        disabled={!discoveryWalkReady || discoveryWalkBusy}
+                      >
+                        Set as my stop 2
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                {discoveryWalkSelected.length === 2 ? (
+                  <div data-testid="bootstrap-discovery-pocket-walk-preview">
+                    {discoveryWalkSelected.map((candidate, index) => {
+                      const source = safeOsmSourceUrl(candidate.source_url);
+                      return (
+                        <p key={candidate.candidate_id}>
+                          {index + 1}. <strong>{candidate.name}</strong> · {candidate.category} · source grade {candidate.provider_provenance} · opening {candidate.opening_state || "UNKNOWN"} · price UNKNOWN · access {candidate.public_access_state} · ETA UNKNOWN · observed {candidate.opening_observed_at}
+                          {source ? <> · <a href={source} target="_blank" rel="noopener noreferrer">OSM source</a></> : null}
+                        </p>
+                      );
+                    })}
+                    <label>
+                      Optional maximum public-to-public walking time
+                      <select
+                        data-testid="bootstrap-discovery-pocket-budget"
+                        value={discoveryWalkBudget === null ? "" : String(discoveryWalkBudget)}
+                        onChange={(event) => {
+                          const next = event.target.value ? Number(event.target.value) : null;
+                          setDiscoveryWalkBudget(next);
+                          setDiscoveryWalkConsent(false);
+                          setDiscoveryWalkMessage(null);
+                        }}
+                        disabled={discoveryWalkBusy}
+                      >
+                        <option value="">No preference declared</option>
+                        {[15, 20, 30, 45].map((minutes) => (
+                          <option key={minutes} value={minutes}>{minutes} minutes</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        data-testid="bootstrap-discovery-pocket-consent"
+                        checked={discoveryWalkConsent}
+                        onChange={(event) => setDiscoveryWalkConsent(event.target.checked)}
+                        disabled={discoveryWalkBusy}
+                      />
+                      I reviewed these two source-linked public places and agree to save them as my private Pocket Walk.
+                    </label>
+                  </div>
+                ) : (
+                  <p data-testid="bootstrap-discovery-pocket-walk-unselected">Choose two different source-linked public places to preview the ordered private save.</p>
+                )}
+                <button
+                  type="button"
+                  data-testid="bootstrap-discovery-pocket-save"
+                  disabled={!discoveryWalkReady || discoveryWalkSelected.length !== 2 || !discoveryWalkConsent || discoveryWalkBusy}
+                  onClick={() => void saveDiscoveryPocketWalk()}
+                >
+                  {discoveryWalkBusy ? "Saving…" : "Make this MY two-stop Pocket Walk"}
+                </button>
+                {discoveryWalkMessage ? <p role="status" data-testid="bootstrap-discovery-pocket-message">{discoveryWalkMessage}</p> : null}
+                {!discoveryWalkReady ? <p role="status">Two-stop private saving is disabled until two current manual-center results and an unexpired signed receipt are available.</p> : null}
+              </section>
+            ) : null}
             {result.candidates.length >= 2 ? (
               <section data-testid="bootstrap-discovery-share" aria-labelledby="bootstrap-discovery-share-title">
                 <h2 id="bootstrap-discovery-share-title">Send two public places to a friend</h2>
