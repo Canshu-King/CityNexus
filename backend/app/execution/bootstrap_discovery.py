@@ -3191,21 +3191,25 @@ def _go_context(
     *,
     member: Any,
     traveler_id: str,
+    for_mutation: bool = True,
 ) -> tuple[Journey, MemberDraftPocketWalk, list[MemberDraftShortlistItem]]:
     """Lock and validate the exact private draft Pocket Walk for GO MODE."""
 
-    locked = session.execute(
-        update(Journey)
-        .where(Journey.id == journey.id)
-        .values(updated_at=Journey.updated_at)
-    )
-    if locked.rowcount != 1:
-        raise BootstrapDiscoveryError(
-            "BOOTSTRAP_JOURNEY_NOT_FOUND",
-            "Journey disappeared while reading Pocket Walk GO MODE",
-            status_code=404,
+    # A GO progress GET is a true read, not a disguised Journey update.
+    # POST transitions alone take the Journey-row serialization lock.
+    if for_mutation:
+        locked = session.execute(
+            update(Journey)
+            .where(Journey.id == journey.id)
+            .values(updated_at=Journey.updated_at)
         )
-    session.flush()
+        if locked.rowcount != 1:
+            raise BootstrapDiscoveryError(
+                "BOOTSTRAP_JOURNEY_NOT_FOUND",
+                "Journey disappeared while changing Pocket Walk GO MODE",
+                status_code=404,
+            )
+        session.flush()
     locked_journey = session.get(Journey, journey.id)
     if locked_journey is None:
         raise BootstrapDiscoveryError(
@@ -3291,6 +3295,7 @@ def get_bootstrap_pocket_walk_go(
         journey,
         member=member,
         traveler_id=traveler_id,
+        for_mutation=False,
     )
     progress = session.scalar(
         select(MemberDraftPocketWalkProgress).where(
