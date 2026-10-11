@@ -1,0 +1,8 @@
+# structure on the merged state, tip ee2ff4053048c80bfa082aa54518fca50419af89
+keys_per_side=6
+dollar_in_my_keys=0
+chinese_literals_left_in_component=0
+PARITY_MERGED en keys: 1251 zh keys: 1252
+PARITY_BREAK_MERGED AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+PARITY_TIP en keys: 1248 zh keys: 1249
+PARITY_BREAK_TIP AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
