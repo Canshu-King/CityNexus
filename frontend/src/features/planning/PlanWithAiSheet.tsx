@@ -810,21 +810,15 @@ export function PlanWithAiSheet({
                 ? "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。"
                 : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
             {aiState === "not_configured" &&
-              (zh
-                ? "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"
-                : "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.")}
+              (t("plan.aiNotConfiguredNote"))}
             {aiState === "disabled_by_ops" &&
-              (zh
-                ? "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。"
-                : "The AI switch on this server is switched off. That is an operator setting, not something you did. It names the switch, not the cause of any one failure.")}
+              (t("plan.aiDisabledByOpsNote"))}
             {aiState === "provider_refused" &&
               (zh
                 ? "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。"
                 : "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.")}
             {aiState === "unknown" &&
-              (zh
-                ? "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。"
-                : "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.")}
+              (t("plan.aiStateUnknownNote"))}
           </p>
         )}
 
