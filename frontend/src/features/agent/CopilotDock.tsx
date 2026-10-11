@@ -240,7 +240,7 @@ export function NativeMissionTimeline({
             source = null;
           }
         } catch {
-          setStreamError(zh ? "运行事件暂时无法解析" : "A runtime event could not be read");
+          setStreamError(t("copilot.stream.parseError"));
         }
       };
       source.addEventListener("message", handleEvent);
@@ -251,10 +251,10 @@ export function NativeMissionTimeline({
         source = null;
         attempts += 1;
         if (attempts <= 3) {
-          setStreamError(zh ? "正在重新连接运行事件" : "Reconnecting to runtime events");
+          setStreamError(t("copilot.stream.reconnecting"));
           retryTimer = window.setTimeout(connect, Math.min(5000, 500 * 2 ** (attempts - 1)));
         } else {
-          setStreamError(zh ? "运行事件流不可用；已保留已收到的事件" : "Event stream unavailable; received events are preserved");
+          setStreamError(t("copilot.stream.unavailable"));
         }
       };
     };

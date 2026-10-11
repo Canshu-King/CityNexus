@@ -1516,6 +1516,9 @@ const en: Dict = {
   "hub.budgetReferenceHint": "This is your own budget averaged out, not a final cost. Real prices come from providers.",
   "hub.budgetReferenceHintCurrency": "This is your own budget averaged out, in {currency}, not a final cost. Real prices come from providers.",
   "hub.tripToCity": "Trip to {cityLabel}",
+  "copilot.stream.parseError": "A runtime event could not be read",
+  "copilot.stream.reconnecting": "Reconnecting to runtime events",
+  "copilot.stream.unavailable": "Event stream unavailable; received events are preserved",
 };
 
 const zhCN: Dict = {
@@ -2938,6 +2941,9 @@ const zhCN: Dict = {
   "hub.budgetReferenceHint": "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。",
   "hub.budgetReferenceHintCurrency": "这是按你的预算平均下来的参考值（以 {currency} 计），不是最终花费；真实价格以供应商为准。",
   "hub.tripToCity": "{cityLabel}之旅",
+  "copilot.stream.parseError": "运行事件暂时无法解析",
+  "copilot.stream.reconnecting": "正在重新连接运行事件",
+  "copilot.stream.unavailable": "运行事件流不可用；已保留已收到的事件",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
