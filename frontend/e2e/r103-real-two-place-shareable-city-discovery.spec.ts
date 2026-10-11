@@ -46,7 +46,7 @@ function createProviderFixtures() {
         elements: [
           { type: "node", id: 103001, lat: 31.2304, lon: 121.4737, tags: { name: "R103 Shanghai Museum", tourism: "museum" } },
           { type: "node", id: 103002, lat: 31.231, lon: 121.474, tags: { name: "R103 Shanghai Gallery", tourism: "gallery" } },
-          { type: "node", id: 103003, lat: 31.2315, lon: 121.4745, tags: { name: "R103 Shanghai Park", leisure: "park" } },
+          { type: "node", id: 103003, lat: 31.2315, lon: 121.4745, tags: { name: "R103 Shanghai Park https://evil.example\u0001", leisure: "park" } },
         ],
       }));
     });
@@ -187,6 +187,15 @@ test("R103 ordinary travelers discover, share, verify, and save two public city 
     expect(shareText).toContain("R103 Shanghai Museum");
     expect(shareText).toContain("R103 Shanghai Gallery");
     for (const privateValue of [senderJourney.id, sender.id, sender.access_token]) expect(shareText).not.toContain(privateValue);
+    const parkId = senderCandidates.find((candidate) => candidate.text.includes("R103 Shanghai Park"))?.id;
+    expect(parkId).toBeTruthy();
+    await senderPanel.getByTestId(`bootstrap-share-first-${museumId!}`).click();
+    await senderPanel.getByTestId(`bootstrap-share-second-${parkId!}`).click();
+    const sanitizedSharePreview = senderPanel.getByTestId("bootstrap-discovery-share-preview");
+    await expect(sanitizedSharePreview).toContainText("[link omitted]");
+    const sanitizedText = await sanitizedSharePreview.innerText();
+    expect(sanitizedText).not.toContain("evil.example");
+    expect(sanitizedText).not.toContain("\u0001");
     expect(readExploreOnlyCounts(senderJourney.id, "Shanghai")).toEqual({ place_count: 0, plan_count: 0, agent_run_count: 0, guardian_run_count: 0, booking_count: 0 });
     await senderPage.close();
 
@@ -201,6 +210,13 @@ test("R103 ordinary travelers discover, share, verify, and save two public city 
     await recipientPage.goto("/v8/hub", { waitUntil: "domcontentloaded" });
     const recipientPanel = recipientPage.getByTestId("bootstrap-discovery");
     const importPanel = recipientPanel.getByTestId("bootstrap-shared-walk-import");
+    const exactLookupUrl = `**/api/v1/journeys/${recipientJourney.id}/bootstrap-shared-walk/lookup`;
+    let exactLookupBody: Buffer | null = null;
+    await recipientPage.route(exactLookupUrl, async (route) => {
+      const response = await route.fetch();
+      exactLookupBody = await response.body();
+      await route.fulfill({ status: response.status(), headers: response.headers(), body: exactLookupBody });
+    });
     await importPanel.getByTestId("bootstrap-shared-walk-textarea").fill(shareText);
     await importPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
     await expect(importPanel.getByTestId("bootstrap-shared-walk-preview")).toContainText("UNVERIFIED_SHARED_REFERENCE");
@@ -209,6 +225,7 @@ test("R103 ordinary travelers discover, share, verify, and save two public city 
     await importPanel.getByTestId("bootstrap-shared-walk-lookup").click();
     await expect(importPanel.getByTestId("bootstrap-shared-walk-results")).toContainText("R103 Shanghai Museum");
     expect(provider.overpassCalls).toHaveLength(2);
+    await recipientPage.unroute(exactLookupUrl);
     const exactQuery = provider.overpassCalls.at(-1) ?? "";
     expect(exactQuery).toMatch(/^\[out:json\]\[timeout:10\];\((?:node\(103001\);node\(103002\);|node\(103002\);node\(103001\);)\);out center tags;$/);
     expect(exactQuery).not.toMatch(/journey|member|receipt|bearer|gps/i);
@@ -267,11 +284,36 @@ test("R103 ordinary travelers discover, share, verify, and save two public city 
     expect(new URL(walkPopup.url()).searchParams.get("origin")).toBe("31.2304000,121.4737000");
     await walkPopup.close();
 
-    await importPanel.getByTestId("bootstrap-shared-walk-textarea").fill(
+    const reloadedImportPanel = reloadedRecipient.getByTestId("bootstrap-shared-walk-import");
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-textarea").fill(shareText);
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-lookup-consent").check();
+    let releaseStaleLookup!: () => void;
+    let staleLookupStartedResolve!: () => void;
+    const staleLookupStarted = new Promise<void>((resolve) => { staleLookupStartedResolve = resolve; });
+    await recipientPage.route(exactLookupUrl, async (route) => {
+      staleLookupStartedResolve();
+      await new Promise<void>((resolve) => { releaseStaleLookup = resolve; });
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: exactLookupBody ?? Buffer.from("{}"),
+      });
+    });
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-lookup").click();
+    await staleLookupStarted;
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-textarea").fill(`${shareText}\nchanged after lookup`);
+    releaseStaleLookup();
+    await expect(reloadedImportPanel.getByTestId("bootstrap-shared-walk-results")).toHaveCount(0);
+    await expect(reloadedImportPanel.getByTestId("bootstrap-shared-walk-preview")).toHaveCount(0);
+    expect(provider.overpassCalls).toHaveLength(2);
+    await recipientPage.unroute(exactLookupUrl);
+
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-textarea").fill(
       "https://www.openstreetmap.org/node/103001?access_token=secret\nhttps://www.openstreetmap.org/node/103002",
     );
-    await importPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
-    await expect(importPanel.getByTestId("bootstrap-shared-walk-error")).toBeVisible();
+    await reloadedImportPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
+    await expect(reloadedImportPanel.getByTestId("bootstrap-shared-walk-error")).toBeVisible();
     expect(provider.overpassCalls).toHaveLength(2);
     expect(savedMuseumId).toBeTruthy();
   } finally {
