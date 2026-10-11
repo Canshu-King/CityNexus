@@ -71,6 +71,15 @@ _BOOTSTRAP_GROUNDED_OPENING = frozenset(
 _MAX_QUERY = 120
 _MAX_SHORTLIST_ITEMS = 3
 _BOOTSTRAP_RATE_LIMIT_SECONDS = 5
+_BOOTSTRAP_OVERPASS_HOSTS = frozenset(
+    {
+        "overpass-api.de",
+        "overpass.kumi.systems",
+        "overpass.private.coffee",
+        "overpass.openstreetmap.fr",
+    }
+)
+_BOOTSTRAP_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
 
 
 class BootstrapDiscoveryError(ValueError):
@@ -79,6 +88,95 @@ class BootstrapDiscoveryError(ValueError):
         self.code = code
         self.status_code = status_code
         self.details = details or {}
+
+
+def bootstrap_discovery_readiness() -> dict[str, Any]:
+    """Project the operator gate without constructing a provider or doing I/O.
+
+    The response describes only the recipient and the decision. It never exposes
+    the configured endpoint, proxy, user agent, credentials, or a caller's
+    selected coordinates. Loopback is accepted only for the declared controlled
+    test boundary and is always graded as ``TEST_PROVIDER``.
+    """
+
+    base = {
+        "provider": "overpass",
+        "provider_name": "OpenStreetMap Overpass",
+        "expected_recipient": "OpenStreetMap/Overpass public map data service",
+        "external_request_allowed": False,
+        "test_only": False,
+    }
+    if not settings.real_city_enabled:
+        return {
+            **base,
+            "status": "BLOCKED",
+            "reason_code": "PROVIDER_DISABLED",
+            "provider_grade": "UNVERIFIED",
+        }
+    if str(settings.real_city_mode).lower() != "live":
+        return {
+            **base,
+            "status": "BLOCKED",
+            "reason_code": "LIVE_MODE_REQUIRED",
+            "provider_grade": "UNVERIFIED",
+        }
+    try:
+        parsed = urlparse(str(settings.overpass_url or "").strip())
+        host = (parsed.hostname or "").lower().rstrip(".")
+        port = parsed.port
+    except (TypeError, ValueError):
+        parsed = None
+        host = ""
+        port = None
+    if parsed is None or not host or parsed.username or parsed.password:
+        return {
+            **base,
+            "status": "BLOCKED",
+            "reason_code": "ENDPOINT_NOT_APPROVED",
+            "provider_grade": "UNVERIFIED",
+        }
+    try:
+        is_loopback = host in _BOOTSTRAP_LOOPBACK_HOSTS or ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        is_loopback = host in _BOOTSTRAP_LOOPBACK_HOSTS
+    path_ok = parsed.path.rstrip("/") == "/api"
+    no_authority_extras = not parsed.query and not parsed.fragment
+    if (
+        is_loopback
+        and settings.city_search_test_provider
+        and parsed.scheme.lower() == "http"
+        and path_ok
+        and no_authority_extras
+        and port is not None
+    ):
+        return {
+            **base,
+            "status": "READY",
+            "reason_code": "READY",
+            "provider_grade": "TEST_PROVIDER",
+            "expected_recipient": "Controlled test provider; no public request is claimed",
+            "test_only": True,
+        }
+    if (
+        parsed.scheme.lower() == "https"
+        and host in _BOOTSTRAP_OVERPASS_HOSTS
+        and port in (None, 443)
+        and path_ok
+        and no_authority_extras
+    ):
+        return {
+            **base,
+            "status": "READY",
+            "reason_code": "READY",
+            "provider_grade": "LIVE_PROVIDER",
+            "external_request_allowed": True,
+        }
+    return {
+        **base,
+        "status": "BLOCKED",
+        "reason_code": "ENDPOINT_NOT_APPROVED",
+        "provider_grade": "UNVERIFIED",
+    }
 
 
 def _now() -> datetime:
@@ -1350,6 +1448,50 @@ def discover_bootstrap_candidates(
     captured_at = _now()
     member_id = str(member.id)
     traveler_id = str(traveler_id)
+    readiness = bootstrap_discovery_readiness()
+    expires_at = captured_at + timedelta(seconds=settings.real_city_cache_ttl_seconds)
+    # ProviderCall is an audit of the public operation, not a location log. Keep
+    # exact centers, accuracy, member IDs and traveler IDs out of this record.
+    request = {
+        "operation": "bootstrap_city_discovery",
+        "journey_id": str(journey.id),
+        "city_code": journey.city_code,
+        "query": query,
+        "radius_m": radius_m,
+        "limit": limit,
+        "mode": "live",
+        "source_kind": source_kind,
+        "coordinate_system": "WGS84",
+        "provider_consent": True,
+    }
+    if readiness["status"] != "READY":
+        _provider_call(
+            session,
+            journey=journey,
+            request=request,
+            response={
+                "status": "PROVIDER_DISABLED",
+                "reason_code": readiness["reason_code"],
+                "attempts": [],
+                "count": 0,
+            },
+            status="DISABLED",
+            created_at=_iso(captured_at),
+        )
+        return {
+            "journey_id": journey.id,
+            "status": "PROVIDER_DISABLED",
+            "result_state": "DISABLED",
+            "failure_code": readiness["reason_code"],
+            "readiness": readiness,
+            "receipt_id": None,
+            "expires_at": None,
+            "source_kind": source_kind,
+            "provider": "overpass",
+            "provider_provenance": "UNVERIFIED",
+            "attempts": [],
+            "candidates": [],
+        }
     if _bootstrap_rate_limited(
         session,
         journey,
@@ -1370,41 +1512,6 @@ def discover_bootstrap_candidates(
                 "provider_consent": True,
             },
         )
-    expires_at = captured_at + timedelta(seconds=settings.real_city_cache_ttl_seconds)
-    request = {
-        "journey_id": str(journey.id),
-        "city_code": journey.city_code,
-        "query": query,
-        "radius_m": radius_m,
-        "limit": limit,
-        "mode": "live",
-        "source_kind": source_kind,
-        "center": _rounded_center(float(latitude), float(longitude)),
-        "accuracy_m": round(float(accuracy_m), 1) if accuracy_m is not None else None,
-        "member_id": member_id,
-        "traveler_id": traveler_id,
-        "provider_consent": True,
-    }
-    if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live":
-        _provider_call(
-            session,
-            journey=journey,
-            request=request,
-            response={"status": "PROVIDER_DISABLED", "attempts": [], "count": 0},
-            status="DISABLED",
-            created_at=_iso(captured_at),
-        )
-        return {
-            "journey_id": journey.id,
-            "status": "PROVIDER_DISABLED",
-            "receipt_id": None,
-            "expires_at": None,
-            "source_kind": source_kind,
-            "provider": "overpass",
-            "provider_provenance": "UNVERIFIED",
-            "attempts": [],
-            "candidates": [],
-        }
 
     provider = OverpassPOIProvider()
     configured_provider_url = provider.base_url
@@ -1431,6 +1538,9 @@ def discover_bootstrap_candidates(
         return {
             "journey_id": journey.id,
             "status": "PROVIDER_UNAVAILABLE",
+            "result_state": "UNAVAILABLE",
+            "failure_code": "PROVIDER_UNAVAILABLE",
+            "readiness": readiness,
             "receipt_id": None,
             "expires_at": None,
             "source_kind": source_kind,
@@ -1574,6 +1684,7 @@ def discover_bootstrap_candidates(
         request=request,
         response={
             "status": "LIVE_RESULTS" if usable else "LIVE_ZERO_RESULTS",
+            "result_state": "FOUND_2+" if len(usable) >= 2 else "PARTIAL_1" if len(usable) == 1 else "ZERO",
             "attempts": attempts,
             "count": len(usable),
             "provider_provenance": provider_provenance,
@@ -1584,6 +1695,8 @@ def discover_bootstrap_candidates(
     return {
         "journey_id": journey.id,
         "status": "LIVE_RESULTS" if usable else "LIVE_ZERO_RESULTS",
+        "result_state": "FOUND_2+" if len(usable) >= 2 else "PARTIAL_1" if len(usable) == 1 else "ZERO",
+        "readiness": readiness,
         "receipt_id": receipt_id,
         "expires_at": _iso(expires_at),
         "source_kind": source_kind,
@@ -1646,12 +1759,18 @@ def lookup_bootstrap_shared_walk(
         "objects": [{"osm_type": kind, "osm_id": identifier} for kind, identifier in requested],
         "provider_consent": True,
     }
-    if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live":
+    readiness = bootstrap_discovery_readiness()
+    if readiness["status"] != "READY":
         _provider_call(
             session,
             journey=journey,
             request=request,
-            response={"status": "LOOKUP_BLOCKED", "reason": "PROVIDER_DISABLED", "attempts": [], "count": 0},
+            response={
+                "status": "LOOKUP_BLOCKED",
+                "reason": readiness["reason_code"],
+                "attempts": [],
+                "count": 0,
+            },
             status="DISABLED",
             created_at=_iso(captured_at),
         )
@@ -1659,11 +1778,12 @@ def lookup_bootstrap_shared_walk(
             "journey_id": journey.id,
             "status": "LOOKUP_BLOCKED",
             "lookup_state": "LOOKUP_BLOCKED",
-            "failure_code": "PROVIDER_DISABLED",
+            "failure_code": readiness["reason_code"],
             "receipt_id": None,
             "expires_at": None,
             "provider": "overpass",
             "provider_provenance": "UNVERIFIED",
+            "readiness": readiness,
             "attempts": [],
             "candidates": [],
             "verified_count": 0,
@@ -1693,6 +1813,7 @@ def lookup_bootstrap_shared_walk(
             "expires_at": None,
             "provider": "overpass",
             "provider_provenance": "UNVERIFIED",
+            "readiness": readiness,
             "attempts": attempts,
             "candidates": [],
             "verified_count": 0,
@@ -1840,6 +1961,7 @@ def lookup_bootstrap_shared_walk(
         "expires_at": _iso(expires_at) if usable else None,
         "provider": "overpass",
         "provider_provenance": provider_provenance,
+        "readiness": readiness,
         "attempts": attempts,
         "verified_count": len(usable),
         "candidates": [

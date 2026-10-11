@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   cityNexusApi,
   type BootstrapCitySearchResult,
+  type BootstrapDiscoveryReadinessResponse,
   type BootstrapDiscoveryCandidate,
   type BootstrapMapPreviewResponse,
   type BootstrapDiscoveryResponse,
@@ -314,6 +315,10 @@ export function BootstrapDiscoveryPanel({
   const [longitude, setLongitude] = useState("");
   const [accuracy, setAccuracy] = useState<number | undefined>();
   const [providerConsent, setProviderConsent] = useState(false);
+  const [cityLabelConfirmed, setCityLabelConfirmed] = useState(() => Boolean(cityName?.trim() || cityCode.trim()));
+  const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
+  const [readinessBusy, setReadinessBusy] = useState(false);
+  const [readinessMessage, setReadinessMessage] = useState<string | null>(null);
   const [result, setResult] = useState<BootstrapDiscoveryResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [selecting, setSelecting] = useState<string | null>(null);
@@ -523,6 +528,9 @@ export function BootstrapDiscoveryPanel({
     setBusy(false);
     setMapBusy(false);
     setProviderConsent(false);
+    setCityLabelConfirmed(Boolean(cityName?.trim() || cityCode.trim()));
+    setReadiness(null);
+    setReadinessMessage(null);
     setSourceKind("MANUAL_PUBLIC_CENTER");
     setOutingIntent(null);
     setLatitude("");
@@ -650,8 +658,42 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkSaveConsent(false);
     setSharedWalkSaveBusy(false);
     setSharedWalkPocketBudget(null);
+    setCityLabelConfirmed(Boolean(cityName?.trim() || cityCode.trim()));
+    setReadiness(null);
+    setReadinessMessage(null);
     setMessage("Journey changed; choose a new public search area.");
-  }, [journeyId, cityName]);
+  }, [journeyId, cityName, cityCode]);
+
+  useEffect(() => {
+    let active = true;
+    const requestBearer = travelerBearer;
+    const requestGeneration = identityGeneration.current;
+    const stillCurrent = () => active && isCurrentIdentity(requestBearer, requestGeneration) && journeyIdRef.current === journeyId;
+    setReadiness(null);
+    setReadinessMessage(null);
+    if (!travelerBearer) {
+      setReadinessBusy(false);
+      return () => {
+        active = false;
+      };
+    }
+    setReadinessBusy(true);
+    void cityNexusApi.getBootstrapDiscoveryReadiness(journeyId)
+      .then((next) => {
+        if (!stillCurrent()) return;
+        setReadiness(next);
+      })
+      .catch((error) => {
+        if (!stillCurrent()) return;
+        setReadinessMessage(error instanceof Error ? error.message : "Provider readiness could not be checked.");
+      })
+      .finally(() => {
+        if (stillCurrent()) setReadinessBusy(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [journeyId, travelerBearer]);
 
   useEffect(() => {
     let active = true;
@@ -924,6 +966,18 @@ export function BootstrapDiscoveryPanel({
   };
 
   const search = async () => {
+    if (readiness?.status !== "READY") {
+      setMessage(`Discovery is blocked by ${readiness?.reason_code ?? "UNAVAILABLE"}; no provider request was made.`);
+      return;
+    }
+    if (sourceKind !== "MANUAL_PUBLIC_CENTER") {
+      setMessage("Choose a public map center. Foreground GPS is not used for this public discovery flow.");
+      return;
+    }
+    if (!cityLabelConfirmed) {
+      setMessage("Confirm the named city label before searching public places.");
+      return;
+    }
     if (!selectedOutingIntent) {
       setMessage("Choose what you want from this outing before searching public places.");
       return;
@@ -969,7 +1023,7 @@ export function BootstrapDiscoveryPanel({
       if (next.status === "PROVIDER_UNAVAILABLE") {
         setMessage("The public provider is unavailable. Use a public map center and try again later.");
       } else if (next.status === "PROVIDER_DISABLED") {
-        setMessage("Live public discovery is unavailable in this environment. No provider request was made.");
+        setMessage(`Live public discovery is unavailable (${next.failure_code ?? "PROVIDER_DISABLED"}). No provider request was made.`);
       } else if (next.status === "LIVE_ZERO_RESULTS") {
         setMessage("No named public places were returned for that center.");
       }
@@ -1909,6 +1963,38 @@ export function BootstrapDiscoveryPanel({
   );
   const pocketSharePreview = pocketShareText();
   const candidateSharePreview = candidateShareText();
+  const publicCityLabel = cityName?.trim() || cityCode.trim() || "the selected city";
+  const effectiveReadinessReason = readinessMessage
+    ? "UNAVAILABLE"
+    : !readiness
+      ? "READINESS_LOADING"
+      : readiness.status === "BLOCKED"
+        ? readiness.reason_code
+        : sourceKind !== "MANUAL_PUBLIC_CENTER" || !hasValidSearchCenter || !cityLabelConfirmed
+          ? "USER_PUBLIC_AREA_REQUIRED"
+          : !selectedOutingIntent
+            ? "USER_CATEGORY_REQUIRED"
+            : !providerConsent
+              ? "CONSENT_REQUIRED"
+              : "READY";
+  const searchReady = Boolean(
+    !busy &&
+    !readinessBusy &&
+    readiness?.status === "READY" &&
+    sourceKind === "MANUAL_PUBLIC_CENTER" &&
+    hasValidSearchCenter &&
+    cityLabelConfirmed &&
+    selectedOutingIntent &&
+    providerConsent,
+  );
+  const discoveryOutcome = result
+    ? result.result_state ?? (
+      result.status === "PROVIDER_DISABLED" ? "DISABLED"
+        : result.status === "PROVIDER_UNAVAILABLE" ? "UNAVAILABLE"
+          : result.candidates.length >= 2 ? "FOUND_2+"
+            : result.candidates.length === 1 ? "PARTIAL_1" : "ZERO"
+    )
+    : null;
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -1923,6 +2009,21 @@ export function BootstrapDiscoveryPanel({
           A manual center is only a public search center. It never becomes your GPS observation,
           group presence, or route origin. Opening hours, price, and ETA remain UNKNOWN until evidence exists.
         </p>
+        <section data-testid="bootstrap-discovery-readiness" aria-labelledby="bootstrap-discovery-readiness-title">
+          <h2 id="bootstrap-discovery-readiness-title">Public discovery readiness</h2>
+          <p>
+            Expected recipient: <strong>{readiness?.expected_recipient ?? "OpenStreetMap/Overpass public map data service"}</strong>.
+            No provider request is made by this readiness check, on mount, while typing, or for an invalid center.
+          </p>
+          <p data-testid="bootstrap-discovery-readiness-reason">
+            {readinessBusy
+              ? "Checking operator configuration…"
+              : readinessMessage
+                ? `UNAVAILABLE: ${readinessMessage}`
+                : `${effectiveReadinessReason}: ${readiness?.provider_grade ?? "UNVERIFIED"}`}
+          </p>
+          {readiness?.test_only ? <p>Controlled test endpoint only. Any returned evidence remains TEST_PROVIDER.</p> : null}
+        </section>
         <div className="v8-actions">
           <button
             type="button"
@@ -2090,6 +2191,18 @@ export function BootstrapDiscoveryPanel({
             Choose a public map center or deliberately allow foreground GPS before searching. No provider request will be made yet.
           </p>
         )}
+        <label data-testid="bootstrap-city-label-confirmation">
+          <input
+            type="checkbox"
+            data-testid="bootstrap-city-label-confirm"
+            checked={cityLabelConfirmed}
+            onChange={(event) => {
+              invalidateDiscovery();
+              setCityLabelConfirmed(event.target.checked);
+            }}
+          />
+          I confirm the named city label is <strong>{publicCityLabel}</strong> for this outing. The pin still represents only a public search area.
+        </label>
         {resumeIntent ? (
           <section data-testid="bootstrap-resume" aria-labelledby="bootstrap-resume-title">
             <h2 id="bootstrap-resume-title">Continue exploring</h2>
@@ -2382,10 +2495,10 @@ export function BootstrapDiscoveryPanel({
             checked={providerConsent}
             onChange={(event) => setProviderConsent(event.target.checked)}
           />
-          I understand that this search sends the query and public center to OpenStreetMap/Overpass.
+          I agree that one search sends the fixed category{selectedOutingIntent ? ` ${selectedOutingIntent.query}` : ""}, city label {publicCityLabel}, and exact public coordinates{hasValidSearchCenter ? ` ${parsedLatitude.toFixed(6)}, ${parsedLongitude.toFixed(6)}` : ""} to the expected public provider. Foreground GPS is not used.
         </label>
         <div className="v8-actions">
-          <button type="button" data-testid="bootstrap-search" disabled={busy || !hasValidSearchCenter || !selectedOutingIntent} onClick={() => void search()}>
+          <button type="button" data-testid="bootstrap-search" disabled={!searchReady} onClick={() => void search()}>
             {busy ? "Searching…" : "Search public places"}
           </button>
           {onCancel ? (
@@ -2395,6 +2508,15 @@ export function BootstrapDiscoveryPanel({
           ) : null}
         </div>
         {message ? <p role="status">{message}</p> : null}
+        {result && discoveryOutcome ? (
+          <section data-testid="bootstrap-discovery-outcome" aria-live="polite">
+            <h2>Discovery outcome: {discoveryOutcome}</h2>
+            <p>
+              Provider grade: {result.provider_provenance} · observed at {result.attempts[0]?.http_status ? "provider response" : "no provider response"}.
+              {discoveryOutcome === "PARTIAL_1" ? " One public candidate can be reviewed or saved; two-place sharing stays disabled." : ""}
+            </p>
+          </section>
+        ) : null}
         {exploreNotice ? (
           <>
             <p role="status" data-testid="bootstrap-explore-state">

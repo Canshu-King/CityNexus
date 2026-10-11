@@ -260,6 +260,7 @@ from app.execution.readiness import (
 from app.execution.departure_activation import departure_activation_projection
 from app.execution.bootstrap_discovery import (
     BootstrapDiscoveryError,
+    bootstrap_discovery_readiness,
     discover_bootstrap_candidates,
     search_bootstrap_city,
     list_bootstrap_shortlist_items,
@@ -3415,6 +3416,21 @@ def _bootstrap_http_error(exc: BootstrapDiscoveryError) -> HTTPException:
     refused.error_details = exc.details
     refused.message_key = "bootstrap." + exc.code.lower()
     return refused
+
+
+@app.get("/api/v1/journeys/{journey_id}/bootstrap-discovery/readiness")
+def get_bootstrap_discovery_readiness(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Return a signed member's nonsecret provider gate without doing provider I/O."""
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    return {"journey_id": journey.id, **bootstrap_discovery_readiness()}
 
 
 @app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery")
