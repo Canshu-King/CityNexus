@@ -1,0 +1,15 @@
+验路工 · 0576 批三 r5 读数板（枝 review/验路工-0576-r3，基准=现尖 dde3933269）
+[1] 基准现取：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 dde393326935dce66c7e7bd88cdab69af3e53985
+[2] 产品提交 ad551988b20039ac3d5e966cfc169e2102a93f3f；相对基准只动两个文件（`frontend/src/features/execution/LiveRecovery.tsx`、`frontend/src/i18n/LocaleContext.tsx`），改动净差零行（增九行、减九行）
+[3] 搬走的三句（真行号＝改前那一代现读）：`frontend/src/features/execution/LiveRecovery.tsx:339`、`frontend/src/features/execution/LiveRecovery.tsx:374`、`frontend/src/features/execution/LiveRecovery.tsx:377`
+[4] 换上的三枚键（改这一代现读，`t` 作用域在 `frontend/src/features/execution/LiveRecovery.tsx:109`）：`frontend/src/features/execution/LiveRecovery.tsx:338`、`frontend/src/features/execution/LiveRecovery.tsx:371`、`frontend/src/features/execution/LiveRecovery.tsx:372`
+[5] 字典两侧同序各一枚：英文 `frontend/src/i18n/LocaleContext.tsx:402`、`frontend/src/i18n/LocaleContext.tsx:403`、`frontend/src/i18n/LocaleContext.tsx:404`；中文 `frontend/src/i18n/LocaleContext.tsx:1860`、`frontend/src/i18n/LocaleContext.tsx:1861`、`frontend/src/i18n/LocaleContext.tsx:1862`；每键在字典里现读命中二处，三枚键名改前现读命中零处，三条值改前在字典里也现读命中零处
+[6] 行尾检查：两文件每行都还是 CRLF（`frontend/src/features/execution/LiveRecovery.tsx` 四百六十二行全带回车、`frontend/src/i18n/LocaleContext.tsx` 二千九百九十二行全带回车）
+[7] 全量类型闸 `npx tsc -p tsconfig.typecheck.json --noEmit`：退出码零、`error TS` 零条，见 review/验路工-0576/typecheck_full_r5.txt:1
+[8] 上屏码闸 r4（ref=产品提交 base=基准）退出码零，判语原样 `files_judged=2 refuse=0 info=29 corpus=1254` 在 review/验路工-0576/gate_r4_candidate_r5.txt:1
+[9] 逐字节尺（这把只认字面量本身，跨行的三元式照样能证）review/验路工-0576/byte_proof_r5.txt:5 = PROVEN，keys_checked=3 keys_reading_t_in_candidate=3 在 `review/验路工-0576/byte_proof_r5.txt:4`，退出码零在 `:6`，两侧行号逐枚在 `review/验路工-0576/byte_proof_r5.txt:1`、`:2`、`:3`
+[10] 反控：同一把尺只喂基准尖 = `FAILED`（review/验路工-0576/byte_proof_r5_negative.txt:14）、退出码一（`review/验路工-0576/byte_proof_r5_negative.txt:15`）
+[11] 普查尺 r2 两代全树：基准 A 臂二百零七处（review/验路工-0576/census_r2_base_dde3933269.json:5）→ 本枝 A 臂二百零四处（review/验路工-0576/census_r2_head_ad551988b2.json:5），差的三处即本批三句；B 两臂三百五十九处与一百六十七处未动
+[12] 普查尺的行号病已实测成因（上一块第五节），本枝沿用反解尺 review/验路工-0576/rest_list_r4.py:1，本枚文件 A 臂余面在该反解件里 `arm_A=13`（review/验路工-0576/rest_liverecovery_r5.txt:2），逐枚真行号自 `review/验路工-0576/rest_liverecovery_r5.txt:3` 起、`unresolved=0` 在 `review/验路工-0576/rest_liverecovery_r5.txt:16`
+[13] 本枝那枚文件余面分两档：组件内（`t` 可用）五枚在 `:309`、`:405`、`:406`、`:415`、`:450`；另有批二那三枚（`:419`、`:428`、`:443`）本就还在这条线上没落地，不在本批分母里；模块级函数 `humanReplanReason` 内五枚在 `:74`、`:79`、`:84`、`:89`、`:94`
+[14] 我没推权威线，force 零次；账本零直写，本块走收件口
