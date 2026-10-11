@@ -12,9 +12,11 @@ import {
   type BootstrapTwoStopWalkabilityResponse,
   type BootstrapAdaptiveShortWalkResponse,
   type BootstrapPocketWalkResponse,
+  type BootstrapSharedWalkLookupResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
+import { parseSharedWalkText, type SharedWalkParseResult } from "./sharedWalk";
 
 type SourceKind = "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
 const OUTING_INTENTS = [
@@ -356,6 +358,12 @@ export function BootstrapDiscoveryPanel({
   const [pocketWalkMessage, setPocketWalkMessage] = useState<string | null>(null);
   const [pocketShareConsent, setPocketShareConsent] = useState(false);
   const [pocketShareMapLink, setPocketShareMapLink] = useState(false);
+  const [sharedWalkText, setSharedWalkText] = useState("");
+  const [sharedWalkParse, setSharedWalkParse] = useState<SharedWalkParseResult | null>(null);
+  const [sharedWalkLookup, setSharedWalkLookup] = useState<BootstrapSharedWalkLookupResponse | null>(null);
+  const [sharedWalkLookupConsent, setSharedWalkLookupConsent] = useState(false);
+  const [sharedWalkLookupBusy, setSharedWalkLookupBusy] = useState(false);
+  const [sharedWalkMessage, setSharedWalkMessage] = useState<string | null>(null);
   const identityGeneration = useRef(0);
   const pendingWindowRef = useRef<Window | null>(null);
   const journeyIdRef = useRef(journeyId);
@@ -367,6 +375,7 @@ export function BootstrapDiscoveryPanel({
   const adaptiveRequestGeneration = useRef(0);
   const pocketRequestGeneration = useRef(0);
   const pocketClearPromiseRef = useRef<Promise<void> | null>(null);
+  const sharedWalkRequestGeneration = useRef(0);
   const parsedLatitude = parsePublicCoordinate(latitude, -90, 90);
   const parsedLongitude = parsePublicCoordinate(longitude, -180, 180);
   const hasValidSearchCenter = parsedLatitude !== null && parsedLongitude !== null;
@@ -379,6 +388,7 @@ export function BootstrapDiscoveryPanel({
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
+    sharedWalkRequestGeneration.current += 1;
     try {
       pendingWindowRef.current?.close();
     } catch {
@@ -415,6 +425,12 @@ export function BootstrapDiscoveryPanel({
     setPocketWalkMessage(null);
     setPocketShareConsent(false);
     setPocketShareMapLink(false);
+    setSharedWalkText("");
+    setSharedWalkParse(null);
+    setSharedWalkLookup(null);
+    setSharedWalkLookupConsent(false);
+    setSharedWalkLookupBusy(false);
+    setSharedWalkMessage(null);
   };
   const captureDiscoveryFence = (): DiscoveryFence => ({
     bearer: travelerBearer,
@@ -468,6 +484,7 @@ export function BootstrapDiscoveryPanel({
     citySearchGeneration.current += 1;
     // Invalidate pending A Pocket Walk mutations before any B state renders.
     pocketRequestGeneration.current += 1;
+    sharedWalkRequestGeneration.current += 1;
     pocketClearPromiseRef.current = null;
     sourceKindRef.current = "MANUAL_PUBLIC_CENTER";
     try {
@@ -524,6 +541,12 @@ export function BootstrapDiscoveryPanel({
     setPocketWalkMessage(null);
     setPocketShareConsent(false);
     setPocketShareMapLink(false);
+    setSharedWalkText("");
+    setSharedWalkParse(null);
+    setSharedWalkLookup(null);
+    setSharedWalkLookupConsent(false);
+    setSharedWalkLookupBusy(false);
+    setSharedWalkMessage(null);
     setShortlistLoading(true);
     setMessage("Session changed; private exploration state was cleared.");
   };
@@ -549,6 +572,7 @@ export function BootstrapDiscoveryPanel({
     discoveryGeneration.current += 1;
     gpsRequestGeneration.current += 1;
     citySearchGeneration.current += 1;
+    sharedWalkRequestGeneration.current += 1;
     // Prior Journey requests must never rehydrate the new Journey's card.
     pocketRequestGeneration.current += 1;
     pocketClearPromiseRef.current = null;
@@ -588,6 +612,12 @@ export function BootstrapDiscoveryPanel({
     setPocketWalkMessage(null);
     setPocketShareConsent(false);
     setPocketShareMapLink(false);
+    setSharedWalkText("");
+    setSharedWalkParse(null);
+    setSharedWalkLookup(null);
+    setSharedWalkLookupConsent(false);
+    setSharedWalkLookupBusy(false);
+    setSharedWalkMessage(null);
     setMessage("Journey changed; choose a new public search area.");
   }, [journeyId, cityName]);
 
@@ -746,6 +776,53 @@ export function BootstrapDiscoveryPanel({
     }
   };
 
+  const previewSharedWalk = () => {
+    const parsed = parseSharedWalkText(sharedWalkText);
+    setSharedWalkParse(parsed);
+    setSharedWalkLookup(null);
+    setSharedWalkLookupConsent(false);
+    setSharedWalkMessage(parsed.ok ? "Preview only: these two public OSM identities are still unverified." : parsed.message);
+  };
+
+  const lookupSharedWalk = async () => {
+    const parsed = sharedWalkParse?.ok ? sharedWalkParse : parseSharedWalkText(sharedWalkText);
+    if (!parsed.ok) {
+      setSharedWalkParse(parsed);
+      setSharedWalkMessage(parsed.message);
+      return;
+    }
+    if (!sharedWalkLookupConsent) {
+      setSharedWalkMessage("Confirm the separate exact-object OpenStreetMap lookup before releasing these two public identities.");
+      return;
+    }
+    const fence = captureDiscoveryFence();
+    const requestGeneration = ++sharedWalkRequestGeneration.current;
+    const stillCurrent = () =>
+      isCurrentDiscovery(fence) && sharedWalkRequestGeneration.current === requestGeneration;
+    setSharedWalkLookupBusy(true);
+    setSharedWalkMessage(null);
+    try {
+      const response = await cityNexusApi.lookupBootstrapSharedWalk(journeyId, {
+        objects: parsed.objects,
+        provider_consent: true,
+      });
+      if (!stillCurrent()) return;
+      setSharedWalkLookup(response);
+      setSharedWalkLookupConsent(false);
+      setSharedWalkMessage(
+        response.status === "LOOKUP_BLOCKED"
+          ? "LOOKUP_BLOCKED: the exact public lookup did not answer. The source-only preview remains; no coordinates or save-ready places were invented."
+          : response.verified_count === 2
+            ? "Both public identities were freshly verified for this signed member. Save them to your own private shortlist, then choose their order."
+            : "Only part of the shared walk was verified. Source-only preview remains; a two-stop Pocket Walk is not available.",
+      );
+    } catch (error) {
+      if (stillCurrent()) setSharedWalkMessage(error instanceof Error ? error.message : "The exact public lookup could not be completed.");
+    } finally {
+      if (stillCurrent()) setSharedWalkLookupBusy(false);
+    }
+  };
+
   const search = async () => {
     if (!selectedOutingIntent) {
       setMessage("Choose what you want from this outing before searching public places.");
@@ -825,8 +902,9 @@ export function BootstrapDiscoveryPanel({
     }
   };
 
-  const saveCandidate = async (candidate: BootstrapDiscoveryCandidate) => {
-    if (!result?.receipt_id) {
+  const saveCandidate = async (candidate: BootstrapDiscoveryCandidate, receiptOverride?: string | null) => {
+    const receiptId = receiptOverride ?? result?.receipt_id;
+    if (!receiptId) {
       setMessage("Search again before saving a public place.");
       return;
     }
@@ -836,7 +914,6 @@ export function BootstrapDiscoveryPanel({
       return;
     }
     const fence = captureDiscoveryFence();
-    const receiptId = result.receipt_id;
     setShortlistBusy(candidate.candidate_id);
     setMessage(null);
     try {
@@ -1879,6 +1956,113 @@ export function BootstrapDiscoveryPanel({
             </div>
           </section>
         ) : null}
+        <section data-testid="bootstrap-shared-walk-import" aria-labelledby="bootstrap-shared-walk-import-title">
+          <h2 id="bootstrap-shared-walk-import-title">Import a friend's public walk</h2>
+          <p>
+            Paste the public-only text from a friend. CityNexus reads exactly two canonical OpenStreetMap object links locally;
+            names, opening hours, prices, provider labels, walking times, Journey IDs, and private authority in the pasted text are untrusted.
+          </p>
+          <label>
+            Public walk text
+            <textarea
+              data-testid="bootstrap-shared-walk-textarea"
+              aria-label="Public walk text"
+              value={sharedWalkText}
+              onChange={(event) => {
+                setSharedWalkText(event.target.value);
+                setSharedWalkParse(null);
+                setSharedWalkLookup(null);
+                setSharedWalkLookupConsent(false);
+                setSharedWalkMessage(null);
+              }}
+              rows={6}
+              placeholder="Paste two public OpenStreetMap object links"
+            />
+          </label>
+          <div className="v8-actions">
+            <button type="button" data-testid="bootstrap-shared-walk-preview-button" onClick={previewSharedWalk} disabled={sharedWalkLookupBusy}>
+              Preview public identities
+            </button>
+            <button
+              type="button"
+              data-testid="bootstrap-shared-walk-cancel"
+              onClick={() => {
+                sharedWalkRequestGeneration.current += 1;
+                setSharedWalkText("");
+                setSharedWalkParse(null);
+                setSharedWalkLookup(null);
+                setSharedWalkLookupConsent(false);
+                setSharedWalkMessage("Import cancelled; no provider request was made.");
+              }}
+              disabled={sharedWalkLookupBusy}
+            >
+              Clear import
+            </button>
+          </div>
+          {sharedWalkParse && !sharedWalkParse.ok ? (
+            <p role="status" data-testid="bootstrap-shared-walk-error">{sharedWalkParse.message}</p>
+          ) : null}
+          {sharedWalkParse?.ok ? (
+            <div data-testid="bootstrap-shared-walk-preview" role="status">
+              <p>Recipient has not verified names, opening, prices, coordinates or routes.</p>
+              <ol>
+                {sharedWalkParse.objects.map((object, index) => (
+                  <li key={object.source_url}>
+                    Stop {index + 1}: <strong>{object.osm_type}/{object.osm_id}</strong> · UNVERIFIED_SHARED_REFERENCE ·{" "}
+                    <a href={object.source_url} target="_blank" rel="noopener noreferrer" data-testid={`bootstrap-shared-walk-source-${index}`}>
+                      Inspect public OSM source
+                    </a>
+                  </li>
+                ))}
+              </ol>
+              <p>Opening the source is a deliberate public OSM disclosure. Pasting, previewing, reload and cancellation make no provider request.</p>
+              <label>
+                <input
+                  type="checkbox"
+                  data-testid="bootstrap-shared-walk-lookup-consent"
+                  checked={sharedWalkLookupConsent}
+                  onChange={(event) => setSharedWalkLookupConsent(event.target.checked)}
+                />
+                I agree to one bounded exact-object public lookup for these two OSM identities.
+              </label>
+              <button
+                type="button"
+                data-testid="bootstrap-shared-walk-lookup"
+                disabled={!sharedWalkLookupConsent || sharedWalkLookupBusy}
+                onClick={() => void lookupSharedWalk()}
+              >
+                {sharedWalkLookupBusy ? "Checking public sources…" : "Check these two public sources"}
+              </button>
+            </div>
+          ) : null}
+          {sharedWalkMessage ? <p role="status" data-testid="bootstrap-shared-walk-message">{sharedWalkMessage}</p> : null}
+          {sharedWalkLookup && sharedWalkLookup.status !== "LOOKUP_BLOCKED" ? (
+            <div data-testid="bootstrap-shared-walk-results">
+              <h3>Fresh recipient-side public evidence</h3>
+              {sharedWalkLookup.candidates.map((candidate) => {
+                const source = safeOsmSourceUrl(candidate.source_url);
+                const alreadySaved = shortlist.some((item) => item.external_id === candidate.external_id);
+                return (
+                  <article key={candidate.candidate_id} data-testid={`bootstrap-shared-walk-candidate-${candidate.candidate_id}`}>
+                    <h4>{candidate.name}</h4>
+                    <p>{candidate.category} · public coordinates freshly returned · opening and price remain UNKNOWN</p>
+                    <p>Source grade: {candidate.provider_provenance} · observed {candidate.opening_observed_at}</p>
+                    {source ? <a href={source} target="_blank" rel="noopener noreferrer">Open public OSM source</a> : null}
+                    <button
+                      type="button"
+                      data-testid={`bootstrap-shared-walk-save-${candidate.candidate_id}`}
+                      disabled={alreadySaved || shortlistBusy !== null || shortlist.length >= 3 || !sharedWalkLookup.receipt_id}
+                      onClick={() => void saveCandidate(candidate, sharedWalkLookup.receipt_id)}
+                    >
+                      {alreadySaved ? "Saved to my private shortlist" : shortlistBusy === candidate.candidate_id ? "Saving…" : "Save to MY private shortlist"}
+                    </button>
+                  </article>
+                );
+              })}
+              {sharedWalkLookup.verified_count < 2 ? <p role="status">A second identity was not verified, so no two-stop Pocket Walk can be claimed.</p> : null}
+            </div>
+          ) : null}
+        </section>
         <section data-testid="bootstrap-outing-intents" aria-labelledby="bootstrap-outing-intents-title">
           <h2 id="bootstrap-outing-intents-title">What would make this first outing feel good?</h2>
           <p>
