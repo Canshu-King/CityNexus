@@ -253,27 +253,21 @@ export function statusCopy(
   if (s === "BASELINE_UNAVAILABLE") {
     return {
       title: t("planning.weCouldNotConfirmThisRun"),
-      body: zh
-        ? "无法确认本次是否生成了新方案，请重试或刷新页面。"
-        : "We could not confirm whether this run produced new plans. Please retry or refresh.",
+      body: t("plan.baselineUnavailableBody"),
       tone: "warn",
     };
   }
   if (s === "NO_PLANS_PRODUCED") {
     return {
       title: t("planning.noUsablePlansWereProduced"),
-      body: zh
-        ? "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。"
-        : "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
+      body: t("plan.noPlansProducedBody"),
       tone: "warn",
     };
   }
   if (s.includes("SKIPPED_EXTERNAL_DEPENDENCY") || s.includes("EXTERNAL")) {
     return {
       title: t("planning.aIIsUnavailableRightNow"),
-      body: zh
-        ? "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。"
-        : "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
+      body: t("plan.assistantUnreachableBody"),
       tone: "warn",
     };
   }
@@ -286,9 +280,7 @@ export function statusCopy(
   }
   return {
     title: t("planning.couldNotFinishPlanning"),
-    body: zh
-      ? "这次没能生成方案。你的行程没有被改动，可以重试或换个说法。"
-      : "We could not produce plans this time. Your trip is unchanged; retry or rephrase.",
+    body: t("plan.couldNotFinishBody"),
     tone: "warn",
   };
 }
