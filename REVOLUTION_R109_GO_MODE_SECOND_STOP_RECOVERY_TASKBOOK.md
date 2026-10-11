@@ -8,6 +8,7 @@ GPT completed a careful R108 **CONTENT INTEGRATION** directly on `gpt/revolution
 GPT direct **UNTESTED** reviewer correction on Revolution branch:
 - `079e993ffdd141d656858d89aa43adcbebd3143b`: `save_bootstrap_discovery_pocket_walk` compares current member-private saved public-source snapshots before/after a signed refresh and only advances Pocket Walk revision / resets GO progress when the ORDER/BUDGET or actual named source snapshot changes. Previous `refreshed_existing=any` unconditionally reset a traveler's active walk on byte-equivalent repeated save. Stop name, current WGS84 coords, source grade, observed-at, access/opening/cost, distance/source URL tracked; exclude `updated_at` from semantic identity.
 - `009c8612dc4eca09df849e0c07c0334b6e2991ac`: new signed R108 backend regression duplicate two-stop save preserves `HEADING_TO_FIRST`, revision and A/B privacy.
+- `f880d7029f586e57bc32f285f8aa601f9ee35a0f`: reviewer follow-up compares full current member-private cost-evidence payload too; a changed amount cannot silently retain stale GO progress just because the price status label stayed the same.
 **FIRST** run `backend/tests/test_r108_pocket_walk_go_mode.py` and the one directly impacted R107 save test locally, correct actual narrow regressions. Do not rerun R58-R108 historical test campaigns. Preserve R108 GO self-report not physical arrival and R106 exact-DNS boundary.
 
 ## Revolution user story: plans break in the street
