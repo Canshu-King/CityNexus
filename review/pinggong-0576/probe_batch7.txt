@@ -1,0 +1,10 @@
+candidate | zh-CN | copilot.history.emptyHint | 问我为什么这样安排、试算变化，或报告已经确认的中断。
+candidate | zh-CN | copilot.bubble.youLabel | 你
+candidate | en | copilot.history.emptyHint | Ask why, preview a change, or report a confirmed disruption.
+candidate | en | copilot.bubble.youLabel | You
+negtip | zh-CN | copilot.history.emptyHint | copilot.history.emptyHint
+negtip | zh-CN | copilot.bubble.youLabel | copilot.bubble.youLabel
+negtip | en | copilot.history.emptyHint | copilot.history.emptyHint
+negtip | en | copilot.bubble.youLabel | copilot.bubble.youLabel
+CANDIDATE_CELLS 4 NEG_CELLS 4 NEG_BARE_KEY 4 FAILS 0
+VERDICT probe_green keys=2 cells=4

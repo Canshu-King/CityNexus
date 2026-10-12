@@ -1,0 +1,18 @@
+{
+ "gen": "2a9367a1316669ac97598857c7c4ac07b9645854",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.bubble",
+ "rows": [
+  {
+   "start": 38242,
+   "start_line": 887,
+   "end_line": 887,
+   "key": "copilot.bubble.youLabel",
+   "zh": "你",
+   "en": "You",
+   "draft_line": "891",
+   "guard": "locale === \"zh-CN\"",
+   "ternary": "locale === \"zh-CN\" ? \"你\" : \"You\""
+  }
+ ]
+}
