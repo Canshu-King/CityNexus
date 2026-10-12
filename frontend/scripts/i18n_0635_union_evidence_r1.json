@@ -1,0 +1,73 @@
+{
+  "tip": "0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5",
+  "head": "0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5",
+  "newline": "LF",
+  "tip_key_counts": {
+    "en": 1359,
+    "zhCN": 1359
+  },
+  "merged_key_counts": {
+    "en": 1359,
+    "zhCN": 1359
+  },
+  "union": [],
+  "union_size": 0,
+  "table_size": 16,
+  "already_on_line": [
+    "agent.assessed",
+    "agent.needsMoreInformation",
+    "agent.notFeasible",
+    "discovery.technicalDetail",
+    "inbox.recorded",
+    "itinerary.stopDisrupted",
+    "lib.failureAttribution.networkCopyStillReadable",
+    "lib.failureAttribution.networkNoOfflineCopy",
+    "lib.failureAttribution.readCauseNotClassified",
+    "planning.stops",
+    "planning.totalCost",
+    "planning.walking",
+    "simulation.retryInMs",
+    "simulation.retryRightNow",
+    "simulation.retryWaitNotGiven"
+  ],
+  "multi": {},
+  "zh_only": [
+    "setup.somePlace"
+  ],
+  "en_only": [],
+  "withheld": {
+    "setup.somePlace": {
+      "side": "zhCN",
+      "source_branch": "预防工-0557-dict-r2",
+      "source_head": "3258e6f6e7b6e319a479486ad4c640a42f7b944f",
+      "source_line": 1441,
+      "row": "  \"setup.somePlace\": \"某地\",",
+      "sources": [
+        "预防工-0557-dict-r2"
+      ],
+      "readers_on_tip": 0
+    }
+  },
+  "both_sides": 0,
+  "insertions": {},
+  "wrapped_rows": {
+    "before": [
+      "me.asksBeforeProtectedChange"
+    ],
+    "after": [
+      "me.asksBeforeProtectedChange"
+    ]
+  },
+  "readers_on_tip": {},
+  "merged_keys_without_a_reader": [],
+  "pre_existing_rows": {
+    "en": 1359,
+    "zhCN": 1359
+  },
+  "bytes": {
+    "before": 202499,
+    "after": 202499
+  },
+  "blob_before": "1d3125fd04236e61318490c8bf1f858e7b962a15",
+  "blob_after": "1d3125fd04236e61318490c8bf1f858e7b962a15"
+}

@@ -57,6 +57,9 @@ const en: Dict = {
   "planning.startPlanning": "Plan my trip",
   "planning.planCannotBeChosen": "This plan could not be chosen.",
   "planning.couldNotReachServer": "Could not reach the server. Try again.",
+  "planning.stops": "Stops",
+  "planning.totalCost": "Total cost",
+  "planning.walking": "Walking",
   "planning.chooseYourPlan": "Choose your plan",
   "poiImport.favoriteNotWired": "Favourites have no door in this build yet, so this cannot promise a save.",
   "poiImport.newJourney": "Create as a new plan",
@@ -635,6 +638,9 @@ const en: Dict = {
   "agent.obsTool": "tool",
   "agent.obsDuration": "duration",
   "agent.obsExecution": "execution",
+  "agent.assessed": "Assessed",
+  "agent.needsMoreInformation": "Needs more information",
+  "agent.notFeasible": "Not feasible",
   "agent.runtimeDetails": "Runtime details",
 
 
@@ -756,6 +762,7 @@ const en: Dict = {
   "discovery.checkAgain": "Check again",
   "discovery.destination": "Destination",
   "discovery.preparePlaces": "Prepare places",
+  "discovery.technicalDetail": "Technical detail",
   "discovery.pickAnotherDestination": "Pick another destination",
   "pending.title": "Not on a day yet",
   "pending.sub": "Places this server says belong to this trip, in no day of it yet.",
@@ -975,6 +982,7 @@ const en: Dict = {
   "inbox.rawAnchorRole": "anchor role",
   "inbox.rawPayment": "payment status",
   "inbox.rawProvider": "source key",
+  "inbox.recorded": "Recorded",
   "inbox.rawKind": "record kind",
 
   // ── Intelligence: Control Tower ──
@@ -1455,6 +1463,7 @@ const en: Dict = {
   "itinerary.emptyNoPlan": "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here.",
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
   "itinerary.lengthUnknown": "length unknown",
+  "itinerary.stopDisrupted": "Affected",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
 
   // ── Trip-creation wizard: spoken labels, buttons and status lines ──
@@ -1524,6 +1533,9 @@ const en: Dict = {
   "lib.failureAttribution.readFailed": "This read failed",
   "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
+  "lib.failureAttribution.networkCopyStillReadable": "This request could not travel and nothing came back, so this is a network problem. Your trip data has not been lost and the saved read-only copy is still available. Check your connection and try again.",
+  "lib.failureAttribution.networkNoOfflineCopy": "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
+  "lib.failureAttribution.readCauseNotClassified": "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
   "simulation.notGiven": "not given",
   /* ORD-0585: the store-busy wait hint. The Chinese screen already read these three bytes; the
@@ -1636,6 +1648,9 @@ const zhCN: Dict = {
   "planning.startPlanning": "开始规划",
   "planning.planCannotBeChosen": "这个方案暂时不能采用。",
   "planning.couldNotReachServer": "连不上服务器，请重试。",
+  "planning.stops": "活动数",
+  "planning.totalCost": "总花费",
+  "planning.walking": "步行",
   "planning.chooseYourPlan": "选择你的方案",
   "poiImport.favoriteNotWired": "这一版还没有收藏的门，所以这里不能承诺保存。",
   "poiImport.newJourney": "新建为一个计划",
@@ -2169,6 +2184,9 @@ const zhCN: Dict = {
   "agent.obsTool": "工具",
   "agent.obsDuration": "耗时",
   "agent.obsExecution": "执行方式",
+  "agent.assessed": "已评估",
+  "agent.needsMoreInformation": "需要更多信息",
+  "agent.notFeasible": "不可行",
   "agent.runtimeDetails": "运行详情",
 
 
@@ -2287,6 +2305,7 @@ const zhCN: Dict = {
   "discovery.checkAgain": "重新判定",
   "discovery.destination": "目的地",
   "discovery.preparePlaces": "准备地点",
+  "discovery.technicalDetail": "技术详情",
   "discovery.pickAnotherDestination": "另选一个目的地",
   "pending.title": "待规划",
   "pending.sub": "这台服务器说这些地点属于这一程，还没排在任何一天。",
@@ -2497,6 +2516,7 @@ const zhCN: Dict = {
   "inbox.rawAnchorRole": "锚点角色",
   "inbox.rawPayment": "支付状态",
   "inbox.rawProvider": "来源标识",
+  "inbox.recorded": "已记录",
   "inbox.rawKind": "记录类型",
 
   // ── 智能守护 ──
@@ -2943,6 +2963,7 @@ const zhCN: Dict = {
   "itinerary.emptyNoPlan": "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
+  "itinerary.stopDisrupted": "受影响",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
 
   // ── 行程创建向导：口语标签、按钮与状态行 ──
@@ -3010,6 +3031,9 @@ const zhCN: Dict = {
   "lib.failureAttribution.readFailed": "这一次没读到",
   "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
   "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
+  "lib.failureAttribution.networkCopyStillReadable": "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+  "lib.failureAttribution.networkNoOfflineCopy": "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。",
+  "lib.failureAttribution.readCauseNotClassified": "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。",
   "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
   "simulation.notGiven": "服务器未给证据状态",
   "simulation.retryWaitNotGiven": "（服务器没说要等多久）",
