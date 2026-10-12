@@ -1,0 +1,11 @@
+tip=6171fdf2c868 rows=41 stamped=8 unstamped=33
+枝名                                             吸收代前12            新增     改动     删除 枝尖可取
+gpt/revolution-r6-h11-r61-prep-20260923        a15e1959a551       0    174   7557 可取 祖先于尖=是
+gpt/revolution-r61-h12-r62-prep-20260923       a15e1959a551       0    174   7555 可取 祖先于尖=是
+gpt/revolution-r62-r63-prep-20260923           a15e1959a551       0    174   7557 可取 祖先于尖=是
+gpt/revolution-r7-r71-prep-20260923            a15e1959a551       0    174   7557 可取 祖先于尖=是
+gpt/revolution-r71-r72-prep-20260923           a15e1959a551       0    174   7555 可取 祖先于尖=是
+gpt/revolution-r72-r73-prep-20260923           a15e1959a551       0    174   7556 可取 祖先于尖=是
+gpt/revolution-r73-r74-prep-20260924           a15e1959a551       0    174   7556 可取 祖先于尖=是
+gpt/revolution-r74-r75-breakthrough-20260924   a15e1959a551       0    174   7559 可取 祖先于尖=是
+八条合计 新增+改动 = 1392 枚；内容口径下这些枝全为未吸尽
