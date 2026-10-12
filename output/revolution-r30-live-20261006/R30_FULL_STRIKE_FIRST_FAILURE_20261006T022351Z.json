@@ -1,0 +1,17 @@
+{
+  "command": "cd backend && python run_r30_live.py --full-r30",
+  "started_utc": "20261006T022351Z",
+  "ended_utc": "2026-10-06T02:42:08.3471997Z",
+  "top_level_exit_code": 0,
+  "first_failure": {
+    "kind": "FAILED_EXTERNAL",
+    "model": "cn:glm-5.3-flash",
+    "provider": "hermes-compat",
+    "reason_code": "MODEL_TIMEOUT",
+    "sequence_no": 10,
+    "run_id": "e0571afd-c495-4317-81ca-13e0791bd5f8"
+  },
+  "recovery_model": "cn:deepseek-v4.1-flash",
+  "final_agent_run_status": "COMPLETED",
+  "machine_verdict": "PROVEN"
+}

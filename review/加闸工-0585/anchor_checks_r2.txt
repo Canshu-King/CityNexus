@@ -1,0 +1,33 @@
+== 键名撞车现查（命令原样 git -C D:/moodle/CityNexus grep -c -e <键名> 8890f22f -- frontend/src）==
+键名 simulation.retryWaitNotGiven       现尖命中行数=0 (git grep 无命中即退出码 1：1)
+键名 simulation.retryRightNow           现尖命中行数=0 (git grep 无命中即退出码 1：1)
+键名 simulation.retryInMs               现尖命中行数=0 (git grep 无命中即退出码 1：1)
+
+== 同文撞车现查（同一命令，串面文本）==
+同文 「服务器没说要等多久」 在现尖 frontend/src 命中 1 行：frontend/src/features/simulation/simulationAdapter.ts:122
+同文 「现在就可以再试」 在现尖 frontend/src 命中 1 行：frontend/src/features/simulation/simulationAdapter.ts:123
+同文 「毫秒后再试」 在现尖 frontend/src 命中 1 行：frontend/src/features/simulation/simulationAdapter.ts:123
+
+== 相对基准动了哪几枚文件（命令原样 git diff --numstat 现尖..产品提交）==
+  8	6	frontend/src/features/simulation/simulationAdapter.ts
+  9	0	frontend/src/i18n/LocaleContext.tsx
+产品两枚之外零枚：True
+证据提交相对产品提交新增文件数：28
+
+== 我名下六枝在不在权威线上（命令原样 git merge-base --is-ancestor <枚> 8890f22f，判是=在线上）==
+  0560 类型闸加宽       689ff976675f -> 在线上=是
+  0558 单复数         b396bf79fbbe -> 在线上=是
+  0407 空态尺 r2      710a607f5fcf -> 在线上=是
+  0568 上屏机器码闸 r3   4d157b56775c -> 在线上=是
+  0570 普查尺 r2      92f3a86263aa -> 在线上=是
+  0576 批一          c0a5c3345659 -> 在线上=否
+  0585 本块          7374fd9f4dc0 -> 在线上=否
+
+== 0576 那枝并回现尖的只读预测（命令原样 git merge-tree --write-tree --messages 现尖 枝）==
+  rc=0 首行(写出的树)=5745663e0525d7452a3de828ad9ce71d03e48017 CONFLICT 行数=0
+
+== 三把尺不在权威线上、只在号令者的量具工作树里（现读 git show 8890f22f:live_checks/<名> 退出码 128）==
+  live_checks/_cmdr_inline_literal_cjk_r2.py         在权威线上=False
+  live_checks/_cmdr_dict_copy_lang_check_r1.py       在权威线上=False
+  live_checks/_cmdr_dict_key_arm_r1.py               在权威线上=False
+  live_checks/codes_on_screen_gate_r4.py             在权威线上=True

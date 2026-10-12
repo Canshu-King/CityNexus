@@ -1,0 +1,19 @@
+加闸工 ORD-0585 r1 闸与尺读数 —— 每条都是原样命令跑出来的，行号自编号
+1  全量类型闸：node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit → 退出码零，error TS 零条；空输出逐字存 typecheck_full_r1.txt（零字节，所以那件没有可引的行，读数以上面这条为准）。
+2  类型闸分母：同命令加 --listFilesOnly，落在 frontend/src 下的产品文件 157 枚（清单 listfiles_r1.txt，952 行为整份清单）。
+3  构建闸（落地腿同款 npm run build / vite build）：退出码零，dist 在、dist/index.html 1200 字节，报错行（Could not resolve / is not exported / RollupError / ERR_ / Transform failed）零条 —— 尾读 vite_build_r1.txt:29。
+4  上屏机器码闸 r4（字节从现尖取回：git show 8890f22f:live_checks/codes_on_screen_gate_r4.py，23508 字节；命令与落地门一致 --only-added --require-name --refuse）：arm codes-on-screen r4 | files_judged=2 refuse=0 info=30 require_name=True only_added=True corpus=1254，退出码零。逐条读数 codes_gate_r1.txt。
+5  同一枚闸的自检：SELFTEST assertions=31 failures=0，退出码零（codes_gate_selftest_r1.txt:1）。
+6  字典键闸（落地门的 MISSING_DICT_KEY 腿，命令原样 _cmdr_dict_key_arm_r1.py --repo D:/moodle/CityNexus --tip 8890f22f --cand 9979ed4f --changed-file 两枚）：VERDICT PASS、FILES_IN_VIEW 2、CALLED_IN_VIEW 2、NEW_MISSING 0；TIP_MISSING 1 是它自带缓存里 main.* 那批旧缺键，与本次无关（dict_key_arm_r1.txt:5、:6）。
+7  字典语言尺（ONE_SIDED / EN_SIDE_HAS_CJK / SAME_TEXT / 占位符 DRIFT）在现尖那一代：EN_KEYS 1272 | ZH_KEYS 1272 | BOTH 1272、ONE_SIDED 0、EN_SIDE_HAS_CJK 0、SAME_TEXT 13、PLACEHOLDER_KEYS 140 | DRIFT 0，退出码零（dict_lang_check_tip_r1.txt:3）。
+8  同一把语言尺在候选枝那一代（只把 ls-remote 与 fetch 两条供数腿换成候选代，判断腿一字未改，换法写在 lang_check_replay_r1.py 文件头）：EN_KEYS 1275 | ZH_KEYS 1275 | BOTH 1275、ONE_SIDED 0、EN_SIDE_HAS_CJK 0、SAME_TEXT 13（还是那 13 枚专名，我没造同文键）、PLACEHOLDER_KEYS 141 | DRIFT 0，退出码零（dict_lang_check_cand_r1.txt:3）。
+9  内联可见汉字尺（号令者那把 _cmdr_inline_literal_cjk_r2.py）在现尖：VISIBLE_HITS 389、FILES_WITH_VISIBLE_CJK 24，我这枚文件 3 条、首落点 simulationAdapter.ts:122（inline_ruler_tip_replay_r1.txt:4）。
+10 同一把尺换成只喂 ls-remote 那一腿、其余照跑，在候选枝：VISIBLE_HITS 386、FILES_WITH_VISIBLE_CJK 23，simulationAdapter.ts 从名单上消失（grep 命中零，inline_ruler_cand_r1.txt:4）。对拍控制：重放在现尖报的 389/24 与尺自己跑的读数逐字相同，所以那两处 stub 没改判断。
+11 文案分层尺 cnx_copy_tiers_r1.py 改前（--i18n 现尖字典 --src 现尖 src）：REGISTER_PARITY 1271 agree 0 clash、NO_GROWTH 0 values changed、RENDERED 1272 distinct keys、HARDCODED_FALLBACK tier A 2 / tier B 79、exit=1（copy_tiers_before_r1.txt:2、:20、:22）。改后（--baseline 现尖字典）：REGISTER_PARITY 1274 agree 0 clash、NO_GROWTH 0 values changed、RENDERED 1275 distinct keys、keys introduced by this run 3 / gated offenders 0、HARDCODED_FALLBACK tier A 2 / tier B 79、exit=1（copy_tiers_after_r1.txt:2、:20、:22）。
+12 那四条 VIOLATION（LADDER_TIER④、LADDER_TIER⑥、HARDCODED_FALLBACK、RENDER_TIERS）改前改后同为红、条数一字未动，是现尖自带的旧账，不是本次新增；本次只把 REGISTER_PARITY/RENDERED 各推 3。
+13 落地门会不会被我撞红：ops/watch_rulers/_ord0326_simpanel_934_r1.py 是一枚锚点式"看一眼"件（它自述 self_declared: an optional look, not a gate），全树引用它名字的只有它自己一枚（git grep -l 现读 1 条）。它在现尖与候选两代都停在同一枚 cite：ABORT SimulationPanel.tsx:934 lacks '{zh ? outcome.zh : outcome.en}'，那第一枚 cite 就红，根本走不到它钉 retryHint 的那三枚锚（simpanel_934_tipbase.txt:1、simpanel_934_cand.txt:1）。
+14 两代逐字节对拍（esbuild 打包真产品码 + node 跑，探针只调 describeFailure / dictionaryCopy / dictionaryText）：12 枚用例（generation.store_busy 与 GENERATION_STORE_BUSY × retry_after_ms 缺席/为 null/为 0/为负/为 1234/为 1299.4）
+15   zh 臂：同文 12 条、异文 0 条 —— 中文屏一字未变。
+16   en 臂：同文 0 条、异文 12 条；改前 en 臂含汉字 12/12，改后 0/12 —— 那句中文括号串不再贴到英文屏上。
+17   反向对照：同一枚探针跑现尖那一代，三枚键在两侧都读不回值（missing_en=True、missing_zh=True，读回来是键名本身），且 dictionaryCopy 对不存在的键返回键名（control 行）—— 说明「两侧都有」这条是被测出来的，不是默认成立。逐条 byte_proof_r1.txt。
+18 行号复核（候选枝现读）：字典锚 en :1482「"simulation.notGiven": "not given",」与 zh :2896 都活着，新行落 en :1486-:1488、zh :2897-:2899；retryHint 在候选枝只有 :119 定义与 :153/:154 两枚调用点（anchor_checks_r1.txt:2 起）。

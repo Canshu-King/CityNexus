@@ -1,0 +1,17 @@
+{
+  "id": "c0c072fd-81a9-4555-aaf0-4a39c5f6ecd2",
+  "traveler_id": "860a61b2-9323-4f94-b446-2c7646c56755",
+  "title": "R24 positive runtime epoch path aligned",
+  "city_code": "JP-NARA",
+  "timezone": "Asia/Tokyo",
+  "start_at": "2026-10-29T08:30:00+08:00",
+  "end_at": "2026-10-29T17:00:00+08:00",
+  "budget": {
+    "amount_minor": 1500000,
+    "currency": "JPY"
+  },
+  "planning_mode": "balanced",
+  "status": "COMPLETED",
+  "active_plan_version_id": "109272a4-3838-468b-a078-6b49e30287a2",
+  "current_activity_id": null
+}

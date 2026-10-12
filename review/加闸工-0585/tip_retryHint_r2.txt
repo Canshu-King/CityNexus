@@ -1,0 +1,5 @@
+新尖那三处旧字面量与那枚调用行的现读（对照用，本块不改它）
+frontend/src/features/simulation/simulationAdapter.ts:119 function retryHint(error: unknown): string {
+frontend/src/features/simulation/simulationAdapter.ts:122 if (ms === null) return "（服务器没说要等多久）";
+frontend/src/features/simulation/simulationAdapter.ts:123 return ms <= 0 ? "（现在就可以再试）" : `（约 ${Math.round(ms)} 毫秒后再试）`;
+frontend/src/features/simulation/simulationAdapter.ts:152 const extra = busy ? retryHint(error) : fields;

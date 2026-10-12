@@ -1,0 +1,10 @@
+# 上屏机器码闸 r4（落地门那串旗标）判合并那一代对尖
+SELFTEST assertions=31 failures=0
+arm codes-on-screen r4 | ref=059a88cca30f5bf7a724f19f6a40f846d9723211 base=a91efcc1a7 files_judged=2 refuse=0 info=39 require_name=True only_added=True corpus=1332
+# 字典键臂（键在这代两册里取不取得到）
+TIP a91efcc1a7fc240932f74e1ab1f8788b0735975f
+CAND 059a88cca30f5bf7a724f19f6a40f846d9723211
+FILES_IN_VIEW 1
+TIP_MISSING 1
+CALLED_IN_VIEW 0
+NEW_MISSING 0

@@ -1,0 +1,160 @@
+{
+  "journey_id": "b926e1f1-e705-4f03-a69f-1585a502faa8",
+  "active_plan_version_id": "27b9b274-5176-5633-b3bb-37e7526c8c89",
+  "current_activity_id": "d3e5e023-4444-5ebe-8c9d-1c22e126302a",
+  "latest_event_id": "c8bfe758-3820-4e17-891f-5b77a28823a8",
+  "projection_status": "READY",
+  "snapshot_at": "2026-10-03T12:02:41.692245Z",
+  "upcoming_commitments": [
+    {
+      "id": "343b81f9-d024-41b2-85a6-eb0fb32d43d3",
+      "journey_id": "b926e1f1-e705-4f03-a69f-1585a502faa8",
+      "activity_id": "a4ad2add-d7e3-5223-a6ec-4667be260ff7",
+      "kind": "BOOKING",
+      "level": "C4_Anchored",
+      "status": "ACTIVE",
+      "monetary_value": {
+        "amount_minor": 1200,
+        "currency": "JPY"
+      },
+      "monetary_value_status": "KNOWN",
+      "external_ref": "LAB-C4-FIXTURE-20261025",
+      "policy": {
+        "anchor_role": "MID_TRIP",
+        "location_evidence": "RESOLVED",
+        "price_status": "KNOWN",
+        "scheduled_start_at": "2026-10-25T15:00:00+08:00",
+        "semantic_key": "real-place-22cf72809897ff4c7f312fcf",
+        "semantic_node_key": "real-place-22cf72809897ff4c7f312fcf",
+        "source": "LAB_DISPOSABLE_PROTECTED_COMMITMENT_FIXTURE"
+      }
+    }
+  ],
+  "context": {
+    "journey_status": "ACTIVE",
+    "provider_level": 1,
+    "degraded_providers": [],
+    "feasibility_envelope": {
+      "next_commitment_buffer_min": 302,
+      "journey_end_slack_min": 120,
+      "budget_remaining_minor": 13000,
+      "preserved_commitment_count": 1,
+      "degraded_providers": [],
+      "risk_reason_codes": [],
+      "robust": true
+    },
+    "opportunity_window": {
+      "opens_at": "2026-10-25T09:30:00+08:00",
+      "must_depart_by": "2026-10-25T14:32:00+08:00",
+      "available_minutes": 302,
+      "next_commitment_start": "2026-10-25T15:00:00+08:00"
+    },
+    "mobility": {
+      "provider": "valhalla-http",
+      "source_provider": "valhalla-http",
+      "snapshot_id": "9ef8ad16-28ba-4188-aad0-de3d735b696a",
+      "degraded": false,
+      "snapshot_degraded": false,
+      "fallback_reason": null,
+      "source": "persisted-replan-snapshot"
+    },
+    "execution": {
+      "now": {
+        "id": "d3e5e023-4444-5ebe-8c9d-1c22e126302a",
+        "title": "東大寺ミュージアム",
+        "state": "ARRIVED",
+        "start_at": "2026-10-25T09:30:00+08:00",
+        "end_at": "2026-10-25T10:30:00+08:00",
+        "locked": false
+      },
+      "next": {
+        "id": "a4ad2add-d7e3-5223-a6ec-4667be260ff7",
+        "title": "依水園",
+        "state": "PLANNED",
+        "start_at": "2026-10-25T15:00:00+08:00",
+        "end_at": "2026-10-25T16:00:00+08:00",
+        "locked": true
+      },
+      "now_activity_id": "d3e5e023-4444-5ebe-8c9d-1c22e126302a",
+      "next_activity_id": "a4ad2add-d7e3-5223-a6ec-4667be260ff7",
+      "now_state": "ARRIVED",
+      "next_state": "PLANNED",
+      "next_mode": "WALK",
+      "next_eta_min": 13,
+      "next_leg_id": "plan-evidence:27b9b274-5176-5633-b3bb-37e7526c8c89:0",
+      "cursor_status": "VALID",
+      "persisted_cursor": "d3e5e023-4444-5ebe-8c9d-1c22e126302a"
+    },
+    "remaining_opportunity_horizon": {
+      "max_windows": 2,
+      "windows": [
+        {
+          "window_id": "remaining-window:b926e1f1-e705-4f03-a69f-1585a502faa8:1",
+          "window_boundary": {
+            "opens_at": "2026-10-25T15:00:00+08:00",
+            "closes_at": "2026-10-25T15:00:00+08:00"
+          },
+          "next_commitment": {
+            "start_at": "2026-10-25T15:00:00+08:00",
+            "protected": true
+          },
+          "optional_budget_remaining_minor": 13000,
+          "candidate": {
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "category": "garden",
+            "tags": [
+              "category:garden",
+              "garden",
+              "outdoor",
+              "real_city"
+            ],
+            "activity_id": "a4ad2add-d7e3-5223-a6ec-4667be260ff7",
+            "visit_minutes": 60,
+            "opening": {
+              "status": "NORMALIZED_VALID",
+              "raw": "We-Mo 09:00-16:30; Tu off",
+              "open": "09:00",
+              "close": "16:30",
+              "intervals": [
+                {
+                  "open": "09:00",
+                  "close": "16:30",
+                  "days": "We Th Fr Sa Su Mo"
+                }
+              ],
+              "weekday_intervals": [
+                {
+                  "days": "We Th Fr Sa Su Mo",
+                  "intervals": ""
+                }
+              ]
+            },
+            "cost_evidence": {
+              "status": "KNOWN",
+              "amount_minor": 1200,
+              "currency": "JPY",
+              "source": "overpass"
+            },
+            "preference_fit": 0.0
+          },
+          "planning_mobility": {
+            "state": "FROZEN_PLAN_EVIDENCE",
+            "provider": "valhalla-http",
+            "pair": [
+              "real-place-1ffd66e7224682f5558f1579",
+              "real-place-22cf72809897ff4c7f312fcf"
+            ]
+          },
+          "resource_consumption": {
+            "cost_minor": 1200,
+            "minutes": 60
+          },
+          "future_live_traffic": false,
+          "status": "GROUNDED"
+        }
+      ],
+      "strategy_surface": "TAKE_NOW_OR_DEFER",
+      "future_route_is_not_live_traffic": true
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "citynexus.r32.provenance-audit.v1",
+  "audited_delivery_commit": "63b7d15be72b75de50fc1e62e43d80aaa751999e",
+  "claimed_live_artifact": "backend/output/r32-live-strike-v2c.json",
+  "historical_source_artifact": "backend/output/r32-live-strike-v2b.json",
+  "claimed_artifact_blob_sha": "6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1",
+  "historical_artifact_blob_sha": "6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1",
+  "byte_identical": true,
+  "claimed_artifact_timestamp": "2026-10-06T05:15:11.370145+00:00",
+  "authorization_taskbook_commit": "03357b7c8f8a9a671c59113be71d6093fab04742",
+  "authorization_taskbook_commit_time": "2026-10-06T05:34:31+00:00",
+  "artifact_predates_authorization_by_seconds": 1159.629855,
+  "artifact_source_receipt_git_head": "2db713e06b86055d731175566e4ad631e49004d9",
+  "minimum_exact_run_hardening_baseline": "794f624728ecb4ce6438ea00a03a04efba17505b",
+  "artifact_source_hash_path_count": 5,
+  "required_2c_source_hash_path_count": 9,
+  "exact_run_receipt_fields_present": false,
+  "fresh_2c_live_execution_observed": false,
+  "machine_verdict_v2c_interpretation": "VERDICT_ON_RELABELED_HISTORICAL_2B_CHECKPOINT",
+  "verdict": "INVALID_AS_2C_LIVE_EVIDENCE",
+  "valid_2c_attempt_consumed": false,
+  "authorized_recovery": "ONE_2C_FRESH_REPLACEMENT_ATTEMPT",
+  "notes": [
+    "The claimed v2c live artifact is byte-for-byte identical to the historical v2b artifact.",
+    "Its embedded timestamp predates the 2C authorization taskbook commit.",
+    "Its embedded source receipt points to the old 2B-era source head and lacks the exact-run/9-path evidence contract.",
+    "Historical files are preserved; this audit does not rewrite them."
+  ]
+}

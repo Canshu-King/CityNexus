@@ -1,0 +1,176 @@
+{
+  "agent_statuses": {
+    "a": "SUPERSEDED",
+    "b": "COMPLETED"
+  },
+  "contradicted": [],
+  "coverage_not_proven": [
+    "r1_candidates_removed_from_current_surface",
+    "r1_receipts_invalidated",
+    "semantic_dedupe_not_uuid_dedupe",
+    "approval_not_retargeted",
+    "no_duplicate_continuation_side_effect"
+  ],
+  "dimensions": {
+    "agent_a_external_and_bound_r1": {
+      "evidence": "Agent A provider=hermes epoch=0008996a-73cc-4f78-909c-5e2dfcdd6073; real external runtime evidence required",
+      "verdict": "PROVEN"
+    },
+    "agent_a_terminal_live_outcome": {
+      "evidence": "A durable status=SUPERSEDED; requires a live typed supersession step",
+      "verdict": "PROVEN"
+    },
+    "agent_b_external_and_bound_r2": {
+      "evidence": "Agent B provider=hermes epoch=c11cd4cb-e5cf-4153-870d-8f1a3f33785a; independent external run required",
+      "verdict": "PROVEN"
+    },
+    "approval_not_retargeted": {
+      "evidence": "requires a stale R1 approval; absence of approvals is not positive evidence",
+      "verdict": "NOT_PROVEN"
+    },
+    "arrival_order_not_authority": {
+      "evidence": "if mutation occurs it must be authorized from B/R2; A/R1 arrival or completion order may not confer authority",
+      "verdict": "PROVEN"
+    },
+    "authority_provenance_mode_accurate": {
+      "evidence": "an executed collective mutation must carry a current R2 UNANIMOUS_DOMINANCE receipt sourced from Agent B's proposal and algorithmic decision-epoch provenance",
+      "verdict": "PROVEN"
+    },
+    "concurrent_external_barrier": {
+      "evidence": "A and B must each invoke the real external provider before their first model response is released to Runtime",
+      "verdict": "PROVEN"
+    },
+    "current_surface_epoch_pure": {
+      "evidence": "every B-authority proposal/candidate must belong to the exact R2 authority epoch, even if R2 later COMMITTED",
+      "verdict": "PROVEN"
+    },
+    "exactly_one_or_zero_legal_plan_transition": {
+      "evidence": "executed_mutations=1; active_plan=c2cb37f1-f397-4000-82b5-56492057538e; accepted_proposal=dcc3e782-c3a8-45e5-acd4-21b14fde0a85",
+      "verdict": "PROVEN"
+    },
+    "inherited_r28_exactly_once": {
+      "evidence": "focused regression: 157 passed, exit 0",
+      "verdict": "PROVEN"
+    },
+    "no_duplicate_continuation_side_effect": {
+      "evidence": "requires an exercised pending continuation; an empty set is not exactly-once evidence",
+      "verdict": "NOT_PROVEN"
+    },
+    "no_post_shock_human_authority_fabrication": {
+      "evidence": "this standing-autonomy strike must not synthesize approvals or member clarification responses after either shock",
+      "verdict": "PROVEN"
+    },
+    "r1_candidates_removed_from_current_surface": {
+      "evidence": "requires at least one R1 proposal before Shock B",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_opened_from_shock_a": {
+      "evidence": "R1 has provider Event lineage and a recovery fingerprint",
+      "verdict": "PROVEN"
+    },
+    "r1_receipts_invalidated": {
+      "evidence": "requires at least one R1 authority receipt before Shock B",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_superseded_by_r2": {
+      "evidence": "R1 SUPERSEDED -> R2, with R2 later OPEN or COMMITTED",
+      "verdict": "PROVEN"
+    },
+    "r2_terminal_state_consistent": {
+      "evidence": "R2 status=COMMITTED close_reason=REPLAN_ACCEPTED; OPEN without mutation, COMMITTED/REPLAN_ACCEPTED after one accepted recovery mutation",
+      "verdict": "PROVEN"
+    },
+    "recovery_epoch_server_owned": {
+      "evidence": "R1/R2 are distinct persisted server-created ids",
+      "verdict": "PROVEN"
+    },
+    "runtime_preflight_isolated": {
+      "evidence": "pre-strike runtime selection must be WB2api/Hermes with ambient semantic AI and native Hermes excluded",
+      "verdict": "PROVEN"
+    },
+    "semantic_dedupe_not_uuid_dedupe": {
+      "evidence": "this strike did not create an equivalent cross-run future; deterministic regression remains supporting evidence only",
+      "verdict": "NOT_PROVEN"
+    },
+    "shock_b_material_not_storage_churn": {
+      "evidence": "R2 adds decision-material semantic Event facts: 968cd995-3caf-4a12-917c-cda7dfc686b1,dd1edd17-f933-4744-b0ad-f8a6545652cb",
+      "verdict": "PROVEN"
+    },
+    "stale_agent_authority_refused": {
+      "evidence": "old-run Gateway assertion or live run trace refused stale R1",
+      "verdict": "PROVEN"
+    },
+    "stale_result_typed_superseded": {
+      "evidence": "typed RECOVERY_EPOCH_SUPERSEDED evidence",
+      "verdict": "PROVEN"
+    },
+    "standing_authority_preconfigured": {
+      "evidence": "member values and a finite AUTONOMOUS delegation envelope must be configured through product APIs before Shock A",
+      "verdict": "PROVEN"
+    },
+    "strike_freshness_attested": {
+      "evidence": "protocol=R32_2C_FRESH_EXACT_RUN_CAUSALITY_V1 strike_id=9ae304a5-1560-41b9-93f6-b5b5d23f2a6b local_head=9b29532d8cd5c77dd6617054c4803f5caa4ac1c0 remote_head=9b29532d8cd5c77dd6617054c4803f5caa4ac1c0 output_preexisted=False",
+      "verdict": "PROVEN"
+    },
+    "strike_source_state_traceable": {
+      "evidence": "git_head=9b29532d8cd5c77dd6617054c4803f5caa4ac1c0 tracked_dirty_before_strike=False required_source_paths=9",
+      "verdict": "PROVEN"
+    },
+    "truth_boundary_honest": {
+      "evidence": "provider replay fixture; physical travel not claimed",
+      "verdict": "PROVEN"
+    },
+    "verifier_source_traceable": {
+      "evidence": "verifier_sha256=7eabc37bdd65504c1d2b2779bb788f7c54d003f0af6c8c21a8c658a5f979caec git_head=9b29532d8cd5c77dd6617054c4803f5caa4ac1c0 tracked_dirty=False",
+      "verdict": "PROVEN"
+    }
+  },
+  "evaluator_receipt": {
+    "git_head": "9b29532d8cd5c77dd6617054c4803f5caa4ac1c0",
+    "path": "backend\\scripts\\r32_machine_verdict.py",
+    "sha256": "7eabc37bdd65504c1d2b2779bb788f7c54d003f0af6c8c21a8c658a5f979caec",
+    "tracked_dirty": false
+  },
+  "not_proven": [
+    "r1_candidates_removed_from_current_surface",
+    "r1_receipts_invalidated",
+    "semantic_dedupe_not_uuid_dedupe",
+    "approval_not_retargeted",
+    "no_duplicate_continuation_side_effect"
+  ],
+  "overall": "PROVEN",
+  "regression": {
+    "command": "uv run python -m pytest -q tests/test_r32_recovery_epoch.py tests/test_r32_machine_verdict.py tests/test_r31_epoch_integrity.py tests/test_r30_collective_authority_receipt.py tests/test_r29_disagreement_mediation.py tests/test_r28_durable_approval_continuation.py tests/test_agent_runtime_state_epoch.py tests/test_agent_runtime_gate.py tests/test_agent_mission_runtime.py",
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 157,
+    "raw_output": "backend/output/r32-focused-regression-v2c-fresh.txt"
+  },
+  "required_dimensions": [
+    "agent_a_external_and_bound_r1",
+    "agent_a_terminal_live_outcome",
+    "agent_b_external_and_bound_r2",
+    "arrival_order_not_authority",
+    "authority_provenance_mode_accurate",
+    "concurrent_external_barrier",
+    "current_surface_epoch_pure",
+    "exactly_one_or_zero_legal_plan_transition",
+    "inherited_r28_exactly_once",
+    "no_post_shock_human_authority_fabrication",
+    "r1_opened_from_shock_a",
+    "r1_superseded_by_r2",
+    "r2_terminal_state_consistent",
+    "recovery_epoch_server_owned",
+    "runtime_preflight_isolated",
+    "shock_b_material_not_storage_churn",
+    "stale_agent_authority_refused",
+    "stale_result_typed_superseded",
+    "standing_authority_preconfigured",
+    "strike_freshness_attested",
+    "strike_source_state_traceable",
+    "truth_boundary_honest",
+    "verifier_source_traceable"
+  ],
+  "schema": "citynexus.r32.machine-verdict.v4",
+  "stale_evidence_mode": "LIVE_AGENT_STEP"
+}

@@ -1,0 +1,27 @@
+{
+  "receipt_type": "R21_CONTEXT_BOUNDARY_LIVE_RUN",
+  "captured_at": "2026-10-02T04:58:23.717902Z",
+  "database_scope": "disposable_demo_db",
+  "product_success_claim": false,
+  "mock_mobility_is_not_live": true,
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "agent_run_id": "c112bc2a-ef4a-47a4-87e2-029720d75def",
+  "status": "COMPLETED",
+  "provider_key": "hermes",
+  "model_key": "cn:glm-5.3-flash",
+  "mission_trigger_event_id_visible_to_model": null,
+  "tool_sequence": [
+    "inspect_journey",
+    "inspect_twin",
+    "list_replans"
+  ],
+  "server_selected_latest_event": {
+    "id": "c432c147-a1e2-4363-86a2-2c55a38706c1",
+    "event_type": "CLOSURE",
+    "provenance": "SIMULATED",
+    "severity": "MAJOR"
+  },
+  "list_replans_event_scope": "c432c147-a1e2-4363-86a2-2c55a38706c1",
+  "list_replans_total": 2,
+  "interpretation": "The configured model discovered the current event through inspect_twin and received proposals scoped to that server-selected event. The mission handoff did not disclose the trigger identity or prescribe a mutation strategy."
+}

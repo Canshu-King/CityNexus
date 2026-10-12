@@ -1,0 +1,408 @@
+{
+  "outcome": "OVERNIGHT_STEWARD_ROUTE_NEEDED",
+  "journey_id": "c7ac8d60-13dd-427c-9bba-16b671d9f63c",
+  "journey_status": "ACTIVE",
+  "day1_activities": [
+    {
+      "id": "bc2e9aac-013c-42e6-ba9f-a96cb9b74885",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "4f62440f-6a72-4b88-91de-040c950a583e",
+      "status": "COMPLETED"
+    }
+  ],
+  "day2_first_activity": {
+    "id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+    "title": "Day 2 — C",
+    "status": "ACTIVE"
+  },
+  "operator_enabled": true,
+  "standing_mission_id_before": "45da6111-62cf-4550-b96f-dc1fc1d416e0",
+  "standing_mission_id_after": "45da6111-62cf-4550-b96f-dc1fc1d416e0",
+  "autopilot_enrollment_id_before": "c7ac8d60-13dd-427c-9bba-16b671d9f63c",
+  "autopilot_enrollment_id_after": "c7ac8d60-13dd-427c-9bba-16b671d9f63c",
+  "active_plan_version_id_before": "7b565a35-add8-4ee0-b2ec-14e10754c0db",
+  "active_plan_version_id_after": "7b565a35-add8-4ee0-b2ec-14e10754c0db",
+  "overnight_cycle_key": "overnight:c7ac8d60-13dd-427c-9bba-16b671d9f63c:2026-10-07:7b565a35-add8-4ee0-b2ec-14e10754c0db",
+  "same_day_cycle_count": 1,
+  "day1_outcome_event_count": 11,
+  "consumed_outcome_ids": [],
+  "learning_summary": {
+    "twin_before": {
+      "traveler_id": "11111111-1111-4111-8111-111111111111",
+      "explicit_preferences": [
+        {
+          "category": "interest",
+          "dimension": "culture",
+          "direction": "culture",
+          "explanation": "Explicit traveler preference.",
+          "id": "42afcd29-8495-5682-ada6-204453c7a98b",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.9
+        },
+        {
+          "category": "interest",
+          "dimension": "local_food",
+          "direction": "local_food",
+          "explanation": "Explicit traveler preference.",
+          "id": "16647f60-b4b0-5b0b-aa55-7f7170677a54",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.8
+        },
+        {
+          "category": "interest",
+          "dimension": "waterfront",
+          "direction": "waterfront",
+          "explanation": "Explicit traveler preference.",
+          "id": "ba09d665-1a69-500f-b7b7-96b67578c988",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.8
+        },
+        {
+          "category": "mobility",
+          "dimension": "walking_minutes_max",
+          "direction": "walking_minutes_max",
+          "explanation": "Explicit traveler preference.",
+          "id": "4248c2fd-4275-5112-8dbd-eb712eaa8523",
+          "source": "EXPLICIT",
+          "value": 25,
+          "weight": 0.6
+        },
+        {
+          "category": "pace",
+          "dimension": "relaxed",
+          "direction": "relaxed",
+          "explanation": "Explicit traveler preference.",
+          "id": "d261180b-d022-57d4-bab9-a03768c92594",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.7
+        }
+      ],
+      "explicit_capabilities": [],
+      "capability_summary": {
+        "items": [],
+        "hard": [],
+        "strong": [],
+        "soft": [],
+        "unknown_accessibility_is_not_accessible": true
+      },
+      "learned_soft_preferences": [],
+      "confidence": 0.0,
+      "evidence_count": 0,
+      "conflicts": [],
+      "provenance": {
+        "evidence_ids": [],
+        "source": "journey_outcome_events",
+        "updated_at": "2026-10-06T18:21:15.710443+00:00"
+      },
+      "updated_at": "2026-10-06T18:21:15.710443+00:00"
+    },
+    "new_consumed_outcome_ids": [],
+    "twin_after": {
+      "traveler_id": "11111111-1111-4111-8111-111111111111",
+      "explicit_preferences": [
+        {
+          "category": "interest",
+          "dimension": "culture",
+          "direction": "culture",
+          "explanation": "Explicit traveler preference.",
+          "id": "42afcd29-8495-5682-ada6-204453c7a98b",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.9
+        },
+        {
+          "category": "interest",
+          "dimension": "local_food",
+          "direction": "local_food",
+          "explanation": "Explicit traveler preference.",
+          "id": "16647f60-b4b0-5b0b-aa55-7f7170677a54",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.8
+        },
+        {
+          "category": "interest",
+          "dimension": "waterfront",
+          "direction": "waterfront",
+          "explanation": "Explicit traveler preference.",
+          "id": "ba09d665-1a69-500f-b7b7-96b67578c988",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.8
+        },
+        {
+          "category": "mobility",
+          "dimension": "walking_minutes_max",
+          "direction": "walking_minutes_max",
+          "explanation": "Explicit traveler preference.",
+          "id": "4248c2fd-4275-5112-8dbd-eb712eaa8523",
+          "source": "EXPLICIT",
+          "value": 25,
+          "weight": 0.6
+        },
+        {
+          "category": "pace",
+          "dimension": "relaxed",
+          "direction": "relaxed",
+          "explanation": "Explicit traveler preference.",
+          "id": "d261180b-d022-57d4-bab9-a03768c92594",
+          "source": "EXPLICIT",
+          "value": true,
+          "weight": 0.7
+        }
+      ],
+      "explicit_capabilities": [],
+      "capability_summary": {
+        "items": [],
+        "hard": [],
+        "strong": [],
+        "soft": [],
+        "unknown_accessibility_is_not_accessible": true
+      },
+      "learned_soft_preferences": [],
+      "confidence": 0.0,
+      "evidence_count": 0,
+      "conflicts": [],
+      "provenance": {
+        "evidence_ids": [],
+        "source": "journey_outcome_events",
+        "updated_at": "2026-10-06T18:21:15.717990+00:00"
+      },
+      "updated_at": "2026-10-06T18:21:15.717990+00:00"
+    },
+    "changed_dimensions": [],
+    "learning_count": 0,
+    "summary": "No new preference was learned from today’s eligible outcomes."
+  },
+  "twin_before": {
+    "traveler_id": "11111111-1111-4111-8111-111111111111",
+    "explicit_preferences": [
+      {
+        "category": "interest",
+        "dimension": "culture",
+        "direction": "culture",
+        "explanation": "Explicit traveler preference.",
+        "id": "42afcd29-8495-5682-ada6-204453c7a98b",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.9
+      },
+      {
+        "category": "interest",
+        "dimension": "local_food",
+        "direction": "local_food",
+        "explanation": "Explicit traveler preference.",
+        "id": "16647f60-b4b0-5b0b-aa55-7f7170677a54",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.8
+      },
+      {
+        "category": "interest",
+        "dimension": "waterfront",
+        "direction": "waterfront",
+        "explanation": "Explicit traveler preference.",
+        "id": "ba09d665-1a69-500f-b7b7-96b67578c988",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.8
+      },
+      {
+        "category": "mobility",
+        "dimension": "walking_minutes_max",
+        "direction": "walking_minutes_max",
+        "explanation": "Explicit traveler preference.",
+        "id": "4248c2fd-4275-5112-8dbd-eb712eaa8523",
+        "source": "EXPLICIT",
+        "value": 25,
+        "weight": 0.6
+      },
+      {
+        "category": "pace",
+        "dimension": "relaxed",
+        "direction": "relaxed",
+        "explanation": "Explicit traveler preference.",
+        "id": "d261180b-d022-57d4-bab9-a03768c92594",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.7
+      }
+    ],
+    "explicit_capabilities": [],
+    "capability_summary": {
+      "items": [],
+      "hard": [],
+      "strong": [],
+      "soft": [],
+      "unknown_accessibility_is_not_accessible": true
+    },
+    "learned_soft_preferences": [],
+    "confidence": 0.0,
+    "evidence_count": 0,
+    "conflicts": [],
+    "provenance": {
+      "evidence_ids": [],
+      "source": "journey_outcome_events",
+      "updated_at": "2026-10-06T18:21:15.702403+00:00"
+    },
+    "updated_at": "2026-10-06T18:21:15.702403+00:00"
+  },
+  "twin_after": {
+    "traveler_id": "11111111-1111-4111-8111-111111111111",
+    "explicit_preferences": [
+      {
+        "category": "interest",
+        "dimension": "culture",
+        "direction": "culture",
+        "explanation": "Explicit traveler preference.",
+        "id": "42afcd29-8495-5682-ada6-204453c7a98b",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.9
+      },
+      {
+        "category": "interest",
+        "dimension": "local_food",
+        "direction": "local_food",
+        "explanation": "Explicit traveler preference.",
+        "id": "16647f60-b4b0-5b0b-aa55-7f7170677a54",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.8
+      },
+      {
+        "category": "interest",
+        "dimension": "waterfront",
+        "direction": "waterfront",
+        "explanation": "Explicit traveler preference.",
+        "id": "ba09d665-1a69-500f-b7b7-96b67578c988",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.8
+      },
+      {
+        "category": "mobility",
+        "dimension": "walking_minutes_max",
+        "direction": "walking_minutes_max",
+        "explanation": "Explicit traveler preference.",
+        "id": "4248c2fd-4275-5112-8dbd-eb712eaa8523",
+        "source": "EXPLICIT",
+        "value": 25,
+        "weight": 0.6
+      },
+      {
+        "category": "pace",
+        "dimension": "relaxed",
+        "direction": "relaxed",
+        "explanation": "Explicit traveler preference.",
+        "id": "d261180b-d022-57d4-bab9-a03768c92594",
+        "source": "EXPLICIT",
+        "value": true,
+        "weight": 0.7
+      }
+    ],
+    "explicit_capabilities": [],
+    "capability_summary": {
+      "items": [],
+      "hard": [],
+      "strong": [],
+      "soft": [],
+      "unknown_accessibility_is_not_accessible": true
+    },
+    "learned_soft_preferences": [],
+    "confidence": 0.0,
+    "evidence_count": 0,
+    "conflicts": [],
+    "provenance": {
+      "evidence_ids": [],
+      "source": "journey_outcome_events",
+      "updated_at": "2026-10-06T18:21:15.897565+00:00"
+    },
+    "updated_at": "2026-10-06T18:21:15.897565+00:00"
+  },
+  "briefing": {
+    "state": "MORNING_NEEDS_ATTENTION",
+    "local_date": "2026-10-07",
+    "next_local_date": "2026-10-08",
+    "first_activities": [
+      {
+        "id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+        "title": "Day 2 — C",
+        "status": "ACTIVE",
+        "start_at": "2026-10-08T09:00:00+09:00",
+        "end_at": "2026-10-08T10:00:00+09:00"
+      }
+    ],
+    "first_activity": {
+      "id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+      "title": "Day 2 — C",
+      "status": "ACTIVE",
+      "start_at": "2026-10-08T09:00:00+09:00"
+    },
+    "route": {
+      "state": "ROUTE_NEEDED",
+      "exact": false,
+      "duration_min": null,
+      "provenance": null,
+      "must_leave_by": null
+    },
+    "readiness": {
+      "state": "READY_WITH_UNCERTAINTY",
+      "target_activity_id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+      "venue_readiness": {
+        "state": "UNKNOWN",
+        "activity_id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+        "source": null,
+        "observed_at": null
+      },
+      "must_leave_by": null,
+      "route_status": "ROUTE_NEEDED"
+    },
+    "commitments": [
+      {
+        "id": "6d125b70-1012-45fa-99b6-dcc3f5318b29",
+        "activity_id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+        "kind": "BOOKING",
+        "level": "C4_Anchored",
+        "status": "ACTIVE"
+      }
+    ],
+    "reservations": [],
+    "future_risk": {
+      "activity_id": "b4015bcc-3d7c-4ef1-8771-fb075decaf17",
+      "title": "Day 2 — C",
+      "risk_score": 66,
+      "failure_modes": [
+        "FORECAST_WEATHER_EXPOSURE"
+      ],
+      "predictive": true,
+      "grounded": true,
+      "protected_commitment": true,
+      "start_at": "2026-10-08T09:00:00+09:00",
+      "starts_at": "2026-10-08T09:00:00+09:00",
+      "risk_kind": "FORECAST_WEATHER_EXPOSURE",
+      "authority": "PROVIDER_GROUNDED",
+      "source_observation_ids": [
+        "r50-weather-c-day2"
+      ],
+      "material_world_epoch": "r50-world-epoch-1",
+      "risk_identity": "ahead:19fc1a9b32784e55db20a645",
+      "lead_time_minutes": 570,
+      "actionability_score": 18
+    },
+    "captured_at": "2026-10-07T14:30:00+00:00",
+    "read_only": true
+  },
+  "notification_count_for_local_morning": 1,
+  "offline_overnight_state": "MORNING_NEEDS_ATTENTION",
+  "operator_enabled_after_night": true,
+  "lab_estimate_authority": false,
+  "stopped_before_day2_execution": true,
+  "valid_outcome": true
+}

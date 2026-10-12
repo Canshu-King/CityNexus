@@ -1,0 +1,140 @@
+{
+  "actions": [
+    {
+      "error": {},
+      "id": "d958d214f6f9449788cf2a2db203b7ae",
+      "kind": "CREATE_BOOKING",
+      "provider_label": "LAB_SANDBOX_PROVIDER",
+      "result": {
+        "booking_id": "596fe343-145a-4cee-8fd8-77ea8f8bad0d",
+        "provider_label": "LAB_SANDBOX_PROVIDER",
+        "status": "CONFIRMED"
+      },
+      "sequence_no": 1,
+      "status": "CONFIRMED",
+      "target_id": "096f2cea-7baf-4eb5-ad8a-c6cdaa43a089",
+      "target_type": "Activity"
+    },
+    {
+      "error": {},
+      "id": "bded274bab1b4e6e9f81b78b7220a1f4",
+      "kind": "CANCEL_BOOKING",
+      "provider_label": "LAB_SANDBOX_PROVIDER",
+      "result": {
+        "booking_id": "c0a041ae-11df-46ff-b01b-6e6a1fde8020",
+        "provider_label": "LAB_SANDBOX_PROVIDER",
+        "status": "CANCELLED"
+      },
+      "sequence_no": 2,
+      "status": "CANCELLED",
+      "target_id": "c0a041ae-11df-46ff-b01b-6e6a1fde8020",
+      "target_type": "Booking"
+    }
+  ],
+  "approval": {
+    "approval_id": "079af1f1-795d-43d4-b3e8-3e45ee58d20d",
+    "method": "USER_CONFIRMATION",
+    "model_call_count": 0
+  },
+  "assertions": {
+    "booking_commitment_converged": true,
+    "no_second_model_call": true,
+    "replacement_created_before_old_cancelled": true,
+    "sandbox_provenance_explicit": true
+  },
+  "bookings": [
+    {
+      "activity_id": "74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "external_ref": "mock-booking:c849c163-4db2-5e0e-af48-84b54ed022ba:cancelled",
+      "id": "c0a041ae-11df-46ff-b01b-6e6a1fde8020",
+      "provider_key": "mock-booking",
+      "status": "CANCELLED"
+    },
+    {
+      "activity_id": "096f2cea-7baf-4eb5-ad8a-c6cdaa43a089",
+      "external_ref": "mock-booking:9562b908-59ee-5021-a921-a65795cd5484:confirmed",
+      "id": "596fe343-145a-4cee-8fd8-77ea8f8bad0d",
+      "provider_key": "mock-booking",
+      "status": "CONFIRMED"
+    }
+  ],
+  "commitments": [
+    {
+      "activity_id": "096f2cea-7baf-4eb5-ad8a-c6cdaa43a089",
+      "external_ref": "mock-booking:c849c163-4db2-5e0e-af48-84b54ed022ba:confirmed",
+      "id": "33c7e996-c419-44e1-8c54-1f5792fd48ef",
+      "level": "C3_Guaranteed",
+      "status": "CANCELLED"
+    },
+    {
+      "activity_id": "096f2cea-7baf-4eb5-ad8a-c6cdaa43a089",
+      "external_ref": "mock-booking:9562b908-59ee-5021-a921-a65795cd5484:confirmed",
+      "id": "0f51ef1b-4918-4746-b9af-aa92ec8bb0c2",
+      "level": "C3_Guaranteed",
+      "status": "ACTIVE"
+    }
+  ],
+  "environment": {
+    "ai_enabled": false,
+    "lab_estimate_authority": false,
+    "mode": "captured_replay",
+    "provider_label": "LAB_SANDBOX_PROVIDER"
+  },
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "operator_after": {
+    "operations": {
+      "actions": [
+        {
+          "kind": "CREATE_BOOKING",
+          "provider_label": "LAB_SANDBOX_PROVIDER",
+          "sequence_no": 1,
+          "status": "CONFIRMED",
+          "target_type": "Activity"
+        },
+        {
+          "kind": "CANCEL_BOOKING",
+          "provider_label": "LAB_SANDBOX_PROVIDER",
+          "sequence_no": 2,
+          "status": "CANCELLED",
+          "target_type": "Booking"
+        }
+      ],
+      "approval_id": "079af1f1-795d-43d4-b3e8-3e45ee58d20d",
+      "completed_action_count": 2,
+      "plan_id": "89b886e347114f489085a96218f68d75",
+      "planned_action_count": 2,
+      "provider_label": "LAB_SANDBOX_PROVIDER",
+      "status": "COMPLETED"
+    },
+    "state": "WATCHING"
+  },
+  "operator_before": {
+    "operations": {
+      "actions": [
+        {
+          "kind": "CREATE_BOOKING",
+          "provider_label": "LAB_SANDBOX_PROVIDER",
+          "sequence_no": 1,
+          "status": "PENDING",
+          "target_type": "Activity"
+        },
+        {
+          "kind": "CANCEL_BOOKING",
+          "provider_label": "LAB_SANDBOX_PROVIDER",
+          "sequence_no": 2,
+          "status": "PENDING",
+          "target_type": "Booking"
+        }
+      ],
+      "approval_id": "079af1f1-795d-43d4-b3e8-3e45ee58d20d",
+      "completed_action_count": 0,
+      "plan_id": "89b886e347114f489085a96218f68d75",
+      "planned_action_count": 2,
+      "provider_label": "LAB_SANDBOX_PROVIDER",
+      "status": "WAITING_FOR_APPROVAL"
+    },
+    "state": "WAITING_FOR_APPROVAL"
+  },
+  "outcome": "TRANSACTIONAL_OPERATOR_SANDBOX_RECOVERED",
+  "run": "R47"
+}

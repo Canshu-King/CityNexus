@@ -1,0 +1,42 @@
+{
+  "schema": "citynexus.r32.postreview-closeout.v1",
+  "live_artifact": "backend/output/r32-live-strike-v2c-fresh.json",
+  "live_artifact_blob_sha": "243adf105dbcc9abb37b3ba04c3bb698eec5a090",
+  "strike_source_head": "9b29532d8cd5c77dd6617054c4803f5caa4ac1c0",
+  "original_machine_verdict": "PROVEN",
+  "original_machine_verdict_schema": "citynexus.r32.machine-verdict.v4",
+  "postreview_verifier_head": "7c1a2464213fbf1fdca67bf3127dd59d0869c198",
+  "postreview_verifier_schema": "citynexus.r32.machine-verdict.v5",
+  "postreview_ci_run_id": 37422248753,
+  "postreview_ci_conclusion": "success",
+  "postreview_regression": {
+    "passed": 162,
+    "failed": 0,
+    "warnings": 4
+  },
+  "live_artifact_replayed_by_ci": true,
+  "replay_expectation": "overall == PROVEN",
+  "newly_hardened_required_dimensions": [
+    "stale_validation_causally_inert",
+    "b_mutation_terminalized"
+  ],
+  "adversarial_checks": [
+    "second active mutation (including booking/commitment mutation tools) is CONTRADICTED",
+    "missing/non-MUTATION_EXECUTED server completion contract is CONTRADICTED",
+    "provider call started after durable R2 commit is CONTRADICTED",
+    "causeless RecoveryEpoch newer than R2 is CONTRADICTED"
+  ],
+  "observed_live_facts": {
+    "agent_a_status": "SUPERSEDED",
+    "agent_b_status": "COMPLETED",
+    "r2_status": "COMMITTED",
+    "r2_close_reason": "REPLAN_ACCEPTED",
+    "executed_mutation_count": 1,
+    "post_r2_epoch_count": 0,
+    "post_commit_provider_call_count": 0,
+    "b_completion_contract": "MUTATION_EXECUTED"
+  },
+  "verdict": "R32_PROVEN_AND_CLOSED",
+  "further_r32_live_retry_authorized": false,
+  "next_revolution_target": "R33_DISTRIBUTED_EXECUTION_LEASE_AND_ZOMBIE_WORKER_FENCING"
+}

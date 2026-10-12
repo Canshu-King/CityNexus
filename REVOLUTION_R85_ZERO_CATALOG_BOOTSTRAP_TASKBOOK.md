@@ -1,0 +1,23 @@
+# CityNexus Revolution R85 — Break the Empty-Catalog Bootstrap Deadlock
+
+## Verified basis
+At remote SHA `71bb1704e20a264e67cdd4326710ca9c95b40949` R84 correctly reports PARTIAL: one narrow backend pass, one browser fallback pass, and a real fresh Journey/empty Place catalog returning `422 CATALOG_EMPTY` at plan generation. No real Overpass attempt (`CITYNEXUS_REAL_CITY_ENABLED=false`). R84's destination-only fallback is legitimate, but it does **not** solve city exploration. Do not claim otherwise; do not rerun historic strikes.
+
+## Revolution product goal
+A first-time visitor creates a Journey in a city without preloaded venues, deliberately discovers public OSM candidates and selects a grounded place **before** a PlanVersion exists, then creates and starts a real plan using that selected Place. **Break the circular dependency**: today live discovery needs an active Journey, while an active Journey needs catalog Places. We must never create a fictitious PlanVersion, silently seed attractions, or forge GPS.
+
+## Implementation, in priority order
+1. Inspect new-Journey/create-plan screens and existing real-city provider and selection services. Implement a **pre-plan first-place discovery** pathway scoped to signed Journey owner or authorized in-force member. It must work on a real newly created DRAFT Journey with zero Places and no Operator, while reusing existing public place identity/provenance normalization, explicit access-deny filters, TTL and exactly-once selection CAS. Keep separate pre-plan discovery authority from member side-quest authority; **selection adds a public Place only, never fabricates an active side quest or changes PlanVersion**. Regular R67 active-Journey personal side-quest behavior remains unchanged.
+2. Offer explicit source choice: foreground browser geolocation from secure context, or **manual public search center** selected by the user (place/map pin or coordinates). Label manual center accurately; never persist/emit it as authenticated member observation, group presence, physical position or route origin. Separate explicit provider disclosure consent; cancel sends no external request. Enforce validated WGS84, safe radius, server-side rate limits and one bounded request per confirm; do not quietly call provider on mount.
+3. Render 1-3 named, source-linked, public-access-gated OSM results with honest UNKNOWN opening/accessibility/price/ETA. Unselected results remain caller-private. Explicit selection materializes exactly one OSM-provenance Place, allows plan generation through the native path, then normal active Journey can reuse R83 directions/return. Do not automatically label candidate as safely visitable.
+4. If Overpass unavailable, keep UI actionable: show honest unavailable status and user-authored manual/public place option **only under existing provenance and authority rules**, else show existing public map/city-stop option. **Never** bypass `CATALOG_EMPTY` by conjuring an ungrounded venue.
+5. Protected C3/C4 feasibility cannot be inferred from straight-line distance or 15/30/45-minute preference. Keep UNKNOWN unless genuine roundtrip/dwell evidence exists.
+
+## Targeted proof and release
+- New product-created signed A/B Journey, city catalog zero, no plan; verified draft UI pre-plan discovery entry; A-only consent with cancellation 0 calls and 1 enabled provider attempt; B never sees A's search interest, manual center, unselected candidates, or receipt.
+- Selected OSM candidate absent before selection; exactly one catalog Place after; native plan generation / plan select / journey start succeeds or report the exact remaining contract blocker. Confirm shared PlanVersion cannot mutate merely from scouting.
+- At most **one real external Overpass request** with sanitized HTTP outcome when valid non-synthetic public center, configuration, network, and consent allow; otherwise report BLOCKED and retain TEST_PROVIDER grade for controlled replay. Never use the synthetic Playwright location as proof of a person's GPS.
+- Narrow backend + one isolated Chromium flow + TS typecheck/build/compile/diff. No full R58-R84 archives, no verifier-only loop, no new Agent framework. Fix true blockers to visible product flow first.
+- Deliver implementation and `REVOLUTION_R85_ZERO_CATALOG_BOOTSTRAP_RESULT.md` to `gpt/revolution-r33-open-world-journey-adaptation`. Report exact SHAs and evidence grades, HTTP count/results, real-vs-test provenance, initial/final Places, PlanVersion, distinct member privacy, provider/Agent/Guardian counters, and remaining unverified field travel.
+
+**A genuinely usable first-city onboarding path beats another dozen recovery-state patches.**

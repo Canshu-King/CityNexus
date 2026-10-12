@@ -1,0 +1,61 @@
+# Revolution R76 — Invite a Real Companion Into an Active Journey
+
+## Verified baton
+Base and same target branch: `gpt/revolution-r33-open-world-journey-adaptation` @ `138da1561afab9f1f118282cdaf86652848823ac`.
+
+R75 Codex implementation `286235e8ab2d8260e10a2d4c349eda5d8c85212b`, result `60aa2c0104288246ea5d0a3bf2f0cd670822fc20` (`REVOLUTION_R75_ANYONE_CAN_SPARK_GROUP_DISCOVERY_RESULT.md`). Reported: R75 related backend **9 passed**, R74/R73 narrow **4 passed**, presence/execution **13 passed**, one fresh A=OWNER/B,C=COLLABORATOR signed browser **1 passed**, TS/build/compileall/diff passed. One PlanVersion successor added the promoted Place once; the evidence was **TEST_REPLAY**. No external Agent or mobility ProviderCall, no verified GPS. The test recorded one fixture GuardianRun `NO_ACTION`, not zero Guardian work.
+
+GPT follow-up commits, **NOT locally tested**:
+- `87071039504631765ebdb7b04709943020621dd8`: `backend/app/execution/member_place_group_share.py` explicitly flushes the EXPIRED/STALE old consent within its transaction before the replacement ACTIVE receipt is inserted (partial-unique slot), rolling it back if later insertion fails.
+- `138da1561afab9f1f118282cdaf86652848823ac`: `backend/tests/test_r75_group_share_reconsent.py` uses real isolated SQLite partial-unique index for expiration, audience drift, and rollback.
+FIRST run only `pytest tests/test_r75_group_share_reconsent.py -q` from configured backend venv. Then directly related `-k r75` when modifying new APIs, focused frontend typecheck, and one new bounded signed E2E. Repair actual failures; do NOT run R58–R74 historical strike loops. Mark GPT edits as unverified until those tests execute.
+
+## Why this is the right Revolution
+R75 lets a *current* ordinary collaborator discover a real Place, control group disclosure, and spark an authorized shared Journey change. But the current `POST /api/v1/journeys/{journey_id}/members` allows the manager to insert a `JourneyMember` with `joined_at` immediately. The target person never accepts. R75's C was inserted through this older path; it was still a signed real-member API path **but not a human-accepted membership**. That undermines the idea of a living group.
+
+The R76 experience should be:
+> A's trip is underway. A invites an existing signed-in traveler C to *join this particular trip as a collaborator*. C, who is not yet a Journey member, gets a private invitation showing just enough safe context, independently accepts or declines. Only after C accepts does C enter the in-force member set, see the shared active itinerary, and learn the next meeting point. C can explicitly request personal, consented “How do I catch up?” navigation without giving A/B a precise position. An already-running R75 discovery or collective approval is stale against the new member set and asks participants to review/re-consent, never treating C's joining as C voting.
+
+**Deliver a real visible Join -> Catch Up -> Co-Plan path, not just another permissions report.**
+
+## One bounded vertical slice
+
+### 1. Signed, recipient-owned JOIN invitation; target not a member before ACCEPT
+- Reuse `app.traveler_principal.resolve_traveler_principal(request, session)` for a **nonmember's own signed identity**, and `resolve_journey_member_principal` + existing `MEMBER_MANAGE` for the inviter. There is deliberately no public token minting endpoint: `issue_traveler_token` is a trusted server helper. Never pretend the test signer proves real production login/identity verification.
+- Introduce a small durable `JourneyMembershipInvitation` (or constrained equivalent), with server-derived Journey, current active PlanVersion, target existing traveler id, inviter signed manager member/traveler, proposed safe role `COLLABORATOR`, explicit expiry (e.g. 24h), state `OFFERED/ACCEPTED/DECLINED/REVOKED/EXPIRED`, timestamps, request-hash/idempotency, and database-level one-live-invite slot. No indefinite invite and no role escalation on accept. Do not send a raw bearer token in an invite URL or in operator projection.
+- Manager explicitly creates a private invitation on the Journey surface. Recipient C can `GET my pending invitations` using own signed traveler principal **before joining**; show only inviter name, Journey title, city/approximate date, proposed collaborator scope and expiry. No private Places, full member roster, current/other members' positions, precise timing/route, decision ballots, or active plan IDs in preaccept projection. A forged invite ID or other traveler must not reveal it exists.
+- C explicitly ACCEPT/DECLINE; only ACCEPT atomically creates C's in-force `JourneyMember` once with `joined_at` and server-derived `invited_by`. Existing rejected/expired invite/changed Journey base or changed manager role -> no membership. Duplicate or parallel accepts yield exactly one member row/accept audit or safe 409, even in multiple workers. Avoid a state where invite says ACCEPTED but membership insert failed or vice versa. C never becomes OWNER/ADMIN due to a hidden default. Decline or manager revoke cannot create membership.
+- **Close the old bypass**: in strict deployed signed mode `POST /journeys/{id}/members` must not create another person's already-joined in-force role without their own response. Route ordinary product writes to invite creation or return a named `RECIPIENT_ACCEPTANCE_REQUIRED` conflict. If isolated fixtures need trusted seeding, keep an explicitly gated test/initial-owner bootstrap only; do not ship a public bypass. The Journey's initial owner bootstrap may remain authoritative for creation of their own Journey. Preserve `MEMBER_MANAGE` for offer/revoke and existing `JOURNEY_UPDATE` role boundaries. Do NOT relax `COLLABORATOR` globally.
+- Handle legacy pre-R76 memberships truthfully: they remain historical/in-force if existing policy says so, but do not retro-label them as human-accepted. Add `join_provenance` or analogous receipt/projection rather than rewriting old joined_at.
+
+### 2. Re-consent on a material membership change
+- At C's successful ACCEPT, the already-current R75 group-share audience hash changes; old B consent should become `AUDIENCE_CHANGED` for any further broad projection and new sponsorship. B sees a crisp "C joined; review the new audience before sharing this Place again" action. C must not inherit prior B sharing, private R64 quests, private origins/locations, or old access to R72 opt-in signals. Keep previously viewed data unretractable, but do not expand the audience retroactively.
+- Existing R73/R74 pending voting/authority is stale against the changed required member set. No A+B-only votes can spend authority after C joins; route/evidence and world/decision epochs need fresh scoped grants and member answers. Do not automatically cast C's vote. Protect C3/C4 and PlanVersion/current cursor.
+- If a join is blocked because of an in-force recovery/follow-through epoch, explain why and provide a safe retry, rather than silently joining under a stale recovery decision. Avoid unnecessarily blocking harmless membership offer/decline.
+
+### 3. The first five minutes of an actual new traveler
+- On ACCEPT, C sees the **normal existing Journey UI** with current active plan, next shared commitment/rendezvous and own role; no fake personal side quest or synthetic physical-arrival proof. Reuse `LiveRecovery.tsx` / `V10LiveExecutionPanel.tsx` / `JourneyInboxWorkbench.tsx` where appropriate; integrate into the product, not a standalone test-only page.
+- C sees `How do I join everyone?` tied to the current server-selected shared rendezvous. This MUST be deliberate one-time private origin/location consent if requesting a route; reuse R68/R65 mobility routing evidence only where it actually supports a newcomer without an R63/R64 side quest. Do not fabricate a private quest or fake ETA. If no eligible route fact/provider: clear `UNKNOWN / ROUTE_UNAVAILABLE` plus a separately consented public-map pin to the *shared* rendezvous. Opening a map must not itself report physical arrival, trigger Guardian, update collective plan, or disclose C's precise origin to others.
+- Do not scope-creep into full universal chat or open-ended cross-city trip sharing. Do not add booking/payment or background provider polling.
+
+## Code seams to inspect before editing
+- `backend/app/main.py`: `_require_membership_manager`, `_add_journey_member` and `POST /api/v1/journeys/{journey_id}/members` (~7390–7480 pre-R75), `list_journey_members`, member withdrawal, and initial Journey owner bootstrap. Main is large; edit the narrow endpoint/domain path.
+- `backend/app/traveler_principal.py`: `resolve_traveler_principal` supports target signed traveler without membership; `resolve_journey_member_principal` requires in-force membership.
+- `backend/app/db/models.py`: `JourneyMember` has one-row-per-(Journey,Traveler) and joined_at; new invite must not be counted as in-force until acceptance. `backend/db/schema.sql` and `backend/app/db/session.py` for additive SQLite migration/idempotent indexes.
+- `backend/app/execution/member_place_group_share.py`: audience/source/plan hashes; R75 group-share consent re-acknowledgement. `backend/app/shared_stop_coplanning.py`: scoped grant signatures and member set decision epoch.
+- `backend/app/operator_projection.py`, `frontend/src/features/execution/LiveRecovery.tsx`, `frontend/src/features/execution/MemberPlaceInvitationPanel.tsx`, `frontend/src/api/citynexus.ts`. Avoid leaking preaccept invite via signed member-only projection. A recipient-only “my invitations” read cannot rely on Journey membership yet.
+- `backend/tests/test_r27_member_surface.py`, `backend/tests/test_r64_member_side_quest.py`, `frontend/e2e/r73-shared-stop.spec.ts`: R75 bootstrap C currently calls the direct joined-member endpoint; migrate focused R75 fixture if strict public route is closed. Keep new signing-in scenarios clearly separated from real identity-provider evidence.
+
+## Mandatory fresh closure and negatives
+Fresh isolated SQLite, A signed OWNER, B signed current COLLABORATOR, C signed existing Traveler **not yet member**. B discovers and shares an R70 private Place with A (source-owned); A invites C to Journey.
+- Before acceptance, C's invite inbox shows only bounded join-preview (no B Place, route, group presence, exact plan); C `/operator` forbidden, C's traveler token cannot read another Journey or forge membership, A cannot insert C via old direct endpoint.
+- C independently accepts → one durable JourneyMember with own signed receipt. Duplicate/parallel accept doesn't add another. C now sees the current shared Journey and next rendezvous; no precise locations leaked.
+- C deliberately opens a public pin or obtains a grounded one-time route (if available); lack of route evidence is honest UNKNOWN. Do not require a live provider to force green.
+- Already-made B group share cannot silently expand to C; R73/R74 old approvals become stale and need C's own scoped grant and vote. End-to-end A/B/C new consenting collective path remains possible after B re-discloses.
+- Reject another traveler/anonymous accepting C's invite, unauthed owner invite, privilege escalation to OWNER, stale/expired/revoked invite, foreign Journey, changed plan/cursor or removed inviter, double-click/parallel workers; no partial member insert or stray assignment.
+- Targeted backend tests, one new signed Playwright using actual client-facing UI, typecheck/build, compileall, diff check, plus diff-based directly affected old R75 tests only. Do not rerun R58–R74 historic campaigns. No Agent or live Provider calls on passive reads.
+
+## Delivery
+Ship code plus `REVOLUTION_R76_REAL_COMPANION_JOIN_CATCHUP_RESULT.md`, exact commands/SHAs, one positive UI flow, adversarial negatives, database evidence, and transparent distinction between *trusted test-issued traveler tokens* and *production identity provider login*. Preserve all existing Revolution source truth. Push to SAME R33 Revolution branch; do not merge `commander/control`/default.
+
+**Revolution principle:** people join a living trip by their own deliberate choice, see what they need when they join, and can change the Journey only through their own real consent.

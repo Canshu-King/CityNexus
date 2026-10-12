@@ -1,0 +1,14 @@
+交块那一刻的落地形状（全部现读；尺跑完之后再取一次尖）
+现尖 = 70da925d886199bd367478069fd428ca870a8a98（命令原样 git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1）
+我这枝并尖那代 e82296fa3bf8 是现尖祖先 = 是；并尖之后线又走了 8 代
+0585 本枝（38ee5c7f77f4）只读预测并回现尖：rc=0 CONFLICT 0 行 写出树 925fb2337e00
+   该枝在权威线上 = 否（命令原样 git merge-base --is-ancestor 枝 现尖）
+0576 批一（c0a5c3345659）只读预测并回现尖：rc=0 CONFLICT 0 行 写出树 97dc8f3cf2a9
+   该枝在权威线上 = 否（命令原样 git merge-base --is-ancestor 枝 现尖）
+键名 simulation.retryWaitNotGiven 在现尖 frontend/src 命中 0 行
+键名 simulation.retryRightNow 在现尖 frontend/src 命中 0 行
+键名 simulation.retryInMs 在现尖 frontend/src 命中 0 行
+键名 stopDisrupted 在现尖 frontend/src 命中 0 行
+旧字面量「服务器没说要等多久」在现尖命中 1 行
+旧字面量「现在就可以再试」在现尖命中 1 行
+旧字面量「毫秒后再试」在现尖命中 1 行

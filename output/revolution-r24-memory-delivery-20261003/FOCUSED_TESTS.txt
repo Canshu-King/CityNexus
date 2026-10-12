@@ -1,0 +1,22 @@
+R24 continuation focused tests
+
+Environment contract:
+CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false
+
+Estimate-off run:
+py -3.13 -m pytest -q tests/test_r23_adaptive_traveler_twin.py tests/test_r24_adaptive_memory.py tests/test_v7_traveler_twin.py tests/test_agent_mission_runtime.py -s
+37 passed, 1 warning
+
+Cross-generation run:
+py -3.13 -m pytest -q tests/test_foundation_opportunity_window.py tests/test_r20_standby_trigger.py tests/test_r21_autonomous_future_synthesis.py tests/test_r22_opportunity_capture.py tests/test_r23_adaptive_traveler_twin.py tests/test_r24_adaptive_memory.py tests/test_v7_traveler_twin.py tests/test_v19_traveler_capability.py tests/test_agent_mission_runtime.py -s
+74 passed, 1 warning
+
+Static:
+py -3.13 -m py_compile app/execution/traveler_twin.py app/replanning/candidate_evidence.py app/services.py tests/test_r24_adaptive_memory.py tests/test_r23_adaptive_traveler_twin.py
+PASS
+
+git diff --check
+PASS
+
+Warning:
+The single warning is the existing Starlette/httpx TestClient deprecation.
