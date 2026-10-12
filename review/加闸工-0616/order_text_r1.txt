@@ -1,0 +1,5 @@
+# 派单原文逐字抄件（认领这一拍从账本现读，命令 `grep -an '^ORD-0616' D:/moodle/CITYNEXUS_AGENT_CONTROL.md`）
+# 抄这一拍的账本行号：514、516、517；账本被代插腿顶长、行号会漂，所以本件才是我这侧的稳定锚
+第 514 行：ORD-0616｜`backend/app/journey_inbox.py` 落线：148 行、app.* 引用 0 个。
+第 516 行：  允许接线宿主只有这些：`backend/app/operations/v9.py`；每一枚的兄弟引用起点现读在第 14 行。
+第 517 行：  禁改：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`。先跑基线再跑改后，两条读数都要给；接不上就交「证明无处可接」。

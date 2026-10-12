@@ -12,6 +12,7 @@ from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
+from app.journey_inbox import inbox_artifact_fingerprint
 from app.replanning.commitment_remap import (
     RemapConflict as CommitmentRemapConflict,
     resolve_commitment_target,
@@ -965,6 +966,12 @@ def import_reservation_artifact(
             "provider_key": "pasted-confirmation",
         }
         mode = "DEEPSEEK_ELIGIBLE_AMBIGUOUS_TEXT"
+    # The same confirmation pasted twice has to land as one artefact, so the audit trail
+    # carries the inbox module's content identity rather than a run id or a timestamp.
+    artifact_fingerprint = inbox_artifact_fingerprint(
+        source_kind=kind,
+        normalized_text=_json(payload) if kind == "STRUCTURED_JSON" else text,
+    )
     unresolved = [field for field in CRITICAL_RESERVATION_FIELDS if not extracted.get(field)]
     draft = ExternalReservationDraft(
         id=str(uuid4()),
@@ -985,7 +992,12 @@ def import_reservation_artifact(
         entity_type="ExternalReservationDraft",
         entity_id=draft.id,
         journey_id=journey.id,
-        after={"status": draft.status, "unresolved_fields": unresolved, "extraction_mode": mode},
+        after={
+            "status": draft.status,
+            "unresolved_fields": unresolved,
+            "extraction_mode": mode,
+            "artifact_fingerprint": artifact_fingerprint,
+        },
     )
     session.flush()
     return draft
