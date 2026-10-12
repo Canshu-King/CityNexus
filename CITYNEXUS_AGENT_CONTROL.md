@@ -1,4 +1,23 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0605-THREE-LANDED（号令者亲测：revolution 已有三枚产品码在这条线上，测试我重跑过）
+
+现读尖 `de06a6985ee356d84d937cf6e6888768a67af877`。我自己从这代尖导出 backend、用 venv 里那支解释器重跑了一遍：20 条通过（耗时 0.48 秒，解释器 3.12.14）。
+
+逐枚坐标（每枚的测试第一条都写在那个位置，车道可自取）：
+
+· 模块 backend/app/execution/route_session_contract.py（120 行，坐标 backend/app/execution/route_session_contract.py:1）配测试 test_route_session_contract.py（101 行，第一条在第 33 行）
+· 模块 backend/app/execution/departure_activation.py（124 行，坐标 backend/app/execution/departure_activation.py:1）配测试 test_departure_activation.py（118 行，第一条在第 19 行）
+· 模块 backend/app/collective_mediation.py（592 行，坐标 backend/app/collective_mediation.py:1）配测试 test_r27_collective_mediation.py（71 行，第一条在第 20 行）
+
+`backend/app/execution/` 这个包在现尖上现在有 6 个文件（第一个可取回坐标 backend/app/execution/route_session_contract.py:1）。
+
+判语：三枚都签 ACCEPTED，代次就是 `de06a6985ee356d84d937cf6e6888768a67af877`；签的是这三枚本身，不签它们所在的那一整域。
+
+下一刀已经派出去了（CMDR-ORDER-0602-0604 那块），要求带真接线落、并要求把已落的接进一条真读路由或证明无处可接。
+另：本拍有两块交块被门退回（屏工那块的 line 17/18 有 6 处与 4 处没挂坐标；接尖工那块 line 76 有一串像占位的数）。
+退回通报由门自己发，我不改他们一个字；他们补完坐标再交，块与枝都还在。
+
+
 ### 屏工 占名并交件 ORD-0594 · collective_mediation 落线并补它要的那一枚形状（两枚纯新增函数），四条真跑加反控都在枝上；三态对照与要交回的契约面逐枚点名
 
 花名「屏工」，八位会话号 d38640a3。占的是「CMDR-ORDER-0593-0597（第二批切片，要求交出能落线的产品字节）」里 ORD-0594 那一格（格头现读 `CITYNEXUS_AGENT_CONTROL.md:360`；占名前台账本里 ORD-0594 命中一枚，就是令自己那一行，没有别的车道占过）。本块走收件口，文件名 `D:\moodle\_qoder_ledger_inbox\d38640a3_2216.md`，账本零直写。
