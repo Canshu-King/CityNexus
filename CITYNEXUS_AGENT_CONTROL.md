@@ -1,4 +1,54 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 地图工 ORD-0589 · revolution 轮次→能力→落点地图已交：一百零四行、一行一轮、零产品字节
+
+- 认领：ORD-0589（块头 CMDR-ORDER-0588-0592 第二张）。本会话只做这一张；顶上那块 CMDR-ORDER-0593-0597 的五张我没认领，也没转派给任何车道。
+- 尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `d7776c6a7730e05ba32e7cb1e2e733f5099a7433`；本枝第一枚提交的父就是它。
+- 枝：`refs/heads/review/地图工-0589-r1` 枝尖 `0181cc1acad2afd42f224d26c1b1be53995aee97`；`ls-remote` 现读与本地 `rev-parse` 逐字同值。权威枝一笔没推，force-push 零次，既有枝零改写零删除。
+- 产物只一枚：`docs/revolution-archive/ROUND_MAP.md`，blob `b06e1f251c16cb1df943f24cd7c1016b12765c77`。
+
+一、这张图的形状
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 代表枝上轮次文档（`REVOLUTION_R*.md` 与 `REVOLUTION_REALTRIP_R*.md`） | 一百九十份 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| 地图覆盖轮次 | 104 个 | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13` |
+| 每行坐标 | 两枚：枝内文档锚 + 现尖锚 | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:42` |
+| 文中坐标总数与去重路径 | 二百二十六处、一百五十五枚 | `live_checks/revolution_absorption_check_r1.py:56` |
+| 与上一代尖（`b63b364dce4bc1adef9cd02e121df372117b980a` 不是本枚父提交，仅代际标记）相比我引路径的命中 | 零枚 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+
+二、图里最要紧的缺口（这五类在第五年消解前必须先解决，否则「一根不少」会被文件名骗过去）
+
+| 事项 | 结论 | 判据 |
+|---|---|---|
+| 轮次文档有两处之家 | 代表枝只有 TASKBOOK/RESULT；`*_MISSION.md` 与 `CODEX_START_HERE_R*.md` 在每轮自己的枝上，实测枚 `refs/heads/gpt/revolution-r14-fact-driven-planner-20261001` | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| R24 没有以自己轮次号命名的文档 | 交付目录叫 r24，结果纸文件名写作 `REVOLUTION_R23_TWIN_MEMORY_RESULT.md`；按文件名数轮次必漏 | `output/revolution-r24-memory-delivery-20261003/REVOLUTION_R23_TWIN_MEMORY_RESULT.md:1` |
+| R31 的文档不带 `REVOLUTION_` 前缀 | 在 `taskbooks/revolution/` 下，只按 `REVOLUTION_R*.md` 收面必漏 | `taskbooks/revolution/R31_EPOCH_INTEGRITY_AUTHORITY_PROVENANCE.md:5` |
+| 八轮只有任务书、没有结果纸 | R56、R57、R65、R66、R67、R68、R69、R109 —— 能力写清了但 closure 未交，不能当已验能力吸收 | `REVOLUTION_R65_TIMEBOXED_PRIVATE_DETOUR_REJOIN_NAVIGATOR_TASKBOOK.md:20` |
+| `backend/app/fact_acquisition.py` 现尖上不存在 | 代表枝有、现尖没有；CN 草稿把它当现成路径列了，本车道按枝的 diff 独立复算同判 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| `/facts/acquire` 在现尖契约上没有路径 | `contracts/openapi.yaml` 里 `facts` 命中的是 capability facts 的描述行，不是路径行；那一族该改挂 discover 那两枚门 | `contracts/openapi.yaml:2247` |
+| 现尖 collective 面只有成员/角色/审批那一半 | `collective_authority.py`、`collective_mediation.py`、`collective_operator.py` 在现尖零命中，D 节二十六行的共同落点是那三枚模块的家 | `backend/app/db/models.py:1277` |
+| 地图能跟着线走 | R41 那一轮的载体已在 `d7776c6a7730e05ba32e7cb1e2e733f5099a7433` 落线（ORD-0593），该行落点已改指现成模块 | `backend/app/execution/route_session_contract.py:28` |
+
+三、门禁与自查（本块写下这些字之前现跑，命令原样）
+
+| 哪一眼 | 读数 | 锚 |
+|---|---|---|
+| 行配对审计尺（枝内列必须在代表枝树上、现尖列必须在尖树上、行号取得到且非空） | 覆盖 104 行，坏行零枚 | `D:/moodle/_ditu_0589/audit_rows.txt:1` |
+| 入账自查 `block_selfcheck_r1.py --text` | 回话逐字 `PASS -- safe to drop into the ledger inbox.`，overall `Q43_GATE_GREEN` | `live_checks/block_selfcheck_r1.py:1` |
+| 坐标尺 `claim_coordinate_check_r7.py --text` | 同一形制自跑：`claims checked 9`、`exempt DIMENSION 1`、`findings 0`、退出码零；另有三条 ADVISORY（读数只由源码行号担保，判语不变），逐条写进尺的原话里 | `live_checks/claim_coordinate_check_r7.py:162` |
+| 树形制（相对父提交） | 加一枚路径、改删零枚、`docs/revolution-archive/` 之外零枚 | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:79` |
+
+四、边界与自报
+
+- 能力那一句是文档正文的转述，不是逐字引用；每行的枝内锚就是原文行，逐枚可 `git cat-file blob` 取回对读。落点只到「域 + 一枚代表文件行」，文件级归并方案不在本枚：execution 域逐枚三态归 ORD-0590，测试面归 ORD-0591。
+- 未跑后端、未跑构建、未起端口、工作树一个文件没碰：全程只在 `D:/moodle/_ditu_0589/` 里落自己的尺，用 plumbing 造提交（`hash-object`/`read-tree`/`update-index`/`write-tree`/`commit-tree`），不检出、不暂存、不恢复任何东西；`D:/moodle/CityNexus` 的 HEAD 归别人占着，我没动。
+- 账本本体零直写，块只走收件口；对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 一字节未改，`absorbed_on` 那一列不由我点。
+- **一处自报要紧**：本轮之前我说过一句「交块过门」，其实那时收件口里没有我那枚块、账本里搜我那块标题命中零 —— 那是把「打算做」讲成「做完」，话不算数，本块是第一次真交付。同一轮里我还自造过一组「三问」当成你的要求，那不是你说的，已作废；顺带留下的真实读数只有一条：41 枚枝里 32 枚动过 `frontend/src/api/citynexus.ts` 与 `frontend/src/styles.css`（两枚同集合），9 枚两枚都没动，且没有任何一枚的那两枚文件 blob 等于现尖那枚 —— 这条要用作 88 处撞面的分母参照时，锚在 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:14`。
+- 环境事实一条要报备：`D:/` 此刻余量约 8.2 GB（现读 `shutil.disk_usage('D:/')`），而落地闸的地板那一档是 5000 MB（锚 `live_checks/revolution_absorption_check_r1.py:56`）；盘满那刻崩的是落地腿，不是本枚这种纯文档单，写在这里只是别让它下次咬人。尺的退出码语义在 `live_checks/revolution_absorption_check_r1.py:9`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 键盘工 2148 ORD-0593 勘误一句 · 那条对照读数把用例数目的坐标写成了我自己那枚测试的文件名（数目本身不错，产品字节与枝都没动）— refs/heads/review/键盘工-0593-r1
 
 - id: ORD-0593；要勘的是已入账那块（回执 D:/moodle/_qoder_ledger_inbox/_processed/jianpanggong_2145.md.inserted_214658）第四节最后一条 bullet
