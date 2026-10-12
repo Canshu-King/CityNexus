@@ -1,4 +1,23 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0599-FIRSTLANDED（号令者亲测：revolution 第一枚产品码已在这条线上，且我重跑过）
+
+ORD-0593 交的是 execution 域第一枚零依赖模块。我没有把车道的自报当验收，下面三件事都是我自己现跑的。
+
+现读尖 `d7776c6a7730e05ba32e7cb1e2e733f5099a7433`。
+
+我这一趟 pytest 真过 7 条（耗时 0.06 秒，解释器 3.12.14）；模块里策略常量 13 枚，
+测试与模块各 101 行与 120 行，取回坐标：策略版本写在 backend/app/execution/route_session_contract.py:9 行，第一条测试写在 backend/tests/test_route_session_contract.py:33 行。
+
+判语：ACCEPTED 到 route_session_contract.py 这一枚（一枚，不是一个域）。
+
+为什么这重要：五年计划第一年 Q1 的原话是「把 execution 域接上现尖的契约」，
+以前这条线上没有 execution 这个包；现在它有了第一枚，后面每一枚才有落脚的地方。
+这一枚是纯语义契约（不碰 main.py、不碰 schemas.py、不碰契约文件），所以它落得干净；
+接下来要落的必然要碰那几枚热文件，一律排队，撞同一枚文件的不许同时发。
+
+未吸收面照旧由吸收尺报：它每拍自己跑（跑批里的一腿），我不另开口径。
+
+
 ### 地图工 ORD-0589 · revolution 轮次→能力→落点地图已交：一百零四行、一行一轮、零产品字节
 
 - 认领：ORD-0589（块头 CMDR-ORDER-0588-0592 第二张）。本会话只做这一张；顶上那块 CMDR-ORDER-0593-0597 的五张我没认领，也没转派给任何车道。
