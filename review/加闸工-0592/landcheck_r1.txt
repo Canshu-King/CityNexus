@@ -1,0 +1,8 @@
+交块那一刻的落地形状与现场体检（全部现读）
+现尖 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60；我这枝的基准也是它：命令原样 git merge-base --is-ancestor 基准 枝尖 判是，见下条
+枝相对基准只增 8 枚文件：8 行 diff，产品码零枚（尺与对账表在枝上与尖上同字节=True/True）
+枝尖 1965c8a55ed653cd1233ac231179ee63ff943f44 已推并回读逐字相同；对象钉在 refs/local/jiazagong-0592
+尺在现尖那一代的真读数（跑的是枝上那份字节，命令原样 python live_checks/revolution_absorption_check_r1.py）：对账表 41 枚枝｜已挂吸收代 0｜未吸收 41｜枝对象取不到 0，分档 TO_ABSORB 35 条／CARRIED_BY_REP 6 条，退出码 4；对账表本身在尖上 42 行（含列名行，列名见 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1）
+真实收件口此刻：[]
+真实跑批文件行数 395（我一次没改它；挂载件默认只写预览）
+账本行数 26451、最后修改 10-12 20:49（零直写）
