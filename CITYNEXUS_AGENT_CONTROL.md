@@ -1,4 +1,118 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 接尖工｜单里那句「追上现尖后另推一枚新枝」办完了：新枝是现尖的直接子代，东西逐字节复用没重写一个字符，重测也跑了
+
+单文现读 `CITYNEXUS_AGENT_CONTROL.md:1042`。我上一块（现读 `CITYNEXUS_AGENT_CONTROL.md:2`）末尾写的是「这枝我不 rebase 也不重推，要落由您那道门判，若门说要先追尖我再 rebase 另推」——那句把动作推给了门，而单里本来就写明「追上后另推一枚新枝」，是我该做的活。所以我直接做了，旧块一字未改，这条是更新。
+
+一、追平后的状态（全部现算）
+
+| 读数 | 现值 | 锚 |
+|---|---|---|
+| 现取的尖 | `6171fdf2c868f5030690c6cfa3b5ea469bb810fd`，与我上一块测的那枚同一代、这一段没动 | refs/heads/mirror/integration-frontend-apple-pass1 |
+| 新推的枝 | commit `f86dbe198b311123dbdeb187dfeb7f0e32b0cae4` | refs/heads/review/接尖工-0606-r2 |
+| 它的父 | 就是上面那枚尖：`git rev-parse <新枝>^` 与 ls-remote 现取的串字字相同，故为直接子代、可 fast-forward | refs/heads/review/接尖工-0606-r2 |
+| 新枝相对尖做了什么 | 四件全为新增，零修改、零删除 | refs/heads/mirror/integration-frontend-apple-pass1 |
+| 远端回验 | `git ls-remote origin` 现读回同一枚 `f86dbe19…`，不是我本地自说 | refs/heads/review/接尖工-0606-r2 |
+
+二、没有重写任何字节
+
+我这一版不是重新生成内容，是把前一枚已推枝里的四件东西按 blob 原样搬过来：`git rev-parse <前枝>:<路径>` 与 `git rev-parse <新枝>:<路径>` 逐枚对过，四枚全同（对照锚 refs/heads/review/接尖工-0606-r1 与新枝 `f86dbe198b311123dbdeb187dfeb7f0e32b0cae4`）。前枝我留着不删不动，您手上两枝都在，请以 r2 为待点的那枚——r1 相对尖落后十笔、超前一笔，r2 才是零落后的。
+
+三、在新尖上重测过，不是搬过去就算
+
+| 读数 | 现值 | 锚 |
+|---|---|---|
+| 我把哪两枚产品文件放进新尖整棵导出的树里跑 | 共走那枚 + 我自己那枚降级测试 | refs/heads/review/接尖工-0606-r2 |
+| 跑了哪些测试文件 | 九枚：我那枚，归档工那枚 103 行的接线测试，加其余七枚引用 v9 的 | refs/heads/review/接尖工-0606-r1 |
+| 结果 | 八十九枚用例全通过、红集合为空，树内零散落库文件 | refs/heads/mirror/integration-frontend-apple-pass1 |
+| 那十笔有没有碰 execution 目录或测试树 | 没碰：`git diff --name-only` 在那两条路径下现读为空 | refs/heads/review/接尖工-0606-r2 |
+
+也就是说这枝追平之后，线上那批测试仍然一条不破；接线那部分我按上一块的证据表交了「无处可接」（现读 `CITYNEXUS_AGENT_CONTROL.md:2` 第二节），四件东西里没有任何一件落在别人名下的宿主上，`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`backend/app/operations/v9.py` 一字节未动（锚 refs/heads/mirror/integration-frontend-apple-pass1）。
+
+四、不需要您动手
+
+夜班这条我只把自己名下该做的做完：不抢别人单、不碰热文件、旧枝旧块不改不删。要点的时刻您只需看 r2 那一枚。我这边下一件等的是您裁第四节那两处向后兼容签名（`backend/app/db/models.py:1071` 补可空两列、`backend/app/integrations/mobility/runtime.py:84` 补一个默认 None 的参数），它们一落，`presence.py` 之外的构造面也能清到新表那一步；不裁我就停在这儿，不再自己扩大范围。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 键盘工 0127 ORD-0576 续 · 落地门判 RECUT_ABORT 的因抓在我自己的尺上：并一次现尖、两把对拍尺改成世代无关，本枝现读零落后 — refs/heads/review/键盘工-0576-r3
+
+- id: ORD-0576（号令者派单 CMDR-ORDER-0576-INLINE 的续做）。本块不重交内容、不新增搬运：只做两件事——把现尖并进本枝，以及把本枝那两把尺改成「换到任何一代都还在描述要落的东西」
+- 为什么现在做：通播在 10-12 17:32 点名退回我这一枝，门的原话逐字是「RECUT_ABORT: 1 file(s) did not merge to the lane" own bytes -- the lane" tests no longer || describe what would land ... / frontend/src/i18n/LocaleContext.tsx」（我按原话抄，竖线是它断行的位置）；00:21 那一拍另有「让在 加闸工-0602-r1 之后（撞 LocaleContext.tsx）」是排队不是退，我不当借口
+- 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 6171fdf2c868f5030690c6cfa3b5ea469bb810fd，与本枝并进来的那一枚同一枚（再取一次仍是它，所以这一代不用再并）
+- 本枝 refs/heads/review/键盘工-0576-r3 枝尖 4f1e6176447d38eb4eb12d65b5ccf926afd06cac；命令原样 git -C D:/moodle/CityNexus ls-remote origin "refs/heads/review/键盘工-0576-r3" 现读与本地 git rev-parse HEAD 逐字同值；相对线命令原样 git -C D:/moodle/CityNexus rev-list --left-right --count 6171fdf2c868f5030690c6cfa3b5ea469bb810fd...4f1e6176447d38eb4eb12d65b5ccf926afd06cac 回落后 0 笔、领先 5 笔（可直接快进）
+- 落地门：git -C D:/moodle/CityNexus merge-tree --write-tree 6171fdf2c868f5030690c6cfa3b5ea469bb810fd 4f1e6176447d38eb4eb12d65b5ccf926afd06cac 退出码 rc=0、冲突 stage 行 0 条、预测树 b49669941e06b9f5b03565ceb7d93c9f2cf08bc4；工作树 git -C D:/moodle/_qoder_jianpanggong_0555 status --porcelain 回 0 行
+- 本枝四笔关键提交：并尖 1e4699c0ea9e（父之一 84c1669c6a8fc0901d197e49f085751ec1bc9854、父之二 6171fdf2c868f5030690c6cfa3b5ea469bb810fd 就是现尖那枚），尺修正 8295c157844d，机读件重跑一笔在它之后；命令原样 git -C D:/moodle/_qoder_jianpanggong_0555 log --format=%h|%H|%s -4 4f1e6176447d
+
+一、RECUT 的因，抓准之后只有两处形状病（都不是产品字节）
+
+- 病灶一「本批独加集合」：旧判据要求「字典相对基代新增的键集合 == 我这一批的键」。一旦按门的要求把现尖并进来，别人新加的键也进了那个集合，判据必红而字节无误。并完这一拍现读：别人新增的键 48 枚，逐枚核过它们的值仍等于我并进来的那一枚尖（6171fdf2c868f5030690c6cfa3b5ea469bb810fd）上的值，一条不少；新判据改成「我的键全是新增 ∧ 两侧新增集合与顺序逐字相同 ∧ 别人新增的键保持那一枚尖上的字节」。这条判据的输出在 scripts/i18n_0576b_arm_r1.py:1 那把尺里，跑动时打印在尺的第一行上方
+- 病灶二「绝对行号钉坐标」：批那四枚键两侧写的是同一串（今天两语屏上同字），所以拿整份文件找那一行文本必然命中两次；旧尺还把行号钉死在我起笔那一代。改成按内容定位、且只在各自那一侧里各找一次。现读位置：
+  main.demoAgentCommand ｜ 字典 en frontend/src/i18n/LocaleContext.tsx:955 与 zh frontend/src/i18n/LocaleContext.tsx:2469 ｜ 两语屏上串逐字相同（判据行 scripts/i18n_0576_main_arm_r1.py:1）
+  main.modeAutonomous ｜ 字典 en frontend/src/i18n/LocaleContext.tsx:956 与 zh frontend/src/i18n/LocaleContext.tsx:2470 ｜ 两语屏上串逐字相同（判据行 scripts/i18n_0576_main_arm_r1.py:1）
+  main.modeAssisted ｜ 字典 en frontend/src/i18n/LocaleContext.tsx:957 与 zh frontend/src/i18n/LocaleContext.tsx:2471 ｜ 两语屏上串逐字相同（判据行 scripts/i18n_0576_main_arm_r1.py:1）
+  main.modeAdvisory ｜ 字典 en frontend/src/i18n/LocaleContext.tsx:958 与 zh frontend/src/i18n/LocaleContext.tsx:2472 ｜ 两语屏上串逐字相同（判据行 scripts/i18n_0576_main_arm_r1.py:1）
+- 批二那 18 枚键的两侧位置在这一代重读为：英文侧连排 frontend/src/i18n/LocaleContext.tsx:1047 至 :1435、中文侧连排 frontend/src/i18n/LocaleContext.tsx:2561 至 :2919；机读件已随这代重跑，红集合为空：frontend/scripts/i18n_0576b_arm_evidence_r1.json:1
+
+二、门禁读数（本块此刻现跑，命令原样；cwd 均为 D:/moodle/_qoder_jianpanggong_0555/frontend）
+
+- 批一 的尺：python scripts/i18n_0576_main_arm_r1.py 退出码 rc=0，末行逐字 ARM i18n_0576_main: rows=4 green=40 red=0 []；反控同尺加 --negative 退出码 rc=0，末行逐字 NEGATIVE_CONTROL_BITES passed=39 failed=['row_main.modeAdvisory_en_reads_same_bytes']，判据行 scripts/i18n_0576_main_arm_r1.py:1
+- 批二 的尺：python scripts/i18n_0576b_arm_r1.py 退出码 rc=0，末行逐字 ARM i18n_0576b: rows=19 green=159 red=0 []；反控同尺加 --negative 退出码 rc=0，末行逐字 NEGATIVE_CONTROL_BITES passed=148 failed=['detail.distance.metres']，判据行 scripts/i18n_0576b_arm_r1.py:1
+- 类型闸两把：npx tsc -p tsconfig.check.json --noEmit 退出码 rc=0，npx tsc -p tsconfig.typecheck.json --noEmit 退出码 rc=0，配置面 frontend/tsconfig.check.json:1 与 frontend/tsconfig.typecheck.json:1
+- 生产构建：node node_modules/vite/bin/vite.js build --outDir D:/moodle/_jp_dist_0576b --emptyOutDir，退出码 rc=0，末行含 built in 7.69s 一行现读 D:/moodle/_jp_build_0576.txt:1，入口定义 frontend/package.json:7
+
+三、边界与自报
+
+- 权威线 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；只推 refs/heads/review/键盘工-0576-r3；force-push 0 次（本枝是加法：两笔新提交挂在原枝尖之后，没有改写任何已发布的一枚）
+- 没碰那五枚排队热文件里的任何一枚；产品字节本块零枚（改动只在 frontend/scripts/ 下三枚：两把尺与它们重跑出的机读件）
+- 自报三件：一，RECUT 是尺的病不是字节的病，可我直到门点名才去核「我的判据换一代还成立吗」，这是我上一块里已经自报过「批一尺的坐标钉会随线前移而红」却没当场修，拖延了一拍；二，构建我第一次用管道接 grep 取末行，拿到的是管道自己的退出码（那次报出一百三十九，而同一次输出里明明有 built in 那行），去掉管道重测才是真值 rc=0，那一次的原文件在 D:/moodle/_jp_build_0576.txt（树外草稿，不入账）；三，我先在 D:/moodle/CityNexus 那棵树上跑了 git status 得到十一行，差点当成自己工作树脏，回到 D:/moodle/_qoder_jianpanggong_0555 实测是 0 行
+- 未验的事照旧自报：本枝两批仍没有屏上读数（要走到 legacy 恢复屏、行程进度条、活动详情页与住宿生成门那几屏）；另外「门那一侧到底怎么算 RECUT」我不知道，我只能保证我自己的尺在并尖这一代描述得对，若它下一拍还判 RECUT，请把门的原话退回给我，我按原话再抓一次因
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 接尖工｜回 CMDR-RULING-0610 第三节的收窄：枝已收成共走那一枚，接线这一头我给不出调用点，按证据表那形交（不动任何人的宿主）
+
+裁语现读在 `CITYNEXUS_AGENT_CONTROL.md:709`。尖现取 `6171fdf2c868f5030690c6cfa3b5ea469bb810fd`，与我上一块测的那枚同一代、未再走。下面每条都是这代尖上现读的。
+
+一、您那节点的，逐条对我这侧
+
+| 您点的 | 我这侧现读 | 锚 |
+|---|---|---|
+| 契约已由归档工这笔落线 | 相符，且尖上那枚与代表枝逐字节相同（blob `b2aead80b18d5de0e99e28bfd0f672d53bed4525`） | backend/app/execution/truth.py:53 |
+| 共走那枚尖上取不到 | 相符：我当场 `git cat-file` 取它，取不到，所以本块不给它编线上坐标 | refs/heads/review/接尖工-0606-r1 |
+| 包的门面与定位范围别再带 | 相符：两者都在尖上，我枝里两枚都没有 | backend/app/execution/location_scope.py:1 |
+| 我这枝到底带了什么 | 四件：共走一枚模块、我自己的测试一枚、两臂读数件两枚；没有第二枚产品模块 | refs/heads/review/接尖工-0606-r1 |
+| 我这枝与尖的距离 | 落后十笔、超前一笔（`git rev-list --count` 现算，父是那代尖 `f85194013ac10202e40b52d7ba2b6b95a7231059`） | refs/heads/mirror/integration-frontend-apple-pass1 |
+
+二、接线这一头我给不出调用点——证据逐条现读
+
+您写「要么带一处真接线并给出调用点行号，要么照证据表那形交现尖无处可接」。我这侧落在前一形，理由如下。
+
+| 判据 | 现读数 | 锚 |
+|---|---|---|
+| 尖上引用共走那枚的地方 | 零处（`git grep` 全 `backend` 现算，一行都没出） | refs/heads/mirror/integration-frontend-apple-pass1 |
+| 代表枝上唯一的生产调用方 | `backend/app/execution/bootstrap_discovery.py` 第 53 行引入、第 1846 行调用 `validate_shared_walk_objects`、第 1847 行接 `SharedWalkParseError` | refs/heads/gpt/revolution-r33-open-world-journey-adaptation |
+| 那枚调用方在不在尖上 | 不在：它自己还被七条挡着（四张 `MemberDraft*` 表整张没有、两处构造器不接受代表枝传的关键字、一处缺 `PhotonCityGeocoder` 符号，那符号在尖上的同族是 `PhotonCityAnchor`） | backend/app/integrations/discovery/real_city.py:711 |
+| 构造器那两处的现读坐标 | 尖上 `backend/app/integrations/mobility/valhalla_http.py:44` 那个 `__init__` 不收 `test_provider`；尖上 `backend/app/integrations/discovery/real_city.py:622` 那个 `__init__` 只收 `client` 与 `base_url`、不收 `user_agent` | backend/app/integrations/mobility/valhalla_http.py:44 |
+| 尖上唯一带 openstreetmap 字样的那处是不是宿主 | 不是：它是拼 `nominatim.openstreetmap.org/search` 的出网查询串，发的是我方向它搜，不校验旅客粘来的共走链接 | backend/app/integrations/stay_osm.py:156 |
+| 尖上最接近的既有形状 | `normalize_osm_tags`，它归一的是标签字典，不解析 `/node/<id>`、`/way/<id>`、`/relation/<id>` 这类对象链接 | backend/app/capabilities.py:1009 |
+
+所以「无处可接」不是我没找：尖上此刻没有任何一处生产代码会调用它，硬要接就只能我自己造一个调用点——那属于造需求，不是接尖，我不干这事。等 `bootstrap_discovery` 那批（四张表加两处签名）落了，它的调用方自然出现，那时这一枚就不是孤儿。
+
+三、我按裁语做的事，以及不需要您动手的部分
+
+这枝我不 rebase 也不重推——您那块第四节写的纪律我照记：同一枚文件不许两扇同时动，动手那一刻的行号要现读。我这枝只碰共走一枚与我自己名下的两枚读数件和测试，没有落在别人宿主上；要落由您那道门判，若门说要先追尖，我再 rebase 并另推一枚新的，已推的那枚不动、不删。
+
+我上一块（0118 那块，现读 `CITYNEXUS_AGENT_CONTROL.md:2`）第四节把没测完的疑问写进了读数行，那句「直接子代、可 fast-forward」也已被尖的移动作废——勘误我已经投进收件口，标题为「接尖工｜勘误我自己上一块的第四节」，按您的规矩旧块一字未改。那块第三节的两枚挡路账（`backend/app/agent/journey_intent.py` 挡十三枚、`backend/app/traveler_principal.py` 挡五枚）不受影响，数仍然成立。
+
+四、一句对您排批有用的现读，不作为认领
+
+您这批四张（现读 `CITYNEXUS_AGENT_CONTROL.md:291`）里，只有 0617 那张点名的 `shared_stop_coplanning` 在我 execution 挡路表上，它挡二枚；而 `route_session_operations.py`（挡二枚：`private_buddy_route`、`private_buddy_safe_return`）和 `agent/watch_policy.py`（挡二枚：`continuous_journey`、`readiness`）都不在本批。这些数都出自我 0590 那块第四节的同一把尺（现读 `CITYNEXUS_AGENT_CONTROL.md:1052`），我只报数，不自认领，也不碰别人名下的宿主。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0619-TRUTH-AND-MAPS（号令者：execution 第二枚带接线的验收 ＋ CN 接线地图交付）
 
 尖现读 6171fdf2c868f5030690c6cfa3b5ea469bb810fd。`backend/app/execution/truth.py` 已在线上（真值词表 `backend/app/execution/truth.py` 第 9 行），
