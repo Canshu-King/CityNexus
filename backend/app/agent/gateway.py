@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
 from uuid import UUID
@@ -1383,3 +1384,93 @@ class AgentToolGateway:
             arguments=arguments,
             execute=execute,
         )
+
+def _latest_actionable_event(
+    session: Session, journey_id: str, event_id: str | None = None
+) -> Event | None:
+    """Resolve only an explicit or unambiguous event; never guess on ambiguity."""
+
+    selected, _events, _error = _resolve_actionable_event(session, journey_id, event_id)
+    return selected
+
+def _resolve_actionable_event(
+    session: Session, journey_id: str, event_id: str | None = None
+) -> tuple[Event | None, list[Event], str | None]:
+    events = _actionable_events(session, journey_id)
+    if event_id:
+        selected = next((item for item in events if item.id == str(event_id)), None)
+        if selected is None:
+            return None, events, "EVENT_NOT_ACTIONABLE"
+        return selected, events, None
+    if len(events) == 1:
+        return events[0], events, None
+    if len(events) > 1:
+        return None, events, "EVENT_SELECTION_REQUIRED"
+    return None, events, None
+
+def _city_category_terms(category: str | None) -> tuple[str, ...]:
+    if not category:
+        return ()
+    normalized = category.casefold().strip()
+    return tuple(dict.fromkeys((normalized, *_CITY_CATEGORY_ALIASES.get(normalized, ()))))
+
+def _city_search_terms(query: str | None) -> tuple[str, ...]:
+    if not query:
+        return ()
+    normalized = query.casefold().strip()
+    terms: list[str] = [normalized]
+    terms.extend(token for token in re.findall(r"[\w\u4e00-\u9fff]+", normalized) if len(token) > 1)
+    for phrase, aliases in _CITY_SEARCH_ALIASES.items():
+        if phrase in normalized:
+            terms.extend(aliases)
+    return tuple(dict.fromkeys(term for term in terms if term))
+
+def _actionable_events(session: Session, journey_id: str) -> list[Event]:
+    """Return all open events in deterministic display order.
+
+    Recency is useful for presentation, but it is not a semantic priority rule.
+    Callers must therefore keep the complete compact choice set whenever more
+    than one event is open.
+    """
+
+    return list(
+        session.scalars(
+            select(Event)
+            .where(
+                Event.journey_id == journey_id,
+                Event.status.in_(("DETECTED", "ACKNOWLEDGED")),
+            )
+            .order_by(Event.detected_at.desc(), Event.id.desc())
+        ).all()
+    )
+
+_CITY_CATEGORY_ALIASES: dict[str, tuple[str, ...]] = {
+    "culture": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "cultural": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "indoor": ("museum", "gallery", "library", "theatre", "attraction"),
+    "outdoor": ("park", "garden", "viewpoint", "heritage", "attraction"),
+    # "experience" is the bounded open-world category used by the opportunity
+    # mission.  Treat it as a discovery umbrella, not a literal Place
+    # category, so the Agent can inspect real provider-backed alternatives.
+    "experience": (
+        "museum", "gallery", "library", "theatre", "heritage", "attraction",
+        "park", "garden", "viewpoint", "restaurant", "cafe",
+    ),
+}
+
+_CITY_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
+    "博物馆": ("museum",),
+    "美术馆": ("gallery", "museum"),
+    "图书馆": ("library",),
+    "文化": ("culture", "museum", "library", "theatre"),
+    "室内": ("indoor", "museum", "library", "theatre"),
+    "历史": ("historic", "attraction", "museum"),
+    # English category words are common model-generated search queries.  They
+    # must expand in the same open-world search path as the Chinese aliases;
+    # otherwise q="culture" is applied literally before category="culture"
+    # can expose museum/gallery/heritage Places.
+    "culture": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "cultural": ("museum", "gallery", "library", "theatre", "heritage", "attraction"),
+    "indoor": ("museum", "gallery", "library", "theatre", "attraction"),
+    "outdoor": ("park", "garden", "viewpoint", "heritage", "attraction"),
+}
