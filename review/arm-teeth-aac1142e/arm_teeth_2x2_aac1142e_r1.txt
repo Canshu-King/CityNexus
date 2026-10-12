@@ -1,0 +1,7 @@
+baseline (tip, no arm)             arm=off prod=normal want=pass got=pass unbound=False -> OK | 1 passed, 2 warnings in 3.82s
+arm carried on the tip             arm=on  prod=normal want=pass got=pass unbound=False -> OK | 1 passed, 2 warnings in 2.68s
+arm absent, product mutated        arm=off prod=mutated want=MEASURE got=fail unbound=True -> OK | 1 failed, 2 warnings in 4.55s
+arm present, product mutated       arm=on  prod=mutated want=fail got=fail unbound=True -> OK | 1 failed, 2 warnings in 2.47s
+VERDICT=ARM_HAS_TEETH
+tip=aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+arm_head=bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1

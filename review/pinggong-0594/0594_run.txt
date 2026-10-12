@@ -1,0 +1,24 @@
+反控甲（只有测试、模块未落）pytest rc=2
+      from app.collective_mediation import (
+  E   ModuleNotFoundError: No module named 'app.collective_mediation'
+  =========================== short test summary info ===========================
+  ERROR tests/test_r27_collective_mediation.py
+  !!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+  1 error in 0.24s
+尖上那枚文件的每个原段落仍在合并文本里：是
+真 import：rc=0 EXPORTS 21
+真跑本单测试：rc=0
+  .....                                                                    [100%]
+  5 passed in 0.38s
+尖上原有引用到 candidate_evidence 的测试 1 枚
+回归跑那批：rc=0
+  ..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+    D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+      _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  2 passed, 2 warnings in 6.01s
+逐枚 blob 与来源枝对拍：collective_mediation.py与test_r27_collective_mediation.py 两枚一致
+本笔改动面：
+  63	0	backend/app/replanning/candidate_evidence.py
+VERDICT ord0594_landed_and_ran

@@ -1,0 +1,6 @@
+TIP 061339c0c61e FILE frontend/src/features/agent/CopilotDock.tsx TOTAL 5
+CAND_ROWS 5 FAMILIES 4
+FAMILY copilot.badge rows 2 lines 449,452
+FAMILY copilot.bubble rows 1 lines 889
+FAMILY copilot.history rows 1 lines 886
+FAMILY copilot.panel rows 1 lines 879

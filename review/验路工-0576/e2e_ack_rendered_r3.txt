@@ -1,0 +1,43 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4941 backend=:4942 db=sqlite:///D:/moodle/_e2e_yanlugong0576r3_2236.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [37248]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:4942 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:60495 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60502 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=yanlugong0576r3_2236 frontend=:4941 -> backend=:4942 ai=disabled db=_e2e_yanlugong0576r3_2236.db
+
+Running 7 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4941 backend=:4942 db=sqlite:///D:/moodle/_e2e_yanlugong0576r3_2236.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:60503 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:60504 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:60503 - "POST /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60504 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60503 - "POST /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/stay-options/a17092c2-02e7-43a4-a131-2bca7cd272e5/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=11705bd9-4075-4167-a797-f75fb70bc4df options=4 chosen=a17092c2-02e7-43a4-a131-2bca7cd272e5 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:64732 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64795 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65142 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52905 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65143 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65145 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59659 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59661 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56228 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65144 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50180 - "GET /api/v1/journeys/11705bd9-4075-4167-a797-f75fb70bc4df/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59660 - "GET /api/v1/travelers/1c98b2ed-7e6c-4430-be4f-5025b287d051/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56029 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.8s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4941 backend=:4942 db=sqlite:///D:/moodle/_e2e_yanlugong0576r3_2236.db ai=disabled reuseExistingServer=false
+  ok 2 [chromium] › e2e\qoder-ack-rendered.spec.ts:198:3 › T3 acknowledgement vs resolution (rendered integration) › an ACKNOWLEDGED disruption with no linked acceptance stays open: both '发生了什么' and '已知晓，仍待处理' render (601ms)
+  ok 3 [chromium] › e2e\qoder-ack-rendered.spec.ts:223:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal linked to the event by trigger_event_id closes it: no open/acknowledged notice, shown as handled (462ms)
+  ok 4 [chromium] › e2e\qoder-ack-rendered.spec.ts:246:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal with an UNRELATED trigger_event_id leaves the event open (519ms)
+  ok 5 [chromium] › e2e\qoder-ack-rendered.spec.ts:280:3 › T3 ack vs resolution — Today surface (rendered integration) › an ACKNOWLEDGED event with no acceptance stays an unresolved change on Today (456ms)
+  ok 6 [chromium] › e2e\qoder-ack-rendered.spec.ts:292:3 › T3 ack vs resolution — Today surface (rendered integration) › a matching ACCEPTED replan clears the change count on Today (446ms)
+  ok 7 [chromium] › e2e\qoder-ack-rendered.spec.ts:311:3 › T3 ack vs resolution — Today surface (rendered integration) › an UNRELATED accepted proposal still leaves the change unresolved on Today (477ms)
+
+  7 passed (16.1s)
+E2E_EXIT=0

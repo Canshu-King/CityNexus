@@ -1,0 +1,14 @@
+candidate | zh-CN | copilot.badge.protectedCommitment | 受保护承诺
+candidate | zh-CN | copilot.badge.protectedActivity | 受保护活动
+candidate | zh-CN | copilot.panel.factsOnlyPromise | 回答只依据已核验的行程事实，不会自己改动你的安排。
+candidate | en | copilot.badge.protectedCommitment | Protected commitment
+candidate | en | copilot.badge.protectedActivity | Protected activity
+candidate | en | copilot.panel.factsOnlyPromise | Answers use verified journey facts only and never change your plan.
+negtip | zh-CN | copilot.badge.protectedCommitment | copilot.badge.protectedCommitment
+negtip | zh-CN | copilot.badge.protectedActivity | copilot.badge.protectedActivity
+negtip | zh-CN | copilot.panel.factsOnlyPromise | copilot.panel.factsOnlyPromise
+negtip | en | copilot.badge.protectedCommitment | copilot.badge.protectedCommitment
+negtip | en | copilot.badge.protectedActivity | copilot.badge.protectedActivity
+negtip | en | copilot.panel.factsOnlyPromise | copilot.panel.factsOnlyPromise
+CANDIDATE_CELLS 6 NEG_CELLS 6 NEG_BARE_KEY 6 FAILS 0
+VERDICT probe_green keys=3 cells=6

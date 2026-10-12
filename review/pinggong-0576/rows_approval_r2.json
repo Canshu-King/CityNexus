@@ -1,0 +1,95 @@
+{
+ "gen": "efde3577aa2fce41b5eaf7b2f0918a4f372de4ab",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.approval",
+ "rows": [
+  {
+   "start": 14264,
+   "start_line": 372,
+   "end_line": 372,
+   "key": "copilot.approval.offlineBlocked",
+   "zh": "离线时不能确认方案",
+   "en": "Approval is disabled while offline",
+   "draft_line": "372",
+   "guard": "zh",
+   "ternary": "zh ? \"离线时不能确认方案\" : \"Approval is disabled while offline\""
+  },
+  {
+   "start": 14402,
+   "start_line": 376,
+   "end_line": 376,
+   "key": "copilot.approval.idMissing",
+   "zh": "缺少 CityNexus approval_id，需打开恢复中心审核",
+   "en": "CityNexus approval_id is not available; review in Recovery",
+   "draft_line": "376",
+   "guard": "zh",
+   "ternary": "zh ? \"缺少 CityNexus approval_id，需打开恢复中心审核\" : \"CityNexus approval_id is not available; review in Recovery\""
+  },
+  {
+   "start": 14548,
+   "start_line": 379,
+   "end_line": 379,
+   "key": "copilot.approval.recording",
+   "zh": "正在记录 CityNexus 确认…",
+   "en": "Recording CityNexus approval…",
+   "draft_line": "379",
+   "guard": "zh",
+   "ternary": "zh ? \"正在记录 CityNexus 确认…\" : \"Recording CityNexus approval…\""
+  },
+  {
+   "start": 14730,
+   "start_line": 382,
+   "end_line": 382,
+   "key": "copilot.approval.recorded",
+   "zh": "确认已记录；仍需由 CityNexus 执行授权",
+   "en": "Approval recorded; CityNexus still owns execution authorization",
+   "draft_line": "382",
+   "guard": "zh",
+   "ternary": "zh ? \"确认已记录；仍需由 CityNexus 执行授权\" : \"Approval recorded; CityNexus still owns execution authorization\""
+  },
+  {
+   "start": 18210,
+   "start_line": 459,
+   "end_line": 459,
+   "key": "copilot.approval.needsConfirmation",
+   "zh": "需要你确认",
+   "en": "Needs your confirmation",
+   "draft_line": "459",
+   "guard": "zh",
+   "ternary": "zh ? \"需要你确认\" : \"Needs your confirmation\""
+  },
+  {
+   "start": 18286,
+   "start_line": 461,
+   "end_line": 463,
+   "key": "copilot.approval.explainer",
+   "zh": "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。",
+   "en": "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically.",
+   "draft_line": "462",
+   "guard": "zh",
+   "ternary": "zh\n              ? \"任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。\"\n              : \"Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically.\""
+  },
+  {
+   "start": 18613,
+   "start_line": 466,
+   "end_line": 466,
+   "key": "copilot.approval.approve",
+   "zh": "批准",
+   "en": "Approve",
+   "draft_line": "466",
+   "guard": "zh",
+   "ternary": "zh ? \"批准\" : \"Approve\""
+  },
+  {
+   "start": 18733,
+   "start_line": 467,
+   "end_line": 467,
+   "key": "copilot.approval.reject",
+   "zh": "拒绝",
+   "en": "Reject",
+   "draft_line": "467",
+   "guard": "zh",
+   "ternary": "zh ? \"拒绝\" : \"Reject\""
+  }
+ ]
+}

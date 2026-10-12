@@ -1,0 +1,14 @@
+candidate | zh-CN | copilot.stream.parseError | 运行事件暂时无法解析
+candidate | zh-CN | copilot.stream.reconnecting | 正在重新连接运行事件
+candidate | zh-CN | copilot.stream.unavailable | 运行事件流不可用；已保留已收到的事件
+candidate | en | copilot.stream.parseError | A runtime event could not be read
+candidate | en | copilot.stream.reconnecting | Reconnecting to runtime events
+candidate | en | copilot.stream.unavailable | Event stream unavailable; received events are preserved
+negtip | zh-CN | copilot.stream.parseError | copilot.stream.parseError
+negtip | zh-CN | copilot.stream.reconnecting | copilot.stream.reconnecting
+negtip | zh-CN | copilot.stream.unavailable | copilot.stream.unavailable
+negtip | en | copilot.stream.parseError | copilot.stream.parseError
+negtip | en | copilot.stream.reconnecting | copilot.stream.reconnecting
+negtip | en | copilot.stream.unavailable | copilot.stream.unavailable
+CANDIDATE_CELLS 6 NEG_CELLS 6 NEG_BARE_KEY 6 FAILS 0
+VERDICT probe_green keys=3 cells=6

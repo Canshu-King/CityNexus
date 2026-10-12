@@ -1,0 +1,61 @@
+{
+ "base": "70da925d886199bd367478069fd428ca870a8a98",
+ "keys": [
+  "live.evidence.serverWordUnexplained",
+  "recover.writeDeadline.title",
+  "recover.writeDeadline.body",
+  "recover.writeDeadline.retryGuidance",
+  "copilot.keyless.writeUnknown"
+ ],
+ "dict_lines": {
+  "en": {
+   "live.evidence.serverWordUnexplained": [
+    420,
+    1909
+   ],
+   "recover.writeDeadline.title": [
+    421,
+    1910
+   ],
+   "recover.writeDeadline.body": [
+    422,
+    1911
+   ],
+   "recover.writeDeadline.retryGuidance": [
+    423,
+    1912
+   ],
+   "copilot.keyless.writeUnknown": [
+    424,
+    1913
+   ]
+  },
+  "zh": {
+   "live.evidence.serverWordUnexplained": [
+    420,
+    1909
+   ],
+   "recover.writeDeadline.title": [
+    421,
+    1910
+   ],
+   "recover.writeDeadline.body": [
+    422,
+    1911
+   ],
+   "recover.writeDeadline.retryGuidance": [
+    423,
+    1912
+   ],
+   "copilot.keyless.writeUnknown": [
+    424,
+    1913
+   ]
+  }
+ },
+ "files": [
+  "frontend/src/lib/keylessWriteDeadline.ts",
+  "frontend/src/lib/writeDeadline.ts",
+  "frontend/src/lib/sceneClock.ts"
+ ]
+}

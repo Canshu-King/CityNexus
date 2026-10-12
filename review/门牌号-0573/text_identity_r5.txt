@@ -1,0 +1,19 @@
+bundle_rc=0
+run_rc=0
+plan.plansReadyBody ZH 源20 存20 解20 现20 存字节同/渲染同
+plan.plansReadyBody EN 源51 存51 解51 现51 存字节同/渲染同
+plan.cancelledBody ZH 源27 存27 解27 现27 存字节同/渲染同
+plan.cancelledBody EN 源73 存73 解73 现73 存字节同/渲染同
+plan.cancelledAfterSendBody ZH 源34 存34 解34 现34 存字节同/渲染同
+plan.cancelledAfterSendBody EN 源108 存108 解108 现108 存字节同/渲染同
+plan.keylessWriteDeadlineBody ZH 源81 存81 解81 现81 存字节同/渲染同
+plan.keylessWriteDeadlineBody EN 源268 存268 解268 现268 存字节同/渲染同
+plan.unreachableBody ZH 源41 存41 解41 现41 存字节同/渲染同
+plan.unreachableBody EN 源134 存134 解134 现134 存字节同/渲染同
+plan.refusedRequestBody ZH 源43 存43 解43 现43 存字节同/渲染同
+plan.refusedRequestBody EN 源109 存109 解109 现109 存字节同/渲染同
+plan.serverErroredBody ZH 源46 存46 解46 现46 存字节同/渲染同
+plan.serverErroredBody EN 源123 存123 解123 现123 存字节同/渲染同
+plan.plansWithoutAiBody ZH 源58 存58 解58 现58 存字节同/渲染同
+plan.plansWithoutAiBody EN 源188 存188 解188 现188 存字节同/渲染同
+VERDICT 两语八枚：存字节与渲染文字都逐字节同（不合 0 臂）

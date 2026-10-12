@@ -1,0 +1,16 @@
+# ORD-0603 现尖读路由承接面调查（尖 d79a857aee9fa8869d8f276d96898a03406d067a，全部现读；上一版我把中文文件名的测试读成空、又只按字面量判输入，两处都已改对）
+# 契约的输入判据：fact_is_eligible_for_live_readiness 只读一枚对象上的 duration_min(或 minutes) + provenance(或 route_provenance/fact_quality) + provider_key(或 provider)，见 backend/app/execution/route_session_contract.py:88
+# 每行：路由声明行｜路径｜是否逐条发出 MobilityFact 形状（fact_payload 在 backend/app/stay_mobility.py:2041）｜三样输入｜现尖上钉这条响应键集的测试
+main.py:1829   /api/v1/journeys/{journey_id}/provider-mesh｜fact_payload 逐条发出=False｜输入=缺：provenance,provider_key｜键集钉=无
+main.py:2028   /api/v1/journeys/{journey_id}/agent/runs/{run_id}｜fact_payload 逐条发出=False｜输入=缺：provider_key｜键集钉=无
+main.py:6104   /api/v1/journeys/{journey_id}/mobility｜fact_payload 逐条发出=True｜输入=duration_min+provenance+provider_key｜键集钉=test_route_stub_验路工_0559b_r1.py:112; test_route_stub_验路工_0559b_r1.py:124
+main.py:6703   /api/v1/journeys/{journey_id}/web-observations｜fact_payload 逐条发出=False｜输入=缺：provider_key｜键集钉=无
+main.py:7052   /api/v1/providers/v9｜fact_payload 逐条发出=False｜输入=缺：provenance,provider_key｜键集钉=无
+main.py:9980   /api/v1/journeys/{journey_id}/events｜fact_payload 逐条发出=False｜输入=缺：provenance,provider_key｜键集钉=无
+main.py:10155  /api/v1/journeys/{journey_id}/reflect｜fact_payload 逐条发出=False｜输入=缺：provenance,provider_key｜键集钉=无
+main.py:10535  /api/v1/journeys/{journey_id}/route-evidence｜fact_payload 逐条发出=False｜输入=缺：provenance,provider_key｜键集钉=无
+main.py:14379  /api/v1/city-services/{service_id}/booking-slots｜fact_payload 逐条发出=False｜输入=缺：provider_key｜键集钉=无
+# 合计：GET 路由 73 枚，其中带 mobility/路线事实形状 9 枚；唯一逐条发出 MobilityFact 的是 main.py:6104 那条
+# 另两枚看着像、其实不行的（读它们自己的响应体）：
+#   main.py:10535 /route-evidence —— 响应 properties 只有 provider/provider_backed/fallback/fallback_reason/plan_version_id（backend/app/main.py:10471 那几行），没有时长也没有 provenance 档，接上去只会恒判 False，那是假调用点，不做
+#   main.py:1829 /provider-mesh —— 带 provider_key 与 provenance 字样，但那是服务商健康面板的形状，一枚对象不是一条边的时长，同样喂不进这枚判据

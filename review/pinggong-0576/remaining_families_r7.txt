@@ -1,0 +1,4 @@
+TIP d1b2ac668966 FILE frontend/src/features/agent/CopilotDock.tsx TOTAL 2
+CAND_ROWS 2 FAMILIES 2
+FAMILY copilot.bubble rows 1 lines 887
+FAMILY copilot.history rows 1 lines 884

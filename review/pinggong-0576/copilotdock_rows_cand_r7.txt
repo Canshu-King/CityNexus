@@ -1,0 +1,3 @@
+TIP d1b2ac668966 FILE frontend/src/features/agent/CopilotDock.tsx TOTAL 2
+884	884	? "问我为什么这样安排、试算变化，或报告已经确认的中断。" : "Ask why, preview a change, or report a confirmed disruption."
+887	887	? "你" : "You"

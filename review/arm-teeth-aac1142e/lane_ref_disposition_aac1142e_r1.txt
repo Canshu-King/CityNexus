@@ -1,0 +1,18 @@
+tip	aac1142e1d25aab0a5bb4fbaa204f3a90668bd0f
+5a53846b-cmdr0204-ruler-fixes-r1	3cbd8be62024b69917505aa62e9302bcc13808ff	读数枝(独有提交超过十二笔,不判定)	0	0	-
+5a53846b-cmdr0204-ruler-fixes-r2	541831b83b8f3727b631b63dbb6a09319680fb1b	内容已在尖	7	2	-
+5a53846b-cmdr0204-ruler-fixes-r3	d58e02d4a60e5d4b868fad808eeb756d11659012	内容已在尖	8	2	-
+5a53846b-cmdr0204-verify-tip-r1	f1fdad6230f0271cad60105f64c4d3b14f4535cf	纯读数件(设计上不落地)	7	0	-
+5a53846b-cmdr0204-verify-tip-r2	d39d8986319d35ef25ac941e136be84cff2bb674	纯读数件(设计上不落地)	7	0	-
+5a53846b-collect-census-liveness-r1	4f49d25d0ba19495d41b56f25aa28b20ff4b26d7	纯读数件(设计上不落地)	5	0	-
+5a53846b-collect-census-liveness-r2	ceb8b859577bab2ee711efdf92cbf904d4ca4b22	纯读数件(设计上不落地)	5	0	-
+5a53846b-lane-instrument-facts-r1	be30dd5f832b590557e65a0744008f5091f752b3	纯读数件(设计上不落地)	19	0	-
+5a53846b-lane-instrument-facts-r2	77520a72e9f810d54c8173ec2ace9f592eb8a8b4	纯读数件(设计上不落地)	12	0	-
+5a53846b-not-reached-arm-r1	0e1084873609566dd8463bb01b32c8cab79b5e03	待落(有 shipped 面与尖不同)	2	1	backend/tests/test_qoder_city_failure_reasons.py
+5a53846b-not-reached-arm-r2	61cf94c7e1c4690a84ab44bd624dce5d76faa81c	待落(有 shipped 面与尖不同)	2	1	backend/tests/test_qoder_city_failure_reasons.py
+5a53846b-not-reached-arm-r3	d9768226a2b8d9b6e83bce0e58e8509419fa564a	待落(有 shipped 面与尖不同)	2	1	backend/tests/test_qoder_city_failure_reasons.py
+5a53846b-ord0500-r19-landcheck-merge-r1	d360d5cf70e9e9069fd4c2e781e6004346c0ecd4	读数枝(独有提交超过十二笔,不判定)	0	0	-
+5a53846b-ord0500-r19-tiprecut-probe-r1	dace4a44c72478958a9a1f2737c5f9b724aef1a1	读数枝(独有提交超过十二笔,不判定)	0	0	-
+5a53846b-ord0571-trips-inline-readings-r1	c54ce9c64f9303f38ae041d33b08e057dc6b9be0	纯读数件(设计上不落地)	4	0	-
+5a53846b-suite-redset-b2fccfdf-r1	26a1ee58de69fadd21fd35991d186a993f47f544	纯读数件(设计上不落地)	5	0	-
+5a53846b-verify-b2fccfdf-r1	1a83c03d8e66ce113b788833533ed2a5ba74bbd5	纯读数件(设计上不落地)	4	0	-

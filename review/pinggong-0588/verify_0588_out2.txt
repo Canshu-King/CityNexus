@@ -1,0 +1,2 @@
+MANIFEST_ROWS 28 源枝并集 28 缺 0 多 0 逐字节不符 0
+VERDICT ord0588_copy_verified rows=28 union=28

@@ -1,0 +1,20 @@
+本枝头 80c38b5af099 含现尖 d7776c6a7730：是
+来源代三方一致：尺 a5a2f1096e0f = 对账表第 29 行 pin a5a2f1096e0f = GitHub 该枝当前头 a5a2f1096e0f
+反控（模块临时挪开）pytest rc=2
+  =========================== short test summary info ===========================
+  ERROR tests/test_r27_collective_mediation.py
+  !!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+  1 error in 0.28s
+注意：来源代与现尖的那枚文件本就不同代，我只从来源代取那两枚新函数，其余以现尖为准
+现尖那枚文件的每个段落逐字仍在合并文本里：是（段落 6 段）
+后端 venv 真 import：rc=0 EXPORTS 21 / HAS_SCOPE True
+本单测试真跑：rc=0 5 passed in 0.49s
+尖上引用那枚文件的其他测试 1 枚
+回归真跑那批：rc=0 2 passed, 2 warnings in 5.87s
+逐字节对拍 collective_mediation.py blob af8ff6a0c6a3 行数 592 字节 26241
+逐字节对拍 test_r27_collective_mediation.py blob 1640f25f4c7d 行数 71 字节 3100
+本枝相对现尖的改动面：
+  592	0	backend/app/collective_mediation.py
+  63	0	backend/app/replanning/candidate_evidence.py
+  71	0	backend/tests/test_r27_collective_mediation.py
+VERDICT ord0594_pinned_generation_landed_and_ran branch=80c38b5af099

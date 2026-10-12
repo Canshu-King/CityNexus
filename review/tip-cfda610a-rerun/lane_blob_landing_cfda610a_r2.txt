@@ -1,0 +1,6 @@
+tip 8996eee4fb9fb4e159588305223ef421728c4e72
+5a53846b-not-reached-arm-r4 head=bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1 own_paths=2 differs_from_tip=0 []
+5a53846b-cmdr0204-verify-tip-r3 head=bb4665a6c1108ebce64505506441ff1e0117d187 own_paths=7 differs_from_tip=0 []
+5a53846b-lane-instrument-facts-r3 head=a65d29eeb5d06be49d5ea0e620393c8839de3d09 own_paths=12 differs_from_tip=0 []
+5a53846b-collect-census-liveness-r3 head=a5599506bd657b362072b9e671859295c7b0d7e9 own_paths=5 differs_from_tip=0 []
+5a53846b-ord0571-trips-inline-readings-r1 head=c54ce9c64f9303f38ae041d33b08e057dc6b9be0 own_paths=4 differs_from_tip=0 []

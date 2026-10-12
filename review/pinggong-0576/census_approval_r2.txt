@@ -1,0 +1,18 @@
+OLD 8890f22fe3 files=157 hits=198
+NEW 9f42b62f33 files=157 hits=183
+DELTA 15 (old-new)
+CLEARED_FILES 1
+CLEARED 15 frontend/src/features/agent/CopilotDock.tsx
+STILL_TOP 21 files=169
+STILL 40 frontend/src/app/V8Experience.tsx
+STILL 21 frontend/src/features/planning/PlanWithAiSheet.tsx
+STILL 18 frontend/src/features/stay/HotelsPanel.tsx
+STILL 14 frontend/src/features/agent/CopilotDock.tsx
+STILL 14 frontend/src/features/stay/StayExplorer.tsx
+STILL 13 frontend/src/features/execution/LiveRecovery.tsx
+STILL 12 frontend/src/features/discovery/DestinationPreparationPanel.tsx
+STILL 10 frontend/src/features/planning/PlanComparison.tsx
+STILL 9 frontend/src/features/setup/JourneyTrialSetup.tsx
+STILL 8 frontend/src/features/trip/TripItinerary.tsx
+STILL 6 frontend/src/features/simulation/SimulationPanel.tsx
+STILL 4 frontend/src/features/progress/journeyProgress.ts

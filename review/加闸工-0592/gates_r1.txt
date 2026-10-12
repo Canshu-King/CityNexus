@@ -1,0 +1,14 @@
+加闸工 ORD-0592 闸与仪件读数 —— 每条都由 live_checks/absorption_leg_proof_r1.py 一键重放，输出全文在 proof_r1.txt
+1  基准：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`；开枝用交块当时现取的那枚（proof_r1.txt 第 2 步打印的尖为 3bf57cc0e15e 那一代），枝只做文本插入与新增件，不动权威线，force-push 零次。
+2  尺在现尖那一代的真读数（这条腿接管之前只有号令者手跑）：对账表 41 枚枝｜已挂吸收代 0｜未吸收 41｜枝对象取不到 0，分档 TO_ABSORB 35 条／CARRIED_BY_REP 6 条，退出码按设计 4（推进中）——见 proof_r1.txt 第 3 步那行 ABS-ROW。
+3  腿自己的自检：ABSORB-LEG-SELFTEST assertions=30 failures=0，退出码零（proof_r1.txt 第 1 步）。里头最关键的一条是「尺退出码九那一拍没有分档行」：尺在 live_checks/revolution_absorption_check_r1.py:96 先 return 9、分档那行在 :98 之后才打，所以报警那一拍那两档必然是空的——先前我这条腿正是崩在这里（打印用了整数格式化），修成「尺未报」而不是猜零，自检里钉了两条守它（live_checks/patrol/_absorption_leg_r1.py:139 的 fmt 与自检里对应 assertion）。
+4  --dry 一拍：状态目录里文件数 0（不落盘），只打印判语（proof_r1.txt 第 2 步）。
+5  --apply 一拍：状态件 `_absorption_state_20261012.tsv` 落 1 行，列齐（表头加时间戳／拍号／尖／尺退出码／四档计数／判语），见 proof_r1.txt 第 3 步。
+6  「面涨了」：往状态件末位种一行「未吸收 40 条」再跑，判语=面涨了、成因=未吸收面从 40 涨到 41（+ 1 枚），交出一块 1725 字节的件，入账自查对它报 overall Q43_GATE_GREEN、claims checked 4（proof_r1.txt 第 4 步）。
+7  冷却：同形状立刻再跑一拍 ⇒ ABSORB-COOLED（0 分前交过，冷却 240 分），收件口仍 1 块，不刷屏（proof_r1.txt 第 5 步）。
+8  负对照：把一块没坐标的件喂给写门 ⇒ 自查报 overall Q43_GATE_RED、findings 1 ['NUMBER_WITHOUT_COORDINATE']，原稿被改名 `.gate_red`、收件口没有可入账的新块（proof_r1.txt 第 6 步）。这道闸是装在写文件那一步上的，不是事后再查。
+9  尺与对账表在枝上与尖上同字节：命令原样 `git rev-parse <尖>:<路径>` 与 `git rev-parse <枝>:<路径>` 对拍，`live_checks/revolution_absorption_check_r1.py` 与 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 两两相同（本块没改它们，只加了腿/挂载件/仪件三枚新文件；对拍数见 landcheck_r1.txt:2 起）。
+10 退化那一拍：把尺的输出换成退出码 9 加一条退化（不动判腿，只换喂给腿的尺结果），腿绕过冷却照样交一块（1960 字节、自查绿、claims checked 2），块里那枚退化枝指回它在对账表的那一行，空着的两档写「尺未报」（proof_r1.txt 第 7 步）。
+11 挂载件三态：DRY ⇒ 预览件可编译、行数 395 到 408（+13）、锚行存活、字节等式过、不碰跑批本体；`--apply` ⇒ 留时间戳备份后写入同一份临时副本；再 `--apply` ⇒ ALREADY-MOUNTED 不重复插。共享原件行数仍 395（proof_r1.txt 第 8 步）。
+12 调用形制不是抄的：把挂载件里那段腿的原文（live_checks/mount_absorption_leg_r1.py:31 的 DELTA）喂给跑批自己的 run()（cwd=LC、NO_WINDOW、text=True），执行出来的日志行是 `round 99 absorption ABS-ROW …;; ABS-LEG …;; ABS-QUIET …`，与其他腿「round %d <名> <marker>」同一形制；这条测试第一次跑时还抓出我少绑了一个 LC 名字（说明它真在跑那份原文）。见 proof_r1.txt 第 9 步。
+13 现场没被我动过：仪件所有写入都在临时目录，跑完自删（proof_r1.txt 第 10 步「清完还在=False」）；真实收件口未被本块写过（本块自己的交块是唯一一枚新件，时刻与文件名见 landcheck_r1.txt:6）；真实跑批文件 395 行未变；账本本体零直写。

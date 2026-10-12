@@ -1,0 +1,70 @@
+{
+ "tip": "ad6a96bf60396b5bc1a8a8bb32b6f45697529337",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.mission",
+ "rows": [
+  {
+   "tip_line": 394,
+   "key": "copilot.mission.workingOnRequest",
+   "zh": "正在为你处理",
+   "en": "Working on your request",
+   "draft_line": "394",
+   "guard": "zh",
+   "ternary": "zh ? \"正在为你处理\" : \"Working on your request\""
+  },
+  {
+   "tip_line": 397,
+   "key": "copilot.mission.ranAgainstFacts",
+   "zh": "已按你的行程事实执行",
+   "en": "Ran against your journey facts",
+   "draft_line": "397",
+   "guard": "zh",
+   "ternary": "zh ? \"已按你的行程事实执行\" : \"Ran against your journey facts\""
+  },
+  {
+   "tip_line": 398,
+   "key": "copilot.mission.checkingFacts",
+   "zh": "正在核对你的行程事实…",
+   "en": "Checking your journey facts…",
+   "draft_line": "398",
+   "guard": "zh",
+   "ternary": "zh ? \"正在核对你的行程事实…\" : \"Checking your journey facts…\""
+  },
+  {
+   "tip_line": 407,
+   "key": "copilot.mission.checkingFacts",
+   "zh": "正在核对你的行程事实…",
+   "en": "Checking your journey facts…",
+   "draft_line": "398",
+   "guard": "zh",
+   "ternary": "zh ? \"正在核对你的行程事实…\" : \"Checking your journey facts…\""
+  },
+  {
+   "tip_line": 428,
+   "key": "copilot.mission.viewSafePlan",
+   "zh": "查看安全任务计划",
+   "en": "View safe mission plan",
+   "draft_line": "428",
+   "guard": "zh",
+   "ternary": "zh ? \"查看安全任务计划\" : \"View safe mission plan\""
+  },
+  {
+   "tip_line": 433,
+   "key": "copilot.mission.needsAuthority",
+   "zh": "CityNexus 授权",
+   "en": "CityNexus authority",
+   "draft_line": "433",
+   "guard": "zh",
+   "ternary": "zh ? \"CityNexus 授权\" : \"CityNexus authority\""
+  },
+  {
+   "tip_line": 478,
+   "key": "copilot.mission.stop",
+   "zh": "停止任务",
+   "en": "Stop mission",
+   "draft_line": "478",
+   "guard": "zh",
+   "ternary": "zh ? \"停止任务\" : \"Stop mission\""
+  }
+ ]
+}

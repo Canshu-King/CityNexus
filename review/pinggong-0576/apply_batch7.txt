@@ -1,0 +1,7 @@
+APPLIED gen 2a9367a13166 family copilot.history 一枚 + copilot.bubble 一枚（本轮两处，最严那一档） rows 2 keys 2
+PRODUCT_BLOB 8e3a9d8bf3027776a1065fc7d6d65101ce1ee0ec
+DICT_BLOB ca65a2cceb2d76ecc58b97727db9861572a8fd4c
+  KEY copilot.history.emptyHint en=1531 zh=2967
+  KEY copilot.bubble.youLabel en=1532 zh=2968
+  CALL copilot.history.emptyHint at lines [884] (改前 884-884)
+  CALL copilot.bubble.youLabel at lines [887] (改前 887-887)

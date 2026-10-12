@@ -1,0 +1,5 @@
+CMD git diff --numstat 4f8e5c4809b4f6c5c3431418c764d9d0b115764d^ 4f8e5c4809b4f6c5c3431418c764d9d0b115764d -- frontend/src
+2	2	frontend/src/features/agent/CopilotDock.tsx
+4	0	frontend/src/i18n/LocaleContext.tsx
+CMD git rev-list --left-right --count e82296fa3bf8de2530ce25471e2dbf9981ae31b1...f23b5166235d5c2c7db84944f6dcf74eb4b43a5d
+0	17

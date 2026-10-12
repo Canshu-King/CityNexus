@@ -1,0 +1,18 @@
+{
+ "gen": "49e2f657a9cb4f33e1491b393bb036946601f366",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.approval",
+ "rows": [
+  {
+   "start": 18312,
+   "start_line": 466,
+   "end_line": 466,
+   "key": "copilot.approval.modifyReview",
+   "zh": "修改 / 审核",
+   "en": "Modify / Review",
+   "draft_line": "468",
+   "guard": "zh",
+   "ternary": "zh ? \"修改 / 审核\" : \"Modify / Review\""
+  }
+ ]
+}

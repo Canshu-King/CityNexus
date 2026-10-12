@@ -1,0 +1,47 @@
+{
+ "tip": "32372c7e57611f73782fdc607d929735224cf657",
+ "measured": "8996eee4fb9fb4e159588305223ef421728c4e72",
+ "backend_measured": "2698755063d88e85a13d1a7fbe3f2cb9e48dbcb6",
+ "backend_tip": "2698755063d88e85a13d1a7fbe3f2cb9e48dbcb6",
+ "backend_identical": true,
+ "frontend_identical": false,
+ "suite_tail": "11 failed, 1712 passed, 17 skipped, 1 xfailed, 4 warnings in 566.11s (0:09:26)",
+ "red_nodes": 11,
+ "counter_examples": [
+  {
+   "ref": "refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r2",
+   "head": "541831b83b8f3727b631b63dbb6a09319680fb1b",
+   "backend_tree": "80b09a56e55cf0f85b0feb33b4ca26ace459d21c",
+   "backend_paths": [
+    "backend/tests/test_qoder_city_failure_reasons.py",
+    "backend/tests/test_qoder_ord197_four_class_receipt.py"
+   ]
+  },
+  {
+   "ref": "refs/heads/review/5a53846b-cmdr0204-ruler-fixes-r3",
+   "head": "d58e02d4a60e5d4b868fad808eeb756d11659012",
+   "backend_tree": "fe95811e2a201431eda0798af179ea4891a4f6f3",
+   "backend_paths": [
+    "backend/tests/test_qoder_city_failure_reasons.py",
+    "backend/tests/test_qoder_ord197_four_class_receipt.py"
+   ]
+  },
+  {
+   "ref": "refs/heads/review/5a53846b-not-reached-arm-r3",
+   "head": "d9768226a2b8d9b6e83bce0e58e8509419fa564a",
+   "backend_tree": "3902c8fe4452fc0ec3a630de6707ea1db314bf7d",
+   "backend_paths": [
+    "backend/tests/test_qoder_city_failure_reasons.py"
+   ]
+  },
+  {
+   "ref": "refs/heads/review/5a53846b-not-reached-arm-r4",
+   "head": "bfa3f4e6412bf1dcbc7e1a686fa1bfcf271e37d1",
+   "backend_tree": "3902c8fe4452fc0ec3a630de6707ea1db314bf7d",
+   "backend_paths": [
+    "backend/tests/test_qoder_city_failure_reasons.py"
+   ]
+  }
+ ],
+ "counter_count": 4
+}

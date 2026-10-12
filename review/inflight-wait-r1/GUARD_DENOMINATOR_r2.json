@@ -1,0 +1,381 @@
+{
+  "generated_by": "89f2e2d6",
+  "supersedes_for_this_count": "review/inflight-wait-r1/GUARD_DENOMINATOR_r1.json",
+  "why_r2": "r1 counted only its own sweep (32 files); 1 seeded files were already measured in the earlier two-mode sweep and belong in the same denominator",
+  "tree_head": "179098bb33fbb9b4998fa9e44f1903ac5e3ee259",
+  "seeded_population": 33,
+  "files_compared": 33,
+  "files_where_the_two_modes_disagree": 9,
+  "files_where_they_agree": 24,
+  "unmeasured_candidates": [],
+  "rows_merged_from_the_first_sweep": [
+    "tests/test_ord0526_offline_source_row_count_r1.py"
+  ],
+  "disagreement_list": [
+    "tests/test_e2e_provenance.py",
+    "tests/test_qoder_ord0296_write_deadline.py",
+    "tests/test_qoder_ord0327_write_bound_default.py",
+    "tests/test_qoder_ord0332_error_receipt.py",
+    "tests/test_qoder_ord0355_honest_stay_budget.py",
+    "tests/test_qoder_ord0383_journey_soft_delete.py",
+    "tests/test_qoder_ord0488_schema_catchup.py",
+    "tests/test_qoder_ord0520_journey_abort.py",
+    "tests/test_qoder_pending_destination_identity.py"
+  ],
+  "arms_lost_only_under_the_stamp": {
+    "tests/test_e2e_provenance.py": [
+      "test_an_unstamped_process_is_left_alone",
+      "test_health_does_not_claim_a_run_id_it_was_never_given"
+    ],
+    "tests/test_qoder_ord0296_write_deadline.py": [
+      "tests/test_qoder_ord0296_write_deadline.py::test_G10_the_budget_belongs_to_one_request_not_one_connection",
+      "tests/test_qoder_ord0296_write_deadline.py::test_G11_importing_the_app_is_what_arms_the_door"
+    ],
+    "tests/test_qoder_ord0327_write_bound_default.py": [
+      "tests/test_qoder_ord0327_write_bound_default.py::test_W1_the_default_scenario_is_declared_once_and_covered_by_the_door",
+      "tests/test_qoder_ord0327_write_bound_default.py::test_W2_the_door_refuses_a_default_deadline_at_or_below_the_lock_wait"
+    ],
+    "tests/test_qoder_ord0332_error_receipt.py": [
+      "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table"
+    ],
+    "tests/test_qoder_ord0355_honest_stay_budget.py": [
+      "test_the_additive_migration_arrives_without_touching_the_existing_row_or_column"
+    ],
+    "tests/test_qoder_ord0383_journey_soft_delete.py": [
+      "test_the_additive_column_arrives_without_rewriting_the_row_that_predates_it"
+    ],
+    "tests/test_qoder_ord0488_schema_catchup.py": [
+      "test_ord0488_dropping_a_preview_missing_table_then_booting_heals_it"
+    ],
+    "tests/test_qoder_ord0520_journey_abort.py": [
+      "test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client"
+    ],
+    "tests/test_qoder_pending_destination_identity.py": [
+      "test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+      "test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+    ]
+  },
+  "rows": [
+    {
+      "file": "tests/test_e2e_provenance.py",
+      "stamped_summary": "2 failed, 5 passed, 2 warnings in 3.75s",
+      "stamped_red": [
+        "test_an_unstamped_process_is_left_alone",
+        "test_health_does_not_claim_a_run_id_it_was_never_given"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "7 passed, 2 warnings in 2.44s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_ord0526_offline_source_row_count_r1.py",
+      "stamped_summary": "3 passed in 0.98s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "3 passed in 1.01s",
+      "differs": false
+    },
+    {
+      "file": "tests/test_ord0544_anchor_leg_shape_r1.py",
+      "stamped_summary": "4 passed in 1.95s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_catalog_hydration.py",
+      "stamped_summary": "23 passed, 2 warnings in 5.26s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_g3_xproc_http.py",
+      "stamped_summary": "1 failed, 2 warnings in 4.37s",
+      "stamped_red": [
+        "test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "1 failed, 2 warnings in 4.58s",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0272_continuation.py",
+      "stamped_summary": "8 passed, 2 warnings in 4.42s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0287_k8_carrier.py",
+      "stamped_summary": "2 passed, 2 warnings in 2.71s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0296_write_deadline.py",
+      "stamped_summary": "2 warnings, 11 errors in 3.69s",
+      "stamped_red": [],
+      "stamped_errors": [
+        "tests/test_qoder_ord0296_write_deadline.py::test_G10_the_budget_belongs_to_one_request_not_one_connection",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G11_importing_the_app_is_what_arms_the_door"
+      ],
+      "control_ran": true,
+      "plain_summary": "11 passed, 2 warnings in 6.99s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0310_keyless_leg_receipts.py",
+      "stamped_summary": "6 passed, 2 warnings in 3.10s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0327_write_bound_default.py",
+      "stamped_summary": "2 warnings, 7 errors in 2.55s",
+      "stamped_red": [],
+      "stamped_errors": [
+        "tests/test_qoder_ord0327_write_bound_default.py::test_W1_the_default_scenario_is_declared_once_and_covered_by_the_door",
+        "tests/test_qoder_ord0327_write_bound_default.py::test_W2_the_door_refuses_a_default_deadline_at_or_below_the_lock_wait"
+      ],
+      "control_ran": true,
+      "plain_summary": "7 passed, 2 warnings in 5.07s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0332_error_receipt.py",
+      "stamped_summary": "1 failed, 8 passed, 2 warnings in 4.89s",
+      "stamped_red": [
+        "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "9 passed, 2 warnings in 4.83s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0340_claim_lease.py",
+      "stamped_summary": "7 passed, 2 warnings in 10.23s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0355_honest_stay_budget.py",
+      "stamped_summary": "1 failed, 10 passed, 2 warnings in 2.59s",
+      "stamped_red": [
+        "test_the_additive_migration_arrives_without_touching_the_existing_row_or_column"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "11 passed, 2 warnings in 2.69s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0383_journey_soft_delete.py",
+      "stamped_summary": "1 failed, 6 passed, 2 warnings in 3.40s",
+      "stamped_red": [
+        "test_the_additive_column_arrives_without_rewriting_the_row_that_predates_it"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "7 passed, 2 warnings in 2.53s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0383_undelete_write_lock.py",
+      "stamped_summary": "4 passed, 2 warnings in 5.20s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0399_journey_undelete.py",
+      "stamped_summary": "7 passed, 2 warnings in 3.34s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0402_recycle_bin.py",
+      "stamped_summary": "8 passed, 2 warnings in 3.39s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0444_collections.py",
+      "stamped_summary": "17 passed, 2 warnings in 6.71s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0476_checkins.py",
+      "stamped_summary": "11 passed, 2 warnings in 3.44s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0477_journey_sort.py",
+      "stamped_summary": "16 passed, 2 warnings in 4.37s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0488_schema_catchup.py",
+      "stamped_summary": "1 failed, 3 passed in 1.22s",
+      "stamped_red": [
+        "test_ord0488_dropping_a_preview_missing_table_then_booting_heals_it"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "4 passed in 1.28s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0496_calendar_export.py",
+      "stamped_summary": "15 passed, 2 warnings in 3.49s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0503_member_doors.py",
+      "stamped_summary": "22 passed, 2 warnings in 4.22s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0512_place_name_on_the_wire_r1.py",
+      "stamped_summary": "6 passed, 2 warnings in 2.71s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0520_abort_contention_r1.py",
+      "stamped_summary": "6 passed, 2 warnings in 2.20s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0520_journey_abort.py",
+      "stamped_summary": "1 failed, 10 passed, 2 warnings in 4.49s",
+      "stamped_red": [
+        "test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "11 passed, 2 warnings in 5.79s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_qoder_ord0520_live_view_survives_status_move_r1.py",
+      "stamped_summary": "5 passed, 2 warnings in 2.23s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_ord0521_empty_store_scene_door.py",
+      "stamped_summary": "16 passed, 2 warnings in 4.90s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_qoder_pending_destination_identity.py",
+      "stamped_summary": "2 failed, 13 passed, 2 warnings in 3.12s",
+      "stamped_red": [
+        "test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+        "test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+      ],
+      "stamped_errors": [],
+      "control_ran": true,
+      "plain_summary": "15 passed, 2 warnings in 2.75s",
+      "differs": true
+    },
+    {
+      "file": "tests/test_sol_migration_truth.py",
+      "stamped_summary": "2 passed in 0.75s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_v6_enrollment.py",
+      "stamped_summary": "1 passed in 0.72s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_wp01_wp03.py",
+      "stamped_summary": "29 passed, 2 warnings in 3.51s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    },
+    {
+      "file": "tests/test_wp04_hardening_wp05.py",
+      "stamped_summary": "5 passed, 2 warnings in 3.13s",
+      "stamped_red": [],
+      "stamped_errors": [],
+      "control_ran": false,
+      "plain_summary": "(not needed)",
+      "differs": false
+    }
+  ]
+}

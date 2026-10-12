@@ -1,0 +1,130 @@
+{
+  "generated_by": "89f2e2d6",
+  "tree_head": "179098bb33fbb9b4998fa9e44f1903ac5e3ee259",
+  "same_run_two_opens": {
+    "first": {
+      "stamp": true,
+      "run_id": "shape2-probe",
+      "db": "_shape2-probe.db",
+      "rc": 0,
+      "refusal": false,
+      "tail": "schemas formal 87; generated 87; missing 0; extra 0"
+    },
+    "second": {
+      "stamp": true,
+      "run_id": "shape2-probe",
+      "db": "_shape2-probe.db",
+      "rc": 1,
+      "refusal": true,
+      "tail": "RuntimeError: E2E run 'shape2-probe' refuses to reopen an existing database at D:\\moodle\\_qoder_lane_ord0520_20260930\\db\\_shape2-probe.db. An authorit"
+    },
+    "plain_control": {
+      "stamp": false,
+      "run_id": "shape2-plain",
+      "db": "_shape2-plain.db",
+      "rc": 0,
+      "refusal": false,
+      "tail": "schemas formal 87; generated 87; missing 0; extra 0"
+    },
+    "verdict": "SECOND_OPEN_OF_THE_RUNS_OWN_STORE_IS_REFUSED"
+  },
+  "shape_of_the_nine": {
+    "A_arm_seeds_its_own_file": [
+      "tests/test_qoder_ord0355_honest_stay_budget.py",
+      "tests/test_qoder_ord0383_journey_soft_delete.py",
+      "tests/test_qoder_ord0488_schema_catchup.py",
+      "tests/test_qoder_pending_destination_identity.py"
+    ],
+    "B_run_own_store_reopened": [
+      "tests/test_qoder_ord0296_write_deadline.py",
+      "tests/test_qoder_ord0327_write_bound_default.py",
+      "tests/test_qoder_ord0332_error_receipt.py",
+      "tests/test_qoder_ord0520_journey_abort.py"
+    ],
+    "C_arm_asserts_no_stamp": [
+      "tests/test_e2e_provenance.py"
+    ]
+  },
+  "shape_counts": {
+    "A_arm_seeds_its_own_file": 4,
+    "B_run_own_store_reopened": 4,
+    "C_arm_asserts_no_stamp": 1
+  },
+  "files_accounted": 9,
+  "files_compared": 9,
+  "special_runnings": {
+    "tests/test_e2e_provenance.py::test_an_unstamped_process_is_left_alone": {
+      "node": "tests/test_e2e_provenance.py::test_an_unstamped_process_is_left_alone",
+      "rc": 1,
+      "run_id": "shape3-f38396af",
+      "refusal_present": false,
+      "refusal_names_the_run_store": false,
+      "failure_line": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt2\\backend\\tests\\test_e2e_provenance.py:94: AssertionError: the ambient settings must not carry a run id",
+      "asserts_absence_of_stamp": true
+    },
+    "tests/test_e2e_provenance.py::test_health_does_not_claim_a_run_id_it_was_never_given": {
+      "node": "tests/test_e2e_provenance.py::test_health_does_not_claim_a_run_id_it_was_never_given",
+      "rc": 1,
+      "run_id": "shape3-2a537977",
+      "refusal_present": false,
+      "refusal_names_the_run_store": false,
+      "failure_line": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt2\\backend\\tests\\test_e2e_provenance.py:24: AssertionError: assert 'shape3-2a537977' == ''",
+      "asserts_absence_of_stamp": true
+    },
+    "tests/test_qoder_ord0520_journey_abort.py::test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client": {
+      "node": "tests/test_qoder_ord0520_journey_abort.py::test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client",
+      "rc": 1,
+      "run_id": "shape3-9409cce5",
+      "refusal_present": false,
+      "refusal_names_the_run_store": false,
+      "failure_line": "D:\\moodle\\_qoder_lane_ord0520_20260930\\wt2\\backend\\tests\\test_qoder_ord0520_journey_abort.py:390: AssertionError: 契约与运行时/生成物不齐：Traceback (most recent call last):",
+      "asserts_absence_of_stamp": false
+    }
+  },
+  "correction_to_my_own_proposal": "the last block asked for the guard to check only the run's declared database url; same_run_two_opens shows the declared url is precisely what gets refused the second time, so that proposal cannot be the whole fix -- shape B needs either a run identity written into the store, or the standing rule to say children and second openers must not inherit CITYNEXUS_E2E_RUN_ID",
+  "shape_B_rate_for_my_own_arm": {
+    "node": "tests/test_qoder_ord0520_journey_abort.py::test_the_parity_ruler_is_green_and_names_the_new_components_in_the_generated_client",
+    "runs": 6,
+    "refusals": 6,
+    "rate": "1.00",
+    "rows": [
+      {
+        "run_id": "shapeB-eaeb24e5",
+        "rc": 1,
+        "refusal": true,
+        "names_the_run_store": true
+      },
+      {
+        "run_id": "shapeB-99c7c8ee",
+        "rc": 1,
+        "refusal": true,
+        "names_the_run_store": true
+      },
+      {
+        "run_id": "shapeB-0f921f32",
+        "rc": 1,
+        "refusal": true,
+        "names_the_run_store": true
+      },
+      {
+        "run_id": "shapeB-f794e1de",
+        "rc": 1,
+        "refusal": true,
+        "names_the_run_store": true
+      },
+      {
+        "run_id": "shapeB-2d78c3ed",
+        "rc": 1,
+        "refusal": true,
+        "names_the_run_store": true
+      },
+      {
+        "run_id": "shapeB-61b219c2",
+        "rc": 1,
+        "refusal": true,
+        "names_the_run_store": true
+      }
+    ],
+    "note": "the single sample in r3 that showed no refusal is why this was counted rather than believed"
+  }
+}

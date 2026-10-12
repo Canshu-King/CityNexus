@@ -1,0 +1,19 @@
+APPLIED gen efde3577aa2f family copilot.approval rows 8 keys 8
+PRODUCT_BLOB 23bf0e924c012502a11b381f1626fe1f0c91d547
+DICT_BLOB 8f58d9cc5fc8263984d81474f34790a956ea1cf4
+  KEY copilot.approval.offlineBlocked en=1500 zh=2911
+  KEY copilot.approval.idMissing en=1501 zh=2912
+  KEY copilot.approval.recording en=1502 zh=2913
+  KEY copilot.approval.recorded en=1503 zh=2914
+  KEY copilot.approval.needsConfirmation en=1504 zh=2915
+  KEY copilot.approval.explainer en=1505 zh=2916
+  KEY copilot.approval.approve en=1506 zh=2917
+  KEY copilot.approval.reject en=1507 zh=2918
+  CALL copilot.approval.offlineBlocked at lines [372] (改前 372-372)
+  CALL copilot.approval.idMissing at lines [376] (改前 376-376)
+  CALL copilot.approval.recording at lines [379] (改前 379-379)
+  CALL copilot.approval.recorded at lines [382] (改前 382-382)
+  CALL copilot.approval.needsConfirmation at lines [459] (改前 459-459)
+  CALL copilot.approval.explainer at lines [461] (改前 461-463)
+  CALL copilot.approval.approve at lines [464] (改前 466-466)
+  CALL copilot.approval.reject at lines [465] (改前 467-467)

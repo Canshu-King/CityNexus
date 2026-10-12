@@ -1,0 +1,42 @@
+CMD git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> rc=0 -> f85194013ac10202e40b52d7ba2b6b95a7231059	refs/heads/mirror/integration-frontend-apple-pass1
+CMD git rev-parse HEAD -> rc=0 -> bedccbf9b2616a64d36c2c33e44260cd78558d6d
+现尖 f85194013ac10202e40b52d7ba2b6b95a7231059｜枝尖 bedccbf9b2616a64d36c2c33e44260cd78558d6d
+CMD git ls-remote origin refs/heads/review/pinggong-0610-r1 -> rc=0 -> bedccbf9b2616a64d36c2c33e44260cd78558d6d	refs/heads/review/pinggong-0610-r1
+READBACK bare：bedccbf9b2616a64d36c2c33e44260cd78558d6d	refs/heads/review/pinggong-0610-r1
+CMD git ls-remote origin refs/heads/review/pinggong-0610-r1 -> rc=0 -> bedccbf9b2616a64d36c2c33e44260cd78558d6d	refs/heads/review/pinggong-0610-r1
+READBACK GitHub：bedccbf9b2616a64d36c2c33e44260cd78558d6d	refs/heads/review/pinggong-0610-r1
+CMD git cat-file -t f85194013ac10202e40b52d7ba2b6b95a7231059 -> rc=0 -> commit
+CMD git cat-file -t f85194013ac10202e40b52d7ba2b6b95a7231059 -> rc=0 -> commit
+CMD git cat-file -t bedccbf9b2616a64d36c2c33e44260cd78558d6d -> rc=0 -> commit
+CMD git cat-file -t bedccbf9b2616a64d36c2c33e44260cd78558d6d -> rc=0 -> commit
+CMD git cat-file -t a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 -> rc=0 -> commit
+CMD git cat-file -t a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 -> rc=0 -> commit
+CMD git cat-file -t 42a66f506493e0b6096fe3f40101d1f5e4ee9411 -> rc=0 -> blob
+CMD git cat-file -t 42a66f506493e0b6096fe3f40101d1f5e4ee9411 -> rc=0 -> blob
+CMD git cat-file -t 197b36f13cd739e2f491d6128f928fada44e8ff6 -> rc=0 -> blob
+CMD git cat-file -t 197b36f13cd739e2f491d6128f928fada44e8ff6 -> rc=0 -> blob
+CMD git rev-list --left-right --count f85194013ac10202e40b52d7ba2b6b95a7231059...bedccbf9b2616a64d36c2c33e44260cd78558d6d -> rc=0 -> 0	4
+CMD git merge-tree --write-tree f85194013ac10202e40b52d7ba2b6b95a7231059 bedccbf9b2616a64d36c2c33e44260cd78558d6d -> rc=0 -> 6eddd60cc6c06e2354f20cd2235e1955974b3ee5
+CMD git status --porcelain -> rc=0 -> 
+CMD git diff --name-only f85194013ac10202e40b52d7ba2b6b95a7231059...bedccbf9b2616a64d36c2c33e44260cd78558d6d -> rc=0 -> review/pinggong-0610/branch_readback.txt
+review/pinggong-0610/check_published_coords_r2.py
+review/pinggong-0610/presence_real_db_probe.txt
+review/pinggong-0610/presence_suite_on_tip.txt
+review/pinggong-0610/probe_real_db_r1.py
+review/pinggong-0610/r2_agent_inventory.txt
+review/pinggong-0610/r2_host_member_hits.txt
+review/pinggong-0610/r2_real_db_probe.txt
+review/pinggong-0610/r2_recheck_zero_gap.txt
+review/pinggong-0610/r2_suite_on_tip.txt
+review/pinggong-0610/r2_surveys_r1.py
+review/pinggong-0610/r2_wiring_survey.txt
+review/pinggong-0610/recheck_zero_gap_r1.py
+review/pinggong-0610/recheck_zero_gap_run.txt
+review/pinggong-0610/rerun_on_new_tip_r1.py
+review/pinggong-0610/slice_pick_run.txt
+review/pinggong-0610/verify_branch_r1.py
+review/pinggong-0610/wiring_survey_r1.txt
+先人位（左=现尖独有 右=本枝独有）：0	4
+只读合流预测写树：6eddd60cc6c06e2354f20cd2235e1955974b3ee5
+工作树未登记改动 0 处
+本枝相对现尖改动面（逐枚）：review/pinggong-0610/branch_readback.txt | review/pinggong-0610/check_published_coords_r2.py | review/pinggong-0610/presence_real_db_probe.txt | review/pinggong-0610/presence_suite_on_tip.txt | review/pinggong-0610/probe_real_db_r1.py | review/pinggong-0610/r2_agent_inventory.txt | review/pinggong-0610/r2_host_member_hits.txt | review/pinggong-0610/r2_real_db_probe.txt | review/pinggong-0610/r2_recheck_zero_gap.txt | review/pinggong-0610/r2_suite_on_tip.txt | review/pinggong-0610/r2_surveys_r1.py | review/pinggong-0610/r2_wiring_survey.txt | review/pinggong-0610/recheck_zero_gap_r1.py | review/pinggong-0610/recheck_zero_gap_run.txt | review/pinggong-0610/rerun_on_new_tip_r1.py | review/pinggong-0610/slice_pick_run.txt | review/pinggong-0610/verify_branch_r1.py | review/pinggong-0610/wiring_survey_r1.txt
