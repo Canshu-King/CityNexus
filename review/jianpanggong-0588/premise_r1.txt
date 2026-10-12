@@ -1,0 +1,13 @@
+# ORD-0588 前提读数：这八枚枝在 现尖 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 上各自带多少产品路径。三把尺都跑，命令写在每行末尾。
+# branch_name	two_dot_prod	three_dot_prod	same_blob_as_line	diff_blob_from_line	fork	manifest_prod	manifest_test
+revolution-r6-h11-r61-prep-20260923	217	187	111	76	7d22cd0eb784	0	0
+revolution-r61-h12-r62-prep-20260923	217	187	111	76	7d22cd0eb784	0	0
+revolution-r62-r63-prep-20260923	217	187	111	76	7d22cd0eb784	0	0
+revolution-r7-r71-prep-20260923	217	187	111	76	7d22cd0eb784	0	0
+revolution-r71-r72-prep-20260923	217	187	111	76	7d22cd0eb784	0	0
+revolution-r72-r73-prep-20260923	217	187	111	76	7d22cd0eb784	0	0
+revolution-r73-r74-prep-20260924	217	187	111	76	7d22cd0eb784	0	0
+revolution-r74-r75-breakthrough-20260924	217	187	111	76	7d22cd0eb784	0	0
+# 两点尺的命令：git -C D:/moodle/CityNexus diff --name-only <现尖> <枝尖> -- backend/app frontend/src
+# 三点尺的命令：先 git merge-base <现尖> <枝尖> 取 fork，再 git diff --name-only <fork>..<枝尖> -- backend/app frontend/src
+# 同字节判的命令：git ls-tree -r <尖> -- backend/app frontend/src 两代各取一次 path→blob 再比
