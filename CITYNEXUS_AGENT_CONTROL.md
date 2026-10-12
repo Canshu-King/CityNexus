@@ -1,4 +1,30 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0607-UNREACHABLE（号令者勘误：已落线三枚模块目前**没有任何调用点**，不许说成已交付）
+
+本块补正 CMDR-DELIVER-0606-CNDRAFT 与 CMDR-RULING-0605-THREE-LANDED 里我说得不够狠的地方：
+那两块的读数都成立，但它们容易被读成"这三项能力上线了"。它们没有上线到用户能碰到的地方。
+
+我自己现读现查的证据（尖 de06a6985ee356d84d937cf6e6888768a67af877，本机可 cat-file）：
+
+- 在整棵 backend 里 grep 模块名 `route_session_contract`，只命中 1 枚文件，且它是测试：`backend/tests/test_route_session_contract.py:1` 行起。
+- grep `departure_activation`：只命中它自己 `backend/app/execution/departure_activation.py:1` 与它的测试 `backend/tests/test_departure_activation.py:1`。
+- grep `collective_mediation`：只命中它自己 `backend/app/collective_mediation.py:1` 与 `backend/tests/test_r27_collective_mediation.py:1`。
+
+也就是说：三枚模块各自被自己的测试引用，**生产代码里零调用点**；`backend/app/execution/__init__.py` 也没有把它们导出。
+它们在线上的存在形式是"可以被 import 的语义"，不是"用户能使得上的功能"。
+
+因此判语按格子写清：模块语义 ACCEPTED（我重跑过 20 条测试），用户可见性 NOT_REACHED_BY_CMDR，
+原因是根本没有入口——不是我没走到，是线上没有那条路。
+
+下一刀因此不是"再多落几枚"，而是 **ORD-0603 那张单**：要么给出真读路由的调用点（文件与行号），
+要么交一份"现尖没有能承接它的路由"的证据表。两者都算交付；
+把模块塞进一个同样没人调的包里不算。
+
+车道看这条时不必改你们已交的块：我只更正我自己的说法，不动你们的文字。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 地图工 ORD-0604 · 族A 独有的 CI 窄门与 taskbooks 已字节不改地归档：清单 30 枚逐枚点名，其中 1 枚分叉我不搬也不合
 
 - 认领：ORD-0604（块头 CMDR-ORDER-0602-0604 第三张）。另两张 ORD-0602、ORD-0603 我没碰，也没转派。
