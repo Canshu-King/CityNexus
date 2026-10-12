@@ -1,4 +1,88 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0588-0592（号令者：revolution 吸收第一批切片，五张，按花名自认领）
+
+五年计划已经进权威线，正文与底账读 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md`（计划正文在尖上的基线段是 docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:5）。
+下面这批是地基加第一年 Q1 的准备活，**不改产品码的对外行为**；交枝走 review/*，我不手合也不改措辞。
+
+认领规矩照旧：一枚文件只给一扇车道；先 `ls-remote` 现取权威尖再 rebase；交块写 `_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### `。
+
+共同的事实底（每条都锚在尖上那一行，车道可自取）：
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 拓扑叉口 | 3 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:10 |
+| 整根落在本族代表之下 | 6 条 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:11 |
+| 需独立处置 | 35 条 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:12 |
+| 代表枝对现尖独有新增 | 554 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 其中产品码 | 65 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 其中测试 | 151 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 其中轮次文档与证据 | 224 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 不计入吸收面的产物 | 21 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 真并行撞面 族A | 88 处 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:14 |
+| 真并行撞面 族B | 173 处 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:14 |
+
+#### ORD-0588 族B 的 gpt-assist 评审产物归档（纯搬运）
+
+族B 共 8 枚枝，它们对现尖的独有产品码是 0，自有资产只有往 `evidence/gpt-assist/` 放的评审产物。
+把这批评审产物的并集搬进 `docs/revolution-archive/gpt-assist/`，一枚不落；交块里逐枚给「来源枝 + 仓内路径 + 行数」。
+
+| 来源枝（refs/heads/ 下可直接取回） | 它在对账表的行 |
+|---|---|
+| refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32 |
+| refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33 |
+| refs/heads/gpt/revolution-r62-r63-prep-20260923 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:34 |
+| refs/heads/gpt/revolution-r7-r71-prep-20260923 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:35 |
+| refs/heads/gpt/revolution-r71-r72-prep-20260923 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36 |
+| refs/heads/gpt/revolution-r72-r73-prep-20260923 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:37 |
+| refs/heads/gpt/revolution-r73-r74-prep-20260924 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:38 |
+| refs/heads/gpt/revolution-r74-r75-breakthrough-20260924 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:39 |
+
+#### ORD-0589 族A 轮次文档与证据的能力映射（先出地图）
+
+代表枝 `refs/heads/gpt/revolution-r33-open-world-journey-adaptation` 对现尖独有的轮次文档与证据那一大面（那一行读数在 docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13），
+要出一份映射：轮次号 → 这轮讲什么能力 → 现尖上最合适的落点候选。
+结果落 `docs/revolution-archive/ROUND_MAP.md`；第五年要把 revolution 这个词消解进主线语汇，靠的就是这张地图。
+
+| 参照 | 坐标 |
+|---|---|
+| 代表枝在对账表的行 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29 |
+| 族A 那行的读数 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+
+#### ORD-0590 第一年 Q1 execution 域的接尖可行性
+
+第一年 Q1 要落 execution 域（计划里那行是 docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54）。把 `backend/app/execution/` 那批模块逐个判定：
+现尖的 `backend/app/schemas.py`、`backend/app/services.py` 里有没有它们要接的形状；
+出三态表：能直接接 / 要改哪一枚签名 / 现尖根本没有对应形状。每行给现读行号，允许零产品字节交回。
+
+| 参照 | 坐标 |
+|---|---|
+| execution 模块都在代表枝上 | refs/heads/gpt/revolution-r33-open-world-journey-adaptation |
+| 代表枝在对账表的行 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29 |
+
+#### ORD-0591 execution 域测试面的三态判定
+
+代表枝独有的测试那一大面里，先只做 execution 域相关那批：逐枚判「现尖可跑 / 需改夹具 / 该作废」。
+不许改断言换绿；判作废要给原因，并说清现尖为什么跑不了它（缺路由、缺字段、还是缺种子数据）。
+
+| 参照 | 坐标 |
+|---|---|
+| 代表枝 | refs/heads/gpt/revolution-r33-open-world-journey-adaptation |
+| 第一年那一段 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:52 |
+
+#### ORD-0592 把吸收尺接成落地循环的一腿
+
+`live_checks/revolution_absorption_check_r1.py` 已在尖上，退出码语义是那行 live_checks/revolution_absorption_check_r1.py:9。现在它只有我手跑，要接成落地循环的一腿：
+每拍跑一次，把未吸收面写进带日期的状态文件；一旦面涨了或报退化，就把成因带回账本，不要只留一行日志。
+
+| 参照 | 坐标 |
+|---|---|
+| 尺的退出码语义 | live_checks/revolution_absorption_check_r1.py:9 |
+| 对账表的列定义 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1 |
+
+五张单的共同判据：结论必须由现读坐标撑起来，「我记得」不算证据；族C 那 2 枚枝本轮不派单，
+它相对代表枝的独有增量是 0（结论写在计划正文里），重复落一遍只会造出两代同能力的分叉。
+
+
 ### CMDR-RULING-0587-FIVEYEAR（号令者亲测：revolution 全量吸收五年计划已进权威线）
 
 主人的令：制定新的五年计划，把 revolution lab 全量吸收、一根不少、融会贯通。
