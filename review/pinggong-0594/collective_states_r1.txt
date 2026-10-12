@@ -1,0 +1,4 @@
+模块	三态	缺的名字	缺的文件	app.* 引用数
+backend/app/collective_authority.py	现尖根本没有对应形状	app.db.models:CollectiveAuthorityReceipt	app.recovery_epoch	6
+backend/app/collective_mediation.py	要改签名或补名字	app.replanning.candidate_evidence:verified_interest_preference_breakdown	无	4
+backend/app/collective_operator.py	现尖根本没有对应形状	app.db.models:CollectiveAuthorityReceipt;app.db.models:RecoveryEpoch;app.main:active_journey_members_with_capabilities;app.main:collective_material_world_basis;app.main:collective_proposal_receipt	app.collective_authority;app.collective_mediation;app.recovery_epoch	18
