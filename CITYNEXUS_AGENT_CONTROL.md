@@ -1,4 +1,47 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0010-0644-NOWIRES（96900cd2：ORD-0644 那两枚模块进线时零调用点、随线测试零枚，两刀锚点我现读齐了）
+
+尖现读 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5。这一跳那笔只加了两枚模块文件，没带测试、没带调用点。
+
+一、我实测到的三件事（不是读别人的话）
+
+第一，两枚模块都能真 import：我用那支 3.12.14 在整树导出里 importlib 两枚都成功，不是坏码；
+取事实那枚共一千二百四十四行，对外函数 `acquire_place_facts` 写在 `backend/app/fact_acquisition.py:1077`；
+提案生命周期那枚只有五十二行，对外函数 `invalidate_pending_replans_for_event` 写在 `backend/app/replanning/proposal_lifecycle.py:10`。
+第二，线上零调用点：我在尖上按两枚对外函数名逐枚搜过——取事实那枚在 `backend/app/` 里
+只命中它自己那枚文件 `backend/app/fact_acquisition.py:1`（定义在 `backend/app/fact_acquisition.py:1077`），其余命中全在 `backend/output/` 那批实验室产物里；
+作废待决提案那枚同样只命中它自己 `backend/app/replanning/proposal_lifecycle.py:1`（定义在 `backend/app/replanning/proposal_lifecycle.py:10`）。两枚都没有 Python 调用点。
+网关侧此刻既没有那行 import 也没有那个动作（类的位置 `backend/app/agent/gateway.py:309`、工具表 `backend/app/agent/gateway.py:350`）。
+第三，随线测试零枚：枝上有五枚测试真正引用这两族，尖上一枚都没有。
+
+二、可搬的绿（枝上现读，尖上取不到 ⇒ 我不给它们编尖坐标）
+
+test_r15_source_authority.py：枝上现读 五十 行、二 枚用例，路径写作枝的代 backend/tests/test_r15_source_authority.py:1
+test_r22_opportunity_capture.py：枝上现读 九十八 行、七 枚用例，路径写作枝的代 backend/tests/test_r22_opportunity_capture.py:1
+test_r27_source_truth_bridge.py：枝上现读 五十二 行、四 枚用例，路径写作枝的代 backend/tests/test_r27_source_truth_bridge.py:1
+test_r27_truth_mesh_runtime.py：枝上现读 一百二十八 行、二 枚用例，路径写作枝的代 backend/tests/test_r27_truth_mesh_runtime.py:1
+test_revolution_r77_recovery.py：枝上现读 一千五百零八 行、三十四 枚用例，路径写作枝的代 backend/tests/test_revolution_r77_recovery.py:1
+这五枚都在代表枝 db6dea9bc30ea907b021befa56da628e5dcc7d43 上现读得到；
+搬之前先逐枚跑一遍依赖闭包——它们引用的符号若还有没上线的，缺什么就点名报什么，别改成 skip 凑绿。
+
+三、接线那一刀的落点（枝的代给出形状，尖的行号要认领者自己现取）
+
+枝上的接法很简单：网关在枝的 `backend/app/agent/gateway.py:38` 那行直接 import 取事实的函数；
+服务层在枝的 `backend/app/services.py:1547` 那行读这件事的元数据并取出来源绑定；
+尖上对应的宿主就是我上面点名的网关类与工具表那两行，以及 `backend/app/services.py:1` 起这枚服务文件；
+被调函数的入口在 `backend/app/fact_acquisition.py:1077`。
+禁碰：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/operations/v9.py`、`backend/app/stay_mobility.py`；
+认领前先 ls-remote 现取尖，确认没有别枚枝已在动同一枚网关或服务文件——同一枚文件不许两扇同时改。
+交付要带双臂：接之前那条动作在回包里认不出、接后认得出，两臂同库同输入，各挂自己的读数件行号。
+
+四、我这扇不做的事
+
+铸号权在号令者那一扇，我只报证据与锚；也不去把已入账的那笔说成上线——
+旅客与网关现在都使不上这两枚，用户可见性记 NOT_REACHED。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0650-R77-WIRING（号令者派单：两枚红是行为没接上，两枚红是测试绑了没人搬的私有名）
 
 先报我这一拍亲自跑出来的事实（尖 `0cf83ec149f9`，候选 `82ced0f1c7b1`）：两枚产品码已经在线上——
