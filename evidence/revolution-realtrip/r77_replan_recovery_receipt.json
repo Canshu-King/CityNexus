@@ -1,0 +1,123 @@
+{
+  "schema": "citynexus.revolution.r77.replan-recovery.v1",
+  "observed_at": "2026-09-29T22:03:40Z",
+  "source_commit": "ce534c0c",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery",
+  "database": "backend/r77_selectable_probe.db",
+  "journey": {
+    "id": "9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2",
+    "destination": "苏州市 / CN-SUZHOU",
+    "unseeded_product_path": true,
+    "status_before": "ACTIVE",
+    "active_plan_before": "e311ab50-5e61-5520-92fa-15ad977a565d",
+    "current_activity_before": "ba2a6cbe-eb29-58e8-a6bb-2e137de36ff2",
+    "next_activity_before": "0fbcce37-34aa-5f2c-b626-d0f09e226e85",
+    "active_plan_after": "3c176241-de74-47af-9c3c-7018e52ef56b",
+    "current_activity_after": "3400829f-bfa6-4a09-9ced-e529a4de1144",
+    "next_activity_after": "bbbb9588-2242-4552-931a-caff09417cfc",
+    "current_title_after": "网师园",
+    "next_title_after": "狮子林"
+  },
+  "trigger_event": {
+    "id": "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+    "event_type": "CLOSURE",
+    "severity": "MAJOR",
+    "provenance": "SIMULATED",
+    "provider_key": "demo-simulator",
+    "status_after_accept": "ACKNOWLEDGED",
+    "affected_activity_id": "0fbcce37-34aa-5f2c-b626-d0f09e226e85",
+    "affected_place_id": "real-place-ba7377353c422c39dfd752b7",
+    "truth_boundary": "diagnostic fixture; not live provider evidence"
+  },
+  "replan": {
+    "proposal_id": "90a0b3aa-b2e0-4544-a416-77bf921308cc",
+    "status": "ACCEPTED",
+    "base_plan_version_id": "e311ab50-5e61-5520-92fa-15ad977a565d",
+    "proposed_plan_version_id": "3c176241-de74-47af-9c3c-7018e52ef56b",
+    "hard_constraints_passed": true,
+    "locked_commitments_preserved": true,
+    "candidate_family": "F0_SAME_SLOT_REPLACEMENT",
+    "kept_place_ids": ["real-place-8bc850f117297987997c87cf"],
+    "removed_place_ids": ["real-place-ba7377353c422c39dfd752b7"],
+    "added_place_ids": ["real-place-054fa857eff7a99169399bdf"],
+    "cost_delta_minor": -9000,
+    "travel_delta_min": -4,
+    "reason_codes": [
+      "COMMITMENT_PRESERVED",
+      "DISRUPTED_ACTIVITY_REPLACED",
+      "INDOOR_ALTERNATIVE",
+      "MINIMAL_DISRUPTION",
+      "MINIMAL_SCHEDULE_CHANGE"
+    ],
+    "incident_mobility": {
+      "snapshot_id": "3dd5ab27-5445-4977-b609-8770e022fe0e",
+      "provider": "valhalla-http",
+      "route_provenance": "RUNTIME_CAPTURE",
+      "fact_quality": "LIVE_PROVIDER_CAPTURE",
+      "degraded": false,
+      "fact_count": 45,
+      "used_edge_ids": [
+        ["real-place-8bc850f117297987997c87cf", "real-place-054fa857eff7a99169399bdf"]
+      ],
+      "used_edge": {
+        "mode": "WALK",
+        "minutes": 38,
+        "provider": "valhalla-http",
+        "route_provenance": "LIVE_PROVIDER_CAPTURE",
+        "fact_quality": "LIVE_PROVIDER_CAPTURE",
+        "degraded": false
+      }
+    }
+  },
+  "authority_readback": {
+    "journey_status": "ACTIVE",
+    "active_plan_version_id": "3c176241-de74-47af-9c3c-7018e52ef56b",
+    "plan_status": "ACTIVE",
+    "twin_projection_status": "READY",
+    "twin_latest_event_id": "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+    "cursor_status": "VALID",
+    "next_mode": "WALK",
+    "next_eta_min": 38,
+    "next_leg_id": "plan-evidence:3c176241-de74-47af-9c3c-7018e52ef56b:0",
+    "degraded_providers": []
+  },
+  "agent": {
+    "mission_id": "940db0b3-c5a6-413e-972d-0a02e3f3a77c",
+    "run_id": "d66bc824-888d-41cc-816d-c0995f7f5403",
+    "runtime_identity": "HERMES_COMPAT_ENDPOINT",
+    "provider_key": "hermes",
+    "model_key": "cn:deepseek-v4.1-flash",
+    "status": "COMPLETED",
+    "requested_autonomy": "PLAN_ONLY",
+    "tool_steps": [
+      {"tool_name": "inspect_journey", "decision": "ALLOW_AUTO"},
+      {"tool_name": "inspect_twin", "decision": "ALLOW_AUTO"},
+      {"tool_name": "list_replans", "decision": "ALLOW_AUTO"}
+    ],
+    "mutation_tools_called": [],
+    "native_mcp_claimed": false,
+    "machine_authority": "CityNexus API, Journey pointer, Twin and frozen provider evidence"
+  },
+  "user_visible": {
+    "url": "http://127.0.0.1:5174/v8/live",
+    "screenshot": "frontend/output/playwright/r77-suzhou-replan-live.png",
+    "observed_text": [
+      "当前：网师园",
+      "下一步 · 狮子林 · 步行 · 38 min",
+      "供应商支持的路线 · WGS84",
+      "风险 · 低 · 路线证据有效",
+      "刚才的行程变化已经处理好，已确认的预订保持不变"
+    ]
+  },
+  "focused_tests": {
+    "command": "py -3.13 -m pytest -q tests/test_revolution_r77_recovery.py tests/test_qoder_catalog_reason_code.py tests/test_qoder_mobility_evidence_sources.py tests/test_provider_runtime_gate.py tests/test_agent_runtime_gate.py tests/test_agent_authority_v2_actions.py",
+    "result": "53 passed, 1 warning in 8.07s"
+  },
+  "truth_notes": [
+    "SIMULATED closure is not presented as a live disruption.",
+    "Provider-backed route facts are retained as LIVE_PROVIDER_CAPTURE and used only for the actual accepted edge.",
+    "UNKNOWN facts were not converted into free/open.",
+    "P7=false; no authority/mainline merge."
+  ]
+}

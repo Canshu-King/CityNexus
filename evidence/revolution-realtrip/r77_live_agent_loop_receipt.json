@@ -1,0 +1,122 @@
+{
+  "schema": "citynexus.revolution.r77.live-agent-loop.v1",
+  "observed_at": "2026-09-30T06:29:43+08:00",
+  "source_commit": "ced4788d2eb710be14a83de2af3e29a82e9f0b15",
+  "git_status_porcelain": "",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery",
+  "database": "backend/r77_selectable_probe.db",
+  "destination": "苏州市 / CN-SUZHOU",
+  "journey_id": "9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2",
+  "credential_boundary": {
+    "source": "HKCU registry presence of DEEPSEEK_API_KEY",
+    "value_recorded": false,
+    "persisted_to_worktree": false,
+    "persisted_to_database": false,
+    "persisted_to_logs_or_archive": false
+  },
+  "runtime_status": {
+    "runtime_identity": "NATIVE_DEEPSEEK_TOOL_LOOP",
+    "native_binary_detected": true,
+    "native_mcp_proven": false,
+    "deepseek_configured": true,
+    "hermes_compat_configured": false,
+    "ai_state": "CONFIGURED_UNVERIFIED",
+    "hermes_native_gateway_ready": false
+  },
+  "runs": [
+    {
+      "run_id": "ecd49946-d11f-461b-aa9e-0264e319da52",
+      "mission_id": "bd32c6a6-e82a-4e54-9864-31c33ea322fb",
+      "provider_key": "deepseek",
+      "model_key": "deepseek-v4-flash",
+      "status": "COMPLETED",
+      "requested_autonomy": "PLAN_ONLY",
+      "response_event_id": null,
+      "event_ids_before": [
+        "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30"
+      ],
+      "event_ids_after": [
+        "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30"
+      ],
+      "tool_steps": [
+        {"sequence_no": 1, "tool_name": "inspect_journey", "status": "COMPLETED", "decision": "ALLOW_AUTO"},
+        {"sequence_no": 2, "tool_name": "inspect_twin", "status": "COMPLETED", "decision": "ALLOW_AUTO"},
+        {"sequence_no": 3, "tool_name": "list_replans", "status": "COMPLETED", "decision": "ALLOW_AUTO"}
+      ]
+    },
+    {
+      "run_id": "78d4d483-b944-40a8-a148-ef02202d9b26",
+      "mission_id": "924199e4-573c-44ed-8b8f-2069d6f0e7bb",
+      "provider_key": "deepseek",
+      "model_key": "deepseek-v4-flash",
+      "status": "COMPLETED",
+      "requested_autonomy": "PLAN_ONLY",
+      "response_event_id": null,
+      "event_ids_before": [
+        "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30"
+      ],
+      "event_ids_after": [
+        "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30"
+      ],
+      "tool_steps": [
+        {"sequence_no": 1, "tool_name": "inspect_journey", "status": "COMPLETED", "decision": "ALLOW_AUTO"},
+        {"sequence_no": 2, "tool_name": "inspect_twin", "status": "COMPLETED", "decision": "ALLOW_AUTO"},
+        {"sequence_no": 3, "tool_name": "list_replans", "status": "COMPLETED", "decision": "ALLOW_AUTO"}
+      ],
+      "machine_cross_check": {
+        "journey_active_plan_version_id": "3c176241-de74-47af-9c3c-7018e52ef56b",
+        "twin_active_plan_version_id": "3c176241-de74-47af-9c3c-7018e52ef56b",
+        "twin_projection_status": "READY",
+        "cursor_status": "VALID",
+        "latest_event_id": "b649a9c0-b2d4-4e2f-9e9f-7dc461702a30",
+        "proposal_total": 3,
+        "proposal_truncated": false,
+        "proposal_statuses": ["ACCEPTED", "INVALIDATED", "INVALIDATED"],
+        "pending_proposal_count": 0,
+        "mobility_provider": "valhalla-http",
+        "route_provenance": ["LIVE_PROVIDER_CAPTURE"],
+        "fact_quality": ["LIVE_PROVIDER_CAPTURE"],
+        "mobility_degraded": false,
+        "used_edge_ids": [
+          [
+            "real-place-8bc850f117297987997c87cf",
+            "real-place-054fa857eff7a99169399bdf"
+          ]
+        ],
+        "used_edge_mode": "WALK",
+        "used_edge_minutes": 38,
+        "synthetic_mobility_marker_present": false
+      }
+    }
+  ],
+  "hermes_probe": {
+    "script": "scripts/hermes_r6_h11_model_probe.py",
+    "evidence_directory": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\citynexus-hermes-r6-live-20260930",
+    "result": "BLOCKED",
+    "exact_blocker": "RESET/SEED HTTP 403: DEMO_MODE_REQUIRED",
+    "details": "The probe's isolated backend sets CITYNEXUS_DEMO_MODE=false; the product correctly refused demo reset. The probe reported nothing was deleted.",
+    "r77_database_touched": false,
+    "source_modified": false,
+    "native_hermes_execution_claimed": false,
+    "prior_real_hermes_compat_run_id": "d66bc824-888d-41cc-816d-c0995f7f5403"
+  },
+  "authority": {
+    "journey_status": "ACTIVE",
+    "current_title": "网师园",
+    "next_title": "狮子林",
+    "p7": false,
+    "mock_is_live": false
+  },
+  "user_visible": {
+    "url": "http://127.0.0.1:5174/v8/live",
+    "screenshot": "frontend/output/playwright/r77-suzhou-replan-live-deepseek.png",
+    "observed_text": [
+      "当前：网师园",
+      "下一步 · 狮子林 · 步行 · 38 min",
+      "供应商支持的路线 · WGS84",
+      "当前没有需要你决定的调整。",
+      "刚才的行程变化已经处理好，已确认的预订保持不变。"
+    ]
+  }
+}
