@@ -1,4 +1,48 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 归档工 0233 ORD-0615 四臂实测：那枚解锁器补两枚表形就进得来、四枚 schema 闸全绿；差的是接线那一枚可空列——要不要我切，请你点一句（附 0617／0618 同尺读数与 0622 那一问的回答）
+
+- id: ORD-0615（CMDR-ORDER-0615-0618 第一张，单文现读 `CITYNEXUS_AGENT_CONTROL.md:1029`）；顺带同尺量 ORD-0617（`CITYNEXUS_AGENT_CONTROL.md:1039`）与 ORD-0618（`CITYNEXUS_AGENT_CONTROL.md:1044`），并回答 ORD-0622 要我先回的那一句（`CITYNEXUS_AGENT_CONTROL.md:538`）
+- 花名归档工；本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_0233.md`，账本零直写。这一拍我没有推新枝，交的是读数与一处要你点的裁语——上一拍的 ORD-0621 块已入账，块头现读 `CITYNEXUS_AGENT_CONTROL.md:2`（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 现取尖 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。我跑四臂那一代是 ec873b1932b0，两代之间整枝差 20 条路径、backend 下 4 条，而我这一张单要动的那三面（`backend/app/db`、`backend/db`、`backend/app/agent` 加那对 schema 闸）差 0 条——所以我那四臂读数对交付这一代同样成立（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 上一拍的账，先摊平：ORD-0616 那一枚已被别人先落。现尖上 `backend/app/journey_inbox.py` 的 blob eaf2b2c15417 与我枝里那枚逐字同、`backend/tests/test_journey_inbox.py` 2299d9e3e2ab 也同（两枚都取自同一枝代表枝），差别只在 v9 那处接线：84dfd600af5f 不是我枝里那枚 41d5d25965e4——线上走的是加闸工那一版（把指纹先取进局部变量再进审计）。我的枝 931cea618b99 留着不删不重推，这一格按超越记账（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- ORD-0621 那一拍我追了尖：r1 的父是 ec873b1932b0，尖在我交完之后动了 20 条路径，所以另推一枚直接子代 r2（提交 8a0d49a31f63，父=3537a99fe0a6，加 1 改 1 删 0，宿主与测试两枚 blob 与 r1 逐字同）；两枚枝都在远端，r2 才是待点的那枚（锚 8a0d49a31f63229e4638422945df023805fedb64）
+
+一、同一棵导出树，四臂逐条真跑（解释器 3.12.14，命令 `-X utf8 -m pytest -q --tb=line` 与 `-X utf8 -c "import app.recovery_epoch"`）
+
+- 被量的那一枚：`backend/app/recovery_epoch.py` 逐字节取自代表枝，blob e12d51053396a139c1a3b52ab808c4b545a1dca6、388 行、14281 字节；它顶层 app 引用 1 处，就是 `backend/app/recovery_epoch.py:20` 那行 `from app.db.models import (...)`（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 基线（尖那一代、什么都没加）：`backend/tests/test_qoder_ord0488_schema_catchup.py` 等四枚 schema/表形闸通过 52 条、红 0 条、退出码全 0；整树收集 1925 条（锚 ec873b1932b05a0d9b266245325a712a91e0f910）
+- 臂甲（只放模块）：import 退出码 1，回话 `cannot import name 'CollectiveAuthorityReceipt' from 'app.db.models'`。单文那句「app.* 引用 1 个」数的是导入语句，不等于它不欠表形（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 臂乙（把它要的两枚 ORM 类与两段建表逐字补进 `backend/app/db/models.py` 与 `backend/db/schema.sql`）：import 退出码 1，回话 `NameError: name 'Index' is not defined`——枝上那枚类体在 `__table_args__` 里用 `Index(`，位置在 `backend/app/db/models.py:847`（枝上类从第 828 行起）；尖上 models.py 第 3 行那串 sqlalchemy 导入没有它（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 臂丙（补上 Index 导入）：import 退出码 1，回话 `NameError: name 'text' is not defined`——同一枚类体在部分唯一索引的 sqlite_where 里用了一次 `text("status = 'OPEN'")`，位置在 `backend/app/db/models.py:851`（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 臂丁（再补上 text 导入）：import 退出码 0、回话干净；四枚 schema 闸仍通过 52 条、红 0 条、收集错 0 枚；整树收集 1925 条，与基线同数（锚 ec873b1932b05a0d9b266245325a712a91e0f910）
+- 所以这一张单的结论不是「无处可接」：模块加它欠的两枚表形，是能在线上落的形状，而且改动面 3 枚文件全在允许面里（`backend/app/db/models.py`、`backend/db/schema.sql`、净新增那枚模块）。尖上现读 ORM 模型 60 枚、DDL 建表 61 枚（这本两账本来就差一枚，是既有事实、不是我补出来的），我臂丁是两头各加两枚才见绿的（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 一条给下一位省事的口径：那对 schema 闸两头都钉——DDL 声明的表必须被 boot 建出来（现读 `backend/tests/test_qoder_ord0488_schema_catchup.py:84`），ORM 模型必须在 DDL 里有声明（同名文件第 95 行）。只补 models.py 不补 schema.sql 会当场红；我这四臂是两头一起补才绿的（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+
+二、臂丁之后还差什么才叫「接线」，逐处点名（我不凑一枚假调用）
+
+- 尖上那三枚允许宿主我逐枚现读：`backend/app/agent/guardian.py` 全文 878 行里 `recovery_epoch` 命中 0 处——代表枝那一枚是 1262 行，它在 `backend/app/agent/guardian.py:41` 导入、在第 488 行铸造 epoch。线的这一侧连铸造者都没有（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 每一处调用都带一枚 `recovery_epoch_id`：枝上给 `action_approvals` 加了可空列（现读 `backend/db/schema.sql:369`），而尖上整枚 schema.sql 里这个名字命中 0 处。补这枚列要走 schema catchup，那是 boot 建库路径、动的是共享预览库的表结构（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 我要你点的事只有这一件：要不要另铸一张前置单——「给 action_approvals 那批表补 recovery_epoch_id 可空列与 catchup 条目」，落完之后 ORD-0615 才是带接线的落线。你不铸，我就停在臂丁这格读数，不自己扩大动共享库的面（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 一枚我没动的事实，也免得被当成偷懒：`backend/app/recovery_epoch.py` 的 `validate_recovery_epoch_binding` 在无绑定 epoch 时是抛 `RecoveryEpochSuperseded` 的（枝上第 309 行那格 `if bound is None or bound.status != expected_status:`）——直接把它插进现尖的审批门会让所有没绑 epoch 的正常审批变 409。我没有那样接（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+三、ORD-0617 与 ORD-0618 用同一把尺（各一枚 import 读数，方法同上臂甲）
+
+- 0617：只放 `backend/app/shared_stop_coplanning.py`（枝上 254 行）→ 退出码 1，`cannot import name 'SharedStopCoPlanningGrant' from 'app.db.models'`。它欠的是第三枚表形，尖上 models.py 里那枚类名现读命中 0 处；补法与我臂乙到丁同形，我没重复跑第四遍（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 0618：只放 `backend/app/fact_acquisition.py`（枝上 1431 行）→ 退出码 1，`No module named 'app.integrations.web.research_service'`。这张单卡的不是列而是一枚整兄弟文件没上线：尖上 `backend/app/integrations/web/research_service.py` 现读 0 条路径。它不在我这张单的允许宿主面上，我只报这一格（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+四、ORD-0622 那一问的回话（它写「认领前先回一句 shared_walk 落线了没」）
+
+- 现读尖：0 条路径。命令原样 `git -C D:/moodle/CityNexus ls-tree -r --name-only 3537a99fe0a6 -- backend/app/execution/shared_walk.py`；同一枚命令换 `bootstrap_discovery.py` 也是 0 条。前置没满足，那张单我不动（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+
+五、我这侧的产物、清理与纪律
+
+- 本拍推出去的枝只有上一张单那一枚：refs/heads/review/归档工-0621-r2，提交 8a0d49a31f63（父=3537a99fe0a6，加 1 改 1 删 0）。这一块没带新字节上线：臂乙到丁那三处改动只在导出树里做过实验，没进任何枝（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 仪表件在我车道目录 `D:/moodle/_qoder_guiandangong_0621_20261013/measure_0615_r1.py`，四臂逐档一条命令可重跑（`python measure_0615_r1.py prep` 再 `screen`/`arm3`/`arm4`/`arm5`）；读数落盘在 `E:/qoder_gdd_0615/readings_0615.txt`，导出树 281 MB 可复现，我下一窗删（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 纪律自证：没推权威枝、没删任何枝、force-push 0 次、没改别人在飞文件、账本零直写；上一块里我点名的禁改面这一拍同样 0 命中（锚 8a0d49a31f63229e4638422945df023805fedb64）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 归档工 0212 ORD-0621 Overpass 并集与 max_attempts 落线：代表枝那枚红测试逐字节带上、当场转绿；r96 那枚文件我扣住没交，三处卡点点名 — refs/heads/review/归档工-0621-r1
 
 - id: ORD-0621（号令者派单 CMDR-ORDER-0620-0622 第二张，块头现读 `CITYNEXUS_AGENT_CONTROL.md:466`，单文那一行现读 `CITYNEXUS_AGENT_CONTROL.md:478`，逐字：ORD-0621｜integrations 域两枚红测试转绿：`test_real_city_overpass_union.py`、`test_r96_intent_driven_first_outing.py`（外加 `test_replan_completion_truth.py` 若你还有力气）。；禁改 backend/app/main.py 与 backend/app/agent/*）
