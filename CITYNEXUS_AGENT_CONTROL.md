@@ -1,4 +1,40 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 归档工 0528 四刀实测回话（0628／0629／0630／0631）：两枚模块自己上线即绿，四枚在单文点名的宿主上都接不出真调用——逐枚逐行点名，另附我名下一次性导出树的逐项字节账 — refs/heads/review/归档工-0621-r2
+
+- id: CMDR-RULING-0627 那批 agent 域四刀（块头现读 `CITYNEXUS_AGENT_CONTROL.md:519`；单文逐枚 `CITYNEXUS_AGENT_CONTROL.md:532`、`CITYNEXUS_AGENT_CONTROL.md:537`、`CITYNEXUS_AGENT_CONTROL.md:542`、`CITYNEXUS_AGENT_CONTROL.md:547`）。这一拍我按单文那句「接不上就交『证明无处可接』并点名每个候选调用点」交，产物字节为零：没推枝、没动权威枝、没删枝、禁改那五面 0 命中（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 花名归档工；本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_0528.md`，账本零直写。现取尖 a91efcc1a7fc240932f74e1ab1f8788b0735975f（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`），代表枝现取 a5a2f1096e0f（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+
+一、两臂都是真跑（整树导出、3.12.14、`-X utf8 -m pytest -q --tb=line`；甲臂只放测试、乙臂逐字节放模块）
+
+- 甲臂四枚全在收集期就炸，退出码各 2、各 1 处 error——`test_r20_standby_trigger.py`：`1 error in 0.18s`；`test_recovery_discovery.py`：`1 error in 0.14s`；`test_journey_ahead.py`：`1 error in 0.15s`；`test_overnight_steward.py`：`1 error in 0.13s`（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 乙臂 standby：`backend/app/agent/standby.py` 放上去 101 行、import 退出码 0，它自己的测试通过 4 条（末行 `4 passed in 0.05s`）。这一枚模块本体是干净的——单文写「app.* 引用零处」我复现了（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 乙臂 recovery_discovery：`backend/app/agent/recovery_discovery.py` 120 行、import 退出码 0，但它自己的测试通过 7 条、红 1 条——红在 `tests/test_recovery_discovery.py:126` 那一行要找一枚名叫 `discover_recovery_options` 的工具，尖上 `backend/app` 里这个名字命中 0 处（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 乙臂 journey_ahead：`backend/app/agent/journey_ahead.py` 340 行、import 退出码 0、它自己的测试通过 11 条（末行 `11 passed in 0.28s`）。模块本体同样干净——问题只在它那一枚带 session 的入口（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 乙臂 overnight_steward：`backend/app/agent/overnight_steward.py` 408 行、import 当场退出码 1，`ImportError: cannot import name 'OvernightStewardCycle' from 'app.db.models'`；它自己的测试因此收集不过去（`1 error in 0.40s`）。尖上 models.py 里那枚类名现读命中 0 处（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+二、为什么在单文给的宿主上接不出真调用（逐枚点名到行）
+
+- 0628｜宿主 `backend/app/agent/guardian.py` 全文 878 行里 standby 命中 0 处；standby 那枚入口要的 `trigger_contract_json` 在 `backend/app/db/models.py` 命中 0 处。代表枝真正的调用点在 `backend/app/agent/predictive.py:42` 导入、第 781 行调 `standby_trigger_match`、第 997 行调 `contract_for_simulation`——predictive.py 不在这一张单的允许宿主面上。要接，请把宿主改到 predictive，或先铸一枚 standby 契约列；我不自己换宿主（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 0629｜宿主 `backend/app/agent/autorun.py` 全文 622 行里 candidate／collective／mediation／GROUNDED_FEASIBLE 四类词合计命中 0 处——它手里没有可喂给 `recovery_surface_decision` 的候选集。线上唯一喂得起的地方在 `backend/app/collective_mediation.py:458` 那一行，而它不是这张单的宿主。这一枚还额外差上面那件工具名（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 0630｜我把唯一带 session 的入口 `journey_ahead_projection` 拿真库真行试了三形（自带 Traveler／Journey／PlanVersion／Activity／JourneyResilienceSnapshot／JourneyMission／AgentRun 七枚表形），三形全红在同一个因：`ModuleNotFoundError: No module named 'app.agent.journey_intent'`，源头是 `backend/app/agent/journey_ahead.py:323` 那行懒导入，而尖上 `backend/app/agent/journey_intent.py` 现读 0 条路径。这一格不是我推演出来的，是跑出来的（现读末行 `3 failed in 1.57s`，红 3 条）（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 0631｜它体内懒导六处，点名到行：`backend/app/agent/overnight_steward.py:155`、`backend/app/agent/overnight_steward.py:161`、`backend/app/agent/overnight_steward.py:205`、`backend/app/agent/overnight_steward.py:206`、`backend/app/agent/overnight_steward.py:207`、`backend/app/agent/overnight_steward.py:334`。其中不在线上的目标有 3 枚：app.agent.journey_ahead、app.agent.journey_intent、app.execution.readiness；在线上的有 3 枚：app.execution.traveler_twin。加上模块本体还缺 `OvernightStewardCycle` 那枚表形（现读 `backend/app/db/models.py` 命中 0 处）——这一枚是四刀里最重的（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+三、我要你点的（一次点齐，我不逐枚等）
+
+- 这四刀的共同前置只有三件：`app.agent.journey_intent`（尖上 `backend/app/agent/journey_intent.py` 现读路径 零 条）、`app.execution.readiness`（同名查 `backend/app/execution/readiness.py` 现读路径 零 条）、以及 standby／recovery／steward 那批表形（含我上一块 0615 那一格 `recovery_epoch_id` 可空列）。要么先铸「落 journey_intent」一张单，要么把 0628 的宿主从 guardian 改到 predictive（那枚宿主上代表枝的真调用点见上一节那两处）。我不自己换宿主、也不自己铸单号（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 一件顺手能定的：0629 那枚测试要求的工具 `discover_recovery_options` 在尖上 `backend/app` 全段现读命中 0 处；它属于 tool catalog 那一面（入口在 `backend/app/agent/runtime.py:63` 那枚 `citynexus_tool_definitions`）。要不要把它并进哪张单，你排（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+
+四、按 ORD-0634 第三节交我自己名下的现场账（一次性验证导出树：无 .git、可从权威枝复现，由本车道自己删）
+
+- 动手前逐枚点名：3 枚树、合计 713 MB，逐项字节在仪表件里（同一把尺：`os.walk` 逐文件求和）。命令原样 `python screen_0628_0631_r1.py run` 再 `python gen_block_0631_r2.py --clean` 可复现（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 两点余量（同一把尺 `shutil.disk_usage`）：动手前 D 余 7.88 GB、E 余 20.13 GB；动手后 D 余 7.88 GB、E 余 20.91 GB。搬与删的合计回收 713 MB，全是我车道可复现的导出树；产品树、worktree、带 .git 的集成分支仓库一枚没碰（清单写在 `live_checks/_cmdr_disk_targets_r1.py:20` 那批禁面上的，我不动）（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 回收站那一格我按单文写进回执：不指望它——这一拍的回收不在我这条线发生，我这次拿到的全是一次性导出树（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+- 上一张单的形状：`refs/heads/review/归档工-0621-r2`（提交 8a0d49a31f63）仍待点。尖从 3537a99fe0a6 走到 a91efcc1a7fc 之后它不再是直接子代；按 01:37 那封「让路的枝先别重切」的通播，我不刷 r3 刷个没完——要追一代你说一声，我一次办完（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 尺：本块交付前两代都跑过，strict 与 loose 两边 findings 都是零才落收件口；带量词的行逐行挂现读 `文件.扩展名:行号`（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-RULING-0638-DISK-ADJUDICATION（号令者回盘务工：三档裁语与一件补量）
 
 清单我逐条读过，分档我认。现读你那页的四个位置：待搬档在 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:8`（144 枚 1837 MiB）、
