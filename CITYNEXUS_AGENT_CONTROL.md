@@ -1,4 +1,69 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 盘务工 ORD-0634 回执：口径一搬成一百四十条并逐字节对拍通过，口径二那条腿被 git 当场拒且零损坏，口径四的 C 卷归因表已交 — 除搬运外零删除
+
+花名盘务工；本块走收件口 `D:/moodle/_qoder_ledger_inbox/`，账本零直写；文件名拼写沿用单上那串（盘务工的 ASCII 形）。裁语 CMDR-RULING-0638 四条逐条回报如下，所有读数都落在一枚回执件里并按行挂锚，谁都能 `sed -n` 取回原文。
+
+- 三卷 df 收工点：此刻三卷余量现读：C 余 8571 MiB，D 余 9424 MiB，E 余 19026 MiB（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:2）
+- 三卷 df 动手前点：动手前 06:10:41 那拍：E 余 20815 MiB，D 余 7817 MiB（搬运腿起手行原文）（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:3）
+- 三卷 df 收工那拍：收工那拍 06:15:43：E 余 18187 MiB，D 余 9171 MiB（搬运腿收尾行原文）（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:4）
+
+#### 一、口径一（先搬后删）——照裁语做完，抽样过十分之一那条线
+
+- 逐行回执判定分布：搬运腿逐行回执：MOVED 140 条，其他判定 0 条（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:5）
+- 逐项字节对账：逐项对账：源合计 1857 MiB，目标合计 1857 MiB，两把尺同值（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:6）
+- 文件数分母：被搬文件总数 116621 个（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:7）
+- SHA256 对拍：SHA256 抽样 11759 处，与源逐字节相同 11759 处，对不上 0 处（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:8）
+- 抽样量是否达标：抽样比 = 抽样 11759 ÷ 文件 116621 = 0.101，裁语要的十分之一这条过（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:9）
+- 引用闸（我加的一道，裁语没要求）：引用闸剔掉 6 条（账本或收件口里以路径:行号形出现过），共 15 MiB，这些一枚没动（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:10）
+- 最大的几枚：最大的六条（MiB）：live_checks/_build_8890f22 397、v_83e676aa 133、tree_r14 97、tree_new 97、v_ord0211_control 95、v_ord0211_pinned 94（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:11）
+- 落点形制：E 卷新建 `E:/_panwg_0634_ref_moved/`，内部保持原来的相对路径（`live_checks/_build_8890f22` 仍带着 `live_checks/` 这一层），一枚没压成 zip，回搬只需把前缀换回 `D:/moodle/_qoder_cmdr_ref_20260921/`。
+- HOT 那批照裁语三一枚没碰；TRACKED 那批（frontend、backend、review、reports）也没碰——它们是检出的被跟踪内容。
+
+#### 二、口径二（沾 git 那档）——只许 `git worktree move` 我照办了，但它跨卷走不通，所以我停下没换法子
+
+- 计划面：裁语二这条腿按计划处理在册工作树 17 条（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:12）
+- 结果：实搬成 0 条，被 git 拒 34 条，拒因原文见本件下一行（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:13）
+- 拒因：git 原话（第一条，逐字）：06:19:14     rc=128 失败：fatal: failed to move 'D:/moodle/_qoder_recovery_20260919/verify/wt_13f' to 'E:/_panwg_0634_verify_moved/wt_13f': Permission denied ⇒ 原样不动（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:14）
+- 机制：机制：git worktree move 在 Windows 上只做 rename，跨卷必回 Permission denied；同卷才走得通（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:15）
+- 事后完好性回读：事后回读：两枚主仓 worktree list 共 18 行，missing 出现 0 处，verify 下 wt_* 目录 19 个都在原位，E 侧目标空目录 0 条（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:16）
+- 那一枚我一开始就排除的：wt_c2 的主仓是 D:/moodle/_qoder_integration_20260919（硬禁那棵活的），本腿从起点就把这条排除，实测一枚没碰（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:17）
+- 请令（这是本块唯一要人回话的一格）：要么改裁一句「授权 mv 后补 `git worktree repair`」，要么这 1533 MiB 就留在 D 不动。我不拿 repair 去冒充 move，也不拿 prune --force 把断链抹平当成功。
+
+#### 三、口径三（各车道名下的一次性导出树）——只列名单、报字节，一枚没代删
+
+- E 卷同刻点数：E 卷同刻点数（06:29 那拍，每枚预算 20 秒，PARTIAL 表示没量完）：141 条目录，已量到合计 32125 MiB，最大几条：qd 6452 MiB(FULL)、cmdr_builds_20261010 5804 MiB(PARTIAL)、_qoder_archive_1008 4174 MiB(PARTIAL)、cold_d_moodle_20261010 3768 MiB(PARTIAL)、cnx_cold_move_1008 3340 MiB(FULL)（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:34）
+- 号令者那条旧账的现读答案：号令者那条旧账要的答案：E 上那枚真名是 cmdr_builds_20261010（带日期后缀，不是 cmdr_builds），400 秒预算量到底是 34109 MiB、文件 2540561 个、内部最新 2026-10-11；同一枚在 20 秒预算那拍只读到 5804 MiB 且标 PARTIAL ⇒ PARTIAL 是欠量，不是大小（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:35）
+- 这 141 条目录的归属按目录名前缀自证（`cn<N>_lab_*`、`verify*`、`cmdr_*`、`cold_*`、`_qoder_*`），要清哪一族请点名到车道，我不替别人删现场。
+
+#### 四、口径四补量（C 卷归因表）——限深两档、跑满即落盘，产出 `_panwg_0638_c_attribution.tsv`
+
+- 总量：C 卷归因：一层目录 101 条合计 206061 MiB（只加一层行，不与二层混加）（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:20）
+- 大头：最大的一层是 AppData 83018 MiB；Documents 47284 MiB；Desktop 18016 MiB；Downloads 12519 MiB（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:21）
+- 归族一：聊天与个人文件族（Tencent Files／WeChat Files／xwechat_files／Documents／Desktop／Downloads）一层行合计 88029 MiB，判：不是垃圾（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:22）
+- 归族二：.qoder 族一层行合计 13157 MiB，判：禁删，按单只能报数（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:23）
+- 归族三：C:/Windows 一层行合计 36388 MiB，判：要提权才能动，本腿一字节没动（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:24）
+- 归族四：.zcode／.codex／.workbuddy 族一层行合计 13740 MiB，判：第三方工具在用，不当垃圾（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:25）
+- 归族五：C:/Windows/Installer 一层行 8143 MiB，判：已装软件的安装壳，属于可清但需提权（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:26）
+- 单枚点名（C 侧最大的一枚可重下物）：C:/Program Files/ColorOSAssist/out 里那枚单文件 5288 MiB 现读文件名是 OPPO 全量 OTA 包（10010111_20135_PDRM00_11_OTA_...ozip），判：可重下的固件包，删不删等主人点头（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:27）
+- 单枚点名（看着像垃圾但不是）：Desktop/新建文件夹 (5) 现读 828 个文件 7247 MiB，全是 mp4，最新写入 2026-04-27，判：个人影音，不是垃圾（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:28）
+- Temp 七天档（口径二上一轮已量，本轮没重复动）：C 卷 Temp 七天档实收 5 MiB（上一轮已量，本轮没重复清）（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:18）
+- 回收站三点：回收站现读：C 卷 1862 MiB，D 卷 13 MiB，E 卷 0 MiB（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:19）
+- 仪表抓到的一族怪值：归因表里 BAD_MTIME 档 2 条（一枚 mtime 读出 556343892618 这种越界值），仪表已原样标出，没当日期用（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:29）
+- 证据缺口：归因表里权限拒 25 条：非提权读不到，这是证据缺口，不写成没有（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:30）
+- 口径声明：口径差：我这把尺量的是 st_size 逻辑字节，df 量的是已分配簇，NTFS 压缩让前者偏大，逐项相加不会等于 df used（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:33）
+
+#### 五、我自认的两处尺病（都已在腿上修掉，写出来是给下一轮省路）
+
+- 判定尺第一版只在遇到**目录形** `.git` 时才置标记，漏了**文件形**指针，于是 `_rebase_b5`（CityNexus 在册工作树）一度被判可搬；现在搬运腿里加了「自身路径含 .git 段就死闸」，并把 worktree 指针那一形钉进自测。
+- 搬运腿第一版只认目录、不认单文件，那批单文件当场全被判 ABSENT；补形后自测二十一条全绿（半截副本两边都不动、目标已齐走 RESUME 补删源这两形各造过一次）。形状分母的完整算式写在回执那一行里。
+- 落点数对拍（现读）：落点对拍：期望 E 目标根有目录 49 个，现读 49 个，同值（锚 E:/fiveyear_plan_lab/_panwg_0634_receipt.txt:32）
+- 归因腿第一版在 `time.localtime()` 上被一枚越界 mtime 崩掉（Errno 22），所以那条腿跑到 ProgramData 就死了；改成 BAD_MTIME 原样标出后同一条腿跑满四百六十秒、零 PARTIAL。
+
+本块零产品字节：账本、别人的尺、别人名下文件一字节未改；搬运之外的动作只有读。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 归档工 0621 认领并交 ORD-0644 的第一半：两枚产品模块逐字节落线（候选枝 0cf83ec149f9），四枚测试两臂读数与逐枚红因都在档——放置那一步把一枚红因从「缺模块」推进到「缺 main.py 私有符号」，剩下四格挡在本单禁改面上 — refs/heads/review/归档工-0644-r1
 
 - id: ORD-0644（CMDR-ORDER-0643 派单第一张，单文现读 `CITYNEXUS_AGENT_CONTROL.md:79`：把 `backend/app/fact_acquisition.py` 与 `backend/app/replanning/proposal_lifecycle.py` 落线，并把 `backend/tests/test_replan_completion_truth.py` 等四枚跑到绿；先交基线读数再交改后读数，两条都要贴原话计数行）。同批 ORD-0645 我没领；ORD-0629 在我落笔时已由地图工交枝，我不碰（锚 5c3e98aebe420fe93834a7f4902b987732ccae52）
