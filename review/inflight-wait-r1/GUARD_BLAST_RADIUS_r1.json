@@ -1,0 +1,124 @@
+{
+  "generated_by": "89f2e2d6",
+  "tree_head": "efc6f365fe040ba1a05a373426f3aa4490ced72a",
+  "pairs": [
+    {
+      "file": "tests/test_qoder_provider_identity_leg.py",
+      "authoritative": {
+        "mode": "authoritative_run_id",
+        "run_id": "guardchk-3497e27c",
+        "started_utc": "224033Z",
+        "rc": 0,
+        "summary": "17 passed, 2 warnings in 3.40s",
+        "seconds": "3.40",
+        "red_set": [],
+        "errors": []
+      },
+      "plain": {
+        "mode": "plain_pytest",
+        "run_id": "(none)",
+        "started_utc": "224037Z",
+        "rc": 0,
+        "summary": "17 passed, 2 warnings in 2.72s",
+        "seconds": "2.72",
+        "red_set": [],
+        "errors": []
+      },
+      "red_set_differs": false,
+      "arms_only_one_mode_reports": []
+    },
+    {
+      "file": "tests/test_qoder_ord197_four_class_receipt.py",
+      "authoritative": {
+        "mode": "authoritative_run_id",
+        "run_id": "guardchk-1c3d38ee",
+        "started_utc": "224041Z",
+        "rc": 0,
+        "summary": "6 passed, 1 xfailed, 2 warnings in 2.79s",
+        "seconds": "2.79",
+        "red_set": [],
+        "errors": []
+      },
+      "plain": {
+        "mode": "plain_pytest",
+        "run_id": "(none)",
+        "started_utc": "224045Z",
+        "rc": 0,
+        "summary": "6 passed, 1 xfailed, 2 warnings in 2.83s",
+        "seconds": "2.83",
+        "red_set": [],
+        "errors": []
+      },
+      "red_set_differs": false,
+      "arms_only_one_mode_reports": []
+    },
+    {
+      "file": "tests/test_ord0526_offline_source_row_count_r1.py",
+      "authoritative": {
+        "mode": "authoritative_run_id",
+        "run_id": "guardchk-c1f0876f",
+        "started_utc": "224049Z",
+        "rc": 0,
+        "summary": "3 passed in 0.98s",
+        "seconds": "0.98",
+        "red_set": [],
+        "errors": []
+      },
+      "plain": {
+        "mode": "plain_pytest",
+        "run_id": "(none)",
+        "started_utc": "224050Z",
+        "rc": 0,
+        "summary": "3 passed in 1.01s",
+        "seconds": "1.01",
+        "red_set": [],
+        "errors": []
+      },
+      "red_set_differs": false,
+      "arms_only_one_mode_reports": []
+    }
+  ],
+  "denominators": {
+    "test_files_in_tree": 228,
+    "files_that_open_their_own_sqlite": 33
+  },
+  "sample": [
+    "tests/test_qoder_provider_identity_leg.py",
+    "tests/test_qoder_ord197_four_class_receipt.py",
+    "tests/test_ord0526_offline_source_row_count_r1.py"
+  ],
+  "not_measured_by_lane": [
+    "test_e2e_provenance.py",
+    "test_ord0544_anchor_leg_shape_r1.py",
+    "test_qoder_catalog_hydration.py",
+    "test_qoder_g3_xproc_http.py",
+    "test_qoder_ord0272_continuation.py",
+    "test_qoder_ord0287_k8_carrier.py",
+    "test_qoder_ord0296_write_deadline.py",
+    "test_qoder_ord0310_keyless_leg_receipts.py",
+    "test_qoder_ord0327_write_bound_default.py",
+    "test_qoder_ord0332_error_receipt.py",
+    "test_qoder_ord0340_claim_lease.py",
+    "test_qoder_ord0355_honest_stay_budget.py",
+    "test_qoder_ord0383_journey_soft_delete.py",
+    "test_qoder_ord0383_undelete_write_lock.py",
+    "test_qoder_ord0399_journey_undelete.py",
+    "test_qoder_ord0402_recycle_bin.py",
+    "test_qoder_ord0444_collections.py",
+    "test_qoder_ord0476_checkins.py",
+    "test_qoder_ord0477_journey_sort.py",
+    "test_qoder_ord0488_schema_catchup.py",
+    "test_qoder_ord0496_calendar_export.py",
+    "test_qoder_ord0503_member_doors.py",
+    "test_qoder_ord0512_place_name_on_the_wire_r1.py",
+    "test_qoder_ord0520_abort_contention_r1.py",
+    "test_qoder_ord0520_journey_abort.py",
+    "test_qoder_ord0520_live_view_survives_status_move_r1.py",
+    "test_qoder_ord0521_empty_store_scene_door.py",
+    "test_qoder_pending_destination_identity.py",
+    "test_sol_migration_truth.py",
+    "test_v6_enrollment.py",
+    "test_wp01_wp03.py",
+    "test_wp04_hardening_wp05.py"
+  ]
+}
