@@ -12,7 +12,7 @@ import sys
 REPO = "D:/moodle/_qoder_integration_20260919"
 CAND = "29fdb40779829e2161e6aef0a0e15dbe03443df1"
 EV = "D:/moodle/_jz_0616"
-DOCS = ["readout_r1.txt", "proof_r1.txt"]
+DOCS = ["readout_r1.txt", "proof_r1.txt", "_block_r1.md"]
 PAT = re.compile(r"([A-Za-z0-9_./\-\u4e00-\u9fff]+\.(?:py|tsx|ts|txt|json|yaml|md)):(\d+)")
 GIT_PREFIX = ("backend/", "frontend/", "contracts/", "docs/", "live_checks/")
 
