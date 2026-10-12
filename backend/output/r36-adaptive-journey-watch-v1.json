@@ -1,0 +1,4190 @@
+{
+  "schema": "citynexus.r36.adaptive-journey-watch.v1",
+  "status": "WATCH_ALL_CLEAR",
+  "database": "sqlite:///D:/moodle/CityNexus-Revolution-RealTrip-Recovery/backend/r28-live-9ac3205914de057e.sqlite3",
+  "source_head_before_live": "153767bd1f3ffb6e93876f77b56e13bc568c7aec",
+  "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+  "initial_plan": {
+    "active_plan_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+    "activities": [
+      {
+        "id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+        "sequence_no": 1,
+        "title": "依水園",
+        "place_id": "real-place-22cf72809897ff4c7f312fcf",
+        "status": "ACTIVE",
+        "start_at": "2026-10-07T09:00:00+09:00",
+        "end_at": "2026-10-07T10:00:00+09:00"
+      },
+      {
+        "id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+        "sequence_no": 2,
+        "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+        "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+        "status": "PLANNED",
+        "start_at": "2026-10-07T10:52:00+09:00",
+        "end_at": "2026-10-07T11:52:00+09:00"
+      }
+    ],
+    "next_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c"
+  },
+  "standing_mission": {
+    "id": "c590a570-8ae4-431d-9924-72f773f5df44",
+    "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+    "status": "ACTIVE"
+  },
+  "autopilot_enrollment": {
+    "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+    "enabled": true,
+    "interval_seconds": 3600.0,
+    "last_pulse_at": "2026-10-06T09:40:52.209008+00:00",
+    "last_error": null
+  },
+  "configured_interval_seconds": 3600.0,
+  "initial_watch": {
+    "watch_state": "DAY_AHEAD",
+    "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+    "configured_interval_seconds": 3600.0,
+    "effective_interval_seconds": 1800.0,
+    "next_due_at": "2026-10-06T08:09:46.987084+00:00",
+    "next_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+    "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+    "next_activity_horizon_seconds": 51613.012916,
+    "open_material_event_ids": [],
+    "event_newer_than_last_pulse": false,
+    "journey_phase": "PRE_TRIP",
+    "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "current_activity_id": null,
+    "monitored_activity_ids": [
+      "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+      "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+    ]
+  },
+  "initial_watch_due": true,
+  "pulse": {
+    "phase": {
+      "journey_phase": "PRE_TRIP",
+      "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+      "phase_authority": "CONTROL_PLANE_ONLY",
+      "current_activity_id": null,
+      "monitored_activity_ids": [
+        "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+        "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+      ]
+    },
+    "signals": {
+      "provider_key": "live-provider-mesh",
+      "state": "NORMAL",
+      "observation_ids": [
+        "df1b42ea-e186-4199-8080-abb678b6752c",
+        "eba6565a-f4e3-4398-9e00-0581babfe2a5"
+      ],
+      "event_ids": [],
+      "created_event_ids": [],
+      "resolved_event_ids": [],
+      "degraded": false,
+      "provider_states": {
+        "weather": "CAPTURED",
+        "mobility": "CAPTURED"
+      },
+      "provider_provenance": {
+        "weather": "LIVE_PROVIDER",
+        "mobility": "LIVE_PROVIDER"
+      },
+      "captured_at": "2026-10-06T09:39:49.621818+00:00"
+    },
+    "context_watch": {
+      "status": "NO_MATERIAL_CHANGE",
+      "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+      "captured_at": "2026-10-06T09:39:49.621818+00:00",
+      "checked_activities": [
+        {
+          "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf"
+        },
+        {
+          "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+          "place_id": "real-place-a346e8f7f72a4d8f523d81e3"
+        }
+      ],
+      "observations": [
+        {
+          "id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "provider_entity": "overpass:way/97082272",
+          "provider_key": "truth-mesh",
+          "source_class": "OFFICIAL_TICKETING",
+          "authority_status": "NON_AUTHORITATIVE",
+          "captured_at": "2026-10-06T09:39:49.621818+00:00"
+        },
+        {
+          "id": "6bd65919-a818-4891-9227-740a48b44559",
+          "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+          "provider_entity": "overpass:node/2661423323",
+          "provider_key": "truth-mesh",
+          "source_class": "OFFICIAL_WEB",
+          "authority_status": "NON_AUTHORITATIVE",
+          "captured_at": "2026-10-06T09:39:49.621818+00:00"
+        }
+      ],
+      "classifications": [
+        {
+          "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "provider_entity": "overpass:way/97082272",
+          "planned_local_interval": {
+            "start": "2026-10-07T09:00:00+09:00",
+            "end": "2026-10-07T10:00:00+09:00"
+          },
+          "opening_hours": {
+            "status": "NORMALIZED_VALID",
+            "raw": "We-Mo 09:00-16:30; Tu off",
+            "open": "09:00",
+            "close": "16:30",
+            "intervals": [
+              {
+                "open": "09:00",
+                "close": "16:30",
+                "days": [
+                  "We",
+                  "Th",
+                  "Fr",
+                  "Sa",
+                  "Su",
+                  "Mo"
+                ]
+              }
+            ],
+            "weekday_intervals": [
+              {
+                "days": [
+                  "We",
+                  "Th",
+                  "Fr",
+                  "Sa",
+                  "Su",
+                  "Mo"
+                ],
+                "intervals": [
+                  {
+                    "open": "09:00",
+                    "close": "16:30"
+                  }
+                ]
+              }
+            ]
+          },
+          "status": "OPEN_COMPATIBLE",
+          "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+          "verified_opening_interval": {
+            "open": "09:00",
+            "close": "16:30",
+            "days": [
+              "We",
+              "Th",
+              "Fr",
+              "Sa",
+              "Su",
+              "Mo"
+            ],
+            "opening_day": "2026-10-07"
+          },
+          "observation_id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6"
+        },
+        {
+          "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+          "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+          "provider_entity": "overpass:node/2661423323",
+          "planned_local_interval": {
+            "start": "2026-10-07T10:52:00+09:00",
+            "end": "2026-10-07T11:52:00+09:00"
+          },
+          "opening_hours": {
+            "status": "OFFICIAL_WEB_VERIFIED",
+            "raw": "午前10時00分～午後4時30分",
+            "open": "10:00",
+            "close": "16:30",
+            "intervals": [
+              {
+                "open": "10:00",
+                "close": "16:30",
+                "days": [
+                  "*"
+                ]
+              }
+            ],
+            "weekday_intervals": [
+              {
+                "days": [
+                  "*"
+                ],
+                "intervals": [
+                  {
+                    "open": "10:00",
+                    "close": "16:30"
+                  }
+                ]
+              }
+            ],
+            "source": "official_web",
+            "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+          },
+          "status": "OPEN_COMPATIBLE",
+          "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+          "verified_opening_interval": {
+            "open": "10:00",
+            "close": "16:30",
+            "days": [
+              "*"
+            ],
+            "opening_day": "2026-10-07"
+          },
+          "observation_id": "6bd65919-a818-4891-9227-740a48b44559"
+        }
+      ],
+      "material_conflicts": [],
+      "unknown_or_degraded": [],
+      "recovery_event_ids": [],
+      "created_recovery_event_ids": [],
+      "resolved_recovery_event_ids": [],
+      "agent_started": false,
+      "mutation_count": 0,
+      "acquisition": {
+        "provider": "truth-mesh",
+        "source": "https://overpass.openstreetmap.fr/api/interpreter",
+        "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+        "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+        "places": [
+          {
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "provider": "truth-mesh",
+            "source": "https://overpass.openstreetmap.fr/api/interpreter",
+            "provider_entity": "overpass:way/97082272",
+            "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+            "identity_evidence": {
+              "exact_ref": "way/97082272",
+              "overpass": "EXACT_IDENTITY_MATCH",
+              "nominatim": "EXACT_IDENTITY_MATCH",
+              "identity_authority": "EXACT_OSM_ID_CONVERGED"
+            },
+            "identity_authority": "EXACT_OSM_ID_CONVERGED",
+            "source_binding": {
+              "provider_entity": "overpass:way/97082272",
+              "source_url": "https://isuien.or.jp/",
+              "source_class": "OFFICIAL_TICKETING",
+              "identity_basis": {
+                "matched_provider_entity": true,
+                "provider_entity": "overpass:way/97082272",
+                "basis": "exact_provider_website_tag",
+                "secondary_provider": "nominatim"
+              },
+              "approval": "PROVIDER_TAG_EXACT_URL",
+              "source_kind": "PROVIDER_BOUND_EXACT_URL"
+            },
+            "secondary_source": {
+              "provider": "nominatim",
+              "source": "https://nominatim.openstreetmap.org/lookup",
+              "status": "ACQUIRED",
+              "matched_provider_entity": true
+            },
+            "supporting_content": {
+              "tags": {
+                "charge:adult": "1200 JPY",
+                "charge:child": "300 JPY;500 JPY",
+                "charge:disabled": "500 JPY",
+                "contact:facebook": "100063951454210",
+                "contact:twitter": "ISUIEN_Garden",
+                "contact:website": "https://isuien.or.jp/",
+                "fee": "yes",
+                "leisure": "garden",
+                "name": "依水園",
+                "name:en": "Isuien Garden",
+                "name:fr": "Jardin Isui",
+                "name:ja-Hira": "いすいえん",
+                "name:ja-Latn": "Isui-en",
+                "name:zh": "依水园",
+                "opening_hours": "We-Mo 09:00-16:30; Tu off",
+                "start_date": "1673",
+                "wikidata": "Q2745677",
+                "wikimedia_commons": "Category:Isuien",
+                "wikipedia": "ja:依水園"
+              },
+              "nominatim_extratags": {
+                "fee": "yes",
+                "wikidata": "Q2745677",
+                "wikipedia": "ja:依水園",
+                "start_date": "1673",
+                "charge:adult": "1200 JPY",
+                "charge:child": "300 JPY;500 JPY",
+                "opening_hours": "We-Mo 09:00-16:30; Tu off",
+                "charge:disabled": "500 JPY",
+                "contact:twitter": "ISUIEN_Garden",
+                "contact:website": "https://isuien.or.jp/",
+                "contact:facebook": "100063951454210",
+                "wikimedia_commons": "Category:Isuien"
+              }
+            },
+            "opening_hours": {
+              "status": "NORMALIZED_VALID",
+              "raw": "We-Mo 09:00-16:30; Tu off",
+              "open": "09:00",
+              "close": "16:30",
+              "intervals": [
+                {
+                  "open": "09:00",
+                  "close": "16:30",
+                  "days": [
+                    "We",
+                    "Th",
+                    "Fr",
+                    "Sa",
+                    "Su",
+                    "Mo"
+                  ]
+                }
+              ],
+              "weekday_intervals": [
+                {
+                  "days": [
+                    "We",
+                    "Th",
+                    "Fr",
+                    "Sa",
+                    "Su",
+                    "Mo"
+                  ],
+                  "intervals": [
+                    {
+                      "open": "09:00",
+                      "close": "16:30"
+                    }
+                  ]
+                }
+              ]
+            },
+            "cost_evidence": {
+              "status": "KNOWN",
+              "amount_minor": 1200,
+              "currency": "JPY",
+              "source": "overpass"
+            },
+            "official_web": {
+              "provider": "official_web",
+              "source": "https://isuien.or.jp/",
+              "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+              "status": "NO_STRUCTURED_FACTS",
+              "opening_hours": {
+                "status": "UNKNOWN",
+                "raw": null,
+                "intervals": []
+              },
+              "cost_evidence": {
+                "status": "UNKNOWN",
+                "amount_minor": null,
+                "currency": "CNY",
+                "source": "official_web",
+                "source_url": "https://isuien.or.jp/"
+              },
+              "source_binding": {
+                "provider_entity": "overpass:way/97082272",
+                "source_url": "https://isuien.or.jp/",
+                "source_class": "OFFICIAL_TICKETING",
+                "identity_basis": {
+                  "matched_provider_entity": true,
+                  "provider_entity": "overpass:way/97082272",
+                  "basis": "exact_provider_website_tag",
+                  "secondary_provider": "nominatim"
+                },
+                "approval": "PROVIDER_TAG_EXACT_URL",
+                "source_kind": "PROVIDER_BOUND_EXACT_URL"
+              }
+            },
+            "search_source": {
+              "provider": "searxng",
+              "status": "UNCONFIGURED",
+              "attempted": false,
+              "observations": [],
+              "opening_hours": {
+                "status": "UNKNOWN",
+                "raw": null,
+                "intervals": []
+              },
+              "cost_evidence": {
+                "status": "UNKNOWN",
+                "amount_minor": null,
+                "currency": "CNY",
+                "source": "searxng"
+              }
+            }
+          },
+          {
+            "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+            "provider": "truth-mesh",
+            "source": "https://overpass.openstreetmap.fr/api/interpreter",
+            "provider_entity": "overpass:node/2661423323",
+            "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+            "identity_evidence": {
+              "exact_ref": "node/2661423323",
+              "overpass": "EXACT_IDENTITY_MATCH",
+              "nominatim": "EXACT_IDENTITY_MATCH",
+              "identity_authority": "EXACT_OSM_ID_CONVERGED"
+            },
+            "identity_authority": "EXACT_OSM_ID_CONVERGED",
+            "source_binding": {
+              "provider_entity": "overpass:node/2661423323",
+              "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+              "source_class": "OFFICIAL_WEB",
+              "identity_basis": {
+                "matched_provider_entity": true,
+                "provider_entity": "overpass:node/2661423323",
+                "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+              },
+              "approval": "OPERATOR_VERIFIED"
+            },
+            "secondary_source": {
+              "provider": "nominatim",
+              "source": "https://nominatim.openstreetmap.org/lookup",
+              "status": "ACQUIRED",
+              "matched_provider_entity": true
+            },
+            "supporting_content": {
+              "tags": {
+                "name": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+                "name:en": "The Kids Science Museum of Photons",
+                "name:ja": "きっづ光科学館ふぉとん",
+                "opening_hours": "10:00 - 16:30",
+                "operator": "日本原子力研究開発機構 関西光科学研究所",
+                "source": "bing",
+                "tourism": "museum",
+                "wikidata": "Q17211497",
+                "wikipedia": "ja:きっづ光科学館ふぉとん"
+              },
+              "nominatim_extratags": {
+                "operator": "日本原子力研究開発機構 関西光科学研究所",
+                "wikidata": "Q17211497",
+                "wikipedia": "ja:きっづ光科学館ふぉとん",
+                "opening_hours": "10:00 - 16:30"
+              }
+            },
+            "opening_hours": {
+              "status": "OFFICIAL_WEB_VERIFIED",
+              "raw": "午前10時00分～午後4時30分",
+              "open": "10:00",
+              "close": "16:30",
+              "intervals": [
+                {
+                  "open": "10:00",
+                  "close": "16:30",
+                  "days": [
+                    "*"
+                  ]
+                }
+              ],
+              "weekday_intervals": [
+                {
+                  "days": [
+                    "*"
+                  ],
+                  "intervals": [
+                    {
+                      "open": "10:00",
+                      "close": "16:30"
+                    }
+                  ]
+                }
+              ],
+              "source": "official_web",
+              "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+            },
+            "cost_evidence": {
+              "status": "VERIFIED_PROVIDER",
+              "amount_minor": 0,
+              "currency": "JPY",
+              "source": "official_web",
+              "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+              "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+            },
+            "official_web": {
+              "provider": "official_web",
+              "source": "https://www.qst.go.jp/site/kids-photon/43021.html",
+              "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+              "status": "ACQUIRED",
+              "opening_hours": {
+                "status": "OFFICIAL_WEB_VERIFIED",
+                "raw": "午前10時00分～午後4時30分",
+                "open": "10:00",
+                "close": "16:30",
+                "intervals": [
+                  {
+                    "open": "10:00",
+                    "close": "16:30",
+                    "days": [
+                      "*"
+                    ]
+                  }
+                ],
+                "weekday_intervals": [
+                  {
+                    "days": [
+                      "*"
+                    ],
+                    "intervals": [
+                      {
+                        "open": "10:00",
+                        "close": "16:30"
+                      }
+                    ]
+                  }
+                ],
+                "source": "official_web",
+                "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+              },
+              "cost_evidence": {
+                "status": "VERIFIED_PROVIDER",
+                "amount_minor": 0,
+                "currency": "JPY",
+                "source": "official_web",
+                "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+              },
+              "source_binding": {
+                "provider_entity": "overpass:node/2661423323",
+                "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                "source_class": "OFFICIAL_WEB",
+                "identity_basis": {
+                  "matched_provider_entity": true,
+                  "provider_entity": "overpass:node/2661423323",
+                  "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+                },
+                "approval": "OPERATOR_VERIFIED"
+              }
+            },
+            "search_source": {
+              "provider": "searxng",
+              "status": "UNCONFIGURED",
+              "attempted": false,
+              "observations": [],
+              "opening_hours": {
+                "status": "UNKNOWN",
+                "raw": null,
+                "intervals": []
+              },
+              "cost_evidence": {
+                "status": "UNKNOWN",
+                "amount_minor": null,
+                "currency": "CNY",
+                "source": "searxng"
+              }
+            }
+          }
+        ],
+        "known_opening_count": 2,
+        "known_cost_count": 2,
+        "overpass_attempts": [
+          {
+            "endpoint": "https://overpass-api.de/api/interpreter",
+            "answered": false,
+            "http_status": 504,
+            "elapsed_ms": 8725.5,
+            "error": "HTTPStatusError: Server error '504 Gateway Timeout' for url 'https://overpass-api.de/api/interpreter'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HT"
+          },
+          {
+            "endpoint": "https://overpass.kumi.systems/api/interpreter",
+            "answered": false,
+            "http_status": null,
+            "elapsed_ms": 25583.0,
+            "error": "ReadTimeout: The read operation timed out"
+          },
+          {
+            "endpoint": "https://overpass.private.coffee/api/interpreter",
+            "answered": false,
+            "http_status": null,
+            "elapsed_ms": 25604.4,
+            "error": "ReadTimeout: The read operation timed out"
+          },
+          {
+            "endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+            "answered": true,
+            "http_status": 200,
+            "elapsed_ms": 1255.5,
+            "elements": 2
+          }
+        ],
+        "identity_evidence": [
+          {
+            "exact_ref": "way/97082272",
+            "overpass": "EXACT_IDENTITY_MATCH",
+            "nominatim": "EXACT_IDENTITY_MATCH",
+            "identity_authority": "EXACT_OSM_ID_CONVERGED"
+          },
+          {
+            "exact_ref": "node/2661423323",
+            "overpass": "EXACT_IDENTITY_MATCH",
+            "nominatim": "EXACT_IDENTITY_MATCH",
+            "identity_authority": "EXACT_OSM_ID_CONVERGED"
+          }
+        ],
+        "identity_authority": "EXACT_OSM_ID_CONVERGED",
+        "degraded_providers": [],
+        "fact_sources": [
+          {
+            "place_id": "real-place-22cf72809897ff4c7f312fcf",
+            "provider_tags": true,
+            "nominatim_extratags": true,
+            "official_web": false
+          },
+          {
+            "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+            "provider_tags": true,
+            "nominatim_extratags": true,
+            "official_web": true
+          }
+        ],
+        "official_web": {
+          "provider": "official_web",
+          "status": "ACQUIRED",
+          "attempted": 2,
+          "acquired": 1
+        },
+        "search_source": {
+          "provider": "searxng",
+          "status": "UNCONFIGURED",
+          "attempted": false,
+          "acquired": 0
+        },
+        "secondary_source": {
+          "provider": "nominatim",
+          "source": "https://nominatim.openstreetmap.org/lookup",
+          "status": "ACQUIRED",
+          "element_count": 2
+        },
+        "status": "ACQUIRED",
+        "element_count": 2
+      }
+    },
+    "guardian": {
+      "id": "1564936f-cfd5-475c-978e-d6213c94953a",
+      "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+      "decision": "NO_ACTION",
+      "status": "COMPLETED",
+      "action_status": "NO_ACTION",
+      "deduplicated": false,
+      "standing_mission": {
+        "id": "c590a570-8ae4-431d-9924-72f773f5df44",
+        "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+        "trigger_event_id": null,
+        "user_text": "持续关注接下来的行程、天气、路线和地点开放信息；只在真实影响当前安排时进入恢复流程。",
+        "objective_codes": [],
+        "protected_activity_ids": [],
+        "mutable_activity_ids": [],
+        "intent": {
+          "capabilities": [],
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "mutable_activity_ids": [],
+          "objective_codes": [],
+          "preferences": {},
+          "protected_activity_ids": [],
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "resolved_intent": {
+          "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+          "capabilities": [],
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "mutable_activity_ids": [],
+          "objective_codes": [],
+          "policy_mode": "ADVISORY",
+          "policy_version": 1,
+          "preferences": {},
+          "protected_activity_ids": [],
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "allowed_action_classes": [
+          "REQUEST_REPLAN",
+          "ACCEPT_REPLAN"
+        ],
+        "unresolved_references": [],
+        "compiler": {
+          "provider_key": "deterministic",
+          "model_key": "mission-compiler-v2-fallback",
+          "confidence": 1.0
+        },
+        "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+        "is_standing": true,
+        "parent_mission_id": null,
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "preferences": {},
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+        "status": "ACTIVE",
+        "created_at": "2026-10-06T09:39:46.885279+00:00",
+        "started_at": null,
+        "completed_at": null,
+        "failure_reason": null,
+        "clarification": {},
+        "ai_state": "CONFIGURED_UNVERIFIED",
+        "mission_plan": {
+          "version": "citynexus.mission-plan.v1",
+          "autonomy": "EXECUTE_WITHIN_BOUNDS",
+          "steps": [
+            {
+              "id": "inspect_journey",
+              "operation": "Inspect current Journey",
+              "tool_name": "inspect_journey",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_twin",
+              "operation": "Inspect JourneyTwin",
+              "tool_name": "inspect_twin",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_commitments",
+              "operation": "Inspect protected commitments",
+              "tool_name": "inspect_journey",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "evaluate_recovery_options",
+              "operation": "Evaluate the current reality and available recovery options",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": true
+            },
+            {
+              "id": "evaluate_candidates",
+              "operation": "Evaluate candidates against constraints",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_proposal",
+              "operation": "Inspect available proposal trade-offs",
+              "tool_name": "list_replans",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "approval_boundary",
+              "operation": "Wait for explicit CityNexus approval before mutation",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": true
+            }
+          ],
+          "protected_activity_ids": [],
+          "allowed_tools": [
+            "inspect_journey",
+            "inspect_twin",
+            "list_replans",
+            "search_city_services",
+            "acquire_place_facts",
+            "estimate_place_facts",
+            "generate_plans",
+            "request_collective_decision",
+            "activate_standby",
+            "request_replan",
+            "accept_replan",
+            "replace_activity",
+            "reschedule_activity",
+            "create_booking",
+            "cancel_refundable_booking",
+            "request_commitment_change",
+            "apply_clarified_horizon_choice",
+            "conclude_recovery"
+          ],
+          "read_only_tools": [
+            "inspect_journey",
+            "inspect_twin",
+            "list_replans",
+            "search_city_services"
+          ],
+          "approval_required_tools": [
+            "request_collective_decision",
+            "activate_standby",
+            "accept_replan",
+            "replace_activity",
+            "reschedule_activity",
+            "create_booking",
+            "cancel_refundable_booking",
+            "request_commitment_change",
+            "apply_clarified_horizon_choice"
+          ],
+          "authority": "CityNexus AgentToolGateway and deterministic domain services"
+        }
+      },
+      "trigger_event_id": null,
+      "trigger_kind": "REACTIVE",
+      "resilience_snapshot_id": null,
+      "proposal_id": null,
+      "agent_run_id": null,
+      "agent_runtime": null,
+      "tool_steps": [],
+      "evidence": {
+        "inference": {},
+        "mutation": null,
+        "observation": {
+          "actionable_event_ids": [],
+          "active_plan_version_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+          "incident_fingerprints": [],
+          "journey_status": "ACTIVE",
+          "open_event_ids": []
+        },
+        "policy": null,
+        "solver": null
+      },
+      "reasoning_summary": "No unresolved weather, closure, traffic, or schedule disruption requires recovery.",
+      "active_plan_before_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+      "active_plan_after_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+      "created_at": "2026-10-06T09:40:52.195494+00:00",
+      "completed_at": "2026-10-06T09:40:52.195494+00:00",
+      "cooldown_until": "2026-10-06T09:55:52.195494+00:00"
+    },
+    "resilience": {
+      "id": "3a410cf7-ca4d-44df-b844-9906dc8204be",
+      "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+      "score": 28,
+      "risk_score": 28,
+      "status": "STABLE",
+      "captured_at": "2026-10-06T09:40:52.185968+00:00",
+      "expires_at": "2026-10-06T09:55:52.185968+00:00",
+      "components": {
+        "commitment_slack": 60,
+        "cost_headroom_minor": 98800,
+        "forecast_risk": 0,
+        "mobility_sensitivity": 0,
+        "recovery_optionality": 40,
+        "route_geography_exposure": 0,
+        "single_point_of_failure": 35,
+        "weather_exposure": 20
+      },
+      "activity_risks": [
+        {
+          "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+          "failure_modes": [],
+          "outdoor": true,
+          "place_id": "real-place-22cf72809897ff4c7f312fcf",
+          "predictive": false,
+          "risk_score": 0,
+          "title": "依水園"
+        },
+        {
+          "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+          "failure_modes": [],
+          "outdoor": false,
+          "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+          "predictive": false,
+          "risk_score": 0,
+          "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)"
+        }
+      ],
+      "commitment_buffers": [],
+      "dominant_failure_modes": [],
+      "preventive_recommendation": {
+        "action": "CONTINUE_MONITORING",
+        "reason": "No predictive provider forecast currently exceeds the predictive threshold.",
+        "reversible": true,
+        "risk_reduction_meaningful": false,
+        "target_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+        "threshold": 65
+      },
+      "evidence_provenance": [
+        {
+          "captured_at": "2026-10-06T09:39:48.301886+00:00",
+          "expires_at": null,
+          "observation_id": "eba6565a-f4e3-4398-9e00-0581babfe2a5",
+          "observation_type": "MOBILITY",
+          "provenance": "LIVE_PROVIDER",
+          "provider_key": "valhalla-http"
+        },
+        {
+          "captured_at": "2026-10-06T09:39:48.301380+00:00",
+          "expires_at": null,
+          "observation_id": "df1b42ea-e186-4199-8080-abb678b6752c",
+          "observation_type": "CITY_SIGNAL",
+          "provenance": "LIVE_PROVIDER",
+          "provider_key": "open-meteo"
+        },
+        {
+          "captured_at": "2026-10-06T09:39:47.082519+00:00",
+          "expires_at": null,
+          "observation_id": "afd64c1b-f46f-40bf-b3a4-f2f51a72d519",
+          "observation_type": "WEATHER",
+          "provenance": "LIVE_PROVIDER",
+          "provider_key": "open-meteo"
+        }
+      ],
+      "fingerprint": "80e882b157e72cd29e40a3ac18bfdd724ef632daa8056fe8719618ec261e0bb4"
+    },
+    "counterfactuals": [],
+    "standby_maintenance": {
+      "active_plan_version_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+      "kept": 0,
+      "retired": []
+    },
+    "trace": {
+      "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+      "phoenix": "NOT_CONFIGURED",
+      "spans": [
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "guardian.phase",
+          "status": "OK",
+          "attributes": {
+            "journey_phase": "PRE_TRIP",
+            "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+            "phase_authority": "CONTROL_PLANE_ONLY",
+            "current_activity_id": null,
+            "monitored_activity_ids": [
+              "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+              "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+            ]
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "provider.capture",
+          "status": "OK",
+          "attributes": {
+            "provider_key": "live-provider-mesh",
+            "observation_ids": [
+              "df1b42ea-e186-4199-8080-abb678b6752c",
+              "eba6565a-f4e3-4398-9e00-0581babfe2a5"
+            ],
+            "provider_states": {
+              "weather": "CAPTURED",
+              "mobility": "CAPTURED"
+            },
+            "provider_provenance": {
+              "weather": "LIVE_PROVIDER",
+              "mobility": "LIVE_PROVIDER"
+            },
+            "degraded": false
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "venue_context.capture",
+          "status": "OK",
+          "attributes": {
+            "status": "NO_MATERIAL_CHANGE",
+            "observation_ids": [
+              "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+              "6bd65919-a818-4891-9227-740a48b44559"
+            ],
+            "recovery_event_ids": [],
+            "checked_activity_count": 2
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "traveler_twin.lookup",
+          "status": "OK",
+          "attributes": {
+            "traveler_id": "e202517b-81a0-4de7-b9ca-e826c899237d",
+            "evidence_count": 0,
+            "confidence": 0.0
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "resilience.evaluate",
+          "status": "OK",
+          "attributes": {
+            "snapshot_id": "3a410cf7-ca4d-44df-b844-9906dc8204be",
+            "score": 28
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "mission.compile",
+          "status": "OK",
+          "attributes": {
+            "mission_id": "c590a570-8ae4-431d-9924-72f773f5df44",
+            "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+            "protected_activity_count": 0
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "agent.model_call",
+          "status": "OK",
+          "attributes": {
+            "provider_key": null,
+            "model_key": null,
+            "status": null
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "agent.tool_calls",
+          "status": "OK",
+          "attributes": {
+            "count": 0,
+            "tools": []
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "gateway.policy_decision",
+          "status": "OK",
+          "attributes": {
+            "decision": null,
+            "action_status": "NO_ACTION"
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        },
+        {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "name": "domain.mutation",
+          "status": "OK",
+          "attributes": {
+            "executed": false,
+            "active_plan_after_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e"
+          },
+          "exporter": "PHOENIX_OPTIONAL"
+        }
+      ]
+    },
+    "pulse_id": "74182f46-5e03-479c-b8cc-4093a7e157bf"
+  },
+  "latest_pulse_read": {
+    "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+    "pulse": {
+      "id": "74182f46-5e03-479c-b8cc-4093a7e157bf",
+      "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+      "status": "COMPLETED",
+      "provider_key": "composite-provider-mesh",
+      "observation_ids": [
+        "df1b42ea-e186-4199-8080-abb678b6752c",
+        "eba6565a-f4e3-4398-9e00-0581babfe2a5",
+        "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+        "6bd65919-a818-4891-9227-740a48b44559"
+      ],
+      "guardian_run_id": "1564936f-cfd5-475c-978e-d6213c94953a",
+      "started_at": "2026-10-06T09:39:46.987084+00:00",
+      "completed_at": "2026-10-06T09:40:52.206008+00:00",
+      "result": {
+        "phase": {
+          "journey_phase": "PRE_TRIP",
+          "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+          "phase_authority": "CONTROL_PLANE_ONLY",
+          "current_activity_id": null,
+          "monitored_activity_ids": [
+            "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+            "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+          ]
+        },
+        "signals": {
+          "provider_key": "live-provider-mesh",
+          "state": "NORMAL",
+          "observation_ids": [
+            "df1b42ea-e186-4199-8080-abb678b6752c",
+            "eba6565a-f4e3-4398-9e00-0581babfe2a5"
+          ],
+          "event_ids": [],
+          "created_event_ids": [],
+          "resolved_event_ids": [],
+          "degraded": false,
+          "provider_states": {
+            "weather": "CAPTURED",
+            "mobility": "CAPTURED"
+          },
+          "provider_provenance": {
+            "weather": "LIVE_PROVIDER",
+            "mobility": "LIVE_PROVIDER"
+          },
+          "captured_at": "2026-10-06T09:39:49.621818+00:00"
+        },
+        "context_watch": {
+          "status": "NO_MATERIAL_CHANGE",
+          "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+          "captured_at": "2026-10-06T09:39:49.621818+00:00",
+          "checked_activities": [
+            {
+              "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+              "place_id": "real-place-22cf72809897ff4c7f312fcf"
+            },
+            {
+              "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+              "place_id": "real-place-a346e8f7f72a4d8f523d81e3"
+            }
+          ],
+          "observations": [
+            {
+              "id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+              "place_id": "real-place-22cf72809897ff4c7f312fcf",
+              "provider_entity": "overpass:way/97082272",
+              "provider_key": "truth-mesh",
+              "source_class": "OFFICIAL_TICKETING",
+              "authority_status": "NON_AUTHORITATIVE",
+              "captured_at": "2026-10-06T09:39:49.621818+00:00"
+            },
+            {
+              "id": "6bd65919-a818-4891-9227-740a48b44559",
+              "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+              "provider_entity": "overpass:node/2661423323",
+              "provider_key": "truth-mesh",
+              "source_class": "OFFICIAL_WEB",
+              "authority_status": "NON_AUTHORITATIVE",
+              "captured_at": "2026-10-06T09:39:49.621818+00:00"
+            }
+          ],
+          "classifications": [
+            {
+              "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+              "place_id": "real-place-22cf72809897ff4c7f312fcf",
+              "provider_entity": "overpass:way/97082272",
+              "planned_local_interval": {
+                "start": "2026-10-07T09:00:00+09:00",
+                "end": "2026-10-07T10:00:00+09:00"
+              },
+              "opening_hours": {
+                "status": "NORMALIZED_VALID",
+                "raw": "We-Mo 09:00-16:30; Tu off",
+                "open": "09:00",
+                "close": "16:30",
+                "intervals": [
+                  {
+                    "open": "09:00",
+                    "close": "16:30",
+                    "days": [
+                      "We",
+                      "Th",
+                      "Fr",
+                      "Sa",
+                      "Su",
+                      "Mo"
+                    ]
+                  }
+                ],
+                "weekday_intervals": [
+                  {
+                    "days": [
+                      "We",
+                      "Th",
+                      "Fr",
+                      "Sa",
+                      "Su",
+                      "Mo"
+                    ],
+                    "intervals": [
+                      {
+                        "open": "09:00",
+                        "close": "16:30"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": "OPEN_COMPATIBLE",
+              "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+              "verified_opening_interval": {
+                "open": "09:00",
+                "close": "16:30",
+                "days": [
+                  "We",
+                  "Th",
+                  "Fr",
+                  "Sa",
+                  "Su",
+                  "Mo"
+                ],
+                "opening_day": "2026-10-07"
+              },
+              "observation_id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6"
+            },
+            {
+              "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+              "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+              "provider_entity": "overpass:node/2661423323",
+              "planned_local_interval": {
+                "start": "2026-10-07T10:52:00+09:00",
+                "end": "2026-10-07T11:52:00+09:00"
+              },
+              "opening_hours": {
+                "status": "OFFICIAL_WEB_VERIFIED",
+                "raw": "午前10時00分～午後4時30分",
+                "open": "10:00",
+                "close": "16:30",
+                "intervals": [
+                  {
+                    "open": "10:00",
+                    "close": "16:30",
+                    "days": [
+                      "*"
+                    ]
+                  }
+                ],
+                "weekday_intervals": [
+                  {
+                    "days": [
+                      "*"
+                    ],
+                    "intervals": [
+                      {
+                        "open": "10:00",
+                        "close": "16:30"
+                      }
+                    ]
+                  }
+                ],
+                "source": "official_web",
+                "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+              },
+              "status": "OPEN_COMPATIBLE",
+              "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+              "verified_opening_interval": {
+                "open": "10:00",
+                "close": "16:30",
+                "days": [
+                  "*"
+                ],
+                "opening_day": "2026-10-07"
+              },
+              "observation_id": "6bd65919-a818-4891-9227-740a48b44559"
+            }
+          ],
+          "material_conflicts": [],
+          "unknown_or_degraded": [],
+          "recovery_event_ids": [],
+          "created_recovery_event_ids": [],
+          "resolved_recovery_event_ids": [],
+          "agent_started": false,
+          "mutation_count": 0,
+          "acquisition": {
+            "provider": "truth-mesh",
+            "source": "https://overpass.openstreetmap.fr/api/interpreter",
+            "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+            "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+            "places": [
+              {
+                "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                "provider": "truth-mesh",
+                "source": "https://overpass.openstreetmap.fr/api/interpreter",
+                "provider_entity": "overpass:way/97082272",
+                "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                "identity_evidence": {
+                  "exact_ref": "way/97082272",
+                  "overpass": "EXACT_IDENTITY_MATCH",
+                  "nominatim": "EXACT_IDENTITY_MATCH",
+                  "identity_authority": "EXACT_OSM_ID_CONVERGED"
+                },
+                "identity_authority": "EXACT_OSM_ID_CONVERGED",
+                "source_binding": {
+                  "provider_entity": "overpass:way/97082272",
+                  "source_url": "https://isuien.or.jp/",
+                  "source_class": "OFFICIAL_TICKETING",
+                  "identity_basis": {
+                    "matched_provider_entity": true,
+                    "provider_entity": "overpass:way/97082272",
+                    "basis": "exact_provider_website_tag",
+                    "secondary_provider": "nominatim"
+                  },
+                  "approval": "PROVIDER_TAG_EXACT_URL",
+                  "source_kind": "PROVIDER_BOUND_EXACT_URL"
+                },
+                "secondary_source": {
+                  "provider": "nominatim",
+                  "source": "https://nominatim.openstreetmap.org/lookup",
+                  "status": "ACQUIRED",
+                  "matched_provider_entity": true
+                },
+                "supporting_content": {
+                  "tags": {
+                    "charge:adult": "1200 JPY",
+                    "charge:child": "300 JPY;500 JPY",
+                    "charge:disabled": "500 JPY",
+                    "contact:facebook": "100063951454210",
+                    "contact:twitter": "ISUIEN_Garden",
+                    "contact:website": "https://isuien.or.jp/",
+                    "fee": "yes",
+                    "leisure": "garden",
+                    "name": "依水園",
+                    "name:en": "Isuien Garden",
+                    "name:fr": "Jardin Isui",
+                    "name:ja-Hira": "いすいえん",
+                    "name:ja-Latn": "Isui-en",
+                    "name:zh": "依水园",
+                    "opening_hours": "We-Mo 09:00-16:30; Tu off",
+                    "start_date": "1673",
+                    "wikidata": "Q2745677",
+                    "wikimedia_commons": "Category:Isuien",
+                    "wikipedia": "ja:依水園"
+                  },
+                  "nominatim_extratags": {
+                    "fee": "yes",
+                    "wikidata": "Q2745677",
+                    "wikipedia": "ja:依水園",
+                    "start_date": "1673",
+                    "charge:adult": "1200 JPY",
+                    "charge:child": "300 JPY;500 JPY",
+                    "opening_hours": "We-Mo 09:00-16:30; Tu off",
+                    "charge:disabled": "500 JPY",
+                    "contact:twitter": "ISUIEN_Garden",
+                    "contact:website": "https://isuien.or.jp/",
+                    "contact:facebook": "100063951454210",
+                    "wikimedia_commons": "Category:Isuien"
+                  }
+                },
+                "opening_hours": {
+                  "status": "NORMALIZED_VALID",
+                  "raw": "We-Mo 09:00-16:30; Tu off",
+                  "open": "09:00",
+                  "close": "16:30",
+                  "intervals": [
+                    {
+                      "open": "09:00",
+                      "close": "16:30",
+                      "days": [
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa",
+                        "Su",
+                        "Mo"
+                      ]
+                    }
+                  ],
+                  "weekday_intervals": [
+                    {
+                      "days": [
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa",
+                        "Su",
+                        "Mo"
+                      ],
+                      "intervals": [
+                        {
+                          "open": "09:00",
+                          "close": "16:30"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "cost_evidence": {
+                  "status": "KNOWN",
+                  "amount_minor": 1200,
+                  "currency": "JPY",
+                  "source": "overpass"
+                },
+                "official_web": {
+                  "provider": "official_web",
+                  "source": "https://isuien.or.jp/",
+                  "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                  "status": "NO_STRUCTURED_FACTS",
+                  "opening_hours": {
+                    "status": "UNKNOWN",
+                    "raw": null,
+                    "intervals": []
+                  },
+                  "cost_evidence": {
+                    "status": "UNKNOWN",
+                    "amount_minor": null,
+                    "currency": "CNY",
+                    "source": "official_web",
+                    "source_url": "https://isuien.or.jp/"
+                  },
+                  "source_binding": {
+                    "provider_entity": "overpass:way/97082272",
+                    "source_url": "https://isuien.or.jp/",
+                    "source_class": "OFFICIAL_TICKETING",
+                    "identity_basis": {
+                      "matched_provider_entity": true,
+                      "provider_entity": "overpass:way/97082272",
+                      "basis": "exact_provider_website_tag",
+                      "secondary_provider": "nominatim"
+                    },
+                    "approval": "PROVIDER_TAG_EXACT_URL",
+                    "source_kind": "PROVIDER_BOUND_EXACT_URL"
+                  }
+                },
+                "search_source": {
+                  "provider": "searxng",
+                  "status": "UNCONFIGURED",
+                  "attempted": false,
+                  "observations": [],
+                  "opening_hours": {
+                    "status": "UNKNOWN",
+                    "raw": null,
+                    "intervals": []
+                  },
+                  "cost_evidence": {
+                    "status": "UNKNOWN",
+                    "amount_minor": null,
+                    "currency": "CNY",
+                    "source": "searxng"
+                  }
+                }
+              },
+              {
+                "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                "provider": "truth-mesh",
+                "source": "https://overpass.openstreetmap.fr/api/interpreter",
+                "provider_entity": "overpass:node/2661423323",
+                "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                "identity_evidence": {
+                  "exact_ref": "node/2661423323",
+                  "overpass": "EXACT_IDENTITY_MATCH",
+                  "nominatim": "EXACT_IDENTITY_MATCH",
+                  "identity_authority": "EXACT_OSM_ID_CONVERGED"
+                },
+                "identity_authority": "EXACT_OSM_ID_CONVERGED",
+                "source_binding": {
+                  "provider_entity": "overpass:node/2661423323",
+                  "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                  "source_class": "OFFICIAL_WEB",
+                  "identity_basis": {
+                    "matched_provider_entity": true,
+                    "provider_entity": "overpass:node/2661423323",
+                    "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+                  },
+                  "approval": "OPERATOR_VERIFIED"
+                },
+                "secondary_source": {
+                  "provider": "nominatim",
+                  "source": "https://nominatim.openstreetmap.org/lookup",
+                  "status": "ACQUIRED",
+                  "matched_provider_entity": true
+                },
+                "supporting_content": {
+                  "tags": {
+                    "name": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+                    "name:en": "The Kids Science Museum of Photons",
+                    "name:ja": "きっづ光科学館ふぉとん",
+                    "opening_hours": "10:00 - 16:30",
+                    "operator": "日本原子力研究開発機構 関西光科学研究所",
+                    "source": "bing",
+                    "tourism": "museum",
+                    "wikidata": "Q17211497",
+                    "wikipedia": "ja:きっづ光科学館ふぉとん"
+                  },
+                  "nominatim_extratags": {
+                    "operator": "日本原子力研究開発機構 関西光科学研究所",
+                    "wikidata": "Q17211497",
+                    "wikipedia": "ja:きっづ光科学館ふぉとん",
+                    "opening_hours": "10:00 - 16:30"
+                  }
+                },
+                "opening_hours": {
+                  "status": "OFFICIAL_WEB_VERIFIED",
+                  "raw": "午前10時00分～午後4時30分",
+                  "open": "10:00",
+                  "close": "16:30",
+                  "intervals": [
+                    {
+                      "open": "10:00",
+                      "close": "16:30",
+                      "days": [
+                        "*"
+                      ]
+                    }
+                  ],
+                  "weekday_intervals": [
+                    {
+                      "days": [
+                        "*"
+                      ],
+                      "intervals": [
+                        {
+                          "open": "10:00",
+                          "close": "16:30"
+                        }
+                      ]
+                    }
+                  ],
+                  "source": "official_web",
+                  "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+                },
+                "cost_evidence": {
+                  "status": "VERIFIED_PROVIDER",
+                  "amount_minor": 0,
+                  "currency": "JPY",
+                  "source": "official_web",
+                  "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                  "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+                },
+                "official_web": {
+                  "provider": "official_web",
+                  "source": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                  "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                  "status": "ACQUIRED",
+                  "opening_hours": {
+                    "status": "OFFICIAL_WEB_VERIFIED",
+                    "raw": "午前10時00分～午後4時30分",
+                    "open": "10:00",
+                    "close": "16:30",
+                    "intervals": [
+                      {
+                        "open": "10:00",
+                        "close": "16:30",
+                        "days": [
+                          "*"
+                        ]
+                      }
+                    ],
+                    "weekday_intervals": [
+                      {
+                        "days": [
+                          "*"
+                        ],
+                        "intervals": [
+                          {
+                            "open": "10:00",
+                            "close": "16:30"
+                          }
+                        ]
+                      }
+                    ],
+                    "source": "official_web",
+                    "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+                  },
+                  "cost_evidence": {
+                    "status": "VERIFIED_PROVIDER",
+                    "amount_minor": 0,
+                    "currency": "JPY",
+                    "source": "official_web",
+                    "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                    "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+                  },
+                  "source_binding": {
+                    "provider_entity": "overpass:node/2661423323",
+                    "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                    "source_class": "OFFICIAL_WEB",
+                    "identity_basis": {
+                      "matched_provider_entity": true,
+                      "provider_entity": "overpass:node/2661423323",
+                      "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+                    },
+                    "approval": "OPERATOR_VERIFIED"
+                  }
+                },
+                "search_source": {
+                  "provider": "searxng",
+                  "status": "UNCONFIGURED",
+                  "attempted": false,
+                  "observations": [],
+                  "opening_hours": {
+                    "status": "UNKNOWN",
+                    "raw": null,
+                    "intervals": []
+                  },
+                  "cost_evidence": {
+                    "status": "UNKNOWN",
+                    "amount_minor": null,
+                    "currency": "CNY",
+                    "source": "searxng"
+                  }
+                }
+              }
+            ],
+            "known_opening_count": 2,
+            "known_cost_count": 2,
+            "overpass_attempts": [
+              {
+                "endpoint": "https://overpass-api.de/api/interpreter",
+                "answered": false,
+                "http_status": 504,
+                "elapsed_ms": 8725.5,
+                "error": "HTTPStatusError: Server error '504 Gateway Timeout' for url 'https://overpass-api.de/api/interpreter'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HT"
+              },
+              {
+                "endpoint": "https://overpass.kumi.systems/api/interpreter",
+                "answered": false,
+                "http_status": null,
+                "elapsed_ms": 25583.0,
+                "error": "ReadTimeout: The read operation timed out"
+              },
+              {
+                "endpoint": "https://overpass.private.coffee/api/interpreter",
+                "answered": false,
+                "http_status": null,
+                "elapsed_ms": 25604.4,
+                "error": "ReadTimeout: The read operation timed out"
+              },
+              {
+                "endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+                "answered": true,
+                "http_status": 200,
+                "elapsed_ms": 1255.5,
+                "elements": 2
+              }
+            ],
+            "identity_evidence": [
+              {
+                "exact_ref": "way/97082272",
+                "overpass": "EXACT_IDENTITY_MATCH",
+                "nominatim": "EXACT_IDENTITY_MATCH",
+                "identity_authority": "EXACT_OSM_ID_CONVERGED"
+              },
+              {
+                "exact_ref": "node/2661423323",
+                "overpass": "EXACT_IDENTITY_MATCH",
+                "nominatim": "EXACT_IDENTITY_MATCH",
+                "identity_authority": "EXACT_OSM_ID_CONVERGED"
+              }
+            ],
+            "identity_authority": "EXACT_OSM_ID_CONVERGED",
+            "degraded_providers": [],
+            "fact_sources": [
+              {
+                "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                "provider_tags": true,
+                "nominatim_extratags": true,
+                "official_web": false
+              },
+              {
+                "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                "provider_tags": true,
+                "nominatim_extratags": true,
+                "official_web": true
+              }
+            ],
+            "official_web": {
+              "provider": "official_web",
+              "status": "ACQUIRED",
+              "attempted": 2,
+              "acquired": 1
+            },
+            "search_source": {
+              "provider": "searxng",
+              "status": "UNCONFIGURED",
+              "attempted": false,
+              "acquired": 0
+            },
+            "secondary_source": {
+              "provider": "nominatim",
+              "source": "https://nominatim.openstreetmap.org/lookup",
+              "status": "ACQUIRED",
+              "element_count": 2
+            },
+            "status": "ACQUIRED",
+            "element_count": 2
+          }
+        },
+        "guardian": {
+          "id": "1564936f-cfd5-475c-978e-d6213c94953a",
+          "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+          "decision": "NO_ACTION",
+          "status": "COMPLETED",
+          "action_status": "NO_ACTION",
+          "deduplicated": false,
+          "standing_mission": {
+            "id": "c590a570-8ae4-431d-9924-72f773f5df44",
+            "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+            "trigger_event_id": null,
+            "user_text": "持续关注接下来的行程、天气、路线和地点开放信息；只在真实影响当前安排时进入恢复流程。",
+            "objective_codes": [],
+            "protected_activity_ids": [],
+            "mutable_activity_ids": [],
+            "intent": {
+              "capabilities": [],
+              "max_cost_delta_minor": 0,
+              "max_loss_minor": 0,
+              "max_schedule_drift_min": 0,
+              "mutable_activity_ids": [],
+              "objective_codes": [],
+              "preferences": {},
+              "protected_activity_ids": [],
+              "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+            },
+            "resolved_intent": {
+              "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+              "capabilities": [],
+              "max_cost_delta_minor": 0,
+              "max_loss_minor": 0,
+              "max_schedule_drift_min": 0,
+              "mutable_activity_ids": [],
+              "objective_codes": [],
+              "policy_mode": "ADVISORY",
+              "policy_version": 1,
+              "preferences": {},
+              "protected_activity_ids": [],
+              "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+            },
+            "allowed_action_classes": [
+              "REQUEST_REPLAN",
+              "ACCEPT_REPLAN"
+            ],
+            "unresolved_references": [],
+            "compiler": {
+              "provider_key": "deterministic",
+              "model_key": "mission-compiler-v2-fallback",
+              "confidence": 1.0
+            },
+            "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+            "is_standing": true,
+            "parent_mission_id": null,
+            "max_cost_delta_minor": 0,
+            "max_loss_minor": 0,
+            "max_schedule_drift_min": 0,
+            "preferences": {},
+            "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+            "status": "ACTIVE",
+            "created_at": "2026-10-06T09:39:46.885279+00:00",
+            "started_at": null,
+            "completed_at": null,
+            "failure_reason": null,
+            "clarification": {},
+            "ai_state": "CONFIGURED_UNVERIFIED",
+            "mission_plan": {
+              "version": "citynexus.mission-plan.v1",
+              "autonomy": "EXECUTE_WITHIN_BOUNDS",
+              "steps": [
+                {
+                  "id": "inspect_journey",
+                  "operation": "Inspect current Journey",
+                  "tool_name": "inspect_journey",
+                  "status": "PENDING",
+                  "requires_authority": false
+                },
+                {
+                  "id": "inspect_twin",
+                  "operation": "Inspect JourneyTwin",
+                  "tool_name": "inspect_twin",
+                  "status": "PENDING",
+                  "requires_authority": false
+                },
+                {
+                  "id": "inspect_commitments",
+                  "operation": "Inspect protected commitments",
+                  "tool_name": "inspect_journey",
+                  "status": "PENDING",
+                  "requires_authority": false
+                },
+                {
+                  "id": "evaluate_recovery_options",
+                  "operation": "Evaluate the current reality and available recovery options",
+                  "tool_name": null,
+                  "status": "PENDING",
+                  "requires_authority": true
+                },
+                {
+                  "id": "evaluate_candidates",
+                  "operation": "Evaluate candidates against constraints",
+                  "tool_name": null,
+                  "status": "PENDING",
+                  "requires_authority": false
+                },
+                {
+                  "id": "inspect_proposal",
+                  "operation": "Inspect available proposal trade-offs",
+                  "tool_name": "list_replans",
+                  "status": "PENDING",
+                  "requires_authority": false
+                },
+                {
+                  "id": "approval_boundary",
+                  "operation": "Wait for explicit CityNexus approval before mutation",
+                  "tool_name": null,
+                  "status": "PENDING",
+                  "requires_authority": true
+                }
+              ],
+              "protected_activity_ids": [],
+              "allowed_tools": [
+                "inspect_journey",
+                "inspect_twin",
+                "list_replans",
+                "search_city_services",
+                "acquire_place_facts",
+                "estimate_place_facts",
+                "generate_plans",
+                "request_collective_decision",
+                "activate_standby",
+                "request_replan",
+                "accept_replan",
+                "replace_activity",
+                "reschedule_activity",
+                "create_booking",
+                "cancel_refundable_booking",
+                "request_commitment_change",
+                "apply_clarified_horizon_choice",
+                "conclude_recovery"
+              ],
+              "read_only_tools": [
+                "inspect_journey",
+                "inspect_twin",
+                "list_replans",
+                "search_city_services"
+              ],
+              "approval_required_tools": [
+                "request_collective_decision",
+                "activate_standby",
+                "accept_replan",
+                "replace_activity",
+                "reschedule_activity",
+                "create_booking",
+                "cancel_refundable_booking",
+                "request_commitment_change",
+                "apply_clarified_horizon_choice"
+              ],
+              "authority": "CityNexus AgentToolGateway and deterministic domain services"
+            }
+          },
+          "trigger_event_id": null,
+          "trigger_kind": "REACTIVE",
+          "resilience_snapshot_id": null,
+          "proposal_id": null,
+          "agent_run_id": null,
+          "agent_runtime": null,
+          "tool_steps": [],
+          "evidence": {
+            "inference": {},
+            "mutation": null,
+            "observation": {
+              "actionable_event_ids": [],
+              "active_plan_version_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+              "incident_fingerprints": [],
+              "journey_status": "ACTIVE",
+              "open_event_ids": []
+            },
+            "policy": null,
+            "solver": null
+          },
+          "reasoning_summary": "No unresolved weather, closure, traffic, or schedule disruption requires recovery.",
+          "active_plan_before_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+          "active_plan_after_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+          "created_at": "2026-10-06T09:40:52.195494+00:00",
+          "completed_at": "2026-10-06T09:40:52.195494+00:00",
+          "cooldown_until": "2026-10-06T09:55:52.195494+00:00"
+        },
+        "resilience": {
+          "id": "3a410cf7-ca4d-44df-b844-9906dc8204be",
+          "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+          "score": 28,
+          "risk_score": 28,
+          "status": "STABLE",
+          "captured_at": "2026-10-06T09:40:52.185968+00:00",
+          "expires_at": "2026-10-06T09:55:52.185968+00:00",
+          "components": {
+            "commitment_slack": 60,
+            "cost_headroom_minor": 98800,
+            "forecast_risk": 0,
+            "mobility_sensitivity": 0,
+            "recovery_optionality": 40,
+            "route_geography_exposure": 0,
+            "single_point_of_failure": 35,
+            "weather_exposure": 20
+          },
+          "activity_risks": [
+            {
+              "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+              "failure_modes": [],
+              "outdoor": true,
+              "place_id": "real-place-22cf72809897ff4c7f312fcf",
+              "predictive": false,
+              "risk_score": 0,
+              "title": "依水園"
+            },
+            {
+              "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+              "failure_modes": [],
+              "outdoor": false,
+              "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+              "predictive": false,
+              "risk_score": 0,
+              "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)"
+            }
+          ],
+          "commitment_buffers": [],
+          "dominant_failure_modes": [],
+          "preventive_recommendation": {
+            "action": "CONTINUE_MONITORING",
+            "reason": "No predictive provider forecast currently exceeds the predictive threshold.",
+            "reversible": true,
+            "risk_reduction_meaningful": false,
+            "target_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+            "threshold": 65
+          },
+          "evidence_provenance": [
+            {
+              "captured_at": "2026-10-06T09:39:48.301886+00:00",
+              "expires_at": null,
+              "observation_id": "eba6565a-f4e3-4398-9e00-0581babfe2a5",
+              "observation_type": "MOBILITY",
+              "provenance": "LIVE_PROVIDER",
+              "provider_key": "valhalla-http"
+            },
+            {
+              "captured_at": "2026-10-06T09:39:48.301380+00:00",
+              "expires_at": null,
+              "observation_id": "df1b42ea-e186-4199-8080-abb678b6752c",
+              "observation_type": "CITY_SIGNAL",
+              "provenance": "LIVE_PROVIDER",
+              "provider_key": "open-meteo"
+            },
+            {
+              "captured_at": "2026-10-06T09:39:47.082519+00:00",
+              "expires_at": null,
+              "observation_id": "afd64c1b-f46f-40bf-b3a4-f2f51a72d519",
+              "observation_type": "WEATHER",
+              "provenance": "LIVE_PROVIDER",
+              "provider_key": "open-meteo"
+            }
+          ],
+          "fingerprint": "80e882b157e72cd29e40a3ac18bfdd724ef632daa8056fe8719618ec261e0bb4"
+        },
+        "counterfactuals": [],
+        "standby_maintenance": {
+          "active_plan_version_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+          "kept": 0,
+          "retired": []
+        },
+        "trace": {
+          "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+          "phoenix": "NOT_CONFIGURED",
+          "spans": [
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "guardian.phase",
+              "status": "OK",
+              "attributes": {
+                "journey_phase": "PRE_TRIP",
+                "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+                "phase_authority": "CONTROL_PLANE_ONLY",
+                "current_activity_id": null,
+                "monitored_activity_ids": [
+                  "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+                  "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+                ]
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "provider.capture",
+              "status": "OK",
+              "attributes": {
+                "provider_key": "live-provider-mesh",
+                "observation_ids": [
+                  "df1b42ea-e186-4199-8080-abb678b6752c",
+                  "eba6565a-f4e3-4398-9e00-0581babfe2a5"
+                ],
+                "provider_states": {
+                  "weather": "CAPTURED",
+                  "mobility": "CAPTURED"
+                },
+                "provider_provenance": {
+                  "weather": "LIVE_PROVIDER",
+                  "mobility": "LIVE_PROVIDER"
+                },
+                "degraded": false
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "venue_context.capture",
+              "status": "OK",
+              "attributes": {
+                "status": "NO_MATERIAL_CHANGE",
+                "observation_ids": [
+                  "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+                  "6bd65919-a818-4891-9227-740a48b44559"
+                ],
+                "recovery_event_ids": [],
+                "checked_activity_count": 2
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "traveler_twin.lookup",
+              "status": "OK",
+              "attributes": {
+                "traveler_id": "e202517b-81a0-4de7-b9ca-e826c899237d",
+                "evidence_count": 0,
+                "confidence": 0.0
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "resilience.evaluate",
+              "status": "OK",
+              "attributes": {
+                "snapshot_id": "3a410cf7-ca4d-44df-b844-9906dc8204be",
+                "score": 28
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "mission.compile",
+              "status": "OK",
+              "attributes": {
+                "mission_id": "c590a570-8ae4-431d-9924-72f773f5df44",
+                "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+                "protected_activity_count": 0
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "agent.model_call",
+              "status": "OK",
+              "attributes": {
+                "provider_key": null,
+                "model_key": null,
+                "status": null
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "agent.tool_calls",
+              "status": "OK",
+              "attributes": {
+                "count": 0,
+                "tools": []
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "gateway.policy_decision",
+              "status": "OK",
+              "attributes": {
+                "decision": null,
+                "action_status": "NO_ACTION"
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            },
+            {
+              "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+              "name": "domain.mutation",
+              "status": "OK",
+              "attributes": {
+                "executed": false,
+                "active_plan_after_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e"
+              },
+              "exporter": "PHOENIX_OPTIONAL"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "persisted": {
+    "enrollment": {
+      "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+      "enabled": true,
+      "interval_seconds": 3600.0,
+      "last_pulse_at": "2026-10-06T09:40:52.209008+00:00",
+      "last_error": null
+    },
+    "guardian_pulses": [
+      {
+        "id": "74182f46-5e03-479c-b8cc-4093a7e157bf",
+        "status": "COMPLETED",
+        "provider_key": "composite-provider-mesh",
+        "observation_ids": [
+          "df1b42ea-e186-4199-8080-abb678b6752c",
+          "eba6565a-f4e3-4398-9e00-0581babfe2a5",
+          "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+          "6bd65919-a818-4891-9227-740a48b44559"
+        ],
+        "guardian_run_id": "1564936f-cfd5-475c-978e-d6213c94953a",
+        "started_at": "2026-10-06T09:39:46.987084+00:00",
+        "completed_at": "2026-10-06T09:40:52.206008+00:00",
+        "result": {
+          "phase": {
+            "journey_phase": "PRE_TRIP",
+            "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+            "phase_authority": "CONTROL_PLANE_ONLY",
+            "current_activity_id": null,
+            "monitored_activity_ids": [
+              "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+              "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+            ]
+          },
+          "signals": {
+            "provider_key": "live-provider-mesh",
+            "state": "NORMAL",
+            "observation_ids": [
+              "df1b42ea-e186-4199-8080-abb678b6752c",
+              "eba6565a-f4e3-4398-9e00-0581babfe2a5"
+            ],
+            "event_ids": [],
+            "created_event_ids": [],
+            "resolved_event_ids": [],
+            "degraded": false,
+            "provider_states": {
+              "weather": "CAPTURED",
+              "mobility": "CAPTURED"
+            },
+            "provider_provenance": {
+              "weather": "LIVE_PROVIDER",
+              "mobility": "LIVE_PROVIDER"
+            },
+            "captured_at": "2026-10-06T09:39:49.621818+00:00"
+          },
+          "context_watch": {
+            "status": "NO_MATERIAL_CHANGE",
+            "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+            "captured_at": "2026-10-06T09:39:49.621818+00:00",
+            "checked_activities": [
+              {
+                "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+                "place_id": "real-place-22cf72809897ff4c7f312fcf"
+              },
+              {
+                "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+                "place_id": "real-place-a346e8f7f72a4d8f523d81e3"
+              }
+            ],
+            "observations": [
+              {
+                "id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+                "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                "provider_entity": "overpass:way/97082272",
+                "provider_key": "truth-mesh",
+                "source_class": "OFFICIAL_TICKETING",
+                "authority_status": "NON_AUTHORITATIVE",
+                "captured_at": "2026-10-06T09:39:49.621818+00:00"
+              },
+              {
+                "id": "6bd65919-a818-4891-9227-740a48b44559",
+                "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                "provider_entity": "overpass:node/2661423323",
+                "provider_key": "truth-mesh",
+                "source_class": "OFFICIAL_WEB",
+                "authority_status": "NON_AUTHORITATIVE",
+                "captured_at": "2026-10-06T09:39:49.621818+00:00"
+              }
+            ],
+            "classifications": [
+              {
+                "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+                "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                "provider_entity": "overpass:way/97082272",
+                "planned_local_interval": {
+                  "start": "2026-10-07T09:00:00+09:00",
+                  "end": "2026-10-07T10:00:00+09:00"
+                },
+                "opening_hours": {
+                  "status": "NORMALIZED_VALID",
+                  "raw": "We-Mo 09:00-16:30; Tu off",
+                  "open": "09:00",
+                  "close": "16:30",
+                  "intervals": [
+                    {
+                      "open": "09:00",
+                      "close": "16:30",
+                      "days": [
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa",
+                        "Su",
+                        "Mo"
+                      ]
+                    }
+                  ],
+                  "weekday_intervals": [
+                    {
+                      "days": [
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa",
+                        "Su",
+                        "Mo"
+                      ],
+                      "intervals": [
+                        {
+                          "open": "09:00",
+                          "close": "16:30"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "status": "OPEN_COMPATIBLE",
+                "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+                "verified_opening_interval": {
+                  "open": "09:00",
+                  "close": "16:30",
+                  "days": [
+                    "We",
+                    "Th",
+                    "Fr",
+                    "Sa",
+                    "Su",
+                    "Mo"
+                  ],
+                  "opening_day": "2026-10-07"
+                },
+                "observation_id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6"
+              },
+              {
+                "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+                "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                "provider_entity": "overpass:node/2661423323",
+                "planned_local_interval": {
+                  "start": "2026-10-07T10:52:00+09:00",
+                  "end": "2026-10-07T11:52:00+09:00"
+                },
+                "opening_hours": {
+                  "status": "OFFICIAL_WEB_VERIFIED",
+                  "raw": "午前10時00分～午後4時30分",
+                  "open": "10:00",
+                  "close": "16:30",
+                  "intervals": [
+                    {
+                      "open": "10:00",
+                      "close": "16:30",
+                      "days": [
+                        "*"
+                      ]
+                    }
+                  ],
+                  "weekday_intervals": [
+                    {
+                      "days": [
+                        "*"
+                      ],
+                      "intervals": [
+                        {
+                          "open": "10:00",
+                          "close": "16:30"
+                        }
+                      ]
+                    }
+                  ],
+                  "source": "official_web",
+                  "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+                },
+                "status": "OPEN_COMPATIBLE",
+                "reason_code": "PLANNED_INTERVAL_WITHIN_VERIFIED_HOURS",
+                "verified_opening_interval": {
+                  "open": "10:00",
+                  "close": "16:30",
+                  "days": [
+                    "*"
+                  ],
+                  "opening_day": "2026-10-07"
+                },
+                "observation_id": "6bd65919-a818-4891-9227-740a48b44559"
+              }
+            ],
+            "material_conflicts": [],
+            "unknown_or_degraded": [],
+            "recovery_event_ids": [],
+            "created_recovery_event_ids": [],
+            "resolved_recovery_event_ids": [],
+            "agent_started": false,
+            "mutation_count": 0,
+            "acquisition": {
+              "provider": "truth-mesh",
+              "source": "https://overpass.openstreetmap.fr/api/interpreter",
+              "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+              "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+              "places": [
+                {
+                  "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                  "provider": "truth-mesh",
+                  "source": "https://overpass.openstreetmap.fr/api/interpreter",
+                  "provider_entity": "overpass:way/97082272",
+                  "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                  "identity_evidence": {
+                    "exact_ref": "way/97082272",
+                    "overpass": "EXACT_IDENTITY_MATCH",
+                    "nominatim": "EXACT_IDENTITY_MATCH",
+                    "identity_authority": "EXACT_OSM_ID_CONVERGED"
+                  },
+                  "identity_authority": "EXACT_OSM_ID_CONVERGED",
+                  "source_binding": {
+                    "provider_entity": "overpass:way/97082272",
+                    "source_url": "https://isuien.or.jp/",
+                    "source_class": "OFFICIAL_TICKETING",
+                    "identity_basis": {
+                      "matched_provider_entity": true,
+                      "provider_entity": "overpass:way/97082272",
+                      "basis": "exact_provider_website_tag",
+                      "secondary_provider": "nominatim"
+                    },
+                    "approval": "PROVIDER_TAG_EXACT_URL",
+                    "source_kind": "PROVIDER_BOUND_EXACT_URL"
+                  },
+                  "secondary_source": {
+                    "provider": "nominatim",
+                    "source": "https://nominatim.openstreetmap.org/lookup",
+                    "status": "ACQUIRED",
+                    "matched_provider_entity": true
+                  },
+                  "supporting_content": {
+                    "tags": {
+                      "charge:adult": "1200 JPY",
+                      "charge:child": "300 JPY;500 JPY",
+                      "charge:disabled": "500 JPY",
+                      "contact:facebook": "100063951454210",
+                      "contact:twitter": "ISUIEN_Garden",
+                      "contact:website": "https://isuien.or.jp/",
+                      "fee": "yes",
+                      "leisure": "garden",
+                      "name": "依水園",
+                      "name:en": "Isuien Garden",
+                      "name:fr": "Jardin Isui",
+                      "name:ja-Hira": "いすいえん",
+                      "name:ja-Latn": "Isui-en",
+                      "name:zh": "依水园",
+                      "opening_hours": "We-Mo 09:00-16:30; Tu off",
+                      "start_date": "1673",
+                      "wikidata": "Q2745677",
+                      "wikimedia_commons": "Category:Isuien",
+                      "wikipedia": "ja:依水園"
+                    },
+                    "nominatim_extratags": {
+                      "fee": "yes",
+                      "wikidata": "Q2745677",
+                      "wikipedia": "ja:依水園",
+                      "start_date": "1673",
+                      "charge:adult": "1200 JPY",
+                      "charge:child": "300 JPY;500 JPY",
+                      "opening_hours": "We-Mo 09:00-16:30; Tu off",
+                      "charge:disabled": "500 JPY",
+                      "contact:twitter": "ISUIEN_Garden",
+                      "contact:website": "https://isuien.or.jp/",
+                      "contact:facebook": "100063951454210",
+                      "wikimedia_commons": "Category:Isuien"
+                    }
+                  },
+                  "opening_hours": {
+                    "status": "NORMALIZED_VALID",
+                    "raw": "We-Mo 09:00-16:30; Tu off",
+                    "open": "09:00",
+                    "close": "16:30",
+                    "intervals": [
+                      {
+                        "open": "09:00",
+                        "close": "16:30",
+                        "days": [
+                          "We",
+                          "Th",
+                          "Fr",
+                          "Sa",
+                          "Su",
+                          "Mo"
+                        ]
+                      }
+                    ],
+                    "weekday_intervals": [
+                      {
+                        "days": [
+                          "We",
+                          "Th",
+                          "Fr",
+                          "Sa",
+                          "Su",
+                          "Mo"
+                        ],
+                        "intervals": [
+                          {
+                            "open": "09:00",
+                            "close": "16:30"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "cost_evidence": {
+                    "status": "KNOWN",
+                    "amount_minor": 1200,
+                    "currency": "JPY",
+                    "source": "overpass"
+                  },
+                  "official_web": {
+                    "provider": "official_web",
+                    "source": "https://isuien.or.jp/",
+                    "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                    "status": "NO_STRUCTURED_FACTS",
+                    "opening_hours": {
+                      "status": "UNKNOWN",
+                      "raw": null,
+                      "intervals": []
+                    },
+                    "cost_evidence": {
+                      "status": "UNKNOWN",
+                      "amount_minor": null,
+                      "currency": "CNY",
+                      "source": "official_web",
+                      "source_url": "https://isuien.or.jp/"
+                    },
+                    "source_binding": {
+                      "provider_entity": "overpass:way/97082272",
+                      "source_url": "https://isuien.or.jp/",
+                      "source_class": "OFFICIAL_TICKETING",
+                      "identity_basis": {
+                        "matched_provider_entity": true,
+                        "provider_entity": "overpass:way/97082272",
+                        "basis": "exact_provider_website_tag",
+                        "secondary_provider": "nominatim"
+                      },
+                      "approval": "PROVIDER_TAG_EXACT_URL",
+                      "source_kind": "PROVIDER_BOUND_EXACT_URL"
+                    }
+                  },
+                  "search_source": {
+                    "provider": "searxng",
+                    "status": "UNCONFIGURED",
+                    "attempted": false,
+                    "observations": [],
+                    "opening_hours": {
+                      "status": "UNKNOWN",
+                      "raw": null,
+                      "intervals": []
+                    },
+                    "cost_evidence": {
+                      "status": "UNKNOWN",
+                      "amount_minor": null,
+                      "currency": "CNY",
+                      "source": "searxng"
+                    }
+                  }
+                },
+                {
+                  "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                  "provider": "truth-mesh",
+                  "source": "https://overpass.openstreetmap.fr/api/interpreter",
+                  "provider_entity": "overpass:node/2661423323",
+                  "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                  "identity_evidence": {
+                    "exact_ref": "node/2661423323",
+                    "overpass": "EXACT_IDENTITY_MATCH",
+                    "nominatim": "EXACT_IDENTITY_MATCH",
+                    "identity_authority": "EXACT_OSM_ID_CONVERGED"
+                  },
+                  "identity_authority": "EXACT_OSM_ID_CONVERGED",
+                  "source_binding": {
+                    "provider_entity": "overpass:node/2661423323",
+                    "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                    "source_class": "OFFICIAL_WEB",
+                    "identity_basis": {
+                      "matched_provider_entity": true,
+                      "provider_entity": "overpass:node/2661423323",
+                      "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+                    },
+                    "approval": "OPERATOR_VERIFIED"
+                  },
+                  "secondary_source": {
+                    "provider": "nominatim",
+                    "source": "https://nominatim.openstreetmap.org/lookup",
+                    "status": "ACQUIRED",
+                    "matched_provider_entity": true
+                  },
+                  "supporting_content": {
+                    "tags": {
+                      "name": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)",
+                      "name:en": "The Kids Science Museum of Photons",
+                      "name:ja": "きっづ光科学館ふぉとん",
+                      "opening_hours": "10:00 - 16:30",
+                      "operator": "日本原子力研究開発機構 関西光科学研究所",
+                      "source": "bing",
+                      "tourism": "museum",
+                      "wikidata": "Q17211497",
+                      "wikipedia": "ja:きっづ光科学館ふぉとん"
+                    },
+                    "nominatim_extratags": {
+                      "operator": "日本原子力研究開発機構 関西光科学研究所",
+                      "wikidata": "Q17211497",
+                      "wikipedia": "ja:きっづ光科学館ふぉとん",
+                      "opening_hours": "10:00 - 16:30"
+                    }
+                  },
+                  "opening_hours": {
+                    "status": "OFFICIAL_WEB_VERIFIED",
+                    "raw": "午前10時00分～午後4時30分",
+                    "open": "10:00",
+                    "close": "16:30",
+                    "intervals": [
+                      {
+                        "open": "10:00",
+                        "close": "16:30",
+                        "days": [
+                          "*"
+                        ]
+                      }
+                    ],
+                    "weekday_intervals": [
+                      {
+                        "days": [
+                          "*"
+                        ],
+                        "intervals": [
+                          {
+                            "open": "10:00",
+                            "close": "16:30"
+                          }
+                        ]
+                      }
+                    ],
+                    "source": "official_web",
+                    "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+                  },
+                  "cost_evidence": {
+                    "status": "VERIFIED_PROVIDER",
+                    "amount_minor": 0,
+                    "currency": "JPY",
+                    "source": "official_web",
+                    "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                    "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+                  },
+                  "official_web": {
+                    "provider": "official_web",
+                    "source": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                    "retrieved_at": "2026-10-06T09:39:49.625820+00:00",
+                    "status": "ACQUIRED",
+                    "opening_hours": {
+                      "status": "OFFICIAL_WEB_VERIFIED",
+                      "raw": "午前10時00分～午後4時30分",
+                      "open": "10:00",
+                      "close": "16:30",
+                      "intervals": [
+                        {
+                          "open": "10:00",
+                          "close": "16:30",
+                          "days": [
+                            "*"
+                          ]
+                        }
+                      ],
+                      "weekday_intervals": [
+                        {
+                          "days": [
+                            "*"
+                          ],
+                          "intervals": [
+                            {
+                              "open": "10:00",
+                              "close": "16:30"
+                            }
+                          ]
+                        }
+                      ],
+                      "source": "official_web",
+                      "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+                    },
+                    "cost_evidence": {
+                      "status": "VERIFIED_PROVIDER",
+                      "amount_minor": 0,
+                      "currency": "JPY",
+                      "source": "official_web",
+                      "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                      "raw": "無料 駐車場について ・普通車 30台・大型バス 4台 ※無料 ※団体見学等、大型バスでご来館の際は事前にお申込みください。 ※満車時は、隣接する関西光科学研究所の駐車場をご利用ください。 車椅子ご利用のお客様へ ・館内貸出し用車椅子を常備しています。 ・館内はバリアフリーで2階への移動はスロープ、エレベーターを利用ください。 乳幼児ご同伴のお客様へ ・1階のトイレ内におむつ替え用シートの設置 ・授乳の際、係りに申し出て頂くと授乳室の利用ができます。 ・ベビーカーの貸出しを行います。 ご飲食について ・屋内に設けた水分補給場所を除き、屋内外とも飲食不可です。 概要 名称 きっづ光科学館ふぉとん"
+                    },
+                    "source_binding": {
+                      "provider_entity": "overpass:node/2661423323",
+                      "source_url": "https://www.qst.go.jp/site/kids-photon/43021.html",
+                      "source_class": "OFFICIAL_WEB",
+                      "identity_basis": {
+                        "matched_provider_entity": true,
+                        "provider_entity": "overpass:node/2661423323",
+                        "basis": "OPERATOR_CONFIRMED_EXACT_PROVIDER_ENTITY"
+                      },
+                      "approval": "OPERATOR_VERIFIED"
+                    }
+                  },
+                  "search_source": {
+                    "provider": "searxng",
+                    "status": "UNCONFIGURED",
+                    "attempted": false,
+                    "observations": [],
+                    "opening_hours": {
+                      "status": "UNKNOWN",
+                      "raw": null,
+                      "intervals": []
+                    },
+                    "cost_evidence": {
+                      "status": "UNKNOWN",
+                      "amount_minor": null,
+                      "currency": "CNY",
+                      "source": "searxng"
+                    }
+                  }
+                }
+              ],
+              "known_opening_count": 2,
+              "known_cost_count": 2,
+              "overpass_attempts": [
+                {
+                  "endpoint": "https://overpass-api.de/api/interpreter",
+                  "answered": false,
+                  "http_status": 504,
+                  "elapsed_ms": 8725.5,
+                  "error": "HTTPStatusError: Server error '504 Gateway Timeout' for url 'https://overpass-api.de/api/interpreter'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HT"
+                },
+                {
+                  "endpoint": "https://overpass.kumi.systems/api/interpreter",
+                  "answered": false,
+                  "http_status": null,
+                  "elapsed_ms": 25583.0,
+                  "error": "ReadTimeout: The read operation timed out"
+                },
+                {
+                  "endpoint": "https://overpass.private.coffee/api/interpreter",
+                  "answered": false,
+                  "http_status": null,
+                  "elapsed_ms": 25604.4,
+                  "error": "ReadTimeout: The read operation timed out"
+                },
+                {
+                  "endpoint": "https://overpass.openstreetmap.fr/api/interpreter",
+                  "answered": true,
+                  "http_status": 200,
+                  "elapsed_ms": 1255.5,
+                  "elements": 2
+                }
+              ],
+              "identity_evidence": [
+                {
+                  "exact_ref": "way/97082272",
+                  "overpass": "EXACT_IDENTITY_MATCH",
+                  "nominatim": "EXACT_IDENTITY_MATCH",
+                  "identity_authority": "EXACT_OSM_ID_CONVERGED"
+                },
+                {
+                  "exact_ref": "node/2661423323",
+                  "overpass": "EXACT_IDENTITY_MATCH",
+                  "nominatim": "EXACT_IDENTITY_MATCH",
+                  "identity_authority": "EXACT_OSM_ID_CONVERGED"
+                }
+              ],
+              "identity_authority": "EXACT_OSM_ID_CONVERGED",
+              "degraded_providers": [],
+              "fact_sources": [
+                {
+                  "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                  "provider_tags": true,
+                  "nominatim_extratags": true,
+                  "official_web": false
+                },
+                {
+                  "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                  "provider_tags": true,
+                  "nominatim_extratags": true,
+                  "official_web": true
+                }
+              ],
+              "official_web": {
+                "provider": "official_web",
+                "status": "ACQUIRED",
+                "attempted": 2,
+                "acquired": 1
+              },
+              "search_source": {
+                "provider": "searxng",
+                "status": "UNCONFIGURED",
+                "attempted": false,
+                "acquired": 0
+              },
+              "secondary_source": {
+                "provider": "nominatim",
+                "source": "https://nominatim.openstreetmap.org/lookup",
+                "status": "ACQUIRED",
+                "element_count": 2
+              },
+              "status": "ACQUIRED",
+              "element_count": 2
+            }
+          },
+          "guardian": {
+            "id": "1564936f-cfd5-475c-978e-d6213c94953a",
+            "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+            "decision": "NO_ACTION",
+            "status": "COMPLETED",
+            "action_status": "NO_ACTION",
+            "deduplicated": false,
+            "standing_mission": {
+              "id": "c590a570-8ae4-431d-9924-72f773f5df44",
+              "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+              "trigger_event_id": null,
+              "user_text": "持续关注接下来的行程、天气、路线和地点开放信息；只在真实影响当前安排时进入恢复流程。",
+              "objective_codes": [],
+              "protected_activity_ids": [],
+              "mutable_activity_ids": [],
+              "intent": {
+                "capabilities": [],
+                "max_cost_delta_minor": 0,
+                "max_loss_minor": 0,
+                "max_schedule_drift_min": 0,
+                "mutable_activity_ids": [],
+                "objective_codes": [],
+                "preferences": {},
+                "protected_activity_ids": [],
+                "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+              },
+              "resolved_intent": {
+                "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+                "capabilities": [],
+                "max_cost_delta_minor": 0,
+                "max_loss_minor": 0,
+                "max_schedule_drift_min": 0,
+                "mutable_activity_ids": [],
+                "objective_codes": [],
+                "policy_mode": "ADVISORY",
+                "policy_version": 1,
+                "preferences": {},
+                "protected_activity_ids": [],
+                "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+              },
+              "allowed_action_classes": [
+                "REQUEST_REPLAN",
+                "ACCEPT_REPLAN"
+              ],
+              "unresolved_references": [],
+              "compiler": {
+                "provider_key": "deterministic",
+                "model_key": "mission-compiler-v2-fallback",
+                "confidence": 1.0
+              },
+              "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+              "is_standing": true,
+              "parent_mission_id": null,
+              "max_cost_delta_minor": 0,
+              "max_loss_minor": 0,
+              "max_schedule_drift_min": 0,
+              "preferences": {},
+              "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+              "status": "ACTIVE",
+              "created_at": "2026-10-06T09:39:46.885279+00:00",
+              "started_at": null,
+              "completed_at": null,
+              "failure_reason": null,
+              "clarification": {},
+              "ai_state": "CONFIGURED_UNVERIFIED",
+              "mission_plan": {
+                "version": "citynexus.mission-plan.v1",
+                "autonomy": "EXECUTE_WITHIN_BOUNDS",
+                "steps": [
+                  {
+                    "id": "inspect_journey",
+                    "operation": "Inspect current Journey",
+                    "tool_name": "inspect_journey",
+                    "status": "PENDING",
+                    "requires_authority": false
+                  },
+                  {
+                    "id": "inspect_twin",
+                    "operation": "Inspect JourneyTwin",
+                    "tool_name": "inspect_twin",
+                    "status": "PENDING",
+                    "requires_authority": false
+                  },
+                  {
+                    "id": "inspect_commitments",
+                    "operation": "Inspect protected commitments",
+                    "tool_name": "inspect_journey",
+                    "status": "PENDING",
+                    "requires_authority": false
+                  },
+                  {
+                    "id": "evaluate_recovery_options",
+                    "operation": "Evaluate the current reality and available recovery options",
+                    "tool_name": null,
+                    "status": "PENDING",
+                    "requires_authority": true
+                  },
+                  {
+                    "id": "evaluate_candidates",
+                    "operation": "Evaluate candidates against constraints",
+                    "tool_name": null,
+                    "status": "PENDING",
+                    "requires_authority": false
+                  },
+                  {
+                    "id": "inspect_proposal",
+                    "operation": "Inspect available proposal trade-offs",
+                    "tool_name": "list_replans",
+                    "status": "PENDING",
+                    "requires_authority": false
+                  },
+                  {
+                    "id": "approval_boundary",
+                    "operation": "Wait for explicit CityNexus approval before mutation",
+                    "tool_name": null,
+                    "status": "PENDING",
+                    "requires_authority": true
+                  }
+                ],
+                "protected_activity_ids": [],
+                "allowed_tools": [
+                  "inspect_journey",
+                  "inspect_twin",
+                  "list_replans",
+                  "search_city_services",
+                  "acquire_place_facts",
+                  "estimate_place_facts",
+                  "generate_plans",
+                  "request_collective_decision",
+                  "activate_standby",
+                  "request_replan",
+                  "accept_replan",
+                  "replace_activity",
+                  "reschedule_activity",
+                  "create_booking",
+                  "cancel_refundable_booking",
+                  "request_commitment_change",
+                  "apply_clarified_horizon_choice",
+                  "conclude_recovery"
+                ],
+                "read_only_tools": [
+                  "inspect_journey",
+                  "inspect_twin",
+                  "list_replans",
+                  "search_city_services"
+                ],
+                "approval_required_tools": [
+                  "request_collective_decision",
+                  "activate_standby",
+                  "accept_replan",
+                  "replace_activity",
+                  "reschedule_activity",
+                  "create_booking",
+                  "cancel_refundable_booking",
+                  "request_commitment_change",
+                  "apply_clarified_horizon_choice"
+                ],
+                "authority": "CityNexus AgentToolGateway and deterministic domain services"
+              }
+            },
+            "trigger_event_id": null,
+            "trigger_kind": "REACTIVE",
+            "resilience_snapshot_id": null,
+            "proposal_id": null,
+            "agent_run_id": null,
+            "agent_runtime": null,
+            "tool_steps": [],
+            "evidence": {
+              "inference": {},
+              "mutation": null,
+              "observation": {
+                "actionable_event_ids": [],
+                "active_plan_version_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+                "incident_fingerprints": [],
+                "journey_status": "ACTIVE",
+                "open_event_ids": []
+              },
+              "policy": null,
+              "solver": null
+            },
+            "reasoning_summary": "No unresolved weather, closure, traffic, or schedule disruption requires recovery.",
+            "active_plan_before_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+            "active_plan_after_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+            "created_at": "2026-10-06T09:40:52.195494+00:00",
+            "completed_at": "2026-10-06T09:40:52.195494+00:00",
+            "cooldown_until": "2026-10-06T09:55:52.195494+00:00"
+          },
+          "resilience": {
+            "id": "3a410cf7-ca4d-44df-b844-9906dc8204be",
+            "journey_id": "1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+            "score": 28,
+            "risk_score": 28,
+            "status": "STABLE",
+            "captured_at": "2026-10-06T09:40:52.185968+00:00",
+            "expires_at": "2026-10-06T09:55:52.185968+00:00",
+            "components": {
+              "commitment_slack": 60,
+              "cost_headroom_minor": 98800,
+              "forecast_risk": 0,
+              "mobility_sensitivity": 0,
+              "recovery_optionality": 40,
+              "route_geography_exposure": 0,
+              "single_point_of_failure": 35,
+              "weather_exposure": 20
+            },
+            "activity_risks": [
+              {
+                "activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+                "failure_modes": [],
+                "outdoor": true,
+                "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                "predictive": false,
+                "risk_score": 0,
+                "title": "依水園"
+              },
+              {
+                "activity_id": "bb937abf-f8ec-5a54-8da7-56af708f36b4",
+                "failure_modes": [],
+                "outdoor": false,
+                "place_id": "real-place-a346e8f7f72a4d8f523d81e3",
+                "predictive": false,
+                "risk_score": 0,
+                "title": "きっづ光科学館ふぉとん (The Kids Science Museum of Photons)"
+              }
+            ],
+            "commitment_buffers": [],
+            "dominant_failure_modes": [],
+            "preventive_recommendation": {
+              "action": "CONTINUE_MONITORING",
+              "reason": "No predictive provider forecast currently exceeds the predictive threshold.",
+              "reversible": true,
+              "risk_reduction_meaningful": false,
+              "target_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+              "threshold": 65
+            },
+            "evidence_provenance": [
+              {
+                "captured_at": "2026-10-06T09:39:48.301886+00:00",
+                "expires_at": null,
+                "observation_id": "eba6565a-f4e3-4398-9e00-0581babfe2a5",
+                "observation_type": "MOBILITY",
+                "provenance": "LIVE_PROVIDER",
+                "provider_key": "valhalla-http"
+              },
+              {
+                "captured_at": "2026-10-06T09:39:48.301380+00:00",
+                "expires_at": null,
+                "observation_id": "df1b42ea-e186-4199-8080-abb678b6752c",
+                "observation_type": "CITY_SIGNAL",
+                "provenance": "LIVE_PROVIDER",
+                "provider_key": "open-meteo"
+              },
+              {
+                "captured_at": "2026-10-06T09:39:47.082519+00:00",
+                "expires_at": null,
+                "observation_id": "afd64c1b-f46f-40bf-b3a4-f2f51a72d519",
+                "observation_type": "WEATHER",
+                "provenance": "LIVE_PROVIDER",
+                "provider_key": "open-meteo"
+              }
+            ],
+            "fingerprint": "80e882b157e72cd29e40a3ac18bfdd724ef632daa8056fe8719618ec261e0bb4"
+          },
+          "counterfactuals": [],
+          "standby_maintenance": {
+            "active_plan_version_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e",
+            "kept": 0,
+            "retired": []
+          },
+          "trace": {
+            "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+            "phoenix": "NOT_CONFIGURED",
+            "spans": [
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "guardian.phase",
+                "status": "OK",
+                "attributes": {
+                  "journey_phase": "PRE_TRIP",
+                  "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+                  "phase_authority": "CONTROL_PLANE_ONLY",
+                  "current_activity_id": null,
+                  "monitored_activity_ids": [
+                    "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+                    "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+                  ]
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "provider.capture",
+                "status": "OK",
+                "attributes": {
+                  "provider_key": "live-provider-mesh",
+                  "observation_ids": [
+                    "df1b42ea-e186-4199-8080-abb678b6752c",
+                    "eba6565a-f4e3-4398-9e00-0581babfe2a5"
+                  ],
+                  "provider_states": {
+                    "weather": "CAPTURED",
+                    "mobility": "CAPTURED"
+                  },
+                  "provider_provenance": {
+                    "weather": "LIVE_PROVIDER",
+                    "mobility": "LIVE_PROVIDER"
+                  },
+                  "degraded": false
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "venue_context.capture",
+                "status": "OK",
+                "attributes": {
+                  "status": "NO_MATERIAL_CHANGE",
+                  "observation_ids": [
+                    "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+                    "6bd65919-a818-4891-9227-740a48b44559"
+                  ],
+                  "recovery_event_ids": [],
+                  "checked_activity_count": 2
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "traveler_twin.lookup",
+                "status": "OK",
+                "attributes": {
+                  "traveler_id": "e202517b-81a0-4de7-b9ca-e826c899237d",
+                  "evidence_count": 0,
+                  "confidence": 0.0
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "resilience.evaluate",
+                "status": "OK",
+                "attributes": {
+                  "snapshot_id": "3a410cf7-ca4d-44df-b844-9906dc8204be",
+                  "score": 28
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "mission.compile",
+                "status": "OK",
+                "attributes": {
+                  "mission_id": "c590a570-8ae4-431d-9924-72f773f5df44",
+                  "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+                  "protected_activity_count": 0
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "agent.model_call",
+                "status": "OK",
+                "attributes": {
+                  "provider_key": null,
+                  "model_key": null,
+                  "status": null
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "agent.tool_calls",
+                "status": "OK",
+                "attributes": {
+                  "count": 0,
+                  "tools": []
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "gateway.policy_decision",
+                "status": "OK",
+                "attributes": {
+                  "decision": null,
+                  "action_status": "NO_ACTION"
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              },
+              {
+                "trace_id": "2d853db7-4ae2-42aa-9d03-d3ed73e18079",
+                "name": "domain.mutation",
+                "status": "OK",
+                "attributes": {
+                  "executed": false,
+                  "active_plan_after_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e"
+                },
+                "exporter": "PHOENIX_OPTIONAL"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "provider_observations": [
+      {
+        "id": "afd64c1b-f46f-40bf-b3a4-f2f51a72d519",
+        "provider_key": "open-meteo",
+        "observation_type": "WEATHER",
+        "state": "CAPTURED",
+        "provenance": "LIVE_PROVIDER",
+        "captured_at": "2026-10-06T09:39:47.082519+00:00",
+        "payload": {
+          "capture_provenance": "LIVE_PROVIDER",
+          "forecast_runs": [],
+          "provider": "open-meteo",
+          "query_scope": {
+            "latitude": 34.6854763,
+            "longitude": 135.8377354,
+            "place_id": "real-place-22cf72809897ff4c7f312fcf"
+          },
+          "snapshot": {
+            "captured_at": "2026-10-06T09:39:47.082519+00:00",
+            "degraded": false,
+            "facts": [],
+            "provider": "open-meteo",
+            "query_scope": {
+              "latitude": 34.6854763,
+              "longitude": 135.8377354,
+              "place_id": "real-place-22cf72809897ff4c7f312fcf"
+            }
+          },
+          "target_times": [
+            "2026-10-06T00:00:00+00:00",
+            "2026-10-06T01:00:00+00:00",
+            "2026-10-06T02:00:00+00:00",
+            "2026-10-06T03:00:00+00:00",
+            "2026-10-06T04:00:00+00:00",
+            "2026-10-06T05:00:00+00:00",
+            "2026-10-06T06:00:00+00:00",
+            "2026-10-06T07:00:00+00:00",
+            "2026-10-06T08:00:00+00:00",
+            "2026-10-06T09:00:00+00:00",
+            "2026-10-06T10:00:00+00:00",
+            "2026-10-06T11:00:00+00:00",
+            "2026-10-06T12:00:00+00:00",
+            "2026-10-06T13:00:00+00:00",
+            "2026-10-06T14:00:00+00:00",
+            "2026-10-06T15:00:00+00:00",
+            "2026-10-06T16:00:00+00:00",
+            "2026-10-06T17:00:00+00:00",
+            "2026-10-06T18:00:00+00:00",
+            "2026-10-06T19:00:00+00:00",
+            "2026-10-06T20:00:00+00:00",
+            "2026-10-06T21:00:00+00:00",
+            "2026-10-06T22:00:00+00:00",
+            "2026-10-06T23:00:00+00:00",
+            "2026-10-07T00:00:00+00:00",
+            "2026-10-07T01:00:00+00:00",
+            "2026-10-07T02:00:00+00:00",
+            "2026-10-07T03:00:00+00:00",
+            "2026-10-07T04:00:00+00:00",
+            "2026-10-07T05:00:00+00:00",
+            "2026-10-07T06:00:00+00:00",
+            "2026-10-07T07:00:00+00:00",
+            "2026-10-07T08:00:00+00:00",
+            "2026-10-07T09:00:00+00:00",
+            "2026-10-07T10:00:00+00:00",
+            "2026-10-07T11:00:00+00:00",
+            "2026-10-07T12:00:00+00:00",
+            "2026-10-07T13:00:00+00:00",
+            "2026-10-07T14:00:00+00:00",
+            "2026-10-07T15:00:00+00:00",
+            "2026-10-07T16:00:00+00:00",
+            "2026-10-07T17:00:00+00:00",
+            "2026-10-07T18:00:00+00:00",
+            "2026-10-07T19:00:00+00:00",
+            "2026-10-07T20:00:00+00:00",
+            "2026-10-07T21:00:00+00:00",
+            "2026-10-07T22:00:00+00:00",
+            "2026-10-07T23:00:00+00:00",
+            "2026-10-08T00:00:00+00:00",
+            "2026-10-08T01:00:00+00:00",
+            "2026-10-08T02:00:00+00:00",
+            "2026-10-08T03:00:00+00:00",
+            "2026-10-08T04:00:00+00:00",
+            "2026-10-08T05:00:00+00:00",
+            "2026-10-08T06:00:00+00:00",
+            "2026-10-08T07:00:00+00:00",
+            "2026-10-08T08:00:00+00:00",
+            "2026-10-08T09:00:00+00:00",
+            "2026-10-08T10:00:00+00:00",
+            "2026-10-08T11:00:00+00:00",
+            "2026-10-08T12:00:00+00:00",
+            "2026-10-08T13:00:00+00:00",
+            "2026-10-08T14:00:00+00:00",
+            "2026-10-08T15:00:00+00:00",
+            "2026-10-08T16:00:00+00:00",
+            "2026-10-08T17:00:00+00:00",
+            "2026-10-08T18:00:00+00:00",
+            "2026-10-08T19:00:00+00:00",
+            "2026-10-08T20:00:00+00:00",
+            "2026-10-08T21:00:00+00:00",
+            "2026-10-08T22:00:00+00:00",
+            "2026-10-08T23:00:00+00:00",
+            "2026-10-09T00:00:00+00:00",
+            "2026-10-09T01:00:00+00:00",
+            "2026-10-09T02:00:00+00:00",
+            "2026-10-09T03:00:00+00:00",
+            "2026-10-09T04:00:00+00:00",
+            "2026-10-09T05:00:00+00:00",
+            "2026-10-09T06:00:00+00:00",
+            "2026-10-09T07:00:00+00:00",
+            "2026-10-09T08:00:00+00:00",
+            "2026-10-09T09:00:00+00:00",
+            "2026-10-09T10:00:00+00:00",
+            "2026-10-09T11:00:00+00:00",
+            "2026-10-09T12:00:00+00:00",
+            "2026-10-09T13:00:00+00:00",
+            "2026-10-09T14:00:00+00:00",
+            "2026-10-09T15:00:00+00:00",
+            "2026-10-09T16:00:00+00:00",
+            "2026-10-09T17:00:00+00:00",
+            "2026-10-09T18:00:00+00:00",
+            "2026-10-09T19:00:00+00:00",
+            "2026-10-09T20:00:00+00:00",
+            "2026-10-09T21:00:00+00:00",
+            "2026-10-09T22:00:00+00:00",
+            "2026-10-09T23:00:00+00:00",
+            "2026-10-10T00:00:00+00:00",
+            "2026-10-10T01:00:00+00:00",
+            "2026-10-10T02:00:00+00:00",
+            "2026-10-10T03:00:00+00:00",
+            "2026-10-10T04:00:00+00:00",
+            "2026-10-10T05:00:00+00:00",
+            "2026-10-10T06:00:00+00:00",
+            "2026-10-10T07:00:00+00:00",
+            "2026-10-10T08:00:00+00:00",
+            "2026-10-10T09:00:00+00:00",
+            "2026-10-10T10:00:00+00:00",
+            "2026-10-10T11:00:00+00:00",
+            "2026-10-10T12:00:00+00:00",
+            "2026-10-10T13:00:00+00:00",
+            "2026-10-10T14:00:00+00:00",
+            "2026-10-10T15:00:00+00:00",
+            "2026-10-10T16:00:00+00:00",
+            "2026-10-10T17:00:00+00:00",
+            "2026-10-10T18:00:00+00:00",
+            "2026-10-10T19:00:00+00:00",
+            "2026-10-10T20:00:00+00:00",
+            "2026-10-10T21:00:00+00:00",
+            "2026-10-10T22:00:00+00:00",
+            "2026-10-10T23:00:00+00:00",
+            "2026-10-11T00:00:00+00:00",
+            "2026-10-11T01:00:00+00:00",
+            "2026-10-11T02:00:00+00:00",
+            "2026-10-11T03:00:00+00:00",
+            "2026-10-11T04:00:00+00:00",
+            "2026-10-11T05:00:00+00:00",
+            "2026-10-11T06:00:00+00:00",
+            "2026-10-11T07:00:00+00:00",
+            "2026-10-11T08:00:00+00:00",
+            "2026-10-11T09:00:00+00:00",
+            "2026-10-11T10:00:00+00:00",
+            "2026-10-11T11:00:00+00:00",
+            "2026-10-11T12:00:00+00:00",
+            "2026-10-11T13:00:00+00:00",
+            "2026-10-11T14:00:00+00:00",
+            "2026-10-11T15:00:00+00:00",
+            "2026-10-11T16:00:00+00:00",
+            "2026-10-11T17:00:00+00:00",
+            "2026-10-11T18:00:00+00:00",
+            "2026-10-11T19:00:00+00:00",
+            "2026-10-11T20:00:00+00:00",
+            "2026-10-11T21:00:00+00:00",
+            "2026-10-11T22:00:00+00:00",
+            "2026-10-11T23:00:00+00:00",
+            "2026-10-12T00:00:00+00:00",
+            "2026-10-12T01:00:00+00:00",
+            "2026-10-12T02:00:00+00:00",
+            "2026-10-12T03:00:00+00:00",
+            "2026-10-12T04:00:00+00:00",
+            "2026-10-12T05:00:00+00:00",
+            "2026-10-12T06:00:00+00:00",
+            "2026-10-12T07:00:00+00:00",
+            "2026-10-12T08:00:00+00:00",
+            "2026-10-12T09:00:00+00:00",
+            "2026-10-12T10:00:00+00:00",
+            "2026-10-12T11:00:00+00:00",
+            "2026-10-12T12:00:00+00:00",
+            "2026-10-12T13:00:00+00:00",
+            "2026-10-12T14:00:00+00:00",
+            "2026-10-12T15:00:00+00:00",
+            "2026-10-12T16:00:00+00:00",
+            "2026-10-12T17:00:00+00:00",
+            "2026-10-12T18:00:00+00:00",
+            "2026-10-12T19:00:00+00:00",
+            "2026-10-12T20:00:00+00:00",
+            "2026-10-12T21:00:00+00:00",
+            "2026-10-12T22:00:00+00:00",
+            "2026-10-12T23:00:00+00:00"
+          ]
+        }
+      },
+      {
+        "id": "df1b42ea-e186-4199-8080-abb678b6752c",
+        "provider_key": "open-meteo",
+        "observation_type": "CITY_SIGNAL",
+        "state": "CAPTURED",
+        "provenance": "LIVE_PROVIDER",
+        "captured_at": "2026-10-06T09:39:48.301380+00:00",
+        "payload": {
+          "state": "NORMAL",
+          "risk_score": 0,
+          "forecast_horizon_min": 45,
+          "provider_key": "open-meteo",
+          "runtime": {
+            "provider": "open-meteo",
+            "queried_place_ids": [
+              "real-place-22cf72809897ff4c7f312fcf"
+            ],
+            "successful_place_ids": [
+              "real-place-22cf72809897ff4c7f312fcf"
+            ],
+            "failed_place_ids": [],
+            "degraded": false,
+            "snapshots": [
+              {
+                "provider": "open-meteo",
+                "captured_at": "2026-10-06T09:39:47.082519+00:00",
+                "degraded": false,
+                "query_scope": {
+                  "place_id": "real-place-22cf72809897ff4c7f312fcf",
+                  "latitude": 34.6854763,
+                  "longitude": 135.8377354
+                },
+                "facts": []
+              }
+            ],
+            "attributions": [],
+            "event_ids": [],
+            "created_event_ids": [],
+            "observation_ids": [
+              "afd64c1b-f46f-40bf-b3a4-f2f51a72d519"
+            ]
+          }
+        }
+      },
+      {
+        "id": "eba6565a-f4e3-4398-9e00-0581babfe2a5",
+        "provider_key": "valhalla-http",
+        "observation_type": "MOBILITY",
+        "state": "CAPTURED",
+        "provenance": "LIVE_PROVIDER",
+        "captured_at": "2026-10-06T09:39:48.301886+00:00",
+        "payload": {
+          "snapshot_id": "f2014535-ec5d-4649-9fca-7112c4e3842a",
+          "operation_key": "guardian-live:1f772a88-2e34-4a0e-8683-e9d7125ba3b1",
+          "captured_at": "2026-10-06T09:39:48.301886+00:00",
+          "source_provider": "valhalla-http",
+          "degraded": false,
+          "provider_capabilities": {
+            "valhalla": {
+              "status": "AVAILABLE",
+              "has_live_traffic": false,
+              "deployment": "3.9.0-f49f3b9",
+              "raw_status": {
+                "version": "3.9.0-f49f3b9",
+                "tileset_last_modified": 1791259006,
+                "available_actions": [
+                  "route",
+                  "locate",
+                  "sources_to_targets",
+                  "optimized_route",
+                  "isochrone",
+                  "trace_route",
+                  "trace_attributes",
+                  "height",
+                  "transit_available",
+                  "expansion",
+                  "centroid",
+                  "status",
+                  "tile"
+                ]
+              }
+            }
+          },
+          "facts": [
+            {
+              "origin_key": "real-place-22cf72809897ff4c7f312fcf",
+              "destination_key": "real-place-a346e8f7f72a4d8f523d81e3",
+              "minutes": 52,
+              "provider": "valhalla-http",
+              "captured_at": "2026-10-06T09:39:48.301886+00:00",
+              "degraded": false,
+              "fallback_reason": null,
+              "route_geometry": [
+                [
+                  135.837772,
+                  34.685462
+                ],
+                [
+                  135.837723,
+                  34.685377
+                ],
+                [
+                  135.837585,
+                  34.685458
+                ],
+                [
+                  135.837558,
+                  34.685435
+                ],
+                [
+                  135.837543,
+                  34.685422
+                ],
+                [
+                  135.837532,
+                  34.685414
+                ],
+                [
+                  135.837483,
+                  34.685458
+                ],
+                [
+                  135.837408,
+                  34.685465
+                ],
+                [
+                  135.837397,
+                  34.685466
+                ],
+                [
+                  135.837363,
+                  34.685428
+                ],
+                [
+                  135.837278,
+                  34.685457
+                ],
+                [
+                  135.837231,
+                  34.685463
+                ],
+                [
+                  135.837104,
+                  34.685521
+                ],
+                [
+                  135.837093,
+                  34.685553
+                ],
+                [
+                  135.837078,
+                  34.68558
+                ],
+                [
+                  135.837076,
+                  34.685597
+                ],
+                [
+                  135.837076,
+                  34.685609
+                ],
+                [
+                  135.837029,
+                  34.685623
+                ],
+                [
+                  135.836991,
+                  34.685638
+                ],
+                [
+                  135.83695,
+                  34.685674
+                ],
+                [
+                  135.836948,
+                  34.685699
+                ],
+                [
+                  135.836883,
+                  34.685739
+                ],
+                [
+                  135.836883,
+                  34.685756
+                ],
+                [
+                  135.836883,
+                  34.685773
+                ],
+                [
+                  135.836853,
+                  34.685803
+                ],
+                [
+                  135.836671,
+                  34.685808
+                ],
+                [
+                  135.836595,
+                  34.685807
+                ],
+                [
+                  135.836664,
+                  34.686152
+                ],
+                [
+                  135.836731,
+                  34.686614
+                ],
+                [
+                  135.836745,
+                  34.686731
+                ],
+                [
+                  135.836713,
+                  34.687645
+                ],
+                [
+                  135.836717,
+                  34.68789
+                ],
+                [
+                  135.836717,
+                  34.687937
+                ],
+                [
+                  135.836719,
+                  34.687974
+                ],
+                [
+                  135.836463,
+                  34.688067
+                ],
+                [
+                  135.836424,
+                  34.688119
+                ],
+                [
+                  135.836387,
+                  34.688336
+                ],
+                [
+                  135.836385,
+                  34.688434
+                ],
+                [
+                  135.836379,
+                  34.68845
+                ],
+                [
+                  135.836378,
+                  34.688477
+                ],
+                [
+                  135.836322,
+                  34.688588
+                ],
+                [
+                  135.836097,
+                  34.688598
+                ],
+                [
+                  135.836035,
+                  34.689118
+                ],
+                [
+                  135.836034,
+                  34.689364
+                ],
+                [
+                  135.835752,
+                  34.689341
+                ],
+                [
+                  135.835459,
+                  34.689316
+                ],
+                [
+                  135.83527,
+                  34.689301
+                ],
+                [
+                  135.835033,
+                  34.689288
+                ],
+                [
+                  135.835002,
+                  34.689298
+                ],
+                [
+                  135.834769,
+                  34.689298
+                ],
+                [
+                  135.834716,
+                  34.689299
+                ],
+                [
+                  135.834714,
+                  34.689344
+                ],
+                [
+                  135.834701,
+                  34.689851
+                ],
+                [
+                  135.8347,
+                  34.690531
+                ],
+                [
+                  135.834698,
+                  34.690612
+                ],
+                [
+                  135.834699,
+                  34.690906
+                ],
+                [
+                  135.834709,
+                  34.69131
+                ],
+                [
+                  135.834718,
+                  34.691644
+                ],
+                [
+                  135.834729,
+                  34.69179
+                ],
+                [
+                  135.834773,
+                  34.693021
+                ],
+                [
+                  135.834787,
+                  34.693213
+                ],
+                [
+                  135.8348,
+                  34.693377
+                ],
+                [
+                  135.834852,
+                  34.693633
+                ],
+                [
+                  135.834915,
+                  34.693927
+                ],
+                [
+                  135.834941,
+                  34.694007
+                ],
+                [
+                  135.835015,
+                  34.694204
+                ],
+                [
+                  135.835049,
+                  34.694298
+                ],
+                [
+                  135.835151,
+                  34.694483
+                ],
+                [
+                  135.835241,
+                  34.694617
+                ],
+                [
+                  135.83531,
+                  34.694677
+                ],
+                [
+                  135.835438,
+                  34.694747
+                ],
+                [
+                  135.835716,
+                  34.694844
+                ],
+                [
+                  135.835635,
+                  34.695149
+                ],
+                [
+                  135.835557,
+                  34.695392
+                ],
+                [
+                  135.83555,
+                  34.695432
+                ],
+                [
+                  135.835544,
+                  34.695961
+                ],
+                [
+                  135.835084,
+                  34.695961
+                ],
+                [
+                  135.835087,
+                  34.696368
+                ],
+                [
+                  135.835217,
+                  34.696488
+                ],
+                [
+                  135.835229,
+                  34.696498
+                ],
+                [
+                  135.835295,
+                  34.696559
+                ],
+                [
+                  135.83539,
+                  34.696635
+                ],
+                [
+                  135.835446,
+                  34.696682
+                ],
+                [
+                  135.835488,
+                  34.696735
+                ],
+                [
+                  135.835525,
+                  34.696856
+                ],
+                [
+                  135.835545,
+                  34.696938
+                ],
+                [
+                  135.835558,
+                  34.697011
+                ],
+                [
+                  135.835569,
+                  34.697097
+                ],
+                [
+                  135.835564,
+                  34.697243
+                ],
+                [
+                  135.835577,
+                  34.698421
+                ],
+                [
+                  135.835572,
+                  34.698838
+                ],
+                [
+                  135.835568,
+                  34.699373
+                ],
+                [
+                  135.835547,
+                  34.699592
+                ],
+                [
+                  135.835538,
+                  34.699675
+                ],
+                [
+                  135.835532,
+                  34.699737
+                ],
+                [
+                  135.835487,
+                  34.700114
+                ],
+                [
+                  135.835482,
+                  34.700192
+                ],
+                [
+                  135.835388,
+                  34.700777
+                ],
+                [
+                  135.835383,
+                  34.700791
+                ],
+                [
+                  135.835376,
+                  34.700859
+                ],
+                [
+                  135.83534,
+                  34.701049
+                ],
+                [
+                  135.83532,
+                  34.701262
+                ],
+                [
+                  135.835326,
+                  34.701348
+                ],
+                [
+                  135.835317,
+                  34.701564
+                ],
+                [
+                  135.835306,
+                  34.701665
+                ],
+                [
+                  135.835276,
+                  34.701784
+                ],
+                [
+                  135.835263,
+                  34.701835
+                ],
+                [
+                  135.83522,
+                  34.702056
+                ],
+                [
+                  135.835168,
+                  34.702227
+                ],
+                [
+                  135.835154,
+                  34.702276
+                ],
+                [
+                  135.835113,
+                  34.702431
+                ],
+                [
+                  135.835077,
+                  34.70277
+                ],
+                [
+                  135.83502,
+                  34.703191
+                ],
+                [
+                  135.834982,
+                  34.703502
+                ],
+                [
+                  135.834938,
+                  34.703742
+                ],
+                [
+                  135.834856,
+                  34.704067
+                ],
+                [
+                  135.834773,
+                  34.70428
+                ],
+                [
+                  135.834675,
+                  34.704496
+                ],
+                [
+                  135.834665,
+                  34.704519
+                ],
+                [
+                  135.834584,
+                  34.704686
+                ],
+                [
+                  135.834487,
+                  34.704843
+                ],
+                [
+                  135.834161,
+                  34.705351
+                ],
+                [
+                  135.834178,
+                  34.705385
+                ],
+                [
+                  135.834194,
+                  34.705418
+                ],
+                [
+                  135.833945,
+                  34.705613
+                ],
+                [
+                  135.8328,
+                  34.70648
+                ],
+                [
+                  135.832194,
+                  34.706983
+                ],
+                [
+                  135.831507,
+                  34.707619
+                ],
+                [
+                  135.831148,
+                  34.70797
+                ],
+                [
+                  135.831007,
+                  34.708077
+                ],
+                [
+                  135.83086,
+                  34.708204
+                ],
+                [
+                  135.830671,
+                  34.708392
+                ],
+                [
+                  135.830453,
+                  34.708639
+                ],
+                [
+                  135.830289,
+                  34.708853
+                ],
+                [
+                  135.830139,
+                  34.70908
+                ],
+                [
+                  135.829815,
+                  34.709665
+                ],
+                [
+                  135.829549,
+                  34.710116
+                ],
+                [
+                  135.829464,
+                  34.710257
+                ],
+                [
+                  135.82957,
+                  34.71033
+                ],
+                [
+                  135.830035,
+                  34.710664
+                ],
+                [
+                  135.83009,
+                  34.710709
+                ],
+                [
+                  135.830472,
+                  34.711016
+                ],
+                [
+                  135.830807,
+                  34.71129
+                ],
+                [
+                  135.830934,
+                  34.711402
+                ],
+                [
+                  135.831064,
+                  34.711516
+                ],
+                [
+                  135.831662,
+                  34.712041
+                ],
+                [
+                  135.83168,
+                  34.712057
+                ],
+                [
+                  135.83186,
+                  34.712212
+                ],
+                [
+                  135.832666,
+                  34.712917
+                ],
+                [
+                  135.83297,
+                  34.713186
+                ],
+                [
+                  135.833169,
+                  34.71335
+                ],
+                [
+                  135.833299,
+                  34.713446
+                ],
+                [
+                  135.833781,
+                  34.713834
+                ],
+                [
+                  135.833978,
+                  34.714003
+                ],
+                [
+                  135.834155,
+                  34.714176
+                ],
+                [
+                  135.834168,
+                  34.71419
+                ],
+                [
+                  135.834273,
+                  34.714334
+                ],
+                [
+                  135.834369,
+                  34.714489
+                ],
+                [
+                  135.834443,
+                  34.714653
+                ],
+                [
+                  135.834464,
+                  34.714724
+                ],
+                [
+                  135.834483,
+                  34.714801
+                ],
+                [
+                  135.83459,
+                  34.71478
+                ],
+                [
+                  135.834722,
+                  34.714858
+                ],
+                [
+                  135.835543,
+                  34.714659
+                ],
+                [
+                  135.836016,
+                  34.714543
+                ]
+              ],
+              "geometry_provider": "valhalla-http",
+              "route_provenance": "LIVE_PROVIDER_CAPTURE",
+              "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
+              "time_basis": "VALHALLA_ROUTE_CAPTURED_AT",
+              "distance_m": null,
+              "walking_distance_m": null,
+              "walking_min": null,
+              "mode": "WALK",
+              "fact_quality": "LIVE_PROVIDER_CAPTURE"
+            }
+          ]
+        }
+      }
+    ],
+    "venue_observations": [
+      {
+        "id": "2706f93e-3c1b-41d4-9bb7-1f8a11c36cd6",
+        "provider_key": "truth-mesh",
+        "provider_entity": "overpass:way/97082272",
+        "source_class": "OFFICIAL_TICKETING",
+        "authority_status": "NON_AUTHORITATIVE",
+        "captured_at": "2026-10-06T09:39:49.621818+00:00",
+        "url": "https://isuien.or.jp/"
+      },
+      {
+        "id": "6bd65919-a818-4891-9227-740a48b44559",
+        "provider_key": "truth-mesh",
+        "provider_entity": "overpass:node/2661423323",
+        "source_class": "OFFICIAL_WEB",
+        "authority_status": "NON_AUTHORITATIVE",
+        "captured_at": "2026-10-06T09:39:49.621818+00:00",
+        "url": "https://www.qst.go.jp/site/kids-photon/43021.html"
+      }
+    ],
+    "events": [],
+    "guardian_runs": [
+      {
+        "id": "1564936f-cfd5-475c-978e-d6213c94953a",
+        "decision": "NO_ACTION",
+        "status": "COMPLETED",
+        "action_status": "NO_ACTION",
+        "trigger_event_id": null,
+        "agent_run_id": null,
+        "proposal_id": null
+      }
+    ],
+    "agent_runs": [],
+    "recovery_epochs": [
+      {
+        "id": "413f9167-cac3-45c5-8a4c-77d4ce4359b2",
+        "status": "OPEN",
+        "close_reason": null
+      }
+    ],
+    "proposals": [],
+    "mutation_count": 0
+  },
+  "final_strategy": {
+    "active_plan_id": "20ecccff-0d0e-5b26-bd95-8b20fac7232e"
+  },
+  "final_watch": {
+    "watch_state": "DAY_AHEAD",
+    "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+    "configured_interval_seconds": 3600.0,
+    "effective_interval_seconds": 1800.0,
+    "next_due_at": "2026-10-06T10:10:52.209008+00:00",
+    "next_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+    "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+    "next_activity_horizon_seconds": 51296.950648,
+    "open_material_event_ids": [],
+    "event_newer_than_last_pulse": false,
+    "journey_phase": "PRE_TRIP",
+    "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "current_activity_id": null,
+    "monitored_activity_ids": [
+      "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+      "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+    ]
+  },
+  "final_guardian_status_watch": {
+    "watch_state": "DAY_AHEAD",
+    "reason_code": "NEXT_ACTIVITY_WITHIN_24H",
+    "configured_interval_seconds": 3600.0,
+    "effective_interval_seconds": 1800.0,
+    "next_due_at": "2026-10-06T10:10:52.209008+00:00",
+    "next_activity_id": "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+    "next_activity_start_at": "2026-10-07T09:00:00+09:00",
+    "next_activity_horizon_seconds": 51296.936656,
+    "open_material_event_ids": [],
+    "event_newer_than_last_pulse": false,
+    "journey_phase": "PRE_TRIP",
+    "phase_reason_code": "BEFORE_FIRST_ACTIVITY",
+    "phase_authority": "CONTROL_PLANE_ONLY",
+    "current_activity_id": null,
+    "monitored_activity_ids": [
+      "8666d3f8-6251-55d6-84cf-5300d7b71e2c",
+      "bb937abf-f8ec-5a54-8da7-56af708f36b4"
+    ]
+  },
+  "traveller_visible_watch": {
+    "enabled": true,
+    "copy": "An activity is planned for tomorrow, so Guardian is checking periodically.",
+    "next_due_at": "2026-10-06T10:10:52.209008+00:00"
+  },
+  "mutation_count": 0,
+  "limitations": [
+    "software/provider execution only; no physical travel claimed",
+    "one scheduled live Guardian pulse; no recurring worker started",
+    "CITYNEXUS_LAB_ESTIMATE_AUTHORITY=false"
+  ],
+  "captured_at": "2026-10-06T09:45:03.082833+00:00",
+  "selected_catalog": {
+    "real-place-22cf72809897ff4c7f312fcf": "current_garden",
+    "real-place-b47a20314c81d5a81381d4a4": "c4_craft",
+    "real-place-ebd30de67691cab346be66ec": "candidate_garden",
+    "real-place-8c09b32224152e3e1ae12843": "candidate_museum",
+    "real-place-a346e8f7f72a4d8f523d81e3": "c4_anchor_museum"
+  }
+}

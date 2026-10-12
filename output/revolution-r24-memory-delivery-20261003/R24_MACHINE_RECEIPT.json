@@ -1,0 +1,55 @@
+{
+  "receipt_type": "REVOLUTION_R23_CONTINUATION_TWIN_MEMORY",
+  "captured_at": "2026-10-03",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:\\moodle\\CityNexus-Revolution-RealTrip-Recovery",
+  "starting_code_sha": "3039a7ffddab2349bf1693b836e85abb6d16c0df",
+  "final_experimental_code_sha": "44f621b7",
+  "remote": "origin/codex/revolution-realtrip-recovery",
+  "estimate_authority_contract": false,
+  "agent_execution": {
+    "executed_in_this_round": false,
+    "reason": "This round changed deterministic TravelerTwin evidence semantics; it did not fabricate a new model run.",
+    "last_verified_provider": "hermes",
+    "last_verified_model": "cn:deepseek-v4.1-flash",
+    "last_verified_agent_run_id": "5faf3952-a8f2-4e7a-bda8-82969b9b1a74"
+  },
+  "changes": [
+    "effective learned evidence strength decays between created_at and expires_at",
+    "avoid:<canonical-category> is a bounded negative soft signal",
+    "explicit interest suppresses same-target learned direction at planning surface",
+    "historical learned record stays visible with EXPLICIT_WINS"
+  ],
+  "machine_path": [
+    "HTTP POST /api/v1/demo/reset",
+    "HTTP POST /api/v1/journeys/{journey_id}/plans/generate",
+    "HTTP POST /api/v1/journeys/{journey_id}/plans/{plan_id}/select",
+    "HTTP POST /api/v1/journeys/{journey_id}/start",
+    "HTTP POST /api/v1/journeys/{journey_id}/outcomes event_type=USER_REJECTED voluntary_choice=true",
+    "HTTP POST /api/v1/journeys/{journey_id}/reflect/process",
+    "HTTP GET /api/v1/travelers/{traveler_id}/traveler-twin",
+    "HTTP PUT /api/v1/travelers/{traveler_id}/preferences explicit override",
+    "planning_preference_items excludes overridden learned direction"
+  ],
+  "observed_contract": {
+    "learned_source": "LEARNED_SOFT",
+    "learned_evidence_class": "VOLUNTARY_CHOICE",
+    "avoidance_is_hard_constraint": false,
+    "unknown_cost_becomes_free": false,
+    "mock_mobility_becomes_live": false,
+    "explicit_preference_wins": true,
+    "learned_decay_observed": true
+  },
+  "focused_tests": {
+    "estimate_off": {
+      "passed": 37,
+      "warnings": 1
+    },
+    "cross_generation": {
+      "passed": 74,
+      "warnings": 1
+    },
+    "py_compile": "PASS",
+    "git_diff_check": "PASS"
+  }
+}

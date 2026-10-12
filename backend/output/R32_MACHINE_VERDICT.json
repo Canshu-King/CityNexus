@@ -1,0 +1,108 @@
+{
+  "agent_statuses": {
+    "a": "RUNNING",
+    "b": "COMPLETED"
+  },
+  "contradicted": [],
+  "dimensions": {
+    "agent_a_external_and_bound_r1": {
+      "evidence": "Agent A provider=hermes epoch=1c62e904-810f-44d9-85bd-a77f99f9eafe; real model-selected tools persisted",
+      "verdict": "PROVEN"
+    },
+    "agent_a_terminal_live_outcome": {
+      "evidence": "A durable status=RUNNING; its natural typed stale terminal classification remains unproven",
+      "verdict": "NOT_PROVEN"
+    },
+    "agent_b_external_and_bound_r2": {
+      "evidence": "Agent B provider=hermes epoch=40035c0c-28c5-46ef-b9be-b5be22bbe766; independent model-selected tools persisted",
+      "verdict": "PROVEN"
+    },
+    "approval_not_retargeted": {
+      "evidence": "No approval was retargeted",
+      "verdict": "PROVEN"
+    },
+    "arrival_order_not_authority": {
+      "evidence": "No final mutation occurred, so arrival-order authority was not exercised",
+      "verdict": "NOT_PROVEN"
+    },
+    "authority_provenance_mode_accurate": {
+      "evidence": "No authority receipt was issued in this run",
+      "verdict": "NOT_PROVEN"
+    },
+    "current_surface_epoch_pure": {
+      "evidence": "R2 agent proposals are epoch-bound, but legacy setup proposals are unbound; a complete current-surface check was not captured",
+      "verdict": "NOT_PROVEN"
+    },
+    "exactly_one_or_zero_legal_plan_transition": {
+      "evidence": "Zero executed model mutation and active plan equals baseline; legality of a mutation must be separately verified",
+      "verdict": "PROVEN"
+    },
+    "inherited_r28_exactly_once": {
+      "evidence": "Focused regression: 132 passed, exit 0",
+      "verdict": "PROVEN"
+    },
+    "no_duplicate_continuation_side_effect": {
+      "evidence": "No duplicate pending continuation side effect",
+      "verdict": "PROVEN"
+    },
+    "r1_candidates_removed_from_current_surface": {
+      "evidence": "R1 proposal retirement evaluated only when R1 rows exist",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_opened_from_shock_a": {
+      "evidence": "R1 has provider event lineage and fingerprint",
+      "verdict": "PROVEN"
+    },
+    "r1_receipts_invalidated": {
+      "evidence": "R1 receipt invalidation evaluated only when receipts exist",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_superseded_by_r2": {
+      "evidence": "R1 SUPERSEDED -> R2 OPEN",
+      "verdict": "PROVEN"
+    },
+    "recovery_epoch_server_owned": {
+      "evidence": "R1/R2 are persisted server-created ids",
+      "verdict": "PROVEN"
+    },
+    "semantic_dedupe_not_uuid_dedupe": {
+      "evidence": "R2 created two distinct semantic identities; no equivalent A/B pair exercised deduplication",
+      "verdict": "NOT_PROVEN"
+    },
+    "shock_b_material_not_storage_churn": {
+      "evidence": "R1 and R2 reality fingerprints differ",
+      "verdict": "PROVEN"
+    },
+    "stale_agent_authority_refused": {
+      "evidence": "Gateway binding assertion or live AgentRun step refused stale R1",
+      "verdict": "PROVEN"
+    },
+    "stale_result_typed_superseded": {
+      "evidence": "typed RECOVERY_EPOCH_SUPERSEDED evidence",
+      "verdict": "PROVEN"
+    },
+    "truth_boundary_honest": {
+      "evidence": "provider replay fixture; physical travel not claimed",
+      "verdict": "PROVEN"
+    }
+  },
+  "not_proven": [
+    "agent_a_terminal_live_outcome",
+    "r1_candidates_removed_from_current_surface",
+    "r1_receipts_invalidated",
+    "current_surface_epoch_pure",
+    "semantic_dedupe_not_uuid_dedupe",
+    "arrival_order_not_authority",
+    "authority_provenance_mode_accurate"
+  ],
+  "overall": "NOT_PROVEN",
+  "regression": {
+    "command": "focused R28-R32 + agent runtime regression",
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 132,
+    "raw_output": "backend/output/r32-focused-regression.txt"
+  },
+  "schema": "citynexus.r32.machine-verdict.v1",
+  "stale_evidence_mode": "SEPARATE_GATEWAY_BINDING_ASSERTION"
+}

@@ -1,0 +1,228 @@
+{
+  "inputs": {
+    "final_recovery_run_id": "e0571afd-c495-4317-81ca-13e0791bd5f8",
+    "journey_id": "9a566827-fdca-4d1e-9970-ad8f0c86c356",
+    "mediator_mission_id": "2ed1e273-899b-4de0-9bc1-f235449155bc",
+    "round1_mission_id": "e8991d2c-ae21-4ad2-870b-3c5e98d3b9b3",
+    "selected_plan_id_e1w1": "911d2fd1-d1a9-4c7c-9540-530b1de98ce4",
+    "selected_proposal_id_e1w1": "d02eff8e-3e30-453a-ab5c-e6b80816ba08"
+  },
+  "schema_version": "R30_MACHINE_VERDICT_V1",
+  "summary": {
+    "CONTRADICTED": 0,
+    "NOT_PROVEN": 0,
+    "PROVEN": 11,
+    "overall": "PROVEN"
+  },
+  "verdicts": {
+    "e1_w1_authenticated_independent_authority": {
+      "facts": {
+        "authenticated_member_ids": [
+          "51f16fe1-05f2-4579-abcf-94a6ab19ffa0",
+          "cdf8dcac-45b3-4f0f-b583-92a6ab8c7125"
+        ],
+        "improved_option_ids": [
+          "d02eff8e-3e30-453a-ab5c-e6b80816ba08"
+        ],
+        "independent_choice_errors": {},
+        "independent_member_choices": {
+          "51f16fe1-05f2-4579-abcf-94a6ab19ffa0": "d02eff8e-3e30-453a-ab5c-e6b80816ba08",
+          "cdf8dcac-45b3-4f0f-b583-92a6ab8c7125": "d02eff8e-3e30-453a-ab5c-e6b80816ba08"
+        },
+        "mediator_mission_id": "2ed1e273-899b-4de0-9bc1-f235449155bc",
+        "required_member_ids": [
+          "51f16fe1-05f2-4579-abcf-94a6ab19ffa0",
+          "cdf8dcac-45b3-4f0f-b583-92a6ab8c7125"
+        ],
+        "response_member_ids": [
+          "51f16fe1-05f2-4579-abcf-94a6ab19ffa0",
+          "cdf8dcac-45b3-4f0f-b583-92a6ab8c7125"
+        ],
+        "selected_proposal_id": "d02eff8e-3e30-453a-ab5c-e6b80816ba08"
+      },
+      "reason": "The pre-shock renewed consent is authenticated and every relevant member independently converges on the same unique grounded best improved option.",
+      "status": "PROVEN"
+    },
+    "e1_w1_durable_at_renewed_consent": {
+      "facts": {
+        "clarification_status": "RESOLVED",
+        "decision_epoch": "c8a9a77a856ac3da09bc40b2ab682b433fe2b7181e663ce52a5783843cf4b2b0",
+        "material_world_epoch": "2e6ebd896976e1e5c0a8a2b1950164820b43f654aacf6d5406969f758f2f82da",
+        "mediator_mission_id": "2ed1e273-899b-4de0-9bc1-f235449155bc",
+        "selected_plan_id": "911d2fd1-d1a9-4c7c-9540-530b1de98ce4",
+        "selected_proposal_id": "d02eff8e-3e30-453a-ab5c-e6b80816ba08"
+      },
+      "reason": "The renewed collective decision durably stores E1/W1 and the exact selected proposal.",
+      "status": "PROVEN"
+    },
+    "e2_w2_durable_when_required": {
+      "facts": {
+        "not_required": true
+      },
+      "reason": "E2/W2 human authority is not required when current post-shock authority is unanimously dominant.",
+      "status": "PROVEN"
+    },
+    "final_exactly_once_continuation": {
+      "facts": {
+        "final_run_id": "e0571afd-c495-4317-81ca-13e0791bd5f8",
+        "r28_binding": {
+          "approval_id": "64ef6f07-d7a8-4fda-b2ee-2806b8001b03",
+          "journey_id": "9a566827-fdca-4d1e-9970-ad8f0c86c356",
+          "mission_id": "92c28441-c66a-4cc7-bb7d-096c767c1c56",
+          "pending_action_id": "c981e46f-6807-4be8-88d6-ee65cc596d40",
+          "proposal_id": "ae012417-6363-427d-b7f8-edfd413cf89d"
+        },
+        "r28_summary": {
+          "CONTRADICTED": 0,
+          "NOT_PROVEN": 0,
+          "PROVEN": 14,
+          "overall": "PROVEN"
+        }
+      },
+      "reason": "The final recovery run preserves R28 same-run approval and exactly-once continuation.",
+      "status": "PROVEN"
+    },
+    "fresh_selective_human_authority": {
+      "facts": {
+        "accepted_audit_id": "3b92dfb2-5087-4ae1-a16e-fdd1b25d8391",
+        "accepted_proposal_id": "ae012417-6363-427d-b7f8-edfd413cf89d",
+        "collective_authority": {
+          "classification": "UNANIMOUS_DOMINANCE",
+          "code": null,
+          "current_decision_epoch": null,
+          "current_material_world_epoch": null,
+          "receipt": {
+            "authority_mode": "UNANIMOUS_DOMINANCE",
+            "candidate_surface_fingerprint": "7663e5e115162b2a49a6acac24c01fa8e5031eb5c8ae1a5d765423a82be1e508",
+            "classification": "UNANIMOUS_DOMINANCE",
+            "decision_epoch": "7663e5e115162b2a49a6acac24c01fa8e5031eb5c8ae1a5d765423a82be1e508",
+            "material_world_epoch": "7663e5e115162b2a49a6acac24c01fa8e5031eb5c8ae1a5d765423a82be1e508",
+            "receipt_id": "69c282e6-3a69-48e4-bbfb-71e9da2e4ae8",
+            "source_agent_run_id": null,
+            "source_mission_id": null
+          },
+          "receipt_id": "69c282e6-3a69-48e4-bbfb-71e9da2e4ae8",
+          "resolved_decision_epoch": null,
+          "resolved_material_world_epoch": null
+        },
+        "post_shock_collective_rounds": []
+      },
+      "reason": "No fresh human round was needed because the final post-shock mutation was durably authorized as current UNANIMOUS_DOMINANCE.",
+      "status": "PROVEN"
+    },
+    "old_authority_not_consumed": {
+      "facts": {
+        "proposal_id": "d02eff8e-3e30-453a-ab5c-e6b80816ba08",
+        "proposal_status": "INVALIDATED"
+      },
+      "reason": "The proposal selected under E1/W1 never became ACCEPTED.",
+      "status": "PROVEN"
+    },
+    "pre_shock_human_authority_receipt": {
+      "facts": {
+        "authority_mode": "AUTHENTICATED_MEMBER_CONSENT",
+        "authority_receipt_id": "95496c18-ca2e-4a90-be2b-6e944cc95941",
+        "receipt_audit_actor_ids": [
+          "baf1f164-e987-4cd1-83ea-93f42a04a2fe",
+          "f7f107fe-f8de-4a5d-a37d-2ffb45bd0cc2"
+        ],
+        "receipt_audit_member_ids": [
+          "51f16fe1-05f2-4579-abcf-94a6ab19ffa0",
+          "cdf8dcac-45b3-4f0f-b583-92a6ab8c7125"
+        ],
+        "receipt_principal_actor_ids": [
+          "baf1f164-e987-4cd1-83ea-93f42a04a2fe",
+          "f7f107fe-f8de-4a5d-a37d-2ffb45bd0cc2"
+        ],
+        "receipt_required_member_ids": [
+          "51f16fe1-05f2-4579-abcf-94a6ab19ffa0",
+          "cdf8dcac-45b3-4f0f-b583-92a6ab8c7125"
+        ],
+        "receipt_response_audit_ids": [
+          "9ec0d1dc-72c4-41ec-b827-50cf909ae779",
+          "c8dabe6e-d0ce-448c-9bea-ab7a41c5c0c2"
+        ],
+        "source_mission_id": "2ed1e273-899b-4de0-9bc1-f235449155bc"
+      },
+      "reason": "E1/W1 is backed by one exact server-issued authenticated member-consent receipt whose response audits sign the selected proposal and decision epoch.",
+      "status": "PROVEN"
+    },
+    "real_external_post_shock_recovery_agent": {
+      "facts": {
+        "denial_created_at": "2026-10-06T02:24:14.070167+00:00",
+        "model_key": "cn:deepseek-v4.1-flash",
+        "provider_key": "hermes",
+        "recovery_created_at": "2026-10-06T02:32:05.603018+00:00",
+        "run_id": "e0571afd-c495-4317-81ca-13e0791bd5f8"
+      },
+      "reason": "A configured external AgentRun is persisted after the stale-authority denial.",
+      "status": "PROVEN"
+    },
+    "server_owned_decision_material_shock": {
+      "facts": {
+        "events": [
+          {
+            "event_id": "78b0201d-18a5-456d-8c42-2063d2145a30",
+            "event_type": "CLOSURE",
+            "incident_fingerprint": "e5ae03da629e71f7ad239d255f294d0f71bcc29a50b689c9b49ab753f33bf24b",
+            "provenance": "PROVIDER_VERIFIED",
+            "provider_key": "city-signal-fixture",
+            "scope_place_id": "real-place-8c09b32224152e3e1ae12843"
+          }
+        ],
+        "fit_subject_place_ids": [
+          "real-place-8c09b32224152e3e1ae12843",
+          "real-place-ebd30de67691cab346be66ec"
+        ]
+      },
+      "reason": "Server-owned provider ingestion persisted a targeted verified closure on a consent-relevant Place.",
+      "status": "PROVEN"
+    },
+    "unrelated_observation_does_not_invalidate": {
+      "facts": {
+        "control": {
+          "after_epoch": "2e6ebd896976e1e5c0a8a2b1950164820b43f654aacf6d5406969f758f2f82da",
+          "before_epoch": "2e6ebd896976e1e5c0a8a2b1950164820b43f654aacf6d5406969f758f2f82da",
+          "signals": {
+            "captured_at": "2026-10-06T02:24:11.059049+00:00",
+            "created_event_ids": [],
+            "degraded": false,
+            "event_ids": [],
+            "observation_ids": [
+              "2d3369fc-4ca2-4694-b260-c216817e82ce",
+              "02b9f7c7-8889-48e3-8b1f-23550476bcc2"
+            ],
+            "provider_key": "city-signal-fixture",
+            "provider_provenance": {
+              "city_discovery": "REPLAY",
+              "mobility": "REPLAY",
+              "weather": "REPLAY"
+            },
+            "provider_states": {
+              "city_discovery": "AVAILABLE",
+              "mobility": "AVAILABLE",
+              "weather": "NORMAL"
+            },
+            "resolved_event_ids": [],
+            "state": "NORMAL"
+          },
+          "unrelated": true
+        }
+      },
+      "reason": "An explicit control proves unrelated evidence churn leaves W unchanged.",
+      "status": "PROVEN"
+    },
+    "world_epoch_stale_semantic_epoch_stable": {
+      "facts": {
+        "current_decision_epoch": "c8a9a77a856ac3da09bc40b2ab682b433fe2b7181e663ce52a5783843cf4b2b0",
+        "current_material_world_epoch": "39641660c6d9f12e5443a590830eec1789d6a8c021e92b329afce4ceb6a591b7",
+        "denial_audit_id": "45135965-0224-4c48-8ad2-a0e0917a251e",
+        "mutation_kind": "ACCEPT_REPLAN",
+        "resolved_decision_epoch": "c8a9a77a856ac3da09bc40b2ab682b433fe2b7181e663ce52a5783843cf4b2b0",
+        "resolved_material_world_epoch": "2e6ebd896976e1e5c0a8a2b1950164820b43f654aacf6d5406969f758f2f82da"
+      },
+      "reason": "The durable core denial proves semantic E stayed equal while material-world W changed.",
+      "status": "PROVEN"
+    }
+  }
+}

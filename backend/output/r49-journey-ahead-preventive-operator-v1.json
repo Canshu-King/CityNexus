@@ -1,0 +1,91 @@
+{
+  "journey_id": "1350c88a-6f3f-4515-932e-ce72ac5ef605",
+  "operator_enabled": true,
+  "operator_requested_autonomy": "PLAN_ONLY",
+  "current_activity_before_agent": "IN_PROGRESS",
+  "current_activity_after_agent": "IN_PROGRESS",
+  "current_activity_id": "f128a702-c2a6-4c12-aea5-6be411b12ada",
+  "future_activity_id": "3589b254-20db-4d1f-b290-62139efb950b",
+  "predictive_event_only": true,
+  "external_agent_run_count": 1,
+  "agent_result": {
+    "id": "f041b928-0771-434f-8793-b0b7e33ec149",
+    "decision": "PREEMPTIVE_RECOVERY",
+    "status": "COMPLETED",
+    "action_status": "NO_FEASIBLE_RECOVERY",
+    "deduplicated": false,
+    "trigger_kind": "PREDICTIVE",
+    "resilience_snapshot_id": "96755c2c-c5bd-4666-9512-9ce32730190d",
+    "proposal_id": null,
+    "agent_run_id": "c2eefa42-8a24-4145-a762-b9baf7ca1b3a"
+  },
+  "lab_estimate_authority": false,
+  "valid_outcome": true,
+  "operator_state": "WATCHING",
+  "ahead": {
+    "state": "WATCHING_FUTURE",
+    "headline": "I’m watching a possible risk later in the journey.",
+    "top_risk": {
+      "activity_id": "3589b254-20db-4d1f-b290-62139efb950b",
+      "title": "Italian Gallery",
+      "risk_score": 78,
+      "failure_modes": [
+        "FORECAST_WEATHER_EXPOSURE"
+      ],
+      "predictive": true,
+      "grounded": true,
+      "protected_commitment": true,
+      "booking_exposure": true,
+      "route_slack_minutes": 20,
+      "start_at": "2026-10-07T00:59:26+00:00",
+      "starts_at": "2026-10-07T00:59:26+00:00",
+      "risk_kind": "FORECAST_WEATHER_EXPOSURE",
+      "authority": "PROVIDER_GROUNDED",
+      "source_observation_ids": [
+        "r49-forecast-c-1"
+      ],
+      "material_world_epoch": "r49-world-epoch-1",
+      "risk_identity": "ahead:6f66f83fad794385b3bc8ab4",
+      "lead_time_minutes": 419,
+      "actionability_score": 26
+    },
+    "recommended_action": "KEEP_WATCHING",
+    "horizon": {
+      "remaining_activity_count": 2,
+      "lookahead_until": "2026-10-07T05:59:27.546250+00:00",
+      "bounded_hours": 12
+    },
+    "risks": [
+      {
+        "activity_id": "3589b254-20db-4d1f-b290-62139efb950b",
+        "title": "Italian Gallery",
+        "risk_score": 78,
+        "failure_modes": [
+          "FORECAST_WEATHER_EXPOSURE"
+        ],
+        "predictive": true,
+        "grounded": true,
+        "protected_commitment": true,
+        "booking_exposure": true,
+        "route_slack_minutes": 20,
+        "start_at": "2026-10-07T00:59:26+00:00",
+        "starts_at": "2026-10-07T00:59:26+00:00",
+        "risk_kind": "FORECAST_WEATHER_EXPOSURE",
+        "authority": "PROVIDER_GROUNDED",
+        "source_observation_ids": [
+          "r49-forecast-c-1"
+        ],
+        "material_world_epoch": "r49-world-epoch-1",
+        "risk_identity": "ahead:6f66f83fad794385b3bc8ab4",
+        "lead_time_minutes": 419,
+        "actionability_score": 26
+      }
+    ],
+    "snapshot_id": "de553c35-6bbe-444d-871a-ed3b5eb65b64",
+    "snapshot_captured_at": "2026-10-06T17:59:36+00:00",
+    "current_activity_id": "f128a702-c2a6-4c12-aea5-6be411b12ada",
+    "read_only": true,
+    "predictive_only": true
+  },
+  "current_incident": null
+}

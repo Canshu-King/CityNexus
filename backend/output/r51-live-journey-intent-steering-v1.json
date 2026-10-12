@@ -1,0 +1,87 @@
+{
+  "task": "R51_LIVE_JOURNEY_INTENT_STEERING",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "journey_timezone": "Asia/Shanghai",
+  "request": "I'm tired. Make the rest of today easier and keep walking low.",
+  "authenticated_traveler_id": "11111111-1111-4111-8111-111111111111",
+  "operator_enabled_before_submission": true,
+  "semantic_compiler_external_credentials_configured": false,
+  "semantic_compiler_provider": "deterministic",
+  "semantic_confidence": 0.94,
+  "http_status": 200,
+  "response": {
+    "outcome": "INTENT_STEERING_NEEDS_CLARIFICATION",
+    "message": "Do you mean a slower pace, less walking, or fewer stops?",
+    "intent": {
+      "id": "a03a33b8-cbd5-49be-9a25-9fe0885715c6",
+      "journey_id": "22222222-2222-4222-8222-222222222222",
+      "created_by_traveler_id": "11111111-1111-4111-8111-111111111111",
+      "created_by_member_id": "47f4bcd4-d9cb-52a8-a586-b47d11af1e30",
+      "source_text": "I'm tired. Make the rest of today easier and keep walking low.",
+      "intent_kind": "UNRESOLVED",
+      "scope_kind": "REST_OF_TODAY",
+      "scope_start_at": "2026-10-06T18:46:06.622020+00:00",
+      "scope_end_at": "2026-10-07T16:00:00+00:00",
+      "local_date": "2026-10-07",
+      "target_activity_ids": [],
+      "canonical_dimensions": [],
+      "constraints": [],
+      "capabilities": [],
+      "preference_hints": {},
+      "source": "USER_TEMPORARY_INTENT",
+      "compiler": {
+        "provider_key": "deterministic",
+        "model_key": "copilot-fallback",
+        "confidence": 0.94
+      },
+      "status": "NEEDS_CLARIFICATION",
+      "evaluation_state": "NEEDS_CLARIFICATION",
+      "created_at": "2026-10-06T18:46:06.622020+00:00",
+      "superseded_at": null,
+      "expired_at": null,
+      "cancelled_at": null
+    },
+    "mission": null,
+    "run": null,
+    "source": "USER_TEMPORARY_INTENT"
+  },
+  "intent": {
+    "id": "a03a33b8-cbd5-49be-9a25-9fe0885715c6",
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "created_by_traveler_id": "11111111-1111-4111-8111-111111111111",
+    "created_by_member_id": "47f4bcd4-d9cb-52a8-a586-b47d11af1e30",
+    "source_text": "I'm tired. Make the rest of today easier and keep walking low.",
+    "intent_kind": "UNRESOLVED",
+    "scope_kind": "REST_OF_TODAY",
+    "scope_start_at": "2026-10-06T18:46:06.622020+00:00",
+    "scope_end_at": "2026-10-07T16:00:00+00:00",
+    "local_date": "2026-10-07",
+    "target_activity_ids": [],
+    "canonical_dimensions": [],
+    "constraints": [],
+    "capabilities": [],
+    "preference_hints": {},
+    "source": "USER_TEMPORARY_INTENT",
+    "compiler": {
+      "provider_key": "deterministic",
+      "model_key": "copilot-fallback",
+      "confidence": 0.94
+    },
+    "status": "NEEDS_CLARIFICATION",
+    "evaluation_state": "NEEDS_CLARIFICATION",
+    "created_at": "2026-10-06T18:46:06.622020+00:00",
+    "superseded_at": null,
+    "expired_at": null,
+    "cancelled_at": null
+  },
+  "current_activity_before": {
+    "id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+    "status": "IN_PROGRESS"
+  },
+  "current_activity_after": {
+    "id": "3a58c470-524c-5854-aa39-6c37a350eb80",
+    "status": "IN_PROGRESS"
+  },
+  "plan_activity_count": 6,
+  "configured_lab_estimate_authority": false
+}

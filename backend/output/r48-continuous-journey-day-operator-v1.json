@@ -1,0 +1,166 @@
+{
+  "journey_id": "5540bd83-659e-4113-8983-9468219c87d4",
+  "operator_enabled": true,
+  "initial_flow": {
+    "state": "PREPARING_TO_LEAVE",
+    "current": {
+      "id": "98b8a32b-374f-4705-a496-8c75f4e2afe7",
+      "title": "Tianjin West Station",
+      "status": "ACTIVE",
+      "place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:arrival-anchor",
+      "start_at": "2026-10-01T08:00:00+00:00",
+      "end_at": "2026-10-01T08:20:00+00:00"
+    },
+    "next": {
+      "id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+      "title": "Check in · Haihe Riverside Hotel",
+      "status": "NOT_STARTED",
+      "place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:check-in",
+      "start_at": "2026-10-01T14:00:00+00:00",
+      "end_at": "2026-10-01T14:20:00+00:00"
+    },
+    "route": {
+      "state": "UNKNOWN",
+      "exact": false,
+      "reason_code": "NO_TRAVEL_EDGE",
+      "origin_activity_id": null,
+      "destination_activity_id": "98b8a32b-374f-4705-a496-8c75f4e2afe7",
+      "origin_place_id": null,
+      "destination_place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:arrival-anchor",
+      "duration_min": null,
+      "provider": null,
+      "provenance": null,
+      "captured_at": null,
+      "must_leave_by": null
+    }
+  },
+  "after_complete": {
+    "state": "LEAVE_NOW",
+    "current": {
+      "id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+      "title": "Check in · Haihe Riverside Hotel",
+      "status": "ACTIVE",
+      "place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:check-in",
+      "start_at": "2026-10-01T14:00:00+00:00",
+      "end_at": "2026-10-01T14:20:00+00:00"
+    },
+    "next": null,
+    "route": {
+      "state": "AVAILABLE",
+      "exact": true,
+      "reason_code": "EXACT_FROZEN_PLAN_EDGE",
+      "origin_activity_id": "98b8a32b-374f-4705-a496-8c75f4e2afe7",
+      "destination_activity_id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+      "origin_place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:arrival-anchor",
+      "destination_place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:check-in",
+      "duration_min": 14,
+      "provider": "citynexus-synthetic-fixture",
+      "provenance": "SYNTHETIC_FIXTURE",
+      "captured_at": "2026-10-06T17:33:23.567914+00:00",
+      "must_leave_by": "2026-10-01T13:36:00+00:00"
+    },
+    "readiness": {
+      "state": "ACTION_NEEDED",
+      "target_activity_id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+      "target_title": "Check in · Haihe Riverside Hotel",
+      "starts_at": "2026-10-01T14:00:00+00:00",
+      "minutes_until_start": -7413.4,
+      "must_leave_by": "2026-10-01T13:36:00+00:00",
+      "must_leave_by_absent_reason": "NO_TRAVEL_EDGE",
+      "safety_buffer_minutes": null,
+      "launch_origin": null,
+      "launch_edge": null,
+      "blocking_reasons": [],
+      "warning_reasons": [
+        "LOCATION_UNAVAILABLE",
+        "ROUTE_EVIDENCE_UNCERTAIN",
+        "VENUE_NOT_VERIFIED"
+      ],
+      "checks": {
+        "venue": "UNKNOWN",
+        "route": "UNKNOWN",
+        "reservation": "NONE",
+        "reservation_realtime": null,
+        "commitment": "NONE",
+        "presence": "LOCATION_UNAVAILABLE"
+      },
+      "recommended_action": "CHECK_BEFORE_LEAVING",
+      "authority": "READ_ONLY_PROJECTION",
+      "next_move": {
+        "current_activity": {
+          "id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+          "title": "Check in · Haihe Riverside Hotel",
+          "status": "ACTIVE",
+          "place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:check-in",
+          "start_at": "2026-10-01T14:00:00+00:00",
+          "end_at": "2026-10-01T14:20:00+00:00"
+        },
+        "next_activity": null,
+        "presence": {
+          "state": "LOCATION_UNAVAILABLE",
+          "authority": "NONE",
+          "location_observation_id": null,
+          "source": null,
+          "captured_at": null,
+          "age_seconds": null,
+          "accuracy_m": null,
+          "target_activity_id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+          "target_place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:check-in",
+          "distance_to_target_m": null,
+          "maximum_near_distance_m": null,
+          "arrival_transition_allowed": false,
+          "reason_code": "NO_LOCATION_OBSERVATION"
+        },
+        "venue_readiness": {
+          "state": "UNKNOWN",
+          "activity_id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+          "source": null,
+          "observed_at": null
+        },
+        "route_evidence": {
+          "state": "UNKNOWN",
+          "kind": "ACTIVITY_EDGE",
+          "provider": null,
+          "provenance": null,
+          "captured_at": null,
+          "expires_at": null,
+          "minutes": null,
+          "from_activity_id": null,
+          "to_activity_id": null,
+          "edge_match": false,
+          "degraded": false,
+          "reason_code": "NO_TRAVEL_EDGE"
+        },
+        "launch_origin": null,
+        "launch_edge": null,
+        "journey_phase": "JOURNEY_COMPLETE",
+        "phase_authority": "CONTROL_PLANE_ONLY",
+        "copy": "Location sharing is off; Guardian is using the plan schedule only.",
+        "authority": "NONE"
+      },
+      "evidence": {
+        "material_event_ids": [],
+        "commitment_ids": [],
+        "reservation_id": null
+      },
+      "route": {
+        "state": "AVAILABLE",
+        "exact": true,
+        "reason_code": "EXACT_FROZEN_PLAN_EDGE",
+        "origin_activity_id": "98b8a32b-374f-4705-a496-8c75f4e2afe7",
+        "destination_activity_id": "c59974a3-f5b5-4962-a484-b64112de37ed",
+        "origin_place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:arrival-anchor",
+        "destination_place_id": "v12:5540bd83-659e-4113-8983-9468219c87d4:check-in",
+        "duration_min": 14,
+        "provider": "citynexus-synthetic-fixture",
+        "provenance": "SYNTHETIC_FIXTURE",
+        "captured_at": "2026-10-06T17:33:23.567914+00:00",
+        "must_leave_by": "2026-10-01T13:36:00+00:00"
+      }
+    }
+  },
+  "offline_continuous_flow_state": "LEAVE_NOW",
+  "auth_truth": "OPERATOR_CONFIRMED_EXECUTION",
+  "lab_estimate_authority": false,
+  "valid_outcome": true
+}

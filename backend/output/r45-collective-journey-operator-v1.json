@@ -1,0 +1,26 @@
+{
+  "experiment": "R45_FRESH_SHARED_JOURNEY_COLLECTIVE_OPERATOR",
+  "authority_flag": "false",
+  "reset_status": 200,
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "normal_world_context_status": 201,
+  "in_force_members": 2,
+  "fixture_status": 200,
+  "guardian_status": 200,
+  "server_derived_candidate_count": 1,
+  "result": "COLLECTIVE_OPERATOR_NO_COMPROMISE",
+  "reason": "HTTPException: 409: COLLECTIVE_TRADEOFF_NOT_REQUIRED",
+  "operator_status": 200,
+  "operator_collective": {
+    "state": "COLLECTIVE_NEEDS_ATTENTION",
+    "required_count": 2,
+    "response_count": 0,
+    "viewer_has_responded": false,
+    "members": [],
+    "options": [],
+    "mission_id": null,
+    "authority_receipt_id": null
+  },
+  "same_standing_mission": true,
+  "plan_mutation_claimed": false
+}

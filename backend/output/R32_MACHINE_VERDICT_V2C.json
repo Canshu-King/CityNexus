@@ -1,0 +1,188 @@
+{
+  "agent_statuses": {
+    "a": "RUNNING",
+    "b": null
+  },
+  "contradicted": [
+    "strike_source_state_traceable",
+    "agent_a_external_and_bound_r1"
+  ],
+  "coverage_not_proven": [
+    "r1_candidates_removed_from_current_surface",
+    "r1_receipts_invalidated",
+    "current_surface_epoch_pure",
+    "semantic_dedupe_not_uuid_dedupe",
+    "arrival_order_not_authority",
+    "approval_not_retargeted",
+    "no_duplicate_continuation_side_effect",
+    "authority_provenance_mode_accurate"
+  ],
+  "dimensions": {
+    "agent_a_external_and_bound_r1": {
+      "evidence": "Agent A provider=hermes epoch=6fa7ca77-e394-4489-9295-bd7fec2851bb; real external runtime evidence required",
+      "verdict": "CONTRADICTED"
+    },
+    "agent_a_terminal_live_outcome": {
+      "evidence": "A durable status=RUNNING; requires a live typed supersession step",
+      "verdict": "NOT_PROVEN"
+    },
+    "agent_b_external_and_bound_r2": {
+      "evidence": "Agent B provider=None epoch=None; independent external run required",
+      "verdict": "NOT_PROVEN"
+    },
+    "approval_not_retargeted": {
+      "evidence": "requires a stale R1 approval; absence of approvals is not positive evidence",
+      "verdict": "NOT_PROVEN"
+    },
+    "arrival_order_not_authority": {
+      "evidence": "if mutation occurs it must be authorized from B/R2; A/R1 arrival or completion order may not confer authority",
+      "verdict": "NOT_PROVEN"
+    },
+    "authority_provenance_mode_accurate": {
+      "evidence": "an executed collective mutation must carry a current R2 UNANIMOUS_DOMINANCE receipt sourced from Agent B's proposal and algorithmic decision-epoch provenance",
+      "verdict": "NOT_PROVEN"
+    },
+    "concurrent_external_barrier": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "current_surface_epoch_pure": {
+      "evidence": "every B-authority proposal/candidate must belong to the exact R2 authority epoch, even if R2 later COMMITTED",
+      "verdict": "NOT_PROVEN"
+    },
+    "exactly_one_or_zero_legal_plan_transition": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "inherited_r28_exactly_once": {
+      "evidence": "focused regression: 152 passed, exit 0",
+      "verdict": "PROVEN"
+    },
+    "no_duplicate_continuation_side_effect": {
+      "evidence": "requires an exercised pending continuation; an empty set is not exactly-once evidence",
+      "verdict": "NOT_PROVEN"
+    },
+    "no_post_shock_human_authority_fabrication": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_candidates_removed_from_current_surface": {
+      "evidence": "requires at least one R1 proposal before Shock B",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_opened_from_shock_a": {
+      "evidence": "R1 has provider Event lineage and a recovery fingerprint",
+      "verdict": "PROVEN"
+    },
+    "r1_receipts_invalidated": {
+      "evidence": "requires at least one R1 authority receipt before Shock B",
+      "verdict": "NOT_PROVEN"
+    },
+    "r1_superseded_by_r2": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "r2_terminal_state_consistent": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "recovery_epoch_server_owned": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "runtime_preflight_isolated": {
+      "evidence": "pre-strike runtime selection must be WB2api/Hermes with ambient semantic AI and native Hermes excluded",
+      "verdict": "PROVEN"
+    },
+    "semantic_dedupe_not_uuid_dedupe": {
+      "evidence": "this strike did not create an equivalent cross-run future; deterministic regression remains supporting evidence only",
+      "verdict": "NOT_PROVEN"
+    },
+    "shock_b_material_not_storage_churn": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "stale_agent_authority_refused": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "stale_result_typed_superseded": {
+      "evidence": "strike aborted before this causal dimension was exercised; phase=A_EXTERNAL_RESPONSE_BOUNDARY",
+      "verdict": "NOT_PROVEN"
+    },
+    "standing_authority_preconfigured": {
+      "evidence": "member values and a finite AUTONOMOUS delegation envelope must be configured through product APIs before Shock A",
+      "verdict": "PROVEN"
+    },
+    "strike_source_state_traceable": {
+      "evidence": "git_head=2db713e06b86055d731175566e4ad631e49004d9 tracked_dirty_before_strike=False required_source_paths=9",
+      "verdict": "CONTRADICTED"
+    },
+    "truth_boundary_honest": {
+      "evidence": "provider replay fixture; physical travel not claimed",
+      "verdict": "PROVEN"
+    },
+    "verifier_source_traceable": {
+      "evidence": "verifier_sha256=d9cb803d21f700fc265e6d455c3ac9cd76a1a5101153ee8c7c27c7d0f8ccfcf1 git_head=03357b7c8f8a9a671c59113be71d6093fab04742 tracked_dirty=False",
+      "verdict": "PROVEN"
+    }
+  },
+  "evaluator_receipt": {
+    "git_head": "03357b7c8f8a9a671c59113be71d6093fab04742",
+    "path": "backend\\scripts\\r32_machine_verdict.py",
+    "sha256": "d9cb803d21f700fc265e6d455c3ac9cd76a1a5101153ee8c7c27c7d0f8ccfcf1",
+    "tracked_dirty": false
+  },
+  "not_proven": [
+    "concurrent_external_barrier",
+    "no_post_shock_human_authority_fabrication",
+    "recovery_epoch_server_owned",
+    "shock_b_material_not_storage_churn",
+    "r1_superseded_by_r2",
+    "r2_terminal_state_consistent",
+    "agent_b_external_and_bound_r2",
+    "stale_agent_authority_refused",
+    "stale_result_typed_superseded",
+    "agent_a_terminal_live_outcome",
+    "r1_candidates_removed_from_current_surface",
+    "r1_receipts_invalidated",
+    "current_surface_epoch_pure",
+    "semantic_dedupe_not_uuid_dedupe",
+    "arrival_order_not_authority",
+    "approval_not_retargeted",
+    "exactly_one_or_zero_legal_plan_transition",
+    "no_duplicate_continuation_side_effect",
+    "authority_provenance_mode_accurate"
+  ],
+  "overall": "CONTRADICTED",
+  "regression": {
+    "command": "uv run python -m pytest -q tests/test_r32_recovery_epoch.py tests/test_r32_machine_verdict.py tests/test_r31_epoch_integrity.py tests/test_r30_collective_authority_receipt.py tests/test_r29_disagreement_mediation.py tests/test_r28_durable_approval_continuation.py tests/test_agent_runtime_state_epoch.py tests/test_agent_runtime_gate.py tests/test_agent_mission_runtime.py",
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 152,
+    "raw_output": "backend/output/r32-focused-regression-v2c.txt"
+  },
+  "required_dimensions": [
+    "agent_a_external_and_bound_r1",
+    "agent_a_terminal_live_outcome",
+    "agent_b_external_and_bound_r2",
+    "concurrent_external_barrier",
+    "exactly_one_or_zero_legal_plan_transition",
+    "inherited_r28_exactly_once",
+    "no_post_shock_human_authority_fabrication",
+    "r1_opened_from_shock_a",
+    "r1_superseded_by_r2",
+    "r2_terminal_state_consistent",
+    "recovery_epoch_server_owned",
+    "runtime_preflight_isolated",
+    "shock_b_material_not_storage_churn",
+    "stale_agent_authority_refused",
+    "stale_result_typed_superseded",
+    "standing_authority_preconfigured",
+    "strike_source_state_traceable",
+    "truth_boundary_honest",
+    "verifier_source_traceable"
+  ],
+  "schema": "citynexus.r32.machine-verdict.v3",
+  "stale_evidence_mode": "SEPARATE_GATEWAY_BINDING_ASSERTION"
+}
