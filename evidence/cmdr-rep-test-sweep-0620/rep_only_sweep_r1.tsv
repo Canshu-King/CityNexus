@@ -1,0 +1,95 @@
+test	verdict_on_tip	n_or_summary	imports_app	missing_on_tip
+test_r84_empty_catalog_entry.py	GREEN_ON_TIP	1 passed		-
+test_event_resolution_projection.py	RED_ON_TIP	1 failed, 2 warnings	db.models;db.session	-
+test_guardian_pulse.py	RED_ON_TIP	2 failed, 2 warnings	agent.guardian;db.models;db.session	-
+test_r14_terminal_disruption_recovery.py	RED_ON_TIP	1 failed, 2 warnings	db.models;db.session;integrations.mobility.snapshot_capture;replanning.provider_snapshots	-
+test_r24_adaptive_memory.py	RED_ON_TIP	3 failed, 2 warnings	agent.autorun;db.models;db.session;execution.traveler_twin;replanning.candidate_evidence	-
+test_r43_operator_loop.py	RED_ON_TIP	3 failed, 2 warnings	db.models;db.session;operator_projection	operator_projection
+test_r59_collective_group_recovery_plan.py	RED_ON_TIP	2 failed, 2 passed	agent.mission_plan;collective_mediation	-
+test_r86_first_startable_real_city_journey.py	RED_ON_TIP	1 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r87_first_live_city_discovery.py	RED_ON_TIP	1 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r88_real_poi_exploration.py	RED_ON_TIP	1 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r89_member_shared_osm_identity.py	RED_ON_TIP	1 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r93_explicit_city_center_and_private_session.py	RED_ON_TIP	1 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r95_city_jump_and_provenance.py	RED_ON_TIP	2 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r96_intent_driven_first_outing.py	RED_ON_TIP	2 failed, 2 warnings	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_real_city_overpass_union.py	RED_ON_TIP	1 failed	integrations.discovery.real_city	-
+test_replan_completion_truth.py	RED_ON_TIP	1 failed, 2 warnings	db.models;db.session	-
+test_revolution_r77_public_place_facts.py	RED_ON_TIP	1 failed, 2 warnings	db.models;db.session;main	-
+test_adaptive_watch_policy.py	COLLECT_ERROR	1 error in 0.17s	agent	agent
+test_agent_runtime_state_epoch.py	COLLECT_ERROR	1 error in 0.91s	agent.runtime;agent.tool_catalog	-
+test_collective_operator.py	COLLECT_ERROR	1 error in 0.15s	collective_operator;operator_projection	collective_operator;operator_projection
+test_continuous_journey.py	COLLECT_ERROR	1 error in 0.16s	execution.continuous_journey	execution.continuous_journey
+test_departure_readiness.py	COLLECT_ERROR	1 error in 0.16s	execution	execution
+test_grounded_launch_origin.py	COLLECT_ERROR	1 error in 0.46s	db.models;execution.launch_origin	execution.launch_origin
+test_grounded_presence.py	COLLECT_ERROR	1 error in 0.43s	db.models;execution.presence	execution.presence
+test_guardian_phase_policy.py	COLLECT_ERROR	1 error in 0.16s	agent.watch_policy	agent.watch_policy
+test_in_transit_reroute.py	COLLECT_ERROR	2 warnings, 1 error in 0.38s	core.config;db.models;db.session;execution.clock;execution.in_transit_reroute;integrations.mobility	execution.in_transit_reroute;integrations.mobility
+test_journey_ahead.py	COLLECT_ERROR	1 error in 0.18s	agent.journey_ahead	agent.journey_ahead
+test_journey_inbox.py	COLLECT_ERROR	1 error in 0.17s	journey_inbox	journey_inbox
+test_journey_intent.py	COLLECT_ERROR	1 error in 0.17s	agent.journey_intent	agent.journey_intent
+test_launch_setup_projection.py	COLLECT_ERROR	1 error in 0.45s	db.models;execution.launch_setup	execution.launch_setup
+test_live_context_watch.py	COLLECT_ERROR	2 warnings, 1 error in 1.81s	db.models;db.session;live_context_watch	live_context_watch
+test_operator_attention.py	COLLECT_ERROR	1 error in 0.17s	operator_attention	operator_attention
+test_operator_brain.py	COLLECT_ERROR	1 error in 0.18s	agent.operator_brain	agent.operator_brain
+test_operator_projection.py	COLLECT_ERROR	1 error in 0.20s	operator_projection	operator_projection
+test_overnight_steward.py	COLLECT_ERROR	1 error in 0.18s	agent.overnight_steward	agent.overnight_steward
+test_progress_drift.py	COLLECT_ERROR	1 error in 0.15s	execution.progress_drift	execution.progress_drift
+test_r100_pocket_walk.py	COLLECT_ERROR	2 warnings, 1 error in 2.33s	core.config;db.models;db.session	-
+test_r101_shared_walk.py	COLLECT_ERROR	1 error in 0.27s	execution.shared_walk;integrations.discovery.real_city	execution.shared_walk
+test_r102_shared_city_outing.py	COLLECT_ERROR	1 error in 0.66s	db.models;execution.bootstrap_discovery;execution.shared_walk;integrations.discovery.real_city	execution.bootstrap_discovery;execution.shared_walk
+test_r105_provider_readiness.py	COLLECT_ERROR	1 error in 0.23s	core.config;execution.bootstrap_discovery	execution.bootstrap_discovery
+test_r106_human_consented_public_discovery.py	COLLECT_ERROR	1 error in 0.21s	core.config;execution	execution
+test_r107_discovery_to_my_pocket_walk.py	COLLECT_ERROR	2 warnings, 1 error in 2.01s	core.config;db.models;db.session	-
+test_r108_pocket_walk_go_mode.py	COLLECT_ERROR	2 warnings, 1 error in 1.70s	core.config;db.models;db.session	-
+test_r15_source_authority.py	COLLECT_ERROR	1 error in 0.18s	db.models;db.session	-
+test_r20_standby_trigger.py	COLLECT_ERROR	1 error in 0.16s	agent.standby	agent.standby
+test_r21_autonomous_future_synthesis.py	COLLECT_ERROR	1 error in 0.74s	agent.ai_availability;agent.gateway;agent.guardian;agent.mission_plan;agent.predictive;agent.runtime;core.config;db.models	-
+test_r22_opportunity_capture.py	COLLECT_ERROR	1 error in 0.16s	agent.gateway;agent.guardian;db.models;db.session;services	-
+test_r23_adaptive_traveler_twin.py	COLLECT_ERROR	2 warnings, 1 error in 1.68s	agent.autorun;agent.mission;agent.runtime;execution.traveler_twin;replanning.candidate_evidence;services	-
+test_r25_strategic_horizon.py	COLLECT_ERROR	1 error in 0.78s	agent.orchestrator;agent.runtime;core.config	-
+test_r26_decision_critical_clarification.py	COLLECT_ERROR	1 error in 0.27s	agent.gateway;agent.runtime;db.models;intelligence.decision_sensitivity;schemas	intelligence.decision_sensitivity
+test_r27_member_surface.py	COLLECT_ERROR	2 warnings, 1 error in 1.70s	agent.autorun;core.config;traveler_principal	traveler_principal
+test_r27_skip_hygiene.py	COLLECT_ERROR	1 error in 1.64s	db.models;db.session;execution.traveler_twin;integrations.mobility.snapshot_capture;main;replanning.provider_snapshots	-
+test_r27_source_truth_bridge.py	COLLECT_ERROR	1 error in 0.15s	fact_acquisition;integrations.web.research_service	fact_acquisition;integrations.web.research_service
+test_r27_truth_mesh_runtime.py	COLLECT_ERROR	1 error in 0.19s	db.models;db.session	-
+test_r28_authenticated_member_principal.py	COLLECT_ERROR	2 warnings, 1 error in 1.73s	core.config;db.models;db.session;traveler_principal	traveler_principal
+test_r28_durable_approval_continuation.py	COLLECT_ERROR	2 warnings, 1 error in 1.68s	agent.continuation;agent.gateway;agent.runtime;core.config;db.models;db.session;schemas;traveler_principal	agent.continuation;traveler_principal
+test_r28_execution_truth.py	COLLECT_ERROR	2 warnings, 1 error in 1.66s	core.config;db.models;db.session;execution.presence;services;traveler_principal	execution.presence;traveler_principal
+test_r29_disagreement_mediation.py	COLLECT_ERROR	2 warnings, 1 error in 1.91s	agent.approval;agent.gateway;agent.runtime;collective_mediation;core.config;db.models;db.session;schemas	traveler_principal
+test_r30_collective_authority_receipt.py	COLLECT_ERROR	1 error in 0.20s	collective_authority;db.models	collective_authority
+test_r31_epoch_integrity.py	COLLECT_ERROR	1 error in 0.19s	collective_authority	collective_authority
+test_r32_machine_verdict.py	COLLECT_ERROR	1 error in 0.20s		-
+test_r32_recovery_epoch.py	COLLECT_ERROR	1 error in 2.03s	agent.approval;agent.gateway;agent.signal_pipeline;db.models;db.session;recovery_epoch;schemas	recovery_epoch
+test_r42_departure_activation_integration.py	COLLECT_ERROR	1 error in 0.16s	db.models;db.session;execution.readiness	execution.readiness
+test_r44_resilient_operator_brain.py	COLLECT_ERROR	2 warnings, 1 error in 1.72s	agent.operator_brain;db.models;db.session;recovery_epoch	agent.operator_brain;recovery_epoch
+test_r51_live_journey_intent.py	COLLECT_ERROR	2 warnings, 1 error in 1.75s	core.config;db.models;db.session;integrations.ai.copilot_contract;traveler_principal	traveler_principal
+test_r52_decision_inbox.py	COLLECT_ERROR	2 warnings, 1 error in 1.80s	core.config;db.models;db.session;integrations.ai.copilot_contract;traveler_principal	traveler_principal
+test_r53_journey_inbox_product.py	COLLECT_ERROR	2 warnings, 1 error in 1.81s	core.config;db.models;db.session;traveler_principal	traveler_principal
+test_r54_reality_reconciliation_product.py	COLLECT_ERROR	2 warnings, 1 error in 2.54s	core.config;db.models;db.session;traveler_principal	traveler_principal
+test_r55_live_progress_drift_product.py	COLLECT_ERROR	2 warnings, 1 error in 2.43s	core.config;db.models;db.session;execution.clock;planning.authoritative_v12;traveler_principal	traveler_principal
+test_r57_group_presence_operator.py	COLLECT_ERROR	2 warnings, 1 error in 2.35s	agent;core.config;db.models;db.session;execution.clock;execution.group_presence;operator_projection;traveler_principal	agent;execution.group_presence;operator_projection;traveler_principal
+test_r60_collective_recovery_apply.py	COLLECT_ERROR	2 warnings, 1 error in 3.01s	agent.gateway;agent.mission_plan;agent.runtime;collective_authority;collective_operator;core.config;db.models;db.session	collective_authority;collective_operator;recovery_epoch;traveler_principal
+test_r62_group_recovery_followthrough.py	COLLECT_ERROR	2 warnings, 1 error in 1.75s	core.config;db.models;db.session;execution.group_recovery_followthrough;traveler_principal	execution.group_recovery_followthrough;traveler_principal
+test_r63_planned_separation.py	COLLECT_ERROR	2 warnings, 1 error in 1.93s	agent.journey_intent;core.config;db.models;db.session;execution.clock;traveler_principal	agent.journey_intent;traveler_principal
+test_r64_member_side_quest.py	COLLECT_ERROR	2 warnings, 1 error in 1.11s	core.config;db.models;db.session;execution;execution.clock;execution.live_moment_scout;integrations.discovery.real_city;integrations.mobility	execution;execution.live_moment_scout;integrations.mobility;traveler_principal
+test_r74_grant_atomicity.py	COLLECT_ERROR	1 error in 0.41s		-
+test_r75_group_share_reconsent.py	COLLECT_ERROR	1 error in 0.51s	db.models;execution	execution
+test_r76_journey_membership_invitation.py	COLLECT_ERROR	2 warnings, 1 error in 1.97s	core.config;db.models;db.session;execution.group_presence;execution.group_recovery_followthrough;traveler_principal	execution.group_presence;execution.group_recovery_followthrough;traveler_principal
+test_r78_member_rendezvous_coordination.py	COLLECT_ERROR	2 warnings, 1 error in 1.99s	core.config;db.models;db.session;traveler_principal	traveler_principal
+test_r79_buddy_rescue_handoff.py	COLLECT_ERROR	2 warnings, 1 error in 1.84s	core.config;db.models;db.session;execution.rendezvous_buddy_handoff;traveler_principal	execution.rendezvous_buddy_handoff;traveler_principal
+test_r80_private_buddy_route.py	COLLECT_ERROR	2 warnings, 1 error in 0.64s	core.config;db.models;db.session;execution.clock;execution.route_session_contract;operations.v9;traveler_principal	traveler_principal
+test_r81_private_location_binding.py	COLLECT_ERROR	1 error in 0.58s	core.config;db.models;db.session;traveler_principal	traveler_principal
+test_r82_buddy_execution.py	COLLECT_ERROR	1 error in 0.57s	core.config;db.models;db.session;execution.clock	-
+test_r85_zero_catalog_bootstrap.py	COLLECT_ERROR	2 warnings, 1 error in 1.81s	core.config;db.models;db.session;integrations.discovery.real_city;traveler_principal	traveler_principal
+test_r90_private_exploration_board.py	COLLECT_ERROR	2 warnings, 1 error in 1.75s	core.config;db.models;db.session;integrations.discovery.real_city	-
+test_r97_two_stop_city_walk.py	COLLECT_ERROR	2 warnings, 1 error in 1.84s	core.config;db.models;db.session	-
+test_r98_two_stop_walkability.py	COLLECT_ERROR	2 warnings, 1 error in 0.60s	core.config;db.models;db.session	-
+test_r99_adaptive_short_walk.py	COLLECT_ERROR	2 warnings, 1 error in 0.59s	core.config;db.models;db.session	-
+test_reality_reconciliation.py	COLLECT_ERROR	1 error in 0.18s	reality_reconciliation	reality_reconciliation
+test_recovery_discovery.py	COLLECT_ERROR	1 error in 0.21s	agent.recovery_discovery;agent.runtime	agent.recovery_discovery
+test_replan_place_fact_binding.py	COLLECT_ERROR	1 error in 1.79s	main	-
+test_replan_schedule_timezone.py	COLLECT_ERROR	1 error in 1.82s	main	-
+test_revolution_r77_recovery.py	COLLECT_ERROR	1 error in 0.81s	agent.gateway;db.models;db.session;fact_acquisition;integrations.discovery.real_city;integrations.web.searxng;main;schemas	fact_acquisition
+test_route_session_operations.py	COLLECT_ERROR	1 error in 0.50s	db.models;db.session;execution.route_session_contract;integrations.mobility.snapshot_capture;operations.v9;replanning.provider_snapshots;route_session_operations	route_session_operations
+test_transactional_operator.py	COLLECT_ERROR	1 error in 0.21s	agent.transactional_operator	agent.transactional_operator
