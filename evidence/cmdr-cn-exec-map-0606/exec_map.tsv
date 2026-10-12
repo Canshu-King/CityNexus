@@ -1,0 +1,33 @@
+# execution 域接尖对照表 · 只读产出
+# 枝: gpt/revolution-r33-open-world-journey-adaptation @ a5a2f1096e（origin 尖）｜现尖: 70da925d88
+# 现尖 backend/app/execution/ 实际只有: __init__.py, clock.py, journey_twin.py, traveler_twin.py
+# 枝上 execution/ 共 30 枚，其中枝上独有 26 枚（下列全部行）
+
+模块名 | 给用户做什么（≤25汉字） | 现尖最接近的落点候选 | 需要现尖提供的输入
+---|---|---|---
+bootstrap_discovery.py | 行程还空着时先探出能去的地点 | backend/app/integrations/discovery/real_city.py | 现尖已有：Journey、Place、OverpassPOIProvider/DiscoveryCandidate、路由 POST /api/v1/journeys/{journey_id}/real-city/discover；枝上另需一张空行程 consent 表，现尖读不到（db/models.py 无对应 class）
+continuous_journey.py | 把今天要做的事串成一条页面流 | backend/app/execution/journey_twin.py | 现尖已有：Journey.status、Activity、JourneyLeg、PlanVersion；枝上还依赖 presence/readiness 两枚投影，现尖读不到
+departure_activation.py | 判断现在该不该出发、几点提示 | backend/app/execution/clock.py | 现尖已有：execution_clock.now()；还需 readiness 投影字典与 activity_status，来源是枝上 readiness.py，现尖读不到
+group_presence.py | 同行人之间看到到没到、在哪碰 | backend/app/main.py | 现尖已有路由：POST /api/v1/journeys/{journey_id}/location、GET /api/v1/journeys/{journey_id}/members；字段：LocationObservation.accuracy_m/captured_at/latitude、JourneyMember；枝上的 planned-separation 表，现尖读不到
+group_recovery_followthrough.py | 计划改过之后盯每人真回来没 | backend/app/core/audit.py | 现尖已有：record_audit()、Activity.metadata_json/status、PlanVersion；枝上的 recovery 快照与归队 receipt 表，现尖读不到
+in_transit_reroute.py | 路上走偏了提醒并给重算依据 | backend/app/integrations/mobility/runtime.py | 现尖已有：JourneyLeg.geometry_json/crs/mode/duration_min、Activity.status/metadata_json、Commitment.policy_json、LocationObservation；枝上依赖 location_scope 的私密来源常量，现尖读不到
+launch_origin.py | 定下这一程实际从哪儿起步 | backend/app/planning/anchors.py | 现尖已有：AccommodationOfferSnapshot、Place、Activity、LocationObservation、Journey.active_plan_version_id；枝上依赖 location_scope 常量，现尖读不到
+launch_setup.py | 出发地不明时引导补一个起点 | backend/app/main.py | 现尖已有：Journey、AccommodationOfferSnapshot、execution_clock；入参要 grounded_launch_origin()（枝上 launch_origin.py，现尖读不到）；落线需新路由 GET /api/v1/journeys/{journey_id}/launch-setup，现尖无
+live_moment_scout.py | 在路上实时找附近可去的一站 | backend/app/integrations/discovery/real_city.py | 现尖已有：DiscoveryCandidate、OverpassPOIProvider、Activity、Place、Journey；枝上依赖 MemberLiveMomentScoutReceipt、MemberSideQuest，现尖读不到
+location_scope.py | 划出私密定位不许进共享视图 | backend/app/db/models.py | 现尖已有：LocationObservation 的来源字段（source/captured_at）；常量 BUDDY_HANDOFF_ROUTE_PRIVATE 及其过滤约定，现尖读不到
+member_place_group_share.py | 把自己找到的地点分享给全组 | backend/app/main.py | 现尖已有路由：POST /api/v1/journeys/{journey_id}/share-grants、GET /api/v1/journeys/{journey_id}/members；字段 Journey、JourneyMember、Traveler；枝上依赖 MemberPlaceGroupShareConsent 与 app.shared_stop_coplanning，现尖读不到
+member_place_invitation.py | 邀请某位同伴去某个地点 | backend/app/main.py | 现尖已有：Commitment、Activity、LocationObservation、JourneyMember、record_audit()；枝上依赖 MemberPlaceInvitation 系列表与 SharedStopCoPlanningGrant，现尖读不到
+member_side_quest.py | 队员离队自己去一处再归队 | backend/app/concurrency_guards.py | 现尖已有：journey_write_lock(journey_id)、Journey、JourneyMember、Place、LocationObservation、record_audit()；枝上依赖 MemberSideQuest/ReturnReport 表，现尖读不到
+moment_scout.py | 按当前位置推荐此刻顺路的一站 | backend/app/integrations/discovery/orchestration.py | 现尖已有：Place.name/category/metadata_json/latitude/longitude、LocationObservation、Journey.city_code/status、Activity；枝上依赖 MemberSideQuest，现尖读不到
+planned_split_meetup_handshake.py | 分头走之后约好在哪重新会合 | backend/app/execution/journey_twin.py | 现尖已有：Activity、Place、Journey、JourneyMember、execution_clock；枝上依赖 PlannedSplitMeetupHandshake、JourneyIntent、MemberSideQuest，现尖读不到
+presence.py | 算出人到底到没到目标点、差多远 | backend/app/execution/journey_twin.py | 现尖已有：Journey.active_plan_version_id/current_activity_id、Place.latitude/longitude、LocationObservation.accuracy_m/captured_at、execution_clock；枝上依赖 location_scope 常量，现尖读不到
+private_buddy_route.py | 给交接点算一条只有俩人看的路线 | backend/app/integrations/mobility/routingpy_adapter.py | 现尖已有：Place、Activity、JourneyMember、ProviderCall、LocationObservation；枝上依赖 JourneyRendezvousBuddyHandoff、PrivateBuddyRouteLocationBinding、RouteAcquisitionOperation、location_scope，现尖均读不到
+private_buddy_safe_return.py | 送完人再算回原集合点的两段路 | backend/app/replanning/protected_commitments.py | 现尖已有：Commitment、Place、Activity、execution_clock；枝上依赖 JourneyRendezvousBuddyHandoff、RouteAcquisitionOperation、protected-commitment 可行性表，现尖读不到
+progress_drift.py | 看进度晚了多久、会不会挤掉后面 | backend/app/agent/guardian.py | 现尖已有：Activity.start_at/end_at/metadata_json、JourneyLeg.arrive_at/depart_at/provenance、Commitment.policy_json、TransportReservation、execution_clock；RealityConflict 表现尖读不到
+readiness.py | 出发前把还差哪几样一次说清 | backend/app/main.py | 现尖已有：Commitment、Event、TransportReservation、Journey.status、execution_clock、路由 GET /api/v1/journeys/{journey_id}；枝上依赖 app.agent.watch_policy.next_move_projection 与 departure_activation，现尖读不到
+rendezvous_buddy_execution.py | 俩人私下一个时间窗口完成交接 | backend/app/agent/approval.py | 现尖已有：Journey、JourneyMember、Place、record_audit()、execution_clock；枝上依赖 JourneyRendezvousBuddy* 四张表与 app.traveler_principal.TravelerPrincipal，现尖读不到
+rendezvous_buddy_handoff.py | 把求助转成公开地点的俩人交接 | backend/app/main.py | 现尖已有：JourneyMember、Traveler、Place、record_audit()、路由 POST /api/v1/journeys/{journey_id}/members；枝上依赖 JourneyRendezvous* 表、TravelerPrincipal、group_presence 投影，现尖读不到
+rendezvous_coordination.py | 集合点上各自报一句打算做什么 | backend/app/core/audit.py | 现尖已有：Journey、JourneyMember、Traveler、record_audit()、execution_clock；枝上依赖 JourneyRendezvousMemberSignal/SignalAcknowledgement 表、TravelerPrincipal、group_presence/group_recovery 投影，现尖读不到
+route_session_contract.py | 一次性出行请求该记成什么状态 | backend/app/integrations/mobility/runtime.py | 纯函数，只要调用方传 explicit_fact/provider_failed；枝上 RouteRequest.semantic_payload 与 RouteAcquisitionOperation，现尖读不到
+shared_walk.py | 解析别人粘来的两站公开链接 | backend/app/integrations/inbox/semantic_intake.py | 纯函数，输入一段文本，不依赖现尖字段；输出 OSM 规范链接对，落库需现尖的 Place 表配合
+truth.py | 分清执行记录是模拟还是真人证实 | backend/app/agent/runtime_events.py | 输入是 metadata 字典 + kind/transition/captured_at/actor_type；落到现尖需 Activity.metadata_json（现尖有）
