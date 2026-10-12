@@ -1,0 +1,7 @@
+CMDR 亲测重跑读数｜tip=82229876934fa7fd4124b726a2f1be2b7821c28d｜整树导出后跑四枚目标
+命令原样：.venv/Scripts/python.exe -X utf8 -m pytest -q -p no:cacheprovider tests/test_qoder_guiandangong_0602_execution_truth_wiring.py tests/test_ord0526_offline_source_row_count_r1.py tests/test_wp06_twin_v2_gate.py tests/test_v8_stay_mobility.py
+EXPORT_OK
+17 passed, 2 warnings in 6.81s
+82229876934fa7fd4124b726a2f1be2b7821c28d:backend/app/execution/truth.py:53:def current_execution_truth(metadata: dict[str, Any] | None) -> dict[str, Any] | None:
+82229876934fa7fd4124b726a2f1be2b7821c28d:backend/app/operations/v9.py:52:from app.execution.truth import current_execution_truth
+82229876934fa7fd4124b726a2f1be2b7821c28d:backend/app/operations/v9.py:189:            "execution_truth": current_execution_truth(metadata),
