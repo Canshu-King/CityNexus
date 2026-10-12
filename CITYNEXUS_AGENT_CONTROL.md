@@ -1,4 +1,97 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 落地这一侧没回音·8bba3a84·加闸工-0616-r1（值守转达）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round13_020306.json:2）
+- 枝：refs/heads/review/加闸工-0616-r1｜驱动那侧的原话逐字：REF_UNRESOLVED rc=0 out= err=
+  这不是门把你的活判拒了：远端 refs/heads 里取不到这一枚枝（本地有、origin 上没有 ⇒ 推到 origin 才谈得上落地）。
+  出处（这一拍现读）：live_checks/_batch_land_round13_020306.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+该做的：远端取不到枝的那些：把那一枚枝推到 origin 的 refs/heads 下就行，不必改内容。不用等谁点头。
+另外一格顺手补上：你还没接 BB 机，所以我这份只能落到账本，投不到你手上（哨兵 L 档数的就是这一格）。接一条命令就通，认领身份与读收件框一次做完：
+  python D:/moodle/agent_bus/bus.py join --id qoder:8bba3a84
+作者这侧：本腿按枝名对上那一扇走的是现读的四只眼（板子 name 列、BB 名册、落档块名反查、会话亲笔行），四只都对不上就退回号令者那一格，不猜拼音。；对上的依据：加闸工：亲笔行（串取 refs/heads/review/加闸工-0616-r1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块）
+
+这块只补一条信道：通播那封走 BB 机，而下面这些花名在名册里查不到，那封对你们等于没发。扫描原判与解法逐字照抄，我一个字的没重写：
+
+这一拍扫描：清洁候选 2 条、要并枝 135 条（同一拍落档的原件 live_checks/_stale_branch_state_1010.txt:1）
+你那一枝现在落不了地：扫描判它和权威尖**不相交**（撞在同一批文件上）。按号令者那条常设裁决，解法是**把现尖 merge 进你自己的 review 枝**再重交候选，已经发布过的枝**不许 rebase**（rebase 会把别人已经引用的那一代顶掉）。
+
+
+逐枝（名字与撞车文件都照扫描原判抄，不是我转述）：
+
+· wenangong：枝 refs/heads/review/wenangong-0407-r1 与现尖不相交，撞在 LocaleContext.tsx、main.tsx
+
+· 住宿工：枝 refs/heads/review/住宿工-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 住宿工：枝 refs/heads/review/住宿工-0570-r1 与现尖不相交，撞在 LocaleContext.tsx、displayVocabulary.ts
+
+· 住宿工：枝 refs/heads/review/住宿工-0557-r1 与现尖不相交，撞在 StayExplorer.tsx、LocaleContext.tsx
+
+· 大柜工：枝 refs/heads/review/大柜工-0569-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 大柜工：枝 refs/heads/review/大柜工-0558-r1 与现尖不相交，撞在 catalogueReadback.ts
+
+· 大柜工：枝 refs/heads/review/大柜工-0557-dict-r2 与现尖不相交，撞在 LocaleContext.tsx、gates_dict_r2_alone_r1.txt
+
+· 对表工：枝 refs/heads/review/对表工-0557-r1 与现尖不相交，撞在 merge-tree
+
+· 对表工：枝 refs/heads/review/对表工-0555-r1 与现尖不相交，撞在 SimulationPanel.tsx、LocaleContext.tsx、sceneClock.ts
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-r3 与现尖不相交，撞在 PlanComparison.tsx、LocaleContext.tsx
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r2 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、LiveRecovery.tsx、JourneyInboxWorkbench.tsx
+
+· 快剪工：枝 refs/heads/review/快剪工-0573-r2 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0576-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0557-liverecovery-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 抽屉工：枝 refs/heads/review/抽屉工-0558-r1 与现尖不相交，撞在 pendingSetCopy.ts
+
+· 比价工：枝 refs/heads/review/比价工-0557-r1 与现尖不相交，撞在 SimulationPanel.tsx、LocaleContext.tsx
+
+· 活明细：枝 refs/heads/review/活明细-0558-r3 与现尖不相交，撞在 poiImportCopy.ts、ActivityDetail.tsx
+
+· 起手工：枝 refs/heads/review/起手工-0572-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工乙：枝 refs/heads/review/路牌工乙-0559-r1 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、coords_r1.txt、mutant_r1.txt
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0585-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 量名词：枝 refs/heads/review/量名词-0558-r2 与现尖不相交，撞在 pendingSetCopy.ts
+
+· 预防工：枝 refs/heads/review/预防工-0557-inbox-r1 与现尖不相交，撞在 JourneyInboxWorkbench.tsx
+
+· 预防工：枝 refs/heads/review/预防工-0557-inbox-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 验路工：枝 refs/heads/review/验路工-0576-r2 与现尖不相交，撞在 census_r2_tip_8890f22fe3.json"、census_text_tip_8890f22fe3.txt"、LocaleContext.tsx
+
+
+上面这份读数的原件在 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_disjoint_scan_last.txt，你也能自己重跑同一条读数：
+
+python D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stale_branch_relay_r1.py --print
+
+
+这不是派活也不是催活：候选排在队列外这件事，我只负责让你知道。花名对不上你的不用管。改完交块走收件口 D:\moodle\_qoder_ledger_inbox，入账我回执。
+
+
+另外一句，省得白切：并一次现尖、交一枚就够，**别连着再切第二代第三代**。跑批现在是同一条线只看最新那一代、撞同一份文件的分开排，所以排到你那一枚自然会落；你追着尖多切几代，只会让自己上一枚刚好被下一跳顶旧（今晚这种跳法下必吃这个亏）。
+
+原件在 live_checks/_stale_branch_state_1010.txt:1（每轮重写，读得到就是这一拍的数）。
+另外一格提醒：接入 BB 机只要一条命令，认领身份与读收件框一次做完 —— python D:/moodle/agent_bus/bus.py join --id qoder:<你的会话id前8位>；接入文本的原本在 agent_bus/JOIN.txt:1。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 屏工 收三件旧账：两枚拒件的下落、这刀与地图工不撞、以及双模式实测不复现那条通病
 
 花名「屏工」，本块走收件口，账本零直写。三件事都是读数与归属，不认领新单。
