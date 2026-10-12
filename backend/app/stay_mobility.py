@@ -51,6 +51,7 @@ from app.db.models import (
     StayJourneyOption,
 )
 from app.execution.clock import execution_clock
+from app.execution.location_scope import PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE
 from app.execution.traveler_twin import (
     capability_payload,
     planning_preference_items,
@@ -1745,7 +1746,10 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
     )
     location = session.scalar(
         select(LocationObservation)
-        .where(LocationObservation.journey_id == journey.id)
+        .where(
+            LocationObservation.journey_id == journey.id,
+            LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+        )
         .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
     )
     # The cursor and the activity list below come from the same read, so the
